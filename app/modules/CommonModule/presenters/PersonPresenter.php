@@ -38,7 +38,6 @@ use Tracy\Debugger;
  *             It's better to use ReferencedId and ReferencedContainer
  *             inside the particular form.
  * @author Michal Koutný <michal@fykos.cz>
- * @method ModelPerson loadEntity(int $id)
  * @method ModelPerson getEntity()
  */
 class PersonPresenter extends BasePresenter {
@@ -120,11 +119,10 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
-     * @throws BadRequestException
+     * @return void
      */
-    public function titleDetail(int $id) {
-        $this->setTitle(sprintf(_('Detail of person %s'), $this->loadEntity($id)->getFullName()), 'fa fa-eye');
+    public function titleDetail() {
+        $this->setTitle(sprintf(_('Detail of person %s'), $this->getEntity()->getFullName()), 'fa fa-eye');
     }
 
     public function titleMerge() {
@@ -137,11 +135,10 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
-     * @throws BadRequestException
+     * @return void
      */
-    public function authorizedDetail(int $id) {
-        $person = $this->loadEntity($id);
+    public function authorizedDetail() {
+        $person = $this->getEntity();
 
         $full = $this->isAnyContestAuthorized($person, 'stalk.full');
 
@@ -208,11 +205,10 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
-     * @throws BadRequestException
+     * @return void
      */
-    public function renderDetail(int $id) {
-        $person = $this->loadEntity($id);
+    public function renderDetail() {
+        $person = $this->getEntity();
         $this->template->userPermissions = $this->getUserPermissions($person);
         $this->template->person = $person;
         $this->template->isSelf = $this->getUser()->getIdentity()->getPerson()->person_id === $person->person_id;

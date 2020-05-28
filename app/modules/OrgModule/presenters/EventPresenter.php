@@ -15,7 +15,7 @@ use FKSDB\Exceptions\NotImplementedException;
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  * @author Michal Koutný <michal@fykos.cz>
- * @method ModelEvent loadEntity(int $id)
+ * @method ModelEvent getEntity()
  */
 class EventPresenter extends BasePresenter {
     use EntityTrait;
@@ -42,11 +42,10 @@ class EventPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
-     * @throws BadRequestException
+     * @return void
      */
-    public function titleEdit(int $id) {
-        $this->setTitle(sprintf(_('Edit event %s'), $this->loadEntity($id)->name), 'fa fa-pencil');
+    public function titleEdit() {
+        $this->setTitle(sprintf(_('Edit event %s'), $this->getEntity()->name), 'fa fa-pencil');
     }
 
     /**
@@ -57,11 +56,10 @@ class EventPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
      * @throws BadRequestException
      */
-    public function actionEdit(int $id) {
-        $this->traitActionEdit($id);
+    public function actionEdit() {
+        $this->traitActionEdit();
     }
 
     protected function createComponentGrid(): EventsGrid {

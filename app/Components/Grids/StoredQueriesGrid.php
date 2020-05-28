@@ -93,7 +93,7 @@ class StoredQueriesGrid extends BaseGrid {
         $this->addButton('edit', _('Edit'))
             ->setText(_('Edit'))
             ->setLink(function (ModelStoredQuery $row) {
-                return $this->getPresenter()->link('edit', $row->query_id);
+                return $this->getPresenter()->link('edit', ['id' => $row->query_id]);
             })
             ->setShow(function (ModelStoredQuery $row) use ($contest) {
                 return $this->contestAuthorizator->isAllowed($row, 'edit', $contest);
@@ -101,7 +101,7 @@ class StoredQueriesGrid extends BaseGrid {
         $this->addButton('show', _('Podrobnosti'))
             ->setText(_('Podrobnosti'))
             ->setLink(function (ModelStoredQuery $row) {
-                return $this->getPresenter()->link('show', $row->query_id);
+                return $this->getPresenter()->link('show', ['id' => $row->query_id]);
             })
             ->setShow(function (ModelStoredQuery $row) use ($contest) {
                 return $this->contestAuthorizator->isAllowed($row, 'show', $contest);
@@ -111,15 +111,15 @@ class StoredQueriesGrid extends BaseGrid {
             ->setClass('btn btn-sm btn-primary')
             ->setText(_('Spustit'))
             ->setLink(function (ModelStoredQuery $row) {
-                return $this->getPresenter()->link('execute', $row->query_id);
+                return $this->getPresenter()->link('execute', ['id' => $row->query_id]);
             })
             ->setShow(function (ModelStoredQuery $row) use ($contest) {
                 return $this->contestAuthorizator->isAllowed($row, 'execute', $contest);
             });
 
-        if ($presenter->authorized('compose')) {
-            $this->addGlobalButton('compose', _('Napsat dotaz'))
-                ->setLink($this->getPresenter()->link('compose'));
+        if ($presenter->authorized('create')) {
+            $this->addGlobalButton('create', _('Napsat dotaz'))
+                ->setLink($this->getPresenter()->link('create'));
         }
     }
 

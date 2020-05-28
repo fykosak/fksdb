@@ -16,8 +16,12 @@ use Nette\Security\IResource;
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read string php_post_proc
  * @property-read int query_id
+ * @property-read string name
+ * @property-read string|null qid
  */
 class ModelStoredQuery extends AbstractModelSingle implements IResource {
+
+    const RESOURCE_ID = 'storedQuery';
     /**
      * @var array
      */
@@ -48,7 +52,8 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @param $value
+     * @param mixed $value
+     * @return void
      */
     public function setParameters($value) {
         $this->outerParameters = $value;
@@ -93,7 +98,14 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
         return $result;
     }
 
+    public function getFQName(): string {
+        if ($this->qid) {
+            return $this->name . ' (' . $this->qid . ')';
+        }
+        return $this->name;
+    }
+
     public function getResourceId(): string {
-        return 'storedQuery';
+        return self::RESOURCE_ID;
     }
 }

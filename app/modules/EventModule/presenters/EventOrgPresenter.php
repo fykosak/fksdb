@@ -50,7 +50,7 @@ class EventOrgPresenter extends BasePresenter {
      */
     public function actionDelete(int $id) {
         try {
-            list($message) = $this->traitHandleDelete($id);
+            list($message) = $this->traitHandleDelete();
             $this->flashMessage($message->getMessage(), $message->getLevel());
             $this->redirect('list');
         } catch (BadRequestException $exception) {

@@ -18,18 +18,17 @@ use Nette\Application\ForbiddenRequestException;
  */
 trait EventEntityTrait {
     use EntityTrait {
-        loadEntity as loadBaseEntity;
+        getEntity as getBaseEntity;
     }
 
     /**
-     * @param int $id
-     * @return AbstractModelMulti|AbstractModelSingle
+     * @return AbstractModelMulti|AbstractModelSingle|IEventReferencedModel
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    protected function loadEntity(int $id) {
-        $this->loadBaseEntity($id);
+    protected function getEntity() {
+        $this->getBaseEntity();
 
         if (!$this->model instanceof IEventReferencedModel) {
             throw new BadTypeException(IEventReferencedModel::class, $this->model);
@@ -37,7 +36,6 @@ trait EventEntityTrait {
         if ($this->model->getEvent()->event_id !== $this->getEvent()->event_id) {
             throw new ForbiddenRequestException();
         }
-
         return $this->model;
     }
 
@@ -47,5 +45,4 @@ trait EventEntityTrait {
      * @throws AbortException
      */
     abstract protected function getEvent(): ModelEvent;
-
 }

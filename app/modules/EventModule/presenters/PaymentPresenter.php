@@ -22,7 +22,6 @@ use Nette\Application\UI\Control;
  * Class PaymentPresenter
  * *
  * @method ModelPayment getEntity
- * @method ModelPayment loadEntity(int $id)
  */
 class PaymentPresenter extends BasePresenter {
     use EventEntityTrait;
@@ -55,23 +54,21 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function titleEdit(int $id) {
-        $this->setTitle(\sprintf(_('Edit payment #%s'), $this->loadEntity($id)->getPaymentId()), 'fa fa-credit-card');
+    public function titleEdit() {
+        $this->setTitle(\sprintf(_('Edit payment #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card');
     }
 
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function titleDetail(int $id) {
-        $this->setTitle(\sprintf(_('Payment detail #%s'), $this->loadEntity($id)->getPaymentId()), 'fa fa-credit-card');
+    public function titleDetail() {
+        $this->setTitle(\sprintf(_('Payment detail #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card');
     }
 
     /**
@@ -88,13 +85,12 @@ class PaymentPresenter extends BasePresenter {
     /* ********* Authorization *****************/
 
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function authorizedEdit(int $id) {
-        $this->loadEntity($id);
+    public function authorizedEdit() {
+        $this->getEntity();
         $this->setAuthorized($this->canEdit());
     }
 
@@ -110,22 +106,20 @@ class PaymentPresenter extends BasePresenter {
 
     /* ********* actions *****************/
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function actionDetail(int $id) {
-        $this->loadEntity($id);
+    public function actionDetail() {
+        $this->getEntity();
     }
 
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function actionEdit(int $id) {
-        $payment = $this->loadEntity($id);
+    public function actionEdit() {
+        $payment = $this->getEntity();
         if (!$this->canEdit()) {
             $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $payment->getPaymentId()), \BasePresenter::FLASH_ERROR);
             $this->redirect(':MyPayments:');
@@ -152,22 +146,20 @@ class PaymentPresenter extends BasePresenter {
 
     /* ********* render *****************/
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function renderEdit(int $id) {
-        $this->template->model = $this->loadEntity($id);
+    public function renderEdit() {
+        $this->template->model = $this->getEntity();
     }
 
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function renderDetail(int $id) {
-        $payment = $this->loadEntity($id);
+    public function renderDetail() {
+        $payment = $this->getEntity();
         $this->template->items = $this->getMachine()->getPriceCalculator()->getGridItems($payment);
         $this->template->model = $payment;
         $this->template->isOrg = $this->isOrg();
@@ -210,7 +202,9 @@ class PaymentPresenter extends BasePresenter {
     /**
      * Is org or (is own payment and can edit)
      * @return bool
+     * @throws AbortException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
     private function canEdit(): bool {
         return ($this->getEntity()->canEdit() && $this->isContestsOrgAuthorized($this->getEntity(), 'edit')) ||

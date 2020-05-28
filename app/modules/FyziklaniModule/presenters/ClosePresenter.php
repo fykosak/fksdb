@@ -21,7 +21,6 @@ use Nette\Application\UI\Control;
  * *
  * @property FormControl closeCategoryAForm
  * @method ModelFyziklaniTeam getEntity()
- * @method ModelFyziklaniTeam loadEntity(int $id)
  */
 class ClosePresenter extends BasePresenter {
 
@@ -37,23 +36,21 @@ class ClosePresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function titleTeam(int $id) {
-        $this->setTitle(\sprintf(_('Uzavírání bodování týmu "%s"'), $this->loadEntity($id)->name), 'fa fa-check-square-o');
+    public function titleTeam() {
+        $this->setTitle(\sprintf(_('Uzavírání bodování týmu "%s"'), $this->getEntity()->name), 'fa fa-check-square-o');
     }
 
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function titleHard(int $id) {
-        $this->titleTeam($id);
+    public function titleHard() {
+        $this->titleTeam();
     }
 
     /* ******* authorized methods ***********/
@@ -88,24 +85,23 @@ class ClosePresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function actionTeam(int $id) {
-        $team = $this->loadEntity($id);
+        $team = $this->getEntity();
         try {
             $team->canClose();
         } catch (BadRequestException $exception) {
             $this->flashMessage($exception->getMessage());
             $this->redirect('list');
         }
-        $this->actionHard($id);
+        $this->actionHard();
     }
 
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function actionHard(int $id) {
-        $team = $this->loadEntity($id);
+    public function actionHard() {
+        $team = $this->getEntity();
         $control = $this->getComponent('closeTeamControl');
         if (!$control instanceof CloseTeamControl) {
             throw new BadTypeException(CloseTeamControl::class, $control);

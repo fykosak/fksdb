@@ -1,10 +1,5 @@
-{block nav-right}
-    {control seriesChooser}
-    {include #parent}
-{/block}
-
 {block content}
-    {control composeForm}
+    {control createForm}
     {if $control->getStoredQuery()}
         <h2>{_'Výsledek dotazu'}</h2>
         {control adhocResultsComponent}

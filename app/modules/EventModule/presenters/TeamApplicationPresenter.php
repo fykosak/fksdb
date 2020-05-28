@@ -43,13 +43,12 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function renderDetail(int $id) {
-        parent::renderDetail($id);
+    public function renderDetail() {
+        parent::renderDetail();
         $this->template->acYear = $this->getAcYear();
         try {
             $setup = $this->getEvent()->getFyziklaniGameSetup();
@@ -58,7 +57,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
             $rankVisible = false;
         }
         $this->template->rankVisible = $rankVisible;
-        $this->template->model = $this->loadEntity($id);
+        $this->template->model = $this->getEntity();
     }
 
     protected function createComponentSeating(): SeatingControl {

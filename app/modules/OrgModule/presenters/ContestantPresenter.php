@@ -30,9 +30,8 @@ class ContestantPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @param int $id
      */
-    public function titleEdit($id) {
+    public function titleEdit() {
         $this->setTitle(sprintf(_('Úprava řešitele %s'), $this->getModel()->getPerson()->getFullName()), 'fa fa-user');
     }
 

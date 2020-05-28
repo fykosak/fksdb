@@ -22,7 +22,6 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
         $this->tmpData = $data;
     }
 
-
     /**
      * @var bool
      * @deprecated
@@ -61,8 +60,8 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
     }
 
     /**
-     * @param $key
-     * @param $value
+     * @param string|int $key
+     * @param mixed $value
      */
     public function __set($key, $value) {
         $this->tmpData[$key] = $value;
@@ -80,7 +79,7 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
     }
 
     /**
-     * @param $key
+     * @param string|int $key
      * @return bool
      */
     public function __isset($key): bool {
@@ -95,7 +94,7 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
     }
 
     /**
-     * @param $key
+     * @param int|string $key
      */
     public function __unset($key) {
         unset($this->tmpData[$key]);

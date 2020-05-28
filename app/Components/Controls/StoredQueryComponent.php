@@ -13,7 +13,6 @@ use FKSDB\Exceptions\NotFoundException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
@@ -69,14 +68,20 @@ class StoredQueryComponent extends BaseComponent {
     /**
      * StoredQueryComponent constructor.
      * @param StoredQuery $storedQuery
+     * @param Container $container
+     */
+    public function __construct(StoredQuery $storedQuery, Container $container) {
+        parent::__construct($container);
+        $this->storedQuery = $storedQuery;
+    }
+
+    /**
      * @param ContestAuthorizator $contestAuthorizator
      * @param StoredQueryFactory $storedQueryFormFactory
      * @param ExportFormatFactory $exportFormatFactory
-     * @param Container $container
+     * @return void
      */
-    public function __construct(StoredQuery $storedQuery, ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory, Container $container) {
-        parent::__construct($container);
-        $this->storedQuery = $storedQuery;
+    public function injectPrimary(ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory) {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->storedQueryFormFactory = $storedQueryFormFactory;
         $this->exportFormatFactory = $exportFormatFactory;

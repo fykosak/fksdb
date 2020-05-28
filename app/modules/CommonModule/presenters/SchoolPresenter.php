@@ -16,7 +16,6 @@ use Nette\Application\UI\Control;
  * Class SchoolPresenter
  * *
  * @method ModelSchool getEntity()
- * @method ModelSchool loadEntity(int $id)
  */
 class SchoolPresenter extends BasePresenter {
     use EntityTrait;
@@ -41,19 +40,17 @@ class SchoolPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
-     * @throws BadRequestException
+     * @return void
      */
-    public function titleEdit(int $id) {
-        $this->setTitle(sprintf(_('Úprava školy %s'), $this->loadEntity($id)->name_abbrev), 'fa fa-pencil');
+    public function titleEdit() {
+        $this->setTitle(sprintf(_('Úprava školy %s'), $this->getEntity()->name_abbrev), 'fa fa-pencil');
     }
 
     /**
-     * @param int $id
-     * @throws BadRequestException
+     * @return void
      */
-    public function titleDetail(int $id) {
-        $this->setTitle(sprintf(_('Detail of school %s'), $this->loadEntity($id)->name_abbrev), 'fa fa-university');
+    public function titleDetail() {
+        $this->setTitle(sprintf(_('Detail of school %s'), $this->getEntity()->name_abbrev), 'fa fa-university');
     }
 
     /**
@@ -64,19 +61,17 @@ class SchoolPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
      * @throws BadRequestException
      */
-    public function actionEdit(int $id) {
-        $this->traitActionEdit($id);
+    public function actionEdit() {
+        $this->traitActionEdit();
     }
 
     /**
-     * @param int $id
-     * @throws BadRequestException
+     * @return void
      */
-    public function renderDetail(int $id) {
-        $this->template->model = $this->loadEntity($id);
+    public function renderDetail() {
+        $this->template->model = $this->getEntity();
     }
 
     /**
