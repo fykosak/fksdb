@@ -2,11 +2,11 @@
 
 namespace FKSDB\Config\Extensions;
 
-use FKSDB\Components\DatabaseReflection\{
-    DateRow,
+use FKSDB\Components\DatabaseReflection\{DateRow,
     DateTimeRow,
     DetailFactory,
     EmailRow,
+    IntRow,
     Links\Link,
     PrimaryKeyRow,
     StateRow,
@@ -116,6 +116,8 @@ class DBReflectionExtension extends CompilerExtension {
                     return $this->registerEmailRow($tableName, $fieldName, $field);
                 case 'state':
                     return $this->registerStateRow($tableName, $fieldName, $field);
+                case 'int':
+                    return $this->registerIntRow($tableName, $fieldName, $field);
                 default:
                     throw new NotImplementedException();
             }
@@ -137,6 +139,27 @@ class DBReflectionExtension extends CompilerExtension {
     private function registerStateRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
         $factory = $this->setUpDefaultFactory($tableName, $fieldName, StateRow::class, $field);
         $factory->addSetup('setStates', [$field['states']]);
+        return $factory;
+    }
+
+    /**
+     * @param string $tableName
+     * @param string $fieldName
+     * @param array $field
+     * @return ServiceDefinition
+     * @throws NotImplementedException
+     */
+    private function registerIntRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
+        $factory = $this->setUpDefaultFactory($tableName, $fieldName, IntRow::class, $field);
+        if (isset($field['nullValueFormat'])) {
+            $factory->addSetup('setNullValueFormat', [$field['nullValueFormat']]);
+        }
+        if (isset($field['prefix'])) {
+            $factory->addSetup('setPrefix', [$field['prefix']]);
+        }
+        if (isset($field['suffix'])) {
+            $factory->addSetup('setSuffix', [$field['suffix']]);
+        }
         return $factory;
     }
 
@@ -284,6 +307,9 @@ class DBReflectionExtension extends CompilerExtension {
             ]);
         if (isset($field['permission'])) {
             $factory->addSetup('setPermissionValue', [$field['permission']]);
+        }
+        if (isset($field['omitInputField'])) {
+            $factory->addSetup('setOmitInputField', [$field['omitInputField']]);
         }
         if (isset($field['required'])) {
             $factory->addSetup('setRequired', [$field['required']]);

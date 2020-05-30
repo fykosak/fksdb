@@ -14,7 +14,7 @@ use Nette\Utils\Html;
 
 /**
  * Class DomainAliasRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DomainAliasRow extends AbstractOrgRowFactory {
     public function getTitle(): string {

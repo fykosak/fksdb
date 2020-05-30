@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 /**
  * Class ForceARow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ForceARow extends AbstractFyziklaniTeamRow {
 

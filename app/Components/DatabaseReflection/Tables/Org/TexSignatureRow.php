@@ -9,7 +9,7 @@ use Nette\Forms\Form;
 
 /**
  * Class TexSignatureRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TexSignatureRow extends AbstractOrgRowFactory {
     use DefaultPrinterTrait;

@@ -13,7 +13,7 @@ use Nette\Utils\Html;
 
 /**
  * Class SchoolIdRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class SchoolIdRow extends AbstractRow {
 

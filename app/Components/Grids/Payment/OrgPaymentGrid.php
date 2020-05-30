@@ -51,7 +51,7 @@ class OrgPaymentGrid extends PaymentGrid {
 
         $this->addColumns([
             DbNames::TAB_PAYMENT . '.id',
-            'referenced.person_name',
+            'person.full_name',
             // 'referenced.event_name',
             DbNames::TAB_PAYMENT . '.price',
             DbNames::TAB_PAYMENT . '.state',

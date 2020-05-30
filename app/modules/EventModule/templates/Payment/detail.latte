@@ -35,7 +35,7 @@
         {if $isOrg}
             {control valuePrinter:row 'referenced.person_link', $model}
         {else}
-            {control valuePrinter:row 'referenced.person_name', $model}
+            {control valuePrinter:row 'person.full_name', $model}
         {/if}
         {control valuePrinter:row 'person_info.email', $model->getPerson()->getInfo()}
     </div>

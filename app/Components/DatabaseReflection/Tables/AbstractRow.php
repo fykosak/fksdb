@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
+use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\BadRequestException;
@@ -33,6 +34,7 @@ abstract class AbstractRow {
     /**
      * @param array $args
      * @return BaseControl
+     * @throws AbstractRowException
      */
     public function createField(...$args): BaseControl {
         return new TextInput($this->getTitle());
@@ -55,7 +57,15 @@ abstract class AbstractRow {
         if (!$this->hasPermissions($userPermissionsLevel)) {
             return PermissionDeniedBadge::getHtml();
         }
-        return $this->createHtmlValue($this->getModel($model));
+        $model = $this->getModel($model);
+        if (is_null($model)) {
+            return $this->nullModelHtmlValue();
+        }
+        return $this->createHtmlValue($model);
+    }
+
+    protected function nullModelHtmlValue(): Html {
+        return NotSetBadge::getHtml();
     }
 
     /**
@@ -88,12 +98,9 @@ abstract class AbstractRow {
             if ($referencedModel) {
                 return $referencedModel;
             }
-            if (!$this->referencedAccess['nullable']) {
-                throw new BadRequestException('Model not accept be nullable');
-            }
             return null;
         }
-        throw new BadRequestException('Can not access model');
+        throw new BadRequestException(sprintf('Can not access model %s from %s', $modelClassName, get_class($model)));
     }
 
     abstract protected function createHtmlValue(AbstractModelSingle $model): Html;

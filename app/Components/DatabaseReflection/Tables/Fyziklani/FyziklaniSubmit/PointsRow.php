@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PointsRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PointsRow extends AbstractRow {
 

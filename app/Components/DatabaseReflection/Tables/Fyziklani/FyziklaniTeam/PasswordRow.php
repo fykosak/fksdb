@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PasswordRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PasswordRow extends AbstractFyziklaniTeamRow {
 

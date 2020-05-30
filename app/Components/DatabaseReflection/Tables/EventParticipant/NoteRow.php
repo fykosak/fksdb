@@ -6,7 +6,8 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
  * Class NoteRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
+ * TODO to textRow
  */
 class NoteRow extends AbstractParticipantRow {
     use DefaultPrinterTrait;

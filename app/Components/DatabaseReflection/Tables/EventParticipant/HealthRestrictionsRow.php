@@ -6,7 +6,8 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
  * Class HealthRestrictionsRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
+ * TODO to textRow
  */
 class HealthRestrictionsRow extends AbstractParticipantRow {
     use DefaultPrinterTrait;

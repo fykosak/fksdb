@@ -47,8 +47,6 @@ class AllPersonsGrid extends BaseGrid {
     /**
      * @param $presenter
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
-     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -63,7 +61,7 @@ class AllPersonsGrid extends BaseGrid {
 
         $this->addColumn('person_schedule_id', _('#'));
 
-        $this->addColumns(['referenced.person_name']);
+        $this->addColumns(['person.full_name']);
 
         $this->addColumn('schedule_item', _('Schedule item'))->setRenderer(function (ModelPersonSchedule $model) {
             return $model->getScheduleItem()->getLabel();
@@ -89,7 +87,7 @@ class AllPersonsGrid extends BaseGrid {
      * @throws DuplicateColumnException
      */
     protected function addColumnPayment() {
-        $this->addColumns(['referenced.payment_id']);
+        $this->addColumns(['payment.payment']);
     }
 
     protected function getModelClassName(): string {

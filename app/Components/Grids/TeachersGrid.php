@@ -62,7 +62,7 @@ class TeachersGrid extends BaseGrid {
         // columns
         //
         $this->addColumns([
-            'referenced.person_name',
+            'person.full_name',
             DbNames::TAB_TEACHER . '.note',
             DbNames::TAB_TEACHER . '.state',
             DbNames::TAB_TEACHER . '.since',

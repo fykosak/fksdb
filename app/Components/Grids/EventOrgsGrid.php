@@ -54,7 +54,7 @@ class EventOrgsGrid extends BaseGrid {
 
         $dataSource = new NDataSource($orgs);
         $this->setDataSource($dataSource);
-        $this->addColumns(['referenced.person_name']);
+        $this->addColumns(['person.full_name']);
         $this->addColumn('note', _('Note'));
         $this->addButton('edit', _('Edit'))->setText(_('Edit'))
             ->setLink(function (ModelEventOrg $model) {

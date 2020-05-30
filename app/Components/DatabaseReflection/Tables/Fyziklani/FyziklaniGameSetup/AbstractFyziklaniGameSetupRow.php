@@ -8,7 +8,7 @@ use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class AbstractFyziklaniGameSetupRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractFyziklaniGameSetupRow extends AbstractRow {
 

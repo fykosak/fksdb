@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 /**
  * Class SwimmerRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class SwimmerRow extends AbstractParticipantRow {
 

@@ -2,13 +2,15 @@
 
 namespace FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam;
 
+use FKSDB\Components\DatabaseReflection\AbstractRowException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
 /**
- * Class OpenSubmitRow
- * *
+ * Class OpenedSubmittingRow
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class OpenedSubmittingRow extends AbstractFyziklaniTeamRow {
 
@@ -26,6 +28,10 @@ class OpenedSubmittingRow extends AbstractFyziklaniTeamRow {
                 ->addText(_('Closed'));
         }
         return $html;
+    }
+
+    public function createField(...$args): BaseControl {
+        throw new AbstractRowException();
     }
 
     public function getTitle(): string {

@@ -91,7 +91,7 @@ stalking:
             model: FKSDB\ORM\Models\ModelPersonHistory
             itemHeadline: person_history.ac_year
             rows:
-                - person_history.school_id
+                - school.school
                 - person_history.study_year
                 - person_history.class
         task_contribution:
@@ -135,7 +135,7 @@ stalking:
             model: FKSDB\ORM\Models\ModelPayment
             links:
                 - payment.detail
-            itemHeadline: payment.id
+            itemHeadline: payment.payment_uid
             rows:
                 - payment.price
                 - payment.state

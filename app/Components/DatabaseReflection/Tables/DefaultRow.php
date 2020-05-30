@@ -31,6 +31,8 @@ abstract class DefaultRow extends AbstractRow {
     private $metaData;
     /** @var bool */
     private $required = false;
+    /** @var bool */
+    private $omitInputField = false;
     /**
      * @var int
      */
@@ -64,7 +66,13 @@ abstract class DefaultRow extends AbstractRow {
     }
 
     final public function createField(...$args): BaseControl {
+        if ($this->omitInputField) {
+            throw new AbstractRowException();
+        }
         $field = $this->createFormControl(...$args);
+        if ($this->description) {
+            $field->setOption('description', $this->getDescription());
+        }
         if ($this->required) {
             $field->setRequired();
         }
@@ -85,6 +93,14 @@ abstract class DefaultRow extends AbstractRow {
      */
     final public function setRequired(bool $value) {
         $this->required = $value;
+    }
+
+    /**
+     * @param bool $omit
+     * @return void
+     */
+    final public function setOmitInputField(bool $omit) {
+        $this->omitInputField = $omit;
     }
 
     final public function getPermissionsValue(): int {

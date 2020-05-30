@@ -12,7 +12,7 @@ use Nette\Utils\Html;
 
 /**
  * Class TagsRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TagsRow extends AbstractRow {
 

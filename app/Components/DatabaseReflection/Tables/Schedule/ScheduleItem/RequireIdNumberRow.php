@@ -10,7 +10,7 @@ use Nette\Utils\Html;
 
 /**
  * Class RequireIdNumberRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class RequireIdNumberRow extends AbstractScheduleItemRow {
 

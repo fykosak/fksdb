@@ -34,7 +34,7 @@ class ApplicationGrid extends AbstractApplicationGrid {
         $this->setDataSource($source);
 
         $this->addColumns([
-            'referenced.person_name',
+            'person.full_name',
             DbNames::TAB_EVENT_PARTICIPANT . '.status',
         ]);
         $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'event_participant_id']);

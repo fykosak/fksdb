@@ -12,7 +12,8 @@ use Nette\Utils\Html;
 
 /**
  * Class OrderRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
+ * TODO update roles
  */
 class OrderRow extends AbstractOrgRowFactory {
     const ORDER_MAPPING = [

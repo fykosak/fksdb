@@ -35,7 +35,6 @@ DBReflection:
              referencedAccess:
                 modelClassName: FKSDB\ORM\Models\IEventReferencedModel
                 method: getEvent
-                nullable: false
              fields:
                 event_id:
                     type: primaryKey
@@ -68,8 +67,15 @@ DBReflection:
                     type: text
                     description: _(Shrnující text k akci.)
                     title: _(Report)
-                event_year: FKSDB\Components\DatabaseReflection\Event\EventYearRow
-                year: FKSDB\Components\DatabaseReflection\Event\YearRow
+                event_year:
+                    type: int
+                    title: _(Event year)
+                    required: true
+                    description: _('Ročník akce musí být unikátní pro daný typ akce.')
+                year:
+                    type: int
+                    title: _(Contest year)
+                    omitInputField: true
                 event_type: FKSDB\Components\DatabaseReflection\Event\EventTypeRow
                 event_type_id: FKSDB\Components\DatabaseReflection\Event\EventTypeRow
                 event_link: FKSDB\Components\DatabaseReflection\ReferencedRows\EventLink
@@ -78,8 +84,9 @@ DBReflection:
              referencedAccess:
                   modelClassName: FKSDB\ORM\Models\IPaymentReferencedModel
                   method: getPayment
-                  nullable: true
              fields:
+                 payment: FKSDB\Components\DatabaseReflection\ReferencedRows\PaymentRow
+                 payment_uid: FKSDB\Components\DatabaseReflection\Payment\UIdRow
                  bank_account:
                     type: string
                     title: _(Bank account)
@@ -105,8 +112,14 @@ DBReflection:
                     type: string
                     title: _(Recipient)
                  price: FKSDB\Components\DatabaseReflection\Payment\PriceRow
-                 state: FKSDB\Components\DatabaseReflection\Payment\StateRow
-                 id: FKSDB\Components\DatabaseReflection\Payment\IdRow
+                 state:
+                     type: state
+                     title: _(State)
+                     states:
+                         waiting: [badge: 'badge badge-warning', label: 'Waiting for paying']
+                         canceled: [badge: 'badge badge-secondary', label: 'Payment canceled']
+                         received: [badge: 'badge badge-success', label: 'Payment received']
+                         new: [badge: 'badge badge-primary', label: 'New payment']
          org:
              org_id:
                   type: primaryKey
@@ -124,32 +137,38 @@ DBReflection:
                  type: string
                  title: Role
          person:
-             person_id:
-                 type: primaryKey
-                 title: _(Person Id)
-                 permission: PERMISSION_ALLOW_BASIC
-             gender: FKSDB\Components\DatabaseReflection\Person\GenderRow
-             created:
-                 type: dateTime
-                 title: _(Created)
-             born_family_name:
-                 type: string
-                 title: _(Born family name)
-                 description: _('Pouze pokud je odlišné od příjmení.')
-                 permission: PERMISSION_ALLOW_FULL
-             display_name:
-                 type: string
-                 title: _(Display name)
-                 description: _('Pouze pokud je odlišné od "jméno příjmení".')
-                 permission: PERMISSION_ALLOW_BASIC
-             family_name:
-                 type: string
-                 title: _(Family name)
-                 permission: PERMISSION_ALLOW_BASIC
-             other_name:
-                 type: string
-                 title: _(Other name)
-                 permission: PERMISSION_ALLOW_BASIC
+             modelClassName: FKSDB\ORM\Models\ModelPerson
+             referencedAccess:
+                modelClassName: FKSDB\ORM\Models\IPersonReferencedModel
+                method: getPerson
+             fields:
+                full_name: FKSDB\Components\DatabaseReflection\Person\FullNameRow
+                person_id:
+                    type: primaryKey
+                    title: _(Person Id)
+                    permission: PERMISSION_ALLOW_BASIC
+                gender: FKSDB\Components\DatabaseReflection\Person\GenderRow
+                created:
+                    type: dateTime
+                    title: _(Created)
+                born_family_name:
+                    type: string
+                    title: _(Born family name)
+                    description: _('Pouze pokud je odlišné od příjmení.')
+                    permission: PERMISSION_ALLOW_FULL
+                display_name:
+                    type: string
+                    title: _(Display name)
+                    description: _('Pouze pokud je odlišné od "jméno příjmení".')
+                    permission: PERMISSION_ALLOW_BASIC
+                family_name:
+                    type: string
+                    title: _(Family name)
+                    permission: PERMISSION_ALLOW_BASIC
+                other_name:
+                    type: string
+                    title: _(Other name)
+                    permission: PERMISSION_ALLOW_BASIC
          person_info:
              email: FKSDB\Components\DatabaseReflection\PersonInfo\EmailRow
              health_insurance: FKSDB\Components\DatabaseReflection\PersonInfo\HealthInsuranceRow
@@ -239,7 +258,6 @@ DBReflection:
              created:
                  type: dateTime
                  title: _(Created)
-             person_id: FKSDB\Components\DatabaseReflection\EventParticipant\PersonIdRow
              swimmer: FKSDB\Components\DatabaseReflection\EventParticipant\SwimmerRow
              price: FKSDB\Components\DatabaseReflection\EventParticipant\PriceRow
              diet: FKSDB\Components\DatabaseReflection\EventParticipant\DietRow
@@ -333,7 +351,6 @@ DBReflection:
              referencedAccess:
                 modelClassName: FKSDB\ORM\Models\IFyziklaniTaskReferencedModel
                 method: getFyziklaniTask
-                nullable: false
              fields:
                 fyziklani_task_id:
                     type: primaryKey
@@ -360,7 +377,10 @@ DBReflection:
              result_hide:
                  type: dateTime
                  title: _(Results hide)
-             refresh_delay: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup\RefreshDelayRow
+             refresh_delay:
+                 type: int
+                 title: _(Refresh delay)
+                 suffix: ms
              result_hard_display: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup\ResultHardDisplayRow
              available_points: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup\AvailablePointsRow
          e_fyziklani_team:
@@ -368,9 +388,7 @@ DBReflection:
              referencedAccess:
                  modelClassName: FKSDB\ORM\Models\IFyziklaniTeamReferencedModel
                  method: getFyziklaniTeam
-                 nullable: false
              fields:
-                opened_submitting: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\OpenedSubmittingRow
                 e_fyziklani_team_id:
                   type: primaryKey
                   title: _(Team Id)
@@ -378,23 +396,39 @@ DBReflection:
                   type: state
                   title: _(State)
                   states: %event_participant.states%
-                name: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NameRow
-                name_n_id: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NameNIdRow
                 phone:
                     type: phone
                     title: _(Phone)
                     writeOnly: false
-                note: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NoteRow
-                password: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\PasswordRow
-                category: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\CategoryRow
+                note:
+                    type: text
+                    title: _(Note)
+                    omitInputField: true
+                category:
+                    type: string
+                    title: _(Category)
+                    omitInputField: true
                 created:
                     type: dateTime
                     title: _(Created)
+                rank_category:
+                    type: string
+                    title: _(Rank in category)
+                    omitInputField: true
+                rank_total:
+                    type: string
+                    title: _(Total rank)
+                    omitInputField: true
+                points:
+                    type: string
+                    title: _(Points)
+                    omitInputField: true
                 game_lang: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\GameLangRow
                 force_a: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\ForceARow
-                rank_category: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\RankInCategoryRow
-                rank_total: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\RankTotalRow
-                points: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\PointsRow
+                password: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\PasswordRow
+                name: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NameRow
+                name_n_id: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NameNIdRow
+                opened_submitting: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\OpenedSubmittingRow
          stored_query:
              qid: FKSDB\Components\DatabaseReflection\StoredQuery\StoredQuery\QIDRow
              tags: FKSDB\Components\DatabaseReflection\StoredQuery\StoredQuery\TagsRow
@@ -428,18 +462,23 @@ DBReflection:
              description_cs:
                  type: string
                  title: _(Description cs)
-             capacity: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\CapacityRow
+             capacity:
+                 type: int
+                 title: _(Total capacity)
+                 nullValueFormat: infinite
              free_capacity: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\FreeCapacityRow
              used_capacity: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\UsedCapacityRow
          teacher:
              state: FKSDB\Components\DatabaseReflection\Tables\Teacher\StateRow
              since: FKSDB\Components\DatabaseReflection\Tables\Teacher\SinceRow
              until: FKSDB\Components\DatabaseReflection\Tables\Teacher\UntilRow
-             number_brochures: FKSDB\Components\DatabaseReflection\Tables\Teacher\NumberBrochuresRow
+             number_brochures:
+                 type: int
+                 title: _(Number of brochures)
+                 description: _('Number of brochures/propagation items, that he wants to send.')
              note: FKSDB\Components\DatabaseReflection\Tables\Teacher\NoteRow
          referenced:
              person_link: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonLinkRow
-             person_name: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonNameRow
              payment_id: FKSDB\Components\DatabaseReflection\ReferencedRows\PaymentRow
              contest: FKSDB\Components\DatabaseReflection\ReferencedRows\ContestRow
          task_contribution:
@@ -451,7 +490,6 @@ DBReflection:
              referencedAccess:
                 modelClassName: FKSDB\ORM\Models\ITaskReferencedModel
                 method: getTask
-                nullable: false
              fields:
                  fq_name: FKSDB\Components\DatabaseReflection\Tables\Task\FQNameRow
                  series:
@@ -477,9 +515,18 @@ DBReflection:
              referencedAccess:
                 modelClassName: FKSDB\ORM\Models\IContestReferencedModel
                 method: getContest
-                nullable: false
              fields:
                   contestBadge: FKSDB\Components\DatabaseReflection\ReferencedRows\ContestRow
+         school:
+             modelClassName: FKSDB\ORM\Models\ModelSchool
+             referencedAccess:
+                modelClassName: FKSDB\ORM\Models\StoredQuery\ISchoolReferencedModel
+                method: getSchool
+             fields:
+                 school:
+                     type: string
+                     title: _(School)
+                     accessKey: name_abbrev
 
     links:
         payment.detail:

@@ -12,6 +12,7 @@ use Nette\Utils\Html;
 
 /**
  * Class FQNameRow
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class FQNameRow extends AbstractRow {
 

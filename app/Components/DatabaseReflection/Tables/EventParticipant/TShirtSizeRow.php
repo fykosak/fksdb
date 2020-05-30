@@ -6,7 +6,7 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
  * Class TShirtSizeRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TShirtSizeRow extends AbstractParticipantRow {
     use DefaultPrinterTrait;

@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
+use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
 use FKSDB\Exceptions\NotImplementedException;
@@ -18,7 +19,11 @@ class StateRow extends DefaultRow {
     protected $states = [];
 
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        $stateDef = $this->getState($model->{$this->getModelAccessKey()});
+        $state = $model->{$this->getModelAccessKey()};
+        if (is_null($state)) {
+            return NotSetBadge::getHtml();
+        }
+        $stateDef = $this->getState($state);
         return Html::el('span')->addAttributes(['class' => $stateDef['badge']])->addText(_($stateDef['label']));
     }
 

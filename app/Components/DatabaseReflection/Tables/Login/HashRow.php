@@ -10,7 +10,7 @@ use Nette\Utils\Html;
 
 /**
  * Class HashRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class HashRow extends AbstractRow {
 
