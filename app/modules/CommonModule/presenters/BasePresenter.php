@@ -3,19 +3,20 @@
 namespace CommonModule;
 
 use AuthenticatedPresenter;
+use FKSDB\UI\PageStyleContainer;
 use Nette\Security\IResource;
 
 /**
  * Class BasePresenter
- * @package CoreModule
+ * *
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
 
-    /**
-     * @return array
-     */
-    protected function getNavBarVariant(): array {
-        return ['theme-light common', 'bg-dark navbar-dark'];
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
+        $container->styleId = 'theme-light common';
+        $container->navBarClassName = 'bg-dark navbar-dark';
+        return $container;
     }
 
     protected function beforeRender() {
@@ -23,11 +24,11 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     protected function getNavRoots(): array {
         $roots = parent::getNavRoots();
-        $roots[] = 'common.dashboard.default';
+        $roots[] = 'Common.Dashboard.default';
         return $roots;
 
     }

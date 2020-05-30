@@ -6,15 +6,16 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventType;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use Nette\Application\AbortException;
-use Nette\Application\UI\Control;
+use FKSDB\UI\Title;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class FyziklaniChooser extends Control {
+class FyziklaniChooser extends Chooser {
     /**
      * @var ModelEvent
      */
@@ -27,35 +28,45 @@ class FyziklaniChooser extends Control {
 
     /**
      * FyziklaniChooser constructor.
-     * @param ServiceEvent $serviceEvent
+     * @param Container $container
      * @param ModelEvent $event
      */
-    function __construct(ServiceEvent $serviceEvent, ModelEvent $event) {
-        parent::__construct();
-        $this->serviceEvent = $serviceEvent;
+    public function __construct(Container $container, ModelEvent $event) {
+        parent::__construct($container);
+        $this->serviceEvent = $container->getByType(ServiceEvent::class);
         $this->event = $event;
     }
 
-    /**
-     * @return TypedTableSelection
-     */
-    private function getAllFyziklani(): TypedTableSelection {
+    protected function getItems(): TypedTableSelection {
         return $this->serviceEvent->getTable()->where('event_type_id=?', ModelEventType::FYZIKLANI)->order('event_year DESC');
     }
 
-    public function render() {
-        $this->template->availableFyziklani = $this->getAllFyziklani();
-        $this->template->currentEvent = $this->event;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'FyziklaniChooser.latte');
-        $this->template->render();
+    /**
+     * @param ModelEvent $item
+     * @return bool
+     */
+    public function isItemActive($item): bool {
+        return $item->event_id === $this->event->event_id;
+    }
+
+    public function getTitle(): Title {
+        return new Title(_('Event'));
     }
 
     /**
-     * @param $eventId
-     * @throws AbortException
+     * @param ModelEvent $item
+     * @return string
      */
-    public function handleChange($eventId) {
-        $presenter = $this->getPresenter();
-        $presenter->redirect('this', ['eventId' => $eventId]);
+    public function getItemLabel($item): string {
+        return $item->name;
+    }
+
+    /**
+     * @param ModelEvent $item
+     * @return string
+     * @throws InvalidLinkException
+     */
+    public function getItemLink($item): string {
+        return $this->getPresenter()->link('this', ['eventId' => $item->event_id]);
     }
 }

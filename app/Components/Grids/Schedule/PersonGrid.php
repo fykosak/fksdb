@@ -3,25 +3,24 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
-use Nette\Application\BadRequestException;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\GridException;
 
 /**
- * Class PersonsGrid
- * @package FKSDB\Components\Grids\Schedule
+ * Class PersonGrid
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonGrid extends BaseGrid {
 
     /**
      * @param ModelEvent $event
      * @param ModelPerson $person
+     * @return void
      */
     public function setData(ModelEvent $event, ModelPerson $person) {
         $query = $person->getScheduleForEvent($event);
@@ -32,12 +31,12 @@ class PersonGrid extends BaseGrid {
     /**
      * @param ModelPerson|null $person
      * @param ModelEvent|null $event
-     * @throws BadRequestException
+     * @throws \InvalidArgumentException
      * @throws GridException
      */
     public function render(ModelPerson $person = null, ModelEvent $event = null) {
         if (!$event || !$person) {
-            throw new BadRequestException();
+            throw new \InvalidArgumentException();
         }
         $this->setData($event, $person);
         parent::render();
@@ -46,7 +45,6 @@ class PersonGrid extends BaseGrid {
     /**
      * @param $presenter
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -78,9 +76,6 @@ class PersonGrid extends BaseGrid {
         });
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelPersonSchedule::class;
     }

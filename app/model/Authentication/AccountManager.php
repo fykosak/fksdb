@@ -25,8 +25,17 @@ class AccountManager {
 
     /** @var ServiceAuthToken */
     private $serviceAuthToken;
+    /**
+     * @var string
+     */
     private $invitationExpiration = '+1 month';
+    /**
+     * @var string
+     */
     private $recoveryExpiration = '+1 day';
+    /**
+     * @var
+     */
     private $emailFrom;
     /** @var ServiceEmailMessage */
     private $serviceEmailMessage;
@@ -40,10 +49,10 @@ class AccountManager {
      * @param ServiceAuthToken $serviceAuthToken
      * @param ServiceEmailMessage $serviceEmailMessage
      */
-    function __construct(MailTemplateFactory $mailTemplateFactory,
-                         ServiceLogin $serviceLogin,
-                         ServiceAuthToken $serviceAuthToken,
-                         ServiceEmailMessage $serviceEmailMessage) {
+    public function __construct(MailTemplateFactory $mailTemplateFactory,
+                                ServiceLogin $serviceLogin,
+                                ServiceAuthToken $serviceAuthToken,
+                                ServiceEmailMessage $serviceEmailMessage) {
         $this->serviceLogin = $serviceLogin;
         $this->serviceAuthToken = $serviceAuthToken;
         $this->serviceEmailMessage = $serviceEmailMessage;
@@ -100,8 +109,6 @@ class AccountManager {
      */
     public function createLoginWithInvitation(ModelPerson $person, string $email) {
         $login = $this->createLogin($person);
-        //TODO email
-        $this->serviceLogin->save($login);
 
         $until = DateTime::from($this->getInvitationExpiration());
         $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_INITIAL_LOGIN, $until);
@@ -137,7 +144,6 @@ class AccountManager {
             'type' => ModelAuthToken::TYPE_RECOVERY,
         ])
             ->where('until > ?', new DateTime())->fetch();
-
         if ($token) {
             throw new RecoveryExistsException();
         }
@@ -174,19 +180,18 @@ class AccountManager {
      * @param string $password
      * @return AbstractModelSingle|ModelLogin
      */
-    public final function createLogin(ModelPerson $person, string $login = null, string $password = null) {
-        $login = $this->serviceLogin->createNew([
+    final public function createLogin(ModelPerson $person, string $login = null, string $password = null) {
+        /** @var ModelLogin $login */
+        $login = $this->serviceLogin->createNewModel([
             'person_id' => $person->person_id,
             'login' => $login,
             'active' => 1,
         ]);
 
-        $this->serviceLogin->save($login);
-
         /* Must be done after login_id is allocated. */
         if ($password) {
-            $login->setHash($password);
-            $this->serviceLogin->save($login);
+            $hash = $login->createHash($password);
+            $this->serviceLogin->updateModel2($login, ['hash' => $hash]);
         }
         return $login;
     }

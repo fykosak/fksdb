@@ -12,10 +12,11 @@ use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\YearCalculator;
 use Nette\DI\Container;
+use Nette\InvalidStateException;
 
 /**
  * Class TimelineControl
- * @package FKSDB\Components\Controls\Stalking\Timeline
+ * *
  */
 class TimelineControl extends ReactComponent {
     /**
@@ -38,10 +39,6 @@ class TimelineControl extends ReactComponent {
         $this->yearCalculator = $container->getByType(YearCalculator::class);
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return array
-     */
     private function eventToArray(ModelEvent $event): array {
         return [
             'eventId' => $event->event_id,
@@ -53,7 +50,7 @@ class TimelineControl extends ReactComponent {
     }
 
     /**
-     * @return array
+     * @return \array[][]
      * @throws \Exception
      */
     private function calculateData() {
@@ -102,6 +99,7 @@ class TimelineControl extends ReactComponent {
 
     /**
      * @return array
+     * TODO better PHPDoc
      */
     private function calculateEvents(): array {
         $events = [];
@@ -169,18 +167,15 @@ class TimelineControl extends ReactComponent {
         return [$first, $last];
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getReactId(): string {
         return 'person.detail.timeline';
     }
 
     /**
-     * @inheritDoc
+     * @return string
      * @throws \Exception
      */
-    function getData(): string {
+    public function getData(): string {
         list($events, $calculatedEvents) = $this->calculateEvents();
         list($dates, $longTimeEvents) = $this->calculateData();
         list($first, $last) = $this->calculateFirstAndLast($events, $dates);

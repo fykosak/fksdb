@@ -4,8 +4,8 @@ namespace FKSDB\Components\Controls\Entity\Fyziklani\Submit;
 
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\model\Fyziklani\ClosedSubmittingException;
-use FKSDB\model\Fyziklani\NotSetGameParametersException;
+use FKSDB\Fyziklani\ClosedSubmittingException;
+use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\ModelEvent;
@@ -16,12 +16,10 @@ use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
 use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 
 /**
- * Class EditSubmitControl
- * @package FKSDB\Components\Controls\Fyziklani
- * @property FileTemplate $template
+ * Class EditControl
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EditControl extends FormControl implements IEditEntityForm {
     /**

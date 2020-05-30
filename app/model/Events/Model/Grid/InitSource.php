@@ -1,9 +1,13 @@
 <?php
 
-namespace Events\Model\Grid;
+namespace FKSDB\Events\Model\Grid;
 
+use FKSDB\Config\NeonSchemaException;
+use FKSDB\Events\EventDispatchFactory;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 
 /**
@@ -18,25 +22,28 @@ use Nette\DI\Container;
  */
 class InitSource extends AggregatedPersonSource implements IHolderSource {
 
-
     /**
      * InitSource constructor.
      * @param TypedTableSelection $events
      * @param Container $container
      */
-    function __construct(TypedTableSelection $events, Container $container) {
+    public function __construct(TypedTableSelection $events, Container $container) {
         parent::__construct($events, $container);
     }
 
     /**
      * @param ModelEvent $event
-     * @return mixed
+     * @return Holder
+     * @throws BadRequestException
+     * @throws NeonSchemaException
      */
     public function processEvent(ModelEvent $event) {
+        /** @var EventDispatchFactory $factory */
+        $factory = $this->container->getByType(EventDispatchFactory::class);
 
-        $holder = $this->container->createEventHolder($event);
+        $holder = $factory->getDummyHolder($event);
+
         $holder->setModel();
-
         return $holder;
     }
 

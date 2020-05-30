@@ -7,8 +7,8 @@ use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServicePersonInfo;
 use Nette\SmartObject;
-use ServiceMPersonHasFlag;
-use ServiceMPostContact;
+use FKSDB\ORM\ServicesMulti\ServiceMPersonHasFlag;
+use FKSDB\ORM\ServicesMulti\ServiceMPostContact;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -17,6 +17,7 @@ use ServiceMPostContact;
  */
 class ReferencedPersonHandlerFactory {
     use SmartObject;
+
     /**
      * @var ServicePerson
      */
@@ -55,7 +56,7 @@ class ReferencedPersonHandlerFactory {
      * @param ServiceMPersonHasFlag $serviceMPersonHasFlag
      * @param Handler $eventScheduleHandler
      */
-    function __construct(
+    public function __construct(
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,
         ServicePersonHistory $servicePersonHistory,
@@ -72,12 +73,12 @@ class ReferencedPersonHandlerFactory {
     }
 
     /**
-     * @param $acYear
+     * @param int $acYear
      * @param string $resolution
-     * @param $eventId
+     * @param int $eventId
      * @return ReferencedPersonHandler
      */
-    public function create($acYear, $resolution = ReferencedPersonHandler::RESOLUTION_EXCEPTION, $eventId) {
+    public function create(int $acYear, $resolution = ReferencedPersonHandler::RESOLUTION_EXCEPTION, int $eventId): ReferencedPersonHandler {
         $handler = new ReferencedPersonHandler(
             $this->servicePerson,
             $this->servicePersonInfo,
@@ -93,4 +94,3 @@ class ReferencedPersonHandlerFactory {
     }
 
 }
-

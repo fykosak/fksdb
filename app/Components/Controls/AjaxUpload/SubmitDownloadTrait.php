@@ -2,22 +2,23 @@
 
 namespace FKSDB\Components\Control\AjaxUpload;
 
+use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
-use FKSDB\Submits\FilesystemCorrectedSubmitStorage;
-use FKSDB\Submits\FilesystemUploadedSubmitStorage;
+use FKSDB\Submits\FileSystemStorage\CorrectedStorage;
+use FKSDB\Submits\FileSystemStorage\UploadedStorage;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\FileResponse;
-use Nette\DI\Container;
 use OrgModule\InboxPresenter;
 use PublicModule\SubmitPresenter;
 
 /**
- * Class SubmitDownloadTrait
- * @package FKSDB\Components\Control\AjaxUpload
+ * Trait SubmitDownloadTrait
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 trait SubmitDownloadTrait {
     /**
@@ -27,37 +28,36 @@ trait SubmitDownloadTrait {
      * @throws BadRequestException
      */
     private function getSubmit(int $id, string $privilege): ModelSubmit {
-        /** @var ServiceSubmit $serviceSubmit */
-        $serviceSubmit = $this->getContext()->getByType(ServiceSubmit::class);
         /** @var ModelSubmit $submit */
-        $submit = $serviceSubmit->findByPrimary($id);
+        $submit = $this->getServiceSubmit()->findByPrimary($id);
 
         if (!$submit) {
-            throw new BadRequestException('Neexistující submit.', 404);
+            throw new NotFoundException('Neexistující submit.');
         }
         if (!$this->getPresenter()->getContestAuthorizator()->isAllowed($submit, $privilege, $submit->getContestant()->getContest())) {
-            throw new  BadRequestException('Nedostatečné oprávnění.', 403);
+            throw new  ForbiddenRequestException('Nedostatečné oprávnění.');
         }
         return $submit;
     }
 
 
     /**
+     * @param ILogger $logger
      * @param int $id
-     * @return array
+     * @return void
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function traitHandleDownloadUploaded(int $id): array {
+    public function traitHandleDownloadUploaded(ILogger $logger, int $id) {
         $submit = $this->getSubmit($id, 'download.uploaded');
-        /** @var FilesystemUploadedSubmitStorage $filesystemUploadedSubmitStorage */
-        $filesystemUploadedSubmitStorage = $this->getContext()->getByType(FilesystemUploadedSubmitStorage::class);
-        $filename = $filesystemUploadedSubmitStorage->retrieveFile($submit);
+        $filename = $this->getUploadedStorage()->retrieveFile($submit);
         if ($submit->source != ModelSubmit::SOURCE_UPLOAD) {
-            return [new Message(_('Lze stahovat jen uploadovaná řešení.'), ILogger::ERROR),];
+            $logger->log(new Message(_('Lze stahovat jen uploadovaná řešení.'), ILogger::ERROR));
+            return;
         }
         if (!$filename) {
-            return [new Message(_('Poškozený soubor submitu'), ILogger::ERROR),];
+            $logger->log(new Message(_('Poškozený soubor submitu'), ILogger::ERROR));
+            return;
         }
         $response = new FileResponse($filename, $submit->getTask()->getFQName() . '-uploaded.pdf', 'application/pdf');
         $this->getPresenter()->sendResponse($response);
@@ -66,22 +66,23 @@ trait SubmitDownloadTrait {
     }
 
     /**
+     * @param ILogger $logger
      * @param int $id
-     * @return array
+     * @return void
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function traitHandleDownloadCorrected(int $id): array {
-        /** @var FilesystemCorrectedSubmitStorage $filesystemCorrectedSubmitStorage */
-        $filesystemCorrectedSubmitStorage = $this->getContext()->getByType(FilesystemCorrectedSubmitStorage::class);
+    public function traitHandleDownloadCorrected(ILogger $logger, int $id) {
         $submit = $this->getSubmit($id, 'download.corrected');
         if (!$submit->corrected) {
-            return [new Message(_('Opravené riešenie nieje nahrané'), ILogger::WARNING),];
+            $logger->log(new Message(_('Opravené riešenie nieje nahrané'), ILogger::WARNING));
+            return;
         }
 
-        $filename = $filesystemCorrectedSubmitStorage->retrieveFile($submit);
+        $filename = $this->getCorrectedStorage()->retrieveFile($submit);
         if (!$filename) {
-            return [new Message(_('Poškozený soubor submitu'), ILogger::ERROR),];
+            $logger->log(new Message(_('Poškozený soubor submitu'), ILogger::ERROR));
+            return;
         }
 
         $response = new FileResponse($filename, $submit->getTask()->getFQName() . '-corrected.pdf', 'application/pdf');
@@ -90,13 +91,14 @@ trait SubmitDownloadTrait {
     }
 
     /**
-     * @return Container
-     */
-    abstract function getContext();
-
-    /**
      * @param bool $need
      * @return SubmitPresenter|InboxPresenter
      */
     abstract protected function getPresenter($need = true);
+
+    abstract protected function getCorrectedStorage(): CorrectedStorage;
+
+    abstract protected function getUploadedStorage(): UploadedStorage;
+
+    abstract protected function getServiceSubmit(): ServiceSubmit;
 }

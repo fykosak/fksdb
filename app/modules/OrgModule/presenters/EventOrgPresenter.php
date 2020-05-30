@@ -3,7 +3,7 @@
 namespace OrgModule;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEvent;
@@ -15,11 +15,11 @@ use Persons\ExtendedPersonHandler;
 
 /**
  * Class EventOrgPresenter
- * @package OrgModule
+ * *
  * @method ModelEventOrg getModel()
  */
 class EventOrgPresenter extends ExtendedPersonPresenter {
-
+    /** @var string */
     protected $fieldsDefinition = 'adminEventOrg';
 
     /**
@@ -44,6 +44,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param ServiceEventOrg $serviceEventOrg
+     * @return void
      */
     public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
         $this->serviceEventOrg = $serviceEventOrg;
@@ -51,6 +52,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param ServiceEvent $serviceEvent
+     * @return void
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
@@ -97,7 +99,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param Form $form
-     * @return mixed|void
+     * @return void
      */
     protected function appendExtendedContainer(Form $form) {
         $container = new ModelContainer();
@@ -107,44 +109,26 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
         $form->addComponent($container, ExtendedPersonHandler::CONT_MODEL);
     }
 
-    /**
-     * @return ServiceEventOrg
-     */
     protected function getORMService(): ServiceEventOrg {
         return $this->serviceEventOrg;
     }
 
-    /**
-     * @return string
-     */
-    public function messageCreate() {
+    public function messageCreate(): string {
         return _('Organizátor akce %s založen.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageEdit() {
+    public function messageEdit(): string {
         return _('Organizátor akce %s upraven.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageError() {
+    public function messageError(): string {
         return _('Chyba při zakládání organizátora akce.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageExists() {
+    public function messageExists(): string {
         return _('Organizátor akce již existuje.');
     }
 
-    /**
-     * @return ModelEvent
-     */
     private function getEvent(): ModelEvent {
         if (!$this->modelEvent) {
             $this->modelEvent = $this->serviceEvent->findByPrimary($this->eventId);
@@ -160,11 +144,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
         throw new NotImplementedException();
     }
 
-    /**
-     * @return string
-     */
     protected function getModelResource(): string {
         return 'eventOrg';
     }
-
 }

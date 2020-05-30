@@ -1,15 +1,15 @@
 <?php
 
-namespace Events\Spec\Fyziklani;
+namespace FKSDB\Events\Spec\Fyziklani;
 
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
-use Events\Processings\AbstractProcessing;
-use Events\SubmitProcessingException;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Events\Processings\AbstractProcessing;
+use FKSDB\Events\SubmitProcessingException;
 use FKSDB\Logging\ILogger;
+use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Models\ModelPersonHistory;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\YearCalculator;
 use Nette\Forms\Form;
@@ -25,7 +25,7 @@ use Nette\Utils\ArrayHash;
 class CategoryProcessing extends AbstractProcessing {
 
     /**
-     * @var \FKSDB\YearCalculator
+     * @var YearCalculator
      */
     private $yearCalculator;
 
@@ -36,10 +36,10 @@ class CategoryProcessing extends AbstractProcessing {
 
     /**
      * CategoryProcessing constructor.
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param YearCalculator $yearCalculator
      * @param ServiceSchool $serviceSchool
      */
-    function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
+    public function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
     }
@@ -51,7 +51,7 @@ class CategoryProcessing extends AbstractProcessing {
      * @param Holder $holder
      * @param ILogger $logger
      * @param Form|null $form
-     * @return mixed|void
+     * @return void
      */
     protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
 
@@ -59,14 +59,13 @@ class CategoryProcessing extends AbstractProcessing {
             return;
         }
 
-
-        $event = $holder->getEvent();
+        $event = $holder->getPrimaryHolder()->getEvent();
         $contest = $event->getEventType()->contest;
         $year = $event->year;
         $acYear = $this->yearCalculator->getAcademicYear($contest, $year);
 
         $participants = [];
-        foreach ($holder as $name => $baseHolder) {
+        foreach ($holder->getBaseHolders() as $name => $baseHolder) {
             if ($name == 'team') {
                 continue;
             }
@@ -85,7 +84,6 @@ class CategoryProcessing extends AbstractProcessing {
                 }
                 /** @var ModelPerson $person */
                 $person = $baseHolder->getModel()->getMainModel()->person;
-                /** @var ModelPersonHistory $history */
                 $history = $person->related('person_history')->where('ac_year', $acYear)->fetch();
                 $participantData = [
                     'school_id' => $history->school_id,
@@ -105,7 +103,7 @@ class CategoryProcessing extends AbstractProcessing {
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
 
         if ($original != $values['team']['category']) {
-            $logger->log(sprintf(_('Tým zařazen do kategorie %s.'), $values['team']['category']), ILogger::INFO);
+            $logger->log(new Message(sprintf(_('Tým zařazen do kategorie %s.'), $values['team']['category']), ILogger::INFO));
         }
     }
 

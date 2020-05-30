@@ -4,7 +4,7 @@ namespace FKSDB\Transitions\Callbacks;
 
 /**
  * Class AbstractCallback
- * @package FKSDB\Transitions\Callbacks
+ * *
  */
 abstract class AbstractCallback {
 
@@ -12,7 +12,7 @@ abstract class AbstractCallback {
      * @param array $args
      * @return void
      */
-    public final function __invoke(...$args) {
+    final public function __invoke(...$args) {
         $this->evaluate(...$args);
     }
 

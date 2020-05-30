@@ -7,7 +7,7 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
  * Class RankTotalRow
- * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam
+ * *
  */
 class RankTotalRow extends AbstractFyziklaniTeamRow {
     use DefaultPrinterTrait;

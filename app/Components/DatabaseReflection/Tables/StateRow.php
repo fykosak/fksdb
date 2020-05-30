@@ -4,12 +4,12 @@ namespace FKSDB\Components\DatabaseReflection;
 
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use Nette\Utils\Html;
 
 /**
  * Class StateRow
- * @package FKSDB\Components\DatabaseReflection
+ * *
  */
 class StateRow extends DefaultRow {
     /**

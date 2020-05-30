@@ -1,21 +1,19 @@
 {layout '../@layout.latte'}
-{block head}
-    {include #parent}
-{/block}
-{block body}
-    <main class="h-100 login" id="wrap">
-        <div class="form-signin card">
+{block nav}{/block}{*nav is emepty*}
+{block main}
+    <main class="{$pageStyleContainer->mainContainerClassName}">
+        <div class="login-form-container card">
             <div class="row mx-3" style="height:7rem">
                 <img class="col-6" src="/images/contests/fykos-gray.svg" alt="fykos"/>
-                <img class="col-6" src="/images/contests/vyfuk-gray.svg" alt="fykos"/>
+                <img class="col-6" src="/images/contests/vyfuk-gray.svg" alt="vyfuk"/>
             </div>
             <div class="card-body pt-0">
-                <h2 class="card-title text-center text-muted">FKSDB</h2>
+                <h2 class="card-title text-center text-muted">{_'FKSDB'}</h2>
                 {block flashes}
                     <div n:foreach="$flashes as $flash" class="alert alert-{$flash->type}">{$flash->message}</div>
                 {/block}
                 {include #form}
-               <div class="text-center">{control languageChooser}</div>
+                <div class="text-center">{control languageChooser}</div>
             </div>
         </div>
     </main>

@@ -9,4 +9,3 @@ namespace FKSDB\Components\Forms\Factories\ReferencedPerson;
  */
 class ReferencedPersonFactory extends AbstractReferencedPersonFactory {
 }
-

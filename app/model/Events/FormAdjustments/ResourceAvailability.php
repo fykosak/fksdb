@@ -1,11 +1,11 @@
 <?php
 
-namespace Events\FormAdjustments;
+namespace FKSDB\Events\FormAdjustments;
 
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Model\Holder\BaseHolder;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\Holder;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Forms\Form;
 
@@ -25,8 +25,17 @@ class ResourceAvailability extends AbstractAdjustment {
      * @var string Name of event parameter that hold overall capacity.
      */
     private $paramCapacity;
+    /**
+     * @var array|string
+     */
     private $includeStates;
+    /**
+     * @var array|string|string[]
+     */
     private $excludeStates;
+    /**
+     * @var string
+     */
     private $message;
 
     /**
@@ -47,7 +56,7 @@ class ResourceAvailability extends AbstractAdjustment {
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    function __construct($fields, $paramCapacity, $message, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
+    public function __construct($fields, $paramCapacity, $message, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
         $this->setFields($fields);
         $this->paramCapacity = $paramCapacity;
         $this->message = $message;
@@ -59,6 +68,7 @@ class ResourceAvailability extends AbstractAdjustment {
      * @param Form $form
      * @param Machine $machine
      * @param Holder $holder
+     * @return void
      */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $groups = $holder->getGroupedSecondaryHolders();
@@ -125,12 +135,12 @@ class ResourceAvailability extends AbstractAdjustment {
             }
 
 
-            $primaries = array_map(function(BaseHolder $baseHolder) {
-                        return $baseHolder->getModel()->getPrimary(false);
-                    }, $serviceData['holders']);
-            $primaries = array_filter($primaries, function($primary) {
-                        return (bool) $primary;
-                    });
+            $primaries = array_map(function (BaseHolder $baseHolder) {
+                return $baseHolder->getModel()->getPrimary(false);
+            }, $serviceData['holders']);
+            $primaries = array_filter($primaries, function ($primary) {
+                return (bool)$primary;
+            });
 
             $column = BaseHolder::getBareColumn($serviceData['field']);
             $pk = $table->getName() . '.' . $table->getPrimary();
@@ -148,16 +158,16 @@ class ResourceAvailability extends AbstractAdjustment {
             }
         }
 
-        $form->onValidate[] = function(Form $form) use($capacity, $usage, $controls) {
-                    $controlsUsage = 0;
-                    foreach ($controls as $control) {
-                        $controlsUsage += (int) $control->getValue();
-                    }
-                    if ($capacity < $usage + $controlsUsage) {
-                        $message = str_replace('%avail', $capacity - $usage, $this->message);
-                        $form->addError($message);
-                    }
-                };
+        $form->onValidate[] = function (Form $form) use ($capacity, $usage, $controls) {
+            $controlsUsage = 0;
+            foreach ($controls as $control) {
+                $controlsUsage += (int)$control->getValue();
+            }
+            if ($capacity < $usage + $controlsUsage) {
+                $message = str_replace('%avail', $capacity - $usage, $this->message);
+                $form->addError($message);
+            }
+        };
     }
 
 }

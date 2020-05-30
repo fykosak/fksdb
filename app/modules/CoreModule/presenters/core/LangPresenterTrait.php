@@ -5,15 +5,16 @@ namespace FKSDB;
 use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Localization\GettextTranslator;
 use FKSDB\ORM\Models\ModelLogin;
+use Nette\Application\BadRequestException;
 use Nette\Http\Request;
 use Nette\Security\User;
 
 /**
  * Class LangPresenter
- * @package FKSDB
+ * *
  */
 trait LangPresenterTrait {
-
+    /** @var string[] */
     public static $languageNames = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
 
     /** @var GettextTranslator */
@@ -30,37 +31,31 @@ trait LangPresenterTrait {
 
     /**
      * @param GettextTranslator $translator
+     * @return void
      */
-    public final function injectTranslator(GettextTranslator $translator) {
+    final public function injectTranslator(GettextTranslator $translator) {
         $this->translator = $translator;
     }
 
     /**
      * @throws \Exception
      */
-    protected function langTraitStartup() {
+    final protected function langTraitStartup() {
         $this->translator->setLang($this->getLang());
-        /**
-         * @var LanguageChooser $languageChooser
-         */
+        /** @var LanguageChooser $languageChooser */
         $languageChooser = $this->getComponent('languageChooser');
-        $languageChooser->setLang($this->getLang());
+        $languageChooser->setLang($this->getLang(), !$this->getUserPreferredLang());
     }
 
-    /**
-     * @return LanguageChooser
-     */
-    protected final function createComponentLanguageChooser(): LanguageChooser {
-        return new LanguageChooser($this->session, !$this->getUserPreferredLang());
+    final protected function createComponentLanguageChooser(): LanguageChooser {
+        return new LanguageChooser($this->getContext());
     }
 
     /**
      * @return string|null
      */
-    protected function getUserPreferredLang() {
-        /**
-         * @var ModelLogin $login
-         */
+    final private function getUserPreferredLang() {
+        /**@var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         if ($login && $login->getPerson()) {
             return $login->getPerson()->getPreferredLang();
@@ -73,6 +68,7 @@ trait LangPresenterTrait {
      *
      * @return string ISO 639-1
      * Should be final
+     * @throws BadRequestException
      */
     public function getLang(): string {
         if (!$this->cacheLang) {
@@ -87,24 +83,25 @@ trait LangPresenterTrait {
             if (!$this->cacheLang) {
                 $this->cacheLang = $this->globalParameters['localization']['defaultLanguage'];
             }
+            // final check
+            if (!in_array($this->cacheLang, $supportedLanguages)) {
+                throw new BadRequestException();
+            }
         }
         return $this->cacheLang;
     }
 
-    /**
-     * @return GettextTranslator
-     */
-    public final function getTranslator(): GettextTranslator {
+    final public function getTranslator(): GettextTranslator {
         return $this->translator;
     }
 
     /**
      * @return User
      */
-    abstract function getUser();
+    abstract public function getUser();
 
     /**
      * @return Request
      */
-    abstract function getHttpRequest();
+    abstract public function getHttpRequest();
 }

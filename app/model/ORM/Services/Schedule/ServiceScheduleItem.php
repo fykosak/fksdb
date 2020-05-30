@@ -9,19 +9,14 @@ use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 
 /**
  * Class ServiceScheduleItem
- * @package FKSDB\ORM\Services\Schedule
+ * *
  */
 class ServiceScheduleItem extends AbstractServiceSingle {
-    /**
-     * @return string
-     */
+
     public function getModelClassName(): string {
         return ModelScheduleItem::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_SCHEDULE_ITEM;
     }

@@ -6,13 +6,12 @@ use FKSDB\Components\React\ReactComponent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use Nette\Application\UI\Control;
-use Nette\DI\Container;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
 /**
- * Class ParticipantAcquaintanceChartControl
- * @package FKSDB\Components\Controls\Chart
+ * Class TotalPersonsChartControl
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TotalPersonsChartControl extends ReactComponent implements IChart {
     /**
@@ -21,17 +20,13 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
     private $servicePerson;
 
     /**
-     * TotalPersonsChartControl constructor.
-     * @param Container $context
+     * @param ServicePerson $servicePerson
+     * @return void
      */
-    public function __construct(Container $context) {
-        parent::__construct($context);
-        $this->servicePerson = $context->getByType(ServicePerson::class);
+    public function injectServicePerson(ServicePerson $servicePerson) {
+        $this->servicePerson = $servicePerson;
     }
 
-    /**
-     * @return string
-     */
     public function getAction(): string {
         return 'totalPersons';
     }
@@ -40,12 +35,11 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
      * @return string
      * @throws JsonException
      */
-    function getData(): string {
+    public function getData(): string {
         $query = $this->servicePerson->getTable()->order('created');
         $data = [];
-        foreach ($query as $row) {
-
-            $person = ModelPerson::createFromActiveRow($row);
+        /** @var ModelPerson $person */
+        foreach ($query as $person) {
             $data[] = [
                 'created' => $person->created->format('c'),
                 'gender' => $person->gender,
@@ -55,23 +49,14 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
         return Json::encode($data);
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Total persons in FKSDB');
     }
 
-    /**
-     * @return Control
-     */
     public function getControl(): Control {
         return $this;
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getReactId(): string {
         return 'chart.total-person';
     }

@@ -1,9 +1,8 @@
 <?php
 
-namespace Events\Semantics;
+namespace FKSDB\Events\Semantics;
 
-use Events\Model\Holder\BaseHolder;
-use Nette\Application\BadRequestException;
+use FKSDB\Events\Model\Holder\BaseHolder;
 use Nette\SmartObject;
 
 /**
@@ -15,20 +14,22 @@ class Count {
     use SmartObject;
     use WithEventTrait;
 
+    /**
+     * @var
+     */
     private $state;
 
     /**
      * Count constructor.
      * @param $state
      */
-    function __construct($state) {
+    public function __construct($state) {
         $this->state = $state;
     }
 
     /**
      * @param array $args
      * @return int
-     * @throws BadRequestException
      */
     public function __invoke(...$args): int {
         $baseHolder = $this->getHolder($args[0])->getPrimaryHolder();

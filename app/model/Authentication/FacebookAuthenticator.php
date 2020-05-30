@@ -3,11 +3,15 @@
 namespace Authentication;
 
 use FKSDB\Authentication\AccountManager;
+use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelPersonInfo;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonInfo;
 use FKSDB\YearCalculator;
+use Nette\Database\Table\ActiveRow;
 use Nette\Security\AuthenticationException;
 use Nette\Security\Identity;
 use Tracy\Debugger;
@@ -20,12 +24,12 @@ use Tracy\Debugger;
 class FacebookAuthenticator extends AbstractAuthenticator {
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePerson
+     * @var ServicePerson
      */
     private $servicePerson;
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePersonInfo
+     * @var ServicePersonInfo
      */
     private $servicePersonInfo;
 
@@ -37,12 +41,12 @@ class FacebookAuthenticator extends AbstractAuthenticator {
     /**
      * FacebookAuthenticator constructor.
      * @param ServicePerson $servicePerson
-     * @param \FKSDB\ORM\Services\ServicePersonInfo $servicePersonInfo
+     * @param ServicePersonInfo $servicePersonInfo
      * @param AccountManager $accountManager
-     * @param \FKSDB\ORM\Services\ServiceLogin $serviceLogin
-     * @param \FKSDB\YearCalculator $yearCalculator
+     * @param ServiceLogin $serviceLogin
+     * @param YearCalculator $yearCalculator
      */
-    function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, AccountManager $accountManager, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
+    public function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, AccountManager $accountManager, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
@@ -54,6 +58,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
      * @return Identity
      * @throws AuthenticationException
      * @throws InactiveLoginException
+     * @throws \Exception
      */
     public function authenticate(array $fbUser) {
         $person = $this->findPerson($fbUser);
@@ -79,7 +84,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
 
     /**
      * @param array $fbUser
-     * @return \Nette\Database\Table\ActiveRow|null
+     * @return ModelPerson|ActiveRow|null
      * @throws AuthenticationException
      */
     private function findPerson(array $fbUser) {
@@ -100,11 +105,13 @@ class FacebookAuthenticator extends AbstractAuthenticator {
 
     /**
      * @param $fbUser
-     * @return \FKSDB\ORM\AbstractModelSingle|\FKSDB\ORM\Models\ModelLogin
+     * @return AbstractModelSingle|ModelLogin
      * @throws \Exception
      */
     private function registerFromFB($fbUser) {
+        /** @var ModelPerson $person */
         $person = $this->servicePerson->createNew($this->getPersonData($fbUser));
+        /** @var ModelPersonInfo $personInfo */
         $personInfo = $this->servicePersonInfo->createNew($this->getPersonInfoData($fbUser));
 
         $this->servicePerson->getConnection()->beginTransaction();

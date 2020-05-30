@@ -11,7 +11,13 @@ use FKSDB\Expressions\EvaluatedExpression;
  */
 class Leq extends EvaluatedExpression {
 
+    /**
+     * @var
+     */
     private $aValue;
+    /**
+     * @var
+     */
     private $bValue;
 
     /**
@@ -19,7 +25,7 @@ class Leq extends EvaluatedExpression {
      * @param $aValue
      * @param $bValue
      */
-    function __construct($aValue, $bValue) {
+    public function __construct($aValue, $bValue) {
         $this->aValue = $aValue;
         $this->bValue = $bValue;
     }

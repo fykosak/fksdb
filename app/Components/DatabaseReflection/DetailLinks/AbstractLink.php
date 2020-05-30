@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\Links;
 
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -10,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class AbstractLink
- * @package FKSDB\Components\DatabaseReflection\Links
+ * *
  */
 abstract class AbstractLink {
     /**
@@ -32,34 +33,28 @@ abstract class AbstractLink {
      * @throws BadRequestException
      * @throws InvalidLinkException
      */
-    public final function __invoke($model): Html {
+    final public function __invoke($model): Html {
         return Html::el('a')->addAttributes([
             'class' => 'btn btn-outline-primary btn-sm',
             'href' => $this->createLink($model),
         ])->addText($this->getText());
     }
 
-    /**
-     * @return string
-     */
-    public abstract function getText(): string;
+    abstract public function getText(): string;
 
     /**
      * @param AbstractModelSingle $model
      * @return string
      */
-    public abstract function getDestination($model): string;
+    abstract public function getDestination($model): string;
 
     /**
      * @param AbstractModelSingle $model
      * @return array
      */
-    public abstract function prepareParams($model): array;
+    abstract public function prepareParams($model): array;
 
-    /**
-     * @return string
-     */
-    public abstract function getModelClassName(): string;
+    abstract public function getModelClassName(): string;
 
     /**
      * @param AbstractModelSingle $model
@@ -70,7 +65,7 @@ abstract class AbstractLink {
     public function createLink($model): string {
         $modelClassName = $this->getModelClassName();
         if (!$model instanceof $modelClassName) {
-            throw new BadRequestException();
+            throw new BadTypeException($modelClassName, $model);
         }
         return $this->presenterComponent->getPresenter()->link(
             $this->getDestination($model),

@@ -32,7 +32,7 @@ class StoredQueryGrid extends BaseGrid {
      * @param StoredQuery $storedQuery
      * @param Container $container
      */
-    function __construct(StoredQuery $storedQuery, Container $container) {
+    public function __construct(StoredQuery $storedQuery, Container $container) {
         parent::__construct($container);
         $this->storedQuery = $storedQuery;
         $this->exportFormatFactory = $container->getByType(ExportFormatFactory::class);
@@ -83,7 +83,8 @@ class StoredQueryGrid extends BaseGrid {
                 ->setLabel(_('Podrobnosti dotazu'))
                 ->setClass('btn btn-sm btn-secondary')
                 ->setLink($this->getPresenter()->link('Export:show', $this->storedQuery->getQueryPattern()->getPrimary()));
-            if ($qid = $this->storedQuery->getQueryPattern()->qid) { // intentionally =
+            $qid = $this->storedQuery->getQueryPattern()->qid;
+            if ($qid) {
                 $parameters = ['qid' => $qid, 'bc' => null];
                 $queryParameters = $this->storedQuery->getParameters();
                 foreach ($this->storedQuery->getParameterNames() as $key) {

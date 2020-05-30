@@ -5,7 +5,7 @@ services:
     mailTemplateFactory:
         class: Mail\MailTemplateFactory(%email.templatesDir%)
 
-    - Events\Model\ApplicationHandlerFactory
+    - FKSDB\Events\Model\ApplicationHandlerFactory
     - Exports\ExportFormatFactory
     - FKSDB\Components\Forms\Factories\StoredQueryFactory
     referencedEventPersonFactory:
@@ -13,22 +13,15 @@ services:
     referencedPersonFactory:
         class: FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory
     - Persons\ReferencedPersonHandlerFactory
-    - FKSDB\Model\Fyziklani\Rooms\PipelineFactory
     breadcrumbFactory:
         class: FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory(%navigation.expiration%, ...)
     storedQueryFactory:
         class: Exports\StoredQueryFactory(@readOnlyConnection,...)
     resultsModelFactory: FKSDB\Results\ResultsModelFactory
-    statsModelFactory: StatsModelFactory
+    - FKSDB\Stats\StatsModelFactory
     pipelineFactory:
-        class: Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, %tasks.defaultStudyYears%, ...)
+        class: FKSDB\Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, %tasks.defaultStudyYears%, ...)
     event.DBReflectionFactory:
         class: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
 #transition
     transitionsFactory: FKSDB\Transitions\TransitionsFactory
-
-
-
-factories:
-# (so far unused)
-

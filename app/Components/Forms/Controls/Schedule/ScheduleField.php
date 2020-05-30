@@ -8,17 +8,19 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Controls\TextInput;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use Nette\Utils\JsonException;
 
 /**
  * Class ScheduleField
- * @package FKSDB\Components\Forms\Controls\Schedule
+ * *
  */
 class ScheduleField extends TextInput {
 
     use ReactField;
+
     /**
      * @var ModelEvent
      */
@@ -50,7 +52,7 @@ class ScheduleField extends TextInput {
     }
 
     /**
-     * @param $obj
+     * @param IComponent $obj
      */
     public function attached($obj) {
         parent::attached($obj);
@@ -81,11 +83,8 @@ class ScheduleField extends TextInput {
         }
     }
 
-    /**
-     * @return string
-     */
     protected function getReactId(): string {
-       return 'event.schedule.'.$this->type;
+        return 'event.schedule.' . $this->type;
     }
 
     /**
@@ -103,9 +102,6 @@ class ScheduleField extends TextInput {
         return json_encode(['groups' => $groupList, 'options' => $options]);
     }
 
-    /**
-     * @return array
-     */
     private function getRenderOptions(): array {
         $params = [
             'display' => [
@@ -133,16 +129,12 @@ class ScheduleField extends TextInput {
         return $params;
     }
 
-    /**
-     * @param ModelScheduleGroup $group
-     * @return array
-     */
     private function serializeGroup(ModelScheduleGroup $group): array {
         $groupArray = $group->__toArray();
         $itemList = [];
         $items = $this->serviceScheduleItem->getTable()->where('schedule_group_id', $group->schedule_group_id);
-        foreach ($items as $itemRow) {
-            $item = ModelScheduleItem::createFromActiveRow($itemRow);
+        /** @var ModelScheduleItem $item */
+        foreach ($items as $item) {
             $itemList[] = $item->__toArray();
         }
 

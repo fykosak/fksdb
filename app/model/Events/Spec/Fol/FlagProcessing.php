@@ -1,24 +1,25 @@
 <?php
 
-namespace Events\Spec\Fol;
+namespace FKSDB\Events\Spec\Fol;
 
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
-use Events\Processings\AbstractProcessing;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Events\Processings\AbstractProcessing;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\YearCalculator;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
 /**
  * Class FlagProcessing
- * @package Events\Spec\Fol
+ * *
  */
 class FlagProcessing extends AbstractProcessing {
 
     /**
-     * @var \FKSDB\YearCalculator
+     * @var YearCalculator
      */
     private $yearCalculator;
 
@@ -29,10 +30,10 @@ class FlagProcessing extends AbstractProcessing {
 
     /**
      * FlagProcessing constructor.
-     * @param \FKSDB\YearCalculator $yearCalculator
-     * @param \FKSDB\ORM\Services\ServiceSchool $serviceSchool
+     * @param YearCalculator $yearCalculator
+     * @param ServiceSchool $serviceSchool
      */
-    function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
+    public function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
     }
@@ -44,22 +45,23 @@ class FlagProcessing extends AbstractProcessing {
      * @param Holder $holder
      * @param ILogger $logger
      * @param Form|null $form
-     * @return mixed|void
+     * @return void
      */
     protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
         if (!isset($values['team'])) {
             return;
         }
 
-        $event = $holder->getEvent();
+        $event = $holder->getPrimaryHolder()->getEvent();
         $contest = $event->getEventType()->contest;
         $year = $event->year;
         $acYear = $this->yearCalculator->getAcademicYear($contest, $year);
 
-        foreach ($holder as $name => $baseHolder) {
+        foreach ($holder->getBaseHolders() as $name => $baseHolder) {
             if ($name == 'team') {
                 continue;
             }
+            /** @var BaseControl[] $formControls */
             $formControls = [
                 'school_id' => $this->getControl("$name.person_id.person_history.school_id"),
                 'study_year' => $this->getControl("$name.person_id.person_history.study_year"),
@@ -85,7 +87,7 @@ class FlagProcessing extends AbstractProcessing {
             } else {
                 $participantData = $formValues;
             }
-            if (!($this->isCzSkSchool($participantData['school_id']) && $this->isStudent($participantData['study_year']))) {
+            if (!($this->serviceSchool->isCzSkSchool($participantData['school_id']) && $this->isStudent($participantData['study_year']))) {
                 $personHasFlag = $values[$name]['person_id_1']['person_has_flag'];
                 $personHasFlag->offsetUnset('spam_mff');
 //                $a=$c;
@@ -94,18 +96,6 @@ class FlagProcessing extends AbstractProcessing {
                 //unset($values[$name]['person_id_1']['person_has_flag']);
             }
         }
-    }
-
-    /**
-     * @param int $schoolId
-     * @return bool
-     */
-    private function isCzSkSchool($schoolId) {
-        $country = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(['school_id' => $schoolId])->fetch();
-        if (in_array($country->country_iso, ['CZ', 'SK'])) {
-            return true;
-        }
-        return false;
     }
 
     /**

@@ -1,8 +1,9 @@
 <?php
 
 use FKSDB\Components\Controls\ContestChooser;
-use FKSDB\Expressions\BadTypeException;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelContest;
+use FKSDB\UI\PageStyleContainer;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -38,22 +39,19 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
         $contestChooser->syncRedirect();
     }
 
-    /**
-     * @return ContestChooser
-     */
     abstract protected function createComponentContestChooser(): ContestChooser;
 
     /**
      * @return ModelContest
      * @throws BadRequestException
      */
-    public function getSelectedContest() {
+    public function getSelectedContest(): ModelContest {
         $contestChooser = $this->getComponent('contestChooser');
         if (!$contestChooser instanceof ContestChooser) {
             throw new BadTypeException(ContestChooser::class, $contestChooser);
         }
         if (!$contestChooser->isValid()) {
-            throw new BadRequestException('No contests available.', 403);
+            throw new ForbiddenRequestException('No contests available.');
         }
         return $contestChooser->getContest();
     }
@@ -62,13 +60,13 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
      * @return int
      * @throws BadRequestException
      */
-    public function getSelectedYear() {
+    public function getSelectedYear(): int {
         $contestChooser = $this->getComponent('contestChooser');
         if (!$contestChooser instanceof ContestChooser) {
             throw new BadTypeException(ContestChooser::class, $contestChooser);
         }
         if (!$contestChooser->isValid()) {
-            throw new BadRequestException('No contests available.', 403);
+            throw new ForbiddenRequestException('No contests available.');
         }
         return $contestChooser->getYear();
     }
@@ -77,26 +75,28 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
      * @return int
      * @throws BadRequestException
      */
-    public function getSelectedAcademicYear() {
-        return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
+    public function getSelectedAcademicYear(): int {
+        return $this->getYearCalculator()->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 
-    /**
-     * @return array
-     */
-    protected function getNavBarVariant(): array {
-        $row = $this->getServiceContest()->findByPrimary($this->contestId);
-        if ($row) {
-            $contest = ModelContest::createFromActiveRow($row);
-            return [$contest->getContestSymbol(), 'navbar-dark bg-' . $contest->getContestSymbol()];
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
+        /** @var ModelContest $contest */
+        $contest = $this->getServiceContest()->findByPrimary($this->contestId);
+        if ($contest) {
+            $container->styleId = $contest->getContestSymbol();
+            $container->navBarClassName = 'navbar-dark bg-' . $contest->getContestSymbol();
         }
-        return parent::getNavBarVariant();
+        return $container;
     }
 
     /**
-     * @return string
+     * @param string $title
+     * @param string $icon
+     * @param string $subTitle
+     * @return void
      */
-    public function getSubTitle(): string {
-        return sprintf(_('%d. ročník'), $this->year);
+    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
+        parent::setTitle($title, $icon, sprintf(_('%d. ročník'), $this->year) . ' ' . $subTitle);
     }
 }

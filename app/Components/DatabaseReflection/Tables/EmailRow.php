@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class EmailRow
- * @package FKSDB\Components\DatabaseReflection
+ * *
  */
 class EmailRow extends DefaultRow {
 
@@ -26,11 +26,7 @@ class EmailRow extends DefaultRow {
         return $control;
     }
 
-    /**
-     * @param AbstractModelSingle $model
-     * @return Html
-     */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new EmailPrinter)($model->{$this->getModelAccessKey()});
+        return (new EmailPrinter())($model->{$this->getModelAccessKey()});
     }
 }

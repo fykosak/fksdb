@@ -22,4 +22,3 @@ interface ISeriesPresenter extends IContestPresenter {
      */
     public function getSelectedSeries();
 }
-

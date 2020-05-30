@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\Tables\Task;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelTask;
 use Nette\Application\BadRequestException;
@@ -42,6 +43,6 @@ class FQNameRow extends AbstractRow {
      * @throws BadRequestException
      */
     public function createField(...$args): BaseControl {
-        throw new BadRequestException();
+        throw new NotImplementedException();
     }
 }

@@ -8,7 +8,7 @@ use FKSDB\DataTesting\TestLog;
 
 /**
  * Interface ITestedRowFactory
- * @package FKSDB\Components\Forms\Factories
+ * *
  */
 interface ITestedRowFactory {
     /**

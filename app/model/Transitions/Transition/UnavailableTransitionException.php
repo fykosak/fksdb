@@ -2,12 +2,12 @@
 
 namespace FKSDB\Transitions;
 
-use Events\Machine\Transition as EventTransition;
+use FKSDB\Events\Machine\Transition as EventTransition;
 use Nette\InvalidStateException;
 
 /**
  * Class UnavailableTransitionException
- * @package FKSDB\Transitions
+ * *
  */
 class UnavailableTransitionException extends \Exception {
     /**

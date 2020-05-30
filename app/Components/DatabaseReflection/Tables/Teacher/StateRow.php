@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class StateRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Teacher
+ * *
  */
 class StateRow extends AbstractTeacherRow {
 

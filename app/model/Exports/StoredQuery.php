@@ -4,9 +4,8 @@ namespace Exports;
 
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use Nette\Database\Connection;
-use Nette\Database\Statement;
 use Nette\InvalidArgumentException;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use Nette\Security\IResource;
 use NiftyGrid\DataSource\IDataSource;
 
@@ -84,7 +83,7 @@ class StoredQuery implements IDataSource, IResource {
      * @param ModelStoredQuery $queryPattern
      * @param Connection $connection
      */
-    function __construct(ModelStoredQuery $queryPattern, Connection $connection) {
+    public function __construct(ModelStoredQuery $queryPattern, Connection $connection) {
         $this->setQueryPattern($queryPattern);
         $this->connection = $connection;
     }
@@ -237,7 +236,7 @@ class StoredQuery implements IDataSource, IResource {
 
             $statement->bindValue($key, $value, $type);
             if ($this->postProcessing) {
-                $this->postProcessing->bindValue($key, $value, $type);
+                $this->postProcessing->bindValue($key, $value);
             }
         }
         return $statement;
@@ -285,7 +284,7 @@ class StoredQuery implements IDataSource, IResource {
     }
 
     /**
-     * @return mixed|Statement|null
+     * @return mixed|\PDOStatement|null
      */
     public function getData() {
         if ($this->data === null) {

@@ -2,30 +2,29 @@
 
 namespace FKSDB\Components\Events;
 
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Machine\Transition;
-use Events\Model\ApplicationHandler;
-use Events\Model\ApplicationHandlerException;
-use Events\Model\Holder\Holder;
+use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\ApplicationHandler;
+use FKSDB\Events\Model\ApplicationHandlerException;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\FlashMessageDump;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Control;
-use Nette\Application\UI\Form;
+use Nette\DI\Container;
+use \Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
-use Nette\Templating\FileTemplate;
-use Nette\Templating\ITemplate;
 use Nette\Utils\JsonException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @method \AuthenticatedPresenter|\BasePresenter getPresenter($need = TRUE)
  */
-class ApplicationComponent extends Control {
+class ApplicationComponent extends BaseComponent {
 
     /**
      * @var ApplicationHandler
@@ -49,11 +48,12 @@ class ApplicationComponent extends Control {
 
     /**
      * ApplicationComponent constructor.
+     * @param Container $container
      * @param ApplicationHandler $handler
      * @param Holder $holder
      */
-    function __construct(ApplicationHandler $handler, Holder $holder) {
-        parent::__construct();
+    public function __construct(Container $container, ApplicationHandler $handler, Holder $holder) {
+        parent::__construct($container);
         $this->handler = $handler;
         $this->holder = $holder;
     }
@@ -77,7 +77,8 @@ class ApplicationComponent extends Control {
     }
 
     /**
-     * @param $redirectCallback
+     * @param callable $redirectCallback
+     * @return void
      */
     public function setRedirectCallback(callable $redirectCallback) {
         $this->redirectCallback = $redirectCallback;
@@ -86,28 +87,23 @@ class ApplicationComponent extends Control {
     /**
      * Syntactic sugar for the template.
      */
-    public function isEventAdmin() {
-        $event = $this->holder->getEvent();
+    public function isEventAdmin(): bool {
+        $event = $this->holder->getPrimaryHolder()->getEvent();
         return $this->getPresenter()->getContestAuthorizator()->isAllowed($event, 'application', $event->getContest());
     }
 
     /**
-     * @param null $class
-     * @return FileTemplate|ITemplate
+     * @return void
+     * @throws BadRequestException
      */
-    protected function createTemplate($class = NULL) {
-        /**
-         * @var FileTemplate $template
-         */
-        $template = parent::createTemplate($class);
-        $template->setTranslator($this->presenter->getTranslator());
-        return $template;
-    }
-
     public function render() {
         $this->renderForm();
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function renderForm() {
         if (!$this->templateFile) {
             throw new InvalidStateException('Must set template for the application form.');
@@ -115,7 +111,7 @@ class ApplicationComponent extends Control {
 
         $this->template->setFile($this->templateFile);
         $this->template->holder = $this->holder;
-        $this->template->event = $this->holder->getEvent();
+        $this->template->event = $this->holder->getPrimaryHolder()->getEvent();
         $this->template->primaryModel = $this->holder->getPrimaryHolder()->getModel();
         $this->template->primaryMachine = $this->getMachine()->getPrimaryMachine();
         $this->template->render();
@@ -123,6 +119,8 @@ class ApplicationComponent extends Control {
 
     /**
      * @param $mode
+     * @return void
+     * @throws BadRequestException
      */
     public function renderInline($mode) {
         $this->template->mode = $mode;
@@ -146,9 +144,9 @@ class ApplicationComponent extends Control {
         /*
          * Create containers
          */
-        foreach ($this->holder as $name => $baseHolder) {
+        foreach ($this->holder->getBaseHolders() as $name => $baseHolder) {
             $baseMachine = $this->getMachine()->getBaseMachine($name);
-            if (!$baseHolder->isVisible($baseMachine)) {
+            if (!$baseHolder->isVisible()) {
                 continue;
             }
             $container = $baseHolder->createFormContainer($baseMachine);
@@ -172,10 +170,8 @@ class ApplicationComponent extends Control {
          */
         $primaryMachine = $this->getMachine()->getPrimaryMachine();
         $transitionSubmit = null;
-        /**
-         * @var Transition $transition
-         */
-        foreach ($primaryMachine->getAvailableTransitions(BaseMachine::EXECUTABLE | BaseMachine::VISIBLE) as $transition) {
+        foreach ($primaryMachine->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), BaseMachine::EXECUTABLE | BaseMachine::VISIBLE) as $transition) {
+
             $transitionName = $transition->getName();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
 
@@ -185,23 +181,13 @@ class ApplicationComponent extends Control {
             };
 
             if ($transition->isCreating()) {
-                $submit->getControlPrototype()->addClass('btn-sm btn-success');
-                $submit->setOption('row', 1);
                 if ($transitionSubmit !== false) {
                     $transitionSubmit = $submit;
                 } elseif ($transitionSubmit) {
                     $transitionSubmit = false; // if there is more than one submit set no one
                 }
-            } elseif ($transition->isTerminating()) {
-                $submit->getControlPrototype()->addClass('btn-sm btn-danger');
-                $submit->setOption('row', 3);
-            } elseif ($transition->isDangerous()) {
-                $submit->getControlPrototype()->addClass('btn-sm btn-danger');
-                $submit->setOption('row', 2);
-            } else {
-                $submit->getControlPrototype()->addClass('btn-sm btn-secondary');
-                $submit->setOption('row', 2);
             }
+            $submit->getControlPrototype()->addAttributes(['btn btn-' . $transition->getType()]);
         }
 
         /*
@@ -210,7 +196,7 @@ class ApplicationComponent extends Control {
         $submit = $form->addSubmit('cancel', _('Storno'));
         $submit->setOption('row', 1);
         $submit->setValidationScope(false);
-        $submit->getControlPrototype()->addClass('btn-warning');
+        $submit->getControlPrototype()->addAttributes(['class' => 'btn-warning']);
         $submit->onClick[] = function (SubmitButton $button) {
             $this->finalRedirect();
         };
@@ -234,6 +220,7 @@ class ApplicationComponent extends Control {
      * @param null $explicitTransitionName
      * @throws AbortException
      * @throws JsonException
+     * @throws BadRequestException
      */
     public function handleSubmit(Form $form, $explicitTransitionName = null) {
         $this->execute($form, $explicitTransitionName);
@@ -243,6 +230,7 @@ class ApplicationComponent extends Control {
      * @param $transitionName
      * @throws AbortException
      * @throws JsonException
+     * @throws BadRequestException
      */
     public function handleTransition($transitionName) {
         $this->execute(null, $transitionName);
@@ -253,6 +241,7 @@ class ApplicationComponent extends Control {
      * @param null $explicitTransitionName
      * @throws AbortException
      * @throws JsonException
+     * @throws BadRequestException
      */
     private function execute(Form $form = null, $explicitTransitionName = null) {
         try {
@@ -270,6 +259,7 @@ class ApplicationComponent extends Control {
 
     /**
      * @return Machine
+     * @throws BadRequestException
      */
     private function getMachine() {
         return $this->handler->getMachine($this->holder);
@@ -279,7 +269,7 @@ class ApplicationComponent extends Control {
      * @return bool
      */
     private function canEdit() {
-        return $this->getMachine()->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
+        return $this->holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
     /**
@@ -288,11 +278,9 @@ class ApplicationComponent extends Control {
     private function finalRedirect() {
         if ($this->redirectCallback) {
             $id = $this->holder->getPrimaryHolder()->getModel()->getPrimary(false);
-            ($this->redirectCallback)($id, $this->holder->getEvent()->getPrimary());
+            ($this->redirectCallback)($id, $this->holder->getPrimaryHolder()->getEvent()->getPrimary());
         } else {
             $this->redirect('this');
         }
     }
-
 }
-

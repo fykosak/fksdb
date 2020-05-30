@@ -7,7 +7,7 @@ use Nette\Application\UI\Control;
 
 /**
  * Trait ChartPresenterTrait
- * @package FKSDB
+ * *
  */
 trait ChartPresenterTrait {
     /**
@@ -52,9 +52,6 @@ trait ChartPresenterTrait {
         }
     }
 
-    /**
-     * @return Control
-     */
     public function createComponentChart(): Control {
         return $this->selectedChart->getControl();
     }
@@ -73,11 +70,11 @@ trait ChartPresenterTrait {
      * @param bool $fullyQualified
      * @return string
      */
-    abstract function getAction($fullyQualified = false);
+    abstract public function getAction($fullyQualified = false);
 
     /**
      * @param $id
-     * @return mixed
+     * @return static
      */
-    abstract function setView($id);
+    abstract public function setView($id);
 }

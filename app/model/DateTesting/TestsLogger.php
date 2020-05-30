@@ -4,7 +4,7 @@ namespace FKSDB\DataTesting;
 
 /**
  * Class TestsLogger
- * @package FKSDB\DataTesting
+ * *
  */
 class TestsLogger {
     /**
@@ -13,14 +13,15 @@ class TestsLogger {
     private $logs = [];
 
     /**
-     * @inheritDoc
+     * @param TestLog $log
+     * @return void
      */
     public function log(TestLog $log) {
         $this->logs[] = $log;
     }
 
     /**
-     * @return array
+     * @return TestLog[]
      */
     public function getLogs(): array {
         return $this->logs;

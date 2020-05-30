@@ -1,8 +1,9 @@
 <?php
 
-namespace Tasks;
+namespace FKSDB\Tasks;
 
 use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelTask;
 
 /**
  * "POD" to hold series pipeline processing data.
@@ -27,84 +28,59 @@ class SeriesData {
     private $series;
 
     /**
-     * @var string ISO 2 chars
-     */
-    private $language;
-
-    /**
-     * @var mixed
+     * @var \SimpleXMLElement
      */
     private $data;
 
     /**
-     * @var array[tasknr] of FKSDB\ORM\Models\ModelTask
+     * array[tasknr] of FKSDB\ORM\Models\ModelTask
+     * @var ModelTask[]
      */
     private $tasks = [];
 
     /**
      * SeriesData constructor.
      * @param ModelContest $contest
-     * @param $year
-     * @param $series
-     * @param $language
-     * @param $data
+     * @param int $year
+     * @param int $series
+     * @param \SimpleXMLElement $data
      */
-    function __construct(ModelContest $contest, $year, $series, $language, $data) {
+    public function __construct(ModelContest $contest, int $year, int $series, \SimpleXMLElement $data) {
         $this->contest = $contest;
         $this->year = $year;
         $this->series = $series;
-        $this->language = $language;
         $this->data = $data;
     }
 
-    /**
-     * @return \FKSDB\ORM\Models\ModelContest
-     */
-    public function getContest() {
+    public function getContest(): ModelContest {
         return $this->contest;
     }
 
-    /**
-     * @return int
-     */
-    public function getYear() {
+    public function getYear(): int {
         return $this->year;
     }
 
-    /**
-     * @return int
-     */
-    public function getSeries() {
+    public function getSeries(): int {
         return $this->series;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getData() {
+    public function getData(): \SimpleXMLElement {
         return $this->data;
     }
 
     /**
-     * @return string
+     * @return ModelTask[]
      */
-    function getLanguage() {
-        return $this->language;
-    }
-
-    /**
-     * @return array
-     */
-    public function getTasks() {
+    public function getTasks(): array {
         return $this->tasks;
     }
 
     /**
-     * @param $tasknr
-     * @param $task
+     * @param int $taskNr
+     * @param ModelTask $task
+     * @return void
      */
-    public function addTask($tasknr, $task) {
-        $this->tasks[$tasknr] = $task;
+    public function addTask(int $taskNr, ModelTask $task) {
+        $this->tasks[$taskNr] = $task;
     }
-
 }

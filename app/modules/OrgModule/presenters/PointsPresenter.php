@@ -10,6 +10,7 @@ use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Models\ModelTaskContribution;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\ORM\Services\ServiceTaskContribution;
+use FKSDB\UI\PageStyleContainer;
 use FKSDB\Results\SQLResultsCache;
 use FKSDB\Submits\SeriesTable;
 use Nette\Application\AbortException;
@@ -19,7 +20,7 @@ use Nette\InvalidArgumentException;
 
 /**
  * Class PointsPresenter
- * @package OrgModule
+ * *
  */
 class PointsPresenter extends SeriesPresenter {
 
@@ -51,6 +52,7 @@ class PointsPresenter extends SeriesPresenter {
 
     /**
      * @param SQLResultsCache $SQLResultsCache
+     * @return void
      */
     public function injectSQLResultsCache(SQLResultsCache $SQLResultsCache) {
         $this->SQLResultsCache = $SQLResultsCache;
@@ -58,6 +60,7 @@ class PointsPresenter extends SeriesPresenter {
 
     /**
      * @param SeriesTable $seriesTable
+     * @return void
      */
     public function injectSeriesTable(SeriesTable $seriesTable) {
         $this->seriesTable = $seriesTable;
@@ -65,6 +68,7 @@ class PointsPresenter extends SeriesPresenter {
 
     /**
      * @param ServiceTask $serviceTask
+     * @return void
      */
     public function injectServiceTask(ServiceTask $serviceTask) {
         $this->serviceTask = $serviceTask;
@@ -72,6 +76,7 @@ class PointsPresenter extends SeriesPresenter {
 
     /**
      * @param ServiceTaskContribution $serviceTaskContribution
+     * @return void
      */
     public function injectServiceTaskContribution(ServiceTaskContribution $serviceTaskContribution) {
         $this->serviceTaskContribution = $serviceTaskContribution;
@@ -85,12 +90,17 @@ class PointsPresenter extends SeriesPresenter {
     }
 
     /**
+     * @return void
      * @throws BadRequestException
      */
     public function titleEntry() {
         $this->setTitle(sprintf(_('Zadávání bodů %d. série'), $this->getSelectedSeries()), 'fa fa-trophy');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titlePreview() {
         $this->setTitle(_('Points'), 'fa fa-inbox');
     }
@@ -118,18 +128,12 @@ class PointsPresenter extends SeriesPresenter {
         $this->template->showAll = (bool)$this->all;
     }
 
-    /**
-     * @return PointsFormControl
-     */
     protected function createComponentPointsForm(): PointsFormControl {
         return new PointsFormControl(function () {
             $this->SQLResultsCache->recalculate($this->getSelectedContest(), $this->getSelectedYear());
         }, $this->getContext(), $this->seriesTable);
     }
 
-    /**
-     * @return PointsPreviewControl
-     */
     protected function createComponentPointsTableControl(): PointsPreviewControl {
         return new PointsPreviewControl($this->getContext(), $this->seriesTable);
     }
@@ -176,9 +180,6 @@ class PointsPresenter extends SeriesPresenter {
         $this->redirect('this');
     }
 
-    /**
-     * @return array
-     */
     private function getGradedTasks(): array {
         /**@var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
@@ -201,10 +202,9 @@ class PointsPresenter extends SeriesPresenter {
         return array_values($gradedTasks);
     }
 
-    /**
-     * @return string
-     */
-    protected function getContainerClassNames(): string {
-        return str_replace('container ', 'container-fluid ', parent::getContainerClassNames());
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
+        $container->mainContainerClassName = str_replace('container ', 'container-fluid ', $container->mainContainerClassName) . ' px-3';
+        return $container;
     }
 }

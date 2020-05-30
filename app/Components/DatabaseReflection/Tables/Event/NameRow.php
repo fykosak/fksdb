@@ -8,7 +8,7 @@ use Nette\Forms\Form;
 
 /**
  * Class NameRow
- * @package FKSDB\Components\DatabaseReflection\Event
+ * *
  */
 class NameRow extends AbstractEventRowFactory {
     use DefaultPrinterTrait;

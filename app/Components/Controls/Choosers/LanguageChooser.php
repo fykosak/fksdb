@@ -2,82 +2,62 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\LangPresenterTrait;
-use Nette\Application\AbortException;
-use Nette\Application\UI\Control;
-use Nette\Http\Session;
-use Nette\Templating\FileTemplate;
+use FKSDB\UI\Title;
+use Nette\Application\UI\InvalidLinkException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Jakub Šafin <xellos@fykos.cz>
- * @property FileTemplate $template
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class LanguageChooser extends Control {
+class LanguageChooser extends Chooser {
     /** @var array */
-    private $supportedLanguages;
-
-    /** @var Session */
-    private $session;
+    private $supportedLanguages = [];
 
     /** @var string */
     private $language;
 
     /** @var bool */
-    private $initialized = false;
-
-    /** @var string */
-    const DEFAULT_LANGUAGE = 'cs';
-    /** @var bool */
-    private $modifiable = true;
+    private $modifiable;
 
     /**
-     * @param Session $session
+     * @param string $lang
      * @param bool $modifiable
+     * @return void
+     * @throws \Exception
      */
-    function __construct(Session $session, bool $modifiable) {
-        parent::__construct();
-        $this->session = $session;
+    public function setLang(string $lang, bool $modifiable) {
+        $this->language = $lang;
         $this->modifiable = $modifiable;
     }
 
     /**
-     * @param string $language
-     * @return bool
+     * @return void
      */
-    private function isLanguage(string $language): bool {
-        return in_array($language, $this->supportedLanguages);
+    public function render() {
+        $this->beforeRender();
+        $this->template->modifiable = $this->modifiable;
+        $this->template->currentLanguageName = LangPresenterTrait::$languageNames[$this->language] ?: null;
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'LanguageChooser.latte');
+        $this->template->render();
+    }
+
+    public function getTitle(): Title {
+        return new Title(isset(LangPresenterTrait::$languageNames[$this->language]) ? LangPresenterTrait::$languageNames[$this->language] : _('Language'), 'fa fa-language');
     }
 
     /**
-     * Redirect to correct address accorging to the resolved values.
-     * @param string $lang
-     * @throws \Exception
+     * @return array|iterable
+     * @throws BadTypeException
      */
-    public function setLang(string $lang) {
-        if ($this->initialized) {
-            return;
-        }
-        $this->initialized = true;
-        if (count($this->getSupportedLanguages()) == 0) {
-            return;
-        }
-        $this->language = self::DEFAULT_LANGUAGE;
-        if ($this->isLanguage($lang)) {
-            $this->language = $lang;
-        }
-    }
-
-    /**
-     * @return array of existing languages
-     * @throws \Exception
-     */
-    private function getSupportedLanguages(): array {
+    public function getItems() {
         if (!count($this->supportedLanguages)) {
             $presenter = $this->getPresenter();
-            if (!($presenter instanceof \BasePresenter)) {
-                throw new \Exception('Wrong presenter');
+            if (!$presenter instanceof \BasePresenter) {
+                throw new BadTypeException(\BasePresenter::class, $presenter);
             }
             $this->supportedLanguages = $presenter->getTranslator()->getSupportedLanguages();
         }
@@ -85,32 +65,27 @@ class LanguageChooser extends Control {
     }
 
     /**
-     * @param string|null $class
-     * @throws \Exception
+     * @param string $item
+     * @return bool
      */
-    public function render(string $class = null) {
-        $this->template->modifiable = $this->modifiable;
-        $this->template->languages = $this->getSupportedLanguages();
-        $this->template->languageNames = LangPresenterTrait::$languageNames;
-        $this->template->currentLanguage = $this->language ?: null;
-        $this->template->class = ($class !== null) ? $class : "nav navbar-nav navbar-right";
-        $this->template->setTranslator($this->getPresenter()->getTranslator());
-
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'LanguageChooser.latte');
-        $this->template->render();
+    public function isItemActive($item): bool {
+        return $this->language === $item;
     }
 
     /**
-     * @param $language
-     * @throws AbortException
+     * @param string $item
+     * @return string
      */
-    public function handleChangeLang(string $language) {
-        /**
-         * @var \BasePresenter $presenter
-         */
-        $presenter = $this->getPresenter();
-        $translator = $presenter->getTranslator();
-        $translator->setLang($language);
-        $presenter->redirect('this', ['lang' => $language]);
+    public function getItemLabel($item): string {
+        return LangPresenterTrait::$languageNames[$item];
+    }
+
+    /**
+     * @param string $item
+     * @return string
+     * @throws InvalidLinkException
+     */
+    public function getItemLink($item): string {
+        return $this->getPresenter()->link('this', ['lang' => $item]);
     }
 }

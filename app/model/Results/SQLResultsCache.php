@@ -30,7 +30,7 @@ class SQLResultsCache {
      * @param Connection $connection
      * @param ServiceTask $serviceTask
      */
-    function __construct(Connection $connection, ServiceTask $serviceTask) {
+    public function __construct(Connection $connection, ServiceTask $serviceTask) {
         $this->connection = $connection;
         $this->serviceTask = $serviceTask;
     }
@@ -81,8 +81,8 @@ class SQLResultsCache {
 
 
         $this->connection->beginTransaction();
-        foreach ($tasks as $row) {
-            $task = ModelTask::createFromActiveRow($row);
+        /** @var ModelTask $task */
+        foreach ($tasks as $task) {
             $conditions = [];
             $conditions[] = 't.contest_id = ' . $contest->contest_id;
             $conditions[] = 't.year = ' . (int)$year;
@@ -103,5 +103,3 @@ class SQLResultsCache {
     }
 
 }
-
-

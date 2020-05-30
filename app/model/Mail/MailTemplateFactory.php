@@ -4,6 +4,7 @@ namespace Mail;
 
 use BasePresenter;
 use Nette\Application\Application;
+use Nette\Application\BadRequestException;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 use Nette\Latte\Engine;
@@ -31,7 +32,7 @@ class MailTemplateFactory {
      * @param Application $application
      * @param ITranslator $translator
      */
-    function __construct(string $templateDir, Application $application, ITranslator $translator) {
+    public function __construct(string $templateDir, Application $application, ITranslator $translator) {
         $this->templateDir = $templateDir;
         $this->application = $application;
         $this->translator = $translator;
@@ -51,6 +52,7 @@ class MailTemplateFactory {
      * @param string $lang ISO 639-1
      * @param array $data
      * @return FileTemplate
+     * @throws BadRequestException
      */
     public function createLoginInvitation(string $lang = null, array $data = []): FileTemplate {
         return $this->createWithParameters('loginInvitation', $lang, $data);
@@ -60,6 +62,7 @@ class MailTemplateFactory {
      * @param string $lang ISO 639-1
      * @param array $data
      * @return FileTemplate
+     * @throws BadRequestException
      */
     public function createPasswordRecovery(string $lang = null, array $data = []): FileTemplate {
         return $this->createWithParameters('passwordRecovery', $lang, $data);
@@ -70,6 +73,7 @@ class MailTemplateFactory {
      * @param string $lang ISO 639-1
      * @param array $data
      * @return FileTemplate
+     * @throws BadRequestException
      */
     public function createWithParameters(string $templateFile, string $lang = null, array $data = []): FileTemplate {
         $template = $this->createFromFile($templateFile, $lang);
@@ -81,11 +85,12 @@ class MailTemplateFactory {
     }
 
     /**
-     * @param $filename
+     * @param string $filename
      * @param string $lang ISO 639-1
      * @return FileTemplate
+     * @throws BadRequestException
      */
-    public final function createFromFile(string $filename, string $lang = null): FileTemplate {
+    final public function createFromFile(string $filename, string $lang = null): FileTemplate {
         $presenter = $this->application->getPresenter();
         if (($lang === null) && !$presenter instanceof BasePresenter) {
             throw new InvalidArgumentException("Expecting BasePresenter, got " . ($presenter ? get_class($presenter) : (string)$presenter));

@@ -11,18 +11,11 @@ use FKSDB\ORM\Models\Events\ModelVikendParticipant;
  */
 class ServiceVikendParticipant extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelVikendParticipant::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_E_VIKEND_PARTICIPANT;
     }
 }
-

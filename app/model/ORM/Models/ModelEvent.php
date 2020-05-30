@@ -2,101 +2,48 @@
 
 namespace FKSDB\ORM\Models;
 
-use Events\Model\Holder\Holder;
-use FKSDB\model\Fyziklani\NotSetGameParametersException;
+use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
-use Nette\InvalidStateException;
 use Nette\Security\IResource;
-use Nette\Utils\DateTime;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-read integer event_year
- * @property-read integer year
+ * @property-read int event_year
+ * @property-read int year
  * @property-read string name
- * @property-read integer event_id
+ * @property-read int event_id
  * @property-read ActiveRow event_type
- * @property-read integer event_type_id
- * @property-read DateTime begin
- * @property-read DateTime end
- * @property-read DateTime registration_begin
- * @property-read DateTime registration_end
+ * @property-read int event_type_id
+ * @property-read \DateTimeInterface begin
+ * @property-read \DateTimeInterface end
+ * @property-read \DateTimeInterface registration_begin
+ * @property-read \DateTimeInterface registration_end
  * @property-read string parameters
  */
 class ModelEvent extends AbstractModelSingle implements IResource, IContestReferencedModel {
     const RESOURCE_ID = 'event';
-    /**
-     * Event can have a holder assigned for purposes of parameter parsing.
-     * Nothing else (currently).
-     * @var Holder
-     */
-    private $holder;
 
-    /**
-     * @param Holder $holder
-     * @deprecated
-     */
-    public function setHolder(Holder $holder) {
-        $this->holder = $holder;
-    }
-
-    /**
-     * @return Holder
-     * @deprecated
-     */
-    public function getHolder(): Holder {
-        return $this->holder;
-    }
-
-    /**
-     * @return ModelEventType
-     */
     public function getEventType(): ModelEventType {
         return ModelEventType::createFromActiveRow($this->event_type);
     }
 
-    /**
-     * @return ModelContest
-     */
     public function getContest(): ModelContest {
-        return ModelContest::createFromActiveRow($this->getEventType()->ref(DbNames::TAB_CONTEST, 'contest_id'));
+        return $this->getEventType()->getContest();
     }
 
-    /**
-     * Syntactic sugar.
-     *
-     * @return int
-     */
     public function getAcYear(): int {
         return $this->getContest()->related('contest_year')->where('year', $this->year)->fetch()->ac_year;
     }
 
-    /**
-     * @param $name
-     * @return mixed
-     */
-    public function getParameter($name) {
-        if (!$this->holder) {
-            throw new InvalidStateException('Event does not have any holder assigned.');
-        }
-        return $this->holder->getParameter($name);
-    }
-
-    /**
-     * @return string
-     */
     public function getResourceId(): string {
         return self::RESOURCE_ID;
     }
 
-    /**
-     * @return string
-     */
     public function __toString(): string {
         return $this->name;
     }
@@ -106,37 +53,25 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
      * @throws NotSetGameParametersException
      */
     public function getFyziklaniGameSetup(): ModelFyziklaniGameSetup {
-        $gameSetup = $this->related(DbNames::TAB_FYZIKLANI_GAME_SETUP, 'event_id')->fetch();
-        if (!$gameSetup) {
+        $gameSetupRow = $this->related(DbNames::TAB_FYZIKLANI_GAME_SETUP, 'event_id')->fetch();
+        if (!$gameSetupRow) {
             throw new NotSetGameParametersException(_('Herné parametre niesu nastavené'));
         }
-        return ModelFyziklaniGameSetup::createFromActiveRow($gameSetup);
+        return ModelFyziklaniGameSetup::createFromActiveRow($gameSetupRow);
     }
 
-    /**
-     * @return GroupedSelection
-     */
     public function getScheduleGroups(): GroupedSelection {
         return $this->related(DbNames::TAB_SCHEDULE_GROUP, 'event_id');
     }
 
-    /**
-     * @return GroupedSelection
-     */
     public function getParticipants(): GroupedSelection {
         return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'event_id');
     }
 
-    /**
-     * @return GroupedSelection
-     */
     public function getTeams(): GroupedSelection {
         return $this->related(DbNames::TAB_E_FYZIKLANI_TEAM, 'event_id');
     }
 
-    /**
-     * @return array
-     */
     public function __toArray(): array {
         return [
             'eventId' => $this->event_id,

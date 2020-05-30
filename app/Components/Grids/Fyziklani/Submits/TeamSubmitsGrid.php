@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FyziklaniModule\BasePresenter;
@@ -13,7 +13,8 @@ use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class TeamSubmitsGrid
- * @package FKSDB\Components\Grids\Fyziklani
+ * @author Michal Červeňák <miso@fykos.cz>
+ * @author Lukáš Timko
  */
 class TeamSubmitsGrid extends SubmitsGrid {
 

@@ -7,12 +7,12 @@ use FKSDB\Components\Forms\Controls\Payment\SelectForm;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
 use FKSDB\Config\Extensions\PaymentExtension;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\Machine;
-use InvalidArgumentException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -20,12 +20,13 @@ use Nette\Application\UI\Control;
 
 /**
  * Class PaymentPresenter
- * @package EventModule
+ * *
  * @method ModelPayment getEntity
  * @method ModelPayment loadEntity(int $id)
  */
 class PaymentPresenter extends BasePresenter {
     use EventEntityTrait;
+
     /**
      * @var Machine
      */
@@ -36,15 +37,19 @@ class PaymentPresenter extends BasePresenter {
      */
     private $servicePayment;
 
-
     /**
      * @param ServicePayment $servicePayment
+     * @return void
      */
     public function injectServicePayment(ServicePayment $servicePayment) {
         $this->servicePayment = $servicePayment;
     }
 
     /* ********* titles *****************/
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleCreate() {
         $this->setTitle(_('New payment'), 'fa fa-credit-card');
     }
@@ -69,13 +74,14 @@ class PaymentPresenter extends BasePresenter {
         $this->setTitle(\sprintf(_('Payment detail #%s'), $this->loadEntity($id)->getPaymentId()), 'fa fa-credit-card');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleList() {
         $this->setTitle(_('List of payments'), 'fa fa-credit-card');
     }
 
-    /**
-     * @return bool
-     */
     protected function isEnabled(): bool {
         return $this->hasApi();
     }
@@ -193,9 +199,11 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @return TransitionButtonsControl
+     * @throws AbortException
+     * @throws BadRequestException
      */
     protected function createComponentTransitionButtons(): TransitionButtonsControl {
-        return $this->machine->createComponentTransitionButtons($this->getEntity());
+        return new TransitionButtonsControl($this->getMachine(), $this->getContext(), $this->getEntity());
     }
 
 
@@ -226,19 +234,13 @@ class PaymentPresenter extends BasePresenter {
     private function getMachine(): PaymentMachine {
         if (!$this->machine) {
             $this->machine = $this->getContext()->getService('payment.' . PaymentExtension::MACHINE_PREFIX . $this->getEvent()->event_id);
-            if (!$this->machine instanceof PaymentMachine) {
-                throw new BadRequestException();
-            }
         }
         if (!$this->machine instanceof PaymentMachine) {
-            throw new InvalidArgumentException(_('Expected class PaymentMachine'), 500);
+            throw new BadTypeException(PaymentMachine::class, $this->machine);
         }
         return $this->machine;
     }
 
-    /**
-     * @return bool
-     */
     private function hasApi(): bool {
         try {
             $this->getMachine();
@@ -251,7 +253,7 @@ class PaymentPresenter extends BasePresenter {
     /**
      * @return ServicePayment
      */
-    function getORMService() {
+    public function getORMService() {
         return $this->servicePayment;
     }
 

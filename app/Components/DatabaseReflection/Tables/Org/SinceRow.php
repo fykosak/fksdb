@@ -3,13 +3,12 @@
 namespace FKSDB\Components\DatabaseReflection\Org;
 
 use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
-use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
 /**
  * Class SinceRow
- * @package FKSDB\Components\DatabaseReflection\Org
+ * *
  */
 class SinceRow extends AbstractOrgRowFactory {
     use DefaultPrinterTrait;
@@ -24,12 +23,12 @@ class SinceRow extends AbstractOrgRowFactory {
     /**
      * @param array $args
      * @return BaseControl
-     * @throws BadRequestException
+     * @throws \InvalidArgumentException
      */
     public function createField(...$args): BaseControl {
         list($min, $max) = $args;
         if (\is_null($max) || \is_null($min)) {
-            throw new BadRequestException();
+            throw new \InvalidArgumentException();
         }
         $control = parent::createField($args);
         $control->addRule(Form::NUMERIC);

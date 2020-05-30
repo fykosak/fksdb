@@ -5,7 +5,7 @@ namespace EventModule;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\AllPersonsGrid;
 use FKSDB\Components\Grids\Schedule\GroupsGrid;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -13,7 +13,7 @@ use Nette\Application\UI\Control;
 
 /**
  * Class ScheduleGroupPresenter
- * @package EventModule
+ * *
  */
 class ScheduleGroupPresenter extends BasePresenter {
     use EventEntityTrait;
@@ -25,15 +25,24 @@ class ScheduleGroupPresenter extends BasePresenter {
 
     /**
      * @param ServiceScheduleGroup $serviceScheduleGroup
+     * @return void
      */
     public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup) {
         $this->serviceScheduleGroup = $serviceScheduleGroup;
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleList() {
         $this->setTitle(_('Schedule'), 'fa fa-calendar-check-o');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titlePersons() {
         $this->setTitle(_('Whole program'), 'fa fa-calendar-check-o');
     }

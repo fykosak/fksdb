@@ -10,7 +10,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -27,6 +27,7 @@ class EventPresenter extends BasePresenter {
 
     /**
      * @param ServiceEvent $serviceEvent
+     * @return void
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
@@ -63,9 +64,6 @@ class EventPresenter extends BasePresenter {
         $this->traitActionEdit($id);
     }
 
-    /**
-     * @return EventsGrid
-     */
     protected function createComponentGrid(): EventsGrid {
         return new EventsGrid($this->getContext());
     }

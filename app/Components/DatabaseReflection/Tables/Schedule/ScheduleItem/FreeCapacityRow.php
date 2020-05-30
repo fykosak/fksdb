@@ -8,7 +8,7 @@ use Nette\Utils\Html;
 
 /**
  * Class FreeCapacityRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem
+ * *
  */
 class FreeCapacityRow extends AbstractScheduleItemRow {
     /**

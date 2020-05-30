@@ -6,22 +6,17 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\Database\Table\Selection;
+use FKSDB\ORM\Tables\TypedTableSelection;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
  */
 class ServiceFyziklaniTask extends AbstractServiceSingle {
-    /**
-     * @return string
-     */
+
     public function getModelClassName(): string {
         return ModelFyziklaniTask::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_FYZIKLANI_TASK;
     }
@@ -33,23 +28,15 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
      * @return ModelFyziklaniTask|null
      */
     public function findByLabel(string $label, ModelEvent $event) {
-        /**
-         * @var ModelFyziklaniTask $result
-         */
+        /** @var ModelFyziklaniTask $result */
         $result = $this->getTable()->where([
             'label' => $label,
             'event_id' => $event->event_id,
         ])->fetch();
-
-        return $result ? ModelFyziklaniTask::createFromActiveRow($result) : null;
+        return $result ?: null;
     }
 
-    /**
-     * Syntactic sugar.
-     * @param ModelEvent $event
-     * @return Selection
-     */
-    public function findAll(ModelEvent $event): Selection {
+    public function findAll(ModelEvent $event): TypedTableSelection {
         return $this->getTable()->where('event_id', $event->event_id);
     }
 
@@ -67,5 +54,4 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
         }
         return $tasks;
     }
-
 }

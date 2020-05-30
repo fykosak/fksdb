@@ -12,12 +12,9 @@ use Nette\Utils\Html;
 
 /**
  * Class BeginRow
- * @package FKSDB\Components\DatabaseReflection\Event
+ * *
  */
 class BeginRow extends AbstractEventRowFactory {
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Event begin');
     }

@@ -2,6 +2,8 @@
 
 namespace FKSDB\Logging;
 
+use FKSDB\Messages\Message;
+
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
@@ -19,9 +21,8 @@ interface ILogger {
     const DEBUG = 40;
 
     /**
-     * @param string $message
-     * @param string $level
-     * @return mixed
+     * @param Message $message
+     * @return void
      */
-    public function log($message, $level = self::INFO);
+    public function log(Message $message);
 }

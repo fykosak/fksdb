@@ -11,7 +11,13 @@ use FKSDB\Expressions\EvaluatedExpression;
  */
 class Le extends EvaluatedExpression {
 
+    /**
+     * @var callable|mixed
+     */
     private $aValue;
+    /**
+     * @var callable|mixed
+     */
     private $bValue;
 
     /**
@@ -19,7 +25,7 @@ class Le extends EvaluatedExpression {
      * @param callable|mixed $aValue
      * @param callable|mixed $bValue
      */
-    function __construct($aValue, $bValue) {
+    public function __construct($aValue, $bValue) {
         $this->aValue = $aValue;
         $this->bValue = $bValue;
     }

@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection;
 
 use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
@@ -10,15 +11,12 @@ use Nette\Utils\Html;
 
 /**
  * Class PrimaryKeyRow
- * @package FKSDB\Components\DatabaseReflection
+ * *
  */
 class PrimaryKeyRow extends DefaultRow {
-    /**
-     * @param AbstractModelSingle $model
-     * @return Html
-     */
+
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new StringPrinter)('#' . $model->getPrimary());
+        return (new StringPrinter())('#' . $model->getPrimary());
     }
 
     /**
@@ -27,6 +25,6 @@ class PrimaryKeyRow extends DefaultRow {
      * @throws BadRequestException
      */
     public function createField(...$args): BaseControl {
-        throw new BadRequestException();
+        throw new NotImplementedException();
     }
 }

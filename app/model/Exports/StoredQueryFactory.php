@@ -9,6 +9,7 @@ use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
+use Nette\Http\Response;
 use Nette\InvalidArgumentException;
 use Utils;
 use WebService\IXMLNodeSerializer;
@@ -41,7 +42,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
      * @param Connection $connection
      * @param ServiceStoredQuery $serviceStoredQuery
      */
-    function __construct(Connection $connection, ServiceStoredQuery $serviceStoredQuery) {
+    public function __construct(Connection $connection, ServiceStoredQuery $serviceStoredQuery) {
         $this->connection = $connection;
         $this->serviceStoredQuery = $serviceStoredQuery;
     }
@@ -110,7 +111,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         try {
             $series = $presenter->getSelectedSeries();
         } catch (BadRequestException $exception) {
-            if ($exception->getCode() == 500) {
+            if ($exception->getCode() == Response::S500_INTERNAL_SERVER_ERROR) {
                 $presenter->flashMessage(_('Kontext série pro dotazy není dostupný'), BasePresenter::FLASH_WARNING);
             } else {
                 throw $exception;

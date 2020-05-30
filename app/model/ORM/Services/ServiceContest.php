@@ -10,18 +10,12 @@ use FKSDB\ORM\Models\ModelContest;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceContest extends AbstractServiceSingle {
-    /**
-     * @return string
-     */
+
     public function getModelClassName(): string {
         return ModelContest::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_CONTEST;
     }
 }
-

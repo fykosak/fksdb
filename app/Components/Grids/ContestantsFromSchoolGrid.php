@@ -31,7 +31,7 @@ class ContestantsFromSchoolGrid extends BaseGrid {
      * @param ModelSchool $school
      * @param Container $container
      */
-    function __construct(ModelSchool $school, Container $container) {
+    public function __construct(ModelSchool $school, Container $container) {
         parent::__construct($container);
         $this->school = $school;
         $this->serviceContestant = $container->getByType(ServiceContestant::class);
@@ -74,5 +74,4 @@ class ContestantsFromSchoolGrid extends BaseGrid {
             });
         $this->paginate = false;
     }
-
 }

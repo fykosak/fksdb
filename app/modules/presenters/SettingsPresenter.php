@@ -44,9 +44,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
     /**
      * @param LoginFactory $loginFactory
-     */
-    /**
-     * @param LoginFactory $loginFactory
+     * @return void
      */
     public function injectLoginFactory(LoginFactory $loginFactory) {
         $this->loginFactory = $loginFactory;
@@ -54,9 +52,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
     /**
      * @param ServiceLogin $loginService
-     */
-    /**
-     * @param ServiceLogin $loginService
+     * @return void
      */
     public function injectLoginService(ServiceLogin $loginService) {
         $this->loginService = $loginService;
@@ -64,9 +60,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
     /**
      * @param UniqueEmailFactory $uniqueEmailFactory
-     */
-    /**
-     * @param UniqueEmailFactory $uniqueEmailFactory
+     * @return void
      */
     public function injectUniqueEmailFactory(UniqueEmailFactory $uniqueEmailFactory) {
         $this->uniqueEmailFactory = $uniqueEmailFactory;
@@ -74,9 +68,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
     /**
      * @param UniqueLoginFactory $uniqueLoginFactory
-     */
-    /**
-     * @param UniqueLoginFactory $uniqueLoginFactory
+     * @return void
      */
     public function injectUniqueLoginFactory(UniqueLoginFactory $uniqueLoginFactory) {
         $this->uniqueLoginFactory = $uniqueLoginFactory;
@@ -164,14 +156,12 @@ class SettingsPresenter extends AuthenticatedPresenter {
         $tokenAuthentication =
             $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
             $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
-        /**
-         * @var ModelLogin $login
-         */
+        /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
 
         $loginData = FormUtils::emptyStrToNull($values[self::CONT_LOGIN]);
         if ($loginData['password']) {
-            $login->setHash($loginData['password']);
+            $loginData['hash'] = $login->createHash($loginData['password']);
         }
 
         $this->loginService->updateModel2($login, $loginData);

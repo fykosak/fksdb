@@ -1,9 +1,9 @@
 <?php
 
-namespace Events\FormAdjustments;
+namespace FKSDB\Events\FormAdjustments;
 
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\Utils\Strings;
@@ -15,8 +15,17 @@ use Nette\Utils\Strings;
  */
 class RegexpCheck extends AbstractAdjustment implements IFormAdjustment {
 
+    /**
+     * @var
+     */
     private $field;
+    /**
+     * @var
+     */
     private $message;
+    /**
+     * @var
+     */
     private $pattern;
 
     /**
@@ -25,7 +34,7 @@ class RegexpCheck extends AbstractAdjustment implements IFormAdjustment {
      * @param $message
      * @param $pattern
      */
-    function __construct($field, $message, $pattern) {
+    public function __construct($field, $message, $pattern) {
         $this->field = $field;
         $this->message = $message;
         $this->pattern = $pattern;
@@ -35,7 +44,7 @@ class RegexpCheck extends AbstractAdjustment implements IFormAdjustment {
      * @param Form $form
      * @param Machine $machine
      * @param Holder $holder
-     * @return mixed|void
+     * @return void
      */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $controls = $this->getControl($this->field);

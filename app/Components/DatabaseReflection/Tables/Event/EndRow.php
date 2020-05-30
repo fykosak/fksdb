@@ -12,13 +12,10 @@ use Nette\Utils\Html;
 
 /**
  * Class EndRow
- * @package FKSDB\Components\DatabaseReflection\Event
+ * *
  */
 class EndRow extends AbstractEventRowFactory {
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Event end');
     }

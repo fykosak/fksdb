@@ -18,11 +18,11 @@ use Nette\Utils\DateTime;
 abstract class AbstractAuthenticator /* implements IAuthenticator */
 {
 
-    /** @var \FKSDB\ORM\Services\ServiceLogin */
+    /** @var ServiceLogin */
     protected $serviceLogin;
 
     /**
-     * @var \FKSDB\YearCalculator
+     * @var YearCalculator
      */
     protected $yearCalculator;
 
@@ -31,13 +31,14 @@ abstract class AbstractAuthenticator /* implements IAuthenticator */
      * @param ServiceLogin $serviceLogin
      * @param YearCalculator $yearCalculator
      */
-    function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
+    public function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
         $this->serviceLogin = $serviceLogin;
         $this->yearCalculator = $yearCalculator;
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelLogin $login
+     * @param ModelLogin $login
+     * @return void
      */
     protected function logAuthentication(ModelLogin $login) {
         $this->serviceLogin->updateModel2($login, ['last_login' => DateTime::from(time())]);

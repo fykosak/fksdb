@@ -8,7 +8,8 @@ use FKSDB\Components\Controls\Fyziklani\CloseTeamControl;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
 use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -17,7 +18,7 @@ use Nette\Application\UI\Control;
 
 /**
  * Class ClosePresenter
- * @package FyziklaniModule
+ * *
  * @property FormControl closeCategoryAForm
  * @method ModelFyziklaniTeam getEntity()
  * @method ModelFyziklaniTeam loadEntity(int $id)
@@ -27,6 +28,10 @@ class ClosePresenter extends BasePresenter {
     use EventEntityTrait;
 
     /* ******* TITLE ***********/
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleList() {
         $this->setTitle(_('Uzavírání bodování'), 'fa fa-check');
     }
@@ -103,7 +108,7 @@ class ClosePresenter extends BasePresenter {
         $team = $this->loadEntity($id);
         $control = $this->getComponent('closeTeamControl');
         if (!$control instanceof CloseTeamControl) {
-            throw new BadRequestException();
+            throw new BadTypeException(CloseTeamControl::class, $control);
         }
         $control->setTeam($team);
     }
@@ -118,9 +123,7 @@ class ClosePresenter extends BasePresenter {
     protected function createComponentCloseTeamControl(): CloseTeamControl {
         return new CloseTeamControl($this->getContext(), $this->getEvent());
     }
-    /**
-     * @return TeamSubmitsGrid
-     */
+
     protected function createComponentTeamSubmitsGrid(): TeamSubmitsGrid {
         return new TeamSubmitsGrid($this->getEntity(), $this->getContext());
     }
@@ -132,9 +135,6 @@ class ClosePresenter extends BasePresenter {
         return $this->getServiceFyziklaniTeam();
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getModelResource(): string {
         return 'fyziklani.close';
     }

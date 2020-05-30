@@ -1,13 +1,11 @@
 <?php
 
-namespace Events\Semantics;
+namespace FKSDB\Events\Semantics;
 
-use Events\Machine\Transition;
-use Events\Model\Holder\BaseHolder;
-use Events\Model\Holder\Field;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\Field;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\Application\BadRequestException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -19,23 +17,20 @@ trait WithEventTrait {
     /**
      * @param mixed $obj
      * @return ModelEvent
-     * @throws BadRequestException
+     * @throws \InvalidArgumentException
      */
     protected function getEvent($obj): ModelEvent {
         return ($holder = $this->getHolder($obj)) ? $holder->getPrimaryHolder()->getEvent() : null;
     }
 
     /**
-     * @param Holder|Transition|Field|BaseHolder $obj
+     * @param mixed $obj
      * @return Holder
-     * @throws BadRequestException
+     * @throws \InvalidArgumentException
      */
     protected function getHolder($obj): Holder {
         if ($obj instanceof Holder) {
             return $obj;
-        }
-        if ($obj instanceof Transition) {
-            return $obj->getBaseMachine()->getMachine()->getHolder();
         }
         if ($obj instanceof Field) {
             return $obj->getBaseHolder()->getHolder();
@@ -43,7 +38,7 @@ trait WithEventTrait {
         if ($obj instanceof BaseHolder) {
             return $obj->getHolder();
         }
-        throw new BadRequestException();
+        throw new \InvalidArgumentException();
 
     }
 

@@ -7,30 +7,53 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class ResultsPresenter
- * @package FyziklaniModule
+ * *
  */
 class ResultsPresenter extends BasePresenter {
-
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleCorrelationStatistics() {
         $this->setTitle(_('Correlation statistics'), 'fa fa-pie-chart');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleList() {
         $this->setTitle(_('Results and statistics'), 'fa fa-trophy');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleTable() {
         $this->setTitle(_('Detailed results'), 'fa fa-trophy');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titlePresentation() {
         $this->setTitle(_('Results presentation'), 'fa fa-table');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleTeamStatistics() {
         $this->setTitle(_('Teams statistics'), 'fa fa-line-chart');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleTaskStatistics() {
         $this->setTitle(_('Tasks statistics'), 'fa fa-pie-chart');
     }
@@ -122,7 +145,7 @@ class ResultsPresenter extends BasePresenter {
      */
     protected function getNavRoots(): array {
         $roots = parent::getNavRoots();
-        $roots[] = 'fyziklani.results.default';
+        $roots[] = 'Fyziklani.Results.default';
         return $roots;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls\Entity\School;
 
+use FKSDB\Exceptions\ModelException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -10,7 +11,7 @@ use Tracy\Debugger;
 
 /**
  * Class CreateForm
- * @package FKSDB\Components\Controls\Entity\School
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class CreateForm extends AbstractForm {
 
@@ -52,7 +53,7 @@ class CreateForm extends AbstractForm {
             $this->getPresenter()->flashMessage(_('Škola založena'), \BasePresenter::FLASH_SUCCESS);
 
             $this->getPresenter()->redirect('list'); // if there's no backlink
-        } catch (\ModelException $exception) {
+        } catch (ModelException $exception) {
             $connection->rollBack();
             Debugger::log($exception, Debugger::ERROR);
             $this->getPresenter()->flashMessage(_('Chyba při zakládání školy.'), \BasePresenter::FLASH_ERROR);

@@ -6,13 +6,12 @@ use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\Links\AbstractLink;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
-use Nette\Localization\ITranslator;
 use Nette\SmartObject;
 use Nette\Utils\Html;
 
 /**
  * Class TableReflectionFactory
- * @package FKSDB\Components\Forms\Factories\PersonInfo
+ * *
  */
 final class TableReflectionFactory {
     use SmartObject;
@@ -20,19 +19,13 @@ final class TableReflectionFactory {
      * @var Container
      */
     private $container;
-    /**
-     * @var ITranslator
-     */
-    private $translator;
 
     /**
      * PersonInfoFactory constructor.
      * @param Container $container
-     * @param ITranslator $translator
      */
-    public function __construct(Container $container, ITranslator $translator) {
+    public function __construct(Container $container) {
         $this->container = $container;
-        $this->translator = $translator;
     }
 
     /**
@@ -82,11 +75,6 @@ final class TableReflectionFactory {
         };
     }
 
-
-    /**
-     * @param array $rows
-     * @return array
-     */
     public static function parseRows(array $rows): array {
         $items = [];
         foreach ($rows as $item) {
@@ -95,10 +83,6 @@ final class TableReflectionFactory {
         return $items;
     }
 
-    /**
-     * @param string $row
-     * @return array
-     */
     public static function parseRow(string $row): array {
         return explode('.', $row);
     }

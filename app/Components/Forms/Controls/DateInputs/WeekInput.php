@@ -1,12 +1,10 @@
 <?php
 
-
 namespace FKSDB\Components\Forms\Controls\DateInputs;
-
 
 /**
  * Class WeekInput
- * @package FKSDB\Components\Forms\Controls\DateInputs
+ * *
  */
 class WeekInput extends AbstractDateInput {
     /**

@@ -10,7 +10,7 @@ use Nette\Utils\Html;
 
 /**
  * Class RequireIdNumberRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem
+ * *
  */
 class RequireIdNumberRow extends AbstractScheduleItemRow {
     /**
@@ -25,6 +25,6 @@ class RequireIdNumberRow extends AbstractScheduleItemRow {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new BinaryPrinter)($model->require_id_number);
+        return (new BinaryPrinter())($model->require_id_number);
     }
 }

@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Grids\Events\Application;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEventParticipant;
@@ -16,7 +16,7 @@ use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class MyApplicationsGrid
- * @package FKSDB\Components\Grids\Events\Application
+ * *
  */
 class MyApplicationsGrid extends BaseGrid {
     /**
@@ -57,16 +57,13 @@ class MyApplicationsGrid extends BaseGrid {
         $eventCallBack = function (ActiveRow $row) {
             return ModelEventParticipant::createFromActiveRow($row)->getEvent();
         };
-        $this->addJoinedColumn(DbNames::TAB_EVENT, 'name', $eventCallBack);
-        $this->addJoinedColumn(DbNames::TAB_EVENT, 'year', $eventCallBack);
-        $this->addJoinedColumn(DbNames::TAB_EVENT, 'event_year', $eventCallBack);
-        $this->addColumns([DbNames::TAB_EVENT_PARTICIPANT . '.status']);
 
+        //     $this->addJoinedColumn(DbNames::TAB_EVENT, 'name', $eventCallBack);
+        //   $this->addJoinedColumn(DbNames::TAB_EVENT, 'year', $eventCallBack);
+        //   $this->addJoinedColumn(DbNames::TAB_EVENT, 'event_year', $eventCallBack);
+        $this->addColumns([DbNames::TAB_EVENT_PARTICIPANT . '.status']);
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelEventParticipant::class;
     }

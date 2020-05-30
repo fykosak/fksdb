@@ -12,16 +12,10 @@ use FKSDB\ORM\Models\ModelTask;
  */
 class ServiceTask extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelTask::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_TASK;
     }
@@ -29,25 +23,20 @@ class ServiceTask extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      *
-     * @param \FKSDB\ORM\Models\ModelContest $contest
+     * @param ModelContest $contest
      * @param int $year
      * @param int $series
      * @param int $tasknr
-     * @return \FKSDB\ORM\Models\ModelTask|null
+     * @return ModelTask|null
      */
-    public function findBySeries(ModelContest $contest, $year, $series, $tasknr) {
+    public function findBySeries(ModelContest $contest, int $year, int $series, int $tasknr) {
+        /** @var ModelTask $result */
         $result = $this->getTable()->where([
             'contest_id' => $contest->contest_id,
             'year' => $year,
             'series' => $series,
             'tasknr' => $tasknr,
         ])->fetch();
-
-        if ($result !== false) {
-            return ModelTask::createFromActiveRow($result);
-        } else {
-            return null;
-        }
+        return $result ?: null;
     }
-
 }

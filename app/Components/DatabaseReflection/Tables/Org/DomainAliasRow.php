@@ -3,10 +3,10 @@
 namespace FKSDB\Components\DatabaseReflection\Org;
 
 use FKSDB\Components\DatabaseReflection\ValuePrinters\EmailPrinter;
+use FKSDB\Exceptions\ContestNotFoundException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelOrg;
-use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
@@ -14,12 +14,9 @@ use Nette\Utils\Html;
 
 /**
  * Class DomainAliasRow
- * @package FKSDB\Components\DatabaseReflection\Org
+ * *
  */
 class DomainAliasRow extends AbstractOrgRowFactory {
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Domain alias');
     }
@@ -27,16 +24,16 @@ class DomainAliasRow extends AbstractOrgRowFactory {
     /**
      * @param AbstractModelSingle|ModelOrg $model
      * @return Html
-     * @throws BadRequestException
+     * @throws ContestNotFoundException
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         switch ($model->contest_id) {
             case ModelContest::ID_FYKOS:
-                return (new EmailPrinter)($model->domain_alias . '@fykos.cz');
+                return (new EmailPrinter())($model->domain_alias . '@fykos.cz');
             case ModelContest::ID_VYFUK:
-                return (new EmailPrinter)($model->domain_alias . '@vyfuk.mff.cuni.cz');
+                return (new EmailPrinter())($model->domain_alias . '@vyfuk.mff.cuni.cz');
             default:
-                throw new BadRequestException();
+                throw new ContestNotFoundException($model->contest_id);
         }
     }
 

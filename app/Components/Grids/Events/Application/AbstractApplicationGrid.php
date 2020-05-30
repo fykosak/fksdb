@@ -3,11 +3,10 @@
 namespace FKSDB\Components\Grids\Events\Application;
 
 use Closure;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
@@ -18,7 +17,7 @@ use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class AbstractApplicationGrid
- * @package FKSDB\Components\Grids\Events\Application
+ * *
  */
 abstract class AbstractApplicationGrid extends BaseGrid {
     /** @var ModelEvent */
@@ -38,9 +37,6 @@ abstract class AbstractApplicationGrid extends BaseGrid {
         $this->holder = $holder;
     }
 
-    /**
-     * @return Selection
-     */
     abstract protected function getSource(): Selection;
 
     /**
@@ -83,9 +79,6 @@ abstract class AbstractApplicationGrid extends BaseGrid {
         return $control;
     }
 
-    /**
-     * @return Closure
-     */
     public function getFilterCallBack(): Closure {
         return function (Selection $table, $value) {
             $states = [];
@@ -100,30 +93,21 @@ abstract class AbstractApplicationGrid extends BaseGrid {
         };
     }
 
-    /**
-     * @return array
-     */
     abstract protected function getHoldersColumns(): array;
 
     /**
      * @param array $fields
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      */
     protected function addColumns(array $fields) {
-        parent::addColumns($fields);
-
         $holderFields = $this->holder->getPrimaryHolder()->getFields();
-
         foreach ($holderFields as $name => $def) {
             if (\in_array($name, $this->getHoldersColumns())) {
-                $this->addReflectionColumn($this->getTableName(), $name, $this->getModelClassName());
+                $fields[] = $this->getTableName() . '.' . $name;
             }
         }
+        parent::addColumns($fields);
     }
 
-    /**
-     * @return string
-     */
     abstract protected function getTableName(): string;
 }

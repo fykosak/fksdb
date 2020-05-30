@@ -7,12 +7,12 @@ use Nette\Database\IConventions;
 
 /**
  * Interface IStateModel
- * @package FKSDB\Transitions
+ * *
  */
 interface IStateModel {
     /**
      * @param $newState
-     * @return mixed
+     * @return void
      */
     public function updateState($newState);
 

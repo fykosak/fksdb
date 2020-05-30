@@ -1,14 +1,14 @@
 <?php
 
-namespace FKSDB\model\Fyziklani;
+namespace FKSDB\Fyziklani;
 
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use FyziklaniModule\BasePresenter;
 use Nette\Application\BadRequestException;
-use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
 use Traversable;
 
@@ -77,9 +77,7 @@ class CloseStrategy {
     private function saveResults(array $data, bool $total): Html {
         $log = Html::el('ul');
         foreach ($data as $index => $teamData) {
-            /**
-             * @var ModelFyziklaniTeam $team
-             */
+            /** @var ModelFyziklaniTeam $team */
             $team = $teamData['team'];
             if ($total) {
                 $this->serviceFyziklaniTeam->updateModel2($team, ['rank_total' => $index + 1]);
@@ -93,15 +91,14 @@ class CloseStrategy {
     }
 
     /**
-     * @param Selection $teams
+     * @param TypedTableSelection $teams
      * @return array[]
      * @throws BadRequestException
      */
-    private function getTeamsStats(Selection $teams): array {
+    private function getTeamsStats(TypedTableSelection $teams): array {
         $teamsData = [];
-        foreach ($teams as $row) {
-            $team = ModelFyziklaniTeam::createFromActiveRow($row);
-
+        /** @var ModelFyziklaniTeam $team */
+        foreach ($teams as $team) {
             if ($team->hasOpenSubmitting()) {
                 throw new BadRequestException('Tým ' . $team->name . '(' . $team->e_fyziklani_team_id . ') nemá uzavřené bodování');
             }
@@ -116,9 +113,6 @@ class CloseStrategy {
         return $teamsData;
     }
 
-    /**
-     * @return callable
-     */
     private static function getSortFunction(): callable {
         return function (array $b, array $a): int {
             if ($a['points'] > $b['points']) {
@@ -138,9 +132,9 @@ class CloseStrategy {
 
     /**
      * @param string|null $category
-     * @return Selection
+     * @return TypedTableSelection
      */
-    private function getAllTeams(string $category = null): Selection {
+    private function getAllTeams(string $category = null): TypedTableSelection {
         $query = $this->serviceFyziklaniTeam->findParticipating($this->event);
         if ($category) {
             $query->where('category', $category);
@@ -150,7 +144,7 @@ class CloseStrategy {
 
     /**
      * @param ModelFyziklaniTeam $team
-     * @return array
+     * @return array[]|int[]
      */
     protected function getAllSubmits(ModelFyziklaniTeam $team): array {
         $arraySubmits = [];

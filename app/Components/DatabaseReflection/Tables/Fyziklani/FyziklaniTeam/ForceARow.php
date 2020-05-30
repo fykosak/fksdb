@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 /**
  * Class ForceARow
- * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam
+ * *
  */
 class ForceARow extends AbstractFyziklaniTeamRow {
     /**
@@ -24,6 +24,6 @@ class ForceARow extends AbstractFyziklaniTeamRow {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new BinaryPrinter)($model->force_a);
+        return (new BinaryPrinter())($model->force_a);
     }
 }

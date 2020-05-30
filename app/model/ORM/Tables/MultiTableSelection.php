@@ -2,15 +2,16 @@
 
 namespace FKSDB\ORM\Tables;
 
+use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\AbstractServiceMulti;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
-use Nette\Database\Table\Selection as TableSelection;
+use Nette\Database\Table\Selection;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class MultiTableSelection extends TableSelection {
+class MultiTableSelection extends Selection {
 
     /**
      * @var AbstractServiceMulti
@@ -33,13 +34,11 @@ class MultiTableSelection extends TableSelection {
      * This override ensures returned objects are of correct class.
      *
      * @param array $row
-     * @return \FKSDB\ORM\AbstractModelMulti
+     * @return AbstractModelMulti
      */
-    protected function createRow(array $row) {
+    protected function createRow(array $row): AbstractModelMulti {
         $mainModel = $this->service->getMainService()->createFromArray($row);
         $joinedModel = $this->service->getJoinedService()->createFromArray($row);
         return $this->service->composeModel($mainModel, $joinedModel);
     }
-
 }
-

@@ -4,7 +4,7 @@ namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\DatabaseReflection\ValuePrinters\EventRole;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceEvent;
@@ -16,7 +16,7 @@ use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class DispatchGrid
- * @package FKSDB\Components\Grids\Events
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DispatchGrid extends BaseGrid {
 
@@ -38,7 +38,7 @@ class DispatchGrid extends BaseGrid {
      * @param ModelPerson $person
      * @param Container $container
      */
-    function __construct(ModelPerson $person, Container $container) {
+    public function __construct(ModelPerson $person, Container $container) {
         parent::__construct($container);
         $this->person = $person;
         $this->serviceEvent = $container->getByType(ServiceEvent::class);
@@ -67,9 +67,6 @@ class DispatchGrid extends BaseGrid {
         $this->addLinkButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelEvent::class;
     }

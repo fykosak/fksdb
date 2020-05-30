@@ -7,8 +7,8 @@ use FKSDB\Components\Controls\Entity\Fyziklani\Submit\EditControl;
 use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
 use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
 use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
-use FKSDB\model\Fyziklani\ClosedSubmittingException;
-use FKSDB\model\Fyziklani\PointsMismatchException;
+use FKSDB\Fyziklani\ClosedSubmittingException;
+use FKSDB\Fyziklani\PointsMismatchException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -17,7 +17,7 @@ use Nette\Application\UI\Control;
 
 /**
  * Class SubmitPresenter
- * @package FyziklaniModule
+ * *
  * @method ModelFyziklaniSubmit getEntity()
  * @method ModelFyziklaniSubmit loadEntity(int $id)
  */
@@ -25,16 +25,25 @@ class SubmitPresenter extends BasePresenter {
     use EventEntityTrait;
 
     /* ***** Title methods *****/
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleCreate() {
         $this->setTitle(_('Zadávání bodů'), 'fa fa-pencil-square-o');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleList() {
         $this->setTitle(_('Submits'), 'fa fa-table');
     }
 
     /**
      * @param int $id
+     * @throws BadRequestException
      */
     public function titleEdit(int $id) {
         $this->setTitle(_('Úprava bodování'), 'fa fa-pencil');
@@ -106,7 +115,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentCreateForm(): Control {
-        return new TaskCodeInput($this->context, $this->getEvent());
+        return new TaskCodeInput($this->getContext(), $this->getEvent());
     }
 
     /**

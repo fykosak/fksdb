@@ -7,7 +7,7 @@ use Nette\Forms\Controls\BaseControl;
 
 /**
  * Class PersonHistoryFactory
- * @package FKSDB\Components\Forms\Factories
+ * *
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonHistoryFactory extends SingleReflectionFactory {

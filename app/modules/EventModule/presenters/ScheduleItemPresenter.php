@@ -5,8 +5,8 @@ namespace EventModule;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\ItemsGrid;
 use FKSDB\Components\Grids\Schedule\PersonsGrid;
-use FKSDB\Expressions\BadTypeException;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
@@ -15,10 +15,11 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
+use Nette\InvalidStateException;
 
 /**
  * Class ScheduleItemPresenter
- * @package EventModule
+ * *
  * @method ModelScheduleItem traitLoadEntity(int $id)
  */
 class ScheduleItemPresenter extends BasePresenter {
@@ -46,6 +47,7 @@ class ScheduleItemPresenter extends BasePresenter {
 
     /**
      * @param ServiceScheduleItem $serviceScheduleItem
+     * @return void
      */
     public function injectServiceScheduleItem(ServiceScheduleItem $serviceScheduleItem) {
         $this->serviceScheduleItem = $serviceScheduleItem;
@@ -53,11 +55,16 @@ class ScheduleItemPresenter extends BasePresenter {
 
     /**
      * @param ServiceScheduleGroup $serviceScheduleGroup
+     * @return void
      */
     public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup) {
         $this->serviceScheduleGroup = $serviceScheduleGroup;
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleList() {
         $this->setTitle(\sprintf(_('Schedule items')), 'fa fa-calendar-check-o');
     }
@@ -88,7 +95,7 @@ class ScheduleItemPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @throws InvalidStateException
      */
     public function renderList() {
         $this->template->group = $this->getGroup();
@@ -122,13 +129,13 @@ class ScheduleItemPresenter extends BasePresenter {
 
     /**
      * @return ModelScheduleGroup
-     * @throws BadRequestException
+     * @throws InvalidStateException
      */
     private function getGroup(): ModelScheduleGroup {
         if (!$this->group) {
             $group = $this->serviceScheduleGroup->findByPrimary($this->groupId);
             if (!$group) {
-                throw new BadRequestException();
+                throw new InvalidStateException();
             }
             $this->group = $group;
         }
@@ -151,15 +158,12 @@ class ScheduleItemPresenter extends BasePresenter {
 
     /**
      * @inheritDoc
-     * @throws BadRequestException
+     * @throws InvalidStateException
      */
     protected function createComponentGrid(): BaseGrid {
         return new ItemsGrid($this->getContext(), $this->getGroup());
     }
 
-    /**
-     * @return PersonsGrid
-     */
     public function createComponentPersonsGrid(): PersonsGrid {
         return new PersonsGrid($this->getContext());
     }
@@ -182,10 +186,12 @@ class ScheduleItemPresenter extends BasePresenter {
     }
 
     /**
-     * @return string
+     * @param string $title
+     * @param string $icon
+     * @param string $subTitle
      * @throws BadRequestException
      */
-    public function getSubTitle(): string {
-        return parent::getSubTitle() . ' ->' . sprintf('"%s/%s"', $this->getGroup()->name_cs, $this->getGroup()->name_en);
+    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
+        parent::setTitle($title, $icon, $subTitle . ' ->' . sprintf('"%s/%s"', $this->getGroup()->name_cs, $this->getGroup()->name_en));
     }
 }

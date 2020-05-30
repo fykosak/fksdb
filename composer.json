@@ -1,7 +1,7 @@
 {
   "require": {
     "php": ">=7.0.0",
-    "tracy/tracy": "~2.5.5",
+    "tracy/tracy": "2.5.9",
     "nette/utils": "~2.5.3",
     "nette/security": "~2.4.4",
     "nette/finder": "~2.4.2",
@@ -17,7 +17,9 @@
     "latte/latte": "~2.4.8",
     "nette/tester": "~2.0.0",
     "setasign/fpdf": "^1.8",
-    "setasign/fpdi": "^2.3"
+    "setasign/fpdi": "^2.3",
+    "nette/di": "2.4.16",
+    "nette/bootstrap": "2.4.6"
   },
   "autoload": {
     "classmap": []
@@ -36,6 +38,11 @@
       "rm -rf temp/cache/"
     ],
     "test": [
+      "@clearTestCache",
+      "@clearTestDatabase",
+      "vendor/bin/tester tests -p php -s -c tests/php.ini -j 1"
+    ],
+    "testCoverage": [
       "@clearTestCache",
       "@clearTestDatabase",
       "vendor/bin/tester tests -p php --coverage coverage.html --coverage-src app -s -c tests/php.ini -j 1"

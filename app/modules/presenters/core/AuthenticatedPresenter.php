@@ -9,6 +9,7 @@ use FKSDB\ORM\Models\ModelAuthToken;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Http\Response;
 use Tracy\Debugger;
 use Nette\Http\UserStorage;
 use Nette\Security\AuthenticationException;
@@ -55,6 +56,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @param TokenAuthenticator $tokenAuthenticator
+     * @return void
      */
     public function injectTokenAuthenticator(TokenAuthenticator $tokenAuthenticator) {
         $this->tokenAuthenticator = $tokenAuthenticator;
@@ -62,6 +64,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @param PasswordAuthenticator $passwordAuthenticator
+     * @return void
      */
     public function injectPasswordAuthenticator(PasswordAuthenticator $passwordAuthenticator) {
         $this->passwordAuthenticator = $passwordAuthenticator;
@@ -69,6 +72,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @param GithubAuthenticator $githubAuthenticator
+     * @return void
      */
     public function injectGithubAuthenticator(GithubAuthenticator $githubAuthenticator) {
         $this->githubAuthenticator = $githubAuthenticator;
@@ -76,28 +80,24 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @param ContestAuthorizator $contestAuthorizator
+     * @return void
      */
     public function injectContestAuthorizator(ContestAuthorizator $contestAuthorizator) {
         $this->contestAuthorizator = $contestAuthorizator;
     }
 
-    /**
-     * @return ContestAuthorizator
-     */
     public function getContestAuthorizator(): ContestAuthorizator {
         return $this->contestAuthorizator;
     }
 
     /**
      * @param EventAuthorizator $eventAuthorizator
+     * @return void
      */
     public function injectEventAuthorizator(EventAuthorizator $eventAuthorizator) {
         $this->eventAuthorizator = $eventAuthorizator;
     }
 
-    /**
-     * @return EventAuthorizator
-     */
     public function getEventAuthorizator(): EventAuthorizator {
         return $this->eventAuthorizator;
     }
@@ -177,7 +177,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     /**
      * @throws AbortException
      */
-    protected final function loginRedirect() {
+    final protected function loginRedirect() {
         if ($this->user->logoutReason === UserStorage::INACTIVITY) {
             $reason = AuthenticationPresenter::REASON_TIMEOUT;
         } else {
@@ -195,7 +195,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      * can be checked there -- user session is not prepared at the
      * moment of the call.
      *
-     * @return boolean
+     * @return bool
      */
     public function requiresLogin() {
         return true;
@@ -203,7 +203,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * It may be overriden (should return realm).
-     * @return boolean|string
+     * @return bool|string
      */
     public function getAllowedAuthMethods() {
         return self::AUTH_ALLOW_LOGIN | self::AUTH_ALLOW_TOKEN;
@@ -250,7 +250,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     *
+     * @return void
      */
     private function tryHttpAuth() {
         if (!isset($_SERVER['PHP_AUTH_USER'])) {
@@ -276,7 +276,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     *
+     * @return void
      */
     private function httpAuthPrompt() {
         $realm = $this->getHttpRealm();
@@ -306,7 +306,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             $method = $this->formatAuthorizedMethod($this->getAction());
             $this->tryCall($method, $this->getParameter());
         } catch (AuthenticationException $exception) {
-            throw new BadRequestException(_('Chyba autentizace.'), 403, $exception);
+            throw new ForbiddenRequestException(_('Chyba autentizace.'), Response::S403_FORBIDDEN, $exception);
         }
     }
 

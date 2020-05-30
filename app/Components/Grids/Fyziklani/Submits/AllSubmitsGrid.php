@@ -4,8 +4,8 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use Closure;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\model\Fyziklani\TaskCodePreprocessor;
-use FKSDB\NotImplementedException;
+use FKSDB\Fyziklani\TaskCodePreprocessor;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
@@ -25,7 +25,6 @@ use NiftyGrid\DuplicateColumnException;
 use SQL\SearchableDataSource;
 
 /**
- *
  * @author Michal Červeňák
  * @author Lukáš Timko
  */
@@ -49,15 +48,11 @@ class AllSubmitsGrid extends SubmitsGrid {
      * @param ModelEvent $event
      * @param Container $container
      */
-    public function __construct(
-        ModelEvent $event,
-        Container $container
-    ) {
+    public function __construct(ModelEvent $event, Container $container) {
         parent::__construct($container);
         $this->event = $event;
         $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
         $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
-
     }
 
     /**
@@ -77,12 +72,12 @@ class AllSubmitsGrid extends SubmitsGrid {
             DbNames::TAB_FYZIKLANI_SUBMIT . '.points',
             DbNames::TAB_FYZIKLANI_SUBMIT . '.created',
         ]);
-        $this->addLinkButton( ':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
-        $this->addLinkButton( ':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
+        $this->addLinkButton(':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
+        $this->addLinkButton(':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
 
         $this->addButton('delete', null)
             ->setClass('btn btn-sm btn-danger')
-            ->setLink(function ($row) {
+            ->setLink(function (ModelFyziklaniSubmit $row) {
                 return $this->link('delete!', $row->fyziklani_submit_id);
             })->setConfirmationDialog(function () {
                 return _('Opravdu vzít submit úlohy zpět?');
@@ -170,16 +165,15 @@ class AllSubmitsGrid extends SubmitsGrid {
 
         $rows = $this->serviceFyziklaniTeam->findPossiblyAttending($this->event);
         $teams = [];
-
-        foreach ($rows as $row) {
-            $team = ModelFyziklaniTeam::createFromActiveRow($row);
+        /** @var ModelFyziklaniTeam $team */
+        foreach ($rows as $team) {
             $teams[$team->e_fyziklani_team_id] = $team->name;
         }
 
         $rows = $this->serviceFyziklaniTask->findAll($this->event);
         $tasks = [];
-        foreach ($rows as $row) {
-            $task = ModelFyziklaniTask::createFromActiveRow($row);
+        /** @var ModelFyziklaniTask $task */
+        foreach ($rows as $task) {
             $tasks[$task->fyziklani_task_id] = '(' . $task->label . ') ' . $task->name;
         }
 

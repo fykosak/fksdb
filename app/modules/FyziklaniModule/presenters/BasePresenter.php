@@ -28,28 +28,24 @@ abstract class BasePresenter extends EventBasePresenter {
 
     /**
      * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @return void
      */
     public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
     }
 
-    /**
-     * @return ServiceFyziklaniSubmit
-     */
     protected function getServiceFyziklaniSubmit(): ServiceFyziklaniSubmit {
         return $this->serviceFyziklaniSubmit;
     }
 
     /**
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @return void
      */
     public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
-    /**
-     * @return ServiceFyziklaniTeam
-     */
     protected function getServiceFyziklaniTeam(): ServiceFyziklaniTeam {
         return $this->serviceFyziklaniTeam;
     }
@@ -59,7 +55,7 @@ abstract class BasePresenter extends EventBasePresenter {
      * @throws BadRequestException
      */
     protected function createComponentFyziklaniChooser(): FyziklaniChooser {
-        return new FyziklaniChooser($this->getServiceEvent(), $this->getEvent());
+        return new FyziklaniChooser($this->getContext(), $this->getEvent());
     }
 
     /**
@@ -75,6 +71,6 @@ abstract class BasePresenter extends EventBasePresenter {
      * @return string[]
      */
     protected function getNavRoots(): array {
-        return ['fyziklani.dashboard.default'];
+        return ['Fyziklani.Dashboard.default'];
     }
 }

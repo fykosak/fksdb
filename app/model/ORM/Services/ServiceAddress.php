@@ -19,23 +19,17 @@ class ServiceAddress extends AbstractServiceSingle {
 
     const PATTERN = '/[0-9]{5}/';
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelAddress::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_ADDRESS;
     }
 
     /**
      * @param array|iterable|\ArrayAccess $data
-     * @return AbstractModelSingle
+     * @return ModelAddress
      */
     public function createNewModel($data = null): AbstractModelSingle {
         if (!isset($data['region_id'])) {
@@ -75,7 +69,6 @@ class ServiceAddress extends AbstractServiceSingle {
         if (!preg_match(self::PATTERN, $postalCode)) {
             throw new InvalidPostalCode($postalCode);
         }
-        /** @var ModelRegion $row */
         $row = $this->getContext()->table(DbNames::TAB_PSC_REGION)->where('psc = ?', $postalCode)->fetch();
         if ($row) {
             return $row->region_id;
@@ -99,7 +92,7 @@ class ServiceAddress extends AbstractServiceSingle {
     /**
      *
      * @param string $postalCode
-     * @return boolean
+     * @return bool
      */
     public function tryInferRegion($postalCode): bool {
         try {

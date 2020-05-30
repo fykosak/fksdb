@@ -6,7 +6,7 @@ use Nette\Database\Connection;
 
 /**
  * Class MetaDataFactory
- * @package FKSDB\Components\Forms\Factories
+ * *
  */
 class MetaDataFactory {
     /**
@@ -40,6 +40,7 @@ class MetaDataFactory {
 
     /**
      * @param string $tableName
+     * @return void
      */
     private function fetchMeta(string $tableName) {
         $this->metadata[$tableName] = [];

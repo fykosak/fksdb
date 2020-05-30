@@ -12,7 +12,7 @@ use Nette\Utils\JsonException;
 
 /**
  * Class PaymentSelectField
- * @package FKSDB\Components\Forms\Controls\Payment
+ * *
  */
 class PaymentSelectField extends TextInput {
 
@@ -56,13 +56,13 @@ class PaymentSelectField extends TextInput {
      * @throws Exception
      */
     public function getData(): string {
-        $query = $this->servicePersonSchedule->where('schedule_item.schedule_group.event_id', $this->event->event_id);
+        $query = $this->servicePersonSchedule->getTable()->where('schedule_item.schedule_group.event_id', $this->event->event_id);
         if (count($this->groupTypes)) {
             $query->where('schedule_item.schedule_group.schedule_group_type IN', $this->groupTypes);
         }
         $items = [];
-        foreach ($query as $row) {
-            $model = ModelPersonSchedule::createFromActiveRow($row);
+        /** @var ModelPersonSchedule $model */
+        foreach ($query as $model) {
             $model->getPayment();
             if ($this->showAll || !$model->hasActivePayment()) {
                 $items[] = [

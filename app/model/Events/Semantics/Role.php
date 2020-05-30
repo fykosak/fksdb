@@ -1,11 +1,10 @@
 <?php
 
-namespace Events\Semantics;
+namespace FKSDB\Events\Semantics;
 
 use Authorization\ContestAuthorizator;
 use Authorization\RelatedPersonAuthorizator;
 use FKSDB\Expressions\EvaluatedExpression;
-use Nette\Application\BadRequestException;
 use Nette\Security\User;
 use Nette\SmartObject;
 
@@ -53,7 +52,7 @@ class Role extends EvaluatedExpression {
      * @param ContestAuthorizator $contestAuthorizator
      * @param RelatedPersonAuthorizator $relatedAuthorizator
      */
-    function __construct($role, User $user, ContestAuthorizator $contestAuthorizator, RelatedPersonAuthorizator $relatedAuthorizator) {
+    public function __construct($role, User $user, ContestAuthorizator $contestAuthorizator, RelatedPersonAuthorizator $relatedAuthorizator) {
         $this->role = $role;
         $this->user = $user;
         $this->contestAuthorizator = $contestAuthorizator;
@@ -63,7 +62,6 @@ class Role extends EvaluatedExpression {
     /**
      * @param array $args
      * @return bool
-     * @throws BadRequestException
      */
     public function __invoke(...$args): bool {
         switch ($this->role) {

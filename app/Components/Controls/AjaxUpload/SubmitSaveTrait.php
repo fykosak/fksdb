@@ -7,14 +7,13 @@ use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
-use FKSDB\Submits\FilesystemUploadedSubmitStorage;
-use Nette\DI\Container;
+use FKSDB\Submits\FileSystemStorage\UploadedStorage;
 use Nette\Http\FileUpload;
 use Nette\Utils\DateTime;
 
 /**
  * Trait SubmitSaveTrait
- * @package FKSDB\Components\Control\AjaxUpload
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 trait SubmitSaveTrait {
     /**
@@ -25,31 +24,26 @@ trait SubmitSaveTrait {
      * @throws \Exception
      */
     private function saveSubmitTrait(FileUpload $file, ModelTask $task, ModelContestant $contestant) {
-        /** @var ServiceSubmit $serviceSubmit */
-        $serviceSubmit = $this->getContext()->getByType(ServiceSubmit::class);
-        $submit = $serviceSubmit->findByContestant($contestant->ct_id, $task->task_id);
+        $submit = $this->getServiceSubmit()->findByContestant($contestant->ct_id, $task->task_id);
         if (!$submit) {
-            $submit = $serviceSubmit->createNewModel([
+            $submit = $this->getServiceSubmit()->createNewModel([
                 'task_id' => $task->task_id,
                 'ct_id' => $contestant->ct_id,
                 'submitted_on' => new DateTime(),
                 'source' => ModelSubmit::SOURCE_UPLOAD,
             ]);
         } else {
-            $submit->update([
+            $this->getServiceSubmit()->updateModel2($submit, [
                 'submitted_on' => new DateTime(),
                 'source' => ModelSubmit::SOURCE_UPLOAD,
             ]);
         }
         // store file
-        /** @var FilesystemUploadedSubmitStorage $submitUploadedStorage */
-        $submitUploadedStorage = $this->getContext()->getByType(FilesystemUploadedSubmitStorage::class);
-        $submitUploadedStorage->storeFile($file->getTemporaryFile(), $submit);
+        $this->getUploadedStorage()->storeFile($file->getTemporaryFile(), $submit);
         return $submit;
     }
 
-    /**
-     * @return Container
-     */
-    abstract function getContext();
+    abstract protected function getUploadedStorage(): UploadedStorage;
+
+    abstract protected function getServiceSubmit(): ServiceSubmit;
 }

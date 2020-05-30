@@ -8,16 +8,18 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use Events\Machine\BaseMachine;
-use Events\Model\Holder\Field;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
+use Nette\Forms\IControl;
 
 
 /**
  * Class CheckboxFactory
- * @package FKSDB\Components\Forms\Factories\Events
+ * *
  */
 class CheckboxFactory extends AbstractFactory {
     public function __construct() {
@@ -27,7 +29,7 @@ class CheckboxFactory extends AbstractFactory {
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
-     * @return mixed|Checkbox
+     * @return Checkbox
      */
     protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
 
@@ -39,22 +41,22 @@ class CheckboxFactory extends AbstractFactory {
 
 
     /**
-     * @param $component
+     * @param BaseControl $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
-     * @return mixed|void
+     * @return void
      */
     protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
         $component->setDefaultValue($field->getValue());
     }
 
     /**
-     * @param $component
+     * @param BaseControl $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
-     * @return mixed|void
+     * @return void
      */
     protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
         $component->setDisabled();
@@ -62,7 +64,7 @@ class CheckboxFactory extends AbstractFactory {
 
     /**
      * @param Component $component
-     * @return Component|\Nette\Forms\IControl
+     * @return Component|IControl
      */
     public function getMainControl(Component $component) {
         return $component;

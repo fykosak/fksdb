@@ -14,6 +14,7 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\UI\PageStyleContainer;
 use FKSDB\SeriesCalculator;
 use IContestPresenter;
 use Nette\Application\AbortException;
@@ -54,17 +55,17 @@ use Persons\SelfResolver;
  */
 class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, IExtendedPersonPresenter {
     /**
-     * @var integer
+     * @var int
      * @persistent
      */
     public $contestId;
     /**
-     * @var integer
+     * @var int
      * @persistent
      */
     public $year;
     /**
-     * @var integer
+     * @var int
      * @persistent
      */
     public $personId;
@@ -88,11 +89,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @var ExtendedPersonHandlerFactory
      */
     private $handlerFactory;
-
-    /**
-     * @var Container
-     */
-    private $container;
     /**
      * @var ServicePerson
      */
@@ -105,6 +101,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @param SeriesCalculator $seriesCalculator
+     * @return void
      */
     public function injectSeriesCalculator(SeriesCalculator $seriesCalculator) {
         $this->seriesCalculator = $seriesCalculator;
@@ -112,6 +109,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @param ServiceContestant $serviceContestant
+     * @return void
      */
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;
@@ -119,6 +117,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @param ServicePerson $servicePerson
+     * @return void
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
@@ -126,6 +125,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @param ReferencedPersonFactory $referencedPersonFactory
+     * @return void
      */
     public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
         $this->referencedPersonFactory = $referencedPersonFactory;
@@ -133,18 +133,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @param ExtendedPersonHandlerFactory $handlerFactory
+     * @return void
      */
     public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory) {
         $this->handlerFactory = $handlerFactory;
     }
-
-    /**
-     * @param Container $container
-     */
-    public function injectContainer(Container $container) {
-        $this->container = $container;
-    }
-
 
     /**
      * @return ModelContest|ActiveRow|null
@@ -160,14 +153,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return $this->year;
     }
 
-    /**
-     * @return int|mixed
-     */
-    public function getSelectedAcademicYear() {
+    public function getSelectedAcademicYear(): int {
         if (!$this->getSelectedContest()) {
             throw new InvalidStateException("Cannot get acadamic year without selected contest.");
         }
-        return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
+        return $this->getYearCalculator()->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 
     /**
@@ -216,7 +206,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         }
 
         if ($this->getSelectedContest() && $person) {
-            $contestants = $person->getActiveContestants($this->yearCalculator);
+            $contestants = $person->getActiveContestants($this->getYearCalculator());
             $contest = $this->getSelectedContest();
             $contestant = isset($contestants[$contest->contest_id]) ? $contestants[$contest->contest_id] : null;
             if ($contestant && $contestant->year == $this->getSelectedYear()) {
@@ -249,8 +239,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function titleYear() {
-        $this->setSubtitle($this->getServiceContest()->findByPrimary($this->contestId)->name);
-        $this->setTitle(_('Zvolit ročník'));
+        $this->setTitle(_('Zvolit ročník'), '', $this->getServiceContest()->findByPrimary($this->contestId)->name);
     }
 
     public function actionEmail() {
@@ -261,8 +250,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function titleEmail() {
-        $this->setSubtitle($this->getServiceContest()->findByPrimary($this->contestId)->name);
-        $this->setTitle(_('Zadejte e-mail'));
+        $this->setTitle(_('Zadejte e-mail'), 'fa fa-envelope', $this->getServiceContest()->findByPrimary($this->contestId)->name);
     }
 
     public function renderContest() {
@@ -277,7 +265,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         /** @var ModelContest $contest */
         $contest = $this->getServiceContest()->findByPrimary($this->contestId);
         $this->template->years = [];
-        $this->template->years[] = $this->yearCalculator->getCurrentYear($contest) + $this->yearCalculator->getForwardShift($contest);
+        $this->template->years[] = $this->getYearCalculator()->getCurrentYear($contest) + $this->getYearCalculator()->getForwardShift($contest);
     }
 
     /**
@@ -295,7 +283,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function handleChangeYear($year) {
         $this->redirect('this', ['year' => $year,]);
     }
-
 
     /**
      * @return FormControl
@@ -318,17 +305,17 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      */
     private function emailFormSucceeded(Form $form) {
         $values = $form->getValues();
-
         $this->redirect('this', ['email' => $values->email,]);
     }
 
+    /**
+     * @throws BadRequestException
+     */
     public function renderContestant() {
-
         $person = $this->getPerson();
-        /**
-         * @var Form $contestantForm
-         */
+        /** @var FormControl $contestantForm */
         $contestantForm = $this->getComponent('contestantForm');
+        /** @var ReferencedId $referencedId */
         $referencedId = $contestantForm->getForm()->getComponent(ExtendedPersonHandler::CONT_AGGR)->getComponent(ExtendedPersonHandler::EL_PERSON);
         if ($person) {
             $referencedId->setDefaultValue($person);
@@ -338,12 +325,12 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     /**
-     * @return array|mixed
+     * @return array
      */
     private function getFieldsDefinition() {
         $contestId = $this->getSelectedContest()->contest_id;
         $contestName = $this->globalParameters['contestMapping'][$contestId];
-        return Helpers::evalExpressionArray($this->globalParameters[$contestName]['registerContestant'], $this->container);
+        return Helpers::evalExpressionArray($this->globalParameters[$contestName]['registerContestant'], $this->getContext());
     }
 
     /**
@@ -381,7 +368,8 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $submit = $form->addSubmit('register', _('Registrovat'));
         $submit->onClick[] = function (SubmitButton $button) use ($handler) {
             $form = $button->getForm();
-            if ($result = $handler->handleForm($form, $this, true)) { // intentionally =
+            $result = $handler->handleForm($form, $this, true);
+            if ($result) { // intentionally =
                 /*
                  * Do not automatically log in user with existing logins for security reasons.
                  * (If someone was able to fill the form without conflicts, he might gain escalated privileges.)
@@ -406,31 +394,19 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return null; //we always create new contestant
     }
 
-    /**
-     * @return string
-     */
-    public function messageCreate() {
+    public function messageCreate(): string {
         return _('Řešitel %s zaregistrován.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageEdit() {
+    public function messageEdit(): string {
         return _('Řešitel %s upraven.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageError() {
+    public function messageError(): string {
         return _('Chyba při registraci.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageExists() {
+    public function messageExists(): string {
         return _('Řešitel je již registrován.');
     }
 
@@ -441,17 +417,13 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return null;
     }
 
-    /**
-     * @return array
-     */
-    protected function getNavBarVariant(): array {
-        /**
-         * @var ModelContest $contest
-         */
-        $contest = $this->getServiceContest()->findByPrimary($this->contestId);
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
+        $contest = $this->getSelectedContest();
         if ($contest) {
-            return [$contest->getContestSymbol(), 'bg-dark navbar-dark'];
+            $container->navBarClassName = 'bg-dark navbar-dark';
+            $container->styleId = $contest->getContestSymbol();
         }
-        return parent::getNavBarVariant();
+        return $container;
     }
 }

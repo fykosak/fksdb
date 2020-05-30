@@ -21,4 +21,3 @@ interface IStylesheetCollector {
      */
     public function unregisterStylesheetFile(string $file, array $media = ['all']);
 }
-

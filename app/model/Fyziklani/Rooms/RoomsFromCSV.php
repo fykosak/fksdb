@@ -3,6 +3,7 @@
 namespace FKSDB\model\Fyziklani\Rooms;
 
 use FKSDB\Logging\ILogger;
+use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\Utils\CSVParser;
@@ -22,21 +23,21 @@ class RoomsFromCSV extends Stage {
     private $data;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelEvent
+     * @var ModelEvent
      */
     private $event;
 
     /**
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
+     * @var ServiceFyziklaniTeam
      */
     private $serviceTeam;
 
     /**
      * RoomsFromCSV constructor.
-     * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam $serviceTeam
+     * @param ModelEvent $event
+     * @param ServiceFyziklaniTeam $serviceTeam
      */
-    function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceTeam) {
+    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceTeam) {
         $this->event = $event;
         $this->serviceTeam = $serviceTeam;
     }
@@ -54,9 +55,9 @@ class RoomsFromCSV extends Stage {
         }
 
         $teams = $this->serviceTeam->getTable()
-                ->where('event_id', $this->event->event_id)
-                ->where('status!=?', 'cancelled')
-                ->fetchPairs('e_fyziklani_team_id');
+            ->where('event_id', $this->event->event_id)
+            ->where('status!=?', 'cancelled')
+            ->fetchPairs('e_fyziklani_team_id');
         $updatedTeams = [];
 
         $this->serviceTeam->getConnection()->beginTransaction();
@@ -66,14 +67,14 @@ class RoomsFromCSV extends Stage {
             $room = $row[1];
 
             if (!array_key_exists($teamId, $teams)) {
-                $this->getPipeline()->log(sprintf(_('Přeskočeno neexistující ID týmu %d.'), $teamId), ILogger::WARNING);
+                $this->getPipeline()->log(new Message(sprintf(_('Přeskočeno neexistující ID týmu %d.'), $teamId), ILogger::WARNING));
                 continue;
             }
             $team = $teams[$teamId];
             $this->serviceTeam->updateModel2($team, [
                 'room' => $room,
             ]);
-          //  $this->serviceTeam->save($team);
+            //  $this->serviceTeam->save($team);
             $updatedTeams[$teamId] = $team;
             if ($room) {
                 unset($teams[$teamId]);
@@ -82,7 +83,7 @@ class RoomsFromCSV extends Stage {
         $this->serviceTeam->getConnection()->commit();
 
         foreach ($teams as $team) {
-            $this->getPipeline()->log(sprintf(_('Tým %s (%d, %s) nemá přiřazenou místnost.'), $team->name, $team->e_fyziklani_team_id, $team->status), ILogger::WARNING);
+            $this->getPipeline()->log(new Message(sprintf(_('Tým %s (%d, %s) nemá přiřazenou místnost.'), $team->name, $team->e_fyziklani_team_id, $team->status), ILogger::WARNING));
         }
     }
 

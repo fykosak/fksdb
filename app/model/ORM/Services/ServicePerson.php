@@ -9,19 +9,14 @@ use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @method ModelPerson findByPrimary($key)
  */
 class ServicePerson extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelPerson::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_PERSON;
     }
@@ -29,27 +24,27 @@ class ServicePerson extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      *
-     * @param mixed $email
-     * @return \FKSDB\ORM\Models\ModelPerson|null
+     * @param string $email
+     * @return ModelPerson|null
      */
     public function findByEmail($email) {
         if (!$email) {
             return null;
         }
+        /** @var ModelPerson|false $result */
         $result = $this->getTable()->where(':person_info.email', $email)->fetch();
-        return $result ? ModelPerson::createFromActiveRow($result) : null;
+        return $result ?: null;
     }
 
     /**
      * @param IModel|ModelPerson $model
-     * @return mixed|void
+     * @return void
      */
     public function save(IModel &$model) {
         if (is_null($model->gender)) {
             $model->inferGender();
         }
-        return parent::save($model);
+        parent::save($model);
     }
 
 }
-

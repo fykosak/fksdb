@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls\FormControl;
 
+use FKSDB\Exceptions\BadTypeException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -20,9 +21,6 @@ class FormControl extends Control {
 
     const TEMPLATE_PATH = 'FormControl.containers.latte';
 
-    /**
-     * @return Form
-     */
     protected function createComponentForm(): Form {
         return new Form();
     }
@@ -31,17 +29,14 @@ class FormControl extends Control {
      * @return Form
      * @throws BadRequestException
      */
-    public final function getForm(): Form {
+    final public function getForm(): Form {
         $component = $this->getComponent('form');
         if (!$component instanceof Form) {
-            throw new BadRequestException();
+            throw new BadTypeException(Form::class, $component);
         }
         return $component;
     }
 
-    /**
-     * @return string
-     */
     private function getTemplateFile(): string {
         return __DIR__ . DIRECTORY_SEPARATOR . self::TEMPLATE_PATH;
     }

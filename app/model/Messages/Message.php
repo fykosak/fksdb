@@ -7,7 +7,7 @@ use Nette\SmartObject;
 
 /**
  * Class Message
- * @package FKSDB\Messages
+ * *
  */
 class Message {
     use SmartObject;
@@ -46,6 +46,7 @@ class Message {
 
     /**
      * @param string $message
+     * @return void
      * @deprecated
      */
     public function setText(string $message) {
@@ -54,35 +55,28 @@ class Message {
 
     /**
      * @param string $message
+     * @return void
      */
     public function setMessage(string $message) {
         $this->message = $message;
     }
 
-    /**
-     * @return string
-     */
     public function getMessage(): string {
         return $this->message;
     }
 
-    /**
-     * @return string
-     */
     public function getLevel(): string {
         return $this->level;
     }
 
     /**
      * @param string $level
+     * @return void
      */
     public function setLevel(string $level) {
         $this->level = $level;
     }
 
-    /**
-     * @return array
-     */
     public function __toArray(): array {
         return [
             'text' => $this->message,
@@ -90,5 +84,4 @@ class Message {
             'level' => $this->level,
         ];
     }
-
 }

@@ -23,13 +23,16 @@ class TokenGSIDHolder implements IGSIDHolder {
      * @var Connection
      */
     private $connection;
+    /**
+     * @var bool
+     */
     private $cachedGSID = false;
 
     /**
      * TokenGSIDHolder constructor.
      * @param Connection $connection
      */
-    function __construct(Connection $connection) {
+    public function __construct(Connection $connection) {
         $this->connection = $connection;
     }
 

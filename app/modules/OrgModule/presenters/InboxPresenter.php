@@ -5,7 +5,7 @@ namespace OrgModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Inbox\CorrectedControl;
 use FKSDB\Components\Controls\Inbox\SubmitsPreviewControl;
-use FKSDB\Components\Controls\Inbox\SubmitCheckControl;
+use FKSDB\Components\Controls\Inbox\SubmitCheckComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Controls\Inbox\InboxControl;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -13,6 +13,7 @@ use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Models\ModelTaskContribution;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServiceTaskContribution;
+use FKSDB\UI\PageStyleContainer;
 use FKSDB\Submits\SeriesTable;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -22,7 +23,7 @@ use Nette\Security\Permission;
 
 /**
  * Class InboxPresenter
- * @package OrgModule
+ * *
  */
 class InboxPresenter extends SeriesPresenter {
 
@@ -50,6 +51,7 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @param ServiceTaskContribution $serviceTaskContribution
+     * @return void
      */
     public function injectServiceTaskContribution(ServiceTaskContribution $serviceTaskContribution) {
         $this->serviceTaskContribution = $serviceTaskContribution;
@@ -57,6 +59,7 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @param ServicePerson $servicePerson
+     * @return void
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
@@ -64,6 +67,7 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @param SeriesTable $seriesTable
+     * @return void
      */
     public function injectSeriesTable(SeriesTable $seriesTable) {
         $this->seriesTable = $seriesTable;
@@ -71,6 +75,7 @@ class InboxPresenter extends SeriesPresenter {
 
     /**
      * @param PersonFactory $personFactory
+     * @return void
      */
     public function injectPersonFactory(PersonFactory $personFactory) {
         $this->personFactory = $personFactory;
@@ -113,22 +118,42 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /* ***************** TITLES ***********************/
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleInbox() {
         $this->setTitle(_('Inbox'), 'fa fa-envelope-open');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleDefault() {
         $this->setTitle(_('Inbox dashboard'), 'fa fa-envelope-open');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleHandout() {
         $this->setTitle(_('Rozdělení úloh opravovatelům'), 'fa fa-inbox');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleList() {
         $this->setTitle(_('List of submits'), 'fa fa-cloud-download');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleCorrected() {
         $this->setTitle(_('Corrected'), 'fa fa-inbox');
     }
@@ -160,8 +185,8 @@ class InboxPresenter extends SeriesPresenter {
      */
     public function renderHandout() {
         $taskIds = [];
-        foreach ($this->seriesTable->getTasks() as $row) {
-            $task = ModelTask::createFromActiveRow($row);
+        /** @var ModelTask $task */
+        foreach ($this->seriesTable->getTasks() as $task) {
             $taskIds[] = $task->task_id;
         }
         $contributions = $this->serviceTaskContribution->getTable()->where([
@@ -170,8 +195,8 @@ class InboxPresenter extends SeriesPresenter {
         ]);
 
         $values = [];
-        foreach ($contributions as $row) {
-            $contribution = ModelTaskContribution::createFromActiveRow($row);
+        /** @var ModelTaskContribution $contribution */
+        foreach ($contributions as $contribution) {
             $taskId = $contribution->task_id;
             $personId = $contribution->person_id;
             $key = self::TASK_PREFIX . $taskId;
@@ -186,9 +211,7 @@ class InboxPresenter extends SeriesPresenter {
 
     }
     /* ******************* COMPONENTS ******************/
-    /**
-     * @return InboxControl
-     */
+
     protected function createComponentInboxForm(): InboxControl {
         return new InboxControl($this->getContext(), $this->seriesTable);
     }
@@ -201,10 +224,9 @@ class InboxPresenter extends SeriesPresenter {
         $formControl = new FormControl();
         $form = $formControl->getForm();
         $orgProvider = new PersonProvider($this->servicePerson);
-        $orgProvider->filterOrgs($this->getSelectedContest(), $this->yearCalculator);
-
-        foreach ($this->seriesTable->getTasks() as $row) {
-            $task = ModelTask::createFromActiveRow($row);
+        $orgProvider->filterOrgs($this->getSelectedContest(), $this->getYearCalculator());
+        /** @var ModelTask $task */
+        foreach ($this->seriesTable->getTasks() as $task) {
             $control = $this->personFactory->createPersonSelect(false, $task->getFQName(), $orgProvider);
             $control->setMultiSelect(true);
             $form->addComponent($control, self::TASK_PREFIX . $task->task_id);
@@ -226,10 +248,10 @@ class InboxPresenter extends SeriesPresenter {
     }
 
     /**
-     * @return SubmitCheckControl
+     * @return SubmitCheckComponent
      */
-    protected function createComponentCheckControl(): SubmitCheckControl {
-        return new SubmitCheckControl($this->getContext(), $this->seriesTable);
+    protected function createComponentCheckControl(): SubmitCheckComponent {
+        return new SubmitCheckComponent($this->getContext(), $this->seriesTable);
     }
 
     /**
@@ -250,9 +272,8 @@ class InboxPresenter extends SeriesPresenter {
         $connection = $service->getConnection();
 
         $connection->beginTransaction();
-
-        foreach ($this->seriesTable->getTasks() as $row) {
-            $task = ModelTask::createFromActiveRow($row);
+        /** @var ModelTask $task */
+        foreach ($this->seriesTable->getTasks() as $task) {
             $service->getTable()->where([
                 'task_id' => $task->task_id,
                 'type' => ModelTaskContribution::TYPE_GRADE
@@ -274,15 +295,12 @@ class InboxPresenter extends SeriesPresenter {
         $this->redirect('this');
     }
 
-    /**
-     * @return string
-     */
-    protected function getContainerClassNames(): string {
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
         switch ($this->getAction()) {
             case 'inbox':
-                return str_replace('container ', 'container-fluid ', parent::getContainerClassNames());
-            default:
-                return parent::getContainerClassNames();
+                $container->mainContainerClassName = str_replace('container ', 'container-fluid ', $container->mainContainerClassName).' px-3';
         }
+        return $container;
     }
 }

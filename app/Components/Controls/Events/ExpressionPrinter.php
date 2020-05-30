@@ -25,5 +25,4 @@ class ExpressionPrinter {
             throw new InvalidArgumentException("Cannot evaluate condition $expression.");
         }
     }
-
 }

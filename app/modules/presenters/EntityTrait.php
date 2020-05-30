@@ -5,6 +5,8 @@ namespace FKSDB;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
@@ -65,18 +67,21 @@ trait EntityTrait {
 
     /**
      * @param int $id
+     * @return void
      */
     public function titleEdit(int $id) {
     }
 
     /**
      * @param int $id
+     * @return void
      */
     public function titleDetail(int $id) {
     }
 
     /**
      * @param int $id
+     * @return void
      */
     public function titleDelete(int $id) {
     }
@@ -120,7 +125,7 @@ trait EntityTrait {
     protected function traitActionEdit(int $id) {
         $component = $this->getComponent('editForm');
         if (!$component instanceof IEditEntityForm) {
-            throw new BadRequestException();
+            throw new BadTypeException(IEditEntityForm::class, $component);
         }
         $component->setModel($this->loadEntity($id));
     }
@@ -133,7 +138,7 @@ trait EntityTrait {
     public function traitHandleDelete(int $id) {
         $success = $this->loadEntity($id)->delete();
         if (!$success) {
-            throw new \ModelException(_('Error during deleting'));
+            throw new Exceptions\ModelException(_('Error during deleting'));
         }
         return [new Message(_('Entity has been deleted'), self::FLASH_SUCCESS)];
     }
@@ -162,9 +167,6 @@ trait EntityTrait {
      */
     abstract protected function getORMService();
 
-    /**
-     * @return string
-     */
     protected function getModelResource(): string {
         return $this->getORMService()->getModelClassName()::RESOURCE_ID;
     }

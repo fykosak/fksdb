@@ -113,15 +113,9 @@ parameters:
             # Výfuk
             2: [6,7,8,9]
 
-        # Paths for search of XML files, including trailing slash.
-        # Arguments: contestName, year, series
-        paths:
-            cs: '/%1$s%2$d/batch%3$d/out/zadaniWeb%3$d-cs.xml'
-            en: '/%1$s%2$d/batch%3$d/out/zadaniWeb%3$d-en.xml'
-
         # Paths for search of new XML files, including trailing slash.
         # Arguments: contestName, year, series
-        paths2: '/%1$s%2$d/batch%3$d/out/zadaniWeb%3$d-new.xml'
+        paths: '/%1$s%2$d/batch%3$d/out/zadaniWeb%3$d-new.xml'
 
     # Generic parameters for Fyziklani
     fyziklani:
@@ -200,6 +194,15 @@ nette:
     session:
         expiration: 14 days
         autoStart: true
+extensions:
+    application: Nette\Config\Extensions\NetteExtension # hack for old application
+    fksrouter: FKSDB\Config\Extensions\RouterExtension
+    acl: Authorization\ACLExtension
+    navigation: FKSDB\Config\Extensions\NavigationExtension
+    events: FKSDB\Events\EventsExtension(%appDir%/../app/config/events.neon)
+    stalking: FKSDB\Config\Extensions\StalkingExtension
+    payment: FKSDB\Config\Extensions\PaymentExtension
+    DBReflection: FKSDB\Config\Extensions\DBReflectionExtension
 
 
 includes:

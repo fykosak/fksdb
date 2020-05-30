@@ -2,25 +2,23 @@
 
 namespace FKSDB\Components\Controls\DataTesting;
 
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\DataTesting\DataTestingFactory;
 use FKSDB\DataTesting\Tests\Person\PersonTest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\DataTesting\TestsLogger;
 use FKSDB\DataTesting\TestLog;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Control;
 use Nette\Forms\Form;
-use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 
 /**
  * Class PersonTestControl
- * @package FKSDB\Components\Controls\DataTesting
- * @property-read FileTemplate $template
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class PersonTestControl extends Control {
+class PersonTestControl extends BaseComponent {
 
     /**
      * @var int
@@ -44,31 +42,23 @@ class PersonTestControl extends Control {
      * @persistent
      */
     public $levels = [];
-
-    /**
-     * @var ITranslator
-     */
-    private $translator;
     /**
      * @var ServicePerson
      */
     private $servicePerson;
     /**
-     * @var array
+     * @var DataTestingFactory
      */
-    private $availableTests = [];
+    private $dataTestingFactory;
 
     /**
-     * ValidationControl constructor.
      * @param ServicePerson $servicePerson
-     * @param ITranslator $translator
-     * @param array $availableTests
+     * @param DataTestingFactory $dataTestingFactory
+     * @return void
      */
-    public function __construct(ServicePerson $servicePerson, ITranslator $translator, array $availableTests) {
-        parent::__construct();
+    public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory) {
         $this->servicePerson = $servicePerson;
-        $this->translator = $translator;
-        $this->availableTests = $availableTests;
+        $this->dataTestingFactory = $dataTestingFactory;
     }
 
     /**
@@ -97,7 +87,7 @@ class PersonTestControl extends Control {
 
         $testsContainer = new ContainerWithOptions();
         $testsContainer->setOption('label', _('Tests'));
-        foreach ($this->availableTests as $key => $test) {
+        foreach ($this->dataTestingFactory->getTests('person') as $key => $test) {
             $field = $testsContainer->addCheckbox($key, $test->getTitle());
             if (\in_array($test, $this->tests)) {
                 $field->setDefaultValue(true);
@@ -129,16 +119,13 @@ class PersonTestControl extends Control {
     }
 
     /**
-     * @return array
+     * @return array[]
      */
     private function calculateProblems(): array {
-        $query = $this->servicePerson->getTable();
-
-        $query->where('person_id BETWEEN ? AND ?', $this->startId, $this->endId);
+        $query = $this->servicePerson->getTable()->where('person_id BETWEEN ? AND ?', $this->startId, $this->endId);
         $logs = [];
-        foreach ($query as $row) {
-
-            $model = ModelPerson::createFromActiveRow($row);
+        /** @var ModelPerson $model */
+        foreach ($query as $model) {
 
             $logger = new TestsLogger();
             foreach ($this->tests as $test) {
@@ -155,15 +142,18 @@ class PersonTestControl extends Control {
         return $logs;
     }
 
+    /**
+     * @return void
+     */
     public function render() {
         $this->template->logs = $this->calculateProblems();
-        $this->template->setTranslator($this->translator);
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
     }
 
     /**
      * @param $page
+     * @return void
      */
     public function handleChangePage($page) {
         $this->page = $page;

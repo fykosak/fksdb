@@ -3,11 +3,15 @@
 namespace EventModule;
 
 use AuthenticatedPresenter;
-use Events\Model\Holder\Holder;
-use FKSDB\NotImplementedException;
+use FKSDB\Config\NeonSchemaException;
+use FKSDB\Events\EventDispatchFactory;
+use FKSDB\Exceptions\NotFoundException;
+use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
+use FKSDB\UI\PageStyleContainer;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Security\IResource;
@@ -37,14 +41,12 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @param ServiceEvent $serviceEvent
+     * @return void
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
     }
 
-    /**
-     * @return ServiceEvent
-     */
     protected function getServiceEvent(): ServiceEvent {
         return $this->serviceEvent;
     }
@@ -61,9 +63,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         parent::startup();
     }
 
-    /**
-     * @return bool
-     */
     public function isAuthorized(): bool {
         if (!$this->isEnabled()) {
             return false;
@@ -79,7 +78,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         if (!$this->event) {
             $model = $this->getServiceEvent()->findByPrimary($this->eventId);
             if (!$model) {
-                throw new BadRequestException('Event not found.', 404);
+                throw new NotFoundException('Event not found.');
             }
             $this->event = $model;
         }
@@ -89,10 +88,13 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     /**
      * @return Holder
      * @throws BadRequestException
+     * @throws NeonSchemaException
      */
     protected function getHolder(): Holder {
         if (!$this->holder) {
-            $this->holder = $this->getContext()->createEventHolder($this->getEvent());
+            /** @var EventDispatchFactory $factory */
+            $factory = $this->getContext()->getByType(EventDispatchFactory::class);
+            $this->holder = $factory->getDummyHolder($this->getEvent());
         }
         return $this->holder;
     }
@@ -102,20 +104,17 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws BadRequestException
      */
     protected function getAcYear(): int {
-        return $this->yearCalculator->getAcademicYear($this->getContest(), $this->getEvent()->year);
+        return $this->getYearCalculator()->getAcademicYear($this->getContest(), $this->getEvent()->year);
     }
 
     /**
      * @return ModelContest
      * @throws BadRequestException
      */
-    protected final function getContest(): ModelContest {
+    final protected function getContest(): ModelContest {
         return $this->getEvent()->getContest();
     }
 
-    /**
-     * @return bool
-     */
     protected function isEnabled(): bool {
         return true;
     }
@@ -165,38 +164,39 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /* ********************** GUI ************************ */
     /**
-     * @return ModelEvent
-     * @return string
-     * @throws BadRequestException
+     * @param string $title
+     * @param string $icon
+     * @param string $subTitle
      * @throws BadRequestException
      */
-    public function getSubTitle(): string {
-        return $this->getEvent()->__toString();
+    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
+        parent::setTitle($title, $icon, $subTitle ?: $this->getEvent()->__toString());
     }
 
     /**
-     * @return array
+     * @return PageStyleContainer
      * @throws BadRequestException
      */
-    protected function getNavBarVariant(): array {
-        $classNames = ['event event-type-' . $this->getEvent()->event_type_id, null];
+    protected function getPageStyleContainer(): PageStyleContainer {
+        $container = parent::getPageStyleContainer();
+        $container->styleId = 'event event-type-' . $this->getEvent()->event_type_id;
         switch ($this->getEvent()->event_type_id) {
             case 1:
-                $classNames[1] = 'bg-fyziklani navbar-dark';
+                $container->navBarClassName = 'bg-fyziklani navbar-dark';
                 break;
             case 9:
-                $classNames[1] = 'bg-fol navbar-light';
+                $container->navBarClassName = 'bg-fol navbar-light';
                 break;
             default:
-                $classNames[1] = 'bg-light navbar-light';
+                $container->navBarClassName = 'bg-light navbar-light';
         }
-        return $classNames;
+        return $container;
     }
 
     /**
-     * @return array
+     * @return array|string[]
      */
     protected function getNavRoots(): array {
-        return ['event.dashboard.default'];
+        return ['Event.Dashboard.default'];
     }
 }

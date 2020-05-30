@@ -3,6 +3,7 @@
 namespace OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Exceptions\NotFoundException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use Nette\Application\BadRequestException;
@@ -84,7 +85,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @return AbstractModelSingle|null|IModel
      * @deprecated
      */
-    public final function getModel() {
+    final public function getModel() {
         if (!$this->model) {
             $this->model = $this->getParameter('id') ? $this->loadModel($this->getParameter('id')) : null;
         }
@@ -100,7 +101,7 @@ abstract class EntityPresenter extends BasePresenter {
         if (!$this->model) {
             $model = $this->loadModel($id ?: $this->id);
             if (!$model) {
-                throw new BadRequestException('Neexistující model.', 404);
+                throw new NotFoundException('Neexistující model.');
             }
             $this->model = $model;
         }
@@ -139,8 +140,5 @@ abstract class EntityPresenter extends BasePresenter {
      */
     abstract protected function createComponentGrid();
 
-    /**
-     * @return string
-     */
-    abstract protected function getModelResource():string ;
+    abstract protected function getModelResource(): string;
 }

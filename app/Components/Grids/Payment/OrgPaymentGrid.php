@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Grids\Payment;
 
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\InvalidLinkException;
@@ -13,8 +13,8 @@ use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 
 /**
- *
- * @author Mišo <miso@fykos.cz>
+ * Class OrgPaymentGrid
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class OrgPaymentGrid extends PaymentGrid {
     /**

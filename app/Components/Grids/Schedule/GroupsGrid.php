@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
@@ -14,7 +13,7 @@ use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class GroupsGrid
- * @package FKSDB\Components\Grids\Schedule
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class GroupsGrid extends BaseGrid {
     /**
@@ -32,9 +31,6 @@ class GroupsGrid extends BaseGrid {
         $this->event = $event;
     }
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelScheduleGroup::class;
     }
@@ -43,7 +39,6 @@ class GroupsGrid extends BaseGrid {
      * @param $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -68,6 +63,7 @@ class GroupsGrid extends BaseGrid {
 
         $this->addButton('detail', _('Detail'))->setText(_('Detail'))
             ->setLink(function ($row) {
+                /** @var ModelScheduleGroup $row */
                 return $this->getPresenter()->link('ScheduleItem:list', ['groupId' => $row->schedule_group_id]);
             });
     }

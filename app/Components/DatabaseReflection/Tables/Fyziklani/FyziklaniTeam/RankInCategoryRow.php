@@ -6,7 +6,7 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
  * Class RankInCategoryRow
- * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam
+ * *
  */
 class RankInCategoryRow extends AbstractFyziklaniTeamRow {
     use DefaultPrinterTrait;

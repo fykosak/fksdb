@@ -7,22 +7,12 @@ use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\DataTesting\TestsLogger;
 use FKSDB\DataTesting\TestLog;
-use Nette\Database\Table\GroupedSelection;
-use Nette\Database\Table\Selection;
 
 /**
  * Class ParticipantsDurationTest
- * @package FKSDB\DataTesting\Tests\Person
+ * *
  */
 class ParticipantsDurationTest extends PersonTest {
-
-    /**
-     * @param ModelPerson $person
-     * @return GroupedSelection
-     */
-    protected function getEventParticipant(ModelPerson $person): Selection {
-        return $person->getEventParticipant();
-    }
 
     /**
      * @param TestsLogger $logger
@@ -38,7 +28,7 @@ class ParticipantsDurationTest extends PersonTest {
         foreach ($contestsDefs as $contestId => $contestsDef) {
             $max = null;
             $min = null;
-            foreach ($this->getEventParticipant($person) as $row) {
+            foreach ($person->getEventParticipant() as $row) {
                 $model = ModelEventParticipant::createFromActiveRow($row);
                 $event = $model->getEvent();
                 if ($event->getEventType()->contest_id !== $contestId) {
@@ -60,12 +50,7 @@ class ParticipantsDurationTest extends PersonTest {
 
     }
 
-    /**
-     * @param int $delta
-     * @param array $thresholds
-     * @return string
-     */
-    private final function evaluateThresholds(int $delta, array $thresholds): string {
+    final private function evaluateThresholds(int $delta, array $thresholds): string {
         if ($delta < $thresholds[0]) {
             return TestLog::LVL_SUCCESS;
         }
@@ -75,16 +60,10 @@ class ParticipantsDurationTest extends PersonTest {
         return TestLog::LVL_DANGER;
     }
 
-    /**
-     * @return string
-     */
     public function getAction(): string {
         return 'participants_duration';
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Participate events');
     }

@@ -4,6 +4,7 @@ namespace FKSDB\Components\Controls\Entity\Event;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\EventFactory;
+use FKSDB\Exceptions\ModelException;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContest;
@@ -16,7 +17,7 @@ use Tracy\Debugger;
 
 /**
  * Class AbstractForm
- * @package FKSDB\Components\Controls\Entity\Event
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractForm extends FormControl {
     const CONT_EVENT = 'event';
@@ -65,7 +66,7 @@ abstract class AbstractForm extends FormControl {
                 $serviceAuthToken->updateModel2($token, $tokenData);
             }
             $connection->commit();
-        } catch (\ModelException $exception) {
+        } catch (ModelException $exception) {
             $connection->rollBack();
             Debugger::log($exception, Debugger::ERROR);
             $this->flashMessage(_('Chyba přidání akce.'), ILogger::ERROR);
