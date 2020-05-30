@@ -11,17 +11,11 @@ use Nette\Utils\Html;
  * *
  */
 class StateRow extends AbstractPaymentRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('State');
     }
 
-    /**
-     * @param AbstractModelSingle $model
-     * @return Html
-     */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         return Html::el('span')->addAttributes(['class' => self::getUIClass($model)])->addText(self::getStateLabel($model));
     }

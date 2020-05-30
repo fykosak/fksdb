@@ -12,9 +12,7 @@ use Nette\Utils\Html;
  * *
  */
 class SwimmerRow extends AbstractParticipantRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Swimmer');
     }

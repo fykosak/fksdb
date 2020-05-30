@@ -104,7 +104,7 @@ stalking:
             itemHeadline: task.fq_name
             rows:
                 - task_contribution.type
-                - referenced.contest
+                - contest.contestBadge
                 - task.year
                 - task.series
 
@@ -117,7 +117,7 @@ stalking:
             links:
                 - org.detail
                 - org.edit
-            itemHeadline: referenced.contest
+            itemHeadline: contest.contestBadge
             rows:
                 - org.org_id
                 - org.since
@@ -139,7 +139,7 @@ stalking:
             rows:
                 - payment.price
                 - payment.state
-                - referenced.event_link
+                - event.event_link
         contestant_base:
             layout: multi
             label: Contestant
@@ -151,7 +151,7 @@ stalking:
             itemHeadline: contestant_base.ct_id
             rows:
                 - contestant_base.year
-                - referenced.contest
+                - contest.contestBadge
         event_participant:
             layout: multi
             label: Event Participant
@@ -164,7 +164,7 @@ stalking:
             rows:
                 - event_participant.status
                 - event_participant.team
-                - referenced.event_link
+                - event.event_link
         event_org:
             layout: multi
             label: Event org
@@ -174,7 +174,7 @@ stalking:
             links: []
             itemHeadline: event_org.event_org_id
             rows:
-                - referenced.event_link
+                - event.event_link
                 - event_org.note
         event_teacher:
             layout: multi
@@ -186,5 +186,5 @@ stalking:
                 - fyziklani_team.detail
             itemHeadline: e_fyziklani_team.name
             rows:
-                - referenced.event_link
+                - event.event_link
                 - e_fyziklani_team.status

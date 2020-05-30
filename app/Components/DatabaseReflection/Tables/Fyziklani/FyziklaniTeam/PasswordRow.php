@@ -12,9 +12,7 @@ use Nette\Utils\Html;
  * *
  */
 class PasswordRow extends AbstractFyziklaniTeamRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Password');
     }

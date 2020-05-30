@@ -11,9 +11,7 @@ use Nette\Utils\Html;
  * *
  */
 class NameNIdRow extends AbstractFyziklaniTeamRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Team');
     }

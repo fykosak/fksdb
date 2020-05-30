@@ -17,9 +17,6 @@ class StateRow extends DefaultRow {
      */
     protected $states = [];
 
-    /**
-     * @inheritDoc
-     */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         $stateDef = $this->getState($model->{$this->getModelAccessKey()});
         return Html::el('span')->addAttributes(['class' => $stateDef['badge']])->addText(_($stateDef['label']));
@@ -32,10 +29,6 @@ class StateRow extends DefaultRow {
         $this->states = $states;
     }
 
-    /**
-     * @param string $state
-     * @return array
-     */
     public function getState(string $state): array {
         if (isset($this->states[$state])) {
             return $this->states[$state];
@@ -48,7 +41,7 @@ class StateRow extends DefaultRow {
      * @return BaseControl
      * @throws NotImplementedException
      */
-    public function createField(...$args): BaseControl {
+    public function createFormControl(...$args): BaseControl {
         throw new NotImplementedException();
     }
 }

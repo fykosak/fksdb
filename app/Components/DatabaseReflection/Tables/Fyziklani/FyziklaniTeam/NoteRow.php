@@ -11,16 +11,10 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 class NoteRow extends AbstractFyziklaniTeamRow {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Note');
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'note';
     }

@@ -10,8 +10,8 @@ use Nette\Utils\Html;
  * *
  */
 class StringPrinter extends AbstractValuePrinter {
-    /**
-     * @param $value
+    /***
+     * @param null $value
      * @return Html
      */
     protected function getHtml($value): Html {

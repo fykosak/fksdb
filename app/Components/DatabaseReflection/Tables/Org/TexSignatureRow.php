@@ -14,16 +14,10 @@ use Nette\Forms\Form;
 class TexSignatureRow extends AbstractOrgRowFactory {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Tex signature');
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'tex_signature';
     }

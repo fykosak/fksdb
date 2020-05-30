@@ -2,9 +2,11 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
+use Nette\Forms\Controls\BaseControl;
+
 /**
  * Class DefaultRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class DefaultRow extends AbstractRow {
     /**
@@ -27,6 +29,8 @@ abstract class DefaultRow extends AbstractRow {
      * @var array
      */
     private $metaData;
+    /** @var bool */
+    private $required = false;
     /**
      * @var int
      */
@@ -59,12 +63,28 @@ abstract class DefaultRow extends AbstractRow {
         $this->metaData = $this->metaDataFactory->getMetaData($tableName, $modelAccessKey);
     }
 
+    final public function createField(...$args): BaseControl {
+        $field = $this->createFormControl(...$args);
+        if ($this->required) {
+            $field->setRequired();
+        }
+        return $field;
+    }
+
     /**
      * @param string $value
      * @return void
      */
     final public function setPermissionValue(string $value) {
         $this->permissionValue = constant(self::class . '::' . $value);
+    }
+
+    /**
+     * @param bool $value
+     * @return void
+     */
+    final public function setRequired(bool $value) {
+        $this->required = $value;
     }
 
     final public function getPermissionsValue(): int {
@@ -90,4 +110,6 @@ abstract class DefaultRow extends AbstractRow {
     final protected function getMetaData(): array {
         return $this->metaData;
     }
+
+    abstract protected function createFormControl(...$args): BaseControl;
 }

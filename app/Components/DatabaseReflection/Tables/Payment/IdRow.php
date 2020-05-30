@@ -12,16 +12,13 @@ use Nette\Utils\Html;
  */
 class IdRow extends AbstractPaymentRow {
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Payment id');
     }
 
     /**
-     * @param ModelPayment|AbstractModelSingle $model
-     * @inheritDoc
+     * @param AbstractModelSingle|ModelPayment $model
+     * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         return Html::el('span')->addText('#' . $model->getPaymentId());

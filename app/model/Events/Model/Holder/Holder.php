@@ -157,12 +157,14 @@ class Holder {
 
     /**
      * @param ModelEvent $event
+     * @return static
      * @throws NeonSchemaException
      */
-    public function inferEvent(ModelEvent $event) {
+    public function inferEvent(ModelEvent $event): self {
         foreach ($this->getBaseHolders() as $baseHolder) {
             $baseHolder->inferEvent($event);
         }
+        return $this;
     }
 
     /**

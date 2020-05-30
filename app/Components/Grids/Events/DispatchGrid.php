@@ -57,7 +57,7 @@ class DispatchGrid extends BaseGrid {
         $events = $this->serviceEvent->getTable()->order('begin DESC');
         $this->setDataSource(new NDataSource($events));
 
-        $this->addColumns(['event.event_id', 'event.name', 'referenced.contest', 'event.year']);
+        $this->addColumns(['event.event_id', 'event.name', 'contest.contestBadge', 'event.year']);
 
         $this->addColumn('roles', _('Roles'))->setRenderer(function (ModelEvent $event) {
             $roles = $this->person->getRolesForEvent($event, $this->yearCalculator);

@@ -14,16 +14,11 @@ use Nette\Utils\Html;
  * *
  */
 class SchoolNameRow extends AbstractRow {
-    /**
-     * @return int
-     */
+
     public function getPermissionsValue(): int {
         return self::PERMISSION_USE_GLOBAL_ACL;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('School');
     }

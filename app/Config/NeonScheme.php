@@ -4,6 +4,7 @@ namespace FKSDB\Config;
 
 use FKSDB\Config\Expressions\Helpers;
 use Nette\InvalidArgumentException;
+use Nette\Neon\Exception;
 use Nette\Utils\Arrays;
 
 /**
@@ -26,10 +27,12 @@ class NeonScheme {
      */
     public static function readSection($section, $sectionScheme) {
         if (!is_array($section)) {
-            throw new NeonSchemaException('Expected array got \'' . (string) $section . '\'.');
+            throw new NeonSchemaException('Expected array got \'' . (string)$section . '\'.');
         }
         $result = [];
         foreach ($sectionScheme as $key => $metadata) {
+
+
             if ($metadata === null || !array_key_exists('default', $metadata)) {
                 try {
                     $result[$key] = Arrays::get($section, $key);
@@ -40,7 +43,7 @@ class NeonScheme {
                     continue;
                 }
             } else {
-                $result[$key] = Arrays::get($section, $key, $metadata['default']);
+                $result[$key] = isset($section[$key]) ? $section[$key] : $metadata['default'];
             }
 
             $typeDef = Arrays::get($metadata, 'type', self::TYPE_NEON);
@@ -50,9 +53,9 @@ class NeonScheme {
 
             if ($type == self::TYPE_EXPRESSION) {
                 if ($qualifier == self::QUALIFIER_ARRAY) {
-                    $result[$key] = array_map(function($it) {
-                                return Helpers::statementFromExpression($it);
-                            }, $result[$key]);
+                    $result[$key] = array_map(function ($it) {
+                        return Helpers::statementFromExpression($it);
+                    }, $result[$key]);
                 } elseif ($qualifier === null) {
                     $result[$key] = Helpers::statementFromExpression($result[$key]);
                 } else {

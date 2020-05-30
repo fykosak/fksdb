@@ -31,20 +31,48 @@ parameters:
 DBReflection:
     tables:
          event:
-             event_id:
-                 type: primaryKey
-                 title: _('Event Id')
-             event_year: FKSDB\Components\DatabaseReflection\Event\EventYearRow
-             name: FKSDB\Components\DatabaseReflection\Event\NameRow
-             begin: FKSDB\Components\DatabaseReflection\Event\BeginRow
-             end: FKSDB\Components\DatabaseReflection\Event\EndRow
-             registration_begin: FKSDB\Components\DatabaseReflection\Event\RegistrationBeginRow
-             registration_end: FKSDB\Components\DatabaseReflection\Event\RegistrationEndRow
-             report: FKSDB\Components\DatabaseReflection\Event\ReportRow
-             parameters: FKSDB\Components\DatabaseReflection\Event\ParametersRow
-             year: FKSDB\Components\DatabaseReflection\Event\YearRow
-             event_type: FKSDB\Components\DatabaseReflection\Event\EventTypeRow
-             event_type_id: FKSDB\Components\DatabaseReflection\Event\EventTypeRow
+             modelClassName: FKSDB\ORM\Models\ModelEvent
+             referencedAccess:
+                modelClassName: FKSDB\ORM\Models\IEventReferencedModel
+                method: getEvent
+                nullable: false
+             fields:
+                event_id:
+                    type: primaryKey
+                    title: _('Event Id')
+                parameters:
+                    type: text
+                    title: _(Parameters)
+                    description: _('V Neon syntaxi, schéma je specifické pro definici akce.')
+                name:
+                    type: string
+                    title: _(Name)
+                    description: _('U soustředka místo.')
+                    required: true
+                begin:
+                    type: dateTime
+                    title: _(Event begin)
+                    required: true
+                end:
+                    type: dateTime
+                    title: _(Event end)
+                    required: false
+                    description: _('U jednodenních akcí shodný se začátkem.')
+                registration_begin:
+                    type: dateTime
+                    title:  _(Registration begin)
+                registration_end:
+                    type: dateTime
+                    title: _(Registration end)
+                report:
+                    type: text
+                    description: _(Shrnující text k akci.)
+                    title: _(Report)
+                event_year: FKSDB\Components\DatabaseReflection\Event\EventYearRow
+                year: FKSDB\Components\DatabaseReflection\Event\YearRow
+                event_type: FKSDB\Components\DatabaseReflection\Event\EventTypeRow
+                event_type_id: FKSDB\Components\DatabaseReflection\Event\EventTypeRow
+                event_link: FKSDB\Components\DatabaseReflection\ReferencedRows\EventLink
          payment:
              modelClassName: FKSDB\ORM\Models\ModelPayment
              referencedAccess:
@@ -101,7 +129,9 @@ DBReflection:
                  title: _(Person Id)
                  permission: PERMISSION_ALLOW_BASIC
              gender: FKSDB\Components\DatabaseReflection\Person\GenderRow
-             created: FKSDB\Components\DatabaseReflection\Person\CreatedRow
+             created:
+                 type: dateTime
+                 title: _(Created)
              born_family_name:
                  type: string
                  title: _(Born family name)
@@ -141,7 +171,10 @@ DBReflection:
              born: FKSDB\Components\DatabaseReflection\PersonInfo\BornRow
              born_id: FKSDB\Components\DatabaseReflection\PersonInfo\BornIdRow
              birthplace: FKSDB\Components\DatabaseReflection\PersonInfo\BirthplaceRow
-             career: FKSDB\Components\DatabaseReflection\PersonInfo\CareerRow
+             career:
+                 title: _(Co právě dělá)
+                 type: text
+                 description: _(Zobrazeno v seznamu organizátorů)
              im: FKSDB\Components\DatabaseReflection\PersonInfo\ImRow
              agreed: FKSDB\Components\DatabaseReflection\PersonInfo\AgreedRow
              uk_login:
@@ -190,7 +223,9 @@ DBReflection:
                  type: primaryKey
                  title: _(login Id)
              hash: FKSDB\Components\DatabaseReflection\Login\HashRow
-             last_login: FKSDB\Components\DatabaseReflection\Login\LastLoginRow
+             last_login:
+                 type: dateTime
+                 title: _(Last logged)
              login:
                  type: string
                  title: _(Login)
@@ -201,7 +236,9 @@ DBReflection:
                  type: state
                  title: _(State)
                  states: %event_participant.states%
-             created: FKSDB\Components\DatabaseReflection\EventParticipant\CreatedRow
+             created:
+                 type: dateTime
+                 title: _(Created)
              person_id: FKSDB\Components\DatabaseReflection\EventParticipant\PersonIdRow
              swimmer: FKSDB\Components\DatabaseReflection\EventParticipant\SwimmerRow
              price: FKSDB\Components\DatabaseReflection\EventParticipant\PriceRow
@@ -276,9 +313,20 @@ DBReflection:
              fyziklani_submit_id:
                  type: primaryKey
                  title: _(Submit Id)
-             state: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\StateRow
-             created: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\CreatedRow
-             modified: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\ModifiedRow
+             state:
+                 type: state
+                 title: _(State)
+                 states:
+                     not_checked: [badge: 'badge badge-danger', label: 'not checked']
+                     checked: [badge: 'badge badge-success', label: 'checked']
+             created:
+                 type: dateTime
+                 title: _(Created)
+                 format: 'H:m:s d-M-Y'
+             modified:
+                 type: dateTime
+                 title: _(Modified)
+                 format: 'H:m:s d-M-Y'
              points: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\PointsRow
          fyziklani_task:
              modelClassName: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask
@@ -300,10 +348,18 @@ DBReflection:
              tasks_on_board:
                  type: string
                  title: Tasks on board
-             game_start: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup\GameStartRow
-             game_end: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup\GameEndRow
-             result_display: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup\ResultDisplayRow
-             result_hide: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup\ResultHideRow
+             game_start:
+                 type: dateTime
+                 title: _(Game start)
+             game_end:
+                 type: dateTime
+                 title: _(Game end)
+             result_display:
+                 type: dateTime
+                 title: _(Results display)
+             result_hide:
+                 type: dateTime
+                 title: _(Results hide)
              refresh_delay: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup\RefreshDelayRow
              result_hard_display: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup\ResultHardDisplayRow
              available_points: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup\AvailablePointsRow
@@ -331,7 +387,9 @@ DBReflection:
                 note: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NoteRow
                 password: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\PasswordRow
                 category: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\CategoryRow
-                created: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\CreatedRow
+                created:
+                    type: dateTime
+                    title: _(Created)
                 game_lang: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\GameLangRow
                 force_a: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\ForceARow
                 rank_category: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\RankInCategoryRow
@@ -342,18 +400,34 @@ DBReflection:
              tags: FKSDB\Components\DatabaseReflection\StoredQuery\StoredQuery\TagsRow
          schedule_group:
              schedule_group_type: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleGroup\ScheduleGroupTypeRow
-             start: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleGroup\StartRow
-             end: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleGroup\EndRow
-             name_cs: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleGroup\NameCsRow
-             name_en: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleGroup\NameEnRow
+             start:
+                 type: dateTime
+                 title: _(Schedule start)
+             end:
+                 type: dateTime
+                 title: _(Schedule end)
+             name_cs:
+                 type: string
+                 title: _(Name cs)
+             name_en:
+                 type: string
+                 title: _(Name en)
          schedule_item:
              require_id_number: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\RequireIdNumberRow
              price_czk: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\PriceCZKRow
              price_eur: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\PriceEURRow
-             name_en: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\NameENRow
-             name_cs: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\NameCSRow
-             description_en: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\DescriptionENRow
-             description_cs: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\DescriptionCSRow
+             name_en:
+                 type: string
+                 title: _(Name en)
+             name_cs:
+                 type: string
+                 title: _(Name cs)
+             description_en:
+                 type: string
+                 title: _(Description en)
+             description_cs:
+                 type: string
+                 title: _(Description cs)
              capacity: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\CapacityRow
              free_capacity: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\FreeCapacityRow
              used_capacity: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\UsedCapacityRow
@@ -365,7 +439,6 @@ DBReflection:
              note: FKSDB\Components\DatabaseReflection\Tables\Teacher\NoteRow
          referenced:
              person_link: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonLinkRow
-             event_link: FKSDB\Components\DatabaseReflection\ReferencedRows\EventLink
              person_name: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonNameRow
              payment_id: FKSDB\Components\DatabaseReflection\ReferencedRows\PaymentRow
              contest: FKSDB\Components\DatabaseReflection\ReferencedRows\ContestRow
@@ -399,6 +472,14 @@ DBReflection:
                  year:
                      type: string
                      title: _(Year)
+         contest:
+             modelClassName: FKSDB\ORM\Models\ModelContest
+             referencedAccess:
+                modelClassName: FKSDB\ORM\Models\IContestReferencedModel
+                method: getContest
+                nullable: false
+             fields:
+                  contestBadge: FKSDB\Components\DatabaseReflection\ReferencedRows\ContestRow
 
     links:
         payment.detail:

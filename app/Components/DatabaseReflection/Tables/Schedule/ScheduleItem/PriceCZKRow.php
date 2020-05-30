@@ -22,9 +22,6 @@ class PriceCZKRow extends AbstractScheduleItemRow {
         return Html::el('span')->addText($model->getPrice(Price::CURRENCY_CZK)->__toString());
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Price CZK');
     }

@@ -5,7 +5,6 @@ namespace FKSDB\ORM\Models;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
@@ -39,7 +38,7 @@ use Nette\Security\IResource;
  * @property-read string used_drugs užívané léky
  * @property-read string schedule
  */
-class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel, IPaymentModel, IPersonReferencedModel, IResource {
+class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel, IPersonReferencedModel, IResource {
     const RESOURCE_ID = 'event.participant';
 
     /**

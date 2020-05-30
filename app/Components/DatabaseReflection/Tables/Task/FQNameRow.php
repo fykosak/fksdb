@@ -16,23 +16,17 @@ use Nette\Utils\Html;
 class FQNameRow extends AbstractRow {
 
     /**
-     * @inheritDoc
-     * @param ModelTask $model
+     * @param AbstractModelSingle|ModelTask $model
+     * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         return Html::el('span')->addText($model->getFQName());
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_USE_GLOBAL_ACL;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getTitle(): string {
         return _('Task');
     }

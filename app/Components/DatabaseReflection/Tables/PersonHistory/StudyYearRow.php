@@ -28,16 +28,10 @@ class StudyYearRow extends AbstractRow {
         $this->yearCalculator = $yearCalculator;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Study year');
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_BASIC;
     }
@@ -91,9 +85,6 @@ class StudyYearRow extends AbstractRow {
         ];
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'study_year';
     }

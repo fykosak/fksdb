@@ -13,9 +13,6 @@ use Nette\Forms\Form;
 class EventYearRow extends AbstractEventRowFactory {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Event year');
     }
@@ -32,9 +29,6 @@ class EventYearRow extends AbstractEventRowFactory {
         return $control;
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'event_year';
     }

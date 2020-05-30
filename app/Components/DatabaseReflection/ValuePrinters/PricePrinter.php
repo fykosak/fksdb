@@ -9,7 +9,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PricePrinter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PricePrinter extends AbstractValuePrinter {
     /**

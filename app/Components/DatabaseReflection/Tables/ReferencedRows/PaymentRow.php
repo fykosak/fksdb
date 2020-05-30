@@ -7,7 +7,7 @@ use FKSDB\Components\DatabaseReflection\Payment\StateRow;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\IPaymentReferencedModel;
-use Nette\Application\BadRequestException;
+use FKSDB\ORM\Models\ModelPayment;
 use Nette\Utils\Html;
 
 /**
@@ -17,8 +17,9 @@ use Nette\Utils\Html;
 class PaymentRow extends AbstractRow {
 
     /**
-     * @inheritDoc
-     * @throws BadRequestException
+     * @param AbstractModelSingle|ModelPayment $model
+     * @return Html
+     * @throws BadTypeException
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         if (!$model instanceof IPaymentReferencedModel) {
@@ -34,16 +35,10 @@ class PaymentRow extends AbstractRow {
 
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_USE_GLOBAL_ACL;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getTitle(): string {
         return _('Payment');
     }

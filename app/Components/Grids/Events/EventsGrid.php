@@ -72,7 +72,7 @@ class EventsGrid extends BaseGrid {
             'event.event_year',
         ]);
 
-        $this->addLinkButton(':Event:dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
+        $this->addLinkButton(':Event:Dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
         $this->addLinkButton('edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
 
         $this->addLink('event_participant.list');

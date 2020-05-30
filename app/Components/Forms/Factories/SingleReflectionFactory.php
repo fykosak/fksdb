@@ -47,7 +47,7 @@ abstract class SingleReflectionFactory {
      * @throws \Exception
      */
     public function createField(string $fieldName, ...$args): BaseControl {
-        return $this->loadFactory($fieldName)->createField();
+        return $this->loadFactory($fieldName)->createField(...$args);
     }
 
     /**

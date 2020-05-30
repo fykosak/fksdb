@@ -8,7 +8,6 @@ use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Machine;
@@ -39,7 +38,7 @@ use Nette\Security\IResource;
  * @property-read string iban
  * @property-read string swift
  */
-class ModelPayment extends AbstractModelSingle implements IResource, IStateModel, IEventReferencedModel, IPaymentModel, IPersonReferencedModel {
+class ModelPayment extends AbstractModelSingle implements IResource, IStateModel, IEventReferencedModel, IPersonReferencedModel {
     const STATE_WAITING = 'waiting'; // waiting for confirm payment
     const STATE_RECEIVED = 'received'; // payment received
     const STATE_CANCELED = 'canceled'; // payment canceled

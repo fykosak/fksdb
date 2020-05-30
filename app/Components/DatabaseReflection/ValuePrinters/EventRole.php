@@ -27,10 +27,6 @@ class EventRole {
         return self::getHtml($roles);
     }
 
-    /**
-     * @param array $roles
-     * @return Html
-     */
     public static function getHtml(array $roles): Html {
         $container = Html::el('span');
 

@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\Links;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Application\BadRequestException;
 
@@ -11,18 +12,15 @@ use Nette\Application\BadRequestException;
  */
 class ParticipantDetailLink extends AbstractLink {
 
-    /**
-     * @inheritDoc
-     */
     public function getText(): string {
         return _('Detail');
     }
 
     /**
-     * @param ModelEventParticipant $model
-     * @inheritDoc
+     * @param ModelEventParticipant|AbstractModelSingle $model
+     * @return string
      */
-    public function getDestination($model): string {
+    public function getDestination(AbstractModelSingle $model): string {
         try {
             $model->getFyziklaniTeam();
             return ':Event:TeamApplication:detail';
@@ -32,10 +30,10 @@ class ParticipantDetailLink extends AbstractLink {
     }
 
     /**
-     * @param ModelEventParticipant $model
-     * @inheritDoc
+     * @param AbstractModelSingle|ModelEventParticipant $model
+     * @return array
      */
-    public function prepareParams($model): array {
+    public function prepareParams(AbstractModelSingle $model): array {
         try {
             $team = $model->getFyziklaniTeam();
             return [

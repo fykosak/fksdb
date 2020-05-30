@@ -13,9 +13,6 @@ use Nette\Forms\Form;
 class SinceRow extends AbstractOrgRowFactory {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Since');
     }
@@ -37,9 +34,6 @@ class SinceRow extends AbstractOrgRowFactory {
         return $control;
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'since';
     }

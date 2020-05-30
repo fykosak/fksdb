@@ -18,16 +18,10 @@ class TShirtSizeRow extends AbstractParticipantRow {
         'F' => 'female',
     ];
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('T-shirt size');
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'tshirt_size';
     }

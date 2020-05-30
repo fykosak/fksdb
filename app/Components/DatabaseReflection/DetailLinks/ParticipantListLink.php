@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\Links;
 
 use EventModule\BasePresenter;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelEvent;
 
 /**
@@ -16,10 +17,10 @@ class ParticipantListLink extends AbstractLink {
     }
 
     /**
-     * @param ModelEvent $model
-     * @inheritDoc
+     * @param AbstractModelSingle|ModelEvent $model
+     * @return string
      */
-    public function getDestination($model): string {
+    public function getDestination(AbstractModelSingle $model): string {
         if (in_array($model->event_type_id, BasePresenter::TEAM_EVENTS)) {
             return ':Event:TeamApplication:list';
         } else {
@@ -28,10 +29,10 @@ class ParticipantListLink extends AbstractLink {
     }
 
     /**
-     * @param ModelEvent $model
-     * @inheritDoc
+     * @param AbstractModelSingle|ModelEvent $model
+     * @return array
      */
-    public function prepareParams($model): array {
+    public function prepareParams(AbstractModelSingle $model): array {
         return [
             'eventId' => $model->event_id,
         ];

@@ -13,8 +13,8 @@ use Nette\Utils\Html;
 class OpenedSubmittingRow extends AbstractFyziklaniTeamRow {
 
     /**
-     * @param ModelFyziklaniTeam $model
-     * @inheritDoc
+     * @param AbstractModelSingle|ModelFyziklaniTeam $model
+     * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         $html = Html::el('span');
@@ -28,9 +28,6 @@ class OpenedSubmittingRow extends AbstractFyziklaniTeamRow {
         return $html;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getTitle(): string {
         return _('Submit opened?');
     }

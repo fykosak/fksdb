@@ -11,9 +11,7 @@ use Nette\Utils\Html;
  * *
  */
 class UsedCapacityRow extends AbstractScheduleItemRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Used capacity');
     }

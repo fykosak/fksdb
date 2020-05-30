@@ -26,12 +26,7 @@ class MetaDataFactory {
         $this->connection = $connection;
     }
 
-    /**
-     * @param $table
-     * @param $field
-     * @return array
-     */
-    public function getMetaData($table, $field): array {
+    public function getMetaData(string $table, string $field): array {
         if (!isset($this->metadata[$table])) {
             $this->fetchMeta($table);
         }

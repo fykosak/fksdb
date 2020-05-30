@@ -24,7 +24,7 @@ class PrimaryKeyRow extends DefaultRow {
      * @return BaseControl
      * @throws BadRequestException
      */
-    public function createField(...$args): BaseControl {
+    public function createFormControl(...$args): BaseControl {
         throw new NotImplementedException();
     }
 }

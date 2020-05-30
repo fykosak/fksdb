@@ -8,12 +8,10 @@ use Nette\Utils\Html;
 
 /**
  * Class RefreshDelayRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class RefreshDelayRow extends AbstractFyziklaniGameSetupRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Refresh delay');
     }

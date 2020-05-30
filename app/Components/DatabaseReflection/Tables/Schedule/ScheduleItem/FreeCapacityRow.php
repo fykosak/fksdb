@@ -11,9 +11,7 @@ use Nette\Utils\Html;
  * *
  */
 class FreeCapacityRow extends AbstractScheduleItemRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Free capacity');
     }

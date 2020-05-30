@@ -11,16 +11,10 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 class FyziklaniTeamIdRow extends AbstractFyziklaniTeamRow {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Team Id');
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'e_fyziklani_team_id';
     }

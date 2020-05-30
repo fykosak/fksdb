@@ -14,9 +14,6 @@ use Nette\Forms\Controls\BaseControl;
 class HomepageRow extends AbstractRow {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Homepage');
     }
@@ -29,18 +26,11 @@ class HomepageRow extends AbstractRow {
         return new URLTextBox();
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_BASIC;
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'homepage';
     }
-
 }

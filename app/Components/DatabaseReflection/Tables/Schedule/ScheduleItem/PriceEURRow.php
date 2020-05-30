@@ -22,9 +22,6 @@ class PriceEURRow extends AbstractScheduleItemRow {
         return Html::el('span')->addText($model->getPrice(Price::CURRENCY_EUR)->__toString());
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Price EUR');
     }

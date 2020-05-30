@@ -23,9 +23,6 @@ class NoteRow extends AbstractTeacherRow {
         return Html::el('span')->addText($model->note);
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Note');
     }

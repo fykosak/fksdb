@@ -12,9 +12,7 @@ use Nette\Utils\Html;
  * *
  */
 class TShirtColorRow extends AbstractParticipantRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('T-shirt color');
     }

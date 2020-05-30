@@ -23,9 +23,6 @@ class NumberBrochuresRow extends AbstractTeacherRow {
         return Html::el('span')->addText($model->number_brochures);
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Number of brochures');
     }

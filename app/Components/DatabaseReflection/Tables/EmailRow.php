@@ -19,7 +19,7 @@ class EmailRow extends DefaultRow {
      * @param array $args
      * @return BaseControl
      */
-    public function createField(...$args): BaseControl {
+    public function createFormControl(...$args): BaseControl {
         $control = new TextInput($this->getTitle());
         $control->addCondition(Form::FILLED)
             ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));

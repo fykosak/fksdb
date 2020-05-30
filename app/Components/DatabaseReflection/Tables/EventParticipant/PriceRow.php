@@ -13,9 +13,7 @@ use Nette\Utils\Html;
  * *
  */
 class PriceRow extends AbstractParticipantRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Price');
     }
