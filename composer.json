@@ -1,7 +1,7 @@
 {
   "require": {
     "php": ">=7.0.0",
-    "tracy/tracy": "~2.5.5",
+    "tracy/tracy": "2.5.9",
     "nette/utils": "~2.5.3",
     "nette/tokenizer": "~2.3.0",
     "nette/security": "~2.4.4",
@@ -19,6 +19,8 @@
     "nette/database": "~2.4.8",
     "nette/tester": "~2.0.0",
     "nette/application": "~2.4.0",
+    "setasign/fpdf": "^1.8",
+    "setasign/fpdi": "1.5.4",
     "nette/di": "2.4.16",
     "nette/bootstrap": "2.4.6"
 

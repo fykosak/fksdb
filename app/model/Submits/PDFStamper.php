@@ -2,9 +2,7 @@
 
 namespace FKSDB\Submits;
 
-use fks_pdf_parser_exception;
 use FKSDB\ORM\Models\ModelSubmit;
-use FPDI;
 use Nette\InvalidStateException;
 use Nette\Utils\Strings;
 
@@ -97,7 +95,7 @@ class PDFStamper implements IStorageProcessing {
         $stampText = sprintf($this->getStampMask(), $series, $label, $person->getFullName(), $submit->submit_id);
         try {
             $this->stampText($stampText);
-        } catch (fks_pdf_parser_exception $exception) {
+        } catch (\Exception $exception) {
             throw new ProcessingException('Cannot add stamp to the PDF.', null, $exception);
         }
     }
@@ -107,7 +105,7 @@ class PDFStamper implements IStorageProcessing {
      * @return void
      */
     private function stampText(string $text) {
-        $pdf = new FPDI();
+        $pdf = new \FPDI();
         $pageCount = $pdf->setSourceFile($this->getInputFile());
 
         for ($page = 1; $page <= $pageCount; ++$page) {
