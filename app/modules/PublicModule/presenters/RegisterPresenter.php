@@ -289,7 +289,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @throws BadRequestException
      */
     public function createComponentEmailForm() {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->addText('email', _('e-mail'));
         $form->addSubmit('submit', _('Vyhledat'));
@@ -339,7 +339,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @throws \Exception
      */
     public function createComponentContestantForm() {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $container = new ContainerWithOptions();

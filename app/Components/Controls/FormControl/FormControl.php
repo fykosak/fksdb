@@ -2,10 +2,12 @@
 
 namespace FKSDB\Components\Controls\FormControl;
 
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Exceptions\BadTypeException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\DI\Container;
 use Nette\Templating\FileTemplate;
 
 /**
@@ -13,9 +15,8 @@ use Nette\Templating\FileTemplate;
  * of form/container groups.
  *
  * @author Michal Koutný <michal@fykos.cz>
- * @property FileTemplate $template
  */
-class FormControl extends Control {
+class FormControl extends BaseComponent {
 
     const SNIPPET_MAIN = 'groupContainer';
 

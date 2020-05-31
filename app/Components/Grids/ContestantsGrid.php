@@ -24,12 +24,11 @@ class ContestantsGrid extends BaseGrid {
     private $serviceContestant;
 
     /**
-     * ContestantsGrid constructor.
-     * @param Container $container
+     * @param ServiceContestant $serviceContestant
+     * @return void
      */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->serviceContestant = $container->getByType(ServiceContestant::class);
+    public function injectServiceContestant(ServiceContestant $serviceContestant) {
+        $this->serviceContestant = $serviceContestant;
     }
 
     /**

@@ -31,9 +31,16 @@ class TaskGrid extends BaseGrid {
      * @param Container $container
      */
     public function __construct(ModelEvent $event, Container $container) {
-        $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
-        $this->event = $event;
         parent::__construct($container);
+        $this->event = $event;
+    }
+
+    /**
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     * @return void
+     */
+    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask) {
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 
     /**

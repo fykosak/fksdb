@@ -39,10 +39,11 @@ class TeamApplicationGrid extends AbstractApplicationGrid {
         $this->setDataSource($source);
 
         $this->addColumns([
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.e_fyziklani_team_id',
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.name',
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.status'
+            'e_fyziklani_team.e_fyziklani_team_id',
+            'e_fyziklani_team.name',
+            'e_fyziklani_team.status',
         ]);
+        // TODO to TRF
         $this->addColumn('room', _('Room'))->setRenderer(function (ActiveRow $row) {
             $model = ModelFyziklaniTeam::createFromActiveRow($row);
             $position = $model->getPosition();

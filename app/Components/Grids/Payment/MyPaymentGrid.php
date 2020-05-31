@@ -20,6 +20,7 @@ class MyPaymentGrid extends PaymentGrid {
      * @param BasePresenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

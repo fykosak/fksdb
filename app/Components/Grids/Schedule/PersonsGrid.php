@@ -23,12 +23,11 @@ class PersonsGrid extends BaseGrid {
     private $yearCalculator;
 
     /**
-     * PersonsGrid constructor.
-     * @param Container $container
+     * @param YearCalculator $yearCalculator
+     * @return void
      */
-    public function __construct(Container $container) {
-        $this->yearCalculator = $container->getByType(YearCalculator::class);
-        parent::__construct($container);
+    public function injectYearCalculator(YearCalculator $yearCalculator) {
+        $this->yearCalculator = $yearCalculator;
     }
 
     /**
@@ -42,7 +41,9 @@ class PersonsGrid extends BaseGrid {
 
     /**
      * @param $presenter
+     * @return void
      * @throws DuplicateColumnException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

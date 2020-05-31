@@ -38,6 +38,7 @@ class OrgPaymentGrid extends PaymentGrid {
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

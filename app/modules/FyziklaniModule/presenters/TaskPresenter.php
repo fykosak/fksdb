@@ -56,7 +56,7 @@ class TaskPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentTaskImportForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $form->addUpload('csvfile')->setRequired();

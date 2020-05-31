@@ -147,7 +147,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentUploadForm() {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $prevDeadline = null;

@@ -46,7 +46,7 @@ class EditControl extends FormControl implements IEditEntityForm {
      * @throws BadRequestException
      */
     public function __construct(Container $container, ModelEvent $event) {
-        parent::__construct();
+        parent::__construct($container);
         $this->serviceFyziklaniSubmit = $container->getByType(ServiceFyziklaniSubmit::class);
         $this->translator = $container->getByType(ITranslator::class);
         $this->event = $event;

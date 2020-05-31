@@ -166,7 +166,7 @@ class AllSubmitsGrid extends SubmitsGrid {
         if (!$this->isSearchable()) {
             throw new InvalidStateException("Cannot create search form without searchable data source.");
         }
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->setMethod(Form::GET);
 

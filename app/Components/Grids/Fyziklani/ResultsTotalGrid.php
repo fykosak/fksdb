@@ -50,6 +50,7 @@ class ResultsTotalGrid extends BaseGrid {
     /**
      * @param BasePresenter $presenter
      * @throws DuplicateColumnException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

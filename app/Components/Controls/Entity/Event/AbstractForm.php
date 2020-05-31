@@ -32,7 +32,7 @@ abstract class AbstractForm extends FormControl {
      * @throws \Exception
      */
     public function __construct(Container $container) {
-        parent::__construct();
+        parent::__construct($container);
         $this->container = $container;
     }
 

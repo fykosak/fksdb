@@ -35,7 +35,14 @@ class ContestantsFromSchoolGrid extends BaseGrid {
     public function __construct(ModelSchool $school, Container $container) {
         parent::__construct($container);
         $this->school = $school;
-        $this->serviceContestant = $container->getByType(ServiceContestant::class);
+    }
+
+    /**
+     * @param ServiceContestant $serviceContestant
+     * @return void
+     */
+    public function injectServiceContestant(ServiceContestant $serviceContestant) {
+        $this->serviceContestant = $serviceContestant;
     }
 
     /**

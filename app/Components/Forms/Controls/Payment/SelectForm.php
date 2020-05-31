@@ -109,6 +109,7 @@ class SelectForm extends Control {
 
     /**
      * @param ModelPayment $modelPayment
+     * @return void
      */
     public function setModel(ModelPayment $modelPayment) {
         $this->model = $modelPayment;

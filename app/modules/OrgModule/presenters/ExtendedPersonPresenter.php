@@ -103,7 +103,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @throws \Exception
      */
     private function createComponentFormControl($create) {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $container = new ContainerWithOptions();

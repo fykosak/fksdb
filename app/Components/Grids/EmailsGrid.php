@@ -20,12 +20,11 @@ class EmailsGrid extends BaseGrid {
     private $serviceEmailMessage;
 
     /**
-     * EmailsGrid constructor.
-     * @param Container $container
+     * @param ServiceEmailMessage $serviceEmailMessage
+     * @return void
      */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->serviceEmailMessage = $container->getByType(ServiceEmailMessage::class);
+    public function injectServiceEmailMessage(ServiceEmailMessage $serviceEmailMessage) {
+        $this->serviceEmailMessage = $serviceEmailMessage;
     }
 
     /**

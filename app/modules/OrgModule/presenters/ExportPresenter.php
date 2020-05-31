@@ -494,7 +494,7 @@ class ExportPresenter extends SeriesPresenter {
      * @throws BadRequestException
      */
     private function createDesignForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $group = $form->addGroup(_('SQL'));

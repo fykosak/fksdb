@@ -138,7 +138,7 @@ class ApplicationComponent extends BaseComponent {
      * @throws BadRequestException
      */
     protected function createComponentForm() {
-        $result = new FormControl();
+        $result = new FormControl($this->getContext());
         $form = $result->getForm();
 
         /*

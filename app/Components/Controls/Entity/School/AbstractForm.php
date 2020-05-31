@@ -37,7 +37,7 @@ abstract class AbstractForm extends FormControl {
      * @throws BadRequestException
      */
     public function __construct(Container $container) {
-        parent::__construct();
+        parent::__construct($container);
         $this->addressFactory = $container->getByType(AddressFactory::class);
         $this->schoolFactory = $container->getByType(SchoolFactory::class);
         $this->serviceAddress = $container->getByType(ServiceAddress::class);

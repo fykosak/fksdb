@@ -41,8 +41,16 @@ class DispatchGrid extends BaseGrid {
     public function __construct(ModelPerson $person, Container $container) {
         parent::__construct($container);
         $this->person = $person;
-        $this->serviceEvent = $container->getByType(ServiceEvent::class);
-        $this->yearCalculator = $container->getByType(YearCalculator::class);
+    }
+
+    /**
+     * @param ServiceEvent $serviceEvent
+     * @param YearCalculator $yearCalculator
+     * @return void
+     */
+    public function injectPrimary(ServiceEvent $serviceEvent, YearCalculator $yearCalculator) {
+        $this->serviceEvent = $serviceEvent;
+        $this->yearCalculator = $yearCalculator;
     }
 
     /**

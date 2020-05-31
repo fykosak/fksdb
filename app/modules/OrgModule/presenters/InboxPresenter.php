@@ -221,7 +221,7 @@ class InboxPresenter extends SeriesPresenter {
      * @throws BadRequestException
      */
     protected function createComponentHandoutForm() {
-        $formControl = new FormControl();
+        $formControl = new FormControl($this->getContext());
         $form = $formControl->getForm();
         $orgProvider = new PersonProvider($this->servicePerson);
         $orgProvider->filterOrgs($this->getSelectedContest(), $this->getYearCalculator());

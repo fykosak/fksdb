@@ -125,7 +125,7 @@ class StoredQueryComponent extends BaseComponent {
      * @throws BadRequestException
      */
     protected function createComponentParametrizeForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $queryPattern = $this->storedQuery->getQueryPattern();

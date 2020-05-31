@@ -25,6 +25,7 @@ class HashRow extends AbstractRow {
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         return (new HashPrinter())($model->hash);
     }
+
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_RESTRICT;
     }

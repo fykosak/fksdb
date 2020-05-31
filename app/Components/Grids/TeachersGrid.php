@@ -27,12 +27,11 @@ class TeachersGrid extends BaseGrid {
     private $serviceTeacher;
 
     /**
-     * TeachersGrid constructor.
-     * @param Container $container
+     * @param ServiceTeacher $serviceTeacher
+     * @return void
      */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->serviceTeacher = $container->getByType(ServiceTeacher::class);
+    public function injectServiceTeacher(ServiceTeacher $serviceTeacher) {
+        $this->serviceTeacher = $serviceTeacher;
     }
 
     /**

@@ -83,7 +83,7 @@ class TasksPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     protected function createComponentSeriesForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $source = $form->addRadioList('source', _('Zdroj úloh'), [

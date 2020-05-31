@@ -54,6 +54,7 @@ class ResultsCategoryGrid extends BaseGrid {
     /**
      * @param $presenter
      * @throws DuplicateColumnException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

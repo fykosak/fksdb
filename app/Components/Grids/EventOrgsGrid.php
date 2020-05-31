@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEventOrg;
@@ -36,7 +37,14 @@ class EventOrgsGrid extends BaseGrid {
     public function __construct(ModelEvent $event, Container $container) {
         parent::__construct($container);
         $this->event = $event;
-        $this->serviceEventOrg = $container->getByType(ServiceEventOrg::class);
+    }
+
+    /**
+     * @param ServiceEventOrg $serviceEventOrg
+     * @return void
+     */
+    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
+        $this->serviceEventOrg = $serviceEventOrg;
     }
 
     /**
@@ -45,6 +53,7 @@ class EventOrgsGrid extends BaseGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

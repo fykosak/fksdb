@@ -40,6 +40,7 @@ class PersonsGrid extends BaseGrid {
     /**
      * @param \AuthenticatedPresenter $presenter
      * @throws DuplicateColumnException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

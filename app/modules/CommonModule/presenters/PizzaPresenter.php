@@ -49,7 +49,7 @@ class PizzaPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentPersonsForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $personsField = $this->personFactory->createPersonSelect(true, _('Persons'), new PersonProvider($this->servicePerson));
         $personsField->setMultiSelect(true);

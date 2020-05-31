@@ -28,17 +28,17 @@ class EventsGrid extends BaseGrid {
     private $serviceEvent;
 
     /**
-     * EventsGrid constructor.
-     * @param Container $container
+     * @param ServiceEvent $serviceEvent
+     * @return void
      */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->serviceEvent = $container->getByType(ServiceEvent::class);
+    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+        $this->serviceEvent = $serviceEvent;
     }
 
     /**
      * @param ModelContest $contest
      * @param int $year
+     * @return void
      */
     public function setParams(ModelContest $contest, int $year) {
         $events = $this->serviceEvent->getEvents($contest, $year);

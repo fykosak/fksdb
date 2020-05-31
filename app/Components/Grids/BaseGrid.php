@@ -40,6 +40,10 @@ abstract class BaseGrid extends Grid {
      * @var TableReflectionFactory
      */
     protected $tableReflectionFactory;
+    /**
+     * @var Container
+     */
+    private $container;
 
     /**
      * BaseGrid constructor.
@@ -47,6 +51,7 @@ abstract class BaseGrid extends Grid {
      */
     public function __construct(Container $container) {
         parent::__construct();
+        $this->container = $container;
         $container->callInjects($this);
     }
 
@@ -143,7 +148,7 @@ abstract class BaseGrid extends Grid {
         if (!$this->isSearchable()) {
             throw new InvalidStateException("Cannot create search form without searchable data source.");
         }
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
         //$form = new Form();
         $form->setMethod(Form::GET);
@@ -199,7 +204,7 @@ abstract class BaseGrid extends Grid {
         $modelClassName = $this->getModelClassName();
         $factory = $this->tableReflectionFactory->loadRowFactory($name);
 
-        $this->addColumn(str_replace(',', '__', $name), $factory->getTitle())->setRenderer(function ($model) use ($factory, $modelClassName) {
+        $this->addColumn(str_replace('.', '__', $name), $factory->getTitle())->setRenderer(function ($model) use ($factory, $modelClassName) {
             if (!$model instanceof $modelClassName) {
                 $model = $modelClassName::createFromActiveRow($model);
             }
@@ -331,5 +336,9 @@ abstract class BaseGrid extends Grid {
         $response->setQuotes(true);
         $response->setGlue(',');
         $this->getPresenter()->sendResponse($response);
+    }
+
+    protected function getContext(): Container {
+        return $this->container;
     }
 }

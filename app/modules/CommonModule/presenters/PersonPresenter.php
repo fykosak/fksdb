@@ -259,7 +259,7 @@ class PersonPresenter extends BasePresenter {
      * @throws \Exception
      */
     public function createComponentFormSearch(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $container = new ContainerWithOptions();
@@ -303,7 +303,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     protected function createComponentMergeForm() {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $form->addSubmit('send', _('Sloučit osoby'))->getControlPrototype()->addAttributes(['class' => 'btn-lg']);

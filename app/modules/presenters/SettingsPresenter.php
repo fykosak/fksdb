@@ -103,7 +103,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
      * @throws BadRequestException
      */
     protected function createComponentSettingsForm() {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
         /**
          * @var ModelLogin $login

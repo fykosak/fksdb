@@ -120,14 +120,16 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     /**
-     * @param $allowClear
+     * @param bool $allowClear
+     * @return void
      */
-    public function setAllowClear($allowClear) {
+    public function setAllowClear(bool $allowClear) {
         $this->allowClear = $allowClear;
     }
 
     /**
      * @param IComponent $child
+     * @return void
      */
     protected function validateChildComponent(IComponent $child) {
         if (!$child instanceof BaseControl && !$child instanceof ContainerWithOptions) {
@@ -270,7 +272,8 @@ class ReferencedContainer extends ContainerWithOptions {
     private $attachedAjax = false;
 
     /**
-     * @param $obj
+     * @param IComponent $obj
+     * @return void
      */
     protected function attached($obj) {
         parent::attached($obj);
@@ -286,7 +289,8 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     /**
-     * @param $obj
+     * @param IComponent $obj
+     * @return void
      */
     protected function detached($obj) {
         parent::detached($obj);
