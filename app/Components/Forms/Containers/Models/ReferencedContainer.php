@@ -85,7 +85,7 @@ class ReferencedContainer extends ContainerWithOptions {
     /**
      * @param bool $value
      */
-    public function setDisabled($value = TRUE) {
+    public function setDisabled($value = true): void {
         foreach ($this->getControls() as $control) {
             $control->setDisabled($value);
         }
@@ -96,7 +96,7 @@ class ReferencedContainer extends ContainerWithOptions {
      * @param callable|null $searchCallback
      * @param callable|null $termToValuesCallback
      */
-    public function setSearch(IControl $control = null, callable $searchCallback = null, callable $termToValuesCallback = null) {
+    public function setSearch(IControl $control = null, callable $searchCallback = null, callable $termToValuesCallback = null): void {
         if ($control == null) {
             $this->referencedId->setValue(null); //is it needed?
             $this->hasSearch = false;
@@ -163,7 +163,7 @@ class ReferencedContainer extends ContainerWithOptions {
      * @staticvar array $searchComponents
      * @param bool $value
      */
-    public function setSearchButton($value) {
+    public function setSearchButton($value): void {
         static $searchComponents = [
             self::CONTROL_SEARCH,
             self::SUBMIT_SEARCH,
@@ -190,7 +190,7 @@ class ReferencedContainer extends ContainerWithOptions {
      *
      * @param bool $value
      */
-    public function setClearButton($value) {
+    public function setClearButton($value): void {
         if (!$this->getAllowClear()) {
             $value = false;
         }

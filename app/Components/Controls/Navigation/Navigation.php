@@ -154,40 +154,28 @@ class Navigation extends BaseComponent {
     }
 
     /**
-     * @param $idChild
-     * @param $idParent
+     * @param mixed $idChild
+     * @param mixed $idParent
      * @return void
      */
-    public function addParent($idChild, $idParent) {
+    public function addParent($idChild, $idParent): void {
         if (!isset($this->nodeChildren)) {
             $this->nodeChildren[$idParent] = [];
         }
         $this->nodeChildren[$idParent][] = $idChild;
     }
 
-    /**
-     * @param string $root
-     * @return void
-     */
-    public function renderNavbar(string $root) {
+    public function renderNavbar(string $root): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.navbar.latte');
         $this->renderFromRoot([$root => $this->structure[$root]]);
     }
 
-    /**
-     * @param string $root
-     * @return void
-     */
-    public function render(string $root) {
+    public function render(string $root): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.latte');
         $this->renderFromRoot($this->structure[$root]);
     }
 
-    /**
-     * @param array $nodes
-     * @return void
-     */
-    private function renderFromRoot(array $nodes) {
+    private function renderFromRoot(array $nodes): void {
         $this->template->nodes = $nodes;
         $this->template->render();
     }

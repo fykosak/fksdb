@@ -27,7 +27,7 @@ class ServiceMSousParticipant extends AbstractServiceMulti {
      * Delete post contact including the address.
      * @param IModel|AbstractModelMulti $model
      */
-    public function dispose(IModel $model) {
+    public function dispose(IModel $model): void {
         parent::dispose($model);
         $this->getMainService()->dispose($model->getMainModel());
     }

@@ -68,7 +68,7 @@ class EditForm extends AbstractForm implements IEditEntityForm {
      * @throws BadRequestException
      * @throws NeonSchemaException
      */
-    public function setModel(AbstractModelSingle $model) {
+    public function setModel(AbstractModelSingle $model): void {
         $this->model = $model;
         $this->getForm()->setDefaults([
             self::CONT_EVENT => $model->toArray(),

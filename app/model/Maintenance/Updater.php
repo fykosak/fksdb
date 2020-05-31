@@ -27,7 +27,7 @@ class Updater {
     /**
      * @param $requestedBranch
      */
-    public function installBranch($requestedBranch) {
+    public function installBranch($requestedBranch): void {
         $deployment = $this->globalParameters['updater']['deployment'];
         foreach ($deployment as $path => $branch) {
             if ($branch != $requestedBranch) {
@@ -41,7 +41,7 @@ class Updater {
      * @param $path
      * @param $branch
      */
-    private function install($path, $branch) {
+    private function install($path, $branch): void {
         $user = $this->globalParameters['updater']['installUser'];
         $script = $this->globalParameters['updater']['installScript'];
         $cmd = "sudo -u {$user} {$script} $path $branch >/dev/null 2>/dev/null &";

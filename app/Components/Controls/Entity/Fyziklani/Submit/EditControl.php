@@ -60,13 +60,12 @@ class EditControl extends FormControl implements IEditEntityForm {
      * @param AbstractModelSingle|ModelFyziklaniSubmit $submit
      * @throws BadRequestException
      */
-    public function setModel(AbstractModelSingle $submit) {
+    public function setModel(AbstractModelSingle $submit): void {
         $this->submit = $submit;
         $this->getForm()->setDefaults([
             'team_id' => $this->submit->e_fyziklani_team_id,
             'points' => $this->submit->points,
         ]);
-
     }
 
     /**

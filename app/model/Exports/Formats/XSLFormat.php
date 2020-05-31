@@ -52,9 +52,9 @@ class XSLFormat implements IExportFormat {
     }
 
     /**
-     * @param $parameters
+     * @param mixed $parameters
      */
-    public function setParameters($parameters) {
+    public function setParameters($parameters): void {
         $this->parameters = $parameters;
     }
 

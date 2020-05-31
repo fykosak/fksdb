@@ -34,42 +34,29 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      *
      *
      */
-    public function getLogin() {
+    public function getLogin(): ?ModelLogin {
         $logins = $this->related(DbNames::TAB_LOGIN, 'person_id');
         $logins->rewind();
         if (!$logins->valid()) {
             return null;
         }
-
         return ModelLogin::createFromActiveRow($logins->current());
     }
 
-    /**
-     * @return string|null
-     */
-    public function getPreferredLang() {
+    public function getPreferredLang(): ?string {
         return $this->getInfo() ? $this->getInfo()->preferred_lang : null;
     }
 
-    /**
-     * @return ModelPersonInfo|null
-     */
-    public function getInfo() {
+    public function getInfo(): ?ModelPersonInfo {
         $infos = $this->related(DbNames::TAB_PERSON_INFO, 'person_id');
         $infos->rewind();
         if (!$infos->valid()) {
             return null;
         }
-
         return ModelPersonInfo::createFromActiveRow($infos->current());
     }
 
-    /**
-     * @param int $acYear
-     * @param bool $extrapolated
-     * @return ModelPersonHistory|null
-     */
-    public function getHistory($acYear, $extrapolated = false) {
+    public function getHistory(int $acYear, bool $extrapolated = false): ?ModelPersonHistory {
         $history = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')
             ->where('ac_year', $acYear)->fetch();
         if ($history) {
@@ -248,10 +235,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $this->related(DbNames::TAB_EVENT_ORG, 'person_id');
     }
 
-    /**
-     * @return null|ModelPersonHistory the most recent person's history record (if any)
-     */
-    private function getLastHistory() {
+    private function getLastHistory(): ?ModelPersonHistory {
         $history = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')->order(('ac_year DESC'))->fetch();
 
         if ($history) {
@@ -310,12 +294,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $result;
     }
 
-    /**
-     *
-     * @param string $fullName
-     * @return array
-     */
-    public static function parseFullName($fullName) {
+    public static function parseFullName(?string $fullName): array {
         $names = explode(' ', $fullName);
         $otherName = implode(' ', array_slice($names, 0, count($names) - 1));
         $familyName = $names[count($names) - 1];
@@ -334,7 +313,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     /**
      * Infers gender from name.
      */
-    public function inferGender() {
+    public function inferGender(): void {
         if (mb_substr($this->family_name, -1) == 'á') {
             $this->gender = 'F';
         } else {
@@ -352,7 +331,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @return string|null
      * @throws JsonException
      */
-    public function getSerializedSchedule(int $eventId, string $type) {
+    public function getSerializedSchedule(int $eventId, string $type): ?string {
         if (!$eventId) {
             return null;
         }
@@ -377,7 +356,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * Definitely ugly but, there is only this way... Mišo
      * TODO refactoring
      */
-    public function removeScheduleForEvent(int $eventId) {
+    public function removeScheduleForEvent(int $eventId): void {
         $query = $this->related(DbNames::TAB_PERSON_SCHEDULE, 'person_id')->where('schedule_item.schedule_group.event_id=?', $eventId);
         /** @var ModelPersonSchedule $row */
         foreach ($query as $row) {
@@ -389,10 +368,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $this->related(DbNames::TAB_PAYMENT, 'person_id');
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return GroupedSelection
-     */
     public function getPaymentsForEvent(ModelEvent $event): GroupedSelection {
         return $this->getPayments()->where('event_id', $event->event_id);
     }

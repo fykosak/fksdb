@@ -36,16 +36,10 @@ final class Transition {
 
     private string $toState;
 
-    /**
-     * @return string
-     */
-    public function getFromState() {
+    public function getFromState(): string {
         return $this->fromState;
     }
 
-    /**
-     * @return string
-     */
     public function getToState(): string {
         return $this->toState;
     }
@@ -62,30 +56,18 @@ final class Transition {
         $this->label = $label;
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string {
         return $this->fromState . '__' . $this->toState;
     }
 
-    /**
-     * @return string
-     */
-    public function getType() {
+    public function getType(): string {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     */
-    public function setType(string $type) {
+    public function setType(string $type): void {
         $this->type = $type;
     }
 
-    /**
-     * @return string
-     */
     public function getLabel(): string {
         return _($this->label);
     }
@@ -93,13 +75,10 @@ final class Transition {
     /**
      * @param callable|Statement $callback
      */
-    public function setCondition(callable $callback) {
+    public function setCondition(callable $callback): void {
         $this->condition = $callback;
     }
 
-    /**
-     * @return bool
-     */
     public function isCreating(): bool {
         return $this->fromState === Machine::STATE_INIT;
     }
@@ -112,19 +91,13 @@ final class Transition {
         return ($this->condition)($model);
     }
 
-    /**
-     * @param IStateModel $model
-     */
-    final public function beforeExecute(IStateModel &$model) {
+    final public function beforeExecute(IStateModel &$model): void {
         foreach ($this->beforeExecuteCallbacks as $callback) {
             $callback($model);
         }
     }
 
-    /**
-     * @param IStateModel $model
-     */
-    final public function afterExecute(IStateModel &$model) {
+    final public function afterExecute(IStateModel &$model): void {
         foreach ($this->afterExecuteCallbacks as $callback) {
             $callback($model);
         }

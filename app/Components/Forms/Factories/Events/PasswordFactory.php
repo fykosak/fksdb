@@ -35,7 +35,7 @@ class PasswordFactory extends AbstractFactory {
      * @param BaseMachine $machine
      * @param Container $container
      */
-    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container): void {
         $component->setDefaultValue('');
     }
 
@@ -45,7 +45,7 @@ class PasswordFactory extends AbstractFactory {
      * @param BaseMachine $machine
      * @param Container $container
      */
-    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container): void {
         $component->setDisabled();
     }
 

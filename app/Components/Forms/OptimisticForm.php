@@ -41,7 +41,7 @@ class OptimisticForm extends Form {
      * @param bool $erase
      * @throws LogicException
      */
-    public function setDefaults($values = null, $erase = FALSE) {
+    public function setDefaults($values = null, $erase = false): void {
         if ($values !== null) {
             throw new LogicException('Default values in ' . __CLASS__ . ' are set by the callback.');
         }
@@ -72,9 +72,9 @@ class OptimisticForm extends Form {
     }
 
     /**
-     * @param $fingerprint
+     * @param mixed $fingerprint
      */
-    private function setFingerprint($fingerprint) {
+    private function setFingerprint($fingerprint): void {
         $this[self::FINGERPRINT]->setValue($fingerprint);
     }
 }

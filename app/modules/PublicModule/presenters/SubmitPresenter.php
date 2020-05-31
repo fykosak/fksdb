@@ -68,38 +68,38 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @throws BadRequestException
      */
-    public function authorizedDefault() {
+    public function authorizedDefault(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest()));
     }
 
     /**
      * @throws BadRequestException
      */
-    public function authorizedAjax() {
+    public function authorizedAjax(): void {
         $this->authorizedDefault();
     }
 
     /* ********************** TITLE **********************/
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setTitle(_('Odevzdat řešení'), 'fa fa-cloud-upload');
     }
 
-    public function titleAjax() {
-        return $this->titleDefault();
+    public function titleAjax(): void {
+        $this->titleDefault();
     }
 
     /**
      * @throws BadRequestException
      * @deprecated
      */
-    public function actionDownload() {
+    public function actionDownload(): void {
         throw new GoneException('');
     }
 
     /**
      * @throws BadRequestException
      */
-    public function renderDefault() {
+    public function renderDefault(): void {
         $this->template->hasTasks = count($this->getAvailableTasks()) > 0;
         $this->template->canRegister = false;
         $this->template->hasForward = false;
@@ -121,7 +121,7 @@ class SubmitPresenter extends BasePresenter {
      * @return FormControl
      * @throws BadRequestException
      */
-    public function createComponentUploadForm() {
+    public function createComponentUploadForm(): FormControl {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
@@ -222,7 +222,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws \Exception
      * @internal
      */
-    public function handleUploadFormSuccess(Form $form) {
+    public function handleUploadFormSuccess(Form $form): void {
         $values = $form->getValues();
 
         $taskIds = explode(',', $values['tasks']);
@@ -304,7 +304,7 @@ class SubmitPresenter extends BasePresenter {
      *
      * @throws BadRequestException
      */
-    public function isAvailableSubmit($taskId) {
+    public function isAvailableSubmit($taskId): ?ModelTask {
         /** @var ModelTask $task */
         foreach ($this->getAvailableTasks() as $task) {
             if ($task->task_id == $taskId) {

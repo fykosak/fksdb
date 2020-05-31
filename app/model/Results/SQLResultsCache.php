@@ -34,7 +34,7 @@ class SQLResultsCache {
      * @param ModelContest $contest
      * @param int $year
      */
-    public function invalidate(ModelContest $contest = null, $year = null) {
+    public function invalidate(ModelContest $contest = null, $year = null): void {
         $data = [
             'calc_points' => null,
         ];
@@ -61,7 +61,7 @@ class SQLResultsCache {
      * @param int $year
      * @throws Nette\Application\BadRequestException
      */
-    public function recalculate(ModelContest $contest, $year) {
+    public function recalculate(ModelContest $contest, $year): void {
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($contest, $year);
         if ($evaluationStrategy === null) {
             throw new Nette\InvalidArgumentException('Undefined evaluation strategy for ' . $contest->name . '@' . $year);

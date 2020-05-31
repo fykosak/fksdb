@@ -134,58 +134,36 @@ class Transition {
     /**
      * @param $mask
      */
-    public function setMask($mask) {
+    public function setMask($mask): void {
         $this->mask = $mask;
         [$this->source, $this->target] = self::parseMask($mask);
         $this->setName($mask);
     }
 
-    /**
-     * @return BaseMachine
-     */
-    public function getBaseMachine() {
+    public function getBaseMachine(): BaseMachine {
         return $this->baseMachine;
     }
 
-    /**
-     * @param BaseMachine $baseMachine
-     */
-    public function setBaseMachine(BaseMachine $baseMachine) {
+    public function setBaseMachine(BaseMachine $baseMachine): void {
         $this->baseMachine = $baseMachine;
     }
 
-    /**
-     * @return string
-     */
     public function getTarget(): string {
         return $this->target;
     }
 
-    /**
-     * @return string
-     */
     public function getSource(): string {
         return $this->source;
     }
 
-    /**
-     * @return bool
-     */
     public function isCreating(): bool {
         return strpos($this->source, BaseMachine::STATE_INIT) !== false;
     }
 
-    /**
-     * @return bool
-     */
     public function isTerminating(): bool {
         return $this->target == BaseMachine::STATE_TERMINATED;
     }
 
-    /**
-     * @param Holder $holder
-     * @return bool
-     */
     public function isVisible(Holder $holder): bool {
         return $this->getEvaluator()->evaluate($this->visible, $holder);
     }
@@ -193,28 +171,22 @@ class Transition {
     /**
      * @param $condition
      */
-    public function setCondition($condition) {
+    public function setCondition($condition): void {
         $this->condition = $condition;
     }
 
     /**
      * @param $visible
      */
-    public function setVisible($visible) {
+    public function setVisible($visible): void {
         $this->visible = $visible;
     }
 
-    /**
-     * @return ExpressionEvaluator
-     */
     private function getEvaluator(): ExpressionEvaluator {
         return $this->evaluator;
     }
 
-    /**
-     * @param ExpressionEvaluator $evaluator
-     */
-    public function setEvaluator(ExpressionEvaluator $evaluator) {
+    public function setEvaluator(ExpressionEvaluator $evaluator): void {
         $this->evaluator = $evaluator;
     }
 
@@ -222,7 +194,7 @@ class Transition {
      * @param BaseMachine $targetMachine
      * @param $targetState
      */
-    public function addInducedTransition(BaseMachine $targetMachine, $targetState) {
+    public function addInducedTransition(BaseMachine $targetMachine, $targetState): void {
         if ($targetMachine === $this->getBaseMachine()) {
             throw new InvalidArgumentException("Cannot induce transition in the same machine.");
         }
@@ -343,7 +315,7 @@ class Transition {
      * @param Holder $holder
      * @param Transition[] $inducedTransitions
      */
-    final public function executed(Holder $holder, $inducedTransitions) {
+    final public function executed(Holder $holder, $inducedTransitions): void {
         foreach ($inducedTransitions as $inducedTransition) {
             $inducedTransition->executed($holder, []);
         }
@@ -360,7 +332,7 @@ class Transition {
      * @note Assumes the condition is fullfilled.
      * @param BaseHolder $holder
      */
-    private function changeState(BaseHolder $holder) {
+    private function changeState(BaseHolder $holder): void {
         $holder->setModelState($this->getTarget());
     }
 

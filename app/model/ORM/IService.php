@@ -35,7 +35,7 @@ interface IService {
      * @param IModel $model
      * @return void
      */
-    public function dispose(IModel $model);
+    public function dispose(IModel $model): void;
 
     /**
      * @return Selection

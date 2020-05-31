@@ -47,7 +47,7 @@ class Pipeline {
      * @param Stage $stage
      * @throws InvalidStateException
      */
-    public function addStage(Stage $stage) {
+    public function addStage(Stage $stage): void {
         if ($this->fixedStages) {
             throw new InvalidStateException('Cannot modify pipeline after loading data.');
         }

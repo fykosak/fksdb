@@ -24,7 +24,7 @@ abstract class SubmitsGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * TODO to TRF
      */
-    protected function addColumnTask() {
+    protected function addColumnTask(): void {
         $this->addColumn('label', _('Task'))->setRenderer(function ($row) {
             $model = ModelFyziklaniSubmit::createFromActiveRow($row); // TODO is needed?
             return $model->getFyziklaniTask()->label;

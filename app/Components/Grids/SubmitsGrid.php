@@ -114,7 +114,7 @@ class SubmitsGrid extends BaseGrid {
      * @param $id
      * @throws InvalidLinkException
      */
-    public function handleRevoke(int $id) {
+    public function handleRevoke(int $id): void {
         $logger = new MemoryLogger();
         $this->traitHandleRevoke($logger, $id);
         FlashMessageDump::dump($logger, $this);
@@ -125,7 +125,7 @@ class SubmitsGrid extends BaseGrid {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function handleDownloadUploaded(int $id) {
+    public function handleDownloadUploaded(int $id): void {
         $logger = new MemoryLogger();
         $this->traitHandleDownloadUploaded($logger, $id);
         FlashMessageDump::dump($logger, $this);
@@ -136,7 +136,7 @@ class SubmitsGrid extends BaseGrid {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function handleDownloadCorrected(int $id) {
+    public function handleDownloadCorrected(int $id): void {
         $logger = new MemoryLogger();
         $this->traitHandleDownloadCorrected($logger, $id);
         FlashMessageDump::dump($logger, $this);

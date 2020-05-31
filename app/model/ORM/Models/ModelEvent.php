@@ -26,6 +26,9 @@ use Nette\Security\IResource;
  * @property-read string parameters
  */
 class ModelEvent extends AbstractModelSingle implements IResource, IContestReferencedModel {
+
+    public const TEAM_EVENTS = [1, 9, 13];
+
     public const RESOURCE_ID = 'event';
 
     public function getEventType(): ModelEventType {

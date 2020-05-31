@@ -42,7 +42,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
      * @param int $id
      * @throws BadRequestException
      */
-    public function titleEdit(int $id) {
+    public function titleEdit(int $id): void {
         $this->setTitle(sprintf(_('Úprava organizátora %s'), $this->getModel2($id)->getPerson()->getFullName()), 'fa fa-pencil');
     }
 
@@ -50,15 +50,15 @@ class OrgPresenter extends ExtendedPersonPresenter {
      * @param int $id
      * @throws BadRequestException
      */
-    public function titleDetail(int $id) {
+    public function titleDetail(int $id): void {
         $this->setTitle(sprintf(_('Org %s'), $this->getModel2($id)->getPerson()->getFullName()), 'fa fa-user');
     }
 
-    public function titleCreate() {
+    public function titleCreate(): void {
         $this->setTitle(_('Založit organizátora'), 'fa fa-user-plus');
     }
 
-    public function titleList() {
+    public function titleList(): void {
         $this->setTitle(_('Organizátoři'), 'fa fa-address-book');
     }
 
@@ -67,7 +67,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
      * @throws ForbiddenRequestException
      * @throws BadRequestException
      */
-    public function actionEdit(int $id) {
+    public function actionEdit(int $id): void {
         $org = $this->getModel2($id);
 
         if ($org->contest_id != $this->getSelectedContest()->contest_id) {
@@ -79,7 +79,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
      * @param int $id
      * @throws BadRequestException
      */
-    public function renderDetail(int $id) {
+    public function renderDetail(int $id): void {
         $this->template->model = $this->getModel2($id);
     }
 
@@ -108,7 +108,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
      * @throws BadRequestException
      * @throws \Exception
      */
-    protected function appendExtendedContainer(Form $form) {
+    protected function appendExtendedContainer(Form $form): void {
         $container = $this->orgFactory->createOrg($this->getSelectedContest());
         $form->addComponent($container, ExtendedPersonHandler::CONT_MODEL);
     }

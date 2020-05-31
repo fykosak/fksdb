@@ -73,7 +73,7 @@ class ChooserFactory extends AbstractFactory {
      * @param Container $container
      * @return void
      */
-    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container): void {
         $component->setDefaultValue($field->getValue());
     }
 
@@ -84,7 +84,7 @@ class ChooserFactory extends AbstractFactory {
      * @param Container $container
      * @return void
      */
-    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container): void {
         $component->setDisabled();
     }
 

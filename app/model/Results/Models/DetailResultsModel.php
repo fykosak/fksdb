@@ -64,7 +64,7 @@ class DetailResultsModel extends AbstractResultsModel {
     /**
      * @param mixed $series
      */
-    public function setSeries($series) {
+    public function setSeries($series): void {
         $this->series = $series;
         // invalidate cache of columns
         $this->dataColumns = [];

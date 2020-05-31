@@ -75,18 +75,11 @@ class Merger {
         return $this->logger;
     }
 
-    /**
-     * @param ILogger $logger
-     */
-    public function setLogger(ILogger $logger) {
+    public function setLogger(ILogger $logger): void {
         $this->logger = $logger;
     }
 
-    /**
-     * @param ActiveRow $trunkRow
-     * @param ActiveRow $mergedRow
-     */
-    public function setMergedPair(ActiveRow $trunkRow, ActiveRow $mergedRow) {
+    public function setMergedPair(ActiveRow $trunkRow, ActiveRow $mergedRow): void {
         $this->trunkRow = $trunkRow;
         $this->mergedRow = $mergedRow;
     }
@@ -103,7 +96,7 @@ class Merger {
      *
      * @param mixed $rawValues
      */
-    public function setConflictResolution($rawValues) {
+    public function setConflictResolution($rawValues): void {
         foreach ($rawValues as $table => $pairs) {
             foreach ($pairs as $pairId => $values) {
                 $data = &$this->getPairDataById($table, $pairId);
@@ -184,7 +177,7 @@ class Merger {
         return $tableMerger;
     }
 
-    private function resetConflicts() {
+    private function resetConflicts(): void {
         foreach ($this->conflicts as $table => &$conflictPairs) {
             foreach ($conflictPairs as $pairId => &$data) {
                 unset($data[self::IDX_TRUNK]);

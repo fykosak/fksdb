@@ -139,14 +139,16 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     abstract protected function createComponentGrid(): AbstractApplicationGrid;
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
     public function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
     public function createComponentEditForm(): Control {
         throw new NotImplementedException();

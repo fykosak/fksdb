@@ -48,9 +48,9 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      */
-    public function setParameters($value) {
+    public function setParameters($value): void {
         $this->outerParameters = $value;
     }
 

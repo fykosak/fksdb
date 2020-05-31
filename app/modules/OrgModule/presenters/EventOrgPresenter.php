@@ -70,7 +70,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
      * @param $id
      * @throws AbortException
      */
-    public function actionDelete(int $id) {
+    public function actionDelete(int $id): void {
         $success = $this->serviceEventOrg->getTable()->wherePrimary($id)->delete();
         if ($success) {
             $this->flashMessage(_('Organizátor akce smazán.'), self::FLASH_SUCCESS);
@@ -80,11 +80,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
         $this->redirect('list');
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     */
-    protected function appendExtendedContainer(Form $form) {
+    protected function appendExtendedContainer(Form $form): void {
         $container = new ModelContainer();
         $container->setCurrentGroup(null);
         $container->addText('note', _('Poznámka'));
@@ -120,7 +116,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @inheritDoc
+     * @return mixed|void
      * @throws NotImplementedException
      */
     protected function createComponentGrid() {

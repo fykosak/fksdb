@@ -7,7 +7,7 @@ use Nette\DI\CompilerExtension;
 
 /**
  * Class StalkingExtension
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class StalkingExtension extends CompilerExtension {
 

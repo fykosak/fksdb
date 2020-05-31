@@ -37,7 +37,7 @@ class RelatedPersonAuthorizator {
      * @param Holder $holder
      * @return bool
      */
-    public function isRelatedPerson(Holder $holder) {
+    public function isRelatedPerson(Holder $holder): bool {
         // everyone is related
         if ($holder->getPrimaryHolder()->getModelState() == BaseMachine::STATE_INIT) {
             return true;

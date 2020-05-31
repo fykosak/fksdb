@@ -36,7 +36,7 @@ abstract class DefaultRow extends AbstractRow {
         $this->metaDataFactory = $metaDataFactory;
     }
 
-    final public function setUp(string $tableName, string $modelAccessKey, array $metaData, string $title, ?string $description = null): void {
+    final public function setUp(string $tableName, string $modelAccessKey, string $title, ?string $description): void {
         $this->title = $title;
         $this->tableName = $tableName;
         $this->modelAccessKey = $modelAccessKey;
@@ -47,11 +47,11 @@ abstract class DefaultRow extends AbstractRow {
     /**
      * @param mixed ...$args
      * @return BaseControl
-     * @throws AbstractRowException
+     * @throws OmittedControlException
      */
     final public function createField(...$args): BaseControl {
         if ($this->omitInputField) {
-            throw new AbstractRowException();
+            throw new OmittedControlException();
         }
         $field = $this->createFormControl(...$args);
         if ($this->description) {

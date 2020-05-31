@@ -45,11 +45,7 @@ class StoredQueryTagCloud extends Control {
         $this->mode = $mode;
     }
 
-    /**
-     * @param ModelStoredQuery $modelStoredQuery
-     * @return void
-     */
-    public function setModelStoredQuery(ModelStoredQuery $modelStoredQuery) {
+    public function setModelStoredQuery(ModelStoredQuery $modelStoredQuery): void {
         $this->modelStoredQuery = $modelStoredQuery;
     }
 

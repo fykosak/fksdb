@@ -16,10 +16,7 @@ class GlobalParameters implements ArrayAccess {
 
     use SmartObject;
 
-    /**
-     * @var array
-     */
-    private $parameters;
+    private array $parameters;
 
     /**
      * GlobalParameters constructor.

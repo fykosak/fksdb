@@ -81,7 +81,7 @@ class CumulativeResultsModel extends AbstractResultsModel {
     /**
      * @param mixed $series
      */
-    public function setSeries($series) {
+    public function setSeries($series): void {
         $this->dataColumns = null;
         $this->series = $series;
         // invalidate cache of columns

@@ -37,11 +37,7 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
         return $this->holder;
     }
 
-    /**
-     * @param Holder $holder
-     * @return void
-     */
-    public function setHolder(Holder $holder) {
+    public function setHolder(Holder $holder): void {
         $this->holder = $holder;
     }
 
@@ -138,10 +134,10 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
     }
 
     /**
-     * @param $studyYear
+     * @param mixed $studyYear
      * @return bool
      */
-    private function isStudent($studyYear) {
+    private function isStudent($studyYear): bool {
         return ($studyYear === null) ? false : true;
     }
 }

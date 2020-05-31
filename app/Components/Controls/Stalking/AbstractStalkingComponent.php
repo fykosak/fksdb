@@ -14,8 +14,5 @@ abstract class AbstractStalkingComponent extends StalkingControl {
 
     abstract protected function getHeadline(): string;
 
-    /**
-     * @return string[]
-     */
     abstract protected function getAllowedPermissions(): array;
 }

@@ -13,26 +13,21 @@ class MemoryLogger extends StackedLogger {
     /**
      * @var Message[]
      */
-    private $messages = [];
+    private array $messages = [];
 
     /**
      *
      * @return Message[]
      */
-    public function getMessages() {
+    public function getMessages(): array {
         return $this->messages;
     }
 
-    public function clear() {
+    public function clear(): void {
         $this->messages = [];
     }
 
-    /**
-     * @param Message $message
-     * @return void
-     */
-    protected function doLog(Message $message) {
+    protected function doLog(Message $message): void {
         $this->messages[] = $message;
     }
-
 }

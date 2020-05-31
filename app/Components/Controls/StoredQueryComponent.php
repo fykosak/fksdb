@@ -77,7 +77,7 @@ class StoredQueryComponent extends BaseComponent {
      * @param $parameters
      * @return void
      */
-    public function setParameters($parameters) {
+    public function setParameters($parameters): void {
         $this->parameters = $parameters;
     }
 
@@ -137,7 +137,7 @@ class StoredQueryComponent extends BaseComponent {
     /**
      * @throws BadRequestException
      */
-    public function render() {
+    public function render(): void {
         if ($this->parameters) {
             $this->storedQuery->setParameters($this->parameters);
             $defaults = [];
@@ -166,7 +166,7 @@ class StoredQueryComponent extends BaseComponent {
      * @throws ForbiddenRequestException
      * @throws AbortException
      */
-    public function handleFormat($format) {
+    public function handleFormat($format): void {
         if ($this->parameters) {
             $this->storedQuery->setParameters($this->parameters);
         }

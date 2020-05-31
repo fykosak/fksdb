@@ -211,7 +211,6 @@ class DBReflectionExtension extends CompilerExtension {
             ->addSetup('setUp', [
                 $tableName,
                 isset($field['accessKey']) ? $field['accessKey'] : $fieldName,
-                [], // TODO load metadata here
                 $this->translate($field['title']),
                 isset($field['description']) ? $this->translate($field['description']) : null,
             ]);

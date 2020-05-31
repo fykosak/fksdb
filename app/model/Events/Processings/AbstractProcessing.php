@@ -142,7 +142,7 @@ abstract class AbstractProcessing implements IProcessing {
      * @param ArrayHash $values
      * @param string $prefix
      */
-    private function setValues(ArrayHash $values, $prefix = '') {
+    private function setValues(ArrayHash $values, $prefix = ''): void {
         if (!$prefix) {
             $this->values = $values;
             $this->valuesPathCache = [];

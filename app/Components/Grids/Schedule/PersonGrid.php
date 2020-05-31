@@ -18,12 +18,7 @@ use NiftyGrid\GridException;
  */
 class PersonGrid extends BaseGrid {
 
-    /**
-     * @param ModelEvent $event
-     * @param ModelPerson $person
-     * @return void
-     */
-    public function setData(ModelEvent $event, ModelPerson $person) {
+    public function setData(ModelEvent $event, ModelPerson $person): void {
         $query = $person->getScheduleForEvent($event);
         $dataSource = new NDataSource($query);
         $this->setDataSource($dataSource);
@@ -87,7 +82,7 @@ class PersonGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws BadTypeException
      */
-    protected function addJoinedColumn(string $name, callable $accessCallback) {
+    protected function addJoinedColumn(string $name, callable $accessCallback): void {
         $factory = $this->tableReflectionFactory->loadRowFactory($name);
         $this->addColumn(str_replace('.', '__', $name), $factory->getTitle())->setRenderer(function ($row) use ($factory, $accessCallback) {
             $model = $accessCallback($row);

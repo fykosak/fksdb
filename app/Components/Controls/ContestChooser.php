@@ -89,7 +89,7 @@ class ContestChooser extends BaseComponent {
     /**
      * @param mixed $contestsDefinition role enum|CONTESTS_ALL|array of contests
      */
-    public function setContests($contestsDefinition) {
+    public function setContests($contestsDefinition): void {
         $this->contestsDefinition = $contestsDefinition;
     }
 
@@ -97,7 +97,7 @@ class ContestChooser extends BaseComponent {
      *
      * @param mixed $yearDefinition enum
      */
-    public function setYears($yearDefinition) {
+    public function setYears($yearDefinition): void {
         $this->yearDefinition = $yearDefinition;
     }
 
@@ -112,7 +112,7 @@ class ContestChooser extends BaseComponent {
      * @param $defaultContest
      * @return void
      */
-    public function setDefaultContest($defaultContest) {
+    public function setDefaultContest($defaultContest): void {
         $this->defaultContest = $defaultContest;
     }
 
@@ -127,7 +127,7 @@ class ContestChooser extends BaseComponent {
      * @param $contestSource
      * @return void
      */
-    public function setContestSource($contestSource) {
+    public function setContestSource($contestSource): void {
         $this->contestSource = $contestSource;
     }
 

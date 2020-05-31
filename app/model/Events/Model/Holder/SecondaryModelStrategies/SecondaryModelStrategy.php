@@ -15,10 +15,10 @@ use Nette\InvalidStateException;
 abstract class SecondaryModelStrategy {
 
     /**
-     * @param $holders
-     * @param $models
+     * @param mixed $holders
+     * @param mixed $models
      */
-    public function setSecondaryModels($holders, $models) {
+    public function setSecondaryModels($holders, $models): void {
         $filledHolders = 0;
         foreach ($models as $secondaryModel) {
             $holders[$filledHolders]->setModel($secondaryModel);

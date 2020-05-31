@@ -33,12 +33,12 @@ class GithubPresenter extends AuthenticatedPresenter {
         return AuthenticatedPresenter::AUTH_ALLOW_GITHUB;
     }
 
-    public function authorizedApi() {
+    public function authorizedApi(): void {
         /* Already authenticated user has ultimate access to this presenter. */
         $this->setAuthorized(true);
     }
 
-    public function actionApi() {
+    public function actionApi(): void {
         $type = $this->getFullHttpRequest()->getRequest()->getHeader(Event::HTTP_HEADER);
         $payload = $this->getFullHttpRequest()->getPayload();
         $data = json_decode($payload, true);
@@ -56,7 +56,7 @@ class GithubPresenter extends AuthenticatedPresenter {
     /**
      * @throws AbortException
      */
-    public function renderApi() {
+    public function renderApi(): void {
         $response = new TextResponse("Thank you, Github.");
         $this->sendResponse($response);
     }

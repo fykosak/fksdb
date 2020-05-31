@@ -111,9 +111,9 @@ class ReferencedId extends HiddenField {
     }
 
     /**
-     * @param $modelCreated
+     * @param mixed $modelCreated
      */
-    public function setModelCreated($modelCreated) {
+    public function setModelCreated($modelCreated): void {
         $this->modelCreated = $modelCreated;
     }
 

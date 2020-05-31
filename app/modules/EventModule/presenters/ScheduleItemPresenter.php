@@ -118,25 +118,21 @@ class ScheduleItemPresenter extends BasePresenter {
      * @throws InvalidStateException
      */
     private function getGroup(): ModelScheduleGroup {
-        if (!isset($this->group)) {
-            $group = $this->serviceScheduleGroup->findByPrimary($this->groupId);
-            if (!$group) {
-                throw new InvalidStateException();
-            }
-            $this->group = $group;
-        }
+        $this->group ??= $this->serviceScheduleGroup->findByPrimary($this->groupId);
         return $this->group;
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
     public function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
     public function createComponentEditForm(): Control {
         throw new NotImplementedException();
@@ -153,7 +149,6 @@ class ScheduleItemPresenter extends BasePresenter {
     public function createComponentPersonsGrid(): PersonsGrid {
         return new PersonsGrid($this->getContext());
     }
-
 
     protected function getORMService(): ServiceScheduleItem {
         return $this->serviceScheduleItem;

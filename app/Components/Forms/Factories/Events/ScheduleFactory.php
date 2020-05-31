@@ -51,7 +51,7 @@ class ScheduleFactory extends AbstractFactory {
      * @param BaseMachine $machine
      * @param Container $container
      */
-    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container): void {
         $component->setDefaultValue($field->getValue());
     }
 
@@ -61,7 +61,7 @@ class ScheduleFactory extends AbstractFactory {
      * @param BaseMachine $machine
      * @param Container $container
      */
-    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container): void {
         $component->setDisabled();
     }
 

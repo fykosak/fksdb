@@ -58,11 +58,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         return Helpers::evalExpressionArray($this->globalParameters[$contestName][$this->fieldsDefinition], $this->getContext());
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     */
-    abstract protected function appendExtendedContainer(Form $form);
+    abstract protected function appendExtendedContainer(Form $form): void;
 
     /**
      * @return AbstractServiceMulti|AbstractServiceSingle

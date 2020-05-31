@@ -39,7 +39,7 @@ class UniqueLogin {
     /**
      * @param ModelLogin|null $ignoredLogin
      */
-    public function setIgnoredLogin(ModelLogin $ignoredLogin = null) {
+    public function setIgnoredLogin(ModelLogin $ignoredLogin = null): void {
         $this->ignoredLogin = $ignoredLogin;
     }
 

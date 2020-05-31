@@ -72,11 +72,6 @@ class StalkingComponent extends StalkingControl {
         $this->template->render();
     }
 
-    /**
-     * @param array $definition
-     * @param ModelPerson $person
-     * @return void
-     */
     private function renderMulti(array $definition, ModelPerson $person): void {
         $models = [];
         $query = $person->related($definition['table']);

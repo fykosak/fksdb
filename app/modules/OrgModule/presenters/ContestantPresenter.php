@@ -41,11 +41,7 @@ class ContestantPresenter extends ExtendedPersonPresenter {
         return new ContestantsGrid($this->getContext());
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     */
-    protected function appendExtendedContainer(Form $form) {
+    protected function appendExtendedContainer(Form $form): void {
         // no container for contestant
     }
 

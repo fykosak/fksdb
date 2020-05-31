@@ -96,7 +96,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
      * @param StoredQuery $storedQuery
      * @throws BadRequestException
      */
-    private function presenterContextToQuery(ISeriesPresenter $presenter, StoredQuery $storedQuery) {
+    private function presenterContextToQuery(ISeriesPresenter $presenter, StoredQuery $storedQuery): void {
         // if (!$presenter instanceof Presenter) {
         //   throw new BadRequestException();
         // TODO forced added to IContest Presenter method flashMessage cause of tests
@@ -127,7 +127,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
      * @return void
      * @throws BadRequestException
      */
-    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $format) {
+    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $format): void {
         if (!$dataSource instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got ' . get_class($dataSource) . '.');
         }

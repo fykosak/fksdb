@@ -6,7 +6,7 @@ use FKSDB\Components\DatabaseReflection\AbstractRow;
 
 /**
  * Class AbstractTeacherRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractTeacherRow extends AbstractRow {
     public function getPermissionsValue(): int {

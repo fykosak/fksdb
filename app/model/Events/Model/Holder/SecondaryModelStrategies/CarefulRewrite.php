@@ -78,10 +78,10 @@ class CarefulRewrite extends SecondaryModelStrategy {
     /**
      * @param IModel $currentModel
      * @param IModel $foundModel
-     * @param $joinData
+     * @param mixed $joinData
      * @param IService $service
      */
-    private function updateFoundModel(IModel $currentModel, IModel $foundModel, $joinData, IService $service) {
+    private function updateFoundModel(IModel $currentModel, IModel $foundModel, $joinData, IService $service): void {
         $currentArray = $currentModel->toArray();
         $data = [];
         foreach ($currentArray as $key => $value) {

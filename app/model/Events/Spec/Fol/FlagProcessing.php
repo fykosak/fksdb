@@ -93,10 +93,10 @@ class FlagProcessing extends AbstractProcessing {
     }
 
     /**
-     * @param $studyYear
+     * @param mixed $studyYear
      * @return bool
      */
-    private function isStudent($studyYear) {
+    private function isStudent($studyYear): bool {
         return ($studyYear === null) ? false : true;
     }
 }

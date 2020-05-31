@@ -7,7 +7,7 @@ use Nette\Utils\Html;
 
 /**
  * Class AbstractValuePrinter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractValuePrinter {
     /**

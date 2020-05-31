@@ -49,15 +49,11 @@ class Message {
      * @return void
      * @deprecated
      */
-    public function setText(string $message) {
+    public function setText(string $message): void {
         $this->message = $message;
     }
 
-    /**
-     * @param string $message
-     * @return void
-     */
-    public function setMessage(string $message) {
+    public function setMessage(string $message): void {
         $this->message = $message;
     }
 
@@ -69,11 +65,7 @@ class Message {
         return $this->level;
     }
 
-    /**
-     * @param string $level
-     * @return void
-     */
-    public function setLevel(string $level) {
+    public function setLevel(string $level): void {
         $this->level = $level;
     }
 

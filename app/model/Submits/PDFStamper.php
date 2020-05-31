@@ -92,11 +92,7 @@ class PDFStamper implements IStorageProcessing {
         }
     }
 
-    /**
-     * @param string $text
-     * @return void
-     */
-    private function stampText(string $text) {
+    private function stampText(string $text): void {
         $pdf = new \FPDI();
         $pageCount = $pdf->setSourceFile($this->getInputFile());
 

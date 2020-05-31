@@ -40,7 +40,7 @@ class EditForm extends AbstractForm implements IEditEntityForm {
      * @param AbstractModelSingle|ModelSchool $model
      * @throws BadRequestException
      */
-    public function setModel(AbstractModelSingle $model) {
+    public function setModel(AbstractModelSingle $model): void {
         $this->model = $model;
         $this->getForm()->setDefaults([
             self::CONT_SCHOOL => $model->toArray(),

@@ -137,14 +137,14 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     /**
      * @throws AbortException
      */
-    public function actionDefault() {
+    public function actionDefault(): void {
         $this->redirect('contest');
     }
 
     /**
      * @throws AbortException
      */
-    public function actionContestant() {
+    public function actionContestant(): void {
 
         if ($this->user->isLoggedIn()) {
             $person = $this->getPerson();
@@ -176,43 +176,43 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         }
     }
 
-    public function titleContestant() {
+    public function titleContestant(): void {
         $contest = $this->getSelectedContest();
         $this->setTitle(sprintf(_('%s – registrace řešitele (%s. ročník)'), $contest ? $contest->name : '', $this->getSelectedYear()));
     }
 
-    public function actionContest() {
+    public function actionContest(): void {
         if ($this->contestId) {
             $this->changeAction('year');
         }
     }
 
-    public function titleContest() {
+    public function titleContest(): void {
         $this->setTitle(_('Zvolit seminář'));
     }
 
-    public function actionYear() {
+    public function actionYear(): void {
         if ($this->year) {
             $this->changeAction('email');
         }
     }
 
-    public function titleYear() {
+    public function titleYear(): void {
         $this->setTitle(_('Zvolit ročník'), '', $this->getServiceContest()->findByPrimary($this->contestId)->name);
     }
 
-    public function actionEmail() {
+    public function actionEmail(): void {
 
         if ($this->getParameter('email')) {
             $this->changeAction('contestant');
         }
     }
 
-    public function titleEmail() {
+    public function titleEmail(): void {
         $this->setTitle(_('Zadejte e-mail'), 'fa fa-envelope', $this->getServiceContest()->findByPrimary($this->contestId)->name);
     }
 
-    public function renderContest() {
+    public function renderContest(): void {
         $pk = $this->getServiceContest()->getPrimary();
 
         $this->template->contests = array_map(function ($value) {
@@ -220,7 +220,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         }, $this->getServiceContest()->fetchPairs($pk, $pk));
     }
 
-    public function renderYear() {
+    public function renderYear(): void {
         /** @var ModelContest $contest */
         $contest = $this->getServiceContest()->findByPrimary($this->contestId);
         $this->template->years = [];
@@ -231,7 +231,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @param $contestId
      * @throws AbortException
      */
-    public function handleChangeContest($contestId) {
+    public function handleChangeContest($contestId): void {
         $this->redirect('this', ['contestId' => $contestId,]);
     }
 
@@ -239,7 +239,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @param $year
      * @throws AbortException
      */
-    public function handleChangeYear($year) {
+    public function handleChangeYear($year): void {
         $this->redirect('this', ['year' => $year,]);
     }
 
@@ -247,7 +247,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @return FormControl
      * @throws BadRequestException
      */
-    public function createComponentEmailForm() {
+    public function createComponentEmailForm(): FormControl {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->addText('email', _('e-mail'));
@@ -262,7 +262,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @param Form $form
      * @throws AbortException
      */
-    private function emailFormSucceeded(Form $form) {
+    private function emailFormSucceeded(Form $form): void {
         $values = $form->getValues();
         $this->redirect('this', ['email' => $values->email,]);
     }
@@ -270,7 +270,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     /**
      * @throws BadRequestException
      */
-    public function renderContestant() {
+    public function renderContestant(): void {
         $person = $this->getPerson();
         /** @var FormControl $contestantForm */
         $contestantForm = $this->getComponent('contestantForm');
@@ -283,10 +283,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         }
     }
 
-    /**
-     * @return array
-     */
-    private function getFieldsDefinition() {
+    private function getFieldsDefinition(): array {
         $contestId = $this->getSelectedContest()->contest_id;
         $contestName = $this->globalParameters['contestMapping'][$contestId];
         return Helpers::evalExpressionArray($this->globalParameters[$contestName]['registerContestant'], $this->getContext());
@@ -297,7 +294,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @throws BadRequestException
      * @throws \Exception
      */
-    public function createComponentContestantForm() {
+    public function createComponentContestantForm(): FormControl {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
@@ -367,13 +364,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     public function messageExists(): string {
         return _('Řešitel je již registrován.');
-    }
-
-    /**
-     * @return null
-     */
-    public function getSelectedSeries() {
-        return null;
     }
 
     protected function getPageStyleContainer(): PageStyleContainer {

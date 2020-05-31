@@ -35,7 +35,7 @@ abstract class EntityPresenter extends BasePresenter {
     /**
      * @throws BadRequestException
      */
-    public function authorizedCreate() {
+    public function authorizedCreate(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModelResource(), 'create', $this->getSelectedContest()));
     }
 
@@ -43,14 +43,14 @@ abstract class EntityPresenter extends BasePresenter {
      * @param $id
      * @throws BadRequestException
      */
-    public function authorizedEdit($id) {
+    public function authorizedEdit($id): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModel(), 'edit', $this->getSelectedContest()));
     }
 
     /**
      * @throws BadRequestException
      */
-    public function authorizedList() {
+    public function authorizedList(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModelResource(), 'list', $this->getSelectedContest()));
     }
 
@@ -58,7 +58,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @param $id
      * @throws BadRequestException
      */
-    public function authorizedDelete($id) {
+    public function authorizedDelete($id): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModel(), 'delete', $this->getSelectedContest()));
     }
 
@@ -75,7 +75,7 @@ abstract class EntityPresenter extends BasePresenter {
     /**
      * @throws BadRequestException
      */
-    public function renderCreate() {
+    public function renderCreate(): void {
         $component = $this->getComponent(self::COMP_CREATE_FORM);
         $form = ($component instanceof FormControl) ? $component->getForm() : $component;
         $this->setDefaults($this->getModel(), $form);

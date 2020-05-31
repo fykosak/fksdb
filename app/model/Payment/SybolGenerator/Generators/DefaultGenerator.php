@@ -20,14 +20,8 @@ class DefaultGenerator extends AbstractSymbolGenerator {
     private int $variableSymbolEnd;
 
     private array $info;
-
-    /**
-     * @param int $variableSymbolStart
-     * @param int $variableSymbolEnd
-     * @param array $info
-     * @return void
-     */
-    public function setUp(int $variableSymbolStart, int $variableSymbolEnd, array $info) {
+    
+    public function setUp(int $variableSymbolStart, int $variableSymbolEnd, array $info): void {
         $this->variableSymbolEnd = $variableSymbolEnd;
         $this->variableSymbolStart = $variableSymbolStart;
         $this->info = $info;

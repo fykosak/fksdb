@@ -63,7 +63,7 @@ class SeriesChooser extends BaseComponent {
     /**
      * @throws \Exception
      */
-    private function init() {
+    private function init(): void {
         if ($this->initialized) {
             return;
         }
@@ -108,7 +108,7 @@ class SeriesChooser extends BaseComponent {
     /**
      * @throws \Exception
      */
-    public function render() {
+    public function render(): void {
         if (!$this->isValid()) {
             return;
         }

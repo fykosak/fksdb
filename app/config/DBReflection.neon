@@ -236,7 +236,6 @@ DBReflection:
 
          person_history:
              ac_year: FKSDB\Components\DatabaseReflection\PersonHistory\AcYearRow
-             school_id: FKSDB\Components\DatabaseReflection\PersonHistory\SchoolIdRow
              study_year: FKSDB\Components\DatabaseReflection\PersonHistory\StudyYearRow
              class:
                  type: string
@@ -481,7 +480,9 @@ DBReflection:
                  type: int
                  title: _(Number of brochures)
                  description: _('Number of brochures/propagation items, that he wants to send.')
-             note: FKSDB\Components\DatabaseReflection\Tables\Teacher\NoteRow
+             note:
+                 type: text
+                 title: _(Note)
          task_contribution:
              type:
                 type: string

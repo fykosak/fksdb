@@ -98,7 +98,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
     /**
      * @param mixed $series
      */
-    public function setSeries($series) {
+    public function setSeries($series): void {
         $this->series = $series;
         $this->cumulativeResultsModel->setSeries($series);
         // invalidate cache of columns
@@ -111,7 +111,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
     public function getCategories(): array {
         //return $this->evaluationStrategy->getCategories();
         return [
-            new ModelCategory(ModelCategory::CAT_ALL)
+            new ModelCategory(ModelCategory::CAT_ALL),
         ];
     }
 

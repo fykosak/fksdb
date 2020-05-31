@@ -104,7 +104,7 @@ abstract class AbstractApplicationGrid extends BaseGrid {
      * @throws NotImplementedException
      * @throws BadTypeException
      */
-    protected function addColumns(array $fields) {
+    protected function addColumns(array $fields): void {
         $holderFields = $this->holder->getPrimaryHolder()->getFields();
         foreach ($holderFields as $name => $def) {
             if (\in_array($name, $this->getHoldersColumns())) {

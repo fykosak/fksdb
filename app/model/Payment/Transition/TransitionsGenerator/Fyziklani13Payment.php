@@ -64,7 +64,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      * @throws BadRequestException
      * @throws Exception
      */
-    public function createTransitions(Machine &$machine) {
+    public function createTransitions(Machine &$machine): void {
         if (!$machine instanceof PaymentMachine) {
             throw new BadRequestException(\sprintf(_('Expected class %s, got %s'), PaymentMachine::class, \get_class($machine)));
         }
@@ -80,7 +80,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      * @param PaymentMachine $machine
      * @throws Exception
      */
-    private function addTransitionInitToNew(PaymentMachine &$machine) {
+    private function addTransitionInitToNew(PaymentMachine &$machine): void {
         $transition = new Transition(Machine::STATE_INIT, ModelPayment::STATE_NEW, _('Create'));
         $transition->setCondition($this->getDatesCondition());
         $machine->addTransition($transition);
@@ -90,7 +90,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      * @param PaymentMachine $machine
      * @throws Exception
      */
-    private function addTransitionNewToWaiting(PaymentMachine &$machine) {
+    private function addTransitionNewToWaiting(PaymentMachine &$machine): void {
         $transition = new Transition(ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING, _('Confirm payment'));
 
         $transition->setType(Transition::TYPE_SUCCESS);
@@ -124,11 +124,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         return new DateBetween('2019-01-21', '2019-02-15');
     }
 
-    /**
-     * @param PaymentMachine $machine
-     * @return void
-     */
-    private function addTransitionAllToCanceled(PaymentMachine &$machine) {
+    private function addTransitionAllToCanceled(PaymentMachine &$machine): void {
         foreach ([ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING] as $state) {
 
             $transition = new Transition($state, ModelPayment::STATE_CANCELED, _('Cancel payment'));
@@ -142,11 +138,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         }
     }
 
-    /**
-     * @param PaymentMachine $machine
-     * @return void
-     */
-    private function addTransitionWaitingToReceived(PaymentMachine &$machine) {
+    private function addTransitionWaitingToReceived(PaymentMachine &$machine): void {
         $transition = new Transition(ModelPayment::STATE_WAITING, ModelPayment::STATE_RECEIVED, _('Paid'));
         $transition->beforeExecuteCallbacks[] = function (ModelPayment $modelPayment) {
             foreach ($modelPayment->getRelatedPersonSchedule() as $personSchedule) {

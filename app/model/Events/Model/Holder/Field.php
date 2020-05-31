@@ -89,8 +89,8 @@ class Field {
         return $this->default;
     }
 
-    /** @param $default */
-    public function setDefault($default) {
+    /** @param mixed $default */
+    public function setDefault($default): void {
         $this->default = $default;
     }
 

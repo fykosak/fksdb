@@ -7,7 +7,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class ResultsPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ResultsPresenter extends BasePresenter {
     /**

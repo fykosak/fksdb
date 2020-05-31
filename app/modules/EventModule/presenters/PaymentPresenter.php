@@ -222,12 +222,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws \Exception
      */
     private function getMachine(): PaymentMachine {
-        if (!isset($this->machine)) {
-            $this->machine = $this->getContext()->getService('payment.' . PaymentExtension::MACHINE_PREFIX . $this->getEvent()->event_id);
-        }
-        if (!$this->machine instanceof PaymentMachine) {
-            throw new BadTypeException(PaymentMachine::class, $this->machine);
-        }
+        $this->machine ??= $this->getContext()->getService('payment.' . PaymentExtension::MACHINE_PREFIX . $this->getEvent()->event_id);
         return $this->machine;
     }
 

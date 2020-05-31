@@ -104,19 +104,11 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->breadcrumbsFactory = $breadcrumbsFactory;
     }
 
-    /**
-     * @param Navigation $navigationControl
-     * @return void
-     */
-    public function injectNavigationControl(Navigation $navigationControl) {
+    public function injectNavigationControl(Navigation $navigationControl): void {
         $this->navigationControl = $navigationControl;
     }
 
-    /**
-     * @param PresenterBuilder $presenterBuilder
-     * @return void
-     */
-    public function injectPresenterBuilder(PresenterBuilder $presenterBuilder) {
+    public function injectPresenterBuilder(PresenterBuilder $presenterBuilder): void {
         $this->presenterBuilder = $presenterBuilder;
     }
 
@@ -149,7 +141,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @throws BadRequestException
      * @throws AbortException
      */
-    public function handleAutocomplete($acName, $acQ) {
+    public function handleAutocomplete($acName, $acQ): void {
         if (!$this->isAjax()) {
             throw new BadRequestException('Can be called only by AJAX.');
         }
@@ -200,13 +192,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->pageTitle ?: new PageTitle();
     }
 
-    /**
-     * @param string $title
-     * @param string $icon
-     * @param string $subTitle
-     * @return void
-     */
-    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
+    protected function setTitle(string $title, string $icon = '', string $subTitle = ''): void {
         $this->pageTitle = new PageTitle($title, $icon, $subTitle);
     }
 
@@ -311,11 +297,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->authorized;
     }
 
-    /**
-     * @param bool $access
-     * @return void
-     */
-    public function setAuthorized(bool $access) {
+    public function setAuthorized(bool $access): void {
         $this->authorized = $access;
     }
 

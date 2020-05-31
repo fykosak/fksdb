@@ -100,11 +100,7 @@ class SelectForm extends Control {
         $this->serviceSchedulePayment = $serviceSchedulePayment;
     }
 
-    /**
-     * @param ModelPayment $modelPayment
-     * @return void
-     */
-    public function setModel(ModelPayment $modelPayment) {
+    public function setModel(ModelPayment $modelPayment): void {
         $this->model = $modelPayment;
     }
 
@@ -114,7 +110,7 @@ class SelectForm extends Control {
      * @throws UnsupportedCurrencyException
      * @throws JsonException
      */
-    public function createComponentFormEdit() {
+    public function createComponentFormEdit(): FormControl {
         return $this->createForm(false);
     }
 
@@ -124,7 +120,7 @@ class SelectForm extends Control {
      * @throws UnsupportedCurrencyException
      * @throws JsonException
      */
-    public function createComponentFormCreate() {
+    public function createComponentFormCreate(): FormControl {
         return $this->createForm(true);
     }
 
@@ -135,7 +131,7 @@ class SelectForm extends Control {
      * @throws BadRequestException
      * @throws JsonException
      */
-    private function createForm(bool $create) {
+    private function createForm(bool $create): FormControl {
         $control = new FormControl($this->container);
         $form = $control->getForm();
         if ($this->isOrg) {
@@ -161,7 +157,7 @@ class SelectForm extends Control {
      * @throws ForbiddenRequestException
      * @throws Exception
      */
-    private function handleSubmit(Form $form, bool $create) {
+    private function handleSubmit(Form $form, bool $create): void {
         $values = $form->getValues();
         if ($create) {
             $model = $this->machine->createNewModel([
@@ -201,7 +197,7 @@ class SelectForm extends Control {
     /**
      * @throws BadRequestException
      */
-    public function renderCreate() {
+    public function renderCreate(): void {
         /**
          * @var FormControl $control
          */
@@ -221,7 +217,7 @@ class SelectForm extends Control {
     /**
      * @throws BadRequestException
      */
-    public function renderEdit() {
+    public function renderEdit(): void {
         $values = $this->model->toArray();
         $values['payment_accommodation'] = $this->serializeScheduleValue();
         /**
@@ -234,10 +230,7 @@ class SelectForm extends Control {
         $this->template->render();
     }
 
-    /**
-     * @return string
-     */
-    private function serializeScheduleValue() {
+    private function serializeScheduleValue(): string {
         $query = $this->model->getRelatedPersonSchedule();
         $items = [];
         foreach ($query as $row) {

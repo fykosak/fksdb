@@ -65,7 +65,7 @@ class PointsPresenter extends SeriesPresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleEntry() {
+    public function titleEntry(): void {
         $this->setTitle(sprintf(_('Zadávání bodů %d. série'), $this->getSelectedSeries()), 'fa fa-trophy');
     }
 
@@ -73,30 +73,30 @@ class PointsPresenter extends SeriesPresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titlePreview() {
+    public function titlePreview(): void {
         $this->setTitle(_('Points'), 'fa fa-inbox');
     }
 
     /**
      * @throws BadRequestException
      */
-    public function authorizedEntry() {
+    public function authorizedEntry(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'edit', $this->getSelectedContest()));
     }
 
     /**
      * @throws BadRequestException
      */
-    public function authorizedPreview() {
+    public function authorizedPreview(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'points', $this->getSelectedContest()));
     }
 
-    public function actionEntry() {
+    public function actionEntry(): void {
         $this->seriesTable->setTaskFilter($this->all ? null : $this->getGradedTasks());
     }
 
 
-    public function renderEntry() {
+    public function renderEntry(): void {
         $this->template->showAll = (bool)$this->all;
     }
 
@@ -113,7 +113,7 @@ class PointsPresenter extends SeriesPresenter {
     /**
      * @throws AbortException
      */
-    public function handleInvalidate() {
+    public function handleInvalidate(): void {
         try {
             $this->SQLResultsCache->invalidate($this->getSelectedContest(), $this->getSelectedYear());
             $this->flashMessage(_('Body invalidovány.'), self::FLASH_INFO);
@@ -129,7 +129,7 @@ class PointsPresenter extends SeriesPresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function handleRecalculateAll() {
+    public function handleRecalculateAll(): void {
         try {
             $contest = $this->getSelectedContest();
 

@@ -11,7 +11,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\SmartObject;
 use Nette\Utils\Html;
-use Tracy\Debugger;
 
 /**
  * Class AbstractRow
@@ -25,10 +24,15 @@ abstract class AbstractRow {
     public const PERMISSION_ALLOW_RESTRICT = 128;
     public const PERMISSION_ALLOW_FULL = 1024;
 
-    private ?string $modelClassName = null;
+    private string $modelClassName;
 
-    private ?array $referencedAccess = null;
+    private array $referencedAccess;
 
+    /**
+     * @param mixed ...$args
+     * @return BaseControl
+     * @throws OmittedControlException
+     */
     public function createField(...$args): BaseControl {
         return new TextInput($this->getTitle());
     }
@@ -49,12 +53,12 @@ abstract class AbstractRow {
         }
         $model = $this->getModel($model);
         if (is_null($model)) {
-            return $this->nullModelHtmlValue();
+            return $this->createNullHtmlValue();
         }
         return $this->createHtmlValue($model);
     }
 
-    protected function nullModelHtmlValue(): Html {
+    protected function createNullHtmlValue(): Html {
         return NotSetBadge::getHtml();
     }
 
@@ -69,27 +73,27 @@ abstract class AbstractRow {
      * @throws BadRequestException
      */
     protected function getModel(AbstractModelSingle $model): ?AbstractModelSingle {
-        $modelClassName = $this->getModelClassName();
-        if (!isset($this->referencedAccess) || is_null($modelClassName)) {
+        // if referenced access is not set return Model
+        if (!isset($this->referencedAccess) || !isset($this->modelClassName)) {
             return $model;
         }
-
+        // referenced access was called at this time
+        $modelClassName = $this->modelClassName;
+        // model is already instance of desired model
         if ($model instanceof $modelClassName) {
             return $model;
         }
-
-        if (isset($this->referencedAccess) && $model instanceof $this->referencedAccess['modelClassName']) {
+        // try interface and access via get<Model>()
+        if ($model instanceof $this->referencedAccess['modelClassName']) {
             $referencedModel = $model->{$this->referencedAccess['method']}();
             if ($referencedModel) {
                 if ($referencedModel instanceof $modelClassName) {
                     return $referencedModel;
                 }
-                Debugger::barDump($this);
                 throw new BadTypeException($modelClassName, $referencedModel);
             }
             return null;
         }
-
         throw new BadRequestException(sprintf('Can not access model %s from %s', $modelClassName, get_class($model)));
     }
 
@@ -97,10 +101,6 @@ abstract class AbstractRow {
 
     final protected function hasPermissions(int $userValue): bool {
         return $userValue >= $this->getPermissionsValue();
-    }
-
-    final protected function getModelClassName(): ?string {
-        return $this->modelClassName;
     }
 
     abstract public function getPermissionsValue(): int;

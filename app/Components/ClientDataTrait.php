@@ -15,10 +15,10 @@ trait ClientDataTrait {
     private $clientData = [];
 
     /**
-     * @param $key
-     * @param $value
+     * @param mixed $key
+     * @param mixed $value
      */
-    public function setClientData($key, $value) {
+    public function setClientData($key, $value): void {
         if ($value === null) {
             unset($this->clientData[$key]);
         } elseif (is_array($value)) {

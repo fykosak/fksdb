@@ -94,7 +94,7 @@ class StoredQuery implements IDataSource, IResource {
      * @param $parameters
      * @param bool $strict
      */
-    public function setImplicitParameters($parameters, $strict = true) {
+    public function setImplicitParameters($parameters, $strict = true): void {
         $parameterNames = $this->getParameterNames();
         foreach ($parameters as $key => $value) {
             if ($strict && in_array($key, $parameterNames)) {
@@ -124,7 +124,7 @@ class StoredQuery implements IDataSource, IResource {
     /**
      * @param $parameters
      */
-    public function setParameters($parameters) {
+    public function setParameters($parameters): void {
         $parameterNames = $this->getParameterNames();
         foreach ($parameters as $key => $value) {
             if (!in_array($key, $parameterNames)) {
@@ -236,12 +236,12 @@ class StoredQuery implements IDataSource, IResource {
         return $statement;
     }
 
-    private function invalidateAll() {
+    private function invalidateAll(): void {
         $this->count = null;
         $this->data = null;
     }
 
-    private function invalidateData() {
+    private function invalidateData(): void {
         $this->data = null;
     }
 

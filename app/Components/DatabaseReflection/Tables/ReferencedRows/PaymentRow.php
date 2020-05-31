@@ -41,7 +41,7 @@ class PaymentRow extends AbstractRow {
         return self::PERMISSION_USE_GLOBAL_ACL;
     }
 
-    protected function nullModelHtmlValue(): Html {
+    protected function createNullHtmlValue(): Html {
         return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText(_('Payment not found'));
     }
 

@@ -26,12 +26,7 @@ class EventsGrid extends BaseGrid {
         $this->serviceEvent = $serviceEvent;
     }
 
-    /**
-     * @param ModelContest $contest
-     * @param int $year
-     * @return void
-     */
-    public function setParams(ModelContest $contest, int $year) {
+    public function setParams(ModelContest $contest, int $year): void {
         $events = $this->serviceEvent->getEvents($contest, $year);
         $dataSource = new NDataSource($events);
         $this->setDefaultOrder('event.begin ASC');

@@ -12,14 +12,14 @@ use Nette\Utils\Html;
  */
 abstract class AbstractDateTimeRow extends DefaultRow {
 
-    private ?string $format = null;
+    private string $format;
 
     public function setFormat(string $format): void {
         $this->format = $format;
     }
 
     final protected function createHtmlValue(AbstractModelSingle $model): Html {
-        $format = $this->format ?: $this->getDefaultFormat();
+        $format = $this->format ?? $this->getDefaultFormat();
         return (new DatePrinter($format))($model->{$this->getModelAccessKey()});
     }
 

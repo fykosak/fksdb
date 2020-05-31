@@ -105,12 +105,8 @@ class ExportPresenter extends SeriesPresenter {
         }
     }
 
-    /**
-     * @param StoredQuery $storedQuery
-     * @return void
-     */
-    public function setStoredQuery(StoredQuery $storedQuery) {
-        $this->storedQuery = $storedQuery; //TODO
+    public function setStoredQuery(StoredQuery $storedQuery): void {
+        $this->storedQuery = $storedQuery;
     }
 
     /**
@@ -178,14 +174,14 @@ class ExportPresenter extends SeriesPresenter {
     /**
      * @throws BadRequestException
      */
-    public function authorizedList() {
+    public function authorizedList(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('storedQuery', 'list', $this->getSelectedContest()));
     }
 
     /**
      * @throws BadRequestException
      */
-    public function authorizedCompose() {
+    public function authorizedCompose(): void {
         $this->setAuthorized(
             ($this->getContestAuthorizator()->isAllowed('storedQuery', 'create', $this->getSelectedContest()) &&
                 $this->getContestAuthorizator()->isAllowed('export.adhoc', 'execute', $this->getSelectedContest()))
@@ -196,7 +192,7 @@ class ExportPresenter extends SeriesPresenter {
      * @param $id
      * @throws BadRequestException
      */
-    public function authorizedEdit($id) {
+    public function authorizedEdit($id): void {
         $query = $this->getPatternQuery();
         if (!$query) {
             throw new NotFoundException('Neexistující dotaz.');
@@ -208,7 +204,7 @@ class ExportPresenter extends SeriesPresenter {
      * @param $id
      * @throws BadRequestException
      */
-    public function authorizedShow($id) {
+    public function authorizedShow($id): void {
         $query = $this->getPatternQuery();
         if (!$query) {
             throw new NotFoundException('Neexistující dotaz.');
@@ -220,7 +216,7 @@ class ExportPresenter extends SeriesPresenter {
      * @param $id
      * @throws BadRequestException
      */
-    public function authorizedExecute($id) {
+    public function authorizedExecute($id): void {
         $query = $this->getPatternQuery();
         if (!$query) {
             throw new NotFoundException('Neexistující dotaz.');
@@ -249,7 +245,7 @@ class ExportPresenter extends SeriesPresenter {
      * @throws AbortException
      * @throws InvalidLinkException
      */
-    public function actionExecute($id) {
+    public function actionExecute($id): void {
         $query = $this->getPatternQuery();
         $storedQuery = $this->storedQueryFactory->createQuery($this, $query);
         $this->setStoredQuery($storedQuery);
@@ -276,14 +272,14 @@ class ExportPresenter extends SeriesPresenter {
      * @param $id
      * @throws BadRequestException
      */
-    public function titleEdit($id) {
+    public function titleEdit($id): void {
         $this->setTitle(sprintf(_('Úprava dotazu %s'), $this->getPatternQuery()->name), 'fa fa-pencil');
     }
 
     /**
      * @param mixed $id
      */
-    public function renderEdit($id) {
+    public function renderEdit($id): void {
         $query = $this->getPatternQuery();
 
         $values = $this->getDesignFormFromSession();
@@ -311,11 +307,11 @@ class ExportPresenter extends SeriesPresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleCompose() {
+    public function titleCompose(): void {
         $this->setTitle(sprintf(_('Napsat dotaz')), 'fa fa-pencil');
     }
 
-    public function renderCompose() {
+    public function renderCompose(): void {
         $values = $this->getDesignFormFromSession();
         if ($values) {
             $this->getComponent('composeForm')->getForm()->setDefaults($values);
@@ -326,7 +322,7 @@ class ExportPresenter extends SeriesPresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleList() {
+    public function titleList(): void {
         $this->setTitle(_('Exports'), 'fa fa-database');
     }
 
@@ -334,7 +330,7 @@ class ExportPresenter extends SeriesPresenter {
      * @param $id
      * @throws BadRequestException
      */
-    public function titleShow($id) {
+    public function titleShow($id): void {
         $title = sprintf(_('Detail dotazu %s'), $this->getPatternQuery()->name);
         $qid = $this->getPatternQuery()->qid;
         if ($qid) {
@@ -347,7 +343,7 @@ class ExportPresenter extends SeriesPresenter {
     /**
      * @param mixed $id
      */
-    public function renderShow($id) {
+    public function renderShow($id): void {
         $this->template->storedQuery = $this->getPatternQuery();
     }
 
@@ -355,14 +351,14 @@ class ExportPresenter extends SeriesPresenter {
      * @param $id
      * @throws BadRequestException
      */
-    public function titleExecute($id) {
+    public function titleExecute($id): void {
         $this->setTitle(sprintf(_('%s'), $this->getPatternQuery()->name), 'fa fa-play-circle-o');
     }
 
     /**
      * @param mixed $id
      */
-    public function renderExecute($id) {
+    public function renderExecute($id): void {
         $this->template->storedQuery = $this->getPatternQuery();
     }
 
@@ -482,7 +478,7 @@ class ExportPresenter extends SeriesPresenter {
      * @param SubmitButton $button
      * @throws AbortException
      */
-    private function handleComposeExecute(SubmitButton $button) {
+    private function handleComposeExecute(SubmitButton $button): void {
         $form = $button->getForm();
         $values = $form->getValues();
         $this->storeDesignFormToSession($values);
@@ -499,7 +495,7 @@ class ExportPresenter extends SeriesPresenter {
      * @throws AbortException
      * @throws \ReflectionException
      */
-    private function handleEditSuccess(SubmitButton $button) {
+    private function handleEditSuccess(SubmitButton $button): void {
         try {
             $storedQuery = $this->getPatternQuery();
             if (!$this->getContestAuthorizator()->isAllowed($storedQuery, 'edit', $this->getSelectedContest())) {
@@ -526,7 +522,7 @@ class ExportPresenter extends SeriesPresenter {
      * @throws AbortException
      * @throws \ReflectionException
      */
-    private function handleComposeSuccess(SubmitButton $button) {
+    private function handleComposeSuccess(SubmitButton $button): void {
         try {
             if (!$this->getContestAuthorizator()->isAllowed('storedQuery', 'create', $this->getSelectedContest())) {
                 throw new ForbiddenRequestException('Nedostatečné oprávnění ke vytvoření dotazu.');
@@ -553,7 +549,7 @@ class ExportPresenter extends SeriesPresenter {
      * @param array|Traversable $values
      * @param ModelStoredQuery $storedQuery
      */
-    private function handleSave($values, $storedQuery) {
+    private function handleSave($values, $storedQuery): void {
         $connection = $this->serviceStoredQuery->getConnection();
         $connection->beginTransaction();
 

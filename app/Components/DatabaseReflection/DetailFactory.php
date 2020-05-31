@@ -10,11 +10,7 @@ class DetailFactory {
 
     private array $nodes = [];
 
-    /**
-     * @param array $nodes
-     * @return void
-     */
-    public function setNodes(array $nodes) {
+    public function setNodes(array $nodes): void {
         $this->nodes = $nodes;
     }
 

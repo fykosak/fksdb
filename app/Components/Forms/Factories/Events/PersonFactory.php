@@ -11,9 +11,12 @@ use FKSDB\Events\Model\PersonContainerResolver;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedEventPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\ORM\Services\ServicePerson;
+use Nette\Application\UI\Control;
 use Nette\ComponentModel\Component;
+use Nette\ComponentModel\IComponent;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\Container;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\IControl;
 use Nette\Security\User;
@@ -137,7 +140,7 @@ class PersonFactory extends AbstractFactory {
      * @param BaseMachine $machine
      * @param Container $container
      */
-    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container): void {
         $hiddenField = reset($component);
         $default = $field->getValue();
         if ($default == self::VALUE_LOGIN) {
@@ -152,13 +155,13 @@ class PersonFactory extends AbstractFactory {
     }
 
     /**
-     * @param $component
+     * @param BaseControl[] $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
      * @return void
      */
-    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container): void {
         $hiddenField = reset($component);
         $hiddenField->setDisabled();
     }

@@ -115,7 +115,7 @@ class BrojureResultsModel extends AbstractResultsModel {
      * @param $listedSeries
      * @return void
      */
-    public function setListedSeries($listedSeries) {
+    public function setListedSeries($listedSeries): void {
         $this->listedSeries = $listedSeries;
         // invalidate cache of columns
         $this->dataColumns = [];

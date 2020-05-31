@@ -63,12 +63,7 @@ class SeriesData {
         return $this->tasks;
     }
 
-    /**
-     * @param int $taskNr
-     * @param ModelTask $task
-     * @return void
-     */
-    public function addTask(int $taskNr, ModelTask $task) {
+    public function addTask(int $taskNr, ModelTask $task): void {
         $this->tasks[$taskNr] = $task;
     }
 }

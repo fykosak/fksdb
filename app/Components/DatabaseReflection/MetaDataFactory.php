@@ -31,11 +31,7 @@ class MetaDataFactory {
         return $this->metadata[$table][$field];
     }
 
-    /**
-     * @param string $tableName
-     * @return void
-     */
-    private function fetchMeta(string $tableName) {
+    private function fetchMeta(string $tableName): void {
         $this->metadata[$tableName] = [];
         foreach ($this->connection->getSupplementalDriver()->getColumns($tableName) as $columnMeta) {
             $this->metadata[$tableName][$columnMeta['name']] = $columnMeta;

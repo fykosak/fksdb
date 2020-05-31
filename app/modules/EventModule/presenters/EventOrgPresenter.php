@@ -31,7 +31,9 @@ class EventOrgPresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @param $resource
+     * @param string $privilege
+     * @return bool
      * @throws BadRequestException
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
@@ -67,14 +69,16 @@ class EventOrgPresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
     public function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
     public function createComponentEditForm(): Control {
         throw new NotImplementedException();
