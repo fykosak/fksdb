@@ -51,14 +51,15 @@ class ItemsGrid extends BaseGrid {
         $this->paginate = false;
         $this->addColumn('schedule_item_id', _('#'));
         $this->addColumns([
-            DbNames::TAB_SCHEDULE_ITEM . '.name_cs',
-            DbNames::TAB_SCHEDULE_ITEM . '.name_en',
-            DbNames::TAB_SCHEDULE_ITEM . '.price_czk',
-            DbNames::TAB_SCHEDULE_ITEM . '.price_eur',
-            DbNames::TAB_SCHEDULE_ITEM . '.capacity',
-            DbNames::TAB_SCHEDULE_ITEM . '.used_capacity',
-            DbNames::TAB_SCHEDULE_ITEM . '.require_id_number',
+            'schedule_item.name_cs',
+            'schedule_item.name_en',
+            'schedule_item.price_czk',
+            'schedule_item.price_eur',
+            'schedule_item.capacity',
+            'schedule_item.used_capacity',
+            'schedule_item.require_id_number',
         ]);
+
         $this->addLinkButton('detail', 'detail', _('Detail'), true, ['id' => 'schedule_item_id']);
     }
 }

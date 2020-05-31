@@ -6,7 +6,6 @@ use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\Forms\Factories\ITestedRowFactory;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Exceptions\BadTypeException;
-use Nette\Application\BadRequestException;
 
 /**
  * Class PersonFileLevelTest
@@ -25,24 +24,21 @@ abstract class PersonFileLevelTest extends PersonTest {
     /**
      * AbstractPhoneNumber constructor.
      * @param TableReflectionFactory $tableReflectionFactory
-     * @param string $factoryTableName
-     * @param string $factoryFieldName
-     * @throws BadRequestException
+     * @param string $factoryName
+     * @throws BadTypeException
      */
-    public function __construct(TableReflectionFactory $tableReflectionFactory, string $factoryTableName, string $factoryFieldName) {
-        $this->actionName = $factoryTableName . '__' . $factoryFieldName;
-        $this->loadFactory($tableReflectionFactory, $factoryTableName, $factoryFieldName);
+    public function __construct(TableReflectionFactory $tableReflectionFactory, string $factoryName) {
+        $this->actionName = str_replace('.', '__', $factoryName);
+        $this->loadFactory($tableReflectionFactory, $factoryName);
     }
 
     /**
      * @param TableReflectionFactory $tableReflectionFactory
-     * @param string $factoryTableName
-     * @param string $factoryFieldName
-     * @throws BadRequestException
-     * @throws \Exception
+     * @param string $factoryName
+     * @throws BadTypeException
      */
-    final private function loadFactory(TableReflectionFactory $tableReflectionFactory, string $factoryTableName, string $factoryFieldName) {
-        $rowFactory = $tableReflectionFactory->loadService($factoryTableName, $factoryFieldName);
+    final private function loadFactory(TableReflectionFactory $tableReflectionFactory, string $factoryName) {
+        $rowFactory = $tableReflectionFactory->loadRowFactory($factoryName);
         if (!$rowFactory instanceof ITestedRowFactory) {
             throw new BadTypeException(ITestedRowFactory::class, $rowFactory);
         }

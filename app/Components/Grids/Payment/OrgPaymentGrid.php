@@ -36,10 +36,8 @@ class OrgPaymentGrid extends PaymentGrid {
      * @param $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws InvalidLinkException
      * @throws DuplicateGlobalButtonException
-     * @throws NotImplementedException
-     * @throws NotImplementedException
+     * @throws InvalidLinkException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -50,12 +48,12 @@ class OrgPaymentGrid extends PaymentGrid {
         $this->setDataSource($dataSource);
 
         $this->addColumns([
-            DbNames::TAB_PAYMENT . '.id',
+            'payment.payment_uid',
             'person.full_name',
-            // 'referenced.event_name',
-            DbNames::TAB_PAYMENT . '.price',
-            DbNames::TAB_PAYMENT . '.state',
-            DbNames::TAB_PAYMENT . '.variable_symbol',
+            'event.event',
+            'payment.price',
+            'payment.state',
+            'payment.variable_symbol',
         ]);
         $this->addLink('payment.detail', false);
         $this->paginate = false;

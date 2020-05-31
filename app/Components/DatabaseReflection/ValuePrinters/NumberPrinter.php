@@ -3,8 +3,13 @@
 namespace FKSDB\Components\DatabaseReflection\ValuePrinters;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\Exceptions\NotImplementedException;
 use Nette\Utils\Html;
 
+/**
+ * Class NumberPrinter
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class NumberPrinter extends AbstractValuePrinter {
     const NULL_VALUE_NOT_SET = 'notSet';
     const NULL_VALUE_INF = 'infinite';
@@ -33,17 +38,21 @@ class NumberPrinter extends AbstractValuePrinter {
     }
 
     /**
-     * @param int|float|null $value
+     * @param int|float $value
      * @return Html
      */
     protected function getHtml($value): Html {
-        if (is_null($value)) {
-            return $this->nullValueFormat();
-        }
         return Html::el('span')->addHtml($this->format($value));
     }
 
-    private function nullValueFormat(): Html {
+    private function format(int $number): string {
+        $text = $this->prefix ? ($this->prefix . '&#8287;') : '';
+        $text .= number_format($number, 0, ',', '&#8287;');
+        $text .= $this->suffix ? ('&#8287;' . $this->suffix) : '';
+        return $text;
+    }
+
+    protected function getEmptyValueHtml(): Html {
         switch ($this->nullValueMode) {
             default:
             case self::NULL_VALUE_NOT_SET:
@@ -53,12 +62,5 @@ class NumberPrinter extends AbstractValuePrinter {
             case self::NULL_VALUE_ZERO:
                 return Html::el('span')->addHtml($this->format(0));
         }
-    }
-
-    private function format(int $number): string {
-        $text = $this->prefix ? ($this->prefix . '&#8287;') : '';
-        $text .= number_format($number, 0, ',', '&#8287;');
-        $text .= $this->suffix ? ('&#8287;' . $this->suffix) : '';
-        return $text;
     }
 }

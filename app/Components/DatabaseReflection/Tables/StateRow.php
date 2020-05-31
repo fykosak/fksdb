@@ -10,7 +10,7 @@ use Nette\Utils\Html;
 
 /**
  * Class StateRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class StateRow extends DefaultRow {
     /**

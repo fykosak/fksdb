@@ -12,9 +12,7 @@ use FKSDB\ORM\DbNames;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class PersonFactory extends SingleReflectionFactory {
-    /**
-     * @return string
-     */
+
     protected function getTableName(): string {
         return DbNames::TAB_PERSON;
     }

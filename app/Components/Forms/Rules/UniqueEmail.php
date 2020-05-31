@@ -45,22 +45,13 @@ class UniqueEmail {
         $this->ignoredPerson = $ignoredPerson;
     }
 
-    /**
-     * @param BaseControl $control
-     * @return bool
-     */
-    public function __invoke(BaseControl $control) {
+    public function __invoke(BaseControl $control): bool {
         $email = $control->getValue();
 
         $conflicts = $this->servicePersonInfo->getTable()->where(['email' => $email]);
         if ($this->ignoredPerson && $this->ignoredPerson->person_id) {
             $conflicts->where('NOT person_id = ?', $this->ignoredPerson->person_id);
         }
-        if (count($conflicts) > 0) {
-            return false;
-        }
-
-        return true;
+        return $conflicts->count() === 0;
     }
-
 }

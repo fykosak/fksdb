@@ -64,9 +64,9 @@ class OrgsGrid extends BaseGrid {
 
         $this->addColumns([
             'person.full_name',
-            DbNames::TAB_ORG . '.since',
-            DbNames::TAB_ORG . '.until',
-            DbNames::TAB_ORG . '.role',
+            'org.since',
+            'org.until',
+            'org.role',
         ]);
 
         $this->addLink('org.edit', true);

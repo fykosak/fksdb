@@ -7,7 +7,7 @@ use Nette\Utils\Html;
 
 /**
  * Class HashPrinter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class HashPrinter extends AbstractValuePrinter {
     /**
@@ -15,10 +15,6 @@ class HashPrinter extends AbstractValuePrinter {
      * @return Html
      */
     protected function getHtml($value): Html {
-        if (\is_null($value)) {
-            return NotSetBadge::getHtml();
-        } else {
-            return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Is set'));
-        }
+        return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Is set'));
     }
 }

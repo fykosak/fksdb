@@ -41,7 +41,6 @@ class EventOrgsGrid extends BaseGrid {
 
     /**
      * @param \AuthenticatedPresenter $presenter
-     * @throws BadRequestException
      * @throws InvalidLinkException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
@@ -78,9 +77,6 @@ class EventOrgsGrid extends BaseGrid {
         }
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelEventOrg::class;
     }

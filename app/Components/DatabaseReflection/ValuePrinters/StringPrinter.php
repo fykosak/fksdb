@@ -7,18 +7,14 @@ use Nette\Utils\Html;
 
 /**
  * Class StringPrinter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class StringPrinter extends AbstractValuePrinter {
     /***
-     * @param null $value
+     * @param string $value
      * @return Html
      */
     protected function getHtml($value): Html {
-        if (\is_null($value)) {
-            return NotSetBadge::getHtml();
-        } else {
-            return Html::el('span')->addText($value);
-        }
+        return Html::el('span')->addText($value);
     }
 }

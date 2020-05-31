@@ -15,6 +15,7 @@ use Nette\Utils\Html;
  */
 final class TableReflectionFactory {
     use SmartObject;
+
     /**
      * @var Container
      */
@@ -28,22 +29,10 @@ final class TableReflectionFactory {
         $this->container = $container;
     }
 
-    /**
-     * @param string $tableName
-     * @param string $fieldName
-     * @return AbstractRow
-     * @throws InvalidArgumentException
-     * @throws \Exception
-     */
-    public function loadService(string $tableName, string $fieldName = null): AbstractRow {
-        if (is_null($fieldName)) {
-            $factoryName = $tableName;
-        } else {
-            $factoryName = $tableName . '.' . $fieldName;
-        }
+    public function loadRowFactory(string $factoryName): AbstractRow {
         $service = $this->container->getService('DBReflection.' . $factoryName);
         if (!$service instanceof AbstractRow) {
-            throw new InvalidArgumentException('Field ' . $tableName . '.' . $fieldName . ' not exists');
+            throw new InvalidArgumentException('Field ' . $factoryName . ' not exists');
         }
         return $service;
     }
@@ -59,31 +48,5 @@ final class TableReflectionFactory {
             throw new InvalidArgumentException('LinkFactory ' . $linkId . ' not exists');
         }
         return $service;
-    }
-
-    /**
-     * @param string $tableName
-     * @param string $fieldName
-     * @param int $userPermissionLevel
-     * @return callable
-     * @throws \Exception
-     */
-    public function createGridCallback(string $tableName, string $fieldName, int $userPermissionLevel): callable {
-        $factory = $this->loadService($tableName, $fieldName);
-        return function ($model) use ($factory, $userPermissionLevel): Html {
-            return $factory->renderValue($model, $userPermissionLevel);
-        };
-    }
-
-    public static function parseRows(array $rows): array {
-        $items = [];
-        foreach ($rows as $item) {
-            $items[] = self::parseRow($item);
-        }
-        return $items;
-    }
-
-    public static function parseRow(string $row): array {
-        return explode('.', $row);
     }
 }

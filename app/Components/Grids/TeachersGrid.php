@@ -45,9 +45,6 @@ class TeachersGrid extends BaseGrid {
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        //
-        // data
-        //
         $teachers = $this->serviceTeacher->getTable()->select('teacher.*, person.family_name AS display_name');
 
         $dataSource = new SearchableDataSource($teachers);
@@ -58,23 +55,17 @@ class TeachersGrid extends BaseGrid {
             }
         });
         $this->setDataSource($dataSource);
-        //
-        // columns
-        //
+
         $this->addColumns([
             'person.full_name',
-            DbNames::TAB_TEACHER . '.note',
-            DbNames::TAB_TEACHER . '.state',
-            DbNames::TAB_TEACHER . '.since',
-            DbNames::TAB_TEACHER . '.until',
-            DbNames::TAB_TEACHER . '.number_brochures',
+            'teacher.note',
+            'teacher.state',
+            'teacher.since',
+            'teacher.until',
+            'teacher.number_brochures',
+            'school.school',
         ]);
-        $this->addColumn('school_id', _('School'))->setRenderer(function (ModelTeacher $row) {
-            return $row->getSchool()->name_abbrev;
-        });
-        //
-        // operations
-        //
+
         $this->addButton('edit', _('Edit'))
             ->setText(_('Edit'))
             ->setLink(function (ModelTeacher $row) {
@@ -91,5 +82,9 @@ class TeachersGrid extends BaseGrid {
                 ->setLabel(_('Create new teacher'))
                 ->setLink($this->getPresenter()->link('create'));
         }
+    }
+
+    protected function getModelClassName(): string {
+        return ModelTeacher::class;
     }
 }

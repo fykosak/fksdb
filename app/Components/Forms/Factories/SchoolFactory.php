@@ -29,9 +29,6 @@ class SchoolFactory {
         $this->schoolProvider = $schoolProvider;
     }
 
-    /**
-     * @return ModelContainer
-     */
     public function createSchool(): ModelContainer {
         $container = new ModelContainer();
         $container->addText('name_full', _('Plný název'))

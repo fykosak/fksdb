@@ -40,7 +40,6 @@ class PersonsGrid extends BaseGrid {
     /**
      * @param \AuthenticatedPresenter $presenter
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -49,7 +48,7 @@ class PersonsGrid extends BaseGrid {
         $dataSource = new NDataSource($persons);
         $this->setDataSource($dataSource);
 
-        $this->addColumns(['referenced.person_link']);
+        $this->addColumns(['person.person_link']);
 
         foreach ($this->dataTestingFactory->getTests('person') as $test) {
             $this->addColumn($test->getAction(), $test->getTitle())->setRenderer(function ($person) use ($test) {

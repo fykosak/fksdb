@@ -74,7 +74,7 @@ abstract class BaseGrid extends Grid {
      * @return ITemplate
      * @throws BadTypeException
      */
-    protected function createTemplate($class = NULL): ITemplate {
+    protected function createTemplate($class = null): ITemplate {
         $presenter = $this->getPresenter();
         if (!$presenter instanceof \BasePresenter) {
             throw new BadTypeException(\BasePresenter::class, $presenter);
@@ -171,7 +171,7 @@ abstract class BaseGrid extends Grid {
      * @return Button
      * @throws DuplicateButtonException
      */
-    protected function addButton($name, $label = NULL): Button {
+    protected function addButton($name, $label = null): Button {
         $button = parent::addButton($name, $label);
         $button->setClass('btn btn-sm btn-secondary');
         return $button;
@@ -183,23 +183,23 @@ abstract class BaseGrid extends Grid {
      * @return GlobalButton
      * @throws DuplicateGlobalButtonException
      */
-    public function addGlobalButton($name, $label = NULL): GlobalButton {
+    public function addGlobalButton($name, $label = null): GlobalButton {
         $button = parent::addGlobalButton($name, $label);
         $button->setClass('btn btn-sm btn-primary');
         return $button;
     }
 
     /**
-     * @param string $tableName
-     * @param string $fieldName
+     * @param string $name
+     * @return void
      * @throws DuplicateColumnException
-     * @throws Exception
+     * @throws NotImplementedException
      */
-    private function addReflectionColumn(string $tableName, string $fieldName) {
+    private function addReflectionColumn(string $name) {
         $modelClassName = $this->getModelClassName();
-        $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
+        $factory = $this->tableReflectionFactory->loadRowFactory($name);
 
-        $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($model) use ($factory, $fieldName, $modelClassName) {
+        $this->addColumn(str_replace(',', '__', $name), $factory->getTitle())->setRenderer(function ($model) use ($factory, $modelClassName) {
             if (!$model instanceof $modelClassName) {
                 $model = $modelClassName::createFromActiveRow($model);
             }
@@ -207,21 +207,6 @@ abstract class BaseGrid extends Grid {
         })->setSortable(false);
     }
 
-    /**
-     * @param string $tableName
-     * @param string $fieldName
-     * @param callable $accessCallback ActiveRow=>AbstractModelSingle
-     * @throws DuplicateColumnException
-     * @throws Exception
-     * @deprecated this functionality is moved to getModel in DBReflection AbstractRow
-     */
-    protected function addJoinedColumn(string $tableName, string $fieldName, callable $accessCallback) {
-        $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
-        $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($row) use ($factory, $fieldName, $accessCallback) {
-            $model = $accessCallback($row);
-            return $factory->renderValue($model, 1);
-        });
-    }
 
     /**
      * @return string|AbstractModelSingle
@@ -234,11 +219,11 @@ abstract class BaseGrid extends Grid {
     /**
      * @param array $fields
      * @throws DuplicateColumnException
+     * @throws NotImplementedException
      */
     protected function addColumns(array $fields) {
         foreach ($fields as $name) {
-            list($table, $field) = TableReflectionFactory::parseRow($name);
-            $this->addReflectionColumn($table, $field);
+            $this->addReflectionColumn($name);
         }
     }
 

@@ -13,14 +13,11 @@ use Nette\Utils\Html;
  */
 class PricePrinter extends AbstractValuePrinter {
     /**
-     * @param Price|null $value
+     * @param Price $value
      * @return Html
      * @throws UnsupportedCurrencyException
      */
     protected function getHtml($value): Html {
-        if (\is_null($value)) {
-            return NotSetBadge::getHtml();
-        }
         return Html::el('span')->addText($value->__toString());
     }
 }

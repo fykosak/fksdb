@@ -27,9 +27,6 @@ class PersonHistoryFactory extends SingleReflectionFactory {
         $this->schoolFactory = $factorySchool;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_PERSON_HISTORY;
     }

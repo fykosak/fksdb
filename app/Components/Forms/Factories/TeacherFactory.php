@@ -10,9 +10,7 @@ use FKSDB\ORM\DbNames;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class TeacherFactory extends SingleReflectionFactory {
-    /**
-     * @return string
-     */
+
     protected function getTableName(): string {
         return DbNames::TAB_TEACHER;
     }

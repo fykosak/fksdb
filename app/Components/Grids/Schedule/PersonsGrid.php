@@ -43,7 +43,6 @@ class PersonsGrid extends BaseGrid {
     /**
      * @param $presenter
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -51,10 +50,7 @@ class PersonsGrid extends BaseGrid {
 
         $this->addColumn('person_schedule_id', _('#'));
 
-        $this->addColumn('person', _('Person'))->setRenderer(function ($row) {
-            $model = ModelPersonSchedule::createFromActiveRow($row);
-            return $model->getPerson()->getFullName();
-        })->setSortable(false);
+        $this->addColumns(['person.full_name']);
 
         $this->addColumnRole();
 

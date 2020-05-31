@@ -64,8 +64,9 @@ class CloseTeamsGrid extends BaseGrid {
             DbNames::TAB_E_FYZIKLANI_TEAM . '.e_fyziklani_team_id',
             DbNames::TAB_E_FYZIKLANI_TEAM . '.points',
             DbNames::TAB_E_FYZIKLANI_TEAM . '.category',
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.opened_submitting'
+            DbNames::TAB_E_FYZIKLANI_TEAM . '.opened_submitting',
         ]);
+        // TODO DBReflection
         $this->addColumn('room', _('Room'))->setRenderer(function (ModelFyziklaniTeam $row) {
             $position = $row->getPosition();
             if (is_null($position)) {
@@ -73,6 +74,7 @@ class CloseTeamsGrid extends BaseGrid {
             }
             return $position->getRoom()->name;
         });
+
         $this->addLinkButton(':Fyziklani:Close:team', 'close', _('Close submitting'), false, [
             'id' => 'e_fyziklani_team_id',
             'eventId' => 'event_id',

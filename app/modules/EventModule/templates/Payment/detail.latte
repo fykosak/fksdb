@@ -33,7 +33,7 @@
     <h2>{_('Informace o platcovi')}</h2>
     <div>
         {if $isOrg}
-            {control valuePrinter:row 'referenced.person_link', $model}
+            {control valuePrinter:row 'person.person_link', $model}
         {else}
             {control valuePrinter:row 'person.full_name', $model}
         {/if}

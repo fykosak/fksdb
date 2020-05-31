@@ -4,14 +4,13 @@ namespace FKSDB\DataTesting\Tests\Person;
 
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\DataTesting\TestLog;
-use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\DataTesting\TestsLogger;
 use Nette\Application\BadRequestException;
 
 /**
  * Class PersonInfoFieldTest
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonInfoFieldTest extends PersonFileLevelTest {
     /**
@@ -21,7 +20,7 @@ class PersonInfoFieldTest extends PersonFileLevelTest {
      * @throws BadRequestException
      */
     public function __construct(TableReflectionFactory $tableReflectionFactory, string $factoryFieldName) {
-        parent::__construct($tableReflectionFactory, DbNames::TAB_PERSON_INFO, $factoryFieldName);
+        parent::__construct($tableReflectionFactory, 'person_info.' . $factoryFieldName);
     }
 
     /**

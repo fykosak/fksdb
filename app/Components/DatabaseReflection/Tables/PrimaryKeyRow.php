@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PrimaryKeyRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PrimaryKeyRow extends DefaultRow {
 

@@ -48,18 +48,16 @@ class TeamSubmitsGrid extends SubmitsGrid {
         $this->addColumnTask();
 
         $this->addColumns([
-            DbNames::TAB_FYZIKLANI_SUBMIT . '.points',
-            DbNames::TAB_FYZIKLANI_SUBMIT . '.created',
-            DbNames::TAB_FYZIKLANI_SUBMIT . '.state',
+            'fyziklani_submit.points',
+            'fyziklani_submit.created',
+            'fyziklani_submit.state',
         ]);
-        $this->addLinkButton( ':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
-        $this->addLinkButton( ':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
+        $this->addLinkButton(':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
+        $this->addLinkButton(':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
 
         $submits = $this->team->getAllSubmits()
             ->order('fyziklani_submit.created');
-
         $dataSource = new NDataSource($submits);
-
         $this->setDataSource($dataSource);
     }
 }

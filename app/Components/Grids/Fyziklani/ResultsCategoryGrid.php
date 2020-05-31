@@ -54,7 +54,6 @@ class ResultsCategoryGrid extends BaseGrid {
     /**
      * @param $presenter
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -62,9 +61,9 @@ class ResultsCategoryGrid extends BaseGrid {
         $this->paginate = false;
 
         $this->addColumns([
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.e_fyziklani_team_id',
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.name',
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.rank_category',
+            'e_fyziklani_team.e_fyziklani_team_id',
+            'e_fyziklani_team.name',
+            'e_fyziklani_team.rank_category',
         ]);
 
         $teams = $this->serviceFyziklaniTeam->findParticipating($this->event)

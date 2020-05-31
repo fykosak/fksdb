@@ -20,7 +20,6 @@ class MyPaymentGrid extends PaymentGrid {
      * @param BasePresenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -31,15 +30,11 @@ class MyPaymentGrid extends PaymentGrid {
         $this->setDataSource($dataSource);
 
         $this->addColumns([
-            DbNames::TAB_PAYMENT . '.id',
-            // 'referenced.event_name',
-            DbNames::TAB_PAYMENT . '.price',
-            DbNames::TAB_PAYMENT . '.state',
+            'payment.payment_uid',
+            'event.event',
+            'payment.price',
+            'payment.state',
         ]);
-
-        $this->addColumn('event', _('Event'))->setRenderer(function (ModelPayment $payment) {
-            return $payment->getEvent()->name;
-        });
         $this->addLink('payment.detail', true);
     }
 }

@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
@@ -45,6 +46,7 @@ class PersonGrid extends BaseGrid {
     /**
      * @param $presenter
      * @throws DuplicateColumnException
+     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -59,11 +61,11 @@ class PersonGrid extends BaseGrid {
             $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->getScheduleItem()->getLabel();
         });
-        $this->addJoinedColumn(DbNames::TAB_SCHEDULE_ITEM, 'price_czk', function ($row) {
+        $this->addJoinedColumn('schedule_item.price_czk', function ($row) {
             $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->getScheduleItem();
         });
-        $this->addJoinedColumn(DbNames::TAB_SCHEDULE_ITEM, 'price_eur', function ($row) {
+        $this->addJoinedColumn('schedule_item.price_eur', function ($row) {
             $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->getScheduleItem();
         });
@@ -73,6 +75,20 @@ class PersonGrid extends BaseGrid {
         $this->addColumn('state', _('State'))->setRenderer(function ($row) {
             $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->state;
+        });
+    }
+
+    /**
+     * @param string $name
+     * @param callable $accessCallback ActiveRow=>AbstractModelSingle
+     * @throws DuplicateColumnException
+     * @deprecated this functionality is moved to getModel in DBReflection AbstractRow
+     */
+    protected function addJoinedColumn(string $name, callable $accessCallback) {
+        $factory = $this->tableReflectionFactory->loadRowFactory($name);
+        $this->addColumn(str_replace('.', '__', $name), $factory->getTitle())->setRenderer(function ($row) use ($factory, $accessCallback) {
+            $model = $accessCallback($row);
+            return $factory->renderValue($model, 1);
         });
     }
 

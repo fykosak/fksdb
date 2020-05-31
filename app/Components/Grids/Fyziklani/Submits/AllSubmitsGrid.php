@@ -6,7 +6,6 @@ use Closure;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Fyziklani\TaskCodePreprocessor;
 use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -51,8 +50,16 @@ class AllSubmitsGrid extends SubmitsGrid {
     public function __construct(ModelEvent $event, Container $container) {
         parent::__construct($container);
         $this->event = $event;
-        $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
-        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
+    }
+
+    /**
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @return void
+     */
+    public function injectPrimary(ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
     /**
@@ -64,13 +71,13 @@ class AllSubmitsGrid extends SubmitsGrid {
     protected function configure($presenter) {
         parent::configure($presenter);
 
-        $this->addColumnTeam();
+        $this->addColumns(['e_fyziklani_team.name_n_id']);
         $this->addColumnTask();
 
         $this->addColumns([
-            DbNames::TAB_FYZIKLANI_SUBMIT . '.state',
-            DbNames::TAB_FYZIKLANI_SUBMIT . '.points',
-            DbNames::TAB_FYZIKLANI_SUBMIT . '.created',
+            'fyziklani_submit.state',
+            'fyziklani_submit.points',
+            'fyziklani_submit.created',
         ]);
         $this->addLinkButton(':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
         $this->addLinkButton(':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);

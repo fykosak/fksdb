@@ -53,9 +53,6 @@ class OrgFactory extends SingleReflectionFactory {
         return $container;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_ORG;
     }

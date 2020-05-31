@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class EmailRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EmailRow extends DefaultRow {
 

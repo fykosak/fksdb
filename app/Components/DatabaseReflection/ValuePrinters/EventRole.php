@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class EventRole
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventRole {
 

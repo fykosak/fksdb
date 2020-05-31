@@ -8,7 +8,7 @@ use Nette\Utils\Html;
 
 /**
  * Class DatePrinter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DatePrinter extends AbstractValuePrinter {
     /** @var string|null */
@@ -23,14 +23,10 @@ class DatePrinter extends AbstractValuePrinter {
     }
 
     /**
-     * @param DateTime|null $value
+     * @param DateTime $value
      * @return Html
      */
     protected function getHtml($value): Html {
-        if (\is_null($value)) {
-            return NotSetBadge::getHtml();
-        } else {
-            return Html::el('span')->addText($value->format($this->format));
-        }
+        return Html::el('span')->addText($value->format($this->format));
     }
 }

@@ -30,24 +30,13 @@ abstract class SubmitsGrid extends BaseGrid {
 
     /**
      * @throws DuplicateColumnException
+     * TODO to TRF
      */
     protected function addColumnTask() {
         $this->addColumn('label', _('Task'))->setRenderer(function ($row) {
             $model = ModelFyziklaniSubmit::createFromActiveRow($row); // TODO is needed?
             return $model->getFyziklaniTask()->label;
         })->setSortable(false);
-    }
-
-    /**
-     * @throws DuplicateColumnException
-     */
-    protected function addColumnTeam() {
-        $this->addJoinedColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'name_n_id', function ($row) {
-            if (!$row instanceof ModelFyziklaniSubmit) {
-                $row = ModelFyziklaniSubmit::createFromActiveRow($row);  // TODO is needed?
-            }
-            return $row->getFyziklaniTeam();
-        });
     }
 
     protected function getModelClassName(): string {

@@ -46,26 +46,16 @@ class UniqueLogin {
         $this->ignoredLogin = $ignoredLogin;
     }
 
-    /**
-     * @param BaseControl $control
-     * @return bool
-     */
-    public function __invoke(BaseControl $control) {
+    public function __invoke(BaseControl $control): bool {
         $login = $control->getValue();
 
         if (!$login) {
             return true;
         }
-
         $conflicts = $this->serviceLogin->getTable()->where(['login' => $login]);
         if ($this->ignoredLogin && $this->ignoredLogin->login_id) {
             $conflicts->where('NOT login_id = ?', $this->ignoredLogin->login_id);
         }
-        if (count($conflicts) > 0) {
-            return false;
-        }
-
-        return true;
+        return $conflicts->count() === 0;
     }
-
 }

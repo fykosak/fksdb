@@ -13,7 +13,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PersonLink
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonLink extends AbstractValuePrinter {
     /**
@@ -30,18 +30,12 @@ class PersonLink extends AbstractValuePrinter {
     }
 
     /**
-     * @param ModelPerson|IPersonReferencedModel $model
+     * @param ModelPerson $person
      * @return Html
      * @throws InvalidLinkException
      * @throws BadRequestException
      */
-    public function getHtml($model): Html {
-        $person = null;
-        if ($model instanceof IPersonReferencedModel) {
-            $person = $model->getPerson();
-        } elseif ($model instanceof ModelPerson) {
-            $person = $model;
-        }
+    public function getHtml($person): Html {
         if (!$person instanceof ModelPerson) {
             throw new BadTypeException(ModelPerson::class, $person);
         }

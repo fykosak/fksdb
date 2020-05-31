@@ -15,11 +15,7 @@ use Nette\OutOfRangeException;
  */
 class BornNumber {
 
-    /**
-     * @param BaseControl $control
-     * @return bool
-     */
-    public function __invoke(BaseControl $control) {
+    public function __invoke(BaseControl $control): bool {
         $rc = $control->getValue();
         // suppose once validated is always valid
         if ($rc == WriteOnlyInput::VALUE_ORIGINAL) {
@@ -28,7 +24,7 @@ class BornNumber {
         $matches = [];
         // "be liberal in what you receive"
         if (!preg_match('#^\s*(\d\d)(\d\d)(\d\d)[ /]*(\d\d\d)(\d?)\s*$#', $rc, $matches)) {
-            return FALSE;
+            return false;
         }
 
         list(, $year, $month, $day, $ext, $c) = $matches;
@@ -44,7 +40,7 @@ class BornNumber {
             $mod = 0;
         }
         if ($mod !== (int)$c) {
-            return FALSE;
+            return false;
         }
 
         $originalYear = $year;
@@ -56,23 +52,21 @@ class BornNumber {
         // k měsíci může být připočteno 20, 50 nebo 70
         if ($month > 70 && $year > 2003) {
             $month -= 70;
-        }
-        elseif ($month > 50) {
+        } elseif ($month > 50) {
             $month -= 50;
-        }
-        elseif ($month > 20 && $year > 2003) {
+        } elseif ($month > 20 && $year > 2003) {
             $month -= 20;
         }
 
         if (!checkdate($month, $day, $year)) {
-            return FALSE;
+            return false;
         }
 
         $normalized = "$originalYear$originalMonth$originalDay/$ext$c";
         $control->setValue($normalized);
 
         // cislo je OK
-        return TRUE;
+        return true;
     }
 
     /**
@@ -93,8 +87,7 @@ class BornNumber {
         }
         if ($month > 50) {
             return 'F';
-        }
-        else {
+        } else {
             return 'M';
         }
     }

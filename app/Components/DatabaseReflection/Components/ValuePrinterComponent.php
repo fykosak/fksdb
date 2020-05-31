@@ -31,18 +31,13 @@ class ValuePrinterComponent extends BaseComponent {
      * @param string $field
      * @param AbstractModelSingle $model
      * @param int $userPermission
-     * @param bool $tested
      * @throws \Exception
      */
-    public function render(string $field, AbstractModelSingle $model, int $userPermission, bool $tested) {
-        list($tableName, $fieldName) = TableReflectionFactory::parseRow($field);
-        $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
+    public function render(string $field, AbstractModelSingle $model, int $userPermission) {
+        $factory = $this->tableReflectionFactory->loadRowFactory($field);
         $this->template->title = $factory->getTitle();
         $this->template->description = $factory->getDescription();
         $this->template->testLog = null;
-        // if ($factory instanceof ITestedRowFactory && $tested) {
-        //  $this->template->testLog = $factory->runTest($model); TODO FIX
-        // }
         $this->template->html = $factory->renderValue($model, $userPermission);
         $this->template->setFile(__DIR__ . '/layout.latte');
         $this->template->render();
@@ -52,35 +47,32 @@ class ValuePrinterComponent extends BaseComponent {
      * @param string $field
      * @param AbstractModelSingle $model
      * @param int $userPermission
-     * @param bool $tested
      * @throws \Exception
      */
-    public function renderRow(string $field, AbstractModelSingle $model, int $userPermission = 2048, bool $tested = false) {
+    public function renderRow(string $field, AbstractModelSingle $model, int $userPermission = 2048) {
         $this->template->layout = self::LAYOUT_ROW;
-        $this->render($field, $model, $userPermission, $tested);
+        $this->render($field, $model, $userPermission);
     }
 
     /**
      * @param string $field
      * @param AbstractModelSingle $model
      * @param int $userPermission
-     * @param bool $tested
      * @throws \Exception
      */
-    public function renderListItem(string $field, AbstractModelSingle $model, int $userPermission = 2048, bool $tested = false) {
+    public function renderListItem(string $field, AbstractModelSingle $model, int $userPermission = 2048) {
         $this->template->layout = self::LAYOUT_LIST_ITEM;
-        $this->render($field, $model, $userPermission, $tested);
+        $this->render($field, $model, $userPermission);
     }
 
     /**
      * @param string $field
      * @param AbstractModelSingle $model
      * @param int $userPermission
-     * @param bool $tested
      * @throws \Exception
      */
-    public function renderOnlyValue(string $field, AbstractModelSingle $model, int $userPermission = 2048, bool $tested = false) {
+    public function renderOnlyValue(string $field, AbstractModelSingle $model, int $userPermission = 2048) {
         $this->template->layout = self::LAYOUT_ONLY_VALUE;
-        $this->render($field, $model, $userPermission, $tested);
+        $this->render($field, $model, $userPermission);
     }
 }
