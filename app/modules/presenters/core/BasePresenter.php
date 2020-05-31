@@ -69,7 +69,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     private PresenterBuilder $presenterBuilder;
 
-    private ?PageTitle $pageTitle;
+    private ?PageTitle $pageTitle = null;
 
     private bool $authorized = true;
 

@@ -302,10 +302,7 @@ class ApplicationPresenter extends BasePresenter {
         return $grid;
     }
 
-    /**
-     * @return ModelEvent|null
-     */
-    private function getEvent() {
+    private function getEvent(): ?ModelEvent {
         if (!isset($this->event)) {
             $eventId = null;
             if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
@@ -317,9 +314,7 @@ class ApplicationPresenter extends BasePresenter {
             }
             $eventId = $eventId ?: $this->getParameter('eventId');
             $event = $this->serviceEvent->findByPrimary($eventId);
-            if ($event) {
-                $this->event = $event;
-            }
+            $this->event = $event;
         }
 
         return $this->event;

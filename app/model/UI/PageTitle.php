@@ -6,7 +6,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PageTitle
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PageTitle extends Title {
 
@@ -29,7 +29,7 @@ class PageTitle extends Title {
             $container->addHtml(Html::el('i')->addAttributes(['class' => $this->icon . ' mr-2']));
         }
         $container->addText($this->title);
-        if ($this->subTitle) {
+        if (isset($this->subTitle)) {
             $container->addHtml(Html::el('small')->addAttributes(['class' => 'ml-2 text-secondary small'])->addText($this->subTitle));
         }
         return $container;
