@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "5f24c2303b0870e0a78ae06accf7f8db",
+    "content-hash": "7ddce08800039d11ba7b2c84f4e6658b",
     "packages": [
         {
             "name": "latte/latte",
@@ -1008,20 +1008,20 @@
         },
         {
             "name": "nette/tester",
-            "version": "v2.0.2",
+            "version": "v2.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tester.git",
-                "reference": "3f273cf0ef82939e5ed07baaa5cf21ea6f657fc2"
+                "reference": "c3bd1b2c1074dfb957288b716c06aa7b4b5295a8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tester/zipball/3f273cf0ef82939e5ed07baaa5cf21ea6f657fc2",
-                "reference": "3f273cf0ef82939e5ed07baaa5cf21ea6f657fc2",
+                "url": "https://api.github.com/repos/nette/tester/zipball/c3bd1b2c1074dfb957288b716c06aa7b4b5295a8",
+                "reference": "c3bd1b2c1074dfb957288b716c06aa7b4b5295a8",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.6.0"
+                "php": ">=7.1"
             },
             "bin": [
                 "src/tester"
@@ -1029,7 +1029,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.0-dev"
+                    "dev-master": "2.4-dev"
                 }
             },
             "autoload": {
@@ -1053,7 +1053,7 @@
                     "homepage": "https://nette.org/contributors"
                 }
             ],
-            "description": "Nette Tester: enjoyable unit testing in PHP with code coverage reporter. ????",
+            "description": "Nette Tester: enjoyable unit testing in PHP with code coverage reporter. 🍏🍏🍎🍏",
             "homepage": "https://tester.nette.org",
             "keywords": [
                 "Xdebug",
@@ -1061,12 +1061,13 @@
                 "clover",
                 "code coverage",
                 "nette",
+                "pcov",
                 "phpdbg",
                 "phpunit",
                 "testing",
                 "unit"
             ],
-            "time": "2018-06-07T11:24:40+00:00"
+            "time": "2019-11-19T13:19:16+00:00"
         },
         {
             "name": "nette/utils",
@@ -1240,27 +1241,28 @@
         },
         {
             "name": "tracy/tracy",
-            "version": "v2.5.9",
+            "version": "v2.6.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nette/tracy.git",
-                "reference": "cd9b889371cfbffe17e5b1a19e0a11de1ad31c8f"
+                "reference": "d3bb9f43692df5e3b83ab8004d3e6208034ac0ca"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nette/tracy/zipball/cd9b889371cfbffe17e5b1a19e0a11de1ad31c8f",
-                "reference": "cd9b889371cfbffe17e5b1a19e0a11de1ad31c8f",
+                "url": "https://api.github.com/repos/nette/tracy/zipball/d3bb9f43692df5e3b83ab8004d3e6208034ac0ca",
+                "reference": "d3bb9f43692df5e3b83ab8004d3e6208034ac0ca",
                 "shasum": ""
             },
             "require": {
                 "ext-json": "*",
                 "ext-session": "*",
-                "php": ">=5.4.4"
+                "php": ">=7.1"
             },
             "require-dev": {
-                "nette/di": "~2.3 || ~3.0.0",
-                "nette/tester": "~1.7 || ~2.0",
-                "nette/utils": "~2.3"
+                "nette/di": "^2.4 || ~3.0.0",
+                "nette/tester": "^2.2",
+                "nette/utils": "^2.4 || ^3.0",
+                "psr/log": "^1.0"
             },
             "suggest": {
                 "https://nette.org/donate": "Please support Tracy via a donation"
@@ -1268,7 +1270,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.5-dev"
+                    "dev-master": "2.6-dev"
                 }
             },
             "autoload": {
@@ -1276,7 +1278,7 @@
                     "src"
                 ],
                 "files": [
-                    "src/shortcuts.php"
+                    "src/Tracy/shortcuts.php"
                 ]
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1302,7 +1304,7 @@
                 "nette",
                 "profiler"
             ],
-            "time": "2020-05-17T09:25:46+00:00"
+            "time": "2020-05-17T09:37:45+00:00"
         }
     ],
     "packages-dev": [],
