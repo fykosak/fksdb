@@ -21,10 +21,7 @@ class DeadlineFromXML extends Stage {
      */
     private $data;
 
-    /**
-     * @var ServiceTask
-     */
-    private $taskService;
+    private ServiceTask $taskService;
 
     /**
      * DeadlineFromXML2 constructor.
@@ -41,7 +38,7 @@ class DeadlineFromXML extends Stage {
         return $this->data;
     }
 
-    public function process() {
+    public function process(): void {
         $xml = $this->data->getData();
         $deadline = (string)$xml->deadline[0];
         if (!$deadline) {
@@ -58,7 +55,7 @@ class DeadlineFromXML extends Stage {
     /**
      * @param SeriesData $data
      */
-    public function setInput($data) {
+    public function setInput($data): void {
         $this->data = $data;
     }
 

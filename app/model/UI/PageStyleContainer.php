@@ -3,13 +3,13 @@
 namespace FKSDB\UI;
 /**
  * Class PageStyleContainer
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PageStyleContainer {
-    /** @var string */
-    public $styleId;
-    /** @var string */
-    public $navBarClassName;
-    /** @var string */
-    public $mainContainerClassName;
+
+    public string $styleId;
+
+    public string $navBarClassName;
+
+    public string $mainContainerClassName;
 }

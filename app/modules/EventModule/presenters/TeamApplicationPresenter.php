@@ -44,7 +44,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function renderDetail(int $id) {
+    public function renderDetail(int $id): void {
         parent::renderDetail($id);
         $this->template->acYear = $this->getAcYear();
         try {

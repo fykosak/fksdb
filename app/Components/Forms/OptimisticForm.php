@@ -12,7 +12,7 @@ use Nette\Application\UI\Form;
  */
 class OptimisticForm extends Form {
 
-    const FINGERPRINT = '__fp';
+    public const FINGERPRINT = '__fp';
 
     /**
      * @var callable

@@ -11,12 +11,8 @@ use FKSDB\ORM\Models\ModelPerson;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class SingleRestComponent extends BaseComponent {
-    /**
-     * @param ModelPerson $person
-     * @param ModelEvent $event
-     * @return void
-     */
-    public function render(ModelPerson $person, ModelEvent $event) {
+
+    public function render(ModelPerson $person, ModelEvent $event): void {
         $this->template->rests = $person->getScheduleRests($event);
         $this->template->person = $person;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'person.latte');

@@ -17,14 +17,10 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class SchoolCheckComponent extends BaseComponent {
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /**
-     * @var int
-     */
-    private $acYear;
+
+    private ModelEvent $event;
+
+    private int $acYear;
 
     /**
      * SchoolCheckControl constructor.
@@ -38,11 +34,7 @@ class SchoolCheckComponent extends BaseComponent {
         $this->acYear = $acYear;
     }
 
-    /**
-     * @param ModelFyziklaniTeam $currentTeam
-     * @return void
-     */
-    public function render(ModelFyziklaniTeam $currentTeam) {
+    public function render(ModelFyziklaniTeam $currentTeam): void {
         $schools = [];
 
         /** @var ServiceSchool $serviceSchool */

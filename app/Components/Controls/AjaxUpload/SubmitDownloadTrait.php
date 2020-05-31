@@ -48,7 +48,7 @@ trait SubmitDownloadTrait {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function traitHandleDownloadUploaded(ILogger $logger, int $id) {
+    public function traitHandleDownloadUploaded(ILogger $logger, int $id): void {
         $submit = $this->getSubmit($id, 'download.uploaded');
         $filename = $this->getUploadedStorage()->retrieveFile($submit);
         if ($submit->source != ModelSubmit::SOURCE_UPLOAD) {
@@ -72,7 +72,7 @@ trait SubmitDownloadTrait {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function traitHandleDownloadCorrected(ILogger $logger, int $id) {
+    public function traitHandleDownloadCorrected(ILogger $logger, int $id): void {
         $submit = $this->getSubmit($id, 'download.corrected');
         if (!$submit->corrected) {
             $logger->log(new Message(_('Opravené riešenie nieje nahrané'), ILogger::WARNING));

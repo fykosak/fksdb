@@ -36,11 +36,11 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     }
 
     /**
-     * @param Traversable|array|null $data
+     * @param iterable $data
      * @return AbstractModelSingle
      * @throws ModelException
      */
-    public function createNewModel($data = null): AbstractModelSingle {
+    public function createNewModel(iterable $data): AbstractModelSingle {
         $modelClassName = $this->getModelClassName();
         $data = $this->filterData($data);
         try {
@@ -94,7 +94,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @param int $key
      * @return AbstractModelSingle|null
      */
-    public function findByPrimary($key) {
+    public function findByPrimary($key): ?AbstractModelSingle {
         /** @var AbstractModelSingle|null $result */
         $result = $this->getTable()->get($key);
         if ($result !== false) {
@@ -124,20 +124,11 @@ abstract class AbstractServiceSingle extends Selection implements IService {
         }
     }
 
-    /**
-     * @param AbstractModelSingle|IModel $model
-     * @return AbstractModelSingle|null
-     */
-    public function refresh(AbstractModelSingle $model) {
+    public function refresh(AbstractModelSingle $model): ?AbstractModelSingle {
         return $this->findByPrimary($model->getPrimary(true));
     }
 
-    /**
-     * @param AbstractModelSingle|IModel $model
-     * @param Traversable|array $data
-     * @return bool
-     */
-    public function updateModel2(AbstractModelSingle $model, $data = null): bool {
+    public function updateModel2(AbstractModelSingle $model, iterable $data): bool {
         $this->checkType($model);
         $data = $this->filterData($data);
         return $model->update($data);
@@ -151,7 +142,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @throws ModelException
      * @deprecated
      */
-    public function save(IModel &$model) {
+    public function save(IModel &$model): void {
         $modelClassName = $this->getModelClassName();
         /** @var AbstractModelSingle $model */
         if (!$model instanceof $modelClassName) {
@@ -186,7 +177,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @throws InvalidArgumentException
      * @throws InvalidStateException
      */
-    public function dispose(IModel $model) {
+    public function dispose(IModel $model): void {
         $this->checkType($model);
         if (!$model->isNew() && $model->delete() === false) {
             $code = $this->context->getConnection()->getPdo()->errorCode();
@@ -249,7 +240,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @param array|Traversable|null $data
      * @return array|null
      */
-    protected function filterData($data) {
+    protected function filterData(?iterable $data): ?array {
         if ($data === null) {
             return null;
         }

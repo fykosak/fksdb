@@ -12,19 +12,19 @@ use FKSDB\ORM\ModelsMulti\Events\ModelMSousParticipant;
  */
 class Heuristics /*extends StoredQueryPostProcessing */{ /* uncomment to use */
 
-    const RESERVE_1 = 8;
-    const ABS_INV = 3;
-    const CAT_COUNT = 4;
-    const P_4 = 1; // o kolik méně se pozývá čtvrťáků než ostatních
-    const RULE_1 = 1;
-    const RULE_2 = 2;
-    const RULE_3M = '3M';
-    const RULE_3F = '3F';
-    const RULE_3I = '3*';
-    const RULE4M2 = '42M';
-    const RULE4F2 = '42F';
-    const RULE4MW = '4WM';
-    const RULE4FW = '4WF';
+    public const RESERVE_1 = 8;
+    public const ABS_INV = 3;
+    public const CAT_COUNT = 4;
+    public const P_4 = 1; // o kolik méně se pozývá čtvrťáků než ostatních
+    public const RULE_1 = 1;
+    public const RULE_2 = 2;
+    public const RULE_3M = '3M';
+    public const RULE_3F = '3F';
+    public const RULE_3I = '3*';
+    public const RULE4M2 = '42M';
+    public const RULE4F2 = '42F';
+    public const RULE4MW = '4WM';
+    public const RULE4FW = '4WF';
 
     /**
      * @return string

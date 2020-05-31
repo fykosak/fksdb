@@ -31,11 +31,9 @@ class ScheduleItemPresenter extends BasePresenter {
      * @var int
      * @persistent
      */
-    public $groupId;
-    /**
-     * @var ModelScheduleGroup
-     */
-    private $group;
+    public int $groupId;
+
+    private ModelScheduleGroup $group;
 
     private ServiceScheduleItem $serviceScheduleItem;
 
@@ -53,7 +51,7 @@ class ScheduleItemPresenter extends BasePresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleList() {
+    public function titleList(): void {
         $this->setTitle(\sprintf(_('Schedule items')), 'fa fa-calendar-check-o');
     }
 
@@ -63,7 +61,7 @@ class ScheduleItemPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function titleDetail(int $id) {
+    public function titleDetail(int $id): void {
         $item = $this->loadEntity($id);
         $this->setTitle(\sprintf(_('Schedule item "%s/%s"'), $item->name_cs, $item->name_en), 'fa fa-calendar-check-o');
     }
@@ -74,7 +72,7 @@ class ScheduleItemPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function actionDetail(int $id) {
+    public function actionDetail(int $id): void {
         $component = $this->getComponent('personsGrid');
         if (!$component instanceof PersonsGrid) {
             throw new BadTypeException(PersonsGrid::class, $component);
@@ -85,7 +83,7 @@ class ScheduleItemPresenter extends BasePresenter {
     /**
      * @throws InvalidStateException
      */
-    public function renderList() {
+    public function renderList(): void {
         $this->template->group = $this->getGroup();
     }
 
@@ -95,7 +93,7 @@ class ScheduleItemPresenter extends BasePresenter {
      * @throws AbortException
      * @throws ForbiddenRequestException
      */
-    public function renderDetail(int $id) {
+    public function renderDetail(int $id): void {
         $this->template->group = $this->getGroup();
         $this->template->model = $this->loadEntity($id);
     }
@@ -156,10 +154,8 @@ class ScheduleItemPresenter extends BasePresenter {
         return new PersonsGrid($this->getContext());
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function getORMService() {
+
+    protected function getORMService(): ServiceScheduleItem {
         return $this->serviceScheduleItem;
     }
 
@@ -179,7 +175,7 @@ class ScheduleItemPresenter extends BasePresenter {
      * @param string $subTitle
      * @throws BadRequestException
      */
-    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
+    protected function setTitle(string $title, string $icon = '', string $subTitle = ''): void {
         parent::setTitle($title, $icon, $subTitle . ' ->' . sprintf('"%s/%s"', $this->getGroup()->name_cs, $this->getGroup()->name_en));
     }
 }

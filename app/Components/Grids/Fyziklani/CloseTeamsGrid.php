@@ -10,7 +10,6 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FyziklaniModule\BasePresenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
@@ -22,14 +21,10 @@ use NiftyGrid\DuplicateColumnException;
  * @author Lukáš Timko
  */
 class CloseTeamsGrid extends BaseGrid {
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
-    /**
-     * @var ModelEvent
-     */
-    private $event;
+
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+
+    private ModelEvent $event;
 
     /**
      * FyziklaniTeamsGrid constructor.

@@ -16,9 +16,9 @@ use SimpleXMLElement;
  */
 class StudyYearsFromXML extends Stage {
 
-    const XML_ELEMENT_PARENT = 'study-years';
+    public const XML_ELEMENT_PARENT = 'study-years';
 
-    const XML_ELEMENT_CHILD = 'study-year';
+    public const XML_ELEMENT_CHILD = 'study-year';
 
     /**
      * @var SeriesData
@@ -30,15 +30,9 @@ class StudyYearsFromXML extends Stage {
      */
     private $defaultStudyYears;
 
-    /**
-     * @var ServiceTaskStudyYear
-     */
-    private $serviceTaskStudyYear;
+    private ServiceTaskStudyYear $serviceTaskStudyYear;
 
-    /**
-     * @var ServiceStudyYear
-     */
-    private $serviceStudyYear;
+    private ServiceStudyYear $serviceStudyYear;
 
     /**
      * StudyYearsFromXML2 constructor.
@@ -55,11 +49,11 @@ class StudyYearsFromXML extends Stage {
     /**
      * @param mixed $data
      */
-    public function setInput($data) {
+    public function setInput($data): void {
         $this->data = $data;
     }
 
-    public function process() {
+    public function process(): void {
         $xml = $this->data->getData();
         foreach ($xml->problems[0]->problem as $task) {
             $this->processTask($task);

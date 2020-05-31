@@ -20,11 +20,7 @@ use OrgModule\OrgPresenter;
  */
 class EventsGrid extends BaseGrid {
 
-    /**
-     *
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
+    private ServiceEvent $serviceEvent;
 
     public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;

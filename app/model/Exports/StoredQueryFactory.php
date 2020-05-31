@@ -22,20 +22,14 @@ use FKSDB\CoreModule\ISeriesPresenter;
  */
 class StoredQueryFactory implements IXMLNodeSerializer {
 
-    const PARAM_CONTEST = 'contest';
-    const PARAM_YEAR = 'year';
-    const PARAM_SERIES = 'series';
-    const PARAM_AC_YEAR = 'ac_year';
+    public const PARAM_CONTEST = 'contest';
+    public const PARAM_YEAR = 'year';
+    public const PARAM_SERIES = 'series';
+    public const PARAM_AC_YEAR = 'ac_year';
 
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
-    /**
-     * @var ServiceStoredQuery
-     */
-    private $serviceStoredQuery;
+    private ServiceStoredQuery $serviceStoredQuery;
 
     /**
      * StoredQueryFactory constructor.

@@ -30,7 +30,7 @@ use Nette\Security\IResource;
  * @property-read string description_en
  */
 class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupReferencedModel, IEventReferencedModel, IResource {
-    const RESOURCE_ID = 'event.scheduleItem';
+    public const RESOURCE_ID = 'event.scheduleItem';
 
     public function getScheduleGroup(): ModelScheduleGroup {
         return ModelScheduleGroup::createFromActiveRow($this->schedule_group);

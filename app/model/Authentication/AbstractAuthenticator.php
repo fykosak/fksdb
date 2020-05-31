@@ -18,13 +18,9 @@ use Nette\Utils\DateTime;
 abstract class AbstractAuthenticator /* implements IAuthenticator */
 {
 
-    /** @var ServiceLogin */
-    protected $serviceLogin;
+    protected ServiceLogin $serviceLogin;
 
-    /**
-     * @var YearCalculator
-     */
-    protected $yearCalculator;
+    protected YearCalculator $yearCalculator;
 
     /**
      * AbstractAuthenticator constructor.

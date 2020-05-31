@@ -11,15 +11,12 @@ use Nette\Forms\Controls\SelectBox;
 
 /**
  * Class StudyYearRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class StudyYearRow extends AbstractRow {
     use DefaultPrinterTrait;
 
-    /**
-     * @var YearCalculator
-     */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
     /**
      * StudyYearRow constructor.

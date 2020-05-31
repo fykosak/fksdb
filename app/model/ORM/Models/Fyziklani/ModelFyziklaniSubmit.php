@@ -27,10 +27,10 @@ use Nette\Security\IResource;
  * @property-read \DateTimeInterface modified
  */
 class ModelFyziklaniSubmit extends AbstractModelSingle implements IFyziklaniTeamReferencedModel, IEventReferencedModel, IFyziklaniTaskReferencedModel, IResource {
-    const STATE_NOT_CHECKED = 'not_checked';
-    const STATE_CHECKED = 'checked';
+    public const STATE_NOT_CHECKED = 'not_checked';
+    public const STATE_CHECKED = 'checked';
 
-    const RESOURCE_ID = 'fyziklani.submit';
+    public const RESOURCE_ID = 'fyziklani.submit';
 
     public function getFyziklaniTask(): ModelFyziklaniTask {
         return ModelFyziklaniTask::createFromActiveRow($this->fyziklani_task);

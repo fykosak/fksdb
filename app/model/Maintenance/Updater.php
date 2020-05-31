@@ -14,8 +14,7 @@ use Tracy\Debugger;
 class Updater {
     use SmartObject;
 
-    /** @var GlobalParameters */
-    private $globalParameters;
+    private GlobalParameters $globalParameters;
 
     /**
      * Updater constructor.

@@ -17,10 +17,7 @@ use Nette\Utils\ArrayHash;
  */
 class AddressContainer extends ModelContainer {
 
-    /**
-     * @var ServiceRegion
-     */
-    private $serviceRegion;
+    private ServiceRegion $serviceRegion;
 
     /**
      * @param ServiceRegion $serviceRegion

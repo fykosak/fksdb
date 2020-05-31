@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Forms\Factories\ReferencedPerson;
 
-use Closure;
 use FKSDB\Components\Forms\Containers\AddressContainer;
 use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
@@ -44,56 +43,31 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
 
     use SmartObject;
 
-    const SEARCH_EMAIL = 'email';
-    const SEARCH_ID = 'id';
-    const SEARCH_NONE = 'none';
-    const TARGET_FORM = 0x1;
-    const TARGET_VALIDATION = 0x2;
-    const EXTRAPOLATE = 0x4;
-    const HAS_DELIVERY = 0x8;
+    public const SEARCH_EMAIL = 'email';
+    public const SEARCH_ID = 'id';
+    public const SEARCH_NONE = 'none';
+    public const TARGET_FORM = 0x1;
+    public const TARGET_VALIDATION = 0x2;
+    public const EXTRAPOLATE = 0x4;
+    public const HAS_DELIVERY = 0x8;
 
-    /**
-     * @var ServicePerson
-     */
-    protected $servicePerson;
+    protected ServicePerson $servicePerson;
 
-    /**
-     * @var PersonFactory
-     */
-    protected $personFactory;
+    protected PersonFactory $personFactory;
 
-    /**
-     * @var PersonHistoryFactory
-     */
-    protected $personHistoryFactory;
-    /**
-     * @var PersonInfoFactory
-     */
-    protected $personInfoFactory;
+    protected PersonHistoryFactory $personHistoryFactory;
 
-    /**
-     * @var ReferencedPersonHandlerFactory
-     */
-    protected $referencedPersonHandlerFactory;
+    protected PersonInfoFactory $personInfoFactory;
 
-    /**
-     * @var PersonProvider
-     */
-    protected $personProvider;
+    protected ReferencedPersonHandlerFactory $referencedPersonHandlerFactory;
 
-    /**
-     * @var ServiceFlag
-     */
-    protected $serviceFlag;
+    protected PersonProvider $personProvider;
 
-    /**
-     * @var FlagFactory
-     */
-    protected $flagFactory;
-    /**
-     * @var AddressFactory
-     */
-    protected $addressFactory;
+    protected ServiceFlag $serviceFlag;
+
+    protected FlagFactory $flagFactory;
+
+    protected AddressFactory $addressFactory;
 
     /**
      * AbstractReferencedPersonFactory constructor.
@@ -409,44 +383,25 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
         return $control;
     }
 
-    /**
-     * @param $searchType
-     * @return Closure
-     */
-    protected function createSearchCallback($searchType) {
+    protected function createSearchCallback(string $searchType): callable {
         $service = $this->servicePerson;
         switch ($searchType) {
             case self::SEARCH_EMAIL:
-                return function ($term) use ($service) {
-                    return $service->findByEmail($term);
-                };
-
-                break;
+                return fn($term) => $service->findByEmail($term);
             case self::SEARCH_ID:
-                return function ($term) use ($service) {
-                    return $service->findByPrimary($term);
-                };
-                break;
+                return fn($term) => $service->findByPrimary($term);
             default:
                 throw new InvalidArgumentException(_('Unknown search type'));
         }
     }
 
-    /**
-     * @param $searchType
-     * @return Closure
-     */
-    protected function createTermToValuesCallback($searchType) {
+    protected function createTermToValuesCallback(string $searchType): callable {
         switch ($searchType) {
             case self::SEARCH_EMAIL:
-                return function ($term) {
-                    return ['person_info' => ['email' => $term]];
-                };
+                return fn($term) => ['person_info' => ['email' => $term]];
                 break;
             case self::SEARCH_ID:
-                return function () {
-                    return [];
-                };
+                return fn() => [];
             default:
                 throw new InvalidArgumentException(_('Unknown search type'));
         }
@@ -472,7 +427,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param $options
      * @return bool|ModelPostContact|mixed|null
      */
-    protected function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options) {
+    protected function getPersonValue(?ModelPerson $person, $sub, $field, $acYear, $options) {
         if (!$person) {
             return null;
         }

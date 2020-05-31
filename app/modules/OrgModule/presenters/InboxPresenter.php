@@ -27,27 +27,15 @@ use Nette\Security\Permission;
  */
 class InboxPresenter extends SeriesPresenter {
 
-    const TASK_PREFIX = 'task';
+    public const TASK_PREFIX = 'task';
 
-    /**
-     * @var ServiceTaskContribution
-     */
-    private $serviceTaskContribution;
+    private ServiceTaskContribution $serviceTaskContribution;
 
-    /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
-    /**
-     * @var SeriesTable
-     */
-    private $seriesTable;
+    private SeriesTable $seriesTable;
 
-    /**
-     * @var PersonFactory
-     */
-    private $personFactory;
+    private PersonFactory $personFactory;
 
     public function injectServiceTaskContribution(ServiceTaskContribution $serviceTaskContribution): void {
         $this->serviceTaskContribution = $serviceTaskContribution;
@@ -69,35 +57,35 @@ class InboxPresenter extends SeriesPresenter {
     /**
      * @throws BadRequestException
      */
-    public function authorizedDefault() {
+    public function authorizedDefault(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
     /**
      * @throws BadRequestException
      */
-    public function authorizedInbox() {
+    public function authorizedInbox(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
     /**
      * @throws BadRequestException
      */
-    public function authorizedList() {
+    public function authorizedList(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'list', $this->getSelectedContest()));
     }
 
     /**
      * @throws BadRequestException
      */
-    public function authorizedHandout() {
+    public function authorizedHandout(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest()));
     }
 
     /**
      * @throws BadRequestException
      */
-    public function authorizedCorrected() {
+    public function authorizedCorrected(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'corrected', $this->getSelectedContest()));
     }
 
@@ -106,7 +94,7 @@ class InboxPresenter extends SeriesPresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleInbox() {
+    public function titleInbox(): void {
         $this->setTitle(_('Inbox'), 'fa fa-envelope-open');
     }
 
@@ -114,7 +102,7 @@ class InboxPresenter extends SeriesPresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setTitle(_('Inbox dashboard'), 'fa fa-envelope-open');
     }
 
@@ -122,7 +110,7 @@ class InboxPresenter extends SeriesPresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleHandout() {
+    public function titleHandout(): void {
         $this->setTitle(_('Rozdělení úloh opravovatelům'), 'fa fa-inbox');
     }
 
@@ -130,7 +118,7 @@ class InboxPresenter extends SeriesPresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleList() {
+    public function titleList(): void {
         $this->setTitle(_('List of submits'), 'fa fa-cloud-download');
     }
 
@@ -138,7 +126,7 @@ class InboxPresenter extends SeriesPresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleCorrected() {
+    public function titleCorrected(): void {
         $this->setTitle(_('Corrected'), 'fa fa-inbox');
     }
 
@@ -155,7 +143,7 @@ class InboxPresenter extends SeriesPresenter {
         $this->seriesTable->setSeries($this->getSelectedSeries());
     }
 
-    public function actionHandout() {
+    public function actionHandout(): void {
         // This workaround fixes inproper caching of referenced tables.
         // $connection = $this->servicePerson->getConnection();
         // $connection->getCache()->clean(array(Cache::ALL => true));
@@ -167,7 +155,7 @@ class InboxPresenter extends SeriesPresenter {
     /**
      * @throws BadRequestException
      */
-    public function renderHandout() {
+    public function renderHandout(): void {
         $taskIds = [];
         /** @var ModelTask $task */
         foreach ($this->seriesTable->getTasks() as $task) {
@@ -205,7 +193,7 @@ class InboxPresenter extends SeriesPresenter {
      * @return FormControl
      * @throws BadRequestException
      */
-    protected function createComponentHandoutForm() {
+    protected function createComponentHandoutForm(): FormControl {
         $formControl = new FormControl($this->getContext());
         $form = $formControl->getForm();
         $orgProvider = new PersonProvider($this->servicePerson);
@@ -225,23 +213,14 @@ class InboxPresenter extends SeriesPresenter {
         return $formControl;
     }
 
-    /**
-     * @return CorrectedControl
-     */
     public function createComponentCorrectedFormControl(): CorrectedControl {
         return new CorrectedControl($this->getContext(), $this->seriesTable);
     }
 
-    /**
-     * @return SubmitCheckComponent
-     */
     protected function createComponentCheckControl(): SubmitCheckComponent {
         return new SubmitCheckComponent($this->getContext(), $this->seriesTable);
     }
 
-    /**
-     * @return SubmitsPreviewControl
-     */
     protected function createComponentSubmitsTableControl(): SubmitsPreviewControl {
         return new SubmitsPreviewControl($this->getContext(), $this->seriesTable);
     }
@@ -250,7 +229,7 @@ class InboxPresenter extends SeriesPresenter {
      * @param Form $form
      * @throws AbortException
      */
-    public function handoutFormSuccess(Form $form) {
+    public function handoutFormSuccess(Form $form): void {
         $values = $form->getValues();
 
         $service = $this->serviceTaskContribution;

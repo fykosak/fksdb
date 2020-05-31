@@ -13,7 +13,7 @@ use Nette\InvalidStateException;
  */
 class BrojureResultsModel extends AbstractResultsModel {
 
-    const COL_SERIES_PREFIX = 's';
+    public const COL_SERIES_PREFIX = 's';
 
     /**
      * @var array of int

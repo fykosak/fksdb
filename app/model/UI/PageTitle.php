@@ -9,8 +9,8 @@ use Nette\Utils\Html;
  * *
  */
 class PageTitle extends Title {
-    /** @var string|null */
-    public $subTitle;
+
+    public ?string $subTitle;
 
     /**
      * PageTitle constructor.

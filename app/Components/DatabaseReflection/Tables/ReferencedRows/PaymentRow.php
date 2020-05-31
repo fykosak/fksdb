@@ -13,8 +13,8 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PaymentRow extends AbstractRow {
-    /** @var TableReflectionFactory */
-    private $reflectionFactory;
+
+    private TableReflectionFactory $reflectionFactory;
 
     /**
      * PaymentRow constructor.

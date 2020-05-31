@@ -7,16 +7,16 @@ use FKSDB\Components\Controls\Chart\TotalPersonsChartControl;
 
 /**
  * Class ChartPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ChartPresenter extends BasePresenter {
     use ChartPresenterTrait;
 
-    public function authorizedList() {
+    public function authorizedList(): void {
         $this->setAuthorized($this->isAnyContestAuthorized('chart', 'list'));
     }
 
-    public function authorizedChart() {
+    public function authorizedChart(): void {
         $this->setAuthorized($this->isAnyContestAuthorized('chart', 'chart'));
     }
 

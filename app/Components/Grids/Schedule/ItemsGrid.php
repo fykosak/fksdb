@@ -4,6 +4,7 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
@@ -17,10 +18,8 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ItemsGrid extends BaseGrid {
-    /**
-     * @var ModelScheduleGroup
-     */
-    private $group;
+
+    private ModelScheduleGroup $group;
 
     /**
      * ItemsGrid constructor.
@@ -41,6 +40,7 @@ class ItemsGrid extends BaseGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws NotImplementedException
+     * @throws BadTypeException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

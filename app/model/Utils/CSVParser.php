@@ -14,9 +14,9 @@ use Nette\SmartObject;
 class CSVParser implements Iterator {
     use SmartObject;
 
-    const INDEX_NUMERIC = 0;
-    const INDEX_FROM_HEADER = 1;
-    const BOM = '\xEF\xBB\xBF';
+    public const INDEX_NUMERIC = 0;
+    public const INDEX_FROM_HEADER = 1;
+    public const BOM = '\xEF\xBB\xBF';
     /**
      * @var resource
      */

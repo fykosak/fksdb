@@ -8,13 +8,11 @@ use FKSDB\Payment\Price;
 
 /**
  * Class EventPrice
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventPrice implements IPreprocess {
-    /**
-     * @var ServiceEventParticipant
-     */
-    private $serviceEventParticipant;
+
+    private ServiceEventParticipant $serviceEventParticipant;
 
     /**
      * EventPrice constructor.

@@ -44,39 +44,19 @@ use Tracy\Debugger;
 class PersonPresenter extends BasePresenter {
     use EntityTrait;
 
-    /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
-    /**
-     * @var ServicePersonInfo
-     */
-    private $servicePersonInfo;
+    private ServicePersonInfo $servicePersonInfo;
 
-    /**
-     * @var Merger
-     */
-    private $personMerger;
-    /**
-     * @var ModelPerson
-     */
-    private $trunkPerson;
+    private Merger $personMerger;
 
-    /**
-     * @var ModelPerson
-     */
-    private $mergedPerson;
+    private ModelPerson $trunkPerson;
 
-    /**
-     * @var ReferencedPersonFactory
-     */
-    private $referencedPersonFactory;
+    private ModelPerson $mergedPerson;
 
-    /**
-     * @var ModelPerson
-     */
-    private $person;
+    private ReferencedPersonFactory $referencedPersonFactory;
+
+    private ModelPerson $person;
     /**
      * @var int
      */
@@ -99,7 +79,7 @@ class PersonPresenter extends BasePresenter {
     }
 
     /* *********** TITLE ***************/
-    public function titleSearch() {
+    public function titleSearch(): void {
         $this->setTitle(_('Find person'), 'fa fa-search');
     }
 
@@ -107,16 +87,16 @@ class PersonPresenter extends BasePresenter {
      * @param int $id
      * @throws BadRequestException
      */
-    public function titleDetail(int $id) {
+    public function titleDetail(int $id): void {
         $this->setTitle(sprintf(_('Detail of person %s'), $this->loadEntity($id)->getFullName()), 'fa fa-eye');
     }
 
-    public function titleMerge() {
+    public function titleMerge(): void {
         $this->setTitle(sprintf(_('Sloučení osob %s (%d) a %s (%d)'), $this->trunkPerson->getFullName(), $this->trunkPerson->person_id, $this->mergedPerson->getFullName(), $this->mergedPerson->person_id));
     }
 
     /* *********** AUTH ***************/
-    public function authorizedSearch() {
+    public function authorizedSearch(): void {
         $this->setAuthorized($this->isAnyContestAuthorized('person', 'stalk.search'));
     }
 
@@ -124,7 +104,7 @@ class PersonPresenter extends BasePresenter {
      * @param int $id
      * @throws BadRequestException
      */
-    public function authorizedDetail(int $id) {
+    public function authorizedDetail(int $id): void {
         $person = $this->loadEntity($id);
 
         $full = $this->isAnyContestAuthorized($person, 'stalk.full');
@@ -141,7 +121,7 @@ class PersonPresenter extends BasePresenter {
      * @param $mergedId
      * @throws BadRequestException
      */
-    public function authorizedMerge($trunkId, $mergedId) {
+    public function authorizedMerge($trunkId, $mergedId): void {
         $this->trunkPerson = $this->servicePerson->findByPrimary($trunkId);
         $this->mergedPerson = $this->servicePerson->findByPrimary($mergedId);
         if (!$this->trunkPerson || !$this->mergedPerson) {
@@ -157,16 +137,16 @@ class PersonPresenter extends BasePresenter {
      * @param $mergedId
      * @throws BadRequestException
      */
-    public function authorizedDontMerge($trunkId, $mergedId) {
+    public function authorizedDontMerge($trunkId, $mergedId): void {
         $this->authorizedMerge($trunkId, $mergedId);
     }
 
     /* ********************* ACTIONS **************/
     /**
-     * @param $trunkId
-     * @param $mergedId
+     * @param int $trunkId
+     * @param int $mergedId
      */
-    public function actionMerge($trunkId, $mergedId) {
+    public function actionMerge($trunkId, $mergedId): void {
         $this->personMerger->setMergedPair($this->trunkPerson, $this->mergedPerson);
         $this->updateMergeForm($this->getComponent('mergeForm')->getForm());
     }
@@ -178,7 +158,7 @@ class PersonPresenter extends BasePresenter {
      * @throws ReflectionException
      * @throws \Exception
      */
-    public function actionDontMerge($trunkId, $mergedId) {
+    public function actionDontMerge($trunkId, $mergedId): void {
         $mergedPI = $this->servicePersonInfo->findByPrimary($mergedId);
         $mergedData = ['duplicates' => trim($mergedPI->duplicates . ",not-same($trunkId)", ',')];
         $this->servicePersonInfo->updateModel2($mergedPI, $mergedData);
@@ -195,7 +175,7 @@ class PersonPresenter extends BasePresenter {
      * @param int $id
      * @throws BadRequestException
      */
-    public function renderDetail(int $id) {
+    public function renderDetail(int $id): void {
         $person = $this->loadEntity($id);
         $this->template->userPermissions = $this->getUserPermissions($person);
         $this->template->person = $person;
@@ -286,7 +266,7 @@ class PersonPresenter extends BasePresenter {
      * @return FormControl
      * @throws BadRequestException
      */
-    protected function createComponentMergeForm() {
+    protected function createComponentMergeForm(): FormControl {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
@@ -300,11 +280,7 @@ class PersonPresenter extends BasePresenter {
         return $control;
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     */
-    private function updateMergeForm(Form $form) {
+    private function updateMergeForm(Form $form): void {
         if (false && !$form->isSubmitted()) { // new form is without any conflict, we use it to clear the session
             $this->setMergeConflicts(null);
             return;
@@ -375,7 +351,7 @@ class PersonPresenter extends BasePresenter {
      * @throws ReflectionException
      * @throws BadTypeException
      */
-    public function handleMergeFormSuccess(Form $form) {
+    public function handleMergeFormSuccess(Form $form): void {
         if ($form['cancel']->isSubmittedBy()) {
             $this->setMergeConflicts(null); // flush the session
             $this->backLinkRedirect(true);
@@ -405,10 +381,10 @@ class PersonPresenter extends BasePresenter {
      * ****************************** */
 
     /**
-     * @param $conflicts
+     * @param array $conflicts
      * @return void
      */
-    private function setMergeConflicts($conflicts) {
+    private function setMergeConflicts($conflicts): void {
         $section = $this->session->getSection('conflicts');
         if ($conflicts === null) {
             $section->remove();
@@ -450,10 +426,7 @@ class PersonPresenter extends BasePresenter {
         throw new NotImplementedException();
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServicePerson {
         return $this->servicePerson;
     }
 

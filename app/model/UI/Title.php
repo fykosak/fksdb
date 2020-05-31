@@ -4,13 +4,13 @@ namespace FKSDB\UI;
 
 /**
  * Class Title
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Title {
-    /** @var string */
-    public $title;
-    /** @var string */
-    public $icon;
+
+    public string $title;
+
+    public string $icon;
 
     /**
      * PageTitle constructor.

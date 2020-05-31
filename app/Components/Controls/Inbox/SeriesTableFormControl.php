@@ -17,12 +17,8 @@ abstract class SeriesTableFormControl extends SeriesTableComponent {
 
     public function createComponentForm(): OptimisticForm {
         $form = new OptimisticForm(
-            function () {
-                return $this->getSeriesTable()->getFingerprint();
-            },
-            function () {
-                return $this->getSeriesTable()->formatAsFormValues();
-            }
+            fn() => $this->getSeriesTable()->getFingerprint(),
+            fn() => $this->getSeriesTable()->formatAsFormValues()
         );
         $form->addSubmit('submit', _('Save'));
         $form->onError[] = function (Form $form) {
@@ -41,5 +37,5 @@ abstract class SeriesTableFormControl extends SeriesTableComponent {
      * @throws AbortException
      * @throws ForbiddenRequestException
      */
-    abstract protected function handleFormSuccess(Form $form);
+    abstract protected function handleFormSuccess(Form $form): void;
 }

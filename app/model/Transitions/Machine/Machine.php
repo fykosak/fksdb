@@ -18,21 +18,17 @@ use Nette\Database\Table\ActiveRow;
  */
 abstract class Machine {
 
-    const STATE_INIT = '__init';
-    const STATE_TERMINATED = '__terminated';
+    public const STATE_INIT = '__init';
+    public const STATE_TERMINATED = '__terminated';
 
     /**
      * @var Transition[]
      */
-    private $transitions = [];
-    /**
-     * @var Context
-     */
-    protected $context;
-    /**
-     * @var IService
-     */
-    private $service;
+    private array $transitions = [];
+
+    protected Context $context;
+
+    private IService $service;
     /**
      * @var callable
      * if callback return true, transition is allowed explicit, independently of transition's condition
@@ -49,11 +45,7 @@ abstract class Machine {
         $this->service = $service;
     }
 
-    /**
-     * @param Transition $transition
-     * @return void
-     */
-    public function addTransition(Transition $transition) {
+    public function addTransition(Transition $transition): void {
         $this->transitions[] = $transition;
     }
 
@@ -69,7 +61,7 @@ abstract class Machine {
      * @return Transition[]
      */
     public function getAvailableTransitions(IStateModel $model = null): array {
-        $state = $model ? $model->getState() : NULL;
+        $state = $model ? $model->getState() : null;
         if (\is_null($state)) {
             $state = self::STATE_INIT;
         }
@@ -77,6 +69,7 @@ abstract class Machine {
             return ($transition->getFromState() === $state) && $this->canExecute($transition, $model);
         });
     }
+
     /**
      * @param string $id
      * @param IStateModel $model
@@ -110,11 +103,8 @@ abstract class Machine {
     }
 
     /* ********** CONDITION ******** */
-    /**
-     * @param callable $condition
-     * @return void
-     */
-    public function setExplicitCondition(callable $condition) {
+
+    public function setExplicitCondition(callable $condition): void {
         $this->explicitCondition = $condition;
     }
 

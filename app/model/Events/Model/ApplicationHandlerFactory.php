@@ -14,15 +14,9 @@ use Nette\DI\Container;
  */
 class ApplicationHandlerFactory {
 
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
-    /**
-     * @var Container
-     */
-    private $container;
+    private Container $container;
 
     /**
      * ApplicationHandlerFactory constructor.
@@ -34,12 +28,7 @@ class ApplicationHandlerFactory {
         $this->container = $container;
     }
 
-    /**
-     * @param ModelEvent $event
-     * @param ILogger $logger
-     * @return ApplicationHandler
-     */
-    public function create(ModelEvent $event, ILogger $logger) {
+    public function create(ModelEvent $event, ILogger $logger): ApplicationHandler {
         return new ApplicationHandler($event, $logger, $this->connection, $this->container);
     }
 

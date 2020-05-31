@@ -10,10 +10,11 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
  */
 class TShirtSizeRow extends AbstractParticipantRow {
     use DefaultPrinterTrait;
-    const SIZE_MAP = [
+
+    public const SIZE_MAP = [
         'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'
     ];
-    const GENDER_MAP = [
+    public const GENDER_MAP = [
         'M' => 'male',
         'F' => 'female',
     ];

@@ -9,17 +9,13 @@ use Nette\Utils\Html;
 
 /**
  * Class PhoneNumberFactory
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PhoneNumberFactory {
-    /**
-     * @var ServiceRegion
-     */
-    private $serviceRegion;
-    /**
-     * @var TypedTableSelection
-     */
-    private $table;
+
+    private ServiceRegion $serviceRegion;
+
+    private TypedTableSelection $table;
 
     /**
      * PhoneNumberFactory constructor.
@@ -49,11 +45,7 @@ class PhoneNumberFactory {
         return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText($number);
     }
 
-    /**
-     * @param string $number
-     * @return ModelRegion|null
-     */
-    private function getRegion(string $number) {
+    private function getRegion(string $number): ?ModelRegion {
         /**
          * @var ModelRegion $region
          */

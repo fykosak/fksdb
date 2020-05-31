@@ -15,12 +15,9 @@ use Nette\DI\Container;
  */
 class GraphComponent extends BaseComponent {
 
-    /**
-     * @var BaseMachine
-     */
-    private $baseMachine;
-    /** @var ExpressionPrinter */
-    private $expressionPrinter;
+    private BaseMachine $baseMachine;
+
+    private ExpressionPrinter$expressionPrinter;
 
     /**
      * GraphComponent constructor.
@@ -86,7 +83,7 @@ class GraphComponent extends BaseComponent {
             $nodes[] = [
                 'id' => $state,
                 'label' => $this->baseMachine->getStateName($state),
-                'type' => $state === BaseMachine::STATE_INIT ? 'init' : $state === BaseMachine::STATE_TERMINATED ? 'terminated' : 'default',
+                'type' => $state === BaseMachine::STATE_INIT ? 'init' : ($state === BaseMachine::STATE_TERMINATED ? 'terminated' : 'default'),
             ];
         }
         return $nodes;

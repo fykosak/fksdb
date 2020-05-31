@@ -12,8 +12,8 @@ use DOMNode;
  */
 interface IXMLNodeSerializer {
 
-    const EXPORT_FORMAT_1 = 1;
-    const EXPORT_FORMAT_2 = 2;
+    public const EXPORT_FORMAT_1 = 1;
+    public const EXPORT_FORMAT_2 = 2;
 
     /**
      * @param $dataSource

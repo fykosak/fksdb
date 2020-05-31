@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\Entity\School\CreateForm;
 use FKSDB\Components\Controls\Entity\School\EditForm;
 use FKSDB\Components\Grids\SchoolsGrid;
 use FKSDB\EntityTrait;
-use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Application\BadRequestException;
@@ -65,7 +64,7 @@ class SchoolPresenter extends BasePresenter {
      * @param int $id
      * @throws BadRequestException
      */
-    public function actionEdit(int $id) {
+    public function actionEdit(int $id): void {
         $this->traitActionEdit($id);
     }
 
@@ -73,14 +72,11 @@ class SchoolPresenter extends BasePresenter {
      * @param int $id
      * @throws BadRequestException
      */
-    public function renderDetail(int $id) {
+    public function renderDetail(int $id): void {
         $this->template->model = $this->loadEntity($id);
     }
 
-    /**
-     * @return IService|ServiceSchool
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServiceSchool {
         return $this->serviceSchool;
     }
 

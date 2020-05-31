@@ -36,30 +36,15 @@ class PipelineFactory {
      */
     private $defaultStudyYears;
 
-    /**
-     * @var ServiceTask
-     */
-    private $serviceTask;
+    private ServiceTask $serviceTask;
 
-    /**
-     * @var ServiceTaskContribution
-     */
-    private $serviceTaskContribution;
+    private ServiceTaskContribution $serviceTaskContribution;
 
-    /**
-     * @var ServiceTaskStudyYear
-     */
-    private $serviceTaskStudyYear;
+    private ServiceTaskStudyYear $serviceTaskStudyYear;
 
-    /**
-     * @var ServiceStudyYear
-     */
-    private $serviceStudyYear;
+    private ServiceStudyYear $serviceStudyYear;
 
-    /**
-     * @var ServiceOrg
-     */
-    private $serviceOrg;
+    private ServiceOrg $serviceOrg;
 
     /**
      * PipelineFactory constructor.

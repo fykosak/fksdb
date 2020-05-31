@@ -10,29 +10,29 @@ use FKSDB\Components\Grids\DataTesting\PersonsGrid;
  * *
  */
 class ValidationPresenter extends BasePresenter {
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setTitle(_('Data validation'), 'fa fa-check');
     }
 
-    public function titleList() {
+    public function titleList(): void {
         $this->setTitle(_('All test'), 'fa fa-check');
     }
 
-    public function titlePreview() {
+    public function titlePreview(): void {
         $this->setTitle(_('Select test'), 'fa fa-check');
     }
 
-    public function authorizedDefault() {
+    public function authorizedDefault(): void {
         $this->setAuthorized(
             $this->getContestAuthorizator()->isAllowedForAnyContest('person', 'validation'));
     }
 
-    public function authorizedList() {
-        return $this->authorizedDefault();
+    public function authorizedList(): void {
+        $this->authorizedDefault();
     }
 
-    public function authorizedPreview() {
-        return $this->authorizedDefault();
+    public function authorizedPreview(): void {
+        $this->authorizedDefault();
     }
 
     public function createComponentGrid(): PersonsGrid {

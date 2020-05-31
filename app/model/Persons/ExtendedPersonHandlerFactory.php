@@ -17,25 +17,13 @@ use Nette\Database\Connection;
  */
 class ExtendedPersonHandlerFactory {
 
-    /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
-    /**
-     * @var MailTemplateFactory
-     */
-    private $mailTemplateFactory;
+    private MailTemplateFactory $mailTemplateFactory;
 
-    /**
-     * @var AccountManager
-     */
-    private $accountManager;
+    private AccountManager $accountManager;
 
     /**
      * ExtendedPersonHandlerFactory constructor.
@@ -52,13 +40,7 @@ class ExtendedPersonHandlerFactory {
         $this->accountManager = $accountManager;
     }
 
-    /**
-     * @param IService $service
-     * @param ModelContest $contest
-     * @param int $year
-     * @param string $invitationLang
-     * @return ExtendedPersonHandler
-     */
+
     public function create(IService $service, ModelContest $contest, int $year, string $invitationLang): ExtendedPersonHandler {
         $handler = new ExtendedPersonHandler($service, $this->servicePerson, $this->connection, $this->mailTemplateFactory, $this->accountManager);
         $handler->setContest($contest);

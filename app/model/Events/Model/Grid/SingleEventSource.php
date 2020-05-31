@@ -28,15 +28,9 @@ use Nette\SmartObject;
 class SingleEventSource implements IHolderSource {
     use SmartObject;
 
-    /**
-     * @var ModelEvent
-     */
-    private $event;
+    private ModelEvent $event;
 
-    /**
-     * @var Container
-     */
-    private $container;
+    private Container $container;
 
     /**
      * @var IModel[]

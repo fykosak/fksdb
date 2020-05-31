@@ -16,9 +16,9 @@ use PDO;
  */
 class ModelStoredQueryParameter extends AbstractModelSingle {
 
-    const TYPE_INT = 'integer';
-    const TYPE_STRING = 'string';
-    const TYPE_BOOL = 'bool';
+    public const TYPE_INT = 'integer';
+    public const TYPE_STRING = 'string';
+    public const TYPE_BOOL = 'bool';
 
     /**
      * @return int|string

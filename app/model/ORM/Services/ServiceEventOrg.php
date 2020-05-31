@@ -30,7 +30,7 @@ class ServiceEventOrg extends AbstractServiceSingle {
      * @return void
      * @deprecated
      */
-    public function save(IModel &$model) {
+    public function save(IModel &$model): void {
         try {
             parent::save($model);
         } catch (ModelException $exception) {

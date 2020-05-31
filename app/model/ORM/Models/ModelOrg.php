@@ -23,7 +23,7 @@ use Nette\Security\IResource;
  * @property-read string domain_alias
  */
 class ModelOrg extends AbstractModelSingle implements IResource, IPersonReferencedModel, IContestReferencedModel {
-    const RESOURCE_ID = 'org';
+    public const RESOURCE_ID = 'org';
 
     public function getContest(): ModelContest {
         return ModelContest::createFromActiveRow($this->contest);

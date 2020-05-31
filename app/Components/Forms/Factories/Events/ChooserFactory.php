@@ -17,19 +17,16 @@ use Nette\Forms\IControl;
  */
 class ChooserFactory extends AbstractFactory {
 
-    const FORMAT_KEY_VALUE = 'key-value';
-    const FORMAT_VALUE_META = 'value-meta';
-    const FORMAT_KEY_META = 'key-meta';
+    public const FORMAT_KEY_VALUE = 'key-value';
+    public const FORMAT_VALUE_META = 'value-meta';
+    public const FORMAT_KEY_META = 'key-meta';
 
     /**
      * @var string
      */
     private $prompt;
 
-    /**
-     * @var IOptionsProvider
-     */
-    private $optionsProvider;
+    private IOptionsProvider $optionsProvider;
 
     /**
      * ChooserFactory constructor.

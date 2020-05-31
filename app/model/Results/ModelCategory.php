@@ -8,16 +8,16 @@ namespace FKSDB\Results;
  */
 class ModelCategory {
 
-    const CAT_HS_4 = '4';
-    const CAT_HS_3 = '3';
-    const CAT_HS_2 = '2';
-    const CAT_HS_1 = '1';
-    const CAT_ES_9 = '9';
-    const CAT_ES_8 = '8';
-    const CAT_ES_7 = '7';
-    const CAT_ES_6 = '6';
-    const CAT_UNK = 'UNK';
-    const CAT_ALL = 'ALL';
+    public const CAT_HS_4 = '4';
+    public const CAT_HS_3 = '3';
+    public const CAT_HS_2 = '2';
+    public const CAT_HS_1 = '1';
+    public const CAT_ES_9 = '9';
+    public const CAT_ES_8 = '8';
+    public const CAT_ES_7 = '7';
+    public const CAT_ES_6 = '6';
+    public const CAT_UNK = 'UNK';
+    public const CAT_ALL = 'ALL';
 
     /** @var string */
     public $id;

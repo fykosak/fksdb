@@ -15,10 +15,8 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonLink extends AbstractValuePrinter {
-    /**
-     * @var PresenterComponent
-     */
-    private $presenterComponent;
+
+    private PresenterComponent $presenterComponent;
 
     /**
      * PersonLink constructor.

@@ -23,7 +23,7 @@ use Traversable;
  */
 class Helpers {
     /** @var string[] */
-    private static $semanticMap = [
+    private static array $semanticMap = [
         'and' => LogicAnd::class,
         'or' => LogicOr::class,
         'neg' => Not::class,

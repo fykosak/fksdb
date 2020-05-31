@@ -22,7 +22,7 @@ use Nette\Security\IResource;
  * @property-read int teacher_id
  */
 class ModelTeacher extends AbstractModelSingle implements IResource, IPersonReferencedModel, ISchoolReferencedModel {
-    const RESOURCE_ID = 'teacher';
+    public const RESOURCE_ID = 'teacher';
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);

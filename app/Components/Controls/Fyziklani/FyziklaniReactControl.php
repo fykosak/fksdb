@@ -11,10 +11,8 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class FyziklaniReactControl extends ReactComponent {
-    /**
-     * @var ModelEvent
-     */
-    private $event;
+
+    private ModelEvent $event;
 
     /**
      * FyziklaniReactControl constructor.

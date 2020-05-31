@@ -15,23 +15,20 @@ use Nette\Forms\IControl;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Field {
-    /* ** NAME ** */
-    /** @var string */
-    private $name;
 
-    /** @return string */
-    public function getName(): string {
-        return $this->name;
-    }
-    /* ** LABEL ** */
+    private string $name;
 
-    /** @var string|null */
-    private $label;
+    private ?string $label;
 
-    /** @return string */
-    public function getLabel() {
-        return $this->label;
-    }
+    private BaseHolder $baseHolder;
+
+    private ?string $description;
+
+    private bool $determining;
+
+    private ExpressionEvaluator $evaluator;
+
+    private IFieldFactory $factory;
 
     /**
      * Field constructor.
@@ -43,48 +40,44 @@ class Field {
         $this->label = $label;
     }
 
-    /*
-     * Accessors
-     */
-    /* ** BASE HOLDER ** */
-    /** @var BaseHolder */
-    private $baseHolder;
+    public function getName(): string {
+        return $this->name;
+    }
 
-    /** @return BaseHolder */
+    public function getLabel(): ?string {
+        return $this->label;
+    }
+
     public function getBaseHolder(): BaseHolder {
         return $this->baseHolder;
     }
 
-    /** @param BaseHolder $baseHolder */
-    public function setBaseHolder(BaseHolder $baseHolder) {
+    public function setBaseHolder(BaseHolder $baseHolder): void {
         $this->baseHolder = $baseHolder;
     }
-    /* ** DESCRIPTION ** */
-    /** @var string */
-    private $description;
 
-    /** @return string */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return $this->description;
     }
 
-    /** @param $description */
-    public function setDescription($description) {
+    public function setDescription(?string $description): void {
         $this->description = $description;
     }
 
-    /* ** DETERMINING ** */
-    /** @var bool */
-    private $determining;
-
-    /** @return bool */
     public function isDetermining(): bool {
         return $this->determining;
     }
 
-    /** @param bool $determining */
-    public function setDetermining(bool $determining) {
+    public function setDetermining(bool $determining): void {
         $this->determining = $determining;
+    }
+
+    public function setEvaluator(ExpressionEvaluator $evaluator): void {
+        $this->evaluator = $evaluator;
+    }
+
+    public function setFactory(IFieldFactory $factory): void {
+        $this->factory = $factory;
     }
 
     /* ** DEFAULT ** */
@@ -99,25 +92,6 @@ class Field {
     /** @param $default */
     public function setDefault($default) {
         $this->default = $default;
-    }
-    /* ** EVALUATOR ** */
-    /** @var ExpressionEvaluator */
-    private $evaluator;
-
-    /** @param ExpressionEvaluator $evaluator */
-    public function setEvaluator(ExpressionEvaluator $evaluator) {
-        $this->evaluator = $evaluator;
-    }
-    /* ** FACTORY ** */
-
-    /** @var IFieldFactory */
-    private $factory;
-
-    /**
-     * @param IFieldFactory $factory
-     */
-    public function setFactory(IFieldFactory $factory) {
-        $this->factory = $factory;
     }
 
     /*

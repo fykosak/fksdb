@@ -20,6 +20,7 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
      * @var int
      */
     private $event;
+
     /**
      * ParticipantAcquaintanceChartControl constructor.
      * @param Container $context
@@ -77,7 +78,7 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
     /**
      * @return string|null
      */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return null;
     }
 }

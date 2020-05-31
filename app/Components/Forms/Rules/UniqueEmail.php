@@ -13,10 +13,7 @@ use Nette\Forms\Controls\BaseControl;
  */
 class UniqueEmail {
 
-    /**
-     * @var ServicePersonInfo
-     */
-    private $servicePersonInfo;
+    private ServicePersonInfo $servicePersonInfo;
 
     /**
      * @var ModelPerson

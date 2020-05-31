@@ -16,7 +16,7 @@ use Nette\Security\IResource;
  * @property-read int year
  */
 class ModelContestant extends AbstractModelSingle implements IResource, IPersonReferencedModel, IContestReferencedModel {
-    const RESOURCE_ID = 'contestant';
+    public const RESOURCE_ID = 'contestant';
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);

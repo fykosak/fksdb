@@ -4,7 +4,7 @@ namespace FKSDB\Transitions\Callbacks;
 
 /**
  * Class AbstractCallback
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractCallback {
 

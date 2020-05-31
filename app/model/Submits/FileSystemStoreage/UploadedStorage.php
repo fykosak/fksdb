@@ -20,18 +20,18 @@ use UnexpectedValueException;
  */
 class UploadedStorage implements ISubmitStorage {
     /** Characters delimiting name and metadata in filename. */
-    const DELIMITER = '__';
+    public const DELIMITER = '__';
 
     /** @const File extension that marks original untouched file. */
-    const ORIGINAL_EXT = '.bak';
+    public const ORIGINAL_EXT = '.bak';
 
     /** @const File extension that marks temporary working file. */
-    const TEMPORARY_EXT = '.tmp';
+    public const TEMPORARY_EXT = '.tmp';
 
     /** @const File extension that marks final file extension.
      *         It's a bit dangerous that only supported filetype is hard-coded in this class
      */
-    const FINAL_EXT = '.pdf';
+    public const FINAL_EXT = '.pdf';
 
     /**
      * @var null
@@ -81,22 +81,18 @@ class UploadedStorage implements ISubmitStorage {
         $this->contestMap = $contestMap;
     }
 
-    /**
-     * @param IStorageProcessing $processing
-     * @return void
-     */
-    public function addProcessing(IStorageProcessing $processing) {
+    public function addProcessing(IStorageProcessing $processing): void {
         $this->processings[] = $processing;
     }
 
-    public function beginTransaction() {
+    public function beginTransaction(): void {
         $this->todo = [];
     }
 
     /**
      * @throws StorageException for unsuccessful commit
      */
-    public function commit() {
+    public function commit(): void {
         if ($this->todo === null) {
             throw new InvalidStateException('Cannot commit out of transaction.');
         }
@@ -113,7 +109,7 @@ class UploadedStorage implements ISubmitStorage {
                 $filename = $todo['file'];
 
                 $dest = $this->root . DIRECTORY_SEPARATOR . $this->createDirname($submit) . DIRECTORY_SEPARATOR . $this->createFilename($submit);
-                @mkdir(dirname($dest), 0777, TRUE); // @ - dir may already exist
+                @mkdir(dirname($dest), 0777, true); // @ - dir may already exist
 
                 if (count($this->processings) > 0) {
                     $original = $dest . self::ORIGINAL_EXT;
@@ -149,7 +145,7 @@ class UploadedStorage implements ISubmitStorage {
      *
      * @throws InvalidStateException
      */
-    public function rollback() {
+    public function rollback(): void {
         if ($this->todo === null) {
             throw new InvalidStateException('Cannot rollback out of transaction.');
         }
@@ -162,7 +158,7 @@ class UploadedStorage implements ISubmitStorage {
      * @param ModelSubmit $submit
      * @return void
      */
-    public function storeFile($filename, ModelSubmit $submit) {
+    public function storeFile($filename, ModelSubmit $submit): void {
         if ($this->todo === null) {
             throw new InvalidStateException('Cannot store file out of transaction.');
         }
@@ -178,7 +174,7 @@ class UploadedStorage implements ISubmitStorage {
      * @param int $type
      * @return null|string
      */
-    public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED) {
+    public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED): ?string {
         $files = $this->retrieveFiles($submit);
         if ($type == self::TYPE_ORIGINAL) {
             $files = array_filter($files, function (\SplFileInfo $file) {
@@ -207,15 +203,11 @@ class UploadedStorage implements ISubmitStorage {
      * @param ModelSubmit $submit
      * @return bool
      */
-    public function fileExists(ModelSubmit $submit) {
+    public function fileExists(ModelSubmit $submit): bool {
         return (bool)$this->retrieveFile($submit);
     }
 
-    /**
-     * @param ModelSubmit $submit
-     * @return void
-     */
-    public function deleteFile(ModelSubmit $submit) {
+    public function deleteFile(ModelSubmit $submit): void {
         $fails = [];
         $files = $this->retrieveFiles($submit);
         foreach ($files as $file) {

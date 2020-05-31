@@ -16,15 +16,10 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class FyziklaniChooser extends Chooser {
-    /**
-     * @var ModelEvent
-     */
-    private $event;
 
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
+    private ModelEvent $event;
+
+    private ServiceEvent $serviceEvent;
 
     /**
      * FyziklaniChooser constructor.

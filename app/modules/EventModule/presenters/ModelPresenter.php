@@ -16,7 +16,7 @@ class ModelPresenter extends BasePresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function authorizedDefault() {
+    public function authorizedDefault(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized('event.model', 'default'));
     }
 
@@ -24,7 +24,7 @@ class ModelPresenter extends BasePresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setTitle(_('Model of event'), 'fa fa-cubes');
     }
 

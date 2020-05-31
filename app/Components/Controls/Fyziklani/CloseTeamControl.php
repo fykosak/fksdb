@@ -13,18 +13,12 @@ use Nette\Application\AbortException;
 use Nette\DI\Container;
 
 class CloseTeamControl extends BaseComponent {
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /**
-     * @var ModelFyziklaniTeam
-     */
-    private $team;
-    /**
-     * @var ServiceFyziklaniTask
-     */
-    private $serviceFyziklaniTask;
+
+    private ModelEvent $event;
+
+    private ModelFyziklaniTeam $team;
+
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
 
     /**
      * CloseTeamControl constructor.
@@ -40,11 +34,7 @@ class CloseTeamControl extends BaseComponent {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 
-    /**
-     * @param ModelFyziklaniTeam $team
-     * @return void
-     */
-    public function setTeam(ModelFyziklaniTeam $team) {
+    public function setTeam(ModelFyziklaniTeam $team): void {
         $this->team = $team;
     }
 
@@ -52,7 +42,7 @@ class CloseTeamControl extends BaseComponent {
      * @return void
      * @throws AbortException
      */
-    public function handleClose() {
+    public function handleClose(): void {
         $connection = $this->serviceFyziklaniTask->getConnection();
         $connection->beginTransaction();
         $sum = (int)$this->team->getNonRevokedSubmits()->sum('points');
@@ -68,7 +58,7 @@ class CloseTeamControl extends BaseComponent {
      * @return void
      * @throws NotSetGameParametersException
      */
-    public function render() {
+    public function render(): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'CloseTeamControl.latte');
         $this->template->task = $this->getNextTask();
         $this->template->render();

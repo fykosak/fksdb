@@ -12,7 +12,7 @@ use Nette\DI\CompilerExtension;
  * *
  */
 class PaymentExtension extends CompilerExtension {
-    const MACHINE_PREFIX = 'machine.';
+    public const MACHINE_PREFIX = 'machine.';
 
     public function loadConfiguration() {
         $builder = $this->getContainerBuilder();

@@ -33,7 +33,7 @@ use Nette\Security\IResource;
  *
  */
 class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferencedModel, IResource {
-    const RESOURCE_ID = 'fyziklani.team';
+    public const RESOURCE_ID = 'fyziklani.team';
 
     public function __toString(): string {
         return $this->name;

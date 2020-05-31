@@ -15,8 +15,8 @@ use Nette\InvalidArgumentException;
  */
 abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdjustment {
 
-    const DELIMITER = '.';
-    const WILDCART = '*';
+    public const DELIMITER = '.';
+    public const WILDCART = '*';
 
     /**
      * @var

@@ -19,10 +19,6 @@ class StringRow extends DefaultRow {
         return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     */
     public function createFormControl(...$args): BaseControl {
         $control = new TextInput(_($this->getTitle()));
         if ($this->getMetaData()['size']) {

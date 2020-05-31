@@ -11,16 +11,9 @@ use Nette\Utils\DateTime;
  */
 class SeriesCalculator {
 
-    /**
-     * @var ServiceTask
-     */
-    private $serviceTask;
+    private ServiceTask $serviceTask;
 
-    /**
-     *
-     * @var YearCalculator
-     */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
     /**
      * FKSDB\SeriesCalculator constructor.
@@ -68,5 +61,4 @@ class SeriesCalculator {
             return 6;
         }
     }
-
 }

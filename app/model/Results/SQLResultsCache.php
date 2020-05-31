@@ -15,15 +15,9 @@ use Nette\Database\Connection;
  */
 class SQLResultsCache {
 
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
-    /**
-     * @var ServiceTask
-     */
-    private $serviceTask;
+    private ServiceTask $serviceTask;
 
     /**
      * FKSDB\Results\SQLResultsCache constructor.

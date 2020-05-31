@@ -17,18 +17,11 @@ use Nette\SmartObject;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ContestAuthorizator {
-
     use SmartObject;
 
-    /**
-     * @var User
-     */
-    private $user;
+    private User $user;
 
-    /**
-     * @var Permission
-     */
-    private $acl;
+    private Permission $acl;
 
     /**
      * ContestAuthorizator constructor.
@@ -40,17 +33,11 @@ class ContestAuthorizator {
         $this->acl = $acl;
     }
 
-    /**
-     * @return User
-     */
-    public function getUser() {
+    public function getUser(): User {
         return $this->user;
     }
 
-    /**
-     * @return Permission
-     */
-    protected function getAcl() {
+    protected function getAcl(): Permission {
         return $this->acl;
     }
 
@@ -63,7 +50,7 @@ class ContestAuthorizator {
      * @param int|ModelContest $contest queried contest
      * @return bool
      */
-    public function isAllowed($resource, string $privilege = null, $contest): bool {
+    public function isAllowed($resource, ?string $privilege, $contest): bool {
         if (!$this->getUser()->isLoggedIn()) {
             $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
             return $this->getAcl()->isAllowed($role, $resource, $privilege);
@@ -108,7 +95,7 @@ class ContestAuthorizator {
      * @param ModelContest|int $contest
      * @return bool
      */
-    final public function isAllowedForLogin(ModelLogin $login, $resource, string $privilege = null, $contest): bool {
+    final public function isAllowedForLogin(ModelLogin $login, $resource, ?string $privilege, $contest): bool {
         $contestId = ($contest instanceof ActiveRow) ? $contest->contest_id : $contest;
         $roles = $login->getRoles();
 

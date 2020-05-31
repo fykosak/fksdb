@@ -24,15 +24,9 @@ use Nette\Utils\ArrayHash;
  */
 class CategoryProcessing extends AbstractProcessing {
 
-    /**
-     * @var YearCalculator
-     */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
-    /**
-     * @var ServiceSchool
-     */
-    private $serviceSchool;
+    private ServiceSchool $serviceSchool;
 
     /**
      * CategoryProcessing constructor.

@@ -32,7 +32,7 @@ class InboxControl extends SeriesTableFormControl {
      * @throws AbortException
      * @throws ForbiddenRequestException
      */
-    protected function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form): void {
         /** @var ServiceSubmit $serviceSubmit */
         $serviceSubmit = $this->getContext()->getByType(ServiceSubmit::class);
         foreach ($form->getHttpData()['submits'] as $ctId => $tasks) {
@@ -65,7 +65,7 @@ class InboxControl extends SeriesTableFormControl {
         $this->getPresenter()->redirect('this');
     }
 
-    public function render() {
+    public function render(): void {
         $form = $this->getComponent('form');
         if ($form instanceof OptimisticForm) {
             $form->setDefaults();

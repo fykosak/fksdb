@@ -16,10 +16,7 @@ class RelatedPersonAuthorizator {
 
     use SmartObject;
 
-    /**
-     * @var IUserStorage
-     */
-    private $user;
+    private IUserStorage $user;
 
     /**
      * RelatedPersonAuthorizator constructor.
@@ -29,9 +26,6 @@ class RelatedPersonAuthorizator {
         $this->user = $user;
     }
 
-    /**
-     * @return IUserStorage
-     */
     public function getUser(): IUserStorage {
         return $this->user;
     }

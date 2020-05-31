@@ -19,9 +19,9 @@ use Nette\Application\UI\Form;
  */
 abstract class EntityPresenter extends BasePresenter {
 
-    const COMP_EDIT_FORM = 'editComponent';
-    const COMP_CREATE_FORM = 'createComponent';
-    const COMP_GRID = 'grid';
+    public const COMP_EDIT_FORM = 'editComponent';
+    public const COMP_CREATE_FORM = 'createComponent';
+    public const COMP_GRID = 'grid';
     /**
      * @var int
      * @persistent
@@ -108,11 +108,7 @@ abstract class EntityPresenter extends BasePresenter {
         return $this->model;
     }
 
-    /**
-     * @param IModel|null $model
-     * @param Form $form
-     */
-    protected function setDefaults(IModel $model = null, Form $form) {
+    protected function setDefaults(?IModel $model, Form $form): void {
         if (!$model) {
             return;
         }

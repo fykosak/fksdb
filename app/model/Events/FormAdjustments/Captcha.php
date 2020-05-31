@@ -21,12 +21,9 @@ class Captcha implements IFormAdjustment {
 
     use SmartObject;
 
-    const CONTROL_NAME = 'c_a_p_t_cha';
+    public const CONTROL_NAME = 'c_a_p_t_cha';
 
-    /**
-     * @var User
-     */
-    private $user;
+    private User $user;
 
     /**
      * Captcha constructor.

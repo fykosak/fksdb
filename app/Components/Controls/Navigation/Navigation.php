@@ -19,23 +19,14 @@ use ReflectionMethod;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Navigation extends BaseComponent {
-    /**
-     * @var array
-     */
-    private $nodes = [];
-    /**
-     * @var array
-     */
-    private $nodeChildren = [];
 
-    /**
-     * @var PresenterBuilder
-     */
-    private $presenterBuilder;
-    /**
-     * @var array
-     */
-    private $structure;
+    private array $nodes = [];
+
+    private array $nodeChildren = [];
+
+    private PresenterBuilder $presenterBuilder;
+
+    private array $structure;
 
     /**
      * Navigation constructor.

@@ -22,9 +22,9 @@ use Tracy\Debugger;
  * @method ModelFyziklaniSubmit createNewModel(array $data)
  */
 class ServiceFyziklaniSubmit extends AbstractServiceSingle {
-    const DEBUGGER_LOG_PRIORITY = 'fyziklani-info';
+    public const DEBUGGER_LOG_PRIORITY = 'fyziklani-info';
 
-    const LOG_FORMAT = 'Submit %d was %s by %s';
+    public const LOG_FORMAT = 'Submit %d was %s by %s';
 
     public function getModelClassName(): string {
         return ModelFyziklaniSubmit::class;
@@ -34,12 +34,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
         return DbNames::TAB_FYZIKLANI_SUBMIT;
     }
 
-    /**
-     * @param ModelFyziklaniTask $task
-     * @param ModelFyziklaniTeam $team
-     * @return ModelFyziklaniSubmit|null
-     */
-    public function findByTaskAndTeam(ModelFyziklaniTask $task, ModelFyziklaniTeam $team) {
+    public function findByTaskAndTeam(ModelFyziklaniTask $task, ModelFyziklaniTeam $team): ?ModelFyziklaniSubmit {
         /** @var ModelFyziklaniSubmit $row */
         $row = $this->getTable()->where([
             'fyziklani_task_id' => $task->fyziklani_task_id,
@@ -79,7 +74,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
             /* ugly, force current timestamp in database
              * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
              */
-            'created' => null
+            'created' => null,
         ]);
         $this->logEvent($submit, $user, 'created', \sprintf(' points %d', $points));
 
@@ -141,7 +136,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
              * so that `modified` is set automatically by DB
              * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
              */
-            'modified' => null
+            'modified' => null,
         ]);
         $this->logEvent($submit, $user, 'revoked');
         return new Message(\sprintf(_('Submit %d has been revoked.'), $submit->fyziklani_submit_id), ILogger::SUCCESS);

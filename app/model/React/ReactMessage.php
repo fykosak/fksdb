@@ -4,6 +4,7 @@ use FKSDB\Messages\Message;
 
 /**
  * Class ReactMessage
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ReactMessage extends Message {
 

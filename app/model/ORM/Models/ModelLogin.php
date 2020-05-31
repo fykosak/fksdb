@@ -23,10 +23,7 @@ use Nette\Security\IIdentity;
  */
 class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonReferencedModel {
 
-    /**
-     * @var YearCalculator|null
-     */
-    private $yearCalculator;
+    private ?YearCalculator $yearCalculator;
 
     /**
      * @return YearCalculator
@@ -44,10 +41,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
         $this->yearCalculator = $yearCalculator;
     }
 
-    /**
-     * @return ModelPerson|null
-     */
-    public function getPerson() {
+    public function getPerson(): ?ModelPerson {
         if ($this->person) {
             return ModelPerson::createFromActiveRow($this->person);
         }
@@ -119,9 +113,9 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
     private $roles;
 
     /**
-     * @return array|Grant[]|null
+     * @return array|Grant[]
      */
-    public function getRoles() {
+    public function getRoles(): array {
         if ($this->roles === null) {
             $this->roles = [];
             $this->roles[] = new Grant(Grant::CONTEST_ALL, ModelRole::REGISTERED);

@@ -22,15 +22,15 @@ use Nette\Security\IIdentity;
  */
 class ContestChooser extends BaseComponent {
 
-    const SOURCE_SESSION = 0x1;
-    const SOURCE_URL = 0x2;
-    const SESSION_PREFIX = 'contestPreset';
-    const CONTESTS_ALL = '__*';
-    const YEARS_ALL = '__*';
+    public const SOURCE_SESSION = 0x1;
+    public const SOURCE_URL = 0x2;
+    public const SESSION_PREFIX = 'contestPreset';
+    public const CONTESTS_ALL = '__*';
+    public const YEARS_ALL = '__*';
     /** @obsolete (no first contest anymore) */
-    const DEFAULT_FIRST = 'first';
-    const DEFAULT_SMART_FIRST = 'smfirst';
-    const DEFAULT_NULL = 'null';
+    public const DEFAULT_FIRST = 'first';
+    public const DEFAULT_SMART_FIRST = 'smfirst';
+    public const DEFAULT_NULL = 'null';
 
     /**
      * @var mixed
@@ -47,20 +47,11 @@ class ContestChooser extends BaseComponent {
      */
     private $contests;
 
-    /**
-     * @var Session
-     */
-    private $session;
+    private Session $session;
 
-    /**
-     * @var YearCalculator
-     */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
-    /**
-     * @var ServiceContest
-     */
-    private $serviceContest;
+    private ServiceContest $serviceContest;
 
     /**
      * @var ModelContest

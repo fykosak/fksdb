@@ -15,17 +15,11 @@ use FKSDB\YearCalculator;
  */
 class PersonProvider implements IFilteredDataProvider {
 
-    const PLACE = 'place';
+    public const PLACE = 'place';
 
-    /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
-    /**
-     * @var TypedTableSelection
-     */
-    private $searchTable;
+    private TypedTableSelection $searchTable;
 
     /**
      * PersonProvider constructor.

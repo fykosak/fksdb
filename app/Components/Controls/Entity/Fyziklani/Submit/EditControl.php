@@ -15,7 +15,6 @@ use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;
 use Nette\Forms\Form;
-use Nette\Localization\ITranslator;
 
 /**
  * Class EditControl

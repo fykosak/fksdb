@@ -14,7 +14,7 @@ use Nette\Utils\Html;
  * *
  */
 class HealthInsuranceRow extends AbstractRow {
-    const ID_MAPPING = [
+    public const ID_MAPPING = [
         111 => '(111) Všeobecná zdravotní pojišťovna ČR',
         201 => '(201) Vojenská zdravotní pojišťovna ČR',
         205 => '(205) Česká průmyslová zdravotní pojišťovna',

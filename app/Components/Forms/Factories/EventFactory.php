@@ -15,10 +15,7 @@ use Nette\Forms\Controls\BaseControl;
  */
 class EventFactory extends SingleReflectionFactory {
 
-    /**
-     * @var ServiceEventType
-     */
-    private $serviceEventType;
+    private ServiceEventType $serviceEventType;
 
     /**
      * EventFactory constructor.

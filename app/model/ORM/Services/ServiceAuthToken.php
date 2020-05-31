@@ -14,7 +14,7 @@ use Nette\Utils\Random;
  */
 class ServiceAuthToken extends AbstractServiceSingle {
 
-    const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
+    public const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
     public function getModelClassName(): string {
         return ModelAuthToken::class;
@@ -71,7 +71,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
                 'token' => $tokenData,
                 'data' => $data,
                 'since' => $since,
-                'type' => $type
+                'type' => $type,
             ]);
         } else {
             $this->updateModel2($token, ['until' => $until]);
@@ -92,7 +92,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
      * @param bool $strict
      * @return ModelAuthToken|null
      */
-    public function verifyToken($tokenData, $strict = true) {
+    public function verifyToken($tokenData, $strict = true): ?ModelAuthToken {
         $tokens = $this->getTable()
             ->where('token', $tokenData);
         if ($strict) {

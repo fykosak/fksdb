@@ -28,15 +28,9 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      */
     protected $sendEmail = true;
 
-    /**
-     * @var ReferencedPersonFactory
-     */
-    private $referencedPersonFactory;
+    private ReferencedPersonFactory $referencedPersonFactory;
 
-    /**
-     * @var ExtendedPersonHandlerFactory
-     */
-    private $handlerFactory;
+    private ExtendedPersonHandlerFactory $handlerFactory;
 
     public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory): void {
         $this->referencedPersonFactory = $referencedPersonFactory;
@@ -46,11 +40,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         $this->handlerFactory = $handlerFactory;
     }
 
-    /**
-     * @param IModel|null $model
-     * @param Form $form
-     */
-    protected function setDefaults(IModel $model = null, Form $form) {
+    protected function setDefaults(?IModel $model, Form $form): void {
         if (!$model) {
             return;
         }

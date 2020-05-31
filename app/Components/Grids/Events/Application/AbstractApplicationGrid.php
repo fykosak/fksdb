@@ -19,13 +19,13 @@ use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class AbstractApplicationGrid
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractApplicationGrid extends BaseGrid {
-    /** @var ModelEvent */
-    protected $event;
-    /** @var Holder */
-    private $holder;
+
+    protected ModelEvent $event;
+
+    private Holder $holder;
 
     /**
      * AbstractApplicationGrid constructor.

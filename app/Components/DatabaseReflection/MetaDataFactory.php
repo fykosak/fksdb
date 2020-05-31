@@ -12,11 +12,9 @@ class MetaDataFactory {
     /**
      * @var array[]
      */
-    private $metadata = [];
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private array $metadata = [];
+
+    private Connection $connection;
 
     /**
      * MetaDataFactory constructor.

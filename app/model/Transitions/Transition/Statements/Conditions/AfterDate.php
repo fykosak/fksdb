@@ -10,10 +10,8 @@ use FKSDB\Transitions\Statements\Statement;
  * *
  */
 class AfterDate extends Statement {
-    /**
-     * @var DateTime
-     */
-    private $from;
+
+    private \DateTimeInterface $from;
 
     /**
      * DateBetween constructor.

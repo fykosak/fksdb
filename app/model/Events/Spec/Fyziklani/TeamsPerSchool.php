@@ -20,10 +20,7 @@ use Nette\Forms\IControl;
  */
 class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
 
-    /**
-     * @var Context
-     */
-    private $context;
+    private Context $context;
 
     /**
      * @var mixed
@@ -35,10 +32,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
      */
     private $teamsPerSchoolValue;
 
-    /**
-     * @var ExpressionEvaluator
-     */
-    private $evaluator;
+    private ExpressionEvaluator $evaluator;
 
     /**
      * @return int|mixed
@@ -51,9 +45,9 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
     }
 
     /**
-     * @param $teamsPerSchool
+     * @param mixed $teamsPerSchool
      */
-    public function setTeamsPerSchool($teamsPerSchool) {
+    public function setTeamsPerSchool($teamsPerSchool): void {
         $this->teamsPerSchool = $teamsPerSchool;
     }
 
@@ -94,7 +88,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         $form->onValidate[] = function (Form $form) use ($schoolControls, $personControls, $msgMulti) {
             if ($form->isValid()) { // it means that all schools may have been disabled
                 $schools = $this->getSchools($schoolControls, $personControls);
-                if (!$this->checkMulti(true, NULL, $schools)) {
+                if (!$this->checkMulti(true, null, $schools)) {
                     $form->addError($msgMulti);
                 }
             }

@@ -15,12 +15,10 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class CreateForm extends AbstractForm {
-    /**
-     * @var int
-     */
-    private $year;
-    /** @var ServiceEvent */
-    private $serviceEvent;
+
+    private int $year;
+
+    private ServiceEvent $serviceEvent;
 
     public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;

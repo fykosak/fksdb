@@ -9,38 +9,24 @@ use Nette\Forms\Controls\BaseControl;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class DefaultRow extends AbstractRow {
-    /**
-     * @var string
-     */
-    private $title;
-    /**
-     * @var string
-     */
-    private $tableName;
-    /**
-     * @var string
-     */
-    private $modelAccessKey;
-    /**
-     * @var string
-     */
-    private $description;
-    /**
-     * @var array
-     */
-    private $metaData;
-    /** @var bool */
-    private $required = false;
-    /** @var bool */
-    private $omitInputField = false;
-    /**
-     * @var int
-     */
-    private $permissionValue = self::PERMISSION_USE_GLOBAL_ACL;
-    /**
-     * @var MetaDataFactory
-     */
-    private $metaDataFactory;
+
+    private string $title;
+
+    private string $tableName;
+
+    private string $modelAccessKey;
+
+    private ?string $description;
+
+    private array $metaData;
+
+    private bool $required = false;
+
+    private bool $omitInputField = false;
+
+    private int $permissionValue = self::PERMISSION_USE_GLOBAL_ACL;
+
+    private MetaDataFactory $metaDataFactory;
 
     /**
      * StringRow constructor.
@@ -50,14 +36,7 @@ abstract class DefaultRow extends AbstractRow {
         $this->metaDataFactory = $metaDataFactory;
     }
 
-    /**
-     * @param string $tableName
-     * @param string $title
-     * @param string $modelAccessKey
-     * @param array $metaData
-     * @param string|null $description
-     */
-    final public function setUp(string $tableName, string $modelAccessKey, array $metaData, string $title, string $description = null) {
+    final public function setUp(string $tableName, string $modelAccessKey, array $metaData, string $title, ?string $description = null): void {
         $this->title = $title;
         $this->tableName = $tableName;
         $this->modelAccessKey = $modelAccessKey;
@@ -65,6 +44,11 @@ abstract class DefaultRow extends AbstractRow {
         $this->metaData = $this->metaDataFactory->getMetaData($tableName, $modelAccessKey);
     }
 
+    /**
+     * @param mixed ...$args
+     * @return BaseControl
+     * @throws AbstractRowException
+     */
     final public function createField(...$args): BaseControl {
         if ($this->omitInputField) {
             throw new AbstractRowException();
@@ -79,27 +63,15 @@ abstract class DefaultRow extends AbstractRow {
         return $field;
     }
 
-    /**
-     * @param string $value
-     * @return void
-     */
-    final public function setPermissionValue(string $value) {
+    final public function setPermissionValue(string $value): void {
         $this->permissionValue = constant(self::class . '::' . $value);
     }
 
-    /**
-     * @param bool $value
-     * @return void
-     */
-    final public function setRequired(bool $value) {
+    final public function setRequired(bool $value): void {
         $this->required = $value;
     }
 
-    /**
-     * @param bool $omit
-     * @return void
-     */
-    final public function setOmitInputField(bool $omit) {
+    final public function setOmitInputField(bool $omit): void {
         $this->omitInputField = $omit;
     }
 

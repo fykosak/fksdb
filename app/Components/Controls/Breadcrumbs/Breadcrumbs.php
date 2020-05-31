@@ -33,31 +33,21 @@ use Utils;
  */
 class Breadcrumbs extends BaseComponent {
 
-    const SECTION_REQUESTS = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.main';
-    const SECTION_BACKIDS = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.backids';
-    const SECTION_REVERSE = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.reverse';
-    const SECTION_PATH_REVERSE = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.pathReverse';
+    public const SECTION_REQUESTS = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.main';
+    public const SECTION_BACKIDS = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.backids';
+    public const SECTION_REVERSE = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.reverse';
+    public const SECTION_PATH_REVERSE = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.pathReverse';
     // const EXPIRATION = '+ 10 minutes';
-    const BACKID_LEN = 4;
-    const BACKID_DOMAIN = '0-9a-zA-Z';
+    public const BACKID_LEN = 4;
+    public const BACKID_DOMAIN = '0-9a-zA-Z';
 
-    /** @var Session */
-    private $session;
+    private Session $session;
 
-    /**
-     * @var IRouter
-     */
-    private $router;
+    private IRouter $router;
 
-    /**
-     * @var HttpRequest
-     */
-    private $httpRequest;
+    private HttpRequest $httpRequest;
 
-    /**
-     * @var PresenterFactory
-     */
-    private $presenterFactory;
+    private PresenterFactory $presenterFactory;
 
     /**
      * Prevents multiple storing the current request.
@@ -95,7 +85,7 @@ class Breadcrumbs extends BaseComponent {
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    public function setBackLink(AppRequest $request) {
+    public function setBackLink(AppRequest $request): void {
         $presenter = $this->getPresenter();
         if (!$presenter instanceof INavigablePresenter) {
             throw new BadTypeException(INavigablePresenter::class, $presenter);
@@ -107,7 +97,7 @@ class Breadcrumbs extends BaseComponent {
         $this->storeRequest($originalBackLink);
     }
 
-    public function reset() {
+    public function reset(): void {
         foreach ([
                      self::SECTION_BACKIDS,
                      self::SECTION_REQUESTS,
@@ -122,7 +112,7 @@ class Breadcrumbs extends BaseComponent {
      * Rendering
      * ********************** */
 
-    public function render() {
+    public function render(): void {
         $request = $this->getPresenter()->getRequest();
 
         $path = [];
@@ -142,10 +132,7 @@ class Breadcrumbs extends BaseComponent {
      * Path traversal
      * ********************** */
 
-    /**
-     * @return NULL|string
-     */
-    public function getBackLinkUrl() {
+    public function getBackLinkUrl(): ?string {
         $presenter = $this->getPresenter();
         $request = $presenter->getRequest();
 

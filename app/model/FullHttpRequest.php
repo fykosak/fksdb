@@ -10,11 +10,9 @@ use Nette\SmartObject;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class FullHttpRequest {
-
     use SmartObject;
 
-    /** @var Request */
-    private $request;
+    private Request $request;
 
     /** @var string */
     private $payload;

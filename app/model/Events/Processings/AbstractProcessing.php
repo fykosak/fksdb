@@ -21,8 +21,8 @@ use Nette\Utils\ArrayHash;
 abstract class AbstractProcessing implements IProcessing {
     use SmartObject;
 
-    const DELIMITER = '.';
-    const WILDCART = '*';
+    public const DELIMITER = '.';
+    public const WILDCART = '*';
 
     /**
      * @var
@@ -39,7 +39,7 @@ abstract class AbstractProcessing implements IProcessing {
     /**
      * @var Holder
      */
-    private $holder;
+    private Holder $holder;
     /**
      * @var
      */

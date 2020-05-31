@@ -4,19 +4,15 @@ namespace FKSDB\DataTesting;
 
 /**
  * Class TestsLogger
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TestsLogger {
     /**
      * @var TestLog[]
      */
-    private $logs = [];
+    private array $logs = [];
 
-    /**
-     * @param TestLog $log
-     * @return void
-     */
-    public function log(TestLog $log) {
+    public function log(TestLog $log): void {
         $this->logs[] = $log;
     }
 

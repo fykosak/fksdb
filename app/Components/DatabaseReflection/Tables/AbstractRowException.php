@@ -9,5 +9,4 @@ use Nette\Application\BadRequestException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class AbstractRowException extends BadRequestException {
-
 }

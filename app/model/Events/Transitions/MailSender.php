@@ -33,15 +33,15 @@ use PublicModule\ApplicationPresenter;
 class MailSender {
     use SmartObject;
 
-    const BCC_PARAM = 'notifyBcc';
-    const FROM_PARAM = 'notifyFrom';
+    public const BCC_PARAM = 'notifyBcc';
+    public const FROM_PARAM = 'notifyFrom';
 
     // Adressee
-    const ADDR_SELF = 'self';
-    const ADDR_PRIMARY = 'primary';
-    const ADDR_SECONDARY = 'secondary';
-    const ADDR_ALL = '*';
-    const BCC_PREFIX = '.';
+    public const ADDR_SELF = 'self';
+    public const ADDR_PRIMARY = 'primary';
+    public const ADDR_SECONDARY = 'secondary';
+    public const ADDR_ALL = '*';
+    public const BCC_PREFIX = '.';
 
     /**
      * @var string
@@ -54,29 +54,15 @@ class MailSender {
      */
     private $addressees;
 
-    /**
-     * @var MailTemplateFactory
-     */
-    private $mailTemplateFactory;
+    private MailTemplateFactory $mailTemplateFactory;
 
-    /**
-     * @var AccountManager
-     */
-    private $accountManager;
+    private AccountManager $accountManager;
 
-    /**
-     * @var ServiceAuthToken
-     */
-    private $serviceAuthToken;
+    private ServiceAuthToken $serviceAuthToken;
 
-    /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
-    /**
-     * @var ServiceEmailMessage
-     */
-    private $serviceEmailMessage;
+    private ServicePerson $servicePerson;
+
+    private ServiceEmailMessage $serviceEmailMessage;
 
     /**
      * MailSender constructor.
@@ -88,13 +74,15 @@ class MailSender {
      * @param ServicePerson $servicePerson
      * @param ServiceEmailMessage $serviceEmailMessage
      */
-    public function __construct($filename,
-                                $addresees,
-                                MailTemplateFactory $mailTemplateFactory,
-                                AccountManager $accountManager,
-                                ServiceAuthToken $serviceAuthToken,
-                                ServicePerson $servicePerson,
-                                ServiceEmailMessage $serviceEmailMessage) {
+    public function __construct(
+        $filename,
+        $addresees,
+        MailTemplateFactory $mailTemplateFactory,
+        AccountManager $accountManager,
+        ServiceAuthToken $serviceAuthToken,
+        ServicePerson $servicePerson,
+        ServiceEmailMessage $serviceEmailMessage
+    ) {
         $this->filename = $filename;
         $this->addressees = $addresees;
         $this->mailTemplateFactory = $mailTemplateFactory;

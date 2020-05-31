@@ -11,6 +11,7 @@ use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -32,7 +33,7 @@ class ClosePresenter extends BasePresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleList() {
+    public function titleList(): void {
         $this->setTitle(_('Uzavírání bodování'), 'fa fa-check');
     }
 
@@ -42,7 +43,7 @@ class ClosePresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function titleTeam(int $id) {
+    public function titleTeam(int $id): void {
         $this->setTitle(\sprintf(_('Uzavírání bodování týmu "%s"'), $this->loadEntity($id)->name), 'fa fa-check-square-o');
     }
 
@@ -52,7 +53,7 @@ class ClosePresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function titleHard(int $id) {
+    public function titleHard(int $id): void {
         $this->titleTeam($id);
     }
 
@@ -60,14 +61,14 @@ class ClosePresenter extends BasePresenter {
     /**
      * @throws BadRequestException
      */
-    public function authorizedTeam() {
+    public function authorizedTeam(): void {
         $this->setAuthorized($this->isEventOrContestOrgAuthorized($this->getModelResource(), 'team'));
     }
 
     /**
      * @throws BadRequestException
      */
-    public function authorizeHard() {
+    public function authorizeHard(): void {
         $this->setAuthorized($this->isEventOrContestOrgAuthorized($this->getModelResource(), 'hard'));
     }
 
@@ -87,7 +88,7 @@ class ClosePresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function actionTeam(int $id) {
+    public function actionTeam(int $id): void {
         $team = $this->loadEntity($id);
         try {
             $team->canClose();
@@ -104,7 +105,7 @@ class ClosePresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function actionHard(int $id) {
+    public function actionHard(int $id): void {
         $team = $this->loadEntity($id);
         $control = $this->getComponent('closeTeamControl');
         if (!$control instanceof CloseTeamControl) {
@@ -128,10 +129,7 @@ class ClosePresenter extends BasePresenter {
         return new TeamSubmitsGrid($this->getEntity(), $this->getContext());
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServiceFyziklaniTeam {
         return $this->getServiceFyziklaniTeam();
     }
 
@@ -149,14 +147,16 @@ class ClosePresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
     public function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
     public function createComponentEditForm(): Control {
         throw new NotImplementedException();

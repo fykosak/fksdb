@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FyziklaniModule\BasePresenter;
@@ -17,10 +18,7 @@ use NiftyGrid\DuplicateColumnException;
  */
 class TeamSubmitsGrid extends SubmitsGrid {
 
-    /**
-     * @var ModelFyziklaniTeam
-     */
-    private $team;
+    private ModelFyziklaniTeam $team;
 
     /**
      * FyziklaniSubmitsGrid constructor.
@@ -40,6 +38,7 @@ class TeamSubmitsGrid extends SubmitsGrid {
      * @throws NotImplementedException
      * @throws NotImplementedException
      * @throws NotImplementedException
+     * @throws BadTypeException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

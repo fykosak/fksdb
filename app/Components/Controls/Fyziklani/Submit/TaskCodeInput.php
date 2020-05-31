@@ -17,6 +17,7 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\React\ReactResponse;
 use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -60,7 +61,7 @@ class TaskCodeInput extends FyziklaniReactControl {
     }
 
     /**
-     * @param $obj
+     * @param IComponent $obj
      * @return void
      */
     protected function attached($obj) {
@@ -74,7 +75,7 @@ class TaskCodeInput extends FyziklaniReactControl {
      * @return void
      * @throws InvalidLinkException
      */
-    protected function configure() {
+    protected function configure(): void {
         $this->addAction('save', $this->link('save!'));
         parent::configure();
     }
@@ -84,7 +85,7 @@ class TaskCodeInput extends FyziklaniReactControl {
      * @throws Exception
      * @throws AbortException
      */
-    public function handleSave() {
+    public function handleSave(): void {
         $request = $this->getReactRequest();
         $response = new ReactResponse();
         $response->setAct($request->act);

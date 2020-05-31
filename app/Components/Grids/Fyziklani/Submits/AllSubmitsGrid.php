@@ -4,6 +4,7 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use Closure;
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Fyziklani\TaskCodePreprocessor;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
@@ -29,18 +30,11 @@ use SQL\SearchableDataSource;
  */
 class AllSubmitsGrid extends SubmitsGrid {
 
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
-    /**
-     * @var ServiceFyziklaniTask
-     */
-    private $serviceFyziklaniTask;
+    private ModelEvent $event;
+
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
 
     /**
      * FyziklaniSubmitsGrid constructor.
@@ -62,6 +56,7 @@ class AllSubmitsGrid extends SubmitsGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws NotImplementedException
+     * @throws BadTypeException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -94,9 +89,6 @@ class AllSubmitsGrid extends SubmitsGrid {
         $this->setDataSource($dataSource);
     }
 
-    /**
-     * @return Closure
-     */
     private function getFilterCallBack(): callable {
         return function (Selection $table, $value) {
             foreach ($value as $key => $condition) {
@@ -133,7 +125,7 @@ class AllSubmitsGrid extends SubmitsGrid {
      * @param $id
      * @throws AbortException
      */
-    public function handleDelete($id) {
+    public function handleDelete($id): void {
         /**
          * @var ModelFyziklaniSubmit $submit
          */

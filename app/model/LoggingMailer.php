@@ -14,15 +14,9 @@ use Nette\Utils\Arrays;
 class LoggingMailer implements IMailer {
     use SmartObject;
 
-    /**
-     * @var IMailer
-     */
-    private $mailer;
+    private IMailer $mailer;
 
-    /**
-     * @var GlobalParameters
-     */
-    private $parameters;
+    private GlobalParameters $parameters;
     /**
      * @var
      */
@@ -54,9 +48,9 @@ class LoggingMailer implements IMailer {
     }
 
     /**
-     * @param $logPath
+     * @param mixed $logPath
      */
-    public function setLogPath($logPath) {
+    public function setLogPath($logPath): void {
         $this->logPath = $logPath;
         @mkdir($this->logPath, 0770, true);
     }
@@ -71,7 +65,7 @@ class LoggingMailer implements IMailer {
     /**
      * @param $logging
      */
-    public function setLogging($logging) {
+    public function setLogging($logging): void {
         $this->logging = $logging;
     }
 
@@ -79,7 +73,7 @@ class LoggingMailer implements IMailer {
      * @param Message $mail
      * @throws Exception
      */
-    public function send(Message $mail) {
+    public function send(Message $mail): void {
         try {
             if (!Arrays::get($this->parameters['email'], 'disabled', false)) {// do not really send emails when debugging
                 $this->mailer->send($mail);

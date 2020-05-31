@@ -16,32 +16,21 @@ use Nette\InvalidStateException;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Pipeline {
-
     /**
      * @var Stage[]
      */
-    private $stages = [];
+    private array $stages = [];
 
     /**
      * @var mixed
      */
     private $input;
 
-    /**
-     * @var bool
-     */
-    private $fixedStages = false;
+    private bool $fixedStages = false;
 
-    /**
-     * @var ILogger
-     */
-    private $logger = null;
+    private ?ILogger $logger = null;
 
-    /**
-     * @param ILogger $logger
-     * @return void
-     */
-    public function setLogger(ILogger $logger) {
+    public function setLogger(ILogger $logger): void {
         $this->logger = $logger;
     }
 

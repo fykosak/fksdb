@@ -15,10 +15,7 @@ use Nette\Security\IIdentity;
  */
 class PasswordAuthenticator extends AbstractAuthenticator implements IAuthenticator {
 
-    /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
     /**
      * PasswordAuthenticator constructor.
@@ -41,7 +38,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
      * @throws UnknownLoginException
      */
     public function authenticate(array $credentials) {
-        list($id, $password) = $credentials;
+        [$id, $password] = $credentials;
 
         $login = $this->findLogin($id);
 

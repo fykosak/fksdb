@@ -36,47 +36,29 @@ use Traversable;
  */
 class ExportPresenter extends SeriesPresenter {
 
-    const CONT_CONSOLE = 'console';
-    const CONT_PARAMS_META = 'paramsMeta';
-    const CONT_META = 'meta';
-    const SESSION_NS = 'sql';
-    const PARAM_LOAD_FROM_SESSION = 'lfs';
-    const PARAM_HTTP_AUTH = 'ha';
+    public const CONT_CONSOLE = 'console';
+    public const CONT_PARAMS_META = 'paramsMeta';
+    public const CONT_META = 'meta';
+    public const SESSION_NS = 'sql';
+    public const PARAM_LOAD_FROM_SESSION = 'lfs';
+    public const PARAM_HTTP_AUTH = 'ha';
 
     /**
      * @persistent
      */
     public $qid;
 
-    /**
-     * @var ServiceStoredQuery
-     */
-    private $serviceStoredQuery;
+    private ServiceStoredQuery $serviceStoredQuery;
 
-    /**
-     * @var ServiceStoredQueryParameter
-     */
-    private $serviceStoredQueryParameter;
+    private ServiceStoredQueryParameter $serviceStoredQueryParameter;
 
-    /**
-     * @var ServiceMStoredQueryTag
-     */
-    private $serviceMStoredQueryTag;
+    private ServiceMStoredQueryTag $serviceMStoredQueryTag;
 
-    /**
-     * @var StoredQueryFormFactory
-     */
-    private $storedQueryFormFactory;
+    private StoredQueryFormFactory $storedQueryFormFactory;
 
-    /**
-     * @var StoredQueryFactory
-     */
-    private $storedQueryFactory;
+    private StoredQueryFactory $storedQueryFactory;
 
-    /**
-     * @var ExportFormatFactory
-     */
-    private $exportFormatFactory;
+    private ExportFormatFactory $exportFormatFactory;
     /**
      * @var StoredQuery
      */
@@ -87,51 +69,27 @@ class ExportPresenter extends SeriesPresenter {
      */
     private $patternQuery = false;
 
-    /**
-     * @param ServiceStoredQuery $serviceStoredQuery
-     * @return void
-     */
-    public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery) {
+    public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery): void {
         $this->serviceStoredQuery = $serviceStoredQuery;
     }
 
-    /**
-     * @param StoredQueryFormFactory $storedQueryFormFactory
-     * @return void
-     */
-    public function injectStoredQueryFormFactory(StoredQueryFormFactory $storedQueryFormFactory) {
+    public function injectStoredQueryFormFactory(StoredQueryFormFactory $storedQueryFormFactory): void {
         $this->storedQueryFormFactory = $storedQueryFormFactory;
     }
 
-    /**
-     * @param ServiceStoredQueryParameter $serviceStoredQueryParameter
-     * @return void
-     */
-    public function injectServiceStoredQueryParameter(ServiceStoredQueryParameter $serviceStoredQueryParameter) {
+    public function injectServiceStoredQueryParameter(ServiceStoredQueryParameter $serviceStoredQueryParameter): void {
         $this->serviceStoredQueryParameter = $serviceStoredQueryParameter;
     }
 
-    /**
-     * @param ServiceMStoredQueryTag $serviceMStoredQueryTag
-     * @return void
-     */
-    public function injectServiceMStoredQueryTag(ServiceMStoredQueryTag $serviceMStoredQueryTag) {
+    public function injectServiceMStoredQueryTag(ServiceMStoredQueryTag $serviceMStoredQueryTag): void {
         $this->serviceMStoredQueryTag = $serviceMStoredQueryTag;
     }
 
-    /**
-     * @param StoredQueryFactory $storedQueryFactory
-     * @return void
-     */
-    public function injectStoredQueryFactory(StoredQueryFactory $storedQueryFactory) {
+    public function injectStoredQueryFactory(StoredQueryFactory $storedQueryFactory): void {
         $this->storedQueryFactory = $storedQueryFactory;
     }
 
-    /**
-     * @param ExportFormatFactory $exportFormatFactory
-     * @return void
-     */
-    public function injectExportFormatFactory(ExportFormatFactory $exportFormatFactory) {
+    public function injectExportFormatFactory(ExportFormatFactory $exportFormatFactory): void {
         $this->exportFormatFactory = $exportFormatFactory;
     }
 

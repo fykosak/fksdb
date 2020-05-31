@@ -16,7 +16,7 @@ use Nette\Utils\Random;
  */
 class ServiceGlobalSession extends AbstractServiceSingle {
 
-    const SESSION_ID_LENGTH = 32;
+    public const SESSION_ID_LENGTH = 32;
 
     public function getModelClassName(): string {
         return ModelGlobalSession::class;
@@ -26,10 +26,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
         return DbNames::TAB_GLOBAL_SESSION;
     }
 
-    /**
-     * @var Request
-     */
-    private $request;
+    private Request $request;
 
     /**
      * FKSDB\ORM\Services\ServiceGlobalSession constructor.

@@ -23,35 +23,20 @@ use Nette\Utils\Arrays;
 class ExportFormatFactory {
     use SmartObject;
 
-    const AESOP = 'aesop';
-    const CSV_HEADLESS = 'csv';
-    const CSV_HEAD = 'csvh';
-    const CSV_QUOTE_HEAD = 'csvqh';
+    public const AESOP = 'aesop';
+    public const CSV_HEADLESS = 'csv';
+    public const CSV_HEAD = 'csvh';
+    public const CSV_QUOTE_HEAD = 'csvqh';
 
-    /**
-     * @var GlobalParameters
-     */
-    private $globalParameters;
+    private GlobalParameters $globalParameters;
 
-    /**
-     * @var Container
-     */
-    private $container;
+    private Container $container;
 
-    /**
-     * @var StoredQueryFactory
-     */
-    private $storedQueryFactory;
+    private StoredQueryFactory $storedQueryFactory;
 
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
+    private ServiceEvent $serviceEvent;
 
-    /**
-     * @var ServiceContest
-     */
-    private $serviceContest;
+    private ServiceContest $serviceContest;
     /**
      * @var array
      */

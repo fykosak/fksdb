@@ -20,27 +20,15 @@ use Nette\Forms\Controls\BaseControl;
  */
 class SettingsPresenter extends AuthenticatedPresenter {
 
-    const CONT_LOGIN = 'login';
+    public const CONT_LOGIN = 'login';
 
-    /**
-     * @var LoginFactory
-     */
-    private $loginFactory;
+    private LoginFactory $loginFactory;
 
-    /**
-     * @var ServiceLogin
-     */
-    private $loginService;
+    private ServiceLogin $loginService;
 
-    /**
-     * @var UniqueEmailFactory
-     */
-    private $uniqueEmailFactory;
+    private UniqueEmailFactory $uniqueEmailFactory;
 
-    /**
-     * @var UniqueLoginFactory
-     */
-    private $uniqueLoginFactory;
+    private UniqueLoginFactory $uniqueLoginFactory;
 
     public function injectLoginFactory(LoginFactory $loginFactory): void {
         $this->loginFactory = $loginFactory;
@@ -86,7 +74,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
      * @return FormControl
      * @throws BadRequestException
      */
-    protected function createComponentSettingsForm() {
+    protected function createComponentSettingsForm(): FormControl {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
         /**
@@ -133,9 +121,8 @@ class SettingsPresenter extends AuthenticatedPresenter {
     /**
      * @param Form $form
      * @throws AbortException
-     * @internal
      */
-    private function handleSettingsFormSuccess(Form $form) {
+    private function handleSettingsFormSuccess(Form $form): void {
         $values = $form->getValues();
         $tokenAuthentication =
             $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||

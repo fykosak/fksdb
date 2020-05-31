@@ -19,14 +19,7 @@ class ServiceOrg extends AbstractServiceSingle {
         return DbNames::TAB_ORG;
     }
 
-    /**
-     * Syntactic sugar.
-     *
-     * @param string $signature
-     * @param int $contestId
-     * @return ModelOrg|null
-     */
-    public function findByTeXSignature(string $signature, int $contestId) {
+    public function findByTeXSignature(string $signature, int $contestId): ?ModelOrg {
         if (!$signature) {
             return null;
         }

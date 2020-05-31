@@ -14,30 +14,19 @@ use Nette\Application\UI\InvalidLinkException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class LanguageChooser extends Chooser {
-    /** @var array */
-    private $supportedLanguages = [];
 
-    /** @var string */
-    private $language;
+    private array $supportedLanguages = [];
 
-    /** @var bool */
-    private $modifiable;
+    private string $language;
 
-    /**
-     * @param string $lang
-     * @param bool $modifiable
-     * @return void
-     * @throws \Exception
-     */
-    public function setLang(string $lang, bool $modifiable) {
+    private bool $modifiable;
+
+    public function setLang(string $lang, bool $modifiable): void {
         $this->language = $lang;
         $this->modifiable = $modifiable;
     }
 
-    /**
-     * @return void
-     */
-    public function render() {
+    public function render(): void {
         $this->beforeRender();
         $this->template->modifiable = $this->modifiable;
         $this->template->currentLanguageName = LangPresenterTrait::$languageNames[$this->language] ?: null;
@@ -53,7 +42,7 @@ class LanguageChooser extends Chooser {
      * @return array|iterable
      * @throws BadTypeException
      */
-    public function getItems() {
+    public function getItems(): array {
         if (!count($this->supportedLanguages)) {
             $presenter = $this->getPresenter();
             if (!$presenter instanceof \BasePresenter) {

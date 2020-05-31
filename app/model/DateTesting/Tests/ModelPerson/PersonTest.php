@@ -7,15 +7,11 @@ use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * Class PersonTest
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class PersonTest {
-    /**
-     * @param TestsLogger $logger
-     * @param ModelPerson $person
-     * @return void
-     */
-    abstract public function run(TestsLogger $logger, ModelPerson $person);
+
+    abstract public function run(TestsLogger $logger, ModelPerson $person): void;
 
     abstract public function getTitle(): string;
 

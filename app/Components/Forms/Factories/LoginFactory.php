@@ -13,13 +13,13 @@ use Nette\Forms\ControlGroup;
  */
 class LoginFactory {
 
-    const SHOW_ACTIVE = 0x1;
+    public const SHOW_ACTIVE = 0x1;
     /** show field pair for setting a password */
-    const SHOW_PASSWORD = 0x2;
+    public const SHOW_PASSWORD = 0x2;
     /** show field for the old password */
-    const VERIFY_OLD_PASSWORD = 0x4;
+    public const VERIFY_OLD_PASSWORD = 0x4;
     /** require nonempty (new) password */
-    const REQUIRE_PASSWORD = 0x8;
+    public const REQUIRE_PASSWORD = 0x8;
 
     /**
      * @param int $options

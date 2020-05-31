@@ -14,41 +14,25 @@ class Machine {
     /**
      * @var BaseMachine[]
      */
-    private $baseMachines = [];
+    private array $baseMachines = [];
 
-    /**
-     * @var BaseMachine
-     */
-    private $primaryMachine;
+    private BaseMachine $primaryMachine;
 
-    /**
-     * @param $name
-     */
-    public function setPrimaryMachine($name) {
+    public function setPrimaryMachine(string $name): void {
         $this->primaryMachine = $this->getBaseMachine($name);
     }
 
-    /**
-     * @return BaseMachine
-     */
-    public function getPrimaryMachine() {
+    public function getPrimaryMachine(): BaseMachine {
         return $this->primaryMachine;
     }
 
-    /**
-     * @param BaseMachine $baseMachine
-     */
-    public function addBaseMachine(BaseMachine $baseMachine) {
+    public function addBaseMachine(BaseMachine $baseMachine): void {
         $name = $baseMachine->getName();
         $this->baseMachines[$name] = $baseMachine;
 
         $baseMachine->setMachine($this);
     }
 
-    /**
-     * @param $name
-     * @return BaseMachine
-     */
     public function getBaseMachine(string $name): BaseMachine {
         if (!array_key_exists($name, $this->baseMachines)) {
             throw new InvalidArgumentException("Unknown base machine '$name'.");

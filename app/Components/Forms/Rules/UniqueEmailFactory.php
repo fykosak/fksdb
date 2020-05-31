@@ -12,10 +12,7 @@ use FKSDB\ORM\Services\ServicePersonInfo;
  */
 class UniqueEmailFactory {
 
-    /**
-     * @var ServicePersonInfo
-     */
-    private $servicePersonInfo;
+    private ServicePersonInfo $servicePersonInfo;
 
     /**
      * UniqueEmailFactory constructor.

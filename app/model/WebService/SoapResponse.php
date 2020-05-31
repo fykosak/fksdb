@@ -12,10 +12,7 @@ use Tracy\Debugger;
  */
 class SoapResponse implements \Nette\Application\IResponse {
 
-    /**
-     * @var \SoapServer
-     */
-    private $soapServer;
+    private \SoapServer $soapServer;
 
     /**
      * SoapResponse constructor.

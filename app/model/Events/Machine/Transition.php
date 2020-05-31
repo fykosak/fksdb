@@ -21,10 +21,10 @@ use Nette\SmartObject;
 class Transition {
     use SmartObject;
 
-    const TYPE_SUCCESS = ILogger::SUCCESS;
-    const TYPE_WARNING = ILogger::WARNING;
-    const TYPE_DANGEROUS = ILogger::ERROR;
-    const TYPE_DEFAULT = 'secondary';
+    public const TYPE_SUCCESS = ILogger::SUCCESS;
+    public const TYPE_WARNING = ILogger::WARNING;
+    public const TYPE_DANGEROUS = ILogger::ERROR;
+    public const TYPE_DEFAULT = 'secondary';
 
     /** @var BaseMachine */
     private $baseMachine;
@@ -100,9 +100,6 @@ class Transition {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string {
         if ($this->isTerminating()) {
             return self::TYPE_DANGEROUS;
@@ -113,10 +110,7 @@ class Transition {
         return $this->type;
     }
 
-    /**
-     * @param $name
-     */
-    private function setName(string $name) {
+    private function setName(string $name): void {
         // it's used for component naming
         $name = str_replace('*', '_any_', $name);
         $name = str_replace('|', '_or_', $name);
@@ -142,7 +136,7 @@ class Transition {
      */
     public function setMask($mask) {
         $this->mask = $mask;
-        list($this->source, $this->target) = self::parseMask($mask);
+        [$this->source, $this->target] = self::parseMask($mask);
         $this->setName($mask);
     }
 
@@ -413,7 +407,7 @@ class Transition {
         if (count($parts) != 2) {
             return false;
         }
-        list($sources, $target) = $parts;
+        [$sources, $target] = $parts;
 
         $sources = explode('|', $sources);
 

@@ -35,14 +35,10 @@ use SQL\SearchableDataSource;
 abstract class BaseGrid extends Grid {
     /** @persistent string */
     public $searchTerm;
-    /**
-     * @var TableReflectionFactory
-     */
-    protected $tableReflectionFactory;
-    /**
-     * @var Container
-     */
-    private $container;
+
+    protected TableReflectionFactory $tableReflectionFactory;
+
+    private Container $container;
 
     /**
      * BaseGrid constructor.

@@ -26,19 +26,14 @@ use Nette\InvalidArgumentException;
  */
 class DBReflectionFactory extends AbstractFactory {
 
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
     /**
      * @var array tableName => columnName[]
      */
     private $columns = [];
-    /**
-     * @var TableReflectionFactory
-     */
-    private $tableReflectionFactory;
+
+    private TableReflectionFactory $tableReflectionFactory;
 
     /**
      * DBReflectionFactory constructor.
@@ -109,7 +104,7 @@ class DBReflectionFactory extends AbstractFactory {
      * @param BaseMachine $machine
      * @param Container $container
      */
-    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container): void {
 
         if ($field->getBaseHolder()->getModelState() == BaseMachine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
@@ -126,7 +121,7 @@ class DBReflectionFactory extends AbstractFactory {
      * @param BaseMachine $machine
      * @param Container $container
      */
-    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container): void {
         $component->setDisabled();
     }
 

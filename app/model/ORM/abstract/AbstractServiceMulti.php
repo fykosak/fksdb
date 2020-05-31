@@ -16,15 +16,9 @@ use Nette\SmartObject;
 abstract class AbstractServiceMulti implements IService {
     use SmartObject;
 
-    /**
-     * @var AbstractServiceSingle
-     */
-    protected $mainService;
+    protected AbstractServiceSingle $mainService;
 
-    /**
-     * @var AbstractServiceSingle
-     */
-    protected $joinedService;
+    protected AbstractServiceSingle $joinedService;
 
     /**
      * AbstractServiceMulti constructor.
@@ -57,7 +51,7 @@ abstract class AbstractServiceMulti implements IService {
      * @param array $data
      * @return AbstractModelMulti
      */
-    public function createNewModel($data) {
+    public function createNewModel(iterable $data): AbstractModelMulti {
         $mainModel = $this->getMainService()->createNewModel($data);
         $joinedModel = $this->getJoinedService()->createNewModel($data);
 
@@ -136,7 +130,7 @@ abstract class AbstractServiceMulti implements IService {
      * @param int $key ID of the joined models
      * @return AbstractModelMulti|null
      */
-    public function findByPrimary($key) {
+    public function findByPrimary($key): ?AbstractModelMulti {
         $joinedModel = $this->getJoinedService()->findByPrimary($key);
         if (!$joinedModel) {
             return null;

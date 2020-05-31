@@ -8,26 +8,19 @@ use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FyziklaniModule\BasePresenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class ResultsTotalGrid
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ResultsTotalGrid extends BaseGrid {
 
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    /**
-     * @var ModelEvent
-     */
-    private $event;
+    private ModelEvent $event;
 
     /**
      * FyziklaniSubmitsGrid constructor.

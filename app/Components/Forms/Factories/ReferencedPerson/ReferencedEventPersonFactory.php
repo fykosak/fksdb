@@ -30,14 +30,9 @@ use Persons\ReferencedPersonHandlerFactory;
  */
 class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
 
-    /**
-     * @var PersonScheduleFactory
-     */
-    private $personScheduleFactory;
-    /**
-     * @var ModelEvent
-     */
-    private $event;
+    private PersonScheduleFactory $personScheduleFactory;
+
+    private ModelEvent $event;
 
     /**
      * ReferencedEventPersonFactory constructor.
@@ -76,10 +71,7 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
         $this->personScheduleFactory = $personScheduleFactory;
     }
 
-    /**
-     * @param ModelEvent $event
-     */
-    public function setEvent(ModelEvent $event) {
+    public function setEvent(ModelEvent $event): void {
         $this->event = $event;
     }
 
@@ -131,7 +123,7 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
      * @return bool|ModelPostContact|mixed|null|string
      * @throws JsonException
      */
-    protected function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options) {
+    protected function getPersonValue(?ModelPerson $person, $sub, $field, $acYear, $options) {
         if (!$person) {
             return null;
         }

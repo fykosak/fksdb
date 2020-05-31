@@ -12,7 +12,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
-use Nette\DI\Container;
 use Tracy\Debugger;
 
 /**
@@ -20,11 +19,11 @@ use Tracy\Debugger;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractForm extends FormControl {
-    const CONT_EVENT = 'event';
-    /** @var EventFactory */
-    private $eventFactory;
-    /** @var ServiceAuthToken */
-    private $serviceAuthToken;
+    public const CONT_EVENT = 'event';
+
+    private EventFactory $eventFactory;
+
+    private ServiceAuthToken $serviceAuthToken;
 
     public function injectPrimary(EventFactory $eventFactory, ServiceAuthToken $serviceAuthToken): void {
         $this->serviceAuthToken = $serviceAuthToken;

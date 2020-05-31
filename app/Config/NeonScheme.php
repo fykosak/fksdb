@@ -14,9 +14,9 @@ use Nette\Utils\Arrays;
  */
 class NeonScheme {
 
-    const TYPE_NEON = 'neon';
-    const TYPE_EXPRESSION = 'expression';
-    const QUALIFIER_ARRAY = 'array';
+    public const TYPE_NEON = 'neon';
+    public const TYPE_EXPRESSION = 'expression';
+    public const QUALIFIER_ARRAY = 'array';
 
     /**
      * @param $section

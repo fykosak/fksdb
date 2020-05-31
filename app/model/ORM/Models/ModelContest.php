@@ -12,8 +12,8 @@ use Nette\Utils\Strings;
  * @property-read string $name
  */
 class ModelContest extends AbstractModelSingle {
-    const ID_FYKOS = 1;
-    const ID_VYFUK = 2;
+    public const ID_FYKOS = 1;
+    public const ID_VYFUK = 2;
 
     public function getContestSymbol(): string {
         return strtolower(Strings::webalize($this->name));

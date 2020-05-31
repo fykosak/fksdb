@@ -6,23 +6,15 @@ use FKSDB\Components\Controls\Stalking\StalkingControl;
 use FKSDB\Components\Controls\Stalking\StalkingService;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\BadRequestException;
-use Nette\DI\Container;
 use FKSDB\Exceptions\NotImplementedException;
 use Nette\InvalidStateException;
 
 class StalkingComponent extends StalkingControl {
-    /**
-     * @var StalkingService
-     */
-    private $stalkingService;
 
-    /**
-     * StalkingComponent constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->stalkingService = $container->getByType(StalkingService::class);
+    private StalkingService $stalkingService;
+
+    public function injectStalkingService(StalkingService $stalkingService): void {
+        $this->stalkingService = $stalkingService;
     }
 
     /**
@@ -33,7 +25,7 @@ class StalkingComponent extends StalkingControl {
      * @throws BadRequestException
      * @throws NotImplementedException
      */
-    public function render(string $section, ModelPerson $person, int $userPermissions) {
+    public function render(string $section, ModelPerson $person, int $userPermissions): void {
         $definition = $this->stalkingService->getSection($section);
         $this->beforeRender($person, $userPermissions);
         $this->template->headline = _($definition['label']);
@@ -57,7 +49,7 @@ class StalkingComponent extends StalkingControl {
      * @return void
      * @throws NotImplementedException
      */
-    private function renderSingle(array $definition, ModelPerson $person) {
+    private function renderSingle(array $definition, ModelPerson $person): void {
 
         $model = null;
         switch ($definition['table']) {
@@ -85,7 +77,7 @@ class StalkingComponent extends StalkingControl {
      * @param ModelPerson $person
      * @return void
      */
-    private function renderMulti(array $definition, ModelPerson $person) {
+    private function renderMulti(array $definition, ModelPerson $person): void {
         $models = [];
         $query = $person->related($definition['table']);
         foreach ($query as $datum) {

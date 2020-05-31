@@ -16,9 +16,9 @@ use Nette\Utils\Strings;
  */
 class DuplicateFinder {
 
-    const IDX_PERSON = 'person';
-    const IDX_SCORE = 'score';
-    const DIFFERENT_PATTERN = 'not-same';
+    public const IDX_PERSON = 'person';
+    public const IDX_SCORE = 'score';
+    public const DIFFERENT_PATTERN = 'not-same';
 
     /**
      * @var ServicePerson

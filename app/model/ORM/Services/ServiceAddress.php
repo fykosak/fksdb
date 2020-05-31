@@ -17,7 +17,7 @@ use Tracy\Debugger;
  */
 class ServiceAddress extends AbstractServiceSingle {
 
-    const PATTERN = '/[0-9]{5}/';
+    public const PATTERN = '/[0-9]{5}/';
 
     public function getModelClassName(): string {
         return ModelAddress::class;
@@ -27,11 +27,7 @@ class ServiceAddress extends AbstractServiceSingle {
         return DbNames::TAB_ADDRESS;
     }
 
-    /**
-     * @param array|iterable|\ArrayAccess $data
-     * @return ModelAddress
-     */
-    public function createNewModel($data = null): AbstractModelSingle {
+    public function createNewModel(iterable $data): AbstractModelSingle {
         if (!isset($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }
@@ -43,7 +39,7 @@ class ServiceAddress extends AbstractServiceSingle {
      * @return void
      * @deprecated
      */
-    public function save(IModel &$model) {
+    public function save(IModel &$model): void {
         $modelClassName = $this->getModelClassName();
         if (!$model instanceof $modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));

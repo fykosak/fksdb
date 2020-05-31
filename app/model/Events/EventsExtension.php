@@ -42,20 +42,20 @@ use Nette\Utils\Strings;
  */
 class EventsExtension extends CompilerExtension {
 
-    const MAIN_RESOLVER = 'eventLayoutResolver';
-    const FIELD_FACTORY = 'Field_';
-    const MACHINE_PREFIX = 'Machine_';
-    const HOLDER_PREFIX = 'Holder_';
-    const BASE_MACHINE_PREFIX = 'BaseMachine_';
-    const BASE_HOLDER_PREFIX = 'BaseHolder_';
+    public const MAIN_RESOLVER = 'eventLayoutResolver';
+    public const FIELD_FACTORY = 'Field_';
+    public const MACHINE_PREFIX = 'Machine_';
+    public const HOLDER_PREFIX = 'Holder_';
+    public const BASE_MACHINE_PREFIX = 'BaseMachine_';
+    public const BASE_HOLDER_PREFIX = 'BaseHolder_';
 
     /** @const Maximum length of state identifier. */
-    const STATE_SIZE = 20;
+    public const STATE_SIZE = 20;
 
     /** @const Regexp for configuration section names */
-    const NAME_PATTERN = '/[a-z0-9_]/i';
+    public const NAME_PATTERN = '/[a-z0-9_]/i';
     /** @var string[] */
-    public static $semanticMap = [
+    public static array $semanticMap = [
         'RefPerson' => PersonFactory::class,
         'Chooser' => ChooserFactory::class,
         'Checkbox' => CheckboxFactory::class,
@@ -138,7 +138,7 @@ class EventsExtension extends CompilerExtension {
         $this->createLayoutResolverFactory();
     }
 
-    private function loadScheme() {
+    private function loadScheme(): void {
         $loader = new Loader();
         $this->getContainerBuilder()->addDependency($this->schemeFile);
         $this->scheme = $loader->load($this->schemeFile);
@@ -159,7 +159,7 @@ class EventsExtension extends CompilerExtension {
                 $this->baseMachineConfig[$key] = $baseMachineDef;
                 break;
             }
-            list($protoDefinitionName, $protoBaseName) = explode('.', $prototype);
+            [$protoDefinitionName, $protoBaseName] = explode('.', $prototype);
             if (!isset($config[$protoDefinitionName]) || !isset($config[$protoDefinitionName]['baseMachines'][$protoBaseName])) {
                 throw new MachineDefinitionException("Prototype '$prototype' not found.");
             }
@@ -187,7 +187,7 @@ class EventsExtension extends CompilerExtension {
         }
     }
 
-    private function createLayoutResolverFactory() {
+    private function createLayoutResolverFactory(): void {
         $def = $this->getContainerBuilder()->addDefinition(self::MAIN_RESOLVER);
         $def->setFactory(LayoutResolver::class);
 
@@ -365,7 +365,7 @@ class EventsExtension extends CompilerExtension {
      * @param array $definition
      * @throws NeonSchemaException
      */
-    private function createHolderFactory(string $name, array $definition) {
+    private function createHolderFactory(string $name, array $definition): void {
         $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
         // Create factory definition.
         $factoryName = $this->getHolderName($name);
@@ -409,7 +409,7 @@ class EventsExtension extends CompilerExtension {
      * @return ServiceDefinition
      * @throws NeonSchemaException
      */
-    private function createBaseHolderFactory(string $eventName, string $baseName, string $instanceName, array $instanceDefinition) {
+    private function createBaseHolderFactory(string $eventName, string $baseName, string $instanceName, array $instanceDefinition): ServiceDefinition {
         $definition = $this->getBaseMachineConfig($eventName, $baseName);
         $factoryName = $this->getBaseHolderName($eventName, $baseName);
         $factory = $this->getContainerBuilder()->addDefinition(uniqid($factoryName));

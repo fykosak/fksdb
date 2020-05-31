@@ -52,10 +52,7 @@ class Holder {
      */
     private $primaryHolder;
 
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
     /**
      * @var SecondaryModelStrategy

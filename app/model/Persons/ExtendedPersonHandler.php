@@ -34,53 +34,29 @@ use Traversable;
 class ExtendedPersonHandler {
     use SmartObject;
 
-    const CONT_AGGR = 'aggr';
-    const CONT_PERSON = 'person';
-    const CONT_MODEL = 'model';
-    const EL_PERSON = 'person_id';
-    const RESULT_OK_EXISTING_LOGIN = 1;
-    const RESULT_OK_NEW_LOGIN = 2;
-    const RESULT_ERROR = 0;
+    public const CONT_AGGR = 'aggr';
+    public const CONT_PERSON = 'person';
+    public const CONT_MODEL = 'model';
+    public const EL_PERSON = 'person_id';
+    public const RESULT_OK_EXISTING_LOGIN = 1;
+    public const RESULT_OK_NEW_LOGIN = 2;
+    public const RESULT_ERROR = 0;
 
-    /**
-     * @var IService|AbstractServiceMulti|AbstractServiceSingle
-     */
-    protected $service;
+    protected IService $service;
 
-    /**
-     * @var ServicePerson
-     */
-    protected $servicePerson;
+    protected ServicePerson $servicePerson;
 
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
-    /**
-     * @var MailTemplateFactory
-     */
-    private $mailTemplateFactory;
+    private MailTemplateFactory $mailTemplateFactory;
 
-    /**
-     * @var AccountManager
-     */
-    private $accountManager;
+    private AccountManager $accountManager;
 
-    /**
-     * @var ModelContest
-     */
-    private $contest;
+    private ModelContest $contest;
 
-    /**
-     * @var int
-     */
-    private $year;
+    private int $year;
 
-    /**
-     * @var string
-     */
-    private $invitationLang;
+    private string $invitationLang;
 
     /**
      * @var ModelPerson
@@ -107,10 +83,7 @@ class ExtendedPersonHandler {
         return $this->contest;
     }
 
-    /**
-     * @param ModelContest $contest
-     */
-    public function setContest(ModelContest $contest) {
+    public function setContest(ModelContest $contest): void {
         $this->contest = $contest;
     }
 
@@ -118,10 +91,7 @@ class ExtendedPersonHandler {
         return $this->year;
     }
 
-    /**
-     * @param int $year
-     */
-    public function setYear(int $year) {
+    public function setYear(int $year): void {
         $this->year = $year;
     }
 
@@ -129,10 +99,7 @@ class ExtendedPersonHandler {
         return $this->invitationLang;
     }
 
-    /**
-     * @param string $invitationLang
-     */
-    public function setInvitationLang(string $invitationLang) {
+    public function setInvitationLang(string $invitationLang): void {
         $this->invitationLang = $invitationLang;
     }
 

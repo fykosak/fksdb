@@ -17,15 +17,9 @@ use PDOException;
  */
 class StoredQueryGrid extends BaseGrid {
 
-    /**
-     * @var StoredQuery
-     */
-    private $storedQuery;
+    private StoredQuery $storedQuery;
 
-    /**
-     * @var ExportFormatFactory
-     */
-    private $exportFormatFactory;
+    private ExportFormatFactory $exportFormatFactory;
 
     /**
      * StoredQueryGrid constructor.

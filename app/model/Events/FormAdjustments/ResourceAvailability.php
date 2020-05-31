@@ -39,9 +39,10 @@ class ResourceAvailability extends AbstractAdjustment {
     private $message;
 
     /**
-     * @param $fields
+     * @param mixed $fields
+     * @return void
      */
-    private function setFields($fields) {
+    private function setFields($fields): void {
         if (!is_array($fields)) {
             $fields = [$fields];
         }

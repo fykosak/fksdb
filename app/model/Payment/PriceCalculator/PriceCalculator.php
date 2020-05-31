@@ -14,21 +14,13 @@ class PriceCalculator {
     /**
      * @var IPreprocess[]
      */
-    private $preProcess = [];
+    private array $preProcess = [];
 
-    /**
-     * @param IPreprocess $preProcess
-     * @return void
-     */
-    public function addPreProcess(IPreprocess $preProcess) {
+    public function addPreProcess(IPreprocess $preProcess): void {
         $this->preProcess[] = $preProcess;
     }
 
-    /**
-     * @param ModelPayment $modelPayment
-     * @return void
-     */
-    final public function __invoke(ModelPayment $modelPayment) {
+    final public function __invoke(ModelPayment $modelPayment): void {
         $price = new Price(0, $modelPayment->currency);
         foreach ($this->preProcess as $preProcess) {
             $subPrice = $preProcess->calculate($modelPayment);

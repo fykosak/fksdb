@@ -19,12 +19,10 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class MassTransitionsControl extends BaseComponent {
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /** @var EventDispatchFactory */
-    private $eventDispatchFactory;
+
+    private ModelEvent $event;
+
+    private EventDispatchFactory $eventDispatchFactory;
 
     /**
      * MassTransitionsControl constructor.
@@ -44,7 +42,7 @@ class MassTransitionsControl extends BaseComponent {
      * @return void
      * @throws BadRequestException
      */
-    public function render() {
+    public function render(): void {
         /** @var  $machine */
         $machine = $this->eventDispatchFactory->getEventMachine($this->event);
         $this->template->transitions = $machine->getPrimaryMachine()->getTransitions();

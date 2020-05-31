@@ -10,7 +10,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class ChartPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ChartPresenter extends BasePresenter {
     use ChartPresenterTrait;
@@ -18,14 +18,14 @@ class ChartPresenter extends BasePresenter {
     /**
      * @throws BadRequestException
      */
-    public function authorizedList() {
+    public function authorizedList(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized($this->getModelResource(), 'list'));
     }
 
     /**
      * @throws BadRequestException
      */
-    public function authorizedChart() {
+    public function authorizedChart(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized($this->getModelResource(), 'chart'));
     }
 

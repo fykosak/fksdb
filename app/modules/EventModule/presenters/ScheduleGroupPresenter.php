@@ -74,10 +74,7 @@ class ScheduleGroupPresenter extends BasePresenter {
         return new AllPersonsGrid($this->getContext(), $this->getEvent());
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServiceScheduleGroup {
         return $this->serviceScheduleGroup;
     }
 

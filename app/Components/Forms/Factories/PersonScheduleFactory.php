@@ -11,13 +11,11 @@ use Nette\Utils\JsonException;
 
 /**
  * Class PersonScheduleFactory
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonScheduleFactory {
-    /**
-     * @var ServiceScheduleItem
-     */
-    private $serviceScheduleItem;
+
+    private ServiceScheduleItem $serviceScheduleItem;
 
     /**
      * PersonScheduleFactory constructor.

@@ -10,19 +10,14 @@ use FKSDB\DataTesting\TestLog;
 
 /**
  * Class ParticipantsDurationTest
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ParticipantsDurationTest extends PersonTest {
 
-    /**
-     * @param TestsLogger $logger
-     * @param ModelPerson $person
-     * @return void
-     */
-    public function run(TestsLogger $logger, ModelPerson $person) {
+    public function run(TestsLogger $logger, ModelPerson $person): void {
         $contestsDefs = [
             ModelContest::ID_FYKOS => ['thresholds' => [4, 6]],
-            ModelContest::ID_VYFUK => ['thresholds' => [4, 6]]
+            ModelContest::ID_VYFUK => ['thresholds' => [4, 6]],
         ];
 
         foreach ($contestsDefs as $contestId => $contestsDef) {

@@ -22,9 +22,7 @@ class ModelFyziklaniGameSetup extends AbstractModelSingle {
      * @return int[]
      */
     public function getAvailablePoints(): array {
-        return \array_map(function (string $value): int {
-            return +trim($value);
-        }, \explode(',', $this->available_points));
+        return \array_map(fn(string $value): int => +trim($value), \explode(',', $this->available_points));
     }
 
     /**

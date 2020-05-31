@@ -15,8 +15,8 @@ use OrgModule\SeriesPresenter;
  */
 class SeriesChooser extends BaseComponent {
 
-    const SESSION_SECTION = 'seriesPreset';
-    const SESSION_KEY = 'series';
+    public const SESSION_SECTION = 'seriesPreset';
+    public const SESSION_KEY = 'series';
 
     private Session $session;
 

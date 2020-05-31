@@ -25,8 +25,8 @@ use FKSDB\Tasks\SeriesData;
  */
 class TasksPresenter extends BasePresenter {
 
-    const SOURCE_ASTRID = 'astrid';
-    const SOURCE_FILE = 'file';
+    public const SOURCE_ASTRID = 'astrid';
+    public const SOURCE_FILE = 'file';
 
     private SeriesCalculator $seriesCalculator;
 

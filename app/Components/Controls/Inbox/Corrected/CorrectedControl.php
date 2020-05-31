@@ -14,14 +14,14 @@ use Nette\Application\UI\Form;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class CorrectedControl extends SeriesTableComponent {
-    /** @var CorrectedStorage */
-    private $correctedStorage;
+
+    private CorrectedStorage $correctedStorage;
 
     public function injectCorrectedStorage(CorrectedStorage $correctedStorage): void {
         $this->correctedStorage = $correctedStorage;
     }
 
-    public function render() {
+    public function render(): void {
         $this->template->correctedSubmitStorage = $this->correctedStorage;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
@@ -46,7 +46,7 @@ class CorrectedControl extends SeriesTableComponent {
      * @param Form $form
      * @throws AbortException
      */
-    private function handleSuccess(Form $form) {
+    private function handleSuccess(Form $form): void {
         $values = $form->getValues();
         $ids = [];
         foreach (\explode(',', $values['submits']) as $value) {

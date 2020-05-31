@@ -14,8 +14,7 @@ class State extends EvaluatedExpression {
     use SmartObject;
     use WithEventTrait;
 
-    /** @var string */
-    private $state;
+    private string $state;
 
     /**
      * State constructor.

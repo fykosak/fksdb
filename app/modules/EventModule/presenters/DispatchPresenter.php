@@ -24,7 +24,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
         return new DispatchGrid($login->getPerson(), $this->getContext());
     }
 
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setTitle(_('List of events'), 'fa fa-calendar');
     }
 

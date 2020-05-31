@@ -14,21 +14,15 @@ use PDOException;
 
 /**
  * Class Handler
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Handler {
-    /**
-     * @var ServiceScheduleGroup
-     */
-    private $serviceScheduleGroup;
-    /**
-     * @var ServicePersonSchedule
-     */
-    private $servicePersonSchedule;
-    /**
-     * @var ServiceScheduleItem
-     */
-    private $serviceScheduleItem;
+
+    private ServiceScheduleGroup $serviceScheduleGroup;
+
+    private ServicePersonSchedule $servicePersonSchedule;
+
+    private ServiceScheduleItem $serviceScheduleItem;
 
     /**
      * Handler constructor.
@@ -54,7 +48,7 @@ class Handler {
      * @throws FullCapacityException
      * @throws NotImplementedException
      */
-    public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, int $eventId) {
+    public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, int $eventId): void {
         foreach ($this->prepareData($data) as $type => $newScheduleData) {
             $this->updateDataType($newScheduleData, $type, $person, $eventId);
         }

@@ -14,12 +14,9 @@ use Nette\Forms\Form;
  */
 class SchoolFactory {
 
-    const SHOW_UNKNOWN_SCHOOL_HINT = 0x1;
+    public const SHOW_UNKNOWN_SCHOOL_HINT = 0x1;
 
-    /**
-     * @var SchoolProvider
-     */
-    private $schoolProvider;
+    private SchoolProvider $schoolProvider;
 
     /**
      * SchoolFactory constructor.

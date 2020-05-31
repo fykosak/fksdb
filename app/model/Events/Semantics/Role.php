@@ -19,31 +19,21 @@ class Role extends EvaluatedExpression {
     use SmartObject;
     use WithEventTrait;
 
-    const GUEST = 'guest';
-    const REGISTERED = 'registered';
-    const RELATED = 'related';
-    const ADMIN = 'admin';
+    public const GUEST = 'guest';
+    public const REGISTERED = 'registered';
+    public const RELATED = 'related';
+    public const ADMIN = 'admin';
 
     /**
      * @var string
      */
     private $role;
 
-    /**
-     * @var User
-     */
-    private $user;
+    private User $user;
 
-    /**
-     * @var ContestAuthorizator
-     */
-    private $contestAuthorizator;
+    private ContestAuthorizator $contestAuthorizator;
 
-    /**
-     *
-     * @var RelatedPersonAuthorizator
-     */
-    private $relatedAuthorizator;
+    private RelatedPersonAuthorizator $relatedAuthorizator;
 
     /**
      * Role constructor.

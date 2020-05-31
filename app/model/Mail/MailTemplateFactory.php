@@ -3,6 +3,7 @@
 namespace Mail;
 
 use BasePresenter;
+use MockEnvironment\MockApplication;
 use Nette\Application\Application;
 use Nette\Application\BadRequestException;
 use Nette\Http\IRequest;
@@ -19,12 +20,12 @@ use Nette\Templating\FileTemplate;
  */
 class MailTemplateFactory {
 
-    /** @var string without trailing slash */
-    private $templateDir;
-    /** @var Application */
+    private string $templateDir;
+
+    /** @var Application|MockApplication */
     private $application;
-    /** @var ITranslator */
-    private $translator;
+
+    private ITranslator $translator;
 
     /**
      * MailTemplateFactory constructor.

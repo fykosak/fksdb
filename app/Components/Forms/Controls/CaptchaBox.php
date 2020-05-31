@@ -12,8 +12,8 @@ use Nette\Forms\Controls\SelectBox;
  */
 class CaptchaBox extends SelectBox {
 
-    const VALUE_YES = 'xyz';
-    const VALUE_NO = 'pqrt';
+    public const VALUE_YES = 'xyz';
+    public const VALUE_NO = 'pqrt';
 
     public function __construct() {
         parent::__construct(_('Jsi robot?'), [

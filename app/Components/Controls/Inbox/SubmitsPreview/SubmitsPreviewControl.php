@@ -12,8 +12,8 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 
 /**
- * Class SubmitsTableControl
- * *
+ * Class SubmitsPreviewControl
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class SubmitsPreviewControl extends SeriesTableComponent {
     use SubmitDownloadTrait;
@@ -24,7 +24,7 @@ class SubmitsPreviewControl extends SeriesTableComponent {
 
     private ServiceSubmit $serviceSubmit;
 
-    public function render() {
+    public function render(): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
     }

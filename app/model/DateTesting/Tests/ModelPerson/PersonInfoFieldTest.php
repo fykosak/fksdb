@@ -23,12 +23,7 @@ class PersonInfoFieldTest extends PersonFileLevelTest {
         parent::__construct($tableReflectionFactory, 'person_info.' . $factoryFieldName);
     }
 
-    /**
-     * @param TestsLogger $logger
-     * @param ModelPerson $person
-     * @return void
-     */
-    final public function run(TestsLogger $logger, ModelPerson $person) {
+    final public function run(TestsLogger $logger, ModelPerson $person): void {
         $info = $person->getInfo();
         if (!$info) {
             $logger->log(new TestLog($this->getTitle(), 'Person info is not set', TestLog::LVL_INFO));

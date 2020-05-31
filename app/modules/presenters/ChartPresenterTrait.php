@@ -10,11 +10,8 @@ use Nette\Application\UI\Control;
  * *
  */
 trait ChartPresenterTrait {
-    /**
-     * @var IChart
-     */
-    protected $selectedChart;
 
+    protected ?IChart $selectedChart;
 
     public function titleChart() {
         $this->setTitle($this->selectedChart->getTitle(), 'fa fa-pie-chart');

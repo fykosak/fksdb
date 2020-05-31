@@ -23,20 +23,11 @@ use Tracy\Debugger;
  */
 class FacebookAuthenticator extends AbstractAuthenticator {
 
-    /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
-    /**
-     * @var ServicePersonInfo
-     */
-    private $servicePersonInfo;
+    private ServicePersonInfo $servicePersonInfo;
 
-    /**
-     * @var AccountManager
-     */
-    private $accountManager;
+    private AccountManager $accountManager;
 
     /**
      * FacebookAuthenticator constructor.

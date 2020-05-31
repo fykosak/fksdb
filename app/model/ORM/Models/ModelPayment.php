@@ -39,12 +39,12 @@ use Nette\Security\IResource;
  * @property-read string swift
  */
 class ModelPayment extends AbstractModelSingle implements IResource, IStateModel, IEventReferencedModel, IPersonReferencedModel {
-    const STATE_WAITING = 'waiting'; // waiting for confirm payment
-    const STATE_RECEIVED = 'received'; // payment received
-    const STATE_CANCELED = 'canceled'; // payment canceled
-    const STATE_NEW = 'new'; // new payment
+    public const STATE_WAITING = 'waiting'; // waiting for confirm payment
+    public const STATE_RECEIVED = 'received'; // payment received
+    public const STATE_CANCELED = 'canceled'; // payment canceled
+    public const STATE_NEW = 'new'; // new payment
 
-    const RESOURCE_ID = 'event.payment';
+    public const RESOURCE_ID = 'event.payment';
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);
@@ -87,17 +87,11 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
         return $this->constant_symbol || $this->variable_symbol || $this->specific_symbol || $this->bank_account || $this->bank_name || $this->recipient;
     }
 
-    /**
-     * @param $newState
-     */
-    public function updateState($newState) {
+    public function updateState(?string $newState): void {
         $this->update(['state' => $newState]);
     }
 
-    /**
-     * @return null|string
-     */
-    public function getState() {
+    public function getState(): ?string {
         return $this->state;
     }
 
@@ -106,7 +100,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
      * @param IConventions $conventions
      * @return ModelPayment|IModel|ActiveRow|AbstractModelSingle
      */
-    public function refresh(Context $connection, IConventions $conventions): IStateModel {
+    public function refresh(Context $connection, IConventions $conventions): self {
         $query = new TypedTableSelection(self::class, DbNames::TAB_PAYMENT, $connection, $conventions);
         return $query->get($this->getPrimary());
     }

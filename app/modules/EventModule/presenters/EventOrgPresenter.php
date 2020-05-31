@@ -16,10 +16,7 @@ use Nette\Application\UI\Control;
 class EventOrgPresenter extends BasePresenter {
     use EventEntityTrait;
 
-    /**
-     * @var ServiceEventOrg
-     */
-    private $serviceEventOrg;
+    private ServiceEventOrg $serviceEventOrg;
 
     public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg): void {
         $this->serviceEventOrg = $serviceEventOrg;
@@ -29,7 +26,7 @@ class EventOrgPresenter extends BasePresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleList() {
+    public function titleList(): void {
         $this->setTitle(sprintf(_('Organisers of event')), 'fa fa-users');
     }
 
@@ -45,7 +42,7 @@ class EventOrgPresenter extends BasePresenter {
      * @param int $id
      * @throws AbortException
      */
-    public function actionDelete(int $id) {
+    public function actionDelete(int $id): void {
         try {
             [$message] = $this->traitHandleDelete($id);
             $this->flashMessage($message->getMessage(), $message->getLevel());
@@ -56,9 +53,6 @@ class EventOrgPresenter extends BasePresenter {
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getORMService(): ServiceEventOrg {
         return $this->serviceEventOrg;
     }

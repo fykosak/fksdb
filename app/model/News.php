@@ -10,10 +10,7 @@ use Nette\SmartObject;
 class News {
     use SmartObject;
 
-    /**
-     * @var GlobalParameters
-     */
-    private $globalParameters;
+    private GlobalParameters $globalParameters;
 
     /**
      * News constructor.
@@ -23,12 +20,7 @@ class News {
         $this->globalParameters = $globalParameters;
     }
 
-    /**
-     * @param ModelContest $contest
-     * @param $lang
-     * @return array
-     */
-    public function getNews(ModelContest $contest, $lang) {
+    public function getNews(ModelContest $contest,string $lang): array {
         $contestName = $this->globalParameters['contestMapping'][$contest->contest_id];
         if (!isset($this->globalParameters[$contestName]['news'][$lang])) {
             return [];

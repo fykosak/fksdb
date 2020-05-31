@@ -12,10 +12,8 @@ use Nette\Application\AbortException;
 use Nette\DI\Container;
 
 class SubmitCheckComponent extends BaseComponent {
-    /**
-     * @var SeriesTable
-     */
-    private $seriesTable;
+
+    private SeriesTable $seriesTable;
 
     /**
      * CheckSubmitsControl constructor.
@@ -27,7 +25,7 @@ class SubmitCheckComponent extends BaseComponent {
         $this->seriesTable = $seriesTable;
     }
 
-    public function render() {
+    public function render(): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
     }
@@ -35,7 +33,8 @@ class SubmitCheckComponent extends BaseComponent {
     /**
      * @throws AbortException
      */
-    public function handleCheck() {
+    public function handleCheck(): void {
+        // TODO to inject
         /** @var UploadedStorage $submitUploadedStorage */
         $submitUploadedStorage = $this->getContext()->getByType(UploadedStorage::class);
         /** @var CorrectedStorage $submitCorrectedStorage */

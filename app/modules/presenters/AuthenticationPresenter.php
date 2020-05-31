@@ -1,6 +1,5 @@
 <?php
 
-use Authentication\SSO\GlobalSession;
 use FKSDB\Authentication\AccountManager;
 use Authentication\FacebookAuthenticator;
 use Authentication\LoginUserStorage;
@@ -14,7 +13,6 @@ use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\UI\PageStyleContainer;
-use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
@@ -32,19 +30,19 @@ use Nette\Utils\DateTime;
  */
 final class AuthenticationPresenter extends BasePresenter {
 
-    const PARAM_GSID = 'gsid';
+    public const PARAM_GSID = 'gsid';
     /** @const Indicates that page is accessed via dispatch from the login page. */
-    const PARAM_DISPATCH = 'dispatch';
+    public const PARAM_DISPATCH = 'dispatch';
     /** @const Reason why the user has been logged out. */
-    const PARAM_REASON = 'reason';
+    public const PARAM_REASON = 'reason';
     /** @const Various modes of authentication. */
-    const PARAM_FLAG = 'flag';
+    public const PARAM_FLAG = 'flag';
     /** @const User is shown the login form if he's not authenticated. */
-    const FLAG_SSO_LOGIN = Authentication::FLAG_SSO_LOGIN;
+    public const FLAG_SSO_LOGIN = Authentication::FLAG_SSO_LOGIN;
     /** @const Only check of authentication with subsequent backlink redirect. */
-    const FLAG_SSO_PROBE = 'ssop';
-    const REASON_TIMEOUT = '1';
-    const REASON_AUTH = '2';
+    public const FLAG_SSO_PROBE = 'ssop';
+    public const REASON_TIMEOUT = '1';
+    public const REASON_AUTH = '2';
 
     /** @persistent */
     public $backlink = '';
@@ -52,41 +50,17 @@ final class AuthenticationPresenter extends BasePresenter {
     /** @persistent */
     public $flag;
 
-    /**
-     * @var FacebookAuthenticator
-     */
-    private $facebookAuthenticator;
+    private FacebookAuthenticator $facebookAuthenticator;
 
-    /**
-     * @var ServiceAuthToken
-     */
-    private $serviceAuthToken;
+    private ServiceAuthToken $serviceAuthToken;
 
-    /**
-     * todo check if type is persistent
-     * @var GlobalSession
-     */
-    private $globalSession;
+    private IGlobalSession $globalSession;
 
-    /**
-     * @var PasswordAuthenticator
-     */
-    private $passwordAuthenticator;
+    private PasswordAuthenticator $passwordAuthenticator;
 
-    /**
-     * @var AccountManager
-     */
-    private $accountManager;
+    private AccountManager $accountManager;
 
-    /**
-     * @var MailTemplateFactory
-     */
-    private $mailTemplateFactory;
-
-    /**
-     * @var ServicePerson
-     */
-    protected $servicePerson;
+    protected ServicePerson $servicePerson;
     /**
      * @var string
      */
@@ -108,14 +82,9 @@ final class AuthenticationPresenter extends BasePresenter {
         $this->passwordAuthenticator = $passwordAuthenticator;
     }
 
-    public function injectAccountManager(AccountManager $accountManager: void {
+    public function injectAccountManager(AccountManager $accountManager): void {
         $this->accountManager = $accountManager;
     }
-
-    public function injectMailTemplateFactory(MailTemplateFactory $mailTemplateFactory): void {
-        $this->mailTemplateFactory = $mailTemplateFactory;
-    }
-
 
     public function injectServicePerson(ServicePerson $servicePerson): void {
         $this->servicePerson = $servicePerson;

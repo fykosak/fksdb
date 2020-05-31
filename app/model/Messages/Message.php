@@ -12,10 +12,10 @@ use Nette\SmartObject;
 class Message {
     use SmartObject;
 
-    const LVL_DANGER = ILogger::ERROR;
-    const LVL_SUCCESS = ILogger::SUCCESS;
-    const LVL_WARNING = ILogger::WARNING;
-    const LVL_INFO = ILogger::INFO;
+    public const LVL_DANGER = ILogger::ERROR;
+    public const LVL_SUCCESS = ILogger::SUCCESS;
+    public const LVL_WARNING = ILogger::WARNING;
+    public const LVL_INFO = ILogger::INFO;
     /**
      * @var string
      */

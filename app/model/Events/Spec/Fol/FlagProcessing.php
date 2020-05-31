@@ -18,15 +18,9 @@ use Nette\Utils\ArrayHash;
  */
 class FlagProcessing extends AbstractProcessing {
 
-    /**
-     * @var YearCalculator
-     */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
-    /**
-     * @var ServiceSchool
-     */
-    private $serviceSchool;
+    private ServiceSchool $serviceSchool;
 
     /**
      * FlagProcessing constructor.

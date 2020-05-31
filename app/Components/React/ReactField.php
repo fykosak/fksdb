@@ -15,16 +15,14 @@ trait ReactField {
     /**
      * @var string[]
      */
-    private $actions = [];
-    /**
-     * @var bool
-     */
-    private static $attachedJS = false;
+    private array $actions = [];
+
+    private static bool $attachedJS = false;
 
     /**
      * @throws JsonException
      */
-    protected function appendProperty() {
+    protected function appendProperty(): void {
         $this->configure();
         $this->setAttribute('data-react-root', true);
         $this->setAttribute('data-react-id', $this->getReactId());
@@ -32,41 +30,26 @@ trait ReactField {
         $this->setAttribute('data-actions', Json::encode($this->actions));
     }
 
-    /**
-     * @param IComponent $obj
-     */
-    protected function attachedReact($obj) {
+
+    protected function attachedReact(IComponent $obj): void {
         if (!self::$attachedJS && $obj instanceof IJavaScriptCollector) {
             self::$attachedJS = true;
             $obj->registerJSFile('js/bundle.min.js');
         }
     }
 
-    protected function registerMonitor() {
+    protected function registerMonitor(): void {
         $this->monitor(IJavaScriptCollector::class);
     }
 
-    /**
-     * @return void
-     */
-    protected function configure() {
+    protected function configure(): void {
     }
 
-    /**
-     * @param string $key
-     * @param string $destination
-     */
-    public function addAction(string $key, string $destination) {
+    public function addAction(string $key, string $destination): void {
         $this->actions[$key] = $destination;
     }
 
-    /**
-     * @return string
-     */
     abstract protected function getReactId(): string;
 
-    /**
-     * @return string
-     */
     abstract public function getData(): string;
 }

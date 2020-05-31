@@ -214,7 +214,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @param string $backLink
      * @return null|string
      */
-    public function setBackLink($backLink) {
+    public function setBackLink($backLink): ?string {
         $old = $this->bc;
         $this->bc = $backLink;
         return $old;

@@ -18,20 +18,12 @@ use Nette\Utils\JsonException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class TeamApplicationsTimeProgress extends ReactComponent implements IChart {
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
 
-    /**
-     * @var ModelEventType
-     */
-    private $eventType;
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
+    private ModelEventType $eventType;
+
+    private ServiceEvent $serviceEvent;
 
     /**
      * TeamApplicationsTimeProgress constructor.
@@ -80,10 +72,7 @@ class TeamApplicationsTimeProgress extends ReactComponent implements IChart {
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return null;
     }
 }

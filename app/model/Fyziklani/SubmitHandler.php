@@ -14,27 +14,18 @@ use Nette\DI\Container;
 use Nette\Security\User;
 
 /**
- * Class TaskCodeHandler
- * *
+ * Class SubmitHandler
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class SubmitHandler {
 
-    /**
-     * @var ServiceFyziklaniSubmit
-     */
-    private $serviceFyziklaniSubmit;
-    /**
-     * @var ServiceFyziklaniTask
-     */
-    private $serviceFyziklaniTask;
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
-    /**
-     * @var ModelEvent
-     */
-    private $event;
+    private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
+
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
+
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+
+    private ModelEvent $event;
 
     /**
      * TaskCodeHandler constructor.

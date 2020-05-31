@@ -12,7 +12,7 @@ namespace Github\Events;
  */
 class PushEvent extends Event {
 
-	const REFS_HEADS = 'refs/heads/';
+    public const REFS_HEADS = 'refs/heads/';
 
 	/** @var string */
 	public $ref;

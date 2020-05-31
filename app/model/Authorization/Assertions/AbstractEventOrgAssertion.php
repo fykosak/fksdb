@@ -18,20 +18,11 @@ abstract class AbstractEventOrgAssertion {
 
     use SmartObject;
 
-    /**
-     * @var string
-     */
-    private $parameterName;
+    private string $parameterName;
 
-    /**
-     * @var IUserStorage
-     */
-    private $user;
+    private IUserStorage $user;
 
-    /**
-     * @var Context
-     */
-    private $connection;
+    private Context $connection;
 
     /**
      * AbstractEventOrgAssertion constructor.

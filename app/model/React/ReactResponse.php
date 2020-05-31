@@ -39,19 +39,15 @@ final class ReactResponse implements Nette\Application\IResponse {
         return 'application/json';
     }
 
-    /**
-     * @param int $code
-     * @return void
-     */
-    public function setCode(int $code) {
+    public function setCode(int $code): void {
         $this->code = $code;
     }
 
     /**
-     * @param $data
+     * @param mixed $data
      * @return void
      */
-    public function setData($data) {
+    public function setData($data): void {
         $this->data = $data;
     }
 
@@ -59,23 +55,15 @@ final class ReactResponse implements Nette\Application\IResponse {
      * @param Message[] $messages
      * @return void
      */
-    public function setMessages(array $messages) {
+    public function setMessages(array $messages): void {
         $this->messages = $messages;
     }
 
-    /**
-     * @param Message $message
-     * @return void
-     */
-    public function addMessage(Message $message) {
+    public function addMessage(Message $message): void {
         $this->messages[] = $message;
     }
 
-    /**
-     * @param string $act
-     * @return void
-     */
-    public function setAct(string $act) {
+    public function setAct(string $act): void {
         $this->act = $act;
     }
 
@@ -84,14 +72,12 @@ final class ReactResponse implements Nette\Application\IResponse {
      * @param IResponse $httpResponse
      * @throws JsonException
      */
-    public function send(IRequest $httpRequest, IResponse $httpResponse) {
+    public function send(IRequest $httpRequest, IResponse $httpResponse): void {
         $httpResponse->setCode($this->code);
         $httpResponse->setContentType($this->getContentType());
-        $httpResponse->setExpiration(FALSE);
+        $httpResponse->setExpiration(false);
         $response = [
-            'messages' => array_map(function (Message $value) {
-                return $value->__toArray();
-            }, $this->messages),
+            'messages' => array_map(fn(Message $value) => $value->__toArray(), $this->messages),
             'act' => $this->act,
             'responseData' => $this->data,
         ];

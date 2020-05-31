@@ -19,10 +19,7 @@ use SQL\SearchableDataSource;
  */
 class OrgsGrid extends BaseGrid {
 
-    /**
-     * @var ServiceOrg
-     */
-    private $serviceOrg;
+    private ServiceOrg $serviceOrg;
 
     public function injectServiceOrg(ServiceOrg $serviceOrg): void {
         $this->serviceOrg = $serviceOrg;

@@ -23,15 +23,12 @@ class ImportHandler {
 
     use SmartObject;
 
-    const STATELESS_IGNORE = 'ignore';
-    const STATELESS_KEEP = 'keep';
+    public const STATELESS_IGNORE = 'ignore';
+    public const STATELESS_KEEP = 'keep';
 
-    const KEY_NAME = 'person_id';
+    public const KEY_NAME = 'person_id';
 
-    /**
-     * @var Container
-     */
-    private $container;
+    private Container $container;
 
     /**
      * @var SingleEventSource
@@ -51,19 +48,11 @@ class ImportHandler {
         $this->container = $container;
     }
 
-    /**
-     * @param CSVParser $parser
-     * @return void
-     */
-    public function setInput(CSVParser $parser) {
+    public function setInput(CSVParser $parser): void {
         $this->parser = $parser;
     }
 
-    /**
-     * @param SingleEventSource $source
-     * @return void
-     */
-    public function setSource(SingleEventSource $source) {
+    public function setSource(SingleEventSource $source): void {
         $this->source = $source;
     }
 
@@ -133,7 +122,7 @@ class ImportHandler {
             if (is_numeric($columnName)) { // hack for new PDO
                 continue;
             }
-            list($baseHolderName, $fieldName) = $this->prepareColumnName($columnName, $primaryBaseHolder);
+            [$baseHolderName, $fieldName] = $this->prepareColumnName($columnName, $primaryBaseHolder);
 
             if (!isset($values[$baseHolderName])) {
                 $values[$baseHolderName] = [];

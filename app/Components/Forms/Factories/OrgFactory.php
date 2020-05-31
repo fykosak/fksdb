@@ -16,15 +16,9 @@ use Nette\Forms\Controls\BaseControl;
  */
 class OrgFactory extends SingleReflectionFactory {
 
-    /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
-    /**
-     * @var YearCalculator
-     */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
     /**
      * OrgFactory constructor.

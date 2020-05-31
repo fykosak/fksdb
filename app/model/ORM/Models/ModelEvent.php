@@ -26,7 +26,7 @@ use Nette\Security\IResource;
  * @property-read string parameters
  */
 class ModelEvent extends AbstractModelSingle implements IResource, IContestReferencedModel {
-    const RESOURCE_ID = 'event';
+    public const RESOURCE_ID = 'event';
 
     public function getEventType(): ModelEventType {
         return ModelEventType::createFromActiveRow($this->event_type);

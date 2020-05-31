@@ -17,19 +17,13 @@ use Nette\Forms\IControl;
  */
 class AddressFactory {
 
-    const SHOW_EXTENDED_ROWS = 0x1;
-    const REQUIRED = 0x2;
-    const NOT_WRITEONLY = 0x4;
+    public const SHOW_EXTENDED_ROWS = 0x1;
+    public const REQUIRED = 0x2;
+    public const NOT_WRITEONLY = 0x4;
 
-    /**
-     * @var ServiceAddress
-     */
-    private $serviceAddress;
+    private ServiceAddress $serviceAddress;
 
-    /**
-     * @var ServiceRegion
-     */
-    private $serviceRegion;
+    private ServiceRegion $serviceRegion;
 
     /**
      * AddressFactory constructor.
@@ -46,7 +40,7 @@ class AddressFactory {
      * @param IControl|null $conditioningField
      * @return AddressContainer
      */
-    public function createAddress($options = 0, IControl $conditioningField = null) {
+    public function createAddress($options = 0, IControl $conditioningField = null): AddressContainer {
         $container = new AddressContainer();
         $this->buildAddress($container, $options, $conditioningField);
         return $container;

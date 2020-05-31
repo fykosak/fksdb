@@ -16,10 +16,8 @@ abstract class PersonFileLevelTest extends PersonTest {
      * @var AbstractRow|ITestedRowFactory
      */
     private $rowFactory;
-    /**
-     * @var string
-     */
-    private $actionName;
+
+    private string $actionName;
 
     /**
      * AbstractPhoneNumber constructor.
@@ -37,7 +35,7 @@ abstract class PersonFileLevelTest extends PersonTest {
      * @param string $factoryName
      * @throws BadTypeException
      */
-    final private function loadFactory(TableReflectionFactory $tableReflectionFactory, string $factoryName) {
+    final private function loadFactory(TableReflectionFactory $tableReflectionFactory, string $factoryName): void {
         $rowFactory = $tableReflectionFactory->loadRowFactory($factoryName);
         if (!$rowFactory instanceof ITestedRowFactory) {
             throw new BadTypeException(ITestedRowFactory::class, $rowFactory);

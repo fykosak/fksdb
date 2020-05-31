@@ -27,19 +27,11 @@ class TableMerger {
      */
     private $table;
 
-    /**
-     * @var Merger
-     */
-    private $merger;
+    private Merger $merger;
 
-    /**
-     * @var Connection
-     */
-    private $connection;
-    /**
-     * @var Context
-     */
-    private $context;
+    private Connection $connection;
+
+    private Context $context;
 
     /**
      * @var ActiveRow
@@ -56,15 +48,9 @@ class TableMerger {
      */
     private $columnMergeStrategies = [];
 
-    /**
-     * @var IMergeStrategy
-     */
-    private $globalMergeStrategy;
+    private IMergeStrategy $globalMergeStrategy;
 
-    /**
-     * @var ILogger
-     */
-    private $logger;
+    private ILogger $logger;
 
     /**
      * TableMerger constructor.

@@ -25,8 +25,8 @@ use PDOException;
  */
 class StoredQueryComponent extends BaseComponent {
 
-    const CONT_PARAMS = 'params';
-    const PARAMETER_URL_PREFIX = 'p_';
+    public const CONT_PARAMS = 'params';
+    public const PARAMETER_URL_PREFIX = 'p_';
 
     /**
      * @persistent
@@ -34,36 +34,20 @@ class StoredQueryComponent extends BaseComponent {
      */
     public $parameters;
 
-    /**
-     * @var StoredQuery
-     */
-    private $storedQuery;
+    private StoredQuery $storedQuery;
 
-    /**
-     * @var ContestAuthorizator
-     */
-    private $contestAuthorizator;
+    private ContestAuthorizator $contestAuthorizator;
 
-    /**
-     * @var StoredQueryFactory
-     */
-    private $storedQueryFormFactory;
+    private StoredQueryFactory $storedQueryFormFactory;
 
-    /**
-     *
-     * @var ExportFormatFactory
-     */
-    private $exportFormatFactory;
+    private ExportFormatFactory $exportFormatFactory;
 
     /**
      * @var null|bool|string
      */
     private $error;
 
-    /**
-     * @var bool
-     */
-    private $showParametrize = true;
+    private bool $showParametrize = true;
 
     /**
      * StoredQueryComponent constructor.
@@ -81,18 +65,11 @@ class StoredQueryComponent extends BaseComponent {
         $this->exportFormatFactory = $exportFormatFactory;
     }
 
-    /**
-     * @return bool
-     */
-    public function getShowParametrize() {
+    public function getShowParametrize(): bool {
         return $this->showParametrize;
     }
 
-    /**
-     * @param $showParametrize
-     * @return void
-     */
-    public function setShowParametrize($showParametrize) {
+    public function setShowParametrize(bool $showParametrize): void {
         $this->showParametrize = $showParametrize;
     }
 

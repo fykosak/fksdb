@@ -26,7 +26,7 @@ use Nette\Utils\JsonException;
  * @property-read \DateTimeInterface created
  */
 class ModelPerson extends AbstractModelSingle implements IResource {
-    const RESOURCE_ID = 'person';
+    public const RESOURCE_ID = 'person';
 
     /**
      * Returns first of the person's logins.

@@ -21,12 +21,7 @@ class GenderFromBornNumberTest extends PersonTest {
         return 'gender_from_born_number';
     }
 
-    /**
-     * @param TestsLogger $logger
-     * @param ModelPerson $person
-     * @return void
-     */
-    public function run(TestsLogger $logger, ModelPerson $person) {
+    public function run(TestsLogger $logger, ModelPerson $person): void {
         $info = $person->getInfo();
 
         if (!$info) {

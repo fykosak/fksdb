@@ -17,15 +17,9 @@ use Nette\InvalidStateException;
  */
 class GlobalSession implements IGlobalSession {
 
-    /**
-     * @var ServiceGlobalSession
-     */
-    private $serviceGlobalSession;
+    private ServiceGlobalSession $serviceGlobalSession;
 
-    /**
-     * @var IGSIDHolder
-     */
-    private $gsidHolder;
+    private IGSIDHolder $gsidHolder;
 
     /**
      * @var ModelGlobalSession|null

@@ -14,8 +14,8 @@ use FKSDB\ORM\Models\ModelEventParticipant;
  */
 class ModelMSousParticipant extends AbstractModelMulti implements IEventReferencedModel {
 
-    const STATE_AUTO_INVITED = 'auto.invited';
-    const STATE_AUTO_SPARE = 'auto.spare';
+    public const STATE_AUTO_INVITED = 'auto.invited';
+    public const STATE_AUTO_SPARE = 'auto.spare';
 
     /**
      * @return string

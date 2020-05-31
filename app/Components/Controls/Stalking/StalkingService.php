@@ -6,19 +6,15 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class StalkingService
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class StalkingService {
     /**
      * @var array[]
      */
-    private $definition;
+    private array $definition;
 
-    /**
-     * @param array $definition
-     * @return void
-     */
-    public function setSections(array $definition) {
+    public function setSections(array $definition): void {
         $this->definition = $definition;
     }
 

@@ -15,15 +15,11 @@ class DataTestingFactory {
     /**
      * @var PersonTest[][]
      */
-    private $tests = [];
-    /**
-     * @var ServiceContest
-     */
-    private $serviceContest;
-    /**
-     * @var TableReflectionFactory
-     */
-    private $tableReflectionFactory;
+    private array $tests = [];
+
+    private ServiceContest $serviceContest;
+
+    private TableReflectionFactory $tableReflectionFactory;
 
     /**
      * DataTestingFactory constructor.
@@ -40,7 +36,7 @@ class DataTestingFactory {
     /**
      * @throws BadRequestException
      */
-    private function registersTests() {
+    private function registersTests(): void {
         $tests = [
             new Tests\Person\GenderFromBornNumberTest(),
             new Tests\Person\ParticipantsDurationTest(),

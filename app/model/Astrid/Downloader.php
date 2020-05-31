@@ -12,35 +12,23 @@ use FKSDB\ORM\Models\ModelContest;
  */
 class Downloader {
 
-    /**
-     * @var string
-     */
-    private $httpUser;
+    private string $httpUser;
 
-    /**
-     * @var string
-     */
-    private $httpPassword;
+    private string $httpPassword;
 
     /**
      * @var string without scheme (only domain name/IP)
      */
-    private $host;
+    private string $host;
 
     /**
      * @var string path to directory for temporary data
      */
-    private $tmpDir;
+    private string $tmpDir;
 
-    /**
-     * @var array   contestId => contest name
-     */
-    private $contestMap;
+    private array $contestMap;
 
-    /**
-     * @var GlobalParameters
-     */
-    private $parameters;
+    private GlobalParameters $parameters;
 
     /**
      * Downloader constructor.

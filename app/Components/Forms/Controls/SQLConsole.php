@@ -15,7 +15,7 @@ use Nette\Utils\Html;
  */
 class SQLConsole extends TextArea {
 
-    const CSS_CLASS = 'sqlConsole';
+    public const CSS_CLASS = 'sqlConsole';
 
     /**
      * SQLConsole constructor.

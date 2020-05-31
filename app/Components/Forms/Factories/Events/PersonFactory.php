@@ -26,7 +26,7 @@ use Persons\SelfResolver;
  */
 class PersonFactory extends AbstractFactory {
 
-    const VALUE_LOGIN = 'fromLogin';
+    public const VALUE_LOGIN = 'fromLogin';
 
     /**
      * @var

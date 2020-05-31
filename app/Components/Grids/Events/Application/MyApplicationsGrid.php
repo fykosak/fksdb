@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Grids\Events\Application;
 
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContest;
@@ -20,14 +21,10 @@ use NiftyGrid\DuplicateColumnException;
  * TODO!!!
  */
 class MyApplicationsGrid extends BaseGrid {
-    /**
-     * @var ModelPerson
-     */
-    private $person;
-    /**
-     * @var ModelContest
-     */
-    private $contest;
+
+    private ModelPerson $person;
+
+    private ModelContest $contest;
 
     /**
      * MyApplicationsGrid constructor.
@@ -45,6 +42,7 @@ class MyApplicationsGrid extends BaseGrid {
      * @param Presenter $presenter
      * @throws DuplicateColumnException
      * @throws NotImplementedException
+     * @throws BadTypeException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

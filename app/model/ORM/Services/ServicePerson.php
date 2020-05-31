@@ -22,12 +22,10 @@ class ServicePerson extends AbstractServiceSingle {
     }
 
     /**
-     * Syntactic sugar.
-     *
      * @param string $email
      * @return ModelPerson|null
      */
-    public function findByEmail($email) {
+    public function findByEmail($email): ?ModelPerson {
         if (!$email) {
             return null;
         }
@@ -40,7 +38,7 @@ class ServicePerson extends AbstractServiceSingle {
      * @param IModel|ModelPerson $model
      * @return void
      */
-    public function save(IModel &$model) {
+    public function save(IModel &$model): void {
         if (is_null($model->gender)) {
             $model->inferGender();
         }

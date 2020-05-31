@@ -13,19 +13,19 @@ use Nette\Application\UI\Form;
 
 /**
  * Class TaskPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TaskPresenter extends BasePresenter {
 
-    const IMPORT_STATE_UPDATE_N_INSERT = 1;
-    const IMPORT_STATE_REMOVE_N_INSERT = 2;
-    const IMPORT_STATE_INSERT = 3;
+    public const IMPORT_STATE_UPDATE_N_INSERT = 1;
+    public const IMPORT_STATE_REMOVE_N_INSERT = 2;
+    public const IMPORT_STATE_INSERT = 3;
 
     /**
      * @return void
      * @throws BadRequestException
      */
-    public function titleList() {
+    public function titleList(): void {
         $this->setTitle(_('Tasks'), 'fa fa-tasks');
     }
 
@@ -33,21 +33,21 @@ class TaskPresenter extends BasePresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleImport() {
+    public function titleImport(): void {
         $this->setTitle(_('Tasks Import'), 'fa fa-upload');
     }
 
     /**
      * @throws BadRequestException
      */
-    public function authorizedList() {
+    public function authorizedList(): void {
         $this->setAuthorized($this->isEventOrContestOrgAuthorized('fyziklani.task', 'list'));
     }
 
     /**
      * @throws BadRequestException
      */
-    public function authorizedImport() {
+    public function authorizedImport(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.task', 'import'));
     }
 
@@ -63,7 +63,7 @@ class TaskPresenter extends BasePresenter {
         $form->addSelect('state', _('Select action'), [
             self::IMPORT_STATE_UPDATE_N_INSERT => _('Update tasks and add in case does not exists.'),
             self::IMPORT_STATE_REMOVE_N_INSERT => _('Delete all tasks and insert new one.'),
-            self::IMPORT_STATE_INSERT => _('Only add in case does not exists.')
+            self::IMPORT_STATE_INSERT => _('Only add in case does not exists.'),
         ]);
         $form->addSubmit('import', _('Import'));
         $form->onSuccess[] = function (Form $form) {
@@ -77,7 +77,7 @@ class TaskPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function taskImportFormSucceeded(Form $form) {
+    public function taskImportFormSucceeded(Form $form): void {
         $values = $form->getValues();
         $taskImportProcessor = new FyziklaniTaskImportProcessor($this->getContext(), $this->getEvent());
         $logger = new MemoryLogger();

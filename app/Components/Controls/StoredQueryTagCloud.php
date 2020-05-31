@@ -15,13 +15,10 @@ use FKSDB\ORM\ServicesMulti\ServiceMStoredQueryTag;
  */
 class StoredQueryTagCloud extends Control {
 
-    const MODE_LIST = 'mode-list';
-    const MODE_DETAIL = 'mode-detail';
+    public const MODE_LIST = 'mode-list';
+    public const MODE_DETAIL = 'mode-detail';
 
-    /**
-     * @var ServiceMStoredQueryTag
-     */
-    private $serviceMStoredQueryTag;
+    private ServiceMStoredQueryTag $serviceMStoredQueryTag;
 
     /**
      * @var ModelStoredQuery

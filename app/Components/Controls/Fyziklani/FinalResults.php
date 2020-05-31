@@ -10,14 +10,10 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
 
 class FinalResults extends BaseComponent {
-    /**
-     * @var ServiceFyziklaniTeam|null
-     */
-    private $serviceFyziklaniTeam;
-    /**
-     * @var ModelEvent
-     */
-    private $event;
+
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+
+    private ModelEvent $event;
 
     /**
      * FinalResults constructor.
@@ -64,10 +60,7 @@ class FinalResults extends BaseComponent {
         return new ResultsTotalGrid($this->event, $this->getContext());
     }
 
-    /**
-     * @return void
-     */
-    public function render() {
+    public function render(): void {
         $this->template->that = $this;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'FinalResults.latte');
         $this->template->render();

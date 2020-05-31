@@ -12,10 +12,7 @@ use Nette\Forms\Controls\BaseControl;
  */
 class PersonHistoryFactory extends SingleReflectionFactory {
 
-    /**
-     * @var SchoolFactory
-     */
-    private $schoolFactory;
+    private SchoolFactory $schoolFactory;
 
     /**
      * PersonHistoryFactory constructor.

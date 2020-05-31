@@ -16,10 +16,8 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventTypeRow extends AbstractRow {
-    /**
-     * @var ServiceEventType
-     */
-    private $serviceEventType;
+
+    private ServiceEventType $serviceEventType;
 
     /**
      * EventTypeRow constructor.

@@ -12,14 +12,10 @@ use Nette\DI\Container;
 use Tracy\Debugger;
 
 class TransitionButtonsControl extends BaseComponent {
-    /**
-     * @var Machine
-     */
-    private $machine;
-    /**
-     * @var IStateModel
-     */
-    private $model;
+
+    private Machine $machine;
+
+    private IStateModel $model;
 
     /**
      * TransitionButtonsControl constructor.
@@ -33,17 +29,18 @@ class TransitionButtonsControl extends BaseComponent {
         $this->model = $model;
     }
 
-    public function render() {
+    public function render(): void {
         $this->template->buttons = $this->machine->getAvailableTransitions($this->model);
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'TransitionButtonsControl.latte');
         $this->template->render();
     }
 
     /**
-     * @param $name
+     * @param string $name
+     * @return void
      * @throws AbortException
      */
-    public function handleTransition($name) {
+    public function handleTransition(string $name): void {
         try {
             $this->machine->executeTransition($name, $this->model);
         } catch (ForbiddenRequestException $exception) {

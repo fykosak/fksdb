@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class NoteRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class NoteRow extends AbstractTeacherRow {
 

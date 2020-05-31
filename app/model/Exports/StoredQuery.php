@@ -16,17 +16,14 @@ use NiftyGrid\DataSource\IDataSource;
  */
 class StoredQuery implements IDataSource, IResource {
 
-    const INNER_QUERY = 'sub';
+    public const INNER_QUERY = 'sub';
 
     /**
      * @var ModelStoredQuery
      */
     private $queryPattern;
 
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
     /**
      * @var array
@@ -88,10 +85,7 @@ class StoredQuery implements IDataSource, IResource {
         $this->connection = $connection;
     }
 
-    /**
-     * @param ModelStoredQuery $queryPattern
-     */
-    private function setQueryPattern(ModelStoredQuery $queryPattern) {
+    private function setQueryPattern(ModelStoredQuery $queryPattern): void {
         $this->queryPattern = $queryPattern;
         $this->postProcessing = $this->queryPattern->getPostProcessing();
     }

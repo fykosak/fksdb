@@ -10,14 +10,11 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class TeamRestsComponent extends BaseComponent {
-    /**
-     * @param ModelFyziklaniTeam $team
-     * @return void
-     */
-    public function render(ModelFyziklaniTeam $team) {
+
+    public function render(ModelFyziklaniTeam $team): void {
         $this->template->event = $team->getEvent();
         $this->template->persons = $team->getPersons();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR.'team.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'team.latte');
         $this->template->render();
     }
 

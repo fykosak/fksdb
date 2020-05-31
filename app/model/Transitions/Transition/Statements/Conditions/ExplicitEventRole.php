@@ -7,13 +7,11 @@ use FKSDB\ORM\Models\ModelEvent;
 
 /**
  * Class ExplicitEventRole
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ExplicitEventRole extends EventRole {
-    /**
-     * @var ModelEvent
-     */
-    private $event;
+
+    private ModelEvent $event;
     /**
      * @var string
      */

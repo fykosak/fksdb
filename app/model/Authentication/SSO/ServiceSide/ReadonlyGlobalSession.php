@@ -15,17 +15,11 @@ use Nette\Database\Connection;
  */
 class ReadonlyGlobalSession implements IGlobalSession {
 
-    const TABLE = 'global_session';
+    public const TABLE = 'global_session';
 
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
-    /**
-     * @var IGSIDHolder
-     */
-    private $gsidHolder;
+    private IGSIDHolder $gsidHolder;
 
     /**
      * @var array

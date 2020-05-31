@@ -17,7 +17,7 @@ use ArrayAccess;
 interface IGlobalSession extends ArrayAccess {
     /** @const Session key that holds authenticated user UI. */
 
-    const UID = 'uid';
+    public const UID = 'uid';
 
     /**
      * @return void

@@ -26,42 +26,14 @@ trait CollectorPresenterTrait {
     /*	 * ******************************
      * IJavaScriptCollector
      * ****************************** */
-    /**
-     * @param string $file
-     * @return void
-     */
-    public function registerJSFile(string $file) {
+
+    public function registerJSFile(string $file): void {
         /** @var JavaScriptLoader $component */
         $component = $this->getComponent('jsLoader');
         $component->addFile($file);
     }
 
-    /**
-     * @param string $code
-     * @param string|null $tag
-     * @return void
-     */
-    public function registerJSCode(string $code, string $tag = null) {
-        /** @var JavaScriptLoader $component */
-        $component = $this->getComponent('jsLoader');
-        $component->addInline($code, $tag);
-    }
-
-    /**
-     * @param string $tag
-     * @return void
-     */
-    public function unregisterJSCode(string $tag) {
-        /** @var JavaScriptLoader $component */
-        $component = $this->getComponent('jsLoader');
-        $component->removeInline($tag);
-    }
-
-    /**
-     * @param string $file
-     * @return void
-     */
-    public function unregisterJSFile(string $file) {
+    public function unregisterJSFile(string $file): void {
         /** @var JavaScriptLoader $component */
         $component = $this->getComponent('jsLoader');
         $component->removeFile($file);
@@ -70,23 +42,14 @@ trait CollectorPresenterTrait {
     /*	 * ******************************
      * IStylesheetCollector
      * ****************************** */
-    /**
-     * @param string $file
-     * @param array $media
-     * @return void
-     */
-    public function registerStylesheetFile(string $file, array $media = []) {
+
+    public function registerStylesheetFile(string $file, array $media = []): void {
         /** @var StylesheetLoader $component */
         $component = $this->getComponent('cssLoader');
         $component->addFile($file, $media);
     }
 
-    /**
-     * @param string $file
-     * @param array $media
-     * @return void
-     */
-    public function unregisterStylesheetFile(string $file, array $media = []) {
+    public function unregisterStylesheetFile(string $file, array $media = []): void {
         /** @var StylesheetLoader $component */
         $component = $this->getComponent('cssLoader');
         $component->removeFile($file, $media);

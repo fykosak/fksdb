@@ -29,12 +29,11 @@ class AjaxUpload extends ReactComponent {
     use SubmitSaveTrait;
     use SubmitDownloadTrait;
 
-    /** @var ServiceSubmit */
-    private $serviceSubmit;
-    /** @var CorrectedStorage */
-    private $correctedStorage;
-    /** @var UploadedStorage */
-    private $uploadedStorage;
+    private ServiceSubmit $serviceSubmit;
+
+    private CorrectedStorage $correctedStorage;
+
+    private UploadedStorage $uploadedStorage;
 
     public function injectPrimary(ServiceSubmit $serviceSubmit, CorrectedStorage $correctedStorage, UploadedStorage $uploadedStorage): void {
         $this->serviceSubmit = $serviceSubmit;
@@ -75,7 +74,7 @@ class AjaxUpload extends ReactComponent {
      * @return SubmitPresenter
      * @throws BadRequestException
      */
-    public function getPresenter($need = TRUE) {
+    public function getPresenter($need = true) {
         $presenter = parent::getPresenter();
         if (!$presenter instanceof SubmitPresenter) {
             throw new BadTypeException(SubmitPresenter::class, $presenter);
@@ -90,7 +89,7 @@ class AjaxUpload extends ReactComponent {
      * @throws \Exception
      * @throws InvalidLinkException
      */
-    public function handleUpload() {
+    public function handleUpload(): void {
         $response = new ReactResponse();
 
         $contestant = $this->getPresenter()->getContestant();
@@ -134,7 +133,7 @@ class AjaxUpload extends ReactComponent {
      * @throws BadRequestException
      * @throws AbortException
      */
-    public function handleRevoke() {
+    public function handleRevoke(): void {
         $submitId = $this->getReactRequest()->requestData['submitId'];
         $logger = new MemoryLogger();
         $data = $this->traitHandleRevoke($logger, $submitId);
@@ -152,7 +151,7 @@ class AjaxUpload extends ReactComponent {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function handleDownload() {
+    public function handleDownload(): void {
         $submitId = $this->getReactRequest()->requestData['submitId'];
         $logger = new MemoryLogger();
         $this->traitHandleDownloadUploaded($logger, $submitId);

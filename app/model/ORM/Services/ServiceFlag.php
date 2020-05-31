@@ -18,13 +18,7 @@ class ServiceFlag extends AbstractServiceSingle {
         return DbNames::TAB_FLAG;
     }
 
-    /**
-     * Syntactic sugar.
-     *
-     * @param string $fid
-     * @return ModelFlag|null
-     */
-    public function findByFid(string $fid) {
+    public function findByFid(string $fid): ?ModelFlag {
         if (!$fid) {
             return null;
         }

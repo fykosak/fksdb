@@ -10,22 +10,16 @@ use Nette\Http\Response;
 use Nette\OutOfRangeException;
 
 /**
- * Class Fyziklani13Generator
- * *
+ * Class DefaultGenerator
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DefaultGenerator extends AbstractSymbolGenerator {
-    /**
-     * @var int
-     */
-    private $variableSymbolStart;
-    /**
-     * @var int
-     */
-    private $variableSymbolEnd;
-    /**
-     * @var array
-     */
-    private $info;
+
+    private int $variableSymbolStart;
+
+    private int $variableSymbolEnd;
+
+    private array $info;
 
     /**
      * @param int $variableSymbolStart
@@ -68,7 +62,7 @@ class DefaultGenerator extends AbstractSymbolGenerator {
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      */
-    protected function create(ModelPayment $modelPayment) {
+    protected function create(ModelPayment $modelPayment): array {
 
         if ($modelPayment->hasGeneratedSymbols()) {
             throw new AlreadyGeneratedSymbolsException(\sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->getPaymentId()));

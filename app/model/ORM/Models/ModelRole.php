@@ -10,8 +10,8 @@ use FKSDB\ORM\AbstractModelSingle;
  */
 class ModelRole extends AbstractModelSingle {
 
-    const CONTESTANT = 'contestant';
-    const ORG = 'org';
-    const REGISTERED = 'registered';
-    const GUEST = 'guest';
+    public const CONTESTANT = 'contestant';
+    public const ORG = 'org';
+    public const REGISTERED = 'registered';
+    public const GUEST = 'guest';
 }

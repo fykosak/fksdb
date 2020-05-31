@@ -4,6 +4,7 @@ namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\DatabaseReflection\ValuePrinters\EventRole;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
@@ -19,18 +20,12 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class AllPersonsGrid extends BaseGrid {
-    /**
-     * @var YearCalculator
-     */
-    private $yearCalculator;
-    /**
-     * @var ServicePersonSchedule
-     */
-    private $servicePersonSchedule;
-    /**
-     * @var ModelEvent
-     */
-    private $event;
+
+    private YearCalculator $yearCalculator;
+
+    private ServicePersonSchedule $servicePersonSchedule;
+
+    private ModelEvent $event;
 
     /**
      * PersonsGrid constructor.
@@ -52,6 +47,7 @@ class AllPersonsGrid extends BaseGrid {
      * @return void
      * @throws DuplicateColumnException
      * @throws NotImplementedException
+     * @throws BadTypeException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
@@ -91,6 +87,7 @@ class AllPersonsGrid extends BaseGrid {
     /**
      * @throws DuplicateColumnException
      * @throws NotImplementedException
+     * @throws BadTypeException
      */
     protected function addColumnPayment() {
         $this->addColumns(['payment.payment']);

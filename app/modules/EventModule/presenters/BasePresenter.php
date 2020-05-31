@@ -26,6 +26,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     public const TEAM_EVENTS = [1, 9, 13];
 
     private ModelEvent $event;
+
     private Holder $holder;
 
     /**
@@ -170,7 +171,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @param string $subTitle
      * @throws BadRequestException
      */
-    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
+    protected function setTitle(string $title, string $icon = '', string $subTitle = ''): void {
         parent::setTitle($title, $icon, $subTitle ?: $this->getEvent()->__toString());
     }
 

@@ -29,8 +29,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
         parent::__construct($context);
     }
 
-    /** @var string */
-    protected $fieldsDefinition = 'adminTeacher';
+    protected string $fieldsDefinition = 'adminTeacher';
 
     private ServiceTeacher $serviceTeacher;
 

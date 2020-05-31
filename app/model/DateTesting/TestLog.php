@@ -8,17 +8,13 @@ use Nette\Utils\Html;
 
 /**
  * Class TestLog
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TestLog extends Message {
-    /**
-     * @var Html
-     */
-    public $detail;
-    /**
-     * @var string
-     */
-    public $testName;
+
+    public ?Html $detail;
+
+    public string $testName;
 
     /**
      * TestLog constructor.
@@ -27,7 +23,7 @@ class TestLog extends Message {
      * @param string $level
      * @param Html|null $detail
      */
-    public function __construct(string $testName, string $message, string $level, Html $detail = null) {
+    public function __construct(string $testName, string $message, string $level, ?Html $detail = null) {
         parent::__construct($message, $level);
         $this->detail = $detail;
         $this->testName = $testName;

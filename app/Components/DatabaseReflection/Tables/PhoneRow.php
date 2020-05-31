@@ -64,12 +64,7 @@ class PhoneRow extends DefaultRow implements ITestedRowFactory {
         return $control;
     }
 
-    /**
-     * @param TestsLogger $logger
-     * @param AbstractModelSingle $model
-     * @return void
-     */
-    final public function runTest(TestsLogger $logger, AbstractModelSingle $model) {
+    final public function runTest(TestsLogger $logger, AbstractModelSingle $model): void {
 
         $value = $model->{$this->getModelAccessKey()};
         if (\is_null($value)) {

@@ -17,22 +17,14 @@ use Nette\Utils\JsonException;
 class PaymentSelectField extends TextInput {
 
     use ReactField;
-    /**
-     * @var ServicePersonSchedule
-     */
-    private $servicePersonSchedule;
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /**
-     * @var string
-     */
-    private $groupTypes;
-    /**
-     * @var bool
-     */
-    private $showAll = true;
+
+    private ServicePersonSchedule $servicePersonSchedule;
+
+    private ModelEvent $event;
+
+    private array $groupTypes;
+
+    private bool $showAll;
 
     /**
      * PaymentSelectField constructor.

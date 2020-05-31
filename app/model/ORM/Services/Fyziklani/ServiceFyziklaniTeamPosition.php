@@ -21,11 +21,7 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
         return DbNames::TAB_FYZIKLANI_TEAM_POSITION;
     }
 
-    /**
-     * @param int $teamId
-     * @return ModelFyziklaniTeamPosition|null
-     */
-    public function findByTeamId(int $teamId) {
+    public function findByTeamId(int $teamId): ?ModelFyziklaniTeamPosition {
         /** @var ModelFyziklaniTeamPosition $row */
         $row = $this->getTable()->where('e_fyziklani_team_id', $teamId)->fetch();
         return $row ? $row : null;

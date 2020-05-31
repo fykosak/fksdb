@@ -18,10 +18,6 @@ class TextRow extends DefaultRow {
         return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     */
     public function createFormControl(...$args): BaseControl {
         $control = new TextArea(_($this->getTitle()));
         $description = $this->getDescription();

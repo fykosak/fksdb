@@ -7,10 +7,8 @@ namespace FKSDB\Components\DatabaseReflection;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class DetailFactory {
-    /**
-     * @var array
-     */
-    private $nodes = [];
+
+    private array $nodes = [];
 
     /**
      * @param array $nodes

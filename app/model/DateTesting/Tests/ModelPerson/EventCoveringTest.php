@@ -13,16 +13,11 @@ use FKSDB\DataTesting\TestsLogger;
 
 /**
  * Class EventCoveringTest
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventCoveringTest extends PersonTest {
 
-    /**
-     * @param TestsLogger $logger
-     * @param ModelPerson $person
-     * @return void
-     */
-    public function run(TestsLogger $logger, ModelPerson $person) {
+    public function run(TestsLogger $logger, ModelPerson $person): void {
         $contestantYears = [
             ModelContest::ID_FYKOS => [],
             ModelContest::ID_VYFUK => [],
@@ -60,7 +55,7 @@ class EventCoveringTest extends PersonTest {
      * @param string $type
      * @param ModelPerson $person
      */
-    private function check(TestsLogger $logger, array $data, array $orgs, string $type, ModelPerson $person) {
+    private function check(TestsLogger $logger, array $data, array $orgs, string $type, ModelPerson $person): void {
         foreach ($data as $contestId => $contestYears) {
             foreach ($contestYears as $year) {
                 if (\in_array($year, $orgs[$contestId])) {
@@ -81,14 +76,7 @@ class EventCoveringTest extends PersonTest {
         }
     }
 
-    /**
-     * @param int $year
-     * @param int $contestId
-     * @param string $typeP
-     * @param string $typeO
-     * @return TestLog
-     */
-    private function createLog(int $year, int $contestId, string $typeP, string $typeO) {
+    private function createLog(int $year, int $contestId, string $typeP, string $typeO): TestLog {
         return new TestLog($this->getTitle(), \sprintf(_('Organization and participation at same year %d and contestId %d %s<->%s. '), $year, $contestId, $typeP, $typeO), TestLog::LVL_DANGER);
     }
 

@@ -19,15 +19,12 @@ use Persons\Deduplication\DuplicateFinder;
  */
 class PersonsGrid extends BaseGrid {
 
-    /**
-     * @var TypedTableSelection
-     */
-    private $trunkPersons;
+    private TypedTableSelection $trunkPersons;
 
     /**
      * @var ModelPerson[] trunkId => ModelPerson
      */
-    private $pairs;
+    private array $pairs;
 
     /**
      * PersonsGrid constructor.

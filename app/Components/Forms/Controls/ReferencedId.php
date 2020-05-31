@@ -20,7 +20,7 @@ use Nette\Forms\Form;
  */
 class ReferencedId extends HiddenField {
 
-    const VALUE_PROMISE = '__promise';
+    public const VALUE_PROMISE = '__promise';
 
     /**
      * @var ReferencedContainer
@@ -32,20 +32,11 @@ class ReferencedId extends HiddenField {
      */
     private $promise;
 
-    /**
-     * @var IService
-     */
-    private $service;
+    private IService $service;
 
-    /**
-     * @var IReferencedHandler
-     */
-    private $handler;
+    private IReferencedHandler $handler;
 
-    /**
-     * @var IReferencedSetter
-     */
-    private $referencedSetter;
+    private IReferencedSetter $referencedSetter;
 
     /**
      * @var bool
@@ -79,10 +70,7 @@ class ReferencedId extends HiddenField {
         return $this->referencedContainer;
     }
 
-    /**
-     * @param ReferencedContainer $referencedContainer
-     */
-    public function setReferencedContainer(ReferencedContainer $referencedContainer) {
+    public function setReferencedContainer(ReferencedContainer $referencedContainer): void {
         $this->referencedContainer = $referencedContainer;
     }
 
@@ -188,7 +176,7 @@ class ReferencedId extends HiddenField {
 
     public function rollback() {
         if ($this->getModelCreated()) {
-            $this->referencedSetter->setModel($this->referencedContainer, NULL, IReferencedSetter::MODE_ROLLBACK);
+            $this->referencedSetter->setModel($this->referencedContainer, null, IReferencedSetter::MODE_ROLLBACK);
             if (parent::getValue()) {
                 parent::setValue(self::VALUE_PROMISE);
             }
@@ -199,7 +187,7 @@ class ReferencedId extends HiddenField {
      * @param bool $value
      * @return BaseControl|void
      */
-    public function setDisabled($value = TRUE) {
+    public function setDisabled($value = true) {
         $this->referencedContainer->setDisabled($value);
     }
 

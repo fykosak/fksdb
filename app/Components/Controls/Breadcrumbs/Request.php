@@ -13,20 +13,11 @@ use Nette\Application\Request as AppRequest;
  */
 class Request {
 
-    /**
-     * @var null|int
-     */
-    public $user;
+    public ?int $user;
 
-    /**
-     * @var AppRequest
-     */
-    public $request;
+    public AppRequest $request;
 
-    /**
-     * @var PageTitle
-     */
-    public $title;
+    public PageTitle $title;
     /**
      * @var string backling ID
      */
@@ -45,7 +36,7 @@ class Request {
      * @param string $parent
      * @param string $pathKey
      */
-    public function __construct($user, AppRequest $request, PageTitle $title, $parent, $pathKey) {
+    public function __construct(?int $user, AppRequest $request, PageTitle $title, $parent, $pathKey) {
         $this->user = $user;
         $this->request = $request;
         $this->title = $title;

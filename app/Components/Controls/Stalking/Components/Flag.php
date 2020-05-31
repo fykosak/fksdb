@@ -6,15 +6,11 @@ use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * Class Flag
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Flag extends AbstractStalkingComponent {
-    /**
-     * @param ModelPerson $person
-     * @param int $userPermissions
-     * @return void
-     */
-    public function render(ModelPerson $person, int $userPermissions) {
+
+    public function render(ModelPerson $person, int $userPermissions): void {
         $this->beforeRender($person, $userPermissions);
         $this->template->flags = $person->getMPersonHasFlags();
         $this->template->setFile(__DIR__ . '/Flag.latte');

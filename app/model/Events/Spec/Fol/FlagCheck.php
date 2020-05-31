@@ -22,15 +22,9 @@ use Nette\Forms\IControl;
  */
 class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
 
-    /**
-     * @var ServiceSchool
-     */
-    private $serviceSchool;
+    private ServiceSchool $serviceSchool;
 
-    /**
-     * @var ServicePersonHistory
-     */
-    private $servicePersonHistory;
+    private ServicePersonHistory $servicePersonHistory;
 
     /**
      * @var Holder
@@ -44,10 +38,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
         return $this->holder;
     }
 
-    /**
-     * @param Holder $holder
-     */
-    public function setHolder(Holder $holder) {
+    public function setHolder(Holder $holder): void {
         $this->holder = $holder;
     }
 

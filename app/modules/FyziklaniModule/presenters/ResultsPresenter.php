@@ -14,7 +14,7 @@ class ResultsPresenter extends BasePresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleCorrelationStatistics() {
+    public function titleCorrelationStatistics(): void {
         $this->setTitle(_('Correlation statistics'), 'fa fa-pie-chart');
     }
 
@@ -22,7 +22,7 @@ class ResultsPresenter extends BasePresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleList() {
+    public function titleList(): void {
         $this->setTitle(_('Results and statistics'), 'fa fa-trophy');
     }
 
@@ -30,7 +30,7 @@ class ResultsPresenter extends BasePresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleTable() {
+    public function titleTable(): void {
         $this->setTitle(_('Detailed results'), 'fa fa-trophy');
     }
 
@@ -38,7 +38,7 @@ class ResultsPresenter extends BasePresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titlePresentation() {
+    public function titlePresentation(): void {
         $this->setTitle(_('Results presentation'), 'fa fa-table');
     }
 
@@ -46,7 +46,7 @@ class ResultsPresenter extends BasePresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleTeamStatistics() {
+    public function titleTeamStatistics(): void {
         $this->setTitle(_('Teams statistics'), 'fa fa-line-chart');
     }
 
@@ -54,49 +54,49 @@ class ResultsPresenter extends BasePresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleTaskStatistics() {
+    public function titleTaskStatistics(): void {
         $this->setTitle(_('Tasks statistics'), 'fa fa-pie-chart');
     }
 
     /**
      * @throws BadRequestException
      */
-    public function authorizedList() {
+    public function authorizedList(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'list'));
     }
 
     /**
      * @throws BadRequestException
      */
-    public function authorizedResultsTable() {
+    public function authorizedResultsTable(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'table'));
     }
 
     /**
      * @throws BadRequestException
      */
-    public function authorizedTaskStatistics() {
+    public function authorizedTaskStatistics(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'taskStatistics'));
     }
 
     /**
      * @throws BadRequestException
      */
-    public function authorizedTeamStatistics() {
+    public function authorizedTeamStatistics(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'teamStatistics'));
     }
 
     /**
      * @throws BadRequestException
      */
-    public function authorizedCorrelationStatistics() {
+    public function authorizedCorrelationStatistics(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'correlation'));
     }
 
     /**
      * @throws BadRequestException
      */
-    public function authorizedPresentation() {
+    public function authorizedPresentation(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'presentation'));
     }
 

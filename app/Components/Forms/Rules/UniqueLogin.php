@@ -14,10 +14,7 @@ use Nette\Forms\Controls\BaseControl;
  */
 class UniqueLogin {
 
-    /**
-     * @var ServiceLogin
-     */
-    private $serviceLogin;
+    private ServiceLogin $serviceLogin;
 
     /**
      * @var ModelLogin

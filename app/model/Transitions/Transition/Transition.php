@@ -11,23 +11,18 @@ use FKSDB\Transitions\Statements\Statement;
  * @author Michal Koutný <michal@fykos.cz>
  */
 final class Transition {
-    const TYPE_SUCCESS = ILogger::SUCCESS;
-    const TYPE_WARNING = ILogger::WARNING;
-    const TYPE_DANGER = ILogger::ERROR;
-    const TYPE_PRIMARY = ILogger::PRIMARY;
+    public const TYPE_SUCCESS = ILogger::SUCCESS;
+    public const TYPE_WARNING = ILogger::WARNING;
+    public const TYPE_DANGER = ILogger::ERROR;
+    public const TYPE_PRIMARY = ILogger::PRIMARY;
     /**
      * @var Callable
      */
     private $condition;
 
-    /**
-     * @var string
-     */
-    private $type = self::TYPE_PRIMARY;
-    /**
-     * @var string
-     */
-    private $label;
+    private string $type = self::TYPE_PRIMARY;
+
+    private string $label;
     /**
      * @var callable[]
      */
@@ -37,14 +32,9 @@ final class Transition {
      */
     public $afterExecuteCallbacks = [];
 
-    /**
-     * @var string
-     */
-    private $fromState;
-    /**
-     * @var string
-     */
-    private $toState;
+    private string $fromState;
+
+    private string $toState;
 
     /**
      * @return string

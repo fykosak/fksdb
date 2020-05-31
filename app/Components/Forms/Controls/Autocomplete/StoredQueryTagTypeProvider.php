@@ -13,17 +13,11 @@ use FKSDB\ORM\Tables\TypedTableSelection;
  */
 class StoredQueryTagTypeProvider implements IFilteredDataProvider {
 
-    const DESCRIPTION = 'description';
+    public const DESCRIPTION = 'description';
 
-    /**
-     * @var ServiceStoredQueryTagType
-     */
-    private $serviceStoredQueryTagType;
+    private ServiceStoredQueryTagType $serviceStoredQueryTagType;
 
-    /**
-     * @var TypedTableSelection
-     */
-    private $searchTable;
+    private TypedTableSelection $searchTable;
 
     /**
      * StoredQueryTagTypeProvider constructor.

@@ -23,23 +23,14 @@ use Nette\Utils\DateTime;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ResultsAndStatistics extends FyziklaniReactControl {
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
 
-    /**
-     * @var ServiceFyziklaniTask
-     */
-    private $serviceFyziklaniTask;
-    /**
-     * @var ServiceFyziklaniSubmit
-     */
-    private $serviceFyziklaniSubmit;
-    /**
-     * @var string
-     */
-    private $reactId;
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
+
+    private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
+
+    private string $reactId;
 
     /**
      * ResultsAndStatistics constructor.
@@ -70,7 +61,7 @@ class ResultsAndStatistics extends FyziklaniReactControl {
      * @return void
      * @throws InvalidLinkException
      */
-    protected function configure() {
+    protected function configure(): void {
         $this->addAction('refresh', $this->link('refresh!'));
         parent::configure();
     }
@@ -81,7 +72,7 @@ class ResultsAndStatistics extends FyziklaniReactControl {
      * @throws BadRequestException
      * @throws NotSetGameParametersException
      */
-    public function handleRefresh() {
+    public function handleRefresh(): void {
         $presenter = $this->getPresenter();
         if (!$presenter->isAjax()) {
             throw new BadRequestException('', Response::S405_METHOD_NOT_ALLOWED);

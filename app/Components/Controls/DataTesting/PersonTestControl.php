@@ -56,7 +56,7 @@ class PersonTestControl extends BaseComponent {
      * @return FormControl
      * @throws BadRequestException
      */
-    public function createComponentForm() {
+    public function createComponentForm(): FormControl {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->addText('start_id', _('From person_id'))
@@ -122,9 +122,7 @@ class PersonTestControl extends BaseComponent {
             foreach ($this->tests as $test) {
                 $test->run($logger, $model);
             }
-            $personLog = \array_filter($logger->getLogs(), function (TestLog $simpleLog) {
-                return \in_array($simpleLog->getLevel(), $this->levels);
-            });
+            $personLog = \array_filter($logger->getLogs(), fn(TestLog $simpleLog) => \in_array($simpleLog->getLevel(), $this->levels));
             if (\count($personLog)) {
                 $logs[] = ['model' => $model, 'log' => $personLog];
             }
@@ -133,20 +131,17 @@ class PersonTestControl extends BaseComponent {
         return $logs;
     }
 
-    /**
-     * @return void
-     */
-    public function render() {
+    public function render(): void {
         $this->template->logs = $this->calculateProblems();
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
     }
 
     /**
-     * @param $page
+     * @param string|int $page
      * @return void
      */
-    public function handleChangePage($page) {
+    public function handleChangePage($page): void {
         $this->page = $page;
         $this->invalidateControl();
     }

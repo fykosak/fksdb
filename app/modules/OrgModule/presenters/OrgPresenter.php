@@ -18,22 +18,17 @@ use Persons\ExtendedPersonHandler;
  * @method ModelOrg getModel2(int $id = null)
  */
 class OrgPresenter extends ExtendedPersonPresenter {
-    /** @var string */
-    protected $fieldsDefinition = 'adminOrg';
+
+    protected string $fieldsDefinition = 'adminOrg';
     /**
      * @var int
      * @persistent
      */
     public $id;
-    /**
-     * @var ServiceOrg
-     */
-    private $serviceOrg;
 
-    /**
-     * @var OrgFactory
-     */
-    private $orgFactory;
+    private ServiceOrg $serviceOrg;
+
+    private OrgFactory $orgFactory;
 
     public function injectServiceOrg(ServiceOrg $serviceOrg): void {
         $this->serviceOrg = $serviceOrg;
@@ -93,7 +88,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
      * @param Form $form
      * @throws BadRequestException
      */
-    protected function setDefaults(IModel $model = null, Form $form) {
+    protected function setDefaults(?IModel $model, Form $form): void {
         parent::setDefaults($model, $form);
         if (!$model) {
             return;

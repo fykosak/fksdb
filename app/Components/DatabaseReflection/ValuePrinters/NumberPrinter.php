@@ -10,9 +10,9 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class NumberPrinter extends AbstractValuePrinter {
-    const NULL_VALUE_NOT_SET = 'notSet';
-    const NULL_VALUE_INF = 'infinite';
-    const NULL_VALUE_ZERO = 'zero';
+    public const NULL_VALUE_NOT_SET = 'notSet';
+    public const NULL_VALUE_INF = 'infinite';
+    public const NULL_VALUE_ZERO = 'zero';
     /** @var string */
     private $nullValueMode;
     /** @var string */

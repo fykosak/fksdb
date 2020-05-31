@@ -29,11 +29,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
      */
     private $dataColumns = [];
 
-    /**
-     *
-     * @var CumulativeResultsModel
-     */
-    private $cumulativeResultsModel;
+    private CumulativeResultsModel $cumulativeResultsModel;
 
     /**
      * FKSDB\Results\Models\SchoolCumulativeResultsModel constructor.

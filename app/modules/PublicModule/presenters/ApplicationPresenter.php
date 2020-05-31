@@ -41,7 +41,7 @@ use Nette\InvalidArgumentException;
  */
 class ApplicationPresenter extends BasePresenter {
 
-    const PARAM_AFTER = 'a';
+    public const PARAM_AFTER = 'a';
 
     /**
      * @var ModelEvent|null
@@ -63,25 +63,15 @@ class ApplicationPresenter extends BasePresenter {
      */
     private $machine;
 
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
+    private ServiceEvent $serviceEvent;
 
-    /**
-     * @var RelatedPersonAuthorizator
-     */
-    private $relatedPersonAuthorizator;
+    private RelatedPersonAuthorizator $relatedPersonAuthorizator;
 
-    /**
-     * @var LayoutResolver
-     */
-    private $layoutResolver;
+    private LayoutResolver $layoutResolver;
 
-    /**
-     * @var ApplicationHandlerFactory
-     */
-    private $handlerFactory;
+    private ApplicationHandlerFactory $handlerFactory;
+
+    private EventDispatchFactory $eventDispatchFactory;
 
     public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
@@ -98,11 +88,6 @@ class ApplicationPresenter extends BasePresenter {
     public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
     }
-
-    /**
-     * @var EventDispatchFactory
-     */
-    private $eventDispatchFactory;
 
     public function injectEventDispatch(EventDispatchFactory $eventDispatchFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;

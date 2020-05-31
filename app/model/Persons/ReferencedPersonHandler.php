@@ -36,26 +36,20 @@ use FKSDB\ORM\ServicesMulti\ServiceMPostContact;
 class ReferencedPersonHandler implements IReferencedHandler {
     use SmartObject;
 
-    const POST_CONTACT_DELIVERY = 'post_contact_d';
-    const POST_CONTACT_PERMANENT = 'post_contact_p';
+    public const POST_CONTACT_DELIVERY = 'post_contact_d';
+    public const POST_CONTACT_PERMANENT = 'post_contact_p';
 
-    /** @var ServicePerson */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
-    /** @var ServicePersonInfo */
-    private $servicePersonInfo;
+    private ServicePersonInfo $servicePersonInfo;
 
-    /** @var ServicePersonHistory */
-    private $servicePersonHistory;
+    private ServicePersonHistory $servicePersonHistory;
 
-    /** @var ServiceMPostContact */
-    private $serviceMPostContact;
+    private ServiceMPostContact $serviceMPostContact;
 
-    /** @var ServiceMPersonHasFlag */
-    private $serviceMPersonHasFlag;
+    private ServiceMPersonHasFlag $serviceMPersonHasFlag;
 
-    /** @var int */
-    private $acYear;
+    private int $acYear;
 
     /** @var int */
     private $eventId;
@@ -177,7 +171,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 'person_history' => ($history = $person->getHistory($this->acYear)) ?: $this->servicePersonHistory->createNew(['ac_year' => $this->acYear]),
                 'person_schedule' => (($this->eventId && isset($data['person_schedule']) && $person->getSerializedSchedule($this->eventId, \array_keys((array)$data['person_schedule'])[0])) ?: null),
                 self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress()) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_DELIVERY]),
-                self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_PERMANENT])
+                self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_PERMANENT]),
             ];
             /**
              * @var AbstractServiceSingle[] $services

@@ -17,9 +17,9 @@ use Nette\MemberAccessException;
  */
 class Merger {
 
-    const IDX_TRUNK = 'trunk';
-    const IDX_MERGED = 'merged';
-    const IDX_RESOLUTION = 'resolution';
+    public const IDX_TRUNK = 'trunk';
+    public const IDX_MERGED = 'merged';
+    public const IDX_RESOLUTION = 'resolution';
 
     /**
      * @var array

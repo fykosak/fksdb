@@ -27,14 +27,7 @@ class ServiceSubmit extends AbstractServiceSingle {
         return DbNames::TAB_SUBMIT;
     }
 
-    /**
-     * Syntactic sugar.
-     *
-     * @param int $ctId
-     * @param int $taskId
-     * @return ModelSubmit|null
-     */
-    public function findByContestant(int $ctId, int $taskId) {
+    public function findByContestant(int $ctId, int $taskId): ?ModelSubmit {
         $key = $ctId . ':' . $taskId;
 
         if (!array_key_exists($key, $this->submitCache)) {
@@ -64,7 +57,7 @@ class ServiceSubmit extends AbstractServiceSingle {
      * @return array
      * @throws InvalidLinkException
      */
-    public function serializeSubmit($submit, ModelTask $task, Presenter $presenter): array {
+    public function serializeSubmit(?ModelSubmit $submit, ModelTask $task, Presenter $presenter): array {
         return [
             'submitId' => $submit ? $submit->submit_id : null,
             'name' => $task->getFQName(),

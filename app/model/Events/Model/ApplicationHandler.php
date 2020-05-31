@@ -39,39 +39,25 @@ use Tracy\Debugger;
  */
 class ApplicationHandler {
 
-    const ERROR_ROLLBACK = 'rollback';
-    const ERROR_SKIP = 'skip';
-    const STATE_TRANSITION = 'transition';
-    const STATE_OVERWRITE = 'overwrite';
+    public const ERROR_ROLLBACK = 'rollback';
+    public const ERROR_SKIP = 'skip';
+    public const STATE_TRANSITION = 'transition';
+    public const STATE_OVERWRITE = 'overwrite';
 
-    /**
-     * @var ModelEvent
-     */
-    private $event;
+    private ModelEvent $event;
 
-    /**
-     * @var ILogger|MemoryLogger
-     */
-    private $logger;
+    private ILogger $logger;
 
     /**
      * @var string
      */
     private $errorMode = self::ERROR_ROLLBACK;
 
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
-    /**
-     * @var Container
-     */
-    private $container;
+    private Container $container;
 
-    /**
-     * @var Machine
-     */
+    /** @var Machine */
     private $machine;
 
     /**

@@ -22,10 +22,10 @@ trait SubmitRevokeTrait {
     /**
      * @param ILogger $logger
      * @param int $submitId
-     * @return array|null
+     * @return array|null TODO
      * @throws InvalidLinkException
      */
-    public function traitHandleRevoke(ILogger $logger, int $submitId) {
+    public function traitHandleRevoke(ILogger $logger, int $submitId): ?array {
         /** @var ModelSubmit $submit */
         $submit = $this->getServiceSubmit()->findByPrimary($submitId);
         if (!$submit) {

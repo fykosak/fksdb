@@ -11,14 +11,10 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractDateTimeRow extends DefaultRow {
-    /** @var string */
-    private $format;
 
-    /**
-     * @param string $format
-     * @return void
-     */
-    public function setFormat(string $format) {
+    private ?string $format;
+
+    public function setFormat(string $format): void {
         $this->format = $format;
     }
 

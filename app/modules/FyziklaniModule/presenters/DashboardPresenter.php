@@ -6,14 +6,14 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class DashboardPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DashboardPresenter extends BasePresenter {
     /**
      * @return void
      * @throws BadRequestException
      */
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setTitle(_('Fyziklani game app'), 'fa fa-dashboard');
     }
 
@@ -21,7 +21,7 @@ class DashboardPresenter extends BasePresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function authorizedDefault() {
+    public function authorizedDefault(): void {
         $this->setAuthorized($this->isEventOrContestOrgAuthorized('fyziklani.dashboard', 'default'));
     }
 }

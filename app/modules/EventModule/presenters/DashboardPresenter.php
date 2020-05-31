@@ -6,29 +6,28 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class DashboardPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DashboardPresenter extends BasePresenter {
-
 
     /**
      * @throws BadRequestException
      */
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setTitle(\sprintf(_('Event %s'), $this->getEvent()->name), 'fa fa-dashboard');
     }
 
     /**
      * @throws BadRequestException
      */
-    public function authorizedDefault() {
+    public function authorizedDefault(): void {
         $this->setAuthorized($this->isEventOrContestOrgAuthorized('event.dashboard', 'default'));
     }
 
     /**
      * @throws BadRequestException
      */
-    public function renderDefault() {
+    public function renderDefault(): void {
         $this->template->event = $this->getEvent();
         $this->template->webUrl = $this->getWebUrl();
         $this->template->fields = ['event_type', 'year', 'event_year', 'begin', 'end'];
@@ -38,7 +37,7 @@ class DashboardPresenter extends BasePresenter {
      * @return string
      * @throws BadRequestException
      */
-    private function getWebUrl() {
+    private function getWebUrl(): string {
         switch ($this->getEvent()->event_type_id) {
             case 1:
                 // FOF

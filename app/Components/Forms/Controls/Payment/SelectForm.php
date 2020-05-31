@@ -36,48 +36,29 @@ class SelectForm extends Control {
     /**
      * @var string[]
      */
-    private $types;
-    /**
-     * @var PersonFactory
-     */
-    private $personFactory;
-    /**
-     * @var PersonProvider
-     */
-    private $personProvider;
-    /**
-     * @var ServicePersonSchedule
-     */
-    private $servicePersonSchedule;
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /**
-     * @var bool
-     */
-    private $isOrg;
-    /**
-     * @var ITranslator
-     */
-    private $translator;
+    private array $types;
 
-    /**
-     * @var PaymentMachine
-     */
-    private $machine;
-    /**
-     * @var ModelPayment
-     */
-    private $model;
-    /**
-     * @var ServicePayment
-     */
-    private $servicePayment;
-    /**
-     * @var ServiceSchedulePayment
-     */
-    private $serviceSchedulePayment;
+    private PersonFactory $personFactory;
+
+    private PersonProvider $personProvider;
+
+    private ServicePersonSchedule $servicePersonSchedule;
+
+    private ModelEvent $event;
+
+    private bool $isOrg;
+
+    private ITranslator $translator;
+
+    private PaymentMachine $machine;
+
+    private ModelPayment $model;
+
+    private ServicePayment $servicePayment;
+
+    private ServiceSchedulePayment $serviceSchedulePayment;
+
+    private Container $container;
 
     /**
      * SelectForm constructor.
@@ -87,24 +68,36 @@ class SelectForm extends Control {
      * @param string[] $types
      * @param PaymentMachine $machine
      */
-    public function __construct(Container $container,
-                                ModelEvent $event,
-                                bool $isOrg,
-                                array $types,
-                                PaymentMachine $machine
+    public function __construct(
+        Container $container,
+        ModelEvent $event,
+        bool $isOrg,
+        array $types,
+        PaymentMachine $machine
     ) {
         parent::__construct();
+        $this->container = $container;
         $this->event = $event;
         $this->machine = $machine;
         $this->isOrg = $isOrg;
         $this->types = $types;
+        $container->callInjects($this);
+    }
 
-        $this->translator = $container->getByType(ITranslator::class);
-        $this->servicePayment = $container->getByType(ServicePayment::class);
-        $this->personFactory = $container->getByType(PersonFactory::class);
-        $this->personProvider = $container->getByType(PersonProvider::class);
-        $this->servicePersonSchedule = $container->getByType(ServicePersonSchedule::class);
-        $this->serviceSchedulePayment = $container->getByType(ServiceSchedulePayment::class);
+    public function injectPrimary(
+        ITranslator $translator,
+        ServicePayment $servicePayment,
+        PersonFactory $personFactory,
+        PersonProvider $personProvider,
+        ServicePersonSchedule $servicePersonSchedule,
+        ServiceSchedulePayment $serviceSchedulePayment
+    ): void {
+        $this->translator = $translator;
+        $this->servicePayment = $servicePayment;
+        $this->personFactory = $personFactory;
+        $this->personProvider = $personProvider;
+        $this->servicePersonSchedule = $servicePersonSchedule;
+        $this->serviceSchedulePayment = $serviceSchedulePayment;
     }
 
     /**
@@ -143,7 +136,7 @@ class SelectForm extends Control {
      * @throws JsonException
      */
     private function createForm(bool $create) {
-        $control = new FormControl();
+        $control = new FormControl($this->container);
         $form = $control->getForm();
         if ($this->isOrg) {
             $form->addComponent($this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider), 'person_id');

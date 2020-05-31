@@ -20,10 +20,7 @@ use Nette\Security\Permission;
  */
 class OwnerAssertion {
 
-    /**
-     * @var IUserStorage
-     */
-    private $user;
+    private IUserStorage $user;
 
     /**
      * OwnerAssertion constructor.

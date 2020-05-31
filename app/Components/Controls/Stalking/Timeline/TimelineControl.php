@@ -15,17 +15,13 @@ use Nette\DI\Container;
 
 /**
  * Class TimelineControl
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TimelineControl extends ReactComponent {
-    /**
-     * @var YearCalculator
-     */
-    private $yearCalculator;
-    /**
-     * @var ModelPerson
-     */
-    private $person;
+
+    private YearCalculator $yearCalculator;
+
+    private ModelPerson $person;
 
     /**
      * TimelineControl constructor.
@@ -35,7 +31,14 @@ class TimelineControl extends ReactComponent {
     public function __construct(Container $container, ModelPerson $person) {
         parent::__construct($container);
         $this->person = $person;
-        $this->yearCalculator = $container->getByType(YearCalculator::class);
+    }
+
+    /**
+     * @param YearCalculator $yearCalculator
+     * @return void
+     */
+    public function injectYearCalculator(YearCalculator $yearCalculator) {
+        $this->yearCalculator = $yearCalculator;
     }
 
     private function eventToArray(ModelEvent $event): array {
@@ -56,7 +59,7 @@ class TimelineControl extends ReactComponent {
 
         $dates = [
             'since' => [],
-            'until' => []
+            'until' => [],
         ];
         $orgs = [];
         foreach ($this->person->getOrgs() as $row) {
@@ -175,9 +178,9 @@ class TimelineControl extends ReactComponent {
      * @throws \Exception
      */
     public function getData(): string {
-        list($events, $calculatedEvents) = $this->calculateEvents();
-        list($dates, $longTimeEvents) = $this->calculateData();
-        list($first, $last) = $this->calculateFirstAndLast($events, $dates);
+        [$events, $calculatedEvents] = $this->calculateEvents();
+        [$dates, $longTimeEvents] = $this->calculateData();
+        [$first, $last] = $this->calculateFirstAndLast($events, $dates);
 
         $data = [
             'scale' => [

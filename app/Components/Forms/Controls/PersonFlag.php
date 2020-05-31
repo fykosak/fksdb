@@ -14,9 +14,9 @@ use Nette\Utils\Html;
  */
 class PersonFlag extends SelectBox {
 
-    const FLAG_YES = 'flag-yes';
+    public const FLAG_YES = 'flag-yes';
     // It's necessary that value for FLAG_NO cannot coerce to false/null.
-    const FLAG_NO = 'flag-no';
+    public const FLAG_NO = 'flag-no';
 
     /**
      * Should be self::FLAG_* values on output?

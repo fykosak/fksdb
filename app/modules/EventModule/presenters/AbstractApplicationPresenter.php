@@ -19,17 +19,15 @@ use Nette\Application\UI\Control;
 use Nette\InvalidStateException;
 
 /**
- * Class ApplicationPresenter
- * *
+ * Class AbstractApplicationPresenter
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractApplicationPresenter extends BasePresenter {
     use EventEntityTrait;
 
-    /** @var ApplicationHandlerFactory */
-    protected $applicationHandlerFactory;
+    protected ApplicationHandlerFactory $applicationHandlerFactory;
 
-    /** @var ServiceEventParticipant */
-    protected $serviceEventParticipant;
+    protected ServiceEventParticipant $serviceEventParticipant;
 
     public function injectHandlerFactory(ApplicationHandlerFactory $applicationHandlerFactory): void {
         $this->applicationHandlerFactory = $applicationHandlerFactory;
@@ -42,7 +40,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     /**
      * @throws BadRequestException
      */
-    final public function titleList() {
+    final public function titleList(): void {
         $this->setTitle(_('List of applications'), 'fa fa-users');
     }
 
@@ -53,7 +51,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws \Throwable
      */
-    final public function titleDetail(int $id) {
+    final public function titleDetail(int $id): void {
         $this->setTitle(sprintf(_('Application detail "%s"'), $this->loadEntity($id)->__toString()), 'fa fa-user');
     }
 
@@ -61,7 +59,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @return void
      * @throws BadRequestException
      */
-    final public function titleTransitions() {
+    final public function titleTransitions(): void {
         $this->setTitle(_('Group transitions'), 'fa fa-user');
     }
 
@@ -81,16 +79,17 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    protected function actionDetail(int $id) {
+    protected function actionDetail(int $id): void {
         $this->loadEntity($id);
     }
 
     /**
      * @param int $id
+     * @return void
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function renderDetail(int $id) {
+    public function renderDetail(int $id): void {
         $this->template->event = $this->getEvent();
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
     }
@@ -99,7 +98,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    public function renderList() {
+    public function renderList(): void {
         $this->template->event = $this->getEvent();
     }
 

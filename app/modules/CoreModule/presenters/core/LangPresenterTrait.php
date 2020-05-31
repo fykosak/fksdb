@@ -7,6 +7,7 @@ use FKSDB\Localization\GettextTranslator;
 use FKSDB\ORM\Models\ModelLogin;
 use Nette\Application\BadRequestException;
 use Nette\Http\Request;
+use Nette\Localization\ITranslator;
 use Nette\Security\User;
 
 /**
@@ -15,19 +16,18 @@ use Nette\Security\User;
  */
 trait LangPresenterTrait {
     /** @var string[] */
-    public static $languageNames = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
+    public static array $languageNames = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
 
-    /** @var GettextTranslator */
-    private $translator;
+    private ITranslator $translator;
 
     /**
      * @persistent
      * @internal
      */
-    public $lang;
+    public ?string $lang;
 
     /** @var string cache */
-    private $cacheLang;
+    private ?string $cacheLang;
 
     final public function injectTranslator(GettextTranslator $translator): void {
         $this->translator = $translator;
@@ -36,7 +36,7 @@ trait LangPresenterTrait {
     /**
      * @throws \Exception
      */
-    final protected function langTraitStartup() {
+    final protected function langTraitStartup(): void {
         $this->translator->setLang($this->getLang());
         /** @var LanguageChooser $languageChooser */
         $languageChooser = $this->getComponent('languageChooser');
@@ -87,7 +87,7 @@ trait LangPresenterTrait {
         return $this->cacheLang;
     }
 
-    final public function getTranslator(): GettextTranslator {
+    final public function getTranslator(): ITranslator {
         return $this->translator;
     }
 

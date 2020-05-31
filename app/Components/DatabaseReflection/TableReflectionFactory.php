@@ -16,10 +16,7 @@ use Nette\SmartObject;
 final class TableReflectionFactory {
     use SmartObject;
 
-    /**
-     * @var Container
-     */
-    private $container;
+    private Container $container;
 
     /**
      * PersonInfoFactory constructor.

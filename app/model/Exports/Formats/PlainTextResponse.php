@@ -14,8 +14,7 @@ use Nette\SmartObject;
 class PlainTextResponse implements IResponse {
     use SmartObject;
 
-    /** @var string */
-    private $content;
+    private string $content;
     /** @var */
     private $name;
 

@@ -19,25 +19,16 @@ class PersonContainerResolver implements IVisibilityResolver, IModifiabilityReso
 
     use SmartObject;
 
-    /**
-     * @var Field
-     */
-    private $field;
+    private Field $field;
 
     /**
      * @var mixed
      */
     private $condition;
 
-    /**
-     * @var SelfResolver
-     */
-    private $selfResolver;
+    private SelfResolver $selfResolver;
 
-    /**
-     * @var ExpressionEvaluator
-     */
-    private $evaluator;
+    private ExpressionEvaluator $evaluator;
 
     /**
      * PersonContainerResolver constructor.
@@ -53,26 +44,14 @@ class PersonContainerResolver implements IVisibilityResolver, IModifiabilityReso
         $this->evaluator = $evaluator;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return string
-     */
     public function getResolutionMode(ModelPerson $person): string {
         return (!$person->isNew() && $this->isModifiable($person)) ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return bool|mixed
-     */
     public function isModifiable(ModelPerson $person): bool {
         return $this->selfResolver->isModifiable($person) || $this->evaluator->evaluate($this->condition, $this->field);
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return bool|mixed
-     */
     public function isVisible(ModelPerson $person): bool {
         return $this->selfResolver->isVisible($person) || $this->evaluator->evaluate($this->condition, $this->field);
     }

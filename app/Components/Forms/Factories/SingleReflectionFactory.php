@@ -12,10 +12,8 @@ use Nette\Forms\Controls\BaseControl;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class SingleReflectionFactory {
-    /**
-     * @var TableReflectionFactory
-     */
-    protected $tableReflectionFactory;
+
+    protected TableReflectionFactory $tableReflectionFactory;
 
     /**
      * PersonHistoryFactory constructor.

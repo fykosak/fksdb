@@ -29,7 +29,7 @@ class ServiceTask extends AbstractServiceSingle {
      * @param int $tasknr
      * @return ModelTask|null
      */
-    public function findBySeries(ModelContest $contest, int $year, int $series, int $tasknr) {
+    public function findBySeries(ModelContest $contest, int $year, int $series, int $tasknr): ?ModelTask {
         /** @var ModelTask $result */
         $result = $this->getTable()->where([
             'contest_id' => $contest->contest_id,

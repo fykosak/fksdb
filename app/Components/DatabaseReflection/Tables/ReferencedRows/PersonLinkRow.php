@@ -11,14 +11,11 @@ use Nette\Utils\Html;
 
 /**
  * Class PersonLinkRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonLinkRow extends AbstractRow {
 
-    /**
-     * @var PresenterComponent
-     */
-    private $presenterComponent;
+    private PresenterComponent $presenterComponent;
 
     /**
      * PersonLinkRow constructor.

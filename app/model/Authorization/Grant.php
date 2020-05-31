@@ -11,17 +11,11 @@ use Nette\Security\IRole;
  */
 class Grant implements IRole {
 
-    const CONTEST_ALL = -1;
+    public const CONTEST_ALL = -1;
 
-    /**
-     * @var int
-     */
-    private $contestId;
+    private int $contestId;
 
-    /**
-     * @var string
-     */
-    private $roleId;
+    private string $roleId;
 
     /**
      * Grant constructor.
@@ -33,18 +27,11 @@ class Grant implements IRole {
         $this->roleId = $roleId;
     }
 
-    /**
-     * @return int
-     */
     public function getContestId(): int {
         return $this->contestId;
     }
 
-    /**
-     * @return string
-     */
     public function getRoleId(): string {
         return $this->roleId;
     }
-
 }

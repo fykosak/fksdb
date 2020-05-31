@@ -33,42 +33,24 @@ class WebServiceModel {
     /**
      * @var array  contest name => contest_id
      */
-    private $inverseContestMap;
+    private array $inverseContestMap;
 
-    /**
-     * @var ServiceContest
-     */
-    private $serviceContest;
+    private ServiceContest $serviceContest;
 
-    /**
-     * @var ResultsModelFactory
-     */
-    private $resultsModelFactory;
+    private ResultsModelFactory $resultsModelFactory;
 
-    /**
-     * @var StatsModelFactory
-     */
-    private $statsModelFactory;
+    private StatsModelFactory $statsModelFactory;
 
     /**
      * @var ModelLogin
      */
     private $authenticatedLogin;
 
-    /**
-     * @var IAuthenticator
-     */
-    private $authenticator;
+    private IAuthenticator $authenticator;
 
-    /**
-     * @var StoredQueryFactory
-     */
-    private $storedQueryFactory;
+    private StoredQueryFactory $storedQueryFactory;
 
-    /**
-     * @var ContestAuthorizator
-     */
-    private $contestAuthorizator;
+    private ContestAuthorizator $contestAuthorizator;
 
     /**
      * FKSDB\WebService\WebServiceModel constructor.

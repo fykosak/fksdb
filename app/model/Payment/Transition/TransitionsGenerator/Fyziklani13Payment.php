@@ -23,30 +23,19 @@ use Tracy\Debugger;
 
 /**
  * Class Fyziklani13Payment
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Fyziklani13Payment extends AbstractTransitionsGenerator {
 
-    /**
-     * @var Connection
-     */
-    private $connection;
-    /**
-     * @var ServicePayment
-     */
-    private $servicePayment;
-    /**
-     * @var EventAuthorizator
-     */
-    private $eventAuthorizator;
-    /**
-     * @var ServiceEmailMessage
-     */
-    private $serviceEmailMessage;
-    /**
-     * @var MailTemplateFactory
-     */
-    private $mailTemplateFactory;
+    private Connection $connection;
+
+    private ServicePayment $servicePayment;
+
+    private EventAuthorizator $eventAuthorizator;
+
+    private ServiceEmailMessage $serviceEmailMessage;
+
+    private MailTemplateFactory $mailTemplateFactory;
 
     /**
      * Fyziklani13Payment constructor.
@@ -144,9 +133,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
 
             $transition = new Transition($state, ModelPayment::STATE_CANCELED, _('Cancel payment'));
             $transition->setType(Transition::TYPE_DANGER);
-            $transition->setCondition(function () {
-                return true;
-            });
+            $transition->setCondition(fn() => true);
             $transition->beforeExecuteCallbacks[] = $this->getClosureDeleteRows();
             $transition->beforeExecuteCallbacks[] = function (ModelPayment $modelPayment) {
                 $modelPayment->update(['price' => null]);
@@ -181,9 +168,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
             $this->serviceEmailMessage->addMessageToSend($data);
         };
 
-        $transition->setCondition(function () {
-            return false;
-        });
+        $transition->setCondition(fn() => false);
         $transition->setType(Transition::TYPE_SUCCESS);
         $machine->addTransition($transition);
     }

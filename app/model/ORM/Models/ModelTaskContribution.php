@@ -17,9 +17,9 @@ use Nette\Database\Table\ActiveRow;
  */
 class ModelTaskContribution extends AbstractModelSingle implements IPersonReferencedModel, ITaskReferencedModel, IContestReferencedModel {
 
-    const TYPE_AUTHOR = 'author';
-    const TYPE_SOLUTION = 'solution';
-    const TYPE_GRADE = 'grade';
+    public const TYPE_AUTHOR = 'author';
+    public const TYPE_SOLUTION = 'solution';
+    public const TYPE_GRADE = 'grade';
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));

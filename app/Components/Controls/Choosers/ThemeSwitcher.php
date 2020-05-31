@@ -14,14 +14,10 @@ use Nette\Http\SessionSection;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ThemeSwitcher extends BaseComponent {
-    /**
-     * @var array
-     */
-    private $availableThemes = ['light', 'dark'];
-    /**
-     * @var Session
-     */
-    private $session;
+
+    private array $availableThemes = ['light', 'dark'];
+
+    private Session $session;
 
     /**
      * ThemeSwitcher constructor.
@@ -43,7 +39,7 @@ class ThemeSwitcher extends BaseComponent {
     }
 
 
-    public function render() {
+    public function render(): void {
         $this->template->availableThemes = $this->availableThemes;
         $this->template->theme = $this->getSelectedTheme();
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ThemeSwitcher.latte');
@@ -54,7 +50,7 @@ class ThemeSwitcher extends BaseComponent {
      * @param string $theme
      * @throws AbortException
      */
-    public function handleChangeTheme(string $theme) {
+    public function handleChangeTheme(string $theme): void {
         $session = $this->getSession();
         $session->theme = $theme;
         $this->redirect('this');

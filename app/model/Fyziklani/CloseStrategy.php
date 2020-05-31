@@ -7,7 +7,6 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use FyziklaniModule\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
 use Traversable;
@@ -18,20 +17,10 @@ use Traversable;
  * @author Lukáš Timko
  */
 class CloseStrategy {
-    /**
-     * @var BasePresenter
-     * @deprecated
-     */
-    protected $presenter;
 
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
-    /**
-     * @var ModelEvent
-     */
-    private $event;
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+
+    private ModelEvent $event;
 
     /**
      * CloseSubmitStrategy constructor.
@@ -49,7 +38,7 @@ class CloseStrategy {
      * @throws BadRequestException
      * @internal
      */
-    public function close(string $category = null): Html {
+    public function close(?string $category): Html {
         $connection = $this->serviceFyziklaniTeam->getConnection();
         $connection->beginTransaction();
         $teams = $this->getAllTeams($category);
@@ -65,7 +54,7 @@ class CloseStrategy {
      * @return Html
      * @throws BadRequestException
      */
-    public function __invoke(string $category = null): Html {
+    public function __invoke(?string $category): Html {
         return $this->close($category);
     }
 
@@ -130,11 +119,7 @@ class CloseStrategy {
         };
     }
 
-    /**
-     * @param string|null $category
-     * @return TypedTableSelection
-     */
-    private function getAllTeams(string $category = null): TypedTableSelection {
+    private function getAllTeams(?string $category): TypedTableSelection {
         $query = $this->serviceFyziklaniTeam->findParticipating($this->event);
         if ($category) {
             $query->where('category', $category);

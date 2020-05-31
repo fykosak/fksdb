@@ -12,7 +12,6 @@ use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IComponent;
@@ -24,15 +23,13 @@ use Nette\Utils\Strings;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
- * @method \BasePresenter getPresenter($need = TRUE)
+ * @method \BasePresenter getPresenter($need = true)
  */
 class ApplicationsGrid extends BaseComponent {
 
-    const NAME_PREFIX = 'application_';
-    /**
-     * @var IHolderSource
-     */
-    private $source;
+    public const NAME_PREFIX = 'application_';
+
+    private IHolderSource $source;
 
     /**
      * @var Holder[]
@@ -54,10 +51,9 @@ class ApplicationsGrid extends BaseComponent {
      */
     private $handlers = [];
 
-    /**
-     * @var ApplicationHandlerFactory
-     */
-    private $handlerFactory;
+    private ApplicationHandlerFactory $handlerFactory;
+
+    private EventDispatchFactory $eventDispatchFactory;
 
     /**
      * @var string
@@ -83,11 +79,6 @@ class ApplicationsGrid extends BaseComponent {
         $this->handlerFactory = $handlerFactory;
         $this->processSource();
     }
-
-    /**
-     * @var EventDispatchFactory
-     */
-    private $eventDispatchFactory;
 
     public function injectEventDispatch(EventDispatchFactory $eventDispatchFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;

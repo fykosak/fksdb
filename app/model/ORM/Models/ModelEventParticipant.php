@@ -39,7 +39,7 @@ use Nette\Security\IResource;
  * @property-read string schedule
  */
 class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel, IPersonReferencedModel, IResource {
-    const RESOURCE_ID = 'event.participant';
+    public const RESOURCE_ID = 'event.participant';
 
     /**
      * @return ModelPerson|null

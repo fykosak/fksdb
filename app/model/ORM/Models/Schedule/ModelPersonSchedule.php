@@ -82,28 +82,21 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
         }
     }
 
-    /**
-     * @param $newState
-     * @return void
-     */
-    public function updateState($newState) {
+    public function updateState(?string $newState): void {
         $this->update(['state' => $newState]);
     }
 
-    /**
-     * @return null|string
-     */
-    public function getState() {
+    public function getState(): ?string {
         return $this->state;
     }
 
     /**
      * @param Context $connection
      * @param IConventions $conventions
-     * @return IStateModel
+     * @return $this
      * @throws NotImplementedException
      */
-    public function refresh(Context $connection, IConventions $conventions): IStateModel {
+    public function refresh(Context $connection, IConventions $conventions): self {
         throw new NotImplementedException();
     }
 }

@@ -10,22 +10,14 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
 
 class RoutingDownload extends BaseComponent {
-    /**
-     * @var bool
-     */
-    private static $JSAttached = false;
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
-    /**
-     * @var ServiceFyziklaniRoom
-     */
-    private $serviceFyziklaniRoom;
+
+    private static bool $JSAttached = false;
+
+    private ModelEvent $event;
+
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+
+    private ServiceFyziklaniRoom $serviceFyziklaniRoom;
 
     /**
      * RoutingDownload constructor.

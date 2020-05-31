@@ -14,20 +14,11 @@ use Nette\SmartObject;
 abstract class AbstractModelMulti implements IModel {
     use SmartObject;
 
-    /**
-     * @var AbstractModelSingle
-     */
-    protected $mainModel;
+    protected AbstractModelSingle $mainModel;
 
-    /**
-     * @var AbstractModelSingle
-     */
-    protected $joinedModel;
+    protected AbstractModelSingle $joinedModel;
 
-    /**
-     * @var AbstractServiceMulti
-     */
-    protected $service;
+    protected ?AbstractServiceMulti $service;
 
     /**
      * @note DO NOT use directly, use AbstracServiceMulti::composeModel or FKSDB\ORM\AbstractModelMulti::createFromExistingModels.
@@ -36,7 +27,7 @@ abstract class AbstractModelMulti implements IModel {
      * @param AbstractModelSingle $mainModel
      * @param AbstractModelSingle $joinedModel
      */
-    public function __construct($service, AbstractModelSingle $mainModel, AbstractModelSingle $joinedModel) {
+    public function __construct(?AbstractServiceMulti $service, AbstractModelSingle $mainModel, AbstractModelSingle $joinedModel) {
         if ($service == null) {
             $this->joinedModel = $joinedModel;
             $this->mainModel = $mainModel;
@@ -152,7 +143,7 @@ abstract class AbstractModelMulti implements IModel {
      * @param bool $need
      * @return mixed
      */
-    public function getPrimary($need = TRUE) {
+    public function getPrimary($need = true) {
         return $this->getJoinedModel()->getPrimary($need);
     }
 
@@ -160,7 +151,7 @@ abstract class AbstractModelMulti implements IModel {
      * @param bool $need
      * @return string
      */
-    public function getSignature($need = TRUE) {
+    public function getSignature($need = true) {
         return implode('|', (array)$this->getPrimary($need));
     }
 

@@ -18,10 +18,7 @@ use SQL\ViewDataSource;
  */
 class ContestantsGrid extends BaseGrid {
 
-    /**
-     * @var ServiceContestant
-     */
-    private $serviceContestant;
+    private ServiceContestant $serviceContestant;
 
     public function injectServiceContestant(ServiceContestant $serviceContestant): void {
         $this->serviceContestant = $serviceContestant;

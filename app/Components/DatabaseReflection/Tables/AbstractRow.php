@@ -24,13 +24,9 @@ abstract class AbstractRow {
     public const PERMISSION_ALLOW_BASIC = 16;
     public const PERMISSION_ALLOW_RESTRICT = 128;
     public const PERMISSION_ALLOW_FULL = 1024;
-    /**
-     * @var string
-     */
+
     private ?string $modelClassName = null;
-    /**
-     * @var string[]
-     */
+
     private ?array $referencedAccess = null;
 
     public function createField(...$args): BaseControl {

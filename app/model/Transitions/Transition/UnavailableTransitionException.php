@@ -7,7 +7,7 @@ use Nette\InvalidStateException;
 
 /**
  * Class UnavailableTransitionException
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class UnavailableTransitionException extends \Exception {
     /**

@@ -19,11 +19,11 @@ use Nette\Utils\Html;
  */
 class AutocompleteSelectBox extends TextBase {
 
-    const SELECTOR_CLASS = 'autocompleteSelect';
-    const PARAM_SEARCH = 'acQ';
-    const PARAM_NAME = 'acName';
-    const INTERNAL_DELIMITER = ',';
-    const META_ELEMENT_SUFFIX = '__meta'; // must be same with constant in autocompleteSelect.js
+    public const SELECTOR_CLASS = 'autocompleteSelect';
+    public const PARAM_SEARCH = 'acQ';
+    public const PARAM_NAME = 'acName';
+    public const INTERNAL_DELIMITER = ',';
+    public const META_ELEMENT_SUFFIX = '__meta'; // must be same with constant in autocompleteSelect.js
 
     /**
      * @var IDataProvider

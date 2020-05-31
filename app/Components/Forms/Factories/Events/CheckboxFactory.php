@@ -15,8 +15,6 @@ use Nette\Forms\IControl;
  * *
  */
 class CheckboxFactory extends AbstractFactory {
-    public function __construct() {
-    }
 
     /**
      * @param Field $field

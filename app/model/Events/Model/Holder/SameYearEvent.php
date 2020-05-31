@@ -18,10 +18,7 @@ class SameYearEvent implements IEventRelation {
      */
     private $eventTypeId;
 
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
+    private ServiceEvent $serviceEvent;
 
     /**
      * SameYearEvent constructor.

@@ -20,22 +20,13 @@ class ServiceQuizQuestion extends AbstractServiceSingle {
         return DbNames::TAB_QUIZ;
     }
 
-    /**
-     * Find question from quiz by task
-     * @param ModelTask $task
-     * @param int $questionNr
-     * @return ModelQuizQuestion|NULL
-     */
-    public function findByTask(ModelTask $task, int $questionNr) {
+    public function findByTask(ModelTask $task, int $questionNr): ?ModelQuizQuestion {
+        /** @var ModelQuizQuestion $result */
         $result = $this->getTable()->where([
             'task_id' => $task->task_id,
             'question_nr' => $questionNr,
         ])->fetch();
+        return $result ?: null;
 
-        if ($result !== false) {
-            return ModelQuizQuestion::createFromActiveRow($result);
-        } else {
-            return null;
-        }
     }
 }

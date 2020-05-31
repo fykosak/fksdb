@@ -11,23 +11,19 @@ use Nette\Application\UI\Control;
  */
 abstract class WebLoader extends Control {
 
-    const FILENAME = 'file';
-    const ATTRIBUTES = 'attr';
-    const UNTAGGED = '__untagged';
+    public const FILENAME = 'file';
+    public const ATTRIBUTES = 'attr';
+    public const UNTAGGED = '__untagged';
     /**
      * @var string[]
      */
-    private $files = [];
+    private array $files = [];
     /**
      * @var string[]
      */
-    private $inlines = [];
+    private array $inlines = [];
 
-    /**
-     * @param $file
-     * @param array $attributes
-     */
-    public function addFile(string $file, array $attributes = []) {
+    public function addFile(string $file, array $attributes = []): void {
         $hash = $file . join(':', $attributes);
         $this->files[$hash] = [
             self::FILENAME => $file,
@@ -36,39 +32,27 @@ abstract class WebLoader extends Control {
         $this->invalidateControl();
     }
 
-    /**
-     * @param $file
-     * @param array $attributes
-     */
-    public function removeFile(string $file, array $attributes = []) {
+    public function removeFile(string $file, array $attributes = []): void {
         $hash = $file . join(':', $attributes);
         unset($this->files[$hash]);
         $this->invalidateControl();
     }
 
-    /**
-     * @param $inline
-     * @param string $tag
-     */
-    public function addInline(string $inline, string $tag = self::UNTAGGED) {
+
+    public function addInline(string $inline, string $tag = self::UNTAGGED): void {
         $this->inlines[$tag] = $inline;
         $this->invalidateControl();
     }
 
-    /**
-     * @param $tag
-     */
-    public function removeInline(string $tag) {
+
+    public function removeInline(string $tag): void {
         if ($tag != self::UNTAGGED) {
             unset($this->inlines[$tag]);
         }
         $this->invalidateControl();
     }
 
-    /**
-     * @param mixed ...$args
-     */
-    public function render(...$args) {
+    public function render(...$args): void {
         $files = [];
         if (count($args) == 1 && is_array($args[0])) {
             foreach ($args[0] as $file => $attributes) {
@@ -99,31 +83,17 @@ abstract class WebLoader extends Control {
         $template->render();
     }
 
-    /**
-     * @param $file
-     * @return bool
-     */
     public static function isRelative(string $file): bool {
         return !preg_match('@https?://|/@Ai', $file);
     }
 
-    /**
-     * @return string
-     */
     abstract protected function getTemplateFilePrefix(): string;
 
-    /**
-     * @return array
-     */
     protected function getFiles(): array {
         return $this->files;
     }
 
-    /**
-     * @return array
-     */
     protected function getInLines(): array {
         return $this->inlines;
     }
-
 }

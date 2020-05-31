@@ -18,10 +18,7 @@ use XSLTProcessor;
 class XSLFormat implements IExportFormat {
     use SmartObject;
 
-    /**
-     * @var StoredQuery
-     */
-    private $storedQuery;
+    private StoredQuery $storedQuery;
 
     /**
      * @var array
@@ -33,10 +30,7 @@ class XSLFormat implements IExportFormat {
      */
     private $xslFile;
 
-    /**
-     * @var IXMLNodeSerializer
-     */
-    private $xmlSerializer;
+    private IXMLNodeSerializer $xmlSerializer;
 
     /**
      * XSLFormat constructor.

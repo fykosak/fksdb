@@ -2,6 +2,7 @@
 
 namespace FKSDB\Payment\Transition;
 
+use FKSDB\Exceptions\NotFoundException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServiceEvent;
@@ -14,25 +15,17 @@ use Nette\Database\Context;
 
 /**
  * Class PaymentMachine
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PaymentMachine extends Machine {
-    /**
-     * @var PriceCalculator
-     */
-    private $priceCalculator;
-    /**
-     * @var AbstractSymbolGenerator
-     */
-    private $symbolGenerator;
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
+
+    private PriceCalculator $priceCalculator;
+
+    private AbstractSymbolGenerator $symbolGenerator;
+
+    private ModelEvent $event;
+
+    private ServiceEvent $serviceEvent;
 
     /**
      * PaymentMachine constructor.
@@ -45,35 +38,28 @@ class PaymentMachine extends Machine {
         $this->serviceEvent = $serviceEvent;
     }
 
-    /**
-     * @param AbstractTransitionsGenerator $factory
-     * @return void
-     */
-    public function setTransitions(AbstractTransitionsGenerator $factory) {
+    public function setTransitions(AbstractTransitionsGenerator $factory): void {
         $factory->createTransitions($this);
     }
 
     /**
      * @param int $eventId
      * @return void
+     * @throws NotFoundException
      */
-    public function setEventId(int $eventId) {
-        $this->event = $this->serviceEvent->findByPrimary($eventId);
+    public function setEventId(int $eventId): void {
+        $event = $this->serviceEvent->findByPrimary($eventId);
+        if (is_null($event)) {
+            throw new NotFoundException(sprintf('Event %d not found', $eventId));
+        }
+        $this->event = $event;
     }
 
-    /**
-     * @param AbstractSymbolGenerator $abstractSymbolGenerator
-     * @return void
-     */
-    public function setSymbolGenerator(AbstractSymbolGenerator $abstractSymbolGenerator) {
+    public function setSymbolGenerator(AbstractSymbolGenerator $abstractSymbolGenerator): void {
         $this->symbolGenerator = $abstractSymbolGenerator;
     }
 
-    /**
-     * @param PriceCalculator $priceCalculator
-     * @return void
-     */
-    public function setPriceCalculator(PriceCalculator $priceCalculator) {
+    public function setPriceCalculator(PriceCalculator $priceCalculator): void {
         $this->priceCalculator = $priceCalculator;
     }
 

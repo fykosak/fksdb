@@ -27,20 +27,11 @@ use Tracy\Debugger;
  */
 class ImportComponent extends BaseComponent {
 
-    /**
-     * @var Machine
-     */
-    private $machine;
+    private Machine $machine;
 
-    /**
-     * @var SingleEventSource
-     */
-    private $source;
+    private SingleEventSource $source;
 
-    /**
-     * @var ApplicationHandler
-     */
-    private $handler;
+    private ApplicationHandler $handler;
 
     /**
      * ImportComponent constructor.
@@ -60,7 +51,7 @@ class ImportComponent extends BaseComponent {
      * @return FormControl
      * @throws BadRequestException
      */
-    protected function createComponentFormImport() {
+    protected function createComponentFormImport(): FormControl {
         $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
@@ -92,10 +83,7 @@ class ImportComponent extends BaseComponent {
         return $control;
     }
 
-    /**
-     * @return void
-     */
-    public function render() {
+    public function render(): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ImportComponent.latte');
         $this->template->render();
     }
@@ -107,7 +95,7 @@ class ImportComponent extends BaseComponent {
      * @throws BadRequestException
      * @throws JsonException
      */
-    private function handleFormImport(Form $form) {
+    private function handleFormImport(Form $form): void {
         $values = $form->getValues();
         try {
             // process form values

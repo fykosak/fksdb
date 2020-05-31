@@ -16,7 +16,7 @@ use Nette\Utils\Html;
  * TODO update roles
  */
 class OrderRow extends AbstractOrgRowFactory {
-    const ORDER_MAPPING = [
+    public const ORDER_MAPPING = [
         0 => '0 - newbie',
         1 => '1 - pasivny org',
         2 => '1 - org',

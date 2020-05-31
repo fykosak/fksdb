@@ -24,16 +24,11 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
 
     use SmartObject;
 
-    const CONTROL_NAME = 'privacy';
+    public const CONTROL_NAME = 'privacy';
 
-    /**
-     * @var ServicePersonInfo
-     */
-    private $servicePersonInfo;
-    /**
-     * @var PersonInfoFactory
-     */
-    private $personInfoFactory;
+    private ServicePersonInfo $servicePersonInfo;
+
+    private PersonInfoFactory $personInfoFactory;
 
     /**
      * PrivacyPolicy constructor.

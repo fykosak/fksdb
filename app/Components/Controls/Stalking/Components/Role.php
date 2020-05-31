@@ -9,15 +9,11 @@ use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * Class Role
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Role extends AbstractStalkingComponent {
-    /**
-     * @param ModelPerson $person
-     * @param int $userPermissions
-     * @return void
-     */
-    public function render(ModelPerson $person, int $userPermissions) {
+
+    public function render(ModelPerson $person, int $userPermissions): void {
         $this->beforeRender($person, $userPermissions);
         $template = $this->template;
         $login = $person->getLogin();

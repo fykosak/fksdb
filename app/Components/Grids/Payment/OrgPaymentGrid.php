@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids\Payment;
 
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\InvalidLinkException;
@@ -16,10 +17,8 @@ use NiftyGrid\DuplicateGlobalButtonException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class OrgPaymentGrid extends PaymentGrid {
-    /**
-     * @var ModelEvent
-     */
-    private $event;
+
+    private ModelEvent $event;
 
     /**
      * OrgPaymentGrid constructor.
@@ -38,6 +37,7 @@ class OrgPaymentGrid extends PaymentGrid {
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      * @throws NotImplementedException
+     * @throws BadTypeException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

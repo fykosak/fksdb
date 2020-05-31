@@ -18,21 +18,13 @@ use Nette\Utils\JsonException;
  * *
  */
 class ScheduleField extends TextInput {
-
     use ReactField;
 
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /**
-     * @var string
-     */
-    private $type;
-    /**
-     * @var ServiceScheduleItem
-     */
-    private $serviceScheduleItem;
+    private ModelEvent $event;
+
+    private string $type;
+
+    private ServiceScheduleItem $serviceScheduleItem;
 
     /**
      * ScheduleField constructor.

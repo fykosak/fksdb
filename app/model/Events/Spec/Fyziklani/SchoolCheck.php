@@ -16,10 +16,7 @@ use Nette\Forms\Controls\BaseControl;
  */
 abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment {
 
-    /**
-     * @var ServicePersonHistory
-     */
-    private $servicePersonHistory;
+    private ServicePersonHistory $servicePersonHistory;
 
     /**
      * @var Holder
@@ -41,10 +38,7 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
         return $this->holder;
     }
 
-    /**
-     * @param Holder $holder
-     */
-    public function setHolder(Holder $holder) {
+    public function setHolder(Holder $holder): void {
         $this->holder = $holder;
     }
 

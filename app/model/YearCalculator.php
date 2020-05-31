@@ -20,27 +20,18 @@ class YearCalculator {
     /**
      * @const No. of years of shift for forward registration.
      */
-    const FORWARD_SHIFT = 1;
+    public const FORWARD_SHIFT = 1;
 
     /**
      * @const First month of the academic year (for high schoolers).
      */
-    const FIRST_AC_MONTH = 9;
+    public const FIRST_AC_MONTH = 9;
 
-    /**
-     * @var ServiceContestYear
-     */
-    private $serviceContestYear;
+    private ServiceContestYear $serviceContestYear;
 
-    /**
-     * @var ServiceContest
-     */
-    private $serviceContest;
+    private ServiceContest $serviceContest;
 
-    /**
-     * @var GlobalParameters
-     */
-    private $globalParameters;
+    private GlobalParameters $globalParameters;
     /**
      * @var int[][]
      */
@@ -74,7 +65,7 @@ class YearCalculator {
      * @return int
      * @throws InvalidArgumentException
      */
-    public function getAcademicYear(ActiveRow $contest, $year): int {
+    public function getAcademicYear(ActiveRow $contest, int $year): int {
         if (!isset($this->cache[$contest->contest_id]) || !isset($this->cache[$contest->contest_id][$year])) {
             throw new InvalidArgumentException("No academic year defined for {$contest->contest_id}:$year.");
         }
@@ -155,7 +146,7 @@ class YearCalculator {
         }
     }
 
-    private function preloadCache() {
+    private function preloadCache(): void {
         /** @var ModelContestYear $model */
         foreach ($this->serviceContestYear->getTable()->order('year') as $model) {
             if (!isset($this->cache[$model->contest_id])) {

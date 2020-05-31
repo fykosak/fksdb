@@ -11,15 +11,12 @@ use FKSDB\Authentication\SSO\IGlobalSession;
  */
 class Authentication {
 
-    const PARAM_BACKLINK = 'backlink';
-    const PARAM_FLAG = 'flag';
-    const PARAM_GSID = 'gsid';
-    const FLAG_SSO_LOGIN = 'sso';
+    public const PARAM_BACKLINK = 'backlink';
+    public const PARAM_FLAG = 'flag';
+    public const PARAM_GSID = 'gsid';
+    public const FLAG_SSO_LOGIN = 'sso';
 
-    /**
-     * @var IGlobalSession
-     */
-    private $globalSession;
+    private IGlobalSession $globalSession;
 
     /**
      * @var string

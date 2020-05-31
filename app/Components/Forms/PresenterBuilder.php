@@ -13,10 +13,7 @@ use Nette\Application\UI\Presenter;
  */
 class PresenterBuilder {
 
-    /**
-     * @var PresenterFactory
-     */
-    private $presenterFactory;
+    private PresenterFactory $presenterFactory;
     /**
      * @var array
      */

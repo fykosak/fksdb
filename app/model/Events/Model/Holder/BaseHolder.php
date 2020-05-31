@@ -24,13 +24,10 @@ use Nette\Utils\Arrays;
  */
 class BaseHolder {
 
-    const STATE_COLUMN = 'status';
-    const EVENT_COLUMN = 'event_id';
+    public const STATE_COLUMN = 'status';
+    public const EVENT_COLUMN = 'event_id';
 
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
     /**
      * @var string

@@ -13,7 +13,7 @@ use WebService\IXMLNodeSerializer;
  */
 class AESOPFormat extends XSLFormat {
 
-    const ID_SCOPE = 'fksdb.person_id';
+    public const ID_SCOPE = 'fksdb.person_id';
 
     /**
      * AESOPFormat constructor.

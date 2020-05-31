@@ -23,23 +23,20 @@ use Nette\Utils\Arrays;
  */
 class ReferencedContainer extends ContainerWithOptions {
 
-    const ID_MASK = 'frm%s-%s';
-    const CSS_AJAX = 'ajax';
-    const JSON_DATA = 'referencedContainer';
-    const CONTROL_SEARCH = '_c_search';
-    const CONTROL_COMPACT = '_c_compact';
-    const SUBMIT_SEARCH = '__search';
-    const SUBMIT_CLEAR = '__clear';
+    public const ID_MASK = 'frm%s-%s';
+    public const CSS_AJAX = 'ajax';
+    public const JSON_DATA = 'referencedContainer';
+    public const CONTROL_SEARCH = '_c_search';
+    public const CONTROL_COMPACT = '_c_compact';
+    public const SUBMIT_SEARCH = '__search';
+    public const SUBMIT_CLEAR = '__clear';
 
     /**
      * @var Component[]
      */
     private $hiddenComponents = [];
 
-    /**
-     * @var ReferencedId
-     */
-    private $referencedId;
+    private ReferencedId $referencedId;
 
     /**
      * @var bool

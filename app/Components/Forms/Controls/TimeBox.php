@@ -14,7 +14,7 @@ use Nette\Forms\Form;
  */
 class TimeBox extends TextInput {
 
-    const TIME_FORMAT = 'H:i:s';
+    public const TIME_FORMAT = 'H:i:s';
 
     /**
      * TimeBox constructor.

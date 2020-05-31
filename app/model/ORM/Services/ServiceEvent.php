@@ -37,7 +37,7 @@ class ServiceEvent extends AbstractServiceSingle {
      * @return ModelEvent|null
      * TODO
      */
-    public function getByEventTypeId(ModelContest $contest, int $year, int $eventTypeId) {
+    public function getByEventTypeId(ModelContest $contest, int $year, int $eventTypeId): ?ModelEvent {
         /** @var ModelEvent $event */
         $event = $this->getEvents($contest, $year)->where(DbNames::TAB_EVENT . '.event_type_id', $eventTypeId)->fetch();
         return $event ?: null;

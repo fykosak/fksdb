@@ -17,10 +17,8 @@ use SQL\SearchableDataSource;
 class TaskGrid extends BaseGrid {
 
     private ServiceFyziklaniTask $serviceFyziklaniTask;
-    /**
-     * @var ModelEvent
-     */
-    private $event;
+
+    private ModelEvent $event;
 
     /**
      * FyziklaniTaskGrid constructor.

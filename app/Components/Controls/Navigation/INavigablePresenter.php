@@ -22,7 +22,7 @@ interface INavigablePresenter extends IPresenter {
      * @param string $backLink
      * @return string|null  original value of the backlink parameter
      */
-    public function setBackLink($backLink);
+    public function setBackLink($backLink): ?string;
 
     /**
      * Returns title object of the current view.

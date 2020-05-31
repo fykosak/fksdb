@@ -11,9 +11,9 @@ use FKSDB\ORM\IModel;
  */
 interface IReferencedSetter {
 
-    const MODE_NORMAL = 'MODE_NORMAL';
-    const MODE_FORCE = 'MODE_FORCE';
-    const MODE_ROLLBACK = 'MODE_ROLLBACK';
+    public const MODE_NORMAL = 'MODE_NORMAL';
+    public const MODE_FORCE = 'MODE_FORCE';
+    public const MODE_ROLLBACK = 'MODE_ROLLBACK';
 
     /**
      * @param ReferencedContainer $container

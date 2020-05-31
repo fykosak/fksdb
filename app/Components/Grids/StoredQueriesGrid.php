@@ -23,19 +23,13 @@ use OrgModule\ExportPresenter;
 class StoredQueriesGrid extends BaseGrid {
     /** @const No. of characters that are showed from query description. */
 
-    const DESCRIPTION_TRUNC = 80;
+    public const DESCRIPTION_TRUNC = 80;
 
-    /**
-     * @var ServiceStoredQuery
-     */
-    private $serviceStoredQuery;
+    private ServiceStoredQuery $serviceStoredQuery;
 
-    /**
-     * @var ContestAuthorizator
-     */
-    private $contestAuthorizator;
-    /** @var bool */
-    private $isFilteredByTag = false;
+    private ContestAuthorizator $contestAuthorizator;
+
+    private bool $isFilteredByTag = false;
 
     /**
      * StoredQueriesGrid constructor.

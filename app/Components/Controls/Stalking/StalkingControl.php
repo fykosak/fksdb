@@ -12,10 +12,10 @@ use FKSDB\ORM\Models\ModelPerson;
 
 abstract class StalkingControl extends BaseComponent {
 
-    const PERMISSION_FULL = 1024;
-    const PERMISSION_RESTRICT = 128;
-    const PERMISSION_BASIC = 16;
-    const PERMISSION_USE_FIELD_LEVEL = 2048;
+    public const PERMISSION_FULL = 1024;
+    public const PERMISSION_RESTRICT = 128;
+    public const PERMISSION_BASIC = 16;
+    public const PERMISSION_USE_FIELD_LEVEL = 2048;
 
     protected TableReflectionFactory $tableReflectionFactory;
 

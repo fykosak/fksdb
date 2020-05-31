@@ -12,8 +12,8 @@ use Nette\Database\Table\Selection;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceContestant extends AbstractServiceSingle {
-    /** @var string */
-    protected $viewName = DbNames::VIEW_CONTESTANT;
+
+    protected string $viewName = DbNames::VIEW_CONTESTANT;
 
     public function getModelClassName(): string {
         return ModelContestant::class;

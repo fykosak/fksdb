@@ -13,9 +13,9 @@ use Nette\Utils\ArrayHash;
  */
 interface IReferencedHandler {
 
-    const RESOLUTION_OVERWRITE = 'overwrite';
-    const RESOLUTION_KEEP = 'keep';
-    const RESOLUTION_EXCEPTION = 'exception';
+    public const RESOLUTION_OVERWRITE = 'overwrite';
+    public const RESOLUTION_KEEP = 'keep';
+    public const RESOLUTION_EXCEPTION = 'exception';
 
     public function getResolution(): string;
 

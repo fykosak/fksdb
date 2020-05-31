@@ -16,20 +16,16 @@ use Nette\DI\Container;
  */
 abstract class AbstractForm extends FormControl {
 
-    const CONT_ADDRESS = 'address';
-    const CONT_SCHOOL = 'school';
+    public const CONT_ADDRESS = 'address';
+    public const CONT_SCHOOL = 'school';
 
-    /** @var ServiceAddress */
-    protected $serviceAddress;
+    protected ServiceAddress $serviceAddress;
 
-    /** @var ServiceSchool */
-    protected $serviceSchool;
+    protected ServiceSchool $serviceSchool;
 
-    /** @var SchoolFactory */
-    protected $schoolFactory;
+    protected SchoolFactory $schoolFactory;
 
-    /** @var AddressFactory */
-    protected $addressFactory;
+    protected AddressFactory $addressFactory;
 
     /**
      * AbstractForm constructor.

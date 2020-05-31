@@ -39,7 +39,6 @@ class TaskCodePreprocessor {
         if ($length > 9) {
             throw new TaskCodeException(_('Code is too long'));
         }
-
         return str_repeat('0', 9 - $length) . strtoupper($code);
     }
 }

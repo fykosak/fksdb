@@ -18,7 +18,7 @@ class PizzaPresenter extends BasePresenter {
     /**
      * @var ModelPerson[]
      */
-    private $persons = [];
+    private array $persons = [];
 
     private PersonFactory $personFactory;
 
@@ -52,11 +52,11 @@ class PizzaPresenter extends BasePresenter {
         return $control;
     }
 
-    public function renderDefault() {
+    public function renderDefault(): void {
         $this->template->persons = $this->persons;
     }
 
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setTitle(_('Pizza'), 'fa fa-cutlery');
     }
 }

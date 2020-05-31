@@ -14,14 +14,10 @@ use Nette\Templating\ITemplate;
  * @property FileTemplate $template
  */
 abstract class BaseComponent extends Control {
-    /**
-     * @var Container
-     */
-    private $context;
-    /**
-     * @var ITranslator
-     */
-    private $translator;
+
+    private Container $context;
+
+    private ITranslator $translator;
 
     /**
      * SubmitsTableControl constructor.
@@ -41,16 +37,13 @@ abstract class BaseComponent extends Control {
      * @param null $class
      * @return ITemplate
      */
-    protected function createTemplate($class = NULL) {
+    protected function createTemplate($class = null) {
         $template = parent::createTemplate($class);
         $template->setTranslator($this->translator);
         return $template;
     }
 
-    /**
-     * @return Container
-     */
-    final protected function getContext() {
+    final protected function getContext(): Container {
         return $this->context;
     }
 }

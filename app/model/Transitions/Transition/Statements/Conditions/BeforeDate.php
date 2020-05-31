@@ -6,14 +6,12 @@ use DateTime;
 use FKSDB\Transitions\Statements\Statement;
 
 /**
- * Class DateTo
- * *
+ * Class BeforeDate
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class BeforeDate extends Statement {
-    /**
-     * @var DateTime
-     */
-    private $to;
+
+    private \DateTimeInterface $to;
 
     /**
      * DateBetween constructor.

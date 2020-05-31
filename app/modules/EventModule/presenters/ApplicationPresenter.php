@@ -7,24 +7,23 @@ use FKSDB\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Events\ImportComponent;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
-use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Models\ModelEventParticipant;
+use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
 /**
  * Class ApplicationPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ApplicationPresenter extends AbstractApplicationPresenter {
     /**
      * @return void
      * @throws BadRequestException
      */
-    public function titleImport() {
+    public function titleImport(): void {
         $this->setTitle(_('Application import'), 'fa fa-upload');
     }
 
@@ -40,7 +39,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws BadRequestException
      * use same method of permissions as trait
      */
-    public function authorizedImport() {
+    public function authorizedImport(): void {
         $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'import'));
     }
 
@@ -75,7 +74,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws ForbiddenRequestException
      * @throws NeonSchemaException
      */
-    public function renderDetail(int $id) {
+    public function renderDetail(int $id): void {
         parent::renderDetail($id);
         $this->template->fields = $this->getHolder()->getPrimaryHolder()->getFields();
         $this->template->model = $this->loadEntity($id);
@@ -87,10 +86,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
         ];
     }
 
-    /**
-     * @return AbstractServiceSingle
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServiceEventParticipant {
         return $this->serviceEventParticipant;
     }
 
