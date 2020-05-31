@@ -23,31 +23,22 @@ use Nette\Security\IResource;
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
 
-    const TEAM_EVENTS = [1, 9, 13];
+    public const TEAM_EVENTS = [1, 9, 13];
 
-    /** @var ModelEvent */
-    private $event;
-    /** @var Holder */
-    private $holder;
+    private ModelEvent $event;
+    private Holder $holder;
 
     /**
      * @var int
      * @persistent
      */
-    public $eventId;
+    public int $eventId;
 
-    /** @var ServiceEvent */
-    protected $serviceEvent;
-    /**
-     * @var EventDispatchFactory
-     */
-    private $eventDispatchFactory;
+    protected ServiceEvent $serviceEvent;
 
-    /**
-     * @param ServiceEvent $serviceEvent
-     * @return void
-     */
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+    private EventDispatchFactory $eventDispatchFactory;
+
+    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 
@@ -55,11 +46,12 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->serviceEvent;
     }
 
-    /**
-     * @param EventDispatchFactory $eventDispatchFactory
-     */
-    public function injectEventDispatch(EventDispatchFactory $eventDispatchFactory) {
+    public function injectEventDispatch(EventDispatchFactory $eventDispatchFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
+    }
+
+    protected function getEventDispatchFactory(): EventDispatchFactory {
+        return $this->eventDispatchFactory;
     }
 
     /**
@@ -103,9 +95,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected function getHolder(): Holder {
         if (!$this->holder) {
-            /** @var EventDispatchFactory $factory */
-            $factory = $this->getContext()->getByType(EventDispatchFactory::class);
-            $this->holder = $factory->getDummyHolder($this->getEvent());
+            $this->holder = $this->getEventDispatchFactory()->getDummyHolder($this->getEvent());
         }
         return $this->holder;
     }

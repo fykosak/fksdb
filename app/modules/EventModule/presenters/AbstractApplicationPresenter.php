@@ -31,19 +31,11 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     /** @var ServiceEventParticipant */
     protected $serviceEventParticipant;
 
-    /**
-     * @param ApplicationHandlerFactory $applicationHandlerFactory
-     * @return void
-     */
-    public function injectHandlerFactory(ApplicationHandlerFactory $applicationHandlerFactory) {
+    public function injectHandlerFactory(ApplicationHandlerFactory $applicationHandlerFactory): void {
         $this->applicationHandlerFactory = $applicationHandlerFactory;
     }
 
-    /**
-     * @param ServiceEventParticipant $serviceEventParticipant
-     * @return void
-     */
-    public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant) {
+    public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant): void {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 

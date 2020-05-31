@@ -36,11 +36,7 @@ class MassTransitionsControl extends BaseComponent {
         $this->event = $event;
     }
 
-    /**
-     * @param EventDispatchFactory $eventDispatchFactory
-     * @return void
-     */
-    public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory) {
+    public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 

@@ -42,12 +42,7 @@ class AllPersonsGrid extends BaseGrid {
         $this->event = $event;
     }
 
-    /**
-     * @param YearCalculator $yearCalculator
-     * @param ServicePersonSchedule $servicePersonSchedule
-     * @return void
-     */
-    public function injectPrimary(YearCalculator $yearCalculator, ServicePersonSchedule $servicePersonSchedule) {
+    public function injectPrimary(YearCalculator $yearCalculator, ServicePersonSchedule $servicePersonSchedule): void {
         $this->yearCalculator = $yearCalculator;
         $this->servicePersonSchedule = $servicePersonSchedule;
     }

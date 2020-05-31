@@ -15,16 +15,13 @@ use Nette\Application\UI\Control;
  */
 class EventOrgPresenter extends BasePresenter {
     use EventEntityTrait;
+
     /**
      * @var ServiceEventOrg
      */
     private $serviceEventOrg;
 
-    /**
-     * @param ServiceEventOrg $serviceEventOrg
-     * @return void
-     */
-    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
+    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg): void {
         $this->serviceEventOrg = $serviceEventOrg;
     }
 
@@ -50,7 +47,7 @@ class EventOrgPresenter extends BasePresenter {
      */
     public function actionDelete(int $id) {
         try {
-            list($message) = $this->traitHandleDelete($id);
+            [$message] = $this->traitHandleDelete($id);
             $this->flashMessage($message->getMessage(), $message->getLevel());
             $this->redirect('list');
         } catch (BadRequestException $exception) {

@@ -16,21 +16,11 @@ use Nette\Application\BadRequestException;
  */
 abstract class BasePresenter extends EventBasePresenter {
 
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    /**
-     * @var ServiceFyziklaniSubmit
-     */
-    private $serviceFyziklaniSubmit;
+    private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
 
-    /**
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
-     * @return void
-     */
-    public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
+    public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit): void {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
     }
 
@@ -38,11 +28,7 @@ abstract class BasePresenter extends EventBasePresenter {
         return $this->serviceFyziklaniSubmit;
     }
 
-    /**
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @return void
-     */
-    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 

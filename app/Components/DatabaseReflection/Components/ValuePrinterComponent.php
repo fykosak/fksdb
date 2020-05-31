@@ -4,26 +4,22 @@ namespace FKSDB\Components\DatabaseReflection;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
+use Nette\Application\BadRequestException;
 
 /**
  * Class ValuePrinterComponent
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ValuePrinterComponent extends BaseComponent {
-    const LAYOUT_LIST_ITEM = 'list-item';
-    const LAYOUT_ROW = 'row';
-    const LAYOUT_ONLY_VALUE = 'only-value';
-    /**
-     * @var TableReflectionFactory
-     */
-    private $tableReflectionFactory;
+    private const LAYOUT_LIST_ITEM = 'list-item';
+    private const LAYOUT_ROW = 'row';
+    private const LAYOUT_ONLY_VALUE = 'only-value';
 
-    /**
-     * @param TableReflectionFactory $tableReflectionFactory
-     * @return void
-     */
-    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
+    private TableReflectionFactory $tableReflectionFactory;
+
+    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory): void {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
@@ -31,9 +27,11 @@ class ValuePrinterComponent extends BaseComponent {
      * @param string $field
      * @param AbstractModelSingle $model
      * @param int $userPermission
-     * @throws \Exception
+     * @return void
+     * @throws BadTypeException
+     * @throws BadRequestException
      */
-    public function render(string $field, AbstractModelSingle $model, int $userPermission) {
+    public function render(string $field, AbstractModelSingle $model, int $userPermission): void {
         $factory = $this->tableReflectionFactory->loadRowFactory($field);
         $this->template->title = $factory->getTitle();
         $this->template->description = $factory->getDescription();
@@ -47,9 +45,11 @@ class ValuePrinterComponent extends BaseComponent {
      * @param string $field
      * @param AbstractModelSingle $model
      * @param int $userPermission
-     * @throws \Exception
+     * @return void
+     * @throws BadRequestException
+     * @throws BadTypeException
      */
-    public function renderRow(string $field, AbstractModelSingle $model, int $userPermission = 2048) {
+    public function renderRow(string $field, AbstractModelSingle $model, int $userPermission = 2048): void {
         $this->template->layout = self::LAYOUT_ROW;
         $this->render($field, $model, $userPermission);
     }
@@ -58,9 +58,11 @@ class ValuePrinterComponent extends BaseComponent {
      * @param string $field
      * @param AbstractModelSingle $model
      * @param int $userPermission
-     * @throws \Exception
+     * @return void
+     * @throws BadRequestException
+     * @throws BadTypeException
      */
-    public function renderListItem(string $field, AbstractModelSingle $model, int $userPermission = 2048) {
+    public function renderListItem(string $field, AbstractModelSingle $model, int $userPermission = 2048): void {
         $this->template->layout = self::LAYOUT_LIST_ITEM;
         $this->render($field, $model, $userPermission);
     }
@@ -69,9 +71,11 @@ class ValuePrinterComponent extends BaseComponent {
      * @param string $field
      * @param AbstractModelSingle $model
      * @param int $userPermission
-     * @throws \Exception
+     * @return void
+     * @throws BadRequestException
+     * @throws BadTypeException
      */
-    public function renderOnlyValue(string $field, AbstractModelSingle $model, int $userPermission = 2048) {
+    public function renderOnlyValue(string $field, AbstractModelSingle $model, int $userPermission = 2048): void {
         $this->template->layout = self::LAYOUT_ONLY_VALUE;
         $this->render($field, $model, $userPermission);
     }

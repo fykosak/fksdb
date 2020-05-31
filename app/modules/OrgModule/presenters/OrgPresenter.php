@@ -35,19 +35,11 @@ class OrgPresenter extends ExtendedPersonPresenter {
      */
     private $orgFactory;
 
-    /**
-     * @param ServiceOrg $serviceOrg
-     * @return void
-     */
-    public function injectServiceOrg(ServiceOrg $serviceOrg) {
+    public function injectServiceOrg(ServiceOrg $serviceOrg): void {
         $this->serviceOrg = $serviceOrg;
     }
 
-    /**
-     * @param OrgFactory $orgFactory
-     * @return void
-     */
-    public function injectOrgFactory(OrgFactory $orgFactory) {
+    public function injectOrgFactory(OrgFactory $orgFactory): void {
         $this->orgFactory = $orgFactory;
     }
 

@@ -44,7 +44,7 @@ class MailTemplateFactory {
      * @deprecated
      * TODO remove this!
      */
-    public function injectApplication($application) {
+    public function injectApplication($application): void {
         $this->application = $application;
     }
 

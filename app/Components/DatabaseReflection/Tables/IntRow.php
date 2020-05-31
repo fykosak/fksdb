@@ -14,38 +14,26 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class IntRow extends DefaultRow {
-    /** @var string */
-    private $nullValue = 'notSet';
-    /** @var string */
-    private $prefix;
-    /** @var string */
-    private $suffix;
+
+    private string $nullValue = 'notSet';
+
+    private ?string $prefix;
+
+    private ?string $suffix;
 
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         return (new NumberPrinter($this->prefix, $this->suffix, 0, $this->nullValue))($model->{$this->getModelAccessKey()});
     }
 
-    /**
-     * @param string $nullValue
-     * @return void
-     */
-    public function setNullValueFormat(string $nullValue) {
+    public function setNullValueFormat(string $nullValue): void {
         $this->nullValue = $nullValue;
     }
 
-    /**
-     * @param string $prefix
-     * @return void
-     */
-    public function setPrefix(string $prefix) {
+    public function setPrefix(string $prefix): void {
         $this->prefix = $prefix;
     }
 
-    /**
-     * @param string $suffix
-     * @return void
-     */
-    public function setSuffix(string $suffix) {
+    public function setSuffix(string $suffix): void {
         $this->suffix = $suffix;
     }
 

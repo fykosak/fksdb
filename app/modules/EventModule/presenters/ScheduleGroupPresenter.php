@@ -18,16 +18,9 @@ use Nette\Application\UI\Control;
 class ScheduleGroupPresenter extends BasePresenter {
     use EventEntityTrait;
 
-    /**
-     * @var ServiceScheduleGroup
-     */
-    private $serviceScheduleGroup;
+    private ServiceScheduleGroup $serviceScheduleGroup;
 
-    /**
-     * @param ServiceScheduleGroup $serviceScheduleGroup
-     * @return void
-     */
-    public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup) {
+    public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup): void {
         $this->serviceScheduleGroup = $serviceScheduleGroup;
     }
 
@@ -35,7 +28,7 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleList() {
+    public function titleList(): void {
         $this->setTitle(_('Schedule'), 'fa fa-calendar-check-o');
     }
 
@@ -43,19 +36,21 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titlePersons() {
+    public function titlePersons(): void {
         $this->setTitle(_('Whole program'), 'fa fa-calendar-check-o');
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
     public function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
     public function createComponentEditForm(): Control {
         throw new NotImplementedException();

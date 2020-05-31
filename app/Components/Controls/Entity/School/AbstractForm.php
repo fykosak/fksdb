@@ -38,11 +38,14 @@ abstract class AbstractForm extends FormControl {
      */
     public function __construct(Container $container) {
         parent::__construct($container);
-        $this->addressFactory = $container->getByType(AddressFactory::class);
-        $this->schoolFactory = $container->getByType(SchoolFactory::class);
-        $this->serviceAddress = $container->getByType(ServiceAddress::class);
-        $this->serviceSchool = $container->getByType(ServiceSchool::class);
         $this->buildForm();
+    }
+
+    public function injectPrimary(AddressFactory $addressFactory, SchoolFactory $schoolFactory, ServiceAddress $serviceAddress, ServiceSchool $serviceSchool): void {
+        $this->addressFactory = $addressFactory;
+        $this->schoolFactory = $schoolFactory;
+        $this->serviceAddress = $serviceAddress;
+        $this->serviceSchool = $serviceSchool;
     }
 
     /**

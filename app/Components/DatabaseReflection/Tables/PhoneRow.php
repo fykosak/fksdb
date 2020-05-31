@@ -21,14 +21,10 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PhoneRow extends DefaultRow implements ITestedRowFactory {
-    /**
-     * @var PhoneNumberFactory
-     */
-    protected $phoneNumberFactory;
-    /**
-     * @var bool
-     */
-    private $isWriteOnly = true;
+
+    protected PhoneNumberFactory $phoneNumberFactory;
+
+    private bool $isWriteOnly = true;
 
     /**
      * PhoneRow constructor.
@@ -40,11 +36,7 @@ class PhoneRow extends DefaultRow implements ITestedRowFactory {
         parent::__construct($metaDataFactory);
     }
 
-    /**
-     * @param bool $isWriteOnly
-     * @return void
-     */
-    public function setWriteOnly(bool $isWriteOnly) {
+    public function setWriteOnly(bool $isWriteOnly): void {
         $this->isWriteOnly = $isWriteOnly;
     }
 

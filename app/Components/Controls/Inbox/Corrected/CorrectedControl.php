@@ -14,10 +14,15 @@ use Nette\Application\UI\Form;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class CorrectedControl extends SeriesTableComponent {
+    /** @var CorrectedStorage */
+    private $correctedStorage;
+
+    public function injectCorrectedStorage(CorrectedStorage $correctedStorage): void {
+        $this->correctedStorage = $correctedStorage;
+    }
 
     public function render() {
-        $correctedSubmitStorage = $this->getContext()->getByType(CorrectedStorage::class);
-        $this->template->correctedSubmitStorage = $correctedSubmitStorage;
+        $this->template->correctedSubmitStorage = $this->correctedStorage;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
     }

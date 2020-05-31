@@ -92,59 +92,32 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     private $login;
 
-    /**
-     * @param FacebookAuthenticator $facebookAuthenticator
-     * @return void
-     */
-    public function injectFacebookAuthenticator(FacebookAuthenticator $facebookAuthenticator) {
+    public function injectFacebookAuthenticator(FacebookAuthenticator $facebookAuthenticator): void {
         $this->facebookAuthenticator = $facebookAuthenticator;
     }
 
-    /**
-     * @param ServiceAuthToken $serviceAuthToken
-     * @return void
-     */
-    public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken) {
+    public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken): void {
         $this->serviceAuthToken = $serviceAuthToken;
     }
 
-    /**
-     * @param IGlobalSession $globalSession
-     * @return void
-     */
-    public function injectGlobalSession(IGlobalSession $globalSession) {
+    public function injectGlobalSession(IGlobalSession $globalSession): void {
         $this->globalSession = $globalSession;
     }
 
-    /**
-     * @param PasswordAuthenticator $passwordAuthenticator
-     * @return void
-     */
-    public function injectPasswordAuthenticator(PasswordAuthenticator $passwordAuthenticator) {
+    public function injectPasswordAuthenticator(PasswordAuthenticator $passwordAuthenticator): void {
         $this->passwordAuthenticator = $passwordAuthenticator;
     }
 
-    /**
-     * @param AccountManager $accountManager
-     * @return void
-     */
-    public function injectAccountManager(AccountManager $accountManager) {
+    public function injectAccountManager(AccountManager $accountManager: void {
         $this->accountManager = $accountManager;
     }
 
-    /**
-     * @param MailTemplateFactory $mailTemplateFactory
-     * @return void
-     */
-    public function injectMailTemplateFactory(MailTemplateFactory $mailTemplateFactory) {
+    public function injectMailTemplateFactory(MailTemplateFactory $mailTemplateFactory): void {
         $this->mailTemplateFactory = $mailTemplateFactory;
     }
 
-    /**
-     * @param ServicePerson $servicePerson
-     * @return void
-     */
-    public function injectServicePerson(ServicePerson $servicePerson) {
+
+    public function injectServicePerson(ServicePerson $servicePerson): void {
         $this->servicePerson = $servicePerson;
     }
 
@@ -365,7 +338,7 @@ final class AuthenticationPresenter extends BasePresenter {
                 $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_SSO, $until, $globalSessionId);
                 $url->appendQuery([
                     LoginUserStorage::PARAM_SSO => LoginUserStorage::SSO_AUTHENTICATED,
-                    TokenAuthenticator::PARAM_AUTH_TOKEN => $token->token
+                    TokenAuthenticator::PARAM_AUTH_TOKEN => $token->token,
                 ]);
             } else {
                 $url->appendQuery([

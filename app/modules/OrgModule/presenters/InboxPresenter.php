@@ -49,35 +49,19 @@ class InboxPresenter extends SeriesPresenter {
      */
     private $personFactory;
 
-    /**
-     * @param ServiceTaskContribution $serviceTaskContribution
-     * @return void
-     */
-    public function injectServiceTaskContribution(ServiceTaskContribution $serviceTaskContribution) {
+    public function injectServiceTaskContribution(ServiceTaskContribution $serviceTaskContribution): void {
         $this->serviceTaskContribution = $serviceTaskContribution;
     }
 
-    /**
-     * @param ServicePerson $servicePerson
-     * @return void
-     */
-    public function injectServicePerson(ServicePerson $servicePerson) {
+    public function injectServicePerson(ServicePerson $servicePerson): void {
         $this->servicePerson = $servicePerson;
     }
 
-    /**
-     * @param SeriesTable $seriesTable
-     * @return void
-     */
-    public function injectSeriesTable(SeriesTable $seriesTable) {
+    public function injectSeriesTable(SeriesTable $seriesTable): void {
         $this->seriesTable = $seriesTable;
     }
 
-    /**
-     * @param PersonFactory $personFactory
-     * @return void
-     */
-    public function injectPersonFactory(PersonFactory $personFactory) {
+    public function injectPersonFactory(PersonFactory $personFactory): void {
         $this->personFactory = $personFactory;
     }
     /* ***************** AUTH ***********************/
@@ -210,6 +194,7 @@ class InboxPresenter extends SeriesPresenter {
         $control->getForm()->setDefaults($values);
 
     }
+
     /* ******************* COMPONENTS ******************/
 
     protected function createComponentInboxForm(): InboxControl {
@@ -276,7 +261,7 @@ class InboxPresenter extends SeriesPresenter {
         foreach ($this->seriesTable->getTasks() as $task) {
             $service->getTable()->where([
                 'task_id' => $task->task_id,
-                'type' => ModelTaskContribution::TYPE_GRADE
+                'type' => ModelTaskContribution::TYPE_GRADE,
             ])->delete();
             $key = self::TASK_PREFIX . $task->task_id;
             foreach ($values[$key] as $personId) {
@@ -299,7 +284,7 @@ class InboxPresenter extends SeriesPresenter {
         $container = parent::getPageStyleContainer();
         switch ($this->getAction()) {
             case 'inbox':
-                $container->mainContainerClassName = str_replace('container ', 'container-fluid ', $container->mainContainerClassName).' px-3';
+                $container->mainContainerClassName = str_replace('container ', 'container-fluid ', $container->mainContainerClassName) . ' px-3';
         }
         return $container;
     }

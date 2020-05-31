@@ -25,11 +25,7 @@ class EventPresenter extends BasePresenter {
      */
     private $serviceEvent;
 
-    /**
-     * @param ServiceEvent $serviceEvent
-     * @return void
-     */
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 

@@ -4,6 +4,7 @@ namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\DatabaseReflection\ValuePrinters\EventRole;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
@@ -16,24 +17,14 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonsGrid extends BaseGrid {
-    /**
-     * @var YearCalculator
-     */
-    private $yearCalculator;
 
-    /**
-     * @param YearCalculator $yearCalculator
-     * @return void
-     */
-    public function injectYearCalculator(YearCalculator $yearCalculator) {
+    private YearCalculator $yearCalculator;
+
+    public function injectYearCalculator(YearCalculator $yearCalculator): void {
         $this->yearCalculator = $yearCalculator;
     }
 
-    /**
-     * @param ModelScheduleItem $item
-     * @return void
-     */
-    public function setItem(ModelScheduleItem $item) {
+    public function setItem(ModelScheduleItem $item): void {
         $dataSource = new NDataSource($item->getInterested());
         $this->setDataSource($dataSource);
     }
@@ -43,6 +34,7 @@ class PersonsGrid extends BaseGrid {
      * @return void
      * @throws DuplicateColumnException
      * @throws NotImplementedException
+     * @throws BadTypeException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

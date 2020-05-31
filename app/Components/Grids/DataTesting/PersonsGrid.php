@@ -4,6 +4,7 @@ namespace FKSDB\Components\Grids\DataTesting;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\DataTesting\DataTestingFactory;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\DataTesting\TestsLogger;
@@ -18,29 +19,22 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonsGrid extends BaseGrid {
-    /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
-    /**
-     * @var DataTestingFactory
-     */
-    private $dataTestingFactory;
 
-    /**
-     * @param ServicePerson $servicePerson
-     * @param DataTestingFactory $dataTestingFactory
-     * @return void
-     */
-    public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory) {
+    private ServicePerson $servicePerson;
+
+    private DataTestingFactory $dataTestingFactory;
+
+    public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory): void {
         $this->servicePerson = $servicePerson;
         $this->dataTestingFactory = $dataTestingFactory;
     }
 
     /**
-     * @param \AuthenticatedPresenter $presenter
+     * @param $presenter
+     * @return void
      * @throws DuplicateColumnException
      * @throws NotImplementedException
+     * @throws BadTypeException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

@@ -15,6 +15,7 @@ use Nette\Forms\Controls\SelectBox;
  */
 class StudyYearRow extends AbstractRow {
     use DefaultPrinterTrait;
+
     /**
      * @var YearCalculator
      */
@@ -36,10 +37,7 @@ class StudyYearRow extends AbstractRow {
         return self::PERMISSION_ALLOW_BASIC;
     }
 
-    /**
-     * @return null|string
-     */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return _('Kvůli zařazení do kategorie.');
     }
 
@@ -49,7 +47,7 @@ class StudyYearRow extends AbstractRow {
      * @throws InvalidArgumentException
      */
     public function createField(...$args): BaseControl {
-        list ($acYear) = $args;
+        [$acYear] = $args;
         if (\is_null($acYear)) {
             throw new \InvalidArgumentException();
         }

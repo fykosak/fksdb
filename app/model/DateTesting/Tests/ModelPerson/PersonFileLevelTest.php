@@ -9,7 +9,7 @@ use FKSDB\Exceptions\BadTypeException;
 
 /**
  * Class PersonFileLevelTest
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class PersonFileLevelTest extends PersonTest {
     /**

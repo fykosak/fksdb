@@ -19,11 +19,7 @@ class DashboardPresenter extends BasePresenter {
      */
     private $news;
 
-    /**
-     * @param News $news
-     * @return void
-     */
-    public function injectNews(News $news) {
+    public function injectNews(News $news): void {
         $this->news = $news;
     }
 
@@ -46,7 +42,7 @@ class DashboardPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Pultík'),'fa fa-dashboard');
+        $this->setTitle(_('Pultík'), 'fa fa-dashboard');
     }
 
     /**
@@ -54,7 +50,7 @@ class DashboardPresenter extends BasePresenter {
      */
     public function renderDefault() {
         foreach ($this->news->getNews($this->getSelectedContest(), $this->getLang())
-	  as $new) {
+                 as $new) {
             $this->flashMessage($new);
         }
     }

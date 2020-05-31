@@ -43,7 +43,7 @@ class UniqueCheck extends AbstractAdjustment {
      * @param Holder $holder
      * @return void
      */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder) {
+    protected function _adjust(Form $form, Machine $machine, Holder $holder): void {
         $controls = $this->getControl($this->field);
         if (!$controls) {
             return;

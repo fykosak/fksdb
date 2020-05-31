@@ -4,8 +4,8 @@ namespace FKSDB\Components\DatabaseReflection\ReferencedRows;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\Models\ModelPayment;
 use Nette\Utils\Html;
 
 /**
@@ -25,9 +25,9 @@ class PaymentRow extends AbstractRow {
     }
 
     /**
-     * @param AbstractModelSingle|ModelPayment $model
+     * @param AbstractModelSingle $model
      * @return Html
-     * @throws \Exception
+     * @throws BadTypeException
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         $factory = $this->reflectionFactory->loadRowFactory('payment.state');

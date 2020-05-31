@@ -23,14 +23,10 @@ use Nette\Application\ForbiddenRequestException;
  * @method ModelFyziklaniTeam getEntity()
  */
 class TeamApplicationPresenter extends AbstractApplicationPresenter {
-    /** @var ServiceFyziklaniTeam */
-    private $serviceFyziklaniTeam;
 
-    /**
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @return void
-     */
-    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+
+    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 

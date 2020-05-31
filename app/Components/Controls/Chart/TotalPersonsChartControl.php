@@ -14,16 +14,10 @@ use Nette\Utils\JsonException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class TotalPersonsChartControl extends ReactComponent implements IChart {
-    /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
 
-    /**
-     * @param ServicePerson $servicePerson
-     * @return void
-     */
-    public function injectServicePerson(ServicePerson $servicePerson) {
+    private ServicePerson $servicePerson;
+
+    public function injectServicePerson(ServicePerson $servicePerson): void {
         $this->servicePerson = $servicePerson;
     }
 

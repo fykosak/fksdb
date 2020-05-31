@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Grids;
 
-use Exception;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Exceptions\BadTypeException;
@@ -55,11 +54,7 @@ abstract class BaseGrid extends Grid {
         $container->callInjects($this);
     }
 
-    /**
-     * @param TableReflectionFactory $tableReflectionFactory
-     * @return void
-     */
-    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
+    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory): void {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
@@ -199,6 +194,7 @@ abstract class BaseGrid extends Grid {
      * @return void
      * @throws DuplicateColumnException
      * @throws NotImplementedException
+     * @throws BadTypeException
      */
     private function addReflectionColumn(string $name) {
         $modelClassName = $this->getModelClassName();
@@ -225,6 +221,7 @@ abstract class BaseGrid extends Grid {
      * @param array $fields
      * @throws DuplicateColumnException
      * @throws NotImplementedException
+     * @throws BadTypeException
      */
     protected function addColumns(array $fields) {
         foreach ($fields as $name) {
@@ -275,8 +272,9 @@ abstract class BaseGrid extends Grid {
      * @param string $linkId
      * @param bool $checkACL
      * @return Button
+     * @throws BadTypeException
      * @throws DuplicateButtonException
-     * @throws Exception
+     * @throws NotImplementedException
      */
     protected function addLink(string $linkId, bool $checkACL = false): Button {
         $modelClassName = $this->getModelClassName();

@@ -42,19 +42,11 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
      */
     public $eventId;
 
-    /**
-     * @param ServiceEventOrg $serviceEventOrg
-     * @return void
-     */
-    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
+    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg): void {
         $this->serviceEventOrg = $serviceEventOrg;
     }
 
-    /**
-     * @param ServiceEvent $serviceEvent
-     * @return void
-     */
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 

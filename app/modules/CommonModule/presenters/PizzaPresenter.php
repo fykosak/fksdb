@@ -19,28 +19,16 @@ class PizzaPresenter extends BasePresenter {
      * @var ModelPerson[]
      */
     private $persons = [];
-    /**
-     * @var PersonFactory
-     */
-    private $personFactory;
-    /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
 
-    /**
-     * @param PersonFactory $personFactory
-     * @return void
-     */
-    public function injectPersonFactory(PersonFactory $personFactory) {
+    private PersonFactory $personFactory;
+
+    private ServicePerson $servicePerson;
+
+    public function injectPersonFactory(PersonFactory $personFactory): void {
         $this->personFactory = $personFactory;
     }
 
-    /**
-     * @param ServicePerson $servicePerson
-     * @return void
-     */
-    public function injectServicePerson(ServicePerson $servicePerson) {
+    public function injectServicePerson(ServicePerson $servicePerson): void {
         $this->servicePerson = $servicePerson;
     }
 
@@ -69,6 +57,6 @@ class PizzaPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Pizza'),'fa fa-cutlery');
+        $this->setTitle(_('Pizza'), 'fa fa-cutlery');
     }
 }

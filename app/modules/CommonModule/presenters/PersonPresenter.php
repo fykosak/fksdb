@@ -82,35 +82,19 @@ class PersonPresenter extends BasePresenter {
      */
     private $mode;
 
-    /**
-     * @param ServicePerson $servicePerson
-     * @return void
-     */
-    public function injectServicePerson(ServicePerson $servicePerson) {
+    public function injectServicePerson(ServicePerson $servicePerson): void {
         $this->servicePerson = $servicePerson;
     }
 
-    /**
-     * @param ServicePersonInfo $servicePersonInfo
-     * @return void
-     */
-    public function injectServicePersonInfo(ServicePersonInfo $servicePersonInfo) {
+    public function injectServicePersonInfo(ServicePersonInfo $servicePersonInfo): void {
         $this->servicePersonInfo = $servicePersonInfo;
     }
 
-    /**
-     * @param Merger $personMerger
-     * @return void
-     */
-    public function injectPersonMerger(Merger $personMerger) {
+    public function injectPersonMerger(Merger $personMerger): void {
         $this->personMerger = $personMerger;
     }
 
-    /**
-     * @param ReferencedPersonFactory $referencedPersonFactory
-     * @return void
-     */
-    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
+    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory): void {
         $this->referencedPersonFactory = $referencedPersonFactory;
     }
 

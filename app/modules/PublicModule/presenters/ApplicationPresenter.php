@@ -83,36 +83,29 @@ class ApplicationPresenter extends BasePresenter {
      */
     private $handlerFactory;
 
-    /**
-     * @param ServiceEvent $serviceEvent
-     * @return void
-     */
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 
-    /**
-     * @param RelatedPersonAuthorizator $relatedPersonAuthorizator
-     * @return void
-     */
-    public function injectRelatedPersonAuthorizator(RelatedPersonAuthorizator $relatedPersonAuthorizator) {
+    public function injectRelatedPersonAuthorizator(RelatedPersonAuthorizator $relatedPersonAuthorizator): void {
         $this->relatedPersonAuthorizator = $relatedPersonAuthorizator;
     }
 
-    /**
-     * @param LayoutResolver $layoutResolver
-     * @return void
-     */
-    public function injectLayoutResolver(LayoutResolver $layoutResolver) {
+    public function injectLayoutResolver(LayoutResolver $layoutResolver): void {
         $this->layoutResolver = $layoutResolver;
     }
 
-    /**
-     * @param ApplicationHandlerFactory $handlerFactory
-     * @return void
-     */
-    public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory) {
+    public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
+    }
+
+    /**
+     * @var EventDispatchFactory
+     */
+    private $eventDispatchFactory;
+
+    public function injectEventDispatch(EventDispatchFactory $eventDispatchFactory): void {
+        $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
     /**
@@ -390,9 +383,7 @@ class ApplicationPresenter extends BasePresenter {
      */
     private function getHolder() {
         if (!$this->holder) {
-            /** @var EventDispatchFactory $factory */
-            $factory = $this->getContext()->getByType(EventDispatchFactory::class);
-            $this->holder = $factory->getDummyHolder($this->getEvent());
+            $this->holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
         }
         return $this->holder;
     }
@@ -403,9 +394,7 @@ class ApplicationPresenter extends BasePresenter {
      */
     private function getMachine() {
         if (!$this->machine) {
-            /** @var EventDispatchFactory $factory */
-            $factory = $this->getContext()->getByType(EventDispatchFactory::class);
-            $this->machine = $factory->getEventMachine($this->getEvent());
+            $this->machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
         }
         return $this->machine;
     }

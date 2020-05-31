@@ -37,7 +37,7 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
      * @param Holder $holder
      * @return void
      */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder) {
+    protected function _adjust(Form $form, Machine $machine, Holder $holder): void {
         foreach ($this->rules as $target => $prerequisities) {
             if (is_scalar($prerequisities)) {
                 $prerequisities = [$prerequisities];

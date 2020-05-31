@@ -37,12 +37,7 @@ class RoutingDownload extends BaseComponent {
         $this->event = $event;
     }
 
-    /**
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param ServiceFyziklaniRoom $serviceFyziklaniRoom
-     * @return void
-     */
-    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniRoom $serviceFyziklaniRoom) {
+    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniRoom $serviceFyziklaniRoom): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->serviceFyziklaniRoom = $serviceFyziklaniRoom;
     }

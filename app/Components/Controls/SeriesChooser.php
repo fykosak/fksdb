@@ -11,22 +11,16 @@ use OrgModule\SeriesPresenter;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
- * @method SeriesPresenter getPresenter($need = TRUE)
+ * @method SeriesPresenter getPresenter($need = true)
  */
 class SeriesChooser extends BaseComponent {
 
     const SESSION_SECTION = 'seriesPreset';
     const SESSION_KEY = 'series';
 
-    /**
-     * @var Session
-     */
-    private $session;
+    private Session $session;
 
-    /**
-     * @var SeriesCalculator
-     */
-    private $seriesCalculator;
+    private SeriesCalculator $seriesCalculator;
 
     /**
      * @var int
@@ -43,12 +37,7 @@ class SeriesChooser extends BaseComponent {
      */
     private $valid;
 
-    /**
-     * @param Session $session
-     * @param SeriesCalculator $seriesCalculator
-     * @return void
-     */
-    public function injectPrimary(Session $session, SeriesCalculator $seriesCalculator) {
+    public function injectPrimary(Session $session, SeriesCalculator $seriesCalculator): void {
         $this->session = $session;
         $this->seriesCalculator = $seriesCalculator;
     }

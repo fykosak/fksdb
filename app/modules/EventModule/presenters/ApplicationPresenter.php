@@ -62,9 +62,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      */
     protected function createComponentImport(): ImportComponent {
         $source = new SingleEventSource($this->getEvent(), $this->getContext());
-        /** @var EventDispatchFactory $factory */
-        $factory = $this->getContext()->getByType(EventDispatchFactory::class);
-        $machine = $factory->getEventMachine($this->getEvent());
+        $machine = $this->getEventDispatchFactory()->getEventMachine($this->getEvent());
         $handler = $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger());
 
         return new ImportComponent($machine, $source, $handler, $this->getContext());

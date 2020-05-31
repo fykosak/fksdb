@@ -16,7 +16,7 @@ class StateRow extends DefaultRow {
     /**
      * @var array[]
      */
-    protected $states = [];
+    protected array $states = [];
 
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         $state = $model->{$this->getModelAccessKey()};
@@ -27,10 +27,7 @@ class StateRow extends DefaultRow {
         return Html::el('span')->addAttributes(['class' => $stateDef['badge']])->addText(_($stateDef['label']));
     }
 
-    /**
-     * @param array[] $states
-     */
-    public function setStates(array $states) {
+    public function setStates(array $states): void {
         $this->states = $states;
     }
 

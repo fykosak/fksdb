@@ -18,11 +18,7 @@ class EmailsGrid extends BaseGrid {
     /** @var ServiceEmailMessage */
     private $serviceEmailMessage;
 
-    /**
-     * @param ServiceEmailMessage $serviceEmailMessage
-     * @return void
-     */
-    public function injectServiceEmailMessage(ServiceEmailMessage $serviceEmailMessage) {
+    public function injectServiceEmailMessage(ServiceEmailMessage $serviceEmailMessage): void {
         $this->serviceEmailMessage = $serviceEmailMessage;
     }
 

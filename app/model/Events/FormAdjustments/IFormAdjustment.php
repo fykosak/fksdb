@@ -13,12 +13,5 @@ use Nette\Forms\Form;
  * @author Michal Koutný <michal@fykos.cz>
  */
 interface IFormAdjustment {
-
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return void
-     */
-    public function adjust(Form $form, Machine $machine, Holder $holder);
+    public function adjust(Form $form, Machine $machine, Holder $holder): void;
 }

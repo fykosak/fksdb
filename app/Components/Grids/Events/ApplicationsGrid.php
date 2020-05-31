@@ -12,6 +12,7 @@ use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IComponent;
@@ -83,6 +84,15 @@ class ApplicationsGrid extends BaseComponent {
         $this->processSource();
     }
 
+    /**
+     * @var EventDispatchFactory
+     */
+    private $eventDispatchFactory;
+
+    public function injectEventDispatch(EventDispatchFactory $eventDispatchFactory): void {
+        $this->eventDispatchFactory = $eventDispatchFactory;
+    }
+
     /** @var bool */
     private $attachedJS = false;
 
@@ -135,9 +145,7 @@ class ApplicationsGrid extends BaseComponent {
             $event = $holder->getPrimaryHolder()->getEvent();
             $this->eventApplications[$key] = $event;
             $this->holders[$key] = $holder;
-            /** @var EventDispatchFactory $factory */
-            $factory = $this->getContext()->getByType(EventDispatchFactory::class);
-            $this->machines[$key] = $factory->getEventMachine($event);
+            $this->machines[$key] = $this->eventDispatchFactory->getEventMachine($event);
             $this->handlers[$key] = $this->handlerFactory->create($event, new MemoryLogger()); //TODO it's a bit weird to create new logger for each handler
         }
     }

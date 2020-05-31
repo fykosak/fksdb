@@ -34,10 +34,6 @@ class EditControl extends FormControl implements IEditEntityForm {
      * @var ModelEvent
      */
     private $event;
-    /**
-     * @var ITranslator
-     */
-    protected $translator;
 
     /**
      * EditControl constructor.
@@ -47,16 +43,17 @@ class EditControl extends FormControl implements IEditEntityForm {
      */
     public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container);
-        $this->serviceFyziklaniSubmit = $container->getByType(ServiceFyziklaniSubmit::class);
-        $this->translator = $container->getByType(ITranslator::class);
         $this->event = $event;
-
         $form = $this->getForm();
         $form->addComponent($this->createPointsField(), 'points');
         $form->addSubmit('send', _('Save'));
         $form->onSuccess[] = function (Form $form) {
             $this->editFormSucceeded($form);
         };
+    }
+
+    public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit): void {
+        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
     }
 
 

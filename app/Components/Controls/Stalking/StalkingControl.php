@@ -17,25 +17,13 @@ abstract class StalkingControl extends BaseComponent {
     const PERMISSION_BASIC = 16;
     const PERMISSION_USE_FIELD_LEVEL = 2048;
 
-    /**
-     * @var TableReflectionFactory
-     */
-    protected $tableReflectionFactory;
+    protected TableReflectionFactory $tableReflectionFactory;
 
-    /**
-     * @param TableReflectionFactory $tableReflectionFactory
-     * @return void
-     */
-    public function injectPrimary(TableReflectionFactory $tableReflectionFactory) {
+    public function injectPrimary(TableReflectionFactory $tableReflectionFactory): void {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param int $userPermissions
-     * @return void
-     */
-    public function beforeRender(ModelPerson $person, int $userPermissions) {
+    public function beforeRender(ModelPerson $person, int $userPermissions): void {
         $this->template->userPermissions = $userPermissions;
         $this->template->gender = $person->gender;
     }

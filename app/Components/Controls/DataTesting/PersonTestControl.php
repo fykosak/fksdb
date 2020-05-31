@@ -42,21 +42,12 @@ class PersonTestControl extends BaseComponent {
      * @persistent
      */
     public $levels = [];
-    /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
-    /**
-     * @var DataTestingFactory
-     */
-    private $dataTestingFactory;
 
-    /**
-     * @param ServicePerson $servicePerson
-     * @param DataTestingFactory $dataTestingFactory
-     * @return void
-     */
-    public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory) {
+    private ServicePerson $servicePerson;
+
+    private DataTestingFactory $dataTestingFactory;
+
+    public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory): void {
         $this->servicePerson = $servicePerson;
         $this->dataTestingFactory = $dataTestingFactory;
     }

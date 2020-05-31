@@ -20,10 +20,7 @@ class BornIdRow extends AbstractRow {
         return _('Rodné číslo');
     }
 
-    /**
-     * @return null|string
-     */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return _('U cizinců prázdné.');
     }
 

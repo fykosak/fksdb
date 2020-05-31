@@ -24,7 +24,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
      * TeacherPresenter constructor.
      * @param Nette\DI\Container|NULL $context
      */
-    public function __construct(Nette\DI\Container $context = NULL) {
+    public function __construct(Nette\DI\Container $context = null) {
         $this->sendEmail = false;
         parent::__construct($context);
     }
@@ -32,61 +32,41 @@ class TeacherPresenter extends ExtendedPersonPresenter {
     /** @var string */
     protected $fieldsDefinition = 'adminTeacher';
 
-    /**
-     * @var ServiceTeacher
-     */
-    private $serviceTeacher;
+    private ServiceTeacher $serviceTeacher;
 
-    /**
-     * @var TeacherFactory
-     */
-    private $teacherFactory;
-    /**
-     * @var SchoolFactory
-     */
-    private $schoolFactory;
+    private TeacherFactory $teacherFactory;
 
-    /**
-     * @param ServiceTeacher $serviceTeacher
-     * @return void
-     */
-    public function injectServiceTeacher(ServiceTeacher $serviceTeacher) {
+    private SchoolFactory $schoolFactory;
+
+    public function injectServiceTeacher(ServiceTeacher $serviceTeacher): void {
         $this->serviceTeacher = $serviceTeacher;
     }
 
-    /**
-     * @param TeacherFactory $teacherFactory
-     * @return void
-     */
-    public function injectTeacherFactory(TeacherFactory $teacherFactory) {
+    public function injectTeacherFactory(TeacherFactory $teacherFactory): void {
         $this->teacherFactory = $teacherFactory;
     }
 
-    /**
-     * @param SchoolFactory $schoolFactory
-     * @return void
-     */
-    public function injectSchoolFactory(SchoolFactory $schoolFactory) {
+    public function injectSchoolFactory(SchoolFactory $schoolFactory): void {
         $this->schoolFactory = $schoolFactory;
     }
 
     /**
      * @throws BadRequestException
      */
-    public function titleEdit() {
+    public function titleEdit(): void {
         $model = $this->getModel2();
         $this->setTitle(sprintf(_('Edit teacher %s'), $model->getPerson()->getFullName()), 'fa fa-pencil');
     }
 
-    public function titleCreate() {
+    public function titleCreate(): void {
         $this->setTitle(_('Create new teacher'), 'fa fa-plus');
     }
 
-    public function titleList() {
+    public function titleList(): void {
         $this->setTitle(_('Teacher'), 'fa fa-graduation-cap');
     }
 
-    public function titleDetail() {
+    public function titleDetail(): void {
         $this->setTitle(_('Teacher detail'), 'fa fa-graduation-cap');
     }
 
@@ -99,7 +79,7 @@ class TeacherPresenter extends ExtendedPersonPresenter {
      * @return void
      * @throws Exception
      */
-    protected function appendExtendedContainer(Form $form) {
+    protected function appendExtendedContainer(Form $form): void {
         $container = $this->teacherFactory->createTeacher();
         $schoolContainer = $this->schoolFactory->createSchoolSelect();
         $container->addComponent($schoolContainer, 'school_id');
@@ -109,14 +89,11 @@ class TeacherPresenter extends ExtendedPersonPresenter {
     /**
      * @throws BadRequestException
      */
-    public function renderDetail() {
+    public function renderDetail(): void {
         $this->template->model = $this->getModel2();
     }
 
-    /**
-     * @return ServiceTeacher
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServiceTeacher {
         return $this->serviceTeacher;
     }
 

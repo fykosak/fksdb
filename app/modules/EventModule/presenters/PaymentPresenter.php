@@ -27,21 +27,11 @@ use Nette\Application\UI\Control;
 class PaymentPresenter extends BasePresenter {
     use EventEntityTrait;
 
-    /**
-     * @var Machine
-     */
-    private $machine;
+    private Machine $machine;
 
-    /**
-     * @var ServicePayment
-     */
-    private $servicePayment;
+    private ServicePayment $servicePayment;
 
-    /**
-     * @param ServicePayment $servicePayment
-     * @return void
-     */
-    public function injectServicePayment(ServicePayment $servicePayment) {
+    public function injectServicePayment(ServicePayment $servicePayment): void {
         $this->servicePayment = $servicePayment;
     }
 

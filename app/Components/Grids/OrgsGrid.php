@@ -24,11 +24,7 @@ class OrgsGrid extends BaseGrid {
      */
     private $serviceOrg;
 
-    /**
-     * @param ServiceOrg $serviceOrg
-     * @return void
-     */
-    public function injectServiceOrg(ServiceOrg $serviceOrg) {
+    public function injectServiceOrg(ServiceOrg $serviceOrg): void {
         $this->serviceOrg = $serviceOrg;
     }
 

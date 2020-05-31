@@ -36,11 +36,7 @@ class CloseTeamControl extends BaseComponent {
         $this->event = $event;
     }
 
-    /**
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @return void
-     */
-    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask) {
+    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask): void {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 
@@ -53,8 +49,8 @@ class CloseTeamControl extends BaseComponent {
     }
 
     /**
-     * @throws AbortException
      * @return void
+     * @throws AbortException
      */
     public function handleClose() {
         $connection = $this->serviceFyziklaniTask->getConnection();
@@ -69,8 +65,8 @@ class CloseTeamControl extends BaseComponent {
     }
 
     /**
-     * @throws NotSetGameParametersException
      * @return void
+     * @throws NotSetGameParametersException
      */
     public function render() {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'CloseTeamControl.latte');

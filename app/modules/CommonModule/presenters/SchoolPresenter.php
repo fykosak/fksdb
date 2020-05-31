@@ -11,6 +11,7 @@ use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
+use Nette\Security\IResource;
 
 /**
  * Class SchoolPresenter
@@ -21,22 +22,17 @@ use Nette\Application\UI\Control;
 class SchoolPresenter extends BasePresenter {
     use EntityTrait;
 
-    /** @var ServiceSchool */
-    private $serviceSchool;
+    private ServiceSchool $serviceSchool;
 
-    /**
-     * @param ServiceSchool $serviceSchool
-     * @return void
-     */
-    public function injectServiceSchool(ServiceSchool $serviceSchool) {
+    public function injectServiceSchool(ServiceSchool $serviceSchool): void {
         $this->serviceSchool = $serviceSchool;
     }
 
-    public function titleList() {
+    public function titleList(): void {
         $this->setTitle(_('Schools'), 'fa fa-university');
     }
 
-    public function titleCreate() {
+    public function titleCreate(): void {
         $this->setTitle(_('Založit školu'), 'fa fa-plus');
     }
 
@@ -44,7 +40,7 @@ class SchoolPresenter extends BasePresenter {
      * @param int $id
      * @throws BadRequestException
      */
-    public function titleEdit(int $id) {
+    public function titleEdit(int $id): void {
         $this->setTitle(sprintf(_('Úprava školy %s'), $this->loadEntity($id)->name_abbrev), 'fa fa-pencil');
     }
 
@@ -52,12 +48,14 @@ class SchoolPresenter extends BasePresenter {
      * @param int $id
      * @throws BadRequestException
      */
-    public function titleDetail(int $id) {
+    public function titleDetail(int $id): void {
         $this->setTitle(sprintf(_('Detail of school %s'), $this->loadEntity($id)->name_abbrev), 'fa fa-university');
     }
 
     /**
-     * @inheritDoc
+     * @param IResource|string $resource
+     * @param string $privilege
+     * @return bool
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
         return $this->isAnyContestAuthorized($resource, $privilege);

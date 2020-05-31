@@ -28,42 +28,21 @@ class TasksPresenter extends BasePresenter {
     const SOURCE_ASTRID = 'astrid';
     const SOURCE_FILE = 'file';
 
-    /**
-     * @var SeriesCalculator
-     */
-    private $seriesCalculator;
+    private SeriesCalculator $seriesCalculator;
 
-    /**
-     * @var PipelineFactory
-     */
-    private $pipelineFactory;
+    private PipelineFactory $pipelineFactory;
 
-    /**
-     * @var Downloader
-     */
-    private $downloader;
+    private Downloader $downloader;
 
-    /**
-     * @param SeriesCalculator $seriesCalculator
-     * @return void
-     */
-    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator) {
+    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator): void {
         $this->seriesCalculator = $seriesCalculator;
     }
 
-    /**
-     * @param PipelineFactory $pipelineFactory
-     * @return void
-     */
-    public function injectPipelineFactory(PipelineFactory $pipelineFactory) {
+    public function injectPipelineFactory(PipelineFactory $pipelineFactory): void {
         $this->pipelineFactory = $pipelineFactory;
     }
 
-    /**
-     * @param Downloader $downloader
-     * @return void
-     */
-    public function injectDownloader(Downloader $downloader) {
+    public function injectDownloader(Downloader $downloader): void {
         $this->downloader = $downloader;
     }
 
@@ -74,7 +53,7 @@ class TasksPresenter extends BasePresenter {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'insert', $this->getSelectedContest()));
     }
 
-    public function titleImport() {
+    public function titleImport(): void {
         $this->setTitle(_('Import úloh'), 'fa fa-upload');
     }
 

@@ -6,7 +6,7 @@ use Nette\Database\Connection;
 
 /**
  * Class MetaDataFactory
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class MetaDataFactory {
     /**

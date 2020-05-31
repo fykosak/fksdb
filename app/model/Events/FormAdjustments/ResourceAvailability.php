@@ -70,7 +70,7 @@ class ResourceAvailability extends AbstractAdjustment {
      * @param Holder $holder
      * @return void
      */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder) {
+    protected function _adjust(Form $form, Machine $machine, Holder $holder): void {
         $groups = $holder->getGroupedSecondaryHolders();
         $groups[] = [
             'service' => $holder->getPrimaryHolder()->getService(),

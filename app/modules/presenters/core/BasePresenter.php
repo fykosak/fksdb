@@ -39,13 +39,13 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     use CollectorPresenterTrait;
     use LangPresenterTrait;
 
-    const FLASH_SUCCESS = ILogger::SUCCESS;
+    public const FLASH_SUCCESS = ILogger::SUCCESS;
 
-    const FLASH_INFO = ILogger::INFO;
+    public const FLASH_INFO = ILogger::INFO;
 
-    const FLASH_WARNING = ILogger::WARNING;
+    public const FLASH_WARNING = ILogger::WARNING;
 
-    const FLASH_ERROR = ILogger::ERROR;
+    public const FLASH_ERROR = ILogger::ERROR;
 
     /** @persistent  */
     public $tld;
@@ -57,53 +57,34 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     public $bc;
 
-    /** @var YearCalculator */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
-    /** @var ServiceContest */
-    private $serviceContest;
+    private ServiceContest $serviceContest;
 
-    /** @var GlobalParameters */
-    protected $globalParameters;
+    protected GlobalParameters $globalParameters;
 
-    /** @var BreadcrumbsFactory */
-    private $breadcrumbsFactory;
+    private BreadcrumbsFactory $breadcrumbsFactory;
 
-    /** @var Navigation */
-    private $navigationControl;
+    private Navigation $navigationControl;
 
-    /** @var PresenterBuilder */
-    private $presenterBuilder;
+    private PresenterBuilder $presenterBuilder;
 
-    /**
-     * @var PageTitle|null
-     */
-    private $pageTitle;
+    private ?PageTitle $pageTitle;
 
-    /**
-     * @var bool
-     */
-    private $authorized = true;
+    private bool $authorized = true;
 
     /**
      * @var bool[]
      */
-    private $authorizedCache = [];
+    private array $authorizedCache = [];
 
-    /**
-     * @var FullHttpRequest
-     */
-    private $fullRequest;
+    private FullHttpRequest $fullRequest;
 
     public function getYearCalculator(): YearCalculator {
         return $this->yearCalculator;
     }
 
-    /**
-     * @param YearCalculator $yearCalculator
-     * @return void
-     */
-    public function injectYearCalculator(YearCalculator $yearCalculator) {
+    public function injectYearCalculator(YearCalculator $yearCalculator): void {
         $this->yearCalculator = $yearCalculator;
     }
 
@@ -111,27 +92,15 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->serviceContest;
     }
 
-    /**
-     * @param ServiceContest $serviceContest
-     * @return void
-     */
-    public function injectServiceContest(ServiceContest $serviceContest) {
+    public function injectServiceContest(ServiceContest $serviceContest): void {
         $this->serviceContest = $serviceContest;
     }
 
-    /**
-     * @param GlobalParameters $globalParameters
-     * @return void
-     */
-    public function injectGlobalParameters(GlobalParameters $globalParameters) {
+    public function injectGlobalParameters(GlobalParameters $globalParameters): void {
         $this->globalParameters = $globalParameters;
     }
 
-    /**
-     * @param BreadcrumbsFactory $breadcrumbsFactory
-     * @return void
-     */
-    public function injectBreadcrumbsFactory(BreadcrumbsFactory $breadcrumbsFactory) {
+    public function injectBreadcrumbsFactory(BreadcrumbsFactory $breadcrumbsFactory): void {
         $this->breadcrumbsFactory = $breadcrumbsFactory;
     }
 
@@ -164,7 +133,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @param null $class
      * @return FileTemplate|ITemplate
      */
-    protected function createTemplate($class = NULL) {
+    protected function createTemplate($class = null) {
         /** @var FileTemplate $template */
         $template = parent::createTemplate($class);
         $template->setTranslator($this->getTranslator());
@@ -390,7 +359,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
                 } else { // relative
                     $presenter = $this->getName();
                     $b = strrpos($presenter, ':');
-                    if ($b === FALSE) { // no module
+                    if ($b === false) { // no module
                         $presenter = substr($destination, 0, $a);
                     } else { // with module
                         $presenter = substr($presenter, 0, $b + 1) . substr($destination, 0, $a);

@@ -27,12 +27,11 @@ class SubmitsGrid extends BaseGrid {
     use SubmitRevokeTrait;
     use SubmitDownloadTrait;
 
-    /** @var ServiceSubmit */
-    private $serviceSubmit;
-    /** @var CorrectedStorage */
-    private $correctedStorage;
-    /** @var UploadedStorage */
-    private $uploadedStorage;
+    private ServiceSubmit $serviceSubmit;
+
+    private CorrectedStorage $correctedStorage;
+
+    private UploadedStorage $uploadedStorage;
 
     /**
      * @var ModelContestant
@@ -49,13 +48,7 @@ class SubmitsGrid extends BaseGrid {
         $this->contestant = $contestant;
     }
 
-    /**
-     * @param ServiceSubmit $serviceSubmit
-     * @param CorrectedStorage $correctedStorage
-     * @param UploadedStorage $uploadedStorage
-     * @return void
-     */
-    public function injectPrimary(ServiceSubmit $serviceSubmit, CorrectedStorage $correctedStorage, UploadedStorage $uploadedStorage) {
+    public function injectPrimary(ServiceSubmit $serviceSubmit, CorrectedStorage $correctedStorage, UploadedStorage $uploadedStorage): void {
         $this->serviceSubmit = $serviceSubmit;
         $this->correctedStorage = $correctedStorage;
         $this->uploadedStorage = $uploadedStorage;

@@ -14,16 +14,9 @@ use NiftyGrid\DuplicateColumnException;
  */
 abstract class SubmitsGrid extends BaseGrid {
 
-    /**
-     * @var ServiceFyziklaniSubmit
-     */
-    protected $serviceFyziklaniSubmit;
+    protected ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
 
-    /**
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
-     * @return void
-     */
-    public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
+    public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit): void {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
     }
 

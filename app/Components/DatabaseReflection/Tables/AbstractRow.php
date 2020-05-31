@@ -20,32 +20,24 @@ use Tracy\Debugger;
 abstract class AbstractRow {
     use SmartObject;
 
-    const PERMISSION_USE_GLOBAL_ACL = 1;
-    const PERMISSION_ALLOW_BASIC = 16;
-    const PERMISSION_ALLOW_RESTRICT = 128;
-    const PERMISSION_ALLOW_FULL = 1024;
+    public const PERMISSION_USE_GLOBAL_ACL = 1;
+    public const PERMISSION_ALLOW_BASIC = 16;
+    public const PERMISSION_ALLOW_RESTRICT = 128;
+    public const PERMISSION_ALLOW_FULL = 1024;
     /**
      * @var string
      */
-    private $modelClassName = null;
+    private ?string $modelClassName = null;
     /**
      * @var string[]
      */
-    private $referencedAccess;
+    private ?array $referencedAccess = null;
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     * @throws AbstractRowException
-     */
     public function createField(...$args): BaseControl {
         return new TextInput($this->getTitle());
     }
 
-    /**
-     * @return null|string
-     */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return null;
     }
 
@@ -70,12 +62,7 @@ abstract class AbstractRow {
         return NotSetBadge::getHtml();
     }
 
-    /**
-     * @param string $modelClassName
-     * @param array $referencedAccess
-     * @return void
-     */
-    final public function setReferencedParams(string $modelClassName, array $referencedAccess) {
+    final public function setReferencedParams(string $modelClassName, array $referencedAccess): void {
         $this->modelClassName = $modelClassName;
         $this->referencedAccess = $referencedAccess;
     }
@@ -85,7 +72,7 @@ abstract class AbstractRow {
      * @return AbstractModelSingle|null
      * @throws BadRequestException
      */
-    protected function getModel(AbstractModelSingle $model) {
+    protected function getModel(AbstractModelSingle $model): ?AbstractModelSingle {
         $modelClassName = $this->getModelClassName();
         if (!isset($this->referencedAccess) || is_null($modelClassName)) {
             return $model;
@@ -116,10 +103,7 @@ abstract class AbstractRow {
         return $userValue >= $this->getPermissionsValue();
     }
 
-    /**
-     * @return string|null
-     */
-    final protected function getModelClassName() {
+    final protected function getModelClassName(): ?string {
         return $this->modelClassName;
     }
 

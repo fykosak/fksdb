@@ -111,7 +111,7 @@ abstract class DefaultRow extends AbstractRow {
         return _($this->title);
     }
 
-    final public function getDescription(): string {
+    final public function getDescription(): ?string {
         return $this->description ? _($this->description) : '';
     }
 

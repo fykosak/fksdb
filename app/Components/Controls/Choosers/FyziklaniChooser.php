@@ -33,8 +33,11 @@ class FyziklaniChooser extends Chooser {
      */
     public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container);
-        $this->serviceEvent = $container->getByType(ServiceEvent::class);
         $this->event = $event;
+    }
+
+    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
+        $this->serviceEvent = $serviceEvent;
     }
 
     protected function getItems(): TypedTableSelection {

@@ -29,11 +29,7 @@ trait LangPresenterTrait {
     /** @var string cache */
     private $cacheLang;
 
-    /**
-     * @param GettextTranslator $translator
-     * @return void
-     */
-    final public function injectTranslator(GettextTranslator $translator) {
+    final public function injectTranslator(GettextTranslator $translator): void {
         $this->translator = $translator;
     }
 

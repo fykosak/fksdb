@@ -11,13 +11,11 @@ use Nette\Utils\Html;
 
 /**
  * Class AbstractLink
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractLink {
-    /**
-     * @var PresenterComponent
-     */
-    protected $presenterComponent;
+
+    protected PresenterComponent $presenterComponent;
 
     /**
      * AbstractLink constructor.

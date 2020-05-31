@@ -23,11 +23,7 @@ class ContestantsGrid extends BaseGrid {
      */
     private $serviceContestant;
 
-    /**
-     * @param ServiceContestant $serviceContestant
-     * @return void
-     */
-    public function injectServiceContestant(ServiceContestant $serviceContestant) {
+    public function injectServiceContestant(ServiceContestant $serviceContestant): void {
         $this->serviceContestant = $serviceContestant;
     }
 

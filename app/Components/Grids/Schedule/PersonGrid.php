@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
@@ -44,6 +45,8 @@ class PersonGrid extends BaseGrid {
 
     /**
      * @param $presenter
+     * @return void
+     * @throws BadTypeException
      * @throws DuplicateColumnException
      * @throws NotImplementedException
      */
@@ -79,9 +82,10 @@ class PersonGrid extends BaseGrid {
 
     /**
      * @param string $name
-     * @param callable $accessCallback ActiveRow=>AbstractModelSingle
+     * @param callable $accessCallback
+     * @return void
      * @throws DuplicateColumnException
-     * @deprecated this functionality is moved to getModel in DBReflection AbstractRow
+     * @throws BadTypeException
      */
     protected function addJoinedColumn(string $name, callable $accessCallback) {
         $factory = $this->tableReflectionFactory->loadRowFactory($name);

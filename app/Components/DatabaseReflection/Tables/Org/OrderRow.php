@@ -28,10 +28,7 @@ class OrderRow extends AbstractOrgRowFactory {
         9 => '9 - vedoucí semináře',
     ];
 
-    /**
-     * @return string|null
-     */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return _('Pro řazení v seznamu organizátorů');
     }
 

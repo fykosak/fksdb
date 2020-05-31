@@ -30,55 +30,27 @@ class PointsPresenter extends SeriesPresenter {
      */
     public $all;
 
-    /**
-     * @var SQLResultsCache
-     */
-    private $SQLResultsCache;
+    private SQLResultsCache $SQLResultsCache;
 
-    /**
-     * @var SeriesTable
-     */
-    private $seriesTable;
+    private SeriesTable $seriesTable;
 
-    /**
-     * @var ServiceTask
-     */
-    private $serviceTask;
+    private ServiceTask $serviceTask;
 
-    /**
-     * @var ServiceTaskContribution
-     */
-    private $serviceTaskContribution;
+    private ServiceTaskContribution $serviceTaskContribution;
 
-    /**
-     * @param SQLResultsCache $SQLResultsCache
-     * @return void
-     */
-    public function injectSQLResultsCache(SQLResultsCache $SQLResultsCache) {
+    public function injectSQLResultsCache(SQLResultsCache $SQLResultsCache): void {
         $this->SQLResultsCache = $SQLResultsCache;
     }
 
-    /**
-     * @param SeriesTable $seriesTable
-     * @return void
-     */
-    public function injectSeriesTable(SeriesTable $seriesTable) {
+    public function injectSeriesTable(SeriesTable $seriesTable): void {
         $this->seriesTable = $seriesTable;
     }
 
-    /**
-     * @param ServiceTask $serviceTask
-     * @return void
-     */
-    public function injectServiceTask(ServiceTask $serviceTask) {
+    public function injectServiceTask(ServiceTask $serviceTask): void {
         $this->serviceTask = $serviceTask;
     }
 
-    /**
-     * @param ServiceTaskContribution $serviceTaskContribution
-     * @return void
-     */
-    public function injectServiceTaskContribution(ServiceTaskContribution $serviceTaskContribution) {
+    public function injectServiceTaskContribution(ServiceTaskContribution $serviceTaskContribution): void {
         $this->serviceTaskContribution = $serviceTaskContribution;
     }
 
@@ -197,7 +169,7 @@ class PointsPresenter extends SeriesPresenter {
             ->where([
                 'person_id' => $person->person_id,
                 'task_id' => $taskIds,
-                'type' => ModelTaskContribution::TYPE_GRADE
+                'type' => ModelTaskContribution::TYPE_GRADE,
             ])->fetchPairs('task_id', 'task_id');
         return array_values($gradedTasks);
     }

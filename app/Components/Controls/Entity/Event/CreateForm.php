@@ -19,6 +19,12 @@ class CreateForm extends AbstractForm {
      * @var int
      */
     private $year;
+    /** @var ServiceEvent */
+    private $serviceEvent;
+
+    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
+        $this->serviceEvent = $serviceEvent;
+    }
 
     /**
      * CreateForm constructor.
@@ -45,12 +51,10 @@ class CreateForm extends AbstractForm {
      * @throws AbortException
      */
     private function handleFormSuccess(Form $form) {
-        /** @var ServiceEvent $serviceEvent */
-        $serviceEvent = $this->container->getByType(ServiceEvent::class);
         $values = $form->getValues();
         $data = \FormUtils::emptyStrToNull($values[self::CONT_EVENT]);
         $data['year'] = $this->year;
-        $model = $serviceEvent->createNewModel($data);
+        $model = $this->serviceEvent->createNewModel($data);
 
         $this->updateTokens($model);
         $this->flashMessage(sprintf(_('Akce %s uložena.'), $model->name), ILogger::SUCCESS);

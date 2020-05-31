@@ -12,30 +12,24 @@ use Nette\InvalidArgumentException;
  */
 class BaseMachine {
 
-    const STATE_INIT = '__init';
-    const STATE_TERMINATED = '__terminated';
-    const STATE_ANY = '*';
-    const EXECUTABLE = 0x1;
-    const VISIBLE = 0x2;
+    public const STATE_INIT = '__init';
+    public const STATE_TERMINATED = '__terminated';
+    public const STATE_ANY = '*';
+    public const EXECUTABLE = 0x1;
+    public const VISIBLE = 0x2;
 
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
     /**
      * @var string[]
      */
-    private $states;
+    private array $states;
 
     /**
      * @var Transition[]
      */
-    private $transitions = [];
+    private array $transitions = [];
 
-    /**
-     * @var Machine
-     */
-    private $machine;
+    private Machine $machine;
 
     /**
      * BaseMachine constructor.
@@ -45,19 +39,11 @@ class BaseMachine {
         $this->name = $name;
     }
 
-    /**
-     * @return string
-     */
-    public function getName() {
+    public function getName(): string {
         return $this->name;
     }
 
-    /**
-     * @param string $state
-     * @param string $label
-     * @return void
-     */
-    public function addState(string $state, string $label) {
+    public function addState(string $state, string $label): void {
         $this->states[$state] = $label;
     }
 
@@ -75,11 +61,7 @@ class BaseMachine {
         return $this->machine;
     }
 
-    /**
-     * @param Machine $machine
-     * @return void
-     */
-    public function setMachine(Machine $machine) {
+    public function setMachine(Machine $machine): void {
         $this->machine = $machine;
     }
 
@@ -98,11 +80,11 @@ class BaseMachine {
 
 
     /**
-     * @param $transitionMask
-     * @param $induced
+     * @param mixed $transitionMask
+     * @param mixed $induced
      * @return void
      */
-    public function addInducedTransition($transitionMask, $induced) {
+    public function addInducedTransition($transitionMask, $induced): void {
         foreach ($this->getMatchingTransitions($transitionMask) as $transition) {
             foreach ($induced as $machineName => $state) {
                 $targetMachine = $this->getMachine()->getBaseMachine($machineName);
@@ -153,9 +135,7 @@ class BaseMachine {
      * @return Transition[]|null
      */
     public function getTransitionByTarget(string $sourceState, string $targetState) {
-        $candidates = array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($targetState) {
-            return $transition->getTarget() == $targetState;
-        });
+        $candidates = array_filter($this->getMatchingTransitions($sourceState), fn(Transition $transition) => $transition->getTarget() == $targetState);
         if (count($candidates) == 0) {
             return null;
         } elseif (count($candidates) > 1) {

@@ -34,11 +34,7 @@ class GraphComponent extends BaseComponent {
 
     }
 
-    /**
-     * @param ExpressionPrinter $expressionPrinter
-     * @return void
-     */
-    public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter) {
+    public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter): void {
         $this->expressionPrinter = $expressionPrinter;
     }
 
@@ -90,7 +86,7 @@ class GraphComponent extends BaseComponent {
             $nodes[] = [
                 'id' => $state,
                 'label' => $this->baseMachine->getStateName($state),
-                'type' => $state === BaseMachine::STATE_INIT ? 'init' : $state === BaseMachine::STATE_TERMINATED ? 'terminated' : 'default'
+                'type' => $state === BaseMachine::STATE_INIT ? 'init' : $state === BaseMachine::STATE_TERMINATED ? 'terminated' : 'default',
             ];
         }
         return $nodes;

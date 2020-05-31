@@ -51,7 +51,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
      * @param Holder $holder
      * @throws \Exception
      */
-    public function adjust(Form $form, Machine $machine, Holder $holder) {
+    public function adjust(Form $form, Machine $machine, Holder $holder): void {
         if ($holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT) {
             return;
         }

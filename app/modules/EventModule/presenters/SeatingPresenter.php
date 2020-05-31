@@ -16,16 +16,9 @@ use ReactMessage;
  */
 class SeatingPresenter extends BasePresenter {
 
-    /**
-     * @var ServiceFyziklaniTeamPosition
-     */
-    private $serviceFyziklaniTeamPosition;
+    private ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition;
 
-    /**
-     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
-     * @return void
-     */
-    public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition) {
+    public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition): void {
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
     }
 
@@ -33,7 +26,7 @@ class SeatingPresenter extends BasePresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setTitle(_('Rooming'), 'fa fa-arrows');
     }
 
@@ -41,7 +34,7 @@ class SeatingPresenter extends BasePresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleEdit() {
+    public function titleEdit(): void {
         $this->setTitle(_('Edit routing'), 'fa fa-pencil');
     }
 
@@ -49,7 +42,7 @@ class SeatingPresenter extends BasePresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleDownload() {
+    public function titleDownload(): void {
         $this->setTitle(_('Download routing'), 'fa fa-download');
     }
 
@@ -57,7 +50,7 @@ class SeatingPresenter extends BasePresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titleList() {
+    public function titleList(): void {
         $this->setTitle(_('List of all teams'), 'fa fa-print');
     }
 
@@ -65,7 +58,7 @@ class SeatingPresenter extends BasePresenter {
      * @return void
      * @throws BadRequestException
      */
-    public function titlePreview() {
+    public function titlePreview(): void {
         $this->setTitle(_('Preview'), 'fa fa-search');
     }
 

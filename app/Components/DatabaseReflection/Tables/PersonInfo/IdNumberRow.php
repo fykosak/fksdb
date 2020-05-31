@@ -19,10 +19,7 @@ class IdNumberRow extends AbstractRow {
         return _('Číslo OP');
     }
 
-    /**
-     * @return null|string
-     */
-    public function getDescription() {
+    public function getDescription(): ?string  {
         return _('U cizinců číslo pasu.');
     }
 

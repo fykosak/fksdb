@@ -26,12 +26,7 @@ abstract class AbstractForm extends FormControl {
     /** @var ServiceAuthToken */
     private $serviceAuthToken;
 
-    /**
-     * @param EventFactory $eventFactory
-     * @param ServiceAuthToken $serviceAuthToken
-     * @return void
-     */
-    public function injectPrimary(EventFactory $eventFactory, ServiceAuthToken $serviceAuthToken) {
+    public function injectPrimary(EventFactory $eventFactory, ServiceAuthToken $serviceAuthToken): void {
         $this->serviceAuthToken = $serviceAuthToken;
         $this->eventFactory = $eventFactory;
     }

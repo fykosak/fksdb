@@ -18,7 +18,7 @@ use Nette\Security\IIdentity;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
- * @method \ContestPresenter getPresenter($need = TRUE)
+ * @method \ContestPresenter getPresenter($need = true)
  */
 class ContestChooser extends BaseComponent {
 
@@ -89,13 +89,7 @@ class ContestChooser extends BaseComponent {
      */
     private $contestSource = 0xffffffff;
 
-    /**
-     * @param Session $session
-     * @param YearCalculator $yearCalculator
-     * @param ServiceContest $serviceContest
-     * @return void
-     */
-    public function injectPrimary(Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest) {
+    public function injectPrimary(Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest): void {
         $this->session = $session;
         $this->yearCalculator = $yearCalculator;
         $this->serviceContest = $serviceContest;
@@ -167,7 +161,7 @@ class ContestChooser extends BaseComponent {
         if ($this->year != $presenter->year || $contestId != $presenter->contestId) {
             $presenter->redirect('this', [
                 'contestId' => $contestId,
-                'year' => $this->year
+                'year' => $this->year,
             ]);
         }
     }

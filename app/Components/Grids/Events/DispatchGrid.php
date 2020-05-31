@@ -4,6 +4,7 @@ namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\DatabaseReflection\ValuePrinters\EventRole;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
@@ -43,21 +44,18 @@ class DispatchGrid extends BaseGrid {
         $this->person = $person;
     }
 
-    /**
-     * @param ServiceEvent $serviceEvent
-     * @param YearCalculator $yearCalculator
-     * @return void
-     */
-    public function injectPrimary(ServiceEvent $serviceEvent, YearCalculator $yearCalculator) {
+    public function injectPrimary(ServiceEvent $serviceEvent, YearCalculator $yearCalculator): void {
         $this->serviceEvent = $serviceEvent;
         $this->yearCalculator = $yearCalculator;
     }
 
     /**
      * @param $presenter
+     * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws NotImplementedException
+     * @throws BadTypeException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

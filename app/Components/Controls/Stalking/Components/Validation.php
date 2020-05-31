@@ -5,25 +5,17 @@ namespace FKSDB\Components\Controls\Stalking;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\DataTesting\TestsLogger;
 use FKSDB\DataTesting\DataTestingFactory;
-use Nette\DI\Container;
 
 /**
- * Class StalkingValidation
- * *
+ * Class Validation
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Validation extends AbstractStalkingComponent {
-    /**
-     * @var DataTestingFactory
-     */
-    private $validationFactory;
 
-    /**
-     * Validation constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->validationFactory = $container->getByType(DataTestingFactory::class);
+    private DataTestingFactory $validationFactory;
+
+    public function injectDataTestingFactory(DataTestingFactory $dataTestingFactory): void {
+        $this->validationFactory = $dataTestingFactory;
     }
 
     protected function getHeadline(): string {
@@ -37,12 +29,7 @@ class Validation extends AbstractStalkingComponent {
         return [self::PERMISSION_RESTRICT, self::PERMISSION_FULL, self::PERMISSION_FULL];
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param int $userPermissions
-     * @return void
-     */
-    public function render(ModelPerson $person, int $userPermissions) {
+    public function render(ModelPerson $person, int $userPermissions): void {
         $this->beforeRender($person, $userPermissions);
         $logger = new TestsLogger();
         foreach ($this->validationFactory->getTests('person') as $test) {

@@ -19,16 +19,9 @@ use SQL\SearchableDataSource;
  */
 class SchoolsGrid extends BaseGrid {
 
-    /**
-     * @var ServiceSchool
-     */
-    private $serviceSchool;
+    private ServiceSchool $serviceSchool;
 
-    /**
-     * @param ServiceSchool $serviceSchool
-     * @return void
-     */
-    public function injectServiceSchool(ServiceSchool $serviceSchool) {
+    public function injectServiceSchool(ServiceSchool $serviceSchool): void {
         $this->serviceSchool = $serviceSchool;
     }
 

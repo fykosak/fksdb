@@ -49,6 +49,21 @@ class EditForm extends AbstractForm implements IEditEntityForm {
     }
 
     /**
+     * @var EventDispatchFactory
+     */
+    private $eventDispatchFactory;
+    /** @var ServiceEvent */
+    private $serviceEvent;
+
+    public function injectEventDispatch(EventDispatchFactory $eventDispatchFactory): void {
+        $this->eventDispatchFactory = $eventDispatchFactory;
+    }
+
+    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
+        $this->serviceEvent = $serviceEvent;
+    }
+
+    /**
      * @param AbstractModelSingle|ModelEvent $model
      * @throws BadRequestException
      * @throws NeonSchemaException
@@ -62,9 +77,7 @@ class EditForm extends AbstractForm implements IEditEntityForm {
         $paramControl = $this->getForm()->getComponent(self::CONT_EVENT)->getComponent('parameters');
         $paramControl->setOption('description', $this->createParamDescription());
         $paramControl->addRule(function (BaseControl $control) {
-            /** @var EventDispatchFactory $factory */
-            $factory = $this->container->getByType(EventDispatchFactory::class);
-            $holder = $factory->getDummyHolder($this->model);
+            $holder = $this->eventDispatchFactory->getDummyHolder($this->model);
             $scheme = $holder->getPrimaryHolder()->getParamScheme();
             $parameters = $control->getValue();
             try {
@@ -90,10 +103,7 @@ class EditForm extends AbstractForm implements IEditEntityForm {
         $values = $form->getValues();
         $data = \FormUtils::emptyStrToNull($values[self::CONT_EVENT]);
         $model = $this->model;
-
-        /** @var ServiceEvent $serviceEvent */
-        $serviceEvent = $this->container->getByType(ServiceEvent::class);
-        $serviceEvent->updateModel2($model, $data);
+        $this->serviceEvent->updateModel2($model, $data);
 
         $this->updateTokens($model);
 
@@ -108,10 +118,7 @@ class EditForm extends AbstractForm implements IEditEntityForm {
      * @throws NeonSchemaException
      */
     private function createParamDescription() {
-        /** @var EventDispatchFactory $factory */
-        $factory = $this->container->getByType(EventDispatchFactory::class);
-
-        $holder = $factory->getDummyHolder($this->model);
+        $holder = $this->eventDispatchFactory->getDummyHolder($this->model);
         $scheme = $holder->getPrimaryHolder()->getParamScheme();
         $result = Html::el('ul');
         foreach ($scheme as $key => $meta) {

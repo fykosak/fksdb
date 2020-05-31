@@ -8,13 +8,13 @@ use FKSDB\DataTesting\TestLog;
 
 /**
  * Interface ITestedRowFactory
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 interface ITestedRowFactory {
     /**
      * @param TestsLogger $logger
      * @param AbstractModelSingle $model
-     * @return TestLog
+     * @return void
      */
     public function runTest(TestsLogger $logger, AbstractModelSingle $model);
 }

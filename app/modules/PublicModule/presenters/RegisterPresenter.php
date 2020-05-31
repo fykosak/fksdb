@@ -74,67 +74,33 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      */
     private $person;
 
-    /**
-     * @var ServiceContestant
-     */
-    private $serviceContestant;
+    private ServiceContestant $serviceContestant;
 
-    /**
-     * @var ReferencedPersonFactory
-     */
-    private $referencedPersonFactory;
+    private ReferencedPersonFactory $referencedPersonFactory;
 
-    /**
-     * @var ExtendedPersonHandlerFactory
-     */
-    private $handlerFactory;
-    /**
-     * @var ServicePerson
-     */
-    protected $servicePerson;
+    private ExtendedPersonHandlerFactory $handlerFactory;
 
-    /**
-     * @var SeriesCalculator
-     */
-    protected $seriesCalculator;
+    protected ServicePerson $servicePerson;
 
-    /**
-     * @param SeriesCalculator $seriesCalculator
-     * @return void
-     */
-    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator) {
+    protected SeriesCalculator $seriesCalculator;
+
+    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator): void {
         $this->seriesCalculator = $seriesCalculator;
     }
 
-    /**
-     * @param ServiceContestant $serviceContestant
-     * @return void
-     */
-    public function injectServiceContestant(ServiceContestant $serviceContestant) {
+    public function injectServiceContestant(ServiceContestant $serviceContestant): void {
         $this->serviceContestant = $serviceContestant;
     }
 
-    /**
-     * @param ServicePerson $servicePerson
-     * @return void
-     */
-    public function injectServicePerson(ServicePerson $servicePerson) {
+    public function injectServicePerson(ServicePerson $servicePerson): void {
         $this->servicePerson = $servicePerson;
     }
 
-    /**
-     * @param ReferencedPersonFactory $referencedPersonFactory
-     * @return void
-     */
-    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
+    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory): void {
         $this->referencedPersonFactory = $referencedPersonFactory;
     }
 
-    /**
-     * @param ExtendedPersonHandlerFactory $handlerFactory
-     * @return void
-     */
-    public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory) {
+    public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
     }
 

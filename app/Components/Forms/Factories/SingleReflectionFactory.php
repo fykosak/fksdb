@@ -4,8 +4,8 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Exceptions\BadTypeException;
 use Nette\Forms\Controls\BaseControl;
-use Nette\InvalidStateException;
 
 /**
  * Class SingleReflectionFactory
@@ -30,8 +30,7 @@ abstract class SingleReflectionFactory {
     /**
      * @param string $fieldName
      * @return AbstractRow
-     * @throws InvalidStateException
-     * @throws \Exception
+     * @throws BadTypeException
      */
     protected function loadFactory(string $fieldName): AbstractRow {
         return $this->tableReflectionFactory->loadRowFactory($this->getTableName() . '.' . $fieldName);

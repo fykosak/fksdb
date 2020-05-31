@@ -34,58 +34,33 @@ use FKSDB\ORM\Services\ServiceSubmitQuizQuestion;
 class SubmitPresenter extends BasePresenter {
     use SubmitSaveTrait;
 
-    /** @var ServiceSubmit */
-    private $submitService;
+    private ServiceSubmit $submitService;
 
-    /**
-     * @param ServiceSubmit $submitService
-     * @return void
-     */
-    public function injectSubmitService(ServiceSubmit $submitService) {
+    public function injectSubmitService(ServiceSubmit $submitService): void {
         $this->submitService = $submitService;
     }
 
-    /** @var ServiceSubmitQuizQuestion */
-    private $submitQuizQuestionService;
+    private ServiceSubmitQuizQuestion $submitQuizQuestionService;
 
-    /**
-     * @param ServiceSubmitQuizQuestion $submitQuizQuestionService
-     * @return void
-     */
-    public function injectSubmitQuizQuestionService(ServiceSubmitQuizQuestion $submitQuizQuestionService) {
+    public function injectSubmitQuizQuestionService(ServiceSubmitQuizQuestion $submitQuizQuestionService): void {
         $this->submitQuizQuestionService = $submitQuizQuestionService;
     }
 
-    /** @var UploadedStorage */
-    private $uploadedSubmitStorage;
+    private UploadedStorage $uploadedSubmitStorage;
 
-    /**
-     * @param UploadedStorage $filesystemUploadedSubmitStorage
-     * @return void
-     */
-    public function injectSubmitUploadedStorage(UploadedStorage $filesystemUploadedSubmitStorage) {
+    public function injectSubmitUploadedStorage(UploadedStorage $filesystemUploadedSubmitStorage): void {
         $this->uploadedSubmitStorage = $filesystemUploadedSubmitStorage;
     }
 
-    /** @var ServiceTask */
-    private $taskService;
+    private ServiceTask $taskService;
 
-    /**
-     * @param ServiceTask $taskService
-     * @return void
-     */
-    public function injectTaskService(ServiceTask $taskService) {
+    public function injectTaskService(ServiceTask $taskService): void {
         $this->taskService = $taskService;
     }
 
-    /** @var ServiceQuizQuestion */
-    private $quizQuestionService;
+    private ServiceQuizQuestion $quizQuestionService;
 
-    /**
-     * @param ServiceQuizQuestion $quizQuestionService
-     * @return void
-     */
-    public function injectQuizQuestionService(ServiceQuizQuestion $quizQuestionService) {
+    public function injectQuizQuestionService(ServiceQuizQuestion $quizQuestionService): void {
         $this->quizQuestionService = $quizQuestionService;
     }
 

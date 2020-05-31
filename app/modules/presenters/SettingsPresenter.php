@@ -42,39 +42,23 @@ class SettingsPresenter extends AuthenticatedPresenter {
      */
     private $uniqueLoginFactory;
 
-    /**
-     * @param LoginFactory $loginFactory
-     * @return void
-     */
-    public function injectLoginFactory(LoginFactory $loginFactory) {
+    public function injectLoginFactory(LoginFactory $loginFactory): void {
         $this->loginFactory = $loginFactory;
     }
 
-    /**
-     * @param ServiceLogin $loginService
-     * @return void
-     */
-    public function injectLoginService(ServiceLogin $loginService) {
+    public function injectLoginService(ServiceLogin $loginService): void {
         $this->loginService = $loginService;
     }
 
-    /**
-     * @param UniqueEmailFactory $uniqueEmailFactory
-     * @return void
-     */
-    public function injectUniqueEmailFactory(UniqueEmailFactory $uniqueEmailFactory) {
+    public function injectUniqueEmailFactory(UniqueEmailFactory $uniqueEmailFactory): void {
         $this->uniqueEmailFactory = $uniqueEmailFactory;
     }
 
-    /**
-     * @param UniqueLoginFactory $uniqueLoginFactory
-     * @return void
-     */
-    public function injectUniqueLoginFactory(UniqueLoginFactory $uniqueLoginFactory) {
+    public function injectUniqueLoginFactory(UniqueLoginFactory $uniqueLoginFactory): void {
         $this->uniqueLoginFactory = $uniqueLoginFactory;
     }
 
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setTitle(_('Settings'), 'fa fa-cogs');
     }
 

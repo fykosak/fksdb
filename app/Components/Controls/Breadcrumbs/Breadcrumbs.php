@@ -79,14 +79,7 @@ class Breadcrumbs extends BaseComponent {
         $this->getReverseBackLinkMap()->setExpiration($expiration);
     }
 
-    /**
-     * @param Session $session
-     * @param IRouter $router
-     * @param HttpRequest $httpRequest
-     * @param PresenterFactory $presenterFactory
-     * @return void
-     */
-    public function injectPrimary(Session $session, IRouter $router, HttpRequest $httpRequest, PresenterFactory $presenterFactory) {
+    public function injectPrimary(Session $session, IRouter $router, HttpRequest $httpRequest, PresenterFactory $presenterFactory): void {
         $this->session = $session;
         $this->router = $router;
         $this->httpRequest = $httpRequest;

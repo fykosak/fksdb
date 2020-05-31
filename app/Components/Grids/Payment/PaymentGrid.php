@@ -11,16 +11,10 @@ use FKSDB\ORM\Services\ServicePayment;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class PaymentGrid extends BaseGrid {
-    /**
-     * @var ServicePayment
-     */
-    protected $servicePayment;
 
-    /**
-     * @param ServicePayment $servicePayment
-     * @return void
-     */
-    public function injectServicePayment(ServicePayment $servicePayment) {
+    protected ServicePayment $servicePayment;
+
+    public function injectServicePayment(ServicePayment $servicePayment): void {
         $this->servicePayment = $servicePayment;
     }
 

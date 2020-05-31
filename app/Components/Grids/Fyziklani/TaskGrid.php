@@ -16,10 +16,7 @@ use SQL\SearchableDataSource;
  */
 class TaskGrid extends BaseGrid {
 
-    /**
-     * @var ServiceFyziklaniTask
-     */
-    private $serviceFyziklaniTask;
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
     /**
      * @var ModelEvent
      */
@@ -35,11 +32,7 @@ class TaskGrid extends BaseGrid {
         $this->event = $event;
     }
 
-    /**
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @return void
-     */
-    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask) {
+    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask): void {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 

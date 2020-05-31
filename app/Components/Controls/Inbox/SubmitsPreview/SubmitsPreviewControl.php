@@ -18,25 +18,18 @@ use Nette\Application\BadRequestException;
 class SubmitsPreviewControl extends SeriesTableComponent {
     use SubmitDownloadTrait;
 
-    /** @var UploadedStorage */
-    private $uploadedStorage;
-    /** @var CorrectedStorage */
-    private $correctedStorage;
-    /** @var ServiceSubmit $serviceSubmit */
-    private $serviceSubmit;
+    private UploadedStorage $uploadedStorage;
+
+    private CorrectedStorage $correctedStorage;
+
+    private ServiceSubmit $serviceSubmit;
 
     public function render() {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
     }
 
-    /**
-     * @param UploadedStorage $uploadedStorage
-     * @param CorrectedStorage $correctedStorage
-     * @param ServiceSubmit $serviceSubmit
-     * @return void
-     */
-    public function injectPrimary(UploadedStorage $uploadedStorage, CorrectedStorage $correctedStorage, ServiceSubmit $serviceSubmit) {
+    public function injectPrimary(UploadedStorage $uploadedStorage, CorrectedStorage $correctedStorage, ServiceSubmit $serviceSubmit): void {
         $this->uploadedStorage = $uploadedStorage;
         $this->correctedStorage = $correctedStorage;
         $this->serviceSubmit = $serviceSubmit;
@@ -44,10 +37,11 @@ class SubmitsPreviewControl extends SeriesTableComponent {
 
     /**
      * @param int $id
+     * @return void
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function handleDownloadUploaded(int $id) {
+    public function handleDownloadUploaded(int $id): void {
         $logger = new MemoryLogger();
         $this->traitHandleDownloadUploaded($logger, $id);
         FlashMessageDump::dump($logger, $this);
@@ -55,10 +49,11 @@ class SubmitsPreviewControl extends SeriesTableComponent {
 
     /**
      * @param int $id
+     * @return void
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function handleDownloadCorrected(int $id) {
+    public function handleDownloadCorrected(int $id): void {
         $logger = new MemoryLogger();
         $this->traitHandleDownloadCorrected($logger, $id);
         FlashMessageDump::dump($logger, $this);

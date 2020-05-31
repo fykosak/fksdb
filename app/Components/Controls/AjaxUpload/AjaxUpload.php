@@ -36,13 +36,7 @@ class AjaxUpload extends ReactComponent {
     /** @var UploadedStorage */
     private $uploadedStorage;
 
-    /**
-     * @param ServiceSubmit $serviceSubmit
-     * @param CorrectedStorage $correctedStorage
-     * @param UploadedStorage $uploadedStorage
-     * @return void
-     */
-    public function injectPrimary(ServiceSubmit $serviceSubmit, CorrectedStorage $correctedStorage, UploadedStorage $uploadedStorage) {
+    public function injectPrimary(ServiceSubmit $serviceSubmit, CorrectedStorage $correctedStorage, UploadedStorage $uploadedStorage): void {
         $this->serviceSubmit = $serviceSubmit;
         $this->correctedStorage = $correctedStorage;
         $this->uploadedStorage = $uploadedStorage;

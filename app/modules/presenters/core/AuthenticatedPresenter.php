@@ -54,35 +54,19 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      */
     protected $contestAuthorizator;
 
-    /**
-     * @param TokenAuthenticator $tokenAuthenticator
-     * @return void
-     */
-    public function injectTokenAuthenticator(TokenAuthenticator $tokenAuthenticator) {
+    public function injectTokenAuthenticator(TokenAuthenticator $tokenAuthenticator): void {
         $this->tokenAuthenticator = $tokenAuthenticator;
     }
 
-    /**
-     * @param PasswordAuthenticator $passwordAuthenticator
-     * @return void
-     */
-    public function injectPasswordAuthenticator(PasswordAuthenticator $passwordAuthenticator) {
+    public function injectPasswordAuthenticator(PasswordAuthenticator $passwordAuthenticator): void {
         $this->passwordAuthenticator = $passwordAuthenticator;
     }
 
-    /**
-     * @param GithubAuthenticator $githubAuthenticator
-     * @return void
-     */
-    public function injectGithubAuthenticator(GithubAuthenticator $githubAuthenticator) {
+    public function injectGithubAuthenticator(GithubAuthenticator $githubAuthenticator): void {
         $this->githubAuthenticator = $githubAuthenticator;
     }
 
-    /**
-     * @param ContestAuthorizator $contestAuthorizator
-     * @return void
-     */
-    public function injectContestAuthorizator(ContestAuthorizator $contestAuthorizator) {
+    public function injectContestAuthorizator(ContestAuthorizator $contestAuthorizator): void {
         $this->contestAuthorizator = $contestAuthorizator;
     }
 
@@ -90,11 +74,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         return $this->contestAuthorizator;
     }
 
-    /**
-     * @param EventAuthorizator $eventAuthorizator
-     * @return void
-     */
-    public function injectEventAuthorizator(EventAuthorizator $eventAuthorizator) {
+    public function injectEventAuthorizator(EventAuthorizator $eventAuthorizator): void {
         $this->eventAuthorizator = $eventAuthorizator;
     }
 
@@ -186,7 +166,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
         $this->redirect(':Authentication:login', [
             'backlink' => $this->storeRequest(),
-            AuthenticationPresenter::PARAM_REASON => $reason
+            AuthenticationPresenter::PARAM_REASON => $reason,
         ]);
     }
 
