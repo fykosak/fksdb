@@ -120,39 +120,36 @@ class Field {
     /** @var bool|callable */
     private $required;
 
-    /** @return bool */
     public function isRequired(): bool {
         return $this->evaluator->evaluate($this->required, $this);
     }
 
     /** @param bool|callable $required */
-    public function setRequired($required) {
+    public function setRequired($required): void {
         $this->required = $required;
     }
     /* ** MODIFIABLE ** */
     /** @var bool|callable */
     private $modifiable;
 
-    /** @return bool */
     public function isModifiable(): bool {
         return $this->getBaseHolder()->isModifiable() && $this->evaluator->evaluate($this->modifiable, $this);
     }
 
     /** @param bool|callable $modifiable */
-    public function setModifiable($modifiable) {
+    public function setModifiable($modifiable): void {
         $this->modifiable = $modifiable;
     }
     /* ** VISIBLE ** */
     /** @var bool|callable */
     private $visible;
 
-    /** @return bool */
     public function isVisible(): bool {
         return $this->evaluator->evaluate($this->visible, $this);
     }
 
-    /** @param $visible */
-    public function setVisible($visible) {
+    /** @param callable|bool $visible */
+    public function setVisible($visible): void {
         $this->visible = $visible;
     }
 

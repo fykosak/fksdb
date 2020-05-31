@@ -50,9 +50,6 @@ class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
         ]);
 
         $response = $this->fixture->run($request);
-        if ($response instanceof \Nette\Application\Responses\TextResponse) {
-            file_put_contents('t.html', $response->getSource());
-        }
         Assert::type(RedirectResponse::class, $response);
 
         $application = $this->assertApplication($this->eventId, 'bila@hrad.cz');

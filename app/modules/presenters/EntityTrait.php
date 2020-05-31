@@ -11,7 +11,6 @@ use FKSDB\Messages\Message;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IModel;
-use FKSDB\ORM\IService;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\InvalidStateException;
@@ -149,7 +148,7 @@ trait EntityTrait {
      */
     abstract protected function createComponentGrid(): BaseGrid;
 
-    abstract protected function getORMService(): AbstractModelSingle;
+    abstract protected function getORMService(): AbstractServiceSingle;
 
     protected function getModelResource(): string {
         return $this->getORMService()->getModelClassName()::RESOURCE_ID;
