@@ -33,7 +33,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @var int
      * @persistent
      */
-    public int $eventId;
+    public $eventId;
 
     protected ServiceEvent $serviceEvent;
 
@@ -79,7 +79,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws BadRequestException
      */
     protected function getEvent(): ModelEvent {
-        if (!$this->event) {
+        if (!isset($this->event)) {
             $model = $this->getServiceEvent()->findByPrimary($this->eventId);
             if (!$model) {
                 throw new NotFoundException('Event not found.');
@@ -95,7 +95,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws NeonSchemaException
      */
     protected function getHolder(): Holder {
-        if (!$this->holder) {
+        if (!isset($this->holder)) {
             $this->holder = $this->getEventDispatchFactory()->getDummyHolder($this->getEvent());
         }
         return $this->holder;

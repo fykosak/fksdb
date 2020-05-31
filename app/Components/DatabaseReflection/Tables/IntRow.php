@@ -17,9 +17,9 @@ class IntRow extends DefaultRow {
 
     private string $nullValue = 'notSet';
 
-    private ?string $prefix;
+    private ?string $prefix = null;
 
-    private ?string $suffix;
+    private ?string $suffix = null;
 
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         return (new NumberPrinter($this->prefix, $this->suffix, 0, $this->nullValue))($model->{$this->getModelAccessKey()});

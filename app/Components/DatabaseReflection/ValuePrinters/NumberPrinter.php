@@ -13,23 +13,23 @@ class NumberPrinter extends AbstractValuePrinter {
     public const NULL_VALUE_NOT_SET = 'notSet';
     public const NULL_VALUE_INF = 'infinite';
     public const NULL_VALUE_ZERO = 'zero';
-    /** @var string */
-    private $nullValueMode;
-    /** @var string */
-    private $prefix;
-    /** @var string */
-    private $suffix;
-    /** @var int */
-    private $decimal;
+
+    private string $nullValueMode;
+
+    private ?string $prefix;
+
+    private ?string $suffix;
+
+    private int $decimal;
 
     /**
      * NumberPrinter constructor.
-     * @param string $prefix
-     * @param string $suffix
+     * @param string|null $prefix
+     * @param string|null $suffix
      * @param int $decimal
      * @param string $nullValueMode
      */
-    public function __construct($prefix = null, $suffix = null, $decimal = 2, $nullValueMode = self::NULL_VALUE_NOT_SET) {
+    public function __construct(?string $prefix, ?string $suffix, int $decimal = 2, $nullValueMode = self::NULL_VALUE_NOT_SET) {
         $this->nullValueMode = $nullValueMode;
         $this->prefix = $prefix;
         $this->suffix = $suffix;

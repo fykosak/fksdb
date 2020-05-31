@@ -12,7 +12,7 @@ use Nette\Utils\Html;
  */
 abstract class AbstractDateTimeRow extends DefaultRow {
 
-    private ?string $format;
+    private ?string $format = null;
 
     public function setFormat(string $format): void {
         $this->format = $format;

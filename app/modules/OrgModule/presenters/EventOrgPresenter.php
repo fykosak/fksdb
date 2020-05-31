@@ -122,7 +122,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     }
 
     private function getEvent(): ModelEvent {
-        if (!$this->modelEvent) {
+        if (!isset($this->modelEvent)) {
             $this->modelEvent = $this->serviceEvent->findByPrimary($this->eventId);
         }
         return $this->modelEvent;

@@ -86,7 +86,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @deprecated
      */
     final public function getModel() {
-        if (!$this->model) {
+        if (!isset($this->model)) {
             $this->model = $this->getParameter('id') ? $this->loadModel($this->getParameter('id')) : null;
         }
         return $this->model;
@@ -98,7 +98,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function getModel2(int $id = null) {
-        if (!$this->model) {
+        if (!isset($this->model)) {
             $model = $this->loadModel($id ?: $this->id);
             if (!$model) {
                 throw new NotFoundException('Neexistující model.');

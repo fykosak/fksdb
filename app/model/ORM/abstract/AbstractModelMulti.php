@@ -125,15 +125,15 @@ abstract class AbstractModelMulti implements IModel {
     }
 
     /**
-     * @param $name
-     * @param $value
+     * @param string|int $name
+     * @param mixed $value
      */
     public function __set($name, $value) {
         throw new LogicException("Cannot update multimodel directly.");
     }
 
     /**
-     * @param $name
+     * @param string|int $name
      */
     public function __unset($name) {
         throw new LogicException("Cannot update multimodel directly.");

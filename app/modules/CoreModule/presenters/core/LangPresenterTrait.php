@@ -24,10 +24,10 @@ trait LangPresenterTrait {
      * @persistent
      * @internal
      */
-    public ?string $lang;
+    public ?string $lang = null;
 
     /** @var string cache */
-    private ?string $cacheLang;
+    private ?string $cacheLang = null;
 
     final public function injectTranslator(GettextTranslator $translator): void {
         $this->translator = $translator;

@@ -91,7 +91,7 @@ trait EntityTrait {
      * @throws InvalidStateException
      */
     public function getEntity() {
-        if (!$this->model) {
+        if (!isset($this->model)) {
             throw new InvalidStateException(_('Entity is not loaded'));
         }
         return $this->model;
@@ -104,10 +104,10 @@ trait EntityTrait {
      */
     public function loadEntity(int $id) {
         // protection for tests ev. change URL during app is running
-        if ($this->model && $id !== $this->model->getPrimary()) {
+        if (isset($this->model) && $id !== $this->model->getPrimary()) {
             $this->model = null;
         }
-        if (!$this->model) {
+        if (!isset($this->model)) {
             $model = $this->getORMService()->findByPrimary($id);
             if (!$model) {
                 throw new BadRequestException('Model neexistuje');

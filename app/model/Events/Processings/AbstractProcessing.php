@@ -36,9 +36,7 @@ abstract class AbstractProcessing implements IProcessing {
      * @var
      */
     private $states;
-    /**
-     * @var Holder
-     */
+
     private Holder $holder;
     /**
      * @var

@@ -129,7 +129,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @return ModelPerson|null
      */
     private function getPerson() {
-        if (!$this->person) {
+        if (!isset($this->person)) {
 
             if ($this->user->isLoggedIn()) {
                 $this->person = $this->user->getIdentity()->getPerson();

@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\Application\IJavaScriptCollector;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextBase;
 use Nette\InvalidArgumentException;
@@ -69,17 +70,13 @@ class AutocompleteSelectBox extends TextBase {
         $this->renderMethod = $renderMethod;
     }
 
-    /**
-     * @var bool
-     */
-    private $attachedJSON = false;
-    /**
-     * @var bool
-     */
-    private $attachedJS = false;
+    private bool $attachedJSON = false;
+
+    private bool $attachedJS = false;
 
     /**
-     * @param $obj
+     * @param IComponent $obj
+     * @return void
      */
     protected function attached($obj) {
         parent::attached($obj);

@@ -43,25 +43,16 @@ class ApplicationPresenter extends BasePresenter {
 
     public const PARAM_AFTER = 'a';
 
-    /**
-     * @var ModelEvent|null
-     */
-    private $event;
+    private ?ModelEvent $event;
 
     /**
      * @var IModel|ModelFyziklaniTeam|ModelEventParticipant
      */
-    private $eventApplication = false;
+    private ?IModel $eventApplication;
 
-    /**
-     * @var Holder
-     */
-    private $holder;
+    private Holder $holder;
 
-    /**
-     * @var Machine
-     */
-    private $machine;
+    private Machine $machine;
 
     private ServiceEvent $serviceEvent;
 
@@ -315,7 +306,7 @@ class ApplicationPresenter extends BasePresenter {
      * @return ModelEvent|null
      */
     private function getEvent() {
-        if (!$this->event) {
+        if (!isset($this->event)) {
             $eventId = null;
             if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
                 $data = $this->getTokenAuthenticator()->getTokenData();
@@ -340,7 +331,7 @@ class ApplicationPresenter extends BasePresenter {
      * @throws NeonSchemaException
      */
     private function getEventApplication() {
-        if (!$this->eventApplication) {
+        if (!isset($this->eventApplication)) {
             $id = null;
             //if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
             //   $data = $this->getTokenAuthenticator()->getTokenData();
@@ -367,7 +358,7 @@ class ApplicationPresenter extends BasePresenter {
      * @throws NeonSchemaException
      */
     private function getHolder() {
-        if (!$this->holder) {
+        if (!isset($this->holder)) {
             $this->holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
         }
         return $this->holder;
@@ -378,7 +369,7 @@ class ApplicationPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     private function getMachine() {
-        if (!$this->machine) {
+        if (!isset($this->machine)) {
             $this->machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
         }
         return $this->machine;
