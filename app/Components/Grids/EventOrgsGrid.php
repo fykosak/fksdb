@@ -6,7 +6,6 @@ use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEventOrg;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
@@ -58,9 +57,9 @@ class EventOrgsGrid extends BaseGrid {
     protected function configure($presenter) {
         parent::configure($presenter);
 
-        $orgs = $this->serviceEventOrg->findByEvent($this->event);
+        $query = $this->serviceEventOrg->findByEvent($this->event);
 
-        $dataSource = new NDataSource($orgs);
+        $dataSource = new NDataSource($query);
         $this->setDataSource($dataSource);
         $this->addColumns(['person.full_name']);
         $this->addColumn('note', _('Note'));

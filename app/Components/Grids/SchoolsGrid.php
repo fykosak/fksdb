@@ -7,7 +7,6 @@ use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\Selection;
-use Nette\DI\Container;
 use Nette\Utils\Html;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;

@@ -12,7 +12,6 @@ use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\YearCalculator;
 use Nette\DI\Container;
-use Nette\InvalidStateException;
 
 /**
  * Class TimelineControl

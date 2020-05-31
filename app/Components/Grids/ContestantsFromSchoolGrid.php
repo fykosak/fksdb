@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceContestant;
 use Nette\DI\Container;

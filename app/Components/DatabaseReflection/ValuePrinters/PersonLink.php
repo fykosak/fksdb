@@ -3,7 +3,6 @@
 namespace FKSDB\Components\DatabaseReflection\ValuePrinters;
 
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\IPersonReferencedModel;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;

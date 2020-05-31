@@ -13,8 +13,8 @@ use NiftyGrid\DuplicateColumnException;
 use SQL\SearchableDataSource;
 
 /**
- * Class ParticipantGrid
- * *
+ * Class ApplicationGrid
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ApplicationGrid extends AbstractApplicationGrid {
 

@@ -7,7 +7,6 @@ use FKSDB\Components\DatabaseReflection\Links\AbstractLink;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
-use Nette\Utils\Html;
 
 /**
  * Class TableReflectionFactory

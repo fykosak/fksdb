@@ -3,7 +3,6 @@
 namespace FKSDB\Components\DatabaseReflection\ValuePrinters;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
-use FKSDB\Exceptions\NotImplementedException;
 use Nette\Utils\Html;
 
 /**

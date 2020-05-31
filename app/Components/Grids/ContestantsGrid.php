@@ -2,10 +2,10 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Services\ServiceContestant;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
@@ -54,8 +54,8 @@ class ContestantsGrid extends BaseGrid {
         // columns
         //
         $this->addColumn('name', _('Name'));
-        $this->addColumn('study_year', _('Ročník'));
-        $this->addColumn('school_name', _('Škola'));
+        $this->addColumn('study_year', _('Study year'));
+        $this->addColumn('school_name', _('School'));
 
         //
         // operations
@@ -63,13 +63,14 @@ class ContestantsGrid extends BaseGrid {
         $this->addButton('editPerson', _('Edit'))
             ->setText(_('Edit'))
             ->setLink(function ($row) use ($presenter) {
+                /** @var ModelContestant $row */
                 return $presenter->link('Contestant:edit', [
                     'id' => $row->ct_id,
                 ]);
             });
 
         $this->addGlobalButton('add')
-            ->setLabel(_('Založit řešitele'))
+            ->setLabel(_('Create contestant'))
             ->setLink($this->getPresenter()->link('create'));
 
 

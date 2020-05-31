@@ -13,7 +13,6 @@ use FKSDB\Exceptions\NotFoundException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;

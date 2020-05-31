@@ -21,19 +21,19 @@ use Tracy\Debugger;
  */
 abstract class AbstractForm extends FormControl {
     const CONT_EVENT = 'event';
-    /**
-     * @var Container
-     */
-    protected $container;
+    /** @var EventFactory */
+    private $eventFactory;
+    /** @var ServiceAuthToken */
+    private $serviceAuthToken;
 
     /**
-     * EditControl constructor.
-     * @param Container $container
-     * @throws \Exception
+     * @param EventFactory $eventFactory
+     * @param ServiceAuthToken $serviceAuthToken
+     * @return void
      */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->container = $container;
+    public function injectPrimary(EventFactory $eventFactory, ServiceAuthToken $serviceAuthToken) {
+        $this->serviceAuthToken = $serviceAuthToken;
+        $this->eventFactory = $eventFactory;
     }
 
     /**
@@ -44,9 +44,7 @@ abstract class AbstractForm extends FormControl {
      */
     protected function createBaseForm(ModelContest $contest) {
         $form = $this->getForm();
-        /** @var EventFactory $eventFactory */
-        $eventFactory = $this->container->getByType(EventFactory::class);
-        $eventContainer = $eventFactory->createEvent($contest);
+        $eventContainer = $this->eventFactory->createEvent($contest);
         $form->addComponent($eventContainer, self::CONT_EVENT);
         return $form;
     }
@@ -55,15 +53,13 @@ abstract class AbstractForm extends FormControl {
      * @param ModelEvent|AbstractModelSingle $event
      */
     protected function updateTokens(ModelEvent $event) {
-        /** @var ServiceAuthToken $serviceAuthToken */
-        $serviceAuthToken = $this->container->getByType(ServiceAuthToken::class);
-        $connection = $serviceAuthToken->getConnection();
+        $connection = $this->serviceAuthToken->getConnection();
         try {
             $connection->beginTransaction();
             // update also 'until' of authTokens in case that registration end has changed
             $tokenData = ['until' => $event->registration_end ?: $event->end];
-            foreach ($serviceAuthToken->findTokensByEventId($event->event_id) as $token) {
-                $serviceAuthToken->updateModel2($token, $tokenData);
+            foreach ($this->serviceAuthToken->findTokensByEventId($event->event_id) as $token) {
+                $this->serviceAuthToken->updateModel2($token, $tokenData);
             }
             $connection->commit();
         } catch (ModelException $exception) {

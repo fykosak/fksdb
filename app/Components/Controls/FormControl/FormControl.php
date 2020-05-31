@@ -5,10 +5,7 @@ namespace FKSDB\Components\Controls\FormControl;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Exceptions\BadTypeException;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
-use Nette\DI\Container;
-use Nette\Templating\FileTemplate;
 
 /**
  * Bootstrap compatible form control with support for AJAX in terms

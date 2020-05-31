@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Grids\Payment;
 
 use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;

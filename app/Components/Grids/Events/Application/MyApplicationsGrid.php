@@ -16,7 +16,8 @@ use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class MyApplicationsGrid
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
+ * TODO!!!
  */
 class MyApplicationsGrid extends BaseGrid {
     /**

@@ -3,11 +3,9 @@
 namespace FKSDB\Components\DatabaseReflection\StoredQuery\StoredQuery;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTagType;
-use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
 
 /**

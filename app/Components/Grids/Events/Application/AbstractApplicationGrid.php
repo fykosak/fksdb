@@ -101,7 +101,6 @@ abstract class AbstractApplicationGrid extends BaseGrid {
      * @return void
      * @throws DuplicateColumnException
      * @throws NotImplementedException
-     * @throws NotImplementedException
      */
     protected function addColumns(array $fields) {
         $holderFields = $this->holder->getPrimaryHolder()->getFields();
