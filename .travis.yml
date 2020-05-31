@@ -5,12 +5,12 @@ addons:
     - db.fykos.local
     - auth.fykos.local
   mariadb: '10.4'
+  
+env:
+  - DB=mariadb
+  - DB=mysql
 
 php:
-  - 7.0
-  - 7.1
-  - 7.2
-  - 7.3
   - 7.4
 
 before_install:
