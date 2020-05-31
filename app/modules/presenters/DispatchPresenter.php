@@ -8,13 +8,14 @@ use Nette\Application\UI\InvalidLinkException;
 
 /**
  * Class DispatchPresenter
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DispatchPresenter extends AuthenticatedPresenter {
 
     /**
      * @throws InvalidLinkException
      */
-    public function renderDefault() {
+    public function renderDefault(): void {
         /**
          * @var ModelLogin $login
          */

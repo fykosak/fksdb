@@ -11,10 +11,6 @@ use FKSDB\Components\Controls\Loaders\Stylesheet\StylesheetLoader;
  */
 trait CollectorPresenterTrait {
 
-    /*	 * ******************************
-     * Loading assets
-     * ****************************** */
-
     protected function createComponentJsLoader(): JavaScriptLoader {
         return new JavaScriptLoader();
     }
@@ -22,10 +18,6 @@ trait CollectorPresenterTrait {
     protected function createComponentCssLoader(): StylesheetLoader {
         return new StylesheetLoader();
     }
-
-    /*	 * ******************************
-     * IJavaScriptCollector
-     * ****************************** */
 
     public function registerJSFile(string $file): void {
         /** @var JavaScriptLoader $component */
@@ -38,10 +30,6 @@ trait CollectorPresenterTrait {
         $component = $this->getComponent('jsLoader');
         $component->removeFile($file);
     }
-
-    /*	 * ******************************
-     * IStylesheetCollector
-     * ****************************** */
 
     public function registerStylesheetFile(string $file, array $media = []): void {
         /** @var StylesheetLoader $component */

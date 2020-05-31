@@ -20,20 +20,17 @@ use FKSDB\Exceptions\NotImplementedException;
 class EventPresenter extends BasePresenter {
     use EntityTrait;
 
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
+    private ServiceEvent $serviceEvent;
 
     public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 
-    public function titleList() {
+    public function titleList(): void {
         $this->setTitle(_('Events'), 'fa fa-calendar-check-o');
     }
 
-    public function titleCreate() {
+    public function titleCreate(): void {
         $this->setTitle(_('Add event'), 'fa fa-calendar-plus-o');
     }
 
@@ -41,14 +38,14 @@ class EventPresenter extends BasePresenter {
      * @param int $id
      * @throws BadRequestException
      */
-    public function titleEdit(int $id) {
+    public function titleEdit(int $id): void {
         $this->setTitle(sprintf(_('Edit event %s'), $this->loadEntity($id)->name), 'fa fa-pencil');
     }
 
     /**
      * @throws NotImplementedException
      */
-    public function actionDelete() {
+    public function actionDelete(): void {
         throw new NotImplementedException();
     }
 
@@ -56,7 +53,7 @@ class EventPresenter extends BasePresenter {
      * @param int $id
      * @throws BadRequestException
      */
-    public function actionEdit(int $id) {
+    public function actionEdit(int $id): void {
         $this->traitActionEdit($id);
     }
 
@@ -65,23 +62,22 @@ class EventPresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws BadRequestException
      */
     public function createComponentCreateForm(): Control {
         return new CreateForm($this->getContext(), $this->getSelectedContest(), $this->getSelectedYear());
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws BadRequestException
      */
     public function createComponentEditForm(): Control {
         return new EditForm($this->getContext(), $this->getSelectedContest());
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServiceEvent {
         return $this->serviceEvent;
     }
 

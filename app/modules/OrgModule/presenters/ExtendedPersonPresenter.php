@@ -23,10 +23,8 @@ use Persons\IExtendedPersonPresenter;
  * *
  */
 abstract class ExtendedPersonPresenter extends EntityPresenter implements IExtendedPersonPresenter {
-    /**
-     * @var bool
-     */
-    protected $sendEmail = true;
+
+    protected bool $sendEmail = true;
 
     private ReferencedPersonFactory $referencedPersonFactory;
 

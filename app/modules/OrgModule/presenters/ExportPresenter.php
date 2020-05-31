@@ -239,10 +239,7 @@ class ExportPresenter extends SeriesPresenter {
         return $methods;
     }
 
-    /**
-     * @return string
-     */
-    protected function getHttpRealm() {
+    protected function getHttpRealm(): ?string {
         return 'FKSDB-export';
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * For presenters that provide contest and year context.
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -12,12 +12,12 @@ use FKSDB\ORM\Models\ModelContest;
  * Interface IContestPresenter
  */
 interface IContestPresenter {
-
-    /** @return ModelContest */
+    /**
+     * @return ModelContest
+     */
     public function getSelectedContest();
 
-    /** @return int */
-    public function getSelectedYear();
+    public function getSelectedYear(): ?int;
 
     public function getSelectedAcademicYear(): int;
 

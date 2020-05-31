@@ -19,23 +19,14 @@ use Persons\ExtendedPersonHandler;
  * @method ModelEventOrg getModel()
  */
 class EventOrgPresenter extends ExtendedPersonPresenter {
-    /** @var string */
-    protected $fieldsDefinition = 'adminEventOrg';
 
-    /**
-     * @var ServiceEventOrg
-     */
-    private $serviceEventOrg;
+    protected string $fieldsDefinition = 'adminEventOrg';
 
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
+    private ServiceEventOrg $serviceEventOrg;
 
-    /**
-     * @var ModelEvent
-     */
-    private $modelEvent;
+    private ServiceEvent $serviceEvent;
+
+    private ModelEvent $modelEvent;
 
     /**
      * @persistent
@@ -50,12 +41,12 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
         $this->serviceEvent = $serviceEvent;
     }
 
-    public function titleEdit() {
+    public function titleEdit(): void {
         $model = $this->getModel();
         $this->setTitle(sprintf(_('Úprava organizátora %s akce %s'), $model->getPerson()->getFullName(), $model->getEvent()->name), 'fa fa-user');
     }
 
-    public function titleCreate() {
+    public function titleCreate(): void {
         $this->setTitle(sprintf(_('Založit organizátora akce %s'), $this->getEvent()->name), 'fa fa-user-plus');
     }
 
@@ -64,7 +55,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function renderEdit($id) {
+    public function renderEdit($id): void {
         parent::renderEdit($id);
 
         $eventOrg = $this->getModel();

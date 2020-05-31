@@ -16,9 +16,5 @@ use Nette\Application\BadRequestException;
  */
 interface ISeriesPresenter extends IContestPresenter {
 
-    /**
-     * @return int
-     * @throws BadRequestException
-     */
-    public function getSelectedSeries();
+    public function getSelectedSeries(): ?int;
 }

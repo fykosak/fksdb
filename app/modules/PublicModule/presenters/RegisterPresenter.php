@@ -104,17 +104,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $this->handlerFactory = $handlerFactory;
     }
 
-    /**
-     * @return ModelContest|ActiveRow|null
-     */
-    public function getSelectedContest() {
+    public function getSelectedContest(): ?ModelContest {
         return $this->contestId ? $this->getServiceContest()->findByPrimary($this->contestId) : null;
     }
 
-    /**
-     * @return int
-     */
-    public function getSelectedYear() {
+    public function getSelectedYear(): ?int {
         return $this->year;
     }
 

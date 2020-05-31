@@ -22,7 +22,7 @@ class ErrorPresenter extends BasePresenter {
         /* empty */
     }
 
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setTitle(_('Chyba'));
     }
 
@@ -31,9 +31,9 @@ class ErrorPresenter extends BasePresenter {
      * @return void
      * @throws AbortException
      */
-    public function renderDefault($exception) {
+    public function renderDefault($exception): void {
         if ($this->isAjax()) { // AJAX request? Just note this error in payload.
-            $this->payload->error = TRUE;
+            $this->payload->error = true;
             $this->terminate();
         } elseif ($exception instanceof BadRequestException) {
             $code = $exception->getCode();

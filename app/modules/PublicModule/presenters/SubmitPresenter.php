@@ -36,32 +36,32 @@ class SubmitPresenter extends BasePresenter {
 
     private ServiceSubmit $submitService;
 
-    public function injectSubmitService(ServiceSubmit $submitService): void {
-        $this->submitService = $submitService;
-    }
-
     private ServiceSubmitQuizQuestion $submitQuizQuestionService;
-
-    public function injectSubmitQuizQuestionService(ServiceSubmitQuizQuestion $submitQuizQuestionService): void {
-        $this->submitQuizQuestionService = $submitQuizQuestionService;
-    }
 
     private UploadedStorage $uploadedSubmitStorage;
 
-    public function injectSubmitUploadedStorage(UploadedStorage $filesystemUploadedSubmitStorage): void {
-        $this->uploadedSubmitStorage = $filesystemUploadedSubmitStorage;
-    }
-
     private ServiceTask $taskService;
-
-    public function injectTaskService(ServiceTask $taskService): void {
-        $this->taskService = $taskService;
-    }
 
     private ServiceQuizQuestion $quizQuestionService;
 
     public function injectQuizQuestionService(ServiceQuizQuestion $quizQuestionService): void {
         $this->quizQuestionService = $quizQuestionService;
+    }
+
+    public function injectSubmitService(ServiceSubmit $submitService): void {
+        $this->submitService = $submitService;
+    }
+
+    public function injectTaskService(ServiceTask $taskService): void {
+        $this->taskService = $taskService;
+    }
+
+    public function injectSubmitUploadedStorage(UploadedStorage $filesystemUploadedSubmitStorage): void {
+        $this->uploadedSubmitStorage = $filesystemUploadedSubmitStorage;
+    }
+
+    public function injectSubmitQuizQuestionService(ServiceSubmitQuizQuestion $submitQuizQuestionService): void {
+        $this->submitQuizQuestionService = $submitQuizQuestionService;
     }
 
     /* ******************* AUTH ************************/

@@ -66,7 +66,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @param $id
      * @throws BadRequestException
      */
-    public function renderEdit($id) {
+    public function renderEdit($id): void {
         $component = $this->getComponent(self::COMP_EDIT_FORM);
         $form = ($component instanceof FormControl) ? $component->getForm() : $component;
         $this->setDefaults($this->getModel(), $form);

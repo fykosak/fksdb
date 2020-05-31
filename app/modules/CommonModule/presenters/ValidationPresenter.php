@@ -7,7 +7,7 @@ use FKSDB\Components\Grids\DataTesting\PersonsGrid;
 
 /**
  * Class ValidationPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ValidationPresenter extends BasePresenter {
     public function titleDefault(): void {

@@ -19,18 +19,17 @@ use Nette\Security\IResource;
 
 /**
  * Trait EntityTrait
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 trait EntityTrait {
-    /**
-     * @var AbstractModelSingle|IModel
-     */
-    private $model;
 
-    public function authorizedList() {
+    private ?AbstractModelSingle $model;
+
+    public function authorizedList(): void {
         $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'list'));
     }
 
-    public function authorizedCreate() {
+    public function authorizedCreate(): void {
         $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'create'));
     }
 
@@ -38,7 +37,7 @@ trait EntityTrait {
      * @param int $id
      * @throws BadRequestException
      */
-    public function authorizedEdit(int $id) {
+    public function authorizedEdit(int $id): void {
         $this->setAuthorized($this->traitIsAuthorized($this->loadEntity($id), 'edit'));
     }
 
@@ -46,7 +45,7 @@ trait EntityTrait {
      * @param int $id
      * @throws BadRequestException
      */
-    public function authorizedDelete(int $id) {
+    public function authorizedDelete(int $id): void {
         $this->setAuthorized($this->traitIsAuthorized($this->loadEntity($id), 'delete'));
     }
 
@@ -54,43 +53,31 @@ trait EntityTrait {
      * @param int $id
      * @throws BadRequestException
      */
-    public function authorizedDetail(int $id) {
+    public function authorizedDetail(int $id): void {
         $this->setAuthorized($this->traitIsAuthorized($this->loadEntity($id), 'detail'));
     }
 
 
-    public function titleList() {
+    public function titleList(): void {
     }
 
-    public function titleCreate() {
+    public function titleCreate(): void {
     }
 
-    /**
-     * @param int $id
-     * @return void
-     */
-    public function titleEdit(int $id) {
+    public function titleEdit(int $id): void {
     }
 
-    /**
-     * @param int $id
-     * @return void
-     */
-    public function titleDetail(int $id) {
+    public function titleDetail(int $id): void {
     }
 
-    /**
-     * @param int $id
-     * @return void
-     */
-    public function titleDelete(int $id) {
+    public function titleDelete(int $id): void {
     }
 
     /**
      * @return AbstractModelSingle|IModel
      * @throws InvalidStateException
      */
-    public function getEntity() {
+    public function getEntity(): AbstractModelSingle {
         if (!isset($this->model)) {
             throw new InvalidStateException(_('Entity is not loaded'));
         }
@@ -102,12 +89,12 @@ trait EntityTrait {
      * @return AbstractModelSingle|IModel
      * @throws BadRequestException
      */
-    public function loadEntity(int $id) {
+    public function loadEntity(int $id): AbstractModelSingle {
         // protection for tests ev. change URL during app is running
         if (isset($this->model) && $id !== $this->model->getPrimary()) {
             $this->model = null;
         }
-        if (!isset($this->model)) {
+        if (!isset($this->model) || is_null($this->model)) {
             $model = $this->getORMService()->findByPrimary($id);
             if (!$model) {
                 throw new BadRequestException('Model neexistuje');
@@ -122,7 +109,7 @@ trait EntityTrait {
      * @param int $id
      * @throws BadRequestException
      */
-    protected function traitActionEdit(int $id) {
+    protected function traitActionEdit(int $id): void {
         $component = $this->getComponent('editForm');
         if (!$component instanceof IEditEntityForm) {
             throw new BadTypeException(IEditEntityForm::class, $component);
@@ -162,10 +149,7 @@ trait EntityTrait {
      */
     abstract protected function createComponentGrid(): BaseGrid;
 
-    /**
-     * @return IService|AbstractServiceSingle
-     */
-    abstract protected function getORMService();
+    abstract protected function getORMService(): AbstractModelSingle;
 
     protected function getModelResource(): string {
         return $this->getORMService()->getModelClassName()::RESOURCE_ID;

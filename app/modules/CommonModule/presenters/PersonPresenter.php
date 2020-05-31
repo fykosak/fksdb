@@ -50,13 +50,13 @@ class PersonPresenter extends BasePresenter {
 
     private Merger $personMerger;
 
-    private ModelPerson $trunkPerson;
-
-    private ModelPerson $mergedPerson;
-
     private ReferencedPersonFactory $referencedPersonFactory;
 
-    private ModelPerson $person;
+    private ?ModelPerson $trunkPerson = null;
+
+    private ?ModelPerson $mergedPerson = null;
+
+    private ?ModelPerson $person = null;
     /**
      * @var int
      */

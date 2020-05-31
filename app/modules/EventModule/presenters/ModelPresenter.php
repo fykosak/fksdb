@@ -8,7 +8,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class ModelPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ModelPresenter extends BasePresenter {
 
@@ -33,9 +33,7 @@ class ModelPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     protected function createComponentGraphComponent(): GraphComponent {
-        /** @var EventDispatchFactory $factory */
-        $factory = $this->getContext()->getByType(EventDispatchFactory::class);
-        $machine = $factory->getEventMachine($this->getEvent());
+        $machine = $this->getEventDispatchFactory()->getEventMachine($this->getEvent());
         return new GraphComponent($this->getContext(), $machine->getPrimaryMachine());
     }
 }

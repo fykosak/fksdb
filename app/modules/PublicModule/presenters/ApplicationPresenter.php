@@ -137,7 +137,7 @@ class ApplicationPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws NeonSchemaException
      */
-    protected function unauthorizedAccess() {
+    protected function unauthorizedAccess(): void {
         if ($this->getAction() == 'default') {
             $this->initializeMachine();
             if ($this->getHolder()->getPrimaryHolder()->getModelState() == BaseMachine::STATE_INIT) {
@@ -148,10 +148,7 @@ class ApplicationPresenter extends BasePresenter {
         parent::unauthorizedAccess();
     }
 
-    /**
-     * @return bool
-     */
-    public function requiresLogin() {
+    public function requiresLogin(): bool {
         return $this->getAction() != 'default';
     }
 
@@ -327,23 +324,11 @@ class ApplicationPresenter extends BasePresenter {
      */
     private function getEventApplication() {
         if (!isset($this->eventApplication)) {
-            $id = null;
-            //if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
-            //   $data = $this->getTokenAuthenticator()->getTokenData();
-            //   if ($data) {
-            //    $data = self::decodeParameters($this->getTokenAuthenticator()->getTokenData());
-            //$eventId = $data['id']; // TODO $id?
-            //  }
-            // }
-            $id = $id ?: $this->getParameter('id');
+            $id = $this->getParameter('id');
             $service = $this->getHolder()->getPrimaryHolder()->getService();
 
             $this->eventApplication = $service->findByPrimary($id);
-            /* if ($row) {
-                 $this->eventApplication = ($service->getModelClassName())::createFromActiveRow($row);
-             }*/
         }
-
         return $this->eventApplication;
     }
 

@@ -179,7 +179,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @param string
      * @return string
      */
-    protected static function formatTitleMethod($view) {
+    protected static function formatTitleMethod(string $view): string {
         return 'title' . $view;
     }
 
@@ -264,7 +264,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @throws ReflectionException
      * @throws BadTypeException
      */
-    protected function putIntoBreadcrumbs() {
+    protected function putIntoBreadcrumbs(): void {
         /** @var Breadcrumbs $component */
         $component = $this->getComponent('breadcrumbs');
         $component->setBackLink($this->getRequest());

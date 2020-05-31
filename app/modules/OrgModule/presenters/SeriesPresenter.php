@@ -52,7 +52,7 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
      * @throws BadRequestException
      * @throws \Exception
      */
-    public function getSelectedSeries() {
+    public function getSelectedSeries(): ?int {
         $control = $this->getComponent('seriesChooser');
         if (!$control instanceof SeriesChooser) {
             throw new BadTypeException(SeriesChooser::class, $control);
@@ -70,7 +70,7 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
      * @param string $subTitle
      * @throws BadRequestException
      */
-    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
+    protected function setTitle(string $title, string $icon = '', string $subTitle = ''): void {
         parent::setTitle($title, $icon, $subTitle . ' ' . sprintf(_('%d. series'), $this->getSelectedSeries()));
     }
 }

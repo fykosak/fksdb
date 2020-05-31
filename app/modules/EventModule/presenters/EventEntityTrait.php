@@ -14,7 +14,7 @@ use Nette\Application\ForbiddenRequestException;
 
 /**
  * Trait EventEntityTrait
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 trait EventEntityTrait {
     use EntityTrait {

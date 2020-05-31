@@ -13,19 +13,19 @@ trait ChartPresenterTrait {
 
     protected ?IChart $selectedChart;
 
-    public function titleChart() {
+    public function titleChart(): void {
         $this->setTitle($this->selectedChart->getTitle(), 'fa fa-pie-chart');
     }
 
-    public function titleList() {
+    public function titleList(): void {
         $this->setTitle(_('Charts'), 'fa fa fa-pie-chart');
     }
 
-    public function renderChart() {
+    public function renderChart(): void {
         $this->template->chart = $this->selectedChart;
     }
 
-    public function renderList() {
+    public function renderList(): void {
         $this->template->charts = $this->getCharts();
     }
 
@@ -40,7 +40,7 @@ trait ChartPresenterTrait {
         return $chartComponents;
     }
 
-    protected function selectChart() {
+    protected function selectChart(): void {
         foreach ($this->getCharts() as $chart) {
             if ($chart->getAction() === $this->getAction()) {
                 $this->selectedChart = $chart;
@@ -54,9 +54,9 @@ trait ChartPresenterTrait {
     }
 
 
-    abstract public function authorizedList();
+    abstract public function authorizedList(): void;
 
-    abstract public function authorizedChart();
+    abstract public function authorizedChart(): void;
 
     /**
      * @return IChart[]

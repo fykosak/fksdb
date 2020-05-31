@@ -10,7 +10,7 @@ use FKSDB\UI\PageStyleContainer;
 
 /**
  * Class DispatchPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DispatchPresenter extends AuthenticatedPresenter {
 

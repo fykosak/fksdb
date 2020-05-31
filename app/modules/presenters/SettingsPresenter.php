@@ -50,7 +50,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
         $this->setTitle(_('Settings'), 'fa fa-cogs');
     }
 
-    public function renderDefault() {
+    public function renderDefault(): void {
         /**
          * @var ModelLogin $login
          */

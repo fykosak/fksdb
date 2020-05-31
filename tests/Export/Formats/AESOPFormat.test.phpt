@@ -8,6 +8,7 @@ use Exports\Formats\PlainTextResponse;
 use Exports\StoredQueryFactory;
 use Exports\StoredQueryPostProcessing;
 use FKSDB\CoreModule\ISeriesPresenter;
+use FKSDB\ORM\Models\ModelContest;
 use Nette\DI\Container;
 use Tester\Assert;
 
@@ -62,11 +63,11 @@ class MockSeriesPresenter implements ISeriesPresenter {
         ];
     }
 
-    public function getSelectedSeries() {
+    public function getSelectedSeries(): int {
         return 1;
     }
 
-    public function getSelectedYear() {
+    public function getSelectedYear(): int {
         return 1;
     }
 
@@ -78,7 +79,7 @@ class MockQueryParameter {
 
     public $name;
 
-    function __construct($name) {
+    public function __construct($name) {
         $this->name = $name;
     }
 

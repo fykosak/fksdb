@@ -12,17 +12,19 @@ use Nette\Application\UI\Form;
 
 /**
  * Class PizzaPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PizzaPresenter extends BasePresenter {
+
+    private PersonFactory $personFactory;
+
+    private ServicePerson $servicePerson;
+
     /**
      * @var ModelPerson[]
      */
     private array $persons = [];
 
-    private PersonFactory $personFactory;
-
-    private ServicePerson $servicePerson;
 
     public function injectPersonFactory(PersonFactory $personFactory): void {
         $this->personFactory = $personFactory;

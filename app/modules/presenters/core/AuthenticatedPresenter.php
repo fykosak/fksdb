@@ -56,22 +56,19 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         $this->contestAuthorizator = $contestAuthorizator;
     }
 
-    public function getContestAuthorizator(): ContestAuthorizator {
-        return $this->contestAuthorizator;
-    }
-
     public function injectEventAuthorizator(EventAuthorizator $eventAuthorizator): void {
         $this->eventAuthorizator = $eventAuthorizator;
+    }
+
+    public function getContestAuthorizator(): ContestAuthorizator {
+        return $this->contestAuthorizator;
     }
 
     public function getEventAuthorizator(): EventAuthorizator {
         return $this->eventAuthorizator;
     }
 
-    /**
-     * @return TokenAuthenticator
-     */
-    public function getTokenAuthenticator() {
+    public function getTokenAuthenticator(): TokenAuthenticator {
         return $this->tokenAuthenticator;
     }
 
@@ -80,7 +77,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      * @param string
      * @return string
      */
-    protected static function formatAuthorizedMethod($action) {
+    protected static function formatAuthorizedMethod(string $action): string {
         return 'authorized' . $action;
     }
 
@@ -133,7 +130,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     /**
      * @throws AbortException
      */
-    private function optionalLoginRedirect() {
+    private function optionalLoginRedirect(): void {
         if (!$this->requiresLogin()) {
             return;
         }
@@ -143,7 +140,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     /**
      * @throws AbortException
      */
-    final protected function loginRedirect() {
+    final protected function loginRedirect(): void {
         if ($this->user->logoutReason === UserStorage::INACTIVITY) {
             $reason = AuthenticationPresenter::REASON_TIMEOUT;
         } else {
@@ -163,7 +160,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      *
      * @return bool
      */
-    public function requiresLogin() {
+    public function requiresLogin(): bool {
         return true;
     }
 
@@ -175,24 +172,21 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         return self::AUTH_ALLOW_LOGIN | self::AUTH_ALLOW_TOKEN;
     }
 
-    /**
-     * @return string
-     */
-    protected function getHttpRealm() {
+    protected function getHttpRealm(): ?string {
         return null;
     }
 
     /**
      * @throws ForbiddenRequestException
      */
-    protected function unauthorizedAccess() {
+    protected function unauthorizedAccess(): void {
         throw new ForbiddenRequestException();
     }
 
     /**
      * @throws AbortException
      */
-    private function tryAuthToken() {
+    private function tryAuthToken(): void {
         $tokenData = $this->getParam(TokenAuthenticator::PARAM_AUTH_TOKEN);
 
         if (!$tokenData) {
@@ -215,10 +209,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         }
     }
 
-    /**
-     * @return void
-     */
-    private function tryHttpAuth() {
+    private function tryHttpAuth(): void {
         if (!isset($_SERVER['PHP_AUTH_USER'])) {
             $this->httpAuthPrompt();
             return;
@@ -241,10 +232,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         }
     }
 
-    /**
-     * @return void
-     */
-    private function httpAuthPrompt() {
+    private function httpAuthPrompt(): void {
         $realm = $this->getHttpRealm();
         if ($realm && $this->requiresLogin()) {
             header('WWW-Authenticate: Basic realm="' . $realm . '"');
@@ -257,7 +245,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     /**
      * @throws BadRequestException
      */
-    private function tryGithub() {
+    private function tryGithub(): void {
         if (!$this->getHttpRequest()->getHeader('X-GitHub-Event')) {
             return;
         }

@@ -11,7 +11,7 @@ use Nette\Application\UI\Control;
 
 /**
  * Class EventOrgPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventOrgPresenter extends BasePresenter {
     use EventEntityTrait;
