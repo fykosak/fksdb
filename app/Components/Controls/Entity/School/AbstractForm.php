@@ -47,7 +47,7 @@ abstract class AbstractForm extends FormControl {
     /**
      * @throws BadRequestException
      */
-    protected function buildForm() {
+    protected function buildForm(): void {
         $form = $this->getForm();
         $schoolContainer = $this->schoolFactory->createSchool();
         $form->addComponent($schoolContainer, self::CONT_SCHOOL);

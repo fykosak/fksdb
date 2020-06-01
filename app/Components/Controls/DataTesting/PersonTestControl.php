@@ -24,24 +24,24 @@ class PersonTestControl extends BaseComponent {
      * @var int
      * @persistent
      */
-    public $startId = 0;
+    public int $startId = 0;
     /**
      * @var int
      * @persistent
      */
-    public $endId = 0;
+    public int $endId = 0;
 
     /**
      * @var PersonTest[]
      * @persistent
      */
-    public $tests = [];
+    public array $tests = [];
 
     /**
      * @var array
      * @persistent
      */
-    public $levels = [];
+    public array $levels = [];
 
     private ServicePerson $servicePerson;
 
@@ -135,14 +135,5 @@ class PersonTestControl extends BaseComponent {
         $this->template->logs = $this->calculateProblems();
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
-    }
-
-    /**
-     * @param string|int $page
-     * @return void
-     */
-    public function handleChangePage($page): void {
-        $this->page = $page;
-        $this->invalidateControl();
     }
 }

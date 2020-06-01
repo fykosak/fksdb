@@ -52,7 +52,7 @@ class EditForm extends AbstractForm implements IEditEntityForm {
      * @param Form $form
      * @throws AbortException
      */
-    private function handleEditFormSuccess(Form $form) {
+    private function handleEditFormSuccess(Form $form): void {
         $connection = $this->serviceSchool->getConnection();
         $values = $form->getValues();
         $school = $this->model;

@@ -54,14 +54,14 @@ class Breadcrumbs extends BaseComponent {
      *
      * @var bool
      */
-    private $storedRequest = false;
+    private bool $storedRequest = false;
 
     /**
      * Breadcrumbs constructor.
      * @param $expiration
      * @param Container $container
      */
-    public function __construct($expiration, Container $container) {
+    public function __construct(string $expiration, Container $container) {
         parent::__construct($container);
         $this->getRequests()->setExpiration($expiration);
         $this->getPathKeyCache()->setExpiration($expiration);
@@ -287,7 +287,7 @@ class Breadcrumbs extends BaseComponent {
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    protected function createNaviRequest(Presenter $presenter, AppRequest $request, $backLink) {
+    protected function createNaviRequest(Presenter $presenter, AppRequest $request, $backLink): NaviRequest {
         $pathKey = $this->getPathKey($request);
         if (!$presenter instanceof INavigablePresenter) {
             throw new BadTypeException(INavigablePresenter::class, $presenter);

@@ -33,9 +33,13 @@ class TeamApplicationsTimeProgress extends ReactComponent implements IChart {
     public function __construct(Container $context, ModelEvent $event) {
         parent::__construct($context);
         $this->eventType = $event->getEventType();
-        $this->serviceFyziklaniTeam = $context->getByType(ServiceFyziklaniTeam::class);
-        $this->serviceEvent = $context->getByType(ServiceEvent::class);
     }
+
+    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceEvent $serviceEvent): void {
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->serviceEvent = $serviceEvent;
+    }
+
 
     protected function getReactId(): string {
         return 'events.applications-time-progress.teams';

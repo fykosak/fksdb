@@ -26,10 +26,11 @@ use Nette\Utils\Html;
  */
 class EditForm extends AbstractForm implements IEditEntityForm {
 
-    /**
-     * @var ModelEvent
-     */
-    private $model;
+    private ModelEvent $model;
+
+    private EventDispatchFactory $eventDispatchFactory;
+
+    private ServiceEvent $serviceEvent;
 
     /**
      * EditControl constructor.
@@ -47,13 +48,6 @@ class EditForm extends AbstractForm implements IEditEntityForm {
             $this->handleFormSuccess($form);
         };
     }
-
-    /**
-     * @var EventDispatchFactory
-     */
-    private $eventDispatchFactory;
-    /** @var ServiceEvent */
-    private $serviceEvent;
 
     public function injectEventDispatch(EventDispatchFactory $eventDispatchFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
@@ -99,7 +93,7 @@ class EditForm extends AbstractForm implements IEditEntityForm {
      * @param Form $form
      * @throws AbortException
      */
-    private function handleFormSuccess(Form $form) {
+    private function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
         $data = \FormUtils::emptyStrToNull($values[self::CONT_EVENT]);
         $model = $this->model;
@@ -117,7 +111,7 @@ class EditForm extends AbstractForm implements IEditEntityForm {
      * @throws BadRequestException
      * @throws NeonSchemaException
      */
-    private function createParamDescription() {
+    private function createParamDescription(): Html {
         $holder = $this->eventDispatchFactory->getDummyHolder($this->model);
         $scheme = $holder->getPrimaryHolder()->getParamScheme();
         $result = Html::el('ul');

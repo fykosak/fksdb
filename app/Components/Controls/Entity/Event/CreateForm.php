@@ -48,7 +48,7 @@ class CreateForm extends AbstractForm {
      * @param Form $form
      * @throws AbortException
      */
-    private function handleFormSuccess(Form $form) {
+    private function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
         $data = \FormUtils::emptyStrToNull($values[self::CONT_EVENT]);
         $data['year'] = $this->year;

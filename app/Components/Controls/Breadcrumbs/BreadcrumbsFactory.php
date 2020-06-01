@@ -11,7 +11,7 @@ use Nette\DI\Container;
  */
 class BreadcrumbsFactory {
 
-    private ?string $expiration;
+    private string $expiration;
 
     private Container $container;
 
@@ -20,7 +20,7 @@ class BreadcrumbsFactory {
      * @param $expiration
      * @param Container $container
      */
-    public function __construct($expiration, Container $container) {
+    public function __construct(string $expiration, Container $container) {
         $this->expiration = $expiration;
         $this->container = $container;
     }

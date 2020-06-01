@@ -34,8 +34,11 @@ class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
     public function __construct(Container $context, ModelEvent $event) {
         parent::__construct($context);
         $this->eventType = $event->getEventType();
-        $this->serviceEventParticipant = $context->getByType(ServiceEventParticipant::class);
-        $this->serviceEvent = $context->getByType(ServiceEvent::class);
+    }
+
+    public function injectPrimary(ServiceEventParticipant $serviceEventParticipant, ServiceEvent $serviceEvent): void {
+        $this->serviceEventParticipant = $serviceEventParticipant;
+        $this->serviceEvent = $serviceEvent;
     }
 
     protected function getReactId(): string {

@@ -19,7 +19,7 @@ use Tracy\Debugger;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractForm extends FormControl {
-    public const CONT_EVENT = 'event';
+    protected const CONT_EVENT = 'event';
 
     private EventFactory $eventFactory;
 
@@ -36,17 +36,14 @@ abstract class AbstractForm extends FormControl {
      * @throws BadRequestException
      * @throws \Exception
      */
-    protected function createBaseForm(ModelContest $contest) {
+    protected function createBaseForm(ModelContest $contest): Form {
         $form = $this->getForm();
         $eventContainer = $this->eventFactory->createEvent($contest);
         $form->addComponent($eventContainer, self::CONT_EVENT);
         return $form;
     }
 
-    /**
-     * @param ModelEvent|AbstractModelSingle $event
-     */
-    protected function updateTokens(ModelEvent $event) {
+    protected function updateTokens(ModelEvent $event): void {
         $connection = $this->serviceAuthToken->getConnection();
         try {
             $connection->beginTransaction();

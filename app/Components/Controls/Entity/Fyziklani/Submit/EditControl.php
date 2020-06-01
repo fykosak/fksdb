@@ -21,18 +21,12 @@ use Nette\Forms\Form;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class EditControl extends FormControl implements IEditEntityForm {
-    /**
-     * @var ServiceFyziklaniSubmit
-     */
-    private $serviceFyziklaniSubmit;
-    /**
-     * @var ModelFyziklaniSubmit
-     */
-    private $submit;
-    /**
-     * @var ModelEvent
-     */
-    private $event;
+
+    private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
+
+    private ModelFyziklaniSubmit $submit;
+
+    private ModelEvent $event;
 
     /**
      * EditControl constructor.
@@ -54,7 +48,6 @@ class EditControl extends FormControl implements IEditEntityForm {
     public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit): void {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
     }
-
 
     /**
      * @param AbstractModelSingle|ModelFyziklaniSubmit $submit
@@ -88,7 +81,7 @@ class EditControl extends FormControl implements IEditEntityForm {
      * @param Form $form
      * @throws AbortException
      */
-    private function editFormSucceeded(Form $form) {
+    private function editFormSucceeded(Form $form): void {
         $values = $form->getValues();
         try {
             $msg = $this->serviceFyziklaniSubmit->changePoints($this->submit, $values->points, $this->getPresenter()->getUser());

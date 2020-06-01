@@ -34,7 +34,7 @@ class CreateForm extends AbstractForm {
      * @param Form $form
      * @throws AbortException
      */
-    private function handleCreateFormSuccess(Form $form) {
+    private function handleCreateFormSuccess(Form $form): void {
         $connection = $this->serviceSchool->getConnection();
         $values = $form->getValues();
 

@@ -22,7 +22,7 @@ use Nette\Utils\JsonException;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
- * @method \AuthenticatedPresenter|\BasePresenter getPresenter($need = TRUE)
+ * @method \AuthenticatedPresenter|\BasePresenter getPresenter($need = true)
  */
 class ApplicationComponent extends BaseComponent {
 
@@ -35,10 +35,7 @@ class ApplicationComponent extends BaseComponent {
      */
     private $redirectCallback;
 
-    /**
-     * @var string
-     */
-    private $templateFile;
+    private string $templateFile;
 
     /**
      * ApplicationComponent constructor.
@@ -52,10 +49,7 @@ class ApplicationComponent extends BaseComponent {
         $this->holder = $holder;
     }
 
-    /**
-     * @param string $template name of the standard template or whole path
-     */
-    public function setTemplate($template) {
+    public function setTemplate(string $template): void {
         if (stripos($template, '.latte') !== false) {
             $this->templateFile = $template;
         } else {
@@ -63,10 +57,7 @@ class ApplicationComponent extends BaseComponent {
         }
     }
 
-    /**
-     * @return callable
-     */
-    public function getRedirectCallback() {
+    public function getRedirectCallback(): callable {
         return $this->redirectCallback;
     }
 
@@ -90,7 +81,7 @@ class ApplicationComponent extends BaseComponent {
      * @return void
      * @throws BadRequestException
      */
-    public function render() {
+    public function render(): void {
         $this->renderForm();
     }
 
@@ -98,7 +89,7 @@ class ApplicationComponent extends BaseComponent {
      * @return void
      * @throws BadRequestException
      */
-    public function renderForm() {
+    public function renderForm(): void {
         if (!$this->templateFile) {
             throw new InvalidStateException('Must set template for the application form.');
         }
@@ -116,7 +107,7 @@ class ApplicationComponent extends BaseComponent {
      * @return void
      * @throws BadRequestException
      */
-    public function renderInline($mode) {
+    public function renderInline($mode): void {
         $this->template->mode = $mode;
         $this->template->holder = $this->holder;
         $this->template->primaryModel = $this->holder->getPrimaryHolder()->getModel();
@@ -131,7 +122,7 @@ class ApplicationComponent extends BaseComponent {
      * @return FormControl
      * @throws BadRequestException
      */
-    protected function createComponentForm() {
+    protected function createComponentForm(): FormControl {
         $result = new FormControl($this->getContext());
         $form = $result->getForm();
 
@@ -216,17 +207,17 @@ class ApplicationComponent extends BaseComponent {
      * @throws JsonException
      * @throws BadRequestException
      */
-    public function handleSubmit(Form $form, $explicitTransitionName = null) {
+    public function handleSubmit(Form $form, $explicitTransitionName = null): void {
         $this->execute($form, $explicitTransitionName);
     }
 
     /**
-     * @param $transitionName
+     * @param string $transitionName
      * @throws AbortException
      * @throws JsonException
      * @throws BadRequestException
      */
-    public function handleTransition($transitionName) {
+    public function handleTransition($transitionName): void {
         $this->execute(null, $transitionName);
     }
 
@@ -237,7 +228,7 @@ class ApplicationComponent extends BaseComponent {
      * @throws JsonException
      * @throws BadRequestException
      */
-    private function execute(Form $form = null, $explicitTransitionName = null) {
+    private function execute(Form $form = null, $explicitTransitionName = null): void {
         try {
             $this->handler->storeAndExecute($this->holder, $form, $explicitTransitionName);
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
@@ -259,17 +250,14 @@ class ApplicationComponent extends BaseComponent {
         return $this->handler->getMachine($this->holder);
     }
 
-    /**
-     * @return bool
-     */
-    private function canEdit() {
+    private function canEdit(): bool {
         return $this->holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
     /**
      * @throws AbortException
      */
-    private function finalRedirect() {
+    private function finalRedirect(): void {
         if ($this->redirectCallback) {
             $id = $this->holder->getPrimaryHolder()->getModel()->getPrimary(false);
             ($this->redirectCallback)($id, $this->holder->getPrimaryHolder()->getEvent()->getPrimary());
