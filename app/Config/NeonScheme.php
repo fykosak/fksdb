@@ -4,6 +4,7 @@ namespace FKSDB\Config;
 
 use FKSDB\Config\Expressions\Helpers;
 use Nette\InvalidArgumentException;
+use Nette\Neon\Exception;
 use Nette\Utils\Arrays;
 
 /**

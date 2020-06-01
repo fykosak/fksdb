@@ -59,11 +59,7 @@ class PersonProvider implements IFilteredDataProvider {
         return $this->getItems();
     }
 
-    /**
-     * @param int $id
-     * @return string
-     */
-    public function getItemLabel($id): string {
+    public function getItemLabel(int $id): string {
         $person = $this->servicePerson->findByPrimary($id);
         return $person->getFullName();
     }

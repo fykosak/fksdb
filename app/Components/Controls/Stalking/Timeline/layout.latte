@@ -6,7 +6,7 @@
         <g transform="translate(0,15)">
             <g class="events">
                 {foreach $events as $type=>$rows}
-                    {var $rowNumber++}
+                    {? $rowNumber++}
                     {var $transform = 'translate(0,'.($rowNumber*$lineHeight).')'}
                     <g transform="{$transform}">
                         {foreach $rows as $row}
@@ -26,11 +26,11 @@
                     {foreach $rows as $row}
                         {var $contest =  $row['model']->getContest()}
                         {if $type=='orgs'}
-                            {var $rowNumber++}
+                            {? $rowNumber++}
                         {else}
                             {if in_array($contest->contest_id,$contestntsContests)}
                             {else}
-                                {var $rowNumber++}
+                                {? $rowNumber++}
                                 {var $contestntsContests[]=$contest->contest_id}
                             {/if}
                         {/if}

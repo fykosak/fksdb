@@ -30,8 +30,8 @@ class TexSignatureRow extends AbstractOrgRowFactory {
         $control = new TextInput($this->getTitle());
 
         $control->addRule(Form::MAX_LENGTH, null, 32);
-        $control->addCondition(Form::FILLED);
-        $control->addRule(Form::REGEXP, _('%label obsahuje nepovolené znaky.'), '/^[a-z][a-z0-9._\-]*$/i');
+        $control->addCondition(Form::FILLED)
+            ->addRule(Form::PATTERN, sprintf(_('%s obsahuje nepovolené znaky.'), $this->getTitle()), '[a-z][a-z0-9._\-]*');
         return $control;
     }
 }

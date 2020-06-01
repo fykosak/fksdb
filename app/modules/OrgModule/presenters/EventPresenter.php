@@ -11,6 +11,7 @@ use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use FKSDB\Exceptions\NotImplementedException;
+use Nette\Utils\Html;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

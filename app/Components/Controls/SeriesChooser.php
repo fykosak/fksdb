@@ -3,8 +3,8 @@
 namespace FKSDB\Components\Controls;
 
 use FKSDB\SeriesCalculator;
-use Nette\Application\BadRequestException;
 use Nette\Http\Session;
+use Nette\Application\BadRequestException;
 use OrgModule\SeriesPresenter;
 
 /**

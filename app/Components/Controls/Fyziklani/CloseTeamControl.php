@@ -12,6 +12,10 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 
+/**
+ * Class CloseTeamControl
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class CloseTeamControl extends BaseComponent {
 
     private ModelEvent $event;

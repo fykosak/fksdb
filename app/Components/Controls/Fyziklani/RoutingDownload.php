@@ -9,6 +9,10 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
 
+/**
+ * Class RoutingDownload
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class RoutingDownload extends BaseComponent {
 
     private static bool $JSAttached = false;

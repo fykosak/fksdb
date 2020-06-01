@@ -43,8 +43,7 @@ trait OptionsTrait {
      * Returns user-specific options.
      * @return array
      */
-    final public function getOptions() {
+    final public function getOptions(): array {
         return $this->options;
     }
-
 }

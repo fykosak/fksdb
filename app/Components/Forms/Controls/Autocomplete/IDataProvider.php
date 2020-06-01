@@ -16,16 +16,12 @@ interface IDataProvider {
      */
     public function getItems(): array;
 
-    /**
-     * @param mixed $id
-     * @return string
-     */
-    public function getItemLabel($id): string;
+    public function getItemLabel(int $id): string;
 
     /**
      * Provider may or may not use knowledge of this update.
      *
-     * @param mixed id
+     * @param int id
      */
     public function setDefaultValue($id);
 }

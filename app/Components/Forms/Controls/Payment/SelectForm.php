@@ -24,13 +24,10 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 use Nette\Utils\JsonException;
 
 /**
  * Class SelectForm
- * *
- * @property FileTemplate $template
  */
 class SelectForm extends Control {
     /**

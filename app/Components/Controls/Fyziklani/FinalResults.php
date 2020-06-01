@@ -9,6 +9,10 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
 
+/**
+ * Class FinalResults
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class FinalResults extends BaseComponent {
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;

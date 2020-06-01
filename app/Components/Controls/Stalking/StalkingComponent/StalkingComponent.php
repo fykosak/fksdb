@@ -9,6 +9,10 @@ use Nette\Application\BadRequestException;
 use FKSDB\Exceptions\NotImplementedException;
 use Nette\InvalidStateException;
 
+/**
+ * Class StalkingComponent
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class StalkingComponent extends StalkingControl {
 
     private StalkingService $stalkingService;
@@ -79,7 +83,9 @@ class StalkingComponent extends StalkingControl {
             $models[] = ($definition['model'])::createFromActiveRow($datum);
         }
         $this->template->links = array_map(function ($link) {
-            return $this->tableReflectionFactory->loadLinkFactory($link);
+            $factory = $this->tableReflectionFactory->loadLinkFactory($link);
+            $factory->setComponent($this);
+            return $factory;
         }, $definition['links']);
         $this->template->rows = $definition['rows'];
         $this->template->models = $models;

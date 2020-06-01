@@ -19,6 +19,7 @@ use Nette\Security\Permission;
 class ACLExtension extends CompilerExtension {
     /** @var string[] */
     public static array $semanticMap = [
+
         'qid' => QIDAssertion::class,
         'queryTag' => StoredQueryTagAssertion::class,
         'isEventOrg' => EventOrgAssertion::class,

@@ -111,9 +111,14 @@ class ApplicationComponent extends BaseComponent {
         $this->template->mode = $mode;
         $this->template->holder = $this->holder;
         $this->template->primaryModel = $this->holder->getPrimaryHolder()->getModel();
-        $this->template->primaryMachine = $this->getMachine()->getPrimaryMachine();
+
+        $primaryMachine= $this->getMachine()->getPrimaryMachine();
+        $this->template->primaryMachine = $primaryMachine;
         $this->template->canEdit = $this->canEdit();
 
+        $state = $this->holder->getPrimaryHolder()->getModelState();
+        $this->template->state = $state;
+        $this->template->transitions = $transactions = $primaryMachine->getAvailableTransitions($this->holder, $state, BaseMachine::EXECUTABLE | BaseMachine::VISIBLE);
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ApplicationComponent.inline.latte');
         $this->template->render();
     }
@@ -155,8 +160,8 @@ class ApplicationComponent extends BaseComponent {
          */
         $primaryMachine = $this->getMachine()->getPrimaryMachine();
         $transitionSubmit = null;
-        foreach ($primaryMachine->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), BaseMachine::EXECUTABLE | BaseMachine::VISIBLE) as $transition) {
 
+        foreach ($primaryMachine->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), BaseMachine::EXECUTABLE | BaseMachine::VISIBLE) as $transition) {
             $transitionName = $transition->getName();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
 
