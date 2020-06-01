@@ -13,6 +13,7 @@ use FKSDB\Utils\Promise;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
+use Tracy\Debugger;
 
 /**
  * Be careful when calling getValue as it executes SQL queries and thus
@@ -170,6 +171,8 @@ class ReferencedId extends HiddenField {
         } else {
             $value = $pValue;
         }
+        Debugger::barDump($value);
+        Debugger::barDump(debug_backtrace());
         return parent::setValue($value);
     }
 
@@ -191,7 +194,7 @@ class ReferencedId extends HiddenField {
 
     public function rollback() {
         if ($this->getModelCreated()) {
-            $this->referencedSetter->setModel($this->referencedContainer, NULL, IReferencedSetter::MODE_ROLLBACK);
+            $this->referencedSetter->setModel($this->referencedContainer, null, IReferencedSetter::MODE_ROLLBACK);
             if (parent::getValue()) {
                 parent::setValue(self::VALUE_PROMISE);
             }
@@ -202,7 +205,7 @@ class ReferencedId extends HiddenField {
      * @param bool $value
      * @return BaseControl|void
      */
-    public function setDisabled($value = TRUE) {
+    public function setDisabled($value = true) {
         $this->referencedContainer->setDisabled($value);
     }
 
@@ -210,9 +213,9 @@ class ReferencedId extends HiddenField {
      * @return void
      */
     private function createPromise() {
-        $referencedId = $this->getValue();
         $values = $this->referencedContainer->getValues();
-        $promise = new Promise(function () use ($referencedId, $values) {
+        $promise = new Promise(function () use ($values) {
+            $referencedId = $this->getValue(false);
             try {
                 if ($referencedId === self::VALUE_PROMISE) {
 
@@ -238,6 +241,7 @@ class ReferencedId extends HiddenField {
                 $this->rollback();
             }
         });
+        $referencedId = $this->getValue();
         $this->setValue($referencedId);
         $this->setPromise($promise);
     }
