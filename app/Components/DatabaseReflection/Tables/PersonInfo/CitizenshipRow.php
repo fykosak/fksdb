@@ -10,11 +10,12 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 
 /**
- * Class CitizenshipField
- * *
+ * Class CitizenshipRow
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class CitizenshipRow extends AbstractRow {
     use DefaultPrinterTrait;
+
     /**
      * @var ServiceRegion
      */

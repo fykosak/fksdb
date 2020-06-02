@@ -1,14 +1,12 @@
 <?php
 
-
 namespace FKSDB\Components\DatabaseReflection\ValuePrinters;
 
-use FKSDB\Components\Controls\Badges\NotSetBadge;
 use Nette\Utils\Html;
 
 /**
  * Class EmailPrinter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EmailPrinter extends AbstractValuePrinter {
     /**
@@ -16,10 +14,6 @@ class EmailPrinter extends AbstractValuePrinter {
      * @return Html
      */
     protected function getHtml($value): Html {
-        if (\is_null($value)) {
-            return NotSetBadge::getHtml();
-        } else {
-            return Html::el('a')->addAttributes(['href' => 'mailto:' . $value])->addText($value);
-        }
+        return Html::el('a')->addAttributes(['href' => 'mailto:' . $value])->addText($value);
     }
 }

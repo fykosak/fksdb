@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PrimaryKeyRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PrimaryKeyRow extends DefaultRow {
 
@@ -24,7 +24,7 @@ class PrimaryKeyRow extends DefaultRow {
      * @return BaseControl
      * @throws BadRequestException
      */
-    public function createField(...$args): BaseControl {
+    public function createFormControl(...$args): BaseControl {
         throw new NotImplementedException();
     }
 }

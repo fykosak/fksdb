@@ -21,7 +21,7 @@ class BornIdRow extends AbstractRow {
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getDescription() {
         return _('U cizinců prázdné.');

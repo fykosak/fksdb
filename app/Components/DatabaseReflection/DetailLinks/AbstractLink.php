@@ -11,29 +11,29 @@ use Nette\Utils\Html;
 
 /**
  * Class AbstractLink
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractLink {
     /**
      * @var PresenterComponent
      */
-    protected $presenterComponent;
+    protected $component;
 
     /**
-     * AbstractLink constructor.
-     * @param PresenterComponent $presenterComponent
+     * @param PresenterComponent $component
+     * @return void
      */
-    public function __construct(PresenterComponent $presenterComponent) {
-        $this->presenterComponent = $presenterComponent;
+    public function setComponent(PresenterComponent $component) {
+        $this->component = $component;
     }
 
     /**
-     * @param $model
+     * @param AbstractModelSingle $model
      * @return Html
      * @throws BadRequestException
      * @throws InvalidLinkException
      */
-    final public function __invoke($model): Html {
+    final public function __invoke(AbstractModelSingle $model): Html {
         return Html::el('a')->addAttributes([
             'class' => 'btn btn-outline-primary btn-sm',
             'href' => $this->createLink($model),
@@ -42,32 +42,25 @@ abstract class AbstractLink {
 
     abstract public function getText(): string;
 
-    /**
-     * @param AbstractModelSingle $model
-     * @return string
-     */
-    abstract public function getDestination($model): string;
+    abstract public function getDestination(AbstractModelSingle $model): string;
 
-    /**
-     * @param AbstractModelSingle $model
-     * @return array
-     */
-    abstract public function prepareParams($model): array;
+    abstract public function prepareParams(AbstractModelSingle $model): array;
 
     abstract public function getModelClassName(): string;
 
     /**
      * @param AbstractModelSingle $model
      * @return string
+     * @throws BadTypeException
      * @throws InvalidLinkException
-     * @throws BadRequestException
      */
-    public function createLink($model): string {
+    private function createLink(AbstractModelSingle $model): string {
+
         $modelClassName = $this->getModelClassName();
         if (!$model instanceof $modelClassName) {
             throw new BadTypeException($modelClassName, $model);
         }
-        return $this->presenterComponent->getPresenter()->link(
+        return $this->component->getPresenter()->link(
             $this->getDestination($model),
             $this->prepareParams($model)
         );

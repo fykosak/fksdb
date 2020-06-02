@@ -2,6 +2,8 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
@@ -71,6 +73,8 @@ class OrgsGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
+     * @throws BadTypeException
+     * @throws NotImplementedException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);
@@ -78,7 +82,7 @@ class OrgsGrid extends BaseGrid {
         $this->setDefaultOrder('since DESC');
 
         $this->addColumns([
-            'referenced.person_name',
+            'person.full_name',
             'org.since',
             'org.until',
             'org.role',

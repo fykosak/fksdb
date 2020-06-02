@@ -26,9 +26,6 @@ class UntilRow extends AbstractTeacherRow {
         return (new DatePrinter(_('__date_format')))($model->until);
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Teaches until');
     }

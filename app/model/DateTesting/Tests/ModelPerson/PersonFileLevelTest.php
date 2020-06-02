@@ -42,7 +42,7 @@ abstract class PersonFileLevelTest extends PersonTest {
      * @throws \Exception
      */
     final private function loadFactory(TableReflectionFactory $tableReflectionFactory, string $factoryTableName, string $factoryFieldName) {
-        $rowFactory = $tableReflectionFactory->loadService($factoryTableName, $factoryFieldName);
+        $rowFactory = $tableReflectionFactory->loadRowFactory($factoryTableName . '.' . $factoryFieldName);
         if (!$rowFactory instanceof ITestedRowFactory) {
             throw new BadTypeException(ITestedRowFactory::class, $rowFactory);
         }

@@ -9,12 +9,10 @@ use Nette\Utils\Html;
 
 /**
  * Class ForceARow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ForceARow extends AbstractFyziklaniTeamRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Force A');
     }

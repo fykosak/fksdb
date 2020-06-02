@@ -3,6 +3,8 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
@@ -55,6 +57,8 @@ class AllPersonsGrid extends BaseGrid {
      * @param Presenter $presenter
      * @return void
      * @throws DuplicateColumnException
+     * @throws BadTypeException
+     * @throws NotImplementedException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);
@@ -63,7 +67,7 @@ class AllPersonsGrid extends BaseGrid {
 
         $this->addColumn('person_schedule_id', _('#'));
 
-        $this->addColumns(['referenced.person_name']);
+        $this->addColumns(['person.person_name']);
 
         $this->addColumn('schedule_item', _('Schedule item'))->setRenderer(function (ModelPersonSchedule $model) {
             return $model->getScheduleItem()->getLabel();
@@ -83,10 +87,13 @@ class AllPersonsGrid extends BaseGrid {
     }
 
     /**
+     * @return void
+     * @throws BadTypeException
      * @throws DuplicateColumnException
+     * @throws NotImplementedException
      */
     protected function addColumnPayment() {
-        $this->addColumns(['referenced.payment_id']);
+        $this->addColumns(['payment.payment']);
     }
 
     protected function getModelClassName(): string {

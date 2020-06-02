@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
@@ -61,13 +62,15 @@ class DispatchGrid extends BaseGrid {
 
     /**
      * @param Presenter $presenter
+     * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws NotImplementedException
+     * @throws BadTypeException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);
-        $this->addColumns(['event.event_id', 'event.name', 'referenced.contest', 'event.year','event.role']);
+        $this->addColumns(['event.event_id', 'event.name', 'contest.contest', 'event.year','event.role']);
         $this->addLinkButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);
     }
 

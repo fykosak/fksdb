@@ -14,7 +14,7 @@ use Nette\Utils\Html;
 
 /**
  * Class DomainAliasRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DomainAliasRow extends AbstractOrgRowFactory {
     public function getTitle(): string {
@@ -45,7 +45,7 @@ class DomainAliasRow extends AbstractOrgRowFactory {
         $control = new TextInput($this->getTitle());
         $control->addRule(Form::MAX_LENGTH, null, 32);
         $control->addCondition(Form::FILLED);
-        $control->addRule(Form::REGEXP, _('%l obsahuje nepovolené znaky.'), '/^[a-z][a-z0-9._\-]*$/i');
+        $control->addRule(Form::PATTERN, sprintf(_('%s obsahuje nepovolené znaky.'), $this->getTitle()), '[a-z][a-z0-9._\-]*');
         return $control;
     }
 }

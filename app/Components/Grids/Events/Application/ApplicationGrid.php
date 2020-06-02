@@ -29,7 +29,7 @@ class ApplicationGrid extends AbstractApplicationGrid {
         $this->paginate = false;
 
         $this->addColumns([
-            'referenced.person_name',
+            'person.full_name',
             'event_participant.status',
         ]);
         $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'event_participant_id']);

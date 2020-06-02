@@ -3,6 +3,8 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\YearCalculator;
@@ -43,6 +45,8 @@ class PersonsGrid extends BaseGrid {
      * @param Presenter $presenter
      * @return void
      * @throws DuplicateColumnException
+     * @throws BadTypeException
+     * @throws NotImplementedException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);
@@ -55,9 +59,7 @@ class PersonsGrid extends BaseGrid {
             return $model->getPerson()->getFullName();
         })->setSortable(false);
 
-        $this->addColumns(['event.role']);
-
-        $this->addColumns(['referenced.payment_id']);
+        $this->addColumns(['event.role','payment.payment_id']);
 
         $this->addColumn('state', _('State'))->setRenderer(function ($row) {
             $model = ModelPersonSchedule::createFromActiveRow($row);

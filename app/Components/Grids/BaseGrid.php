@@ -205,16 +205,17 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @param string $tableName
-     * @param string $fieldName
+     * @param string $field
+     * @return void
+     * @throws BadTypeException
      * @throws DuplicateColumnException
-     * @throws Exception
+     * @throws NotImplementedException
      */
-    private function addReflectionColumn(string $tableName, string $fieldName) {
+    private function addReflectionColumn(string $field) {
         $modelClassName = $this->getModelClassName();
-        $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
+        $factory = $this->tableReflectionFactory->loadRowFactory($field);
 
-        $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($model) use ($factory, $fieldName, $modelClassName) {
+        $this->addColumn(str_replace('.', '__', $field), $factory->getTitle())->setRenderer(function ($model) use ($factory, $modelClassName) {
             if (!$model instanceof $modelClassName) {
                 $model = $modelClassName::createFromActiveRow($model);
             }
@@ -231,7 +232,7 @@ abstract class BaseGrid extends Grid {
      * @deprecated this functionality is moved to getModel in DBReflection AbstractRow
      */
     protected function addJoinedColumn(string $tableName, string $fieldName, callable $accessCallback) {
-        $factory = $this->tableReflectionFactory->loadService($tableName, $fieldName);
+        $factory = $this->tableReflectionFactory->loadRowFactory($tableName . '.' . $fieldName);
         $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($row) use ($factory, $fieldName, $accessCallback) {
             $model = $accessCallback($row);
             return $factory->renderValue($model, 1);
@@ -248,12 +249,14 @@ abstract class BaseGrid extends Grid {
 
     /**
      * @param array $fields
+     * @return void
+     * @throws BadTypeException
      * @throws DuplicateColumnException
+     * @throws NotImplementedException
      */
     protected function addColumns(array $fields) {
         foreach ($fields as $name) {
-            list($table, $field) = TableReflectionFactory::parseRow($name);
-            $this->addReflectionColumn($table, $field);
+            $this->addReflectionColumn($name);
         }
     }
 
@@ -306,6 +309,7 @@ abstract class BaseGrid extends Grid {
     protected function addLink(string $linkId, bool $checkACL = false): Button {
         $modelClassName = $this->getModelClassName();
         $factory = $this->tableReflectionFactory->loadLinkFactory($linkId);
+        $factory->setComponent($this);
         /** @var Button $button */
         $button = $this->addButton(str_replace('.', '_', $linkId), $factory->getText())
             ->setText($factory->getText())

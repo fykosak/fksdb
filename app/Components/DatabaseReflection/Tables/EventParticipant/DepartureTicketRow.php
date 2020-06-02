@@ -10,7 +10,7 @@ use Nette\Utils\Html;
 
 /**
  * Class DepartureTicketRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DepartureTicketRow extends AbstractParticipantRow {
 
