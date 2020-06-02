@@ -4,13 +4,14 @@ namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\DatabaseReflection\ValuePrinters\EventRole;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Payment\Price;
 use FKSDB\YearCalculator;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
@@ -44,20 +45,20 @@ class AllPersonsGrid extends BaseGrid {
         $this->event = $event;
     }
 
-    /**
-     * @param $presenter
-     * @throws DuplicateColumnException
-     * @throws NotImplementedException
-     * @throws NotImplementedException
-     */
-    protected function configure($presenter) {
-        parent::configure($presenter);
+    protected function getData(): IDataSource {
         $query = $this->servicePersonSchedule->getTable()
             ->where('schedule_item.schedule_group.event_id', $this->event->event_id)
             ->order('person_schedule_id');//->limit(10, 140);
-        $dataSource = new NDataSource($query);
-        $this->setDataSource($dataSource);
+        return new NDataSource($query);
+    }
 
+    /**
+     * @param Presenter $presenter
+     * @return void
+     * @throws DuplicateColumnException
+     */
+    protected function configure(Presenter $presenter) {
+        parent::configure($presenter);
 
         $this->paginate = false;
 

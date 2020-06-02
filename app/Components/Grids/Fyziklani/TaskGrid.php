@@ -5,8 +5,10 @@ namespace FKSDB\Components\Grids\Fyziklani;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateColumnException;
 use SQL\SearchableDataSource;
 
@@ -25,6 +27,18 @@ class TaskGrid extends BaseGrid {
      */
     private $event;
 
+    protected function getData(): IDataSource {
+        $submits = $this->serviceFyziklaniTask->findAll($this->event);
+        $dataSource = new SearchableDataSource($submits);
+        $dataSource->setFilterCallback(function (Selection $table, $value) {
+            $tokens = preg_split('/\s+/', $value);
+            foreach ($tokens as $token) {
+                $table->where('name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task_id LIKE CONCAT(\'%\', ? , \'%\')', $token, $token);
+            }
+        });
+        return $dataSource;
+    }
+
     /**
      * FyziklaniTaskGrid constructor.
      * @param ModelEvent $event
@@ -37,23 +51,13 @@ class TaskGrid extends BaseGrid {
     }
 
     /**
-     * @param $presenter
+     * @param Presenter $presenter
      * @throws DuplicateColumnException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
         $this->addColumn('fyziklani_task_id', _('Task Id'));
         $this->addColumn('label', _('#'));
         $this->addColumn('name', _('Task name'));
-
-        $submits = $this->serviceFyziklaniTask->findAll($this->event);
-        $dataSource = new SearchableDataSource($submits);
-        $dataSource->setFilterCallback(function (Selection $table, $value) {
-            $tokens = preg_split('/\s+/', $value);
-            foreach ($tokens as $token) {
-                $table->where('name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task_id LIKE CONCAT(\'%\', ? , \'%\')', $token, $token);
-            }
-        });
-        $this->setDataSource($dataSource);
     }
 }

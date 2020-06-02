@@ -9,7 +9,9 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\YearCalculator;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -41,21 +43,31 @@ class DispatchGrid extends BaseGrid {
     public function __construct(ModelPerson $person, Container $container) {
         parent::__construct($container);
         $this->person = $person;
-        $this->serviceEvent = $container->getByType(ServiceEvent::class);
+//TODO yearCalculator will be removed
         $this->yearCalculator = $container->getByType(YearCalculator::class);
     }
 
     /**
-     * @param $presenter
+     * @param ServiceEvent $serviceEvent
+     * @return void
+     */
+    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+        $this->serviceEvent = $serviceEvent;
+    }
+
+    protected function getData(): IDataSource {
+        $events = $this->serviceEvent->getTable()->order('begin DESC');
+        return new NDataSource($events);
+    }
+
+    /**
+     * @param Presenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws NotImplementedException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
-
-        $events = $this->serviceEvent->getTable()->order('begin DESC');
-        $this->setDataSource(new NDataSource($events));
 
         $this->addColumns(['event.event_id', 'event.name', 'referenced.contest', 'event.year']);
 

@@ -5,7 +5,6 @@ namespace FKSDB\Components\Grids\Payment;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
-use Nette\DI\Container;
 
 /**
  * Class PaymentGrid
@@ -18,12 +17,11 @@ abstract class PaymentGrid extends BaseGrid {
     protected $servicePayment;
 
     /**
-     * PaymentGrid constructor.
-     * @param Container $container
+     * @param ServicePayment $servicePayment
+     * @return void
      */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->servicePayment = $container->getByType(ServicePayment::class);
+    public function injectServicePayment(ServicePayment $servicePayment) {
+        $this->servicePayment = $servicePayment;
     }
 
     protected function getModelClassName(): string {

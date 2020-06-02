@@ -111,8 +111,12 @@ class OrgPresenter extends ExtendedPersonPresenter {
         $form[ExtendedPersonHandler::CONT_MODEL]->setDefaults($defaults);
     }
 
+    /**
+     * @return OrgsGrid
+     * @throws BadRequestException
+     */
     protected function createComponentGrid(): OrgsGrid {
-        return new OrgsGrid($this->getContext());
+        return new OrgsGrid($this->getContext(), $this->getSelectedContest());
     }
 
     /**
