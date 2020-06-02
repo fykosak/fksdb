@@ -11,6 +11,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use FKSDB\Exceptions\NotImplementedException;
@@ -20,6 +21,7 @@ use Nette\Utils\Html;
 use NiftyGrid\Components\Button;
 use NiftyGrid\Components\Column;
 use NiftyGrid\Components\GlobalButton;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
@@ -59,10 +61,15 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @param $presenter
+     * @param Presenter $presenter
      * @return void
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
+        try {
+            $this->setDataSource($this->getData());
+        } catch (NotImplementedException$exception) {
+
+        }
         $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.latte');
         /** @var GridPaginator $paginator */
         $paginator = $this->getComponent('paginator');
@@ -70,11 +77,19 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
+     * @return IDataSource
+     * @throws NotImplementedException
+     */
+    protected function getData(): IDataSource {
+        throw new NotImplementedException();
+    }
+
+    /**
      * @param null $class
      * @return ITemplate
      * @throws BadTypeException
      */
-    protected function createTemplate($class = NULL): ITemplate {
+    protected function createTemplate($class = null): ITemplate {
         $presenter = $this->getPresenter();
         if (!$presenter instanceof \BasePresenter) {
             throw new BadTypeException(\BasePresenter::class, $presenter);
@@ -171,7 +186,7 @@ abstract class BaseGrid extends Grid {
      * @return Button
      * @throws DuplicateButtonException
      */
-    protected function addButton($name, $label = NULL): Button {
+    protected function addButton($name, $label = null): Button {
         $button = parent::addButton($name, $label);
         $button->setClass('btn btn-sm btn-secondary');
         return $button;
@@ -183,7 +198,7 @@ abstract class BaseGrid extends Grid {
      * @return GlobalButton
      * @throws DuplicateGlobalButtonException
      */
-    public function addGlobalButton($name, $label = NULL): GlobalButton {
+    public function addGlobalButton($name, $label = null): GlobalButton {
         $button = parent::addGlobalButton($name, $label);
         $button->setClass('btn btn-sm btn-primary');
         return $button;

@@ -3,10 +3,10 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\YearCalculator;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
@@ -40,11 +40,11 @@ class PersonsGrid extends BaseGrid {
     }
 
     /**
-     * @param $presenter
+     * @param Presenter $presenter
+     * @return void
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
         $this->paginate = false;
 

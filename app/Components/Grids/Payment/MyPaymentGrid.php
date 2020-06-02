@@ -2,10 +2,8 @@
 
 namespace FKSDB\Components\Grids\Payment;
 
-use BasePresenter;
-use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelPayment;
+use Nette\Application\UI\Presenter;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -17,12 +15,12 @@ use NiftyGrid\DuplicateColumnException;
 class MyPaymentGrid extends PaymentGrid {
 
     /**
-     * @param BasePresenter $presenter
+     * @param Presenter $presenter
+     * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
 
         $payments = $this->servicePayment->getTable()->where('person_id', $presenter->getUser()->getIdentity()->person_id)->order('payment_id DESC');
@@ -31,10 +29,10 @@ class MyPaymentGrid extends PaymentGrid {
         $this->setDataSource($dataSource);
 
         $this->addColumns([
-            DbNames::TAB_PAYMENT . '.id',
+            'payment.id',
             // 'referenced.event_name',
-            DbNames::TAB_PAYMENT . '.price',
-            DbNames::TAB_PAYMENT . '.state',
+            'payment.price',
+            'payment.state',
         ]);
 
         $this->addColumn('event', _('Event'))->setRenderer(function (ModelPayment $payment) {

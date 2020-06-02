@@ -3,20 +3,17 @@
 namespace FKSDB\Components\Grids\Events\Application;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\UI\Presenter;
-use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class MyApplicationsGrid
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class MyApplicationsGrid extends BaseGrid {
     /**
@@ -42,10 +39,10 @@ class MyApplicationsGrid extends BaseGrid {
 
     /**
      * @param Presenter $presenter
+     * @return void
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
 
         $this->paginate = false;
@@ -54,14 +51,14 @@ class MyApplicationsGrid extends BaseGrid {
         //$source->select('event_participant.*,event.*');
         $source = new NDataSource($source);
         $this->setDataSource($source);
-        $eventCallBack = function (ActiveRow $row) {
-            return ModelEventParticipant::createFromActiveRow($row)->getEvent();
-        };
+        /*   $eventCallBack = function (ActiveRow $row) {
+               return ModelEventParticipant::createFromActiveRow($row)->getEvent();
+           };*/
 
         //     $this->addJoinedColumn(DbNames::TAB_EVENT, 'name', $eventCallBack);
         //   $this->addJoinedColumn(DbNames::TAB_EVENT, 'year', $eventCallBack);
         //   $this->addJoinedColumn(DbNames::TAB_EVENT, 'event_year', $eventCallBack);
-        $this->addColumns([DbNames::TAB_EVENT_PARTICIPANT . '.status']);
+        $this->addColumns(['event_participant.status']);
     }
 
     protected function getModelClassName(): string {

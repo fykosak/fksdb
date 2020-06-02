@@ -5,9 +5,10 @@ namespace FKSDB\Components\Grids;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEventOrg;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -40,20 +41,28 @@ class EventOrgsGrid extends BaseGrid {
     }
 
     /**
-     * @param \AuthenticatedPresenter $presenter
-     * @throws BadRequestException
+     * @param ServiceEventOrg $serviceEventOrg
+     * @return void
+     */
+    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
+        $this->serviceEventOrg = $serviceEventOrg;
+    }
+
+    protected function getData(): IDataSource {
+        $orgs = $this->serviceEventOrg->findByEvent($this->event);
+        return new NDataSource($orgs);
+    }
+
+    /**
+     * @param Presenter $presenter
      * @throws InvalidLinkException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
 
-        $orgs = $this->serviceEventOrg->findByEvent($this->event);
-
-        $dataSource = new NDataSource($orgs);
-        $this->setDataSource($dataSource);
         $this->addColumns(['referenced.person_name']);
         $this->addColumn('note', _('Note'));
         $this->addButton('edit', _('Edit'))->setText(_('Edit'))
@@ -78,9 +87,6 @@ class EventOrgsGrid extends BaseGrid {
         }
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelEventOrg::class;
     }
