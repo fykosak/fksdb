@@ -81,19 +81,7 @@ class AllPersonsGrid extends BaseGrid {
                 '/' . $model->getScheduleItem()->getPrice(Price::CURRENCY_CZK)->__toString();
         })->setSortable(false);
 
-        $this->addColumns(['event.role']);
-
-        $this->addColumnPayment();
-    }
-
-    /**
-     * @return void
-     * @throws BadTypeException
-     * @throws DuplicateColumnException
-     * @throws NotImplementedException
-     */
-    protected function addColumnPayment() {
-        $this->addColumns(['payment.payment']);
+        $this->addColumns(['event.role', 'payment.payment']);
     }
 
     protected function getModelClassName(): string {

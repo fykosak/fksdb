@@ -33,8 +33,8 @@ class MyPaymentGrid extends PaymentGrid {
         $this->setDataSource($dataSource);
 
         $this->addColumns([
-            'payment.id',
-            // 'referenced.event_name',
+            'payment.payment_uid',
+            'event.event',
             'payment.price',
             'payment.state',
         ]);
