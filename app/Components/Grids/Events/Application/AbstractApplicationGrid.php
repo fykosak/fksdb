@@ -49,14 +49,7 @@ abstract class AbstractApplicationGrid extends BaseGrid {
     }
 
     abstract protected function getSource(): Selection;
-
-    protected function getData(): IDataSource {
-        $participants = $this->getSource();
-        $source = new SearchableDataSource($participants);
-        $source->setFilterCallback($this->getFilterCallBack());
-        return $source;
-    }
-
+    
     /**
      * @return FormControl
      * @throws BadRequestException
