@@ -70,7 +70,7 @@ class DispatchGrid extends BaseGrid {
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);
-        $this->addColumns(['event.event_id', 'event.name', 'contest.contest', 'event.year','event.role']);
+        $this->addColumns(['event.event_id', 'event.name', 'contest.contestBadge', 'event.year', 'event.role']);
         $this->addLinkButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);
     }
 
