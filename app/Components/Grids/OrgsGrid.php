@@ -2,19 +2,18 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
-use OrgModule\OrgPresenter;
 use SQL\SearchableDataSource;
 
 /**
@@ -66,23 +65,23 @@ class OrgsGrid extends BaseGrid {
     }
 
     /**
-     * @param OrgPresenter $presenter
-     * @throws BadRequestException
-     * @throws InvalidLinkException
+     * @param Presenter $presenter
+     * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
+     * @throws InvalidLinkException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
 
         $this->setDefaultOrder('since DESC');
 
         $this->addColumns([
             'referenced.person_name',
-            DbNames::TAB_ORG . '.since',
-            DbNames::TAB_ORG . '.until',
-            DbNames::TAB_ORG . '.role',
+            'org.since',
+            'org.until',
+            'org.role',
         ]);
 
         $this->addLink('org.edit', true);

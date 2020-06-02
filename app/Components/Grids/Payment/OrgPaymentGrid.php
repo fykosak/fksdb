@@ -2,10 +2,9 @@
 
 namespace FKSDB\Components\Grids\Payment;
 
-use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -39,23 +38,23 @@ class OrgPaymentGrid extends PaymentGrid {
     }
 
     /**
-     * @param $presenter
+     * @param Presenter $presenter
      * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
 
         $this->addColumns([
-            DbNames::TAB_PAYMENT . '.id',
+            'payment.id',
             'referenced.person_name',
             // 'referenced.event_name',
-            DbNames::TAB_PAYMENT . '.price',
-            DbNames::TAB_PAYMENT . '.state',
-            DbNames::TAB_PAYMENT . '.variable_symbol',
+            'payment.price',
+            'payment.state',
+            'payment.variable_symbol',
         ]);
         $this->addLink('payment.detail', false);
         $this->paginate = false;

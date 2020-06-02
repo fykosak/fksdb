@@ -5,11 +5,11 @@ namespace FKSDB\Components\Grids;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceContestant;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use OrgModule\BasePresenter;
 use SQL\ViewDataSource;
 
 /**
@@ -54,11 +54,11 @@ class ContestantsFromSchoolGrid extends BaseGrid {
     }
 
     /**
-     * @param BasePresenter $presenter
+     * @param Presenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
 
         $this->setDefaultOrder('name_lex ASC');

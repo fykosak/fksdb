@@ -11,11 +11,9 @@ use Nette\Application\UI\Presenter;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Database\Table\Selection;
-use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
-use SQL\SearchableDataSource;
 
 /**
  * Class TeamApplicationGrid
@@ -31,14 +29,14 @@ class TeamApplicationGrid extends AbstractApplicationGrid {
      * @throws InvalidLinkException
      * @throws NotImplementedException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
         $this->paginate = false;
 
         $this->addColumns([
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.e_fyziklani_team_id',
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.name',
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.status'
+            'e_fyziklani_team.e_fyziklani_team_id',
+            'e_fyziklani_team.name',
+            'e_fyziklani_team.status',
         ]);
         $this->addColumn('room', _('Room'))->setRenderer(function (ActiveRow $row) {
             $model = ModelFyziklaniTeam::createFromActiveRow($row);

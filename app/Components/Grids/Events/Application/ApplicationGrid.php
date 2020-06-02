@@ -8,10 +8,8 @@ use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Database\Table\Selection;
-use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use SQL\SearchableDataSource;
 
 /**
  * Class ApplicationGrid
@@ -25,14 +23,14 @@ class ApplicationGrid extends AbstractApplicationGrid {
      * @throws DuplicateButtonException
      * @throws Exception
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
 
         $this->paginate = false;
 
         $this->addColumns([
             'referenced.person_name',
-            DbNames::TAB_EVENT_PARTICIPANT . '.status',
+            'event_participant.status',
         ]);
         $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'event_participant_id']);
         $this->addCSVDownloadButton();

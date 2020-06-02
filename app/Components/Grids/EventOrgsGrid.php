@@ -5,8 +5,8 @@ namespace FKSDB\Components\Grids;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEventOrg;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -54,13 +54,13 @@ class EventOrgsGrid extends BaseGrid {
     }
 
     /**
-     * @param \AuthenticatedPresenter $presenter
+     * @param Presenter $presenter
      * @throws InvalidLinkException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
 
         $this->addColumns(['referenced.person_name']);
@@ -87,9 +87,6 @@ class EventOrgsGrid extends BaseGrid {
         }
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelEventOrg::class;
     }

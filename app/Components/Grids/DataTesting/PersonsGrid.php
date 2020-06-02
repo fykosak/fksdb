@@ -9,6 +9,7 @@ use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\DataTesting\TestsLogger;
 use FKSDB\DataTesting\TestLog;
 use FKSDB\Exceptions\NotImplementedException;
+use Nette\Application\UI\Presenter;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -44,11 +45,11 @@ class PersonsGrid extends BaseGrid {
     }
 
     /**
-     * @param $presenter
+     * @param Presenter $presenter
      * @return void
      * @throws DuplicateColumnException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
 
         $this->addColumns(['referenced.person_link']);

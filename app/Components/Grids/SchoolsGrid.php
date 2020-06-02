@@ -6,6 +6,7 @@ use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Utils\Html;
@@ -48,14 +49,14 @@ class SchoolsGrid extends BaseGrid {
     }
 
     /**
-     * @param $presenter
+     * @param Presenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      * @throws NotImplementedException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
 
         //

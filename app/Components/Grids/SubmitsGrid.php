@@ -14,6 +14,7 @@ use FKSDB\Submits\FileSystemStorage\UploadedStorage;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -69,11 +70,11 @@ class SubmitsGrid extends BaseGrid {
     }
 
     /**
-     * @param $presenter
+     * @param Presenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
 
         $this->setDefaultOrder('series DESC, tasknr ASC');

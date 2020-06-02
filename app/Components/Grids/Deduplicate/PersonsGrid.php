@@ -6,6 +6,7 @@ use FKSDB\Components\DatabaseReflection\ValuePrinters\PersonLink;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
@@ -47,11 +48,11 @@ class PersonsGrid extends BaseGrid {
     }
 
     /**
-     * @param \AuthenticatedPresenter $presenter
+     * @param Presenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
 
         /***** columns ****/

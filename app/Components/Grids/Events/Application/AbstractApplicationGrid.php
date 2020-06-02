@@ -39,7 +39,6 @@ abstract class AbstractApplicationGrid extends BaseGrid {
         $this->holder = $holder;
     }
 
-
     protected function getData(): IDataSource {
         $participants = $this->getSource();
         $source = new SearchableDataSource($participants);

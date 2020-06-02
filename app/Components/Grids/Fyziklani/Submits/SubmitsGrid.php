@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use NiftyGrid\DuplicateColumnException;
@@ -42,7 +41,7 @@ abstract class SubmitsGrid extends BaseGrid {
      * @throws DuplicateColumnException
      */
     protected function addColumnTeam() {
-        $this->addJoinedColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'name_n_id', function ($row) {
+        $this->addJoinedColumn('e_fyziklani_team', 'name_n_id', function ($row) {
             if (!$row instanceof ModelFyziklaniSubmit) {
                 $row = ModelFyziklaniSubmit::createFromActiveRow($row);  // TODO is needed?
             }

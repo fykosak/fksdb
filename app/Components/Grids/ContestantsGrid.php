@@ -4,14 +4,13 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceContestant;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
-use OrgModule\BasePresenter;
 use SQL\ViewDataSource;
 
 /**
@@ -59,14 +58,14 @@ class ContestantsGrid extends BaseGrid {
     }
 
     /**
-     * @param BasePresenter $presenter
-     * @throws BadRequestException
-     * @throws InvalidLinkException
+     * @param Presenter $presenter
+     * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
+     * @throws InvalidLinkException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
 
         $this->setDefaultOrder('name_lex ASC');

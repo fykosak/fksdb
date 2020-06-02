@@ -2,18 +2,17 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
-use OrgModule\TeacherPresenter;
 use SQL\SearchableDataSource;
 
 /**
@@ -28,12 +27,11 @@ class TeachersGrid extends BaseGrid {
     private $serviceTeacher;
 
     /**
-     * TeachersGrid constructor.
-     * @param Container $container
+     * @param ServiceTeacher $serviceTeacher
+     * @return void
      */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->serviceTeacher = $container->getByType(ServiceTeacher::class);
+    public function injectServiceTeacher(ServiceTeacher $serviceTeacher) {
+        $this->serviceTeacher = $serviceTeacher;
     }
 
     protected function getData(): IDataSource {
@@ -50,25 +48,25 @@ class TeachersGrid extends BaseGrid {
     }
 
     /**
-     * @param TeacherPresenter $presenter
-     * @throws InvalidLinkException
+     * @param Presenter $presenter
+     * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
-     * @throws BadRequestException
+     * @throws InvalidLinkException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
         //
         // columns
         //
         $this->addColumns([
             'referenced.person_name',
-            DbNames::TAB_TEACHER . '.note',
-            DbNames::TAB_TEACHER . '.state',
-            DbNames::TAB_TEACHER . '.since',
-            DbNames::TAB_TEACHER . '.until',
-            DbNames::TAB_TEACHER . '.number_brochures',
+            'teacher.note',
+            'teacher.state',
+            'teacher.since',
+            'teacher.until',
+            'teacher.number_brochures',
         ]);
         $this->addColumn('school_id', _('School'))->setRenderer(function (ModelTeacher $row) {
             return $row->getSchool()->name_abbrev;

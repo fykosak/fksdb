@@ -11,6 +11,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use FKSDB\Exceptions\NotImplementedException;
@@ -60,10 +61,10 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @param $presenter
+     * @param Presenter $presenter
      * @return void
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         try {
             $this->setDataSource($this->getData());
         } catch (NotImplementedException$exception) {

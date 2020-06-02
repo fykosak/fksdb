@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -42,20 +42,20 @@ class GroupsGrid extends BaseGrid {
     }
 
     /**
-     * @param $presenter
+     * @param Presenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
         $this->paginate = false;
         $this->addColumn('schedule_group_id', _('#'));
         $this->addColumns([
-            DbNames::TAB_SCHEDULE_GROUP . '.name_cs',
-            DbNames::TAB_SCHEDULE_GROUP . '.name_en',
-            DbNames::TAB_SCHEDULE_GROUP . '.schedule_group_type',
-            DbNames::TAB_SCHEDULE_GROUP . '.start',
-            DbNames::TAB_SCHEDULE_GROUP . '.end',
+            'schedule_group.name_cs',
+            'schedule_group.name_en',
+            'schedule_group.schedule_group_type',
+            'schedule_group.start',
+            'schedule_group.end',
         ]);
 
         $this->addColumn('items_count', _('Items count'))->setRenderer(function ($row) {

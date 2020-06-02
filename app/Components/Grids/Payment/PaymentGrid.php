@@ -5,7 +5,6 @@ namespace FKSDB\Components\Grids\Payment;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
-use Nette\DI\Container;
 
 /**
  * Class PaymentGrid
