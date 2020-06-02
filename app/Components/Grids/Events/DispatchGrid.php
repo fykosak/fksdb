@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Grids\Events;
 
-use FKSDB\Components\DatabaseReflection\ValuePrinters\EventRole;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
@@ -57,12 +56,7 @@ class DispatchGrid extends BaseGrid {
         $events = $this->serviceEvent->getTable()->order('begin DESC');
         $this->setDataSource(new NDataSource($events));
 
-        $this->addColumns(['event.event_id', 'event.name', 'referenced.contest', 'event.year']);
-
-        $this->addColumn('roles', _('Roles'))->setRenderer(function (ModelEvent $event) {
-            $roles = $this->person->getRolesForEvent($event, $this->yearCalculator);
-            return EventRole::getHtml($roles);
-        })->setSortable(false);
+        $this->addColumns(['event.event_id', 'event.name', 'referenced.contest', 'event.year','event.role']);
 
         $this->addLinkButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);
     }
