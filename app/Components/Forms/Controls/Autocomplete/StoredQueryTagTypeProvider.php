@@ -13,7 +13,7 @@ use FKSDB\ORM\Tables\TypedTableSelection;
  */
 class StoredQueryTagTypeProvider implements IFilteredDataProvider {
 
-    public const DESCRIPTION = 'description';
+    private const DESCRIPTION = 'description';
 
     private ServiceStoredQueryTagType $serviceStoredQueryTagType;
 
@@ -28,13 +28,7 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
         $this->searchTable = $this->serviceStoredQueryTagType->getTable();
     }
 
-    /**
-     * Prefix search.
-     *
-     * @param string $search
-     * @return array
-     */
-    public function getFilteredItems($search) {
+    public function getFilteredItems(string $search): array {
         $search = trim($search);
         $search = str_replace(' ', '', $search);
         $this->searchTable
@@ -42,10 +36,6 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
         return $this->getItems();
     }
 
-    /**
-     * @param int $id
-     * @return string
-     */
     public function getItemLabel(int $id): string {
         /** @var ModelStoredQueryTagType $tagType */
         $tagType = $this->serviceStoredQueryTagType->findByPrimary($id);

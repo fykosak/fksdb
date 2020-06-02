@@ -3,7 +3,6 @@
 namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\Models\StoredQuery\ISchoolReferencedModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 

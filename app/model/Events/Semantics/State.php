@@ -32,10 +32,7 @@ class State extends EvaluatedExpression {
         return $this->getHolder($args[0])->getPrimaryHolder()->getModelState() == $this->state;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return "state == {$this->state}";
     }
 

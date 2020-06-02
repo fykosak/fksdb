@@ -9,12 +9,11 @@ use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\DI\Container;
+use Nette\Application\UI\Presenter;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
-use OrgModule\ExportPresenter;
 
 /**
  *
@@ -31,14 +30,9 @@ class StoredQueriesGrid extends BaseGrid {
 
     private bool $isFilteredByTag = false;
 
-    /**
-     * StoredQueriesGrid constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->serviceStoredQuery = $container->getByType(ServiceStoredQuery::class);
-        $this->contestAuthorizator = $container->getByType(ContestAuthorizator::class);
+    public function injectPrimary(ServiceStoredQuery $serviceStoredQuery, ContestAuthorizator $contestAuthorizator): void {
+        $this->serviceStoredQuery = $serviceStoredQuery;
+        $this->contestAuthorizator = $contestAuthorizator;
     }
 
     public function getFilterByTagCallback(): Closure {
@@ -54,14 +48,14 @@ class StoredQueriesGrid extends BaseGrid {
     }
 
     /**
-     * @param ExportPresenter $presenter
+     * @param Presenter|\IContestPresenter $presenter
      * @throws BadRequestException
      * @throws InvalidLinkException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         //
         // data

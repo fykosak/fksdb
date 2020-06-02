@@ -51,7 +51,7 @@ abstract class AbstractServiceMulti implements IService {
      * @param array $data
      * @return AbstractModelMulti
      */
-    public function createNewModel(iterable $data): AbstractModelMulti {
+    public function createNewModel(array $data): AbstractModelMulti {
         $mainModel = $this->getMainService()->createNewModel($data);
         $joinedModel = $this->getJoinedService()->createNewModel($data);
 
@@ -70,7 +70,7 @@ abstract class AbstractServiceMulti implements IService {
      * @param bool $alive
      * @return void
      */
-    public function updateModel(IModel $model, $data, $alive = true) {
+    public function updateModel(IModel $model, array $data, bool $alive = true): void {
         $this->checkType($model);
         $this->getMainService()->updateModel($model->getMainModel(), $data, $alive);
         $this->getJoinedService()->updateModel($model->getJoinedModel(), $data, $alive);

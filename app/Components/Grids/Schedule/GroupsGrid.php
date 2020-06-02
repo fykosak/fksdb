@@ -7,7 +7,9 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -34,20 +36,21 @@ class GroupsGrid extends BaseGrid {
         return ModelScheduleGroup::class;
     }
 
+    protected function getData(): IDataSource {
+        $groups = $this->event->getScheduleGroups();
+        return new NDataSource($groups);
+    }
+
     /**
-     * @param $presenter
+     * @param Presenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws NotImplementedException
      * @throws BadTypeException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
-        $groups = $this->event->getScheduleGroups();
-
-        $dataSource = new NDataSource($groups);
-        $this->setDataSource($dataSource);
         $this->addColumn('schedule_group_id', _('#'));
         $this->addColumns([
             'schedule_group.name_cs',

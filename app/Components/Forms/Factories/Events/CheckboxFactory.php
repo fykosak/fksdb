@@ -16,17 +16,9 @@ use Nette\Forms\IControl;
  */
 class CheckboxFactory extends AbstractFactory {
 
-    /**
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return Checkbox
-     */
-    protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
-
+    protected function createComponent(Field $field, BaseMachine $machine, Container $container): Checkbox {
         $component = new Checkbox($field->getLabel());
         $component->setOption('description', $field->getDescription());
-
         return $component;
     }
 
@@ -53,11 +45,7 @@ class CheckboxFactory extends AbstractFactory {
         $component->setDisabled();
     }
 
-    /**
-     * @param Component $component
-     * @return Component|IControl
-     */
-    public function getMainControl(Component $component) {
+    public function getMainControl(Component $component): Component {
         return $component;
     }
 

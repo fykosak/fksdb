@@ -17,10 +17,7 @@ class ModelMSousParticipant extends AbstractModelMulti implements IEventReferenc
     public const STATE_AUTO_INVITED = 'auto.invited';
     public const STATE_AUTO_SPARE = 'auto.spare';
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return $this->getMainModel()->getPerson()->getFullName();
     }
 

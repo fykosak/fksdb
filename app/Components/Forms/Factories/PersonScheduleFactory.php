@@ -32,7 +32,7 @@ class PersonScheduleFactory {
      * @throws JsonException
      * @throws NotImplementedException
      */
-    public function createField($fieldName, ModelEvent $event) {
+    public function createField(string $fieldName, ModelEvent $event): BaseControl {
         return new ScheduleField($event, $fieldName, $this->serviceScheduleItem);
     }
 }

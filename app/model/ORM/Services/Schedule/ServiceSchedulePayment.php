@@ -31,7 +31,7 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
      * @throws DuplicatePaymentException
      * @throws \Exception
      */
-    public function prepareAndUpdate($data, ModelPayment $payment) {
+    public function prepareAndUpdate($data, ModelPayment $payment): void {
         $oldRows = $this->getTable()->where('payment_id', $payment->payment_id);
 
         $newScheduleIds = $this->prepareData($data);

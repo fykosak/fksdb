@@ -237,7 +237,7 @@ class Navigation extends BaseComponent {
      * @return Presenter|INavigablePresenter
      * @throws BadRequestException
      */
-    public function preparePresenter(string $presenterName, string $action, $providedParams): Presenter {
+    public function preparePresenter(string $presenterName, ?string $action, ?array $providedParams): Presenter {
         $ownPresenter = $this->getPresenter();
         $presenter = $this->presenterBuilder->preparePresenter($presenterName, $action, $providedParams, $ownPresenter->getParameters());
         if (!$presenter instanceof INavigablePresenter) {

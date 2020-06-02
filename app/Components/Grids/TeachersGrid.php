@@ -6,11 +6,12 @@ use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
-use OrgModule\TeacherPresenter;
 use SQL\SearchableDataSource;
 
 /**
@@ -25,18 +26,8 @@ class TeachersGrid extends BaseGrid {
         $this->serviceTeacher = $serviceTeacher;
     }
 
-    /**
-     * @param TeacherPresenter $presenter
-     * @throws InvalidLinkException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
-     * @throws BadRequestException
-     */
-    protected function configure($presenter) {
-        parent::configure($presenter);
+    protected function getData(): IDataSource {
         $teachers = $this->serviceTeacher->getTable()->select('teacher.*, person.family_name AS display_name');
-
         $dataSource = new SearchableDataSource($teachers);
         $dataSource->setFilterCallback(function (Selection $table, $value) {
             $tokens = preg_split('/\s+/', $value);
@@ -44,7 +35,19 @@ class TeachersGrid extends BaseGrid {
                 $table->where('CONCAT(person.family_name, person.other_name) LIKE CONCAT(\'%\', ? , \'%\')', $token);
             }
         });
-        $this->setDataSource($dataSource);
+        return $dataSource;
+    }
+
+    /**
+     * @param Presenter $presenter
+     * @throws InvalidLinkException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
+     * @throws BadRequestException
+     */
+    protected function configure(Presenter $presenter): void {
+        parent::configure($presenter);
 
         $this->addColumns([
             'person.full_name',

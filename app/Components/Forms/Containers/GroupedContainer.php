@@ -19,7 +19,7 @@ class GroupedContainer extends Container {
      */
     private $groups = [];
     /**
-     * @var
+     * @var mixed
      */
     private $prefix;
 

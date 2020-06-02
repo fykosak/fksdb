@@ -14,7 +14,7 @@ use FKSDB\ORM\Models\ModelPersonHasFlag;
 class ModelMPersonHasFlag extends AbstractModelMulti {
 
     /**
-     * @return IModel|ModelFlag
+     * @return ModelFlag
      */
     public function getFlag(): ModelFlag {
         return $this->getMainModel();

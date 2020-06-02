@@ -41,10 +41,7 @@ use Nette\Security\IResource;
 class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel, IPersonReferencedModel, IResource {
     public const RESOURCE_ID = 'event.participant';
 
-    /**
-     * @return ModelPerson|null
-     */
-    public function getPerson() {
+    public function getPerson(): ?ModelPerson {
         if (!$this->person) {
             return null;
         }

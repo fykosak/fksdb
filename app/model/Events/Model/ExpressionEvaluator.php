@@ -27,5 +27,4 @@ class ExpressionEvaluator {
             throw new InvalidArgumentException("Cannot evaluate condition $condition.");
         }
     }
-
 }

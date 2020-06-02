@@ -39,7 +39,5 @@ trait WithEventTrait {
             return $obj->getHolder();
         }
         throw new \InvalidArgumentException();
-
     }
-
 }

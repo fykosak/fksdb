@@ -339,11 +339,7 @@ class StoredQuery implements IDataSource, IResource {
         $this->invalidateData();
     }
 
-    /**
-     * @return string
-     */
     public function getResourceId(): string {
         return 'export';
     }
-
 }

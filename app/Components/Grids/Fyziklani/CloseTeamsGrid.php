@@ -10,7 +10,9 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -40,15 +42,20 @@ class CloseTeamsGrid extends BaseGrid {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
+    protected function getData(): IDataSource {
+        $teams = $this->serviceFyziklaniTeam->findParticipating($this->event);//->where('points',NULL);
+        return new NDataSource($teams);
+    }
+
     /**
-     * @param $presenter
+     * @param Presenter $presenter
      * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws NotImplementedException
      * @throws BadTypeException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->paginate = false;
@@ -75,8 +82,6 @@ class CloseTeamsGrid extends BaseGrid {
         ])->setShow(function (ModelFyziklaniTeam $row) {
             return $row->isReadyForClosing();
         });
-        $teams = $this->serviceFyziklaniTeam->findParticipating($this->event);//->where('points',NULL);
-        $this->setDataSource(new NDataSource($teams));
     }
 
     protected function getModelClassName(): string {

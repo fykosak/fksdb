@@ -11,6 +11,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\ITemplate;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use FKSDB\Exceptions\NotImplementedException;
@@ -18,6 +19,7 @@ use Nette\Utils\Html;
 use NiftyGrid\Components\Button;
 use NiftyGrid\Components\Column;
 use NiftyGrid\Components\GlobalButton;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
@@ -53,15 +55,24 @@ abstract class BaseGrid extends Grid {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    /**
-     * @param $presenter
-     * @return void
-     */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
+        try {
+            $this->setDataSource($this->getData());
+        } catch (NotImplementedException$exception) {
+
+        }
         $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.latte');
         /** @var GridPaginator $paginator */
         $paginator = $this->getComponent('paginator');
         $paginator->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.paginator.latte');
+    }
+
+    /**
+     * @return IDataSource
+     * @throws NotImplementedException
+     */
+    protected function getData(): IDataSource {
+        throw new NotImplementedException();
     }
 
     /**
@@ -89,7 +100,7 @@ abstract class BaseGrid extends Grid {
     /**
      * @throws GridException
      */
-    public function render() {
+    public function render(): void {
         $paginator = $this->getPaginator();
 
         // this has to be done already here (and in the parent call again :-( )
@@ -184,16 +195,16 @@ abstract class BaseGrid extends Grid {
 
     /**
      * @param string $name
-     * @return void
+     * @return Column
+     * @throws BadTypeException
      * @throws DuplicateColumnException
      * @throws NotImplementedException
-     * @throws BadTypeException
      */
-    private function addReflectionColumn(string $name) {
+    private function addReflectionColumn(string $name): Column {
         $modelClassName = $this->getModelClassName();
         $factory = $this->tableReflectionFactory->loadRowFactory($name);
 
-        $this->addColumn(str_replace('.', '__', $name), $factory->getTitle())->setRenderer(function ($model) use ($factory, $modelClassName) {
+        return $this->addColumn(str_replace('.', '__', $name), $factory->getTitle())->setRenderer(function ($model) use ($factory, $modelClassName) {
             if (!$model instanceof $modelClassName) {
                 $model = $modelClassName::createFromActiveRow($model);
             }
@@ -216,7 +227,7 @@ abstract class BaseGrid extends Grid {
      * @throws NotImplementedException
      * @throws BadTypeException
      */
-    protected function addColumns(array $fields) {
+    protected function addColumns(array $fields): void {
         foreach ($fields as $name) {
             $this->addReflectionColumn($name);
         }
@@ -306,7 +317,7 @@ abstract class BaseGrid extends Grid {
     /**
      * @throws AbortException
      */
-    public function handleCsv() {
+    public function handleCsv(): void {
         $columns = $this['columns']->components;
         $rows = $this->dataSource->getData();
         $data = [];

@@ -6,7 +6,7 @@ use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\ORM\DbNames;
 
 /**
- *
+ * Class TeacherFactory
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class TeacherFactory extends SingleReflectionFactory {

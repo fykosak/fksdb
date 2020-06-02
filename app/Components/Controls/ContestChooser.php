@@ -109,7 +109,7 @@ class ContestChooser extends BaseComponent {
     }
 
     /**
-     * @param $defaultContest
+     * @param mixed $defaultContest
      * @return void
      */
     public function setDefaultContest($defaultContest): void {
@@ -124,7 +124,7 @@ class ContestChooser extends BaseComponent {
     }
 
     /**
-     * @param $contestSource
+     * @param mixed $contestSource
      * @return void
      */
     public function setContestSource($contestSource): void {

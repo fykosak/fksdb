@@ -40,7 +40,7 @@ class AddressFactory {
      * @param IControl|null $conditioningField
      * @return AddressContainer
      */
-    public function createAddress($options = 0, IControl $conditioningField = null): AddressContainer {
+    public function createAddress(int $options = 0, IControl $conditioningField = null): AddressContainer {
         $container = new AddressContainer();
         $this->buildAddress($container, $options, $conditioningField);
         return $container;
@@ -54,7 +54,7 @@ class AddressFactory {
      * @param IControl $conditioningField
      * @param int $options
      */
-    public function buildAddress(AddressContainer $container, $options = 0, IControl $conditioningField = null) {
+    public function buildAddress(AddressContainer $container, int $options = 0, IControl $conditioningField = null) {
         $container->setServiceRegion($this->serviceRegion);
 
 

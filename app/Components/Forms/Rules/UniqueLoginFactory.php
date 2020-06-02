@@ -22,14 +22,9 @@ class UniqueLoginFactory {
         $this->serviceLogin = $serviceLogin;
     }
 
-    /**
-     * @param ModelLogin|null $login
-     * @return UniqueLogin
-     */
-    public function create(ModelLogin $login = null): UniqueLogin {
+    public function create(?ModelLogin $login): UniqueLogin {
         $rule = new UniqueLogin($this->serviceLogin);
         $rule->setIgnoredLogin($login);
         return $rule;
     }
-
 }

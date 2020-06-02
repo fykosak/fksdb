@@ -5,6 +5,7 @@ namespace FKSDB\Components\Forms\Factories\Events;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\Holder\DataValidator;
 use FKSDB\Events\Model\Holder\Field;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
@@ -68,22 +69,22 @@ abstract class AbstractFactory implements IFieldFactory {
     }
 
     /**
-     * @param $component
+     * @param IControl|IComponent|array $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
      * @return void
      */
-    abstract protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container);
+    abstract protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container): void;
 
     /**
-     * @param $component
+     * @param IControl|IComponent|array $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
      * @return void
      */
-    abstract protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container);
+    abstract protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container): void;
 
     /**
      * @param Field $field

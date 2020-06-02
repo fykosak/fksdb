@@ -30,8 +30,9 @@ abstract class ReactComponent extends BaseComponent {
 
     /**
      * @param IComponent $obj
+     * @return void
      */
-    protected function attached($obj) {
+    protected function attached($obj): void {
         $this->attachedReact($obj);
         parent::attached($obj);
     }
@@ -39,7 +40,7 @@ abstract class ReactComponent extends BaseComponent {
     /**
      * @throws JsonException
      */
-    final public function render() {
+    final public function render(): void {
         $this->configure();
         $this->template->reactId = $this->getReactId();
         $this->template->actions = Json::encode($this->actions);
@@ -64,7 +65,7 @@ abstract class ReactComponent extends BaseComponent {
      * @return object
      * @throws BadRequestException
      */
-    protected function getReactRequest() {
+    protected function getReactRequest(): object {
         $requestData = $this->getHttpRequest()->getPost('requestData');
         $act = $this->getHttpRequest()->getPost('act');
         return (object)['requestData' => $requestData, 'act' => $act];

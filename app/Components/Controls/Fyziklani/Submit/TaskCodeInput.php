@@ -64,7 +64,7 @@ class TaskCodeInput extends FyziklaniReactControl {
      * @param IComponent $obj
      * @return void
      */
-    protected function attached($obj) {
+    protected function attached($obj): void {
         if ($obj instanceof IJavaScriptCollector) {
             $obj->registerJSFile('https://dmla.github.io/jsqrcode/src/qr_packed.js');
         }

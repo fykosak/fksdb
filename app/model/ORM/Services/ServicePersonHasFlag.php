@@ -45,7 +45,7 @@ class ServicePersonHasFlag extends AbstractServiceSingle {
      * @return void
      * @throws \Exception
      */
-    public function updateModel(IModel $model, $data, $alive = true) {
+    public function updateModel(IModel $model, array $data, bool $alive = true): void {
         if ($data === null) {
             $data = new ArrayHash();
         }

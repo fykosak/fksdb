@@ -14,12 +14,7 @@ use Nette\Utils\Arrays;
  */
 class FlagFactory {
 
-    /**
-     * @param HiddenField|null $hiddenField
-     * @param array $metadata
-     * @return BaseControl
-     */
-    public function createFlag(HiddenField $hiddenField = null, $metadata = []): BaseControl {
+    public function createFlag(HiddenField $hiddenField = null, array $metadata = []): BaseControl {
         $control = $this->createSpamMff();
 
         if (Arrays::get($metadata, 'required', false)) {

@@ -44,7 +44,7 @@ class MyApplicationsGrid extends BaseGrid {
      * @throws NotImplementedException
      * @throws BadTypeException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->paginate = false;

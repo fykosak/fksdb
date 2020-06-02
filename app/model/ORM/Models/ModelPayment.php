@@ -87,6 +87,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
         return $this->constant_symbol || $this->variable_symbol || $this->specific_symbol || $this->bank_account || $this->bank_name || $this->recipient;
     }
 
+// TODO to service
     public function updateState(?string $newState): void {
         $this->update(['state' => $newState]);
     }

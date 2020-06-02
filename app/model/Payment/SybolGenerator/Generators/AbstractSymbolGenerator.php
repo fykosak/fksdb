@@ -38,6 +38,6 @@ abstract class AbstractSymbolGenerator {
      */
     final public function __invoke(ModelPayment $modelPayment): void {
         $info = $this->create($modelPayment);
-        $modelPayment->update($info);
+        $this->servicePayment->updateModel2($modelPayment,$info);
     }
 }

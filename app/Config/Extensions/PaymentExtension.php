@@ -39,7 +39,6 @@ class PaymentExtension extends CompilerExtension {
                 ->addSetup('setPriceCalculator', [$priceCalculator])
                 ->addSetup('setSymbolGenerator', [$symbolGenerator])
                 ->addSetup('setTransitions', [$transitionsGenerator]);
-
         }
     }
 }

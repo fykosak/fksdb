@@ -103,14 +103,10 @@ class TokenAuthenticator extends AbstractAuthenticator {
         unset($section->data);
     }
 
-    /**
-     * @param ModelAuthToken $token
-     */
-    private function storeAuthToken(ModelAuthToken $token) {
+    private function storeAuthToken(ModelAuthToken $token): void {
         $section = $this->session->getSection(self::SESSION_NS);
         $section->token = $token->token;
         $section->type = $token->type;
         $section->data = $token->data;
     }
-
 }

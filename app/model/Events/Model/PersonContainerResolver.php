@@ -22,7 +22,7 @@ class PersonContainerResolver implements IVisibilityResolver, IModifiabilityReso
     private Field $field;
 
     /**
-     * @var mixed
+     * @var callable|bool
      */
     private $condition;
 
@@ -33,7 +33,7 @@ class PersonContainerResolver implements IVisibilityResolver, IModifiabilityReso
     /**
      * PersonContainerResolver constructor.
      * @param Field $field
-     * @param $condition
+     * @param callable|bool $condition
      * @param SelfResolver $selfResolver
      * @param ExpressionEvaluator $evaluator
      */

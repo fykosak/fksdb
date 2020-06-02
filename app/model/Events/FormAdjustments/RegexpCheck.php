@@ -15,43 +15,29 @@ use Nette\Utils\Strings;
  */
 class RegexpCheck extends AbstractAdjustment implements IFormAdjustment {
 
-    /**
-     * @var
-     */
-    private $field;
-    /**
-     * @var
-     */
-    private $message;
-    /**
-     * @var
-     */
-    private $pattern;
+    private string $field;
+
+    private string $message;
+
+    private string $pattern;
 
     /**
      * RegexpCheck constructor.
-     * @param $field
-     * @param $message
-     * @param $pattern
+     * @param string $field
+     * @param string $message
+     * @param string $pattern
      */
-    public function __construct($field, $message, $pattern) {
+    public function __construct(string $field, string $message, string $pattern) {
         $this->field = $field;
         $this->message = $message;
         $this->pattern = $pattern;
     }
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return void
-     */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder): void {
+    protected function conform(Form $form, Machine $machine, Holder $holder): void {
         $controls = $this->getControl($this->field);
         if (!$controls) {
             return;
         }
-
         foreach ($controls as $control) {
             $control->addRule(function (IControl $control) {
                 return (bool)Strings::match($control->getValue(), $this->pattern);

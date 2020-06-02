@@ -5,8 +5,9 @@ namespace FKSDB\Components\Grids\Fyziklani;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FyziklaniModule\BasePresenter;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -26,21 +27,24 @@ class TeamSubmitsGrid extends SubmitsGrid {
      * @param Container $container
      */
     public function __construct(ModelFyziklaniTeam $team, Container $container) {
-        $this->team = $team;
         parent::__construct($container);
+        $this->team = $team;
+    }
+
+    protected function getData(): IDataSource {
+        $submits = $this->team->getAllSubmits()
+            ->order('fyziklani_submit.created');
+        return new NDataSource($submits);
     }
 
     /**
-     * @param BasePresenter $presenter
+     * @param Presenter $presenter
      * @throws DuplicateColumnException
      * @throws DuplicateButtonException
      * @throws NotImplementedException
-     * @throws NotImplementedException
-     * @throws NotImplementedException
-     * @throws NotImplementedException
      * @throws BadTypeException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
         $this->addColumnTask();
@@ -52,10 +56,5 @@ class TeamSubmitsGrid extends SubmitsGrid {
         ]);
         $this->addLinkButton(':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
         $this->addLinkButton(':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
-
-        $submits = $this->team->getAllSubmits()
-            ->order('fyziklani_submit.created');
-        $dataSource = new NDataSource($submits);
-        $this->setDataSource($dataSource);
     }
 }

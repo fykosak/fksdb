@@ -21,5 +21,4 @@ class EventOrgAssertion extends AbstractEventOrgAssertion {
     public function __construct($eventTypeId, IUserStorage $user, Context $connection) {
         parent::__construct($eventTypeId, null, $user, $connection);
     }
-
 }

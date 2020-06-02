@@ -24,10 +24,7 @@ class Role extends EvaluatedExpression {
     public const RELATED = 'related';
     public const ADMIN = 'admin';
 
-    /**
-     * @var string
-     */
-    private $role;
+    private string $role;
 
     private User $user;
 
@@ -42,7 +39,7 @@ class Role extends EvaluatedExpression {
      * @param ContestAuthorizator $contestAuthorizator
      * @param RelatedPersonAuthorizator $relatedAuthorizator
      */
-    public function __construct($role, User $user, ContestAuthorizator $contestAuthorizator, RelatedPersonAuthorizator $relatedAuthorizator) {
+    public function __construct(string $role, User $user, ContestAuthorizator $contestAuthorizator, RelatedPersonAuthorizator $relatedAuthorizator) {
         $this->role = $role;
         $this->user = $user;
         $this->contestAuthorizator = $contestAuthorizator;
@@ -69,11 +66,7 @@ class Role extends EvaluatedExpression {
         }
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return "role({$this->role})";
     }
-
 }

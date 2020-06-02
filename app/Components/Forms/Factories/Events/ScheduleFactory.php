@@ -65,12 +65,7 @@ class ScheduleFactory extends AbstractFactory {
         $component->setDisabled();
     }
 
-    /**
-     * @param Component $component
-     * @return Component|IControl
-     */
-    public function getMainControl(Component $component) {
+    public function getMainControl(Component $component): Component {
         return $component;
     }
-
 }

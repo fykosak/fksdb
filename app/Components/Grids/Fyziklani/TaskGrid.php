@@ -5,8 +5,10 @@ namespace FKSDB\Components\Grids\Fyziklani;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateColumnException;
 use SQL\SearchableDataSource;
 
@@ -34,16 +36,7 @@ class TaskGrid extends BaseGrid {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 
-    /**
-     * @param $presenter
-     * @throws DuplicateColumnException
-     */
-    protected function configure($presenter) {
-        parent::configure($presenter);
-        $this->addColumn('fyziklani_task_id', _('Task Id'));
-        $this->addColumn('label', _('#'));
-        $this->addColumn('name', _('Task name'));
-
+    protected function getData(): IDataSource {
         $submits = $this->serviceFyziklaniTask->findAll($this->event);
         $dataSource = new SearchableDataSource($submits);
         $dataSource->setFilterCallback(function (Selection $table, $value) {
@@ -52,6 +45,17 @@ class TaskGrid extends BaseGrid {
                 $table->where('name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task_id LIKE CONCAT(\'%\', ? , \'%\')', $token, $token);
             }
         });
-        $this->setDataSource($dataSource);
+        return $dataSource;
+    }
+
+    /**
+     * @param Presenter $presenter
+     * @throws DuplicateColumnException
+     */
+    protected function configure(Presenter $presenter): void {
+        parent::configure($presenter);
+        $this->addColumn('fyziklani_task_id', _('Task Id'));
+        $this->addColumn('label', _('#'));
+        $this->addColumn('name', _('Task name'));
     }
 }

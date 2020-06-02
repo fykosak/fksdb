@@ -26,26 +26,20 @@ class Transition {
     public const TYPE_DANGEROUS = ILogger::ERROR;
     public const TYPE_DEFAULT = 'secondary';
 
-    /** @var BaseMachine */
-    private $baseMachine;
+    private BaseMachine $baseMachine;
 
     /** @var Transition[] */
-    private $inducedTransitions = [];
+    private array $inducedTransitions = [];
 
-    /** @var string */
-    private $mask;
+    private string $mask;
 
-    /** @var string */
-    private $name;
+    private string $name;
 
-    /** @var string */
-    private $target;
+    private string $target;
 
-    /** @var string */
-    private $source;
+    private string $source;
 
-    /** @var string */
-    private $label;
+    private ?string $label;
 
     /** @var bool|callable */
     private $condition;
@@ -53,27 +47,19 @@ class Transition {
     /** @var bool|callable */
     private $visible;
 
-    /**
-     * @var ExpressionEvaluator
-     */
-    private $evaluator;
+    private ExpressionEvaluator $evaluator;
 
-    /**
-     * @var array
-     */
-    public $onExecuted = [];
-    /**
-     * @var
-     */
-    private $type;
+    public array $onExecuted = [];
+
+    private string $type;
 
     /**
      * Transition constructor.
      * @param string $mask
-     * @param string $label
+     * @param string|null $label
      * @param string $type
      */
-    public function __construct(string $mask, $label = null, string $type = self::TYPE_DEFAULT) {
+    public function __construct(string $mask, ?string $label, string $type) {
         $this->setMask($mask);
         $this->label = $label;
         if (!in_array($type, $this->getAllowedBehaviorTypes())) {
@@ -91,11 +77,6 @@ class Transition {
         ];
     }
 
-    /**
-     * Meaningless idenifier.
-     *
-     * @return string
-     */
     public function getName(): string {
         return $this->name;
     }
@@ -117,24 +98,15 @@ class Transition {
         $this->name = preg_replace('/[^a-z0-9_]/i', '_', $name);
     }
 
-    /**
-     * @return string
-     */
-    public function getLabel() {
+    public function getLabel(): ?string {
         return $this->label;
     }
 
-    /**
-     * @return string
-     */
-    public function getMask() {
+    public function getMask(): string {
         return $this->mask;
     }
 
-    /**
-     * @param $mask
-     */
-    public function setMask($mask): void {
+    public function setMask(string $mask): void {
         $this->mask = $mask;
         [$this->source, $this->target] = self::parseMask($mask);
         $this->setName($mask);
@@ -169,14 +141,14 @@ class Transition {
     }
 
     /**
-     * @param $condition
+     * @param bool|callable $condition
      */
     public function setCondition($condition): void {
         $this->condition = $condition;
     }
 
     /**
-     * @param $visible
+     * @param bool|callable $visible
      */
     public function setVisible($visible): void {
         $this->visible = $visible;
@@ -190,11 +162,7 @@ class Transition {
         $this->evaluator = $evaluator;
     }
 
-    /**
-     * @param BaseMachine $targetMachine
-     * @param $targetState
-     */
-    public function addInducedTransition(BaseMachine $targetMachine, $targetState): void {
+    public function addInducedTransition(BaseMachine $targetMachine, string $targetState): void {
         if ($targetMachine === $this->getBaseMachine()) {
             throw new InvalidArgumentException("Cannot induce transition in the same machine.");
         }
@@ -239,11 +207,7 @@ class Transition {
         return null;
     }
 
-    /**
-     * @param Holder $holder
-     * @return bool
-     */
-    private function isConditionFulfilled(Holder $holder) {
+    private function isConditionFulfilled(Holder $holder): bool {
         return $this->getEvaluator()->evaluate($this->condition, $holder);
     }
 
@@ -258,18 +222,13 @@ class Transition {
                 return $result;
             }
         }
-
         $baseHolder = $holder->getBaseHolder($this->getBaseMachine()->getName());
         $validator = $baseHolder->getValidator();
         $validator->validate($baseHolder);
         return $validator->getValidationResult();
     }
 
-    /**
-     * @param Holder $holder
-     * @return bool
-     */
-    final public function canExecute(Holder $holder) {
+    final public function canExecute(Holder $holder): bool {
         return !$this->getBlockingTransition($holder);
     }
 
@@ -287,7 +246,7 @@ class Transition {
      * @return array
      * @todo Induction work only for one level.
      */
-    final public function execute(Holder $holder) {
+    final public function execute(Holder $holder): array {
         $blockingTransition = $this->getBlockingTransition($holder);
         if ($blockingTransition) {
             throw new TransitionConditionFailedException($blockingTransition);
@@ -315,7 +274,7 @@ class Transition {
      * @param Holder $holder
      * @param Transition[] $inducedTransitions
      */
-    final public function executed(Holder $holder, $inducedTransitions): void {
+    final public function executed(Holder $holder, array $inducedTransitions): void {
         foreach ($inducedTransitions as $inducedTransition) {
             $inducedTransition->executed($holder, []);
         }
@@ -340,7 +299,7 @@ class Transition {
      * @param string $mask It may be either mask of initial state or mask of whole transition.
      * @return bool
      */
-    public function matches($mask) {
+    public function matches(string $mask): bool {
         $parts = self::parseMask($mask);
 
         if (count($parts) == 2 && $parts[1] != $this->getTarget()) {
@@ -369,11 +328,6 @@ class Transition {
         return explode('->', $mask);
     }
 
-    /**
-     * @param string $mask
-     * @param array $states
-     * @return bool
-     */
     public static function validateTransition(string $mask, array $states): bool {
         $parts = self::parseMask($mask);
         if (count($parts) != 2) {

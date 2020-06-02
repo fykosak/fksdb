@@ -8,13 +8,15 @@ use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class ResultsCategoryGrid
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ResultsCategoryGrid extends BaseGrid {
 
@@ -40,14 +42,21 @@ class ResultsCategoryGrid extends BaseGrid {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
+    protected function getData(): IDataSource {
+        $teams = $this->serviceFyziklaniTeam->findParticipating($this->event)
+            ->where('category', $this->category)
+            ->order('name');
+        return new NDataSource($teams);
+    }
+
     /**
-     * @param $presenter
+     * @param Presenter $presenter
      * @return void
      * @throws DuplicateColumnException
      * @throws NotImplementedException
      * @throws BadTypeException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->paginate = false;
@@ -57,13 +66,6 @@ class ResultsCategoryGrid extends BaseGrid {
             'e_fyziklani_team.name',
             'e_fyziklani_team.rank_category',
         ]);
-
-        $teams = $this->serviceFyziklaniTeam->findParticipating($this->event)
-            ->where('category', $this->category)
-            ->order('name');
-        $dataSource = new NDataSource($teams);
-        $this->setDataSource($dataSource);
-
     }
 
     protected function getModelClassName(): string {

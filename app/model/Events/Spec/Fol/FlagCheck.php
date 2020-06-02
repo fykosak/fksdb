@@ -52,13 +52,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
         $this->servicePersonHistory = $servicePersonHistory;
     }
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return void
-     */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder): void {
+    protected function conform(Form $form, Machine $machine, Holder $holder): void {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $studyYearControls = $this->getControl("p*.person_id.person_history.study_year");

@@ -5,19 +5,21 @@ namespace FKSDB\Events;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Events\Machine\Machine;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
+use Tracy\Debugger;
 
 /**
  * Class EventDispatchFactory
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventDispatchFactory {
-    /** @var array */
-    private $definitions = [];
-    /** @var Container */
-    private $container;
+
+    private array $definitions = [];
+
+    private Container$container;
 
     /**
      * EventDispatchFactory constructor.
@@ -27,11 +29,6 @@ class EventDispatchFactory {
         $this->container = $container;
     }
 
-    /**
-     * @param array $key
-     * @param string $machineName
-     * @param string $holderMethodName
-     */
     public function addEvent(array $key, string $holderMethodName, string $machineName): void {
         $this->definitions[] = [
             'keys' => $key,
@@ -42,13 +39,17 @@ class EventDispatchFactory {
 
     /**
      * @param ModelEvent $event
-     * @return mixed
+     * @return Machine
      * @throws BadRequestException
-     * @throws \Exception
+     * @throws BadTypeException
      */
     public function getEventMachine(ModelEvent $event): Machine {
         $definition = $this->findDefinition($event);
-        return $this->container->getService($definition['machineName']);
+        $machine = $this->container->getService($definition['machineName']);
+        if (!$machine instanceof Machine) {
+            throw new BadTypeException(Machine::class, $machine);
+        }
+        return $machine;
     }
 
     /**

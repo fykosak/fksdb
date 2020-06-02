@@ -30,15 +30,9 @@ class ImportHandler {
 
     private Container $container;
 
-    /**
-     * @var SingleEventSource
-     */
-    private $source;
+    private SingleEventSource $source;
 
-    /**
-     * @var CSVParser
-     */
-    private $parser;
+    private CSVParser $parser;
 
     /**
      * ImportHandler constructor.

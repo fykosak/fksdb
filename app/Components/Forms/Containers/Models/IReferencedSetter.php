@@ -15,11 +15,5 @@ interface IReferencedSetter {
     public const MODE_FORCE = 'MODE_FORCE';
     public const MODE_ROLLBACK = 'MODE_ROLLBACK';
 
-    /**
-     * @param ReferencedContainer $container
-     * @param IModel|null $model
-     * @param string $mode
-     * @return void
-     */
-    public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL);
+    public function setModel(ReferencedContainer $container, IModel $model = null, string $mode = self::MODE_NORMAL): void;
 }

@@ -158,10 +158,10 @@ class Breadcrumbs extends BaseComponent {
 
     /**
      * @param AppRequest $request
-     * @param null $maxLen
+     * @param int|null $maxLen
      * @return NaviRequest[]
      */
-    private function getTraversePath(AppRequest $request, $maxLen = null) {
+    private function getTraversePath(AppRequest $request, ?int $maxLen = null): array {
         $requests = $this->getRequests();
         $backLinkMap = $this->getBackLinkMap();
 

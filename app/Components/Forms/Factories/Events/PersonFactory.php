@@ -31,64 +31,43 @@ class PersonFactory extends AbstractFactory {
 
     public const VALUE_LOGIN = 'fromLogin';
 
+    private array $fieldsDefinition;
     /**
-     * @var
-     */
-    private $fieldsDefinition;
-    /**
-     * @var
+     * @var bool|callable
      */
     private $searchType;
     /**
-     * @var
+     * @var bool|callable
      */
     private $allowClear;
     /**
-     * @var
+     * @var bool|callable
      */
     private $modifiable;
     /**
-     * @var
+     * @var bool|callable
      */
     private $visible;
 
-    /**
-     * @var ReferencedEventPersonFactory
-     */
-    private $referencedEventPersonFactory;
+    private ReferencedEventPersonFactory $referencedEventPersonFactory;
 
-    /**
-     * @var SelfResolver
-     */
-    private $selfResolver;
+    private SelfResolver $selfResolver;
 
-    /**
-     * @var ExpressionEvaluator
-     */
-    private $evaluator;
+    private ExpressionEvaluator $evaluator;
 
-    /**
-     * @var User
-     */
-    private $user;
+    private User $user;
 
-    /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
-    /**
-     * @var DIContainer
-     */
-    private $container;
+    private DIContainer $container;
 
     /**
      * PersonFactory constructor.
-     * @param $fieldsDefinition
-     * @param $searchType
-     * @param $allowClear
-     * @param $modifiable
-     * @param $visible
+     * @param array $fieldsDefinition
+     * @param string|callable $searchType
+     * @param bool|callable $allowClear
+     * @param bool|callable $modifiable
+     * @param bool|callable $visible
      * @param ReferencedEventPersonFactory $referencedEventPersonFactory
      * @param SelfResolver $selfResolver
      * @param ExpressionEvaluator $evaluator
@@ -96,7 +75,19 @@ class PersonFactory extends AbstractFactory {
      * @param ServicePerson $servicePerson
      * @param DIContainer $container
      */
-    public function __construct($fieldsDefinition, $searchType, $allowClear, $modifiable, $visible, ReferencedEventPersonFactory $referencedEventPersonFactory, SelfResolver $selfResolver, ExpressionEvaluator $evaluator, User $user, ServicePerson $servicePerson, DIContainer $container) {
+    public function __construct(
+        array $fieldsDefinition,
+        $searchType,
+        $allowClear,
+        $modifiable,
+        $visible,
+        ReferencedEventPersonFactory $referencedEventPersonFactory,
+        SelfResolver $selfResolver,
+        ExpressionEvaluator $evaluator,
+        User $user,
+        ServicePerson $servicePerson,
+        DIContainer $container
+    ) {
         $this->fieldsDefinition = $fieldsDefinition;
         $this->searchType = $searchType;
         $this->allowClear = $allowClear;
@@ -114,10 +105,10 @@ class PersonFactory extends AbstractFactory {
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
-     * @return array|mixed
+     * @return IControl[]|IComponent[]
      * @throws \Exception
      */
-    protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
+    protected function createComponent(Field $field, BaseMachine $machine, Container $container): array {
         $searchType = $this->evaluator->evaluate($this->searchType, $field);
         $allowClear = $this->evaluator->evaluate($this->allowClear, $field);
 
@@ -170,7 +161,7 @@ class PersonFactory extends AbstractFactory {
      * @param Component $component
      * @return Component|IControl
      */
-    public function getMainControl(Component $component) {
+    public function getMainControl(Component $component): Component {
         return $component;
     }
 
@@ -205,11 +196,7 @@ class PersonFactory extends AbstractFactory {
         }
     }
 
-    /**
-     * @param Field $field
-     * @return array|mixed
-     */
-    private function evaluateFieldsDefinition(Field $field) {
+    private function evaluateFieldsDefinition(Field $field): array {
         Helpers::registerSemantic(EventsExtension::$semanticMap);
         $fieldsDefinition = Helpers::evalExpressionArray($this->fieldsDefinition, $this->container);
 
@@ -223,8 +210,6 @@ class PersonFactory extends AbstractFactory {
                 }
             }
         }
-
         return $fieldsDefinition;
     }
-
 }

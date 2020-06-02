@@ -58,8 +58,6 @@ class RelatedPersonAuthorizator {
                 return true;
             }
         }
-
         return false;
     }
-
 }

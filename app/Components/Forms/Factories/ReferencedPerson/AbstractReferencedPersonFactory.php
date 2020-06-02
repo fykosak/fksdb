@@ -175,7 +175,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param string $mode
      * @return void
      */
-    public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL) {
+    public function setModel(ReferencedContainer $container, IModel $model = null, string $mode = self::MODE_NORMAL): void {
         $acYear = $container->getOption('acYear');
         /** @var IModifiabilityResolver $modifiabilityResolver */
         $modifiabilityResolver = $container->getOption('modifiabilityResolver');
@@ -242,52 +242,49 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
     }
 
     /**
-     * @param $sub
-     * @param $fieldName
-     * @param $acYear
+     * @param string $sub
+     * @param string $fieldName
+     * @param int $acYear
      * @param HiddenField $hiddenField
      * @param array $metadata
-     * @return AddressContainer|BaseControl|null
-     * @throws \Exception
+     * @return AddressContainer|BaseControl
      * @throws \Exception
      */
-    public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField, array $metadata) {
-        if (in_array($sub, [
-            ReferencedPersonHandler::POST_CONTACT_DELIVERY,
-            ReferencedPersonHandler::POST_CONTACT_PERMANENT,
-        ])) {
-            if ($fieldName == 'address') {
-                $required = Arrays::get($metadata, 'required', false);
-                if ($required) {
-                    $options = AddressFactory::REQUIRED;
+    public function createField(string $sub, string $fieldName, int $acYear, HiddenField $hiddenField, array $metadata) {
+        switch ($sub) {
+            case  ReferencedPersonHandler::POST_CONTACT_DELIVERY:
+            case ReferencedPersonHandler::POST_CONTACT_PERMANENT:
+                if ($fieldName == 'address') {
+                    $required = Arrays::get($metadata, 'required', false);
+                    if ($required) {
+                        $options = AddressFactory::REQUIRED;
+                    } else {
+                        $options = 0;
+                    }
+                    return $this->addressFactory->createAddress($options, $hiddenField);
                 } else {
-                    $options = 0;
+                    throw new InvalidArgumentException("Only 'address' field is supported.");
                 }
-                return $this->addressFactory->createAddress($options, $hiddenField);
-            } else {
-                throw new InvalidArgumentException("Only 'address' field is supported.");
-            }
-        } elseif ($sub == 'person_has_flag') {
-            return $this->flagFactory->createFlag($hiddenField, $metadata);
-        } else {
-            $control = null;
-            switch ($sub) {
-                case 'person_info':
-                    $control = $this->personInfoFactory->createField($fieldName);
-                    break;
-                case 'person_history':
-                    $control = $this->personHistoryFactory->createField($fieldName, $acYear);
-                    break;
-                case 'person':
-                    $control = $this->personFactory->createField($fieldName);
-                    break;
-                default:
-                    throw new InvalidArgumentException();
+            case 'person_has_flag':
+                return $this->flagFactory->createFlag($hiddenField, $metadata);
+            default:
+                $control = null;
+                switch ($sub) {
+                    case 'person_info':
+                        $control = $this->personInfoFactory->createField($fieldName);
+                        break;
+                    case 'person_history':
+                        $control = $this->personHistoryFactory->createField($fieldName, $acYear);
+                        break;
+                    case 'person':
+                        $control = $this->personFactory->createField($fieldName);
+                        break;
+                    default:
+                        throw new InvalidArgumentException();
 
-            }
-            $this->appendMetadata($control, $hiddenField, $fieldName, $metadata);
-
-            return $control;
+                }
+                $this->appendMetadata($control, $hiddenField, $fieldName, $metadata);
+                return $control;
         }
     }
 

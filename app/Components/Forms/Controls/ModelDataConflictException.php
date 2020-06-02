@@ -15,8 +15,7 @@ class ModelDataConflictException extends RuntimeException {
     /** @var ArrayHash */
     private $conflicts;
 
-    /** @var ReferencedId */
-    private $referencedId;
+    private ReferencedId $referencedId;
 
     /**
      * ModelDataConflictException constructor.
@@ -35,17 +34,11 @@ class ModelDataConflictException extends RuntimeException {
         return $this->conflicts;
     }
 
-    /**
-     * @return ReferencedId
-     */
-    public function getReferencedId() {
+    public function getReferencedId(): ReferencedId {
         return $this->referencedId;
     }
 
-    /**
-     * @param ReferencedId $referencedId
-     */
-    public function setReferencedId(ReferencedId $referencedId) {
+    public function setReferencedId(ReferencedId $referencedId): void {
         $this->referencedId = $referencedId;
     }
 

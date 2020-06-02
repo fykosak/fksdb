@@ -18,7 +18,7 @@ class ErrorPresenter extends BasePresenter {
         return $container;
     }
 
-    protected function putIntoBreadcrumbs() {
+    protected function putIntoBreadcrumbs(): void {
         /* empty */
     }
 

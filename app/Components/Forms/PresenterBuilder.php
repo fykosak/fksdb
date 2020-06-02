@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls;
 
+use Nette\Application\IPresenter;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
@@ -14,8 +15,8 @@ use Nette\Application\UI\Presenter;
 class PresenterBuilder {
 
     private IPresenterFactory $presenterFactory;
-    /** @var array */
-    private $presenterCache = [];
+    /** @var IPresenter[] */
+    private array $presenterCache = [];
 
     /**
      * PresenterBuilder constructor.
@@ -36,7 +37,7 @@ class PresenterBuilder {
      * @return Presenter
      * @throws BadRequestException
      */
-    public function preparePresenter($presenterName, $action, $params, $baseParams = [], $newInstance = false) {
+    public function preparePresenter(string $presenterName, ?string $action, ?array $params, ?array $baseParams = [], bool $newInstance = false): IPresenter {
         if ($newInstance) {
             $presenter = $this->presenterFactory->createPresenter($presenterName);
         } else {
@@ -59,7 +60,7 @@ class PresenterBuilder {
      * @param string $presenterName
      * @return Presenter
      */
-    private function getCachePresenter($presenterName) {
+    private function getCachePresenter(string $presenterName): IPresenter {
         if (!isset($this->presenters[$presenterName])) {
             $this->presenterCache[$presenterName] = $this->presenterFactory->createPresenter($presenterName);
         }

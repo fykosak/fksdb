@@ -100,23 +100,20 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
 
     // ----- IIdentity implementation ----------
 
-    /**
-     * @return int|mixed
-     */
-    public function getId() {
+    public function getId(): int {
         return $this->login_id;
     }
 
     /**
      * @var Grant[]   cache
      */
-    private $roles;
+    private array $roles;
 
     /**
      * @return array|Grant[]
      */
     public function getRoles(): array {
-        if ($this->roles === null) {
+        if (!isset($this->roles)) {
             $this->roles = [];
             $this->roles[] = new Grant(Grant::CONTEST_ALL, ModelRole::REGISTERED);
 

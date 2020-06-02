@@ -5,10 +5,11 @@ namespace FKSDB\Components\Grids;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceContestant;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use OrgModule\BasePresenter;
 use SQL\ViewDataSource;
 
 /**
@@ -17,14 +18,9 @@ use SQL\ViewDataSource;
  */
 class ContestantsFromSchoolGrid extends BaseGrid {
 
-    /**
-     * @var ServiceContestant
-     */
-    private $serviceContestant;
-    /**
-     * @var ModelSchool
-     */
-    private $school;
+    private ServiceContestant $serviceContestant;
+
+    private ModelSchool $school;
 
     /**
      * ContestantsGrid constructor.
@@ -40,21 +36,24 @@ class ContestantsFromSchoolGrid extends BaseGrid {
         $this->serviceContestant = $serviceContestant;
     }
 
-    /**
-     * @param BasePresenter $presenter
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     */
-    protected function configure($presenter) {
-        parent::configure($presenter);
-
+    protected function getData(): IDataSource {
         $contestants = $this->serviceContestant->getContext()->table(DbNames::VIEW_CONTESTANT)
             ->select('*')->where([
                 'v_contestant.school_id' => $this->school->school_id,
             ]);
 
+        return new ViewDataSource('ct_id', $contestants);
+    }
 
-        $this->setDataSource(new ViewDataSource('ct_id', $contestants));
+    /**
+     * @param Presenter $presenter
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     */
+    protected function configure(Presenter $presenter): void {
+        parent::configure($presenter);
+
+        $this->paginate = false;
         $this->setDefaultOrder('name_lex ASC');
 
         //
@@ -75,6 +74,6 @@ class ContestantsFromSchoolGrid extends BaseGrid {
                     'id' => $row->ct_id,
                 ]);
             });
-        $this->paginate = false;
+
     }
 }

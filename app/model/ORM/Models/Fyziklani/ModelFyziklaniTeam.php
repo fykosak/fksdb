@@ -39,10 +39,7 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
         return $this->name;
     }
 
-    /**
-     * @return ModelPerson|NULL
-     */
-    public function getTeacher() {
+    public function getTeacher(): ?ModelPerson {
         $row = $this->ref(DbNames::TAB_PERSON, 'teacher_id');
         if ($row) {
             return ModelPerson::createFromActiveRow($row);
@@ -58,10 +55,7 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
         return $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'e_fyziklani_team_id');
     }
 
-    /**
-     * @return null|ModelFyziklaniTeamPosition
-     */
-    public function getPosition() {
+    public function getPosition(): ?ModelFyziklaniTeamPosition {
         $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_POSITION, 'e_fyziklani_team_id')->fetch();
         if ($row) {
             return ModelFyziklaniTeamPosition::createFromActiveRow($row);
@@ -138,10 +132,6 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
         return $persons;
     }
 
-    /**
-     * @param bool $includePosition
-     * @return array
-     */
     public function __toArray(bool $includePosition = false): array {
         $data = [
             'created' => $this->created->format('c'),

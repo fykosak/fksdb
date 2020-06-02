@@ -16,7 +16,7 @@ interface IService {
      */
     public function createNew($data = null);
 
-    public function createNewModel(iterable $data): IModel;
+    public function createNewModel(array $data): IModel;
 
     /**
      * @param int $key
@@ -31,16 +31,9 @@ interface IService {
      */
     public function save(IModel &$model);
 
-    /**
-     * @param IModel $model
-     * @return void
-     */
     public function dispose(IModel $model): void;
 
-    /**
-     * @return Selection
-     */
-    public function getTable();
+    public function getTable(): Selection;
 
     /**
      * @param IModel $model
@@ -48,7 +41,7 @@ interface IService {
      * @return mixed
      * @deprecated
      */
-    public function updateModel(IModel $model, $data);
+    public function updateModel(IModel $model, array $data): void;
 
     /**
      * @return string|AbstractModelSingle|AbstractModelMulti

@@ -34,13 +34,7 @@ class SchoolProvider implements IFilteredDataProvider {
         $this->serviceSchool = $serviceSchool;
     }
 
-    /**
-     * Prefix search.
-     *
-     * @param string $search
-     * @return array
-     */
-    public function getFilteredItems($search) {
+    public function getFilteredItems(string $search): array {
         $search = trim($search);
         $tokens = preg_split('/[ ,\.]+/', $search);
 
@@ -95,7 +89,7 @@ class SchoolProvider implements IFilteredDataProvider {
     /**
      * @param mixed $id
      */
-    public function setDefaultValue($id) {
+    public function setDefaultValue($id): void {
         $this->defaultValue = $id;
     }
 }

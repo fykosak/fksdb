@@ -15,10 +15,7 @@ class UniqueEmail {
 
     private ServicePersonInfo $servicePersonInfo;
 
-    /**
-     * @var ModelPerson
-     */
-    private $ignoredPerson;
+    private ?ModelPerson $ignoredPerson = null;
 
     /**
      * UniqueEmail constructor.
@@ -28,17 +25,11 @@ class UniqueEmail {
         $this->servicePersonInfo = $servicePersonInfo;
     }
 
-    /**
-     * @return ModelPerson
-     */
-    public function getIgnoredPerson() {
+    public function getIgnoredPerson(): ?ModelPerson {
         return $this->ignoredPerson;
     }
 
-    /**
-     * @param ModelPerson|null $ignoredPerson
-     */
-    public function setIgnoredPerson(ModelPerson $ignoredPerson = null) {
+    public function setIgnoredPerson(?ModelPerson $ignoredPerson): void {
         $this->ignoredPerson = $ignoredPerson;
     }
 

@@ -38,13 +38,7 @@ class ChooserFactory extends AbstractFactory {
         $this->optionsProvider = $optionsProvider;
     }
 
-    /**
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return SelectBox
-     */
-    protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
+    protected function createComponent(Field $field, BaseMachine $machine, Container $container): SelectBox {
 
         $component = new SelectBox($field->getLabel());
         $component->setOption('description', $field->getDescription());
@@ -88,12 +82,7 @@ class ChooserFactory extends AbstractFactory {
         $component->setDisabled();
     }
 
-    /**
-     * @param Component $component
-     * @return Component|IControl
-     */
-    public function getMainControl(Component $component) {
+    public function getMainControl(Component $component): Component {
         return $component;
     }
-
 }

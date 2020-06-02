@@ -23,11 +23,7 @@ class EventWas extends EvaluatedExpression {
         return $event->begin->getTimestamp() <= time();
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return 'eventWas';
     }
-
 }

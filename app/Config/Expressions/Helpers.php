@@ -33,11 +33,7 @@ class Helpers {
         'leq' => Leq::class,
     ];
 
-    /**
-     * @param array $semanticMap
-     * @return void
-     */
-    public static function registerSemantic(array $semanticMap) {
+    public static function registerSemantic(array $semanticMap): void {
         self::$semanticMap += $semanticMap;
     }
 

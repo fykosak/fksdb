@@ -14,10 +14,8 @@ use Nette\Application\UI\Presenter;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceSubmit extends AbstractServiceSingle {
-    /**
-     * @var array
-     */
-    private $submitCache = [];
+
+    private array $submitCache = [];
 
     public function getModelClassName(): string {
         return ModelSubmit::class;

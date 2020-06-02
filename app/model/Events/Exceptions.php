@@ -21,10 +21,7 @@ class MachineExecutionException extends RuntimeException {
  */
 class TransitionConditionFailedException extends MachineExecutionException {
 
-    /**
-     * @var Transition
-     */
-    private $transition;
+    private Transition $transition;
 
     /**
      * TransitionConditionFailedException constructor.

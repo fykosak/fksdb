@@ -14,16 +14,13 @@ class Count {
     use SmartObject;
     use WithEventTrait;
 
-    /**
-     * @var
-     */
-    private $state;
+    private string $state;
 
     /**
      * Count constructor.
      * @param $state
      */
-    public function __construct($state) {
+    public function __construct(string $state) {
         $this->state = $state;
     }
 
@@ -39,10 +36,7 @@ class Count {
         return $table->count('1');
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return "count({$this->state})";
     }
 

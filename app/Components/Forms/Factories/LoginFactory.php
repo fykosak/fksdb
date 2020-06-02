@@ -27,7 +27,7 @@ class LoginFactory {
      * @param null $loginRule
      * @return ModelContainer
      */
-    public function createLogin($options = 0, ControlGroup $group = null, $loginRule = null): ModelContainer {
+    public function createLogin(int $options = 0, ControlGroup $group = null, $loginRule = null): ModelContainer {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 

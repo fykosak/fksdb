@@ -9,8 +9,8 @@ use FKSDB\Events\Model\Holder\BaseHolder;
  * *
  */
 class SecondaryModelDataConflictException extends SecondaryModelConflictException {
-    /** @var array */
-    private $conflictData;
+
+    private array $conflictData;
 
     /**
      * SecondaryModelDataConflictException constructor.
@@ -26,9 +26,6 @@ class SecondaryModelDataConflictException extends SecondaryModelConflictExceptio
         $this->message .= sprintf(' (%s)', implode(', ', $this->conflictData));
     }
 
-    /**
-     * @return array
-     */
     public function getConflictData(): array {
         return $this->conflictData;
     }

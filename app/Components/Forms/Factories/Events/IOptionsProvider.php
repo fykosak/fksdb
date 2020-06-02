@@ -14,5 +14,5 @@ interface IOptionsProvider {
      * @param Field $field
      * @return array  key => label
      */
-    public function getOptions(Field $field);
+    public function getOptions(Field $field): array;
 }

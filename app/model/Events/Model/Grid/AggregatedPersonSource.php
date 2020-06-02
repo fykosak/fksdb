@@ -30,7 +30,7 @@ abstract class AggregatedPersonSource implements IHolderSource {
     /**
      * @var Holder[]
      */
-    private $holders = null;
+    private ?array $holders = null;
 
     /**
      * AggregatedPersonSource constructor.

@@ -14,10 +14,7 @@ use FKSDB\ORM\Models\ModelEventParticipant;
  */
 class ModelMVikendParticipant extends AbstractModelMulti implements IEventReferencedModel {
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return $this->getMainModel()->getPerson()->getFullName();
     }
 

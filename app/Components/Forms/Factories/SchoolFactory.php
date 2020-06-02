@@ -62,11 +62,7 @@ class SchoolFactory {
         return $container;
     }
 
-    /**
-     * @param int $options
-     * @return AutocompleteSelectBox
-     */
-    public function createSchoolSelect($options = 0): AutocompleteSelectBox {
+    public function createSchoolSelect(int $options = 0): AutocompleteSelectBox {
         $schoolElement = new AutocompleteSelectBox(true, _('Škola'));
         $schoolElement->setDataProvider($this->schoolProvider);
         if ($options & self::SHOW_UNKNOWN_SCHOOL_HINT) {

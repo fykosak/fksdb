@@ -4,7 +4,6 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\StoredQuery\ISchoolReferencedModel;
 
 /**
  *
@@ -49,9 +48,9 @@ class ModelPersonHistory extends AbstractModelSingle implements IPersonReference
     ];
 
     /**
-     * @param $class
-     * @param $diff
-     * @return null|string|string[]
+     * @param string|null $class
+     * @param int $diff
+     * @return string|string[]|null
      */
     private function extrapolateClass(string $class = null, int $diff = 0) {
         if (!$class) {
@@ -72,7 +71,7 @@ class ModelPersonHistory extends AbstractModelSingle implements IPersonReference
         return $class;
     }
 
-    private function extrapolateStudyYear(int $studyYear = null, int $diff = 0): ?int {
+    private function extrapolateStudyYear(?int $studyYear, int $diff = 0): ?int {
         if (!$studyYear) {
             return null;
         }

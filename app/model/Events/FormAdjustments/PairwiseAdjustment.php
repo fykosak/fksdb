@@ -31,13 +31,7 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
         $this->rules = $rules;
     }
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return void
-     */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder): void {
+    protected function conform(Form $form, Machine $machine, Holder $holder): void {
         foreach ($this->rules as $target => $prerequisities) {
             if (is_scalar($prerequisities)) {
                 $prerequisities = [$prerequisities];
@@ -50,7 +44,7 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
                 if (!$cTarget || !$cPrerequisity) {
                     break;
                 }
-                if ($this->hasWildcart($target) && $this->hasWildcart($prerequisity)) {
+                if ($this->hasWildCart($target) && $this->hasWildCart($prerequisity)) {
                     foreach ($cTarget as $key => $control) {
                         if (isset($cPrerequisity[$key])) {
                             $this->processPair($control, $cPrerequisity[$key]);

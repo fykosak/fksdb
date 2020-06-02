@@ -51,7 +51,7 @@ class TimelineControl extends ReactComponent {
      * @return \array[][]
      * @throws \Exception
      */
-    private function calculateData() {
+    private function calculateData(): array {
 
         $dates = [
             'since' => [],

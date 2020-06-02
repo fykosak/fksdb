@@ -13,10 +13,7 @@ use RuntimeException;
  */
 class SecondaryModelConflictException extends RuntimeException {
 
-    /**
-     * @var BaseHolder
-     */
-    private $baseHolder;
+    private BaseHolder $baseHolder;
 
     /**
      * @var IModel[]
@@ -50,10 +47,7 @@ class SecondaryModelConflictException extends RuntimeException {
         return sprintf('Model with PK %s conflicts with other models: %s.', $id, $ids);
     }
 
-    /**
-     * @return BaseHolder
-     */
-    public function getBaseHolder() {
+    public function getBaseHolder(): BaseHolder {
         return $this->baseHolder;
     }
 
@@ -63,5 +57,4 @@ class SecondaryModelConflictException extends RuntimeException {
     public function getConflicts() {
         return $this->conflicts;
     }
-
 }

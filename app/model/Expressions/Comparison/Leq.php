@@ -12,11 +12,11 @@ use FKSDB\Expressions\EvaluatedExpression;
 class Leq extends EvaluatedExpression {
 
     /**
-     * @var
+     * @var mixed
      */
     private $aValue;
     /**
-     * @var
+     * @var mixed
      */
     private $bValue;
 

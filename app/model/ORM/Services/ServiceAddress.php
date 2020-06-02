@@ -27,7 +27,7 @@ class ServiceAddress extends AbstractServiceSingle {
         return DbNames::TAB_ADDRESS;
     }
 
-    public function createNewModel(iterable $data): AbstractModelSingle {
+    public function createNewModel(array $data): AbstractModelSingle {
         if (!isset($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }

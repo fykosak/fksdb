@@ -54,10 +54,7 @@ class BaseMachine {
         return $this->states;
     }
 
-    /**
-     * @return Machine
-     */
-    public function getMachine() {
+    public function getMachine(): Machine {
         return $this->machine;
     }
 
@@ -65,11 +62,7 @@ class BaseMachine {
         $this->machine = $machine;
     }
 
-    /**
-     * @param Transition $transition
-     * @return void
-     */
-    public function addTransition(Transition $transition) {
+    public function addTransition(Transition $transition): void {
         $transition->setBaseMachine($this);
         $this->transitions[$transition->getName()] = $transition;
     }
@@ -78,13 +71,7 @@ class BaseMachine {
         return $this->transitions[$name];
     }
 
-
-    /**
-     * @param mixed $transitionMask
-     * @param mixed $induced
-     * @return void
-     */
-    public function addInducedTransition($transitionMask, $induced): void {
+    public function addInducedTransition(string $transitionMask, array $induced): void {
         foreach ($this->getMatchingTransitions($transitionMask) as $transition) {
             foreach ($induced as $machineName => $state) {
                 $targetMachine = $this->getMachine()->getBaseMachine($machineName);
@@ -134,7 +121,7 @@ class BaseMachine {
      * @param string $targetState
      * @return Transition[]|null
      */
-    public function getTransitionByTarget(string $sourceState, string $targetState) {
+    public function getTransitionByTarget(string $sourceState, string $targetState): ?array {
         $candidates = array_filter($this->getMatchingTransitions($sourceState), fn(Transition $transition) => $transition->getTarget() == $targetState);
         if (count($candidates) == 0) {
             return null;

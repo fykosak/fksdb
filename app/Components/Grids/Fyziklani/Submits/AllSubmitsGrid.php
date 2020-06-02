@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
-use Closure;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Fyziklani\TaskCodePreprocessor;
@@ -13,13 +12,14 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FyziklaniModule\BasePresenter;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use SQL\SearchableDataSource;
@@ -51,14 +51,22 @@ class AllSubmitsGrid extends SubmitsGrid {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
+    protected function getData(): IDataSource {
+        $submits = $this->serviceFyziklaniSubmit->findAll($this->event)/*->where('fyziklani_submit.points IS NOT NULL')*/
+        ->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name');
+        $dataSource = new SearchableDataSource($submits);
+        $dataSource->setFilterCallback($this->getFilterCallBack());
+        return $dataSource;
+    }
+
     /**
-     * @param BasePresenter $presenter
+     * @param Presenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws NotImplementedException
      * @throws BadTypeException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->addColumns(['e_fyziklani_team.name_n_id']);
@@ -82,11 +90,6 @@ class AllSubmitsGrid extends SubmitsGrid {
             ->setShow(function (ModelFyziklaniSubmit $row) {
                 return $row->canRevoke();
             });
-        $submits = $this->serviceFyziklaniSubmit->findAll($this->event)/*->where('fyziklani_submit.points IS NOT NULL')*/
-        ->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name');
-        $dataSource = new SearchableDataSource($submits);
-        $dataSource->setFilterCallback($this->getFilterCallBack());
-        $this->setDataSource($dataSource);
     }
 
     private function getFilterCallBack(): callable {
@@ -122,10 +125,10 @@ class AllSubmitsGrid extends SubmitsGrid {
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @throws AbortException
      */
-    public function handleDelete($id): void {
+    public function handleDelete(int $id): void {
         /**
          * @var ModelFyziklaniSubmit $submit
          */

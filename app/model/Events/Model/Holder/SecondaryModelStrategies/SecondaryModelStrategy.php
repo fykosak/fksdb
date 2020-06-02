@@ -59,8 +59,9 @@ abstract class SecondaryModelStrategy {
      * @param $joinTo
      * @param $holders
      * @param IModel $primaryModel
+     * @return void
      */
-    public function updateSecondaryModels(IService $service, $joinOn, $joinTo, $holders, IModel $primaryModel) {
+    public function updateSecondaryModels(IService $service, $joinOn, $joinTo, $holders, IModel $primaryModel): void {
         $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
         foreach ($holders as $baseHolder) {
             $joinData = [$joinOn => $joinValue];
@@ -87,5 +88,5 @@ abstract class SecondaryModelStrategy {
      * @param $joinData
      * @return void
      */
-    abstract protected function resolveMultipleSecondaries(BaseHolder $holder, $secondaries, $joinData);
+    abstract protected function resolveMultipleSecondaries(BaseHolder $holder, $secondaries, $joinData): void;
 }

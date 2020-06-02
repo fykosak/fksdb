@@ -22,7 +22,6 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
 
     /**
      * @return int|string
-     * @throws InvalidStateException
      */
     public function getDefaultValue() {
         switch ($this->type) {
@@ -58,7 +57,7 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
      * @return int
      * @throws InvalidStateException
      */
-    public function getPDOType() {
+    public function getPDOType(): int {
         switch ($this->type) {
             case self::TYPE_INT:
             case self::TYPE_BOOL:

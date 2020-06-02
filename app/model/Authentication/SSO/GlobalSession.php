@@ -162,7 +162,7 @@ class GlobalSession implements IGlobalSession {
     }
 
     /**
-     * @param $offset
+     * @param mixed $offset
      */
     public function offsetUnset($offset) {
         if (!$this->started) {

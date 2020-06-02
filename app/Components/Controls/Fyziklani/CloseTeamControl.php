@@ -50,6 +50,7 @@ class CloseTeamControl extends BaseComponent {
         $connection = $this->serviceFyziklaniTask->getConnection();
         $connection->beginTransaction();
         $sum = (int)$this->team->getNonRevokedSubmits()->sum('points');
+        // TODO to service
         $this->team->update([
             'points' => $sum,
         ]);

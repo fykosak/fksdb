@@ -29,30 +29,15 @@ class BaseHolder {
 
     private string $name;
 
-    /**
-     * @var string
-     */
-    private $label;
+    private ?string $label;
 
-    /**
-     * @var string
-     */
-    private $description;
+    private ?string $description;
 
-    /**
-     * @var IService
-     */
-    private $service;
+    private IService $service;
 
-    /**
-     * @var string
-     */
-    private $joinOn;
+    private ?string $joinOn;
 
-    /**
-     * @var string
-     */
-    private $joinTo;
+    private ?string $joinTo;
 
     /**
      * @var string[]
@@ -64,10 +49,7 @@ class BaseHolder {
      */
     private $eventId;
 
-    /**
-     * @var Holder
-     */
-    private $holder;
+    private Holder $holder;
 
     /**
      * @var bool|callable
@@ -82,7 +64,7 @@ class BaseHolder {
     /**
      * @var Field[]
      */
-    private $fields = [];
+    private array $fields = [];
 
     /**
      * @var IModel
@@ -94,12 +76,9 @@ class BaseHolder {
      *
      * @var IEventRelation|null
      */
-    private $eventRelation;
+    private ?IEventRelation $eventRelation;
 
-    /**
-     * @var ModelEvent
-     */
-    private $event;
+    private ModelEvent $event;
 
     /**
      * @var array
@@ -111,15 +90,9 @@ class BaseHolder {
      */
     private $parameters;
 
-    /**
-     * @var ExpressionEvaluator
-     */
-    private $evaluator;
+    private ExpressionEvaluator $evaluator;
 
-    /**
-     * @var DataValidator
-     */
-    private $validator;
+    private DataValidator $validator;
 
     /**
      * BaseHolder constructor.
@@ -275,10 +248,6 @@ class BaseHolder {
         }
     }
 
-    /**
-     * @param string $state
-     * @return void
-     */
     public function setModelState(string $state): void {
         $this->getService()->updateModel($this->getModel(), [self::STATE_COLUMN => $state]);
     }
@@ -303,67 +272,42 @@ class BaseHolder {
         return $this->service;
     }
 
-    /**
-     * @param IService $service
-     * @return void
-     */
     public function setService(IService $service): void {
         $this->service = $service;
     }
 
-    /**
-     * @return string
-     */
-    public function getLabel() {
+    public function getLabel(): ?string {
         return $this->label;
     }
 
-    /**
-     * @param string $label
-     */
-    public function setLabel($label): void {
+    public function setLabel(?string $label): void {
         $this->label = $label;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     */
-    public function setDescription($description): void {
+    public function setDescription(?string $description): void {
         $this->description = $description;
     }
 
-    /**
-     * @return string
-     */
-    public function getJoinOn() {
+    public function getJoinOn(): ?string {
         return $this->joinOn;
     }
 
     /**
      * @param string $joinOn
      */
-    public function setJoinOn($joinOn): void {
+    public function setJoinOn(?string $joinOn): void {
         $this->joinOn = $joinOn;
     }
 
-    /**
-     * @return string
-     */
-    public function getJoinTo() {
+    public function getJoinTo(): ?string {
         return $this->joinTo;
     }
 
-    /**
-     * @param string $joinTo
-     */
-    public function setJoinTo($joinTo): void {
+    public function setJoinTo(?string $joinTo): void {
         $this->joinTo = $joinTo;
     }
 
@@ -468,10 +412,7 @@ class BaseHolder {
         return $model[$personColumn];
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return $this->name;
     }
 
@@ -481,7 +422,7 @@ class BaseHolder {
     /**
      * @throws NeonSchemaException
      */
-    private function cacheParameters() {
+    private function cacheParameters(): void {
         $parameters = isset($this->getEvent()->parameters) ? $this->getEvent()->parameters : '';
         $parameters = $parameters ? Neon::decode($parameters) : [];
         $this->parameters = NeonScheme::readSection($parameters, $this->getParamScheme());

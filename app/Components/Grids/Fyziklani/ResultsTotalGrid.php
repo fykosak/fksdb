@@ -8,7 +8,9 @@ use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
@@ -36,14 +38,20 @@ class ResultsTotalGrid extends BaseGrid {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
+    protected function getData(): IDataSource {
+        $teams = $this->serviceFyziklaniTeam->findParticipating($this->event)
+            ->order('name');
+        return new NDataSource($teams);
+    }
+
     /**
-     * @param $presenter
+     * @param Presenter $presenter
      * @return void
      * @throws DuplicateColumnException
      * @throws NotImplementedException
      * @throws BadTypeException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
 
@@ -52,10 +60,6 @@ class ResultsTotalGrid extends BaseGrid {
             'e_fyziklani_team.name',
             'e_fyziklani_team.rank_total',
         ]);
-        $teams = $this->serviceFyziklaniTeam->findParticipating($this->event)
-            ->order('name');
-        $dataSource = new NDataSource($teams);
-        $this->setDataSource($dataSource);
     }
 
     protected function getModelClassName(): string {

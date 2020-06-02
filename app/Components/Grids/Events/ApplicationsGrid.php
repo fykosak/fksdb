@@ -84,8 +84,7 @@ class ApplicationsGrid extends BaseComponent {
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
-    /** @var bool */
-    private $attachedJS = false;
+    private bool $attachedJS = false;
 
     /**
      * @param $obj

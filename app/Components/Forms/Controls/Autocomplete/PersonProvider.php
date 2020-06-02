@@ -30,12 +30,7 @@ class PersonProvider implements IFilteredDataProvider {
         $this->searchTable = $this->servicePerson->getTable();
     }
 
-    /**
-     * Syntactic sugar, should be solved more generally.
-     * @param ModelContest $contest
-     * @param YearCalculator $yearCalculator
-     */
-    public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator) {
+    public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator): void {
         $this->searchTable = $this->servicePerson->getTable()
             ->where([
                 ':org.contest_id' => $contest->contest_id,
@@ -45,13 +40,7 @@ class PersonProvider implements IFilteredDataProvider {
 
     }
 
-    /**
-     * Prefix search.
-     *
-     * @param string $search
-     * @return array
-     */
-    public function getFilteredItems($search) {
+    public function getFilteredItems(string $search): array {
         $search = trim($search);
         $search = str_replace(' ', '', $search);
         $this->searchTable
@@ -77,11 +66,7 @@ class PersonProvider implements IFilteredDataProvider {
         return $result;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return array
-     */
-    private function getItem(ModelPerson $person) {
+    private function getItem(ModelPerson $person): array {
         $place = null;
         $address = $person->getDeliveryAddress();
         if ($address) {

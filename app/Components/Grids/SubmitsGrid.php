@@ -14,7 +14,9 @@ use FKSDB\Submits\FileSystemStorage\UploadedStorage;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -33,10 +35,7 @@ class SubmitsGrid extends BaseGrid {
 
     private UploadedStorage $uploadedStorage;
 
-    /**
-     * @var ModelContestant
-     */
-    private $contestant;
+    private ModelContestant $contestant;
 
     /**
      * SubmitsGrid constructor.
@@ -54,21 +53,19 @@ class SubmitsGrid extends BaseGrid {
         $this->uploadedStorage = $uploadedStorage;
     }
 
+    protected function getData(): IDataSource {
+        $submits = $this->serviceSubmit->getSubmits();
+        $submits->where('ct_id = ?', $this->contestant->ct_id); //TODO year + contest?
+        return new NDataSource($submits);
+    }
+
     /**
-     * @param $presenter
+     * @param Presenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
-        //
-        // data
-        //
-        $submits = $this->serviceSubmit->getSubmits();
-        $submits->where('ct_id = ?', $this->contestant->ct_id); //TODO year + contest?
-
-        $this->setDataSource(new NDataSource($submits));
-        $this->setDefaultOrder('series DESC, tasknr ASC');
 
         //
         // columns
@@ -106,6 +103,7 @@ class SubmitsGrid extends BaseGrid {
                 return $row->corrected;
             });
 
+        $this->setDefaultOrder('series DESC, tasknr ASC');
         $this->paginate = false;
         $this->enableSorting = false;
     }

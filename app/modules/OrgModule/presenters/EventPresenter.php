@@ -59,7 +59,7 @@ class EventPresenter extends BasePresenter {
     }
 
     protected function createComponentGrid(): EventsGrid {
-        return new EventsGrid($this->getContext());
+        return new EventsGrid($this->getContext(), $this->getSelectedContest(), $this->getSelectedYear());
     }
 
     /**

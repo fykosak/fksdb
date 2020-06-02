@@ -23,10 +23,7 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
      */
     private $outerParameters;
 
-    /**
-     * @var StoredQueryPostProcessing
-     */
-    private $postProcessing;
+    private ?StoredQueryPostProcessing $postProcessing;
 
     /**
      * @param bool $outer
@@ -54,16 +51,17 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
         $this->outerParameters = $value;
     }
 
-    /**
-     * @return StoredQueryPostProcessing|null
-     */
-    public function getPostProcessing() {
-        if ($this->postProcessing == null && $this->php_post_proc) {
-            $className = $this->php_post_proc;
-            if (!class_exists($className)) {
-                throw new InvalidArgumentException("Expected class name, got '$className'.");
+    public function getPostProcessing(): ?StoredQueryPostProcessing {
+        if (!isset($this->postProcessing)) {
+            if ($this->php_post_proc) {
+                $className = $this->php_post_proc;
+                if (!class_exists($className)) {
+                    throw new InvalidArgumentException("Expected class name, got '$className'.");
+                }
+                $this->postProcessing = new $className();
+            } else {
+                $this->postProcessing = null;
             }
-            $this->postProcessing = new $className();
         }
         return $this->postProcessing;
     }

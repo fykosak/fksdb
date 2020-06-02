@@ -6,11 +6,12 @@ use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
-use OrgModule\OrgPresenter;
 use SQL\SearchableDataSource;
 
 /**
@@ -25,19 +26,7 @@ class OrgsGrid extends BaseGrid {
         $this->serviceOrg = $serviceOrg;
     }
 
-    /**
-     * @param OrgPresenter $presenter
-     * @throws BadRequestException
-     * @throws InvalidLinkException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
-     */
-    protected function configure($presenter) {
-        parent::configure($presenter);
-        //
-        // data
-        //
+    protected function getData(): IDataSource {
         $orgs = $this->serviceOrg->getTable()->where('contest_id', $presenter->getSelectedContest()->contest_id)
             ->select('org.*, person.family_name AS display_name');
 
@@ -49,7 +38,21 @@ class OrgsGrid extends BaseGrid {
                             LIKE CONCAT(\'%\', ? , \'%\')', $token);
             }
         });
-        $this->setDataSource($dataSource);
+        return $dataSource;
+    }
+
+    /**
+     * @param Presenter|\IContestPresenter $presenter
+     * @throws BadRequestException
+     * @throws InvalidLinkException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
+     */
+    protected function configure(Presenter $presenter): void {
+        parent::configure($presenter);
+
+        $this->setDataSource($this->getData());
         $this->setDefaultOrder('since DESC');
 
         $this->addColumns([

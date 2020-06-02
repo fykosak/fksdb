@@ -7,10 +7,8 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\GroupedSelection;
-use Nette\Database\Table\Selection;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use SQL\SearchableDataSource;
 
 /**
  * Class ApplicationGrid
@@ -24,14 +22,9 @@ class ApplicationGrid extends AbstractApplicationGrid {
      * @throws DuplicateButtonException
      * @throws Exception
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
-        $participants = $this->getSource();
         $this->paginate = false;
-
-        $source = new SearchableDataSource($participants);
-        $source->setFilterCallback($this->getFilterCallBack());
-        $this->setDataSource($source);
 
         $this->addColumns([
             'person.full_name',
@@ -41,10 +34,7 @@ class ApplicationGrid extends AbstractApplicationGrid {
         $this->addCSVDownloadButton();
     }
 
-    /**
-     * @return GroupedSelection
-     */
-    protected function getSource(): Selection {
+    protected function getSource(): GroupedSelection {
         return $this->event->getParticipants();
     }
 

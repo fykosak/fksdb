@@ -22,11 +22,7 @@ class UniqueEmailFactory {
         $this->servicePersonInfo = $servicePersonInfo;
     }
 
-    /**
-     * @param ModelPerson|null $person
-     * @return UniqueEmail
-     */
-    public function create(ModelPerson $person = null): UniqueEmail {
+    public function create(?ModelPerson $person): UniqueEmail {
         $rule = new UniqueEmail($this->servicePersonInfo);
         $rule->setIgnoredPerson($person);
 

@@ -15,7 +15,7 @@ class LayoutResolver {
 
     use SmartObject;
 
-    public const TEMPLATE_EXT = '.latte';
+    private const TEMPLATE_EXT = '.latte';
 
     private array $definitions;
 
@@ -42,7 +42,7 @@ class LayoutResolver {
 
     /**
      * @param ModelEvent $event
-     * @param $type
+     * @param string $type
      * @return string
      * @throws NotImplementedException
      */
@@ -63,5 +63,4 @@ class LayoutResolver {
         }
         throw new NotImplementedException();
     }
-
 }

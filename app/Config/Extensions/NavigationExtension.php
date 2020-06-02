@@ -13,10 +13,7 @@ use Nette\DI\ServiceDefinition;
  */
 class NavigationExtension extends \Nette\DI\CompilerExtension {
 
-    /**
-     * @var array
-     */
-    private $createdNodes = [];
+    private array $createdNodes = [];
 
     public function loadConfiguration() {
         parent::loadConfiguration();
@@ -42,11 +39,11 @@ class NavigationExtension extends \Nette\DI\CompilerExtension {
     }
 
     /**
-     * @param $navbar
-     * @param $nodeId
+     * @param ServiceDefinition $navbar
+     * @param mixed $nodeId
      * @param array $arguments
      */
-    private function createNode(ServiceDefinition $navbar, $nodeId, $arguments = []) {
+    private function createNode(ServiceDefinition $navbar, $nodeId, array $arguments = []): void {
         if (!isset($arguments['link'])) {
             $this->parseIdAsLink($nodeId, $arguments);
         }
@@ -83,10 +80,10 @@ class NavigationExtension extends \Nette\DI\CompilerExtension {
     }
 
     /**
-     * @param $nodeId
-     * @param $arguments
+     * @param mixed $nodeId
+     * @param mixed $arguments
      */
-    private function parseIdAsLink($nodeId, &$arguments) {
+    private function parseIdAsLink($nodeId, &$arguments): void {
         $fullQualityAction = str_replace('.', ':', $nodeId);
         $a = strrpos($fullQualityAction, ':');
         $presenterName = substr($fullQualityAction, 0, $a);

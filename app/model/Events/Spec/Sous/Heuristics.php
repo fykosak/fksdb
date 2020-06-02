@@ -26,9 +26,6 @@ class Heuristics /*extends StoredQueryPostProcessing */{ /* uncomment to use */
     public const RULE4MW = '4WM';
     public const RULE4FW = '4WF';
 
-    /**
-     * @return string
-     */
     public function getDescription(): string {
         return 'Z výsledkovky vybere zvance a náhradníky na soustředění (http://wiki.fykos.cz/fykos:soustredeni:zasady:heuristikazvani).
             Hierarchický kód určuje pravidlo a případně podpravidlo, dle nějž je osoba zvaná/náhradníkovaná.';

@@ -90,7 +90,9 @@ abstract class Grid extends \Nette\Application\UI\Control
 	protected function attached($presenter)
 	{
 		parent::attached($presenter);
-		if(!$presenter instanceof Presenter) return;
+		if(!$presenter instanceof Presenter) {
+            return;
+        }
 
 		$this->addComponent(New \Nette\ComponentModel\Container(), "columns");
 		$this->addComponent(New \Nette\ComponentModel\Container(), "buttons");
@@ -147,7 +149,7 @@ abstract class Grid extends \Nette\Application\UI\Control
 		}
 	}
 
-	abstract protected function configure($presenter);
+	abstract protected function configure(\Nette\Application\UI\Presenter $presenter): void;
 
 	/**
 	 * @param string $subGrid

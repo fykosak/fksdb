@@ -16,10 +16,7 @@ class UniqueLogin {
 
     private ServiceLogin $serviceLogin;
 
-    /**
-     * @var ModelLogin
-     */
-    private $ignoredLogin;
+    private ?ModelLogin$ignoredLogin = null;
 
     /**
      * UniqueLogin constructor.
@@ -29,17 +26,11 @@ class UniqueLogin {
         $this->serviceLogin = $serviceLogin;
     }
 
-    /**
-     * @return ModelLogin
-     */
-    public function getIgnoredLogin() {
+    public function getIgnoredLogin(): ?ModelLogin {
         return $this->ignoredLogin;
     }
 
-    /**
-     * @param ModelLogin|null $ignoredLogin
-     */
-    public function setIgnoredLogin(ModelLogin $ignoredLogin = null): void {
+    public function setIgnoredLogin(?ModelLogin $ignoredLogin): void {
         $this->ignoredLogin = $ignoredLogin;
     }
 

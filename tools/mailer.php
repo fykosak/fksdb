@@ -45,9 +45,9 @@ foreach ($query as $model) {
     try {
         $message = $model->toMessage();
         $mailer->send($message);
-        $model->update(['state' => ModelEmailMessage::STATE_SENT, 'sent' => new DateTime()]);
+        $serviceEmailMessage->updateModel2($model, ['state' => ModelEmailMessage::STATE_SENT, 'sent' => new DateTime()]);
     } catch (Exception $e) {
-        $model->update(['state' => ModelEmailMessage::STATE_FAILED]);
+        $serviceEmailMessage->updateModel2($model, ['state' => ModelEmailMessage::STATE_FAILED]);
         Debugger::log($e, 'mailer-exceptions');
     }
 }

@@ -97,7 +97,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
         if (!$submit->canChange()) {
             throw new ClosedSubmittingException($submit->getFyziklaniTeam());
         }
-        $submit->update([
+        $this->updateModel2($submit, [
             'points' => $points,
             /* ugly, exclude previous value of `modified` from query
              * so that `modified` is set automatically by DB
@@ -129,7 +129,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
         if (!$submit->canRevoke()) {
             throw new BadRequestException(_('Submit can\'t be revoked'));
         }
-        $submit->update([
+        $this->updateModel2($submit, [
             'points' => null,
             'state' => ModelFyziklaniSubmit::STATE_NOT_CHECKED,
             /* ugly, exclude previous value of `modified` from query
@@ -157,7 +157,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
         if ($submit->points != $points) {
             throw new PointsMismatchException();
         }
-        $submit->update([
+        $this->updateModel2($submit, [
             'state' => ModelFyziklaniSubmit::STATE_CHECKED,
             /* ugly, exclude previous value of `modified` from query
              * so that `modified` is set automatically by DB
@@ -181,7 +181,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
      * @param string $action
      * @param string|null $appendLog
      */
-    public function logEvent(ModelFyziklaniSubmit $submit, User $user, string $action, string $appendLog = null) {
+    public function logEvent(ModelFyziklaniSubmit $submit, User $user, string $action, string $appendLog = null): void {
         Debugger::log(\sprintf(self::LOG_FORMAT . $appendLog, $submit->getPrimary(), $action, $user->getIdentity()->getId()), self::DEBUGGER_LOG_PRIORITY);
     }
 }

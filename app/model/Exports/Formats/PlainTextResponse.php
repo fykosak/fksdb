@@ -15,8 +15,8 @@ class PlainTextResponse implements IResponse {
     use SmartObject;
 
     private string $content;
-    /** @var */
-    private $name;
+
+    private string $name;
 
     /**
      * PlainTextResponse constructor.

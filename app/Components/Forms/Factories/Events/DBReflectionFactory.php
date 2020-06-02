@@ -31,7 +31,7 @@ class DBReflectionFactory extends AbstractFactory {
     /**
      * @var array tableName => columnName[]
      */
-    private $columns = [];
+    private array $columns = [];
 
     private TableReflectionFactory $tableReflectionFactory;
 
@@ -127,19 +127,11 @@ class DBReflectionFactory extends AbstractFactory {
         $component->setDisabled();
     }
 
-    /**
-     * @param Component $component
-     * @return Component|IControl
-     */
-    public function getMainControl(Component $component) {
+    public function getMainControl(Component $component): Component {
         return $component;
     }
 
-    /**
-     * @param Field $field
-     * @return null
-     */
-    private function resolveColumn(Field $field) {
+    private function resolveColumn(Field $field): array {
         $service = $field->getBaseHolder()->getService();
         $columnName = $field->getName();
 
@@ -161,12 +153,8 @@ class DBReflectionFactory extends AbstractFactory {
         return $column;
     }
 
-    /**
-     * @param $table
-     * @param $column
-     * @return null
-     */
-    private function getColumnMetadata($table, $column) {
+
+    private function getColumnMetadata(string $table, string $column): ?array {
         if (!isset($this->columns[$table])) {
             $columns = [];
             foreach ($this->connection->getSupplementalDriver()->getColumns($table) as $columnMeta) {

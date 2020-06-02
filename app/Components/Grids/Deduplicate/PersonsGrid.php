@@ -2,12 +2,16 @@
 
 namespace FKSDB\Components\Grids\Deduplicate;
 
-use FKSDB\Components\DatabaseReflection\ValuePrinters\PersonLink;
+use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Nette\Utils\Html;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -26,30 +30,33 @@ class PersonsGrid extends BaseGrid {
      */
     private array $pairs;
 
+    private AbstractRow $personRowFactory;
+
     /**
      * PersonsGrid constructor.
      * @param TypedTableSelection $trunkPersons
      * @param array $pairs
      * @param Container $container
+     * @throws BadTypeException
      */
     public function __construct(TypedTableSelection $trunkPersons, array $pairs, Container $container) {
         parent::__construct($container);
         $this->trunkPersons = $trunkPersons;
         $this->pairs = $pairs;
+        $this->personRowFactory = $this->tableReflectionFactory->loadRowFactory('person.full_name');
+    }
+
+    protected function getData(): IDataSource {
+        return new NDataSource($this->trunkPersons);
     }
 
     /**
-     * @param \AuthenticatedPresenter $presenter
+     * @param Presenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
-
-        /***** data ****/
-
-        $dataSource = new NDataSource($this->trunkPersons);
-        $this->setDataSource($dataSource);
 
         /***** columns ****/
 
@@ -118,8 +125,9 @@ class PersonsGrid extends BaseGrid {
     /**
      * @param ModelPerson $person
      * @return Html
+     * @throws BadRequestException
      */
-    private function renderPerson(ModelPerson $person) {
-        return (new PersonLink($this->getPresenter()))($person);
+    private function renderPerson(ModelPerson $person): Html {
+        return $this->personRowFactory->renderValue($person, AbstractRow::PERMISSION_ALLOW_FULL);
     }
 }

@@ -26,21 +26,11 @@ class AutocompleteSelectBox extends TextBase {
     public const INTERNAL_DELIMITER = ',';
     public const META_ELEMENT_SUFFIX = '__meta'; // must be same with constant in autocompleteSelect.js
 
-    /**
-     * @var IDataProvider
-     */
+    private IDataProvider $dataProvider;
 
-    private $dataProvider;
+    private bool $ajax;
 
-    /**
-     * @var bool
-     */
-    private $ajax;
-
-    /**
-     * @var bool
-     */
-    private $multiSelect;
+    private bool $multiSelect = false;
 
     /**
      * @var string
@@ -53,7 +43,7 @@ class AutocompleteSelectBox extends TextBase {
      * @see http://api.jqueryui.com/autocomplete/#method-_renderItem
      * @var string
      */
-    private $renderMethod;
+    private ?string $renderMethod;
 
     /**
      * AutocompleteSelectBox constructor.
@@ -61,7 +51,7 @@ class AutocompleteSelectBox extends TextBase {
      * @param string $label
      * @param string $renderMethod
      */
-    public function __construct(bool $ajax, $label = null, $renderMethod = null) {
+    public function __construct(bool $ajax, string $label, ?string $renderMethod = null) {
         parent::__construct($label);
 
         $this->monitor(IAutocompleteJSONProvider::class);
@@ -98,32 +88,19 @@ class AutocompleteSelectBox extends TextBase {
         return $this->dataProvider;
     }
 
-    /**
-     * @return null|string
-     */
-    public function getRenderMethod() {
+    public function getRenderMethod(): ?string {
         return $this->renderMethod;
     }
 
-    /**
-     * @return bool
-     */
-    public function isAjax() {
+    public function isAjax(): bool {
         return $this->ajax;
     }
 
-    /**
-     * @return bool
-     */
-    public function isMultiSelect() {
+    public function isMultiSelect(): bool {
         return $this->multiSelect;
     }
 
-    /**
-     * @param IDataProvider $dataProvider
-     * @return void
-     */
-    public function setDataProvider(IDataProvider $dataProvider) {
+    public function setDataProvider(IDataProvider $dataProvider): void {
         if ($this->ajax && !($dataProvider instanceof IFilteredDataProvider)) {
             throw new InvalidArgumentException('Data provider for AJAX must be instance of IFilteredDataProvider.');
         }
@@ -132,7 +109,7 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     /**
-     * @return Html
+     * @return Html|string
      */
     public function getControl() {
         $control = parent::getControl();
@@ -235,12 +212,7 @@ class AutocompleteSelectBox extends TextBase {
         return $this->value;
     }
 
-    /**
-     * @param $multiSelect
-     * @return void
-     */
-    public function setMultiSelect($multiSelect) {
+    public function setMultiSelect(bool $multiSelect): void {
         $this->multiSelect = $multiSelect;
     }
-
 }

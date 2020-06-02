@@ -17,7 +17,7 @@ class BreadcrumbsFactory {
 
     /**
      * BreadcrumbsFactory constructor.
-     * @param $expiration
+     * @param string $expiration
      * @param Container $container
      */
     public function __construct(string $expiration, Container $container) {

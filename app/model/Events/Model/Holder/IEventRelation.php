@@ -10,10 +10,5 @@ use FKSDB\ORM\Models\ModelEvent;
  * @author Michal Koutný <michal@fykos.cz>
  */
 interface IEventRelation {
-
-    /**
-     * @param ModelEvent $event
-     * @return ModelEvent
-     */
-    public function getEvent(ModelEvent $event);
+    public function getEvent(ModelEvent $event): ModelEvent;
 }

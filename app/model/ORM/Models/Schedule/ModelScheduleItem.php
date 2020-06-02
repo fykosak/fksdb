@@ -59,11 +59,10 @@ class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupRef
     public function getInterested(): GroupedSelection {
         return $this->related(DbNames::TAB_PERSON_SCHEDULE);
     }
+
     /* ****** CAPACITY CALCULATION *******/
-    /**
-     * @return int|null
-     */
-    public function getCapacity() {
+
+    public function getCapacity(): ?int {
         return $this->capacity;
     }
 
@@ -127,10 +126,7 @@ class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupRef
         ];
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getResourceId() {
+    public function getResourceId(): string {
         return self::RESOURCE_ID;
     }
 }

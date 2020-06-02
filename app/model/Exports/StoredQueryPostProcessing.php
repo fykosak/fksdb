@@ -29,9 +29,6 @@ abstract class StoredQueryPostProcessing {
         $this->parameters[$key] = $value; // type is ignored so far
     }
 
-    /**
-     * @return bool
-     */
     public function keepsCount(): bool {
         return true;
     }

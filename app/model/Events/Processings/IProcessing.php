@@ -14,14 +14,14 @@ use Nette\Utils\ArrayHash;
  * @author Michal Koutný <michal@fykos.cz>
  */
 interface IProcessing {
-
     /**
-     * @param $states
+     * @param array $states
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder
      * @param ILogger $logger
      * @param Form|null $form
+     * @return mixed
      */
-    public function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null);
+    public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form);
 }

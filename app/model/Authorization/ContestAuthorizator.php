@@ -107,7 +107,6 @@ class ContestAuthorizator {
                 return true;
             }
         }
-
         return false;
     }
 }

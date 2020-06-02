@@ -12,11 +12,6 @@ use Nette\Forms\IControl;
  */
 class DependentRequirements extends PairwiseAdjustment {
 
-    /**
-     * @param IControl $target
-     * @param IControl $prerequisite
-     * @return void
-     */
     protected function processPair(IControl $target, IControl $prerequisite): void {
         $target->getRules()->addConditionOn($prerequisite, Form::FILLED)->addRule(Form::FILLED, _('Pole %label je třeba vyplnit.'));
     }

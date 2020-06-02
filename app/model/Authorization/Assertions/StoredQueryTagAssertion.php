@@ -39,7 +39,7 @@ class StoredQueryTagAssertion {
      * @param $privilege
      * @return bool
      */
-    public function __invoke(Permission $acl, $role, $resourceId, $privilege) {
+    public function __invoke(Permission $acl, $role, $resourceId, $privilege): bool {
         $storedQuery = $acl->getQueriedResource();
         if (!$storedQuery instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');

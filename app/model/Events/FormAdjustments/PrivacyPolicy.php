@@ -67,7 +67,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
      * @param Form|null $form
      * @throws \Exception
      */
-    public function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
+    public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void {
         $this->trySetAgreed($values);
     }
 

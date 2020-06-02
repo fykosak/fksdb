@@ -22,7 +22,7 @@ class MultiTableSelection extends Selection {
      * @param Context $connection
      * @param IConventions $conventions
      */
-    public function __construct(AbstractServiceMulti $service, $table, Context $connection, IConventions $conventions) {
+    public function __construct(AbstractServiceMulti $service, string $table, Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, $table);
         $this->service = $service;
     }

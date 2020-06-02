@@ -92,11 +92,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $related;
     }
 
-    /**
-     * @param int|null $contestId
-     * @return GroupedSelection
-     */
-    public function getOrgs($contestId = null): GroupedSelection {
+    public function getOrgs(?int $contestId = null): GroupedSelection {
         $related = $this->related(DbNames::TAB_ORG, 'person_id');
         if ($contestId) {
             $related->where('contest_id', $contestId);
@@ -133,7 +129,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @param $fid
      * @return ModelMPersonHasFlag|null
      */
-    public function getMPersonHasFlag($fid) {
+    public function getMPersonHasFlag($fid): ?ModelMPersonHasFlag {
         $flags = $this->getMPersonHasFlags();
 
         if (!$flags || count($flags) == 0) {
@@ -156,7 +152,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @param null $type
      * @return array
      */
-    public function getMPostContacts($type = null) {
+    public function getMPostContacts($type = null): array {
         $postContacts = $this->getPostContacts();
         if ($postContacts && $type !== null) {
             $postContacts->where(['type' => $type]);
@@ -176,12 +172,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $result;
     }
 
-    /**
-     * Main delivery address of the contestant.
-     *
-     * @return ModelPostContact|null
-     */
-    public function getDeliveryAddress() {
+    public function getDeliveryAddress(): ?ModelPostContact {
         $dAddresses = $this->getMPostContacts(ModelPostContact::TYPE_DELIVERY);
         if (count($dAddresses)) {
             return reset($dAddresses);
@@ -190,11 +181,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         }
     }
 
-    /**
-     * @param bool $noFallback
-     * @return ModelPostContact|null
-     */
-    public function getPermanentAddress($noFallback = false) {
+    public function getPermanentAddress(bool $noFallback = false): ?ModelPostContact {
         $pAddresses = $this->getMPostContacts(ModelPostContact::TYPE_PERMANENT);
         if (count($pAddresses)) {
             return reset($pAddresses);
@@ -214,11 +201,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $this->related(DbNames::TAB_E_FYZIKLANI_TEAM, 'teacher_id');
     }
 
-    /**
-     * @param int|null $eventId
-     * @return bool
-     */
-    public function isEventParticipant($eventId = null): bool {
+    public function isEventParticipant(?int $eventId = null): bool {
         $tmp = $this->getEventParticipant();
         if ($eventId) {
             $tmp->where('event_id = ?', $eventId);

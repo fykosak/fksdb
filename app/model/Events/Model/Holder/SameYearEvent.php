@@ -30,11 +30,7 @@ class SameYearEvent implements IEventRelation {
         $this->serviceEvent = $serviceEvent;
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return ModelEvent
-     */
-    public function getEvent(ModelEvent $event) {
+    public function getEvent(ModelEvent $event): ModelEvent {
         $result = $this->serviceEvent->getTable()->where([
             'event_type_id' => $this->eventTypeId,
             'year' => $event->year,

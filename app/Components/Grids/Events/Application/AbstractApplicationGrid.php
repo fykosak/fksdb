@@ -15,7 +15,9 @@ use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateColumnException;
+use SQL\SearchableDataSource;
 
 /**
  * Class AbstractApplicationGrid
@@ -40,6 +42,13 @@ abstract class AbstractApplicationGrid extends BaseGrid {
     }
 
     abstract protected function getSource(): Selection;
+
+    protected function getData(): IDataSource {
+        $participants = $this->getSource();
+        $source = new SearchableDataSource($participants);
+        $source->setFilterCallback($this->getFilterCallBack());
+        return $source;
+    }
 
     /**
      * @return FormControl

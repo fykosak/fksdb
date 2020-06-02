@@ -132,7 +132,7 @@ class Fyziklani14Payment extends AbstractTransitionsGenerator {
             $transition->setCondition(fn() => true);
             $transition->beforeExecuteCallbacks[] = $this->getClosureDeleteRows();
             $transition->beforeExecuteCallbacks[] = function (ModelPayment $modelPayment) {
-                $modelPayment->update(['price' => null]);
+                $this->servicePayment->updateModel2($modelPayment, ['price' => null]);
             };
             $machine->addTransition($transition);
         }

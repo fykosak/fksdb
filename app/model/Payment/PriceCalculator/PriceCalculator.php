@@ -3,18 +3,29 @@
 namespace FKSDB\Payment\PriceCalculator;
 
 use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Price;
 use FKSDB\Payment\PriceCalculator\PreProcess\IPreprocess;
 
 /**
  * Class PriceCalculator
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PriceCalculator {
     /**
      * @var IPreprocess[]
      */
     private array $preProcess = [];
+
+    private ServicePayment $servicePayment;
+
+    /**
+     * PriceCalculator constructor.
+     * @param ServicePayment $servicePayment
+     */
+    public function __construct(ServicePayment $servicePayment) {
+        $this->servicePayment = $servicePayment;
+    }
 
     public function addPreProcess(IPreprocess $preProcess): void {
         $this->preProcess[] = $preProcess;
@@ -26,8 +37,7 @@ class PriceCalculator {
             $subPrice = $preProcess->calculate($modelPayment);
             $price->add($subPrice);
         }
-        // TODO to service
-        $modelPayment->update(['price' => $price->getAmount(), 'currency' => $price->getCurrency()]);
+        $this->servicePayment->updateModel2($modelPayment, ['price' => $price->getAmount(), 'currency' => $price->getCurrency()]);
     }
 
     /**

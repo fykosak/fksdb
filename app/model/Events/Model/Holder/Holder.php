@@ -27,37 +27,23 @@ use Nette\Utils\ArrayHash;
  */
 class Holder {
 
-    /**
-     * @var IFormAdjustment[]
-     */
-    private $formAdjustments = [];
-
+    private array $formAdjustments = [];
     /**
      * @var IProcessing[]
      */
-    private $processings = [];
-
+    private array $processings = [];
     /**
      * @var BaseHolder[]
      */
-    private $baseHolders = [];
+    private array $baseHolders = [];
 
-    /**
-     * @var BaseHolder[]
-     */
-    private $secondaryBaseHolders = [];
+    private array $secondaryBaseHolders = [];
 
-    /**
-     * @var BaseHolder
-     */
-    private $primaryHolder;
+    private BaseHolder $primaryHolder;
 
     private Connection $connection;
 
-    /**
-     * @var SecondaryModelStrategy
-     */
-    private $secondaryModelStrategy;
+    private SecondaryModelStrategy $secondaryModelStrategy;
 
     /**
      * Holder constructor.
@@ -231,7 +217,7 @@ class Holder {
      * Joined data manipulation
      */
     /**
-     * @var
+     * @var mixed
      */
     private $groupedHolders;
 

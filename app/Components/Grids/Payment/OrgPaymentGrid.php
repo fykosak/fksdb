@@ -6,7 +6,9 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -30,8 +32,13 @@ class OrgPaymentGrid extends PaymentGrid {
         $this->event = $event;
     }
 
+    protected function getData(): IDataSource {
+        $schools = $this->servicePayment->getTable()->where('event_id', $this->event->event_id);
+        return new NDataSource($schools);
+    }
+
     /**
-     * @param $presenter
+     * @param Presenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
@@ -39,13 +46,9 @@ class OrgPaymentGrid extends PaymentGrid {
      * @throws NotImplementedException
      * @throws BadTypeException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
-        $schools = $this->servicePayment->getTable()->where('event_id', $this->event->event_id);
-
-        $dataSource = new NDataSource($schools);
-        $this->setDataSource($dataSource);
 
         $this->addColumns([
             'payment.payment_uid',

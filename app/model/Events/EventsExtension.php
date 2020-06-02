@@ -68,22 +68,22 @@ class EventsExtension extends CompilerExtension {
         'parameter' => Parameter::class,
         'count' => Count::class,
     ];
-    /** @var array */
-    private $scheme;
+
+    private array $scheme;
 
     /**
      * Global registry of available events definitions.
      *
      * @var array[definitionName] => definition[] where definition (eventTypes =>, years =>, tableLayout =>, formLayout =>)
      */
-    private $definitionsMap = [];
+    private array $definitionsMap = [];
 
     /**
      * @var array[baseMachineFullName] => expanded configuration
      */
-    private $baseMachineConfig = [];
-    /** @var string */
-    private $schemeFile;
+    private array $baseMachineConfig = [];
+
+    private string $schemeFile;
 
     /**
      * EventsExtension constructor.
