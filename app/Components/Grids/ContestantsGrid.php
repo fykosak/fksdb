@@ -2,10 +2,12 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceContestant;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
@@ -22,14 +24,38 @@ class ContestantsGrid extends BaseGrid {
      * @var ServiceContestant
      */
     private $serviceContestant;
+    /**
+     * @var int
+     */
+    private $year;
+    /**
+     * @var ModelContest
+     */
+    private $contest;
 
     /**
      * ContestantsGrid constructor.
      * @param Container $container
+     * @param ModelContest $contest
+     * @param int $year
      */
-    public function __construct(Container $container) {
+    public function __construct(Container $container, ModelContest $contest, int $year) {
         parent::__construct($container);
-        $this->serviceContestant = $container->getByType(ServiceContestant::class);
+        $this->contest = $contest;
+        $this->year = $year;
+    }
+
+    /**
+     * @param ServiceContestant $serviceContestant
+     * @return void
+     */
+    public function injectServiceContestant(ServiceContestant $serviceContestant) {
+        $this->serviceContestant = $serviceContestant;
+    }
+
+    protected function getData(): IDataSource {
+        $contestants = $this->serviceContestant->getCurrentContestants($this->contest, $this->year);
+        return new ViewDataSource('ct_id', $contestants);
     }
 
     /**
@@ -42,13 +68,7 @@ class ContestantsGrid extends BaseGrid {
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        //
-        // data
-        //
-        $contestants = $this->serviceContestant->getCurrentContestants($presenter->getSelectedContest(), $presenter->getSelectedYear());
 
-
-        $this->setDataSource(new ViewDataSource('ct_id', $contestants));
         $this->setDefaultOrder('name_lex ASC');
 
         //

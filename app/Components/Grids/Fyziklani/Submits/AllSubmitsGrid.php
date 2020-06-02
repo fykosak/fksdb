@@ -20,6 +20,7 @@ use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use SQL\SearchableDataSource;
@@ -55,6 +56,14 @@ class AllSubmitsGrid extends SubmitsGrid {
         $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
     }
 
+    protected function getData(): IDataSource {
+        $submits = $this->serviceFyziklaniSubmit->findAll($this->event)/*->where('fyziklani_submit.points IS NOT NULL')*/
+        ->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name');
+        $dataSource = new SearchableDataSource($submits);
+        $dataSource->setFilterCallback($this->getFilterCallBack());
+        return $dataSource;
+    }
+
     /**
      * @param BasePresenter $presenter
      * @throws DuplicateButtonException
@@ -85,11 +94,6 @@ class AllSubmitsGrid extends SubmitsGrid {
             ->setShow(function (ModelFyziklaniSubmit $row) {
                 return $row->canRevoke();
             });
-        $submits = $this->serviceFyziklaniSubmit->findAll($this->event)/*->where('fyziklani_submit.points IS NOT NULL')*/
-        ->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name');
-        $dataSource = new SearchableDataSource($submits);
-        $dataSource->setFilterCallback($this->getFilterCallBack());
-        $this->setDataSource($dataSource);
     }
 
     /**

@@ -6,6 +6,7 @@ use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -19,13 +20,18 @@ class EmailsGrid extends BaseGrid {
     /** @var ServiceEmailMessage */
     private $serviceEmailMessage;
 
-    /**
-     * EmailsGrid constructor.
-     * @param Container $container
+    /***
+     * @param ServiceEmailMessage $serviceEmailMessage
+     * @return void
      */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->serviceEmailMessage = $container->getByType(ServiceEmailMessage::class);
+    public function injectServiceEmailMessage(ServiceEmailMessage $serviceEmailMessage) {
+        $this->serviceEmailMessage = $serviceEmailMessage;
+    }
+
+    protected function getData(): IDataSource {
+        $emails = $this->serviceEmailMessage->getTable()->order('created DESC');
+        //->where('state!=? OR created > ?', [ModelEmailMessage::STATE_SENT, (new \DateTime())->modify('-1 month')]);
+        return new NDataSource($emails);
     }
 
     /**
@@ -36,10 +42,6 @@ class EmailsGrid extends BaseGrid {
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        $emails = $this->serviceEmailMessage->getTable()->order('created DESC');
-        //->where('state!=? OR created > ?', [ModelEmailMessage::STATE_SENT, (new \DateTime())->modify('-1 month')]);
-        $source = new NDataSource($emails);
-        $this->setDataSource($source);
 
         $this->addColumns([
             'email_message.email_message_id',

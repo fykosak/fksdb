@@ -9,6 +9,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
@@ -35,6 +36,19 @@ class TeachersGrid extends BaseGrid {
         $this->serviceTeacher = $container->getByType(ServiceTeacher::class);
     }
 
+    protected function getData(): IDataSource {
+        $teachers = $this->serviceTeacher->getTable()->select('teacher.*, person.family_name AS display_name');
+
+        $dataSource = new SearchableDataSource($teachers);
+        $dataSource->setFilterCallback(function (Selection $table, $value) {
+            $tokens = preg_split('/\s+/', $value);
+            foreach ($tokens as $token) {
+                $table->where('CONCAT(person.family_name, person.other_name) LIKE CONCAT(\'%\', ? , \'%\')', $token);
+            }
+        });
+        return $dataSource;
+    }
+
     /**
      * @param TeacherPresenter $presenter
      * @throws InvalidLinkException
@@ -45,19 +59,6 @@ class TeachersGrid extends BaseGrid {
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        //
-        // data
-        //
-        $teachers = $this->serviceTeacher->getTable()->select('teacher.*, person.family_name AS display_name');
-
-        $dataSource = new SearchableDataSource($teachers);
-        $dataSource->setFilterCallback(function (Selection $table, $value) {
-            $tokens = preg_split('/\s+/', $value);
-            foreach ($tokens as $token) {
-                $table->where('CONCAT(person.family_name, person.other_name) LIKE CONCAT(\'%\', ? , \'%\')', $token);
-            }
-        });
-        $this->setDataSource($dataSource);
         //
         // columns
         //

@@ -7,6 +7,7 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FyziklaniModule\BasePresenter;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -33,6 +34,12 @@ class TeamSubmitsGrid extends SubmitsGrid {
         parent::__construct($container);
     }
 
+    protected function getData(): IDataSource {
+        $submits = $this->team->getAllSubmits()
+            ->order('fyziklani_submit.created');
+        return new NDataSource($submits);
+    }
+
     /**
      * @param BasePresenter $presenter
      * @throws DuplicateColumnException
@@ -52,14 +59,7 @@ class TeamSubmitsGrid extends SubmitsGrid {
             DbNames::TAB_FYZIKLANI_SUBMIT . '.created',
             DbNames::TAB_FYZIKLANI_SUBMIT . '.state',
         ]);
-        $this->addLinkButton( ':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
-        $this->addLinkButton( ':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
-
-        $submits = $this->team->getAllSubmits()
-            ->order('fyziklani_submit.created');
-
-        $dataSource = new NDataSource($submits);
-
-        $this->setDataSource($dataSource);
+        $this->addLinkButton(':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
+        $this->addLinkButton(':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
     }
 }

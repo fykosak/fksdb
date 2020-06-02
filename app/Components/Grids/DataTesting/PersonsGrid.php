@@ -10,6 +10,7 @@ use FKSDB\DataTesting\TestsLogger;
 use FKSDB\DataTesting\TestLog;
 use FKSDB\Exceptions\NotImplementedException;
 use Nette\Utils\Html;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
@@ -37,17 +38,18 @@ class PersonsGrid extends BaseGrid {
         $this->dataTestingFactory = $dataTestingFactory;
     }
 
+    protected function getData(): IDataSource {
+        $persons = $this->servicePerson->getTable();
+        return new NDataSource($persons);
+    }
+
     /**
-     * @param \AuthenticatedPresenter $presenter
+     * @param $presenter
+     * @return void
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-
-        $persons = $this->servicePerson->getTable();
-        $dataSource = new NDataSource($persons);
-        $this->setDataSource($dataSource);
 
         $this->addColumns(['referenced.person_link']);
 

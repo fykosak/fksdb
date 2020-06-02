@@ -11,6 +11,7 @@ use Nette\Application\UI\Presenter;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Database\Table\Selection;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
@@ -21,6 +22,7 @@ use SQL\SearchableDataSource;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class TeamApplicationGrid extends AbstractApplicationGrid {
+
     /**
      * @param Presenter $presenter
      * @throws DuplicateButtonException
@@ -31,12 +33,7 @@ class TeamApplicationGrid extends AbstractApplicationGrid {
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        $participants = $this->getSource();
         $this->paginate = false;
-
-        $source = new SearchableDataSource($participants);
-        $source->setFilterCallback($this->getFilterCallBack());
-        $this->setDataSource($source);
 
         $this->addColumns([
             DbNames::TAB_E_FYZIKLANI_TEAM . '.e_fyziklani_team_id',

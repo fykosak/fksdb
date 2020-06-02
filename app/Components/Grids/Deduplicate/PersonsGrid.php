@@ -8,6 +8,7 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\DI\Container;
 use Nette\Utils\Html;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -41,6 +42,10 @@ class PersonsGrid extends BaseGrid {
         $this->pairs = $pairs;
     }
 
+    protected function getData(): IDataSource {
+        return new NDataSource($this->trunkPersons);
+    }
+
     /**
      * @param \AuthenticatedPresenter $presenter
      * @throws DuplicateButtonException
@@ -48,11 +53,6 @@ class PersonsGrid extends BaseGrid {
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-
-        /***** data ****/
-
-        $dataSource = new NDataSource($this->trunkPersons);
-        $this->setDataSource($dataSource);
 
         /***** columns ****/
 

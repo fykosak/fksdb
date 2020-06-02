@@ -41,9 +41,9 @@ class MyApplicationsGrid extends BaseGrid {
     }
 
     /**
-     * @param Presenter $presenter
+     * @param $presenter
+     * @return void
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      */
     protected function configure($presenter) {
         parent::configure($presenter);

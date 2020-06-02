@@ -8,13 +8,14 @@ use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Database\Table\Selection;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use SQL\SearchableDataSource;
 
 /**
- * Class ParticipantGrid
- * *
+ * Class ApplicationGrid
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ApplicationGrid extends AbstractApplicationGrid {
 
@@ -26,12 +27,8 @@ class ApplicationGrid extends AbstractApplicationGrid {
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        $participants = $this->getSource();
-        $this->paginate = false;
 
-        $source = new SearchableDataSource($participants);
-        $source->setFilterCallback($this->getFilterCallBack());
-        $this->setDataSource($source);
+        $this->paginate = false;
 
         $this->addColumns([
             'referenced.person_name',

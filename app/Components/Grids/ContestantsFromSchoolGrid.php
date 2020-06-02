@@ -6,6 +6,7 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceContestant;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use OrgModule\BasePresenter;
@@ -34,7 +35,22 @@ class ContestantsFromSchoolGrid extends BaseGrid {
     public function __construct(ModelSchool $school, Container $container) {
         parent::__construct($container);
         $this->school = $school;
-        $this->serviceContestant = $container->getByType(ServiceContestant::class);
+    }
+
+    /**
+     * @param ServiceContestant $serviceContestant
+     * @return void
+     */
+    public function injectServiceContestant(ServiceContestant $serviceContestant) {
+        $this->serviceContestant = $serviceContestant;
+    }
+
+    protected function getData(): IDataSource {
+        $contestants = $this->serviceContestant->getContext()->table(DbNames::VIEW_CONTESTANT)
+            ->select('*')->where([
+                'v_contestant.school_id' => $this->school->school_id,
+            ]);
+        return new ViewDataSource('ct_id', $contestants);
     }
 
     /**
@@ -45,13 +61,6 @@ class ContestantsFromSchoolGrid extends BaseGrid {
     protected function configure($presenter) {
         parent::configure($presenter);
 
-        $contestants = $this->serviceContestant->getContext()->table(DbNames::VIEW_CONTESTANT)
-            ->select('*')->where([
-                'v_contestant.school_id' => $this->school->school_id,
-            ]);
-
-
-        $this->setDataSource(new ViewDataSource('ct_id', $contestants));
         $this->setDefaultOrder('name_lex ASC');
 
         //

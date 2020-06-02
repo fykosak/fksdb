@@ -9,6 +9,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Utils\Html;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
@@ -34,6 +35,18 @@ class SchoolsGrid extends BaseGrid {
         $this->serviceSchool = $container->getByType(ServiceSchool::class);
     }
 
+    protected function getData(): IDataSource {
+        $schools = $this->serviceSchool->getSchools();
+        $dataSource = new SearchableDataSource($schools);
+        $dataSource->setFilterCallback(function (Selection $table, $value) {
+            $tokens = preg_split('/\s+/', $value);
+            foreach ($tokens as $token) {
+                $table->where('name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
+            }
+        });
+        return $dataSource;
+    }
+
     /**
      * @param $presenter
      * @throws DuplicateButtonException
@@ -44,19 +57,6 @@ class SchoolsGrid extends BaseGrid {
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        //
-        // data
-        //
-        $schools = $this->serviceSchool->getSchools();
-
-        $dataSource = new SearchableDataSource($schools);
-        $dataSource->setFilterCallback(function (Selection $table, $value) {
-            $tokens = preg_split('/\s+/', $value);
-            foreach ($tokens as $token) {
-                $table->where('name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
-            }
-        });
-        $this->setDataSource($dataSource);
 
         //
         // columns

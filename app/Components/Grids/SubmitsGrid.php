@@ -15,6 +15,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -61,6 +62,12 @@ class SubmitsGrid extends BaseGrid {
         $this->uploadedStorage = $uploadedStorage;
     }
 
+    protected function getData(): IDataSource {
+        $submits = $this->serviceSubmit->getSubmits();
+        $submits->where('ct_id = ?', $this->contestant->ct_id); //TODO year + contest?
+        return new NDataSource($submits);
+    }
+
     /**
      * @param $presenter
      * @throws DuplicateButtonException
@@ -68,13 +75,7 @@ class SubmitsGrid extends BaseGrid {
      */
     protected function configure($presenter) {
         parent::configure($presenter);
-        //
-        // data
-        //
-        $submits = $this->serviceSubmit->getSubmits();
-        $submits->where('ct_id = ?', $this->contestant->ct_id); //TODO year + contest?
 
-        $this->setDataSource(new NDataSource($submits));
         $this->setDefaultOrder('series DESC, tasknr ASC');
 
         //

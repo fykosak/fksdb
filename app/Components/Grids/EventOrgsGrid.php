@@ -8,6 +8,7 @@ use FKSDB\ORM\Services\ServiceEventOrg;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -40,8 +41,20 @@ class EventOrgsGrid extends BaseGrid {
     }
 
     /**
+     * @param ServiceEventOrg $serviceEventOrg
+     * @return void
+     */
+    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
+        $this->serviceEventOrg = $serviceEventOrg;
+    }
+
+    protected function getData(): IDataSource {
+        $orgs = $this->serviceEventOrg->findByEvent($this->event);
+        return new NDataSource($orgs);
+    }
+
+    /**
      * @param \AuthenticatedPresenter $presenter
-     * @throws BadRequestException
      * @throws InvalidLinkException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
@@ -50,10 +63,6 @@ class EventOrgsGrid extends BaseGrid {
     protected function configure($presenter) {
         parent::configure($presenter);
 
-        $orgs = $this->serviceEventOrg->findByEvent($this->event);
-
-        $dataSource = new NDataSource($orgs);
-        $this->setDataSource($dataSource);
         $this->addColumns(['referenced.person_name']);
         $this->addColumn('note', _('Note'));
         $this->addButton('edit', _('Edit'))->setText(_('Edit'))
