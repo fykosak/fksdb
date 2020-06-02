@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FKSDB\ORM\Services\Schedule;
 
 use FKSDB\ORM\AbstractServiceSingle;
@@ -13,7 +12,7 @@ use Nette\Utils\ArrayHash;
 
 /**
  * Class ServiceSchedulePayment
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ServiceSchedulePayment extends AbstractServiceSingle {
 

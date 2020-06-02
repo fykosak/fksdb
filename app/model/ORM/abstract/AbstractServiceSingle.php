@@ -36,11 +36,11 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     }
 
     /**
-     * @param Traversable|array|null $data
+     * @param array $data
      * @return AbstractModelSingle
      * @throws ModelException
      */
-    public function createNewModel($data = null): AbstractModelSingle {
+    public function createNewModel(array $data): IModel {
         $modelClassName = $this->getModelClassName();
         $data = $this->filterData($data);
         try {
@@ -137,7 +137,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @param Traversable|array $data
      * @return bool
      */
-    public function updateModel2(AbstractModelSingle $model, $data = null): bool {
+    public function updateModel2(AbstractModelSingle $model, array $data): bool {
         $this->checkType($model);
         $data = $this->filterData($data);
         return $model->update($data);
@@ -246,7 +246,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     /**
      * Omits array elements whose keys aren't columns in the table.
      *
-     * @param array|Traversable|null $data
+     * @param array|null $data
      * @return array|null
      */
     protected function filterData($data) {
