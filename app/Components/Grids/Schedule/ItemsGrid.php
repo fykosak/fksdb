@@ -50,7 +50,6 @@ class ItemsGrid extends BaseGrid {
      */
     protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
-
         $this->paginate = false;
         $this->addColumn('schedule_item_id', _('#'));
         $this->addColumns([

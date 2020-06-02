@@ -48,12 +48,12 @@ class EventOrgsGrid extends BaseGrid {
     /**
      * @param Presenter $presenter
      * @return void
+     * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      * @throws NotImplementedException
-     * @throws BadTypeException
      */
     protected function configure(Presenter $presenter): void {
         parent::configure($presenter);

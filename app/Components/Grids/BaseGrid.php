@@ -80,7 +80,6 @@ abstract class BaseGrid extends Grid {
      * @throws BadTypeException
      */
     protected function createTemplate(): ITemplate {
-
         $presenter = $this->getPresenter();
         if (!$presenter instanceof \BasePresenter) {
             throw new BadTypeException(\BasePresenter::class, $presenter);

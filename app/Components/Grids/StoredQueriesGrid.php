@@ -4,7 +4,6 @@ namespace FKSDB\Components\Grids;
 
 use Authorization\ContestAuthorizator;
 use Closure;
-use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use Nette\Application\BadRequestException;
@@ -48,12 +47,14 @@ class StoredQueriesGrid extends BaseGrid {
     }
 
     /**
-     * @param Presenter|\IContestPresenter $presenter
      * @throws BadRequestException
      * @throws InvalidLinkException
+     * @param Presenter $presenter
+     * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
+     * @throws InvalidLinkException
      */
     protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
@@ -71,8 +72,8 @@ class StoredQueriesGrid extends BaseGrid {
         $this->addColumn('name', _('Export name'));
         $this->addColumn('description', _('Description'))->setTruncate(self::DESCRIPTION_TRUNC);
         $this->addColumns([
-            DbNames::TAB_STORED_QUERY . '.qid',
-            DbNames::TAB_STORED_QUERY . '.tags',
+            'stored_query.qid',
+            'stored_query.tags',
         ]);
         //
         // operations

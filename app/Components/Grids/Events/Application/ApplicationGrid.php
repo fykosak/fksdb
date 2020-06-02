@@ -28,7 +28,7 @@ class ApplicationGrid extends AbstractApplicationGrid {
 
         $this->addColumns([
             'person.full_name',
-            DbNames::TAB_EVENT_PARTICIPANT . '.status',
+           'event_participant.status',
         ]);
         $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'event_participant_id']);
         $this->addCSVDownloadButton();

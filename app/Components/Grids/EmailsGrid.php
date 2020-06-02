@@ -40,7 +40,6 @@ class EmailsGrid extends BaseGrid {
     protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
-
         $this->addColumns([
             'email_message.email_message_id',
             'email_message.recipient',

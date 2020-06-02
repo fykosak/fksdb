@@ -22,6 +22,18 @@ class TaskGrid extends BaseGrid {
 
     private ModelEvent $event;
 
+    protected function getData(): IDataSource {
+        $submits = $this->serviceFyziklaniTask->findAll($this->event);
+        $dataSource = new SearchableDataSource($submits);
+        $dataSource->setFilterCallback(function (Selection $table, $value) {
+            $tokens = preg_split('/\s+/', $value);
+            foreach ($tokens as $token) {
+                $table->where('name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task_id LIKE CONCAT(\'%\', ? , \'%\')', $token, $token);
+            }
+        });
+        return $dataSource;
+    }
+
     /**
      * FyziklaniTaskGrid constructor.
      * @param ModelEvent $event
@@ -34,18 +46,6 @@ class TaskGrid extends BaseGrid {
 
     public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask): void {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
-    }
-
-    protected function getData(): IDataSource {
-        $submits = $this->serviceFyziklaniTask->findAll($this->event);
-        $dataSource = new SearchableDataSource($submits);
-        $dataSource->setFilterCallback(function (Selection $table, $value) {
-            $tokens = preg_split('/\s+/', $value);
-            foreach ($tokens as $token) {
-                $table->where('name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task_id LIKE CONCAT(\'%\', ? , \'%\')', $token, $token);
-            }
-        });
-        return $dataSource;
     }
 
     /**

@@ -7,7 +7,6 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
-use FKSDB\YearCalculator;
 use Nette\Application\UI\Presenter;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
@@ -17,12 +16,6 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonsGrid extends BaseGrid {
-
-    private YearCalculator $yearCalculator;
-
-    public function injectYearCalculator(YearCalculator $yearCalculator): void {
-        $this->yearCalculator = $yearCalculator;
-    }
 
     public function setItem(ModelScheduleItem $item): void {
         $dataSource = new NDataSource($item->getInterested());

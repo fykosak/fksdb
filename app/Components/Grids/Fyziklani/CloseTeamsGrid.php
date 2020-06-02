@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
@@ -61,11 +60,11 @@ class CloseTeamsGrid extends BaseGrid {
         $this->paginate = false;
 
         $this->addColumns([
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.name',
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.e_fyziklani_team_id',
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.points',
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.category',
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.opened_submitting',
+            'e_fyziklani_team.name',
+            'e_fyziklani_team.e_fyziklani_team_id',
+            'e_fyziklani_team.points',
+            'e_fyziklani_team.category',
+            'e_fyziklani_team.opened_submitting',
         ]);
         // TODO DBReflection
         $this->addColumn('room', _('Room'))->setRenderer(function (ModelFyziklaniTeam $row) {

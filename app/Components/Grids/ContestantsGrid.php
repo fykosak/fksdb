@@ -6,6 +6,9 @@ use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Services\ServiceContestant;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use FKSDB\ORM\Models\ModelContest;
+use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
@@ -17,14 +20,36 @@ use SQL\ViewDataSource;
  */
 class ContestantsGrid extends BaseGrid {
 
+
     private ServiceContestant $serviceContestant;
 
     public function injectServiceContestant(ServiceContestant $serviceContestant): void {
         $this->serviceContestant = $serviceContestant;
     }
 
+    private int $year;
+
+    private ModelContest $contest;
+
     /**
-     * @param Presenter|\IContestPresenter $presenter
+     * ContestantsGrid constructor.
+     * @param Container $container
+     * @param ModelContest $contest
+     * @param int $year
+     */
+    public function __construct(Container $container, ModelContest $contest, int $year) {
+        parent::__construct($container);
+        $this->contest = $contest;
+        $this->year = $year;
+    }
+
+    protected function getData(): IDataSource {
+        $contestants = $this->serviceContestant->getCurrentContestants($this->contest, $this->year);
+        return new ViewDataSource('ct_id', $contestants);
+    }
+
+    /**
+     * @param Presenter $presenter
      * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
@@ -33,11 +58,7 @@ class ContestantsGrid extends BaseGrid {
      */
     protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
-        //
-        // data
-        //
-        $contestants = $this->serviceContestant->getCurrentContestants($presenter->getSelectedContest(), $presenter->getSelectedYear());
-        $this->setDataSource(new ViewDataSource('ct_id', $contestants));
+
         $this->setDefaultOrder('name_lex ASC');
 
         //

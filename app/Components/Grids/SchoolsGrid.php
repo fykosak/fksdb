@@ -29,7 +29,6 @@ class SchoolsGrid extends BaseGrid {
 
     protected function getData(): IDataSource {
         $schools = $this->serviceSchool->getSchools();
-
         $dataSource = new SearchableDataSource($schools);
         $dataSource->setFilterCallback(function (Selection $table, $value) {
             $tokens = preg_split('/\s+/', $value);

@@ -41,7 +41,6 @@ class ContestantsFromSchoolGrid extends BaseGrid {
             ->select('*')->where([
                 'v_contestant.school_id' => $this->school->school_id,
             ]);
-
         return new ViewDataSource('ct_id', $contestants);
     }
 
@@ -54,6 +53,7 @@ class ContestantsFromSchoolGrid extends BaseGrid {
         parent::configure($presenter);
 
         $this->paginate = false;
+
         $this->setDefaultOrder('name_lex ASC');
 
         //

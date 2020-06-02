@@ -39,6 +39,7 @@ class OrgPaymentGrid extends PaymentGrid {
 
     /**
      * @param Presenter $presenter
+     * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException

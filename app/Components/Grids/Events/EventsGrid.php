@@ -26,6 +26,8 @@ class EventsGrid extends BaseGrid {
 
     private int $year;
 
+    private ServiceEvent $serviceEvent;
+
     /**
      * EventsGrid constructor.
      * @param Container $container
@@ -37,9 +39,6 @@ class EventsGrid extends BaseGrid {
         $this->contest = $contest;
         $this->year = $year;
     }
-
-    private ServiceEvent $serviceEvent;
-
     public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
@@ -59,7 +58,6 @@ class EventsGrid extends BaseGrid {
      */
     protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
-
         $this->setDefaultOrder('event.begin ASC');
 
         $this->addColumns([

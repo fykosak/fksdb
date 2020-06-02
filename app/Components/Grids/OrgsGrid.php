@@ -2,12 +2,14 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -22,12 +24,24 @@ class OrgsGrid extends BaseGrid {
 
     private ServiceOrg $serviceOrg;
 
+    private ModelContest $contest;
+
+    /**
+     * OrgsGrid constructor.
+     * @param Container $container
+     * @param ModelContest $contest
+     */
+    public function __construct(Container $container, ModelContest $contest) {
+        parent::__construct($container);
+        $this->contest = $contest;
+    }
+
     public function injectServiceOrg(ServiceOrg $serviceOrg): void {
         $this->serviceOrg = $serviceOrg;
     }
 
     protected function getData(): IDataSource {
-        $orgs = $this->serviceOrg->getTable()->where('contest_id', $presenter->getSelectedContest()->contest_id)
+        $orgs = $this->serviceOrg->getTable()->where('contest_id', $this->contest->contest_id)
             ->select('org.*, person.family_name AS display_name');
 
         $dataSource = new SearchableDataSource($orgs);
