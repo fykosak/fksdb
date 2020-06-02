@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Grids\Schedule;
 
-use FKSDB\Components\DatabaseReflection\ValuePrinters\EventRole;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
@@ -78,10 +77,7 @@ class AllPersonsGrid extends BaseGrid {
                 '/' . $model->getScheduleItem()->getPrice(Price::CURRENCY_CZK)->__toString();
         })->setSortable(false);
 
-        $this->addColumn('role', _('Role'))
-            ->setRenderer(function (ModelPersonSchedule $model) {
-                return EventRole::calculateRoles($model->getPerson(), $this->event, $this->yearCalculator);
-            })->setSortable(false);
+        $this->addColumns(['event.role']);
 
         $this->addColumnPayment();
     }
