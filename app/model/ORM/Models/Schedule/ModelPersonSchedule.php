@@ -4,9 +4,11 @@ namespace FKSDB\ORM\Models\Schedule;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\IPaymentReferencedModel;
 use FKSDB\ORM\Models\IPersonReferencedModel;
 use FKSDB\ORM\Models\IScheduleGroupReferencedModel;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\Transitions\IStateModel;
@@ -25,7 +27,7 @@ use FKSDB\Exceptions\NotImplementedException;
  * @property-read string state
  * @property-read int person_schedule_id
  */
-class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IPersonReferencedModel, IScheduleGroupReferencedModel, IPaymentReferencedModel {
+class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IPersonReferencedModel, IScheduleGroupReferencedModel, IPaymentReferencedModel, IEventReferencedModel {
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);
@@ -37,6 +39,10 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
 
     public function getScheduleGroup(): ModelScheduleGroup {
         return $this->getScheduleItem()->getScheduleGroup();
+    }
+
+    public function getEvent(): ModelEvent {
+        return $this->getScheduleGroup()->getEvent();
     }
 
     /**
