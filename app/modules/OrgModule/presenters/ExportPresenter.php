@@ -12,6 +12,7 @@ use FKSDB\Components\Controls\StoredQueryComponent;
 use FKSDB\Components\Controls\StoredQueryTagCloud;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Components\Grids\StoredQueriesGrid;
+use FKSDB\CoreModule\SeriesPresenter\{ISeriesPresenter, SeriesPresenterTrait};
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
@@ -34,7 +35,8 @@ use Traversable;
  * Class ExportPresenter
  * *
  */
-class ExportPresenter extends SeriesPresenter {
+class ExportPresenter extends BasePresenter implements ISeriesPresenter {
+    use SeriesPresenterTrait;
 
     public const CONT_CONSOLE = 'console';
     public const CONT_PARAMS_META = 'paramsMeta';
@@ -588,5 +590,15 @@ class ExportPresenter extends SeriesPresenter {
 
         $this->clearSession();
         $connection->commit();
+    }
+
+    /**
+     * @param string $title
+     * @param string $icon
+     * @param string $subTitle
+     * @throws BadRequestException
+     */
+    protected function setTitle(string $title, string $icon = '', string $subTitle = ''): void {
+        parent::setTitle($title, $icon, $subTitle . ' ' . sprintf(_('%d. series'), $this->getSelectedSeries()));
     }
 }

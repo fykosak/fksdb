@@ -14,6 +14,7 @@ use FKSDB\ORM\Models\ModelContest;
 interface IContestPresenter {
     /**
      * @return ModelContest
+     * TODO noreturn type for tests
      */
     public function getSelectedContest();
 

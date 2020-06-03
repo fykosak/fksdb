@@ -34,11 +34,7 @@ class SeriesTable {
 
     private int $series;
 
-    /**
-     *
-     * @var null|array of int IDs of allowed tasks or null for unrestricted
-     */
-    private ?array $taskFilter;
+    private ?array $taskFilter = null;
 
     /**
      * SeriesTable constructor.

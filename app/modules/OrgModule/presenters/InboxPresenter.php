@@ -9,6 +9,7 @@ use FKSDB\Components\Controls\Inbox\SubmitCheckComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Controls\Inbox\InboxControl;
 use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\CoreModule\SeriesPresenter\{ISeriesPresenter, SeriesPresenterTrait};
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Models\ModelTaskContribution;
 use FKSDB\ORM\Services\ServicePerson;
@@ -25,7 +26,9 @@ use Nette\Security\Permission;
  * Class InboxPresenter
  * *
  */
-class InboxPresenter extends SeriesPresenter {
+class InboxPresenter extends BasePresenter implements ISeriesPresenter {
+
+    use SeriesPresenterTrait;
 
     public const TASK_PREFIX = 'task';
 
@@ -55,35 +58,35 @@ class InboxPresenter extends SeriesPresenter {
     /* ***************** AUTH ***********************/
 
     /**
-     * @throws BadRequestException
+     * @return void
      */
     public function authorizedDefault(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
      */
     public function authorizedInbox(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
      */
     public function authorizedList(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'list', $this->getSelectedContest()));
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
      */
     public function authorizedHandout(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest()));
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
      */
     public function authorizedCorrected(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'corrected', $this->getSelectedContest()));
@@ -138,6 +141,7 @@ class InboxPresenter extends SeriesPresenter {
      */
     protected function startup() {
         parent::startup();
+        $this->seriesTraitStartup();
         $this->seriesTable->setContest($this->getSelectedContest());
         $this->seriesTable->setYear($this->getSelectedYear());
         $this->seriesTable->setSeries($this->getSelectedSeries());
@@ -266,5 +270,15 @@ class InboxPresenter extends SeriesPresenter {
                 $container->mainContainerClassName = str_replace('container ', 'container-fluid ', $container->mainContainerClassName) . ' px-3';
         }
         return $container;
+    }
+
+    /**
+     * @param string $title
+     * @param string $icon
+     * @param string $subTitle
+     * @throws BadRequestException
+     */
+    protected function setTitle(string $title, string $icon = '', string $subTitle = ''): void {
+        parent::setTitle($title, $icon, $subTitle . ' ' . sprintf(_('%d. series'), $this->getSelectedSeries()));
     }
 }

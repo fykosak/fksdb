@@ -7,9 +7,7 @@ use Exports\Formats\AESOPFormat;
 use Exports\Formats\PlainTextResponse;
 use Exports\StoredQueryFactory;
 use Exports\StoredQueryPostProcessing;
-use FKSDB\CoreModule\ISeriesPresenter;
-use FKSDB\ORM\Models\ModelContest;
-use Nette\DI\Container;
+use FKSDB\CoreModule\SeriesPresenter\ISeriesPresenter;
 use Tester\Assert;
 
 class AESOPFormatTest extends DatabaseTestCase {

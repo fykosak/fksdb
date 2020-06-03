@@ -3,6 +3,7 @@
 namespace OrgModule;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
@@ -119,7 +120,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
      * @return mixed|void
      * @throws NotImplementedException
      */
-    protected function createComponentGrid() {
+    protected function createComponentGrid(): BaseGrid {
         throw new NotImplementedException();
     }
 

@@ -3,6 +3,7 @@
 namespace OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
@@ -67,8 +68,9 @@ abstract class EntityPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function renderEdit($id): void {
+        /** @var FormControl $component */
         $component = $this->getComponent(self::COMP_EDIT_FORM);
-        $form = ($component instanceof FormControl) ? $component->getForm() : $component;
+        $form = $component->getForm();
         $this->setDefaults($this->getModel(), $form);
     }
 
@@ -76,8 +78,9 @@ abstract class EntityPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function renderCreate(): void {
+        /** @var FormControl $component */
         $component = $this->getComponent(self::COMP_CREATE_FORM);
-        $form = ($component instanceof FormControl) ? $component->getForm() : $component;
+        $form = $component->getForm();
         $this->setDefaults($this->getModel(), $form);
     }
 
@@ -121,18 +124,12 @@ abstract class EntityPresenter extends BasePresenter {
      */
     abstract protected function loadModel($id);
 
-    /**
-     * @return mixed
-     */
-    abstract protected function createComponentEditComponent();
+    abstract protected function createComponentEditComponent(): FormControl;
+
+    abstract protected function createComponentCreateComponent(): FormControl;
 
     /**
-     * @return mixed
-     */
-    abstract protected function createComponentCreateComponent();
-
-    /**
-     * @return mixed
+     * @return BaseGrid
      */
     abstract protected function createComponentGrid();
 

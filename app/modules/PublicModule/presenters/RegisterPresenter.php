@@ -15,7 +15,6 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\UI\PageStyleContainer;
-use FKSDB\SeriesCalculator;
 use IContestPresenter;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -81,12 +80,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     private ExtendedPersonHandlerFactory $handlerFactory;
 
     protected ServicePerson $servicePerson;
-
-    protected SeriesCalculator $seriesCalculator;
-
-    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator): void {
-        $this->seriesCalculator = $seriesCalculator;
-    }
 
     public function injectServiceContestant(ServiceContestant $serviceContestant): void {
         $this->serviceContestant = $serviceContestant;

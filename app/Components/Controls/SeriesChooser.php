@@ -2,16 +2,16 @@
 
 namespace FKSDB\Components\Controls;
 
+use FKSDB\CoreModule\SeriesPresenter\ISeriesPresenter;
 use FKSDB\SeriesCalculator;
 use Nette\Http\Session;
 use Nette\Application\BadRequestException;
-use OrgModule\SeriesPresenter;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
- * @method SeriesPresenter getPresenter($need = true)
+ * @method ISeriesPresenter getPresenter($need = true)
  */
 class SeriesChooser extends BaseComponent {
 
