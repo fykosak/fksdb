@@ -6,7 +6,7 @@
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 
-namespace FKSDB\CoreModule;
+namespace FKSDB\CoreModule\SeriesPresenter;
 
 use IContestPresenter;
 use Nette\Application\BadRequestException;
@@ -20,5 +20,5 @@ interface ISeriesPresenter extends IContestPresenter {
      * @return int
      * @throws BadRequestException
      */
-    public function getSelectedSeries();
+    public function getSelectedSeries(): int;
 }

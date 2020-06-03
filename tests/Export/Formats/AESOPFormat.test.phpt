@@ -7,7 +7,7 @@ use Exports\Formats\AESOPFormat;
 use Exports\Formats\PlainTextResponse;
 use Exports\StoredQueryFactory;
 use Exports\StoredQueryPostProcessing;
-use FKSDB\CoreModule\ISeriesPresenter;
+use FKSDB\CoreModule\SeriesPresenter\ISeriesPresenter;
 use Nette\DI\Container;
 use Tester\Assert;
 
@@ -62,7 +62,7 @@ class MockSeriesPresenter implements ISeriesPresenter {
         ];
     }
 
-    public function getSelectedSeries() {
+    public function getSelectedSeries(): int {
         return 1;
     }
 

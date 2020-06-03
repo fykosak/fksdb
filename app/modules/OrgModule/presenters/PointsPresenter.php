@@ -5,6 +5,7 @@ namespace OrgModule;
 use Exception;
 use FKSDB\Components\Controls\Inbox\PointsFormControl;
 use FKSDB\Components\Controls\Inbox\PointsPreviewControl;
+use FKSDB\CoreModule\SeriesPresenter\{ISeriesPresenter, SeriesPresenterTrait};
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Models\ModelTaskContribution;
@@ -20,9 +21,11 @@ use Nette\InvalidArgumentException;
 
 /**
  * Class PointsPresenter
- * *
+ *
  */
-class PointsPresenter extends SeriesPresenter {
+class PointsPresenter extends BasePresenter implements ISeriesPresenter {
+
+    use SeriesPresenterTrait;
 
     /**
      * Show all tasks?
@@ -197,7 +200,7 @@ class PointsPresenter extends SeriesPresenter {
             ->where([
                 'person_id' => $person->person_id,
                 'task_id' => $taskIds,
-                'type' => ModelTaskContribution::TYPE_GRADE
+                'type' => ModelTaskContribution::TYPE_GRADE,
             ])->fetchPairs('task_id', 'task_id');
         return array_values($gradedTasks);
     }
@@ -206,5 +209,15 @@ class PointsPresenter extends SeriesPresenter {
         $container = parent::getPageStyleContainer();
         $container->mainContainerClassName = str_replace('container ', 'container-fluid ', $container->mainContainerClassName) . ' px-3';
         return $container;
+    }
+
+    /**
+     * @param string $title
+     * @param string $icon
+     * @param string $subTitle
+     * @throws BadRequestException
+     */
+    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
+        parent::setTitle($title, $icon, $subTitle . ' ' . sprintf(_('%d. series'), $this->getSelectedSeries()));
     }
 }
