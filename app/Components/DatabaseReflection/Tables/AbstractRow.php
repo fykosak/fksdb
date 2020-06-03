@@ -2,7 +2,9 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
+use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
@@ -11,8 +13,8 @@ use Nette\SmartObject;
 use Nette\Utils\Html;
 
 /**
- * Class AbstractField
- * *
+ * Class AbstractRow
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractRow {
     use SmartObject;
@@ -24,22 +26,18 @@ abstract class AbstractRow {
     /**
      * @var string
      */
-    private $modelClassName = null;
+    private $modelClassName;
     /**
-     * @var string[]
+     * @var array
      */
     private $referencedAccess;
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     */
     public function createField(...$args): BaseControl {
         return new TextInput($this->getTitle());
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getDescription() {
         return null;
@@ -55,7 +53,15 @@ abstract class AbstractRow {
         if (!$this->hasPermissions($userPermissionsLevel)) {
             return PermissionDeniedBadge::getHtml();
         }
-        return $this->createHtmlValue($this->getModel($model));
+        $model = $this->getModel($model);
+        if (is_null($model)) {
+            return $this->createNullHtmlValue();
+        }
+        return $this->createHtmlValue($model);
+    }
+
+    protected function createNullHtmlValue(): Html {
+        return NotSetBadge::getHtml();
     }
 
     /**
@@ -74,39 +80,35 @@ abstract class AbstractRow {
      * @throws BadRequestException
      */
     protected function getModel(AbstractModelSingle $model) {
-        $modelClassName = $this->getModelClassName();
-        if (!isset($this->referencedAccess) || is_null($modelClassName)) {
+        // if referenced access is not set return Model
+        //if (!isset($this->referencedAccess) || !isset($this->modelClassName)) {
+        if (!$this->referencedAccess || !$this->modelClassName) {
             return $model;
         }
-
+        // referenced access was called at this time
+        $modelClassName = $this->modelClassName;
+        // model is already instance of desired model
         if ($model instanceof $modelClassName) {
             return $model;
         }
-
-        if (isset($this->referencedAccess) && $model instanceof $this->referencedAccess['modelClassName']) {
+        // try interface and access via get<Model>()
+        if ($model instanceof $this->referencedAccess['modelClassName']) {
             $referencedModel = $model->{$this->referencedAccess['method']}();
             if ($referencedModel) {
-                return $referencedModel;
-            }
-            if (!$this->referencedAccess['nullable']) {
-                throw new BadRequestException('Model not accept be nullable');
+                if ($referencedModel instanceof $modelClassName) {
+                    return $referencedModel;
+                }
+                throw new BadTypeException($modelClassName, $referencedModel);
             }
             return null;
         }
-        throw new BadRequestException('Can not access model');
+        throw new BadRequestException(sprintf('Can not access model %s from %s', $modelClassName, get_class($model)));
     }
 
     abstract protected function createHtmlValue(AbstractModelSingle $model): Html;
 
     final protected function hasPermissions(int $userValue): bool {
         return $userValue >= $this->getPermissionsValue();
-    }
-
-    /**
-     * @return string|null
-     */
-    final protected function getModelClassName() {
-        return $this->modelClassName;
     }
 
     abstract public function getPermissionsValue(): int;

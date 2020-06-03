@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection;
 
 use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\ORM\AbstractModelSingle;
 
 class DetailComponent extends BaseComponent {
     /**
@@ -23,11 +24,11 @@ class DetailComponent extends BaseComponent {
     }
 
     /**
-     * @param $section
-     * @param $model
+     * @param string $section
+     * @param AbstractModelSingle $model
      * @return void
      */
-    public function render($section, $model) {
+    public function render(string $section, AbstractModelSingle $model) {
         $this->template->data = $this->detailFactory->getSection($section);
         $this->template->model = $model;
         $this->template->setFile(__DIR__ . '/detail.latte');

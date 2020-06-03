@@ -4,6 +4,7 @@ namespace FKSDB\Components\Grids\DataTesting;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\DataTesting\DataTestingFactory;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\DataTesting\TestsLogger;
@@ -48,11 +49,13 @@ class PersonsGrid extends BaseGrid {
      * @param Presenter $presenter
      * @return void
      * @throws DuplicateColumnException
+     * @throws NotImplementedException
+     * @throws BadTypeException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);
 
-        $this->addColumns(['referenced.person_link']);
+        $this->addColumns(['person.person_link']);
 
         foreach ($this->dataTestingFactory->getTests('person') as $test) {
             $this->addColumn($test->getAction(), $test->getTitle())->setRenderer(function ($person) use ($test) {

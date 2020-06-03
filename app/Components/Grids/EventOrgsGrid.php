@@ -2,6 +2,8 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEventOrg;
@@ -55,15 +57,18 @@ class EventOrgsGrid extends BaseGrid {
 
     /**
      * @param Presenter $presenter
-     * @throws InvalidLinkException
+     * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
+     * @throws InvalidLinkException
+     * @throws BadTypeException
+     * @throws NotImplementedException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);
 
-        $this->addColumns(['referenced.person_name']);
+        $this->addColumns(['person.full_name']);
         $this->addColumn('note', _('Note'));
         $this->addButton('edit', _('Edit'))->setText(_('Edit'))
             ->setLink(function (ModelEventOrg $model) {

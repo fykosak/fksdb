@@ -10,12 +10,10 @@ use Nette\Utils\Html;
 
 /**
  * Class PriceRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PriceRow extends AbstractPaymentRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Price');
     }

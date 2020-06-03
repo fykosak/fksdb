@@ -2,7 +2,9 @@
 
 namespace FKSDB\Components\DatabaseReflection\Event;
 
+use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEventType;
 use Nette\Forms\Controls\BaseControl;
@@ -11,9 +13,9 @@ use Nette\Utils\Html;
 
 /**
  * Class EventTypeRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class EventTypeRow extends AbstractEventRowFactory {
+class EventTypeRow extends AbstractRow {
     /**
      * @var ServiceEventType
      */
@@ -38,7 +40,7 @@ class EventTypeRow extends AbstractEventRowFactory {
      */
     public function createField(...$args): BaseControl {
         list($contest) = $args;
-        if (\is_null($contest)) {
+        if (\is_null($contest) || !$contest instanceof ModelContest) {
             throw new \InvalidArgumentException();
         }
 
@@ -57,6 +59,10 @@ class EventTypeRow extends AbstractEventRowFactory {
      */
     public function createHtmlValue(AbstractModelSingle $model): Html {
         return Html::el('span')->addText($model->getEventType()->name);
+    }
+
+    public function getPermissionsValue(): int {
+        return self::PERMISSION_USE_GLOBAL_ACL;
     }
 
 }

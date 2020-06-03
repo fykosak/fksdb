@@ -8,7 +8,7 @@ use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class AbstractPaymentRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractPaymentRow extends AbstractRow {
     /**

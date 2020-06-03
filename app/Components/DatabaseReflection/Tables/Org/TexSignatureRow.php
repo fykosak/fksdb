@@ -9,21 +9,15 @@ use Nette\Forms\Form;
 
 /**
  * Class TexSignatureRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TexSignatureRow extends AbstractOrgRowFactory {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Tex signature');
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'tex_signature';
     }
@@ -36,8 +30,8 @@ class TexSignatureRow extends AbstractOrgRowFactory {
         $control = new TextInput($this->getTitle());
 
         $control->addRule(Form::MAX_LENGTH, null, 32);
-        $control->addCondition(Form::FILLED);
-        $control->addRule(Form::REGEXP, _('%label obsahuje nepovolené znaky.'), '/^[a-z][a-z0-9._\-]*$/i');
+        $control->addCondition(Form::FILLED)
+            ->addRule(Form::PATTERN, sprintf(_('%s obsahuje nepovolené znaky.'), $this->getTitle()), '[a-z][a-z0-9._\-]*');
         return $control;
     }
 }

@@ -7,8 +7,8 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Utils\Html;
 
 /**
- * Class GameStartRow
- * *
+ * Class AvailablePointsRow
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class AvailablePointsRow extends AbstractFyziklaniGameSetupRow {
 

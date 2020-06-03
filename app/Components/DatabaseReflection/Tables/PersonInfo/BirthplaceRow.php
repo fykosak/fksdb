@@ -20,7 +20,7 @@ class BirthplaceRow extends AbstractRow {
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getDescription() {
         return _('Město a okres (kvůli diplomům).');

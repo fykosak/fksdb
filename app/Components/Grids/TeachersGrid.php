@@ -2,6 +2,8 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
 use Nette\Application\BadRequestException;
@@ -54,6 +56,8 @@ class TeachersGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
+     * @throws BadTypeException
+     * @throws NotImplementedException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);
@@ -61,7 +65,7 @@ class TeachersGrid extends BaseGrid {
         // columns
         //
         $this->addColumns([
-            'referenced.person_name',
+            'person.full_name',
             'teacher.note',
             'teacher.state',
             'teacher.since',

@@ -27,7 +27,6 @@ class EventRolePrinter {
         $this->yearCalculator = $yearCalculator;
     }
 
-    // TODO ModelPerson should be nullable
     public function __invoke(ModelPerson $person, ModelEvent $event): Html {
         if (!$person) {
             Html::el('span')

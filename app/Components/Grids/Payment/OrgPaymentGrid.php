@@ -44,14 +44,16 @@ class OrgPaymentGrid extends PaymentGrid {
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
+     * @throws \FKSDB\Exceptions\BadTypeException
+     * @throws \FKSDB\Exceptions\NotImplementedException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);
 
         $this->addColumns([
-            'payment.id',
-            'referenced.person_name',
-            // 'referenced.event_name',
+            'payment.payment_uid',
+            'person.full_name',
+            'event.event',
             'payment.price',
             'payment.state',
             'payment.variable_symbol',

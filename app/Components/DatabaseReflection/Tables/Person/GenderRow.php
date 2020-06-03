@@ -11,19 +11,14 @@ use Nette\Utils\Html;
 
 /**
  * Class GenderRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class GenderRow extends AbstractRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Gender');
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_FULL;
     }
@@ -38,9 +33,6 @@ class GenderRow extends AbstractRow {
         return $control;
     }
 
-    /**
-     * @return array
-     */
     private function createOptions(): array {
         return ['M' => _('Male'), 'F' => _('Female')];
     }

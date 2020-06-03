@@ -2,6 +2,8 @@
 
 namespace FKSDB\Components\Grids\Payment;
 
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelPayment;
 use Nette\Application\UI\Presenter;
 use NiftyGrid\DataSource\NDataSource;
@@ -19,6 +21,8 @@ class MyPaymentGrid extends PaymentGrid {
      * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
+     * @throws BadTypeException
+     * @throws NotImplementedException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);
@@ -29,8 +33,8 @@ class MyPaymentGrid extends PaymentGrid {
         $this->setDataSource($dataSource);
 
         $this->addColumns([
-            'payment.id',
-            // 'referenced.event_name',
+            'payment.payment_uid',
+            'event.event',
             'payment.price',
             'payment.state',
         ]);

@@ -64,7 +64,7 @@ class EventRole extends AbstractRow {
      * @return AbstractModelSingle|null
      */
     protected function getModel(AbstractModelSingle $model) {
-        return $model; // must to be original model because of
+        return $model; // need to be original model because of
     }
 
     public function getPermissionsValue(): int {

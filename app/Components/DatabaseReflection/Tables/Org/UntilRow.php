@@ -12,12 +12,10 @@ use Nette\Utils\Html;
 
 /**
  * Class UntilRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class UntilRow extends AbstractOrgRowFactory {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Until');
     }

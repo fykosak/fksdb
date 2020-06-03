@@ -2,9 +2,11 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
+use Nette\Forms\Controls\BaseControl;
+
 /**
  * Class DefaultRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class DefaultRow extends AbstractRow {
     /**
@@ -20,13 +22,21 @@ abstract class DefaultRow extends AbstractRow {
      */
     private $modelAccessKey;
     /**
-     * @var string
+     * @var string|null
      */
     private $description;
     /**
      * @var array
      */
     private $metaData;
+    /**
+     * @var bool
+     */
+    private $required = false;
+    /**
+     * @var bool
+     */
+    private $omitInputField = false;
     /**
      * @var int
      */
@@ -46,17 +56,36 @@ abstract class DefaultRow extends AbstractRow {
 
     /**
      * @param string $tableName
-     * @param string $title
      * @param string $modelAccessKey
-     * @param array $metaData
+     * @param string $title
      * @param string|null $description
+     * @return void
      */
-    final public function setUp(string $tableName, string $modelAccessKey, array $metaData, string $title, string $description = null) {
+    final public function setUp(string $tableName, string $modelAccessKey, string $title, $description) {
         $this->title = $title;
         $this->tableName = $tableName;
         $this->modelAccessKey = $modelAccessKey;
         $this->description = $description;
         $this->metaData = $this->metaDataFactory->getMetaData($tableName, $modelAccessKey);
+    }
+
+    /**
+     * @param mixed ...$args
+     * @return BaseControl
+     * @throws OmittedControlException
+     */
+    final public function createField(...$args): BaseControl {
+        if ($this->omitInputField) {
+            throw new OmittedControlException();
+        }
+        $field = $this->createFormControl(...$args);
+        if ($this->description) {
+            $field->setOption('description', $this->getDescription());
+        }
+        if ($this->required) {
+            $field->setRequired();
+        }
+        return $field;
     }
 
     /**
@@ -67,6 +96,22 @@ abstract class DefaultRow extends AbstractRow {
         $this->permissionValue = constant(self::class . '::' . $value);
     }
 
+    /**
+     * @param bool $value
+     * @return void
+     */
+    final public function setRequired(bool $value) {
+        $this->required = $value;
+    }
+
+    /**
+     * @param bool $omit
+     * @return void
+     */
+    final public function setOmitInputField(bool $omit) {
+        $this->omitInputField = $omit;
+    }
+
     final public function getPermissionsValue(): int {
         return $this->permissionValue;
     }
@@ -75,7 +120,10 @@ abstract class DefaultRow extends AbstractRow {
         return _($this->title);
     }
 
-    final public function getDescription(): string {
+    /**
+     * @return string|null
+     */
+    final public function getDescription() {
         return $this->description ? _($this->description) : '';
     }
 
@@ -90,4 +138,6 @@ abstract class DefaultRow extends AbstractRow {
     final protected function getMetaData(): array {
         return $this->metaData;
     }
+
+    abstract protected function createFormControl(...$args): BaseControl;
 }
