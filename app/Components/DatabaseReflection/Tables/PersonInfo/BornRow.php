@@ -12,12 +12,10 @@ use Nette\Utils\Html;
 
 /**
  * Class BornField
- * @package FKSDB\Components\Forms\Factories\PersonInfo
+ * *
  */
 class BornRow extends AbstractRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Datum narození');
     }
@@ -33,9 +31,6 @@ class BornRow extends AbstractRow {
         return $control;
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_FULL;
     }

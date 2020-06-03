@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
+use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
 use FKSDB\Exceptions\NotImplementedException;
@@ -9,7 +10,7 @@ use Nette\Utils\Html;
 
 /**
  * Class StateRow
- * @package FKSDB\Components\DatabaseReflection
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class StateRow extends DefaultRow {
     /**
@@ -17,25 +18,23 @@ class StateRow extends DefaultRow {
      */
     protected $states = [];
 
-    /**
-     * @inheritDoc
-     */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        $stateDef = $this->getState($model->{$this->getModelAccessKey()});
+        $state = $model->{$this->getModelAccessKey()};
+        if (is_null($state)) {
+            return NotSetBadge::getHtml();
+        }
+        $stateDef = $this->getState($state);
         return Html::el('span')->addAttributes(['class' => $stateDef['badge']])->addText(_($stateDef['label']));
     }
 
     /**
-     * @param array[] $states
+     * @param array $states
+     * @return void
      */
     public function setStates(array $states) {
         $this->states = $states;
     }
 
-    /**
-     * @param string $state
-     * @return array
-     */
     public function getState(string $state): array {
         if (isset($this->states[$state])) {
             return $this->states[$state];
@@ -48,7 +47,7 @@ class StateRow extends DefaultRow {
      * @return BaseControl
      * @throws NotImplementedException
      */
-    public function createField(...$args): BaseControl {
-        throw new NotImplementedException;
+    public function createFormControl(...$args): BaseControl {
+        throw new NotImplementedException();
     }
 }

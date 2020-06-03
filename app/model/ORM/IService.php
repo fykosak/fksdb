@@ -17,11 +17,7 @@ interface IService {
      */
     public function createNew($data = null);
 
-    /**
-     * @param array|Traversable $data
-     * @return IModel
-     */
-    public function createNewModel($data);
+    public function createNewModel(array $data): IModel;
 
     /**
      * @param int $key
@@ -38,7 +34,7 @@ interface IService {
 
     /**
      * @param IModel $model
-     * @return mixed
+     * @return void
      */
     public function dispose(IModel $model);
 
@@ -56,8 +52,7 @@ interface IService {
     public function updateModel(IModel $model, $data);
 
     /**
-     * @return string
-     * @return string|AbstractModelSingle
+     * @return string|AbstractModelSingle|AbstractModelMulti
      */
     public function getModelClassName(): string;
 }

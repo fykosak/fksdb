@@ -14,11 +14,11 @@ use Persons\ExtendedPersonHandler;
 
 /**
  * Class OrgPresenter
- * @package OrgModule
+ * *
  * @method ModelOrg getModel2(int $id = null)
  */
 class OrgPresenter extends ExtendedPersonPresenter {
-
+    /** @var string */
     protected $fieldsDefinition = 'adminOrg';
     /**
      * @var int
@@ -37,6 +37,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param ServiceOrg $serviceOrg
+     * @return void
      */
     public function injectServiceOrg(ServiceOrg $serviceOrg) {
         $this->serviceOrg = $serviceOrg;
@@ -44,6 +45,7 @@ class OrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param OrgFactory $orgFactory
+     * @return void
      */
     public function injectOrgFactory(OrgFactory $orgFactory) {
         $this->orgFactory = $orgFactory;
@@ -111,9 +113,10 @@ class OrgPresenter extends ExtendedPersonPresenter {
 
     /**
      * @return OrgsGrid
+     * @throws BadRequestException
      */
     protected function createComponentGrid(): OrgsGrid {
-        return new OrgsGrid($this->getContext());
+        return new OrgsGrid($this->getContext(), $this->getSelectedContest());
     }
 
     /**
@@ -127,46 +130,27 @@ class OrgPresenter extends ExtendedPersonPresenter {
         $form->addComponent($container, ExtendedPersonHandler::CONT_MODEL);
     }
 
-    /**
-     * @return ServiceOrg
-     */
     protected function getORMService(): ServiceOrg {
         return $this->serviceOrg;
     }
 
-    /**
-     * @return string
-     */
     public function messageCreate(): string {
         return _('Organizátor %s založen.');
     }
 
-    /**
-     * @return string
-     */
     public function messageEdit(): string {
         return _('Organizátor %s upraven.');
     }
 
-    /**
-     * @return string
-     */
     public function messageError(): string {
         return _('Chyba při zakládání organizátora.');
     }
 
-    /**
-     * @return string
-     */
     public function messageExists(): string {
         return _('Organizátor již existuje.');
     }
 
-    /**
-     * @return string
-     */
     protected function getModelResource(): string {
         return ModelOrg::RESOURCE_ID;
     }
 }
-

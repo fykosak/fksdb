@@ -10,7 +10,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class ChartPresenter
- * @package EventModule
+ * *
  */
 class ChartPresenter extends BasePresenter {
     use ChartPresenterTrait;
@@ -46,9 +46,6 @@ class ChartPresenter extends BasePresenter {
         ];
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getModelResource(): string {
         return 'event.chart';
     }

@@ -48,7 +48,7 @@ class GlobalSession implements IGlobalSession {
      * @param ServiceGlobalSession $serviceGlobalSession
      * @param IGSIDHolder $gsidHolder
      */
-    function __construct($expiration, ServiceGlobalSession $serviceGlobalSession, IGSIDHolder $gsidHolder) {
+    public function __construct($expiration, ServiceGlobalSession $serviceGlobalSession, IGSIDHolder $gsidHolder) {
         $this->expiration = $expiration;
         $this->serviceGlobalSession = $serviceGlobalSession;
         $this->gsidHolder = $gsidHolder;

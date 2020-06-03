@@ -3,11 +3,11 @@
 namespace FKSDB\Config\Extensions;
 
 use FKSDB\Components\Controls\Stalking\StalkingService;
-use Nette\Config\CompilerExtension;
+use Nette\DI\CompilerExtension;
 
 /**
  * Class StalkingExtension
- * @package FKSDB\Config\Extensions
+ * *
  */
 class StalkingExtension extends CompilerExtension {
 

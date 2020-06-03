@@ -10,12 +10,10 @@ use Nette\Utils\Html;
 
 /**
  * Class PriceRow
- * @package FKSDB\Components\DatabaseReflection\EventParticipant
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PriceRow extends AbstractParticipantRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Price');
     }
@@ -28,6 +26,6 @@ class PriceRow extends AbstractParticipantRow {
         if (\is_null($model->price)) {
             return NotSetBadge::getHtml();
         }
-        return (new PricePrinter)($model->getPrice());
+        return (new PricePrinter())($model->getPrice());
     }
 }

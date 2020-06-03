@@ -5,15 +5,16 @@ namespace OrgModule;
 use FKSDB\Components\Grids\ContestantsGrid;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Services\ServiceContestant;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 
 /**
  * Class ContestantPresenter
- * @package OrgModule
+ * *
  * @method ModelContestant getModel()
  */
 class ContestantPresenter extends ExtendedPersonPresenter {
-
+    /** @var string */
     protected $fieldsDefinition = 'adminContestant';
 
     /**
@@ -23,13 +24,14 @@ class ContestantPresenter extends ExtendedPersonPresenter {
 
     /**
      * @param ServiceContestant $serviceContestant
+     * @return void
      */
     public function injectServiceContestant(ServiceContestant $serviceContestant) {
         $this->serviceContestant = $serviceContestant;
     }
 
     /**
-     * @param $id
+     * @param int $id
      */
     public function titleEdit($id) {
         $this->setTitle(sprintf(_('Úprava řešitele %s'), $this->getModel()->getPerson()->getFullName()), 'fa fa-user');
@@ -45,21 +47,22 @@ class ContestantPresenter extends ExtendedPersonPresenter {
 
     /**
      * @return ContestantsGrid
+     * @throws BadRequestException
      */
-    protected function createComponentGrid() {
-        return new ContestantsGrid($this->getContext());
+    protected function createComponentGrid(): ContestantsGrid {
+        return new ContestantsGrid($this->getContext(), $this->getSelectedContest(), $this->getSelectedYear());
     }
 
     /**
      * @param Form $form
-     * @return mixed|void
+     * @return void
      */
     protected function appendExtendedContainer(Form $form) {
         // no container for contestant
     }
 
     /**
-     * @return mixed|ServiceContestant
+     * @return ServiceContestant
      */
     protected function getORMService() {
         return $this->serviceContestant;
@@ -74,43 +77,26 @@ class ContestantPresenter extends ExtendedPersonPresenter {
         if (!$model) {
             return null;
         }
-        return $this->yearCalculator->getAcademicYear($this->getServiceContest()->findByPrimary($model->contest_id), $model->year);
+        return $this->getYearCalculator()->getAcademicYear($this->getServiceContest()->findByPrimary($model->contest_id), $model->year);
     }
 
-    /**
-     * @return string
-     */
-    public function messageCreate() {
+    public function messageCreate(): string {
         return _('Řešitel %s založen.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageEdit() {
+    public function messageEdit(): string {
         return _('Řešitel %s upraven.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageError() {
+    public function messageError(): string {
         return _('Chyba při zakládání řešitele.');
     }
 
-    /**
-     * @return string
-     */
-    public function messageExists() {
+    public function messageExists(): string {
         return _('Řešitel už existuje.');
     }
 
-
-    /**
-     * @inheritDoc
-     */
     protected function getModelResource(): string {
         return ModelContestant::RESOURCE_ID;
     }
 }
-

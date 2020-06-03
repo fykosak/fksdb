@@ -59,6 +59,7 @@ class Downloader {
         $this->contestMap = $contestMap;
         $this->parameters = $parameters;
     }
+
     /**
      * @param ModelContest $contest
      * @param int $year
@@ -73,11 +74,7 @@ class Downloader {
         return $this->download($path);
     }
 
-    /**
-     * @param $path
-     * @return bool|string
-     */
-    private function download(string $path) {
+    private function download(string $path): string {
         $src = "https://{$this->httpUser}:{$this->httpPassword}@{$this->host}{$path}";
         $dst = tempnam($this->tmpDir, 'task');
 
@@ -87,4 +84,3 @@ class Downloader {
         return $dst;
     }
 }
-

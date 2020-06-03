@@ -6,7 +6,9 @@ use Exports\ExportFormatFactory;
 use Exports\StoredQuery;
 use FKSDB\Components\Controls\StoredQueryComponent;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 use PDOException;
@@ -32,24 +34,24 @@ class StoredQueryGrid extends BaseGrid {
      * @param StoredQuery $storedQuery
      * @param Container $container
      */
-    function __construct(StoredQuery $storedQuery, Container $container) {
+    public function __construct(StoredQuery $storedQuery, Container $container) {
         parent::__construct($container);
         $this->storedQuery = $storedQuery;
         $this->exportFormatFactory = $container->getByType(ExportFormatFactory::class);
     }
 
+    protected function getData(): IDataSource {
+        return $this->storedQuery;
+    }
+
     /**
-     * @param $presenter
+     * @param Presenter $presenter
      * @throws InvalidLinkException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
-        //
-        // data
-        //
-        $this->setDataSource($this->storedQuery);
 
         //
         // columns
@@ -83,7 +85,8 @@ class StoredQueryGrid extends BaseGrid {
                 ->setLabel(_('Podrobnosti dotazu'))
                 ->setClass('btn btn-sm btn-secondary')
                 ->setLink($this->getPresenter()->link('Export:show', $this->storedQuery->getQueryPattern()->getPrimary()));
-            if ($qid = $this->storedQuery->getQueryPattern()->qid) { // intentionally =
+            $qid = $this->storedQuery->getQueryPattern()->qid;
+            if ($qid) {
                 $parameters = ['qid' => $qid, 'bc' => null];
                 $queryParameters = $this->storedQuery->getParameters();
                 foreach ($this->storedQuery->getParameterNames() as $key) {

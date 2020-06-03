@@ -60,7 +60,7 @@ class YearCalculator {
      * @param ServiceContest $serviceContest
      * @param GlobalParameters $globalParameters
      */
-    function __construct(ServiceContestYear $serviceContestYear, ServiceContest $serviceContest, GlobalParameters $globalParameters) {
+    public function __construct(ServiceContestYear $serviceContestYear, ServiceContest $serviceContest, GlobalParameters $globalParameters) {
         $this->serviceContestYear = $serviceContestYear;
         $this->serviceContest = $serviceContest;
         $this->globalParameters = $globalParameters;
@@ -114,37 +114,20 @@ class YearCalculator {
         throw new \Nette\InvalidArgumentException('Graduation year not match');
     }
 
-    /**
-     * @param ModelContest $contest
-     * @return int
-     */
     public function getCurrentYear(ModelContest $contest): int {
         return $this->revCache[$contest->contest_id][$this->getCurrentAcademicYear()];
     }
 
-    /**
-     * @param ModelContest $contest
-     * @return int
-     */
     public function getFirstYear(ModelContest $contest): int {
         $years = array_keys($this->cache[$contest->contest_id]);
         return reset($years);
     }
 
-    /**
-     * @param ModelContest $contest
-     * @return int
-     */
     public function getLastYear(ModelContest $contest): int {
         $years = array_keys($this->cache[$contest->contest_id]);
         return end($years);
     }
 
-    /**
-     * @param ModelContest $contest
-     * @param int $year
-     * @return bool
-     */
     public function isValidYear(ModelContest $contest, int $year = null): bool {
         return $year !== null && $year >= $this->getFirstYear($contest) && $year <= $this->getLastYear($contest);
     }
@@ -198,5 +181,4 @@ class YearCalculator {
             }
         }
     }
-
 }

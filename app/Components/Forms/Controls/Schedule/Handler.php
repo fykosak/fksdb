@@ -14,7 +14,7 @@ use PDOException;
 
 /**
  * Class Handler
- * @package FKSDB\Components\Forms\Controls\Schedule
+ * *
  */
 class Handler {
     /**
@@ -110,10 +110,6 @@ class Handler {
         }
     }
 
-    /**
-     * @param ArrayHash $data
-     * @return integer[]
-     */
     private function prepareData(ArrayHash $data): array {
         $newData = [];
         foreach ($data as $type => $datum) {
@@ -122,4 +118,3 @@ class Handler {
         return $newData;
     }
 }
-

@@ -20,12 +20,13 @@ use Nette\Application\UI\Control;
 
 /**
  * Class PaymentPresenter
- * @package EventModule
+ * *
  * @method ModelPayment getEntity
  * @method ModelPayment loadEntity(int $id)
  */
 class PaymentPresenter extends BasePresenter {
     use EventEntityTrait;
+
     /**
      * @var Machine
      */
@@ -36,15 +37,19 @@ class PaymentPresenter extends BasePresenter {
      */
     private $servicePayment;
 
-
     /**
      * @param ServicePayment $servicePayment
+     * @return void
      */
     public function injectServicePayment(ServicePayment $servicePayment) {
         $this->servicePayment = $servicePayment;
     }
 
     /* ********* titles *****************/
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleCreate() {
         $this->setTitle(_('New payment'), 'fa fa-credit-card');
     }
@@ -69,13 +74,14 @@ class PaymentPresenter extends BasePresenter {
         $this->setTitle(\sprintf(_('Payment detail #%s'), $this->loadEntity($id)->getPaymentId()), 'fa fa-credit-card');
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleList() {
         $this->setTitle(_('List of payments'), 'fa fa-credit-card');
     }
 
-    /**
-     * @return bool
-     */
     protected function isEnabled(): bool {
         return $this->hasApi();
     }
@@ -193,9 +199,11 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @return TransitionButtonsControl
+     * @throws AbortException
+     * @throws BadRequestException
      */
     protected function createComponentTransitionButtons(): TransitionButtonsControl {
-        return $this->machine->createComponentTransitionButtons($this->getEntity());
+        return new TransitionButtonsControl($this->getMachine(), $this->getContext(), $this->getEntity());
     }
 
 
@@ -233,9 +241,6 @@ class PaymentPresenter extends BasePresenter {
         return $this->machine;
     }
 
-    /**
-     * @return bool
-     */
     private function hasApi(): bool {
         try {
             $this->getMachine();
@@ -248,7 +253,7 @@ class PaymentPresenter extends BasePresenter {
     /**
      * @return ServicePayment
      */
-    function getORMService() {
+    public function getORMService() {
         return $this->servicePayment;
     }
 
@@ -256,20 +261,20 @@ class PaymentPresenter extends BasePresenter {
      * @inheritDoc
      */
     public function createComponentGrid(): BaseGrid {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
      * @inheritDoc
      */
     public function createComponentCreateForm(): Control {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
      * @inheritDoc
      */
     public function createComponentEditForm(): Control {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 }

@@ -9,12 +9,10 @@ use Nette\Utils\Html;
 
 /**
  * Class PasswordRow
- * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PasswordRow extends AbstractFyziklaniTeamRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Password');
     }
@@ -24,6 +22,6 @@ class PasswordRow extends AbstractFyziklaniTeamRow {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new HashPrinter)($model->password);
+        return (new HashPrinter())($model->password);
     }
 }

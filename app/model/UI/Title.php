@@ -4,7 +4,7 @@ namespace FKSDB\UI;
 
 /**
  * Class Title
- * @package FKSDB
+ * *
  */
 class Title {
     /** @var string */

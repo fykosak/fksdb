@@ -8,7 +8,7 @@ use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class AbstractParticipantRow
- * @package FKSDB\Components\DatabaseReflection\PersonInfo
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractParticipantRow extends AbstractRow {
 
@@ -18,12 +18,9 @@ abstract class AbstractParticipantRow extends AbstractRow {
      * @throws NotImplementedException
      */
     public function createField(...$args): BaseControl {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_USE_GLOBAL_ACL;
     }

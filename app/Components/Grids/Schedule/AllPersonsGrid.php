@@ -2,21 +2,23 @@
 
 namespace FKSDB\Components\Grids\Schedule;
 
-use FKSDB\Components\DatabaseReflection\ValuePrinters\EventRole;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Payment\Price;
 use FKSDB\YearCalculator;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
 /**
- * Class PersonsGrid
- * @package FKSDB\Components\Grids\Schedule
+ * Class AllPersonsGrid
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class AllPersonsGrid extends BaseGrid {
     /**
@@ -38,32 +40,34 @@ class AllPersonsGrid extends BaseGrid {
      * @param ModelEvent $event
      */
     public function __construct(Container $container, ModelEvent $event) {
+        parent::__construct($container);
         $this->yearCalculator = $container->getByType(YearCalculator::class);
         $this->servicePersonSchedule = $container->getByType(ServicePersonSchedule::class);
         $this->event = $event;
-        parent::__construct($container);
     }
 
-    /**
-     * @param $presenter
-     * @throws DuplicateColumnException
-     * @throws NotImplementedException
-     * @throws NotImplementedException
-     */
-    protected function configure($presenter) {
-        parent::configure($presenter);
+    protected function getData(): IDataSource {
         $query = $this->servicePersonSchedule->getTable()
             ->where('schedule_item.schedule_group.event_id', $this->event->event_id)
             ->order('person_schedule_id');//->limit(10, 140);
-        $dataSource = new NDataSource($query);
-        $this->setDataSource($dataSource);
+        return new NDataSource($query);
+    }
 
+    /**
+     * @param Presenter $presenter
+     * @return void
+     * @throws DuplicateColumnException
+     * @throws BadTypeException
+     * @throws NotImplementedException
+     */
+    protected function configure(Presenter $presenter) {
+        parent::configure($presenter);
 
         $this->paginate = false;
 
         $this->addColumn('person_schedule_id', _('#'));
 
-        $this->addColumns(['referenced.person_name']);
+        $this->addColumns(['person.person_name']);
 
         $this->addColumn('schedule_item', _('Schedule item'))->setRenderer(function (ModelPersonSchedule $model) {
             return $model->getScheduleItem()->getLabel();
@@ -77,26 +81,9 @@ class AllPersonsGrid extends BaseGrid {
                 '/' . $model->getScheduleItem()->getPrice(Price::CURRENCY_CZK)->__toString();
         })->setSortable(false);
 
-        $this->addColumn('role', _('Role'))
-            ->setRenderer(function (ModelPersonSchedule $model) {
-                return EventRole::calculateRoles($model->getPerson(), $this->event, $this->yearCalculator);
-            })->setSortable(false);
-
-        $this->addColumnPayment();
+        $this->addColumns(['event.role', 'payment.payment']);
     }
 
-    /**
-     * @throws DuplicateColumnException
-     * @throws NotImplementedException
-     * @throws NotImplementedException
-     */
-    protected function addColumnPayment() {
-        $this->addColumns(['referenced.payment_id']);
-    }
-
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelPersonSchedule::class;
     }

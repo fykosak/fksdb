@@ -67,18 +67,21 @@ trait EntityTrait {
 
     /**
      * @param int $id
+     * @return void
      */
     public function titleEdit(int $id) {
     }
 
     /**
      * @param int $id
+     * @return void
      */
     public function titleDetail(int $id) {
     }
 
     /**
      * @param int $id
+     * @return void
      */
     public function titleDelete(int $id) {
     }
@@ -164,9 +167,6 @@ trait EntityTrait {
      */
     abstract protected function getORMService();
 
-    /**
-     * @return string
-     */
     protected function getModelResource(): string {
         return $this->getORMService()->getModelClassName()::RESOURCE_ID;
     }

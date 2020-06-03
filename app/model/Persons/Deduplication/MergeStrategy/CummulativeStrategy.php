@@ -9,13 +9,16 @@ namespace Persons\Deduplication\MergeStrategy;
  */
 class CummulativeStrategy implements IMergeStrategy {
 
+    /**
+     * @var mixed|null
+     */
     private $precedence;
 
     /**
      *
      * @param null|mixed $precedence trunk|merged
      */
-    function __construct($precedence = null) {
+    public function __construct($precedence = null) {
         $this->precedence = $precedence;
     }
 
@@ -41,7 +44,7 @@ class CummulativeStrategy implements IMergeStrategy {
             return $merged;
         }
 
-        throw new CannotMergeException;
+        throw new CannotMergeException();
     }
 
     /**

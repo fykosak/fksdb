@@ -83,7 +83,7 @@ class StoredQuery implements IDataSource, IResource {
      * @param ModelStoredQuery $queryPattern
      * @param Connection $connection
      */
-    function __construct(ModelStoredQuery $queryPattern, Connection $connection) {
+    public function __construct(ModelStoredQuery $queryPattern, Connection $connection) {
         $this->setQueryPattern($queryPattern);
         $this->connection = $connection;
     }
@@ -236,7 +236,7 @@ class StoredQuery implements IDataSource, IResource {
 
             $statement->bindValue($key, $value, $type);
             if ($this->postProcessing) {
-                $this->postProcessing->bindValue($key, $value, $type);
+                $this->postProcessing->bindValue($key, $value);
             }
         }
         return $statement;
@@ -260,7 +260,7 @@ class StoredQuery implements IDataSource, IResource {
      * @throws NotImplementedException
      */
     public function filterData(array $filters) {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**

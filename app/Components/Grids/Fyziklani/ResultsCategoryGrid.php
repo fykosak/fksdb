@@ -3,18 +3,18 @@
 namespace FKSDB\Components\Grids\Fyziklani;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class ResultsCategoryGrid
- * @package FKSDB\Components\Grids\Fyziklani
+ * *
  */
 class ResultsCategoryGrid extends BaseGrid {
 
@@ -38,39 +38,44 @@ class ResultsCategoryGrid extends BaseGrid {
      * @param Container $container
      */
     public function __construct(ModelEvent $event, string $category, Container $container) {
-        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
+        parent::__construct($container);
         $this->event = $event;
         $this->category = $category;
-        parent::__construct($container);
     }
 
     /**
-     * @param $presenter
-     * @throws DuplicateColumnException
-     * @throws NotImplementedException
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @return void
      */
-    protected function configure($presenter) {
+    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+    }
+
+    protected function getData(): IDataSource {
+        $teams = $this->serviceFyziklaniTeam->findParticipating($this->event)
+            ->where('category', $this->category)
+            ->order('name');
+        return new NDataSource($teams);
+
+    }
+
+    /**
+     * @param Presenter $presenter
+     * @return void
+     * @throws DuplicateColumnException
+     */
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
 
         $this->paginate = false;
 
         $this->addColumns([
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.e_fyziklani_team_id',
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.name',
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.rank_category',
+            'e_fyziklani_team.e_fyziklani_team_id',
+            'e_fyziklani_team.name',
+            'e_fyziklani_team.rank_category',
         ]);
-
-        $teams = $this->serviceFyziklaniTeam->findParticipating($this->event)
-            ->where('category', $this->category)
-            ->order('name');
-        $dataSource = new NDataSource($teams);
-        $this->setDataSource($dataSource);
-
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelFyziklaniTeam::class;
     }

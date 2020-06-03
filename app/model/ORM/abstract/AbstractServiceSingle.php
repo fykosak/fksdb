@@ -22,18 +22,9 @@ use Traversable;
  *       duplicated in all descedant classes.
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @author Michal Červeňak <miso@fykos.cz>
  */
 abstract class AbstractServiceSingle extends Selection implements IService {
-    /**
-     * @var string
-     */
-    protected $modelClassName;
-
-    /**
-     * @var string
-     */
-    protected $tableName;
-
     /**
      * AbstractServiceSingle constructor.
      * @param Context $connection
@@ -45,19 +36,17 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     }
 
     /**
-     * @param Traversable|array|null $data
+     * @param array $data
      * @return AbstractModelSingle
      * @throws ModelException
      */
-    public function createNewModel($data = null): AbstractModelSingle {
+    public function createNewModel(array $data): IModel {
         $modelClassName = $this->getModelClassName();
         $data = $this->filterData($data);
         try {
             $result = $this->getTable()->insert($data);
             if ($result !== false) {
-                /**
-                 * @var AbstractModelSingle $model
-                 */
+                /** @var AbstractModelSingle $model */
                 $model = ($modelClassName)::createFromActiveRow($result);
                 $model->setNew(false); // only for old compatibility
                 return $model;
@@ -100,22 +89,13 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     }
 
     /**
-     * @return string|AbstractModelSingle|AbstractModelMulti
-     */
-    abstract public function getModelClassName(): string;
-
-    /**
-     * @return string
-     */
-    abstract protected function getTableName(): string;
-
-    /**
      * Syntactic sugar.
      *
      * @param int $key
      * @return AbstractModelSingle|null
      */
     public function findByPrimary($key) {
+        /** @var AbstractModelSingle|null $result */
         $result = $this->getTable()->get($key);
         if ($result !== false) {
             return $result;
@@ -129,7 +109,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      *
      * @param IModel $model
      * @param array $data
-     * @param boolean $alive
+     * @param bool $alive
      * @deprecated
      */
     public function updateModel(IModel $model, $data, $alive = true) {
@@ -155,10 +135,9 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     /**
      * @param AbstractModelSingle|IModel $model
      * @param Traversable|array $data
-     * @param bool $alive
-     * @return int
+     * @return bool
      */
-    public function updateModel2(AbstractModelSingle $model, $data = null, $alive = true) {
+    public function updateModel2(AbstractModelSingle $model, array $data): bool {
         $this->checkType($model);
         $data = $this->filterData($data);
         return $model->update($data);
@@ -174,9 +153,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      */
     public function save(IModel &$model) {
         $modelClassName = $this->getModelClassName();
-        /**
-         * @var AbstractModelSingle $model
-         */
+        /** @var AbstractModelSingle $model */
         if (!$model instanceof $modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
         }
@@ -217,30 +194,18 @@ abstract class AbstractServiceSingle extends Selection implements IService {
         }
     }
 
-    /**
-     * @return TypedTableSelection
-     */
     public function getTable(): TypedTableSelection {
         return new TypedTableSelection($this->getModelClassName(), $this->getTableName(), $this->context, $this->conventions);
     }
 
-    /**
-     * @return Connection
-     */
     public function getConnection(): Connection {
         return $this->context->getConnection();
     }
 
-    /**
-     * @return Context
-     */
     public function getContext(): Context {
         return $this->context;
     }
 
-    /**
-     * @return IConventions
-     */
     public function getConventions(): IConventions {
         return $this->conventions;
     }
@@ -256,6 +221,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
         }
     }
 
+    /** @var array|null */
     protected $defaults = null;
 
     /**
@@ -280,7 +246,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     /**
      * Omits array elements whose keys aren't columns in the table.
      *
-     * @param array|Traversable|null $data
+     * @param array|null $data
      * @return array|null
      */
     protected function filterData($data) {
@@ -297,15 +263,15 @@ abstract class AbstractServiceSingle extends Selection implements IService {
         return $result;
     }
 
+    /** @var array */
     private $columns;
 
-    /**
-     * @return array
-     */
-    private function getColumnMetadata() {
+    private function getColumnMetadata(): array {
         if ($this->columns === null) {
             $this->columns = $this->context->getConnection()->getSupplementalDriver()->getColumns($this->getTableName());
         }
         return $this->columns;
     }
+
+    abstract protected function getTableName(): string;
 }

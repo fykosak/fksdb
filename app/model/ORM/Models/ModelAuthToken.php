@@ -12,7 +12,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read ActiveRow login
  * @property-read string data
  * @property-read string type
- * @property-read \DateTime until
+ * @property-read \DateTimeInterface until
  */
 class ModelAuthToken extends AbstractModelSingle {
     /** @const The first login for setting up a password. */
@@ -27,12 +27,8 @@ class ModelAuthToken extends AbstractModelSingle {
     /** @const Notification about an event application. */
     const TYPE_EVENT_NOTIFY = 'event_notify';
 
-    /**
-     * @return ModelLogin
-     */
     public function getLogin(): ModelLogin {
         $data = $this->login;
         return ModelLogin::createFromActiveRow($data);
     }
-
 }

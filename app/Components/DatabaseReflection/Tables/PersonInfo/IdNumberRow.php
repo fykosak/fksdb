@@ -10,22 +10,19 @@ use Nette\Forms\Form;
 
 /**
  * Class IdNumberField
- * @package FKSDB\Components\Forms\Factories\PersonInfo
+ * *
  */
 class IdNumberRow extends AbstractRow {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Číslo OP');
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
-    public function getDescription() {
+    public function getDescription()  {
         return _('U cizinců číslo pasu.');
     }
 
@@ -40,16 +37,10 @@ class IdNumberRow extends AbstractRow {
         return $control;
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_FULL;
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'id_number';
     }

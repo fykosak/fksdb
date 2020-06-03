@@ -92,22 +92,22 @@ events:
                         condition: role('admin')
                         label: Pozvat účastníka
                         onExecuted:
-                            - Events\Transitions\MailSender(sous/invited, .self)
+                            - FKSDB\Events\Transitions\MailSender(sous/invited, .self)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: role('admin')
                         label: Pozvat účastníka
                         onExecuted:
-                            - Events\Transitions\MailSender(sous/invited, .self)
+                            - FKSDB\Events\Transitions\MailSender(sous/invited, .self)
                     __init->spare:
                         condition: role('admin')
                         label: Pozvat náhradníka
                         onExecuted:
-                            - Events\Transitions\MailSender(sous/spare, .self)
+                            - FKSDB\Events\Transitions\MailSender(sous/spare, .self)
                     auto.spare->spare: # this must be duplicate of __init->spare
                         condition: role('admin')
                         label: Pozvat náhradníka
                         onExecuted:
-                            - Events\Transitions\MailSender(sous/spare, .self)
+                            - FKSDB\Events\Transitions\MailSender(sous/spare, .self)
                     invited|invited1|invited2|invited3->applied:
                         condition: or(before(param('deadline1')),role('admin'))
                         label: Potrvrdit učast
@@ -117,42 +117,42 @@ events:
                     invited|invited1|invited2|invited3->rejected:
                         condition: or(before(param('deadline1')),role('admin'))
                         label: Odmítnout účast
-                        dangerous: true
+                        behaviorType: danger
 
                     spare->spare1:
                         condition: and(after(param('deadline2')),role('admin'))
                         label: "Poslat I. upomínku"
                         onExecuted:
-                            - Events\Transitions\MailSender(sous/spare1, self)
+                            - FKSDB\Events\Transitions\MailSender(sous/spare1, self)
                     invited->invited1:
                         condition: and(after(param('deadline2')),role('admin'))
                         label: "Poslat I. upomínku"
                         onExecuted:
-                            - Events\Transitions\MailSender(sous/invited1, self)
+                            - FKSDB\Events\Transitions\MailSender(sous/invited1, self)
                     spare1->spare2:
                         condition: and(after(param('deadline3')),role('admin'))
                         label: "Poslat II. upomínku"
                         onExecuted:
-                            - Events\Transitions\MailSender(sous/spare2, self)
+                            - FKSDB\Events\Transitions\MailSender(sous/spare2, self)
                     invited1->invited2:
                         condition: and(after(param('deadline3')),role('admin'))
                         label: "Poslat II. upomínku"
                         onExecuted:
-                            - Events\Transitions\MailSender(sous/invited2, self)
+                            - FKSDB\Events\Transitions\MailSender(sous/invited2, self)
                     spare2->spare3:
                         condition: and(after(param('deadline4')),role('admin'))
                         label: "Poslat last call"
                         onExecuted:
-                            - Events\Transitions\MailSender(sous/spare3, self)
+                            - FKSDB\Events\Transitions\MailSender(sous/spare3, self)
                     invited2->invited3:
                         condition: and(after(param('deadline4')),role('admin'))
                         label: "Poslat last call"
                         onExecuted:
-                            - Events\Transitions\MailSender(sous/invited3, self)
+                            - FKSDB\Events\Transitions\MailSender(sous/invited3, self)
                     spare|spare1|spare2|spare3->rejected:
                         condition: or(before(param('deadline1')),role('admin'))
                         label: Odmítnout účast
-                        dangerous: true
+                        behaviorType: danger
                     interested->applied:
                         condition: role('admin')
                         label: Schválit jako účastníka
@@ -270,7 +270,7 @@ events:
                     primary: true # base machine states are propagated to the machine
                     modifiable: or(neg(or(state('participated'),state('missed'),state('rejected'))),role('admin'))
             formAdjustments:
-                - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                - FKSDB\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
 
             processings:

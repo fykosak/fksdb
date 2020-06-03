@@ -43,7 +43,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
     private function check(ModelLogin $login, ModelContest $contest, $role) {
         switch ($role) {
             case ModelRole::ORG:
-                foreach ($login->getActiveOrgs($this->yearCalculator) as $contestId => $org) {
+                foreach ($login->getActiveOrgs($this->getYearCalculator()) as $contestId => $org) {
                     if ($contest->contest_id == $contestId) {
                         return [
                             'link' => $this->link(':Org:Dashboard:default', [
@@ -63,7 +63,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
             case ModelRole::CONTESTANT:
                 $person = $login->getPerson();
                 if ($person) {
-                    foreach ($person->getActiveContestants($this->yearCalculator) as $contestId => $org) {
+                    foreach ($person->getActiveContestants($this->getYearCalculator()) as $contestId => $org) {
                         if ($contest->contest_id == $contestId) {
                             return [
                                 'link' => $this->link(':Public:Dashboard:default', [
@@ -98,9 +98,6 @@ class DispatchPresenter extends AuthenticatedPresenter {
         $this->setTitle(_('Rozcestník'), 'fa fa-home');
     }
 
-    /**
-     * @return PageStyleContainer
-     */
     protected function getPageStyleContainer(): PageStyleContainer {
         $container = parent::getPageStyleContainer();
         $container->navBarClassName = 'bg-dark navbar-dark';

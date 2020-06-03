@@ -12,21 +12,19 @@ interface IStorageProcessing {
 
     /**
      * @param string $filename
-     * @return mixed
+     * @return void
      */
     public function setInputFile(string $filename);
 
     /**
      * @param string $filename
-     * @return mixed
+     * @return void
      */
     public function setOutputFile(string $filename);
 
     /**
-     * @param \FKSDB\ORM\Models\ModelSubmit $submit
-     * @return mixed
+     * @param ModelSubmit $submit
+     * @return void
      */
     public function process(ModelSubmit $submit);
 }
-
-

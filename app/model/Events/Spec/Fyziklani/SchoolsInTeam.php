@@ -1,11 +1,11 @@
 <?php
 
-namespace Events\Spec\Fyziklani;
+namespace FKSDB\Events\Spec\Fyziklani;
 
-use Events\FormAdjustments\IFormAdjustment;
-use Events\Machine\Machine;
-use Events\Model\ExpressionEvaluator;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\FormAdjustments\IFormAdjustment;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\ExpressionEvaluator;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
@@ -53,9 +53,9 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
      * SchoolsInTeam constructor.
      * @param $schoolsInTeam
      * @param ExpressionEvaluator $evaluator
-     * @param \FKSDB\ORM\Services\ServicePersonHistory $servicePersonHistory
+     * @param ServicePersonHistory $servicePersonHistory
      */
-    function __construct($schoolsInTeam, ExpressionEvaluator $evaluator, ServicePersonHistory $servicePersonHistory) {
+    public function __construct($schoolsInTeam, ExpressionEvaluator $evaluator, ServicePersonHistory $servicePersonHistory) {
         parent::__construct($servicePersonHistory);
         $this->evaluator = $evaluator;
         $this->setSchoolsInTeam($schoolsInTeam);
@@ -65,7 +65,7 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
      * @param Form $form
      * @param Machine $machine
      * @param Holder $holder
-     * @return mixed|void
+     * @return void
      */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $this->setHolder($holder);
@@ -74,23 +74,23 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
 
         $msgMixture = sprintf(_('V týmu můžou být soutežící nejvýše z %d škol.'), $this->getSchoolsInTeam());
         foreach ($schoolControls as $control) {
-            $control->addRule(function(IControl $control) use ($schoolControls, $personControls, $form, $msgMixture) {
-                        $schools = $this->getSchools($schoolControls, $personControls);
-                        if (!$this->checkMixture($schools)) {
-                            $form->addError($msgMixture);
-                            return false;
-                        }
-                        return true;
-                    }, $msgMixture);
+            $control->addRule(function (IControl $control) use ($schoolControls, $personControls, $form, $msgMixture) {
+                $schools = $this->getSchools($schoolControls, $personControls);
+                if (!$this->checkMixture($schools)) {
+                    $form->addError($msgMixture);
+                    return false;
+                }
+                return true;
+            }, $msgMixture);
         }
-        $form->onValidate[] = function(Form $form) use($schoolControls, $personControls, $msgMixture) {
-                    if ($form->isValid()) { // it means that all schools may have been disabled
-                        $schools = $this->getSchools($schoolControls, $personControls);
-                        if (!$this->checkMixture($schools)) {
-                            $form->addError($msgMixture);
-                        }
-                    }
-                };
+        $form->onValidate[] = function (Form $form) use ($schoolControls, $personControls, $msgMixture) {
+            if ($form->isValid()) { // it means that all schools may have been disabled
+                $schools = $this->getSchools($schoolControls, $personControls);
+                if (!$this->checkMixture($schools)) {
+                    $form->addError($msgMixture);
+                }
+            }
+        };
     }
 
     /**
@@ -102,4 +102,3 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
     }
 
 }
-

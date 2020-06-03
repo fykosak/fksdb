@@ -5,7 +5,7 @@ namespace FKSDB\Authentication;
 
 /**
  * Class RecoveryExistsException
- * @package Authentication
+ * *
  */
 class RecoveryExistsException extends RecoveryException {
 

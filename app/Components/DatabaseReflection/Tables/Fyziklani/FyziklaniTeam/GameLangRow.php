@@ -6,21 +6,16 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
  * Class GameLangRow
- * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam
+ * @author Michal Červeňák <miso@fykos.cz>
+ * TODO rendering
  */
 class GameLangRow extends AbstractFyziklaniTeamRow {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Game language');
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'game_lang';
     }

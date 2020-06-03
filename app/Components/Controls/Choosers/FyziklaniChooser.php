@@ -31,15 +31,12 @@ class FyziklaniChooser extends Chooser {
      * @param Container $container
      * @param ModelEvent $event
      */
-    function __construct(Container $container, ModelEvent $event) {
+    public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container);
         $this->serviceEvent = $container->getByType(ServiceEvent::class);
         $this->event = $event;
     }
 
-    /**
-     * @return TypedTableSelection
-     */
     protected function getItems(): TypedTableSelection {
         return $this->serviceEvent->getTable()->where('event_type_id=?', ModelEventType::FYZIKLANI)->order('event_year DESC');
     }

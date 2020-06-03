@@ -8,14 +8,14 @@ use FKSDB\YearCalculator;
 use http\Exception\InvalidArgumentException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
-use Nette\Localization\ITranslator;
 
 /**
  * Class StudyYearRow
- * @package FKSDB\Components\DatabaseReflection\PersonHistory
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class StudyYearRow extends AbstractRow {
     use DefaultPrinterTrait;
+
     /**
      * @var YearCalculator
      */
@@ -23,30 +23,22 @@ class StudyYearRow extends AbstractRow {
 
     /**
      * StudyYearRow constructor.
-     * @param ITranslator $translator
      * @param YearCalculator $yearCalculator
      */
-    public function __construct(ITranslator $translator, YearCalculator $yearCalculator) {
-        parent::__construct($translator);
+    public function __construct(YearCalculator $yearCalculator) {
         $this->yearCalculator = $yearCalculator;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Study year');
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_BASIC;
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getDescription() {
         return _('Kvůli zařazení do kategorie.');
@@ -58,9 +50,9 @@ class StudyYearRow extends AbstractRow {
      * @throws InvalidArgumentException
      */
     public function createField(...$args): BaseControl {
-        list ($acYear) = $args;
+        list($acYear) = $args;
         if (\is_null($acYear)) {
-            throw new \InvalidArgumentException;
+            throw new \InvalidArgumentException();
         }
         $control = new SelectBox($this->getTitle());
         $control->setItems($this->createOptions($acYear));
@@ -94,9 +86,6 @@ class StudyYearRow extends AbstractRow {
         ];
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'study_year';
     }

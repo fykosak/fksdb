@@ -7,7 +7,7 @@ use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * Class PersonTest
- * @package FKSDB\DataTesting\Tests\Person
+ * *
  */
 abstract class PersonTest {
     /**
@@ -17,13 +17,7 @@ abstract class PersonTest {
      */
     abstract public function run(TestsLogger $logger, ModelPerson $person);
 
-    /**
-     * @return string
-     */
     abstract public function getTitle(): string;
 
-    /**
-     * @return string
-     */
     abstract public function getAction(): string;
 }

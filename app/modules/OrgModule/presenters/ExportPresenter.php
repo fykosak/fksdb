@@ -26,13 +26,13 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Strings;
-use ServiceMStoredQueryTag;
+use FKSDB\ORM\ServicesMulti\ServiceMStoredQueryTag;
 use Tracy\Debugger;
 use Traversable;
 
 /**
  * Class ExportPresenter
- * @package OrgModule
+ * *
  */
 class ExportPresenter extends SeriesPresenter {
 
@@ -89,6 +89,7 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param ServiceStoredQuery $serviceStoredQuery
+     * @return void
      */
     public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery) {
         $this->serviceStoredQuery = $serviceStoredQuery;
@@ -96,6 +97,7 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param StoredQueryFormFactory $storedQueryFormFactory
+     * @return void
      */
     public function injectStoredQueryFormFactory(StoredQueryFormFactory $storedQueryFormFactory) {
         $this->storedQueryFormFactory = $storedQueryFormFactory;
@@ -103,6 +105,7 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param ServiceStoredQueryParameter $serviceStoredQueryParameter
+     * @return void
      */
     public function injectServiceStoredQueryParameter(ServiceStoredQueryParameter $serviceStoredQueryParameter) {
         $this->serviceStoredQueryParameter = $serviceStoredQueryParameter;
@@ -110,6 +113,7 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param ServiceMStoredQueryTag $serviceMStoredQueryTag
+     * @return void
      */
     public function injectServiceMStoredQueryTag(ServiceMStoredQueryTag $serviceMStoredQueryTag) {
         $this->serviceMStoredQueryTag = $serviceMStoredQueryTag;
@@ -117,6 +121,7 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param StoredQueryFactory $storedQueryFactory
+     * @return void
      */
     public function injectStoredQueryFactory(StoredQueryFactory $storedQueryFactory) {
         $this->storedQueryFactory = $storedQueryFactory;
@@ -124,6 +129,7 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param ExportFormatFactory $exportFormatFactory
+     * @return void
      */
     public function injectExportFormatFactory(ExportFormatFactory $exportFormatFactory) {
         $this->exportFormatFactory = $exportFormatFactory;
@@ -143,6 +149,7 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param StoredQuery $storedQuery
+     * @return void
      */
     public function setStoredQuery(StoredQuery $storedQuery) {
         $this->storedQuery = $storedQuery; //TODO
@@ -150,6 +157,7 @@ class ExportPresenter extends SeriesPresenter {
 
     /**
      * @param $values
+     * @return void
      */
     private function storeDesignFormToSession($values) {
         $section = $this->session->getSection(self::SESSION_NS);
@@ -298,6 +306,7 @@ class ExportPresenter extends SeriesPresenter {
                     $parameters[substr($key, strlen(StoredQueryComponent::PARAMETER_URL_PREFIX))] = $value;
                 }
             }
+            /** @var StoredQueryComponent $storedQueryComponent */
             $storedQueryComponent = $this->getComponent('resultsComponent');
             $storedQueryComponent->updateParameters($parameters);
 
@@ -317,7 +326,7 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     /**
-     * @param $id
+     * @param mixed $id
      */
     public function renderEdit($id) {
         $query = $this->getPatternQuery();
@@ -343,6 +352,10 @@ class ExportPresenter extends SeriesPresenter {
         $this->getComponent('editForm')->getForm()->setDefaults($values);
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleCompose() {
         $this->setTitle(sprintf(_('Napsat dotaz')), 'fa fa-pencil');
     }
@@ -354,6 +367,10 @@ class ExportPresenter extends SeriesPresenter {
         }
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleList() {
         $this->setTitle(_('Exports'), 'fa fa-database');
     }
@@ -365,7 +382,7 @@ class ExportPresenter extends SeriesPresenter {
     public function titleShow($id) {
         $title = sprintf(_('Detail dotazu %s'), $this->getPatternQuery()->name);
         $qid = $this->getPatternQuery()->qid;
-        if ($qid) { // intentionally =
+        if ($qid) {
             $title .= " ($qid)";
         }
 
@@ -373,7 +390,7 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     /**
-     * @param $id
+     * @param mixed $id
      */
     public function renderShow($id) {
         $this->template->storedQuery = $this->getPatternQuery();
@@ -388,15 +405,12 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     /**
-     * @param $id
+     * @param mixed $id
      */
     public function renderExecute($id) {
         $this->template->storedQuery = $this->getPatternQuery();
     }
 
-    /**
-     * @return ContestChooser
-     */
     protected function createComponentContestChooser(): ContestChooser {
         $component = parent::createComponentContestChooser();
         if ($this->getAction() == 'execute') {
@@ -407,9 +421,6 @@ class ExportPresenter extends SeriesPresenter {
         return $component;
     }
 
-    /**
-     * @return StoredQueriesGrid
-     */
     protected function createComponentGrid(): StoredQueriesGrid {
         return new StoredQueriesGrid($this->getContext());
     }
@@ -440,18 +451,12 @@ class ExportPresenter extends SeriesPresenter {
         return new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory, $this->exportFormatFactory, $this->getContext());
     }
 
-    /**
-     * @return StoredQueryTagCloud
-     */
     protected function createComponentTagCloudList(): StoredQueryTagCloud {
         $tagCloud = new StoredQueryTagCloud(StoredQueryTagCloud::MODE_LIST, $this->serviceMStoredQueryTag);
         $tagCloud->registerOnClick($this->getComponent('grid')->getFilterByTagCallback());
         return $tagCloud;
     }
 
-    /**
-     * @return StoredQueryTagCloud
-     */
     protected function createComponentTagCloudDetail(): StoredQueryTagCloud {
         $tagCloud = new StoredQueryTagCloud(StoredQueryTagCloud::MODE_DETAIL, $this->serviceMStoredQueryTag);
         $tagCloud->setModelStoredQuery($this->getPatternQuery());

@@ -8,6 +8,7 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\EntityTrait;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\ILogger;
@@ -33,7 +34,7 @@ use Tracy\Debugger;
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
- * @deprecated Do not use this presenter to create/modify persons.
+ * Do not use this presenter to create/modify persons.
  *             It's better to use ReferencedId and ReferencedContainer
  *             inside the particular form.
  * @author Michal Koutný <michal@fykos.cz>
@@ -42,6 +43,7 @@ use Tracy\Debugger;
  */
 class PersonPresenter extends BasePresenter {
     use EntityTrait;
+
     /**
      * @var ServicePerson
      */
@@ -82,6 +84,7 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @param ServicePerson $servicePerson
+     * @return void
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
@@ -89,6 +92,7 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @param ServicePersonInfo $servicePersonInfo
+     * @return void
      */
     public function injectServicePersonInfo(ServicePersonInfo $servicePersonInfo) {
         $this->servicePersonInfo = $servicePersonInfo;
@@ -96,6 +100,7 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @param Merger $personMerger
+     * @return void
      */
     public function injectPersonMerger(Merger $personMerger) {
         $this->personMerger = $personMerger;
@@ -103,6 +108,7 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @param ReferencedPersonFactory $referencedPersonFactory
+     * @return void
      */
     public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
         $this->referencedPersonFactory = $referencedPersonFactory;
@@ -216,52 +222,33 @@ class PersonPresenter extends BasePresenter {
             $userPerson->getFullName(), $userPerson->person_id,
             $person->getFullName(), $person->person_id), 'stalking-log');
     }
+
     /* ******************* COMPONENTS *******************/
-    /**
-     * @return StalkingComponent
-     */
+
     public function createComponentStalkingComponent(): StalkingComponent {
         return new StalkingComponent($this->getContext());
     }
 
-    /**
-     * @return Stalking\Address
-     */
     public function createComponentAddress(): Stalking\Address {
         return new Stalking\Address($this->getContext());
     }
 
-    /**
-     * @return Stalking\Role
-     */
     public function createComponentRole(): Stalking\Role {
         return new Stalking\Role($this->getContext());
     }
 
-    /**
-     * @return Stalking\Flag
-     */
     public function createComponentFlag(): Stalking\Flag {
         return new Stalking\Flag($this->getContext());
     }
 
-    /**
-     * @return Stalking\Schedule
-     */
     public function createComponentSchedule(): Stalking\Schedule {
         return new Stalking\Schedule($this->getContext());
     }
 
-    /**
-     * @return Stalking\Validation
-     */
     public function createComponentValidation(): Stalking\Validation {
         return new Stalking\Validation($this->getContext());
     }
 
-    /**
-     * @return Stalking\Timeline\TimelineControl
-     */
     public function createComponentTimeline(): Stalking\Timeline\TimelineControl {
         return new Stalking\Timeline\TimelineControl($this->getContext(), $this->getEntity());
     }
@@ -277,13 +264,9 @@ class PersonPresenter extends BasePresenter {
 
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
-
-        $fieldsDefinition = [];
-        //$acYear = $this->getSelectedAcademicYear();
-        $searchType = ReferencedPersonFactory::SEARCH_ID;
-        $allowClear = true;
         $modifiabilityResolver = $visibilityResolver = new DenyResolver();
-        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, null, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
+        $acYear = $this->getYearCalculator()->getCurrentAcademicYear();
+        $components = $this->referencedPersonFactory->createReferencedPerson([], $acYear, ReferencedPersonFactory::SEARCH_ID, true, $modifiabilityResolver, $visibilityResolver);
         $components[0]->addRule(Form::FILLED, _('Osobu je třeba zadat.'));
         $components[1]->setOption('label', _('Osoba'));
 
@@ -292,8 +275,7 @@ class PersonPresenter extends BasePresenter {
 
         $submit = $form->addSubmit('send', _('Stalkovat'));
         $submit->onClick[] = function (SubmitButton $button) {
-            $form = $button->getForm();
-            $values = $form->getValues();
+            $values = $button->getForm()->getValues();
             $id = $values[ExtendedPersonHandler::CONT_AGGR][ExtendedPersonHandler::EL_PERSON];
             $this->redirect('detail', ['id' => $id]);
         };
@@ -301,10 +283,6 @@ class PersonPresenter extends BasePresenter {
         return $control;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return int
-     */
     private function getUserPermissions(ModelPerson $person): int {
         if (!$this->mode) {
             if ($this->isAnyContestAuthorized($person, 'stalk.basic')) {
@@ -340,6 +318,7 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @param Form $form
+     * @return void
      */
     private function updateMergeForm(Form $form) {
         if (false && !$form->isSubmitted()) { // new form is without any conflict, we use it to clear the session
@@ -410,6 +389,7 @@ class PersonPresenter extends BasePresenter {
      * @param Form $form
      * @throws AbortException
      * @throws ReflectionException
+     * @throws BadTypeException
      */
     public function handleMergeFormSuccess(Form $form) {
         if ($form['cancel']->isSubmittedBy()) {
@@ -442,6 +422,7 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @param $conflicts
+     * @return void
      */
     private function setMergeConflicts($conflicts) {
         $section = $this->session->getSection('conflicts');
@@ -468,21 +449,21 @@ class PersonPresenter extends BasePresenter {
      * @inheritDoc
      */
     public function createComponentCreateForm(): Control {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
      * @inheritDoc
      */
     public function createComponentEditForm(): Control {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
      * @inheritDoc
      */
     protected function createComponentGrid(): BaseGrid {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**

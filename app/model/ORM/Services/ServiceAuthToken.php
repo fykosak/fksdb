@@ -16,32 +16,26 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
     const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelAuthToken::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_AUTH_TOKEN;
     }
 
     /**
      *
-     * @param \FKSDB\ORM\Models\ModelLogin $login
+     * @param ModelLogin $login
      * @param string $type
-     * @param \Nette\Utils\DateTime $until
+     * @param \DateTimeInterface $until
      * @param null $data
      * @param bool $refresh
-     * @param \Nette\Utils\DateTime $since
+     * @param DateTime $since
      * @return ModelAuthToken
      * @throws \Exception
      */
-    public function createToken(ModelLogin $login, $type, DateTime $until = null, $data = null, $refresh = false, DateTime $since = null) {
+    public function createToken(ModelLogin $login, $type, \DateTimeInterface $until = null, $data = null, $refresh = false, DateTime $since = null) {
         if ($since === null) {
             $since = new DateTime();
         }
@@ -140,4 +134,3 @@ class ServiceAuthToken extends AbstractServiceSingle {
         return $tokens;
     }
 }
-

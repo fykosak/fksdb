@@ -6,8 +6,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class AbstractRowException
- * @package FKSDB\Components\DatabaseReflection
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class AbstractRowException extends BadRequestException {
-
 }

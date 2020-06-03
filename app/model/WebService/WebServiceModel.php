@@ -8,17 +8,19 @@ use DOMElement;
 use Exports\StoredQuery;
 use Exports\StoredQueryFactory;
 use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\Results\Models\AbstractResultsModel;
 use FKSDB\Results\Models\BrojureResultsModel;
 use FKSDB\Results\ResultsModelFactory;
 use InvalidArgumentException;
+use Nette\Application\BadRequestException;
 use Tracy\Debugger;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
 use SoapFault;
 use SoapVar;
-use StatsModelFactory;
+use FKSDB\Stats\StatsModelFactory;
 use stdClass;
 use WebService\IXMLNodeSerializer;
 
@@ -49,7 +51,7 @@ class WebServiceModel {
     private $statsModelFactory;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelLogin
+     * @var ModelLogin
      */
     private $authenticatedLogin;
 
@@ -78,7 +80,7 @@ class WebServiceModel {
      * @param StoredQueryFactory $storedQueryFactory
      * @param ContestAuthorizator $contestAuthorizator
      */
-    function __construct(array $inverseContestMap, ServiceContest $serviceContest, ResultsModelFactory $resultsModelFactory, StatsModelFactory $statsModelFactory, IAuthenticator $authenticator, StoredQueryFactory $storedQueryFactory, ContestAuthorizator $contestAuthorizator) {
+    public function __construct(array $inverseContestMap, ServiceContest $serviceContest, ResultsModelFactory $resultsModelFactory, StatsModelFactory $statsModelFactory, IAuthenticator $authenticator, StoredQueryFactory $storedQueryFactory, ContestAuthorizator $contestAuthorizator) {
         $this->inverseContestMap = $inverseContestMap;
         $this->serviceContest = $serviceContest;
         $this->resultsModelFactory = $resultsModelFactory;
@@ -118,7 +120,7 @@ class WebServiceModel {
      * @param $args
      * @return SoapVar
      * @throws SoapFault
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function getResults($args): SoapVar {
         $this->checkAuthentication(__FUNCTION__);
@@ -220,7 +222,7 @@ class WebServiceModel {
         $statsNode = $doc->createElement('stats');
         $doc->appendChild($statsNode);
 
-        $model = $this->statsModelFactory->createTaskStatsModel($contest, $year);
+        $model = $this->statsModelFactory->createTaskStatsModel($contest,(int) $year);
 
         if (isset($args->series)) {
             if (!is_array($args->series)) {
@@ -260,7 +262,7 @@ class WebServiceModel {
      * @param $args
      * @return SoapVar
      * @throws SoapFault
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function getExport($args): SoapVar {
         // parse arguments
@@ -327,10 +329,6 @@ class WebServiceModel {
         }
     }
 
-    /**
-     * @param StoredQuery $query
-     * @return bool
-     */
     private function isAuthorizedExport(StoredQuery $query): bool {
         $implicitParameters = $query->getImplicitParameters();
         if (!isset($implicitParameters[StoredQueryFactory::PARAM_CONTEST])) {
@@ -341,6 +339,7 @@ class WebServiceModel {
 
     /**
      * @param $msg
+     * @return void
      */
     private function log($msg) {
         if (!$this->authenticatedLogin) {

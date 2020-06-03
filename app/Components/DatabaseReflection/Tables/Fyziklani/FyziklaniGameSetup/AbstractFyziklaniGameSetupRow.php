@@ -8,13 +8,11 @@ use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class AbstractFyziklaniGameSetupRow
- * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractFyziklaniGameSetupRow extends AbstractRow {
-    /**
-     * @return int
-     */
-    public final function getPermissionsValue(): int {
+
+    final public function getPermissionsValue(): int {
         return self::PERMISSION_USE_GLOBAL_ACL;
     }
 
@@ -24,6 +22,6 @@ abstract class AbstractFyziklaniGameSetupRow extends AbstractRow {
      * @throws NotImplementedException
      */
     public function createField(...$args): BaseControl {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 }

@@ -11,10 +11,11 @@ use Nette\SmartObject;
 
 /**
  * Class EventAuthorizator
- * @package Authorization
+ * *
  */
 class EventAuthorizator {
     use SmartObject;
+
     /**
      * @var IUserStorage
      */
@@ -42,7 +43,7 @@ class EventAuthorizator {
      * @param ContestAuthorizator $contestAuthorizator
      * @param Context $db
      */
-    function __construct(IUserStorage $identity, Permission $acl, ContestAuthorizator $contestAuthorizator, Context $db) {
+    public function __construct(IUserStorage $identity, Permission $acl, ContestAuthorizator $contestAuthorizator, Context $db) {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->user = $identity;
         $this->acl = $acl;

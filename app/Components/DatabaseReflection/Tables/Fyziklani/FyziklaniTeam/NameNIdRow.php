@@ -7,13 +7,11 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Utils\Html;
 
 /**
- * Class FyziklaniTeamIdTeamRow
- * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam
+ * Class NameNIdRow
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class NameNIdRow extends AbstractFyziklaniTeamRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Team');
     }

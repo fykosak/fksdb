@@ -4,7 +4,7 @@ namespace FKSDB\Components\DatabaseReflection;
 
 /**
  * Class DetailFactory
- * @package FKSDB\Components\DatabaseReflection
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DetailFactory {
     /**
@@ -14,15 +14,12 @@ class DetailFactory {
 
     /**
      * @param array $nodes
+     * @return void
      */
     public function setNodes(array $nodes) {
         $this->nodes = $nodes;
     }
 
-    /**
-     * @param string $section
-     * @return array
-     */
     public function getSection(string $section): array {
         return $this->nodes[$section];
     }

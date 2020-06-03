@@ -12,12 +12,10 @@ use Nette\Utils\Html;
 
 /**
  * Class UntilRow
- * @package FKSDB\Components\DatabaseReflection\Org
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class UntilRow extends AbstractOrgRowFactory {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Until');
     }
@@ -30,7 +28,7 @@ class UntilRow extends AbstractOrgRowFactory {
         if (\is_null($model->until)) {
             return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Still organizes'));
         } else {
-            return (new StringPrinter)($model->until);
+            return (new StringPrinter())($model->until);
         }
     }
 
@@ -42,7 +40,7 @@ class UntilRow extends AbstractOrgRowFactory {
     public function createField(...$args): BaseControl {
         list($min, $max) = $args;
         if (\is_null($max) || \is_null($min)) {
-            throw new \InvalidArgumentException;
+            throw new \InvalidArgumentException();
         }
         $control = new TextInput($this->getTitle());
 

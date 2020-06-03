@@ -10,9 +10,7 @@ use Tracy\Debugger;
  * Error presenter.
  */
 class ErrorPresenter extends BasePresenter {
-    /**
-     * @return PageStyleContainer
-     */
+
     protected function getPageStyleContainer(): PageStyleContainer {
         $container = parent::getPageStyleContainer();
         $container->styleId = 'error';

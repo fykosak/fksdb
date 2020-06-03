@@ -31,7 +31,7 @@ class StoredQueryFactory {
      * StoredQueryFactory constructor.
      * @param ServiceStoredQueryTagType $serviceStoredQueryTagType
      */
-    function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
+    public function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
         $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
     }
 
@@ -104,9 +104,9 @@ class StoredQueryFactory {
     }
 
     /**
-     * @internal
      * @param Container $container
      * @param mixed $group
+     * @internal
      */
     public function buildParameterMetadata(Container $container, $group) {
         $container->setCurrentGroup($group);

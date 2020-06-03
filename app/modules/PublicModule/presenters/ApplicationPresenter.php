@@ -3,16 +3,18 @@
 namespace PublicModule;
 
 use Authorization\RelatedPersonAuthorizator;
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Model\ApplicationHandlerFactory;
-use Events\Model\Grid\InitSource;
-use Events\Model\Grid\RelatedPersonSource;
-use Events\Model\Holder\Holder;
+use FKSDB\Config\NeonSchemaException;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\ApplicationHandlerFactory;
+use FKSDB\Events\Model\Grid\InitSource;
+use FKSDB\Events\Model\Grid\RelatedPersonSource;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
+use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\GoneException;
 use FKSDB\Exceptions\NotFoundException;
@@ -68,11 +70,6 @@ class ApplicationPresenter extends BasePresenter {
     private $serviceEvent;
 
     /**
-     * @var Container
-     */
-    private $container;
-
-    /**
      * @var RelatedPersonAuthorizator
      */
     private $relatedPersonAuthorizator;
@@ -89,20 +86,15 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @param ServiceEvent $serviceEvent
+     * @return void
      */
     public function injectServiceEvent(ServiceEvent $serviceEvent) {
         $this->serviceEvent = $serviceEvent;
     }
 
     /**
-     * @param Container $container
-     */
-    public function injectContainer(Container $container) {
-        $this->container = $container;
-    }
-
-    /**
      * @param RelatedPersonAuthorizator $relatedPersonAuthorizator
+     * @return void
      */
     public function injectRelatedPersonAuthorizator(RelatedPersonAuthorizator $relatedPersonAuthorizator) {
         $this->relatedPersonAuthorizator = $relatedPersonAuthorizator;
@@ -110,6 +102,7 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @param LayoutResolver $layoutResolver
+     * @return void
      */
     public function injectLayoutResolver(LayoutResolver $layoutResolver) {
         $this->layoutResolver = $layoutResolver;
@@ -117,6 +110,7 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @param ApplicationHandlerFactory $handlerFactory
+     * @return void
      */
     public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory) {
         $this->handlerFactory = $handlerFactory;
@@ -138,7 +132,7 @@ class ApplicationPresenter extends BasePresenter {
             return;
         }
         if (strtotime($event->registration_begin) > time() || strtotime($event->registration_end) < time()) {
-            throw new GoneException;
+            throw new GoneException();
         }
     }
 
@@ -146,6 +140,9 @@ class ApplicationPresenter extends BasePresenter {
         $this->setAuthorized($this->getUser()->isLoggedIn() && $this->getUser()->getIdentity()->getPerson());
     }
 
+    /**
+     * @throws \Throwable
+     */
     public function titleDefault() {
         if ($this->getEventApplication()) {
             $this->setTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fa fa-calendar-check-o');
@@ -166,10 +163,16 @@ class ApplicationPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws NeonSchemaException
+     */
     protected function unauthorizedAccess() {
         if ($this->getAction() == 'default') {
             $this->initializeMachine();
-            if ($this->getMachine()->getPrimaryMachine()->getState() == BaseMachine::STATE_INIT) {
+            if ($this->getHolder()->getPrimaryHolder()->getModelState() == BaseMachine::STATE_INIT) {
                 return;
             }
         }
@@ -189,6 +192,7 @@ class ApplicationPresenter extends BasePresenter {
      * @param $id
      * @throws BadRequestException
      * @throws AbortException
+     * @throws NeonSchemaException
      */
     public function actionDefault($eventId, $id) {
         if (!$this->getEvent()) {
@@ -203,7 +207,7 @@ class ApplicationPresenter extends BasePresenter {
                 throw new BadTypeException(IEventReferencedModel::class, $eventApplication);
             }
             if ($this->getEvent()->event_id !== $eventApplication->getEvent()->event_id) {
-                throw new ForbiddenRequestException;
+                throw new ForbiddenRequestException();
             }
         }
 
@@ -218,8 +222,9 @@ class ApplicationPresenter extends BasePresenter {
         }
 
 
-        if (!$this->getMachine()->getPrimaryMachine()->getAvailableTransitions()) {
-            if ($this->getMachine()->getPrimaryMachine()->getState() == BaseMachine::STATE_INIT) {
+        if (!$this->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->holder, $this->getHolder()->getPrimaryHolder()->getModelState())) {
+
+            if ($this->getHolder()->getPrimaryHolder()->getModelState() == BaseMachine::STATE_INIT) {
                 $this->setView('closed');
                 $this->flashMessage(_('Přihlašování není povoleno.'), BasePresenter::FLASH_INFO);
             } elseif (!$this->getParameter(self::PARAM_AFTER, false)) {
@@ -245,9 +250,13 @@ class ApplicationPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     * @throws NeonSchemaException
+     */
     private function initializeMachine() {
         $this->getHolder()->setModel($this->getEventApplication());
-        $this->getMachine()->setHolder($this->getHolder());
     }
 
     /**
@@ -271,11 +280,13 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @return ApplicationComponent
+     * @throws BadRequestException
+     * @throws NeonSchemaException
      */
     protected function createComponentApplication() {
         $logger = new MemoryLogger();
         $handler = $this->handlerFactory->create($this->getEvent(), $logger);
-        $component = new ApplicationComponent($handler, $this->getHolder());
+        $component = new ApplicationComponent($this->getContext(), $handler, $this->getHolder());
         $component->setRedirectCallback(function ($modelId, $eventId) {
             $this->backLinkRedirect();
             $this->redirect('this', [
@@ -297,9 +308,9 @@ class ApplicationPresenter extends BasePresenter {
         $events = $this->serviceEvent->getTable();
         $events->where('event_type.contest_id', $this->getSelectedContest()->contest_id);
 
-        $source = new RelatedPersonSource($person, $events, $this->container);
+        $source = new RelatedPersonSource($person, $events, $this->getContext());
 
-        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory);
+        $grid = new ApplicationsGrid($this->getContext(), $source, $this->handlerFactory);
 
         $grid->setTemplate('myApplications');
 
@@ -316,8 +327,8 @@ class ApplicationPresenter extends BasePresenter {
             ->where('registration_begin <= NOW()')
             ->where('registration_end >= NOW()');
 
-        $source = new InitSource($events, $this->container);
-        $grid = new ApplicationsGrid($this->container, $source, $this->handlerFactory);
+        $source = new InitSource($events, $this->getContext());
+        $grid = new ApplicationsGrid($this->getContext(), $source, $this->handlerFactory);
         $grid->setTemplate('myApplications');
 
         return $grid;
@@ -348,6 +359,8 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @return AbstractModelMulti|AbstractModelSingle|IModel|ModelFyziklaniTeam|ModelEventParticipant|IEventReferencedModel
+     * @throws BadRequestException
+     * @throws NeonSchemaException
      */
     private function getEventApplication() {
         if (!$this->eventApplication) {
@@ -373,20 +386,27 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @return Holder
+     * @throws BadRequestException
+     * @throws NeonSchemaException
      */
     private function getHolder() {
         if (!$this->holder) {
-            $this->holder = $this->container->createEventHolder($this->getEvent());
+            /** @var EventDispatchFactory $factory */
+            $factory = $this->getContext()->getByType(EventDispatchFactory::class);
+            $this->holder = $factory->getDummyHolder($this->getEvent());
         }
         return $this->holder;
     }
 
     /**
      * @return Machine
+     * @throws BadRequestException
      */
     private function getMachine() {
         if (!$this->machine) {
-            $this->machine = $this->container->createEventMachine($this->getEvent());
+            /** @var EventDispatchFactory $factory */
+            $factory = $this->getContext()->getByType(EventDispatchFactory::class);
+            $this->machine = $factory->getEventMachine($this->getEvent());
         }
         return $this->machine;
     }
@@ -415,9 +435,6 @@ class ApplicationPresenter extends BasePresenter {
         ];
     }
 
-    /**
-     * @return PageStyleContainer
-     */
     protected function getPageStyleContainer(): PageStyleContainer {
         $container = parent::getPageStyleContainer();
         $event = $this->getEvent();
@@ -428,4 +445,3 @@ class ApplicationPresenter extends BasePresenter {
         return $container;
     }
 }
-

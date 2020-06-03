@@ -8,37 +8,28 @@ use FKSDB\ORM\DbNames;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-read integer ac_year
- * @property-read integer school_id
+ * @property-read int ac_year
+ * @property-read int school_id
  * @property-read string class
- * @property-read integer study_year
+ * @property-read int study_year
  */
-class ModelPersonHistory extends AbstractModelSingle {
-    /**
-     * @return ModelPerson
-     */
+class ModelPersonHistory extends AbstractModelSingle implements ISchoolReferencedModel {
+
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }
 
-    /**
-     * @return ModelSchool
-     */
     public function getSchool(): ModelSchool {
         return ModelSchool::createFromActiveRow($this->ref(DbNames::TAB_SCHOOL, 'school_id'));
     }
 
-    /**
-     * @param int $acYear
-     * @return ModelPersonHistory
-     */
     public function extrapolate(int $acYear): ModelPersonHistory {
         $diff = $acYear - $this->ac_year;
         $data = [
             'ac_year' => $acYear,
             'school_id' => $this->school_id,
             'class' => $this->extrapolateClass($this->class, $diff),
-            'study_year' => $this->extrapolateStudyYear($this->study_year, $diff)
+            'study_year' => $this->extrapolateStudyYear($this->study_year, $diff),
         ];
         $result = new self([], $this->getTable());
         foreach ($data as $key => $value) {
@@ -109,4 +100,3 @@ class ModelPersonHistory extends AbstractModelSingle {
     }
 
 }
-

@@ -5,6 +5,7 @@ namespace Persons;
 use Authorization\ContestAuthorizator;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
+use Nette\Security\IResource;
 use Nette\SmartObject;
 
 /**
@@ -14,13 +15,14 @@ use Nette\SmartObject;
  */
 class AclResolver implements IVisibilityResolver, IModifiabilityResolver {
     use SmartObject;
+
     /**
      * @var ContestAuthorizator
      */
     private $contestAuthorizator;
 
     /**
-     * @var \FKSDB\ORM\Models\ModelContest
+     * @var ModelContest
      */
     private $contest;
 
@@ -28,44 +30,31 @@ class AclResolver implements IVisibilityResolver, IModifiabilityResolver {
     /**
      * AclResolver constructor.
      * @param ContestAuthorizator $contestAuthorizator
-     * @param \FKSDB\ORM\Models\ModelContest $contest
+     * @param ModelContest $contest
      */
-    function __construct(ContestAuthorizator $contestAuthorizator, ModelContest $contest) {
+    public function __construct(ContestAuthorizator $contestAuthorizator, ModelContest $contest) {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->contest = $contest;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return bool|mixed
-     */
-    public function isVisible(ModelPerson $person) {
+    public function isVisible(ModelPerson $person): bool {
         return $person->isNew() || $this->isAllowed($person, 'edit');
     }
 
-    /**
-     * @param \FKSDB\ORM\Models\ModelPerson $person
-     * @return mixed|string
-     */
-    public function getResolutionMode(ModelPerson $person) {
+    public function getResolutionMode(ModelPerson $person): string {
         return $this->isAllowed($person, 'edit') ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
     }
 
-    /**
-     * @param \FKSDB\ORM\Models\ModelPerson $person
-     * @return bool|mixed
-     */
-    public function isModifiable(ModelPerson $person) {
+    public function isModifiable(ModelPerson $person): bool {
         return $person->isNew() || $this->isAllowed($person, 'edit');
     }
 
     /**
      * @param ModelPerson $person
-     * @param $privilege
+     * @param string|IResource $privilege
      * @return bool
      */
-    private function isAllowed(ModelPerson $person, $privilege) {
+    private function isAllowed(ModelPerson $person, $privilege): bool {
         return $this->contestAuthorizator->isAllowed($person, $privilege, $this->contest);
     }
-
 }

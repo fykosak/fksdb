@@ -9,6 +9,9 @@ namespace FKSDB\Components;
  */
 trait ClientDataTrait {
 
+    /**
+     * @var array
+     */
     private $clientData = [];
 
     /**

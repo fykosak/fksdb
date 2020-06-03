@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class StateRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Teacher
+ * *
  */
 class StateRow extends AbstractTeacherRow {
 
@@ -43,9 +43,6 @@ class StateRow extends AbstractTeacherRow {
         return $el;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Cooperation status');
     }
@@ -58,9 +55,6 @@ class StateRow extends AbstractTeacherRow {
         return new SelectBox($this->getTitle(), $this->getItems());
     }
 
-    /**
-     * @return array
-     */
     private function getItems(): array {
         return [
             'proposal' => _('Proposal'),

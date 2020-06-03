@@ -19,25 +19,19 @@ class ServiceAddress extends AbstractServiceSingle {
 
     const PATTERN = '/[0-9]{5}/';
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelAddress::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_ADDRESS;
     }
 
     /**
-     * @param array|iterable|\ArrayAccess $data
-     * @return AbstractModelSingle
+     * @param array $data
+     * @return ModelAddress
      */
-    public function createNewModel($data = null): AbstractModelSingle {
+    public function createNewModel(array $data): IModel {
         if (!isset($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }
@@ -98,7 +92,7 @@ class ServiceAddress extends AbstractServiceSingle {
     /**
      *
      * @param string $postalCode
-     * @return boolean
+     * @return bool
      */
     public function tryInferRegion($postalCode): bool {
         try {

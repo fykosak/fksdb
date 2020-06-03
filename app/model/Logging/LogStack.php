@@ -25,6 +25,7 @@ abstract class StackedLogger implements ILogger {
 
     /**
      * @param ILogger $child
+     * @return void
      */
     public function setChild(ILogger $child) {
         $this->child = $child;
@@ -32,8 +33,9 @@ abstract class StackedLogger implements ILogger {
 
     /**
      * @param Message $message
+     * @return void
      */
-    public final function log(Message $message) {
+    final public function log(Message $message) {
         $this->doLog($message);
         if ($this->getChild()) {
             $this->getChild()->log($message);
@@ -41,7 +43,7 @@ abstract class StackedLogger implements ILogger {
     }
 
     /**
-     * @param $message
+     * @param Message $message
      * @return void
      */
     abstract protected function doLog(Message $message);

@@ -12,13 +12,10 @@ use Nette\Utils\Html;
 
 /**
  * Class AgreedField
- * @package FKSDB\Components\Forms\Factories\PersonInfo
+ * *
  */
 class AgreedRow extends AbstractRow {
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Souhlasím se zpracováním osobních údajů');
     }
@@ -37,9 +34,6 @@ class AgreedRow extends AbstractRow {
         return $control;
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_BASIC;
     }
@@ -49,7 +43,7 @@ class AgreedRow extends AbstractRow {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new DatePrinter)($model->agreed);
+        return (new DatePrinter())($model->agreed);
     }
 
 }

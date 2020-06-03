@@ -10,12 +10,11 @@ use Nette\Application\UI\Form;
 
 /**
  * Class SeriesTableFormControl
- * @package FKSDB\Components\Controls\Inbox
+ * @author Michal Červeňák <miso@fykos.cz>
+ * @author Michal Koutny
  */
-abstract class SeriesTableFormControl extends SeriesTableControl {
-    /**
-     * @return OptimisticForm
-     */
+abstract class SeriesTableFormControl extends SeriesTableComponent {
+
     public function createComponentForm(): OptimisticForm {
         $form = new OptimisticForm(
             function () {
@@ -42,5 +41,5 @@ abstract class SeriesTableFormControl extends SeriesTableControl {
      * @throws AbortException
      * @throws ForbiddenRequestException
      */
-    protected abstract function handleFormSuccess(Form $form);
+    abstract protected function handleFormSuccess(Form $form);
 }

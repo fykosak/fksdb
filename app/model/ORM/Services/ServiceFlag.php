@@ -10,16 +10,10 @@ use FKSDB\ORM\Models\ModelFlag;
  * @author Lukáš Timko <lukast@fykos.cz>
  */
 class ServiceFlag extends AbstractServiceSingle {
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelFlag::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_FLAG;
     }
@@ -27,10 +21,10 @@ class ServiceFlag extends AbstractServiceSingle {
     /**
      * Syntactic sugar.
      *
-     * @param int $fid
+     * @param string $fid
      * @return ModelFlag|null
      */
-    public function findByFid(int $fid) {
+    public function findByFid(string $fid) {
         if (!$fid) {
             return null;
         }

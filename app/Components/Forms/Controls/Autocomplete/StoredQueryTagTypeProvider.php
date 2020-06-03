@@ -29,7 +29,7 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
      * StoredQueryTagTypeProvider constructor.
      * @param ServiceStoredQueryTagType $serviceStoredQueryTagType
      */
-    function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
+    public function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
         $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
         $this->searchTable = $this->serviceStoredQueryTagType->getTable();
     }
@@ -59,9 +59,9 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
     }
 
     /**
-     * @return array
+     * @return ModelStoredQueryTagType[]
      */
-    public function getItems() {
+    public function getItems(): array {
         $tagTypes = $this->searchTable
             ->order('name');
 

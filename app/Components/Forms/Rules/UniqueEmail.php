@@ -27,7 +27,7 @@ class UniqueEmail {
      * UniqueEmail constructor.
      * @param ServicePersonInfo $servicePersonInfo
      */
-    function __construct(ServicePersonInfo $servicePersonInfo) {
+    public function __construct(ServicePersonInfo $servicePersonInfo) {
         $this->servicePersonInfo = $servicePersonInfo;
     }
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace Events\Model;
+namespace FKSDB\Events\Model;
 
-use Events\EventTestCase;
+use FKSDB\Events\EventTestCase;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
 use PublicModule\ApplicationPresenter;
@@ -14,11 +14,6 @@ abstract class ResourceAvailabilityTestCase extends EventTestCase {
      */
     protected $fixture;
     protected $persons;
-
-    function __construct(Container $container) {
-        parent::__construct($container);
-        $this->setContainer($container);
-    }
 
     abstract function getCapacity();
 

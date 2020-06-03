@@ -2,33 +2,32 @@
 
 namespace FKSDB\Components\DatabaseReflection\Org;
 
+use FKSDB\Components\DatabaseReflection\AbstractRowException;
 use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
 /**
  * Class SinceRow
- * @package FKSDB\Components\DatabaseReflection\Org
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class SinceRow extends AbstractOrgRowFactory {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Since');
     }
 
     /**
-     * @param array $args
+     * @param mixed ...$args
      * @return BaseControl
-     * @throws \InvalidArgumentException
+     * @throws OmittedControlException
      */
     public function createField(...$args): BaseControl {
         list($min, $max) = $args;
         if (\is_null($max) || \is_null($min)) {
-            throw new \InvalidArgumentException;
+            throw new \InvalidArgumentException();
         }
         $control = parent::createField($args);
         $control->addRule(Form::NUMERIC);
@@ -37,9 +36,6 @@ class SinceRow extends AbstractOrgRowFactory {
         return $control;
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'since';
     }

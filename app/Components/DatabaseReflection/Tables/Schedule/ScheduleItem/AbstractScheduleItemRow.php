@@ -8,12 +8,9 @@ use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class AbstractScheduleItemRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem
+ * *
  */
 abstract class AbstractScheduleItemRow extends AbstractRow {
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_USE_GLOBAL_ACL;
     }
@@ -24,6 +21,6 @@ abstract class AbstractScheduleItemRow extends AbstractRow {
      * @throws NotImplementedException
      */
     public function createField(...$args): BaseControl {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 }

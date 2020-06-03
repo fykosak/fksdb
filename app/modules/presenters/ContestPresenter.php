@@ -39,9 +39,6 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
         $contestChooser->syncRedirect();
     }
 
-    /**
-     * @return ContestChooser
-     */
     abstract protected function createComponentContestChooser(): ContestChooser;
 
     /**
@@ -79,12 +76,9 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
      * @throws BadRequestException
      */
     public function getSelectedAcademicYear(): int {
-        return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
+        return $this->getYearCalculator()->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 
-    /**
-     * @return PageStyleContainer
-     */
     protected function getPageStyleContainer(): PageStyleContainer {
         $container = parent::getPageStyleContainer();
         /** @var ModelContest $contest */
@@ -100,6 +94,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
      * @param string $title
      * @param string $icon
      * @param string $subTitle
+     * @return void
      */
     protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
         parent::setTitle($title, $icon, sprintf(_('%d. ročník'), $this->year) . ' ' . $subTitle);

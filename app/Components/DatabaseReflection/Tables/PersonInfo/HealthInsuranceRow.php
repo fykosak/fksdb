@@ -10,8 +10,8 @@ use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
 /**
- * Class HealthInsuranceField
- * @package FKSDB\Components\Forms\Factories\PersonInfo
+ * Class HealthInsuranceRow
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class HealthInsuranceRow extends AbstractRow {
     const ID_MAPPING = [
@@ -27,23 +27,14 @@ class HealthInsuranceRow extends AbstractRow {
         27 => '(27) UNION zdravotná poisťovňa, a. s.',
     ];
 
-    /**
-     * @return string
-     */
     public function getModelAccessKey(): string {
         return 'health_insurance';
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Health insurance');
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_FULL;
     }

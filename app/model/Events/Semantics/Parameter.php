@@ -1,6 +1,6 @@
 <?php
 
-namespace Events\Semantics;
+namespace FKSDB\Events\Semantics;
 
 use Nette\SmartObject;
 
@@ -13,13 +13,16 @@ class Parameter {
     use SmartObject;
     use WithEventTrait;
 
+    /**
+     * @var
+     */
     private $parameter;
 
     /**
      * Parameter constructor.
      * @param $parameter
      */
-    function __construct($parameter) {
+    public function __construct($parameter) {
         $this->parameter = $parameter;
     }
 

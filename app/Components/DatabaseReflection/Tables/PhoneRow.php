@@ -14,12 +14,11 @@ use FKSDB\DataTesting\TestLog;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
-use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 
 /**
  * Class PhoneRow
- * @package FKSDB\Components\DatabaseReflection\Tables
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PhoneRow extends DefaultRow implements ITestedRowFactory {
     /**
@@ -34,16 +33,16 @@ class PhoneRow extends DefaultRow implements ITestedRowFactory {
     /**
      * PhoneRow constructor.
      * @param PhoneNumberFactory $phoneNumberFactory
-     * @param ITranslator $translator
      * @param MetaDataFactory $metaDataFactory
      */
-    public function __construct(PhoneNumberFactory $phoneNumberFactory, ITranslator $translator, MetaDataFactory $metaDataFactory) {
+    public function __construct(PhoneNumberFactory $phoneNumberFactory, MetaDataFactory $metaDataFactory) {
         $this->phoneNumberFactory = $phoneNumberFactory;
-        parent::__construct($translator, $metaDataFactory);
+        parent::__construct($metaDataFactory);
     }
 
     /**
      * @param bool $isWriteOnly
+     * @return void
      */
     public function setWriteOnly(bool $isWriteOnly) {
         $this->isWriteOnly = $isWriteOnly;
@@ -53,7 +52,7 @@ class PhoneRow extends DefaultRow implements ITestedRowFactory {
      * @param array $args
      * @return BaseControl
      */
-    public function createField(...$args): BaseControl {
+    public function createFormControl(...$args): BaseControl {
         $control = null;
         if ($this->isWriteOnly) {
             $control = new WriteOnlyInput($this->getTitle());
@@ -68,7 +67,7 @@ class PhoneRow extends DefaultRow implements ITestedRowFactory {
                 if ($control->getValue() === WriteOnlyInput::VALUE_ORIGINAL) {
                     return true;
                 }
-                return $this->phoneNumberFactory->getFormValidationCallback()($control);
+                return $this->phoneNumberFactory->isValid($control->getValue());
             }, _('Phone number is not valid. Please insert a valid number.'));
         return $control;
     }
@@ -78,7 +77,7 @@ class PhoneRow extends DefaultRow implements ITestedRowFactory {
      * @param AbstractModelSingle $model
      * @return void
      */
-    public final function runTest(TestsLogger $logger, AbstractModelSingle $model) {
+    final public function runTest(TestsLogger $logger, AbstractModelSingle $model) {
 
         $value = $model->{$this->getModelAccessKey()};
         if (\is_null($value)) {
@@ -91,10 +90,6 @@ class PhoneRow extends DefaultRow implements ITestedRowFactory {
         }
     }
 
-    /**
-     * @param AbstractModelSingle $model
-     * @return Html
-     */
     public function createHtmlValue(AbstractModelSingle $model): Html {
         $value = $model->{$this->getModelAccessKey()};
         if (\is_null($value)) {

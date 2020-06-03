@@ -6,7 +6,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class DashboardPresenter
- * @package EventModule
+ * *
  */
 class DashboardPresenter extends BasePresenter {
 

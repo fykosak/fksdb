@@ -1,6 +1,6 @@
 <?php
 
-namespace Events\Model\Holder;
+namespace FKSDB\Events\Model\Holder;
 
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
@@ -13,6 +13,9 @@ use Nette\InvalidArgumentException;
  */
 class SameYearEvent implements IEventRelation {
 
+    /**
+     * @var
+     */
     private $eventTypeId;
 
     /**
@@ -25,7 +28,7 @@ class SameYearEvent implements IEventRelation {
      * @param $eventTypeId
      * @param ServiceEvent $serviceEvent
      */
-    function __construct($eventTypeId, ServiceEvent $serviceEvent) {
+    public function __construct($eventTypeId, ServiceEvent $serviceEvent) {
         $this->eventTypeId = $eventTypeId;
         $this->serviceEvent = $serviceEvent;
     }

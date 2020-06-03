@@ -10,24 +10,23 @@ use NiftyGrid\DataSource\NDataSource;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ViewDataSource extends NDataSource {
-
+    /** @var string */
     private $primaryKey;
 
     /**
      * ViewDataSource constructor.
-     * @param $primaryKey
+     * @param string $primaryKey
      * @param $table
      */
-    public function __construct($primaryKey, $table) {
+    public function __construct(string $primaryKey, $table) {
         parent::__construct($table);
         $this->primaryKey = $primaryKey;
     }
 
     /**
-     * @return mixed
+     * @return string|int
      */
     public function getPrimaryKey() {
         return $this->primaryKey;
     }
-
 }

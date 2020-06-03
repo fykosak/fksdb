@@ -23,8 +23,17 @@ class LoggingMailer implements IMailer {
      * @var GlobalParameters
      */
     private $parameters;
+    /**
+     * @var
+     */
     private $logPath;
+    /**
+     * @var bool
+     */
     private $logging = true;
+    /**
+     * @var int
+     */
     private $sentMessages = 0;
 
     /**
@@ -32,7 +41,7 @@ class LoggingMailer implements IMailer {
      * @param IMailer $mailer
      * @param GlobalParameters $parameters
      */
-    function __construct(IMailer $mailer, GlobalParameters $parameters) {
+    public function __construct(IMailer $mailer, GlobalParameters $parameters) {
         $this->mailer = $mailer;
         $this->parameters = $parameters;
     }

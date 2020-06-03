@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class UntilRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Teacher
+ * *
  */
 class UntilRow extends AbstractTeacherRow {
 
@@ -26,9 +26,6 @@ class UntilRow extends AbstractTeacherRow {
         return (new DatePrinter(_('__date_format')))($model->until);
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Teaches until');
     }

@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class SinceRow
- * @package FKSDB\Components\DatabaseReflection\Tables\Teacher
+ * *
  */
 class SinceRow extends AbstractTeacherRow {
 
@@ -26,9 +26,6 @@ class SinceRow extends AbstractTeacherRow {
         return (new DatePrinter(_('__date_format')))($model->since);
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Teaches since');
     }

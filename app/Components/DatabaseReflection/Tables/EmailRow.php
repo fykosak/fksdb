@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class EmailRow
- * @package FKSDB\Components\DatabaseReflection
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EmailRow extends DefaultRow {
 
@@ -19,18 +19,14 @@ class EmailRow extends DefaultRow {
      * @param array $args
      * @return BaseControl
      */
-    public function createField(...$args): BaseControl {
+    public function createFormControl(...$args): BaseControl {
         $control = new TextInput($this->getTitle());
         $control->addCondition(Form::FILLED)
             ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
         return $control;
     }
 
-    /**
-     * @param AbstractModelSingle $model
-     * @return Html
-     */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new EmailPrinter)($model->{$this->getModelAccessKey()});
+        return (new EmailPrinter())($model->{$this->getModelAccessKey()});
     }
 }

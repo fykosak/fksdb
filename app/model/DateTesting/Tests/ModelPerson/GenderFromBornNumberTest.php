@@ -9,19 +9,14 @@ use FKSDB\DataTesting\TestLog;
 
 /**
  * Class GenderFromBornNumberTest
- * @package FKSDB\DataTesting\Tests\Person
+ * *
  */
 class GenderFromBornNumberTest extends PersonTest {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Gender from born number');
     }
 
-    /**
-     * @return string
-     */
     public function getAction(): string {
         return 'gender_from_born_number';
     }

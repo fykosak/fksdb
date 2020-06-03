@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
 use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
-use FKSDB\model\Fyziklani\NotSetGameParametersException;
+use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
@@ -20,7 +20,7 @@ use Nette\Utils\DateTime;
 
 /**
  * Class ResultsAndStatistics
- * @package FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ResultsAndStatistics extends FyziklaniReactControl {
     /**
@@ -50,26 +50,21 @@ class ResultsAndStatistics extends FyziklaniReactControl {
     public function __construct(Container $container, ModelEvent $event, string $reactId) {
         parent::__construct($container, $event);
         $this->reactId = $reactId;
-        $this->serviceFyziklaniSubmit = $this->container->getByType(ServiceFyziklaniSubmit::class);
-        $this->serviceFyziklaniTask = $this->container->getByType(ServiceFyziklaniTask::class);
-        $this->serviceFyziklaniTeam = $this->container->getByType(ServiceFyziklaniTeam::class);
+        $this->serviceFyziklaniSubmit = $this->getContext()->getByType(ServiceFyziklaniSubmit::class);
+        $this->serviceFyziklaniTask = $this->getContext()->getByType(ServiceFyziklaniTask::class);
+        $this->serviceFyziklaniTeam = $this->getContext()->getByType(ServiceFyziklaniTeam::class);
     }
 
-    /**
-     * @return string
-     */
     protected function getReactId(): string {
         return $this->reactId;
     }
 
-    /**
-     * @return string
-     */
-    public final function getData(): string {
+    final public function getData(): string {
         return '';
     }
 
     /**
+     * @return void
      * @throws InvalidLinkException
      */
     protected function configure() {
@@ -78,16 +73,18 @@ class ResultsAndStatistics extends FyziklaniReactControl {
     }
 
     /**
+     * @return void
      * @throws AbortException
      * @throws BadRequestException
+     * @throws NotSetGameParametersException
      */
     public function handleRefresh() {
         $presenter = $this->getPresenter();
         if (!$presenter->isAjax()) {
-            throw new BadRequestException('',Response::S405_METHOD_NOT_ALLOWED);
+            throw new BadRequestException('', Response::S405_METHOD_NOT_ALLOWED);
         }
         if (!$presenter instanceof BasePresenter) {
-            throw new ArgumentOutOfRangeException;
+            throw new ArgumentOutOfRangeException();
         }
         $isOrg = $presenter->getEventAuthorizator()->isContestOrgAllowed('fyziklani.results', 'presentation', $this->getEvent());
 

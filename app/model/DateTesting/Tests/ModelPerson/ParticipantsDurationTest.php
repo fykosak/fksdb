@@ -10,7 +10,7 @@ use FKSDB\DataTesting\TestLog;
 
 /**
  * Class ParticipantsDurationTest
- * @package FKSDB\DataTesting\Tests\Person
+ * *
  */
 class ParticipantsDurationTest extends PersonTest {
 
@@ -50,12 +50,7 @@ class ParticipantsDurationTest extends PersonTest {
 
     }
 
-    /**
-     * @param int $delta
-     * @param array $thresholds
-     * @return string
-     */
-    private final function evaluateThresholds(int $delta, array $thresholds): string {
+    final private function evaluateThresholds(int $delta, array $thresholds): string {
         if ($delta < $thresholds[0]) {
             return TestLog::LVL_SUCCESS;
         }
@@ -65,16 +60,10 @@ class ParticipantsDurationTest extends PersonTest {
         return TestLog::LVL_DANGER;
     }
 
-    /**
-     * @return string
-     */
     public function getAction(): string {
         return 'participants_duration';
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Participate events');
     }

@@ -92,12 +92,9 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     private $login;
 
-
     /**
      * @param FacebookAuthenticator $facebookAuthenticator
-     */
-    /**
-     * @param FacebookAuthenticator $facebookAuthenticator
+     * @return void
      */
     public function injectFacebookAuthenticator(FacebookAuthenticator $facebookAuthenticator) {
         $this->facebookAuthenticator = $facebookAuthenticator;
@@ -105,9 +102,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * @param ServiceAuthToken $serviceAuthToken
-     */
-    /**
-     * @param ServiceAuthToken $serviceAuthToken
+     * @return void
      */
     public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken) {
         $this->serviceAuthToken = $serviceAuthToken;
@@ -115,9 +110,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * @param IGlobalSession $globalSession
-     */
-    /**
-     * @param IGlobalSession $globalSession
+     * @return void
      */
     public function injectGlobalSession(IGlobalSession $globalSession) {
         $this->globalSession = $globalSession;
@@ -125,9 +118,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * @param PasswordAuthenticator $passwordAuthenticator
-     */
-    /**
-     * @param PasswordAuthenticator $passwordAuthenticator
+     * @return void
      */
     public function injectPasswordAuthenticator(PasswordAuthenticator $passwordAuthenticator) {
         $this->passwordAuthenticator = $passwordAuthenticator;
@@ -135,9 +126,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * @param AccountManager $accountManager
-     */
-    /**
-     * @param AccountManager $accountManager
+     * @return void
      */
     public function injectAccountManager(AccountManager $accountManager) {
         $this->accountManager = $accountManager;
@@ -145,9 +134,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * @param MailTemplateFactory $mailTemplateFactory
-     */
-    /**
-     * @param MailTemplateFactory $mailTemplateFactory
+     * @return void
      */
     public function injectMailTemplateFactory(MailTemplateFactory $mailTemplateFactory) {
         $this->mailTemplateFactory = $mailTemplateFactory;
@@ -155,9 +142,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * @param ServicePerson $servicePerson
-     */
-    /**
-     * @param ServicePerson $servicePerson
+     * @return void
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
@@ -335,9 +320,6 @@ final class AuthenticationPresenter extends BasePresenter {
             $values = $form->getValues();
 
             $connection->beginTransaction();
-            /**
-             * @var ModelLogin $login
-             */
             $login = $this->passwordAuthenticator->findLogin($values['id']);
             $this->accountManager->sendRecovery($login, $login->getPerson()->getPreferredLang() ?: $this->getLang());
             $email = Utils::cryptEmail($login->getPerson()->getInfo()->email);

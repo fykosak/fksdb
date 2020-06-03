@@ -14,7 +14,6 @@ class SeriesCalculator {
     /**
      * @var ServiceTask
      */
-
     private $serviceTask;
 
     /**
@@ -48,17 +47,11 @@ class SeriesCalculator {
         return ($currentSeries === null) ? 1 : $currentSeries;
     }
 
-    /**
-     *
-     * @param ModelContest $contest
-     * @param int $year
-     * @return int
-     */
     public function getLastSeries(ModelContest $contest, int $year): int {
         return $this->serviceTask->getTable()->where([
             'contest_id' => $contest->contest_id,
             'year' => $year
-        ])->max('series');
+        ])->max('series') ?: 1;
     }
 
     /**
@@ -69,7 +62,11 @@ class SeriesCalculator {
      */
     public function getTotalSeries(ModelContest $contest, $year): int {
         //TODO allow variance?
-        return 6;
+        if ($contest->contest_id === ModelContest::ID_VYFUK && $year >= 9) { //TODO Think of better solution of deciding
+            return 8;
+        } else {
+            return 6;
+        }
     }
 
 }

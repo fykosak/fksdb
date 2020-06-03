@@ -28,7 +28,7 @@ class Grant implements IRole {
      * @param int $contestId
      * @param string $roleId
      */
-    function __construct(int $contestId, string $roleId) {
+    public function __construct(int $contestId, string $roleId) {
         $this->contestId = $contestId;
         $this->roleId = $roleId;
     }

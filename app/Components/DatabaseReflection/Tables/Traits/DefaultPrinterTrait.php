@@ -8,19 +8,13 @@ use Nette\Utils\Html;
 
 /**
  * Trait DefaultPrinterTrait
- * @package FKSDB\Components\DatabaseReflection
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 trait DefaultPrinterTrait {
-    /**
-     * @param AbstractModelSingle $model
-     * @return Html
-     */
+
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new StringPrinter)($model->{$this->getModelAccessKey()});
+        return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }
 
-    /**
-     * @return string
-     */
     abstract protected function getModelAccessKey(): string;
 }

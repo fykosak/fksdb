@@ -3,47 +3,50 @@
 namespace FKSDB\Components\DatabaseReflection\ReferencedRows;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
-use FKSDB\Components\DatabaseReflection\Payment\StateRow;
+use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\Models\IPaymentReferencedModel;
-use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
 
 /**
  * Class PaymentRow
- * @package FKSDB\Components\DatabaseReflection\ReferencedRows
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PaymentRow extends AbstractRow {
+    /**
+     * @var TableReflectionFactory
+     */
+    private $reflectionFactory;
 
     /**
-     * @inheritDoc
-     * @throws BadRequestException
+     * PaymentRow constructor.
+     * @param TableReflectionFactory $reflectionFactory
      */
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
-        if (!$model instanceof IPaymentReferencedModel) {
-            throw new BadTypeException(IPaymentReferencedModel::class, $model);
-        }
-        $payment = $model->getPayment();
-        if (is_null($payment)) {
-            return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText(_('No payment found'));
-        }
-        return Html::el('span')
-            ->addAttributes(['class' => StateRow::getUIClass($payment)])
-            ->addText('#' . $payment->getPaymentId() . ' ' . StateRow::getStateLabel($payment));
-
+    public function __construct(TableReflectionFactory $reflectionFactory) {
+        $this->reflectionFactory = $reflectionFactory;
     }
 
     /**
-     * @inheritDoc
+     * @param AbstractModelSingle $model
+     * @return Html
+     * @throws BadTypeException
      */
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
+        $factory = $this->reflectionFactory->loadRowFactory('payment.state');
+        $html = $factory->createHtmlValue($model);
+        $text = $html->getText();
+        $html->setText('#' . $model->getPaymentId() . ' - ' . $text);
+        return $html;
+    }
+
     public function getPermissionsValue(): int {
         return self::PERMISSION_USE_GLOBAL_ACL;
     }
 
-    /**
-     * @inheritDoc
-     */
+    protected function createNullHtmlValue(): Html {
+        return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText(_('Payment not found'));
+    }
+
     public function getTitle(): string {
         return _('Payment');
     }

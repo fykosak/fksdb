@@ -1,9 +1,10 @@
 <?php
 
-namespace Events\FormAdjustments;
+namespace FKSDB\Events\FormAdjustments;
 
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
+use Nette\Application\UI\Control;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
@@ -20,15 +21,16 @@ abstract class AbstractAdjustment implements IFormAdjustment {
 
     const DELIMITER = '.';
     const WILDCART = '*';
-
+    /** @var array */
     private $pathCache;
 
     /**
      * @param Form $form
      * @param Machine $machine
      * @param Holder $holder
+     * @return void
      */
-    public final function adjust(Form $form, Machine $machine, Holder $holder) {
+    final public function adjust(Form $form, Machine $machine, Holder $holder) {
         $this->setForm($form);
         $this->_adjust($form, $machine, $holder);
     }
@@ -37,15 +39,15 @@ abstract class AbstractAdjustment implements IFormAdjustment {
      * @param Form $form
      * @param Machine $machine
      * @param Holder $holder
-     * @return mixed
+     * @return void
      */
-    protected abstract function _adjust(Form $form, Machine $machine, Holder $holder);
+    abstract protected function _adjust(Form $form, Machine $machine, Holder $holder);
 
     /**
      * @param $mask
      * @return bool
      */
-    protected final function hasWildcart($mask) {
+    final protected function hasWildcart($mask) {
         return strpos($mask, self::WILDCART) !== false;
     }
 
@@ -54,7 +56,7 @@ abstract class AbstractAdjustment implements IFormAdjustment {
      * @param string $mask
      * @return IControl[]
      */
-    protected final function getControl($mask) {
+    final protected function getControl($mask) {
         $keys = array_keys($this->pathCache);
         $pMask = str_replace(self::WILDCART, '__WC__', $mask);
         $pMask = preg_quote($pMask);
@@ -79,6 +81,8 @@ abstract class AbstractAdjustment implements IFormAdjustment {
      */
     private function setForm($form) {
         $this->pathCache = [];
+        /** @var Control $control */
+        // TODO not type safe
         foreach ($form->getComponents(true, IControl::class) as $control) {
             $path = $control->lookupPath(Form::class);
             $path = str_replace('_1', '', $path);
@@ -86,6 +90,4 @@ abstract class AbstractAdjustment implements IFormAdjustment {
             $this->pathCache[$path] = $control;
         }
     }
-
 }
-

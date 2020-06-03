@@ -6,6 +6,7 @@ use CSVFormat;
 use Exports\Formats\AESOPFormat;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Config\GlobalParameters;
+use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Services\ServiceTask;
@@ -21,6 +22,7 @@ use Nette\Utils\Arrays;
  */
 class ExportFormatFactory {
     use SmartObject;
+
     const AESOP = 'aesop';
     const CSV_HEADLESS = 'csv';
     const CSV_HEAD = 'csvh';
@@ -42,14 +44,17 @@ class ExportFormatFactory {
     private $storedQueryFactory;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceEvent
+     * @var ServiceEvent
      */
     private $serviceEvent;
 
     /**
-     * @var \FKSDB\ORM\Services\ServiceContest
+     * @var ServiceContest
      */
     private $serviceContest;
+    /**
+     * @var array
+     */
     private $defaultFormats;
 
     /**
@@ -60,7 +65,7 @@ class ExportFormatFactory {
      * @param ServiceEvent $serviceEvent
      * @param ServiceContest $serviceContest
      */
-    function __construct(GlobalParameters $globalParameters, Container $container, StoredQueryFactory $storedQueryFactory, ServiceEvent $serviceEvent, ServiceContest $serviceContest) {
+    public function __construct(GlobalParameters $globalParameters, Container $container, StoredQueryFactory $storedQueryFactory, ServiceEvent $serviceEvent, ServiceContest $serviceContest) {
         $this->globalParameters = $globalParameters;
         $this->container = $container;
         $this->storedQueryFactory = $storedQueryFactory;
@@ -76,7 +81,7 @@ class ExportFormatFactory {
     /**
      *
      * @param mixed $name
-     * @param \Exports\StoredQuery $storedQuery
+     * @param StoredQuery $storedQuery
      * @return IExportFormat
      */
     public function createFormat($name, StoredQuery $storedQuery) {
@@ -134,6 +139,7 @@ class ExportFormatFactory {
         ]);
 
         if (array_key_exists('eventTypeId', $parameters[$qid])) {
+            /** @var ModelContest $contest */
             $contest = $this->serviceContest->findByPrimary($queryParameters['contest']);
             $event = $this->serviceEvent->getByEventTypeId($contest, $queryParameters['year'], $parameters[$qid]['eventTypeId']);
             $format->addParameters([
@@ -159,15 +165,7 @@ class ExportFormatFactory {
         return $format;
     }
 
-    /**
-     * @param StoredQuery $storedQuery
-     * @param $header
-     * @param bool $quote
-     * @return CSVFormat
-     */
-    private function createCSV(StoredQuery $storedQuery, $header, $quote = CSVFormat::DEFAULT_QUOTE): CSVFormat {
+    private function createCSV(StoredQuery $storedQuery, bool $header, bool $quote = CSVFormat::DEFAULT_QUOTE): CSVFormat {
         return new CSVFormat($storedQuery, $header, CSVFormat::DEFAULT_DELIMITER, $quote);
     }
-
 }
-

@@ -19,7 +19,7 @@ use Nette\InvalidStateException;
 
 /**
  * Class ScheduleItemPresenter
- * @package EventModule
+ * *
  * @method ModelScheduleItem traitLoadEntity(int $id)
  */
 class ScheduleItemPresenter extends BasePresenter {
@@ -47,6 +47,7 @@ class ScheduleItemPresenter extends BasePresenter {
 
     /**
      * @param ServiceScheduleItem $serviceScheduleItem
+     * @return void
      */
     public function injectServiceScheduleItem(ServiceScheduleItem $serviceScheduleItem) {
         $this->serviceScheduleItem = $serviceScheduleItem;
@@ -54,11 +55,16 @@ class ScheduleItemPresenter extends BasePresenter {
 
     /**
      * @param ServiceScheduleGroup $serviceScheduleGroup
+     * @return void
      */
     public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup) {
         $this->serviceScheduleGroup = $serviceScheduleGroup;
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleList() {
         $this->setTitle(\sprintf(_('Schedule items')), 'fa fa-calendar-check-o');
     }
@@ -116,7 +122,7 @@ class ScheduleItemPresenter extends BasePresenter {
     protected function loadEntity(int $id) {
         $entity = $this->traitLoadEntity($id);
         if ($entity->schedule_group_id !== $this->getGroup()->schedule_group_id) {
-            throw new ForbiddenRequestException;
+            throw new ForbiddenRequestException();
         }
         return $entity;
     }
@@ -129,7 +135,7 @@ class ScheduleItemPresenter extends BasePresenter {
         if (!$this->group) {
             $group = $this->serviceScheduleGroup->findByPrimary($this->groupId);
             if (!$group) {
-                throw new InvalidStateException;
+                throw new InvalidStateException();
             }
             $this->group = $group;
         }
@@ -140,14 +146,14 @@ class ScheduleItemPresenter extends BasePresenter {
      * @inheritDoc
      */
     public function createComponentCreateForm(): Control {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
      * @inheritDoc
      */
     public function createComponentEditForm(): Control {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
@@ -158,9 +164,6 @@ class ScheduleItemPresenter extends BasePresenter {
         return new ItemsGrid($this->getContext(), $this->getGroup());
     }
 
-    /**
-     * @return PersonsGrid
-     */
     public function createComponentPersonsGrid(): PersonsGrid {
         return new PersonsGrid($this->getContext());
     }

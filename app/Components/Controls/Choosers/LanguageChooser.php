@@ -6,7 +6,6 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\LangPresenterTrait;
 use FKSDB\UI\Title;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\DI\Container;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -16,7 +15,7 @@ use Nette\DI\Container;
  */
 class LanguageChooser extends Chooser {
     /** @var array */
-    private $supportedLanguages;
+    private $supportedLanguages = [];
 
     /** @var string */
     private $language;
@@ -27,13 +26,17 @@ class LanguageChooser extends Chooser {
     /**
      * @param string $lang
      * @param bool $modifiable
+     * @return void
      * @throws \Exception
      */
-    public function setLang(string $lang , bool $modifiable) {
+    public function setLang(string $lang, bool $modifiable) {
         $this->language = $lang;
         $this->modifiable = $modifiable;
     }
 
+    /**
+     * @return void
+     */
     public function render() {
         $this->beforeRender();
         $this->template->modifiable = $this->modifiable;
@@ -47,7 +50,7 @@ class LanguageChooser extends Chooser {
     }
 
     /**
-     * @return array|iterable|void
+     * @return array|iterable
      * @throws BadTypeException
      */
     public function getItems() {

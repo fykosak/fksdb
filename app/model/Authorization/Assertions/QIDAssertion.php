@@ -16,13 +16,16 @@ class QIDAssertion {
 
     use SmartObject;
 
+    /**
+     * @var array
+     */
     private $qids;
 
     /**
      * QIDAssertion constructor.
      * @param $qids
      */
-    function __construct($qids) {
+    public function __construct($qids) {
         if (!is_array($qids)) {
             $qids = [$qids];
         }

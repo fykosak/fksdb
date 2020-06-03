@@ -1,25 +1,28 @@
 <?php
 
-namespace Events\Spec\Fol;
+namespace FKSDB\Events\Spec\Fol;
 
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Model\Holder\Field;
-use Events\Model\Holder\Holder;
-use Events\Processings\AbstractProcessing;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Field;
+use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Events\Processings\AbstractProcessing;
 use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelPersonHistory;
 use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\YearCalculator;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
 
 /**
  * Class CategoryProcessing
- * @package Events\Spec\Fol
+ * *
  */
 class CategoryProcessing extends AbstractProcessing implements IOptionsProvider {
 
@@ -38,8 +41,14 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
      * @var ServiceSchool
      */
     private $serviceSchool;
+    /**
+     * @var array
+     */
     private $categoryNames;
 
+    /**
+     * @var int
+     */
     private $rulesVersion;
 
     /**
@@ -48,7 +57,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
      * @param YearCalculator $yearCalculator
      * @param ServiceSchool $serviceSchool
      */
-    function __construct($rulesVersion, YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
+    public function __construct($rulesVersion, YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
 
@@ -82,23 +91,24 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
      * @param Holder $holder
      * @param ILogger $logger
      * @param Form|null $form
-     * @return mixed|void
+     * @return void
      */
     protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
         if (!isset($values['team'])) {
             return;
         }
 
-        $event = $holder->getEvent();
+        $event = $holder->getPrimaryHolder()->getEvent();
         $contest = $event->getEventType()->contest;
         $year = $event->year;
         $acYear = $this->yearCalculator->getAcademicYear($contest, $year);
 
         $participants = [];
-        foreach ($holder as $name => $baseHolder) {
+        foreach ($holder->getBaseHolders() as $name => $baseHolder) {
             if ($name == 'team') {
                 continue;
             }
+            /** @var BaseControl[] $formControls */
             $formControls = [
                 'school_id' => $this->getControl("$name.person_id.person_history.school_id"),
                 'study_year' => $this->getControl("$name.person_id.person_history.study_year"),
@@ -115,7 +125,9 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
                 if ($this->isBaseReallyEmpty($name)) {
                     continue;
                 }
+                /** @var ModelPerson $person */
                 $person = $baseHolder->getModel()->getMainModel()->person;
+                /** @var ModelPersonHistory $history TODO type safe */
                 $history = $person->related('person_history')->where('ac_year', $acYear)->fetch();
                 $participantData = [
                     'school_id' => $history->school_id,

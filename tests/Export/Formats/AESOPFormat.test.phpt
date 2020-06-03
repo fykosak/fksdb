@@ -14,26 +14,16 @@ use Tester\Assert;
 class AESOPFormatTest extends DatabaseTestCase {
 
     /**
-     * @var Container
-     */
-    private $container;
-
-    /**
      * @var AESOPFormat
      */
     private $fixture;
 
-    function __construct(Container $container) {
-        parent::__construct($container);
-        $this->container = $container;
-    }
-
     protected function setUp() {
         parent::setUp();
         /** @var ExportFormatFactory $exportFactory */
-        $exportFactory = $this->container->getByType(ExportFormatFactory::class);
+        $exportFactory = $this->getContext()->getByType(ExportFormatFactory::class);
         /** @var StoredQueryFactory $queryFactory */
-        $queryFactory = $this->container->getByType(StoredQueryFactory::class);
+        $queryFactory = $this->getContext()->getByType(StoredQueryFactory::class);
         //$queryFactory->setPresenter(new MockSeriesPresenter());
 
         $parameters = [
@@ -61,7 +51,7 @@ class AESOPFormatTest extends DatabaseTestCase {
 
 class MockSeriesPresenter implements ISeriesPresenter {
 
-    public function getSelectedAcademicYear() {
+    public function getSelectedAcademicYear(): int {
         return 2000;
     }
 
@@ -108,11 +98,11 @@ class MockProcessing extends StoredQueryPostProcessing {
         return 0;
     }
 
-    public function getDescription() {
+    public function getDescription(): string {
 
     }
 
-    public function processData($data) {
+    public function processData(PDOStatement $data) {
         return $data;
     }
 

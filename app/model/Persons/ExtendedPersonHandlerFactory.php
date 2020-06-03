@@ -45,7 +45,7 @@ class ExtendedPersonHandlerFactory {
      * @param AccountManager $accountManager
      * @param GlobalParameters $globalParameters
      */
-    function __construct(ServicePerson $servicePerson, Connection $connection, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager, GlobalParameters $globalParameters) {
+    public function __construct(ServicePerson $servicePerson, Connection $connection, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager, GlobalParameters $globalParameters) {
         $this->servicePerson = $servicePerson;
         $this->connection = $connection;
         $this->mailTemplateFactory = $mailTemplateFactory;
@@ -55,11 +55,11 @@ class ExtendedPersonHandlerFactory {
     /**
      * @param IService $service
      * @param ModelContest $contest
-     * @param $year
-     * @param $invitationLang
+     * @param int $year
+     * @param string $invitationLang
      * @return ExtendedPersonHandler
      */
-    public function create(IService $service, ModelContest $contest, $year, $invitationLang) {
+    public function create(IService $service, ModelContest $contest, int $year, string $invitationLang): ExtendedPersonHandler {
         $handler = new ExtendedPersonHandler($service, $this->servicePerson, $this->connection, $this->mailTemplateFactory, $this->accountManager);
         $handler->setContest($contest);
         $handler->setYear($year);

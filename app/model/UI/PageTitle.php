@@ -6,7 +6,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PageTitle
- * @package FKSDB
+ * *
  */
 class PageTitle extends Title {
     /** @var string|null */

@@ -31,7 +31,7 @@ class PersonProvider implements IFilteredDataProvider {
      * PersonProvider constructor.
      * @param ServicePerson $servicePerson
      */
-    function __construct(ServicePerson $servicePerson) {
+    public function __construct(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
         $this->searchTable = $this->servicePerson->getTable();
     }
@@ -66,23 +66,21 @@ class PersonProvider implements IFilteredDataProvider {
     }
 
     /**
-     * @param mixed $id
-     * @return mixed
+     * @param int $id
+     * @return string
      */
-    public function getItemLabel($id) {
+    public function getItemLabel($id): string {
         $person = $this->servicePerson->findByPrimary($id);
         return $person->getFullName();
     }
 
-    /**
-     * @return array
-     */
-    public function getItems() {
+    public function getItems(): array {
         $persons = $this->searchTable
             ->order('family_name, other_name');
 
 
         $result = [];
+        /** @var ModelPerson $person */
         foreach ($persons as $person) {
             $result[] = $this->getItem($person);
         }

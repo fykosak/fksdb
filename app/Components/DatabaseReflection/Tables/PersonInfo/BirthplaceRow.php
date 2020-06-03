@@ -10,20 +10,17 @@ use Nette\Forms\Form;
 
 /**
  * Class BirthplaceField
- * @package FKSDB\Components\Forms\Factories\PersonInfo
+ * *
  */
 class BirthplaceRow extends AbstractRow {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Místo narození');
     }
 
     /**
-     * @return null|string
+     * @return string|null
      */
     public function getDescription() {
         return _('Město a okres (kvůli diplomům).');
@@ -40,16 +37,10 @@ class BirthplaceRow extends AbstractRow {
         return $control;
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_FULL;
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'birthplace';
     }

@@ -7,13 +7,11 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Utils\Html;
 
 /**
- * Class GameStartRow
- * @package FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup
+ * Class AvailablePointsRow
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class AvailablePointsRow extends AbstractFyziklaniGameSetupRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Available points');
     }

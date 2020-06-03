@@ -5,41 +5,43 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Services\ServiceEmailMessage;
-use Nette\DI\Container;
+use Nette\Application\UI\Presenter;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class EmailsGrid
- * @package FKSDB\Components\Grids
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EmailsGrid extends BaseGrid {
 
     /** @var ServiceEmailMessage */
     private $serviceEmailMessage;
 
-    /**
-     * EmailsGrid constructor.
-     * @param Container $container
+    /***
+     * @param ServiceEmailMessage $serviceEmailMessage
+     * @return void
      */
-    function __construct(Container $container) {
-        parent::__construct($container);
-        $this->serviceEmailMessage = $container->getByType(ServiceEmailMessage::class);
+    public function injectServiceEmailMessage(ServiceEmailMessage $serviceEmailMessage) {
+        $this->serviceEmailMessage = $serviceEmailMessage;
+    }
+
+    protected function getData(): IDataSource {
+        $emails = $this->serviceEmailMessage->getTable()->order('created DESC');
+        //->where('state!=? OR created > ?', [ModelEmailMessage::STATE_SENT, (new \DateTime())->modify('-1 month')]);
+        return new NDataSource($emails);
     }
 
     /**
-     * @param $presenter
+     * @param Presenter $presenter
      * @throws DuplicateColumnException
      * @throws NotImplementedException
      * @throws DuplicateButtonException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
-        $emails = $this->serviceEmailMessage->getTable()->order('created DESC');
-        //->where('state!=? OR created > ?', [ModelEmailMessage::STATE_SENT, (new \DateTime())->modify('-1 month')]);
-        $source = new NDataSource($emails);
-        $this->setDataSource($source);
 
         $this->addColumns([
             'email_message.email_message_id',
@@ -51,9 +53,6 @@ class EmailsGrid extends BaseGrid {
         $this->paginate = true;
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelEmailMessage::class;
     }

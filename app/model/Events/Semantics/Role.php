@@ -1,6 +1,6 @@
 <?php
 
-namespace Events\Semantics;
+namespace FKSDB\Events\Semantics;
 
 use Authorization\ContestAuthorizator;
 use Authorization\RelatedPersonAuthorizator;
@@ -52,7 +52,7 @@ class Role extends EvaluatedExpression {
      * @param ContestAuthorizator $contestAuthorizator
      * @param RelatedPersonAuthorizator $relatedAuthorizator
      */
-    function __construct($role, User $user, ContestAuthorizator $contestAuthorizator, RelatedPersonAuthorizator $relatedAuthorizator) {
+    public function __construct($role, User $user, ContestAuthorizator $contestAuthorizator, RelatedPersonAuthorizator $relatedAuthorizator) {
         $this->role = $role;
         $this->user = $user;
         $this->contestAuthorizator = $contestAuthorizator;

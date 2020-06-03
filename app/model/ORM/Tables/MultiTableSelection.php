@@ -21,11 +21,11 @@ class MultiTableSelection extends Selection {
     /**
      * MultiTableSelection constructor.
      * @param AbstractServiceMulti $service
-     * @param $table
+     * @param string $table
      * @param Context $connection
      * @param IConventions $conventions
      */
-    public function __construct(AbstractServiceMulti $service, $table, Context $connection, IConventions $conventions) {
+    public function __construct(AbstractServiceMulti $service, string $table, Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, $table);
         $this->service = $service;
     }
@@ -36,11 +36,9 @@ class MultiTableSelection extends Selection {
      * @param array $row
      * @return AbstractModelMulti
      */
-    protected function createRow(array $row) {
+    protected function createRow(array $row): AbstractModelMulti {
         $mainModel = $this->service->getMainService()->createFromArray($row);
         $joinedModel = $this->service->getJoinedService()->createFromArray($row);
         return $this->service->composeModel($mainModel, $joinedModel);
     }
-
 }
-

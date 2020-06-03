@@ -2,10 +2,12 @@
 
 namespace EventModule;
 
-use Events\Model\Grid\SingleEventSource;
+use FKSDB\Config\NeonSchemaException;
+use FKSDB\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Events\ImportComponent;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
+use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Models\ModelEventParticipant;
@@ -15,10 +17,13 @@ use Nette\Application\ForbiddenRequestException;
 
 /**
  * Class ApplicationPresenter
- * @package EventModule
+ * *
  */
 class ApplicationPresenter extends AbstractApplicationPresenter {
-
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function titleImport() {
         $this->setTitle(_('Application import'), 'fa fa-upload');
     }
@@ -43,6 +48,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @return ApplicationGrid
      * @throws AbortException
      * @throws BadRequestException
+     * @throws NeonSchemaException
      */
     protected function createComponentGrid(): AbstractApplicationGrid {
         return new ApplicationGrid($this->getEvent(), $this->getHolder(), $this->getContext());
@@ -52,10 +58,13 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @return ImportComponent
      * @throws AbortException
      * @throws BadRequestException
+     * @throws NeonSchemaException
      */
     protected function createComponentImport(): ImportComponent {
         $source = new SingleEventSource($this->getEvent(), $this->getContext());
-        $machine = $this->getContext()->createEventMachine($this->getEvent());
+        /** @var EventDispatchFactory $factory */
+        $factory = $this->getContext()->getByType(EventDispatchFactory::class);
+        $machine = $factory->getEventMachine($this->getEvent());
         $handler = $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger());
 
         return new ImportComponent($machine, $source, $handler, $this->getContext());
@@ -66,6 +75,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
+     * @throws NeonSchemaException
      */
     public function renderDetail(int $id) {
         parent::renderDetail($id);
@@ -86,9 +96,6 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
         return $this->serviceEventParticipant;
     }
 
-    /**
-     * @return string
-     */
     protected function getModelResource(): string {
         return ModelEventParticipant::RESOURCE_ID;
     }

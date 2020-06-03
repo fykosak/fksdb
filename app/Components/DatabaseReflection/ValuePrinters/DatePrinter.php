@@ -2,34 +2,32 @@
 
 namespace FKSDB\Components\DatabaseReflection\ValuePrinters;
 
-use FKSDB\Components\Controls\Badges\NotSetBadge;
 use Nette\Utils\DateTime;
 use Nette\Utils\Html;
 
 /**
  * Class DatePrinter
- * @package FKSDB\Components\DatabaseReflection\ValuePrinters
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DatePrinter extends AbstractValuePrinter {
-    protected $format = 'c';
+    /**
+     * @var string
+     */
+    protected $format;
 
     /**
      * DatePrinter constructor.
-     * @param string|null $format
+     * @param string $format
      */
     public function __construct(string $format = 'c') {
         $this->format = $format;
     }
 
     /**
-     * @param DateTime|null $value
+     * @param DateTime $value
      * @return Html
      */
     protected function getHtml($value): Html {
-        if (\is_null($value)) {
-            return NotSetBadge::getHtml();
-        } else {
-            return Html::el('span')->addText($value->format($this->format));
-        }
+        return Html::el('span')->addText($value->format($this->format));
     }
 }

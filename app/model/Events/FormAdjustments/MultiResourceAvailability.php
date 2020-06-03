@@ -1,11 +1,14 @@
 <?php
 
-namespace Events\FormAdjustments;
+namespace FKSDB\Events\FormAdjustments;
 
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Model\Holder\BaseHolder;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\Field;
+use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\ORM\AbstractServiceMulti;
+use FKSDB\ORM\AbstractServiceSingle;
 use Nette\Database\Context;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
@@ -18,7 +21,7 @@ use Nette\Utils\Html;
 class MultiResourceAvailability extends AbstractAdjustment {
 
     /**
-     * @var array[] fields that specifies amount used (string masks)
+     * @var array fields that specifies amount used (string masks)
      */
     private $fields;
 
@@ -26,8 +29,17 @@ class MultiResourceAvailability extends AbstractAdjustment {
      * @var string Name of event parameter that hold overall capacity.
      */
     private $paramCapacity;
+    /**
+     * @var array|string
+     */
     private $includeStates;
+    /**
+     * @var array|string|string[]
+     */
     private $excludeStates;
+    /**
+     * @var string
+     */
     private $message;
     /**
      * @var Context
@@ -36,9 +48,10 @@ class MultiResourceAvailability extends AbstractAdjustment {
 
     /**
      * @param $fields
+     * @return void
      */
     private function setFields($fields) {
-        if(!is_array($fields)){
+        if (!is_array($fields)) {
             $fields = [$fields];
         }
         $this->fields = $fields;
@@ -53,7 +66,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    function __construct($fields, $paramCapacity, $message, Context $database, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
+    public function __construct($fields, $paramCapacity, $message, Context $database, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
         $this->setFields($fields);
         $this->database = $database;
         $this->paramCapacity = $paramCapacity;
@@ -66,6 +79,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
      * @param Form $form
      * @param Machine $machine
      * @param Holder $holder
+     * @return void
      */
     protected function _adjust(Form $form, Machine $machine, Holder $holder) {
         $groups = $holder->getGroupedSecondaryHolders();
@@ -73,31 +87,32 @@ class MultiResourceAvailability extends AbstractAdjustment {
             'service' => $holder->getPrimaryHolder()->getService(),
             'holders' => [$holder->getPrimaryHolder()],
         ];
-
+        /** @var BaseHolder[][]|Field[][]|AbstractServiceSingle[]|AbstractServiceMulti[] $services */
         $services = [];
         $controls = [];
         foreach ($groups as $group) {
             $holders = [];
             $field = null;
+            /** @var BaseHolder $baseHolder */
             foreach ($group['holders'] as $baseHolder) {
                 $name = $baseHolder->getName();
                 foreach ($this->fields as $fieldMask) {
                     $foundControls = $this->getControl($fieldMask);
-                    if(!$foundControls){
+                    if (!$foundControls) {
                         continue;
                     }
-                    if(isset($foundControls[$name])){
+                    if (isset($foundControls[$name])) {
                         $holders[] = $baseHolder;
                         $controls[] = $foundControls[$name];
                         $field = $fieldMask;
-                    }elseif($name == substr($fieldMask,0,strpos($fieldMask,self::DELIMITER))){
+                    } elseif ($name == substr($fieldMask, 0, strpos($fieldMask, self::DELIMITER))) {
                         $holders[] = $baseHolder;
                         $controls[] = reset($foundControls); // assume single result;
                         $field = $fieldMask;
                     }
                 }
             }
-            if($holders){
+            if ($holders) {
                 $services[] = [
                     'service' => $group['service'],
                     'holders' => $holders,
@@ -108,39 +123,40 @@ class MultiResourceAvailability extends AbstractAdjustment {
 
         $usage = [];
         foreach ($services as $serviceData) {
+            /** @var BaseHolder $firstHolder */
             $firstHolder = reset($serviceData['holders']);
             $event = $firstHolder->getEvent();
             $tableName = $serviceData['service']->getTable()->getName();
             $table = $this->database->table($tableName);
-            $table->where($firstHolder->getEventId(),$event->getPrimary());
-            if($this->includeStates !== BaseMachine::STATE_ANY){
-                $table->where(BaseHolder::STATE_COLUMN,$this->includeStates);
+            $table->where($firstHolder->getEventId(), $event->getPrimary());
+            if ($this->includeStates !== BaseMachine::STATE_ANY) {
+                $table->where(BaseHolder::STATE_COLUMN, $this->includeStates);
             }
-            if($this->excludeStates !== BaseMachine::STATE_ANY){
-                $table->where('NOT '.BaseHolder::STATE_COLUMN,$this->excludeStates);
-            }else{
+            if ($this->excludeStates !== BaseMachine::STATE_ANY) {
+                $table->where('NOT ' . BaseHolder::STATE_COLUMN, $this->excludeStates);
+            } else {
                 $table->where('1=0');
             }
 
 
-            $primaries = array_map(function(BaseHolder $baseHolder) {
+            $primaries = array_map(function (BaseHolder $baseHolder) {
                 return $baseHolder->getModel()->getPrimary(false);
-            },$serviceData['holders']);
-            $primaries = array_filter($primaries,function($primary) {
-                return (bool) $primary;
+            }, $serviceData['holders']);
+            $primaries = array_filter($primaries, function ($primary) {
+                return (bool)$primary;
             });
 
             $column = BaseHolder::getBareColumn($serviceData['field']);
-            $pk = $table->getName().'.'.$table->getPrimary();
-            if($primaries){
-                $table->where("NOT $pk IN",$primaries);
+            $pk = $table->getName() . '.' . $table->getPrimary();
+            if ($primaries) {
+                $table->where("NOT $pk IN", $primaries);
             }
-            $r = $table->select('count('.$column.') AS count, '.$column)->group($column);
+            $r = $table->select('count(' . $column . ') AS count, ' . $column)->group($column);
 
             foreach ($r as $row) {
                 $k = $row->{$column};
-                if(is_numeric($k) && $k > 0){
-                    $usage[$k] = array_key_exists($k,$usage) ? ($usage[$k] + $row->count) : $row->count;
+                if (is_numeric($k) && $k > 0) {
+                    $usage[$k] = array_key_exists($k, $usage) ? ($usage[$k] + $row->count) : $row->count;
                 }
             }
 
@@ -149,7 +165,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
         $capacities = [];
         $o = is_scalar($this->paramCapacity) ? $holder->getParameter($this->paramCapacity) : $this->paramCapacity;
         foreach ($o as $key => $option) {
-            if(is_array($option)){
+            if (is_array($option)) {
                 $capacities[$option['value']] = $option['capacity'];
             }
         }
@@ -159,30 +175,30 @@ class MultiResourceAvailability extends AbstractAdjustment {
             $newItems = [];
             $items = $control->getItems();
             foreach ($items as $key => $item) {
-                $delta = $capacities[$key] - (array_key_exists($key,$usage) ? $usage[$key] : 0);
-                if($delta > 0){
-                    $newItems[$key] = Html::el('option')->setText($item.'('.$delta.')');
-                }else{
+                $delta = $capacities[$key] - (array_key_exists($key, $usage) ? $usage[$key] : 0);
+                if ($delta > 0) {
+                    $newItems[$key] = Html::el('option')->setText($item . '(' . $delta . ')');
+                } else {
                     $newItems[$key] = Html::el('option')->setText($item)->addAttributes(['disabled' => true]);
                 }
             }
             $control->setItems($newItems);
         }
 
-        $form->onValidate[] = function(Form $form) use($capacities,$usage,$controls) {
+        $form->onValidate[] = function (Form $form) use ($capacities, $usage, $controls) {
             $controlsUsages = [];
             foreach ($controls as $control) {
                 $k = $control->getValue();
                 /** kontrola ak je k null nieje zaujem o ubytovanie*/
-                if($k){
-                    $controlsUsages[$k] = array_key_exists($k,$controlsUsages) ? ($controlsUsages[$k]+1) : 1;
+                if ($k) {
+                    $controlsUsages[$k] = array_key_exists($k, $controlsUsages) ? ($controlsUsages[$k] + 1) : 1;
                 }
 
             }
-            foreach ($controlsUsages as $k =>$u ){
-                $us = (array_key_exists($k,$usage) ? $usage[$k] : 0)+$u;
-                if($capacities[$k]-$us<0){
-                    $message = str_replace('%avail',$capacities[$k]-$us,$this->message);
+            foreach ($controlsUsages as $k => $u) {
+                $us = (array_key_exists($k, $usage) ? $usage[$k] : 0) + $u;
+                if ($capacities[$k] - $us < 0) {
+                    $message = str_replace('%avail', $capacities[$k] - $us, $this->message);
                     $form->addError($message);
                 }
             }

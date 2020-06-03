@@ -4,19 +4,17 @@ namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
-use FKSDB\Components\Forms\Controls\URLTextBox;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\TextInput;
+use Nette\Forms\Form;
 
 /**
  * Class HomepageField
- * @package FKSDB\Components\Forms\Factories\PersonInfo
+ * *
  */
 class HomepageRow extends AbstractRow {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Homepage');
     }
@@ -26,21 +24,16 @@ class HomepageRow extends AbstractRow {
      * @return BaseControl
      */
     public function createField(...$args): BaseControl {
-        return new URLTextBox();
+        $control = new TextInput($this->getTitle());
+        $control->addCondition(Form::FILLED)->addRule(Form::URL);
+        return $control;
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_BASIC;
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'homepage';
     }
-
 }

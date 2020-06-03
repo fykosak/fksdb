@@ -4,39 +4,28 @@ namespace FKSDB\Components\DatabaseReflection\ReferencedRows;
 
 use FKSDB\Components\Controls\Badges\ContestBadge;
 use FKSDB\Components\DatabaseReflection\AbstractRow;
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\Models\IContestReferencedModel;
-use Nette\Application\BadRequestException;
+use FKSDB\ORM\Models\ModelContest;
 use Nette\Utils\Html;
 
 /**
  * Class ContestRow
- * @package FKSDB\Components\DatabaseReflection\ReferencedRows
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ContestRow extends AbstractRow {
 
     /**
-     * @inheritDoc
-     * @throws BadRequestException
+     * @param AbstractModelSingle|ModelContest $model
+     * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        if (!$model instanceof IContestReferencedModel) {
-            throw new BadTypeException(IContestReferencedModel::class, $model);
-        }
-        return ContestBadge::getHtml($model->getContest());
+        return ContestBadge::getHtml($model);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_USE_GLOBAL_ACL;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getTitle(): string {
         return _('Contest');
     }

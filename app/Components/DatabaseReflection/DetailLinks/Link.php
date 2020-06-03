@@ -2,9 +2,11 @@
 
 namespace FKSDB\Components\DatabaseReflection\Links;
 
+use FKSDB\ORM\AbstractModelSingle;
+
 /**
  * Class Link
- * @package FKSDB\Components\DatabaseReflection\Links
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Link extends AbstractLink {
     /**
@@ -29,6 +31,7 @@ class Link extends AbstractLink {
      * @param array $params
      * @param string $title
      * @param string $modelClassName
+     * @return void
      */
     public function setParams(string $destination, array $params, string $title, string $modelClassName) {
         $this->destination = $destination;
@@ -37,32 +40,19 @@ class Link extends AbstractLink {
         $this->modelClassName = $modelClassName;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getText(): string {
         return _($this->title);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getModelClassName(): string {
         return $this->modelClassName;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getDestination($model): string {
+    public function getDestination(AbstractModelSingle $model): string {
         return $this->destination;
     }
 
-    /**
-     * @param \FKSDB\ORM\AbstractModelSingle $model
-     * @return array
-     */
-    public function prepareParams($model): array {
+    public function prepareParams(AbstractModelSingle $model): array {
         $urlParams = [];
         foreach ($this->params as $key => $accessKey) {
             $urlParams[$key] = $model->{$accessKey};

@@ -1,14 +1,14 @@
 <?php
 
-namespace Events\Spec\Dsef;
+namespace FKSDB\Events\Spec\Dsef;
 
-use Events\Machine\BaseMachine;
-use Events\Model\Holder\Field;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\Holder\Field;
 use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Services\Events\ServiceDsefGroup;
 use Nette\SmartObject;
-use ORM\ServicesMulti\Events\ServiceMDsefParticipant;
+use FKSDB\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 
 /**
  *
@@ -16,6 +16,7 @@ use ORM\ServicesMulti\Events\ServiceMDsefParticipant;
  */
 class GroupOptions implements IOptionsProvider {
     use SmartObject;
+
     /**
      * @var ServiceMDsefParticipant
      */
@@ -25,7 +26,13 @@ class GroupOptions implements IOptionsProvider {
      * @var ServiceDsefGroup
      */
     private $serviceDsefGroup;
+    /**
+     * @var array|string
+     */
     private $includeStates;
+    /**
+     * @var array|string|string[]
+     */
     private $excludeStates;
 
     /**
@@ -41,7 +48,7 @@ class GroupOptions implements IOptionsProvider {
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    function __construct(ServiceMDsefParticipant $serviceMParticipant, ServiceDsefGroup $serviceDsefGroup, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
+    public function __construct(ServiceMDsefParticipant $serviceMParticipant, ServiceDsefGroup $serviceDsefGroup, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
         $this->includeStates = $includeStates;
         $this->excludeStates = $excludeStates;
         $this->serviceMParticipant = $serviceMParticipant;

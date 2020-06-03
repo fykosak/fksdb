@@ -4,6 +4,8 @@ namespace EventModule;
 
 use FKSDB\EntityTrait;
 use FKSDB\Exceptions\BadTypeException;
+use FKSDB\ORM\AbstractModelMulti;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\AbortException;
@@ -12,7 +14,7 @@ use Nette\Application\ForbiddenRequestException;
 
 /**
  * Trait EventEntityTrait
- * @package EventModule
+ * *
  */
 trait EventEntityTrait {
     use EntityTrait {
@@ -21,7 +23,7 @@ trait EventEntityTrait {
 
     /**
      * @param int $id
-     * @return mixed
+     * @return AbstractModelMulti|AbstractModelSingle
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
@@ -33,7 +35,7 @@ trait EventEntityTrait {
             throw new BadTypeException(IEventReferencedModel::class, $this->model);
         }
         if ($this->model->getEvent()->event_id !== $this->getEvent()->event_id) {
-            throw new ForbiddenRequestException;
+            throw new ForbiddenRequestException();
         }
 
         return $this->model;

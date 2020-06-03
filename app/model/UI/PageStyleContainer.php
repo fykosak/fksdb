@@ -3,12 +3,12 @@
 namespace FKSDB\UI;
 /**
  * Class PageStyleContainer
- * @package FKSDB
+ * *
  */
 class PageStyleContainer {
     /** @var string */
     public $styleId;
-    /** @var */
+    /** @var string */
     public $navBarClassName;
     /** @var string */
     public $mainContainerClassName;

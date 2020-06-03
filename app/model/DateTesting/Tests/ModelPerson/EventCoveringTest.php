@@ -13,7 +13,7 @@ use FKSDB\DataTesting\TestsLogger;
 
 /**
  * Class EventCoveringTest
- * @package FKSDB\DataTesting\Tests\Person
+ * *
  */
 class EventCoveringTest extends PersonTest {
 
@@ -73,10 +73,8 @@ class EventCoveringTest extends PersonTest {
                         if ($org->until >= $year && $org->since <= $year) {
                             $logger->log($this->createLog($year, $contestId, $type, 'org'));
                         }
-                    } else {
-                        if ($org->since <= $year) {
-                            $logger->log($this->createLog($year, $contestId, $type, 'org'));
-                        }
+                    } elseif ($org->since <= $year) {
+                        $logger->log($this->createLog($year, $contestId, $type, 'org'));
                     }
                 }
             }
@@ -94,10 +92,6 @@ class EventCoveringTest extends PersonTest {
         return new TestLog($this->getTitle(), \sprintf(_('Organization and participation at same year %d and contestId %d %s<->%s. '), $year, $contestId, $typeP, $typeO), TestLog::LVL_DANGER);
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return array
-     */
     private function getEventOrgYears(ModelPerson $person): array {
         $eventOrgYears = [
             ModelContest::ID_FYKOS => [],
@@ -114,16 +108,10 @@ class EventCoveringTest extends PersonTest {
         return $eventOrgYears;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Organization and participation at same year');
     }
 
-    /**
-     * @return string
-     */
     public function getAction(): string {
         return 'organization_participation_same_year';
     }

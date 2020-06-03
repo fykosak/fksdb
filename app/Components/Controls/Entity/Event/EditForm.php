@@ -2,9 +2,10 @@
 
 namespace FKSDB\Components\Controls\Entity\Event;
 
-use Events\Model\Holder\Holder;
+use FKSDB\Config\NeonSchemaException;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Config\NeonScheme;
+use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContest;
@@ -18,11 +19,10 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
 use Nette\Neon\Neon;
 use Nette\Utils\Html;
-use Nette\Utils\NeonException;
 
 /**
- * Class EditControl
- * @package FKSDB\Components\Controls\Entity\Event
+ * Class EditForm
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EditForm extends AbstractForm implements IEditEntityForm {
 
@@ -51,6 +51,7 @@ class EditForm extends AbstractForm implements IEditEntityForm {
     /**
      * @param AbstractModelSingle|ModelEvent $model
      * @throws BadRequestException
+     * @throws NeonSchemaException
      */
     public function setModel(AbstractModelSingle $model) {
         $this->model = $model;
@@ -61,8 +62,9 @@ class EditForm extends AbstractForm implements IEditEntityForm {
         $paramControl = $this->getForm()->getComponent(self::CONT_EVENT)->getComponent('parameters');
         $paramControl->setOption('description', $this->createParamDescription());
         $paramControl->addRule(function (BaseControl $control) {
-            /** @var Holder $holder */
-            $holder = $this->container->createEventHolder($this->model);
+            /** @var EventDispatchFactory $factory */
+            $factory = $this->container->getByType(EventDispatchFactory::class);
+            $holder = $factory->getDummyHolder($this->model);
             $scheme = $holder->getPrimaryHolder()->getParamScheme();
             $parameters = $control->getValue();
             try {
@@ -73,7 +75,7 @@ class EditForm extends AbstractForm implements IEditEntityForm {
                 }
                 NeonScheme::readSection($parameters, $scheme);
                 return true;
-            } catch (NeonException $exception) {
+            } catch (NeonSchemaException $exception) {
                 $control->addError($exception->getMessage());
                 return false;
             }
@@ -102,10 +104,14 @@ class EditForm extends AbstractForm implements IEditEntityForm {
 
     /**
      * @return Html
+     * @throws BadRequestException
+     * @throws NeonSchemaException
      */
     private function createParamDescription() {
-        /** @var Holder $holder */
-        $holder = $this->container->createEventHolder($this->model);
+        /** @var EventDispatchFactory $factory */
+        $factory = $this->container->getByType(EventDispatchFactory::class);
+
+        $holder = $factory->getDummyHolder($this->model);
         $scheme = $holder->getPrimaryHolder()->getParamScheme();
         $result = Html::el('ul');
         foreach ($scheme as $key => $meta) {

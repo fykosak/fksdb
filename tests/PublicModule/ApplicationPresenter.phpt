@@ -2,13 +2,12 @@
 
 $container = require '../bootstrap.php';
 
-use Events\EventTestCase;
+use FKSDB\Events\EventTestCase;
 use Nette\Application\BadRequestException;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\Templating\ITemplate;
 use Nette\Utils\DateTime;
-use Nette\DI\Container;
 use PublicModule\ApplicationPresenter;
 use Tester\Assert;
 
@@ -18,11 +17,6 @@ class ApplicationPresenterTest extends EventTestCase {
      * @var ApplicationPresenter
      */
     private $fixture;
-
-    function __construct(Container $container) {
-        parent::__construct($container);
-        $this->setContainer($container);
-    }
 
     protected function setUp() {
         parent::setUp();

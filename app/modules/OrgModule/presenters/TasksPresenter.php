@@ -45,6 +45,7 @@ class TasksPresenter extends BasePresenter {
 
     /**
      * @param SeriesCalculator $seriesCalculator
+     * @return void
      */
     public function injectSeriesCalculator(SeriesCalculator $seriesCalculator) {
         $this->seriesCalculator = $seriesCalculator;
@@ -52,6 +53,7 @@ class TasksPresenter extends BasePresenter {
 
     /**
      * @param PipelineFactory $pipelineFactory
+     * @return void
      */
     public function injectPipelineFactory(PipelineFactory $pipelineFactory) {
         $this->pipelineFactory = $pipelineFactory;
@@ -59,8 +61,9 @@ class TasksPresenter extends BasePresenter {
 
     /**
      * @param Downloader $downloader
+     * @return void
      */
-    function injectDownloader(Downloader $downloader) {
+    public function injectDownloader(Downloader $downloader) {
         $this->downloader = $downloader;
     }
 
@@ -105,10 +108,6 @@ class TasksPresenter extends BasePresenter {
         return $control;
     }
 
-    /**
-     * @param SimpleXMLElement $xml
-     * @return bool
-     */
     private function isLegacyXml(SimpleXMLElement $xml): bool {
         return $xml->getName() === 'problems';
     }
@@ -129,7 +128,7 @@ class TasksPresenter extends BasePresenter {
                 break;
             case self::SOURCE_FILE:
                 if (!$values['file']->isOk()) {
-                    throw new UploadException;
+                    throw new UploadException();
                 }
                 $file = $values['file']->getTemporaryFile();
                 break;

@@ -3,21 +3,17 @@
 namespace FKSDB\Components\DatabaseReflection\ReferencedRows;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\Models\IEventReferencedModel;
-use Nette\Application\BadRequestException;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\PresenterComponent;
-use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 
 /**
- * Class PersonLinkRow
- * @package FKSDB\Components\DatabaseReflection\VirtualRows
+ * Class EventLink
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventLink extends AbstractRow {
-
     /**
      * @var PresenterComponent
      */
@@ -25,40 +21,28 @@ class EventLink extends AbstractRow {
 
     /**
      * PersonLinkRow constructor.
-     * @param ITranslator $translator
      * @param PresenterComponent $presenterComponent
      */
-    public function __construct(ITranslator $translator, PresenterComponent $presenterComponent) {
-        parent::__construct($translator);
+    public function __construct(PresenterComponent $presenterComponent) {
         $this->presenterComponent = $presenterComponent;
     }
 
-    /**
-     * @return int
-     */
     public function getPermissionsValue(): int {
         return self::PERMISSION_USE_GLOBAL_ACL;
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Event');
     }
 
     /**
-     * @param AbstractModelSingle $model
+     * @param ModelEvent|AbstractModelSingle $model
      * @return Html
-     * @throws BadRequestException
      * @throws InvalidLinkException
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        if (!$model instanceof IEventReferencedModel) {
-            throw new BadTypeException(IEventReferencedModel::class, $model);
-        }
         return Html::el('a')->addAttributes(['href' => $this->presenterComponent->getPresenter()->link(
-            ':Event:Dashboard:default', ['eventId' => $model->getEvent()->event_id]
-        )])->addText($model->getEvent()->name);
+            ':Event:Dashboard:default', ['eventId' => $model->event_id]
+        )])->addText($model->name);
     }
 }

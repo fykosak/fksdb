@@ -6,21 +6,16 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
  * Class NoteRow
- * @package FKSDB\Components\DatabaseReflection\EventParticipant
+ * @author Michal Červeňák <miso@fykos.cz>
+ * TODO to textRow
  */
 class NoteRow extends AbstractParticipantRow {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Note');
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'note';
     }

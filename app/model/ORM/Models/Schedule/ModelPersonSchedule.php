@@ -4,9 +4,11 @@ namespace FKSDB\ORM\Models\Schedule;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\IPaymentReferencedModel;
 use FKSDB\ORM\Models\IPersonReferencedModel;
 use FKSDB\ORM\Models\IScheduleGroupReferencedModel;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\Transitions\IStateModel;
@@ -17,7 +19,7 @@ use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class ModelPersonSchedule
- * @package FKSDB\ORM\Models\Schedule
+ * *
  * @property-read ActiveRow person
  * @property-read ActiveRow schedule_item
  * @property-read int person_id
@@ -25,26 +27,22 @@ use FKSDB\Exceptions\NotImplementedException;
  * @property-read string state
  * @property-read int person_schedule_id
  */
-class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IPersonReferencedModel, IScheduleGroupReferencedModel, IPaymentReferencedModel {
-    /**
-     * @return ModelPerson
-     */
+class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IPersonReferencedModel, IScheduleGroupReferencedModel, IPaymentReferencedModel, IEventReferencedModel {
+
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);
     }
 
-    /**
-     * @return ModelScheduleItem
-     */
     public function getScheduleItem(): ModelScheduleItem {
         return ModelScheduleItem::createFromActiveRow($this->schedule_item);
     }
 
-    /**
-     * @return ModelScheduleGroup
-     */
     public function getScheduleGroup(): ModelScheduleGroup {
         return $this->getScheduleItem()->getScheduleGroup();
+    }
+
+    public function getEvent(): ModelEvent {
+        return $this->getScheduleGroup()->getEvent();
     }
 
     /**
@@ -58,9 +56,6 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
         return ModelPayment::createFromActiveRow($data);
     }
 
-    /**
-     * @return bool
-     */
     public function hasActivePayment(): bool {
         $payment = $this->getPayment();
         if (!$payment) {
@@ -89,7 +84,7 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
             case ModelScheduleGroup::TYPE_WEEKEND:
                 return $item->getLabel();
             default:
-                throw new NotImplementedException;
+                throw new NotImplementedException();
         }
     }
 
@@ -115,6 +110,6 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
      * @throws NotImplementedException
      */
     public function refresh(Context $connection, IConventions $conventions): IStateModel {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 }

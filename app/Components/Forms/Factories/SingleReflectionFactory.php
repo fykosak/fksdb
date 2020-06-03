@@ -9,7 +9,7 @@ use Nette\InvalidStateException;
 
 /**
  * Class SingleReflectionFactory
- * @package FKSDB\Components\Forms\Factories
+ * *
  */
 abstract class SingleReflectionFactory {
     /**
@@ -25,9 +25,6 @@ abstract class SingleReflectionFactory {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    /**
-     * @return string
-     */
     abstract protected function getTableName(): string;
 
     /**
@@ -37,7 +34,7 @@ abstract class SingleReflectionFactory {
      * @throws \Exception
      */
     protected function loadFactory(string $fieldName): AbstractRow {
-        return $this->tableReflectionFactory->loadService($this->getTableName(), $fieldName);
+        return $this->tableReflectionFactory->loadRowFactory($this->getTableName() . '.' . $fieldName);
     }
 
     /**

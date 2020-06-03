@@ -4,7 +4,10 @@ namespace CommonModule;
 
 use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
 use FKSDB\ORM\Services\ServicePerson;
+use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Database\Table\ActiveRow;
 use Persons\Deduplication\DuplicateFinder;
 use Persons\Deduplication\Merger;
 
@@ -16,7 +19,7 @@ use Persons\Deduplication\Merger;
 class DeduplicatePresenter extends BasePresenter {
 
     /**
-     * @var \FKSDB\ORM\Services\ServicePerson
+     * @var ServicePerson
      */
     private $servicePerson;
 
@@ -27,6 +30,7 @@ class DeduplicatePresenter extends BasePresenter {
 
     /**
      * @param ServicePerson $servicePerson
+     * @return void
      */
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
@@ -34,29 +38,34 @@ class DeduplicatePresenter extends BasePresenter {
 
     /**
      * @param Merger $merger
+     * @return void
      */
     public function injectMerger(Merger $merger) {
         $this->merger = $merger;
     }
 
     /**
+     * @return void
      */
     public function authorizedPerson() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowedForAnyContest('person', 'list'));
     }
 
+    /**
+     * @return void
+     */
     public function titlePerson() {
         $this->setTitle(_('Duplicitní osoby'), 'fa fa-exchange');
     }
 
     /**
      * @throws ForbiddenRequestException
-     * @throws \Nette\Application\AbortException
-     * @throws \Nette\Application\BadRequestException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function handleBatchMerge() {
         if (!$this->getContestAuthorizator()->isAllowedForAnyContest('person', 'merge')) { //TODO generic authorizator
-            throw new ForbiddenRequestException;
+            throw new ForbiddenRequestException();
         }
         //TODO later specialize for each entinty type
         $finder = $this->createPersonDuplicateFinder();
@@ -69,6 +78,7 @@ class DeduplicatePresenter extends BasePresenter {
                 continue; // the trunk can be already merged somewhere else as merged
             }
             $trunkRow = $trunkPersons[$trunkId];
+            /** @var ActiveRow $mergedRow */
             $mergedRow = $mergedData[DuplicateFinder::IDX_PERSON];
             $this->merger->setMergedPair($trunkRow, $mergedRow);
 
@@ -82,9 +92,6 @@ class DeduplicatePresenter extends BasePresenter {
         $this->redirect('this');
     }
 
-    /**
-     * @return PersonsGrid
-     */
     protected function createComponentPersonsGrid(): PersonsGrid {
         $duplicateFinder = $this->createPersonDuplicateFinder();
         $pairs = $duplicateFinder->getPairs();
@@ -93,16 +100,11 @@ class DeduplicatePresenter extends BasePresenter {
         return new PersonsGrid($trunkPersons, $pairs, $this->getContext());
     }
 
-
-    /**
-     * @return DuplicateFinder
-     */
-    protected function createPersonDuplicateFinder() {
+    protected function createPersonDuplicateFinder(): DuplicateFinder {
         return new DuplicateFinder($this->servicePerson, $this->globalParameters);
     }
 
     protected function getChoosers() {
         return ['dispatch', 'lang'];
     }
-
 }

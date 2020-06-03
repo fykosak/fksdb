@@ -65,7 +65,7 @@ class TasksFromXML extends Stage {
     }
 
     /**
-     * @return mixed|SeriesData
+     * @return SeriesData
      */
     public function getOutput() {
         return $this->data;
@@ -73,6 +73,7 @@ class TasksFromXML extends Stage {
 
     /**
      * @param SimpleXMLElement $XMLTask
+     * @return void
      */
     private function processTask(SimpleXMLElement $XMLTask) {
         $contest = $this->data->getContest();

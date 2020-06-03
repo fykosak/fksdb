@@ -12,7 +12,7 @@ use Nette\DI\Container;
 
 /**
  * Class AbstractForm
- * @package FKSDB\Components\Controls\Entity\School
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractForm extends FormControl {
 

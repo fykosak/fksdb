@@ -11,16 +11,10 @@ use FKSDB\ORM\Models\ModelTaskContribution;
  */
 class ServiceTaskContribution extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelTaskContribution::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_TASK_CONTRIBUTION;
     }

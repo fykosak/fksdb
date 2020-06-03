@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use Events\Machine\BaseMachine;
-use Events\Model\Holder\Field;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\Holder\Field;
 use FKSDB\Components\Forms\Controls\TimeBox;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\AbstractServiceMulti;
@@ -16,6 +16,7 @@ use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\TextArea;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
+use Nette\Forms\IControl;
 use Nette\InvalidArgumentException;
 
 /**
@@ -44,7 +45,7 @@ class DBReflectionFactory extends AbstractFactory {
      * @param Connection $connection
      * @param TableReflectionFactory $tableReflectionFactory
      */
-    function __construct(Connection $connection, TableReflectionFactory $tableReflectionFactory) {
+    public function __construct(Connection $connection, TableReflectionFactory $tableReflectionFactory) {
         $this->connection = $connection;
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
@@ -70,7 +71,7 @@ class DBReflectionFactory extends AbstractFactory {
                 $tableName = $service->getMainService()->getTable()->getName();
             }
             if ($tableName) {
-                $element = $this->tableReflectionFactory->loadService($tableName, $columnName)->createField();
+                $element = $this->tableReflectionFactory->loadRowFactory($tableName . '.' . $columnName)->createField();
             }
         } catch (\Exception $e) {
         }
@@ -87,8 +88,10 @@ class DBReflectionFactory extends AbstractFactory {
             } elseif (substr_compare($type, 'INT', '-3') == 0) {
                 $element = new TextInput($field->getLabel());
                 $element->addCondition(Form::FILLED)
-                    ->addRule(Form::INTEGER, _('%label musí být celé číslo.'))
-                    ->addRule(Form::MAX_LENGTH, null, $size);
+                    ->addRule(Form::INTEGER, _('%label musí být celé číslo.'));
+                if ($size) {
+                    $element->addRule(Form::MAX_LENGTH, null, $size);
+                }
             } elseif ($type == 'TEXT') {
                 $element = new TextArea($field->getLabel());
             } elseif ($type == 'TIME') {
@@ -110,13 +113,14 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
     /**
-     * @param $component
+     * @param BaseControl $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
      */
     protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
-        if ($machine->getState() == BaseMachine::STATE_INIT && $field->getDefault() === null) {
+
+        if ($field->getBaseHolder()->getModelState() == BaseMachine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
             $default = $column['default'];
         } else {
@@ -126,7 +130,7 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
     /**
-     * @param $component
+     * @param BaseControl $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
@@ -137,7 +141,7 @@ class DBReflectionFactory extends AbstractFactory {
 
     /**
      * @param Component $component
-     * @return Component|\Nette\Forms\IControl
+     * @return Component|IControl
      */
     public function getMainControl(Component $component) {
         return $component;
@@ -190,4 +194,3 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
 }
-

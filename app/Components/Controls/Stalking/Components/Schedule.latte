@@ -8,7 +8,7 @@
                          {var $model = \FKSDB\ORM\Models\Schedule\ModelPersonSchedule::createFromActiveRow($row)}
                          {var $item = $model->getScheduleItem()}
                          <span class="col-4">{$item->getScheduleGroup()->schedule_group_type}</span>
-                         {control valuePrinter:onlyValue 'referenced.event_link', $item}
+                         {control valuePrinter:onlyValue 'event.event_link', $item}
                          <span class="col-5">{$item->getLabel()}</span>
                      </span>
                 </li>

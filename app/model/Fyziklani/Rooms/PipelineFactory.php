@@ -14,7 +14,7 @@ use Pipeline\Pipeline;
 class PipelineFactory {
 
     /**
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
+     * @var ServiceFyziklaniTeam
      */
     private $serviceTeam;
 
@@ -22,14 +22,10 @@ class PipelineFactory {
      * PipelineFactory constructor.
      * @param ServiceFyziklaniTeam $serviceTeam
      */
-    function __construct(ServiceFyziklaniTeam $serviceTeam) {
+    public function __construct(ServiceFyziklaniTeam $serviceTeam) {
         $this->serviceTeam = $serviceTeam;
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return Pipeline
-     */
     public function create(ModelEvent $event): Pipeline {
         $pipeline = new Pipeline();
         $pipeline->setLogger(new MemoryLogger());

@@ -30,6 +30,7 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
 
     /**
      * @param SeriesCalculator $seriesCalculator
+     * @return void
      */
     public function injectSeriesCalculator(SeriesCalculator $seriesCalculator) {
         $this->seriesCalculator = $seriesCalculator;
@@ -66,12 +67,10 @@ abstract class SeriesPresenter extends BasePresenter implements ISeriesPresenter
         return $control->getSeries();
     }
 
-    /**
-     * @return SeriesChooser
-     */
     public function createComponentSeriesChooser(): SeriesChooser {
-        return new SeriesChooser($this->session, $this->seriesCalculator, $this->getServiceContest(), $this->getTranslator());
+        return new SeriesChooser($this->getContext());
     }
+
     /**
      * @param string $title
      * @param string $icon

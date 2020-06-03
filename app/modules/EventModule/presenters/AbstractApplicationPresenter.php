@@ -2,8 +2,9 @@
 
 namespace EventModule;
 
-use Events\Model\ApplicationHandlerFactory;
-use Events\Model\Grid\SingleEventSource;
+use FKSDB\Config\NeonSchemaException;
+use FKSDB\Events\Model\ApplicationHandlerFactory;
+use FKSDB\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\MassTransitionsControl;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
@@ -19,7 +20,7 @@ use Nette\InvalidStateException;
 
 /**
  * Class ApplicationPresenter
- * @package EventModule
+ * *
  */
 abstract class AbstractApplicationPresenter extends BasePresenter {
     use EventEntityTrait;
@@ -32,6 +33,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
 
     /**
      * @param ApplicationHandlerFactory $applicationHandlerFactory
+     * @return void
      */
     public function injectHandlerFactory(ApplicationHandlerFactory $applicationHandlerFactory) {
         $this->applicationHandlerFactory = $applicationHandlerFactory;
@@ -39,12 +41,16 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
 
     /**
      * @param ServiceEventParticipant $serviceEventParticipant
+     * @return void
      */
     public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant) {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
-    public final function titleList() {
+    /**
+     * @throws BadRequestException
+     */
+    final public function titleList() {
         $this->setTitle(_('List of applications'), 'fa fa-users');
     }
 
@@ -53,12 +59,17 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
+     * @throws \Throwable
      */
-    public final function titleDetail(int $id) {
+    final public function titleDetail(int $id) {
         $this->setTitle(sprintf(_('Application detail "%s"'), $this->loadEntity($id)->__toString()), 'fa fa-user');
     }
 
-    public final function titleTransitions() {
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
+    final public function titleTransitions() {
         $this->setTitle(_('Group transitions'), 'fa fa-user');
     }
 
@@ -100,9 +111,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
         $this->template->event = $this->getEvent();
     }
 
-    /**
-     * @return PersonGrid
-     */
     protected function createComponentPersonScheduleGrid(): PersonGrid {
         return new PersonGrid($this->getContext());
     }
@@ -111,15 +119,16 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @return ApplicationComponent
      * @throws BadRequestException
      * @throws AbortException
+     * @throws NeonSchemaException
      */
     protected function createComponentApplicationComponent(): ApplicationComponent {
         $source = new SingleEventSource($this->getEvent(), $this->getContext());
         foreach ($source->getHolders() as $key => $holder) {
             if ($key === $this->getEntity()->getPrimary()) {
-                return new ApplicationComponent($this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);
+                return new ApplicationComponent($this->getContext(), $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);
             }
         }
-        throw new InvalidStateException;
+        throw new InvalidStateException();
     }
 
     /**
@@ -127,7 +136,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    protected final function createComponentMassTransitions(): MassTransitionsControl {
+    final protected function createComponentMassTransitions(): MassTransitionsControl {
         return new MassTransitionsControl($this->getContext(), $this->getEvent());
     }
 
@@ -142,13 +151,13 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @inheritDoc
      */
     public function createComponentCreateForm(): Control {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
      * @inheritDoc
      */
     public function createComponentEditForm(): Control {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 }

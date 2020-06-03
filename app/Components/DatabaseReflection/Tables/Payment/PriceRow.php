@@ -10,12 +10,10 @@ use Nette\Utils\Html;
 
 /**
  * Class PriceRow
- * @package FKSDB\Components\DatabaseReflection\Payment
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PriceRow extends AbstractPaymentRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Price');
     }
@@ -26,7 +24,7 @@ class PriceRow extends AbstractPaymentRow {
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         if ($model->price) {
-            return (new PricePrinter)($model->getPrice());
+            return (new PricePrinter())($model->getPrice());
         }
         return NotSetBadge::getHtml();
     }

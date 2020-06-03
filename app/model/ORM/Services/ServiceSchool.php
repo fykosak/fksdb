@@ -13,33 +13,20 @@ use FKSDB\ORM\Tables\TypedTableSelection;
  */
 class ServiceSchool extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
     public function getModelClassName(): string {
         return ModelSchool::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_SCHOOL;
     }
 
-    /**
-     * @return TypedTableSelection
-     */
     public function getSchools(): TypedTableSelection {
         return $this->getTable()
             ->select(DbNames::TAB_SCHOOL . '.*')
             ->select(DbNames::TAB_ADDRESS . '.*');
     }
 
-    /**
-     * @param int $schoolId
-     * @return bool
-     */
     public function isCzSkSchool(int $schoolId): bool {
         /** @var ModelRegion|false $country */
         $country = $this->getTable()->select('address.region.country_iso')->where(['school_id' => $schoolId])->fetch();

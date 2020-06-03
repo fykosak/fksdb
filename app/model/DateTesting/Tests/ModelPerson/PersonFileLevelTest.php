@@ -10,7 +10,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class PersonFileLevelTest
- * @package FKSDB\DataTesting\Tests\Person
+ * *
  */
 abstract class PersonFileLevelTest extends PersonTest {
     /**
@@ -41,8 +41,8 @@ abstract class PersonFileLevelTest extends PersonTest {
      * @throws BadRequestException
      * @throws \Exception
      */
-    private final function loadFactory(TableReflectionFactory $tableReflectionFactory, string $factoryTableName, string $factoryFieldName) {
-        $rowFactory = $tableReflectionFactory->loadService($factoryTableName, $factoryFieldName);
+    final private function loadFactory(TableReflectionFactory $tableReflectionFactory, string $factoryTableName, string $factoryFieldName) {
+        $rowFactory = $tableReflectionFactory->loadRowFactory($factoryTableName . '.' . $factoryFieldName);
         if (!$rowFactory instanceof ITestedRowFactory) {
             throw new BadTypeException(ITestedRowFactory::class, $rowFactory);
         }
@@ -52,21 +52,15 @@ abstract class PersonFileLevelTest extends PersonTest {
     /**
      * @return AbstractRow|ITestedRowFactory
      */
-    protected final function getRowFactory(): AbstractRow {
+    final protected function getRowFactory(): AbstractRow {
         return $this->rowFactory;
     }
 
-    /**
-     * @return string
-     */
-    public final function getTitle(): string {
+    final public function getTitle(): string {
         return $this->getRowFactory()->getTitle();
     }
 
-    /**
-     * @return string
-     */
-    public final function getAction(): string {
+    final public function getAction(): string {
         return $this->actionName;
     }
 }
