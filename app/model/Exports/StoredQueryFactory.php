@@ -13,7 +13,7 @@ use Nette\Http\Response;
 use Nette\InvalidArgumentException;
 use Utils;
 use WebService\IXMLNodeSerializer;
-use FKSDB\CoreModule\ISeriesPresenter;
+use FKSDB\CoreModule\SeriesPresenter\ISeriesPresenter;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
