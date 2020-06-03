@@ -57,7 +57,7 @@ abstract class AbstractServiceMulti implements IService {
      * @param array $data
      * @return AbstractModelMulti
      */
-    public function createNewModel($data) {
+    public function createNewModel(array $data): IModel {
         $mainModel = $this->getMainService()->createNewModel($data);
         $joinedModel = $this->getJoinedService()->createNewModel($data);
 
