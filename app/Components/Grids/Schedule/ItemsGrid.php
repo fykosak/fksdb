@@ -43,6 +43,7 @@ class ItemsGrid extends BaseGrid {
 
     /**
      * @param Presenter $presenter
+     * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws NotImplementedException

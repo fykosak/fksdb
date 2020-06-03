@@ -43,10 +43,11 @@ class GroupsGrid extends BaseGrid {
 
     /**
      * @param Presenter $presenter
+     * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      * @throws BadTypeException
+     * @throws NotImplementedException
      */
     protected function configure(Presenter $presenter): void {
         parent::configure($presenter);

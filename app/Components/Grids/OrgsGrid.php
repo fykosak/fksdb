@@ -2,6 +2,8 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
@@ -62,6 +64,9 @@ class OrgsGrid extends BaseGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
+     * @throws InvalidLinkException
+     * @throws BadTypeException
+     * @throws NotImplementedException
      */
     protected function configure(Presenter $presenter): void {
         parent::configure($presenter);

@@ -35,7 +35,7 @@ class PersonsGrid extends BaseGrid {
 
         $this->addColumn('person_schedule_id', _('#'));
 
-        $this->addColumns(['person.full_name','event.role','payment.payment']);
+        $this->addColumns(['person.full_name', 'event.role', 'payment.payment']);
 
         $this->addColumn('state', _('State'))->setRenderer(function ($row) {
             $model = ModelPersonSchedule::createFromActiveRow($row);

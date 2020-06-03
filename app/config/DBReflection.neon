@@ -523,7 +523,7 @@ DBReflection:
          school:
              modelClassName: FKSDB\ORM\Models\ModelSchool
              referencedAccess:
-                modelClassName: FKSDB\ORM\Models\StoredQuery\ISchoolReferencedModel
+                modelClassName: FKSDB\ORM\Models\ISchoolReferencedModel
                 method: getSchool
              fields:
                  school:
