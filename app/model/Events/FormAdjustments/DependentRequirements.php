@@ -2,6 +2,7 @@
 
 namespace FKSDB\Events\FormAdjustments;
 
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 
@@ -11,7 +12,11 @@ use Nette\Forms\IControl;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DependentRequirements extends PairwiseAdjustment {
-
+    /**
+     * @param BaseControl|IControl $target
+     * @param BaseControl|IControl $prerequisite
+     * @return void
+     */
     protected function processPair(IControl $target, IControl $prerequisite): void {
         $target->getRules()->addConditionOn($prerequisite, Form::FILLED)->addRule(Form::FILLED, _('Pole %label je třeba vyplnit.'));
     }

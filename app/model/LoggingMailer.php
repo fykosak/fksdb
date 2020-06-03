@@ -63,7 +63,7 @@ class LoggingMailer implements IMailer {
     }
 
     /**
-     * @param $logging
+     * @param mixed $logging
      */
     public function setLogging($logging): void {
         $this->logging = $logging;

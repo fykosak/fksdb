@@ -126,7 +126,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @param $fid
+     * @param mixed $fid
      * @return ModelMPersonHasFlag|null
      */
     public function getMPersonHasFlag($fid): ?ModelMPersonHasFlag {

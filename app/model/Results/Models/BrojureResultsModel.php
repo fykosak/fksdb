@@ -112,7 +112,7 @@ class BrojureResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @param $listedSeries
+     * @param mixed $listedSeries
      * @return void
      */
     public function setListedSeries($listedSeries): void {

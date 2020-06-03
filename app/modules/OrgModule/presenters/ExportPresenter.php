@@ -173,16 +173,10 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         return $this->patternQuery;
     }
 
-    /**
-     * @throws BadRequestException
-     */
     public function authorizedList(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('storedQuery', 'list', $this->getSelectedContest()));
     }
 
-    /**
-     * @throws BadRequestException
-     */
     public function authorizedCompose(): void {
         $this->setAuthorized(
             ($this->getContestAuthorizator()->isAllowed('storedQuery', 'create', $this->getSelectedContest()) &&

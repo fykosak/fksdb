@@ -253,7 +253,7 @@ class TableMerger {
 
     /**
      * @param ActiveRow $row
-     * @param $changes
+     * @param mixed $changes
      */
     private function logUpdate(ActiveRow $row, $changes): void {
         $msg = [];
@@ -326,7 +326,7 @@ class TableMerger {
     }
 
     /**
-     * @var
+     * @var mixed
      */
     private $primaryKey;
 
@@ -368,7 +368,7 @@ class TableMerger {
     }
 
     /**
-     * @var
+     * @var mixed
      */
     private $secondaryKey;
 
@@ -390,7 +390,7 @@ class TableMerger {
     }
 
     /**
-     * @param $secondaryKey
+     * @param mixed $secondaryKey
      */
     public function setSecondaryKey($secondaryKey): void {
         $this->secondaryKey = $secondaryKey;

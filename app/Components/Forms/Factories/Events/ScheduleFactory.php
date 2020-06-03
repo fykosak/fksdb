@@ -7,7 +7,6 @@ use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Container;
-use Nette\Forms\IControl;
 use Nette\Utils\JsonException;
 
 /**

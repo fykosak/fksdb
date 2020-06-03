@@ -4,7 +4,6 @@ namespace FKSDB;
 
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceTask;
-use Nette\Application\BadRequestException;
 use Nette\Utils\DateTime;
 
 /**

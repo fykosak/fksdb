@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\DatabaseReflection\Links;
 
-use EventModule\BasePresenter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelEvent;
 

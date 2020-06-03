@@ -34,9 +34,9 @@ class QIDAssertion {
 
     /**
      * @param Permission $acl
-     * @param $role
-     * @param $resourceId
-     * @param $privilege
+     * @param mixed $role
+     * @param mixed $resourceId
+     * @param mixed $privilege
      * @return bool
      */
     public function __invoke(Permission $acl, $role, $resourceId, $privilege): bool {

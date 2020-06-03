@@ -90,7 +90,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
     }
 
     /**
-     * @var
+     * @var mixed
      */
     private $cache;
 

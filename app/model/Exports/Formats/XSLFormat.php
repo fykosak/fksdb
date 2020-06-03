@@ -59,7 +59,7 @@ class XSLFormat implements IExportFormat {
     }
 
     /**
-     * @param $parameters
+     * @param mixed $parameters
      */
     public function addParameters($parameters) {
         $this->parameters = array_merge($this->parameters, $parameters);

@@ -9,7 +9,6 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
-use Tracy\Debugger;
 
 /**
  * Class EventDispatchFactory

@@ -11,7 +11,6 @@ use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use FKSDB\Exceptions\NotImplementedException;
-use Nette\Utils\Html;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -58,6 +57,10 @@ class EventPresenter extends BasePresenter {
         $this->traitActionEdit($id);
     }
 
+    /**
+     * @return EventsGrid
+     * @throws BadRequestException
+     */
     protected function createComponentGrid(): EventsGrid {
         return new EventsGrid($this->getContext(), $this->getSelectedContest(), $this->getSelectedYear());
     }

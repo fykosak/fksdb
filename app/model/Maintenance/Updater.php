@@ -25,7 +25,7 @@ class Updater {
     }
 
     /**
-     * @param $requestedBranch
+     * @param mixed $requestedBranch
      */
     public function installBranch($requestedBranch): void {
         $deployment = $this->globalParameters['updater']['deployment'];
@@ -38,8 +38,8 @@ class Updater {
     }
 
     /**
-     * @param $path
-     * @param $branch
+     * @param mixed $path
+     * @param mixed $branch
      */
     private function install($path, $branch): void {
         $user = $this->globalParameters['updater']['installUser'];

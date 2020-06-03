@@ -3,7 +3,6 @@
 namespace EventModule;
 
 use FKSDB\Components\Events\GraphComponent;
-use FKSDB\Events\EventDispatchFactory;
 use Nette\Application\BadRequestException;
 
 /**

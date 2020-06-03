@@ -74,7 +74,7 @@ class StoredQueryComponent extends BaseComponent {
     }
 
     /**
-     * @param $parameters
+     * @param mixed $parameters
      * @return void
      */
     public function setParameters($parameters): void {

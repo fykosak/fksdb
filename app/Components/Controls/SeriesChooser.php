@@ -120,10 +120,6 @@ class SeriesChooser extends BaseComponent {
         $this->template->render();
     }
 
-    /**
-     * @return int[] of allowed series
-     * @throws BadRequestException
-     */
     private function getAllowedSeries(): array {
         $presenter = $this->getPresenter();
         $contest = $presenter->getSelectedContest();

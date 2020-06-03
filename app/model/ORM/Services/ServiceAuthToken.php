@@ -105,7 +105,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
     }
 
     /**
-     * @param $token
+     * @param mixed $token
      * @return void
      */
     public function disposeToken($token): void {

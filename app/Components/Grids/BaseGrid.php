@@ -212,22 +212,6 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @param string $tableName
-     * @param string $fieldName
-     * @param callable $accessCallback ActiveRow=>AbstractModelSingle
-     * @throws DuplicateColumnException
-     * @throws \Exception
-     * @deprecated this functionality is moved to getModel in DBReflection AbstractRow
-     */
-    protected function addJoinedColumn(string $tableName, string $fieldName, callable $accessCallback) {
-        $factory = $this->tableReflectionFactory->loadRowFactory($tableName . '.' . $fieldName);
-        $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($row) use ($factory, $fieldName, $accessCallback) {
-            $model = $accessCallback($row);
-            return $factory->renderValue($model, 1);
-        });
-    }
-
-    /**
      * @return string|AbstractModelSingle
      * @throws NotImplementedException
      */

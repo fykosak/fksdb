@@ -2,7 +2,6 @@
 
 namespace FKSDB\Authentication;
 
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;

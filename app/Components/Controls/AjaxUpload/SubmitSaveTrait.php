@@ -2,8 +2,6 @@
 
 namespace FKSDB\Components\Control\AjaxUpload;
 
-use FKSDB\Exceptions\ModelException;
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;

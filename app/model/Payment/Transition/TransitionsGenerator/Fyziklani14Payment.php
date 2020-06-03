@@ -64,7 +64,7 @@ class Fyziklani14Payment extends AbstractTransitionsGenerator {
      * @throws BadRequestException
      * @throws Exception
      */
-    public function createTransitions(Machine &$machine): void {
+    public function createTransitions(Machine $machine): void {
         if (!$machine instanceof PaymentMachine) {
             throw new BadRequestException(\sprintf(_('Expected class %s, got %s'), PaymentMachine::class, \get_class($machine)));
         }
@@ -80,7 +80,7 @@ class Fyziklani14Payment extends AbstractTransitionsGenerator {
      * @param PaymentMachine $machine
      * @throws Exception
      */
-    private function addTransitionInitToNew(PaymentMachine &$machine): void {
+    private function addTransitionInitToNew(PaymentMachine $machine): void {
         $transition = new Transition(Machine::STATE_INIT, ModelPayment::STATE_NEW, _('Create'));
         $transition->setCondition($this->getDatesCondition());
         $machine->addTransition($transition);

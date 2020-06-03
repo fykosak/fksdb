@@ -76,8 +76,8 @@ class StoredQueryFactory implements IXMLNodeSerializer {
     }
 
     /**
-     * @param $qid
-     * @param $parameters
+     * @param mixed $qid
+     * @param mixed $parameters
      * @return StoredQuery
      */
     public function createQueryFromQid($qid, $parameters): StoredQuery {

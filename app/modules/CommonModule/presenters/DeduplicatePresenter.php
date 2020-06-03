@@ -3,6 +3,7 @@
 namespace CommonModule;
 
 use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Services\ServicePerson;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -72,11 +73,14 @@ class DeduplicatePresenter extends BasePresenter {
         $this->redirect('this');
     }
 
+    /**
+     * @return PersonsGrid
+     * @throws BadTypeException
+     */
     protected function createComponentPersonsGrid(): PersonsGrid {
         $duplicateFinder = $this->createPersonDuplicateFinder();
         $pairs = $duplicateFinder->getPairs();
         $trunkPersons = $this->servicePerson->getTable()->where('person_id', array_keys($pairs));
-
         return new PersonsGrid($trunkPersons, $pairs, $this->getContext());
     }
 

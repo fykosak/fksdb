@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Services;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContest;
@@ -11,6 +12,7 @@ use FKSDB\ORM\Tables\TypedTableSelection;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @method findByPrimary($key) : ?ModelEvent
  */
 class ServiceEvent extends AbstractServiceSingle {
 

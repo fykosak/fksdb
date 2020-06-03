@@ -8,7 +8,6 @@ use Nette\ComponentModel\Component;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
-use Nette\Forms\IControl;
 
 /**
  * Class CheckboxFactory

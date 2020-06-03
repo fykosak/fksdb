@@ -26,7 +26,7 @@ use Nette\Utils\ArrayHash;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Holder {
-
+    /** @var IFormAdjustment[] */
     private array $formAdjustments = [];
     /**
      * @var IProcessing[]
@@ -36,7 +36,7 @@ class Holder {
      * @var BaseHolder[]
      */
     private array $baseHolders = [];
-
+    /** @var BaseHolder[] */
     private array $secondaryBaseHolders = [];
 
     private BaseHolder $primaryHolder;
@@ -228,7 +228,6 @@ class Holder {
     public function getGroupedSecondaryHolders(): array {
         if ($this->groupedHolders == null) {
             $this->groupedHolders = [];
-
             foreach ($this->secondaryBaseHolders as $baseHolder) {
                 $key = spl_object_hash($baseHolder->getService());
                 if (!isset($this->groupedHolders[$key])) {

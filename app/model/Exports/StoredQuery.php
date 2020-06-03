@@ -122,7 +122,7 @@ class StoredQuery implements IDataSource, IResource {
     }
 
     /**
-     * @param $parameters
+     * @param mixed $parameters
      */
     public function setParameters($parameters): void {
         $parameterNames = $this->getParameterNames();

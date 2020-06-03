@@ -29,7 +29,7 @@ class SeriesChooser extends Chooser {
     /**
      * @return int[]
      */
-    protected function getItems(): iterable {
+    protected function getItems(): array {
         return $this->allowedSeries;
     }
 

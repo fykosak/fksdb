@@ -57,37 +57,22 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
     }
     /* ***************** AUTH ***********************/
 
-    /**
-     * @return void
-     */
     public function authorizedDefault(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
-    /**
-     * @return void
-     */
     public function authorizedInbox(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
-    /**
-     * @return void
-     */
     public function authorizedList(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'list', $this->getSelectedContest()));
     }
 
-    /**
-     * @return void
-     */
     public function authorizedHandout(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest()));
     }
 
-    /**
-     * @return void
-     */
     public function authorizedCorrected(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'corrected', $this->getSelectedContest()));
     }

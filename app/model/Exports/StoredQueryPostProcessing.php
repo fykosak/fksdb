@@ -22,8 +22,8 @@ abstract class StoredQueryPostProcessing {
     }
 
     /**
-     * @param $key
-     * @param $value
+     * @param mixed $key
+     * @param mixed $value
      */
     final public function bindValue($key, $value) {
         $this->parameters[$key] = $value; // type is ignored so far

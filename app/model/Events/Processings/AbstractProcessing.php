@@ -25,11 +25,11 @@ abstract class AbstractProcessing implements IProcessing {
     public const WILDCART = '*';
 
     /**
-     * @var
+     * @var mixed
      */
     private $valuesPathCache;
     /**
-     * @var
+     * @var mixed
      */
     private $formPathCache;
 
@@ -37,7 +37,7 @@ abstract class AbstractProcessing implements IProcessing {
 
     private Holder $holder;
     /**
-     * @var
+     * @var mixed
      */
     private $values;
 

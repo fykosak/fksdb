@@ -79,7 +79,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     protected function getEvent(): ModelEvent {
         if (!isset($this->event)) {
             $model = $this->getServiceEvent()->findByPrimary($this->eventId);
-            if (!$model) {
+            if (is_null($model)) {
                 throw new NotFoundException('Event not found.');
             }
             $this->event = $model;

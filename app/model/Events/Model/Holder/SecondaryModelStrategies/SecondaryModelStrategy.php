@@ -15,8 +15,8 @@ use Nette\InvalidStateException;
 abstract class SecondaryModelStrategy {
 
     /**
-     * @param mixed $holders
-     * @param mixed $models
+     * @param BaseHolder[] $holders
+     * @param IModel[] $models
      */
     public function setSecondaryModels($holders, $models): void {
         $filledHolders = 0;
@@ -33,9 +33,9 @@ abstract class SecondaryModelStrategy {
 
     /**
      * @param IService $service
-     * @param $joinOn
-     * @param $joinTo
-     * @param $holders
+     * @param string $joinOn
+     * @param string $joinTo
+     * @param BaseHolder[] $holders
      * @param IModel|null $primaryModel
      */
     public function loadSecondaryModels(IService $service, $joinOn, $joinTo, $holders, IModel $primaryModel = null) {
@@ -55,9 +55,9 @@ abstract class SecondaryModelStrategy {
 
     /**
      * @param IService $service
-     * @param $joinOn
-     * @param $joinTo
-     * @param $holders
+     * @param mixed $joinOn
+     * @param mixed $joinTo
+     * @param mixed $holders
      * @param IModel $primaryModel
      * @return void
      */

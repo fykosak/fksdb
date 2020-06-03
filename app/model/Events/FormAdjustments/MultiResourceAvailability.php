@@ -79,8 +79,9 @@ class MultiResourceAvailability extends AbstractAdjustment {
             'service' => $holder->getPrimaryHolder()->getService(),
             'holders' => [$holder->getPrimaryHolder()],
         ];
-        /** @var BaseHolder[][]|Field[][]|AbstractServiceSingle[]|AbstractServiceMulti[] $services */
+        /** @var AbstractServiceSingle[]|AbstractServiceMulti[] $services */
         $services = [];
+        /** @var BaseHolder[][]|Field[][] $controls */
         $controls = [];
         foreach ($groups as $group) {
             $holders = [];

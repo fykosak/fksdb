@@ -295,7 +295,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param array $metadata
      * @return void
      */
-    protected function appendMetadata(BaseControl &$control, HiddenField $hiddenField, string $fieldName, array $metadata) {
+    protected function appendMetadata(BaseControl $control, HiddenField $hiddenField, string $fieldName, array $metadata) {
         foreach ($metadata as $key => $value) {
             switch ($key) {
                 case 'required':

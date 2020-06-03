@@ -4,6 +4,7 @@ namespace FKSDB\Components\DatabaseReflection\Org;
 
 use FKSDB\Components\DatabaseReflection\AbstractRowException;
 use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
@@ -19,13 +20,12 @@ class SinceRow extends AbstractOrgRowFactory {
     }
 
     /**
-     * @param array $args
+     * @param mixed ...$args
      * @return BaseControl
-     * @throws \InvalidArgumentException
-     * @throws AbstractRowException
+     * @throws OmittedControlException
      */
     public function createField(...$args): BaseControl {
-        list($min, $max) = $args;
+        [$min, $max] = $args;
         if (\is_null($max) || \is_null($min)) {
             throw new \InvalidArgumentException();
         }

@@ -49,7 +49,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
     /**
      * @param IModel $currentModel
      * @param IModel $foundModel
-     * @param $joinData
+     * @param mixed $joinData
      * @param IService $service
      * @return array
      */

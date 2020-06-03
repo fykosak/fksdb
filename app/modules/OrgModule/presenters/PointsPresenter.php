@@ -80,16 +80,10 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
         $this->setTitle(_('Points'), 'fa fa-inbox');
     }
 
-    /**
-     * @throws BadRequestException
-     */
     public function authorizedEntry(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'edit', $this->getSelectedContest()));
     }
 
-    /**
-     * @throws BadRequestException
-     */
     public function authorizedPreview(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'points', $this->getSelectedContest()));
     }

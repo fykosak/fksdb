@@ -8,7 +8,6 @@ use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\IControl;
 
 /**
  * More user friendly Due to author's laziness there's no class doc (or it's self explaining).

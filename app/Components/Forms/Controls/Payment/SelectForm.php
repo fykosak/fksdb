@@ -124,7 +124,6 @@ class SelectForm extends Control {
     /**
      * @param bool $create
      * @return FormControl
-     * @throws UnsupportedCurrencyException
      * @throws BadRequestException
      * @throws JsonException
      */
@@ -175,11 +174,7 @@ class SelectForm extends Control {
 
         try {
             $this->serviceSchedulePayment->prepareAndUpdate($values->payment_accommodation, $model);
-        } catch (DuplicatePaymentException $exception) {
-            $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
-            $connection->rollBack();
-            return;
-        } catch (EmptyDataException $exception) {
+        } catch (DuplicatePaymentException|EmptyDataException $exception) {
             $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             $connection->rollBack();
             return;
