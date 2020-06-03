@@ -216,7 +216,7 @@ abstract class BaseGrid extends Grid {
      * @param string $fieldName
      * @param callable $accessCallback ActiveRow=>AbstractModelSingle
      * @throws DuplicateColumnException
-     * @throws Exception
+     * @throws \Exception
      * @deprecated this functionality is moved to getModel in DBReflection AbstractRow
      */
     protected function addJoinedColumn(string $tableName, string $fieldName, callable $accessCallback) {
