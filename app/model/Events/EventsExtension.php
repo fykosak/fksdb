@@ -30,7 +30,6 @@ use Nette\DI\Container;
 use Nette\DI\ServiceDefinition;
 use Nette\DI\Statement;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
 use Nette\Utils\Strings;
 
@@ -67,7 +66,7 @@ class EventsExtension extends CompilerExtension {
         'parameter' => Parameter::class,
         'count' => Count::class,
     ];
-    /** @var */
+    /** @var mixed */
     private $scheme;
 
     /**
@@ -94,7 +93,7 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
-     * Configuration loading
+     * @return void
      * @throws NeonSchemaException
      */
     public function loadConfiguration() {
@@ -136,6 +135,9 @@ class EventsExtension extends CompilerExtension {
         $this->createLayoutResolverFactory();
     }
 
+    /**
+     * @return void
+     */
     private function loadScheme() {
         $loader = new Loader();
         $this->getContainerBuilder()->addDependency($this->schemeFile);
@@ -147,7 +149,7 @@ class EventsExtension extends CompilerExtension {
      * @param $baseName
      * @return mixed
      */
-    private function getBaseMachineConfig($definitionName, $baseName) {
+    private function getBaseMachineConfig(string $definitionName, string $baseName) {
         $key = "$definitionName.$baseName";
         while (!isset($this->baseMachineConfig[$key])) { // 'while' instead of 'if' so that 'break' can be used instead of return
             $config = $this->getConfig();
@@ -181,14 +183,18 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
-     * @param $name
+     * @param string $name
+     * @return void
      */
-    private function validateConfigName($name) {
+    private function validateConfigName(string $name) {
         if (!preg_match(self::NAME_PATTERN, $name)) {
             throw new InvalidArgumentException("Section name '$name' in events configuration is invalid.");
         }
     }
 
+    /**
+     * @return void
+     */
     private function createLayoutResolverFactory() {
         $def = $this->getContainerBuilder()->addDefinition(self::MAIN_RESOLVER);
         $def->setFactory(LayoutResolver::class);
@@ -198,13 +204,6 @@ class EventsExtension extends CompilerExtension {
         $def->setArguments([$templateDir, $this->definitionsMap]); //TODO!!
     }
 
-    /**
-     * @param string $baseName
-     * @param array $states
-     * @param string $mask
-     * @param array $definition
-     * @return ServiceDefinition
-     */
     private function createTransitionService(string $baseName, array $states, string $mask, array $definition): ServiceDefinition {
         if (!Transition::validateTransition($mask, $states)) {
             throw new MachineDefinitionException("Invalid transition $mask for base machine $baseName.");
@@ -234,10 +233,6 @@ class EventsExtension extends CompilerExtension {
         return $factory;
     }
 
-    /**
-     * @param array $fieldDefinition
-     * @return ServiceDefinition
-     */
     private function createFieldService(array $fieldDefinition): ServiceDefinition {
         $field = $this->getContainerBuilder()
             ->addDefinition($this->getFieldName())
@@ -256,12 +251,7 @@ class EventsExtension extends CompilerExtension {
         return $field;
     }
 
-    /**
-     * @param $eventTypeIds
-     * @param $definition
-     * @return array
-     */
-    private function createAccessKeys($eventTypeIds, $definition): array {
+    private function createAccessKeys(array $eventTypeIds, array $definition): array {
         $keys = [];
         foreach ($eventTypeIds as $eventTypeId) {
             if ($definition['eventYears'] === true) {
@@ -521,11 +511,6 @@ class EventsExtension extends CompilerExtension {
         return $this->prefix(self::BASE_HOLDER_PREFIX . $name . '_' . $baseName);
     }
 
-    /**
-     * @param string $baseName
-     * @param string $mask
-     * @return string
-     */
     private function getTransitionName(string $baseName, string $mask): string {
         return $id = uniqid($baseName . '_transition_' . str_replace('-', '_', Strings::webalize($mask)) . '__');
     }
@@ -536,13 +521,5 @@ class EventsExtension extends CompilerExtension {
     private function getFieldName() {
         return $this->prefix(uniqid(self::FIELD_FACTORY));
     }
-
-}
-
-/**
- * Class MachineDefinitionException
- * *
- */
-class MachineDefinitionException extends InvalidStateException {
 
 }

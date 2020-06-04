@@ -10,6 +10,10 @@ use Nette\DI\Container;
 use FKSDB\Exceptions\NotImplementedException;
 use Nette\InvalidStateException;
 
+/**
+ * Class StalkingComponent
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class StalkingComponent extends StalkingControl {
     /**
      * @var StalkingService

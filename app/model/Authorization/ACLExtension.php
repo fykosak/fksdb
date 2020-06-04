@@ -18,6 +18,7 @@ use Nette\Security\Permission;
  */
 class ACLExtension extends CompilerExtension {
     /** @var string[] */
+
     public static $semanticMap = [
         'qid' => QIDAssertion::class,
         'queryTag' => StoredQueryTagAssertion::class,
@@ -35,7 +36,7 @@ class ACLExtension extends CompilerExtension {
 
         $builder = $this->getContainerBuilder();
         $definition = $builder->addDefinition('authorization')
-            ->setClass(Permission::class);
+            ->setFactory(Permission::class);
 
         $config = $this->getConfig();
 

@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: miso
- * Date: 12.11.2016
- * Time: 14:03
- */
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
@@ -15,7 +9,6 @@ use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\IControl;
-
 
 /**
  * Class CheckboxFactory

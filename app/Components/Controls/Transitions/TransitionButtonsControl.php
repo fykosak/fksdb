@@ -11,7 +11,12 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Tracy\Debugger;
 
+/**
+ * Class TransitionButtonsControl
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class TransitionButtonsControl extends BaseComponent {
+
     /**
      * @var Machine
      */

@@ -51,13 +51,15 @@ class ArrayProvider implements IFilteredDataProvider {
     }
 
     /**
-     * @param mixed $id
-     * @return string
+     * @inheritDoc
      */
-    public function getItemLabel($id): string {
+    public function getItemLabel(int $id): string {
         return $this->labelById[$id];
     }
 
+    /**
+     * @inheritDoc
+     */
     public function getItems(): array {
         return $this->data;
     }
