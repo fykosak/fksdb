@@ -7,6 +7,7 @@ use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Component;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\ComponentModel\IComponent;
 use Nette\Utils\Html;
 
 /**
@@ -20,10 +21,10 @@ abstract class AbstractLink {
     protected $component;
 
     /**
-     * @param PresenterComponent $component
+     * @param Component $component
      * @return void
      */
-    public function setComponent(PresenterComponent $component) {
+    public function setComponent(Component $component) {
         $this->component = $component;
     }
 

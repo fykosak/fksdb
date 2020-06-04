@@ -4,8 +4,6 @@ namespace FKSDB\Components\DatabaseReflection\ReferencedRows;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\Models\IEventReferencedModel;
-use Nette\Application\BadRequestException;
 use Nette\Application\LinkGenerator;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\InvalidLinkException;
@@ -43,7 +41,7 @@ class EventLink extends AbstractRow {
      * @throws InvalidLinkException
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return Html::el('a')->addAttributes(['href' => $this->presenterComponent->getPresenter()->link(
+        return Html::el('a')->addAttributes(['href' => $this->presenterComponent->link(
             ':Event:Dashboard:default', ['eventId' => $model->event_id]
         )])->addText($model->name);
     }
