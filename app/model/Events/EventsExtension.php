@@ -95,7 +95,7 @@ class EventsExtension extends CompilerExtension {
     }
 
     /**
-     * Configuration loading
+     * @return void
      * @throws NeonSchemaException
      */
     public function loadConfiguration() {
@@ -138,6 +138,9 @@ class EventsExtension extends CompilerExtension {
         $this->createLayoutResolverFactory();
     }
 
+    /**
+     * @return void
+     */
     private function loadScheme() {
         $loader = new Loader();
         $this->getContainerBuilder()->addDependency($this->schemeFile);
@@ -179,7 +182,11 @@ class EventsExtension extends CompilerExtension {
 
     /**
      * @param string $name
+     * <<<<<<< HEAD
+     * @return void
+     * >>>>>>> origin/master
      * @throws InvalidArgumentException
+     * =======
      */
     private function validateConfigName(string $name) {
         if (!preg_match(self::NAME_PATTERN, $name)) {
@@ -187,6 +194,9 @@ class EventsExtension extends CompilerExtension {
         }
     }
 
+    /**
+     * @return void
+     */
     private function createLayoutResolverFactory() {
         $def = $this->getContainerBuilder()->addDefinition(self::MAIN_RESOLVER);
         $def->setFactory(LayoutResolver::class);
