@@ -10,6 +10,10 @@ use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
 
+/**
+ * Class StalkingControl
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 abstract class StalkingControl extends BaseComponent {
 
     const PERMISSION_FULL = 1024;

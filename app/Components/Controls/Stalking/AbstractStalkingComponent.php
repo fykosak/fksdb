@@ -4,6 +4,10 @@ namespace FKSDB\Components\Controls\Stalking;
 
 use FKSDB\ORM\Models\ModelPerson;
 
+/**
+ * Class AbstractStalkingComponent
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 abstract class AbstractStalkingComponent extends StalkingControl {
     /**
      * @param ModelPerson $person
