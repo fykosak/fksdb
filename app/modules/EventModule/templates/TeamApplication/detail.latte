@@ -41,7 +41,7 @@
     <h2>{_'Teacher'}</h2>
     {var $teacher = $model->getTeacher() }
     {if $teacher}
-        {control valuePrinter:row 'referenced.person_link', $teacher}
+        {control valuePrinter:row 'person.person_link', $teacher}
         {include #personSchedule, person => $teacher,event=> $model->getEvent()}
         {if $hasSchedule}
             <h4 class="mt-3 pull-left">{_'Schedule'}</h4>
@@ -60,13 +60,13 @@
 
         <h3>{_'Parcipant'} {$counter}</h3>
 
-        {control valuePrinter:row 'referenced.person_link', $participant}
+        {control valuePrinter:row 'person.person_link', $participant}
 
         {control valuePrinter:row 'event_participant.status', $participant}
 
         {control valuePrinter:row 'person_history.study_year', $history}
 
-        {control valuePrinter:row 'person_history.school_id', $history}
+        {control valuePrinter:row 'school.school', $history}
 
         {include #personSchedule, person => $participant->getPerson(),event=>$model->getEvent()}
         <hr/>

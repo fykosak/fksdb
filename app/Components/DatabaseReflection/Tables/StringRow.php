@@ -11,22 +11,15 @@ use Nette\Utils\Html;
 
 /**
  * Class StringRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class StringRow extends DefaultRow {
-    /**
-     * @param AbstractModelSingle $model
-     * @return Html
-     */
+
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     */
-    public function createField(...$args): BaseControl {
+    public function createFormControl(...$args): BaseControl {
         $control = new TextInput(_($this->getTitle()));
         if ($this->getMetaData()['size']) {
             $control->addRule(Form::MAX_LENGTH, null, $this->getMetaData()['size']);

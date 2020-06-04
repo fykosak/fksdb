@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\ORM\Models\StoredQuery;
+namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\Models\ModelSchool;
 

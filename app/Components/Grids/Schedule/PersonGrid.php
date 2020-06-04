@@ -3,10 +3,12 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\DbNames;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
+use Nette\Application\UI\Presenter;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\GridException;
@@ -43,10 +45,13 @@ class PersonGrid extends BaseGrid {
     }
 
     /**
-     * @param $presenter
+     * @param Presenter $presenter
+     * @return void
      * @throws DuplicateColumnException
+     * @throws BadTypeException
+     * @throws NotImplementedException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
         $this->paginate = false;
 
@@ -59,16 +64,16 @@ class PersonGrid extends BaseGrid {
             $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->getScheduleItem()->getLabel();
         });
-        $this->addJoinedColumn(DbNames::TAB_SCHEDULE_ITEM, 'price_czk', function ($row) {
+        $this->addJoinedColumn('schedule_item', 'price_czk', function ($row) {
             $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->getScheduleItem();
         });
-        $this->addJoinedColumn(DbNames::TAB_SCHEDULE_ITEM, 'price_eur', function ($row) {
+        $this->addJoinedColumn('schedule_item', 'price_eur', function ($row) {
             $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->getScheduleItem();
         });
 
-        $this->addColumns(['referenced.payment_id']);
+        $this->addColumns(['payment.payment']);
 
         $this->addColumn('state', _('State'))->setRenderer(function ($row) {
             $model = ModelPersonSchedule::createFromActiveRow($row);

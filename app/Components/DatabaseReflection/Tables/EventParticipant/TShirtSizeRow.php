@@ -6,10 +6,11 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
  * Class TShirtSizeRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TShirtSizeRow extends AbstractParticipantRow {
     use DefaultPrinterTrait;
+
     const SIZE_MAP = [
         'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL'
     ];
@@ -18,16 +19,10 @@ class TShirtSizeRow extends AbstractParticipantRow {
         'F' => 'female',
     ];
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('T-shirt size');
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'tshirt_size';
     }

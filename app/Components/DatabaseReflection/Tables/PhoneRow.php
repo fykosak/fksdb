@@ -18,7 +18,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PhoneRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PhoneRow extends DefaultRow implements ITestedRowFactory {
     /**
@@ -52,7 +52,7 @@ class PhoneRow extends DefaultRow implements ITestedRowFactory {
      * @param array $args
      * @return BaseControl
      */
-    public function createField(...$args): BaseControl {
+    public function createFormControl(...$args): BaseControl {
         $control = null;
         if ($this->isWriteOnly) {
             $control = new WriteOnlyInput($this->getTitle());

@@ -14,9 +14,7 @@ use Nette\Forms\Form;
  */
 class ImRow extends AbstractRow {
     use DefaultPrinterTrait;
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('ICQ, Jabber, apod.');
     }
@@ -30,18 +28,12 @@ class ImRow extends AbstractRow {
         $control->addRule(Form::MAX_LENGTH, null, 32);
         return $control;
     }
-    /**
-     * @return int
-     */
+
     public function getPermissionsValue(): int {
         return self::PERMISSION_ALLOW_RESTRICT;
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'im';
     }
-
 }

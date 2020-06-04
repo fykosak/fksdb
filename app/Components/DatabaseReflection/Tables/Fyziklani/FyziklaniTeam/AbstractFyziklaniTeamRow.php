@@ -8,8 +8,8 @@ use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
 
 /**
- * Class AbstractFyziklaniRow
- * *
+ * Class AbstractFyziklaniTeamRow
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractFyziklaniTeamRow extends AbstractRow {
 

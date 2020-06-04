@@ -6,7 +6,7 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
  * Class ArrivalTimeRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ArrivalTimeRow extends AbstractParticipantRow {
     use DefaultPrinterTrait;

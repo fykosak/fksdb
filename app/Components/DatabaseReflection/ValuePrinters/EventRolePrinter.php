@@ -11,27 +11,40 @@ use Nette\Utils\Html;
 
 /**
  * Class EventRole
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class EventRole {
+class EventRolePrinter {
+    /**
+     * @var YearCalculator
+     */
+    private $yearCalculator;
 
-    public static function calculateRoles(ModelPerson $person, ModelEvent $event, YearCalculator $yearCalculator): Html {
+    /**
+     * EventRolePrinter constructor.
+     * @param YearCalculator $yearCalculator
+     */
+    public function __construct(YearCalculator $yearCalculator) {
+        $this->yearCalculator = $yearCalculator;
+    }
+
+    public function __invoke(ModelPerson $person, ModelEvent $event): Html {
+        if (!$person) {
+            Html::el('span')
+                ->addAttributes(['class' => 'badge badge-danger'])
+                ->addText(_('No user found'));
+        }
         $container = Html::el('span');
-        $roles = $person->getRolesForEvent($event, $yearCalculator);
+        $roles = $person->getRolesForEvent($event, $this->yearCalculator);
         if (!\count($roles)) {
             $container->addHtml(Html::el('span')
                 ->addAttributes(['class' => 'badge badge-danger'])
                 ->addText(_('No role')));
             return $container;
         }
-        return self::getHtml($roles);
+        return $this->getHtml($roles);
     }
 
-    /**
-     * @param array $roles
-     * @return Html
-     */
-    public static function getHtml(array $roles): Html {
+    private function getHtml(array $roles): Html {
         $container = Html::el('span');
 
         foreach ($roles as $role) {

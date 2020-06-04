@@ -71,7 +71,7 @@ class DBReflectionFactory extends AbstractFactory {
                 $tableName = $service->getMainService()->getTable()->getName();
             }
             if ($tableName) {
-                $element = $this->tableReflectionFactory->loadService($tableName, $columnName)->createField();
+                $element = $this->tableReflectionFactory->loadRowFactory($tableName . '.' . $columnName)->createField();
             }
         } catch (\Exception $e) {
         }
@@ -88,8 +88,10 @@ class DBReflectionFactory extends AbstractFactory {
             } elseif (substr_compare($type, 'INT', '-3') == 0) {
                 $element = new TextInput($field->getLabel());
                 $element->addCondition(Form::FILLED)
-                    ->addRule(Form::INTEGER, _('%label musí být celé číslo.'))
-                    ->addRule(Form::MAX_LENGTH, null, $size);
+                    ->addRule(Form::INTEGER, _('%label musí být celé číslo.'));
+                if ($size) {
+                    $element->addRule(Form::MAX_LENGTH, null, $size);
+                }
             } elseif ($type == 'TEXT') {
                 $element = new TextArea($field->getLabel());
             } elseif ($type == 'TIME') {

@@ -13,7 +13,7 @@ use FKSDB\ORM\DbNames;
  * @property-read string class
  * @property-read int study_year
  */
-class ModelPersonHistory extends AbstractModelSingle {
+class ModelPersonHistory extends AbstractModelSingle implements ISchoolReferencedModel {
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
@@ -29,7 +29,7 @@ class ModelPersonHistory extends AbstractModelSingle {
             'ac_year' => $acYear,
             'school_id' => $this->school_id,
             'class' => $this->extrapolateClass($this->class, $diff),
-            'study_year' => $this->extrapolateStudyYear($this->study_year, $diff)
+            'study_year' => $this->extrapolateStudyYear($this->study_year, $diff),
         ];
         $result = new self([], $this->getTable());
         foreach ($data as $key => $value) {

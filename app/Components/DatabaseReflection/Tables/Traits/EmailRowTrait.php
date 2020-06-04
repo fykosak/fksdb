@@ -12,7 +12,7 @@ use Nette\Utils\Html;
 
 /**
  * Trait EmailRowTrait
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 trait EmailRowTrait {
 

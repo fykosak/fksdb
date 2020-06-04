@@ -14,13 +14,13 @@ use Nette\Database\Table\Selection;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
-use SQL\SearchableDataSource;
 
 /**
  * Class TeamApplicationGrid
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class TeamApplicationGrid extends AbstractApplicationGrid {
+
     /**
      * @param Presenter $presenter
      * @throws DuplicateButtonException
@@ -29,19 +29,14 @@ class TeamApplicationGrid extends AbstractApplicationGrid {
      * @throws InvalidLinkException
      * @throws NotImplementedException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
-        $participants = $this->getSource();
         $this->paginate = false;
 
-        $source = new SearchableDataSource($participants);
-        $source->setFilterCallback($this->getFilterCallBack());
-        $this->setDataSource($source);
-
         $this->addColumns([
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.e_fyziklani_team_id',
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.name',
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.status'
+            'e_fyziklani_team.e_fyziklani_team_id',
+            'e_fyziklani_team.name',
+            'e_fyziklani_team.status',
         ]);
         $this->addColumn('room', _('Room'))->setRenderer(function (ActiveRow $row) {
             $model = ModelFyziklaniTeam::createFromActiveRow($row);

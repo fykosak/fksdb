@@ -10,12 +10,10 @@ use Nette\Utils\Html;
 
 /**
  * Class RequireIdNumberRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class RequireIdNumberRow extends AbstractScheduleItemRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Require Id number');
     }

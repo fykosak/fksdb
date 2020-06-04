@@ -11,7 +11,7 @@ use Nette\Utils\Html;
 
 /**
  * Class AbstractLink
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractLink {
     /**
@@ -20,9 +20,10 @@ abstract class AbstractLink {
     protected $component;
 
     /**
-     * @param Component $component
+     * @param PresenterComponent $component
+     * @return void
      */
-    public function setComponent(Component $component) {
+    public function setComponent(PresenterComponent $component) {
         $this->component = $component;
     }
 
@@ -41,17 +42,9 @@ abstract class AbstractLink {
 
     abstract public function getText(): string;
 
-    /**
-     * @param AbstractModelSingle $model
-     * @return string
-     */
-    abstract public function getDestination($model): string;
+    abstract public function getDestination(AbstractModelSingle $model): string;
 
-    /**
-     * @param AbstractModelSingle $model
-     * @return array
-     */
-    abstract public function prepareParams($model): array;
+    abstract public function prepareParams(AbstractModelSingle $model): array;
 
     abstract public function getModelClassName(): string;
 

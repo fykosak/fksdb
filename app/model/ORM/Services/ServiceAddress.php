@@ -28,10 +28,10 @@ class ServiceAddress extends AbstractServiceSingle {
     }
 
     /**
-     * @param array|iterable|\ArrayAccess $data
+     * @param array $data
      * @return ModelAddress
      */
-    public function createNewModel($data = null): AbstractModelSingle {
+    public function createNewModel(array $data): IModel {
         if (!isset($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }

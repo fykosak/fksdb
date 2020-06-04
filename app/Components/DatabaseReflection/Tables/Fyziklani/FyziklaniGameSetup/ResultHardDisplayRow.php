@@ -8,13 +8,11 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Utils\Html;
 
 /**
- * Class GameStartRow
- * *
+ * Class ResultHardDisplayRow
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ResultHardDisplayRow extends AbstractFyziklaniGameSetupRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('Hard display');
     }

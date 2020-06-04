@@ -134,9 +134,6 @@ class TeacherPresenter extends ExtendedPersonPresenter {
         return _('Teacher already exist');
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getModelResource(): string {
         return ModelTeacher::RESOURCE_ID;
     }

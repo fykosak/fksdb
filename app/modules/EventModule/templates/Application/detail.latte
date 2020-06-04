@@ -1,6 +1,6 @@
 {block content}
     <h2>{_'Base info'}</h2>
-    {control valuePrinter:row 'referenced.person_link', $model}
+    {control valuePrinter:row 'person.person_link', $model}
     {foreach ['event_participant_id', 'status', 'price', 'created'] as $field}
         {control valuePrinter:row 'event_participant.'.$field, $model}
     {/foreach}
