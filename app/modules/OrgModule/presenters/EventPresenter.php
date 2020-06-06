@@ -65,6 +65,10 @@ class EventPresenter extends BasePresenter {
         $this->traitActionEdit($id);
     }
 
+    /**
+     * @return EventsGrid
+     * @throws BadRequestException
+     */
     protected function createComponentGrid(): EventsGrid {
         return new EventsGrid($this->getContext(), $this->getSelectedContest(), $this->getSelectedYear());
     }
@@ -82,7 +86,7 @@ class EventPresenter extends BasePresenter {
      * @inheritDoc
      */
     public function createComponentEditForm(): Control {
-        return new EditForm($this->getContext(), $this->getSelectedContest());
+        return new EditForm($this->getSelectedContest(), $this->getContext());
     }
 
     /**

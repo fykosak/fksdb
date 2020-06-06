@@ -69,6 +69,6 @@ class PizzaPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Pizza'),'fa fa-cutlery');
+        $this->setTitle(_('Pizza'), 'fa fa-cutlery');
     }
 }

@@ -30,10 +30,6 @@ class DispatchGrid extends BaseGrid {
      * @var ModelPerson
      */
     private $person;
-    /**
-     * @var YearCalculator
-     */
-    private $yearCalculator;
 
     /**
      * DispatchGrid constructor.
@@ -43,8 +39,6 @@ class DispatchGrid extends BaseGrid {
     public function __construct(ModelPerson $person, Container $container) {
         parent::__construct($container);
         $this->person = $person;
-//TODO yearCalculator will be removed
-        $this->yearCalculator = $container->getByType(YearCalculator::class);
     }
 
     /**

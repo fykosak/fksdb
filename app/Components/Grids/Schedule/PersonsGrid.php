@@ -8,6 +8,8 @@ use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use Nette\Application\UI\Presenter;
+use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
@@ -16,14 +18,21 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonsGrid extends BaseGrid {
+    /** @var ModelScheduleItem */
+    private $item;
 
     /**
+     * PersonsGrid constructor.
+     * @param Container $container
      * @param ModelScheduleItem $item
-     * @return void
      */
-    public function setItem(ModelScheduleItem $item) {
-        $dataSource = new NDataSource($item->getInterested());
-        $this->setDataSource($dataSource);
+    public function __construct(Container $container, ModelScheduleItem $item) {
+        parent::__construct($container);
+        $this->item = $item;
+    }
+
+    protected function getData(): IDataSource {
+        return new NDataSource($this->item->getInterested());
     }
 
     /**

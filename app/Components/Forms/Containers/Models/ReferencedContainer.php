@@ -5,6 +5,7 @@ namespace FKSDB\Components\Forms\Containers\Models;
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\ReferencedId;
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
@@ -88,14 +89,15 @@ class ReferencedContainer extends ContainerWithOptions {
     /**
      * @param bool $value
      */
-    public function setDisabled($value = TRUE) {
+    public function setDisabled($value = true) {
+        /** @var BaseControl $control */
         foreach ($this->getControls() as $control) {
             $control->setDisabled($value);
         }
     }
 
     /**
-     * @param IControl|null $control
+     * @param IControl|IComponent|null $control
      * @param callable|null $searchCallback
      * @param callable|null $termToValuesCallback
      */
@@ -120,7 +122,7 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     /**
-     * @param $allowClear
+     * @param bool $allowClear
      */
     public function setAllowClear($allowClear) {
         $this->allowClear = $allowClear;
@@ -128,6 +130,7 @@ class ReferencedContainer extends ContainerWithOptions {
 
     /**
      * @param IComponent $child
+     * @return void
      */
     protected function validateChildComponent(IComponent $child) {
         if (!$child instanceof BaseControl && !$child instanceof ContainerWithOptions) {
@@ -246,8 +249,10 @@ class ReferencedContainer extends ContainerWithOptions {
 
     private function invalidateFormGroup() {
         $form = $this->getForm();
+        /** @var Presenter $presenter */
         $presenter = $form->lookup(Presenter::class);
         if ($presenter->isAjax()) {
+            /** @var Control $control */
             $control = $form->getParent();
             $control->invalidateControl(FormControl::SNIPPET_MAIN);
             $control->getTemplate()->mainContainer = $this;
@@ -270,7 +275,8 @@ class ReferencedContainer extends ContainerWithOptions {
     private $attachedAjax = false;
 
     /**
-     * @param $obj
+     * @param IComponent $obj
+     * @return void
      */
     protected function attached($obj) {
         parent::attached($obj);
@@ -286,7 +292,8 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     /**
-     * @param $obj
+     * @param IComponent $obj
+     * @return void
      */
     protected function detached($obj) {
         parent::detached($obj);
@@ -326,8 +333,8 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     /**
-     * @param $name
-     * @param ContainerWithOptions $component
+     * @param string $name
+     * @param ContainerWithOptions|IComponent $component
      */
     private function showComponent($name, $component) {
         $component->setOption('visible', true);

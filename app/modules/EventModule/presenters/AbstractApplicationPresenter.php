@@ -19,8 +19,8 @@ use Nette\Application\UI\Control;
 use Nette\InvalidStateException;
 
 /**
- * Class ApplicationPresenter
- * *
+ * Class AbstractApplicationPresenter
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractApplicationPresenter extends BasePresenter {
     use EventEntityTrait;

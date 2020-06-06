@@ -62,6 +62,10 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
+    protected function getEventDispatchFactory(): EventDispatchFactory {
+        return $this->eventDispatchFactory;
+    }
+
     /**
      * @throws BadRequestException
      * @throws AbortException
@@ -103,9 +107,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected function getHolder(): Holder {
         if (!$this->holder) {
-            /** @var EventDispatchFactory $factory */
-            $factory = $this->getContext()->getByType(EventDispatchFactory::class);
-            $this->holder = $factory->getDummyHolder($this->getEvent());
+            $this->holder = $this->getEventDispatchFactory()->getDummyHolder($this->getEvent());
         }
         return $this->holder;
     }
