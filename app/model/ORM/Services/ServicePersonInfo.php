@@ -49,6 +49,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
      * @param bool $alive
      * @return void
      * @throws \Exception
+     * @deprecated
      */
     public function updateModel(IModel $model, $data, $alive = true) {
         if (isset($data['agreed'])) {

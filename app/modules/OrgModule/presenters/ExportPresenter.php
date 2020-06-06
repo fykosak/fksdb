@@ -597,10 +597,10 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     /**
-     * @param array|Traversable $values
+     * @param iterable $values
      * @param ModelStoredQuery $storedQuery
      */
-    private function handleSave($values, $storedQuery) {
+    private function handleSave($values, ModelStoredQuery $storedQuery) {
         $connection = $this->serviceStoredQuery->getConnection();
         $connection->beginTransaction();
 

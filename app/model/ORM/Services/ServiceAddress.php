@@ -32,10 +32,17 @@ class ServiceAddress extends AbstractServiceSingle {
      * @return ModelAddress
      */
     public function createNewModel(array $data): IModel {
-        if (!isset($data['region_id'])) {
+        if (!isset($data['region_id']) || is_null($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }
         return parent::createNewModel($data);
+    }
+
+    public function updateModel2(AbstractModelSingle $model, array $data): bool {
+        if (!isset($data['region_id']) || is_null($data['region_id'])) {
+            $data['region_id'] = $this->inferRegion($data['postal_code']);
+        }
+        return parent::updateModel2($model, $data);
     }
 
     /**
