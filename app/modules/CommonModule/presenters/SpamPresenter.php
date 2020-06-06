@@ -6,13 +6,12 @@ use FKSDB\Components\Grids\EmailsGrid;
 use FKSDB\EntityTrait;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Services\ServiceEmailMessage;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 
 /**
- * Class MailSenderPresenter
- * *
+ * Class SpamPresenter
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class SpamPresenter extends BasePresenter {
     use EntityTrait;
@@ -31,11 +30,10 @@ class SpamPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
-     * @throws BadRequestException
+     * @return void
      */
-    public function titleDetail(int $id) {
-        $this->setTitle(sprintf(_('Detail of email #%s'), $this->loadEntity($id)->getPrimary()), 'fa fa-envelope');
+    public function titleDetail() {
+        $this->setTitle(sprintf(_('Detail of email #%s'), $this->getEntity()->getPrimary()), 'fa fa-envelope');
     }
 
     public function titleList() {
@@ -52,17 +50,13 @@ class SpamPresenter extends BasePresenter {
     }
 
     /**
-     * @param $id
-     * @throws BadRequestException
+     * @return void
      */
-    public function renderDetail(int $id) {
-        $this->template->model = $this->loadEntity($id);
+    public function renderDetail() {
+        $this->template->model = $this->getEntity();
     }
 
-    /**
-     * @return ServiceEmailMessage
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServiceEmailMessage {
         return $this->serviceEmailMessage;
     }
 

@@ -71,16 +71,15 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      * @throws NeonSchemaException
      */
-    public function renderDetail(int $id) {
-        parent::renderDetail($id);
+    public function renderDetail() {
+        parent::renderDetail();
         $this->template->fields = $this->getHolder()->getPrimaryHolder()->getFields();
-        $this->template->model = $this->loadEntity($id);
+        $this->template->model = $this->getEntity();
         $this->template->groups = [
             _('Health & food') => ['health_restrictions', 'diet', 'used_drugs', 'note', 'swimmer'],
             _('T-shirt') => ['tshirt_size', 'tshirt_color'],

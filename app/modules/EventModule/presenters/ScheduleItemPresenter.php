@@ -16,16 +16,18 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\InvalidStateException;
+use Nette\Security\IResource;
 
 /**
  * Class ScheduleItemPresenter
  * *
- * @method ModelScheduleItem traitLoadEntity(int $id)
+ * @method ModelScheduleItem traitGetEntity()
  */
 class ScheduleItemPresenter extends BasePresenter {
     use EventEntityTrait {
-        loadEntity as traitLoadEntity;
+        getEntity as traitGetEntity;
     }
+
     /**
      * @var int
      * @persistent
@@ -70,28 +72,26 @@ class ScheduleItemPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function titleDetail(int $id) {
-        $item = $this->loadEntity($id);
+    public function titleDetail() {
+        $item = $this->getEntity();
         $this->setTitle(\sprintf(_('Schedule item "%s/%s"'), $item->name_cs, $item->name_en), 'fa fa-calendar-check-o');
     }
 
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function actionDetail(int $id) {
+    public function actionDetail() {
         $component = $this->getComponent('personsGrid');
         if (!$component instanceof PersonsGrid) {
             throw new BadTypeException(PersonsGrid::class, $component);
         }
-        $component->setItem($this->loadEntity($id));
+        $component->setItem($this->getEntity());
     }
 
     /**
@@ -102,25 +102,23 @@ class ScheduleItemPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
      * @throws BadRequestException
      * @throws AbortException
      * @throws ForbiddenRequestException
      */
-    public function renderDetail(int $id) {
+    public function renderDetail() {
         $this->template->group = $this->getGroup();
-        $this->template->model = $this->loadEntity($id);
+        $this->template->model = $this->getEntity();
     }
 
     /**
-     * @param int $id
      * @return ModelScheduleItem
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      * @throws AbortException
      */
-    protected function loadEntity(int $id) {
-        $entity = $this->traitLoadEntity($id);
+    protected function getEntity() {
+        $entity = $this->traitGetEntity();
         if ($entity->schedule_group_id !== $this->getGroup()->schedule_group_id) {
             throw new ForbiddenRequestException();
         }
@@ -143,23 +141,21 @@ class ScheduleItemPresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
     public function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
     public function createComponentEditForm(): Control {
         throw new NotImplementedException();
     }
 
-    /**
-     * @inheritDoc
-     * @throws InvalidStateException
-     */
     protected function createComponentGrid(): BaseGrid {
         return new ItemsGrid($this->getContext(), $this->getGroup());
     }
@@ -168,15 +164,12 @@ class ScheduleItemPresenter extends BasePresenter {
         return new PersonsGrid($this->getContext());
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServiceScheduleItem {
         return $this->serviceScheduleItem;
     }
 
     /**
-     * @param $resource
+     * @param string|IResource $resource
      * @param string $privilege
      * @return bool
      * @throws BadRequestException

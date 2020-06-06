@@ -19,8 +19,8 @@ use Nette\Application\UI\Control;
 use Nette\InvalidStateException;
 
 /**
- * Class ApplicationPresenter
- * *
+ * Class AbstractApplicationPresenter
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractApplicationPresenter extends BasePresenter {
     use EventEntityTrait;
@@ -55,14 +55,13 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      * @throws \Throwable
      */
-    final public function titleDetail(int $id) {
-        $this->setTitle(sprintf(_('Application detail "%s"'), $this->loadEntity($id)->__toString()), 'fa fa-user');
+    final public function titleDetail() {
+        $this->setTitle(sprintf(_('Application detail "%s"'), $this->getEntity()->__toString()), 'fa fa-user');
     }
 
     /**
@@ -84,21 +83,10 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
-     * @throws AbortException
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     */
-    protected function actionDetail(int $id) {
-        $this->loadEntity($id);
-    }
-
-    /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function renderDetail(int $id) {
+    public function renderDetail() {
         $this->template->event = $this->getEvent();
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
     }

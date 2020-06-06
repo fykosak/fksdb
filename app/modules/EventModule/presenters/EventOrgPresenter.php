@@ -11,7 +11,7 @@ use Nette\Application\UI\Control;
 
 /**
  * Class EventOrgPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventOrgPresenter extends BasePresenter {
     use EventEntityTrait;
@@ -45,12 +45,11 @@ class EventOrgPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
      * @throws AbortException
      */
-    public function actionDelete(int $id) {
+    public function actionDelete() {
         try {
-            list($message) = $this->traitHandleDelete($id);
+            list($message) = $this->traitHandleDelete();
             $this->flashMessage($message->getMessage(), $message->getLevel());
             $this->redirect('list');
         } catch (BadRequestException $exception) {
@@ -59,9 +58,6 @@ class EventOrgPresenter extends BasePresenter {
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     protected function getORMService(): ServiceEventOrg {
         return $this->serviceEventOrg;
     }
@@ -76,14 +72,16 @@ class EventOrgPresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
     public function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
     public function createComponentEditForm(): Control {
         throw new NotImplementedException();
