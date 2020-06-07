@@ -15,6 +15,7 @@ use Nette,
 	Nette\Application\Routers,
 	Nette\Application\UI\Presenter, // templates
     Tracy\Debugger;
+use Tracy\Dumper;
 use Tracy\IBarPanel;
 
 
@@ -39,17 +40,16 @@ class RoutingPanel  implements IBarPanel
 	private $request;
 
 
-	public static function initializePanel(Nette\Application\Application $application)
-	{
-
-		Debugger::getBlueScreen()->addPanel(function($e) use ($application) {
-			return $e ? NULL : array(
-				'tab' => 'Nette Application',
-				'panel' => '<h3>Requests</h3>' . \Tracy\Helpers::clickableDump($application->getRequests())
-					. '<h3>Presenter</h3>' . \Tracy\Helpers::clickableDump($application->getPresenter())
-			);
-		});
-	}
+    public static function initializePanel(Nette\Application\Application $application)
+    {
+        \Tracy\Debugger::getBlueScreen()->addPanel(function ($e) use ($application) {
+            return $e ? null : [
+                'tab' => 'Nette Application',
+                'panel' => '<h3>Requests</h3>' . Dumper::toHtml($application->getRequests(), [Dumper::LIVE => true])
+                    . '<h3>Presenter</h3>' . Dumper::toHtml($application->getPresenter(), [Dumper::LIVE => true]),
+            ];
+        });
+    }
 
 
 	public function __construct(Nette\Application\IRouter $router, Nette\Http\IRequest $httpRequest)
@@ -86,7 +86,7 @@ class RoutingPanel  implements IBarPanel
 
 	/**
 	 * Analyses simple route.
-	 * @param  Nette\Application\IRouter
+	 * @param  Nette\Application\IRouter $router
 	 * @return void
 	 */
 	private function analyse($router, $module = '')
