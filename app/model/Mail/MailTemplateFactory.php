@@ -7,7 +7,6 @@ use Nette\Application\Application;
 use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\ITemplateFactory;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 use Nette\Localization\ITranslator;

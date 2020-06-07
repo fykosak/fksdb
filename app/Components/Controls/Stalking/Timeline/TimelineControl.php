@@ -12,11 +12,10 @@ use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\YearCalculator;
 use Nette\DI\Container;
-use Nette\InvalidStateException;
 
 /**
  * Class TimelineControl
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TimelineControl extends ReactComponent {
     /**

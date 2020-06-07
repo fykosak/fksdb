@@ -3,7 +3,6 @@
 namespace FKSDB\Config\Extensions;
 
 use FKSDB\Components\Controls\Navigation\Navigation;
-use Nette\DI\CompilerExtension;
 use Nette\DI\ServiceDefinition;
 
 /**

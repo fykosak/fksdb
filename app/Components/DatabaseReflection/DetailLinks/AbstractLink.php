@@ -7,7 +7,6 @@ use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Component;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\ComponentModel\IComponent;
 use Nette\Utils\Html;
 
 /**

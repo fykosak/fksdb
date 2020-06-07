@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\Entity\School\CreateForm;
 use FKSDB\Components\Controls\Entity\School\EditForm;
 use FKSDB\Components\Grids\SchoolsGrid;
 use FKSDB\EntityTrait;
-use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Application\BadRequestException;
