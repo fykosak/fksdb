@@ -25,9 +25,7 @@ class NetteLoader extends AutoLoader
 	private static $instance;
 
 	/** @var array */
-	public $renamed = [
-		'Nette\Templating\DefaultHelpers' => 'Nette\Templating\Helpers',
-    ];
+	public $renamed = [];
 
 	/** @var array */
 	public $list = [
@@ -40,9 +38,6 @@ class NetteLoader extends AutoLoader
 		'Nette\Callback' => '/common/Callback',
 		'Nette\Environment' => '/common/Environment',
 		'Nette\FatalErrorException' => '/common/exceptions',
-		'Nette\Framework' => '/common/Framework',
-		'Nette\IFreezable' => '/common/IFreezable',
-		'Nette\Utils\TokenizerException' => '/Utils/Tokenizer',
     ];
 
 
