@@ -27,12 +27,10 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
-use Nette\Templating\FileTemplate;
-use Nette\Templating\ITemplate;
 
 /**
  * Base presenter for all application presenters.
- * @property FileTemplate $template
+ * @property \Nette\Bridges\ApplicationLatte\Template $template
  */
 abstract class BasePresenter extends Presenter implements IJavaScriptCollector, IStylesheetCollector, IAutocompleteJSONProvider, INavigablePresenter {
 
@@ -162,10 +160,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * @param null $class
-     * @return FileTemplate|ITemplate
+     * @return \Nette\Bridges\ApplicationLatte\Template|\Nette\Application\UI\ITemplate
      */
     protected function createTemplate($class = NULL) {
-        /** @var FileTemplate $template */
+        /** @var \Nette\Bridges\ApplicationLatte\Template $template */
         $template = parent::createTemplate($class);
         $template->setTranslator($this->getTranslator());
         return $template;

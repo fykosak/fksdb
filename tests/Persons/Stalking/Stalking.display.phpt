@@ -6,7 +6,7 @@ $container = require '../../bootstrap.php';
 
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Responses\TextResponse;
-use Nette\Templating\ITemplate;
+use Nette\Application\UI\ITemplate;
 use Nette\DI\Container;
 use Tester\Assert;
 
@@ -34,7 +34,7 @@ class StalkingDisplay extends Stalking {
         Assert::type(TextResponse::class, $response);
 
         $source = $response->getSource();
-        Assert::type(ITemplate::class, $source);
+        Assert::type(\Nette\Application\UI\ITemplate::class, $source);
         $html = (string)$source;
 
         Assert::contains('Base info', $html); // contains headline

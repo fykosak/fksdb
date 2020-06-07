@@ -27,7 +27,6 @@ class NetteLoader extends AutoLoader
 	/** @var array */
 	public $renamed = [
 		'Nette\Templating\DefaultHelpers' => 'Nette\Templating\Helpers',
-		'Nette\Latte\ParseException' => 'Nette\Latte\CompileException',
     ];
 
 	/** @var array */
@@ -42,9 +41,7 @@ class NetteLoader extends AutoLoader
 		'Nette\Environment' => '/common/Environment',
 		'Nette\FatalErrorException' => '/common/exceptions',
 		'Nette\Framework' => '/common/Framework',
-		'Nette\FreezableObject' => '/common/FreezableObject',
 		'Nette\IFreezable' => '/common/IFreezable',
-		'Nette\Latte\CompileException' => '/Latte/exceptions',
 		'Nette\Utils\TokenizerException' => '/Utils/Tokenizer',
     ];
 

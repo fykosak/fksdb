@@ -203,7 +203,7 @@ extensions:
     stalking: FKSDB\Config\Extensions\StalkingExtension
     payment: FKSDB\Config\Extensions\PaymentExtension
     DBReflection: FKSDB\Config\Extensions\DBReflectionExtension
-
+    #latte2: Nette\Bridges\ApplicationDI\LatteExtension
 
 includes:
     - router.neon

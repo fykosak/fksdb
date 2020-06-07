@@ -19,12 +19,12 @@ use Nette;
  *
  * @author     David Grudl
  *
- * @property-read Nette\Templating\ITemplate $template
+ * @property-read Nette\Application\UI\ITemplate $template
  * @property-read string $snippetId
  */
 abstract class Control extends PresenterComponent implements IRenderable
 {
-	/** @var Nette\Templating\ITemplate */
+	/** @var Nette\Application\UI\ITemplate */
 	private $template;
 
 	/** @var array */
@@ -38,13 +38,13 @@ abstract class Control extends PresenterComponent implements IRenderable
 
 
 	/**
-	 * @return Nette\Templating\ITemplate
+	 * @return Nette\Application\UI\ITemplate
 	 */
 	final public function getTemplate()
 	{
 		if ($this->template === NULL) {
 			$value = $this->createTemplate();
-			if (!$value instanceof Nette\Templating\ITemplate && $value !== NULL) {
+			if (!$value instanceof Nette\Application\UI\ITemplate && $value !== NULL) {
 				$class2 = get_class($value); $class = get_class($this);
 				throw new Nette\UnexpectedValueException("Object returned by $class::createTemplate() must be instance of Nette\\Templating\\ITemplate, '$class2' given.");
 			}
@@ -54,40 +54,11 @@ abstract class Control extends PresenterComponent implements IRenderable
 	}
 
 
-	/**
-	 * @param  string|NULL
-	 * @return Nette\Templating\ITemplate
-	 */
-	protected function createTemplate($class = NULL)
-	{
-		$template = $class ? new $class : new Nette\Templating\FileTemplate;
-		$presenter = $this->getPresenter(FALSE);
-		$template->onPrepareFilters[] = $this->templatePrepareFilters;
-		$template->registerHelperLoader('Nette\Templating\Helpers::loader');
-
-		// default parameters
-		$template->control = $template->_control = $this;
-		$template->presenter = $template->_presenter = $presenter;
-		if ($presenter instanceof Presenter) {
-			$template->setCacheStorage($presenter->getContext()->getService('nette.templateCacheStorage'));
-			$template->user = $presenter->getUser();
-			$template->netteHttpResponse = $presenter->getHttpResponse();
-			$template->netteCacheStorage = $presenter->getContext()->getByType('Nette\Caching\IStorage');
-			$template->baseUri = $template->baseUrl = rtrim($presenter->getHttpRequest()->getUrl()->getBaseUrl(), '/');
-			$template->basePath = preg_replace('#https?://[^/]+#A', '', $template->baseUrl);
-
-			// flash message
-			if ($presenter->hasFlashSession()) {
-				$id = $this->getParameterId('flash');
-				$template->flashes = $presenter->getFlashSession()->$id;
-			}
-		}
-		if (!isset($template->flashes) || !is_array($template->flashes)) {
-			$template->flashes = array();
-		}
-
-		return $template;
-	}
+    protected function createTemplate()
+    {
+        $templateFactory = $this->getPresenter()->getTemplateFactory();
+        return $templateFactory->createTemplate($this);
+    }
 
 
 	/**
@@ -97,8 +68,24 @@ abstract class Control extends PresenterComponent implements IRenderable
 	 */
 	public function templatePrepareFilters($template)
 	{
-		$template->registerFilter($this->getPresenter()->getContext()->getByType(Nette\Latte\Engine::class));
 	}
+
+    /**
+     * Forces control or its snippet to repaint.
+     * @return void
+     */
+    public function redrawControl($snippet = null, $redraw = true)
+    {
+        if ($redraw) {
+            $this->invalidSnippets[$snippet === null ? "\0" : $snippet] = true;
+
+        } elseif ($snippet === null) {
+            $this->invalidSnippets = [];
+
+        } else {
+            $this->invalidSnippets[$snippet] = false;
+        }
+    }
 
 
 	/**

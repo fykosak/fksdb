@@ -5,11 +5,10 @@ namespace Mail;
 use BasePresenter;
 use Nette\Application\Application;
 use Nette\Application\BadRequestException;
+use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
-use Nette\Latte\Engine;
 use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -51,20 +50,20 @@ class MailTemplateFactory {
     /**
      * @param string $lang ISO 639-1
      * @param array $data
-     * @return FileTemplate
+     * @return Template
      * @throws BadRequestException
      */
-    public function createLoginInvitation(string $lang = null, array $data = []): FileTemplate {
+    public function createLoginInvitation(string $lang = null, array $data = []): Template {
         return $this->createWithParameters('loginInvitation', $lang, $data);
     }
 
     /**
      * @param string $lang ISO 639-1
      * @param array $data
-     * @return FileTemplate
+     * @return Template
      * @throws BadRequestException
      */
-    public function createPasswordRecovery(string $lang = null, array $data = []): FileTemplate {
+    public function createPasswordRecovery(string $lang = null, array $data = []): Template {
         return $this->createWithParameters('passwordRecovery', $lang, $data);
     }
 
@@ -72,10 +71,10 @@ class MailTemplateFactory {
      * @param string $templateFile
      * @param string $lang ISO 639-1
      * @param array $data
-     * @return FileTemplate
+     * @return Template
      * @throws BadRequestException
      */
-    public function createWithParameters(string $templateFile, string $lang = null, array $data = []): FileTemplate {
+    public function createWithParameters(string $templateFile, string $lang = null, array $data = []): Template {
         $template = $this->createFromFile($templateFile, $lang);
         $template->setTranslator($this->translator);
         foreach ($data as $key => $value) {
@@ -87,10 +86,10 @@ class MailTemplateFactory {
     /**
      * @param string $filename
      * @param string $lang ISO 639-1
-     * @return FileTemplate
+     * @return Template
      * @throws BadRequestException
      */
-    final public function createFromFile(string $filename, string $lang = null): FileTemplate {
+    final public function createFromFile(string $filename, string $lang = null): Template {
         $presenter = $this->application->getPresenter();
         if (($lang === null) && !$presenter instanceof BasePresenter) {
             throw new InvalidArgumentException("Expecting BasePresenter, got " . ($presenter ? get_class($presenter) : (string)$presenter));
@@ -104,9 +103,9 @@ class MailTemplateFactory {
         if (!file_exists($file)) {
             throw new InvalidArgumentException("Cannot find template '$filename.$lang'.");
         }
-        $template = new FileTemplate($file);
+        $template = new Template($file);
         $template->registerHelperLoader('Nette\Templating\Helpers::loader');
-        $template->registerFilter(new Engine());
+        $template->registerFilter(new \Latte\Engine());
         $template->control = $template->_control = $control;
         if ($presenter instanceof BasePresenter) {
             $template->baseUri = $presenter->getContext()->getByType(IRequest::class)->getUrl()->getBaseUrl();

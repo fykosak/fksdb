@@ -32,7 +32,7 @@ use Nette,
  * @property-read bool $ajax
  * @property-read Nette\Application\Request $lastCreatedRequest
  * @property-read Nette\Http\SessionSection $flashSession
- * @property-read \SystemContainer|Nette\DI\Container $context
+ * @property-read Nette\DI\Container $context
  * @property-read Nette\Application\Application $application
  * @property-read Nette\Http\Session $session
  * @property-read Nette\Security\User $user
@@ -107,17 +107,25 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/** @var array */
 	private $lastCreatedRequestFlag;
 
-	/** @var \SystemContainer|Nette\DI\Container */
+	/** @var Nette\DI\Container */
 	private $context;
 
+    /** @var ITemplateFactory */
+    private $templateFactory;
 
-	public function __construct(Nette\DI\Container $context = NULL)
+
+
+    public function __construct(Nette\DI\Container $context = NULL)
 	{
 		$this->context = $context;
 		if ($context && $this->invalidLinkMode === NULL) {
 			$this->invalidLinkMode = $context->parameters['productionMode'] ? self::INVALID_LINK_SILENT : self::INVALID_LINK_WARNING;
 		}
 	}
+
+	public function injectTemplateFactory(ITemplateFactory $templateFactory){
+        $this->templateFactory=$templateFactory;
+    }
 
 
 	/**
@@ -428,7 +436,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 			return;
 		}
 
-		if ($template instanceof Nette\Templating\IFileTemplate && !$template->getFile()) { // content template
+		if ($template instanceof ITemplate && !$template->getFile()) { // content template
 			$files = $this->formatTemplateFiles();
 			foreach ($files as $file) {
 				if (is_file($file)) {
@@ -470,6 +478,17 @@ abstract class Presenter extends Control implements Application\IPresenter
 			throw new Nette\FileNotFoundException("Layout not found. Missing template '$file'.");
 		}
 	}
+
+    /**
+     * @return ITemplateFactory
+     */
+    public function getTemplateFactory()
+    {
+        if (!$this->templateFactory) {
+            throw new Nette\InvalidStateException('Service TemplateFactory has not been set.');
+        }
+        return $this->templateFactory;
+    }
 
 
 	/**
@@ -1321,7 +1340,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	/**
 	 * @return Nette\Http\Response
 	 */
-	protected function getHttpResponse()
+	public function getHttpResponse()
 	{
 		return $this->context->getByType('Nette\Http\IResponse');
 	}

@@ -73,7 +73,7 @@ final class Helpers
 	 */
 	public static function escapeHtml($s, $quotes = ENT_QUOTES)
 	{
-		if (is_object($s) && ($s instanceof ITemplate || $s instanceof Html || $s instanceof Form)) {
+		if (is_object($s) && ($s instanceof Nette\Application\UI\ITemplate || $s instanceof Html || $s instanceof Form)) {
 			return $s->__toString(TRUE);
 		}
 		return htmlSpecialChars($s, $quotes);
@@ -124,7 +124,7 @@ final class Helpers
 	 */
 	public static function escapeJs($s)
 	{
-		if (is_object($s) && ($s instanceof ITemplate || $s instanceof Html || $s instanceof Form)) {
+		if (is_object($s) && ($s instanceof Nette\Application\UI\ITemplate || $s instanceof Html || $s instanceof Form)) {
 			$s = $s->__toString(TRUE);
 		}
 		return str_replace(']]>', ']]\x3E', Nette\Utils\Json::encode($s));
@@ -243,21 +243,6 @@ final class Helpers
 	public static function replace($subject, $search, $replacement = '')
 	{
 		return str_replace($search, $replacement, $subject);
-	}
-
-
-	/**
-	 * The data: URI generator.
-	 * @param  string
-	 * @param  string
-	 * @return string
-	 */
-	public static function dataStream($data, $type = NULL)
-	{
-		if ($type === NULL) {
-			$type = Nette\Utils\MimeTypeDetector::fromString($data);
-		}
-		return 'data:' . ($type ? "$type;" : '') . 'base64,' . base64_encode($data);
 	}
 
 
