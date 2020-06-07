@@ -70,7 +70,7 @@ class InboxControl extends SeriesTableFormControl {
                 }
             }
         }
-        $this->invalidateControl();
+        $this->redrawControl();
         $this->getPresenter()->redirect('this');
     }
 

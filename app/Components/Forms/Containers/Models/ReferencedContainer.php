@@ -254,7 +254,7 @@ class ReferencedContainer extends ContainerWithOptions {
         if ($presenter->isAjax()) {
             /** @var Control $control */
             $control = $form->getParent();
-            $control->invalidateControl(FormControl::SNIPPET_MAIN);
+            $control->redrawControl(FormControl::SNIPPET_MAIN);
             $control->getTemplate()->mainContainer = $this;
             $control->getTemplate()->level = 2; //TODO should depend on lookup path
             $payload = $presenter->getPayload();

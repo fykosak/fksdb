@@ -124,7 +124,7 @@ abstract class Presenter extends Control implements Application\IPresenter
 	}
 
 	public function injectTemplateFactory(ITemplateFactory $templateFactory){
-        $this->templateFactory=$templateFactory;
+        $this->templateFactory = $templateFactory;
     }
 
 

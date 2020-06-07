@@ -204,7 +204,9 @@ extensions:
     payment: FKSDB\Config\Extensions\PaymentExtension
     DBReflection: FKSDB\Config\Extensions\DBReflectionExtension
     #latte2: Nette\Bridges\ApplicationDI\LatteExtension
-
+latte:
+    macros:
+        - Nette\Latte\Macros\FormMacros
 includes:
     - router.neon
     - acl.neon
