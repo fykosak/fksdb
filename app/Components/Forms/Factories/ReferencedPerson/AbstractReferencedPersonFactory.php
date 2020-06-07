@@ -34,6 +34,7 @@ use Persons\IModifiabilityResolver;
 use Persons\IVisibilityResolver;
 use Persons\ReferencedPersonHandler;
 use Persons\ReferencedPersonHandlerFactory;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -212,11 +213,11 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
         $visible = $model ? $visibilityResolver->isVisible($model) : true;
         $submittedBySearch = $container->isSearchSubmitted();
         $force = ($mode == self::MODE_FORCE);
-        if ($mode == self::MODE_ROLLBACK) {
+        if ($mode === self::MODE_ROLLBACK) {
             $model = null;
         }
-
         $container->getReferencedId()->getHandler()->setResolution($resolution);
+
         $container->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model ? $model->getFullName() : null);
         foreach ($container->getComponents() as $sub => $subcontainer) {
             if (!$subcontainer instanceof Container) {
@@ -409,34 +410,23 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
         return $control;
     }
 
-    /**
-     * @param $searchType
-     * @return Closure
-     */
-    protected function createSearchCallback($searchType) {
+    protected function createSearchCallback(string $searchType): Closure {
         $service = $this->servicePerson;
         switch ($searchType) {
             case self::SEARCH_EMAIL:
                 return function ($term) use ($service) {
                     return $service->findByEmail($term);
                 };
-
-                break;
             case self::SEARCH_ID:
                 return function ($term) use ($service) {
                     return $service->findByPrimary($term);
                 };
-                break;
             default:
                 throw new InvalidArgumentException(_('Unknown search type'));
         }
     }
 
-    /**
-     * @param $searchType
-     * @return Closure
-     */
-    protected function createTermToValuesCallback($searchType) {
+    protected function createTermToValuesCallback(string $searchType): Closure {
         switch ($searchType) {
             case self::SEARCH_EMAIL:
                 return function ($term) {

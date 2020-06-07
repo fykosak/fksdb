@@ -226,7 +226,7 @@ class ReferencedContainer extends ContainerWithOptions {
             $term = $this->getComponent(self::CONTROL_SEARCH)->getValue();
             $model = ($this->searchCallback)($term);
 
-            $values = new ArrayHash();
+            $values = [];
             if (!$model) {
                 $model = ReferencedId::VALUE_PROMISE;
                 $values = ($this->termToValuesCallback)($term);

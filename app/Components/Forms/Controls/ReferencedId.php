@@ -161,6 +161,7 @@ class ReferencedId extends HiddenField {
                 $container->setSearchButton(false);
                 $container->setClearButton(true);
             }
+            Debugger::barDump($pValue, 'setValue');
             $this->referencedSetter->setModel($container, $pValue, $force);
         }
 

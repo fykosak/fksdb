@@ -39,9 +39,6 @@ abstract class Grid extends \Nette\Application\UI\Control {
     /** @var bool */
     public $paginate = true;
 
-	/** @var bool */
-	public $paginate = TRUE;
-
 	/** @var string */
 	protected $defaultOrder;
 

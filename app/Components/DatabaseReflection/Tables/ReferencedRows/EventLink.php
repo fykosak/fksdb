@@ -42,7 +42,7 @@ class EventLink extends AbstractRow {
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         return Html::el('a')->addAttributes(['href' => $this->presenterComponent->link(
-            ':Event:Dashboard:default', ['eventId' => $model->event_id]
+            'Event:Dashboard:default', ['eventId' => $model->event_id]
         )])->addText($model->name);
     }
 }
