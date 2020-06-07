@@ -202,7 +202,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param string $mode
      * @return void
      */
-    public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL) {
+    public function setModel(ReferencedContainer $container, IModel $model = null, string $mode = self::MODE_NORMAL) {
         $acYear = $container->getOption('acYear');
         /** @var IModifiabilityResolver $modifiabilityResolver */
         $modifiabilityResolver = $container->getOption('modifiabilityResolver');
@@ -212,7 +212,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
         $resolution = $model ? $modifiabilityResolver->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
         $visible = $model ? $visibilityResolver->isVisible($model) : true;
         $submittedBySearch = $container->isSearchSubmitted();
-        $force = ($mode == self::MODE_FORCE);
+        $force = ($mode === self::MODE_FORCE);
         if ($mode === self::MODE_ROLLBACK) {
             $model = null;
         }

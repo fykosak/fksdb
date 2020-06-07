@@ -234,7 +234,6 @@ class ReferencedContainer extends ContainerWithOptions {
             $this->referencedId->setValue($model);
             $this->setValues($values);
             $this->invalidateFormGroup();
-            Debugger::barDump($this);
         };
     }
 

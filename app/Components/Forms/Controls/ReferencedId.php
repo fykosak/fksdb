@@ -161,8 +161,7 @@ class ReferencedId extends HiddenField {
                 $container->setSearchButton(false);
                 $container->setClearButton(true);
             }
-            Debugger::barDump($pValue, 'setValue');
-            $this->referencedSetter->setModel($container, $pValue, $force);
+            $this->referencedSetter->setModel($container, $pValue, $force ? IReferencedSetter::MODE_FORCE : IReferencedSetter::MODE_NORMAL);
         }
 
         if ($isPromise) {
@@ -172,8 +171,6 @@ class ReferencedId extends HiddenField {
         } else {
             $value = $pValue;
         }
-        Debugger::barDump($value);
-        Debugger::barDump(debug_backtrace());
         return parent::setValue($value);
     }
 
