@@ -7,6 +7,7 @@ use Nette\Application\Application;
 use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\ITemplateFactory;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 use Nette\Localization\ITranslator;
@@ -112,10 +113,7 @@ class MailTemplateFactory {
         $template = $presenter->getTemplateFactory()->createTemplate();
         $template->setFile($file);
         $template->control = $template->_control = $control;
-        if ($presenter instanceof BasePresenter) {
-            $template->baseUri = $this->request->getUrl()->getBaseUrl();
-        }
-
+        $template->baseUri = $this->request->getUrl()->getBaseUrl();
         return $template;
     }
 }

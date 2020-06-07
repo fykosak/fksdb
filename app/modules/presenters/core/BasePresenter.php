@@ -26,11 +26,12 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
 
 /**
  * Base presenter for all application presenters.
- *
+ * @property ITemplate $template
  */
 abstract class BasePresenter extends Presenter implements IJavaScriptCollector, IStylesheetCollector, IAutocompleteJSONProvider, INavigablePresenter {
 
@@ -159,7 +160,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
-     * @return \Nette\Application\UI\ITemplate
+     * @return ITemplate
      */
     protected function createTemplate() {
         $template = parent::createTemplate();

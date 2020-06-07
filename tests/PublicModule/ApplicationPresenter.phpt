@@ -76,7 +76,7 @@ class ApplicationPresenterTest extends EventTestCase {
         Assert::type(TextResponse::class, $response);
 
         $source = $response->getSource();
-        Assert::type(ITemplate::class, $source);
+        Assert::type(\Nette\Application\UI\ITemplate::class, $source);
 
         $html = (string) $source;
         Assert::contains('Přihlašování není povoleno', $html);

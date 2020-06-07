@@ -13,9 +13,11 @@ use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
+use Nette\Bridges\ApplicationLatte\Template;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use FKSDB\Exceptions\NotImplementedException;
+use Nette\Application\UI\ITemplate;
 use Nette\Utils\Html;
 use NiftyGrid\Components\Button;
 use NiftyGrid\Components\Column;
@@ -98,8 +100,10 @@ abstract class BaseGrid extends Grid {
         if (!$presenter instanceof \BasePresenter) {
             throw new BadTypeException(\BasePresenter::class, $presenter);
         }
-
-        /** @var GridPaginator $paginator */
+        /**
+         * @var GridPaginator $paginator
+         * @var Template $template
+         */
         $paginator = $this->getComponent('paginator');
         $paginator->getTemplate()->setTranslator($presenter->getTranslator());
         $template = parent::createTemplate();

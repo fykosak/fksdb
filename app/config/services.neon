@@ -69,6 +69,7 @@ services:
     #- FKSDB\Events\EventDispatchFactory
 
     - FKSDB\DataTesting\DataTestingFactory
+   # - Nette\Bridges\ApplicationLatte\TemplateFactory
 
 
 

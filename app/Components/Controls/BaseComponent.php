@@ -4,12 +4,14 @@ namespace FKSDB\Components\Controls;
 
 use Nette\Application\UI\Control;
 use Nette\Application\UI\ITemplate;
+use Nette\Bridges\ApplicationLatte\Template;
 use Nette\DI\Container;
 use Nette\Localization\ITranslator;
 
 /**
  * Class BaseComponent
  * @author Michal Červeňák <miso@fykos.cz>
+ * @property Template $template
  */
 abstract class BaseComponent extends Control {
     /**

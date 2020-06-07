@@ -63,7 +63,7 @@ class PointsFormControl extends SeriesTableFormControl {
             }
         }
         ($this->invalidCacheCallback)();
-        $this->invalidateControl();
+        $this->redrawControl();
         $this->getPresenter()->redirect('this');
     }
 
