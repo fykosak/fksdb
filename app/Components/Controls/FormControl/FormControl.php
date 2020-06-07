@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Controls\FormControl;
 
 use FKSDB\Exceptions\BadTypeException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 
@@ -23,7 +22,7 @@ class FormControl extends Control {
 
     /**
      * @return Form
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     final public function getForm(): Form {
         $component = $this->getComponent('form');

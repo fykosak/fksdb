@@ -24,66 +24,79 @@ trait EntityTrait {
     /**
      * @var AbstractModelSingle|IModel
      */
-    private $model;
+    protected $model;
+    /**
+     * @var int
+     * @persistent
+     */
+    public $id;
 
+    /**
+     * @return void
+     */
     public function authorizedList() {
         $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'list'));
     }
 
+    /**
+     * @return void
+     */
     public function authorizedCreate() {
         $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'create'));
     }
 
     /**
-     * @param int $id
-     * @throws BadRequestException
+     * @return void
+     * @throws InvalidStateException
      */
-    public function authorizedEdit(int $id) {
-        $this->setAuthorized($this->traitIsAuthorized($this->loadEntity($id), 'edit'));
+    public function authorizedEdit() {
+        $this->setAuthorized($this->traitIsAuthorized($this->getEntity(), 'edit'));
     }
 
     /**
-     * @param int $id
-     * @throws BadRequestException
+     * @return void
+     * @throws InvalidStateException
      */
-    public function authorizedDelete(int $id) {
-        $this->setAuthorized($this->traitIsAuthorized($this->loadEntity($id), 'delete'));
+    public function authorizedDelete() {
+        $this->setAuthorized($this->traitIsAuthorized($this->getEntity(), 'delete'));
     }
 
     /**
-     * @param int $id
-     * @throws BadRequestException
+     * @return void
+     * @throws InvalidStateException
      */
-    public function authorizedDetail(int $id) {
-        $this->setAuthorized($this->traitIsAuthorized($this->loadEntity($id), 'detail'));
+    public function authorizedDetail() {
+        $this->setAuthorized($this->traitIsAuthorized($this->getEntity(), 'detail'));
     }
 
-
+    /**
+     * @return void
+     */
     public function titleList() {
     }
 
+    /**
+     * @return void
+     */
     public function titleCreate() {
     }
 
     /**
-     * @param int $id
      * @return void
      */
-    public function titleEdit(int $id) {
+    public function titleEdit() {
     }
 
     /**
-     * @param int $id
      * @return void
      */
-    public function titleDetail(int $id) {
+    public function titleDetail() {
     }
 
     /**
-     * @param int $id
      * @return void
      */
-    public function titleDelete(int $id) {
+    public function titleDelete() {
     }
 
     /**
@@ -91,52 +104,36 @@ trait EntityTrait {
      * @throws InvalidStateException
      */
     public function getEntity() {
-        if (!$this->model) {
-            throw new InvalidStateException(_('Entity is not loaded'));
-        }
-        return $this->model;
-    }
-
-    /**
-     * @param int $id
-     * @return AbstractModelSingle|IModel
-     * @throws BadRequestException
-     */
-    public function loadEntity(int $id) {
+        $id = $this->getParameter($this->getPrimaryParameterName());
         // protection for tests ev. change URL during app is running
         if ($this->model && $id !== $this->model->getPrimary()) {
             $this->model = null;
         }
         if (!$this->model) {
-            $model = $this->getORMService()->findByPrimary($id);
-            if (!$model) {
-                throw new BadRequestException('Model neexistuje');
-            }
-            $this->model = $model;
+            $this->model = $this->getORMService()->findByPrimary($id);
+        }
+        if (!$this->model) {
+            throw new InvalidStateException('Model neexistuje');
         }
         return $this->model;
     }
 
-
     /**
-     * @param int $id
      * @throws BadRequestException
      */
-    protected function traitActionEdit(int $id) {
+    protected function traitActionEdit() {
         $component = $this->getComponent('editForm');
         if (!$component instanceof IEditEntityForm) {
             throw new BadTypeException(IEditEntityForm::class, $component);
         }
-        $component->setModel($this->loadEntity($id));
+        $component->setModel($this->getEntity());
     }
 
     /**
-     * @param int $id
      * @return array
-     * @throws BadRequestException
      */
-    public function traitHandleDelete(int $id) {
-        $success = $this->loadEntity($id)->delete();
+    public function traitHandleDelete() {
+        $success = $this->getEntity()->delete();
         if (!$success) {
             throw new Exceptions\ModelException(_('Error during deleting'));
         }
@@ -171,10 +168,27 @@ trait EntityTrait {
         return $this->getORMService()->getModelClassName()::RESOURCE_ID;
     }
 
+    protected function getPrimaryParameterName(): string {
+        return 'id';
+    }
+
     /**
      * @param IResource|string $resource
      * @param string $privilege
      * @return bool
      */
     abstract protected function traitIsAuthorized($resource, string $privilege): bool;
+
+    /**
+     * @param null $name
+     * @param null $default
+     * @return mixed
+     */
+    abstract public function getParameter($name = NULL, $default = NULL);
+
+    /**
+     * @param bool $access
+     * @return void
+     */
+    abstract public function setAuthorized(bool $access);
 }

@@ -11,6 +11,7 @@ use FKSDB\ORM\Tables\TypedTableSelection;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @method ModelEvent createNewModel(array $data)
  */
 class ServiceEvent extends AbstractServiceSingle {
 

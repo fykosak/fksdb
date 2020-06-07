@@ -4,10 +4,9 @@ namespace FKSDB\CoreModule\SeriesPresenter;
 
 use FKSDB\Components\Controls\Choosers\SeriesChooser;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotFoundException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\SeriesCalculator;
-use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 
 /**
@@ -45,10 +44,13 @@ trait SeriesPresenterTrait {
 
     /**
      * @return void
-     * @throws BadRequestException
      * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     protected function seriesTraitStartup() {
+        if (+$this->series !== $this->getSelectedSeries()) {
+            $this->redirect('this', ['series' => $this->getSelectedSeries()]);
+        }
         $control = $this->getComponent('seriesChooser');
         if (!$control instanceof SeriesChooser) {
             throw new BadTypeException(SeriesChooser::class, $control);
@@ -56,23 +58,24 @@ trait SeriesPresenterTrait {
         $control->setSeries($this->getSelectedSeries(), $this->getAllowedSeries());
     }
 
-    private function isValidSeries(int $series): bool {
+    /**
+     * @param int|null $series
+     * @return bool
+     */
+    private function isValidSeries($series): bool {
         return in_array($series, $this->getAllowedSeries());
     }
 
     /**
-     * @return int
-     * @throws NotFoundException
+     * @return int|null
+     * @throws ForbiddenRequestException
      */
     public function getSelectedSeries(): int {
-        if (is_null($this->series)) {
-            $lastSeries = $this->getSeriesCalculator()->getLastSeries($this->getSelectedContest(), $this->getSelectedYear());
-            $this->redirect('this', ['series' => $lastSeries]);
+        $candidate = $this->series ?: $this->getSeriesCalculator()->getLastSeries($this->getSelectedContest(), $this->getSelectedYear());
+        if (!$this->isValidSeries($candidate)) {
+            throw new ForbiddenRequestException();
         }
-        if (!$this->isValidSeries($this->series)) {
-            throw new NotFoundException();
-        }
-        return $this->series;
+        return $candidate;
     }
 
     public function createComponentSeriesChooser(): SeriesChooser {

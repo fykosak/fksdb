@@ -12,6 +12,8 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
+use FKSDB\YearCalculator;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
@@ -51,8 +53,16 @@ class AllSubmitsGrid extends SubmitsGrid {
     public function __construct(ModelEvent $event, Container $container) {
         parent::__construct($container);
         $this->event = $event;
-        $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
-        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
+    }
+
+    /**
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     * @return void
+     */
+    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask) {
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 
     protected function getData(): IDataSource {

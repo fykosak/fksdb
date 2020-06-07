@@ -97,7 +97,7 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     /**
-     * @param IControl|null $control
+     * @param IControl|IComponent|null $control
      * @param callable|null $searchCallback
      * @param callable|null $termToValuesCallback
      */
@@ -244,7 +244,7 @@ class ReferencedContainer extends ContainerWithOptions {
 
     private function invalidateFormGroup() {
         $form = $this->getForm();
-        /** @var \BasePresenter $presenter */
+        /** @var Presenter $presenter */
         $presenter = $form->lookup(Presenter::class);
         if ($presenter->isAjax()) {
             /** @var Control $control */
@@ -328,8 +328,8 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     /**
-     * @param $name
-     * @param ContainerWithOptions $component
+     * @param string $name
+     * @param ContainerWithOptions|IComponent $component
      */
     private function showComponent($name, $component) {
         $component->setOption('visible', true);

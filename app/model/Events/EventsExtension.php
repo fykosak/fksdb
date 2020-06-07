@@ -182,11 +182,7 @@ class EventsExtension extends CompilerExtension {
 
     /**
      * @param string $name
-     * <<<<<<< HEAD
      * @return void
-     * >>>>>>> origin/master
-     * @throws InvalidArgumentException
-     * =======
      */
     private function validateConfigName(string $name) {
         if (!preg_match(self::NAME_PATTERN, $name)) {

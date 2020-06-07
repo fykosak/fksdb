@@ -2,39 +2,42 @@
 /**
  * NiftyGrid - DataGrid for Nette
  *
- * @author	Jakub Holub
- * @copyright	Copyright (c) 2012 Jakub Holub
+ * @author    Jakub Holub
+ * @copyright    Copyright (c) 2012 Jakub Holub
  * @license     New BSD Licence
  * @link        http://addons.nette.org/cs/niftygrid
  */
+
 namespace NiftyGrid;
 
 use Nette;
 use Nette\Application\UI\Presenter;
 
-abstract class Grid extends \Nette\Application\UI\Control
-{
-	const ROW_FORM = "rowForm";
+abstract class Grid extends \Nette\Application\UI\Control {
+    const ROW_FORM = "rowForm";
 
-	const ADD_ROW = "addRow";
+    const ADD_ROW = "addRow";
 
-	/** @persistent array */
-	public $filter;
+    /** @persistent array */
+    public $filter;
 
-	/** @persistent string */
-	public $order;
+    /** @persistent string */
+    public $order;
 
-	/** @persistent int */
-	public $perPage;
+    /** @persistent int */
+    public $perPage;
 
-	/** @persistent int */
-	public $activeSubGridId;
+    /** @persistent int */
+    public $activeSubGridId;
 
-	/** @persistent string */
-	public $activeSubGridName;
+    /** @persistent string */
+    public $activeSubGridName;
 
-	/** @var array */
-	protected $perPageValues = array(20 => 20, 50 => 50, 100 => 100);
+    /** @var array */
+    protected $perPageValues = [20 => 20, 50 => 50, 100 => 100];
+
+    /** @var bool */
+    public $paginate = true;
 
 	/** @var bool */
 	public $paginate = TRUE;

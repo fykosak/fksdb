@@ -10,7 +10,7 @@ use FKSDB\UI\PageStyleContainer;
 
 /**
  * Class DispatchPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DispatchPresenter extends AuthenticatedPresenter {
 
@@ -20,7 +20,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
 
     public function createComponentDispatchGrid(): DispatchGrid {
         /** @var ModelLogin $login */
-        $login = $this->user->getIdentity();
+        $login = $this->getUser()->getIdentity();
         return new DispatchGrid($login->getPerson(), $this->getContext());
     }
 
