@@ -39,7 +39,6 @@ class EventOrgsGrid extends BaseGrid {
     public function __construct(ModelEvent $event, Container $container) {
         parent::__construct($container);
         $this->event = $event;
-        $this->serviceEventOrg = $container->getByType(ServiceEventOrg::class);
     }
 
     /**

@@ -28,12 +28,11 @@ class SchoolsGrid extends BaseGrid {
     private $serviceSchool;
 
     /**
-     * SchoolsGrid constructor.
-     * @param Container $container
+     * @param ServiceSchool $serviceSchool
+     * @return void
      */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->serviceSchool = $container->getByType(ServiceSchool::class);
+    public function injectServiceSchool(ServiceSchool $serviceSchool) {
+        $this->serviceSchool = $serviceSchool;
     }
 
     protected function getData(): IDataSource {

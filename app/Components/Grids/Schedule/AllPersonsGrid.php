@@ -41,9 +41,17 @@ class AllPersonsGrid extends BaseGrid {
      */
     public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container);
-        $this->yearCalculator = $container->getByType(YearCalculator::class);
-        $this->servicePersonSchedule = $container->getByType(ServicePersonSchedule::class);
         $this->event = $event;
+    }
+
+    /**
+     * @param YearCalculator $yearCalculator
+     * @param ServicePersonSchedule $servicePersonSchedule
+     * @return void
+     */
+    public function injectPrimary(YearCalculator $yearCalculator, ServicePersonSchedule $servicePersonSchedule) {
+        $this->yearCalculator = $yearCalculator;
+        $this->servicePersonSchedule = $servicePersonSchedule;
     }
 
     protected function getData(): IDataSource {

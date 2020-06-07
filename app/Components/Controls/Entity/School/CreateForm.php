@@ -4,9 +4,7 @@ namespace FKSDB\Components\Controls\Entity\School;
 
 use FKSDB\Exceptions\ModelException;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
-use Nette\DI\Container;
 use Tracy\Debugger;
 
 /**
@@ -14,16 +12,12 @@ use Tracy\Debugger;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class CreateForm extends AbstractForm {
-
     /**
-     * EditForm constructor.
-     * @param Container $container
-     * @throws BadRequestException
+     * @param Form $form
+     * @return void
      */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $form = $this->getForm();
-
+    protected function configureForm(Form $form) {
+        parent::configureForm($form);
         $form->addSubmit('send', _('Create'));
         $form->onSuccess[] = function (Form $form) {
             $this->handleCreateFormSuccess($form);

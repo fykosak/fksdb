@@ -34,7 +34,6 @@ class FyziklaniTaskImportProcessor {
      * @param ModelEvent $event
      */
     public function __construct(Container $container, ModelEvent $event) {
-
         $this->event = $event;
         $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
     }

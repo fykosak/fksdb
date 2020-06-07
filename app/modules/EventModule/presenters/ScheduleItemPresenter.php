@@ -26,6 +26,7 @@ class ScheduleItemPresenter extends BasePresenter {
     use EventEntityTrait {
         loadEntity as traitLoadEntity;
     }
+
     /**
      * @var int
      * @persistent
@@ -87,11 +88,7 @@ class ScheduleItemPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function actionDetail(int $id) {
-        $component = $this->getComponent('personsGrid');
-        if (!$component instanceof PersonsGrid) {
-            throw new BadTypeException(PersonsGrid::class, $component);
-        }
-        $component->setItem($this->loadEntity($id));
+        $this->loadEntity($id);
     }
 
     /**
@@ -165,7 +162,7 @@ class ScheduleItemPresenter extends BasePresenter {
     }
 
     public function createComponentPersonsGrid(): PersonsGrid {
-        return new PersonsGrid($this->getContext());
+        return new PersonsGrid($this->getContext(), $this->getEntity());
     }
 
     /**
