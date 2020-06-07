@@ -123,7 +123,7 @@ class Application
 
 				$this->presenterFactory->getPresenterClass($presenterName);
 				$request->setPresenterName($presenterName);
-				$request->freeze();
+
 
 				// Execute presenter
 				$response = $this->presenter->run($request);

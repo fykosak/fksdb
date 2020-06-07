@@ -67,6 +67,7 @@ services:
         setup:
             - setLogPath(%logDir%/mail)
     - FKSDB\DataTesting\DataTestingFactory
+   # - Nette\Bridges\ApplicationLatte\TemplateFactory
 
 
     #

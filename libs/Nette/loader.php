@@ -29,23 +29,7 @@ define('NETTE_DIR', __DIR__);
 define('NETTE_VERSION_ID', 20012); // v2.0.12
 define('NETTE_PACKAGE', '5.3');
 
-
 require_once __DIR__ . '/common/exceptions.php';
 require_once __DIR__ . '/Utils/LimitedScope.php';
-require_once __DIR__ . '/Loaders/AutoLoader.php';
-require_once __DIR__ . '/Loaders/NetteLoader.php';
-
-Nette\Loaders\NetteLoader::getInstance()->register();
 
 Nette\Utils\SafeStream::register();
-
-/**
- * Nette\Callback factory.
- * @param  mixed   class, object, callable
- * @param  string  method
- * @return Nette\Callback
- */
-function callback($callback, $m = NULL)
-{
-	return new Nette\Callback($callback, $m);
-}

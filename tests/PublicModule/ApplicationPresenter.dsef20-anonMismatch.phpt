@@ -4,7 +4,7 @@ $container = require '../bootstrap.php';
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use Nette\Application\Responses\TextResponse;
-use Nette\Templating\ITemplate;
+use Nette\Application\UI\ITemplate;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
@@ -49,7 +49,7 @@ class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
         Assert::type(TextResponse::class, $response);
 
         $source = $response->getSource();
-        Assert::type(ITemplate::class, $source);
+        Assert::type(\Nette\Application\UI\ITemplate::class, $source);
 
         $html = (string) $source;
         Assert::contains('<div id="frmform-participant-person_id_1-person_info-born-pair" class="form-group has-error">', $html);

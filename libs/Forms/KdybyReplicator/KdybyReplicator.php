@@ -482,7 +482,7 @@ class Replicator extends Container
 			$_this->onClick[] = function (SubmitButton $button) use ($replicator, $callback) {
 				/** @var Replicator $replicator */
 				if (is_callable($callback)) {
-					callback($callback)->invoke($replicator, $button->parent);
+					($callback)($replicator, $button->parent);
 				}
 				$replicator->remove($button->parent);
 			};
@@ -494,7 +494,7 @@ class Replicator extends Container
 			$_this->onClick[] = function (SubmitButton $button) use ($replicator, $allowEmpty, $callback) {
 				/** @var Replicator $replicator */
 				if (!is_bool($allowEmpty)) {
-					$callback = callback($allowEmpty);
+					$callback = $allowEmpty;
 					$allowEmpty = FALSE;
 				}
 				if ($allowEmpty === FALSE && $replicator->isAllFilled() === FALSE) {
@@ -502,7 +502,7 @@ class Replicator extends Container
 				}
 				$newContainer = $replicator->createOne();
 				if (is_callable($callback)) {
-					callback($callback)->invoke($replicator, $newContainer);
+					($callback)($replicator, $newContainer);
 				}
 			};
 			return $_this;

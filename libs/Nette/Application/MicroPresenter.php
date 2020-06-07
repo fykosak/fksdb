@@ -79,14 +79,14 @@ class MicroPresenter implements Application\IPresenter
 		}
 		if (is_array($response)) {
 			if ($response[0] instanceof \SplFileInfo) {
-				$response = $this->createTemplate('Nette\Templating\FileTemplate')
+				$response = $this->createTemplate(Nette\Bridges\ApplicationLatte\Template::class)
 					->setParameters($response[1])->setFile($response[0]);
 			} else {
 				$response = $this->createTemplate('Nette\Templating\Template')
 					->setParameters($response[1])->setSource($response[0]);
 			}
 		}
-		if ($response instanceof Nette\Templating\ITemplate) {
+		if ($response instanceof Nette\Application\UI\ITemplate) {
 			return new Responses\TextResponse($response);
 		} else {
 			return $response;
@@ -98,11 +98,11 @@ class MicroPresenter implements Application\IPresenter
 	 * Template factory.
 	 * @param  string
 	 * @param  callable
-	 * @return Nette\Templating\ITemplate
+	 * @return Nette\Application\UI\ITemplate
 	 */
 	public function createTemplate($class = NULL, $latteFactory = NULL)
 	{
-		$template = $class ? new $class : new Nette\Templating\FileTemplate;
+		$template = $class ? new $class : new Nette\Bridges\ApplicationLatte\Template();
 
 		$template->setParameters($this->request->getParameters());
 		$template->presenter = $this;
@@ -114,7 +114,7 @@ class MicroPresenter implements Application\IPresenter
 		$template->registerHelperLoader('Nette\Templating\Helpers::loader');
 		$template->setCacheStorage($context->getService('nette.templateCacheStorage'));
 		$template->onPrepareFilters[] = function($template) use ($latteFactory) {
-			$template->registerFilter($latteFactory ? $latteFactory() : new Nette\Latte\Engine);
+			$template->registerFilter($latteFactory ? $latteFactory() : new \Latte\Engine());
 		};
 		return $template;
 	}

@@ -535,7 +535,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         $this->storeDesignFormToSession($values);
 
         if ($this->isAjax()) {
-            $this->invalidateControl('adhocResultsComponent');
+            $this->redrawControl('adhocResultsComponent');
         } else {
             $this->redirect('this', [self::PARAM_LOAD_FROM_SESSION => true]);
         }

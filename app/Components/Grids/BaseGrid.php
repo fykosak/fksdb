@@ -12,11 +12,11 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use Nette\Bridges\ApplicationLatte\Template;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use FKSDB\Exceptions\NotImplementedException;
-use Nette\Templating\FileTemplate;
-use Nette\Templating\ITemplate;
+use Nette\Application\UI\ITemplate;
 use Nette\Utils\Html;
 use NiftyGrid\Components\Button;
 use NiftyGrid\Components\Column;
@@ -101,7 +101,7 @@ abstract class BaseGrid extends Grid {
         }
         /**
          * @var GridPaginator $paginator
-         * @var FileTemplate $template
+         * @var Template $template
          */
         $paginator = $this->getComponent('paginator');
         $paginator->getTemplate()->setTranslator($presenter->getTranslator());

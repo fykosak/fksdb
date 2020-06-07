@@ -11,13 +11,11 @@
 
 namespace Nette\Latte\Macros;
 
-use Nette,
-	Nette\Latte,
-	Nette\Latte\MacroNode,
-	Nette\Latte\PhpWriter,
-	Nette\Latte\CompileException,
-	Nette\Forms\Form,
-	Nette\Utils\Strings;
+use Latte\Compiler;
+use Latte\MacroNode;
+use Latte\Macros\MacroSet;
+use Latte\PhpWriter;
+use Nette\Forms\Form;
 
 
 /**
@@ -33,7 +31,7 @@ use Nette,
 class FormMacros extends MacroSet
 {
 
-	public static function install(Latte\Compiler $compiler)
+	public static function install(Compiler $compiler)
 	{
 		$me = new static($compiler);
 		$me->addMacro('form',

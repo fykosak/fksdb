@@ -157,6 +157,6 @@ class PersonTestControl extends BaseComponent {
      */
     public function handleChangePage($page) {
         $this->page = $page;
-        $this->invalidateControl();
+        $this->redrawControl();
     }
 }

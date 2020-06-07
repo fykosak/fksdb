@@ -39,9 +39,6 @@ abstract class Grid extends \Nette\Application\UI\Control {
     /** @var bool */
     public $paginate = true;
 
-	/** @var bool */
-	public $paginate = TRUE;
-
 	/** @var string */
 	protected $defaultOrder;
 
@@ -102,7 +99,7 @@ abstract class Grid extends \Nette\Application\UI\Control {
 		$this->addComponent(New \Nette\ComponentModel\Container(), "subGrids");
 
 		if($presenter->isAjax()){
-			$this->invalidateControl();
+			$this->redrawControl();
 		}
 
 		$this->configure($presenter);
