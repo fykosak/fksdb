@@ -6,7 +6,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class DashboardPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DashboardPresenter extends BasePresenter {
 

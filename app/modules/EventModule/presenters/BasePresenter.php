@@ -23,8 +23,6 @@ use Nette\Security\IResource;
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
 
-    const TEAM_EVENTS = [1, 9, 13];
-
     /** @var ModelEvent */
     private $event;
     /** @var Holder */
@@ -57,6 +55,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @param EventDispatchFactory $eventDispatchFactory
+     * @return void
      */
     public function injectEventDispatch(EventDispatchFactory $eventDispatchFactory) {
         $this->eventDispatchFactory = $eventDispatchFactory;
@@ -137,7 +136,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws BadRequestException
      */
     protected function isTeamEvent(): bool {
-        return (bool)in_array($this->getEvent()->event_type_id, self::TEAM_EVENTS);
+        return (bool)in_array($this->getEvent()->event_type_id, ModelEvent::TEAM_EVENTS);
     }
 
     /* **************** ACL *********************** */

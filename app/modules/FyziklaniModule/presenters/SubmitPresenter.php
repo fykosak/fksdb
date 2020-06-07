@@ -10,6 +10,7 @@ use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
 use FKSDB\Fyziklani\ClosedSubmittingException;
 use FKSDB\Fyziklani\PointsMismatchException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -19,7 +20,6 @@ use Nette\Application\UI\Control;
  * Class SubmitPresenter
  * *
  * @method ModelFyziklaniSubmit getEntity()
- * @method ModelFyziklaniSubmit loadEntity(int $id)
  */
 class SubmitPresenter extends BasePresenter {
     use EventEntityTrait;
@@ -42,21 +42,19 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
      * @throws BadRequestException
      */
-    public function titleEdit(int $id) {
+    public function titleEdit() {
         $this->setTitle(_('Úprava bodování'), 'fa fa-pencil');
     }
 
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function titleDetail(int $id) {
-        $this->setTitle(sprintf(_('Detail of the submit #%d'), $this->loadEntity($id)->fyziklani_submit_id), 'fa fa-pencil');
+    public function titleDetail() {
+        $this->setTitle(sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id), 'fa fa-pencil');
     }
 
     /* ***** Authorized methods *****/
@@ -72,31 +70,28 @@ class SubmitPresenter extends BasePresenter {
     /* ******** ACTION METHODS ********/
 
     /**
-     * @param int $id
      * @throws BadRequestException
      */
-    public function actionEdit(int $id) {
-        $this->traitActionEdit($id);
+    public function actionEdit() {
+        $this->traitActionEdit();
     }
 
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function renderDetail(int $id) {
-        $this->template->model = $this->loadEntity($id);
+    public function renderDetail() {
+        $this->template->model = $this->getEntity();
     }
 
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function renderEdit(int $id) {
-        $this->template->model = $this->loadEntity($id);
+    public function renderEdit() {
+        $this->template->model = $this->getEntity();
     }
 
     /* ****** COMPONENTS **********/
@@ -139,7 +134,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @return ServiceFyziklaniSubmit
      */
     protected function getORMService() {
         return $this->getServiceFyziklaniSubmit();

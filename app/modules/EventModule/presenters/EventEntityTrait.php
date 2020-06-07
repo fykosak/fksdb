@@ -14,31 +14,29 @@ use Nette\Application\ForbiddenRequestException;
 
 /**
  * Trait EventEntityTrait
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 trait EventEntityTrait {
     use EntityTrait {
-        loadEntity as loadBaseEntity;
+        getEntity as getBaseEntity;
     }
 
     /**
-     * @param int $id
-     * @return AbstractModelMulti|AbstractModelSingle
+     * @return AbstractModelSingle
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    protected function loadEntity(int $id) {
-        $this->loadBaseEntity($id);
+    protected function getEntity() {
+        $model = $this->getBaseEntity();
 
-        if (!$this->model instanceof IEventReferencedModel) {
-            throw new BadTypeException(IEventReferencedModel::class, $this->model);
+        if (!$model instanceof IEventReferencedModel) {
+            throw new BadTypeException(IEventReferencedModel::class, $model);
         }
-        if ($this->model->getEvent()->event_id !== $this->getEvent()->event_id) {
+        if ($model->getEvent()->event_id !== $this->getEvent()->event_id) {
             throw new ForbiddenRequestException();
         }
-
-        return $this->model;
+        return $model;
     }
 
     /**
