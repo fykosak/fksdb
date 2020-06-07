@@ -50,9 +50,22 @@ class ResultsAndStatistics extends FyziklaniReactControl {
     public function __construct(Container $container, ModelEvent $event, string $reactId) {
         parent::__construct($container, $event);
         $this->reactId = $reactId;
-        $this->serviceFyziklaniSubmit = $this->getContext()->getByType(ServiceFyziklaniSubmit::class);
-        $this->serviceFyziklaniTask = $this->getContext()->getByType(ServiceFyziklaniTask::class);
-        $this->serviceFyziklaniTeam = $this->getContext()->getByType(ServiceFyziklaniTeam::class);
+    }
+
+    /**
+     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @return void
+     */
+    public function injectPrimary(
+        ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
+        ServiceFyziklaniTask $serviceFyziklaniTask,
+        ServiceFyziklaniTeam $serviceFyziklaniTeam
+    ) {
+        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
     protected function getReactId(): string {

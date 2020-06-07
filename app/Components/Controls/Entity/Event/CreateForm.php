@@ -6,7 +6,6 @@ use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 
@@ -19,21 +18,37 @@ class CreateForm extends AbstractForm {
      * @var int
      */
     private $year;
+    /**
+     * @var ServiceEvent
+     */
+    private $serviceEvent;
 
     /**
      * CreateForm constructor.
      * @param Container $container
      * @param ModelContest $contest
      * @param int $year
-     * @throws BadRequestException
-     * @throws \Exception
      */
     public function __construct(Container $container, ModelContest $contest, int $year) {
-        parent::__construct($container);
+        parent::__construct($contest, $container);
         $this->year = $year;
+    }
+    /**
+     * @param ServiceEvent $serviceEvent
+     * @return void
+     */
+    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+        $this->serviceEvent = $serviceEvent;
+    }
 
-        $form = $this->createBaseForm($contest);
 
+    /**
+     * @param Form $form
+     * @return void
+     * @throws \Exception
+     */
+    protected function configureForm(Form $form) {
+        parent::configureForm($form);
         $form->addSubmit('send', _('Create'));
         $form->onSuccess[] = function (Form $form) {
             $this->handleFormSuccess($form);
@@ -45,12 +60,10 @@ class CreateForm extends AbstractForm {
      * @throws AbortException
      */
     private function handleFormSuccess(Form $form) {
-        /** @var ServiceEvent $serviceEvent */
-        $serviceEvent = $this->container->getByType(ServiceEvent::class);
-        $values = $form->getValues();
-        $data = \FormUtils::emptyStrToNull($values[self::CONT_EVENT]);
+        $values = $form->getValues(true);
+        $data = \FormUtils::emptyStrToNull($values[self::CONT_EVENT], true);
         $data['year'] = $this->year;
-        $model = $serviceEvent->createNewModel($data);
+        $model = $this->serviceEvent->createNewModel($data);
 
         $this->updateTokens($model);
         $this->flashMessage(sprintf(_('Akce %s uložena.'), $model->name), ILogger::SUCCESS);

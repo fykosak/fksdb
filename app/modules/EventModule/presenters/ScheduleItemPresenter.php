@@ -86,12 +86,8 @@ class ScheduleItemPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function actionDetail() {
-        $component = $this->getComponent('personsGrid');
-        if (!$component instanceof PersonsGrid) {
-            throw new BadTypeException(PersonsGrid::class, $component);
-        }
-        $component->setItem($this->getEntity());
+    public function actionDetail(int $id) {
+        $this->loadEntity($id);
     }
 
     /**
@@ -161,7 +157,7 @@ class ScheduleItemPresenter extends BasePresenter {
     }
 
     public function createComponentPersonsGrid(): PersonsGrid {
-        return new PersonsGrid($this->getContext());
+        return new PersonsGrid($this->getContext(), $this->getEntity());
     }
 
     protected function getORMService(): ServiceScheduleItem {

@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Controls\FormControl;
 
 use FKSDB\Exceptions\BadTypeException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Templating\FileTemplate;
@@ -19,15 +18,13 @@ class FormControl extends Control {
 
     const SNIPPET_MAIN = 'groupContainer';
 
-    const TEMPLATE_PATH = 'FormControl.containers.latte';
-
     protected function createComponentForm(): Form {
         return new Form();
     }
 
     /**
      * @return Form
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     final public function getForm(): Form {
         $component = $this->getComponent('form');
@@ -37,16 +34,12 @@ class FormControl extends Control {
         return $component;
     }
 
-    private function getTemplateFile(): string {
-        return __DIR__ . DIRECTORY_SEPARATOR . self::TEMPLATE_PATH;
-    }
 
     public function render() {
         if (!isset($this->template->mainContainer)) {
             $this->template->mainContainer = $this->getComponent('form');
         }
-        $this->template->setFile($this->getTemplateFile());
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'FormControl.containers.latte');
         $this->template->render();
     }
-
 }

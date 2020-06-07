@@ -20,6 +20,8 @@ class PointsFormControl extends SeriesTableFormControl {
      * @var callable
      */
     private $invalidCacheCallback;
+    /** @var ServiceSubmit */
+    private $serviceSubmit;
 
     /**
      * PointsFormControl constructor.
@@ -34,24 +36,30 @@ class PointsFormControl extends SeriesTableFormControl {
     }
 
     /**
+     * @param ServiceSubmit $serviceSubmit
+     * @return void
+     */
+    public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
+        $this->serviceSubmit = $serviceSubmit;
+    }
+
+    /**
      * @param Form $form
      * @throws AbortException
      * @throws ForbiddenRequestException
      */
     protected function handleFormSuccess(Form $form) {
-        /** @var ServiceSubmit $serviceSubmit */
-        $serviceSubmit = $this->getContext()->getByType(ServiceSubmit::class);
         foreach ($form->getHttpData()['submits'] as $submitId => $points) {
             if (!$this->getSeriesTable()->getSubmits()->where('submit_id', $submitId)->fetch()) {
                 // secure check for rewrite submitId.
                 throw new ForbiddenRequestException();
             }
             /** @var ModelSubmit $submit */
-            $submit = $serviceSubmit->findByPrimary($submitId);
+            $submit = $this->serviceSubmit->findByPrimary($submitId);
             if ($points !== "" && $points !== $submit->raw_points) {
-                $serviceSubmit->updateModel2($submit, ['raw_points' => +$points]);
+                $this->serviceSubmit->updateModel2($submit, ['raw_points' => +$points]);
             } elseif (!is_null($submit->raw_points) && $points === "") {
-                $serviceSubmit->updateModel2($submit, ['raw_points' => null]);
+                $this->serviceSubmit->updateModel2($submit, ['raw_points' => null]);
             }
         }
         ($this->invalidCacheCallback)();

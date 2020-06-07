@@ -42,6 +42,10 @@ abstract class BaseGrid extends Grid {
      * @var TableReflectionFactory
      */
     protected $tableReflectionFactory;
+    /**
+     * @var Container
+     */
+    private $container;
 
     /**
      * BaseGrid constructor.
@@ -49,6 +53,7 @@ abstract class BaseGrid extends Grid {
      */
     public function __construct(Container $container) {
         parent::__construct();
+        $this->container = $container;
         $container->callInjects($this);
     }
 
@@ -365,5 +370,9 @@ abstract class BaseGrid extends Grid {
         $response->setQuotes(true);
         $response->setGlue(',');
         $this->getPresenter()->sendResponse($response);
+    }
+
+    protected function getContext(): Container {
+        return $this->container;
     }
 }

@@ -84,7 +84,7 @@ class EventPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function createComponentEditForm(): Control {
-        return new EditForm($this->getContext(), $this->getSelectedContest());
+        return new EditForm($this->getSelectedContest(), $this->getContext());
     }
 
     protected function getORMService(): ServiceEvent {

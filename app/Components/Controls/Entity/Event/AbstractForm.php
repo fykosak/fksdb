@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Entity\Event;
 
-use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
 use FKSDB\Components\Forms\Factories\EventFactory;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\Logging\ILogger;
@@ -10,7 +10,6 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceAuthToken;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Tracy\Debugger;
@@ -19,51 +18,62 @@ use Tracy\Debugger;
  * Class AbstractForm
  * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class AbstractForm extends FormControl {
+abstract class AbstractForm extends AbstractEntityFormControl {
     const CONT_EVENT = 'event';
     /**
-     * @var Container
+     * @var ModelContest
      */
-    protected $container;
+    protected $contest;
+    /**
+     * @var EventFactory
+     */
+    protected $eventFactory;
+    /**
+     * @var ServiceAuthToken
+     */
+    protected $serviceAuthToken;
 
     /**
-     * EditControl constructor.
+     * AbstractForm constructor.
+     * @param ModelContest $contest
      * @param Container $container
-     * @throws \Exception
      */
-    public function __construct(Container $container) {
-        parent::__construct();
-        $this->container = $container;
+    public function __construct(ModelContest $contest, Container $container) {
+        parent::__construct($container);
+        $this->contest = $contest;
     }
 
     /**
-     * @param ModelContest $contest
-     * @return Form
-     * @throws BadRequestException
+     * @param EventFactory $eventFactory
+     * @param ServiceAuthToken $serviceAuthToken
+     * @return void
+     */
+    public function injectPrimary(EventFactory $eventFactory, ServiceAuthToken $serviceAuthToken) {
+        $this->serviceAuthToken = $serviceAuthToken;
+        $this->eventFactory = $eventFactory;
+    }
+
+    /**
+     * @param Form $form
+     * @return void
      * @throws \Exception
      */
-    protected function createBaseForm(ModelContest $contest) {
-        $form = $this->getForm();
-        /** @var EventFactory $eventFactory */
-        $eventFactory = $this->container->getByType(EventFactory::class);
-        $eventContainer = $eventFactory->createEvent($contest);
+    protected function configureForm(Form $form) {
+        $eventContainer = $this->eventFactory->createEvent($this->contest);
         $form->addComponent($eventContainer, self::CONT_EVENT);
-        return $form;
     }
 
     /**
      * @param ModelEvent|AbstractModelSingle $event
      */
     protected function updateTokens(ModelEvent $event) {
-        /** @var ServiceAuthToken $serviceAuthToken */
-        $serviceAuthToken = $this->container->getByType(ServiceAuthToken::class);
-        $connection = $serviceAuthToken->getConnection();
+        $connection = $this->serviceAuthToken->getConnection();
         try {
             $connection->beginTransaction();
             // update also 'until' of authTokens in case that registration end has changed
             $tokenData = ['until' => $event->registration_end ?: $event->end];
-            foreach ($serviceAuthToken->findTokensByEventId($event->event_id) as $token) {
-                $serviceAuthToken->updateModel2($token, $tokenData);
+            foreach ($this->serviceAuthToken->findTokensByEventId($event->event_id) as $token) {
+                $this->serviceAuthToken->updateModel2($token, $tokenData);
             }
             $connection->commit();
         } catch (ModelException $exception) {

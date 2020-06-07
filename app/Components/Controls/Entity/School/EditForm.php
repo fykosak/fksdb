@@ -9,7 +9,6 @@ use FKSDB\ORM\Models\ModelSchool;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
-use Nette\DI\Container;
 use Tracy\Debugger;
 
 /**
@@ -23,13 +22,10 @@ class EditForm extends AbstractForm implements IEditEntityForm {
     private $model;
 
     /**
-     * EditForm constructor.
-     * @param Container $container
-     * @throws BadRequestException
+     * @param Form $form
+     * @return void
      */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $form = $this->getForm();
+    protected function configureForm(Form $form) {
         $form->addSubmit('send', _('Save'));
         $form->onSuccess[] = function (Form $form) {
             $this->handleEditFormSuccess($form);
