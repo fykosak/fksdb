@@ -183,9 +183,9 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
                         }, _('S e-mailem %value byla nalezena (formálně) jiná (ale pravděpodobně duplicitní) osoba, a tak ve formuláři nahradila původní.'));
                 }
 
-                $subcontainer->addComponent($control, $fieldName);
+                $subContainer->addComponent($control, $fieldName);
             }
-            $container->addComponent($subcontainer, $sub);
+            $container->addComponent($subContainer, $sub);
         }
 
         return [
