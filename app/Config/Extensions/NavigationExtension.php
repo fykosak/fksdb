@@ -3,6 +3,7 @@
 namespace FKSDB\Config\Extensions;
 
 use FKSDB\Components\Controls\Navigation\Navigation;
+use Nette\DI\CompilerExtension;
 use Nette\DI\ServiceDefinition;
 
 /**
@@ -10,7 +11,7 @@ use Nette\DI\ServiceDefinition;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class NavigationExtension extends \Nette\DI\CompilerExtension {
+class NavigationExtension extends CompilerExtension {
 
     /**
      * @var array

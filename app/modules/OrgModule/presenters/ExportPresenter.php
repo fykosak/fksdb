@@ -29,6 +29,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Strings;
 use FKSDB\ORM\ServicesMulti\ServiceMStoredQueryTag;
 use Tracy\Debugger;
+use Traversable;
 
 /**
  * Class ExportPresenter

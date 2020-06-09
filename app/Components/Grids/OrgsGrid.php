@@ -7,6 +7,7 @@ use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;

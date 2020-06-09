@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\DatabaseReflection\Org;
 
+use FKSDB\Components\DatabaseReflection\AbstractRowException;
 use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use Nette\Forms\Controls\BaseControl;

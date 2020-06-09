@@ -4,6 +4,7 @@ namespace EventModule;
 
 use FKSDB\EntityTrait;
 use FKSDB\Exceptions\BadTypeException;
+use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
