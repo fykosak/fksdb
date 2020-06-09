@@ -6,6 +6,7 @@
     {/if}
 {elseif  $mode == 'transitions'}
     {if}
+        {var $transitions = $primaryMachine->getAvailableTransitions($holder,$state,\FKSDB\Events\Machine\BaseMachine::EXECUTABLE OR \FKSDB\Events\Machine\BaseMachine::VISIBLE)}
         {foreach $transitions as $transition}
             {var $className = 'btn btn-sm btn-'.$transition->getType()}
             {if $transition->isCreating()}

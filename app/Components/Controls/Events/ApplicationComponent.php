@@ -118,7 +118,7 @@ class ApplicationComponent extends BaseComponent {
     }
 
     /**
-     * @param $mode
+     * @param string $mode
      * @return void
      * @throws BadRequestException
      */
@@ -126,14 +126,9 @@ class ApplicationComponent extends BaseComponent {
         $this->template->mode = $mode;
         $this->template->holder = $this->holder;
         $this->template->primaryModel = $this->holder->getPrimaryHolder()->getModel();
-
-        $primaryMachine= $this->getMachine()->getPrimaryMachine();
-        $this->template->primaryMachine = $primaryMachine;
+        $this->template->primaryMachine = $this->getMachine()->getPrimaryMachine();
         $this->template->canEdit = $this->canEdit();
-
-        $state = $this->holder->getPrimaryHolder()->getModelState();
-        $this->template->state = $state;
-        $this->template->transitions = $transactions = $primaryMachine->getAvailableTransitions($this->holder, $state, BaseMachine::EXECUTABLE | BaseMachine::VISIBLE);
+        $this->template->state = $this->holder->getPrimaryHolder()->getModelState();
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ApplicationComponent.inline.latte');
         $this->template->render();
     }
