@@ -29,9 +29,6 @@ class RelatedPersonAuthorizator {
         $this->user = $user;
     }
 
-    /**
-     * @return IUserStorage
-     */
     public function getUser(): IUserStorage {
         return $this->user;
     }

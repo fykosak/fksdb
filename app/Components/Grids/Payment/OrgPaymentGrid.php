@@ -2,6 +2,8 @@
 
 namespace FKSDB\Components\Grids\Payment;
 
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
@@ -44,8 +46,8 @@ class OrgPaymentGrid extends PaymentGrid {
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
-     * @throws \FKSDB\Exceptions\BadTypeException
-     * @throws \FKSDB\Exceptions\NotImplementedException
+     * @throws BadTypeException
+     * @throws NotImplementedException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);

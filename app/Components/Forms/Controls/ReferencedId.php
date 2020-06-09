@@ -83,6 +83,7 @@ class ReferencedId extends HiddenField {
 
     /**
      * @param ReferencedContainer $referencedContainer
+     * @return void
      */
     public function setReferencedContainer(ReferencedContainer $referencedContainer) {
         $this->referencedContainer = $referencedContainer;
@@ -126,6 +127,7 @@ class ReferencedId extends HiddenField {
 
     /**
      * @param $modelCreated
+     * @return void
      */
     public function setModelCreated($modelCreated) {
         $this->modelCreated = $modelCreated;

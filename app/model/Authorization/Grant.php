@@ -33,18 +33,11 @@ class Grant implements IRole {
         $this->roleId = $roleId;
     }
 
-    /**
-     * @return int
-     */
     public function getContestId(): int {
         return $this->contestId;
     }
 
-    /**
-     * @return string
-     */
     public function getRoleId(): string {
         return $this->roleId;
     }
-
 }

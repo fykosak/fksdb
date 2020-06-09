@@ -37,7 +37,9 @@ class EventOrgPresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @param $resource
+     * @param string $privilege
+     * @return bool
      * @throws BadRequestException
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {

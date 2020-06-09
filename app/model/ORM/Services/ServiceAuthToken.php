@@ -105,8 +105,8 @@ class ServiceAuthToken extends AbstractServiceSingle {
     }
 
     /**
-     *
      * @param $token
+     * @return void
      */
     public function disposeToken($token) {
         if (!$token instanceof ModelAuthToken) {

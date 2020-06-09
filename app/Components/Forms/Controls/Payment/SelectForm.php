@@ -173,6 +173,7 @@ class SelectForm extends BaseComponent {
      * @return void
      * @throws AbortException
      * @throws ForbiddenRequestException
+     * @throws \Exception
      */
     private function handleSubmit(Form $form, bool $create) {
         $values = $form->getValues();

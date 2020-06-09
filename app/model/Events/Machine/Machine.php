@@ -23,6 +23,7 @@ class Machine {
 
     /**
      * @param $name
+     * @return void
      */
     public function setPrimaryMachine($name) {
         $this->primaryMachine = $this->getBaseMachine($name);
@@ -37,6 +38,7 @@ class Machine {
 
     /**
      * @param BaseMachine $baseMachine
+     * @return void
      */
     public function addBaseMachine(BaseMachine $baseMachine) {
         $name = $baseMachine->getName();
@@ -45,10 +47,6 @@ class Machine {
         $baseMachine->setMachine($this);
     }
 
-    /**
-     * @param $name
-     * @return BaseMachine
-     */
     public function getBaseMachine(string $name): BaseMachine {
         if (!array_key_exists($name, $this->baseMachines)) {
             throw new InvalidArgumentException("Unknown base machine '$name'.");

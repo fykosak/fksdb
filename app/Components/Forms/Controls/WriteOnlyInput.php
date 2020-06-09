@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Components\Forms\Containers\IWriteOnly;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
 
@@ -41,7 +42,8 @@ class WriteOnlyInput extends TextInput implements IWriteOnly {
     }
 
     /**
-     * @param $obj
+     * @param IComponent $obj
+     * @return void
      */
     protected function attached($obj) {
         parent::attached($obj);

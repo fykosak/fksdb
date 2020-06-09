@@ -15,7 +15,7 @@ class Count {
     use WithEventTrait;
 
     /**
-     * @var
+     * @var mixed
      */
     private $state;
 

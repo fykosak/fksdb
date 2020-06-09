@@ -6,11 +6,11 @@ use FKSDB\Components\Controls\Entity\School\CreateForm;
 use FKSDB\Components\Controls\Entity\School\EditForm;
 use FKSDB\Components\Grids\SchoolsGrid;
 use FKSDB\EntityTrait;
-use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
+use Nette\Security\IResource;
 
 /**
  * Class SchoolPresenter
@@ -54,7 +54,9 @@ class SchoolPresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @param IResource|string $resource
+     * @param string $privilege
+     * @return bool
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
         return $this->isAnyContestAuthorized($resource, $privilege);
@@ -82,12 +84,10 @@ class SchoolPresenter extends BasePresenter {
         return new SchoolsGrid($this->getContext());
     }
 
-    /** @inheritDoc */
     public function createComponentEditForm(): Control {
         return new EditForm($this->getContext());
     }
 
-    /** @inheritDoc */
     public function createComponentCreateForm(): Control {
         return new CreateForm($this->getContext());
     }

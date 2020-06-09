@@ -57,6 +57,7 @@ class TokenGSIDHolder implements IGSIDHolder {
 
     /**
      * @param $gsid
+     * @return mixed|void
      */
     public function setGSID($gsid) {
         if ($gsid) {

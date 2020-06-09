@@ -90,11 +90,10 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @param null $class
      * @return ITemplate
      * @throws BadTypeException
      */
-    protected function createTemplate($class = null): ITemplate {
+    protected function createTemplate(): ITemplate {
         $presenter = $this->getPresenter();
         if (!$presenter instanceof \BasePresenter) {
             throw new BadTypeException(\BasePresenter::class, $presenter);
@@ -105,7 +104,7 @@ abstract class BaseGrid extends Grid {
          */
         $paginator = $this->getComponent('paginator');
         $paginator->getTemplate()->setTranslator($presenter->getTranslator());
-        $template = parent::createTemplate($class);
+        $template = parent::createTemplate();
         $template->setTranslator($presenter->getTranslator());
         return $template;
     }

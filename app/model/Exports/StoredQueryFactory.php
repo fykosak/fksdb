@@ -82,7 +82,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
     }
 
     /**
-     * @param $qid
+     * @param string $qid
      * @param $parameters
      * @return StoredQuery
      */

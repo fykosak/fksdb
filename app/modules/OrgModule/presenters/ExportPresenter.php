@@ -29,7 +29,6 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Utils\Strings;
 use FKSDB\ORM\ServicesMulti\ServiceMStoredQueryTag;
 use Tracy\Debugger;
-use Traversable;
 
 /**
  * Class ExportPresenter
@@ -219,16 +218,10 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         return $this->patternQuery;
     }
 
-    /**
-     * @throws BadRequestException
-     */
     public function authorizedList() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('storedQuery', 'list', $this->getSelectedContest()));
     }
 
-    /**
-     * @throws BadRequestException
-     */
     public function authorizedCompose() {
         $this->setAuthorized(
             ($this->getContestAuthorizator()->isAllowed('storedQuery', 'create', $this->getSelectedContest()) &&

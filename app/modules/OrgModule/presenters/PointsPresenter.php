@@ -109,24 +109,29 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
      */
     public function authorizedEntry() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'edit', $this->getSelectedContest()));
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
      */
     public function authorizedPreview() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'points', $this->getSelectedContest()));
     }
 
+    /**
+     * @return void
+     */
     public function actionEntry() {
         $this->seriesTable->setTaskFilter($this->all ? null : $this->getGradedTasks());
     }
 
-
+    /**
+     * @return void
+     */
     public function renderEntry() {
         $this->template->showAll = (bool)$this->all;
     }
