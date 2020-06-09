@@ -110,7 +110,7 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
      * @throws JsonException
      * @throws \Exception
      */
-    public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField = null, array $metadata = []) {
+    public function createField(string $sub, string $fieldName, int $acYear, HiddenField $hiddenField = null, array $metadata = []) {
         switch ($sub) {
             case 'person_schedule':
                 $control = $this->personScheduleFactory->createField($fieldName, $this->event);
