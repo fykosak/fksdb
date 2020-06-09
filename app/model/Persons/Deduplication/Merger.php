@@ -77,6 +77,7 @@ class Merger {
 
     /**
      * @param ILogger $logger
+     * @return void
      */
     public function setLogger(ILogger $logger) {
         $this->logger = $logger;
@@ -85,6 +86,7 @@ class Merger {
     /**
      * @param ActiveRow $trunkRow
      * @param ActiveRow $mergedRow
+     * @return void
      */
     public function setMergedPair(ActiveRow $trunkRow, ActiveRow $mergedRow) {
         $this->trunkRow = $trunkRow;

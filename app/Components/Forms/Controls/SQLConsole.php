@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Application\IStylesheetCollector;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Controls\TextArea;
 use Nette\Utils\Html;
 
@@ -37,7 +38,8 @@ class SQLConsole extends TextArea {
     private $attachedCSS = false;
 
     /**
-     * @param $component
+     * @param IComponent $component
+     * @return void
      */
     protected function attached($component) {
         parent::attached($component);

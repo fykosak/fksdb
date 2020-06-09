@@ -15,6 +15,7 @@ use Nette;
  * Latte extension for Nette DI.
  */
 class LatteExtension extends Nette\DI\CompilerExtension {
+    /** @var array  */
     public $defaults = [
         'xhtml' => false,
         'macros' => [],

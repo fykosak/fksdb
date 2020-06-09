@@ -134,7 +134,7 @@ abstract class AbstractModelMulti implements IModel {
     }
 
     /**
-     * @param $name
+     * @param string|int $name
      * @param $value
      */
     public function __set($name, $value) {
@@ -142,7 +142,7 @@ abstract class AbstractModelMulti implements IModel {
     }
 
     /**
-     * @param $name
+     * @param string|int $name
      */
     public function __unset($name) {
         throw new LogicException("Cannot update multimodel directly.");

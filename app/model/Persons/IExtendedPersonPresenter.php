@@ -29,14 +29,8 @@ interface IExtendedPersonPresenter {
      */
     public function messageEdit(): string;
 
-    /**
-     * @return string
-     */
     public function messageError(): string;
 
-    /**
-     * @return string
-     */
     public function messageExists(): string;
 
     /**

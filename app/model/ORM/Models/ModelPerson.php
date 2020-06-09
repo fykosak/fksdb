@@ -390,10 +390,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $this->related(DbNames::TAB_PAYMENT, 'person_id');
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return GroupedSelection
-     */
     public function getPaymentsForEvent(ModelEvent $event): GroupedSelection {
         return $this->getPayments()->where('event_id', $event->event_id);
     }

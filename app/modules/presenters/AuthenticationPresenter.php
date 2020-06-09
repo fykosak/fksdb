@@ -14,7 +14,6 @@ use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\UI\PageStyleContainer;
-use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
@@ -79,11 +78,6 @@ final class AuthenticationPresenter extends BasePresenter {
     private $accountManager;
 
     /**
-     * @var MailTemplateFactory
-     */
-    private $mailTemplateFactory;
-
-    /**
      * @var ServicePerson
      */
     protected $servicePerson;
@@ -130,14 +124,6 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     public function injectAccountManager(AccountManager $accountManager) {
         $this->accountManager = $accountManager;
-    }
-
-    /**
-     * @param MailTemplateFactory $mailTemplateFactory
-     * @return void
-     */
-    public function injectMailTemplateFactory(MailTemplateFactory $mailTemplateFactory) {
-        $this->mailTemplateFactory = $mailTemplateFactory;
     }
 
     /**

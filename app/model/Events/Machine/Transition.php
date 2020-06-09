@@ -63,7 +63,7 @@ class Transition {
      */
     public $onExecuted = [];
     /**
-     * @var
+     * @var mixed
      */
     private $type;
 
@@ -100,9 +100,6 @@ class Transition {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
     public function getType(): string {
         if ($this->isTerminating()) {
             return self::TYPE_DANGEROUS;
@@ -114,7 +111,8 @@ class Transition {
     }
 
     /**
-     * @param $name
+     * @param string $name
+     * @return void
      */
     private function setName(string $name) {
         // it's used for component naming
@@ -139,6 +137,7 @@ class Transition {
 
     /**
      * @param $mask
+     * @return void
      */
     public function setMask($mask) {
         $this->mask = $mask;
@@ -155,49 +154,35 @@ class Transition {
 
     /**
      * @param BaseMachine $baseMachine
+     * @return void
      */
     public function setBaseMachine(BaseMachine $baseMachine) {
         $this->baseMachine = $baseMachine;
     }
 
-    /**
-     * @return string
-     */
     public function getTarget(): string {
         return $this->target;
     }
 
-    /**
-     * @return string
-     */
     public function getSource(): string {
         return $this->source;
     }
 
-    /**
-     * @return bool
-     */
     public function isCreating(): bool {
         return strpos($this->source, BaseMachine::STATE_INIT) !== false;
     }
 
-    /**
-     * @return bool
-     */
     public function isTerminating(): bool {
         return $this->target == BaseMachine::STATE_TERMINATED;
     }
 
-    /**
-     * @param Holder $holder
-     * @return bool
-     */
     public function isVisible(Holder $holder): bool {
         return $this->getEvaluator()->evaluate($this->visible, $holder);
     }
 
     /**
      * @param $condition
+     * @return void
      */
     public function setCondition($condition) {
         $this->condition = $condition;
@@ -205,20 +190,19 @@ class Transition {
 
     /**
      * @param $visible
+     * @return void
      */
     public function setVisible($visible) {
         $this->visible = $visible;
     }
 
-    /**
-     * @return ExpressionEvaluator
-     */
     private function getEvaluator(): ExpressionEvaluator {
         return $this->evaluator;
     }
 
     /**
      * @param ExpressionEvaluator $evaluator
+     * @return void
      */
     public function setEvaluator(ExpressionEvaluator $evaluator) {
         $this->evaluator = $evaluator;
@@ -227,6 +211,7 @@ class Transition {
     /**
      * @param BaseMachine $targetMachine
      * @param $targetState
+     * @return void
      */
     public function addInducedTransition(BaseMachine $targetMachine, $targetState) {
         if ($targetMachine === $this->getBaseMachine()) {
@@ -403,11 +388,6 @@ class Transition {
         return explode('->', $mask);
     }
 
-    /**
-     * @param string $mask
-     * @param array $states
-     * @return bool
-     */
     public static function validateTransition(string $mask, array $states): bool {
         $parts = self::parseMask($mask);
         if (count($parts) != 2) {

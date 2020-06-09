@@ -21,10 +21,5 @@ interface IStateModel {
      */
     public function getState();
 
-    /**
-     * @param Context $connection
-     * @param IConventions $conventions
-     * @return IStateModel
-     */
     public function refresh(Context $connection, IConventions $conventions): self;
 }

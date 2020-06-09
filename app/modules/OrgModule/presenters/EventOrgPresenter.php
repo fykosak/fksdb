@@ -138,7 +138,7 @@ class EventOrgPresenter extends ExtendedPersonPresenter {
     }
 
     /**
-     * @inheritDoc
+     * @return BaseGrid
      * @throws NotImplementedException
      */
     protected function createComponentGrid(): BaseGrid {

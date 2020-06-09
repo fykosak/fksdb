@@ -4,8 +4,8 @@ namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Submits\SeriesTable;
-use Nette\DI\Container;
 use Nette\Application\UI\ITemplate;
+use Nette\DI\Container;
 
 /**
  * Class SeriesTableComponent

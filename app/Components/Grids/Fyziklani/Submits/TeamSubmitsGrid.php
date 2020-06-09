@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\UI\Presenter;
@@ -41,9 +42,11 @@ class TeamSubmitsGrid extends SubmitsGrid {
 
     /**
      * @param Presenter $presenter
-     * @throws DuplicateColumnException
+     * @return void
      * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
      * @throws NotImplementedException
+     * @throws BadTypeException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);

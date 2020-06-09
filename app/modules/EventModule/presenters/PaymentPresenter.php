@@ -250,21 +250,24 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @return BaseGrid
+     * @throws NotImplementedException
      */
     public function createComponentGrid(): BaseGrid {
         throw new NotImplementedException();
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
     public function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
     public function createComponentEditForm(): Control {
         throw new NotImplementedException();
