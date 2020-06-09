@@ -31,7 +31,11 @@ abstract class AbstractRow {
      * @var array
      */
     private $referencedAccess;
-
+    /**
+     * @param mixed ...$args
+     * @return BaseControl
+     * @throws OmittedControlException
+     */
     public function createField(...$args): BaseControl {
         return new TextInput($this->getTitle());
     }

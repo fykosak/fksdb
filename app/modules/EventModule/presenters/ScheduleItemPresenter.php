@@ -5,7 +5,6 @@ namespace EventModule;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\ItemsGrid;
 use FKSDB\Components\Grids\Schedule\PersonsGrid;
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
@@ -82,12 +81,13 @@ class ScheduleItemPresenter extends BasePresenter {
     }
 
     /**
+     * @return void
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function actionDetail(int $id) {
-        $this->loadEntity($id);
+    public function actionDetail() {
+        $this->getEntity();
     }
 
     /**
@@ -156,6 +156,12 @@ class ScheduleItemPresenter extends BasePresenter {
         return new ItemsGrid($this->getContext(), $this->getGroup());
     }
 
+    /**
+     * @return PersonsGrid
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
     public function createComponentPersonsGrid(): PersonsGrid {
         return new PersonsGrid($this->getContext(), $this->getEntity());
     }

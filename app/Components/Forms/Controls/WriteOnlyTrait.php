@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Application\IJavaScriptCollector;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
@@ -38,15 +39,13 @@ trait WriteOnlyTrait {
         $this->monitor(IJavaScriptCollector::class);
     }
 
-    /**
-     * @return bool
-     */
     public function getWriteOnly(): bool {
         return $this->writeOnly;
     }
 
     /**
      * @param bool $writeOnly
+     * @return void
      */
     public function setWriteOnly(bool $writeOnly = true) {
         $this->writeOnly = $writeOnly;
@@ -96,7 +95,8 @@ trait WriteOnlyTrait {
     private $writeOnlyAttachedJS = false;
 
     /**
-     * @param $obj
+     * @param IComponent $obj
+     * @return void
      */
     protected function writeOnlyAttached($obj) {
         if (!$this->writeOnlyAttachedOnValidate && $obj instanceof Form) {

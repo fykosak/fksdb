@@ -52,7 +52,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
     /**
      * @param IModel $currentModel
      * @param IModel $foundModel
-     * @param $joinData
+     * @param iterable $joinData
      * @param IService $service
      * @return array
      */
@@ -78,7 +78,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
     /**
      * @param IModel $currentModel
      * @param IModel $foundModel
-     * @param $joinData
+     * @param iterable $joinData
      * @param IService $service
      */
     private function updateFoundModel(IModel $currentModel, IModel $foundModel, $joinData, IService $service) {

@@ -60,7 +60,9 @@ class SubmitPresenter extends BasePresenter {
     /* ***** Authorized methods *****/
 
     /**
-     * @inheritDoc
+     * @param $resource
+     * @param string $privilege
+     * @return bool
      * @throws BadRequestException
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
@@ -114,8 +116,9 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @return Control
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function createComponentEditForm(): Control {
         return new EditControl($this->getContext(), $this->getEvent());

@@ -23,6 +23,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Security\IResource;
 use Nette\Utils\Html;
 use Persons\Deduplication\Merger;
 use Persons\DenyResolver;
@@ -119,8 +120,7 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
-     * @throws BadRequestException
+     * @return void
      */
     public function titleDetail() {
         $this->setTitle(sprintf(_('Detail of person %s'), $this->getEntity()->getFullName()), 'fa fa-eye');
@@ -179,6 +179,7 @@ class PersonPresenter extends BasePresenter {
     /**
      * @param $trunkId
      * @param $mergedId
+     * @return void
      */
     public function actionMerge($trunkId, $mergedId) {
         $this->personMerger->setMergedPair($this->trunkPerson, $this->mergedPerson);
@@ -206,8 +207,7 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
-     * @throws BadRequestException
+     * @return void
      */
     public function renderDetail() {
         $person = $this->getEntity();
@@ -444,35 +444,36 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
     public function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
     public function createComponentEditForm(): Control {
         throw new NotImplementedException();
     }
 
     /**
-     * @inheritDoc
+     * @return BaseGrid
+     * @throws NotImplementedException
      */
     protected function createComponentGrid(): BaseGrid {
         throw new NotImplementedException();
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServicePerson {
         return $this->servicePerson;
     }
 
     /**
-     * @inheritDoc
+     * @param IResource|string $resource
+     * @param string|null $privilege
      * all auth method is overwritten
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {

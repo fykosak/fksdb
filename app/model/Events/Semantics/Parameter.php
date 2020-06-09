@@ -14,7 +14,7 @@ class Parameter {
     use WithEventTrait;
 
     /**
-     * @var
+     * @var mixed
      */
     private $parameter;
 

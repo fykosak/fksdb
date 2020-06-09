@@ -48,14 +48,16 @@ class ScheduleGroupPresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
     public function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
     public function createComponentEditForm(): Control {
         throw new NotImplementedException();
@@ -79,10 +81,7 @@ class ScheduleGroupPresenter extends BasePresenter {
         return new AllPersonsGrid($this->getContext(), $this->getEvent());
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServiceScheduleGroup {
         return $this->serviceScheduleGroup;
     }
 

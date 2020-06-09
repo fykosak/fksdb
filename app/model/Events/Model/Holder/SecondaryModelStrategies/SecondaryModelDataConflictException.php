@@ -26,9 +26,6 @@ class SecondaryModelDataConflictException extends SecondaryModelConflictExceptio
         $this->message .= sprintf(' (%s)', implode(', ', $this->conflictData));
     }
 
-    /**
-     * @return array
-     */
     public function getConflictData(): array {
         return $this->conflictData;
     }

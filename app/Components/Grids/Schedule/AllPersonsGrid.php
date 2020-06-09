@@ -9,7 +9,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Payment\Price;
-use FKSDB\YearCalculator;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
@@ -21,10 +20,6 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class AllPersonsGrid extends BaseGrid {
-    /**
-     * @var YearCalculator
-     */
-    private $yearCalculator;
     /**
      * @var ServicePersonSchedule
      */
@@ -45,12 +40,10 @@ class AllPersonsGrid extends BaseGrid {
     }
 
     /**
-     * @param YearCalculator $yearCalculator
      * @param ServicePersonSchedule $servicePersonSchedule
      * @return void
      */
-    public function injectPrimary(YearCalculator $yearCalculator, ServicePersonSchedule $servicePersonSchedule) {
-        $this->yearCalculator = $yearCalculator;
+    public function injectServicePersonSchedule(ServicePersonSchedule $servicePersonSchedule) {
         $this->servicePersonSchedule = $servicePersonSchedule;
     }
 

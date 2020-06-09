@@ -22,16 +22,13 @@ abstract class StoredQueryPostProcessing {
     }
 
     /**
-     * @param $key
+     * @param mixed $key
      * @param $value
      */
     final public function bindValue($key, $value) {
         $this->parameters[$key] = $value; // type is ignored so far
     }
 
-    /**
-     * @return bool
-     */
     public function keepsCount(): bool {
         return true;
     }

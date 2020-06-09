@@ -78,6 +78,7 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
 
     /**
      * @param ModelEvent $event
+     * @return void
      */
     public function setEvent(ModelEvent $event) {
         $this->event = $event;

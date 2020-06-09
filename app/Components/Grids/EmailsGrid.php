@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Services\ServiceEmailMessage;
@@ -36,9 +37,11 @@ class EmailsGrid extends BaseGrid {
 
     /**
      * @param Presenter $presenter
+     * @return void
+     * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws NotImplementedException
-     * @throws DuplicateButtonException
+     * @throws BadTypeException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);

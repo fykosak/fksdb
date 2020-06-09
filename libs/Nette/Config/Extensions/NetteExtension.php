@@ -64,37 +64,9 @@ class NetteExtension extends Nette\DI\CompilerExtension {
         ),
     );
 
-    public $databaseDefaults = array(
-        'dsn' => NULL,
-        'user' => NULL,
-        'password' => NULL,
-        'options' => NULL,
-        'debugger' => TRUE,
-        'explain' => TRUE,
-        'reflection' => Nette\Database\Conventions\DiscoveredConventions::class,
-    );
-
-
     public function loadConfiguration() {
         $container = $this->getContainerBuilder();
         $config = $this->getConfig($this->defaults);
-
-        if ($config['security']['users']) {
-            $container->addDefinition($this->prefix('authenticator'))
-                ->setClass('Nette\Security\SimpleAuthenticator', array($config['security']['users']));
-        }
-
-        if ($config['security']['roles'] || $config['security']['resources']) {
-            $authorizator = $container->addDefinition($this->prefix('authorizator'))
-                ->setClass('Nette\Security\Permission');
-            foreach ($config['security']['roles'] as $role => $parents) {
-                $authorizator->addSetup('addRole', array($role, $parents));
-            }
-            foreach ($config['security']['resources'] as $resource => $parents) {
-                $authorizator->addSetup('addResource', array($resource, $parents));
-            }
-        }
-
 
         // application
         $application = $container->addDefinition('application')// no namespace for back compatibility
@@ -124,47 +96,6 @@ class NetteExtension extends Nette\DI\CompilerExtension {
             $application->addSetup('\Tracy\Debugger::getBar()->addPanel(?)', array(
                 new Nette\DI\Statement('Nette\Application\Diagnostics\RoutingPanel')
             ));
-        }
-
-        // forms
-        $container->addDefinition($this->prefix('basicForm'))
-            ->setClass('Nette\Forms\Form');
-
-
-        // templating
-        $latte = $container->addDefinition($this->prefix('latte'))
-            ->setClass('\Latte\Engine');
-
-        // database
-        $container->addDefinition($this->prefix('database'))
-            ->setClass('Nette\DI\NestedAccessor', array('@container', $this->prefix('database')));
-
-        if (isset($config['database']['dsn'])) {
-            $config['database'] = array('default' => $config['database']);
-        }
-
-        $autowired = TRUE;
-        foreach ((array)$config['database'] as $name => $info) {
-            if (!is_array($info)) {
-                continue;
-            }
-            $info += $this->databaseDefaults + array('autowired' => $autowired);
-            $autowired = FALSE;
-
-            foreach ((array)$info['options'] as $key => $value) {
-                if (preg_match('#^PDO::\w+\z#', $key)) {
-                    unset($info['options'][$key]);
-                    $info['options'][constant($key)] = $value;
-                }
-            }
-
-            $connection = $container->addDefinition($this->prefix("database.$name"))
-                ->setClass('Nette\Database\Connection', array($info['dsn'], $info['user'], $info['password'], $info['options']))
-                ->setAutowired($info['autowired'])
-                ->addSetup(Debugger::class . '::getBlueScreen()->addPanel(?)', array(
-                    Nette\Bridges\DatabaseTracy\ConnectionPanel::class . '::renderException'
-                ));
-            
         }
     }
 

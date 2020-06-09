@@ -90,6 +90,7 @@ class TableMerger {
     /**
      * @param ActiveRow $trunkRow
      * @param ActiveRow $mergedRow
+     * @return void
      */
     public function setMergedPair(ActiveRow $trunkRow, ActiveRow $mergedRow) {
         $this->trunkRow = $trunkRow;
@@ -272,6 +273,7 @@ class TableMerger {
     /**
      * @param ActiveRow $row
      * @param $changes
+     * @return void
      */
     private function logUpdate(ActiveRow $row, $changes) {
         $msg = [];
@@ -287,6 +289,7 @@ class TableMerger {
 
     /**
      * @param ActiveRow $row
+     * @return void
      */
     private function logDelete(ActiveRow $row) {
         $this->logger->log(new Message(sprintf(_('%s(%s) sloučen a smazán.'), $row->getTable()->getName(), $row->getPrimary()), ILogger::INFO));
@@ -294,6 +297,7 @@ class TableMerger {
 
     /**
      * @param ActiveRow $row
+     * @return void
      */
     private function logTrunk(ActiveRow $row) {
         $this->logger->log(new Message(sprintf(_('%s(%s) rozšířen sloučením.'), $row->getTable()->getName(), $row->getPrimary()), ILogger::INFO));
@@ -350,7 +354,7 @@ class TableMerger {
     }
 
     /**
-     * @var
+     * @var mixed
      */
     private $primaryKey;
 
@@ -392,7 +396,7 @@ class TableMerger {
     }
 
     /**
-     * @var
+     * @var mixed
      */
     private $secondaryKey;
 
@@ -415,9 +419,9 @@ class TableMerger {
 
     /**
      * @param $secondaryKey
+     * @return void
      */
     public function setSecondaryKey($secondaryKey) {
         $this->secondaryKey = $secondaryKey;
     }
-
 }

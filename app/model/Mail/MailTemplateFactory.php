@@ -28,7 +28,7 @@ class MailTemplateFactory {
     private $translator;
     /** @var IRequest */
     private $request;
-    /** @var ITemplateFactory  */
+    /** @var ITemplateFactory */
     private $templateFactory;
 
     /**
@@ -37,13 +37,14 @@ class MailTemplateFactory {
      * @param Application $application
      * @param ITranslator $translator
      * @param IRequest $request
+     * @param ITemplateFactory $templateFactory
      */
-    public function __construct(string $templateDir, Application $application, ITranslator $translator, IRequest $request,ITemplateFactory $templateFactory) {
+    public function __construct(string $templateDir, Application $application, ITranslator $translator, IRequest $request, ITemplateFactory $templateFactory) {
         $this->templateDir = $templateDir;
         $this->application = $application;
         $this->translator = $translator;
         $this->request = $request;
-        $this->templateFactory=$templateFactory;
+        $this->templateFactory = $templateFactory;
     }
 
     /**

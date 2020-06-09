@@ -90,6 +90,7 @@ class StoredQuery implements IDataSource, IResource {
 
     /**
      * @param ModelStoredQuery $queryPattern
+     * @return void
      */
     private function setQueryPattern(ModelStoredQuery $queryPattern) {
         $this->queryPattern = $queryPattern;
@@ -129,6 +130,7 @@ class StoredQuery implements IDataSource, IResource {
 
     /**
      * @param $parameters
+     * @return void
      */
     public function setParameters($parameters) {
         $parameterNames = $this->getParameterNames();
@@ -345,11 +347,7 @@ class StoredQuery implements IDataSource, IResource {
         $this->invalidateData();
     }
 
-    /**
-     * @return string
-     */
     public function getResourceId(): string {
         return 'export';
     }
-
 }

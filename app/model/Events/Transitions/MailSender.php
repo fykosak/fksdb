@@ -227,18 +227,10 @@ class MailSender {
         return $event->registration_end ?: $event->end;
     }
 
-    /**
-     * @return bool
-     */
     private function hasBcc(): bool {
         return !is_array($this->addressees) && substr($this->addressees, 0, strlen(self::BCC_PREFIX)) == self::BCC_PREFIX;
     }
 
-    /**
-     * @param Transition $transition
-     * @param Holder $holder
-     * @return array
-     */
     private function resolveAdressees(Transition $transition, Holder $holder): array {
         if (is_array($this->addressees)) {
             $names = $this->addressees;

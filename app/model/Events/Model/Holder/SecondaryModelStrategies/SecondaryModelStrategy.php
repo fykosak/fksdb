@@ -17,6 +17,7 @@ abstract class SecondaryModelStrategy {
     /**
      * @param $holders
      * @param $models
+     * @return void
      */
     public function setSecondaryModels($holders, $models) {
         $filledHolders = 0;
@@ -55,7 +56,7 @@ abstract class SecondaryModelStrategy {
 
     /**
      * @param IService $service
-     * @param $joinOn
+     * @param mixed $joinOn
      * @param $joinTo
      * @param $holders
      * @param IModel $primaryModel

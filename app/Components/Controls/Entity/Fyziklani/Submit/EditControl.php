@@ -4,6 +4,7 @@ namespace FKSDB\Components\Controls\Entity\Fyziklani\Submit;
 
 use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Fyziklani\ClosedSubmittingException;
 use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\AbstractModelSingle;
@@ -64,10 +65,10 @@ class EditControl extends AbstractEntityFormControl implements IEditEntityForm {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
     }
 
-
     /**
      * @param AbstractModelSingle $submit
      * @return void
+     * @throws BadTypeException
      */
     public function setModel(AbstractModelSingle $submit) {
         $this->submit = $submit;

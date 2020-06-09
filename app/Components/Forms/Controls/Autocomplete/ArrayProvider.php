@@ -50,16 +50,10 @@ class ArrayProvider implements IFilteredDataProvider {
         return $result;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getItemLabel(int $id): string {
         return $this->labelById[$id];
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getItems(): array {
         return $this->data;
     }
