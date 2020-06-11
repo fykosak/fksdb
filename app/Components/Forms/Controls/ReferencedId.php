@@ -13,7 +13,6 @@ use FKSDB\Utils\Promise;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
-use Tracy\Debugger;
 
 /**
  * Be careful when calling getValue as it executes SQL queries and thus
@@ -163,7 +162,7 @@ class ReferencedId extends HiddenField {
                 $container->setSearchButton(false);
                 $container->setClearButton(true);
             }
-            $this->referencedSetter->setModel($container, $pValue, $force);
+            $this->referencedSetter->setModel($container, $pValue, $force ? IReferencedSetter::MODE_FORCE : IReferencedSetter::MODE_NORMAL);
         }
 
         if ($isPromise) {
@@ -173,8 +172,6 @@ class ReferencedId extends HiddenField {
         } else {
             $value = $pValue;
         }
-        Debugger::barDump($value);
-        Debugger::barDump(debug_backtrace());
         return parent::setValue($value);
     }
 

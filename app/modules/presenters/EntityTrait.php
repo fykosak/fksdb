@@ -19,6 +19,7 @@ use Nette\Security\IResource;
 
 /**
  * Trait EntityTrait
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 trait EntityTrait {
     /**
@@ -184,7 +185,7 @@ trait EntityTrait {
      * @param null $default
      * @return mixed
      */
-    abstract public function getParameter($name = NULL, $default = NULL);
+    abstract public function getParameter($name, $default = null);
 
     /**
      * @param bool $access

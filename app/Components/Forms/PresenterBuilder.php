@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Controls;
 
+use Nette\Application\IPresenterFactory;
 use Nette\Application\BadRequestException;
-use Nette\Application\PresenterFactory;
 use Nette\Application\UI\Presenter;
 
 /**
@@ -14,19 +14,17 @@ use Nette\Application\UI\Presenter;
 class PresenterBuilder {
 
     /**
-     * @var PresenterFactory
+     * @var IPresenterFactory
      */
     private $presenterFactory;
-    /**
-     * @var array
-     */
+    /** @var array */
     private $presenterCache = [];
 
     /**
      * PresenterBuilder constructor.
-     * @param PresenterFactory $presenterFactory
+     * @param IPresenterFactory $presenterFactory
      */
-    public function __construct(PresenterFactory $presenterFactory) {
+    public function __construct(IPresenterFactory $presenterFactory) {
         $this->presenterFactory = $presenterFactory;
     }
 

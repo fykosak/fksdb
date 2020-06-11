@@ -21,11 +21,9 @@ class SQLConsole extends TextArea {
     /**
      * SQLConsole constructor.
      * @param null $label
-     * @param null $cols
-     * @param null $rows
      */
-    public function __construct($label = NULL, $cols = NULL, $rows = NULL) {
-        parent::__construct($label, $cols, $rows);
+    public function __construct($label = NULL) {
+        parent::__construct($label);
         $this->monitor(IJavaScriptCollector::class);
         $this->monitor(IStylesheetCollector::class);
     }

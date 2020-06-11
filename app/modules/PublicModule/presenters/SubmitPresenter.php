@@ -222,7 +222,7 @@ class SubmitPresenter extends BasePresenter {
                 $this->handleUploadFormSuccess($form);
             };
 
-            $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
+       //     $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
         }
 
         return $control;

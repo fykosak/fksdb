@@ -201,7 +201,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param string $mode
      * @return void
      */
-    public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL) {
+    public function setModel(ReferencedContainer $container, IModel $model = null, string $mode = self::MODE_NORMAL) {
         $acYear = $container->getOption('acYear');
         /** @var IModifiabilityResolver $modifiabilityResolver */
         $modifiabilityResolver = $container->getOption('modifiabilityResolver');
@@ -211,12 +211,12 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
         $resolution = $model ? $modifiabilityResolver->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
         $visible = $model ? $visibilityResolver->isVisible($model) : true;
         $submittedBySearch = $container->isSearchSubmitted();
-        $force = ($mode == self::MODE_FORCE);
-        if ($mode == self::MODE_ROLLBACK) {
+        $force = ($mode === self::MODE_FORCE);
+        if ($mode === self::MODE_ROLLBACK) {
             $model = null;
         }
-
         $container->getReferencedId()->getHandler()->setResolution($resolution);
+
         $container->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model ? $model->getFullName() : null);
         foreach ($container->getComponents() as $sub => $subcontainer) {
             if (!$subcontainer instanceof Container) {
@@ -413,13 +413,10 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
                 return function ($term) use ($service) {
                     return $service->findByEmail($term);
                 };
-
-                break;
             case self::SEARCH_ID:
                 return function ($term) use ($service) {
                     return $service->findByPrimary($term);
                 };
-                break;
             default:
                 throw new InvalidArgumentException(_('Unknown search type'));
         }

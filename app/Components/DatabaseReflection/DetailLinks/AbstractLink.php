@@ -5,8 +5,8 @@ namespace FKSDB\Components\DatabaseReflection\Links;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\Component;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\PresenterComponent;
 use Nette\Utils\Html;
 
 /**
@@ -15,15 +15,15 @@ use Nette\Utils\Html;
  */
 abstract class AbstractLink {
     /**
-     * @var PresenterComponent
+     * @var Component
      */
     protected $component;
 
     /**
-     * @param PresenterComponent $component
+     * @param Component $component
      * @return void
      */
-    public function setComponent(PresenterComponent $component) {
+    public function setComponent(Component $component) {
         $this->component = $component;
     }
 
@@ -55,7 +55,6 @@ abstract class AbstractLink {
      * @throws InvalidLinkException
      */
     private function createLink(AbstractModelSingle $model): string {
-
         $modelClassName = $this->getModelClassName();
         if (!$model instanceof $modelClassName) {
             throw new BadTypeException($modelClassName, $model);

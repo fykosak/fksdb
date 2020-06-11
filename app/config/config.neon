@@ -188,14 +188,13 @@ php:
 nette:
     database:
         reflection: discovered
-    application:
-        errorPresenter: Error
+    #application:
+      #  errorPresenter: Error
 
     session:
         expiration: 14 days
         autoStart: true
 extensions:
-    application: Nette\Config\Extensions\NetteExtension # hack for old application
     fksrouter: FKSDB\Config\Extensions\RouterExtension
     acl: Authorization\ACLExtension
     navigation: FKSDB\Config\Extensions\NavigationExtension
@@ -203,10 +202,7 @@ extensions:
     stalking: FKSDB\Config\Extensions\StalkingExtension
     payment: FKSDB\Config\Extensions\PaymentExtension
     DBReflection: FKSDB\Config\Extensions\DBReflectionExtension
-    #latte2: Nette\Bridges\ApplicationDI\LatteExtension
-latte:
-    macros:
-        - Nette\Latte\Macros\FormMacros
+
 includes:
     - router.neon
     - acl.neon

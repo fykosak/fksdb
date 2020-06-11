@@ -764,8 +764,8 @@ abstract class Grid extends \Nette\Application\UI\Control {
 
 		$form->setTranslator($this->getTranslator());
 
-		$form->onSuccess[] = function ($values){
-		    $this->processGridForm($values);
+        $form->onSuccess[] = function ($values) {
+            $this->processGridForm($values);
         };
 
 		return $form;

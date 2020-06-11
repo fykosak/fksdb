@@ -32,7 +32,7 @@ use Nette\Bridges\ApplicationLatte\Template;
 
 /**
  * Base presenter for all application presenters.
- * @property Template $template
+ * @property ITemplate $template
  */
 abstract class BasePresenter extends Presenter implements IJavaScriptCollector, IStylesheetCollector, IAutocompleteJSONProvider, INavigablePresenter {
 
@@ -219,7 +219,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     public function setView($view) {
         parent::setView($view);
         $method = $this->formatTitleMethod($this->getView());
-        if (!$this->tryCall($method, $this->getParameter())) {
+        if (!$this->tryCall($method, $this->getParameters())) {
             $this->pageTitle = null;
         }
         return $this;
@@ -399,7 +399,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
             /*
              * Now create a mock presenter and evaluate accessibility.
              */
-            $baseParams = $this->getParameter();
+            $baseParams = $this->getParameters();
             /** @var BasePresenter $testedPresenter */
             $testedPresenter = $this->presenterBuilder->preparePresenter($presenter, $action, $args, $baseParams);
 

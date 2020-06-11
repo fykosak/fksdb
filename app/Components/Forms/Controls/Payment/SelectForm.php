@@ -20,14 +20,11 @@ use FKSDB\Payment\Transition\PaymentMachine;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
-use Nette\Bridges\ApplicationLatte\Template;
 use Nette\DI\Container;
 use Nette\Utils\JsonException;
 
 /**
  * Class SelectForm
- * *
- * @property Template $template
  */
 class SelectForm extends BaseComponent {
     /**

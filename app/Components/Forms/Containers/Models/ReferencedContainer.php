@@ -11,6 +11,7 @@ use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\InvalidStateException;
@@ -79,17 +80,15 @@ class ReferencedContainer extends ContainerWithOptions {
         $this->referencedId->setReferencedContainer($this);
     }
 
-    /**
-     * @return ReferencedId
-     */
-    public function getReferencedId() {
+    public function getReferencedId(): ReferencedId {
         return $this->referencedId;
     }
 
     /**
      * @param bool $value
+     * @return void
      */
-    public function setDisabled($value = true) {
+    public function setDisabled(bool $value = true) {
         /** @var BaseControl $control */
         foreach ($this->getControls() as $control) {
             $control->setDisabled($value);
@@ -114,17 +113,15 @@ class ReferencedContainer extends ContainerWithOptions {
         $this->createSearchButton();
     }
 
-    /**
-     * @return bool
-     */
-    public function getAllowClear() {
+    public function getAllowClear(): bool {
         return $this->allowClear;
     }
 
     /**
      * @param bool $allowClear
+     * @return void
      */
-    public function setAllowClear($allowClear) {
+    public function setAllowClear(bool $allowClear) {
         $this->allowClear = $allowClear;
     }
 
@@ -138,10 +135,7 @@ class ReferencedContainer extends ContainerWithOptions {
         }
     }
 
-    /**
-     * @return bool
-     */
-    public function isSearchSubmitted() {
+    public function isSearchSubmitted(): bool {
         return $this->getForm(false) && $this->getComponent(self::SUBMIT_SEARCH)->isSubmittedBy();
     }
 
@@ -227,12 +221,11 @@ class ReferencedContainer extends ContainerWithOptions {
 
         $submit->getControlPrototype()->class[] = self::CSS_AJAX;
 
-        $submit->onClick[] = function () {
-
+        $submit->onClick[] = function (SubmitButton $button) {
             $term = $this->getComponent(self::CONTROL_SEARCH)->getValue();
             $model = ($this->searchCallback)($term);
 
-            $values = new ArrayHash();
+            $values = [];
             if (!$model) {
                 $model = ReferencedId::VALUE_PROMISE;
                 $values = ($this->termToValuesCallback)($term);

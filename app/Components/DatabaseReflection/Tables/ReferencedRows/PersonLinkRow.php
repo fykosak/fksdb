@@ -6,7 +6,7 @@ use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\PersonLink;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
-use Nette\Application\UI\PresenterComponent;
+use Nette\Application\LinkGenerator;
 use Nette\Utils\Html;
 
 /**
@@ -15,15 +15,15 @@ use Nette\Utils\Html;
  */
 class PersonLinkRow extends AbstractRow {
     /**
-     * @var PresenterComponent
+     * @var LinkGenerator
      */
     private $presenterComponent;
 
     /**
      * PersonLinkRow constructor.
-     * @param PresenterComponent $presenterComponent
+     * @param LinkGenerator $presenterComponent
      */
-    public function __construct(PresenterComponent $presenterComponent) {
+    public function __construct(LinkGenerator $presenterComponent) {
         $this->presenterComponent = $presenterComponent;
     }
 

@@ -18,8 +18,7 @@ services:
     - Authorization\RelatedPersonAuthorizator
     - FKSDB\Components\Events\ExpressionPrinter
     downloader: FKSDB\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
-    Facebook:
-        class: Facebook({appId: %facebook.appId%, secret: %facebook.secret%})
+    - Facebook({appId: %facebook.appId%, secret: %facebook.secret%})
     globalParameters: FKSDB\Config\GlobalParameters
     yearCalculator: FKSDB\YearCalculator
     news: News
@@ -66,8 +65,12 @@ services:
         class: LoggingMailer(Nette\Mail\SendmailMailer())
         setup:
             - setLogPath(%logDir%/mail)
+
+    #- FKSDB\Events\EventDispatchFactory
+
     - FKSDB\DataTesting\DataTestingFactory
    # - Nette\Bridges\ApplicationLatte\TemplateFactory
+
 
 
     #

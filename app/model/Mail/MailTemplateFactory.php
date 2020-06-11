@@ -4,10 +4,9 @@ namespace Mail;
 
 use BasePresenter;
 use Nette\Application\Application;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\ITemplate;
-use Nette\Application\UI\ITemplateFactory;
 use Nette\Application\UI\Presenter;
+use Nette\Application\BadRequestException;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 use Nette\Localization\ITranslator;
@@ -28,8 +27,6 @@ class MailTemplateFactory {
     private $translator;
     /** @var IRequest */
     private $request;
-    /** @var ITemplateFactory */
-    private $templateFactory;
 
     /**
      * MailTemplateFactory constructor.
@@ -37,14 +34,12 @@ class MailTemplateFactory {
      * @param Application $application
      * @param ITranslator $translator
      * @param IRequest $request
-     * @param ITemplateFactory $templateFactory
      */
-    public function __construct(string $templateDir, Application $application, ITranslator $translator, IRequest $request, ITemplateFactory $templateFactory) {
+    public function __construct(string $templateDir, Application $application, ITranslator $translator, IRequest $request) {
         $this->templateDir = $templateDir;
         $this->application = $application;
         $this->translator = $translator;
         $this->request = $request;
-        $this->templateFactory = $templateFactory;
     }
 
     /**
@@ -114,11 +109,10 @@ class MailTemplateFactory {
         if (!file_exists($file)) {
             throw new InvalidArgumentException("Cannot find template '$filename.$lang'.");
         }
-        $template = $this->templateFactory->createTemplate();
+        $template = $presenter->getTemplateFactory()->createTemplate();
         $template->setFile($file);
         $template->control = $template->_control = $control;
         $template->baseUri = $this->request->getUrl()->getBaseUrl();
         return $template;
     }
-
 }
