@@ -111,7 +111,8 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
             $schoolControl = reset($schoolControls);
             $studyYearControls = $this->getControl("$name.person_id.person_history.study_year");
             $studyYearControl = reset($studyYearControls);
-
+            $schoolControl->loadHttpData();
+            $studyYearControl->loadHttpData();
             $formValues = [
                 'school_id' => ($schoolControl ? $schoolControl->getValue() : null),
                 'study_year' => ($studyYearControl ? $studyYearControl->getValue() : null),
