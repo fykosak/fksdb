@@ -74,11 +74,17 @@ class CategoryProcessing extends AbstractProcessing {
 
             $studyYearControl = reset($studyYearControl);
             $schoolControl = reset($schoolControl);
-            $schoolControl->loadHttpData();
-            $studyYearControl->loadHttpData();
 
-            $schoolValue = $schoolControl ? $schoolControl->getValue() : null;
-            $studyYearValue = $studyYearControl ? $studyYearControl->getValue() : null;
+            $schoolValue = null;
+            if ($schoolControl) {
+                $schoolControl->loadHttpData();
+                $schoolValue = $schoolControl->getValue();
+            }
+            $studyYearValue = null;
+            if ($studyYearControl) {
+                $studyYearControl->loadHttpData();
+                $studyYearValue = $studyYearControl->getValue();
+            }
 
             if (!$studyYearValue) {
                 if ($this->isBaseReallyEmpty($name)) {

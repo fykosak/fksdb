@@ -111,14 +111,19 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
             $schoolControl = reset($schoolControls);
             $studyYearControls = $this->getControl("$name.person_id.person_history.study_year");
             $studyYearControl = reset($studyYearControls);
-            $schoolControl->loadHttpData();
-            $studyYearControl->loadHttpData();
-            $formValues = [
-                'school_id' => ($schoolControl ? $schoolControl->getValue() : null),
-                'study_year' => ($studyYearControl ? $studyYearControl->getValue() : null),
-            ];
 
-            if (!$formValues['school_id']) {
+            $schoolValue = null;
+            if ($schoolControl) {
+                $schoolControl->loadHttpData();
+                $schoolValue = $schoolControl->getValue();
+            }
+            $studyYearValue = null;
+            if ($studyYearControl) {
+                $studyYearControl->loadHttpData();
+                $studyYearValue = $studyYearControl->getValue();
+            }
+
+            if (!$schoolValue) {
                 if ($this->isBaseReallyEmpty($name)) {
                     continue;
                 }
@@ -131,7 +136,10 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
                     'study_year' => $history->study_year,
                 ];
             } else {
-                $participantData = $formValues;
+                $participantData = [
+                    'school_id' => $schoolValue,
+                    'study_year' => $studyYearValue,
+                ];;
             }
             $participants[] = $participantData;
         }
