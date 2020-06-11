@@ -126,7 +126,7 @@ abstract class AbstractResultsModel {
      * @param mixed $conditions
      * @return string
      */
-    protected function conditionsToWhere($conditions): string {
+    protected function conditionsToWhere(array $conditions): string {
         $where = [];
         foreach ($conditions as $col => $value) {
             if (is_array($value)) {

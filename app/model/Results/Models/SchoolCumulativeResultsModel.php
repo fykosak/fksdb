@@ -115,7 +115,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
     public function getCategories(): array {
         //return $this->evaluationStrategy->getCategories();
         return [
-            new ModelCategory(ModelCategory::CAT_ALL)
+            new ModelCategory(ModelCategory::CAT_ALL),
         ];
     }
 
@@ -186,21 +186,11 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
     }
 
     //TODO better have somehow in evaluation strategy
-
-    /**
-     * @param $i
-     * @return mixed
-     */
-    private function weightVector($i) {
+    private function weightVector(int $i): float {
         return max([1.0 - 0.1 * $i, 0.1]);
     }
 
-    /**
-     * @param $schoolContestants
-     * @param ModelCategory $category
-     * @return array
-     */
-    private function createResultRow($schoolContestants, ModelCategory $category) {
+    private function createResultRow(array $schoolContestants, ModelCategory $category): array {
         $resultRow = [];
         foreach ($this->getDataColumns($category) as $column) {
             $resultRow[$column[self::COL_ALIAS]] = 0;
@@ -237,5 +227,4 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
         }
         return $resultRow;
     }
-
 }

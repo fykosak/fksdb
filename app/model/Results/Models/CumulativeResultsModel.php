@@ -72,7 +72,7 @@ class CumulativeResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @return array|mixed
+     * @return array|int|int[]
      */
     public function getSeries() {
         return $this->series;

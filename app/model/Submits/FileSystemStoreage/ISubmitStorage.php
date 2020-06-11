@@ -22,8 +22,8 @@ interface ISubmitStorage {
     public function beginTransaction();
 
     /**
-     * @throws StorageException for unsuccessful commit
      * @return void
+     * @throws StorageException for unsuccessful commit
      */
     public function commit();
 
@@ -51,15 +51,11 @@ interface ISubmitStorage {
      *
      * @param ModelSubmit $submit
      * @param int $type
-     * @return string filename with absolute path
+     * @return string|null filename with absolute path
      */
     public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED);
 
-    /**
-     * @param ModelSubmit $submit
-     * @return bool
-     */
-    public function fileExists(ModelSubmit $submit);
+    public function fileExists(ModelSubmit $submit): bool;
 
     /**
      * @param ModelSubmit $submit

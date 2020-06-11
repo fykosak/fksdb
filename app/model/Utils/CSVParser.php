@@ -48,7 +48,7 @@ class CSVParser implements Iterator {
      * @param int $indexType
      * @param string $delimiter
      */
-    public function __construct($filename, $indexType = self::INDEX_NUMERIC, $delimiter = ';') {
+    public function __construct(string $filename, $indexType = self::INDEX_NUMERIC, string $delimiter = ';') {
         $this->indexType = $indexType;
         $this->delimiter = $delimiter;
         $this->file = fopen($filename, 'r');
@@ -109,5 +109,4 @@ class CSVParser implements Iterator {
         }
         return !$eof;
     }
-
 }

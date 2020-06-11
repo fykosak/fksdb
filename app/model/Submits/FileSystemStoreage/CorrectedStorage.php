@@ -137,7 +137,7 @@ class CorrectedStorage implements ISubmitStorage {
      * @param ModelSubmit $submit
      * @return bool
      */
-    public function fileExists(ModelSubmit $submit) {
+    public function fileExists(ModelSubmit $submit): bool {
         return (bool)$this->retrieveFile($submit);
     }
 
@@ -153,7 +153,7 @@ class CorrectedStorage implements ISubmitStorage {
      * @param ModelSubmit $submit
      * @return string  directory part of the path relative to root, w/out trailing slash
      */
-    private function createDirname(ModelSubmit $submit) {
+    private function createDirname(ModelSubmit $submit): string {
         $task = $submit->getTask();
         return sprintf($this->directoryMask, $task->getContest()->getContestSymbol(), $task->year, $task->series, $task->webalizeLabel());
     }

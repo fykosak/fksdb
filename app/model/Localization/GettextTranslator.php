@@ -72,7 +72,7 @@ class GettextTranslator implements ITranslator {
      * @param null $count
      * @return string
      */
-    public function translate($message, $count = NULL) {
+    public function translate($message, $count = null): string {
         if ($message === "" || $message === null) {
             return "";
         }

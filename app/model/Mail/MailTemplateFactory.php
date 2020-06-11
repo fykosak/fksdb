@@ -3,6 +3,7 @@
 namespace Mail;
 
 use BasePresenter;
+use MockEnvironment\MockApplication;
 use Nette\Application\Application;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\ITemplate;
@@ -22,7 +23,7 @@ class MailTemplateFactory {
 
     /** @var string without trailing slash */
     private $templateDir;
-    /** @var Application */
+    /** @var Application|MockApplication */
     private $application;
     /** @var ITranslator */
     private $translator;
@@ -108,7 +109,6 @@ class MailTemplateFactory {
         if ($lang === null) {
             $lang = $presenter->getLang();
         }
-        $control = $presenter;
 
         $file = $this->templateDir . DIRECTORY_SEPARATOR . "$filename.$lang.latte";
         if (!file_exists($file)) {
@@ -116,7 +116,7 @@ class MailTemplateFactory {
         }
         $template = $this->templateFactory->createTemplate();
         $template->setFile($file);
-        $template->control = $template->_control = $control;
+        $template->control = $template->_control = $presenter;
         $template->baseUri = $this->request->getUrl()->getBaseUrl();
         return $template;
     }

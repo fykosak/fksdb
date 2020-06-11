@@ -23,6 +23,9 @@ class MemoryLogger extends StackedLogger {
         return $this->messages;
     }
 
+    /**
+     * @return void
+     */
     public function clear() {
         $this->messages = [];
     }

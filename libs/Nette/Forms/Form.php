@@ -70,6 +70,13 @@ class Form extends Container
 	const GET = 'get',
 		POST = 'post';
 
+    /** submitted data types */
+    const
+        DATA_TEXT = 1,
+        DATA_LINE = 2,
+        DATA_FILE = 3,
+        DATA_KEYS = 8;
+
 	/** @internal tracker ID */
 	const TRACKER_ID = '_form_';
 
@@ -109,6 +116,8 @@ class Form extends Container
 	/** @var array */
 	private $errors = array();
 
+    /** @var Nette\Http\IRequest  used only by standalone form */
+    public $httpRequest;
 
 	/**
 	 * Form constructor.
@@ -202,25 +211,17 @@ class Form extends Container
 	}
 
 
-	/**
-	 * Cross-Site Request Forgery (CSRF) form protection.
-	 * @param  string
-	 * @param  int
-	 * @return void
-	 */
-	public function addProtection($message = NULL, $timeout = NULL)
-	{
-		$session = $this->getSession()->getSection('Nette.Forms.Form/CSRF');
-		$key = "key$timeout";
-		if (isset($session->$key)) {
-			$token = $session->$key;
-		} else {
-			$session->$key = $token = Nette\Utils\Random::generate();
-		}
-		$session->setExpiration($timeout, $key);
-		$this[self::PROTECTOR_ID] = new Controls\HiddenField($token);
-		$this[self::PROTECTOR_ID]->addRule(self::PROTECTION, $message, $token);
-	}
+    /**
+     * Cross-Site Request Forgery (CSRF) form protection.
+     * @param  string
+     * @return Controls\CsrfProtection
+     */
+    public function addProtection($errorMessage = null)
+    {
+        $control = new Controls\CsrfProtection($errorMessage);
+        $this->addComponent($control, self::PROTECTOR_ID, key((array) $this->getComponents()));
+        return $control;
+    }
 
 
 	/**
@@ -365,22 +366,20 @@ class Form extends Container
 	}
 
 
-	/**
-	 * Returns submitted HTTP data.
-	 * @return array
-	 */
-	final public function getHttpData()
-	{
-		if ($this->httpData === NULL) {
-			if (!$this->isAnchored()) {
-				throw new Nette\InvalidStateException('Form is not anchored and therefore can not determine whether it was submitted.');
-			}
-			$data = $this->receiveHttpData();
-			$this->httpData = (array) $data;
-			$this->submittedBy = is_array($data);
-		}
-		return $this->httpData;
-	}
+    public function getHttpData($type = null, $htmlName = null) {
+        if ($this->httpData === null) {
+            if (!$this->isAnchored()) {
+                throw new Nette\InvalidStateException('Form is not anchored and therefore can not determine whether it was submitted.');
+            }
+            $data = $this->receiveHttpData();
+            $this->httpData = (array)$data;
+            $this->submittedBy = is_array($data);
+        }
+        if ($htmlName === null) {
+            return $this->httpData;
+        }
+        return Helpers::extractHttpData($this->httpData, $htmlName, $type);
+    }
 
 
 	/**
@@ -585,21 +584,16 @@ class Form extends Container
 	/********************* backend ****************d*g**/
 
 
-	/**
-	 * @return Nette\Http\IRequest
-	 */
-	protected function getHttpRequest()
-	{
-		return Nette\Environment::getHttpRequest();
-	}
-
-
-	/**
-	 * @return Nette\Http\Session
-	 */
-	protected function getSession()
-	{
-		return Nette\Environment::getSession();
-	}
+    /**
+     * @return Nette\Http\IRequest
+     */
+    private function getHttpRequest()
+    {
+        if (!$this->httpRequest) {
+            $factory = new Nette\Http\RequestFactory;
+            $this->httpRequest = $factory->createHttpRequest();
+        }
+        return $this->httpRequest;
+    }
 
 }

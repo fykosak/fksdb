@@ -65,11 +65,11 @@ class AESOPContestant extends StoredQueryPostProcessing {
     }
 
     /**
-     * @param $data
+     * @param iterable $data
      * @return array
      * @throws BadRequestException
      */
-    private function filterCategory($data) {
+    private function filterCategory($data): array {
         $evaluationStrategy = $this->getEvaluationStrategy();
 
         $studyYears = [];
@@ -95,8 +95,8 @@ class AESOPContestant extends StoredQueryPostProcessing {
     }
 
     /**
-     * @param array|\Traversable $data
-     * @return array|\Traversable
+     * @param iterable $data
+     * @return iterable
      */
     private function calculateRank($data) {
         $points = [];
@@ -143,7 +143,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
      * @param $acYear
      * @return int|null
      */
-    private function studyYearToGraduation($studyYear, $acYear) {
+    private function studyYearToGraduation(int $studyYear, int $acYear) {
         if ($studyYear >= 1 && $studyYear <= 4) {
             return $acYear + (5 - $studyYear);
         } elseif ($studyYear >= 6 && $studyYear <= 9) {
@@ -157,7 +157,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
      * @return EvaluationStrategy
      * @throws BadRequestException
      */
-    private function getEvaluationStrategy() {
+    private function getEvaluationStrategy(): EvaluationStrategy {
         return ResultsModelFactory::findEvaluationStrategy($this->parameters['contest'], $this->parameters['year']);
     }
 
