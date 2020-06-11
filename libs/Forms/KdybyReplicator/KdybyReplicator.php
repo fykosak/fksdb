@@ -58,15 +58,13 @@ class Replicator extends Container
 	 *
 	 * @throws \Nette\InvalidArgumentException
 	 */
-	public function __construct($factory, $createDefault = 0, $forceDefault = FALSE)
+	public function __construct(callable $factory, $createDefault = 0, $forceDefault = FALSE)
 	{
 		parent::__construct();
 		$this->monitor('Nette\Application\UI\Presenter');
 
 		try {
-			$this->factoryCallback = function (...$args)use ($factory){
-			    return ($factory)(...$args);
-			};
+			$this->factoryCallback = $factory;
 		} catch (Nette\InvalidArgumentException $e) {
 			$type = is_object($factory) ? 'instanceof ' . get_class($factory) : gettype($factory);
 			throw new Nette\InvalidArgumentException(
@@ -85,9 +83,7 @@ class Replicator extends Container
 	 */
 	public function setFactory(callable $factory)
 	{
-		$this->factoryCallback = function (...$args)use ($factory){
-            return ($factory)(...$args);
-        };
+		$this->factoryCallback = $factory;
 	}
 
 
@@ -482,7 +478,7 @@ class Replicator extends Container
 			$_this->onClick[] = function (SubmitButton $button) use ($replicator, $callback) {
 				/** @var Replicator $replicator */
 				if (is_callable($callback)) {
-					($callback)($replicator, $button->parent);
+					$callback($replicator, $button->parent);
 				}
 				$replicator->remove($button->parent);
 			};
@@ -502,7 +498,7 @@ class Replicator extends Container
 				}
 				$newContainer = $replicator->createOne();
 				if (is_callable($callback)) {
-					($callback)($replicator, $newContainer);
+					$callback($replicator, $newContainer);
 				}
 			};
 			return $_this;
