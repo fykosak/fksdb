@@ -23,7 +23,6 @@ define('LOG_DIR', TESTS_DIR . '/../temp/tester/log');
 
 // Load Nette Framework
 require LIBS_DIR . '/../vendor/autoload.php';
-require LIBS_DIR . '/autoload.php';
 
 define('CONFIG_DIR', APP_DIR . DIRECTORY_SEPARATOR . 'config');
 
