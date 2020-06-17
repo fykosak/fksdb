@@ -11,9 +11,9 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceAddress;
 use FKSDB\ORM\Services\ServiceSchool;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
-use Nette\DI\Container;
 use Tracy\Debugger;
 
 /**
@@ -41,20 +41,6 @@ class SchoolForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @var ModelSchool;
      */
     protected $model;
-    /**
-     * @var bool
-     */
-    protected $create;
-
-    /**
-     * AbstractForm constructor.
-     * @param Container $container
-     * @param bool $create
-     */
-    public function __construct(Container $container, bool $create) {
-        parent::__construct($container);
-        $this->create = $create;
-    }
 
     /**
      * @param AddressFactory $addressFactory
@@ -85,26 +71,29 @@ class SchoolForm extends AbstractEntityFormControl implements IEditEntityForm {
 
         $addressContainer = $this->addressFactory->createAddress(AddressFactory::REQUIRED | AddressFactory::NOT_WRITEONLY);
         $form->addComponent($addressContainer, self::CONT_ADDRESS);
+    }
 
-        $form->addSubmit('send', $this->create ? _('Create') : _('Save'));
-        $form->onSuccess[] = function (Form $form) {
-            $values = $form->getValues();
-            $data = \FormUtils::emptyStrToNull($values, true);
-            $connection = $this->serviceSchool->getConnection();
-            try {
-                $connection->beginTransaction();
-                $this->create ? $this->handleCreateSuccess($data) : $this->handleEditSuccess($data);
-                $connection->commit();
+    /**
+     * @param Form $form
+     * @return void
+     * @throws AbortException
+     */
+    protected function handleFormSuccess(Form $form) {
+        $values = $form->getValues();
+        $data = \FormUtils::emptyStrToNull($values, true);
+        $connection = $this->serviceSchool->getConnection();
+        try {
+            $connection->beginTransaction();
+            $this->create ? $this->handleCreateSuccess($data) : $this->handleEditSuccess($data);
+            $connection->commit();
 
-                $this->getPresenter()->flashMessage($this->create ? _('Škola založena') : _('Škola upravena'), \BasePresenter::FLASH_SUCCESS);
-                $this->getPresenter()->redirect('list');
-            } catch (ModelException $exception) {
-                $connection->rollBack();
-                Debugger::log($exception, Debugger::ERROR);
-                $this->getPresenter()->flashMessage($this->create ? _('Chyba při zakládání školy.') : _('Chyba při úpravě školy.'), \BasePresenter::FLASH_ERROR);
-            }
-
-        };
+            $this->getPresenter()->flashMessage($this->create ? _('Škola založena') : _('Škola upravena'), \BasePresenter::FLASH_SUCCESS);
+            $this->getPresenter()->redirect('list');
+        } catch (ModelException $exception) {
+            $connection->rollBack();
+            Debugger::log($exception, Debugger::ERROR);
+            $this->getPresenter()->flashMessage($this->create ? _('Chyba při zakládání školy.') : _('Chyba při úpravě školy.'), \BasePresenter::FLASH_ERROR);
+        }
     }
 
     /**

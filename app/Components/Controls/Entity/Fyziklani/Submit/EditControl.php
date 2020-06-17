@@ -12,9 +12,9 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use Nette\Application\AbortException;
+use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;
-use Nette\Forms\Form;
 
 /**
  * Class EditControl
@@ -40,21 +40,17 @@ class EditControl extends AbstractEntityFormControl implements IEditEntityForm {
      * @param ModelEvent $event
      */
     public function __construct(Container $container, ModelEvent $event) {
-        parent::__construct($container);
+        parent::__construct($container, false);
         $this->event = $event;
     }
 
     /**
-     * @param \Nette\Application\UI\Form $form
+     * @param Form $form
      * @return void
      * @throws NotSetGameParametersException
      */
-    protected function configureForm(\Nette\Application\UI\Form $form) {
+    protected function configureForm(Form $form) {
         $form->addComponent($this->createPointsField(), 'points');
-        $form->addSubmit('send', _('Save'));
-        $form->onSuccess[] = function (Form $form) {
-            $this->editFormSucceeded($form);
-        };
     }
 
     /**
@@ -99,7 +95,7 @@ class EditControl extends AbstractEntityFormControl implements IEditEntityForm {
      * @param Form $form
      * @throws AbortException
      */
-    private function editFormSucceeded(Form $form) {
+    protected function handleFormSuccess(Form $form) {
         $values = $form->getValues();
         try {
             $msg = $this->serviceFyziklaniSubmit->changePoints($this->submit, $values->points, $this->getPresenter()->getUser());

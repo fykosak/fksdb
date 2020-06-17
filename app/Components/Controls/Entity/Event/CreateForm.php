@@ -30,9 +30,10 @@ class CreateForm extends AbstractForm {
      * @param int $year
      */
     public function __construct(Container $container, ModelContest $contest, int $year) {
-        parent::__construct($contest, $container);
+        parent::__construct($contest, $container, true);
         $this->year = $year;
     }
+
     /**
      * @param ServiceEvent $serviceEvent
      * @return void
@@ -41,25 +42,11 @@ class CreateForm extends AbstractForm {
         $this->serviceEvent = $serviceEvent;
     }
 
-
-    /**
-     * @param Form $form
-     * @return void
-     * @throws \Exception
-     */
-    protected function configureForm(Form $form) {
-        parent::configureForm($form);
-        $form->addSubmit('send', _('Create'));
-        $form->onSuccess[] = function (Form $form) {
-            $this->handleFormSuccess($form);
-        };
-    }
-
     /**
      * @param Form $form
      * @throws AbortException
      */
-    private function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form) {
         $values = $form->getValues(true);
         $data = \FormUtils::emptyStrToNull($values[self::CONT_EVENT], true);
         $data['year'] = $this->year;

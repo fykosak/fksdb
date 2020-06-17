@@ -37,9 +37,10 @@ abstract class AbstractForm extends AbstractEntityFormControl {
      * AbstractForm constructor.
      * @param ModelContest $contest
      * @param Container $container
+     * @param bool $create
      */
-    public function __construct(ModelContest $contest, Container $container) {
-        parent::__construct($container);
+    public function __construct(ModelContest $contest, Container $container, bool $create) {
+        parent::__construct($container, $create);
         $this->contest = $contest;
     }
 

@@ -8,11 +8,13 @@ use FKSDB\Config\NeonScheme;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
+use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
 use Nette\Neon\Neon;
@@ -24,23 +26,14 @@ use Nette\Utils\Html;
  */
 class EditForm extends AbstractForm implements IEditEntityForm {
 
+    public function __construct(ModelContest $contest, Container $container) {
+        parent::__construct($contest, $container, false);
+    }
+
     /**
      * @var ModelEvent
      */
     private $model;
-
-    /**
-     * @param Form $form
-     * @return void
-     * @throws \Exception
-     */
-    protected function configureForm(Form $form) {
-        parent::configureForm($form);
-        $form->addSubmit('send', _('Save'));
-        $form->onSuccess[] = function (Form $form) {
-            $this->handleFormSuccess($form);
-        };
-    }
 
     /**
      * @param AbstractModelSingle|ModelEvent $model
@@ -101,7 +94,7 @@ class EditForm extends AbstractForm implements IEditEntityForm {
      * @throws BadRequestException
      * @throws NeonSchemaException
      */
-    private function createParamDescription() {
+    protected function createParamDescription() {
         /** @var EventDispatchFactory $factory */
         $factory = $this->getContext()->getByType(EventDispatchFactory::class);
 

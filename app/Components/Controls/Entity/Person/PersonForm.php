@@ -54,10 +54,6 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @var ModelPerson
      */
     private $model;
-    /**
-     * @var bool
-     */
-    private $create;
 
     /**
      * AbstractPersonFormControl constructor.
@@ -66,7 +62,7 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @param bool $create
      */
     public function __construct(Container $container, bool $create, FieldLevelPermission $userPermission = null) {
-        parent::__construct($container);
+        parent::__construct($container, $create);
         if (is_null($userPermission)) {
             if ($create) {
                 $this->userPermission = new FieldLevelPermission(2048, 2048);
@@ -76,7 +72,6 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
         } else {
             $this->userPermission = $userPermission;
         }
-        $this->create = $create;
     }
 
     /**
@@ -122,10 +117,6 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
             }
             $form->addComponent($control, $table);
         }
-        $form->addSubmit('submit', $this->create ? _('Create') : _('Save'));
-        $form->onSuccess[] = function (Form $form) {
-            $this->handleFormSuccess($form);
-        };
     }
 
     /**
@@ -146,7 +137,7 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @return void
      * @throws \Exception
      */
-    private function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form) {
         $values = $form->getValues();
         $data = \FormUtils::emptyStrToNull($values, true);
         try {
