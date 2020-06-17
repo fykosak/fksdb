@@ -6,9 +6,12 @@ use Exception;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Components\Forms\Factories\TeacherFactory;
 use FKSDB\Components\Grids\TeachersGrid;
+use FKSDB\EntityTrait;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Persons\ExtendedPersonHandler;
 
@@ -17,8 +20,11 @@ use Persons\ExtendedPersonHandler;
  * *
  * @method ModelTeacher getModel2()
  * @method ModelTeacher getModel()
+ * @method ModelTeacher getEntity()
  */
 class TeacherPresenter extends ExtendedPersonPresenter {
+    use EntityTrait;
+
     /**
      * TeacherPresenter constructor.
      */
@@ -68,12 +74,8 @@ class TeacherPresenter extends ExtendedPersonPresenter {
         $this->schoolFactory = $schoolFactory;
     }
 
-    /**
-     * @throws BadRequestException
-     */
     public function titleEdit() {
-        $model = $this->getModel2();
-        $this->setTitle(sprintf(_('Edit teacher %s'), $model->getPerson()->getFullName()), 'fa fa-pencil');
+        $this->setTitle(sprintf(_('Edit teacher %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-pencil');
     }
 
     public function titleCreate() {
@@ -104,17 +106,11 @@ class TeacherPresenter extends ExtendedPersonPresenter {
         $form->addComponent($container, ExtendedPersonHandler::CONT_MODEL);
     }
 
-    /**
-     * @throws BadRequestException
-     */
     public function renderDetail() {
-        $this->template->model = $this->getModel2();
+        $this->template->model = $this->getEntity();
     }
 
-    /**
-     * @return ServiceTeacher
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServiceTeacher {
         return $this->serviceTeacher;
     }
 
@@ -136,5 +132,23 @@ class TeacherPresenter extends ExtendedPersonPresenter {
 
     protected function getModelResource(): string {
         return ModelTeacher::RESOURCE_ID;
+    }
+
+    public function createComponentCreateForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    public function createComponentEditForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @param $resource
+     * @param string $privilege
+     * @return bool
+     * @throws BadRequestException
+     */
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 }

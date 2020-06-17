@@ -32,10 +32,10 @@ class FormUtils {
         }
     }
 
-
     /**
-     * @param string|array|Traversable $values
-     * @return array
+     * @param ArrayHash $values
+     * @param bool $ignoreNulls
+     * @return ArrayHash
      * @todo Move to general utils.
      */
     public static function removeEmptyHashes(ArrayHash $values, $ignoreNulls = false) {
@@ -47,6 +47,21 @@ class FormUtils {
                     $result[$key] = $clear;
                 }
             } elseif (!$ignoreNulls || $value !== null) {
+                $result[$key] = $value;
+            }
+        }
+        return $result;
+    }
+
+    public static function removeEmptyValues(array $values): array {
+        $result = [];
+        foreach ($values as $key => $value) {
+            if (is_array($value)) {
+                $clear = self::removeEmptyValues($value);
+                if (count($clear)) {
+                    $result[$key] = $clear;
+                }
+            } elseif ($value !== null) {
                 $result[$key] = $value;
             }
         }

@@ -8,6 +8,10 @@ use FKSDB\Exceptions\BadTypeException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 
+/**
+ * Class AbstractEntityFormControl
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 abstract class AbstractEntityFormControl extends BaseComponent {
 
     protected function createFormControl(): FormControl {

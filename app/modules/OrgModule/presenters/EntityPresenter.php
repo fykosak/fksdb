@@ -41,10 +41,9 @@ abstract class EntityPresenter extends BasePresenter {
     }
 
     /**
-     * @param $id
      * @throws BadRequestException
      */
-    public function authorizedEdit($id) {
+    public function authorizedEdit() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModel(), 'edit', $this->getSelectedContest()));
     }
 
@@ -94,23 +93,6 @@ abstract class EntityPresenter extends BasePresenter {
         }
         return $this->model;
     }
-
-    /**
-     * @param int $id
-     * @return AbstractModelSingle|IModel
-     * @throws BadRequestException
-     */
-    public function getModel2(int $id = null) {
-        if (!$this->model) {
-            $model = $this->loadModel($id ?: $this->id);
-            if (!$model) {
-                throw new NotFoundException('Neexistující model.');
-            }
-            $this->model = $model;
-        }
-        return $this->model;
-    }
-
     /**
      * @param IModel|null $model
      * @param Form $form

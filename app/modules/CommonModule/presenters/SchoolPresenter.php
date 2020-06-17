@@ -2,8 +2,7 @@
 
 namespace CommonModule;
 
-use FKSDB\Components\Controls\Entity\School\CreateForm;
-use FKSDB\Components\Controls\Entity\School\EditForm;
+use FKSDB\Components\Controls\Entity\School\SchoolForm;
 use FKSDB\Components\Grids\SchoolsGrid;
 use FKSDB\EntityTrait;
 use FKSDB\ORM\Models\ModelSchool;
@@ -85,11 +84,11 @@ class SchoolPresenter extends BasePresenter {
     }
 
     public function createComponentEditForm(): Control {
-        return new EditForm($this->getContext());
+        return new SchoolForm($this->getContext(), false);
     }
 
     public function createComponentCreateForm(): Control {
-        return new CreateForm($this->getContext());
+        return new SchoolForm($this->getContext(), true);
     }
 
 }

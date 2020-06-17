@@ -71,23 +71,20 @@ class EventOrgsGrid extends BaseGrid {
         $this->addColumn('note', _('Note'));
         $this->addButton('edit', _('Edit'))->setText(_('Edit'))
             ->setLink(function (ModelEventOrg $model) {
-                return $this->getPresenter()->link(':Org:EventOrg:edit', [
+                return $this->getPresenter()->link('edit', [
                     'id' => $model->e_org_id,
-                    'contestId' => $model->getEvent()->getEventType()->contest_id,
-                    'year' => $model->getEvent()->year,
-                    'eventId' => $model->getEvent()->event_id,
                 ]);
             });
 
-        $this->addButton('delete')->setText(_('Delete'))
-            ->setLink(function (ModelEventOrg $model) {
-                return $this->getPresenter()->link('delete', $model->getPrimary());
-            });
+        /*   $this->addButton('delete')->setText(_('Delete'))
+               ->setLink(function (ModelEventOrg $model) {
+                   return $this->getPresenter()->link('delete', $model->getPrimary());
+               });*/
 
         if ($this->getPresenter()->authorized('create')) {
             $this->addGlobalButton('create')
                 ->setLabel(_('Add organiser'))
-                ->setLink($this->getPresenter()->link(':Org:EventOrg:create'));
+                ->setLink($this->getPresenter()->link('create'));
         }
     }
 

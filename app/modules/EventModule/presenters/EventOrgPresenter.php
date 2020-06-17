@@ -2,19 +2,23 @@
 
 namespace EventModule;
 
+use FKSDB\Components\Controls\Entity\EventOrg\EventOrgForm;
 use FKSDB\Components\Grids\EventOrgsGrid;
-use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEventOrg;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 
 /**
  * Class EventOrgPresenter
  * @author Michal Červeňák <miso@fykos.cz>
+ * @method ModelEventOrg getEntity()
  */
 class EventOrgPresenter extends BasePresenter {
     use EventEntityTrait;
+
     /**
      * @var ServiceEventOrg
      */
@@ -34,6 +38,24 @@ class EventOrgPresenter extends BasePresenter {
      */
     public function titleList() {
         $this->setTitle(sprintf(_('Organisers of event')), 'fa fa-users');
+    }
+
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
+    public function titleCreate() {
+        $this->setTitle(sprintf(_('Create organiser of event')), 'fa fa-users');
+    }
+
+    /**
+     * @return void
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
+    public function titleEdit() {
+        $this->setTitle(sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-users');
     }
 
     /**
@@ -60,6 +82,14 @@ class EventOrgPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
+    public function actionEdit() {
+        $this->traitActionEdit();
+    }
+
     protected function getORMService(): ServiceEventOrg {
         return $this->serviceEventOrg;
     }
@@ -75,18 +105,20 @@ class EventOrgPresenter extends BasePresenter {
 
     /**
      * @return Control
-     * @throws NotImplementedException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function createComponentCreateForm(): Control {
-        throw new NotImplementedException();
+        return new EventOrgForm($this->getContext(), $this->getEvent(), true);
     }
 
     /**
      * @return Control
-     * @throws NotImplementedException
+     * @throws AbortException
+     * @throws BadRequestException
      */
     public function createComponentEditForm(): Control {
-        throw new NotImplementedException();
+        return new EventOrgForm($this->getContext(), $this->getEvent(), false);
     }
 
 }

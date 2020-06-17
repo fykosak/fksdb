@@ -49,6 +49,14 @@ class SpamPresenter extends BasePresenter {
         return $this->isAnyContestAuthorized($resource, $privilege);
     }
 
+    public function authorizedDetail() {
+        $authorized = true;
+        foreach ($this->getServiceContest()->getTable() as $contest) {
+            $authorized = $authorized && $this->contestAuthorizator->isAllowed($this->getORMService()->getModelClassName()::RESOURCE_ID, 'detail', $contest);
+        }
+        $this->setAuthorized($authorized);
+    }
+
     /**
      * @return void
      */

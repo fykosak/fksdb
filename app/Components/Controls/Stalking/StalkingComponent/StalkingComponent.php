@@ -19,36 +19,46 @@ class StalkingComponent extends StalkingControl {
      * @var StalkingService
      */
     private $stalkingService;
+    /**
+     * @var int
+     */
+    private $userPermissions;
+    /**
+     * @var ModelPerson
+     */
+    private $person;
 
     /**
      * StalkingComponent constructor.
      * @param Container $container
+     * @param ModelPerson $person
+     * @param int $userPermissions
      */
-    public function __construct(Container $container) {
+    public function __construct(Container $container, ModelPerson $person, int $userPermissions) {
         parent::__construct($container);
         $this->stalkingService = $container->getByType(StalkingService::class);
+        $this->userPermissions = $userPermissions;
+        $this->person = $person;
     }
 
     /**
      * @param string $section
-     * @param ModelPerson $person
-     * @param int $userPermissions
      * @return void
      * @throws BadRequestException
      * @throws NotImplementedException
      */
-    public function render(string $section, ModelPerson $person, int $userPermissions) {
+    public function render(string $section) {
         $definition = $this->stalkingService->getSection($section);
-        $this->beforeRender($person, $userPermissions);
+        $this->beforeRender($this->person, $this->userPermissions);
         $this->template->headline = _($definition['label']);
         $this->template->minimalPermissions = $definition['minimalPermission'];
 
         switch ($definition['layout']) {
             case 'single':
-                $this->renderSingle($definition, $person);
+                $this->renderSingle($definition);
                 return;
             case 'multi':
-                $this->renderMulti($definition, $person);
+                $this->renderMulti($definition);
                 return;
             default:
                 throw new InvalidStateException();
@@ -57,22 +67,21 @@ class StalkingComponent extends StalkingControl {
 
     /**
      * @param array $definition
-     * @param ModelPerson $person
      * @return void
      * @throws NotImplementedException
      */
-    private function renderSingle(array $definition, ModelPerson $person) {
+    private function renderSingle(array $definition) {
 
         $model = null;
         switch ($definition['table']) {
             case 'person_info':
-                $model = $person->getInfo();
+                $model = $this->person->getInfo();
                 break;
             case 'person':
-                $model = $person;
+                $model = $this->person;
                 break;
             case 'login':
-                $model = $person->getLogin();
+                $model = $this->person->getLogin();
                 break;
             default:
                 throw new NotImplementedException();
@@ -86,12 +95,11 @@ class StalkingComponent extends StalkingControl {
 
     /**
      * @param array $definition
-     * @param ModelPerson $person
      * @return void
      */
-    private function renderMulti(array $definition, ModelPerson $person) {
+    private function renderMulti(array $definition) {
         $models = [];
-        $query = $person->related($definition['table']);
+        $query = $this->person->related($definition['table']);
         foreach ($query as $datum) {
             $models[] = ($definition['model'])::createFromActiveRow($datum);
         }

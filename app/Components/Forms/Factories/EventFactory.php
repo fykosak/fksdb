@@ -14,22 +14,6 @@ use Nette\Forms\Controls\BaseControl;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class EventFactory extends SingleReflectionFactory {
-
-    /**
-     * @var ServiceEventType
-     */
-    private $serviceEventType;
-
-    /**
-     * EventFactory constructor.
-     * @param ServiceEventType $serviceEventType
-     * @param TableReflectionFactory $tableReflectionFactory
-     */
-    public function __construct(ServiceEventType $serviceEventType, TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct($tableReflectionFactory);
-        $this->serviceEventType = $serviceEventType;
-    }
-
     /**
      * @param ModelContest $contest
      * @return ModelContainer
@@ -46,21 +30,5 @@ class EventFactory extends SingleReflectionFactory {
 
     protected function getTableName(): string {
         return DbNames::TAB_EVENT;
-    }
-
-    /**
-     * @param string $fieldName
-     * @param array $args
-     * @return BaseControl
-     * @throws \Exception
-     */
-    public function createField(string $fieldName, ...$args): BaseControl {
-        list ($contest) = $args;
-        switch ($fieldName) {
-            case 'event_type_id':
-                return $this->loadFactory($fieldName)->createField($contest);
-            default:
-                return parent::createField($fieldName);
-        }
     }
 }
