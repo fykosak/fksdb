@@ -6,7 +6,6 @@ use Closure;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Fyziklani\TaskCodePreprocessor;
-use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -76,7 +75,6 @@ class AllSubmitsGrid extends SubmitsGrid {
      * @param Presenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      * @throws BadTypeException
      * @throws BadTypeException
      * @throws BadTypeException
@@ -154,7 +152,6 @@ class AllSubmitsGrid extends SubmitsGrid {
         if (!$submit) {
             $this->flashMessage(_('Submit dos not exists.'), \BasePresenter::FLASH_ERROR);
             $this->redirect('this');
-            return;
         }
         try {
             $log = $this->serviceFyziklaniSubmit->revokeSubmit($submit, $this->getPresenter()->getUser());

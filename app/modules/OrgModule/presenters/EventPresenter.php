@@ -2,8 +2,7 @@
 
 namespace OrgModule;
 
-use FKSDB\Components\Controls\Entity\Event\CreateForm;
-use FKSDB\Components\Controls\Entity\Event\EditForm;
+use FKSDB\Components\Controls\Entity\Event\EventForm;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\EntityTrait;
 use FKSDB\ORM\Models\ModelEvent;
@@ -75,16 +74,16 @@ class EventPresenter extends BasePresenter {
      * @return Control
      * @throws BadRequestException
      */
-    public function createComponentCreateForm(): Control {
-        return new CreateForm($this->getContext(), $this->getSelectedContest(), $this->getSelectedYear());
+    protected function createComponentCreateForm(): Control {
+        return new EventForm($this->getSelectedContest(), $this->getContext(), $this->getSelectedYear(), true);
     }
 
     /**
      * @return Control
      * @throws BadRequestException
      */
-    public function createComponentEditForm(): Control {
-        return new EditForm($this->getSelectedContest(), $this->getContext());
+    protected function createComponentEditForm(): Control {
+        return new EventForm($this->getSelectedContest(), $this->getContext(), $this->getSelectedYear(), false);
     }
 
     protected function getORMService(): ServiceEvent {

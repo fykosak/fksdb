@@ -4,7 +4,6 @@ namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -92,9 +91,4 @@ class EventsGrid extends BaseGrid {
             ->setLabel('Add event')
             ->setClass('btn btn-sm btn-primary');
     }
-
-    protected function getModelClassName(): string {
-        return ModelEvent::class;
-    }
-
 }

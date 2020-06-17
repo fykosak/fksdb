@@ -66,7 +66,7 @@ class SchoolForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @return void
      */
     protected function configureForm(Form $form) {
-        $schoolContainer = $this->schoolFactory->createSchool();
+        $schoolContainer = $this->schoolFactory->createContainer();
         $form->addComponent($schoolContainer, self::CONT_SCHOOL);
 
         $addressContainer = $this->addressFactory->createAddress(AddressFactory::REQUIRED | AddressFactory::NOT_WRITEONLY);

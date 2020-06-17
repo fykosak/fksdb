@@ -15,7 +15,6 @@ use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
-use Nette\DI\Container;
 use Tracy\Debugger;
 
 class TeacherForm extends AbstractEntityFormControl implements IEditEntityForm {

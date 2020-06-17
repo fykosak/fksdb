@@ -92,7 +92,7 @@ class OrgPresenter extends BasePresenter {
      * @return Control
      * @throws BadRequestException
      */
-    public function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control {
         return new OrgForm($this->getContext(), $this->getSelectedContest(), true);
     }
 
@@ -100,7 +100,7 @@ class OrgPresenter extends BasePresenter {
      * @return Control
      * @throws BadRequestException
      */
-    public function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control {
         return new OrgForm($this->getContext(), $this->getSelectedContest(), false);
     }
 

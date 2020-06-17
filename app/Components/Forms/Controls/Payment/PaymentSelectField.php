@@ -32,7 +32,7 @@ class PaymentSelectField extends TextInput {
     /**
      * @var bool
      */
-    private $showAll = true;
+    private $showAll;
 
     /**
      * PaymentSelectField constructor.

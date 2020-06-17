@@ -7,8 +7,6 @@ use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\Controls\HiddenField;
-use Nette\Forms\Form;
 use Nette\InvalidStateException;
 
 /**

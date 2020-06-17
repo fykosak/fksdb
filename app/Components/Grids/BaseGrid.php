@@ -72,7 +72,7 @@ abstract class BaseGrid extends Grid {
     protected function configure(Presenter $presenter) {
         try {
             $this->setDataSource($this->getData());
-        } catch (NotImplementedException$exception) {
+        } catch (NotImplementedException $exception) {
 
         }
         $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.latte');
@@ -210,18 +210,15 @@ abstract class BaseGrid extends Grid {
 
     /**
      * @param string $field
-     * @return void
+     * @return Column
      * @throws BadTypeException
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      */
-    private function addReflectionColumn(string $field) {
-        $modelClassName = $this->getModelClassName();
+    private function addReflectionColumn(string $field): Column {
         $factory = $this->tableReflectionFactory->loadRowFactory($field);
-
-        $this->addColumn(str_replace('.', '__', $field), $factory->getTitle())->setRenderer(function ($model) use ($factory, $modelClassName) {
-            if (!$model instanceof $modelClassName) {
-                $model = $modelClassName::createFromActiveRow($model);
+        return $this->addColumn(str_replace('.', '__', $field), $factory->getTitle())->setRenderer(function ($model) use ($factory) {
+            if (!$model instanceof AbstractModelSingle) {
+                $model = $this->getModelClassName()::createFromActiveRow($model);
             }
             return $factory->renderValue($model, 1);
         })->setSortable(false);
@@ -230,14 +227,14 @@ abstract class BaseGrid extends Grid {
     /**
      * @param string $tableName
      * @param string $fieldName
-     * @param callable $accessCallback ActiveRow=>AbstractModelSingle
+     * @param callable $accessCallback
+     * @return Column
+     * @throws BadTypeException
      * @throws DuplicateColumnException
-     * @throws Exception
-     * @deprecated this functionality is moved to getModel in DBReflection AbstractRow
      */
-    protected function addJoinedColumn(string $tableName, string $fieldName, callable $accessCallback) {
+    protected function addJoinedColumn(string $tableName, string $fieldName, callable $accessCallback): Column {
         $factory = $this->tableReflectionFactory->loadRowFactory($tableName . '.' . $fieldName);
-        $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($row) use ($factory, $fieldName, $accessCallback) {
+        return $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($row) use ($factory, $fieldName, $accessCallback) {
             $model = $accessCallback($row);
             return $factory->renderValue($model, 1);
         });
@@ -248,7 +245,7 @@ abstract class BaseGrid extends Grid {
      * @throws NotImplementedException
      */
     protected function getModelClassName(): string {
-        throw new NotImplementedException();
+        throw new NotImplementedException('Model className must be defined, if data source is not TypedSelection.');
     }
 
     /**
@@ -256,7 +253,6 @@ abstract class BaseGrid extends Grid {
      * @return void
      * @throws BadTypeException
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      */
     protected function addColumns(array $fields) {
         foreach ($fields as $name) {
@@ -272,10 +268,8 @@ abstract class BaseGrid extends Grid {
      * @param array $params
      * @return Button
      * @throws DuplicateButtonException
-     * @throws NotImplementedException
      */
     protected function addLinkButton(string $destination, string $id, string $label, bool $checkACL = true, array $params = []): Button {
-        $modelClassName = $this->getModelClassName();
         $paramMapCallback = function ($model) use ($params): array {
             $hrefParams = [];
             foreach ($params as $key => $value) {
@@ -286,16 +280,16 @@ abstract class BaseGrid extends Grid {
         /** @var Button $button */
         $button = $this->addButton($id, $label)
             ->setText($label)
-            ->setLink(function ($model) use ($modelClassName, $destination, $paramMapCallback) {
-                if (!$model instanceof $modelClassName) {
-                    $model = $modelClassName::createFromActiveRow($model);
+            ->setLink(function ($model) use ($destination, $paramMapCallback): string {
+                if (!$model instanceof AbstractModelSingle) {
+                    $model = $this->getModelClassName()::createFromActiveRow($model);
                 }
                 return $this->getPresenter()->link($destination, $paramMapCallback($model));
             });
         if ($checkACL) {
-            $button->setShow(function ($model) use ($modelClassName, $destination, $paramMapCallback) {
-                if (!$model instanceof $modelClassName) {
-                    $model = $modelClassName::createFromActiveRow($model);
+            $button->setShow(function ($model) use ($destination, $paramMapCallback) {
+                if (!$model instanceof AbstractModelSingle) {
+                    $model = $this->getModelClassName()::createFromActiveRow($model);
                 }
                 return $this->getPresenter()->authorized($destination, $paramMapCallback($model));
             });
@@ -311,22 +305,21 @@ abstract class BaseGrid extends Grid {
      * @throws Exception
      */
     protected function addLink(string $linkId, bool $checkACL = false): Button {
-        $modelClassName = $this->getModelClassName();
         $factory = $this->tableReflectionFactory->loadLinkFactory($linkId);
         $factory->setComponent($this);
         /** @var Button $button */
         $button = $this->addButton(str_replace('.', '_', $linkId), $factory->getText())
             ->setText($factory->getText())
-            ->setLink(function ($model) use ($modelClassName, $factory) {
-                if (!$model instanceof $modelClassName) {
-                    $model = $modelClassName::createFromActiveRow($model);
+            ->setLink(function ($model) use ($factory) {
+                if (!$model instanceof AbstractModelSingle) {
+                    $model = $this->getModelClassName()::createFromActiveRow($model);
                 }
                 return $this->getPresenter()->link($factory->getDestination($model), $factory->prepareParams($model));
             });
         if ($checkACL) {
-            $button->setShow(function ($model) use ($modelClassName, $factory) {
-                if (!$model instanceof $modelClassName) {
-                    $model = $modelClassName::createFromActiveRow($model);
+            $button->setShow(function ($model) use ($factory) {
+                if (!$model instanceof AbstractModelSingle) {
+                    $model = $this->getModelClassName()::createFromActiveRow($model);
                 }
                 return $this->getPresenter()->authorized($factory->getDestination($model), $factory->prepareParams($model));
             });

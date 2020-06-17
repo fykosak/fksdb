@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
 use Nette\Application\UI\InvalidLinkException;
@@ -50,12 +49,11 @@ class TeachersGrid extends BaseGrid {
     /**
      * @param Presenter $presenter
      * @return void
+     * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
-     * @throws BadTypeException
-     * @throws NotImplementedException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);
@@ -69,17 +67,15 @@ class TeachersGrid extends BaseGrid {
             'teacher.since',
             'teacher.until',
             'teacher.number_brochures',
+            'school.school',
         ]);
-        $this->addColumn('school_id', _('School'))->setRenderer(function (ModelTeacher $row) {
-            return $row->getSchool()->name_abbrev;
-        });
         //
         // operations
         //
         $this->addButton('edit', _('Edit'))
             ->setText(_('Edit'))
             ->setLink(function (ModelTeacher $row) {
-                return $this->getPresenter()->link('edit', $row->teacher_id);
+                return $this->getPresenter()->link('edit', ['id' => $row->teacher_id]);
             });
         $this->addButton('detail', _('Detail'))
             ->setText(_('Detail'))

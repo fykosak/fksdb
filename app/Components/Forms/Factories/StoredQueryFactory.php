@@ -164,13 +164,6 @@ class StoredQueryFactory {
         return $container;
     }
 
-    /**
-     * @param bool $ajax
-     * @param string $label
-     * @param IDataProvider $dataProvider
-     * @param string $renderMethod
-     * @return AutocompleteSelectBox
-     */
     private function createTagSelect(bool $ajax, string $label, IDataProvider $dataProvider, string $renderMethod = null): AutocompleteSelectBox {
         if ($renderMethod === null) {
             $renderMethod = '$("<li>")

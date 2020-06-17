@@ -153,7 +153,6 @@ final class AuthenticationPresenter extends BasePresenter {
             ];
             $url = $this->link('//this', $params);
             $this->redirectUrl($url);
-            return;
         }
         // else: $subdomain == $subdomainAuth
         // -> check for the GSID parameter

@@ -139,7 +139,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
                 $participantData = [
                     'school_id' => $schoolValue,
                     'study_year' => $studyYearValue,
-                ];;
+                ];
             }
             $participants[] = $participantData;
         }

@@ -146,14 +146,14 @@ trait EntityTrait {
      * @throws BadRequestException
      * @throws NotImplementedException
      */
-    abstract public function createComponentCreateForm(): Control;
+    abstract protected function createComponentCreateForm(): Control;
 
     /**
      * @return FormControl
      * @throws BadRequestException
      * @throws NotImplementedException
      */
-    abstract public function createComponentEditForm(): Control;
+    abstract protected function createComponentEditForm(): Control;
 
     /**
      * @throws NotImplementedException

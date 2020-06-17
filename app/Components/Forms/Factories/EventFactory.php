@@ -5,8 +5,6 @@ namespace FKSDB\Components\Forms\Factories;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Services\ServiceEventType;
-use Nette\Forms\Controls\BaseControl;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

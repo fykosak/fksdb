@@ -6,6 +6,7 @@ use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Factories\Events\IFieldFactory;
 use Nette\ComponentModel\Component;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\IControl;
 
@@ -147,10 +148,10 @@ class Field {
     }
 
     /**
-     * @param Component $component
+     * @param IComponent $component
      * @return IControl
      */
-    public function getMainControl(Component $component) {
+    public function getMainControl(IComponent $component) {
         return $this->factory->getMainControl($component);
     }
 

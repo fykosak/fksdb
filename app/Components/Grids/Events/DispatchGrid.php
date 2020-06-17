@@ -4,8 +4,6 @@ namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\UI\Presenter;
@@ -58,16 +56,11 @@ class DispatchGrid extends BaseGrid {
      * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      * @throws BadTypeException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);
         $this->addColumns(['event.event_id', 'event.name', 'contest.contestBadge', 'event.year', 'event.role']);
         $this->addLinkButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);
-    }
-
-    protected function getModelClassName(): string {
-        return ModelEvent::class;
     }
 }

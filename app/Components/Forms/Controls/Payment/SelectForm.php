@@ -126,7 +126,7 @@ class SelectForm extends BaseComponent {
      * @throws BadTypeException
      * @throws JsonException
      */
-    public function createComponentFormEdit(): FormControl {
+    protected function createComponentFormEdit(): FormControl {
         return $this->createForm(false);
     }
 
@@ -135,7 +135,7 @@ class SelectForm extends BaseComponent {
      * @throws BadTypeException
      * @throws JsonException
      */
-    public function createComponentFormCreate(): FormControl {
+    protected function createComponentFormCreate(): FormControl {
         return $this->createForm(true);
     }
 

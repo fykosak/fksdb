@@ -52,7 +52,7 @@ trait ChartPresenterTrait {
         }
     }
 
-    public function createComponentChart(): Control {
+    protected function createComponentChart(): Control {
         return $this->selectedChart->getControl();
     }
 

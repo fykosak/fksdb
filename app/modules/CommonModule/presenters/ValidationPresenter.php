@@ -35,11 +35,11 @@ class ValidationPresenter extends BasePresenter {
         return $this->authorizedDefault();
     }
 
-    public function createComponentGrid(): PersonsGrid {
+    protected function createComponentGrid(): PersonsGrid {
         return new PersonsGrid($this->getContext());
     }
 
-    public function createComponentValidationControl(): PersonTestControl {
+    protected function createComponentValidationControl(): PersonTestControl {
         return new PersonTestControl($this->getContext());
     }
 }

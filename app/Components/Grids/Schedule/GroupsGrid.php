@@ -4,7 +4,6 @@ namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use Nette\Application\UI\Presenter;
@@ -46,10 +45,9 @@ class GroupsGrid extends BaseGrid {
     /**
      * @param Presenter $presenter
      * @return void
+     * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws BadTypeException
-     * @throws NotImplementedException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);

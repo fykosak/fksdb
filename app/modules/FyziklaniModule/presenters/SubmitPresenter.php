@@ -102,7 +102,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    public function createComponentGrid(): SubmitsGrid {
+    protected function createComponentGrid(): SubmitsGrid {
         return new AllSubmitsGrid($this->getEvent(), $this->getContext());
     }
 
@@ -111,7 +111,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control {
         return new TaskCodeInput($this->getContext(), $this->getEvent());
     }
 
@@ -120,7 +120,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control {
         return new EditControl($this->getContext(), $this->getEvent());
     }
 

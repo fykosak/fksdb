@@ -5,7 +5,6 @@ namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use Nette\Application\UI\Presenter;
@@ -49,7 +48,6 @@ class ItemsGrid extends BaseGrid {
      * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      * @throws BadTypeException
      */
     protected function configure(Presenter $presenter) {

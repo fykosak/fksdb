@@ -132,7 +132,7 @@ class ReferencedEventPersonFactory extends AbstractReferencedPersonFactory {
      * @return bool|ModelPostContact|mixed|null|string
      * @throws JsonException
      */
-    protected function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options) {
+    protected function getPersonValue(ModelPerson $person = null, string $sub, string $field, int $acYear, $options) {
         if (!$person) {
             return null;
         }

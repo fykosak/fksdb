@@ -78,7 +78,7 @@ trait SeriesPresenterTrait {
         return $candidate;
     }
 
-    public function createComponentSeriesChooser(): SeriesChooser {
+    protected function createComponentSeriesChooser(): SeriesChooser {
         return new SeriesChooser($this->getContext());
     }
 

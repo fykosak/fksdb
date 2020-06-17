@@ -49,7 +49,7 @@ abstract class AbstractEntityFormControl extends BaseComponent {
      * @return FormControl
      * @throws BadRequestException
      */
-    final public function createComponentFormControl(): FormControl {
+    final protected function createComponentFormControl(): FormControl {
         $control = $this->createFormControl();
         $this->configureForm($control->getForm());
         $this->appendSubmitButton($control->getForm());

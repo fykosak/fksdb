@@ -4,7 +4,6 @@ namespace OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Exceptions\NotFoundException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use Nette\Application\BadRequestException;

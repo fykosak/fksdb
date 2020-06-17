@@ -49,7 +49,6 @@ class PersonsGrid extends BaseGrid {
      * @param Presenter $presenter
      * @return void
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      * @throws BadTypeException
      */
     protected function configure(Presenter $presenter) {

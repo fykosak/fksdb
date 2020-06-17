@@ -12,6 +12,7 @@ use FKSDB\Components\Controls\StoredQueryComponent;
 use FKSDB\Components\Controls\StoredQueryTagCloud;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Components\Grids\StoredQueriesGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\CoreModule\SeriesPresenter\{ISeriesPresenter, SeriesPresenterTrait};
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
@@ -296,7 +297,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
         if ($query && $this->getParameter('qid')) {
             $parameters = [];
-            foreach ($this->getParameter() as $key => $value) {
+            foreach ($this->getParameters() as $key => $value) {
                 if (Strings::startsWith($key, StoredQueryComponent::PARAMETER_URL_PREFIX)) {
                     $parameters[substr($key, strlen(StoredQueryComponent::PARAMETER_URL_PREFIX))] = $value;
                 }
@@ -322,6 +323,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @param mixed $id
+     * @throws BadTypeException
      */
     public function renderEdit($id) {
         $query = $this->getPatternQuery();
@@ -343,8 +345,9 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
                 $this->flashMessage(_('Výsledek dotazu je ještě zpracován v PHP. Dodržuj názvy sloupců a parametrů.'), BasePresenter::FLASH_WARNING);
             }
         }
-
-        $this->getComponent('editForm')->getForm()->setDefaults($values);
+        /** @var FormControl $control */
+        $control = $this->getComponent('editForm');
+        $control->getForm()->setDefaults($values);
     }
 
     /**
@@ -355,10 +358,16 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         $this->setTitle(sprintf(_('Napsat dotaz')), 'fa fa-pencil');
     }
 
+    /**
+     * @return void
+     * @throws BadTypeException
+     */
     public function renderCompose() {
         $values = $this->getDesignFormFromSession();
         if ($values) {
-            $this->getComponent('composeForm')->getForm()->setDefaults($values);
+            /** @var FormControl $control */
+            $control = $this->getComponent('composeForm');
+            $control->getForm()->setDefaults($values);
         }
     }
 

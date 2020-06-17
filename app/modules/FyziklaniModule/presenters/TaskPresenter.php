@@ -55,7 +55,7 @@ class TaskPresenter extends BasePresenter {
      * @return FormControl
      * @throws BadRequestException
      */
-    public function createComponentTaskImportForm(): FormControl {
+    protected function createComponentTaskImportForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
 
@@ -90,7 +90,7 @@ class TaskPresenter extends BasePresenter {
      * @return TaskGrid
      * @throws BadRequestException
      */
-    public function createComponentGrid(): TaskGrid {
+    protected function createComponentGrid(): TaskGrid {
         return new TaskGrid($this->getEvent(), $this->getContext());
     }
 }

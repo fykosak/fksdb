@@ -90,7 +90,7 @@ class DiplomasPresenter extends BasePresenter {
      * @return FinalResults
      * @throws BadRequestException
      */
-    public function createComponentResults(): FinalResults {
+    protected function createComponentResults(): FinalResults {
         return new FinalResults($this->getContext(), $this->getEvent());
     }
 }

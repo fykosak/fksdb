@@ -108,7 +108,7 @@ class EventOrgPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control {
         return new EventOrgForm($this->getContext(), $this->getEvent(), true);
     }
 
@@ -117,7 +117,7 @@ class EventOrgPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control {
         return new EventOrgForm($this->getContext(), $this->getEvent(), false);
     }
 

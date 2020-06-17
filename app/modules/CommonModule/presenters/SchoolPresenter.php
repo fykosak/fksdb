@@ -53,15 +53,6 @@ class SchoolPresenter extends BasePresenter {
     }
 
     /**
-     * @param IResource|string $resource
-     * @param string $privilege
-     * @return bool
-     */
-    protected function traitIsAuthorized($resource, string $privilege): bool {
-        return $this->isAnyContestAuthorized($resource, $privilege);
-    }
-
-    /**
      * @throws BadRequestException
      */
     public function actionEdit() {
@@ -75,20 +66,28 @@ class SchoolPresenter extends BasePresenter {
         $this->template->model = $this->getEntity();
     }
 
-    protected function getORMService(): ServiceSchool {
-        return $this->serviceSchool;
-    }
-
     protected function createComponentGrid(): SchoolsGrid {
         return new SchoolsGrid($this->getContext());
     }
 
-    public function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control {
         return new SchoolForm($this->getContext(), false);
     }
 
-    public function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control {
         return new SchoolForm($this->getContext(), true);
     }
 
+    /**
+     * @param IResource|string $resource
+     * @param string $privilege
+     * @return bool
+     */
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return $this->isAnyContestAuthorized($resource, $privilege);
+    }
+
+    protected function getORMService(): ServiceSchool {
+        return $this->serviceSchool;
+    }
 }

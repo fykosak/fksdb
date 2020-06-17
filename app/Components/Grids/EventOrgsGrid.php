@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEventOrg;
@@ -57,12 +56,11 @@ class EventOrgsGrid extends BaseGrid {
     /**
      * @param Presenter $presenter
      * @return void
+     * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
-     * @throws BadTypeException
-     * @throws NotImplementedException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);
@@ -86,9 +84,5 @@ class EventOrgsGrid extends BaseGrid {
                 ->setLabel(_('Add organiser'))
                 ->setLink($this->getPresenter()->link('create'));
         }
-    }
-
-    protected function getModelClassName(): string {
-        return ModelEventOrg::class;
     }
 }
