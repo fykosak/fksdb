@@ -67,7 +67,6 @@ class StoredQueriesGrid extends BaseGrid {
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      * @throws BadTypeException
-     * @throws NotImplementedException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);

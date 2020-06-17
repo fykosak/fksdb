@@ -112,8 +112,8 @@ abstract class DefaultRow extends AbstractRow {
         $this->omitInputField = $omit;
     }
 
-    final public function getPermissionsValue(): int {
-        return $this->permissionValue;
+    final public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission($this->permissionValue, $this->permissionValue);
     }
 
     final public function getTitle(): string {

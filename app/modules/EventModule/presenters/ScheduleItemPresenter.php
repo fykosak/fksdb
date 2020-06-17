@@ -140,7 +140,7 @@ class ScheduleItemPresenter extends BasePresenter {
      * @return Control
      * @throws NotImplementedException
      */
-    public function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
@@ -148,7 +148,7 @@ class ScheduleItemPresenter extends BasePresenter {
      * @return Control
      * @throws NotImplementedException
      */
-    public function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control {
         throw new NotImplementedException();
     }
 
@@ -162,7 +162,7 @@ class ScheduleItemPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function createComponentPersonsGrid(): PersonsGrid {
+    protected function createComponentPersonsGrid(): PersonsGrid {
         return new PersonsGrid($this->getContext(), $this->getEntity());
     }
 

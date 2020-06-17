@@ -40,13 +40,12 @@ class SpamPresenter extends BasePresenter {
         $this->setTitle(_('List of emails'), 'fa fa-envelope');
     }
 
-    /**
-     * @param IResource|string $resource
-     * @param string $privilege
-     * @return bool
-     */
-    protected function traitIsAuthorized($resource, string $privilege): bool {
-        return $this->isAnyContestAuthorized($resource, $privilege);
+    public function authorizedDetail() {
+        $authorized = true;
+        foreach ($this->getServiceContest()->getTable() as $contest) {
+            $authorized = $authorized && $this->contestAuthorizator->isAllowed($this->getORMService()->getModelClassName()::RESOURCE_ID, 'detail', $contest);
+        }
+        $this->setAuthorized($authorized);
     }
 
     /**
@@ -60,15 +59,24 @@ class SpamPresenter extends BasePresenter {
         return $this->serviceEmailMessage;
     }
 
-    public function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control {
         throw new NotImplementedException();
     }
 
-    public function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
     protected function createComponentGrid(): EmailsGrid {
         return new EmailsGrid($this->getContext());
+    }
+
+    /**
+     * @param IResource|string $resource
+     * @param string $privilege
+     * @return bool
+     */
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return $this->isAnyContestAuthorized($resource, $privilege);
     }
 }

@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEventOrg;
@@ -57,12 +56,11 @@ class EventOrgsGrid extends BaseGrid {
     /**
      * @param Presenter $presenter
      * @return void
+     * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
-     * @throws BadTypeException
-     * @throws NotImplementedException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);
@@ -71,27 +69,20 @@ class EventOrgsGrid extends BaseGrid {
         $this->addColumn('note', _('Note'));
         $this->addButton('edit', _('Edit'))->setText(_('Edit'))
             ->setLink(function (ModelEventOrg $model) {
-                return $this->getPresenter()->link(':Org:EventOrg:edit', [
+                return $this->getPresenter()->link('edit', [
                     'id' => $model->e_org_id,
-                    'contestId' => $model->getEvent()->getEventType()->contest_id,
-                    'year' => $model->getEvent()->year,
-                    'eventId' => $model->getEvent()->event_id,
                 ]);
             });
 
-        $this->addButton('delete')->setText(_('Delete'))
-            ->setLink(function (ModelEventOrg $model) {
-                return $this->getPresenter()->link('delete', $model->getPrimary());
-            });
+        /*   $this->addButton('delete')->setText(_('Delete'))
+               ->setLink(function (ModelEventOrg $model) {
+                   return $this->getPresenter()->link('delete', $model->getPrimary());
+               });*/
 
         if ($this->getPresenter()->authorized('create')) {
             $this->addGlobalButton('create')
                 ->setLabel(_('Add organiser'))
-                ->setLink($this->getPresenter()->link(':Org:EventOrg:create'));
+                ->setLink($this->getPresenter()->link('create'));
         }
-    }
-
-    protected function getModelClassName(): string {
-        return ModelEventOrg::class;
     }
 }

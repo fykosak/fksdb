@@ -269,7 +269,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             $this->getUser()->login($login);
 
             $method = $this->formatAuthorizedMethod($this->getAction());
-            $this->tryCall($method, $this->getParameter());
+            $this->tryCall($method, $this->getParameters());
         } catch (AuthenticationException $exception) {
             $this->httpAuthPrompt();
         }
@@ -304,7 +304,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             $this->getUser()->login($login);
 
             $method = $this->formatAuthorizedMethod($this->getAction());
-            $this->tryCall($method, $this->getParameter());
+            $this->tryCall($method, $this->getParameters());
         } catch (AuthenticationException $exception) {
             throw new ForbiddenRequestException(_('Chyba autentizace.'), Response::S403_FORBIDDEN, $exception);
         }

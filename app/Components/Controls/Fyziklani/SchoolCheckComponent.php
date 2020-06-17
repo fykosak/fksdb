@@ -87,7 +87,7 @@ group by school_id', [$this->acYear, array_keys($this->getSchoolsFromTeam($curre
      * @return ValuePrinterComponent
      * @throws \Exception
      */
-    public function createComponentValuePrinter(): ValuePrinterComponent {
+    protected function createComponentValuePrinter(): ValuePrinterComponent {
         return new ValuePrinterComponent($this->getContext());
     }
 }

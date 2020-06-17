@@ -253,7 +253,7 @@ class PaymentPresenter extends BasePresenter {
      * @return BaseGrid
      * @throws NotImplementedException
      */
-    public function createComponentGrid(): BaseGrid {
+    protected function createComponentGrid(): BaseGrid {
         throw new NotImplementedException();
     }
 
@@ -261,7 +261,7 @@ class PaymentPresenter extends BasePresenter {
      * @return Control
      * @throws NotImplementedException
      */
-    public function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
@@ -269,7 +269,7 @@ class PaymentPresenter extends BasePresenter {
      * @return Control
      * @throws NotImplementedException
      */
-    public function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control {
         throw new NotImplementedException();
     }
 }

@@ -4,7 +4,6 @@ namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
@@ -57,9 +56,8 @@ class AllPersonsGrid extends BaseGrid {
     /**
      * @param Presenter $presenter
      * @return void
-     * @throws DuplicateColumnException
      * @throws BadTypeException
-     * @throws NotImplementedException
+     * @throws DuplicateColumnException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);

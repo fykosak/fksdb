@@ -2,10 +2,13 @@
 
 namespace CommonModule;
 
+use FKSDB\Components\Controls\Entity\Person\PersonForm;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
+use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\EntityTrait;
 use FKSDB\Exceptions\BadTypeException;
@@ -26,8 +29,6 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\Security\IResource;
 use Nette\Utils\Html;
 use Persons\Deduplication\Merger;
-use Persons\DenyResolver;
-use Persons\ExtendedPersonHandler;
 use ReflectionException;
 use FKSDB\Components\Controls\Stalking;
 use Tracy\Debugger;
@@ -38,11 +39,17 @@ use Tracy\Debugger;
  * Do not use this presenter to create/modify persons.
  *             It's better to use ReferencedId and ReferencedContainer
  *             inside the particular form.
+ * TODO fix referenced person
  * @author Michal Koutný <michal@fykos.cz>
  * @method ModelPerson getEntity()
  */
 class PersonPresenter extends BasePresenter {
     use EntityTrait;
+
+    /**
+     * @var ModelPerson[]
+     */
+    private $persons = [];
 
     /**
      * @var ServicePerson
@@ -69,9 +76,9 @@ class PersonPresenter extends BasePresenter {
     private $mergedPerson;
 
     /**
-     * @var ReferencedPersonFactory
+     * @var PersonFactory
      */
-    private $referencedPersonFactory;
+    private $personFactory;
 
     /**
      * @var ModelPerson
@@ -107,11 +114,11 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @param ReferencedPersonFactory $referencedPersonFactory
+     * @param PersonFactory $personFactory
      * @return void
      */
-    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
-        $this->referencedPersonFactory = $referencedPersonFactory;
+    public function injectPersonFactory(PersonFactory $personFactory) {
+        $this->personFactory = $personFactory;
     }
 
     /* *********** TITLE ***************/
@@ -126,8 +133,26 @@ class PersonPresenter extends BasePresenter {
         $this->setTitle(sprintf(_('Detail of person %s'), $this->getEntity()->getFullName()), 'fa fa-eye');
     }
 
+    /**
+     * @return void
+     */
+    public function titleEdit() {
+        $this->setTitle(sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()), 'fa fa-user');
+    }
+
+    /**
+     * @return void
+     */
+    public function titleCreate() {
+        $this->setTitle(_('Create person'), 'fa fa-user-plus');
+    }
+
     public function titleMerge() {
         $this->setTitle(sprintf(_('Sloučení osob %s (%d) a %s (%d)'), $this->trunkPerson->getFullName(), $this->trunkPerson->person_id, $this->mergedPerson->getFullName(), $this->mergedPerson->person_id));
+    }
+
+    public function titlePizza() {
+        $this->setTitle(_('Pizza'), 'fa fa-cutlery');
     }
 
     /* *********** AUTH ***************/
@@ -135,17 +160,17 @@ class PersonPresenter extends BasePresenter {
         $this->setAuthorized($this->isAnyContestAuthorized('person', 'stalk.search'));
     }
 
+    public function authorizedEdit() {
+        $this->setAuthorized($this->isAnyContestAuthorized('person', 'edit'));
+    }
+
     /**
      * @return void
      */
     public function authorizedDetail() {
-        $person = $this->getEntity();
-
-        $full = $this->isAnyContestAuthorized($person, 'stalk.full');
-
-        $restrict = $this->isAnyContestAuthorized($person, 'stalk.restrict');
-
-        $basic = $this->isAnyContestAuthorized($person, 'stalk.basic');
+        $full = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.full');
+        $restrict = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.restrict');
+        $basic = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.basic');
 
         $this->setAuthorized($full || $restrict || $basic);
     }
@@ -187,6 +212,14 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
+     * @return void
+     * @throws BadRequestException
+     */
+    public function actionEdit() {
+        $this->traitActionEdit();
+    }
+
+    /**
      * @param $trunkId
      * @param $mergedId
      * @throws AbortException
@@ -211,7 +244,7 @@ class PersonPresenter extends BasePresenter {
      */
     public function renderDetail() {
         $person = $this->getEntity();
-        $this->template->userPermissions = $this->getUserPermissions($person);
+        $this->template->userPermissions = $this->getUserPermissions();
         $this->template->person = $person;
         $this->template->isSelf = $this->getUser()->getIdentity()->getPerson()->person_id === $person->person_id;
         /** @var ModelPerson $userPerson */
@@ -221,33 +254,37 @@ class PersonPresenter extends BasePresenter {
             $person->getFullName(), $person->person_id), 'stalking-log');
     }
 
-    /* ******************* COMPONENTS *******************/
-
-    public function createComponentStalkingComponent(): StalkingComponent {
-        return new StalkingComponent($this->getContext());
+    public function renderPizza() {
+        $this->template->persons = $this->persons;
     }
 
-    public function createComponentAddress(): Stalking\Address {
+    /* ******************* COMPONENTS *******************/
+
+    protected function createComponentStalkingComponent(): StalkingComponent {
+        return new StalkingComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions());
+    }
+
+    protected function createComponentAddress(): Stalking\Address {
         return new Stalking\Address($this->getContext());
     }
 
-    public function createComponentRole(): Stalking\Role {
+    protected function createComponentRole(): Stalking\Role {
         return new Stalking\Role($this->getContext());
     }
 
-    public function createComponentFlag(): Stalking\Flag {
+    protected function createComponentFlag(): Stalking\Flag {
         return new Stalking\Flag($this->getContext());
     }
 
-    public function createComponentSchedule(): Stalking\Schedule {
+    protected function createComponentSchedule(): Stalking\Schedule {
         return new Stalking\Schedule($this->getContext());
     }
 
-    public function createComponentValidation(): Stalking\Validation {
+    protected function createComponentValidation(): Stalking\Validation {
         return new Stalking\Validation($this->getContext());
     }
 
-    public function createComponentTimeline(): Stalking\Timeline\TimelineControl {
+    protected function createComponentTimeline(): Stalking\Timeline\TimelineControl {
         return new Stalking\Timeline\TimelineControl($this->getContext(), $this->getEntity());
     }
 
@@ -256,44 +293,24 @@ class PersonPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws \Exception
      */
-    public function createComponentFormSearch(): FormControl {
+    protected function createComponentFormSearch(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
+        $form->addComponent($this->personFactory->createPersonSelect(true, _('Person'), new PersonProvider($this->servicePerson)), 'person_id');
 
-        $container = new ContainerWithOptions();
-        $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
-        $modifiabilityResolver = $visibilityResolver = new DenyResolver();
-        $acYear = $this->getYearCalculator()->getCurrentAcademicYear();
-        $components = $this->referencedPersonFactory->createReferencedPerson([], $acYear, ReferencedPersonFactory::SEARCH_ID, true, $modifiabilityResolver, $visibilityResolver);
-        $components[0]->addRule(Form::FILLED, _('Osobu je třeba zadat.'));
-        $components[1]->setOption('label', _('Osoba'));
+        $stalkSubmit = $form->addSubmit('stalk', _('Stalk'));
+        $editSubmit = $form->addSubmit('edit', _('Edit'));
 
-        $container->addComponent($components[0], ExtendedPersonHandler::EL_PERSON);
-        $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
-
-        $submit = $form->addSubmit('send', _('Stalkovat'));
-        $submit->onClick[] = function (SubmitButton $button) {
+        $stalkSubmit->onClick[] = function (SubmitButton $button) {
             $values = $button->getForm()->getValues();
-            $id = $values[ExtendedPersonHandler::CONT_AGGR][ExtendedPersonHandler::EL_PERSON];
-            $this->redirect('detail', ['id' => $id]);
+            $this->redirect('detail', ['id' => $values['person_id']]);
+        };
+        $editSubmit->onClick[] = function (SubmitButton $button) {
+            $values = $button->getForm()->getValues();
+            $this->redirect('edit', ['id' => $values['person_id']]);
         };
 
         return $control;
-    }
-
-    private function getUserPermissions(ModelPerson $person): int {
-        if (!$this->mode) {
-            if ($this->isAnyContestAuthorized($person, 'stalk.basic')) {
-                $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_BASIC;
-            }
-            if ($this->isAnyContestAuthorized($person, 'stalk.restrict')) {
-                $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_RESTRICT;
-            }
-            if ($this->isAnyContestAuthorized($person, 'stalk.full')) {
-                $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_FULL;
-            }
-        }
-        return $this->mode;
     }
 
     /**
@@ -312,6 +329,57 @@ class PersonPresenter extends BasePresenter {
             $this->handleMergeFormSuccess($form);
         };
         return $control;
+    }
+
+    protected function createComponentCreateForm(): Control {
+        return new PersonForm($this->getContext(), true);
+    }
+
+    protected function createComponentEditForm(): Control {
+        return new PersonForm($this->getContext(), false, new FieldLevelPermission($this->getUserPermissions(), $this->getUserPermissions()));
+    }
+
+    /**
+     * @return FormControl
+     * @throws BadRequestException
+     */
+    protected function createComponentPizzaSelect(): FormControl {
+        $control = new FormControl();
+        $form = $control->getForm();
+        $personsField = $this->personFactory->createPersonSelect(true, _('Persons'), new PersonProvider($this->servicePerson));
+        $personsField->setMultiSelect(true);
+        $form->addComponent($personsField, 'persons');
+        $form->addSubmit('submit', _('Get pizza information!'));
+        $form->onSuccess[] = function (Form $form) {
+            $values = $form->getValues();
+            foreach ($values['persons'] as $personId) {
+                $this->persons[] = $this->servicePerson->findByPrimary($personId);
+            }
+        };
+        return $control;
+    }
+
+    /**
+     * @return BaseGrid
+     * @throws NotImplementedException
+     */
+    protected function createComponentGrid(): BaseGrid {
+        throw new NotImplementedException();
+    }
+
+    private function getUserPermissions(): int {
+        if (!$this->mode) {
+            if ($this->isAnyContestAuthorized($this->getEntity(), 'stalk.basic')) {
+                $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_BASIC;
+            }
+            if ($this->isAnyContestAuthorized($this->getEntity(), 'stalk.restrict')) {
+                $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_RESTRICT;
+            }
+            if ($this->isAnyContestAuthorized($this->getEntity(), 'stalk.full')) {
+                $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_FULL;
+            }
+        }
+        return $this->mode;
     }
 
     /**
@@ -389,7 +457,7 @@ class PersonPresenter extends BasePresenter {
      * @throws ReflectionException
      * @throws BadTypeException
      */
-    public function handleMergeFormSuccess(Form $form) {
+    private function handleMergeFormSuccess(Form $form) {
         if ($form['cancel']->isSubmittedBy()) {
             $this->setMergeConflicts(null); // flush the session
             $this->backLinkRedirect(true);
@@ -443,30 +511,6 @@ class PersonPresenter extends BasePresenter {
         }
     }
 
-    /**
-     * @return Control
-     * @throws NotImplementedException
-     */
-    public function createComponentCreateForm(): Control {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @return Control
-     * @throws NotImplementedException
-     */
-    public function createComponentEditForm(): Control {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @return BaseGrid
-     * @throws NotImplementedException
-     */
-    protected function createComponentGrid(): BaseGrid {
-        throw new NotImplementedException();
-    }
-
     protected function getORMService(): ServicePerson {
         return $this->servicePerson;
     }
@@ -477,6 +521,6 @@ class PersonPresenter extends BasePresenter {
      * all auth method is overwritten
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
-        return false;
+        return $this->isAnyContestAuthorized($resource, $privilege);
     }
 }

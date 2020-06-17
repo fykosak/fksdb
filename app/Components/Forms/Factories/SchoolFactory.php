@@ -29,7 +29,7 @@ class SchoolFactory {
         $this->schoolProvider = $schoolProvider;
     }
 
-    public function createSchool(): ModelContainer {
+    public function createContainer(): ModelContainer {
         $container = new ModelContainer();
         $container->addText('name_full', _('Plný název'))
             ->addRule(Form::MAX_LENGTH, null, 255)
@@ -59,8 +59,6 @@ class SchoolFactory {
             ->setDefaultValue(true);
 
         $container->addText('note', _('Poznámka'));
-
-        //$container->addHidden('school_id');
 
         return $container;
     }

@@ -14,11 +14,11 @@ use FKSDB\UI\PageStyleContainer;
  */
 class DispatchPresenter extends AuthenticatedPresenter {
 
-    public function createComponentContestBadge(): ContestBadge {
+    protected function createComponentContestBadge(): ContestBadge {
         return new ContestBadge($this->getContext());
     }
 
-    public function createComponentDispatchGrid(): DispatchGrid {
+    protected function createComponentDispatchGrid(): DispatchGrid {
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         return new DispatchGrid($login->getPerson(), $this->getContext());

@@ -7,6 +7,7 @@ use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\BadRequestException;
+use Nette\DeprecatedException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\SmartObject;
@@ -31,6 +32,7 @@ abstract class AbstractRow {
      * @var array
      */
     private $referencedAccess;
+
     /**
      * @param mixed ...$args
      * @return BaseControl
@@ -54,7 +56,7 @@ abstract class AbstractRow {
      * @throws BadRequestException
      */
     final public function renderValue(AbstractModelSingle $model, int $userPermissionsLevel): Html {
-        if (!$this->hasPermissions($userPermissionsLevel)) {
+        if (!$this->hasReadPermissions($userPermissionsLevel)) {
             return PermissionDeniedBadge::getHtml();
         }
         $model = $this->getModel($model);
@@ -111,11 +113,25 @@ abstract class AbstractRow {
 
     abstract protected function createHtmlValue(AbstractModelSingle $model): Html;
 
-    final protected function hasPermissions(int $userValue): bool {
-        return $userValue >= $this->getPermissionsValue();
+    final public function hasReadPermissions(int $userValue): bool {
+        return $userValue >= $this->getPermission()->read;
     }
 
-    abstract public function getPermissionsValue(): int;
+    final public function hasWritePermissions(int $userValue): bool {
+        return $userValue >= $this->getPermission()->write;
+    }
+
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission($this->getPermissionsValue(), $this->getPermissionsValue());
+    }
+
+    /**
+     * @return int
+     * @deprecated
+     */
+    public function getPermissionsValue(): int {
+        throw new DeprecatedException();
+    }
 
     abstract public function getTitle(): string;
 }

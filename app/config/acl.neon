@@ -92,6 +92,7 @@ acl:
     - allow(org, storedQuery, show)
     - allow(org, teacher, ::constant(Nette\Security\Permission::ALL))
     - allow(org, person, stalk.search)
+    - allow(org, person, edit, [@ownerAssertion, 'isSelf'])
     - allow(org, person, stalk.basic, [@ownerAssertion, 'existsOwnContestant'])
     - allow(org, person, stalk.full, [@ownerAssertion, 'isSelf'])
 
@@ -108,6 +109,7 @@ acl:
     - allow(inboxManager, contestant, edit, [@ownerAssertion, 'isOwnContestant'])
     - allow(inboxManager, school, ::constant(Nette\Security\Permission::ALL))
     - allow(inboxManager, person, stalk.restrict, [@ownerAssertion, 'existsOwnContestant'])
+    - allow(inboxManager, person, edit, [@ownerAssertion, 'existsOwnContestant'])
 
     - allow(taskManager, task, ::constant(Nette\Security\Permission::ALL))
 
@@ -124,12 +126,14 @@ acl:
     - allow(eventManager, school, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, export, execute) # TODO (needs better distinction -- assertion at event org)
     - allow(eventManager, person, stalk.full)
+    - allow(eventManager, person, edit)
     - allow(eventManager, fyziklani.team, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, event.participant, ::constant(Nette\Security\Permission::ALL))
 
     - allow(boss, org, ::constant(Nette\Security\Permission::ALL))
     - allow(boss, person, edit, [@ownerAssertion, 'existsOwnContestant'])
     - allow(boss, person, stalk.full)
+    - allow(boss, person, edit)
     - allow(boss, email_message, list)
 
     - allow(schoolManager, school, ::constant(Nette\Security\Permission::ALL))

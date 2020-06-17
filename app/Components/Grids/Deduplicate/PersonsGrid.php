@@ -2,13 +2,11 @@
 
 namespace FKSDB\Components\Grids\Deduplicate;
 
-use FKSDB\Components\DatabaseReflection\ValuePrinters\PersonLink;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
@@ -121,9 +119,10 @@ class PersonsGrid extends BaseGrid {
 
     /**
      * @param ModelPerson $person
-     * @return Html
+     * @return string
      */
     private function renderPerson(ModelPerson $person) {
-        return (new PersonLink($this->getPresenter()))($person);
+        return $person->getFullName();
+        // return (new PersonLink($this->getPresenter()))($person);
     }
 }

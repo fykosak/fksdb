@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Grids\Payment;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
 
 /**
@@ -22,9 +21,5 @@ abstract class PaymentGrid extends BaseGrid {
      */
     public function injectServicePayment(ServicePayment $servicePayment) {
         $this->servicePayment = $servicePayment;
-    }
-
-    protected function getModelClassName(): string {
-        return ModelPayment::class;
     }
 }

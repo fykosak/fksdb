@@ -139,7 +139,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @return Control
      * @throws NotImplementedException
      */
-    public function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
@@ -147,7 +147,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @return Control
      * @throws NotImplementedException
      */
-    public function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control {
         throw new NotImplementedException();
     }
 }

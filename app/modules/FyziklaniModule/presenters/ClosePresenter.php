@@ -143,7 +143,7 @@ class ClosePresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function createComponentGrid(): BaseGrid {
+    protected function createComponentGrid(): BaseGrid {
         return new CloseTeamsGrid($this->getEvent(), $this->getContext());
     }
 
@@ -151,7 +151,7 @@ class ClosePresenter extends BasePresenter {
      * @return Control
      * @throws NotImplementedException
      */
-    public function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
@@ -159,7 +159,7 @@ class ClosePresenter extends BasePresenter {
      * @return Control
      * @throws NotImplementedException
      */
-    public function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control {
         throw new NotImplementedException();
     }
 

@@ -245,7 +245,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
         return $formControl;
     }
 
-    public function createComponentCorrectedFormControl(): CorrectedControl {
+    protected function createComponentCorrectedFormControl(): CorrectedControl {
         return new CorrectedControl($this->getContext(), $this->seriesTable);
     }
 

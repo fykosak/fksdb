@@ -19,7 +19,7 @@ class DetailComponent extends BaseComponent {
         $this->detailFactory = $detailFactory;
     }
 
-    public function createComponentValuePrinter(): ValuePrinterComponent {
+    protected function createComponentValuePrinter(): ValuePrinterComponent {
         return new ValuePrinterComponent($this->getContext());
     }
 

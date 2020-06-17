@@ -51,7 +51,7 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @return Control
      * @throws NotImplementedException
      */
-    public function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
@@ -59,7 +59,7 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @return Control
      * @throws NotImplementedException
      */
-    public function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control {
         throw new NotImplementedException();
     }
 
@@ -77,7 +77,7 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function createComponentAllPersonsGrid(): AllPersonsGrid {
+    protected function createComponentAllPersonsGrid(): AllPersonsGrid {
         return new AllPersonsGrid($this->getContext(), $this->getEvent());
     }
 

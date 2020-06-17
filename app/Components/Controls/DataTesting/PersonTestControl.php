@@ -65,7 +65,7 @@ class PersonTestControl extends BaseComponent {
      * @return FormControl
      * @throws BadRequestException
      */
-    public function createComponentForm() {
+    protected function createComponentForm() {
         $control = new FormControl();
         $form = $control->getForm();
         $form->addText('start_id', _('From person_id'))
@@ -99,20 +99,20 @@ class PersonTestControl extends BaseComponent {
         $form->onSuccess[] = function (Form $form) {
             $values = $form->getValues();
             $this->levels = [];
-            foreach ($values->levels as $level => $value) {
+            foreach ($values['levels'] as $level => $value) {
                 if ($value) {
                     $this->levels[] = $level;
                 }
             }
 
             $this->tests = [];
-            foreach ($values->tests as $testId => $value) {
+            foreach ($values['tests'] as $testId => $value) {
                 if ($value) {
-                    $this->tests[] = $this->availableTests[$testId];
+                    $this->tests[] = $this->dataTestingFactory->getTests('person')[$testId];
                 }
             }
-            $this->startId = $values->start_id;
-            $this->endId = $values->end_id;
+            $this->startId = $values['start_id'];
+            $this->endId = $values['end_id'];
 
         };
         return $control;
@@ -149,14 +149,5 @@ class PersonTestControl extends BaseComponent {
         $this->template->logs = $this->calculateProblems();
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
-    }
-
-    /**
-     * @param $page
-     * @return void
-     */
-    public function handleChangePage($page) {
-        $this->page = $page;
-        $this->redrawControl();
     }
 }

@@ -186,10 +186,10 @@ DBReflection:
                  title: _('Phone')
              phone_parent_m:
                  type: phone
-                 title: _('Telefonní číslo (matka)')
+                 title: _('Phone number (mother)')
              phone_parent_d:
                  type: phone
-                 title: _('Telefonní číslo (otec)')
+                 title: _('Phone number (father)')
              email_parent_m: FKSDB\Components\DatabaseReflection\PersonInfo\EmailParentMRow
              email_parent_d: FKSDB\Components\DatabaseReflection\PersonInfo\EmailParentDRow
              id_number: FKSDB\Components\DatabaseReflection\PersonInfo\IdNumberRow
