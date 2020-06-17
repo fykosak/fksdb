@@ -42,7 +42,7 @@ class PersonHistoryFactory extends SingleReflectionFactory {
             case 'school_id':
                 return $this->schoolFactory->createSchoolSelect();
             default:
-                return parent::createField($fieldName);
+                return parent::createField($fieldName, ...$args);
         }
     }
 }
