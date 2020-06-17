@@ -38,11 +38,7 @@ class FlagFactory {
         return $control;
     }
 
-    /**
-     * @return PersonFlag
-     */
     public function createSpamMff(): PersonFlag {
         return new PersonFlag(_('Přeji si dostávat informace o dění na MFF a akcích, které pořádáme'));
     }
-
 }

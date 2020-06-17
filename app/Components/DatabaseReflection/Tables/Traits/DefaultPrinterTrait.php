@@ -8,7 +8,7 @@ use Nette\Utils\Html;
 
 /**
  * Trait DefaultPrinterTrait
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 trait DefaultPrinterTrait {
 

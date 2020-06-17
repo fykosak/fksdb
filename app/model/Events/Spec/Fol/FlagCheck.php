@@ -2,6 +2,7 @@
 
 namespace FKSDB\Events\Spec\Fol;
 
+use FKSDB\ORM\Models\ModelPersonHistory;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\Events\FormAdjustments\AbstractAdjustment;
 use FKSDB\Events\FormAdjustments\IFormAdjustment;
@@ -46,6 +47,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
 
     /**
      * @param Holder $holder
+     * @return void
      */
     public function setHolder(Holder $holder) {
         $this->holder = $holder;
@@ -117,8 +119,8 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
     }
 
     /**
-     * @param $studyYearControl
-     * @param $personControl
+     * @param IControl $studyYearControl
+     * @param IControl $personControl
      * @return bool|mixed|ActiveRow|Selection|null
      */
     private function getStudyYear($studyYearControl, $personControl) {
@@ -126,7 +128,8 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
             return $studyYearControl->getValue();
         }
 
-        $personId = $personControl->getValue(false);
+        $personId = $personControl->getValue();
+        /** @var ModelPersonHistory $personHistory */
         $personHistory = $this->servicePersonHistory->getTable()
             ->where('person_id', $personId)
             ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getAcYear())->fetch();
@@ -134,8 +137,8 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
     }
 
     /**
-     * @param $schoolControl
-     * @param $personControl
+     * @param IControl $schoolControl
+     * @param IControl $personControl
      * @return bool|mixed|ActiveRow|Selection|null
      */
     private function getSchoolId($schoolControl, $personControl) {
@@ -143,7 +146,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
             return $schoolControl->getValue();
         }
 
-        $personId = $personControl->getValue(false);
+        $personId = $personControl->getValue();
         /** @var ModelSchool|false $school */
         $school = $this->servicePersonHistory->getTable()
             ->where('person_id', $personId)

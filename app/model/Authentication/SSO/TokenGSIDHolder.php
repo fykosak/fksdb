@@ -72,6 +72,7 @@ class TokenGSIDHolder implements IGSIDHolder {
 
     /**
      * @param $gsid
+     * @return mixed|void
      */
     public function setGSID($gsid) {
         $section = $this->session->getSection(self::SESSION_NS);

@@ -4,16 +4,16 @@ namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
-use OrgModule\OrgPresenter;
 
 /**
  *
@@ -22,47 +22,54 @@ use OrgModule\OrgPresenter;
 class EventsGrid extends BaseGrid {
 
     /**
-     *
      * @var ServiceEvent
      */
     private $serviceEvent;
+    /**
+     * @var ModelContest
+     */
+    private $contest;
+    /**
+     * @var int
+     */
+    private $year;
 
     /**
      * EventsGrid constructor.
      * @param Container $container
-     */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->serviceEvent = $container->getByType(ServiceEvent::class);
-    }
-
-    /**
      * @param ModelContest $contest
      * @param int $year
      */
-    public function setParams(ModelContest $contest, int $year) {
-        $events = $this->serviceEvent->getEvents($contest, $year);
-        $dataSource = new NDataSource($events);
-        $this->setDefaultOrder('event.begin ASC');
-        $this->setDataSource($dataSource);
+    public function __construct(Container $container, ModelContest $contest, int $year) {
+        parent::__construct($container);
+        $this->contest = $contest;
+        $this->year = $year;
     }
 
     /**
-     * @param OrgPresenter $presenter
+     * @param ServiceEvent $serviceEvent
+     * @return void
+     */
+    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+        $this->serviceEvent = $serviceEvent;
+    }
+
+    public function getData(): IDataSource {
+        $events = $this->serviceEvent->getEvents($this->contest, $this->year);
+        return new NDataSource($events);
+    }
+
+    /**
+     * @param Presenter $presenter
      * @throws BadRequestException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      * @throws DuplicateButtonException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
-        $events = $this->serviceEvent->getEvents($presenter->getSelectedContest(), $presenter->getSelectedYear());
-
-        $dataSource = new NDataSource($events);
-
         $this->setDefaultOrder('event.begin ASC');
-        $this->setDataSource($dataSource);
 
         $this->addColumns([
             'event.event_id',
@@ -72,7 +79,7 @@ class EventsGrid extends BaseGrid {
             'event.event_year',
         ]);
 
-        $this->addLinkButton(':Event:dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
+        $this->addLinkButton(':Event:Dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
         $this->addLinkButton('edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
 
         $this->addLink('event_participant.list');
@@ -84,9 +91,4 @@ class EventsGrid extends BaseGrid {
             ->setLabel('Add event')
             ->setClass('btn btn-sm btn-primary');
     }
-
-    protected function getModelClassName(): string {
-        return ModelEvent::class;
-    }
-
 }

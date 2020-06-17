@@ -23,7 +23,6 @@ define('LOG_DIR', TESTS_DIR . '/../temp/tester/log');
 
 // Load Nette Framework
 require LIBS_DIR . '/../vendor/autoload.php';
-require LIBS_DIR . '/autoload.php';
 
 define('CONFIG_DIR', APP_DIR . DIRECTORY_SEPARATOR . 'config');
 
@@ -37,7 +36,7 @@ Tester\Environment::setup();
 
 // Enable RobotLoader - this will load all classes automatically
 $configurator->setTempDirectory(TEMP_DIR);
-error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
+error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING & ~E_USER_NOTICE & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
 $configurator->createRobotLoader()
     ->addDirectory(APP_DIR)
     ->addDirectory(LIBS_DIR)
@@ -58,7 +57,6 @@ foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/../data/events'
 foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/neon') as $filename => $file) {
     $configurator->addConfig($filename, Configurator::NONE);
 }
-
 $container = $configurator->createContainer();
 
 // Register addons

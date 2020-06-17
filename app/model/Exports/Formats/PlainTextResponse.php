@@ -16,7 +16,7 @@ class PlainTextResponse implements IResponse {
 
     /** @var string */
     private $content;
-    /** @var */
+    /** @var mixed */
     private $name;
 
     /**
@@ -34,6 +34,7 @@ class PlainTextResponse implements IResponse {
 
     /**
      * @param string $name
+     * @return void
      */
     public function setName(string $name) {
         $this->name = $name;
@@ -42,6 +43,7 @@ class PlainTextResponse implements IResponse {
     /**
      * @param IRequest $httpRequest
      * @param \Nette\Http\IResponse $httpResponse
+     * @return void
      */
     public function send(IRequest $httpRequest, \Nette\Http\IResponse $httpResponse) {
         $httpResponse->setContentType('text/plain', 'utf-8');

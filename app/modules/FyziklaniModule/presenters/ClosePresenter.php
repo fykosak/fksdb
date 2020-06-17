@@ -11,6 +11,7 @@ use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -21,7 +22,6 @@ use Nette\Application\UI\Control;
  * *
  * @property FormControl closeCategoryAForm
  * @method ModelFyziklaniTeam getEntity()
- * @method ModelFyziklaniTeam loadEntity(int $id)
  */
 class ClosePresenter extends BasePresenter {
 
@@ -37,23 +37,21 @@ class ClosePresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function titleTeam(int $id) {
-        $this->setTitle(\sprintf(_('Uzavírání bodování týmu "%s"'), $this->loadEntity($id)->name), 'fa fa-check-square-o');
+    public function titleTeam() {
+        $this->setTitle(\sprintf(_('Uzavírání bodování týmu "%s"'), $this->getEntity()->name), 'fa fa-check-square-o');
     }
 
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function titleHard(int $id) {
-        $this->titleTeam($id);
+    public function titleHard() {
+        $this->titleTeam();
     }
 
     /* ******* authorized methods ***********/
@@ -82,30 +80,28 @@ class ClosePresenter extends BasePresenter {
     }
     /* *********** ACTIONS **************** */
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function actionTeam(int $id) {
-        $team = $this->loadEntity($id);
+    public function actionTeam() {
+        $team = $this->getEntity();
         try {
             $team->canClose();
         } catch (BadRequestException $exception) {
             $this->flashMessage($exception->getMessage());
             $this->redirect('list');
         }
-        $this->actionHard($id);
+        $this->actionHard();
     }
 
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function actionHard(int $id) {
-        $team = $this->loadEntity($id);
+    public function actionHard() {
+        $team = $this->getEntity();
         $control = $this->getComponent('closeTeamControl');
         if (!$control instanceof CloseTeamControl) {
             throw new BadTypeException(CloseTeamControl::class, $control);
@@ -124,14 +120,17 @@ class ClosePresenter extends BasePresenter {
         return new CloseTeamControl($this->getContext(), $this->getEvent());
     }
 
+    /**
+     * @return TeamSubmitsGrid
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
     protected function createComponentTeamSubmitsGrid(): TeamSubmitsGrid {
         return new TeamSubmitsGrid($this->getEntity(), $this->getContext());
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServiceFyziklaniTeam {
         return $this->getServiceFyziklaniTeam();
     }
 
@@ -144,21 +143,23 @@ class ClosePresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function createComponentGrid(): BaseGrid {
+    protected function createComponentGrid(): BaseGrid {
         return new CloseTeamsGrid($this->getEvent(), $this->getContext());
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
-    public function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
-    public function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control {
         throw new NotImplementedException();
     }
 

@@ -4,7 +4,7 @@ namespace FKSDB\Components\DatabaseReflection;
 
 /**
  * Class DetailFactory
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DetailFactory {
     /**

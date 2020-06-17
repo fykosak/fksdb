@@ -2,13 +2,13 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
-use Nette\DI\Container;
 use Nette\Utils\Html;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
@@ -26,29 +26,15 @@ class SchoolsGrid extends BaseGrid {
     private $serviceSchool;
 
     /**
-     * SchoolsGrid constructor.
-     * @param Container $container
+     * @param ServiceSchool $serviceSchool
+     * @return void
      */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->serviceSchool = $container->getByType(ServiceSchool::class);
+    public function injectServiceSchool(ServiceSchool $serviceSchool) {
+        $this->serviceSchool = $serviceSchool;
     }
 
-    /**
-     * @param $presenter
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
-     * @throws InvalidLinkException
-     * @throws NotImplementedException
-     */
-    protected function configure($presenter) {
-        parent::configure($presenter);
-        //
-        // data
-        //
+    protected function getData(): IDataSource {
         $schools = $this->serviceSchool->getSchools();
-
         $dataSource = new SearchableDataSource($schools);
         $dataSource->setFilterCallback(function (Selection $table, $value) {
             $tokens = preg_split('/\s+/', $value);
@@ -56,7 +42,19 @@ class SchoolsGrid extends BaseGrid {
                 $table->where('name_full LIKE CONCAT(\'%\', ? , \'%\')', $token);
             }
         });
-        $this->setDataSource($dataSource);
+        return $dataSource;
+    }
+
+    /**
+     * @param Presenter $presenter
+     * @return void
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
+     * @throws InvalidLinkException
+     */
+    protected function configure(Presenter $presenter) {
+        parent::configure($presenter);
 
         //
         // columns
@@ -74,9 +72,5 @@ class SchoolsGrid extends BaseGrid {
             ->setLink($this->getPresenter()->link('create'))
             ->setLabel(_('CreateSchool'))
             ->setClass('btn btn-sm btn-primary');
-    }
-
-    protected function getModelClassName(): string {
-        return ModelSchool::class;
     }
 }

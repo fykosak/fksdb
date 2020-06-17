@@ -55,18 +55,13 @@ trait ReactField {
     /**
      * @param string $key
      * @param string $destination
+     * @return void
      */
     public function addAction(string $key, string $destination) {
         $this->actions[$key] = $destination;
     }
 
-    /**
-     * @return string
-     */
     abstract protected function getReactId(): string;
 
-    /**
-     * @return string
-     */
     abstract public function getData(): string;
 }

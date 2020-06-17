@@ -1,5 +1,4 @@
 {foreach $flashes as $flash}
     <div class="alert alert-{$flash->type}">{$flash->message}</div>
 {/foreach}
-{block content}
-{/block}
+{include content}

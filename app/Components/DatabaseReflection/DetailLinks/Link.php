@@ -6,7 +6,7 @@ use FKSDB\ORM\AbstractModelSingle;
 
 /**
  * Class Link
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Link extends AbstractLink {
     /**
@@ -40,32 +40,19 @@ class Link extends AbstractLink {
         $this->modelClassName = $modelClassName;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getText(): string {
         return _($this->title);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getModelClassName(): string {
         return $this->modelClassName;
     }
 
-    /**
-     * @inheritDoc
-     */
-    public function getDestination($model): string {
+    public function getDestination(AbstractModelSingle $model): string {
         return $this->destination;
     }
 
-    /**
-     * @param AbstractModelSingle $model
-     * @return array
-     */
-    public function prepareParams($model): array {
+    public function prepareParams(AbstractModelSingle $model): array {
         $urlParams = [];
         foreach ($this->params as $key => $accessKey) {
             $urlParams[$key] = $model->{$accessKey};

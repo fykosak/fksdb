@@ -146,7 +146,7 @@ class SubmitPresenter extends BasePresenter {
      * @return FormControl
      * @throws BadRequestException
      */
-    public function createComponentUploadForm() {
+    protected function createComponentUploadForm() {
         $control = new FormControl();
         $form = $control->getForm();
 
@@ -222,13 +222,13 @@ class SubmitPresenter extends BasePresenter {
                 $this->handleUploadFormSuccess($form);
             };
 
-            $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
+       //     $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
         }
 
         return $control;
     }
 
-    public function createComponentAjaxUpload(): AjaxUpload {
+    protected function createComponentAjaxUpload(): AjaxUpload {
         return new AjaxUpload($this->getContext());
     }
 
@@ -236,7 +236,7 @@ class SubmitPresenter extends BasePresenter {
      * @return SubmitsGrid
      * @throws BadRequestException
      */
-    public function createComponentSubmitsGrid(): SubmitsGrid {
+    protected function createComponentSubmitsGrid(): SubmitsGrid {
         return new SubmitsGrid($this->getContext(), $this->getContestant());
     }
 

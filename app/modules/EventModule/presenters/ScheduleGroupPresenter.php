@@ -13,7 +13,7 @@ use Nette\Application\UI\Control;
 
 /**
  * Class ScheduleGroupPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ScheduleGroupPresenter extends BasePresenter {
     use EventEntityTrait;
@@ -48,16 +48,18 @@ class ScheduleGroupPresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
-    public function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
-    public function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control {
         throw new NotImplementedException();
     }
 
@@ -75,14 +77,11 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function createComponentAllPersonsGrid(): AllPersonsGrid {
+    protected function createComponentAllPersonsGrid(): AllPersonsGrid {
         return new AllPersonsGrid($this->getContext(), $this->getEvent());
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServiceScheduleGroup {
         return $this->serviceScheduleGroup;
     }
 

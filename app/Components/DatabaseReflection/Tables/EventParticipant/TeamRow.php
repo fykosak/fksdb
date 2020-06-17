@@ -11,13 +11,13 @@ use Nette\Utils\Html;
 
 /**
  * Class TeamRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TeamRow extends AbstractParticipantRow {
 
     /**
-     * @param ModelEventParticipant $model
-     * @inheritDoc
+     * @param ModelEventParticipant|AbstractModelSingle $model
+     * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         try {
@@ -28,9 +28,6 @@ class TeamRow extends AbstractParticipantRow {
         }
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getTitle(): string {
         return _('Team');
     }

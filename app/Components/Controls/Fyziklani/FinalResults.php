@@ -9,7 +9,12 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
 
+/**
+ * Class FinalResults
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class FinalResults extends BaseComponent {
+
     /**
      * @var ServiceFyziklaniTeam|null
      */
@@ -52,19 +57,19 @@ class FinalResults extends BaseComponent {
         return $count === 0;
     }
 
-    public function createComponentResultsCategoryAGrid(): ResultsCategoryGrid {
+    protected function createComponentResultsCategoryAGrid(): ResultsCategoryGrid {
         return new ResultsCategoryGrid($this->event, 'A', $this->getContext());
     }
 
-    public function createComponentResultsCategoryBGrid(): ResultsCategoryGrid {
+    protected function createComponentResultsCategoryBGrid(): ResultsCategoryGrid {
         return new ResultsCategoryGrid($this->event, 'B', $this->getContext());
     }
 
-    public function createComponentResultsCategoryCGrid(): ResultsCategoryGrid {
+    protected function createComponentResultsCategoryCGrid(): ResultsCategoryGrid {
         return new ResultsCategoryGrid($this->event, 'C', $this->getContext());
     }
 
-    public function createComponentResultsTotalGrid(): ResultsTotalGrid {
+    protected function createComponentResultsTotalGrid(): ResultsTotalGrid {
         return new ResultsTotalGrid($this->event, $this->getContext());
     }
 

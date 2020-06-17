@@ -5,6 +5,7 @@ namespace Authorization;
 use Authorization\Assertions\EventOrgByIdAssertion;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Context;
+use Nette\Security\IResource;
 use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
 use Nette\SmartObject;
@@ -50,9 +51,6 @@ class EventAuthorizator {
         $this->db = $db;
     }
 
-    /**
-     * @return IUserStorage
-     */
     public function getUser(): IUserStorage {
         return $this->user;
     }
@@ -76,7 +74,7 @@ class EventAuthorizator {
     }
 
     /**
-     * @param $resource
+     * @param IResource|string $resource
      * @param $privilege
      * @param $event
      * @return bool
@@ -118,12 +116,12 @@ class EventAuthorizator {
     }
 
     /**
-     * @param $resource
+     * @param IResource|string $resource
      * @param $privilege
-     * @param $event
+     * @param ModelEvent $event
      * @return bool
      */
     private function isEventOrg($resource, $privilege, ModelEvent $event): bool {
-        return (new EventOrgByIdAssertion(null, $this->getUser(), $this->db))($this->getAcl(), null, $resource, $privilege, $event->event_id);
+        return (new EventOrgByIdAssertion($this->getUser(), $this->db))($this->getAcl(), null, $resource, $privilege, $event->event_id);
     }
 }

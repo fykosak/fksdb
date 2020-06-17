@@ -6,7 +6,9 @@ use Exports\ExportFormatFactory;
 use Exports\StoredQuery;
 use FKSDB\Components\Controls\StoredQueryComponent;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 use PDOException;
@@ -38,18 +40,18 @@ class StoredQueryGrid extends BaseGrid {
         $this->exportFormatFactory = $container->getByType(ExportFormatFactory::class);
     }
 
+    protected function getData(): IDataSource {
+        return $this->storedQuery;
+    }
+
     /**
-     * @param $presenter
+     * @param Presenter $presenter
      * @throws InvalidLinkException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
-        //
-        // data
-        //
-        $this->setDataSource($this->storedQuery);
 
         //
         // columns

@@ -2,8 +2,7 @@
 
 namespace OrgModule;
 
-use FKSDB\Components\Controls\Entity\Event\CreateForm;
-use FKSDB\Components\Controls\Entity\Event\EditForm;
+use FKSDB\Components\Controls\Entity\Event\EventForm;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\EntityTrait;
 use FKSDB\ORM\Models\ModelEvent;
@@ -15,7 +14,7 @@ use FKSDB\Exceptions\NotImplementedException;
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  * @author Michal Koutný <michal@fykos.cz>
- * @method ModelEvent loadEntity(int $id)
+ * @method ModelEvent getEntity()
  */
 class EventPresenter extends BasePresenter {
     use EntityTrait;
@@ -42,11 +41,10 @@ class EventPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
-     * @throws BadRequestException
+     * @return void
      */
-    public function titleEdit(int $id) {
-        $this->setTitle(sprintf(_('Edit event %s'), $this->loadEntity($id)->name), 'fa fa-pencil');
+    public function titleEdit() {
+        $this->setTitle(sprintf(_('Edit event %s'), $this->getEntity()->name), 'fa fa-pencil');
     }
 
     /**
@@ -57,35 +55,38 @@ class EventPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
+     * @return void
      * @throws BadRequestException
      */
-    public function actionEdit(int $id) {
-        $this->traitActionEdit($id);
+    public function actionEdit() {
+        $this->traitActionEdit();
     }
 
+    /**
+     * @return EventsGrid
+     * @throws BadRequestException
+     */
     protected function createComponentGrid(): EventsGrid {
-        return new EventsGrid($this->getContext());
+        return new EventsGrid($this->getContext(), $this->getSelectedContest(), $this->getSelectedYear());
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws BadRequestException
      */
-    public function createComponentCreateForm(): Control {
-        return new CreateForm($this->getContext(), $this->getSelectedContest(), $this->getSelectedYear());
+    protected function createComponentCreateForm(): Control {
+        return new EventForm($this->getSelectedContest(), $this->getContext(), $this->getSelectedYear(), true);
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws BadRequestException
      */
-    public function createComponentEditForm(): Control {
-        return new EditForm($this->getContext(), $this->getSelectedContest());
+    protected function createComponentEditForm(): Control {
+        return new EventForm($this->getSelectedContest(), $this->getContext(), $this->getSelectedYear(), false);
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServiceEvent {
         return $this->serviceEvent;
     }
 

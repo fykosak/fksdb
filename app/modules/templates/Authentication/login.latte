@@ -3,15 +3,8 @@
     {form loginForm class => 'form-signin'}
         <div n:foreach="$form->errors as $error" class="alert alert-danger">{$error}</div>
 
-        {input id
-            class => 'top form-control',
-            autofocus => true,
-            placeholder => $_input->translate($_input->caption),
-            readonly => $login?true:false,
-            value => $login?:'',
-            autocomplete => 'username'
-}
-        {input password class => 'bottom mb-3 form-control', placeholder => $_input->translate($_input->caption), autocomplete => 'current-password'}
+        {input id readonly => $login?true:false, value => $login?:''}
+        {input password }
         {input send class => 'btn btn-lg btn-success btn-block'}
         <a n:href=":Public:Register:default" class="btn btn-info btn-block">{_'Registrace'}</a>
         <a class="btn btn-secondary btn-sm btn-block" n:href="recover, backlink => null, bc => null, flag => null">{_'Zapomenuté heslo'}</a>

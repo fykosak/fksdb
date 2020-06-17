@@ -2,12 +2,12 @@
 
 namespace FKSDB\Components\Grids\Deduplicate;
 
-use FKSDB\Components\DatabaseReflection\ValuePrinters\PersonLink;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use Nette\Utils\Html;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -41,18 +41,17 @@ class PersonsGrid extends BaseGrid {
         $this->pairs = $pairs;
     }
 
+    protected function getData(): IDataSource {
+        return new NDataSource($this->trunkPersons);
+    }
+
     /**
-     * @param \AuthenticatedPresenter $presenter
+     * @param Presenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
-
-        /***** data ****/
-
-        $dataSource = new NDataSource($this->trunkPersons);
-        $this->setDataSource($dataSource);
 
         /***** columns ****/
 
@@ -120,9 +119,10 @@ class PersonsGrid extends BaseGrid {
 
     /**
      * @param ModelPerson $person
-     * @return Html
+     * @return string
      */
     private function renderPerson(ModelPerson $person) {
-        return (new PersonLink($this->getPresenter()))($person);
+        return $person->getFullName();
+        // return (new PersonLink($this->getPresenter()))($person);
     }
 }

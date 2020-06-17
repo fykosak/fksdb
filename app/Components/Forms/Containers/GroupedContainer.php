@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Containers;
 
-
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\ControlGroup;
 use Nette\Forms\Form;
@@ -20,7 +20,7 @@ class GroupedContainer extends Container {
      */
     private $groups = [];
     /**
-     * @var
+     * @var mixed
      */
     private $prefix;
 
@@ -72,7 +72,8 @@ class GroupedContainer extends Container {
 //    }
 
     /**
-     * @param $obj
+     * @param IComponent $obj
+     * @return void
      */
     protected function attached($obj) {
         parent::attached($obj);

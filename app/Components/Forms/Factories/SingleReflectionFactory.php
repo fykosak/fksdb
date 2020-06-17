@@ -3,6 +3,8 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
+use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use Nette\Forms\Controls\BaseControl;
 use Nette\InvalidStateException;
@@ -25,9 +27,6 @@ abstract class SingleReflectionFactory {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    /**
-     * @return string
-     */
     abstract protected function getTableName(): string;
 
     /**
@@ -37,7 +36,7 @@ abstract class SingleReflectionFactory {
      * @throws \Exception
      */
     protected function loadFactory(string $fieldName): AbstractRow {
-        return $this->tableReflectionFactory->loadService($this->getTableName(), $fieldName);
+        return $this->tableReflectionFactory->loadRowFactory($this->getTableName() . '.' . $fieldName);
     }
 
     /**
@@ -47,7 +46,7 @@ abstract class SingleReflectionFactory {
      * @throws \Exception
      */
     public function createField(string $fieldName, ...$args): BaseControl {
-        return $this->loadFactory($fieldName)->createField();
+        return $this->loadFactory($fieldName)->createField(...$args);
     }
 
     /**
@@ -63,5 +62,58 @@ abstract class SingleReflectionFactory {
             $container->addComponent($control, $field);
         }
         return $container;
+    }
+
+    /**
+     * @param array $fields
+     * @param FieldLevelPermission $userPermissions
+     * @return ModelContainer
+     * @throws \Exception
+     */
+    public function createContainerWithMetadata(array $fields, FieldLevelPermission $userPermissions): ModelContainer {
+        $container = new ModelContainer();
+        foreach ($fields as $field => $metadata) {
+            $control = $this->createField($field);
+
+            $factory = $this->loadFactory($field);
+            $canWrite = $factory->hasWritePermissions($userPermissions->write);
+            $canRead = $factory->hasReadPermissions($userPermissions->read);
+            if ($control instanceof IWriteOnly) {
+                $control->setWriteOnly(!$canRead);
+            } elseif ($canRead) {
+// do nothing
+            } else {
+                continue;
+            }
+            $control->setDisabled(!$canWrite);
+
+            $this->appendMetadata($control, $metadata);
+            $container->addComponent($control, $field);
+        }
+        return $container;
+    }
+
+    /**
+     * @param BaseControl $control
+     * @param array $metadata
+     * @return void
+     */
+    protected function appendMetadata(BaseControl $control, array $metadata) {
+        foreach ($metadata as $key => $value) {
+            switch ($key) {
+                case 'required':
+                    $control->setRequired($value);
+                    break;
+                case 'caption':
+                    if ($value) {
+                        $control->caption = $value;
+                    }
+                    break;
+                case 'description':
+                    if ($value) {
+                        $control->setOption('description', $value);
+                    }
+            }
+        }
     }
 }

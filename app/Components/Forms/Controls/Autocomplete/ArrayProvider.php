@@ -50,11 +50,7 @@ class ArrayProvider implements IFilteredDataProvider {
         return $result;
     }
 
-    /**
-     * @param mixed $id
-     * @return string
-     */
-    public function getItemLabel($id): string {
+    public function getItemLabel(int $id): string {
         return $this->labelById[$id];
     }
 

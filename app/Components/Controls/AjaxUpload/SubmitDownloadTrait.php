@@ -61,8 +61,6 @@ trait SubmitDownloadTrait {
         }
         $response = new FileResponse($filename, $submit->getTask()->getFQName() . '-uploaded.pdf', 'application/pdf');
         $this->getPresenter()->sendResponse($response);
-
-        die();
     }
 
     /**
@@ -87,7 +85,6 @@ trait SubmitDownloadTrait {
 
         $response = new FileResponse($filename, $submit->getTask()->getFQName() . '-corrected.pdf', 'application/pdf');
         $this->getPresenter()->sendResponse($response);
-        die();
     }
 
     /**

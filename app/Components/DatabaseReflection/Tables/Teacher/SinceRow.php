@@ -26,9 +26,6 @@ class SinceRow extends AbstractTeacherRow {
         return (new DatePrinter(_('__date_format')))($model->since);
     }
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Teaches since');
     }

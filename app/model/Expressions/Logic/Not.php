@@ -12,7 +12,7 @@ use FKSDB\Expressions\EvaluatedExpression;
 class Not extends EvaluatedExpression {
 
     /**
-     * @var
+     * @var mixed
      */
     private $expression;
 

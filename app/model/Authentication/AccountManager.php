@@ -34,7 +34,7 @@ class AccountManager {
      */
     private $recoveryExpiration = '+1 day';
     /**
-     * @var
+     * @var mixed
      */
     private $emailFrom;
     /** @var ServiceEmailMessage */
@@ -68,6 +68,7 @@ class AccountManager {
 
     /**
      * @param $invitationExpiration
+     * @return void
      */
     public function setInvitationExpiration($invitationExpiration) {
         $this->invitationExpiration = $invitationExpiration;
@@ -82,17 +83,22 @@ class AccountManager {
 
     /**
      * @param $recoveryExpiration
+     * @return void
      */
     public function setRecoveryExpiration($recoveryExpiration) {
         $this->recoveryExpiration = $recoveryExpiration;
     }
 
+    /**
+     * @return mixed
+     */
     public function getEmailFrom() {
         return $this->emailFrom;
     }
 
     /**
      * @param $emailFrom
+     * @return void
      */
     public function setEmailFrom($emailFrom) {
         $this->emailFrom = $emailFrom;
@@ -166,6 +172,7 @@ class AccountManager {
 
     /**
      * @param ModelLogin $login
+     * @return void
      */
     public function cancelRecovery(ModelLogin $login) {
         $this->serviceAuthToken->getTable()->where([

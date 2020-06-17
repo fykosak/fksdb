@@ -4,29 +4,26 @@ namespace FKSDB\Components\DatabaseReflection\ReferencedRows;
 
 use FKSDB\Components\DatabaseReflection\AbstractRow;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\PersonLink;
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\Models\IPersonReferencedModel;
-use Nette\Application\BadRequestException;
-use Nette\Application\UI\PresenterComponent;
+use FKSDB\ORM\Models\ModelPerson;
+use Nette\Application\LinkGenerator;
 use Nette\Utils\Html;
 
 /**
  * Class PersonLinkRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonLinkRow extends AbstractRow {
-
     /**
-     * @var PresenterComponent
+     * @var LinkGenerator
      */
     private $presenterComponent;
 
     /**
      * PersonLinkRow constructor.
-     * @param PresenterComponent $presenterComponent
+     * @param LinkGenerator $presenterComponent
      */
-    public function __construct(PresenterComponent $presenterComponent) {
+    public function __construct(LinkGenerator $presenterComponent) {
         $this->presenterComponent = $presenterComponent;
     }
 
@@ -39,14 +36,10 @@ class PersonLinkRow extends AbstractRow {
     }
 
     /**
-     * @param AbstractModelSingle $model
+     * @param AbstractModelSingle|ModelPerson $model
      * @return Html
-     * @throws BadRequestException
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        if (!$model instanceof IPersonReferencedModel) {
-            throw new BadTypeException(IPersonReferencedModel::class, $model);
-        }
-        return (new PersonLink($this->presenterComponent))($model->getPerson());
+        return (new PersonLink($this->presenterComponent))($model);
     }
 }

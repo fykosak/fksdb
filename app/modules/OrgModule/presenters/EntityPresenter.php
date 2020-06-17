@@ -3,7 +3,7 @@
 namespace OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Exceptions\NotFoundException;
+use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use Nette\Application\BadRequestException;
@@ -40,10 +40,9 @@ abstract class EntityPresenter extends BasePresenter {
     }
 
     /**
-     * @param $id
      * @throws BadRequestException
      */
-    public function authorizedEdit($id) {
+    public function authorizedEdit() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModel(), 'edit', $this->getSelectedContest()));
     }
 
@@ -67,8 +66,9 @@ abstract class EntityPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function renderEdit($id) {
+        /** @var FormControl $component */
         $component = $this->getComponent(self::COMP_EDIT_FORM);
-        $form = ($component instanceof FormControl) ? $component->getForm() : $component;
+        $form = $component->getForm();
         $this->setDefaults($this->getModel(), $form);
     }
 
@@ -76,8 +76,9 @@ abstract class EntityPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function renderCreate() {
+        /** @var FormControl $component */
         $component = $this->getComponent(self::COMP_CREATE_FORM);
-        $form = ($component instanceof FormControl) ? $component->getForm() : $component;
+        $form = $component->getForm();
         $this->setDefaults($this->getModel(), $form);
     }
 
@@ -91,26 +92,10 @@ abstract class EntityPresenter extends BasePresenter {
         }
         return $this->model;
     }
-
-    /**
-     * @param int $id
-     * @return AbstractModelSingle|IModel
-     * @throws BadRequestException
-     */
-    public function getModel2(int $id = null) {
-        if (!$this->model) {
-            $model = $this->loadModel($id ?: $this->id);
-            if (!$model) {
-                throw new NotFoundException('Neexistující model.');
-            }
-            $this->model = $model;
-        }
-        return $this->model;
-    }
-
     /**
      * @param IModel|null $model
      * @param Form $form
+     * @return void
      */
     protected function setDefaults(IModel $model = null, Form $form) {
         if (!$model) {
@@ -125,18 +110,12 @@ abstract class EntityPresenter extends BasePresenter {
      */
     abstract protected function loadModel($id);
 
-    /**
-     * @return mixed
-     */
-    abstract protected function createComponentEditComponent();
+    abstract protected function createComponentEditComponent(): FormControl;
+
+    abstract protected function createComponentCreateComponent(): FormControl;
 
     /**
-     * @return mixed
-     */
-    abstract protected function createComponentCreateComponent();
-
-    /**
-     * @return mixed
+     * @return BaseGrid
      */
     abstract protected function createComponentGrid();
 

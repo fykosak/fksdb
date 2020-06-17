@@ -5,8 +5,10 @@ namespace FKSDB\Components\Forms\Controls;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
+use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\Utils\Promise;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
@@ -64,12 +66,11 @@ class ReferencedId extends HiddenField {
      * @param IReferencedSetter $referencedSetter
      */
     public function __construct(IService $service, IReferencedHandler $handler, IReferencedSetter $referencedSetter) {
-        parent::__construct();
-        $this->monitor(Form::class);
-
         $this->service = $service;
         $this->handler = $handler;
         $this->referencedSetter = $referencedSetter;
+        parent::__construct();
+        $this->monitor(Form::class);
     }
 
     /**
@@ -81,6 +82,7 @@ class ReferencedId extends HiddenField {
 
     /**
      * @param ReferencedContainer $referencedContainer
+     * @return void
      */
     public function setReferencedContainer(ReferencedContainer $referencedContainer) {
         $this->referencedContainer = $referencedContainer;
@@ -124,6 +126,7 @@ class ReferencedId extends HiddenField {
 
     /**
      * @param $modelCreated
+     * @return void
      */
     public function setModelCreated($modelCreated) {
         $this->modelCreated = $modelCreated;
@@ -137,37 +140,39 @@ class ReferencedId extends HiddenField {
     }
 
     /**
-     * @param $pvalue
+     * @param string|int|IModel|AbstractModelSingle|ModelPerson $pValue
      * @param bool $force
-     * @return HiddenField|void
+     * @return HiddenField
      */
-    public function setValue($pvalue, $force = false) {
-        $isPromise = ($pvalue === self::VALUE_PROMISE);
-        if (!($pvalue instanceof IModel) && !$isPromise) {
-            $pvalue = $this->service->findByPrimary($pvalue);
+    public function setValue($pValue, bool $force = false) {
+        $isPromise = ($pValue === self::VALUE_PROMISE);
+        if (!($pValue instanceof IModel) && !$isPromise) {
+            $pValue = $this->service->findByPrimary($pValue);
         } elseif ($isPromise) {
-            $pvalue = $this->service->createNew();
-        } elseif ($pvalue instanceof IModel) {
-            $this->model = $pvalue;
+            $pValue = $this->service->createNew();
+        } elseif ($pValue instanceof IModel) {
+            $this->model = $pValue;
         }
-        $container = $this->referencedContainer;
-        if (!$pvalue) {
-            $container->setSearchButton(true);
-            $container->setClearButton(false);
-        } else {
-            $container->setSearchButton(false);
-            $container->setClearButton(true);
+        if ($this->referencedContainer) {
+            $container = $this->referencedContainer;
+            if (!$pValue) {
+                $container->setSearchButton(true);
+                $container->setClearButton(false);
+            } else {
+                $container->setSearchButton(false);
+                $container->setClearButton(true);
+            }
+            $this->referencedSetter->setModel($container, $pValue, $force ? IReferencedSetter::MODE_FORCE : IReferencedSetter::MODE_NORMAL);
         }
-        $this->referencedSetter->setModel($container, $pvalue, $force);
 
         if ($isPromise) {
             $value = self::VALUE_PROMISE;
-        } elseif ($pvalue instanceof IModel) {
-            $value = $pvalue->getPrimary();
+        } elseif ($pValue instanceof IModel) {
+            $value = $pValue->getPrimary();
         } else {
-            $value = $pvalue;
+            $value = $pValue;
         }
-        parent::setValue($value);
+        return parent::setValue($value);
     }
 
     /**
@@ -188,7 +193,7 @@ class ReferencedId extends HiddenField {
 
     public function rollback() {
         if ($this->getModelCreated()) {
-            $this->referencedSetter->setModel($this->referencedContainer, NULL, IReferencedSetter::MODE_ROLLBACK);
+            $this->referencedSetter->setModel($this->referencedContainer, null, IReferencedSetter::MODE_ROLLBACK);
             if (parent::getValue()) {
                 parent::setValue(self::VALUE_PROMISE);
             }
@@ -199,7 +204,7 @@ class ReferencedId extends HiddenField {
      * @param bool $value
      * @return BaseControl|void
      */
-    public function setDisabled($value = TRUE) {
+    public function setDisabled($value = true) {
         $this->referencedContainer->setDisabled($value);
     }
 
@@ -207,9 +212,9 @@ class ReferencedId extends HiddenField {
      * @return void
      */
     private function createPromise() {
-        $referencedId = $this->getValue();
         $values = $this->referencedContainer->getValues();
-        $promise = new Promise(function () use ($referencedId, $values) {
+        $promise = new Promise(function () use ($values) {
+            $referencedId = $this->getValue(false);
             try {
                 if ($referencedId === self::VALUE_PROMISE) {
 
@@ -235,6 +240,7 @@ class ReferencedId extends HiddenField {
                 $this->rollback();
             }
         });
+        $referencedId = $this->getValue();
         $this->setValue($referencedId);
         $this->setPromise($promise);
     }

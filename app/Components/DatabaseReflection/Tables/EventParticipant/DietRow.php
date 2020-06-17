@@ -6,7 +6,8 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 
 /**
  * Class DietRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
+ * TODO to textRow
  */
 class DietRow extends AbstractParticipantRow {
     use DefaultPrinterTrait;

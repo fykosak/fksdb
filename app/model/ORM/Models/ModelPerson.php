@@ -33,6 +33,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * (so far, there's not support for multiple login in DB schema)
      *
      *
+     * @return ModelLogin|null
      */
     public function getLogin() {
         $logins = $this->related(DbNames::TAB_LOGIN, 'person_id');
@@ -69,7 +70,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @param bool $extrapolated
      * @return ModelPersonHistory|null
      */
-    public function getHistory($acYear, $extrapolated = false) {
+    public function getHistory(int $acYear, bool $extrapolated = false) {
         $history = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')
             ->where('ac_year', $acYear)->fetch();
         if ($history) {
@@ -389,10 +390,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $this->related(DbNames::TAB_PAYMENT, 'person_id');
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return GroupedSelection
-     */
     public function getPaymentsForEvent(ModelEvent $event): GroupedSelection {
         return $this->getPayments()->where('event_id', $event->event_id);
     }

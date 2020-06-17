@@ -4,12 +4,15 @@ namespace FKSDB\Components\Grids\DataTesting;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\DataTesting\DataTestingFactory;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\DataTesting\TestsLogger;
 use FKSDB\DataTesting\TestLog;
 use FKSDB\Exceptions\NotImplementedException;
+use Nette\Application\UI\Presenter;
 use Nette\Utils\Html;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
@@ -37,19 +40,21 @@ class PersonsGrid extends BaseGrid {
         $this->dataTestingFactory = $dataTestingFactory;
     }
 
+    protected function getData(): IDataSource {
+        $persons = $this->servicePerson->getTable();
+        return new NDataSource($persons);
+    }
+
     /**
-     * @param \AuthenticatedPresenter $presenter
+     * @param Presenter $presenter
+     * @return void
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
+     * @throws BadTypeException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
 
-        $persons = $this->servicePerson->getTable();
-        $dataSource = new NDataSource($persons);
-        $this->setDataSource($dataSource);
-
-        $this->addColumns(['referenced.person_link']);
+        $this->addColumns(['person.person_link']);
 
         foreach ($this->dataTestingFactory->getTests('person') as $test) {
             $this->addColumn($test->getAction(), $test->getTitle())->setRenderer(function ($person) use ($test) {

@@ -148,17 +148,17 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
         $container->setOption('modifiabilityResolver', $modifiabilityResolver);
         $container->setOption('visibilityResolver', $visibilityResolver);
         foreach ($fieldsDefinition as $sub => $fields) {
-            $subcontainer = new ContainerWithOptions();
+            $subContainer = new ContainerWithOptions();
             if ($sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
-                $subcontainer->setOption('showGroup', true);
-                $subcontainer->setOption('label', _('Doručovací adresa'));
+                $subContainer->setOption('showGroup', true);
+                $subContainer->setOption('label', _('Doručovací adresa'));
             } elseif ($sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
-                $subcontainer->setOption('showGroup', true);
+                $subContainer->setOption('showGroup', true);
                 $label = _('Trvalá adresa');
                 if (isset($container[ReferencedPersonHandler::POST_CONTACT_DELIVERY])) {
                     $label .= ' ' . _('(je-li odlišná od doručovací)');
                 }
-                $subcontainer->setOption('label', $label);
+                $subContainer->setOption('label', $label);
             }
             foreach ($fields as $fieldName => $metadata) {
                 $control = $this->createField($sub, $fieldName, $acYear, $hiddenField, $metadata);
@@ -184,9 +184,9 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
                         }, _('S e-mailem %value byla nalezena (formálně) jiná (ale pravděpodobně duplicitní) osoba, a tak ve formuláři nahradila původní.'));
                 }
 
-                $subcontainer->addComponent($control, $fieldName);
+                $subContainer->addComponent($control, $fieldName);
             }
-            $container->addComponent($subcontainer, $sub);
+            $container->addComponent($subContainer, $sub);
         }
 
         return [
@@ -202,7 +202,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param string $mode
      * @return void
      */
-    public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL) {
+    public function setModel(ReferencedContainer $container, IModel $model = null, string $mode = self::MODE_NORMAL) {
         $acYear = $container->getOption('acYear');
         /** @var IModifiabilityResolver $modifiabilityResolver */
         $modifiabilityResolver = $container->getOption('modifiabilityResolver');
@@ -212,12 +212,12 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
         $resolution = $model ? $modifiabilityResolver->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
         $visible = $model ? $visibilityResolver->isVisible($model) : true;
         $submittedBySearch = $container->isSearchSubmitted();
-        $force = ($mode == self::MODE_FORCE);
-        if ($mode == self::MODE_ROLLBACK) {
+        $force = ($mode === self::MODE_FORCE);
+        if ($mode === self::MODE_ROLLBACK) {
             $model = null;
         }
-
         $container->getReferencedId()->getHandler()->setResolution($resolution);
+
         $container->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model ? $model->getFullName() : null);
         foreach ($container->getComponents() as $sub => $subcontainer) {
             if (!$subcontainer instanceof Container) {
@@ -269,16 +269,15 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
     }
 
     /**
-     * @param $sub
-     * @param $fieldName
-     * @param $acYear
+     * @param string $sub
+     * @param string $fieldName
+     * @param int $acYear
      * @param HiddenField $hiddenField
      * @param array $metadata
-     * @return AddressContainer|BaseControl|null
-     * @throws \Exception
+     * @return AddressContainer|BaseControl
      * @throws \Exception
      */
-    public function createField($sub, $fieldName, $acYear, HiddenField $hiddenField, array $metadata) {
+    public function createField(string $sub, string $fieldName, int $acYear, HiddenField $hiddenField, array $metadata) {
         if (in_array($sub, [
             ReferencedPersonHandler::POST_CONTACT_DELIVERY,
             ReferencedPersonHandler::POST_CONTACT_PERMANENT,
@@ -325,15 +324,13 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param array $metadata
      * @return void
      */
-    protected function appendMetadata(BaseControl &$control, HiddenField $hiddenField, string $fieldName, array $metadata) {
+    protected function appendMetadata(BaseControl $control, HiddenField $hiddenField, string $fieldName, array $metadata) {
         foreach ($metadata as $key => $value) {
             switch ($key) {
                 case 'required':
                     if ($value) {
-                        $conditioned = $control;
-                        if ($hiddenField) {
-                            $conditioned = $control->addConditionOn($hiddenField, Form::FILLED);
-                        }
+                        $conditioned = $control->addConditionOn($hiddenField, Form::FILLED);
+
                         if ($fieldName == 'agreed') { // NOTE: this may need refactoring when more customization requirements occurre
                             $conditioned->addRule(Form::FILLED, _('Bez souhlasu nelze bohužel pokračovat.'));
                         } else {
@@ -370,10 +367,10 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
     }
 
     /**
-     * @param $component
+     * @param mixed $component
      * @return bool
      */
-    protected function isWriteOnly($component) {
+    protected function isWriteOnly($component): bool {
         if ($component instanceof IWriteOnly) {
             return true;
         } elseif ($component instanceof Container) {
@@ -410,34 +407,23 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
         return $control;
     }
 
-    /**
-     * @param $searchType
-     * @return Closure
-     */
-    protected function createSearchCallback($searchType) {
+    protected function createSearchCallback(string $searchType): Closure {
         $service = $this->servicePerson;
         switch ($searchType) {
             case self::SEARCH_EMAIL:
                 return function ($term) use ($service) {
                     return $service->findByEmail($term);
                 };
-
-                break;
             case self::SEARCH_ID:
                 return function ($term) use ($service) {
                     return $service->findByPrimary($term);
                 };
-                break;
             default:
                 throw new InvalidArgumentException(_('Unknown search type'));
         }
     }
 
-    /**
-     * @param $searchType
-     * @return Closure
-     */
-    protected function createTermToValuesCallback($searchType) {
+    protected function createTermToValuesCallback(string $searchType): Closure {
         switch ($searchType) {
             case self::SEARCH_EMAIL:
                 return function ($term) {
@@ -453,27 +439,20 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
         }
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param $sub
-     * @param $field
-     * @param $acYear
-     * @return bool
-     */
-    final public function isFilled(ModelPerson $person, $sub, $field, $acYear) {
+    final public function isFilled(ModelPerson $person, string $sub, string $field, int $acYear): bool {
         $value = $this->getPersonValue($person, $sub, $field, $acYear, self::TARGET_VALIDATION);
         return !($value === null || $value === '');
     }
 
     /**
      * @param ModelPerson|null $person
-     * @param $sub
-     * @param $field
-     * @param $acYear
+     * @param string $sub
+     * @param string $field
+     * @param int $acYear
      * @param $options
      * @return bool|ModelPostContact|mixed|null
      */
-    protected function getPersonValue(ModelPerson $person = null, $sub, $field, $acYear, $options) {
+    protected function getPersonValue(ModelPerson $person = null, string $sub, string $field, int $acYear, $options) {
         if (!$person) {
             return null;
         }

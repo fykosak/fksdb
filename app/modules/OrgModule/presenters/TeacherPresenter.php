@@ -2,49 +2,26 @@
 
 namespace OrgModule;
 
-use Exception;
-use FKSDB\Components\Forms\Factories\SchoolFactory;
-use FKSDB\Components\Forms\Factories\TeacherFactory;
+use FKSDB\Components\Controls\Entity\Teacher\TeacherForm;
 use FKSDB\Components\Grids\TeachersGrid;
+use FKSDB\EntityTrait;
 use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
-use Nette;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Form;
-use Persons\ExtendedPersonHandler;
+use Nette\Application\UI\Control;
 
 /**
  * Class TeacherPresenter
- * *
- * @method ModelTeacher getModel2()
- * @method ModelTeacher getModel()
+ * @author Michal Červeňák <miso@fykos.cz>
+ * @method ModelTeacher getEntity()
  */
-class TeacherPresenter extends ExtendedPersonPresenter {
-    /**
-     * TeacherPresenter constructor.
-     * @param Nette\DI\Container|NULL $context
-     */
-    public function __construct(Nette\DI\Container $context = NULL) {
-        $this->sendEmail = false;
-        parent::__construct($context);
-    }
-
-    /** @var string */
-    protected $fieldsDefinition = 'adminTeacher';
+class TeacherPresenter extends BasePresenter {
+    use EntityTrait;
 
     /**
      * @var ServiceTeacher
      */
     private $serviceTeacher;
-
-    /**
-     * @var TeacherFactory
-     */
-    private $teacherFactory;
-    /**
-     * @var SchoolFactory
-     */
-    private $schoolFactory;
 
     /**
      * @param ServiceTeacher $serviceTeacher
@@ -54,28 +31,8 @@ class TeacherPresenter extends ExtendedPersonPresenter {
         $this->serviceTeacher = $serviceTeacher;
     }
 
-    /**
-     * @param TeacherFactory $teacherFactory
-     * @return void
-     */
-    public function injectTeacherFactory(TeacherFactory $teacherFactory) {
-        $this->teacherFactory = $teacherFactory;
-    }
-
-    /**
-     * @param SchoolFactory $schoolFactory
-     * @return void
-     */
-    public function injectSchoolFactory(SchoolFactory $schoolFactory) {
-        $this->schoolFactory = $schoolFactory;
-    }
-
-    /**
-     * @throws BadRequestException
-     */
     public function titleEdit() {
-        $model = $this->getModel2();
-        $this->setTitle(sprintf(_('Edit teacher %s'), $model->getPerson()->getFullName()), 'fa fa-pencil');
+        $this->setTitle(sprintf(_('Edit teacher %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-pencil');
     }
 
     public function titleCreate() {
@@ -90,56 +47,46 @@ class TeacherPresenter extends ExtendedPersonPresenter {
         $this->setTitle(_('Teacher detail'), 'fa fa-graduation-cap');
     }
 
+    public function renderDetail() {
+        $this->template->model = $this->getEntity();
+    }
+
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
+    public function actionEdit() {
+        $this->traitActionEdit();
+    }
+
     protected function createComponentGrid(): TeachersGrid {
         return new TeachersGrid($this->getContext());
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     * @throws Exception
-     */
-    protected function appendExtendedContainer(Form $form) {
-        $container = $this->teacherFactory->createTeacher();
-        $schoolContainer = $this->schoolFactory->createSchoolSelect();
-        $container->addComponent($schoolContainer, 'school_id');
-        $form->addComponent($container, ExtendedPersonHandler::CONT_MODEL);
+    protected function createComponentCreateForm(): Control {
+        return new TeacherForm($this->getContext(), true);
+    }
+
+    protected function createComponentEditForm(): Control {
+        return new TeacherForm($this->getContext(), false);
     }
 
     /**
+     * @param $resource
+     * @param string $privilege
+     * @return bool
      * @throws BadRequestException
      */
-    public function renderDetail() {
-        $this->template->model = $this->getModel2();
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 
-    /**
-     * @return ServiceTeacher
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServiceTeacher {
         return $this->serviceTeacher;
     }
 
-    public function messageCreate(): string {
-        return _('Teacher %s has been created.');
-    }
-
-    public function messageEdit(): string {
-        return _('Teacher has been edited');
-    }
-
-    public function messageError(): string {
-        return _('Error during creating new teacher.');
-    }
-
-    public function messageExists(): string {
-        return _('Teacher already exist');
-    }
-
-    /**
-     * @inheritDoc
-     */
     protected function getModelResource(): string {
         return ModelTeacher::RESOURCE_ID;
     }
+
 }

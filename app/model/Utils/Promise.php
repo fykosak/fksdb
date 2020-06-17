@@ -12,6 +12,7 @@ use Nette\SmartObject;
  */
 class Promise {
     use SmartObject;
+
     /**
      * @var callable
      */
@@ -21,7 +22,7 @@ class Promise {
      */
     private $called = false;
     /**
-     * @var
+     * @var mixed
      */
     private $value;
 

@@ -1,31 +1,29 @@
-$(function() {
-    $('.sqlConsole').each(function(index, el) {
-        var codeMirror = CodeMirror.fromTextArea(el,
-                {
-                    mode: 'text/x-mysql',
-                    indentWithTabs: true,
-                    smartIndent: true,
-                    lineNumbers: true,
-                    matchBrackets: true,
-                    autofocus: true
-                });
+$(() => {
+    document.querySelectorAll('.sqlConsole').forEach((el) => {
+        CodeMirror.fromTextArea(el,
+            {
+                mode: 'text/x-mysql',
+                indentWithTabs: true,
+                smartIndent: true,
+                lineNumbers: true,
+                matchBrackets: true,
+                autofocus: true
+            });
     });
-    $('.syntax-sql').each(function(index, el) {
-        $el = $(el);
-        var code = $el.html();
-        $el.empty();
+    document.querySelectorAll('.syntax-sql').forEach((el) => {
+        const code = el.innerHTML;
+        el.innerHTML = '';
 
         CodeMirror(el, {
             value: code,
             mode: 'text/x-mysql',
-            lineNumbers: !$el.is('.inline'),
+            lineNumbers: true,
             readOnly: true,
-                                indentWithTabs: true,
-                    smartIndent: true,
-                    matchBrackets: true,
-                    autofocus: true
+            indentWithTabs: true,
+            smartIndent: true,
+            matchBrackets: true,
+            autofocus: true
         });
-        
     });
 });
 

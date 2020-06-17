@@ -8,13 +8,11 @@ use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Utils\Html;
 
 /**
- * Class TShirtColor
- * *
+ * Class TShirtColorRow
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TShirtColorRow extends AbstractParticipantRow {
-    /**
-     * @return string
-     */
+
     public function getTitle(): string {
         return _('T-shirt color');
     }

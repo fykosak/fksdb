@@ -13,6 +13,7 @@ use Nette\SmartObject;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @deprecated
  */
 abstract class AbstractEventOrgAssertion {
 
@@ -35,12 +36,11 @@ abstract class AbstractEventOrgAssertion {
 
     /**
      * AbstractEventOrgAssertion constructor.
-     * @param $eventTypeId
      * @param $parameterName
      * @param IUserStorage $user
      * @param Context $connection
      */
-    public function __construct($eventTypeId, string $parameterName, IUserStorage $user, Context $connection) {
+    public function __construct(string $parameterName, IUserStorage $user, Context $connection) {
         $this->parameterName = $parameterName;
         $this->user = $user;
         $this->connection = $connection;

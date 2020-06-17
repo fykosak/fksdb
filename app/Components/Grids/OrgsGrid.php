@@ -2,17 +2,17 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\ModelOrg;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceOrg;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
-use OrgModule\OrgPresenter;
 use SQL\SearchableDataSource;
 
 /**
@@ -25,30 +25,31 @@ class OrgsGrid extends BaseGrid {
      * @var ServiceOrg
      */
     private $serviceOrg;
+    /**
+     * @var ModelContest
+     */
+    private $contest;
 
     /**
      * OrgsGrid constructor.
      * @param Container $container
+     * @param ModelContest $contest
      */
-    public function __construct(Container $container) {
+    public function __construct(Container $container, ModelContest $contest) {
         parent::__construct($container);
-        $this->serviceOrg = $container->getByType(ServiceOrg::class);
+        $this->contest = $contest;
     }
 
     /**
-     * @param OrgPresenter $presenter
-     * @throws BadRequestException
-     * @throws InvalidLinkException
-     * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
+     * @param ServiceOrg $serviceOrg
+     * @return void
      */
-    protected function configure($presenter) {
-        parent::configure($presenter);
-        //
-        // data
-        //
-        $orgs = $this->serviceOrg->getTable()->where('contest_id', $presenter->getSelectedContest()->contest_id)
+    public function injectServiceOrg(ServiceOrg $serviceOrg) {
+        $this->serviceOrg = $serviceOrg;
+    }
+
+    protected function getData(): IDataSource {
+        $orgs = $this->serviceOrg->getTable()->where('contest_id', $this->contest->contest_id)
             ->select('org.*, person.family_name AS display_name');
 
         $dataSource = new SearchableDataSource($orgs);
@@ -59,14 +60,28 @@ class OrgsGrid extends BaseGrid {
                             LIKE CONCAT(\'%\', ? , \'%\')', $token);
             }
         });
-        $this->setDataSource($dataSource);
+        return $dataSource;
+    }
+
+    /**
+     * @param Presenter $presenter
+     * @return void
+     * @throws BadTypeException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
+     * @throws InvalidLinkException
+     */
+    protected function configure(Presenter $presenter) {
+        parent::configure($presenter);
+
         $this->setDefaultOrder('since DESC');
 
         $this->addColumns([
-            'referenced.person_name',
-            DbNames::TAB_ORG . '.since',
-            DbNames::TAB_ORG . '.until',
-            DbNames::TAB_ORG . '.role',
+            'person.full_name',
+            'org.since',
+            'org.until',
+            'org.role',
         ]);
 
         $this->addLink('org.edit', true);
@@ -77,9 +92,5 @@ class OrgsGrid extends BaseGrid {
                 ->setLabel(_('Založit organizátora'))
                 ->setLink($this->getPresenter()->link('create'));
         }
-    }
-
-    protected function getModelClassName(): string {
-        return ModelOrg::class;
     }
 }

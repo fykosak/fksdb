@@ -2,21 +2,19 @@
 
 namespace CommonModule;
 
-use FKSDB\Components\Controls\Entity\School\CreateForm;
-use FKSDB\Components\Controls\Entity\School\EditForm;
+use FKSDB\Components\Controls\Entity\School\SchoolForm;
 use FKSDB\Components\Grids\SchoolsGrid;
 use FKSDB\EntityTrait;
-use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
+use Nette\Security\IResource;
 
 /**
  * Class SchoolPresenter
  * *
  * @method ModelSchool getEntity()
- * @method ModelSchool loadEntity(int $id)
  */
 class SchoolPresenter extends BasePresenter {
     use EntityTrait;
@@ -41,63 +39,55 @@ class SchoolPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
+     * @return void
+     */
+    public function titleEdit() {
+        $this->setTitle(sprintf(_('Úprava školy %s'), $this->getEntity()->name_abbrev), 'fa fa-pencil');
+    }
+
+    /**
+     * @return void
+     */
+    public function titleDetail() {
+        $this->setTitle(sprintf(_('Detail of school %s'), $this->getEntity()->name_abbrev), 'fa fa-university');
+    }
+
+    /**
      * @throws BadRequestException
      */
-    public function titleEdit(int $id) {
-        $this->setTitle(sprintf(_('Úprava školy %s'), $this->loadEntity($id)->name_abbrev), 'fa fa-pencil');
+    public function actionEdit() {
+        $this->traitActionEdit();
     }
 
     /**
-     * @param int $id
-     * @throws BadRequestException
+     * @return void
      */
-    public function titleDetail(int $id) {
-        $this->setTitle(sprintf(_('Detail of school %s'), $this->loadEntity($id)->name_abbrev), 'fa fa-university');
-    }
-
-    /**
-     * @inheritDoc
-     */
-    protected function traitIsAuthorized($resource, string $privilege): bool {
-        return $this->isAnyContestAuthorized($resource, $privilege);
-    }
-
-    /**
-     * @param int $id
-     * @throws BadRequestException
-     */
-    public function actionEdit(int $id) {
-        $this->traitActionEdit($id);
-    }
-
-    /**
-     * @param int $id
-     * @throws BadRequestException
-     */
-    public function renderDetail(int $id) {
-        $this->template->model = $this->loadEntity($id);
-    }
-
-    /**
-     * @return IService|ServiceSchool
-     */
-    protected function getORMService() {
-        return $this->serviceSchool;
+    public function renderDetail() {
+        $this->template->model = $this->getEntity();
     }
 
     protected function createComponentGrid(): SchoolsGrid {
         return new SchoolsGrid($this->getContext());
     }
 
-    /** @inheritDoc */
-    public function createComponentEditForm(): Control {
-        return new EditForm($this->getContext());
+    protected function createComponentEditForm(): Control {
+        return new SchoolForm($this->getContext(), false);
     }
 
-    /** @inheritDoc */
-    public function createComponentCreateForm(): Control {
-        return new CreateForm($this->getContext());
+    protected function createComponentCreateForm(): Control {
+        return new SchoolForm($this->getContext(), true);
     }
 
+    /**
+     * @param IResource|string $resource
+     * @param string $privilege
+     * @return bool
+     */
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return $this->isAnyContestAuthorized($resource, $privilege);
+    }
+
+    protected function getORMService(): ServiceSchool {
+        return $this->serviceSchool;
+    }
 }

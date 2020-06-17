@@ -22,7 +22,7 @@ use Nette\Utils\JsonException;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
- * @method \AuthenticatedPresenter|\BasePresenter getPresenter($need = TRUE)
+ * @method \AuthenticatedPresenter|\BasePresenter getPresenter($need = true)
  */
 class ApplicationComponent extends BaseComponent {
 
@@ -118,7 +118,7 @@ class ApplicationComponent extends BaseComponent {
     }
 
     /**
-     * @param $mode
+     * @param string $mode
      * @return void
      * @throws BadRequestException
      */
@@ -128,7 +128,7 @@ class ApplicationComponent extends BaseComponent {
         $this->template->primaryModel = $this->holder->getPrimaryHolder()->getModel();
         $this->template->primaryMachine = $this->getMachine()->getPrimaryMachine();
         $this->template->canEdit = $this->canEdit();
-
+        $this->template->state = $this->holder->getPrimaryHolder()->getModelState();
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ApplicationComponent.inline.latte');
         $this->template->render();
     }
@@ -170,8 +170,8 @@ class ApplicationComponent extends BaseComponent {
          */
         $primaryMachine = $this->getMachine()->getPrimaryMachine();
         $transitionSubmit = null;
-        foreach ($primaryMachine->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), BaseMachine::EXECUTABLE | BaseMachine::VISIBLE) as $transition) {
 
+        foreach ($primaryMachine->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), BaseMachine::EXECUTABLE | BaseMachine::VISIBLE) as $transition) {
             $transitionName = $transition->getName();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
 

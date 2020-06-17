@@ -121,7 +121,6 @@ class AjaxUpload extends ReactComponent {
                 $response->setCode(Response::S500_INTERNAL_SERVER_ERROR);
                 $response->addMessage(new ReactMessage(_('File is not Ok'), ILogger::ERROR));
                 $this->getPresenter()->sendResponse($response);
-                return;
             }
             // store submit
             $submit = $this->saveSubmitTrait($file, $task, $contestant);
@@ -150,7 +149,6 @@ class AjaxUpload extends ReactComponent {
         }
         $response->setMessages($logger->getMessages());
         $this->getPresenter()->sendResponse($response);
-        die();
     }
 
     /**

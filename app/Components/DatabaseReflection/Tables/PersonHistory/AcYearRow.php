@@ -10,7 +10,7 @@ use Nette\Forms\Controls\BaseControl;
 
 /**
  * Class AcYearRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class AcYearRow extends AbstractRow {
     use DefaultPrinterTrait;

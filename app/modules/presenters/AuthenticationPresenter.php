@@ -14,7 +14,6 @@ use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\UI\PageStyleContainer;
-use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
@@ -79,11 +78,6 @@ final class AuthenticationPresenter extends BasePresenter {
     private $accountManager;
 
     /**
-     * @var MailTemplateFactory
-     */
-    private $mailTemplateFactory;
-
-    /**
      * @var ServicePerson
      */
     protected $servicePerson;
@@ -133,14 +127,6 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @param MailTemplateFactory $mailTemplateFactory
-     * @return void
-     */
-    public function injectMailTemplateFactory(MailTemplateFactory $mailTemplateFactory) {
-        $this->mailTemplateFactory = $mailTemplateFactory;
-    }
-
-    /**
      * @param ServicePerson $servicePerson
      * @return void
      */
@@ -167,7 +153,6 @@ final class AuthenticationPresenter extends BasePresenter {
             ];
             $url = $this->link('//this', $params);
             $this->redirectUrl($url);
-            return;
         }
         // else: $subdomain == $subdomainAuth
         // -> check for the GSID parameter
@@ -256,9 +241,19 @@ final class AuthenticationPresenter extends BasePresenter {
     protected function createComponentLoginForm() {
         $form = new Form($this, 'loginForm');
         $form->addText('id', _('Přihlašovací jméno nebo email'))
-            ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'));
+            ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'))
+            ->getControlPrototype()->addAttributes([
+                'class' => 'top form-control',
+                'autofocus' => true,
+                'placeholder' => _('Přihlašovací jméno nebo email'),
+                'autocomplete' => 'username'
+            ]);
         $form->addPassword('password', _('Heslo'))
-            ->addRule(Form::FILLED, _('Zadejte heslo.'));
+            ->addRule(Form::FILLED, _('Zadejte heslo.'))->getControlPrototype()->addAttributes([
+                'class' => 'bottom mb-3 form-control',
+                'placeholder' => _('Heslo'),
+                'autocomplete' => 'current-password',
+            ]);
         $form->addSubmit('send', _('Přihlásit'));
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
         $form->onSuccess[] = function (Form $form) {
@@ -288,15 +283,13 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @param $form
+     * @param Form $form
      * @throws AbortException
      */
     private function loginFormSubmitted(Form $form) {
         try {
             $this->user->login($form['id']->value, $form['password']->value);
-            /**
-             * @var ModelLogin $login
-             */
+            /** @var ModelLogin $login */
             $login = $this->user->getIdentity();
             $this->loginBackLinkRedirect($login);
             $this->initialRedirect();
@@ -308,13 +301,9 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @param Form $form
      * @throws AbortException
-     */
-    /**
-     * @param Form $form
-     * @throws AbortException
      * @throws Exception
      */
-    public function recoverFormSubmitted(Form $form) {
+    private function recoverFormSubmitted(Form $form) {
         $connection = $this->serviceAuthToken->getConnection();
         try {
             $values = $form->getValues();

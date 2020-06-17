@@ -9,6 +9,7 @@ use FKSDB\Components\Controls\Inbox\SubmitCheckComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Controls\Inbox\InboxControl;
 use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\CoreModule\SeriesPresenter\{ISeriesPresenter, SeriesPresenterTrait};
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Models\ModelTaskContribution;
 use FKSDB\ORM\Services\ServicePerson;
@@ -25,7 +26,9 @@ use Nette\Security\Permission;
  * Class InboxPresenter
  * *
  */
-class InboxPresenter extends SeriesPresenter {
+class InboxPresenter extends BasePresenter implements ISeriesPresenter {
+
+    use SeriesPresenterTrait;
 
     const TASK_PREFIX = 'task';
 
@@ -83,35 +86,35 @@ class InboxPresenter extends SeriesPresenter {
     /* ***************** AUTH ***********************/
 
     /**
-     * @throws BadRequestException
+     * @return void
      */
     public function authorizedDefault() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
      */
     public function authorizedInbox() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
      */
     public function authorizedList() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'list', $this->getSelectedContest()));
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
      */
     public function authorizedHandout() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest()));
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
      */
     public function authorizedCorrected() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'corrected', $this->getSelectedContest()));
@@ -166,6 +169,7 @@ class InboxPresenter extends SeriesPresenter {
      */
     protected function startup() {
         parent::startup();
+        $this->seriesTraitStartup();
         $this->seriesTable->setContest($this->getSelectedContest());
         $this->seriesTable->setYear($this->getSelectedYear());
         $this->seriesTable->setSeries($this->getSelectedSeries());
@@ -210,6 +214,7 @@ class InboxPresenter extends SeriesPresenter {
         $control->getForm()->setDefaults($values);
 
     }
+
     /* ******************* COMPONENTS ******************/
 
     protected function createComponentInboxForm(): InboxControl {
@@ -240,23 +245,14 @@ class InboxPresenter extends SeriesPresenter {
         return $formControl;
     }
 
-    /**
-     * @return CorrectedControl
-     */
-    public function createComponentCorrectedFormControl(): CorrectedControl {
+    protected function createComponentCorrectedFormControl(): CorrectedControl {
         return new CorrectedControl($this->getContext(), $this->seriesTable);
     }
 
-    /**
-     * @return SubmitCheckComponent
-     */
     protected function createComponentCheckControl(): SubmitCheckComponent {
         return new SubmitCheckComponent($this->getContext(), $this->seriesTable);
     }
 
-    /**
-     * @return SubmitsPreviewControl
-     */
     protected function createComponentSubmitsTableControl(): SubmitsPreviewControl {
         return new SubmitsPreviewControl($this->getContext(), $this->seriesTable);
     }
@@ -276,7 +272,7 @@ class InboxPresenter extends SeriesPresenter {
         foreach ($this->seriesTable->getTasks() as $task) {
             $service->getTable()->where([
                 'task_id' => $task->task_id,
-                'type' => ModelTaskContribution::TYPE_GRADE
+                'type' => ModelTaskContribution::TYPE_GRADE,
             ])->delete();
             $key = self::TASK_PREFIX . $task->task_id;
             foreach ($values[$key] as $personId) {
@@ -299,8 +295,18 @@ class InboxPresenter extends SeriesPresenter {
         $container = parent::getPageStyleContainer();
         switch ($this->getAction()) {
             case 'inbox':
-                $container->mainContainerClassName = str_replace('container ', 'container-fluid ', $container->mainContainerClassName).' px-3';
+                $container->mainContainerClassName = str_replace('container ', 'container-fluid ', $container->mainContainerClassName) . ' px-3';
         }
         return $container;
+    }
+
+    /**
+     * @param string $title
+     * @param string $icon
+     * @param string $subTitle
+     * @throws BadRequestException
+     */
+    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
+        parent::setTitle($title, $icon, $subTitle . ' ' . sprintf(_('%d. series'), $this->getSelectedSeries()));
     }
 }

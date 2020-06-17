@@ -10,6 +10,10 @@ use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
 
+/**
+ * Class StalkingControl
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 abstract class StalkingControl extends BaseComponent {
 
     const PERMISSION_FULL = 1024;
@@ -40,19 +44,19 @@ abstract class StalkingControl extends BaseComponent {
         $this->template->gender = $person->gender;
     }
 
-    public function createComponentContestBadge(): ContestBadge {
+    protected function createComponentContestBadge(): ContestBadge {
         return new ContestBadge($this->getContext());
     }
 
-    public function createComponentPermissionDenied(): PermissionDeniedBadge {
+    protected function createComponentPermissionDenied(): PermissionDeniedBadge {
         return new PermissionDeniedBadge($this->getContext());
     }
 
-    public function createComponentNoRecords(): NoRecordsBadge {
+    protected function createComponentNoRecords(): NoRecordsBadge {
         return new NoRecordsBadge($this->getContext());
     }
 
-    public function createComponentValuePrinter(): ValuePrinterComponent {
+    protected function createComponentValuePrinter(): ValuePrinterComponent {
         return new ValuePrinterComponent($this->getContext());
     }
 }

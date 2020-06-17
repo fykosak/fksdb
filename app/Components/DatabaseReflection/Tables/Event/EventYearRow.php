@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\Event;
 
 use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 
@@ -13,16 +14,14 @@ use Nette\Forms\Form;
 class EventYearRow extends AbstractEventRowFactory {
     use DefaultPrinterTrait;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string {
         return _('Event year');
     }
 
     /**
-     * @param array $args
+     * @param mixed ...$args
      * @return BaseControl
+     * @throws OmittedControlException
      */
     public function createField(...$args): BaseControl {
         $control = parent::createField($args);
@@ -32,9 +31,6 @@ class EventYearRow extends AbstractEventRowFactory {
         return $control;
     }
 
-    /**
-     * @return string
-     */
     protected function getModelAccessKey(): string {
         return 'event_year';
     }
