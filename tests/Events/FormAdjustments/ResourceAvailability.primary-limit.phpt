@@ -5,7 +5,7 @@ namespace FKSDB\Events\Model;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
-use Nette\Templating\ITemplate;
+use Nette\Application\UI\ITemplate;
 use Tester\Assert;
 use Tester\DomQuery;
 
@@ -26,7 +26,7 @@ class ResourceAvailabilityTest extends ResourceAvailabilityTestCase {
         Assert::type(TextResponse::class, $response);
 
         $source = $response->getSource();
-        Assert::type(ITemplate::class, $source);
+        Assert::type(\Nette\Application\UI\ITemplate::class, $source);
 
         $html = (string) $source;
         $dom = DomQuery::fromHtml($html);

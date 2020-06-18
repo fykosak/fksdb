@@ -44,10 +44,6 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
         $this->stored = !$value;
     }
 
-    /**
-     * @param ActiveRow $row
-     * @return static
-     */
     public static function createFromActiveRow(ActiveRow $row): self {
         if ($row instanceof static) {
             return $row;

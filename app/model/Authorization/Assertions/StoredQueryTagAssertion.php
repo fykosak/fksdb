@@ -4,6 +4,7 @@ namespace Authorization\Assertions;
 
 use Exports\StoredQuery;
 use Nette\InvalidArgumentException;
+use Nette\Security\IResource;
 use Nette\Security\Permission;
 use Nette\SmartObject;
 
@@ -35,11 +36,11 @@ class StoredQueryTagAssertion {
     /**
      * @param Permission $acl
      * @param $role
-     * @param $resourceId
-     * @param $privilege
+     * @param IResource|string|null $resourceId
+     * @param string|null $privilege
      * @return bool
      */
-    public function __invoke(Permission $acl, $role, $resourceId, $privilege) {
+    public function __invoke(Permission $acl, $role, $resourceId, $privilege): bool {
         $storedQuery = $acl->getQueriedResource();
         if (!$storedQuery instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');

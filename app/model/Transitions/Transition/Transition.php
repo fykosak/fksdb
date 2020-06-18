@@ -53,9 +53,6 @@ final class Transition {
         return $this->fromState;
     }
 
-    /**
-     * @return string
-     */
     public function getToState(): string {
         return $this->toState;
     }
@@ -72,9 +69,6 @@ final class Transition {
         $this->label = $label;
     }
 
-    /**
-     * @return string
-     */
     public function getId(): string {
         return $this->fromState . '__' . $this->toState;
     }
@@ -88,14 +82,12 @@ final class Transition {
 
     /**
      * @param string $type
+     * @return void
      */
     public function setType(string $type) {
         $this->type = $type;
     }
 
-    /**
-     * @return string
-     */
     public function getLabel(): string {
         return _($this->label);
     }
@@ -107,9 +99,6 @@ final class Transition {
         $this->condition = $callback;
     }
 
-    /**
-     * @return bool
-     */
     public function isCreating(): bool {
         return $this->fromState === Machine::STATE_INIT;
     }
@@ -124,6 +113,7 @@ final class Transition {
 
     /**
      * @param IStateModel $model
+     * @return void
      */
     final public function beforeExecute(IStateModel &$model) {
         foreach ($this->beforeExecuteCallbacks as $callback) {
@@ -133,6 +123,7 @@ final class Transition {
 
     /**
      * @param IStateModel $model
+     * @return void
      */
     final public function afterExecute(IStateModel &$model) {
         foreach ($this->afterExecuteCallbacks as $callback) {

@@ -55,7 +55,7 @@ class TaskPresenter extends BasePresenter {
      * @return FormControl
      * @throws BadRequestException
      */
-    public function createComponentTaskImportForm(): FormControl {
+    protected function createComponentTaskImportForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
 
@@ -63,7 +63,7 @@ class TaskPresenter extends BasePresenter {
         $form->addSelect('state', _('Select action'), [
             self::IMPORT_STATE_UPDATE_N_INSERT => _('Update tasks and add in case does not exists.'),
             self::IMPORT_STATE_REMOVE_N_INSERT => _('Delete all tasks and insert new one.'),
-            self::IMPORT_STATE_INSERT => _('Only add in case does not exists.')
+            self::IMPORT_STATE_INSERT => _('Only add in case does not exists.'),
         ]);
         $form->addSubmit('import', _('Import'));
         $form->onSuccess[] = function (Form $form) {
@@ -77,7 +77,7 @@ class TaskPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function taskImportFormSucceeded(Form $form) {
+    private function taskImportFormSucceeded(Form $form) {
         $values = $form->getValues();
         $taskImportProcessor = new FyziklaniTaskImportProcessor($this->getContext(), $this->getEvent());
         $logger = new MemoryLogger();
@@ -90,7 +90,7 @@ class TaskPresenter extends BasePresenter {
      * @return TaskGrid
      * @throws BadRequestException
      */
-    public function createComponentGrid(): TaskGrid {
+    protected function createComponentGrid(): TaskGrid {
         return new TaskGrid($this->getEvent(), $this->getContext());
     }
 }

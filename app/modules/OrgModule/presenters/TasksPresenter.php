@@ -110,6 +110,7 @@ class TasksPresenter extends BasePresenter {
         $form->onSuccess[] = function (Form $seriesForm) {
             $this->validSubmitSeriesForm($seriesForm);
         };
+
         return $control;
     }
 

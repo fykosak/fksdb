@@ -38,7 +38,7 @@ class CSVParser implements Iterator {
      */
     private $currentRow;
     /**
-     * @var
+     * @var mixed
      */
     private $header;
 

@@ -28,15 +28,13 @@ abstract class Stage {
      */
     abstract public function getOutput();
 
-    /**
-     * @return Pipeline
-     */
     final protected function getPipeline(): Pipeline {
         return $this->pipeline;
     }
 
     /**
      * @param Pipeline $pipeline
+     * @return void
      */
     final public function setPipeline(Pipeline $pipeline) {
         $this->pipeline = $pipeline;
@@ -44,6 +42,7 @@ abstract class Stage {
 
     /**
      * @param Message $message
+     * @return void
      */
     final protected function log(Message $message) {
         $this->getPipeline()->log($message);

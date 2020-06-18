@@ -6,7 +6,7 @@ use FKSDB\Events\EventTestCase;
 use Nette\Application\BadRequestException;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
-use Nette\Templating\ITemplate;
+use Nette\Application\UI\ITemplate;
 use Nette\Utils\DateTime;
 use PublicModule\ApplicationPresenter;
 use Tester\Assert;
@@ -76,7 +76,7 @@ class ApplicationPresenterTest extends EventTestCase {
         Assert::type(TextResponse::class, $response);
 
         $source = $response->getSource();
-        Assert::type(ITemplate::class, $source);
+        Assert::type(\Nette\Application\UI\ITemplate::class, $source);
 
         $html = (string) $source;
         Assert::contains('Přihlašování není povoleno', $html);

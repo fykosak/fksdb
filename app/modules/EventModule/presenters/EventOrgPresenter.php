@@ -2,19 +2,23 @@
 
 namespace EventModule;
 
+use FKSDB\Components\Controls\Entity\EventOrg\EventOrgForm;
 use FKSDB\Components\Grids\EventOrgsGrid;
-use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEventOrg;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 
 /**
  * Class EventOrgPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
+ * @method ModelEventOrg getEntity()
  */
 class EventOrgPresenter extends BasePresenter {
     use EventEntityTrait;
+
     /**
      * @var ServiceEventOrg
      */
@@ -37,7 +41,27 @@ class EventOrgPresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @return void
+     * @throws BadRequestException
+     */
+    public function titleCreate() {
+        $this->setTitle(sprintf(_('Create organiser of event')), 'fa fa-users');
+    }
+
+    /**
+     * @return void
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
+    public function titleEdit() {
+        $this->setTitle(sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-users');
+    }
+
+    /**
+     * @param $resource
+     * @param string $privilege
+     * @return bool
      * @throws BadRequestException
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
@@ -45,10 +69,9 @@ class EventOrgPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
      * @throws AbortException
      */
-    public function actionDelete(int $id) {
+    public function actionDelete() {
         try {
             list($message) = $this->traitHandleDelete();
             $this->flashMessage($message->getMessage(), $message->getLevel());
@@ -60,8 +83,13 @@ class EventOrgPresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @return void
+     * @throws BadRequestException
      */
+    public function actionEdit() {
+        $this->traitActionEdit();
+    }
+
     protected function getORMService(): ServiceEventOrg {
         return $this->serviceEventOrg;
     }
@@ -76,17 +104,21 @@ class EventOrgPresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws AbortException
+     * @throws BadRequestException
      */
-    public function createComponentCreateForm(): Control {
-        throw new NotImplementedException();
+    protected function createComponentCreateForm(): Control {
+        return new EventOrgForm($this->getContext(), $this->getEvent(), true);
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws AbortException
+     * @throws BadRequestException
      */
-    public function createComponentEditForm(): Control {
-        throw new NotImplementedException();
+    protected function createComponentEditForm(): Control {
+        return new EventOrgForm($this->getContext(), $this->getEvent(), false);
     }
 
 }

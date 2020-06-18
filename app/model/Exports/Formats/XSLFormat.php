@@ -26,7 +26,7 @@ class XSLFormat implements IExportFormat {
     /**
      * @var array
      */
-    private $parameters;
+    private $parameters = [];
 
     /**
      * @var string
@@ -50,26 +50,23 @@ class XSLFormat implements IExportFormat {
         $this->xmlSerializer = $xmlSerializer;
     }
 
-    /**
-     * @return array
-     */
-    public function getParameters() {
+    public function getParameters(): array {
         return $this->parameters;
     }
 
     /**
-     * @param $parameters
+     * @param array $parameters
      * @return void
      */
-    public function setParameters($parameters) {
+    public function setParameters(array $parameters) {
         $this->parameters = $parameters;
     }
 
     /**
-     * @param $parameters
+     * @param array $parameters
      * @return void
      */
-    public function addParameters($parameters) {
+    public function addParameters(array $parameters) {
         $this->parameters = array_merge($this->parameters, $parameters);
     }
 

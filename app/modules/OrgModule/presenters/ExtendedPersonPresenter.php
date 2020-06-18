@@ -6,6 +6,7 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\AbstractServiceSingle;
@@ -72,7 +73,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @return array
      * @throws BadRequestException
      */
-    private function getFieldsDefinition() {
+    protected function getFieldsDefinition() {
         $contestId = $this->getSelectedContest()->contest_id;
         $contestName = $this->globalParameters['contestMapping'][$contestId];
         return Helpers::evalExpressionArray($this->globalParameters[$contestName][$this->fieldsDefinition], $this->getContext());
@@ -97,12 +98,13 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @param $create
+     * @param bool $create
      * @return FormControl
      * @throws BadRequestException
+     * @throws BadTypeException
      * @throws \Exception
      */
-    private function createComponentFormControl($create) {
+    private function createComponentFormControl(bool $create): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
 
@@ -140,7 +142,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @return FormControl
      * @throws BadRequestException
      */
-    final protected function createComponentCreateComponent() {
+    final protected function createComponentCreateComponent(): FormControl {
         return $this->createComponentFormControl(true);
     }
 
@@ -148,7 +150,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @return FormControl
      * @throws BadRequestException
      */
-    final protected function createComponentEditComponent() {
+    final protected function createComponentEditComponent(): FormControl {
         return $this->createComponentFormControl(false);
     }
 

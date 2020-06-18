@@ -35,6 +35,7 @@ class Helpers {
 
     /**
      * @param array $semanticMap
+     * @return void
      */
     public static function registerSemantic(array $semanticMap) {
         self::$semanticMap += $semanticMap;

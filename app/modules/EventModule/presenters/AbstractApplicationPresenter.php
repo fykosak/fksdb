@@ -19,8 +19,8 @@ use Nette\Application\UI\Control;
 use Nette\InvalidStateException;
 
 /**
- * Class ApplicationPresenter
- * *
+ * Class AbstractApplicationPresenter
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractApplicationPresenter extends BasePresenter {
     use EventEntityTrait;
@@ -55,7 +55,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
@@ -81,15 +80,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
         return $this->isContestsOrgAuthorized($resource, $privilege);
-    }
-
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     */
-    protected function actionDetail() {
-        $this->getEntity();
     }
 
     /**
@@ -146,16 +136,18 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     abstract protected function createComponentGrid(): AbstractApplicationGrid;
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
-    public function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
-    public function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control {
         throw new NotImplementedException();
     }
 }

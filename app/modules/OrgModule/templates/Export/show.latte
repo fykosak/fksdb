@@ -8,12 +8,12 @@
     <a n:if="$presenter->authorized('edit', ['id' => $storedQuery->getPrimary()])" n:href="edit $storedQuery->getPrimary()" class="btn btn-secondary" title="{_('Upravit dotaz')}">{_('Upravit')}</a>
 </div>
 
-<p>{!$storedQuery->description|escape|nl2br}</p>
+<p>{$storedQuery->description|noescape|nl2br}</p>
 {control tagCloudDetail}
 
 {if $storedQuery->getPostProcessing()}
 <h3>{_'PHP post processing'}</h3>
-<p>{!$storedQuery->getPostProcessing()->getDescription()|escape|nl2br}</p>
+<p>{$storedQuery->getPostProcessing()->getDescription()|noescape|nl2br}</p>
 {/if}
 
 {if count($storedQuery->getParameters())}

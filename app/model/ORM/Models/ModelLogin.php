@@ -42,6 +42,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
 
     /**
      * @param YearCalculator $yearCalculator
+     * @return void
      */
     public function injectYearCalculator(YearCalculator $yearCalculator) {
         $this->yearCalculator = $yearCalculator;

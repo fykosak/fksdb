@@ -85,6 +85,7 @@ class NavigationExtension extends CompilerExtension {
     /**
      * @param $nodeId
      * @param $arguments
+     * @return void
      */
     private function parseIdAsLink($nodeId, &$arguments) {
         $fullQualityAction = str_replace('.', ':', $nodeId);

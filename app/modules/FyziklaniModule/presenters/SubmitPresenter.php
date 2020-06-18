@@ -10,6 +10,7 @@ use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
 use FKSDB\Fyziklani\ClosedSubmittingException;
 use FKSDB\Fyziklani\PointsMismatchException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -59,7 +60,9 @@ class SubmitPresenter extends BasePresenter {
     /* ***** Authorized methods *****/
 
     /**
-     * @inheritDoc
+     * @param $resource
+     * @param string $privilege
+     * @return bool
      * @throws BadRequestException
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
@@ -99,7 +102,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws AbortException
      */
-    public function createComponentGrid(): SubmitsGrid {
+    protected function createComponentGrid(): SubmitsGrid {
         return new AllSubmitsGrid($this->getEvent(), $this->getContext());
     }
 
@@ -108,15 +111,16 @@ class SubmitPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control {
         return new TaskCodeInput($this->getContext(), $this->getEvent());
     }
 
     /**
-     * @inheritDoc
+     * @return Control
      * @throws AbortException
+     * @throws BadRequestException
      */
-    public function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control {
         return new EditControl($this->getContext(), $this->getEvent());
     }
 
@@ -132,10 +136,7 @@ class SubmitPresenter extends BasePresenter {
         $this->redirect('this');
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServiceFyziklaniSubmit {
         return $this->getServiceFyziklaniSubmit();
     }
 }

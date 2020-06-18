@@ -25,6 +25,8 @@ class MassTransitionsControl extends BaseComponent {
     private $event;
     /** @var EventDispatchFactory */
     private $eventDispatchFactory;
+    /** @var ApplicationHandlerFactory */
+    private $applicationHandlerFactory;
 
     /**
      * MassTransitionsControl constructor.
@@ -38,10 +40,12 @@ class MassTransitionsControl extends BaseComponent {
 
     /**
      * @param EventDispatchFactory $eventDispatchFactory
+     * @param ApplicationHandlerFactory $applicationHandlerFactory
      * @return void
      */
-    public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory) {
+    public function injectPrimary(EventDispatchFactory $eventDispatchFactory, ApplicationHandlerFactory $applicationHandlerFactory) {
         $this->eventDispatchFactory = $eventDispatchFactory;
+        $this->applicationHandlerFactory = $applicationHandlerFactory;
     }
 
     /**
@@ -65,13 +69,11 @@ class MassTransitionsControl extends BaseComponent {
      */
     public function handleTransition(string $name) {
         $source = new SingleEventSource($this->event, $this->getContext());
-        /** @var ApplicationHandlerFactory $applicationHandlerFactory */
-        $applicationHandlerFactory = $this->getContext()->getByType(ApplicationHandlerFactory::class);
         $logger = new MemoryLogger();
         $total = 0;
         $errored = 0;
         foreach ($source->getHolders() as $key => $holder) {
-            $handler = $applicationHandlerFactory->create($this->event, $logger);
+            $handler = $this->applicationHandlerFactory->create($this->event, $logger);
             $total++;
             try {
                 $handler->onlyExecute($holder, $name);

@@ -163,6 +163,7 @@ class BaseHolder {
 
     /**
      * @param $modifiable
+     * @return void
      */
     public function setModifiable($modifiable) {
         $this->modifiable = $modifiable;
@@ -170,6 +171,7 @@ class BaseHolder {
 
     /**
      * @param $visible
+     * @return void
      */
     public function setVisible($visible) {
         $this->visible = $visible;

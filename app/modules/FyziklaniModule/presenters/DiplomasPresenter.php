@@ -10,7 +10,7 @@ use Nette\Utils\Html;
 
 /**
  * Class DiplomasPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DiplomasPresenter extends BasePresenter {
     /**
@@ -90,7 +90,7 @@ class DiplomasPresenter extends BasePresenter {
      * @return FinalResults
      * @throws BadRequestException
      */
-    public function createComponentResults(): FinalResults {
+    protected function createComponentResults(): FinalResults {
         return new FinalResults($this->getContext(), $this->getEvent());
     }
 }

@@ -9,7 +9,7 @@ use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @method ModelPerson findByPrimary($key)
+ * @method ModelPerson|null findByPrimary($key)
  */
 class ServicePerson extends AbstractServiceSingle {
 

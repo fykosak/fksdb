@@ -43,7 +43,7 @@ parameters:
 
             contestant_base:
                 created: @merge.less
-            
+
             submit:
                 submitted_on: @merge.trunk
                 source: @merge.trunk
@@ -52,11 +52,21 @@ parameters:
 # Instantces of merge strategies.
 services:
     merge.cummulative: Persons\Deduplication\MergeStrategy\CummulativeStrategy
-    merge.cummTrunk: Persons\Deduplication\MergeStrategy\CummulativeStrategy(trunk)
-    merge.cummMerged: Persons\Deduplication\MergeStrategy\CummulativeStrategy(merged)
+    merge.cummTrunk:
+        class: Persons\Deduplication\MergeStrategy\CummulativeStrategy
+        arguments: [trunk]
+    merge.cummMerged:
+        class: Persons\Deduplication\MergeStrategy\CummulativeStrategy
+        arguments: [merged]
     merge.trunk: Persons\Deduplication\MergeStrategy\TrunkStrategy
     merge.merged: Persons\Deduplication\MergeStrategy\MergedStrategy
     merge.fail: Persons\Deduplication\MergeStrategy\FailStrategy
-    merge.greater: Persons\Deduplication\MergeStrategy\CompareStrategy(greater)
-    merge.less: Persons\Deduplication\MergeStrategy\CompareStrategy(less)
-    merge.null: Persons\Deduplication\MergeStrategy\ConstantStrategy(null)
+    merge.greater:
+        class: Persons\Deduplication\MergeStrategy\CompareStrategy
+        arguments: [greater]
+    merge.less:
+        class: Persons\Deduplication\MergeStrategy\CompareStrategy
+        arguments: [less]
+    merge.null:
+        class: Persons\Deduplication\MergeStrategy\ConstantStrategy
+        arguments: [null]

@@ -112,8 +112,8 @@ class EventFactory {
     }
 
     /**
-     * @param $event
-     * @param $data
+     * @param mixed $event
+     * @param mixed $data
      */
     private function fillBase($event, $data) {
         if (!array_key_exists('repository', $data)) {

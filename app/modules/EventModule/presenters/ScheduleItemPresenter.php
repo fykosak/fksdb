@@ -5,7 +5,6 @@ namespace EventModule;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\ItemsGrid;
 use FKSDB\Components\Grids\Schedule\PersonsGrid;
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
@@ -16,14 +15,17 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\InvalidStateException;
+use Nette\Security\IResource;
 
 /**
  * Class ScheduleItemPresenter
  * *
- * @method ModelScheduleItem getEntity()
+ * @method ModelScheduleItem traitGetEntity()
  */
 class ScheduleItemPresenter extends BasePresenter {
-    use EventEntityTrait;
+    use EventEntityTrait {
+        getEntity as traitGetEntity;
+    }
 
     /**
      * @var int
@@ -79,19 +81,6 @@ class ScheduleItemPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     */
-    public function actionDetail() {
-        $component = $this->getComponent('personsGrid');
-        if (!$component instanceof PersonsGrid) {
-            throw new BadTypeException(PersonsGrid::class, $component);
-        }
-        $component->setItem($this->getEntity());
-    }
-
-    /**
      * @throws InvalidStateException
      */
     public function renderList() {
@@ -114,8 +103,8 @@ class ScheduleItemPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws AbortException
      */
-    protected function loadEntity() {
-        $entity = $this->traitgetEntity();
+    protected function getEntity(): ModelScheduleItem {
+        $entity = $this->traitGetEntity();
         if ($entity->schedule_group_id !== $this->getGroup()->schedule_group_id) {
             throw new ForbiddenRequestException();
         }
@@ -138,40 +127,41 @@ class ScheduleItemPresenter extends BasePresenter {
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
-    public function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
-    public function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control {
         throw new NotImplementedException();
     }
 
-    /**
-     * @inheritDoc
-     * @throws InvalidStateException
-     */
     protected function createComponentGrid(): BaseGrid {
         return new ItemsGrid($this->getContext(), $this->getGroup());
     }
 
-    public function createComponentPersonsGrid(): PersonsGrid {
-        return new PersonsGrid($this->getContext());
+    /**
+     * @return PersonsGrid
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
+    protected function createComponentPersonsGrid(): PersonsGrid {
+        return new PersonsGrid($this->getContext(), $this->getEntity());
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServiceScheduleItem {
         return $this->serviceScheduleItem;
     }
 
     /**
-     * @param $resource
+     * @param string|IResource $resource
      * @param string $privilege
      * @return bool
      * @throws BadRequestException

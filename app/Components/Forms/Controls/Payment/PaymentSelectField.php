@@ -32,7 +32,7 @@ class PaymentSelectField extends TextInput {
     /**
      * @var bool
      */
-    private $showAll = true;
+    private $showAll;
 
     /**
      * PaymentSelectField constructor.
@@ -79,9 +79,6 @@ class PaymentSelectField extends TextInput {
         return \json_encode($items);
     }
 
-    /**
-     * @return string
-     */
     protected function getReactId(): string {
         return 'payment.schedule-select';
     }

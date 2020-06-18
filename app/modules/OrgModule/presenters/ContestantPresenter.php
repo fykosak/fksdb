@@ -5,6 +5,7 @@ namespace OrgModule;
 use FKSDB\Components\Grids\ContestantsGrid;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Services\ServiceContestant;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 
 /**
@@ -50,8 +51,12 @@ class ContestantPresenter extends ExtendedPersonPresenter {
         $this->setTitle(_('Řešitelé'), 'fa fa-users');
     }
 
+    /**
+     * @return ContestantsGrid
+     * @throws BadRequestException
+     */
     protected function createComponentGrid(): ContestantsGrid {
-        return new ContestantsGrid($this->getContext());
+        return new ContestantsGrid($this->getContext(), $this->getSelectedContest(), $this->getSelectedYear());
     }
 
     /**

@@ -2,15 +2,14 @@
 
 namespace CommonModule;
 
-use FKSDB\Components\Controls\Entity\School\CreateForm;
-use FKSDB\Components\Controls\Entity\School\EditForm;
+use FKSDB\Components\Controls\Entity\School\SchoolForm;
 use FKSDB\Components\Grids\SchoolsGrid;
 use FKSDB\EntityTrait;
-use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
+use Nette\Security\IResource;
 
 /**
  * Class SchoolPresenter
@@ -53,12 +52,6 @@ class SchoolPresenter extends BasePresenter {
         $this->setTitle(sprintf(_('Detail of school %s'), $this->getEntity()->name_abbrev), 'fa fa-university');
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function traitIsAuthorized($resource, string $privilege): bool {
-        return $this->isAnyContestAuthorized($resource, $privilege);
-    }
 
     /**
      * @throws BadRequestException
@@ -74,25 +67,28 @@ class SchoolPresenter extends BasePresenter {
         $this->template->model = $this->getEntity();
     }
 
-    /**
-     * @return IService|ServiceSchool
-     */
-    protected function getORMService() {
-        return $this->serviceSchool;
-    }
-
     protected function createComponentGrid(): SchoolsGrid {
         return new SchoolsGrid($this->getContext());
     }
 
-    /** @inheritDoc */
-    public function createComponentEditForm(): Control {
-        return new EditForm($this->getContext());
+    protected function createComponentEditForm(): Control {
+        return new SchoolForm($this->getContext(), false);
     }
 
-    /** @inheritDoc */
-    public function createComponentCreateForm(): Control {
-        return new CreateForm($this->getContext());
+    protected function createComponentCreateForm(): Control {
+        return new SchoolForm($this->getContext(), true);
     }
 
+    /**
+     * @param IResource|string $resource
+     * @param string $privilege
+     * @return bool
+     */
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return $this->isAnyContestAuthorized($resource, $privilege);
+    }
+
+    protected function getORMService(): ServiceSchool {
+        return $this->serviceSchool;
+    }
 }

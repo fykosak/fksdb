@@ -11,6 +11,7 @@ use FKSDB\Components\Grids\Fyziklani\TeamSubmitsGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -79,12 +80,11 @@ class ClosePresenter extends BasePresenter {
     }
     /* *********** ACTIONS **************** */
     /**
-     * @param int $id
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function actionTeam(int $id) {
+    public function actionTeam() {
         $team = $this->getEntity();
         try {
             $team->canClose();
@@ -120,14 +120,17 @@ class ClosePresenter extends BasePresenter {
         return new CloseTeamControl($this->getContext(), $this->getEvent());
     }
 
+    /**
+     * @return TeamSubmitsGrid
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
     protected function createComponentTeamSubmitsGrid(): TeamSubmitsGrid {
         return new TeamSubmitsGrid($this->getEntity(), $this->getContext());
     }
 
-    /**
-     * @inheritDoc
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServiceFyziklaniTeam {
         return $this->getServiceFyziklaniTeam();
     }
 
@@ -140,21 +143,23 @@ class ClosePresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function createComponentGrid(): BaseGrid {
+    protected function createComponentGrid(): BaseGrid {
         return new CloseTeamsGrid($this->getEvent(), $this->getContext());
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
-    public function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
-    public function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control {
         throw new NotImplementedException();
     }
 

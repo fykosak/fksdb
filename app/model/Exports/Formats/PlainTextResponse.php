@@ -44,6 +44,7 @@ class PlainTextResponse implements IResponse {
     /**
      * @param IRequest $httpRequest
      * @param HttpResponse $httpResponse
+     * @return void
      */
     public function send(IRequest $httpRequest, HttpResponse $httpResponse) {
         $httpResponse->setContentType('text/plain', 'utf-8');

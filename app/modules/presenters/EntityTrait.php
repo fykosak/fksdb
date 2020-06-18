@@ -19,12 +19,18 @@ use Nette\Security\IResource;
 
 /**
  * Trait EntityTrait
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 trait EntityTrait {
     /**
      * @var AbstractModelSingle|IModel
      */
     protected $model;
+    /**
+     * @var int
+     * @persistent
+     */
+    public $id;
 
     /**
      * @return void
@@ -140,14 +146,14 @@ trait EntityTrait {
      * @throws BadRequestException
      * @throws NotImplementedException
      */
-    abstract public function createComponentCreateForm(): Control;
+    abstract protected function createComponentCreateForm(): Control;
 
     /**
      * @return FormControl
      * @throws BadRequestException
      * @throws NotImplementedException
      */
-    abstract public function createComponentEditForm(): Control;
+    abstract protected function createComponentEditForm(): Control;
 
     /**
      * @throws NotImplementedException
@@ -179,7 +185,7 @@ trait EntityTrait {
      * @param null $default
      * @return mixed
      */
-    abstract public function getParameter($name = NULL, $default = NULL);
+    abstract public function getParameter($name, $default = null);
 
     /**
      * @param bool $access

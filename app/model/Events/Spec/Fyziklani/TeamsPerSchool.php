@@ -52,6 +52,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
 
     /**
      * @param $teamsPerSchool
+     * @return void
      */
     public function setTeamsPerSchool($teamsPerSchool) {
         $this->teamsPerSchool = $teamsPerSchool;
@@ -102,7 +103,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
     }
 
     /**
-     * @var
+     * @var mixed
      */
     private $cache;
 

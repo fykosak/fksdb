@@ -6,6 +6,8 @@ use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Events\Processings\AbstractProcessing;
 use FKSDB\Logging\ILogger;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelPersonHasFlag;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\YearCalculator;
 use Nette\Forms\Controls\BaseControl;
@@ -78,8 +80,9 @@ class FlagProcessing extends AbstractProcessing {
                 if ($this->isBaseReallyEmpty($name)) {
                     continue;
                 }
+                /** @var ModelPerson $person */
                 $person = $baseHolder->getModel()->getMainModel()->person;
-                $history = $person->related('person_history')->where('ac_year', $acYear)->fetch();
+                $history = $person->getHistory($acYear);
                 $participantData = [
                     'school_id' => $history->school_id,
                     'study_year' => $history->study_year,
@@ -88,6 +91,7 @@ class FlagProcessing extends AbstractProcessing {
                 $participantData = $formValues;
             }
             if (!($this->serviceSchool->isCzSkSchool($participantData['school_id']) && $this->isStudent($participantData['study_year']))) {
+                /** @var ModelPersonHasFlag $personHasFlag */
                 $personHasFlag = $values[$name]['person_id_1']['person_has_flag'];
                 $personHasFlag->offsetUnset('spam_mff');
 //                $a=$c;

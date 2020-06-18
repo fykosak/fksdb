@@ -8,7 +8,7 @@ use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 
 /**
  * Class ServiceScheduleGroup
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ServiceScheduleGroup extends AbstractServiceSingle {
 

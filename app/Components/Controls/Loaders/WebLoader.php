@@ -34,7 +34,7 @@ abstract class WebLoader extends Control {
             self::FILENAME => $file,
             self::ATTRIBUTES => $attributes,
         ];
-        $this->invalidateControl();
+        $this->redrawControl();
     }
 
     /**
@@ -45,7 +45,7 @@ abstract class WebLoader extends Control {
     public function removeFile(string $file, array $attributes = []) {
         $hash = $file . join(':', $attributes);
         unset($this->files[$hash]);
-        $this->invalidateControl();
+        $this->redrawControl();
     }
 
     /**
@@ -55,7 +55,7 @@ abstract class WebLoader extends Control {
      */
     public function addInline(string $inline, string $tag = self::UNTAGGED) {
         $this->inlines[$tag] = $inline;
-        $this->invalidateControl();
+        $this->redrawControl();
     }
 
     /**
@@ -66,7 +66,7 @@ abstract class WebLoader extends Control {
         if ($tag != self::UNTAGGED) {
             unset($this->inlines[$tag]);
         }
-        $this->invalidateControl();
+        $this->redrawControl();
     }
 
     /**

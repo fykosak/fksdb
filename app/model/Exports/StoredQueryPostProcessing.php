@@ -25,7 +25,7 @@ abstract class StoredQueryPostProcessing {
     }
 
     /**
-     * @param $key
+     * @param mixed $key
      * @param $value
      * @return void
      */

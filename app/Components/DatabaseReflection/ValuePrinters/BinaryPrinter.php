@@ -2,22 +2,19 @@
 
 namespace FKSDB\Components\DatabaseReflection\ValuePrinters;
 
-use FKSDB\Components\Controls\Badges\NotSetBadge;
 use Nette\Utils\Html;
 
 /**
  * Class BinaryPrinter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class BinaryPrinter extends AbstractValuePrinter {
     /**
-     * @param int|bool|null $value
+     * @param int|bool $value
      * @return Html
      */
     protected function getHtml($value): Html {
-        if (\is_null($value)) {
-            return NotSetBadge::getHtml();
-        } elseif ($value) {
+        if ($value) {
             return Html::el('span')->addAttributes(['class' => 'fa fa-check text-success']);
         } else {
             return Html::el('span')->addAttributes(['class' => 'fa fa-times text-danger']);

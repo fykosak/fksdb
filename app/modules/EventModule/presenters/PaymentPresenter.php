@@ -85,12 +85,11 @@ class PaymentPresenter extends BasePresenter {
     /* ********* Authorization *****************/
 
     /**
+     * @return void
      * @throws AbortException
      * @throws BadRequestException
-     * @throws ForbiddenRequestException
      */
     public function authorizedEdit() {
-        $this->getEntity();
         $this->setAuthorized($this->canEdit());
     }
 
@@ -205,6 +204,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
+     * @throws AbortException
      */
     private function canEdit(): bool {
         return ($this->getEntity()->canEdit() && $this->isContestsOrgAuthorized($this->getEntity(), 'edit')) ||
@@ -244,31 +244,31 @@ class PaymentPresenter extends BasePresenter {
         return true;
     }
 
-    /**
-     * @return ServicePayment
-     */
-    public function getORMService() {
+    protected function getORMService(): ServicePayment {
         return $this->servicePayment;
     }
 
     /**
-     * @inheritDoc
+     * @return BaseGrid
+     * @throws NotImplementedException
      */
-    public function createComponentGrid(): BaseGrid {
+    protected function createComponentGrid(): BaseGrid {
         throw new NotImplementedException();
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
-    public function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }
 
     /**
-     * @inheritDoc
+     * @return Control
+     * @throws NotImplementedException
      */
-    public function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): Control {
         throw new NotImplementedException();
     }
 }

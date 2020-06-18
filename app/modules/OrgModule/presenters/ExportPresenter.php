@@ -12,6 +12,8 @@ use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Components\Grids\StoredQueriesGrid;
 use FKSDB\EntityTrait;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\CoreModule\SeriesPresenter\{ISeriesPresenter, SeriesPresenterTrait};
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
@@ -33,10 +35,8 @@ use Tracy\Debugger;
  * Class ExportPresenter
  * @method ModelStoredQuery traitGetEntity()
  */
-class ExportPresenter extends SeriesPresenter {
-    use EntityTrait {
-        getEntity as traitGetEntity;
-    }
+class ExportPresenter extends BasePresenter implements ISeriesPresenter {
+    use SeriesPresenterTrait;
 
     const CONT_CONSOLE = 'console';
     const CONT_PARAMS_META = 'paramsMeta';
@@ -251,7 +251,7 @@ class ExportPresenter extends SeriesPresenter {
 
         if ($query && $this->getParameter('qid')) {
             $parameters = [];
-            foreach ($this->getParameter() as $key => $value) {
+            foreach ($this->getParameters() as $key => $value) {
                 if (Strings::startsWith($key, StoredQueryComponent::PARAMETER_URL_PREFIX)) {
                     $parameters[substr($key, strlen(StoredQueryComponent::PARAMETER_URL_PREFIX))] = $value;
                 }
@@ -282,8 +282,10 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     /**
+     * @param mixed $id
      * @return void
      * @throws BadRequestException
+     * @throws BadTypeException
      */
     public function renderEdit() {
         $query = $this->getPatternQuery();
@@ -333,6 +335,20 @@ class ExportPresenter extends SeriesPresenter {
             return $this->storedQuery;
         } else {
             return $this->getStoredQueryFromSession();
+
+        }
+    }
+
+    /**
+     * @return void
+     * @throws BadTypeException
+     */
+    public function renderCompose() {
+        $values = $this->getDesignFormFromSession();
+        if ($values) {
+            /** @var FormControl $control */
+            $control = $this->getComponent('composeForm');
+            $control->getForm()->setDefaults($values);
         }
     }
 
@@ -550,7 +566,7 @@ class ExportPresenter extends SeriesPresenter {
         $this->storeDesignFormToSession($values);
 
         if ($this->isAjax()) {
-            $this->invalidateControl('adhocResultsComponent');
+            $this->redrawControl('adhocResultsComponent');
         } else {
             $this->redirect('this', [self::PARAM_LOAD_FROM_SESSION => true]);
         }
@@ -614,11 +630,11 @@ class ExportPresenter extends SeriesPresenter {
     }
 
     /**
-     * @param $values
+     * @param iterable $values
      * @param ModelStoredQuery $storedQuery
      * @return void
      */
-    private function handleSave($values, $storedQuery) {
+    private function handleSave($values, ModelStoredQuery $storedQuery) {
         $connection = $this->serviceStoredQuery->getConnection();
         $connection->beginTransaction();
 
@@ -659,10 +675,17 @@ class ExportPresenter extends SeriesPresenter {
         $connection->commit();
     }
 
-    /**
-     * @return ServiceStoredQuery
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServiceStoredQuery {
         return $this->serviceStoredQuery;
+    }
+
+    /**
+     * @param string $title
+     * @param string $icon
+     * @param string $subTitle
+     * @throws BadRequestException
+     */
+    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
+        parent::setTitle($title, $icon, $subTitle . ' ' . sprintf(_('%d. series'), $this->getSelectedSeries()));
     }
 }

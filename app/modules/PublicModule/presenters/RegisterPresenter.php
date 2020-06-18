@@ -15,7 +15,6 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\UI\PageStyleContainer;
-use FKSDB\SeriesCalculator;
 use IContestPresenter;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -92,19 +91,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @var ServicePerson
      */
     protected $servicePerson;
-
-    /**
-     * @var SeriesCalculator
-     */
-    protected $seriesCalculator;
-
-    /**
-     * @param SeriesCalculator $seriesCalculator
-     * @return void
-     */
-    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator) {
-        $this->seriesCalculator = $seriesCalculator;
-    }
 
     /**
      * @param ServiceContestant $serviceContestant
@@ -287,7 +273,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @return FormControl
      * @throws BadRequestException
      */
-    public function createComponentEmailForm() {
+    protected function createComponentEmailForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
         $form->addText('email', _('e-mail'));
@@ -337,7 +323,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @throws BadRequestException
      * @throws \Exception
      */
-    public function createComponentContestantForm() {
+    protected function createComponentContestantForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
 
@@ -407,13 +393,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     public function messageExists(): string {
         return _('Řešitel je již registrován.');
-    }
-
-    /**
-     * @return null
-     */
-    public function getSelectedSeries() {
-        return null;
     }
 
     protected function getPageStyleContainer(): PageStyleContainer {

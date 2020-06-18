@@ -10,8 +10,8 @@ use Nette\Http\Request;
 use Nette\Security\User;
 
 /**
- * Class LangPresenter
- * *
+ * Trait LangPresenterTrait
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 trait LangPresenterTrait {
     /** @var string[] */

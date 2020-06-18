@@ -36,12 +36,20 @@ class ServicePersonInfo extends AbstractServiceSingle {
         return parent::createNew($data);
     }
 
+    public function createNewModel(array $data): IModel {
+        if ($data && isset($data['agreed']) && $data['agreed'] == '1') {
+            $data['agreed'] = new DateTime();
+        }
+        return parent::createNewModel($data);
+    }
+
     /**
      * @param IModel $model
      * @param array $data
      * @param bool $alive
      * @return void
      * @throws \Exception
+     * @deprecated
      */
     public function updateModel(IModel $model, $data, $alive = true) {
         if (isset($data['agreed'])) {
@@ -60,7 +68,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
      * @return bool
      * @throws \Exception
      */
-    public function updateModel2(AbstractModelSingle $model, $data = null): bool {
+    public function updateModel2(AbstractModelSingle $model, array $data): bool {
         if (isset($data['agreed'])) {
             if ($data['agreed'] == '1') {
                 $data['agreed'] = new DateTime();

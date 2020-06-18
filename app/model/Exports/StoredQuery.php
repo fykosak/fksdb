@@ -89,6 +89,7 @@ class StoredQuery implements IDataSource, IResource {
 
     /**
      * @return StoredQueryPostProcessing|null
+     * @return void
      */
     public function getPostProcessing() {
         return $this->getModelQuery()->getPostProcessing();

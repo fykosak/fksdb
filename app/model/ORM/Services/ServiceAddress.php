@@ -28,14 +28,21 @@ class ServiceAddress extends AbstractServiceSingle {
     }
 
     /**
-     * @param array|iterable|\ArrayAccess $data
+     * @param array $data
      * @return ModelAddress
      */
-    public function createNewModel($data = null): AbstractModelSingle {
-        if (!isset($data['region_id'])) {
+    public function createNewModel(array $data): IModel {
+        if (!isset($data['region_id']) || is_null($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }
         return parent::createNewModel($data);
+    }
+
+    public function updateModel2(AbstractModelSingle $model, array $data): bool {
+        if (!isset($data['region_id']) || is_null($data['region_id'])) {
+            $data['region_id'] = $this->inferRegion($data['postal_code']);
+        }
+        return parent::updateModel2($model, $data);
     }
 
     /**

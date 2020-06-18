@@ -4,17 +4,17 @@ namespace FKSDB\Components\Grids;
 
 use Authorization\ContestAuthorizator;
 use Closure;
-use FKSDB\ORM\DbNames;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
-use OrgModule\ExportPresenter;
 
 /**
  *
@@ -60,14 +60,15 @@ class StoredQueriesGrid extends BaseGrid {
     }
 
     /**
-     * @param ExportPresenter $presenter
-     * @throws BadRequestException
-     * @throws InvalidLinkException
+     * @param Presenter $presenter
+     * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
+     * @throws InvalidLinkException
+     * @throws BadTypeException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
         //
         // data
@@ -83,8 +84,8 @@ class StoredQueriesGrid extends BaseGrid {
         $this->addColumn('name', _('Export name'));
         $this->addColumn('description', _('Description'))->setTruncate(self::DESCRIPTION_TRUNC);
         $this->addColumns([
-            DbNames::TAB_STORED_QUERY . '.qid',
-            DbNames::TAB_STORED_QUERY . '.tags',
+            'stored_query.qid',
+            'stored_query.tags',
         ]);
         //
         // operations

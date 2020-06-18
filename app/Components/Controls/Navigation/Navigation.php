@@ -260,7 +260,7 @@ class Navigation extends BaseComponent {
      */
     public function preparePresenter(string $presenterName, string $action, $providedParams): Presenter {
         $ownPresenter = $this->getPresenter();
-        $presenter = $this->presenterBuilder->preparePresenter($presenterName, $action, $providedParams, $ownPresenter->getParameter());
+        $presenter = $this->presenterBuilder->preparePresenter($presenterName, $action, $providedParams, $ownPresenter->getParameters());
         if (!$presenter instanceof INavigablePresenter) {
             throw new BadTypeException(INavigablePresenter::class, $presenter);
         }

@@ -7,7 +7,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class ResultsPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ResultsPresenter extends BasePresenter {
     /**
@@ -104,7 +104,7 @@ class ResultsPresenter extends BasePresenter {
      * @return ResultsAndStatistics
      * @throws BadRequestException
      */
-    public function createComponentTable(): ResultsAndStatistics {
+    protected function createComponentTable(): ResultsAndStatistics {
         return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.results.table');
     }
 
@@ -112,7 +112,7 @@ class ResultsPresenter extends BasePresenter {
      * @return ResultsAndStatistics
      * @throws BadRequestException
      */
-    public function createComponentPresentation(): ResultsAndStatistics {
+    protected function createComponentPresentation(): ResultsAndStatistics {
         return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.results.presentation');
     }
 
@@ -120,7 +120,7 @@ class ResultsPresenter extends BasePresenter {
      * @return ResultsAndStatistics
      * @throws BadRequestException
      */
-    public function createComponentTeamStatistics(): ResultsAndStatistics {
+    protected function createComponentTeamStatistics(): ResultsAndStatistics {
         return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.statistics.team');
     }
 
@@ -128,7 +128,7 @@ class ResultsPresenter extends BasePresenter {
      * @return ResultsAndStatistics
      * @throws BadRequestException
      */
-    public function createComponentTaskStatistics(): ResultsAndStatistics {
+    protected function createComponentTaskStatistics(): ResultsAndStatistics {
         return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.statistics.task');
     }
 
@@ -136,7 +136,7 @@ class ResultsPresenter extends BasePresenter {
      * @return ResultsAndStatistics
      * @throws BadRequestException
      */
-    public function createComponentCorrelationStatistics(): ResultsAndStatistics {
+    protected function createComponentCorrelationStatistics(): ResultsAndStatistics {
         return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.statistics.correlation');
     }
 

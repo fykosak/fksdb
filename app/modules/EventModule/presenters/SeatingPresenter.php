@@ -149,7 +149,7 @@ class SeatingPresenter extends BasePresenter {
         $this->template->event = $this->getEvent();
     }
 
-    public function createComponentSeating(): SeatingControl {
+    protected function createComponentSeating(): SeatingControl {
         return new SeatingControl($this->getContext());
     }
 }

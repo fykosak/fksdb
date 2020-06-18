@@ -1,5 +1,5 @@
 {block content}
-    {foreach ['org.org_id','referenced.person_link','referenced.contest','org.since','org.until','org.role','org.order','org.contribution','org.tex_signature','org.domain_alias'] as $field}
+    {foreach ['org.org_id','person.person_link','contest.contestBadge','org.since','org.until','org.role','org.order','org.contribution','org.tex_signature','org.domain_alias'] as $field}
         {control valuePrinter:row $field, $model}
     {/foreach}
 {/block}

@@ -27,9 +27,6 @@ class PersonHistoryFactory extends SingleReflectionFactory {
         $this->schoolFactory = $factorySchool;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_PERSON_HISTORY;
     }
@@ -44,11 +41,8 @@ class PersonHistoryFactory extends SingleReflectionFactory {
         switch ($fieldName) {
             case 'school_id':
                 return $this->schoolFactory->createSchoolSelect();
-            case 'study_year':
-                list($acYear) = $args;
-                return $this->loadFactory($fieldName)->createField($acYear);
             default:
-                return parent::createField($fieldName);
+                return parent::createField($fieldName, ...$args);
         }
     }
 }
