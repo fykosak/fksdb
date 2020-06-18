@@ -332,7 +332,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         if ($backLink) {
             $this->redirectUrl($backLink);
         } elseif ($need) {
-            $this->redirect(':Authentication:login'); // will cause dispatch
+            $this->redirect(':Core:Authentication:login'); // will cause dispatch
         }
     }
 

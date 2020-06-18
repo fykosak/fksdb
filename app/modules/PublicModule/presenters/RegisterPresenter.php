@@ -177,7 +177,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
             if (!$person) {
                 $this->flashMessage(_('Uživatel musí být osobou, aby se mohl registrovat jako řešitel.'), self::FLASH_INFO);
-                $this->redirect(':Authentication:login');
+                $this->redirect(':Core:Authentication:login');
             }
         } else {
             $email = $this->getHttpRequest()->getQuery('email');
@@ -185,7 +185,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
             if ($person) {
                 if ($person->getLogin()) {
                     $this->flashMessage('Byl nalezen existující účet, pro pokračování se přihlaste.');
-                    $this->redirect(':Authentication:login', ['login' => $email, 'backlink' => $this->storeRequest()]);
+                    $this->redirect(':Core:Authentication:login', ['login' => $email, 'backlink' => $this->storeRequest()]);
                 }
             }
         }
@@ -197,7 +197,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
             if ($contestant && $contestant->year == $this->getSelectedYear()) {
                 // TODO FIXME persistent flash
                 $this->flashMessage(sprintf(_('%s již řeší %s.'), $person->getFullName(), $contest->name), self::FLASH_INFO);
-                $this->redirect(':Authentication:login');
+                $this->redirect(':Core:Authentication:login');
             }
         }
     }
