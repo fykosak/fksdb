@@ -13,7 +13,7 @@ use Nette\Utils\Html;
  * Class AbstractLink
  * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class AbstractLink {
+abstract class AbstractLink implements ILinkFactory {
     /**
      * @var Component
      */
@@ -40,13 +40,7 @@ abstract class AbstractLink {
         ])->addText($this->getText());
     }
 
-    abstract public function getText(): string;
-
-    abstract public function getDestination(AbstractModelSingle $model): string;
-
-    abstract public function prepareParams(AbstractModelSingle $model): array;
-
-    abstract public function getModelClassName(): string;
+    abstract protected function getModelClassName(): string;
 
     /**
      * @param AbstractModelSingle $model

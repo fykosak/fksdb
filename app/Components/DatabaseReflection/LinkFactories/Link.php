@@ -8,7 +8,7 @@ use FKSDB\ORM\AbstractModelSingle;
  * Class Link
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class Link extends AbstractLink implements ILinkFactory {
+class Link extends AbstractLink {
     /**
      * @var string
      */
@@ -44,7 +44,7 @@ class Link extends AbstractLink implements ILinkFactory {
         return _($this->title);
     }
 
-    public function getModelClassName(): string {
+    protected function getModelClassName(): string {
         return $this->modelClassName;
     }
 

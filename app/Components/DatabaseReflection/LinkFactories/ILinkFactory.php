@@ -14,4 +14,10 @@ interface ILinkFactory {
     public function setComponent(Component $component);
 
     public function __invoke(AbstractModelSingle $model): Html;
+
+    public function getText(): string;
+
+    public function getDestination(AbstractModelSingle $model): string;
+
+    public function prepareParams(AbstractModelSingle $model): array;
 }

@@ -37,7 +37,7 @@ class ParticipantListLink extends AbstractLink {
         ];
     }
 
-    public function getModelClassName(): string {
+    protected function getModelClassName(): string {
         return ModelEvent::class;
     }
 }
