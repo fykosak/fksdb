@@ -1,9 +1,9 @@
 <?php
 
-namespace FKSDB\CoreModule;
+namespace FKSDB\Modules\Core\ContestPresenter;
 
 use Authentication\SSO\GlobalSession;
-use FKSDB\CoreModule\BasePresenter;
+use FKSDB\Modules\Core\BasePresenter;
 use Exception;
 use FKSDB\Authentication\AccountManager;
 use Authentication\FacebookAuthenticator;

@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\CoreModule;
+namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Localization\GettextTranslator;

@@ -1,10 +1,10 @@
 <?php
 
-namespace FKSDB\OrgModule;
+namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Entity\Org\OrgForm;
 use FKSDB\Components\Grids\OrgsGrid;
-use FKSDB\EntityTrait;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
 use Nette\Application\BadRequestException;
@@ -18,7 +18,7 @@ use Nette\Application\UI\Control;
  */
 class OrgPresenter extends BasePresenter {
 
-    use EntityTrait;
+    use EntityPresenterTrait;
 
     /**
      * @var ServiceOrg

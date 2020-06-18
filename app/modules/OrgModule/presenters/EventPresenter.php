@@ -1,10 +1,10 @@
 <?php
 
-namespace FKSDB\OrgModule;
+namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Entity\Event\EventForm;
 use FKSDB\Components\Grids\Events\EventsGrid;
-use FKSDB\EntityTrait;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\BadRequestException;
@@ -17,7 +17,7 @@ use FKSDB\Exceptions\NotImplementedException;
  * @method ModelEvent getEntity()
  */
 class EventPresenter extends BasePresenter {
-    use EntityTrait;
+    use EntityPresenterTrait;
 
     /**
      * @var ServiceEvent

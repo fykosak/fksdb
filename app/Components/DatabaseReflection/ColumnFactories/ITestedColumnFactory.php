@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\DatabaseReflection\ColumnFactories;
 
-use FKSDB\Components\DatabaseReflection\ColumnFactories\IColumnFactory;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\AbstractModelSingle;
 

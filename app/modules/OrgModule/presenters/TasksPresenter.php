@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\OrgModule;
+namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Astrid\Downloader;
 use FKSDB\Components\Controls\FormControl\FormControl;

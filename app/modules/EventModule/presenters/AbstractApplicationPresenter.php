@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\EventModule;
+namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\Model\ApplicationHandlerFactory;
@@ -11,6 +11,7 @@ use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -23,7 +24,7 @@ use Nette\InvalidStateException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractApplicationPresenter extends BasePresenter {
-    use EventEntityTrait;
+    use EventEntityPresenterTrait;
 
     /** @var ApplicationHandlerFactory */
     protected $applicationHandlerFactory;

@@ -1,11 +1,12 @@
 <?php
 
-namespace FKSDB\EventModule;
+namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\AllPersonsGrid;
 use FKSDB\Components\Grids\Schedule\GroupsGrid;
 use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -16,7 +17,7 @@ use Nette\Application\UI\Control;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ScheduleGroupPresenter extends BasePresenter {
-    use EventEntityTrait;
+    use EventEntityPresenterTrait;
 
     /**
      * @var ServiceScheduleGroup

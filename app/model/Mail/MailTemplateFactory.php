@@ -2,7 +2,7 @@
 
 namespace Mail;
 
-use FKSDB\CoreModule\BasePresenter;
+use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\Application;
 use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;

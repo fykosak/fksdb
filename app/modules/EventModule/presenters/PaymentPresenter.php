@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\EventModule;
+namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\Components\Forms\Controls\Payment\SelectForm;
@@ -9,6 +9,7 @@ use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
 use FKSDB\Config\Extensions\PaymentExtension;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Transition\PaymentMachine;
@@ -24,7 +25,7 @@ use Nette\Application\UI\Control;
  * @method ModelPayment getEntity
  */
 class PaymentPresenter extends BasePresenter {
-    use EventEntityTrait;
+    use EventEntityPresenterTrait;
 
     /**
      * @var Machine
@@ -120,7 +121,7 @@ class PaymentPresenter extends BasePresenter {
     public function actionEdit() {
         $payment = $this->getEntity();
         if (!$this->canEdit()) {
-            $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $payment->getPaymentId()), \FKSDB\CoreModule\BasePresenter::FLASH_ERROR);
+            $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $payment->getPaymentId()), \FKSDB\Modules\Core\BasePresenter::FLASH_ERROR);
             $this->redirect(':Core:MyPayments:');
         }
         /**

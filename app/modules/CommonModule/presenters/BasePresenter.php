@@ -2,7 +2,7 @@
 
 namespace FKSDB\CommonModule;
 
-use FKSDB\CoreModule\AuthenticatedPresenter;
+use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\UI\PageStyleContainer;
 use Nette\Security\IResource;
 

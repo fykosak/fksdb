@@ -6,9 +6,9 @@
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 
-namespace FKSDB\CoreModule\SeriesPresenter;
+namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\CoreModule\IContestPresenter;
+use FKSDB\Modules\Core\ContestPresenter\IContestPresenter;
 use Nette\Application\BadRequestException;
 
 /**

@@ -1,13 +1,12 @@
 <?php
 
-namespace FKSDB\CoreModule;
+namespace FKSDB\Modules\Core\ContestPresenter;
 
-use FKSDB\CoreModule\AuthenticatedPresenter;
+use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\UI\PageStyleContainer;
-use FKSDB\CoreModule\IContestPresenter;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;

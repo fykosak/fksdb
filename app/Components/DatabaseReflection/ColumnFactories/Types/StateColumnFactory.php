@@ -3,7 +3,6 @@
 namespace FKSDB\Components\DatabaseReflection\ColumnFactories;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
-use FKSDB\Components\DatabaseReflection\ColumnFactories\DefaultColumnFactory;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
 use FKSDB\Exceptions\NotImplementedException;

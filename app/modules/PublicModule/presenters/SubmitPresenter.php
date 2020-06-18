@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\PublicModule;
+namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Control\AjaxUpload\AjaxUpload;
 use FKSDB\Components\Controls\FormControl\FormControl;

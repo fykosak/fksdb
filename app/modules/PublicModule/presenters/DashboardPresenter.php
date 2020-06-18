@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\PublicModule;
+namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\CoreModule\AuthenticationPresenter;
+use FKSDB\Modules\Core\ContestPresenter\AuthenticationPresenter;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;

@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\FyziklaniModule;
+namespace FKSDB\Modules\FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatistics;
 use Nette\Application\BadRequestException;

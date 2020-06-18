@@ -1,8 +1,9 @@
 <?php
 
-namespace FKSDB\PublicModule;
+namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\ContestChooser;
+use FKSDB\Modules\Core\ContestPresenter\ContestPresenter;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelPerson;
@@ -16,7 +17,7 @@ use Nette\Application\BadRequestException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class BasePresenter extends \FKSDB\CoreModule\ContestPresenter {
+abstract class BasePresenter extends ContestPresenter {
 
     /**
      * @var ModelContestant|null|false

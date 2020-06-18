@@ -189,7 +189,7 @@ database:
     reflection: discovered
 application:
     mapping:
-        *: FKSDB\*Module\*Presenter
+        *: FKSDB\Modules\*Module\*Presenter
 
 session:
    expiration: 14 days

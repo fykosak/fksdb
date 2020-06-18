@@ -2,7 +2,7 @@
 
 namespace FKSDB\CommonModule;
 
-use FKSDB\CoreModule\ChartPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
 use FKSDB\Components\Controls\Chart\TotalPersonsChartControl;
 
 /**

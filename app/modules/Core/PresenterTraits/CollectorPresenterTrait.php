@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\CoreModule;
+namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Loaders\JavaScript\JavaScriptLoader;
 use FKSDB\Components\Controls\Loaders\Stylesheet\StylesheetLoader;

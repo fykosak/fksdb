@@ -1,8 +1,7 @@
 <?php
 
-namespace FKSDB\EventModule;
+namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\EntityTrait;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\IEventReferencedModel;
@@ -15,8 +14,8 @@ use Nette\Application\ForbiddenRequestException;
  * Trait EventEntityTrait
  * @author Michal Červeňák <miso@fykos.cz>
  */
-trait EventEntityTrait {
-    use EntityTrait {
+trait EventEntityPresenterTrait {
+    use EntityPresenterTrait {
         getEntity as getBaseEntity;
     }
 

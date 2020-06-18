@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\OrgModule;
+namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Inbox\CorrectedControl;
@@ -9,7 +9,8 @@ use FKSDB\Components\Controls\Inbox\SubmitCheckComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Controls\Inbox\InboxControl;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\CoreModule\SeriesPresenter\{ISeriesPresenter, SeriesPresenterTrait};
+use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
+use FKSDB\Modules\Core\PresenterTraits\{SeriesPresenterTrait};
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Models\ModelTaskContribution;
 use FKSDB\ORM\Services\ServicePerson;
@@ -87,6 +88,8 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
+     * @throws BadRequestException
+     * @throws BadRequestException
      */
     public function authorizedDefault() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
@@ -94,6 +97,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
+     * @throws BadRequestException
      */
     public function authorizedInbox() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
@@ -101,6 +105,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
+     * @throws BadRequestException
      */
     public function authorizedList() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'list', $this->getSelectedContest()));
@@ -108,6 +113,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
+     * @throws BadRequestException
      */
     public function authorizedHandout() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest()));
@@ -115,6 +121,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
+     * @throws BadRequestException
      */
     public function authorizedCorrected() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'corrected', $this->getSelectedContest()));

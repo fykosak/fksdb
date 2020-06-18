@@ -1,10 +1,10 @@
 <?php
 
-namespace FKSDB\OrgModule;
+namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Entity\Teacher\TeacherForm;
 use FKSDB\Components\Grids\TeachersGrid;
-use FKSDB\EntityTrait;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
 use Nette\Application\BadRequestException;
@@ -16,7 +16,7 @@ use Nette\Application\UI\Control;
  * @method ModelTeacher getEntity()
  */
 class TeacherPresenter extends BasePresenter {
-    use EntityTrait;
+    use EntityPresenterTrait;
 
     /**
      * @var ServiceTeacher

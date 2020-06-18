@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\FyziklaniModule;
+namespace FKSDB\Modules\FyziklaniModule;
 
-use FKSDB\EventModule\BasePresenter as EventBasePresenter;
+use FKSDB\Modules\EventModule\BasePresenter as EventBasePresenter;
 use FKSDB\Components\Controls\Choosers\FyziklaniChooser;
 use FKSDB\ORM\Models\ModelEventType;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;

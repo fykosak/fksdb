@@ -3,7 +3,7 @@
 namespace FKSDB\CommonModule;
 
 use FKSDB\Components\Grids\EmailsGrid;
-use FKSDB\EntityTrait;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use Nette\Application\UI\Control;
@@ -14,7 +14,7 @@ use Nette\Security\IResource;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class SpamPresenter extends BasePresenter {
-    use EntityTrait;
+    use EntityPresenterTrait;
 
     /**
      * @var ServiceEmailMessage

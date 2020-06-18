@@ -1,9 +1,10 @@
 <?php
 
-namespace FKSDB\EventModule;
+namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Entity\EventOrg\EventOrgForm;
 use FKSDB\Components\Grids\EventOrgsGrid;
+use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEventOrg;
 use Nette\Application\AbortException;
@@ -17,7 +18,7 @@ use Nette\Application\UI\Control;
  * @method ModelEventOrg getEntity()
  */
 class EventOrgPresenter extends BasePresenter {
-    use EventEntityTrait;
+    use EventEntityPresenterTrait;
 
     /**
      * @var ServiceEventOrg

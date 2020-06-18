@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\PublicModule;
+namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\CoreModule\BasePresenter as CoreBasePresenter;
+use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
@@ -15,7 +15,7 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\UI\PageStyleContainer;
-use FKSDB\CoreModule\IContestPresenter;
+use FKSDB\Modules\Core\ContestPresenter\IContestPresenter;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;

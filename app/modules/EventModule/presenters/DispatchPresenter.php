@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\EventModule;
+namespace FKSDB\Modules\EventModule;
 
-use FKSDB\CoreModule\AuthenticatedPresenter;
+use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Components\Controls\Badges\ContestBadge;
 use FKSDB\Components\Grids\Events\DispatchGrid;
 use FKSDB\ORM\Models\ModelLogin;

@@ -6,7 +6,7 @@
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 
-namespace FKSDB\CoreModule;
+namespace FKSDB\Modules\Core\ContestPresenter;
 
 use FKSDB\ORM\Models\ModelContest;
 

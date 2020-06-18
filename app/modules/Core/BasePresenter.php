@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\CoreModule;
+namespace FKSDB\Modules\Core;
 
 use Exception;
 use FKSDB\Application\IJavaScriptCollector;
@@ -18,6 +18,8 @@ use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
 use FKSDB\Config\GlobalParameters;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\ILogger;
+use FKSDB\Modules\Core\PresenterTraits\CollectorPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\LangPresenterTrait;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\UI\PageStyleContainer;
 use FKSDB\UI\PageTitle;

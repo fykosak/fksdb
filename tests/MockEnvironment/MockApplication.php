@@ -2,7 +2,7 @@
 
 namespace MockEnvironment;
 
-use FKSDB\CoreModule\BasePresenter;
+use FKSDB\Modules\Core\BasePresenter;
 
 class MockApplication {
 

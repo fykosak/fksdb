@@ -1,11 +1,12 @@
 <?php
 
-namespace FKSDB\OrgModule;
+namespace FKSDB\Modules\OrgModule;
 
 use Exception;
 use FKSDB\Components\Controls\Inbox\PointsFormControl;
 use FKSDB\Components\Controls\Inbox\PointsPreviewControl;
-use FKSDB\CoreModule\SeriesPresenter\{ISeriesPresenter, SeriesPresenterTrait};
+use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
+use FKSDB\Modules\Core\PresenterTraits\{SeriesPresenterTrait};
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Models\ModelTaskContribution;
@@ -110,6 +111,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
+     * @throws BadRequestException
      */
     public function authorizedEntry() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'edit', $this->getSelectedContest()));
@@ -117,6 +119,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
+     * @throws BadRequestException
      */
     public function authorizedPreview() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'points', $this->getSelectedContest()));

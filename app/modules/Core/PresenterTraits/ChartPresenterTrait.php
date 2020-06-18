@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\CoreModule;
+namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Chart\IChart;
 use Nette\Application\UI\Control;

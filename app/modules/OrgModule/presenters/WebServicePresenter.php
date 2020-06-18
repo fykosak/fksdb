@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\OrgModule;
+namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\CoreModule\BasePresenter;
+use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\AbortException;
 use Tracy\Debugger;
 use FKSDB\WebService\SoapResponse;

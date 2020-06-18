@@ -1,11 +1,12 @@
 <?php
 
-namespace FKSDB\EventModule;
+namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\ItemsGrid;
 use FKSDB\Components\Grids\Schedule\PersonsGrid;
 use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
@@ -23,7 +24,7 @@ use Nette\Security\IResource;
  * @method ModelScheduleItem traitGetEntity()
  */
 class ScheduleItemPresenter extends BasePresenter {
-    use EventEntityTrait {
+    use EventEntityPresenterTrait {
         getEntity as traitGetEntity;
     }
 

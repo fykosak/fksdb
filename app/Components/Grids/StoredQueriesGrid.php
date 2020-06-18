@@ -5,7 +5,6 @@ namespace FKSDB\Components\Grids;
 use Authorization\ContestAuthorizator;
 use Closure;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use Nette\Application\UI\InvalidLinkException;

@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
 use FKSDB\Components\DatabaseReflection\ColumnFactories\IColumnFactory;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\Forms\Containers\IWriteOnly;

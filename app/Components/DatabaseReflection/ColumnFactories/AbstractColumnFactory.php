@@ -35,11 +35,6 @@ abstract class AbstractColumnFactory implements IColumnFactory {
      */
     private $referencedAccess;
 
-    /**
-     * @param mixed ...$args
-     * @return BaseControl
-     * @throws OmittedControlException
-     */
     public function createField(...$args): BaseControl {
         return new TextInput($this->getTitle());
     }

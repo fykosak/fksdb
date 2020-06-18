@@ -10,7 +10,7 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\EntityTrait;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\FlashMessageDump;
@@ -44,7 +44,7 @@ use Tracy\Debugger;
  * @method ModelPerson getEntity()
  */
 class PersonPresenter extends BasePresenter {
-    use EntityTrait;
+    use EntityPresenterTrait;
 
     /**
      * @var ModelPerson[]

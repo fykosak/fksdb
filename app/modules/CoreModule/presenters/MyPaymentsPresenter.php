@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\CoreModule;
+namespace FKSDB\Modules\Core\ContestPresenter;
 
-use FKSDB\CoreModule\AuthenticatedPresenter;
+use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Components\Grids\Payment\MyPaymentGrid;
 
 /**

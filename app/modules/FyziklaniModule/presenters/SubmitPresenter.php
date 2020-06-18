@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\FyziklaniModule;
+namespace FKSDB\Modules\FyziklaniModule;
 
-use FKSDB\EventModule\EventEntityTrait;
+use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Components\Controls\Entity\Fyziklani\Submit\EditControl;
 use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
 use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
@@ -22,7 +22,7 @@ use Nette\Application\UI\Control;
  * @method ModelFyziklaniSubmit getEntity()
  */
 class SubmitPresenter extends BasePresenter {
-    use EventEntityTrait;
+    use EventEntityPresenterTrait;
 
     /* ***** Title methods *****/
     /**

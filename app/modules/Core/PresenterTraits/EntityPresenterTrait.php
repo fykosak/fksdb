@@ -1,10 +1,11 @@
 <?php
 
-namespace FKSDB;
+namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Messages\Message;
@@ -21,7 +22,7 @@ use Nette\Security\IResource;
  * Trait EntityTrait
  * @author Michal Červeňák <miso@fykos.cz>
  */
-trait EntityTrait {
+trait EntityPresenterTrait {
     /**
      * @var AbstractModelSingle|IModel
      */

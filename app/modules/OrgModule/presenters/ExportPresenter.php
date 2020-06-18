@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\OrgModule;
+namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\CoreModule\AuthenticatedPresenter;
+use FKSDB\Modules\Core\AuthenticatedPresenter;
 use Exports\ExportFormatFactory;
 use Exports\StoredQuery;
 use Exports\StoredQueryFactory;
@@ -13,7 +13,8 @@ use FKSDB\Components\Controls\StoredQueryTagCloud;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Components\Grids\StoredQueriesGrid;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\CoreModule\SeriesPresenter\{ISeriesPresenter, SeriesPresenterTrait};
+use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
+use FKSDB\Modules\Core\PresenterTraits\{SeriesPresenterTrait};
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
@@ -219,10 +220,18 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         return $this->patternQuery;
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function authorizedList() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('storedQuery', 'list', $this->getSelectedContest()));
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     */
     public function authorizedCompose() {
         $this->setAuthorized(
             ($this->getContestAuthorizator()->isAllowed('storedQuery', 'create', $this->getSelectedContest()) &&

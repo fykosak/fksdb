@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\PublicModule;
+namespace FKSDB\Modules\PublicModule;
 
 use DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;

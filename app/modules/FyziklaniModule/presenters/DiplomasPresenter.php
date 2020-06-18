@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\FyziklaniModule;
+namespace FKSDB\Modules\FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\FinalResults;
 use FKSDB\Fyziklani\CloseStrategy;
@@ -73,7 +73,7 @@ class DiplomasPresenter extends BasePresenter {
     public function handleCalculate(string $category = null) {
         $closeStrategy = new CloseStrategy($this->getEvent(), $this->getServiceFyziklaniTeam());
         $log = $closeStrategy($category);
-        $this->flashMessage(Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(Html::el('ul')->addHtml($log)), \FKSDB\CoreModule\BasePresenter::FLASH_SUCCESS);
+        $this->flashMessage(Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(Html::el('ul')->addHtml($log)), \FKSDB\Modules\Core\BasePresenter::FLASH_SUCCESS);
         $this->redirect('this');
     }
 

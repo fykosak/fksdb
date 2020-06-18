@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\FyziklaniModule;
+namespace FKSDB\Modules\FyziklaniModule;
 
-use FKSDB\EventModule\EventEntityTrait;
+use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Fyziklani\CloseTeamControl;
 use FKSDB\Components\Grids\BaseGrid;
@@ -25,7 +25,7 @@ use Nette\Application\UI\Control;
  */
 class ClosePresenter extends BasePresenter {
 
-    use EventEntityTrait;
+    use EventEntityPresenterTrait;
 
     /* ******* TITLE ***********/
     /**

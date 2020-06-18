@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\OrgModule;
+namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Grids\ContestantsGrid;
 use FKSDB\ORM\Models\ModelContestant;

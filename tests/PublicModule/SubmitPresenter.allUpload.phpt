@@ -4,7 +4,7 @@ $container = require '../bootstrap.php';
 
 use Nette\Application\Responses\RedirectResponse;
 use Nette\DI\Container;
-use FKSDB\PublicModule\SubmitTestCase;
+use FKSDB\Modules\PublicModule\SubmitTestCase;
 use Tester\Assert;
 
 class SubmitPresenterTest extends SubmitTestCase {

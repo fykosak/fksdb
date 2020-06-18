@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\EventModule;
+namespace FKSDB\Modules\EventModule;
 
 use Nette\Application\BadRequestException;
 

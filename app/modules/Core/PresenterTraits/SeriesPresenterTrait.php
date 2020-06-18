@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\CoreModule\SeriesPresenter;
+namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Choosers\SeriesChooser;
 use FKSDB\Exceptions\BadTypeException;
@@ -39,6 +39,10 @@ trait SeriesPresenterTrait {
         return $this->seriesCalculator;
     }
 
+    /**
+     * @return array
+     * @throws BadRequestException
+     */
     private function getAllowedSeries(): array {
         return $this->getSeriesCalculator()->getAllowedSeries($this->getSelectedContest(), $this->getSelectedYear());
     }
@@ -61,8 +65,9 @@ trait SeriesPresenterTrait {
     }
 
     /**
-     * @param int|null $series
+     * @param $series
      * @return bool
+     * @throws BadRequestException
      */
     private function isValidSeries($series): bool {
         return in_array($series, $this->getAllowedSeries());

@@ -4,7 +4,7 @@ namespace FKSDB\CommonModule;
 
 use FKSDB\Components\Controls\Entity\School\SchoolForm;
 use FKSDB\Components\Grids\SchoolsGrid;
-use FKSDB\EntityTrait;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Application\BadRequestException;
@@ -17,7 +17,7 @@ use Nette\Security\IResource;
  * @method ModelSchool getEntity()
  */
 class SchoolPresenter extends BasePresenter {
-    use EntityTrait;
+    use EntityPresenterTrait;
 
     /** @var ServiceSchool */
     private $serviceSchool;
