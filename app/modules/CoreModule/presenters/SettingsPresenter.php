@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Modules\Core\ContestPresenter;
+namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use Authentication\PasswordAuthenticator;

@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\CommonModule;
+namespace FKSDB\Modules\CommonModule;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\UI\PageStyleContainer;
@@ -8,7 +8,7 @@ use Nette\Security\IResource;
 
 /**
  * Class BasePresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
 

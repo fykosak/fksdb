@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Modules\Core\ContestPresenter\AuthenticationPresenter;
+use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;

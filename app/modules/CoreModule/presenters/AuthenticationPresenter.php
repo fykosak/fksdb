@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Modules\Core\ContestPresenter;
+namespace FKSDB\Modules\CoreModule;
 
 use Authentication\SSO\GlobalSession;
 use FKSDB\Modules\Core\BasePresenter;

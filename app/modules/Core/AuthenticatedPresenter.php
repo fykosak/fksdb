@@ -8,7 +8,7 @@ use Authentication\TokenAuthenticator;
 use Authorization\ContestAuthorizator;
 use Authorization\EventAuthorizator;
 use Exception;
-use FKSDB\Modules\Core\ContestPresenter\AuthenticationPresenter;
+use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use FKSDB\ORM\Models\ModelAuthToken;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;

@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\CommonModule;
+namespace FKSDB\Modules\CommonModule;
 
 use FKSDB\Components\Grids\EmailsGrid;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;

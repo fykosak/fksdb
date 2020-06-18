@@ -4,7 +4,7 @@ namespace Authentication;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use Authentication\SSO\GlobalSession;
-use FKSDB\Modules\Core\ContestPresenter\AuthenticationPresenter;
+use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\YearCalculator;
