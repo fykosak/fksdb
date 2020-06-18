@@ -77,7 +77,7 @@ class TaskPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function taskImportFormSucceeded(Form $form) {
+    private function taskImportFormSucceeded(Form $form) {
         $values = $form->getValues();
         $taskImportProcessor = new FyziklaniTaskImportProcessor($this->getContext(), $this->getEvent());
         $logger = new MemoryLogger();

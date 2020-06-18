@@ -136,10 +136,7 @@ class SubmitPresenter extends BasePresenter {
         $this->redirect('this');
     }
 
-    /**
-     * @return ServiceFyziklaniSubmit
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServiceFyziklaniSubmit {
         return $this->getServiceFyziklaniSubmit();
     }
 }

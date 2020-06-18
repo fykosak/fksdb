@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\DatabaseReflection\AbstractRow;
-use FKSDB\Components\DatabaseReflection\Links\AbstractLink;
+use FKSDB\Components\DatabaseReflection\ColumnFactories\IColumnFactory;
+use FKSDB\Components\DatabaseReflection\LinkFactories\ILinkFactory;
 use FKSDB\Exceptions\BadTypeException;
 use Nette\DI\Container;
 use Nette\DI\MissingServiceException;
@@ -31,28 +31,28 @@ final class TableReflectionFactory {
 
     /**
      * @param string $factoryName
-     * @return AbstractRow
+     * @return IColumnFactory
      * @throws BadTypeException
      * @throws MissingServiceException
      */
-    public function loadRowFactory(string $factoryName): AbstractRow {
+    public function loadRowFactory(string $factoryName): IColumnFactory {
         $service = $this->container->getService('DBReflection.' . $factoryName);
-        if (!$service instanceof AbstractRow) {
-            throw new BadTypeException(AbstractRow::class, $service);
+        if (!$service instanceof IColumnFactory) {
+            throw new BadTypeException(IColumnFactory::class, $service);
         }
         return $service;
     }
 
     /**
      * @param string $linkId
-     * @return AbstractLink
+     * @return ILinkFactory
      * @throws MissingServiceException
      * @throws BadTypeException
      */
-    public function loadLinkFactory(string $linkId): AbstractLink {
+    public function loadLinkFactory(string $linkId): ILinkFactory {
         $service = $this->container->getService('DBReflection.link.' . $linkId);
-        if (!$service instanceof AbstractLink) {
-            throw new BadTypeException(AbstractLink::class, $service);
+        if (!$service instanceof ILinkFactory) {
+            throw new BadTypeException(ILinkFactory::class, $service);
         }
         return $service;
     }

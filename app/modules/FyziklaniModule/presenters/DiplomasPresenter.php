@@ -10,7 +10,7 @@ use Nette\Utils\Html;
 
 /**
  * Class DiplomasPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DiplomasPresenter extends BasePresenter {
     /**

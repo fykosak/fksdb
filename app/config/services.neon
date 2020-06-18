@@ -45,6 +45,7 @@ services:
             - addProcessing(@PDFStamper)
     submitCorrectedStorage:
                     class: FKSDB\Submits\FileSystemStorage\CorrectedStorage(%corrected.root%, %corrected.directoryMask%, %corrected.filenameMask%, %contestMapping%)
+    - FKSDB\Submits\SubmitHandlerFactory
     - FKSDB\Components\Forms\Controls\Schedule\Handler
     PDFStamper: FKSDB\Submits\PDFStamper(%stamper.fontSize%)
     readOnlyConnection:

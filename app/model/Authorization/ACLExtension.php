@@ -15,7 +15,6 @@ use Nette\Security\Permission;
  */
 class ACLExtension extends CompilerExtension {
     /** @var string[] */
-
     public static $semanticMap = [
         'qid' => QIDAssertion::class,
         'queryTag' => StoredQueryTagAssertion::class,

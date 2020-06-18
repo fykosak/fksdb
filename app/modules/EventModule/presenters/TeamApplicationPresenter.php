@@ -87,9 +87,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
         return new TeamRestsComponent($this->getContext());
     }
 
-    /**
-     * @return AbstractServiceSingle|ServiceFyziklaniTeam
-     */
     protected function getORMService(): ServiceFyziklaniTeam {
         return $this->serviceFyziklaniTeam;
     }

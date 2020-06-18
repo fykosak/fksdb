@@ -3,7 +3,6 @@
 namespace PublicModule;
 
 use FKSDB\Components\Control\AjaxUpload\AjaxUpload;
-use FKSDB\Components\Control\AjaxUpload\SubmitSaveTrait;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
@@ -19,6 +18,7 @@ use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Submits\ProcessingException;
 use FKSDB\Exceptions\ModelException;
+use FKSDB\Submits\SubmitHandlerFactory;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -32,7 +32,6 @@ use FKSDB\ORM\Services\ServiceSubmitQuizQuestion;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SubmitPresenter extends BasePresenter {
-    use SubmitSaveTrait;
 
     /** @var ServiceSubmit */
     private $submitService;
@@ -87,6 +86,16 @@ class SubmitPresenter extends BasePresenter {
      */
     public function injectQuizQuestionService(ServiceQuizQuestion $quizQuestionService) {
         $this->quizQuestionService = $quizQuestionService;
+    }
+/** @var SubmitHandlerFactory */
+    private $submitHandlerFactory;
+
+    /**
+     * @param SubmitHandlerFactory $submitHandlerFactory
+     * @return void
+     */
+    public function injectSubmitHandlerFactory(SubmitHandlerFactory $submitHandlerFactory) {
+        $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
     /* ******************* AUTH ************************/
@@ -222,14 +231,18 @@ class SubmitPresenter extends BasePresenter {
                 $this->handleUploadFormSuccess($form);
             };
 
-       //     $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
+            //     $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
         }
 
         return $control;
     }
 
+    /**
+     * @return AjaxUpload
+     * @throws BadRequestException
+     */
     protected function createComponentAjaxUpload(): AjaxUpload {
-        return new AjaxUpload($this->getContext());
+        return new AjaxUpload($this->getContext(), $this->getAvailableTasks(), $this->getContestant());
     }
 
     /**
@@ -247,7 +260,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws \Exception
      * @internal
      */
-    public function handleUploadFormSuccess(Form $form) {
+    private function handleUploadFormSuccess(Form $form) {
         $values = $form->getValues();
 
         $taskIds = explode(',', $values['tasks']);
@@ -286,7 +299,7 @@ class SubmitPresenter extends BasePresenter {
                     continue;
                 }
 
-                $this->saveSubmitTrait($taskValues['file'], $task, $this->getContestant());
+                $this->submitHandlerFactory->handleSave($taskValues['file'], $task, $this->getContestant());
 
                 $this->flashMessage(sprintf(_('Úloha %s odevzdána.'), $task->label), self::FLASH_SUCCESS);
             }
@@ -313,7 +326,7 @@ class SubmitPresenter extends BasePresenter {
      * @return TypedTableSelection
      * @throws BadRequestException
      */
-    public function getAvailableTasks(): TypedTableSelection {
+    private function getAvailableTasks(): TypedTableSelection {
         $tasks = $this->taskService->getTable();
         $tasks->where('contest_id = ? AND year = ?', $this->getSelectedContest()->contest_id, $this->getSelectedYear());
         $tasks->where('submit_start IS NULL OR submit_start < NOW()');
@@ -321,22 +334,6 @@ class SubmitPresenter extends BasePresenter {
         $tasks->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
 
         return $tasks;
-    }
-
-    /**
-     * @param int $taskId
-     * @return ModelTask|null
-     *
-     * @throws BadRequestException
-     */
-    public function isAvailableSubmit($taskId) {
-        /** @var ModelTask $task */
-        foreach ($this->getAvailableTasks() as $task) {
-            if ($task->task_id == $taskId) {
-                return $task;
-            }
-        }
-        return null;
     }
 
     protected function getUploadedStorage(): UploadedStorage {
