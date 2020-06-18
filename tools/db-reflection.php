@@ -1,6 +1,6 @@
 <?php
 
-use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\ColumnFactories\IColumnFactory;
 use Nette\DI\Container;
 
 const SAFE_LIMIT = 500;
@@ -11,10 +11,10 @@ const SAFE_LIMIT = 500;
 $container = require './bootstrap.php';
 set_time_limit(60);
 
-$factories = $container->findByType(AbstractRow::class);
+$factories = $container->findByType(IColumnFactory::class);
 
 foreach ($factories as $key => $factoryName) {
-    /** @var AbstractRow $factory */
+    /** @var IColumnFactory $factory */
     $factory = $container->getService($factoryName);
     list(, $table, $field) = explode('.', $factoryName);
     echo '| ' . $table . ' | ' . $field . ' | ' . $factory->getPermission()->read . ' | ' . $factory->getPermission()->write . ' |' . "\n";

@@ -55,10 +55,7 @@ class EventAuthorizator {
         return $this->user;
     }
 
-    /**
-     * @return Permission
-     */
-    protected function getAcl() {
+    protected function getAcl(): Permission {
         return $this->acl;
     }
 
@@ -84,12 +81,12 @@ class EventAuthorizator {
     }
 
     /**
-     * @param $resource
-     * @param $privilege
+     * @param IResource|string|null $resource
+     * @param string|null $privilege
      * @param ModelEvent $event
      * @return bool
      */
-    public function isEventOrContestOrgAllowed($resource, $privilege, ModelEvent $event) {
+    public function isEventOrContestOrgAllowed($resource, $privilege, ModelEvent $event): bool {
         if (!$this->getUser()->isAuthenticated()) {
             return false;
         }
@@ -100,12 +97,12 @@ class EventAuthorizator {
     }
 
     /**
-     * @param $resource
-     * @param $privilege
+     * @param IResource|string|null $resource
+     * @param string|null $privilege
      * @param ModelEvent $event
      * @return bool
      */
-    public function isEventAndContestOrgAllowed($resource, $privilege, ModelEvent $event) {
+    public function isEventAndContestOrgAllowed($resource, $privilege, ModelEvent $event): bool {
         if (!$this->getUser()->isAuthenticated()) {
             return false;
         }

@@ -2,19 +2,20 @@
 
 namespace FKSDB\Config\Extensions;
 
-use FKSDB\Components\DatabaseReflection\{DateRow,
+use FKSDB\Components\DatabaseReflection\ColumnFactories\{
+    DateRow,
     DateTimeRow,
-    DetailFactory,
-    EmailRow,
-    IntRow,
-    Links\Link,
-    PrimaryKeyRow,
-    StateRow,
-    StringRow,
-    Tables\PhoneRow,
-    TextRow,
+    EmailColumnFactory,
+    IntColumnFactory,
+    PrimaryKeyColumnFactory,
+    StateColumnFactory,
+    StringColumnFactory,
+    PhoneColumnFactory,
+    TextColumnFactory,
     TimeRow
 };
+use FKSDB\Components\DatabaseReflection\DetailFactory;
+use FKSDB\Components\DatabaseReflection\LinkFactories\Link;
 use Nette\Application\BadRequestException;
 use Nette\DI\CompilerExtension;
 use Nette\DI\ServiceDefinition;
@@ -130,13 +131,13 @@ class DBReflectionExtension extends CompilerExtension {
     }
 
     private function registerStateRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
-        $factory = $this->setUpDefaultFactory($tableName, $fieldName, StateRow::class, $field);
+        $factory = $this->setUpDefaultFactory($tableName, $fieldName, StateColumnFactory::class, $field);
         $factory->addSetup('setStates', [$field['states']]);
         return $factory;
     }
 
     private function registerIntRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
-        $factory = $this->setUpDefaultFactory($tableName, $fieldName, IntRow::class, $field);
+        $factory = $this->setUpDefaultFactory($tableName, $fieldName, IntColumnFactory::class, $field);
         if (isset($field['nullValueFormat'])) {
             $factory->addSetup('setNullValueFormat', [$field['nullValueFormat']]);
         }
@@ -150,11 +151,11 @@ class DBReflectionExtension extends CompilerExtension {
     }
 
     private function registerStringRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
-        return $this->setUpDefaultFactory($tableName, $fieldName, StringRow::class, $field);
+        return $this->setUpDefaultFactory($tableName, $fieldName, StringColumnFactory::class, $field);
     }
 
     private function registerTextRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
-        return $this->setUpDefaultFactory($tableName, $fieldName, TextRow::class, $field);
+        return $this->setUpDefaultFactory($tableName, $fieldName, TextColumnFactory::class, $field);
     }
 
     private function registerDateTimeRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
@@ -178,11 +179,11 @@ class DBReflectionExtension extends CompilerExtension {
     }
 
     private function registerPrimaryKeyRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
-        return $this->setUpDefaultFactory($tableName, $fieldName, PrimaryKeyRow::class, $field);
+        return $this->setUpDefaultFactory($tableName, $fieldName, PrimaryKeyColumnFactory::class, $field);
     }
 
     private function registerPhoneRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
-        $factory = $this->setUpDefaultFactory($tableName, $fieldName, PhoneRow::class, $field);
+        $factory = $this->setUpDefaultFactory($tableName, $fieldName, PhoneColumnFactory::class, $field);
         if (isset($field['writeOnly'])) {
             $factory->addSetup('setWriteOnly', [$field['writeOnly']]);
         }
@@ -190,7 +191,7 @@ class DBReflectionExtension extends CompilerExtension {
     }
 
     private function registerEmailRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
-        return $this->setUpDefaultFactory($tableName, $fieldName, EmailRow::class, $field);
+        return $this->setUpDefaultFactory($tableName, $fieldName, EmailColumnFactory::class, $field);
     }
 
     /**

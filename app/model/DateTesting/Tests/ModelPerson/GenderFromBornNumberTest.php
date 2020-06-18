@@ -3,13 +3,13 @@
 namespace FKSDB\DataTesting\Tests\Person;
 
 use FKSDB\Components\Forms\Rules\BornNumber;
+use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\DataTesting\TestsLogger;
 use FKSDB\DataTesting\TestLog;
 
 /**
  * Class GenderFromBornNumberTest
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class GenderFromBornNumberTest extends PersonTest {
 
@@ -22,11 +22,11 @@ class GenderFromBornNumberTest extends PersonTest {
     }
 
     /**
-     * @param TestsLogger $logger
+     * @param ILogger $logger
      * @param ModelPerson $person
      * @return void
      */
-    public function run(TestsLogger $logger, ModelPerson $person) {
+    public function run(ILogger $logger, ModelPerson $person) {
         $info = $person->getInfo();
 
         if (!$info) {

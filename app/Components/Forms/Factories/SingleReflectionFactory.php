@@ -2,7 +2,8 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\DatabaseReflection\AbstractRow;
+use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
+use FKSDB\Components\DatabaseReflection\ColumnFactories\IColumnFactory;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Containers\ModelContainer;
@@ -31,11 +32,11 @@ abstract class SingleReflectionFactory {
 
     /**
      * @param string $fieldName
-     * @return AbstractRow
+     * @return IColumnFactory
      * @throws InvalidStateException
      * @throws \Exception
      */
-    protected function loadFactory(string $fieldName): AbstractRow {
+    protected function loadFactory(string $fieldName): IColumnFactory {
         return $this->tableReflectionFactory->loadRowFactory($this->getTableName() . '.' . $fieldName);
     }
 

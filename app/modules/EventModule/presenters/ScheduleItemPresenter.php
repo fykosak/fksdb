@@ -113,7 +113,7 @@ class ScheduleItemPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws AbortException
      */
-    protected function getEntity() {
+    protected function getEntity(): ModelScheduleItem {
         $entity = $this->traitGetEntity();
         if ($entity->schedule_group_id !== $this->getGroup()->schedule_group_id) {
             throw new ForbiddenRequestException();
