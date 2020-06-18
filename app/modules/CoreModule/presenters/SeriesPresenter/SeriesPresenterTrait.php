@@ -87,13 +87,7 @@ trait SeriesPresenterTrait {
      */
     abstract protected function getContext();
 
-    /**
-     * @return ModelContest
-     */
-    abstract public function getSelectedContest();
+    abstract public function getSelectedContest(): ModelContest;
 
-    /**
-     * @return int
-     */
-    abstract public function getSelectedYear();
+    abstract public function getSelectedYear(): int;
 }
