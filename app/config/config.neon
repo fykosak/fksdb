@@ -185,15 +185,15 @@ php:
     session.gc_maxlifetime: 1213200
     # zlib.output_compression: yes
 
-nette:
-    database:
-        reflection: discovered
-    #application:
-      #  errorPresenter: Error
+database:
+    reflection: discovered
+application:
+    mapping:
+        *: FKSDB\*Module\*Presenter
 
-    session:
-        expiration: 14 days
-        autoStart: true
+session:
+   expiration: 14 days
+   autoStart: true
 extensions:
     fksrouter: FKSDB\Config\Extensions\RouterExtension
     acl: Authorization\ACLExtension

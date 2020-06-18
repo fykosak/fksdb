@@ -1,6 +1,6 @@
 <?php
 
-namespace FyziklaniModule;
+namespace FKSDB\FyziklaniModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Fyziklani\TaskGrid;

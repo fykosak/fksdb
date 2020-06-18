@@ -8,7 +8,7 @@ use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\DI\Container;
 use Nette\Application\UI\ITemplate;
-use PublicModule\RegisterPresenter;
+use FKSDB\PublicModule\RegisterPresenter;
 use Tester\Assert;
 
 class RegisterPresenterTest extends DatabaseTestCase {

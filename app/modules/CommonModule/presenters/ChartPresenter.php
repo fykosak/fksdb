@@ -1,8 +1,8 @@
 <?php
 
-namespace CommonModule;
+namespace FKSDB\CommonModule;
 
-use FKSDB\ChartPresenterTrait;
+use FKSDB\CoreModule\ChartPresenterTrait;
 use FKSDB\Components\Controls\Chart\TotalPersonsChartControl;
 
 /**

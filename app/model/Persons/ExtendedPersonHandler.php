@@ -3,7 +3,7 @@
 namespace Persons;
 
 use FKSDB\Authentication\AccountManager;
-use BasePresenter;
+use FKSDB\CoreModule\BasePresenter;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\ORM\AbstractModelSingle;
@@ -22,7 +22,7 @@ use Nette\Database\Connection;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
-use OrgModule\ContestantPresenter;
+use FKSDB\OrgModule\ContestantPresenter;
 use Tracy\Debugger;
 use Traversable;
 

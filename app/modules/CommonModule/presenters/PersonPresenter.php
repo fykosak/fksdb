@@ -1,6 +1,6 @@
 <?php
 
-namespace CommonModule;
+namespace FKSDB\CommonModule;
 
 use FKSDB\Components\Controls\Entity\Person\PersonForm;
 use FKSDB\Components\Controls\FormControl\FormControl;

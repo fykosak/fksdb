@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
-use BasePresenter;
+use FKSDB\CoreModule\BasePresenter;
 use Exception;
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;

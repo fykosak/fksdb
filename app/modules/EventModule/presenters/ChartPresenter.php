@@ -1,8 +1,8 @@
 <?php
 
-namespace EventModule;
+namespace FKSDB\EventModule;
 
-use FKSDB\ChartPresenterTrait;
+use FKSDB\CoreModule\ChartPresenterTrait;
 use FKSDB\Components\Controls\Chart\Event\ParticipantAcquaintanceChartControl;
 use FKSDB\Components\React\ReactComponent\Events\SingleApplicationsTimeProgress;
 use FKSDB\Components\React\ReactComponent\Events\TeamApplicationsTimeProgress;

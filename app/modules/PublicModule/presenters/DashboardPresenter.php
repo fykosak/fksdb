@@ -1,8 +1,8 @@
 <?php
 
-namespace PublicModule;
+namespace FKSDB\PublicModule;
 
-use AuthenticationPresenter;
+use FKSDB\CoreModule\AuthenticationPresenter;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -35,7 +35,7 @@ class DashboardPresenter extends BasePresenter {
         if ($this->getParam(AuthenticationPresenter::PARAM_DISPATCH)) {
             parent::unauthorizedAccess();
         } else {
-            $this->redirect(':Authentication:login'); // ask for a central dispatch
+            $this->redirect(':Core:Authentication:login'); // ask for a central dispatch
         }
     }
 

@@ -95,8 +95,8 @@ abstract class BaseGrid extends Grid {
      */
     protected function createTemplate(): ITemplate {
         $presenter = $this->getPresenter();
-        if (!$presenter instanceof \BasePresenter) {
-            throw new BadTypeException(\BasePresenter::class, $presenter);
+        if (!$presenter instanceof \FKSDB\CoreModule\BasePresenter) {
+            throw new BadTypeException(\FKSDB\CoreModule\BasePresenter::class, $presenter);
         }
         /**
          * @var GridPaginator $paginator

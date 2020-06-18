@@ -1,6 +1,6 @@
 <?php
 
-namespace OrgModule;
+namespace FKSDB\OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;

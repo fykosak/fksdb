@@ -87,12 +87,12 @@ class SchoolForm extends AbstractEntityFormControl implements IEditEntityForm {
             $this->create ? $this->handleCreateSuccess($data) : $this->handleEditSuccess($data);
             $connection->commit();
 
-            $this->getPresenter()->flashMessage($this->create ? _('Škola založena') : _('Škola upravena'), \BasePresenter::FLASH_SUCCESS);
+            $this->getPresenter()->flashMessage($this->create ? _('Škola založena') : _('Škola upravena'), \FKSDB\CoreModule\BasePresenter::FLASH_SUCCESS);
             $this->getPresenter()->redirect('list');
         } catch (ModelException $exception) {
             $connection->rollBack();
             Debugger::log($exception, Debugger::ERROR);
-            $this->getPresenter()->flashMessage($this->create ? _('Chyba při zakládání školy.') : _('Chyba při úpravě školy.'), \BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage($this->create ? _('Chyba při zakládání školy.') : _('Chyba při úpravě školy.'), \FKSDB\CoreModule\BasePresenter::FLASH_ERROR);
         }
     }
 

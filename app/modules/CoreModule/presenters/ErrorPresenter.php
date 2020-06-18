@@ -1,5 +1,9 @@
 <?php
 
+namespace FKSDB\CoreModule;
+
+use FKSDB\CoreModule\BasePresenter;
+use Exception;
 use FKSDB\UI\PageStyleContainer;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -33,7 +37,7 @@ class ErrorPresenter extends BasePresenter {
      */
     public function renderDefault($exception) {
         if ($this->isAjax()) { // AJAX request? Just note this error in payload.
-            $this->payload->error = TRUE;
+            $this->payload->error = true;
             $this->terminate();
         } elseif ($exception instanceof BadRequestException) {
             $code = $exception->getCode();

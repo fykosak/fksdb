@@ -1,6 +1,6 @@
 <?php
 
-namespace EventModule;
+namespace FKSDB\EventModule;
 
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\Components\Forms\Controls\Payment\SelectForm;
@@ -120,8 +120,8 @@ class PaymentPresenter extends BasePresenter {
     public function actionEdit() {
         $payment = $this->getEntity();
         if (!$this->canEdit()) {
-            $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $payment->getPaymentId()), \BasePresenter::FLASH_ERROR);
-            $this->redirect(':MyPayments:');
+            $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $payment->getPaymentId()), \FKSDB\CoreModule\BasePresenter::FLASH_ERROR);
+            $this->redirect(':Core:MyPayments:');
         }
         /**
          * @var SelectForm $component
@@ -138,7 +138,7 @@ class PaymentPresenter extends BasePresenter {
         if (\count($this->getMachine()->getAvailableTransitions(null)) === 0) {
             $this->flashMessage(_('Payment is not allowed in this time!'));
             if (!$this->isOrg()) {
-                $this->redirect('Dashboard:default');
+                $this->redirect(':Core:Dashboard:default');
             }
         }
     }

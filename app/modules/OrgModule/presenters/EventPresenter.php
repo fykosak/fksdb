@@ -1,6 +1,6 @@
 <?php
 
-namespace OrgModule;
+namespace FKSDB\OrgModule;
 
 use FKSDB\Components\Controls\Entity\Event\EventForm;
 use FKSDB\Components\Grids\Events\EventsGrid;

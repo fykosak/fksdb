@@ -1,6 +1,6 @@
 <?php
 
-namespace OrgModule;
+namespace FKSDB\OrgModule;
 
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\ORM\Models\ModelRole;
@@ -10,7 +10,7 @@ use FKSDB\ORM\Models\ModelRole;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class BasePresenter extends \ContestPresenter {
+abstract class BasePresenter extends \FKSDB\CoreModule\ContestPresenter {
 
     protected function createComponentContestChooser(): ContestChooser {
         $control = new ContestChooser($this->getContext());

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
-use BasePresenter;
+use FKSDB\CoreModule\BasePresenter;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;

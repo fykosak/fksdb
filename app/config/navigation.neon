@@ -17,7 +17,7 @@ navigation:
 
     structure:
         Org.Dashboard.default:
-            - Dispatch.default
+            - Core.Dispatch.default
             - Org.Inbox.default
             - Org.Points.entry
             - Org.Tasks.import
@@ -42,7 +42,7 @@ navigation:
             - Common.Validation.preview
             - Common.Validation.list
         Public.Dashboard.default:
-            - Dispatch.Default
+            - Core.Dispatch.Default
             - Public.Submit.default
             - Public.Application.list
             - fykos

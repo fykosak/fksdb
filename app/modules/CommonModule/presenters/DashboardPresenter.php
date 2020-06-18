@@ -1,6 +1,6 @@
 <?php
 
-namespace CommonModule;
+namespace FKSDB\CommonModule;
 
 /**
  * Class DashboardPresenter

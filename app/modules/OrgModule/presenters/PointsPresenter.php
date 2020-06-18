@@ -1,6 +1,6 @@
 <?php
 
-namespace OrgModule;
+namespace FKSDB\OrgModule;
 
 use Exception;
 use FKSDB\Components\Controls\Inbox\PointsFormControl;

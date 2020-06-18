@@ -1,8 +1,8 @@
 <?php
 
-namespace CommonModule;
+namespace FKSDB\CommonModule;
 
-use AuthenticatedPresenter;
+use FKSDB\CoreModule\AuthenticatedPresenter;
 use FKSDB\UI\PageStyleContainer;
 use Nette\Security\IResource;
 

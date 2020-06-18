@@ -1,6 +1,6 @@
 <?php
 
-namespace OrgModule;
+namespace FKSDB\OrgModule;
 
 use FKSDB\Components\Controls\Entity\Teacher\TeacherForm;
 use FKSDB\Components\Grids\TeachersGrid;

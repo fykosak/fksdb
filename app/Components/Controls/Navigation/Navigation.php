@@ -62,7 +62,7 @@ class Navigation extends BaseComponent {
     public function isActive(\stdClass $node): bool {
         if (isset($node->linkPresenter)) {
             /**
-             * @var \BasePresenter $presenter
+             * @var \FKSDB\CoreModule\BasePresenter $presenter
              */
             $presenter = $this->getPresenter();
             try {

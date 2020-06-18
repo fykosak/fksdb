@@ -3,7 +3,7 @@
 use FKSDB\Events\EventTestCase;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
-use PublicModule\ApplicationPresenter;
+use FKSDB\PublicModule\ApplicationPresenter;
 use Tester\Assert;
 
 abstract class ApplicationPresenterFolTestCase extends EventTestCase {

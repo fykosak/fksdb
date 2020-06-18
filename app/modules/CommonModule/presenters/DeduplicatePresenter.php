@@ -1,6 +1,6 @@
 <?php
 
-namespace CommonModule;
+namespace FKSDB\CommonModule;
 
 use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
 use FKSDB\ORM\Services\ServicePerson;

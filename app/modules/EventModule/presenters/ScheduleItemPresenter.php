@@ -1,6 +1,6 @@
 <?php
 
-namespace EventModule;
+namespace FKSDB\EventModule;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\ItemsGrid;

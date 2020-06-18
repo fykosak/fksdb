@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Events;
 
-use BasePresenter;
+use FKSDB\CoreModule\BasePresenter;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\Machine\Machine;

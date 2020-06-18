@@ -1,13 +1,13 @@
 <?php
 
-namespace FKSDB;
+namespace FKSDB\CoreModule;
 
 use FKSDB\Components\Controls\Chart\IChart;
 use Nette\Application\UI\Control;
 
 /**
  * Trait ChartPresenterTrait
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 trait ChartPresenterTrait {
     /**

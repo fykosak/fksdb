@@ -1,6 +1,6 @@
 <?php
 
-namespace PublicModule;
+namespace FKSDB\PublicModule;
 
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\ORM\DbNames;
@@ -16,7 +16,7 @@ use Nette\Application\BadRequestException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class BasePresenter extends \ContestPresenter {
+abstract class BasePresenter extends \FKSDB\CoreModule\ContestPresenter {
 
     /**
      * @var ModelContestant|null|false

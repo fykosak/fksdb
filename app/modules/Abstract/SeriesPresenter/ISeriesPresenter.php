@@ -8,7 +8,7 @@
 
 namespace FKSDB\CoreModule\SeriesPresenter;
 
-use IContestPresenter;
+use FKSDB\CoreModule\IContestPresenter;
 use Nette\Application\BadRequestException;
 
 /**

@@ -1,15 +1,19 @@
 <?php
 
+namespace FKSDB\CoreModule;
+
 use Authentication\GithubAuthenticator;
 use Authentication\PasswordAuthenticator;
 use Authentication\TokenAuthenticator;
 use Authorization\ContestAuthorizator;
 use Authorization\EventAuthorizator;
+use Exception;
 use FKSDB\ORM\Models\ModelAuthToken;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Http\Response;
+use ReflectionClass;
 use Tracy\Debugger;
 use Nette\Http\UserStorage;
 use Nette\Security\AuthenticationException;
@@ -184,9 +188,9 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             $reason = AuthenticationPresenter::REASON_AUTH;
         }
 
-        $this->redirect(':Authentication:login', [
+        $this->redirect(':Core:Authentication:login', [
             'backlink' => $this->storeRequest(),
-            AuthenticationPresenter::PARAM_REASON => $reason
+            AuthenticationPresenter::PARAM_REASON => $reason,
         ]);
     }
 

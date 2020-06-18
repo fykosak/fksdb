@@ -1,10 +1,12 @@
 <?php
 
-/*
+/**
  * For presenters that provide contest and year context.
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
+
+namespace FKSDB\CoreModule;
 
 use FKSDB\ORM\Models\ModelContest;
 

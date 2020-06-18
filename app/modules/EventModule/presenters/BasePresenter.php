@@ -1,8 +1,8 @@
 <?php
 
-namespace EventModule;
+namespace FKSDB\EventModule;
 
-use AuthenticatedPresenter;
+use FKSDB\CoreModule\AuthenticatedPresenter;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Exceptions\NotFoundException;

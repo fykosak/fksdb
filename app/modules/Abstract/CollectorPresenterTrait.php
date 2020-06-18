@@ -1,13 +1,14 @@
 <?php
 
-namespace FKSDB;
+namespace FKSDB\CoreModule;
 
 use FKSDB\Components\Controls\Loaders\JavaScript\JavaScriptLoader;
 use FKSDB\Components\Controls\Loaders\Stylesheet\StylesheetLoader;
 
 /**
- * Class CollectorPresenter
- * *
+ * Trait CollectorPresenterTrait
+ * @author Michal Červeňák <miso@fykos.cz>
+ * @author Michal Koutny
  */
 trait CollectorPresenterTrait {
 

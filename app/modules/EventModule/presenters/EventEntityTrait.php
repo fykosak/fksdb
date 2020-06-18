@@ -1,6 +1,6 @@
 <?php
 
-namespace EventModule;
+namespace FKSDB\EventModule;
 
 use FKSDB\EntityTrait;
 use FKSDB\Exceptions\BadTypeException;

@@ -1,6 +1,6 @@
 <?php
 
-namespace FyziklaniModule;
+namespace FKSDB\FyziklaniModule;
 
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Fyziklani\NotSetGameParametersException;

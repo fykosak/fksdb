@@ -2,7 +2,7 @@
 
 namespace Exports;
 
-use BasePresenter;
+use FKSDB\CoreModule\BasePresenter;
 use DOMDocument;
 use DOMNode;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;

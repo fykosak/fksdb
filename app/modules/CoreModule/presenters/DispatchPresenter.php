@@ -1,5 +1,8 @@
 <?php
 
+namespace FKSDB\CoreModule;
+
+use FKSDB\CoreModule\AuthenticatedPresenter;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelRole;
@@ -8,6 +11,7 @@ use Nette\Application\UI\InvalidLinkException;
 
 /**
  * Class DispatchPresenter
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DispatchPresenter extends AuthenticatedPresenter {
 

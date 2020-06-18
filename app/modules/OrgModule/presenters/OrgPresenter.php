@@ -1,6 +1,6 @@
 <?php
 
-namespace OrgModule;
+namespace FKSDB\OrgModule;
 
 use FKSDB\Components\Controls\Entity\Org\OrgForm;
 use FKSDB\Components\Grids\OrgsGrid;

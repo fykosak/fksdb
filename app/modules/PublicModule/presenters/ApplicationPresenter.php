@@ -1,6 +1,6 @@
 <?php
 
-namespace PublicModule;
+namespace FKSDB\PublicModule;
 
 use Authorization\RelatedPersonAuthorizator;
 use FKSDB\Config\NeonSchemaException;

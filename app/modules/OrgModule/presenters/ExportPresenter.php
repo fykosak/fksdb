@@ -1,8 +1,8 @@
 <?php
 
-namespace OrgModule;
+namespace FKSDB\OrgModule;
 
-use AuthenticatedPresenter;
+use FKSDB\CoreModule\AuthenticatedPresenter;
 use Exports\ExportFormatFactory;
 use Exports\StoredQuery;
 use Exports\StoredQueryFactory;

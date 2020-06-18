@@ -1,6 +1,6 @@
 <?php
 
-namespace EventModule;
+namespace FKSDB\EventModule;
 
 use FKSDB\Components\Events\GraphComponent;
 use Nette\Application\BadRequestException;

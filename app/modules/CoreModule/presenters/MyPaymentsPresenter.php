@@ -1,9 +1,13 @@
 <?php
 
+namespace FKSDB\CoreModule;
+
+use FKSDB\CoreModule\AuthenticatedPresenter;
 use FKSDB\Components\Grids\Payment\MyPaymentGrid;
 
 /**
  * Class MyPaymentsPresenter
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class MyPaymentsPresenter extends AuthenticatedPresenter {
 

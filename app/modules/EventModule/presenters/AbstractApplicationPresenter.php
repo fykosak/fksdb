@@ -1,6 +1,6 @@
 <?php
 
-namespace EventModule;
+namespace FKSDB\EventModule;
 
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\Model\ApplicationHandlerFactory;

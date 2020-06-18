@@ -18,7 +18,7 @@ abstract class Stalking extends DatabaseTestCase {
     /** @var int */
     protected $personId;
 
-    /** @var \CommonModule\PersonPresenter */
+    /** @var \FKSDB\CommonModule\PersonPresenter */
     protected $fixture;
 
     /**

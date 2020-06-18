@@ -1,6 +1,10 @@
 <?php
 
+namespace FKSDB\CoreModule;
+
 use Authentication\SSO\GlobalSession;
+use FKSDB\CoreModule\BasePresenter;
+use Exception;
 use FKSDB\Authentication\AccountManager;
 use Authentication\FacebookAuthenticator;
 use Authentication\LoginUserStorage;
@@ -21,6 +25,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\DateTime;
+use Utils;
 
 /**
  * Class AuthenticationPresenter
@@ -246,7 +251,7 @@ final class AuthenticationPresenter extends BasePresenter {
                 'class' => 'top form-control',
                 'autofocus' => true,
                 'placeholder' => _('Přihlašovací jméno nebo email'),
-                'autocomplete' => 'username'
+                'autocomplete' => 'username',
             ]);
         $form->addPassword('password', _('Heslo'))
             ->addRule(Form::FILLED, _('Zadejte heslo.'))->getControlPrototype()->addAttributes([
@@ -350,7 +355,7 @@ final class AuthenticationPresenter extends BasePresenter {
                 $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_SSO, $until, $globalSessionId);
                 $url->appendQuery([
                     LoginUserStorage::PARAM_SSO => LoginUserStorage::SSO_AUTHENTICATED,
-                    TokenAuthenticator::PARAM_AUTH_TOKEN => $token->token
+                    TokenAuthenticator::PARAM_AUTH_TOKEN => $token->token,
                 ]);
             } else {
                 $url->appendQuery([
@@ -375,7 +380,7 @@ final class AuthenticationPresenter extends BasePresenter {
         if ($this->backlink) {
             $this->restoreRequest($this->backlink);
         }
-        $this->redirect(':Dispatch:');
+        $this->redirect(':Core:Dispatch:');
     }
 
     public function renderLogin() {

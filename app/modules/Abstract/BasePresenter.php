@@ -1,8 +1,10 @@
 <?php
 
+namespace FKSDB\CoreModule;
+
+use Exception;
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Application\IStylesheetCollector;
-use FKSDB\CollectorPresenterTrait;
 use FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs;
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
@@ -15,12 +17,13 @@ use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
 use FKSDB\Config\GlobalParameters;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\LangPresenterTrait;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\UI\PageStyleContainer;
 use FKSDB\UI\PageTitle;
 use FKSDB\YearCalculator;
+use FullHttpRequest;
+use InvalidArgumentException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -28,6 +31,8 @@ use Nette\Application\Responses\JsonResponse;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
+use ReflectionException;
+use Utils;
 
 /**
  * Base presenter for all application presenters.
@@ -387,7 +392,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
                 } else { // relative
                     $presenter = $this->getName();
                     $b = strrpos($presenter, ':');
-                    if ($b === FALSE) { // no module
+                    if ($b === false) { // no module
                         $presenter = substr($destination, 0, $a);
                     } else { // with module
                         $presenter = substr($presenter, 0, $b + 1) . substr($destination, 0, $a);

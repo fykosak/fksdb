@@ -1,6 +1,6 @@
 <?php
 
-namespace CommonModule;
+namespace FKSDB\CommonModule;
 
 use FKSDB\Components\Controls\Entity\School\SchoolForm;
 use FKSDB\Components\Grids\SchoolsGrid;

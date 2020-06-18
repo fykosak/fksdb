@@ -22,7 +22,7 @@ use Nette\Utils\JsonException;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
- * @method \AuthenticatedPresenter|\BasePresenter getPresenter($need = true)
+ * @method \FKSDB\CoreModule\AuthenticatedPresenter|\FKSDB\CoreModule\BasePresenter getPresenter($need = true)
  */
 class ApplicationComponent extends BaseComponent {
 
