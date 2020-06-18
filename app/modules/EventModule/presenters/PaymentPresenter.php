@@ -242,10 +242,7 @@ class PaymentPresenter extends BasePresenter {
         return true;
     }
 
-    /**
-     * @return ServicePayment
-     */
-    public function getORMService() {
+    protected function getORMService(): ServicePayment {
         return $this->servicePayment;
     }
 

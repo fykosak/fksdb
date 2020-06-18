@@ -42,7 +42,7 @@ class OwnerAssertion {
      * @return bool
      * @throws InvalidStateException
      */
-    public function isSubmitUploader(Permission $acl, $role, $resourceId, $privilege) {
+    public function isSubmitUploader(Permission $acl, $role, $resourceId, $privilege): bool {
 
         if (!$this->user->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
@@ -67,7 +67,7 @@ class OwnerAssertion {
      * @return bool
      * @throws InvalidStateException
      */
-    public function isOwnContestant(Permission $acl, $role, $resourceId, $privilege) {
+    public function isOwnContestant(Permission $acl, $role, $resourceId, $privilege): bool {
         if (!$this->user->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
@@ -89,7 +89,7 @@ class OwnerAssertion {
      * @return bool
      * @throws InvalidStateException
      */
-    public function existsOwnContestant(Permission $acl, $role, $resourceId, $privilege) {
+    public function existsOwnContestant(Permission $acl, $role, $resourceId, $privilege): bool {
         if (!$this->user->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }

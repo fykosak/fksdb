@@ -9,7 +9,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class GameSetupPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class GameSetupPresenter extends BasePresenter {
     /**
@@ -47,7 +47,7 @@ class GameSetupPresenter extends BasePresenter {
      * @throws NotSetGameParametersException
      */
     protected function getGameSetup(): ModelFyziklaniGameSetup {
-        if (!$this->gameSetup) {
+        if (!isset($this->gameSetup) || is_null($this->gameSetup)) {
             $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
             if (!$gameSetup) {
                 throw new NotFoundException(_('Game is not set up!'));

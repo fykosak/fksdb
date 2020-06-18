@@ -330,10 +330,6 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @param null $login
      * @throws AbortException
-     */
-    /**
-     * @param null $login
-     * @throws AbortException
      * @throws Exception
      */
     private function loginBackLinkRedirect($login = null) {

@@ -10,6 +10,7 @@ use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\Models\ModelEventParticipant;
+use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -85,10 +86,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
         ];
     }
 
-    /**
-     * @return AbstractServiceSingle
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServiceEventParticipant {
         return $this->serviceEventParticipant;
     }
 

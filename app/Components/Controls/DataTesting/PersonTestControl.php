@@ -7,9 +7,9 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\DataTesting\DataTestingFactory;
 use FKSDB\DataTesting\Tests\Person\PersonTest;
+use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
-use FKSDB\DataTesting\TestsLogger;
 use FKSDB\DataTesting\TestLog;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
@@ -127,11 +127,11 @@ class PersonTestControl extends BaseComponent {
         /** @var ModelPerson $model */
         foreach ($query as $model) {
 
-            $logger = new TestsLogger();
+            $logger = new MemoryLogger();
             foreach ($this->tests as $test) {
                 $test->run($logger, $model);
             }
-            $personLog = \array_filter($logger->getLogs(), function (TestLog $simpleLog) {
+            $personLog = \array_filter($logger->getMessages(), function (TestLog $simpleLog) {
                 return \in_array($simpleLog->getLevel(), $this->levels);
             });
             if (\count($personLog)) {

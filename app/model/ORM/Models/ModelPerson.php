@@ -287,6 +287,13 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $result;
     }
 
+    public function getActiveOrgsAsQuery(YearCalculator $yearCalculator, ModelContest $contest): GroupedSelection {
+        $year = $yearCalculator->getCurrentYear($contest);
+        return $this->related(DbNames::TAB_ORG, 'person_id')
+            ->where('contest_id', $contest->contest_id)
+            ->where('since<=?', $year)->where('until IS NULL OR until >=?', $year);
+    }
+
     /**
      * Active contestant := contestant in the highest year but not older than the current year.
      *
