@@ -15,6 +15,5 @@ parameters:
         # Path to storage directory
         root: %appDir%/../tmp/upload
 
-nette:
-    database:
-        dsn: "mysql:host=127.0.0.1;dbname=fksdb_test1"
+database:
+    dsn: "mysql:host=127.0.0.1;dbname=fksdb_test1"
