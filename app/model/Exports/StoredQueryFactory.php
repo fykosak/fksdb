@@ -2,7 +2,7 @@
 
 namespace Exports;
 
-use BasePresenter;
+use FKSDB\Modules\Core\BasePresenter;
 use DOMDocument;
 use DOMNode;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
@@ -13,7 +13,7 @@ use Nette\Http\Response;
 use Nette\InvalidArgumentException;
 use Utils;
 use WebService\IXMLNodeSerializer;
-use FKSDB\CoreModule\SeriesPresenter\ISeriesPresenter;
+use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

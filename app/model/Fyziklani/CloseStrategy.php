@@ -7,7 +7,7 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use FyziklaniModule\BasePresenter;
+use FKSDB\Modules\FyziklaniModule\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
 use Traversable;

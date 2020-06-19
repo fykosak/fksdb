@@ -11,6 +11,7 @@ use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\MemoryLogger;
+use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
@@ -23,7 +24,7 @@ use Nette\Utils\Strings;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
- * @method \BasePresenter getPresenter($need = TRUE)
+ * @method BasePresenter getPresenter($need = TRUE)
  */
 class ApplicationsGrid extends BaseComponent {
 

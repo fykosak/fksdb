@@ -2,9 +2,9 @@
 
 namespace Authentication;
 
-use AuthenticatedPresenter;
+use FKSDB\Modules\Core\AuthenticatedPresenter;
 use Authentication\SSO\GlobalSession;
-use AuthenticationPresenter;
+use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\YearCalculator;
@@ -155,7 +155,7 @@ class LoginUserStorage extends UserStorage {
                         AuthenticationPresenter::PARAM_REASON => AuthenticationPresenter::REASON_AUTH,
                     ];
 
-                    $presenter->redirect(':Authentication:login', $params);
+                    $presenter->redirect(':Core:Authentication:login', $params);
                 }
             }
             return false;

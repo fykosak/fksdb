@@ -3,7 +3,6 @@
 namespace FKSDB\Components\DatabaseReflection\ColumnFactories;
 
 use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
-use FKSDB\Components\DatabaseReflection\ColumnFactories\DefaultColumnFactory;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\BadRequestException;

@@ -18,7 +18,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Http\FileUpload;
 use Nette\Http\Response;
-use PublicModule\SubmitPresenter;
+use FKSDB\Modules\PublicModule\SubmitPresenter;
 use ReactMessage;
 
 /**

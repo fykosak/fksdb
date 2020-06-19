@@ -6,6 +6,7 @@ use Exception;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -95,8 +96,8 @@ abstract class BaseGrid extends Grid {
      */
     protected function createTemplate(): ITemplate {
         $presenter = $this->getPresenter();
-        if (!$presenter instanceof \BasePresenter) {
-            throw new BadTypeException(\BasePresenter::class, $presenter);
+        if (!$presenter instanceof BasePresenter) {
+            throw new BadTypeException(BasePresenter::class, $presenter);
         }
         /**
          * @var GridPaginator $paginator

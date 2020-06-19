@@ -7,6 +7,7 @@ use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Exceptions\ModelException;
+use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceAddress;
@@ -87,12 +88,12 @@ class SchoolForm extends AbstractEntityFormControl implements IEditEntityForm {
             $this->create ? $this->handleCreateSuccess($data) : $this->handleEditSuccess($data);
             $connection->commit();
 
-            $this->getPresenter()->flashMessage($this->create ? _('Škola založena') : _('Škola upravena'), \BasePresenter::FLASH_SUCCESS);
+            $this->getPresenter()->flashMessage($this->create ? _('Škola založena') : _('Škola upravena'), BasePresenter::FLASH_SUCCESS);
             $this->getPresenter()->redirect('list');
         } catch (ModelException $exception) {
             $connection->rollBack();
             Debugger::log($exception, Debugger::ERROR);
-            $this->getPresenter()->flashMessage($this->create ? _('Chyba při zakládání školy.') : _('Chyba při úpravě školy.'), \BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage($this->create ? _('Chyba při zakládání školy.') : _('Chyba při úpravě školy.'), BasePresenter::FLASH_ERROR);
         }
     }
 

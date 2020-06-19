@@ -1,6 +1,6 @@
 <?php
 
-namespace FyziklaniModule;
+namespace FKSDB\Modules\FyziklaniModule;
 
 $container = require '../bootstrap.php';
 

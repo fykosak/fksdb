@@ -5,7 +5,6 @@ namespace FKSDB\Events\Model\Holder;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Factories\Events\IFieldFactory;
-use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\IControl;

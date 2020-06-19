@@ -7,7 +7,7 @@ use Exports\Formats\AESOPFormat;
 use Exports\Formats\PlainTextResponse;
 use Exports\StoredQueryFactory;
 use Exports\StoredQueryPostProcessing;
-use FKSDB\CoreModule\SeriesPresenter\ISeriesPresenter;
+use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use Nette\DI\Container;
 use Tester\Assert;
 

@@ -29,7 +29,6 @@ class DataTestingFactory {
      * DataTestingFactory constructor.
      * @param ServiceContest $serviceContest
      * @param TableReflectionFactory $tableReflectionFactory
-     * @throws BadRequestException
      */
     public function __construct(ServiceContest $serviceContest, TableReflectionFactory $tableReflectionFactory) {
         $this->serviceContest = $serviceContest;
@@ -38,7 +37,7 @@ class DataTestingFactory {
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
      */
     private function registersTests() {
         $tests = [

@@ -18,7 +18,7 @@ abstract class Stalking extends DatabaseTestCase {
     /** @var int */
     protected $personId;
 
-    /** @var \CommonModule\PersonPresenter */
+    /** @var \FKSDB\Modules\CommonModule\PersonPresenter */
     protected $fixture;
 
     /**
@@ -79,7 +79,7 @@ abstract class Stalking extends DatabaseTestCase {
 
     abstract protected function getUserRoleId(): int;
 
-    protected final function createRequest(): Request {
+    final protected function createRequest(): Request {
         return new Request('Common:Person', 'GET', [
             'action' => 'detail',
             'lang' => 'en',

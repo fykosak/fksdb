@@ -8,7 +8,7 @@ use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;
 use Nette\Utils\DateTime;
-use PublicModule\ApplicationPresenter;
+use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Tester\Assert;
 
 class ApplicationPresenterTest extends EventTestCase {

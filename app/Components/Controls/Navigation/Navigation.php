@@ -5,6 +5,7 @@ namespace FKSDB\Components\Controls\Navigation;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\PresenterBuilder;
 use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -62,7 +63,7 @@ class Navigation extends BaseComponent {
     public function isActive(\stdClass $node): bool {
         if (isset($node->linkPresenter)) {
             /**
-             * @var \BasePresenter $presenter
+             * @var BasePresenter $presenter
              */
             $presenter = $this->getPresenter();
             try {
