@@ -109,7 +109,7 @@ class PageDisplayTest extends \DatabaseTestCase {
             ['Org:Org', ['contestId' => 1, 'year' => 1, 'action' => 'create']],
             ['Org:Points', ['contestId' => 1, 'year' => 1, 'action' => 'entry', 'series' => 1]],
             ['Org:Points', ['contestId' => 1, 'year' => 1, 'action' => 'preview', 'series' => 1]],
-            // ['Org:Tasks', ['contestId' => 1, 'year' => 1, 'action' => 'import']], TODO FIX astrid on travis
+            ['Org:Tasks', ['contestId' => 1, 'year' => 1, 'action' => 'import']],
             ['Org:Teacher', ['contestId' => 1, 'year' => 1, 'action' => 'list']],
             ['Org:Teacher', ['contestId' => 1, 'year' => 1, 'action' => 'create']],
 
