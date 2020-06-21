@@ -3,7 +3,6 @@
 namespace FKSDB\Modules\CommonModule;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
-use FKSDB\UI\PageStyleContainer;
 use Nette\Security\IResource;
 
 /**
@@ -12,14 +11,9 @@ use Nette\Security\IResource;
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
 
-    protected function getPageStyleContainer(): PageStyleContainer {
-        $container = parent::getPageStyleContainer();
-        $container->styleId = 'theme-light common';
-        $container->navBarClassName = 'bg-dark navbar-dark';
-        return $container;
-    }
-
     protected function beforeRender() {
+        $this->getPageStyleContainer()->styleId = 'theme-light common';
+        $this->getPageStyleContainer()->navBarClassName = 'bg-dark navbar-dark';
         parent::beforeRender();
     }
 

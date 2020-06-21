@@ -22,7 +22,7 @@ use FKSDB\Logging\MemoryLogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\Transitions\UnavailableTransitionException;
-use FormUtils;
+use FKSDB\Utils\FormUtils;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\DI\Container;

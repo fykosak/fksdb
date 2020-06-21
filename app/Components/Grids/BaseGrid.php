@@ -202,6 +202,7 @@ abstract class BaseGrid extends Grid {
      * @param null $label
      * @return GlobalButton
      * @throws DuplicateGlobalButtonException
+     * @deprecated do not use for links!
      */
     public function addGlobalButton($name, $label = null): GlobalButton {
         $button = parent::addGlobalButton($name, $label);

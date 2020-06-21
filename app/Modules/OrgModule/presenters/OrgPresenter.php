@@ -7,6 +7,7 @@ use FKSDB\Components\Grids\OrgsGrid;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
+use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
@@ -35,30 +36,28 @@ class OrgPresenter extends BasePresenter {
 
     /**
      * @return void
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
     public function titleEdit() {
-        $this->setTitle(sprintf(_('Úprava organizátora %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-pencil');
+        $this->setPageTitle(new PageTitle(sprintf(_('Úprava organizátora %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-pencil'));
     }
 
     /**
      * @return void
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
     public function titleDetail() {
-        $this->setTitle(sprintf(_('Org %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-user');
+        $this->setPageTitle(new PageTitle(sprintf(_('Org %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-user'));
     }
 
-    /**
-     * @return void
-     */
-    public function titleCreate() {
-        $this->setTitle(_('Založit organizátora'), 'fa fa-user-plus');
+    public function getTitleCreate(): PageTitle {
+        return new PageTitle(_('Založit organizátora'), 'fa fa-user-plus');
     }
 
-    /**
-     * @return void
-     */
-    public function titleList() {
-        $this->setTitle(_('Organizátoři'), 'fa fa-address-book');
+    public function getTitleList(): PageTitle {
+        return new PageTitle(_('Organizátoři'), 'fa fa-address-book');
     }
 
     /**

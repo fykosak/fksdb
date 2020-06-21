@@ -12,6 +12,7 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceAddress;
 use FKSDB\ORM\Services\ServiceSchool;
+use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -81,7 +82,7 @@ class SchoolForm extends AbstractEntityFormControl implements IEditEntityForm {
      */
     protected function handleFormSuccess(Form $form) {
         $values = $form->getValues();
-        $data = \FormUtils::emptyStrToNull($values, true);
+        $data = FormUtils::emptyStrToNull($values, true);
         $connection = $this->serviceSchool->getConnection();
         try {
             $connection->beginTransaction();

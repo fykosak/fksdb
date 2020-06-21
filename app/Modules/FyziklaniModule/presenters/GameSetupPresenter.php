@@ -5,6 +5,7 @@ namespace FKSDB\Modules\FyziklaniModule;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
+use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
 
 /**
@@ -22,7 +23,7 @@ class GameSetupPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleDefault() {
-        $this->setTitle(_('Fyziklani game setup'), 'fa fa-cogs');
+        $this->setPageTitle(new PageTitle(_('Fyziklani game setup'), 'fa fa-cogs'));
     }
 
     /**

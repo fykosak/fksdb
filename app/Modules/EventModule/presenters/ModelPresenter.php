@@ -3,6 +3,7 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Events\GraphComponent;
+use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
 
 /**
@@ -24,7 +25,7 @@ class ModelPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleDefault() {
-        $this->setTitle(_('Model of event'), 'fa fa-cubes');
+        $this->setPageTitle(new PageTitle(_('Model of event'), 'fa fa-cubes'));
     }
 
     /**

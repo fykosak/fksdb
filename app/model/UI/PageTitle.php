@@ -6,7 +6,7 @@ use Nette\Utils\Html;
 
 /**
  * Class PageTitle
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PageTitle extends Title {
     /** @var string|null */

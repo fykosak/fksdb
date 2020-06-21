@@ -34,7 +34,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
 use ReflectionException;
-use Utils;
+use FKSDB\Utils\Utils;
 
 /**
  * Base presenter for all application presenters.
@@ -100,6 +100,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @var FullHttpRequest
      */
     private $fullRequest;
+    /**
+     * @var PageStyleContainer
+     */
+    private $pageStyleContainer;
 
     public function getYearCalculator(): YearCalculator {
         return $this->yearCalculator;
@@ -214,35 +218,42 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @param string
      * @return string
      */
-    protected static function formatTitleMethod($view) {
+    protected static function formatTitleMethod($view): string {
         return 'title' . $view;
     }
 
     /**
-     * @param $view
+     * @param string $view
      * @return static
      */
-    public function setView($view) {
+    public function setView($view): self {
         parent::setView($view);
-        $method = $this->formatTitleMethod($this->getView());
-        if (!$this->tryCall($method, $this->getParameters())) {
-            $this->pageTitle = null;
-        }
+        $this->pageTitle = null;
         return $this;
     }
 
+    private function callTitleMethod() {
+        $method = $this->formatTitleMethod($this->getView());
+        if (method_exists($this, $method)) {
+            $this->{$method}();
+            return;
+        }
+        $this->pageTitle = null;
+    }
+
     public function getTitle(): PageTitle {
+        if (!isset($this->pageTitle) || is_null($this->pageTitle)) {
+            $this->callTitleMethod();
+        }
         return $this->pageTitle ?? new PageTitle();
     }
 
     /**
-     * @param string $title
-     * @param string $icon
-     * @param string $subTitle
+     * @param PageTitle $pageTitle
      * @return void
      */
-    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
-        $this->pageTitle = new PageTitle($title, $icon, $subTitle);
+    protected function setPageTitle(PageTitle $pageTitle) {
+        $this->pageTitle = $pageTitle;
     }
 
     /**
@@ -288,11 +299,9 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return [];
     }
 
-    protected function getPageStyleContainer(): PageStyleContainer {
-        $container = new PageStyleContainer();
-        $container->navBarClassName = 'bg-light navbar-light';
-        $container->mainContainerClassName = 'container bg-white-container';
-        return $container;
+    final protected function getPageStyleContainer(): PageStyleContainer {
+        $this->pageStyleContainer = $this->pageStyleContainer ?? new PageStyleContainer();
+        return $this->pageStyleContainer;
     }
 
     /**

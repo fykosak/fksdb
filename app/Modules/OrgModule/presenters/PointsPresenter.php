@@ -6,13 +6,14 @@ use Exception;
 use FKSDB\Components\Controls\Inbox\PointsFormControl;
 use FKSDB\Components\Controls\Inbox\PointsPreviewControl;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
+use FKSDB\UI\PageTitle;
+use Nette\Application\ForbiddenRequestException;
 use FKSDB\Modules\Core\PresenterTraits\{SeriesPresenterTrait};
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Models\ModelTaskContribution;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\ORM\Services\ServiceTaskContribution;
-use FKSDB\UI\PageStyleContainer;
 use FKSDB\Results\SQLResultsCache;
 use FKSDB\Submits\SeriesTable;
 use Nette\Application\AbortException;
@@ -98,7 +99,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadRequestException
      */
     public function titleEntry() {
-        $this->setTitle(sprintf(_('Zadávání bodů %d. série'), $this->getSelectedSeries()), 'fa fa-trophy');
+        $this->setPageTitle(new PageTitle(sprintf(_('Zadávání bodů %d. série'), $this->getSelectedSeries()), 'fa fa-trophy'));
     }
 
     /**
@@ -106,7 +107,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadRequestException
      */
     public function titlePreview() {
-        $this->setTitle(_('Points'), 'fa fa-inbox');
+        $this->setPageTitle(new PageTitle(_('Points'), 'fa fa-inbox'));
     }
 
     /**
@@ -213,19 +214,19 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
         return array_values($gradedTasks);
     }
 
-    protected function getPageStyleContainer(): PageStyleContainer {
-        $container = parent::getPageStyleContainer();
-        $container->mainContainerClassName = str_replace('container ', 'container-fluid ', $container->mainContainerClassName) . ' px-3';
-        return $container;
+    protected function beforeRender() {
+        $this->getPageStyleContainer()->mainContainerClassName = str_replace('container ', 'container-fluid ', $this->getPageStyleContainer()->mainContainerClassName) . ' px-3';
+        parent::beforeRender();
     }
 
     /**
-     * @param string $title
-     * @param string $icon
-     * @param string $subTitle
+     * @param PageTitle $pageTitle
+     * @return void
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
-        parent::setTitle($title, $icon, $subTitle . ' ' . sprintf(_('%d. series'), $this->getSelectedSeries()));
+    protected function setPageTitle(PageTitle $pageTitle) {
+        $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
+        parent::setPageTitle($pageTitle);
     }
 }

@@ -3,6 +3,7 @@
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\UI\PageTitle;
 
 /**
  * Homepage presenter.
@@ -19,6 +20,6 @@ class DashboardPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Organizátorský pultík'), 'fa fa-dashboard');
+        $this->setPageTitle(new PageTitle(_('Organizátorský pultík'), 'fa fa-dashboard'));
     }
 }

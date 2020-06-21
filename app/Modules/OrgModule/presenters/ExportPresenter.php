@@ -14,13 +14,14 @@ use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactor
 use FKSDB\Components\Grids\StoredQueriesGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
+use FKSDB\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\{SeriesPresenterTrait};
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter;
-use FormUtils;
+use FKSDB\Utils\FormUtils;
 use FKSDB\Exceptions\ModelException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -323,11 +324,12 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     /**
-     * @param $id
+     * @return void
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    public function titleEdit($id) {
-        $this->setTitle(sprintf(_('Úprava dotazu %s'), $this->getPatternQuery()->name), 'fa fa-pencil');
+    public function titleEdit() {
+        $this->setPageTitle(new PageTitle(sprintf(_('Úprava dotazu %s'), $this->getPatternQuery()->name), 'fa fa-pencil'));
     }
 
     /**
@@ -364,7 +366,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadRequestException
      */
     public function titleCompose() {
-        $this->setTitle(sprintf(_('Napsat dotaz')), 'fa fa-pencil');
+        $this->setPageTitle(new PageTitle(sprintf(_('Napsat dotaz')), 'fa fa-pencil'));
     }
 
     /**
@@ -385,21 +387,22 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadRequestException
      */
     public function titleList() {
-        $this->setTitle(_('Exports'), 'fa fa-database');
+        $this->setPageTitle(new PageTitle(_('Exports'), 'fa fa-database'));
     }
 
     /**
-     * @param $id
+     * @return void
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    public function titleShow($id) {
+    public function titleShow() {
         $title = sprintf(_('Detail dotazu %s'), $this->getPatternQuery()->name);
         $qid = $this->getPatternQuery()->qid;
         if ($qid) {
             $title .= " ($qid)";
         }
 
-        $this->setTitle($title, 'fa fa-database');
+        $this->setPageTitle(new PageTitle($title, 'fa fa-database'));
     }
 
     /**
@@ -410,11 +413,12 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     /**
-     * @param $id
+     * @return void
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    public function titleExecute($id) {
-        $this->setTitle(sprintf(_('%s'), $this->getPatternQuery()->name), 'fa fa-play-circle-o');
+    public function titleExecute() {
+        $this->setPageTitle(new PageTitle(sprintf(_('%s'), $this->getPatternQuery()->name), 'fa fa-play-circle-o'));
     }
 
     /**
@@ -653,12 +657,13 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     /**
-     * @param string $title
-     * @param string $icon
-     * @param string $subTitle
+     * @param PageTitle $pageTitle
+     * @return void
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
-        parent::setTitle($title, $icon, $subTitle . ' ' . sprintf(_('%d. series'), $this->getSelectedSeries()));
+    protected function setPageTitle(PageTitle $pageTitle) {
+        $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
+        parent::setPageTitle($pageTitle);
     }
 }

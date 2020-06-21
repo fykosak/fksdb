@@ -13,6 +13,7 @@ use FKSDB\Logging\MemoryLogger;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\ORM\Services\ServiceEventParticipant;
+use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -52,7 +53,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     final public function titleList() {
-        $this->setTitle(_('List of applications'), 'fa fa-users');
+        $this->setPageTitle(new PageTitle(_('List of applications'), 'fa fa-users'));
     }
 
     /**
@@ -62,7 +63,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws \Throwable
      */
     final public function titleDetail() {
-        $this->setTitle(sprintf(_('Application detail "%s"'), $this->getEntity()->__toString()), 'fa fa-user');
+        $this->setPageTitle(new PageTitle(sprintf(_('Application detail "%s"'), $this->getEntity()->__toString()), 'fa fa-user'));
     }
 
     /**
@@ -70,7 +71,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     final public function titleTransitions() {
-        $this->setTitle(_('Group transitions'), 'fa fa-user');
+        $this->setPageTitle(new PageTitle(_('Group transitions'), 'fa fa-user'));
     }
 
     /**

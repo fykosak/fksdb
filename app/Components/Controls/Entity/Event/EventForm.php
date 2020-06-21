@@ -17,6 +17,8 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceEvent;
+use FKSDB\Utils\FormUtils;
+use FKSDB\Utils\Utils;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -173,7 +175,7 @@ class EventForm extends AbstractEntityFormControl implements IEditEntityForm {
             $item->addHtml(Html::el(null)->setText($key));
             if (isset($meta['default'])) {
                 $item->addText(': ');
-                $item->addHtml(Html::el(null)->setText(\Utils::getRepr($meta['default'])));
+                $item->addHtml(Html::el(null)->setText(Utils::getRepr($meta['default'])));
             }
         }
         return $result;
@@ -213,7 +215,7 @@ class EventForm extends AbstractEntityFormControl implements IEditEntityForm {
      */
     protected function handleFormSuccess(Form $form) {
         $values = $form->getValues();
-        $data = \FormUtils::emptyStrToNull($values[self::CONT_EVENT], true);
+        $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT], true);
         try {
             $this->create ? $this->handleCreateSuccess($data) : $this->handleEditSuccess($data);
         } catch (ModelException $exception) {

@@ -11,7 +11,8 @@ use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
-use FormUtils;
+use FKSDB\UI\PageTitle;
+use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -79,7 +80,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Settings'), 'fa fa-cogs');
+        $this->setPageTitle(new PageTitle(_('Settings'), 'fa fa-cogs'));
     }
 
     public function renderDefault() {

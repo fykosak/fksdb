@@ -4,6 +4,7 @@ namespace FKSDB\Modules\FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\FinalResults;
 use FKSDB\Fyziklani\CloseStrategy;
+use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
@@ -18,7 +19,7 @@ class DiplomasPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleResults() {
-        $this->setTitle(_('Final results'), 'fa fa-trophy');
+        $this->setPageTitle(new PageTitle(_('Final results'), 'fa fa-trophy'));
     }
 
     /**
@@ -26,7 +27,7 @@ class DiplomasPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleDefault() {
-        $this->setTitle(_('Calculate ranking'), 'fa fa-check');
+        $this->setPageTitle(new PageTitle(_('Calculate ranking'), 'fa fa-check'));
     }
 
     /**

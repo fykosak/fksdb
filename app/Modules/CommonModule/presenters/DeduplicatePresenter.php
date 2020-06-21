@@ -4,6 +4,7 @@ namespace FKSDB\Modules\CommonModule;
 
 use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
 use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -55,7 +56,7 @@ class DeduplicatePresenter extends BasePresenter {
      * @return void
      */
     public function titlePerson() {
-        $this->setTitle(_('Duplicitní osoby'), 'fa fa-exchange');
+        $this->setPageTitle(new PageTitle(_('Duplicitní osoby'), 'fa fa-exchange'));
     }
 
     /**

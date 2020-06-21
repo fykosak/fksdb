@@ -5,7 +5,7 @@ namespace FKSDB\ORM\Models;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use Nette\Utils\Strings;
-use Utils;
+use FKSDB\Utils\Utils;
 
 /**
  *

@@ -3,6 +3,7 @@
 namespace FKSDB\Modules\FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatistics;
+use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
 
 /**
@@ -15,7 +16,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleCorrelationStatistics() {
-        $this->setTitle(_('Correlation statistics'), 'fa fa-pie-chart');
+        $this->setPageTitle(new PageTitle(_('Correlation statistics'), 'fa fa-pie-chart'));
     }
 
     /**
@@ -23,7 +24,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleList() {
-        $this->setTitle(_('Results and statistics'), 'fa fa-trophy');
+        $this->setPageTitle(new PageTitle(_('Results and statistics'), 'fa fa-trophy'));
     }
 
     /**
@@ -31,7 +32,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleTable() {
-        $this->setTitle(_('Detailed results'), 'fa fa-trophy');
+        $this->setPageTitle(new PageTitle(_('Detailed results'), 'fa fa-trophy'));
     }
 
     /**
@@ -39,7 +40,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titlePresentation() {
-        $this->setTitle(_('Results presentation'), 'fa fa-table');
+        $this->setPageTitle(new PageTitle(_('Results presentation'), 'fa fa-table'));
     }
 
     /**
@@ -47,7 +48,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleTeamStatistics() {
-        $this->setTitle(_('Teams statistics'), 'fa fa-line-chart');
+        $this->setPageTitle(new PageTitle(_('Teams statistics'), 'fa fa-line-chart'));
     }
 
     /**
@@ -55,7 +56,7 @@ class ResultsPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleTaskStatistics() {
-        $this->setTitle(_('Tasks statistics'), 'fa fa-pie-chart');
+        $this->setPageTitle(new PageTitle(_('Tasks statistics'), 'fa fa-pie-chart'));
     }
 
     /**

@@ -1,8 +1,11 @@
 <?php
 
+namespace FKSDB\Utils;
+
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
+use Traversable;
 
 /**
  *
@@ -38,7 +41,7 @@ class FormUtils {
      * @return ArrayHash
      * @todo Move to general utils.
      */
-    public static function removeEmptyHashes(ArrayHash $values, $ignoreNulls = false) {
+    public static function removeEmptyHashes(ArrayHash $values, bool $ignoreNulls = false): ArrayHash {
         $result = new ArrayHash();
         foreach ($values as $key => $value) {
             if ($value instanceof ArrayHash) {
@@ -68,6 +71,10 @@ class FormUtils {
         return $result;
     }
 
+    /**
+     * @param Form $form
+     * @return SubmitButton|null
+     */
     public static function findFirstSubmit(Form $form) {
         foreach ($form->getComponents() as $component) {
             if ($component instanceof SubmitButton) {

@@ -17,7 +17,7 @@ use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServicePerson;
-use FKSDB\UI\PageStyleContainer;
+use FKSDB\UI\PageTitle;
 use Mail\SendFailedException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
@@ -25,7 +25,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\DateTime;
-use Utils;
+use FKSDB\Utils\Utils;
 
 /**
  * Class AuthenticationPresenter
@@ -219,11 +219,11 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     public function titleLogin() {
-        $this->setTitle(_('Login'));
+        $this->setPageTitle(new PageTitle(_('Login')));
     }
 
     public function titleRecover() {
-        $this->setTitle(_('Obnova hesla'));
+        $this->setPageTitle(new PageTitle(_('Obnova hesla')));
     }
 
     /**
@@ -387,10 +387,9 @@ final class AuthenticationPresenter extends BasePresenter {
         $this->template->login = $this->login;
     }
 
-    protected function getPageStyleContainer(): PageStyleContainer {
-        $container = parent::getPageStyleContainer();
-        $container->styleId = 'login';
-        $container->mainContainerClassName = '';
-        return $container;
+    protected function beforeRender() {
+        $this->getPageStyleContainer()->styleId = 'login';
+        $this->getPageStyleContainer()->mainContainerClassName = '';
+        parent::beforeRender();
     }
 }

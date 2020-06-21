@@ -5,13 +5,11 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
 use SQL\SearchableDataSource;
 
 /**
@@ -52,8 +50,6 @@ class TeachersGrid extends BaseGrid {
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
-     * @throws InvalidLinkException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);
@@ -82,11 +78,5 @@ class TeachersGrid extends BaseGrid {
             ->setLink(function (ModelTeacher $row) {
                 return $this->getPresenter()->link('detail', ['id' => $row->teacher_id]);
             });
-
-        if ($presenter->authorized('create')) {
-            $this->addGlobalButton('add')
-                ->setLabel(_('Create new teacher'))
-                ->setLink($this->getPresenter()->link('create'));
-        }
     }
 }

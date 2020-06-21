@@ -13,7 +13,9 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
+use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
@@ -70,35 +72,58 @@ trait EntityPresenterTrait {
     public function authorizedDetail() {
         $this->setAuthorized($this->traitIsAuthorized($this->getEntity(), 'detail'));
     }
-
+    /* ****************** TITLES ***************************** */
     /**
      * @return void
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
     public function titleList() {
+        $this->setPageTitle($this->getTitleList());
+    }
+
+    public function getTitleList(): PageTitle {
+        return new PageTitle(_('List of entities'), 'fa fa-table');
     }
 
     /**
      * @return void
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    public function titleCreate() {
+    final public function titleCreate() {
+        $this->setPageTitle($this->getTitleCreate());
+    }
+
+    public function getTitleCreate(): PageTitle {
+        return new PageTitle(_('Create an entity'), 'fa fa-plus');
     }
 
     /**
      * @return void
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
     public function titleEdit() {
+        $this->setPageTitle(new PageTitle(_('Edit an entity'), 'fa fa-pencil'));
     }
 
     /**
      * @return void
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
     public function titleDetail() {
+        $this->setPageTitle(new PageTitle(_('Detail of the entity'), 'fa fa-eye'));
     }
 
     /**
      * @return void
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
     public function titleDelete() {
+        $this->setPageTitle(new PageTitle(_('Delete an entity'), 'fa fa-minus'));
     }
 
     /**
@@ -193,4 +218,12 @@ trait EntityPresenterTrait {
      * @return void
      */
     abstract public function setAuthorized(bool $access);
+
+    /**
+     * @param PageTitle $pageTitle
+     * @return void
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
+    abstract public function setPageTitle(PageTitle $pageTitle);
 }

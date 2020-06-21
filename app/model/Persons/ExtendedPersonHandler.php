@@ -14,7 +14,7 @@ use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
-use FormUtils;
+use FKSDB\Utils\FormUtils;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use FKSDB\Exceptions\ModelException;

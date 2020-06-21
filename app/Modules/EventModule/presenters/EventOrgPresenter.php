@@ -7,6 +7,7 @@ use FKSDB\Components\Grids\EventOrgsGrid;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEventOrg;
+use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -33,20 +34,12 @@ class EventOrgPresenter extends BasePresenter {
         $this->serviceEventOrg = $serviceEventOrg;
     }
 
-    /**
-     * @return void
-     * @throws BadRequestException
-     */
-    public function titleList() {
-        $this->setTitle(sprintf(_('Organisers of event')), 'fa fa-users');
+    public function getTitleList(): PageTitle {
+        return new PageTitle(sprintf(_('Organisers of event')), 'fa fa-users');
     }
 
-    /**
-     * @return void
-     * @throws BadRequestException
-     */
-    public function titleCreate() {
-        $this->setTitle(sprintf(_('Create organiser of event')), 'fa fa-users');
+    public function getTitleCreate(): PageTitle {
+        return new PageTitle(sprintf(_('Create organiser of event')), 'fa fa-users');
     }
 
     /**
@@ -56,7 +49,7 @@ class EventOrgPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleEdit() {
-        $this->setTitle(sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-users');
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-users'));
     }
 
     /**

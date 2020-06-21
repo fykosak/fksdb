@@ -5,7 +5,6 @@ namespace FKSDB\DataTesting;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\DataTesting\Tests\Person\PersonTest;
 use FKSDB\ORM\Services\ServiceContest;
-use Nette\Application\BadRequestException;
 
 /**
  * Class DataTestingFactory

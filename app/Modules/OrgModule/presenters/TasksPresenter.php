@@ -8,6 +8,7 @@ use FKSDB\Logging\FlashMessageDump;
 use FKSDB\SeriesCalculator;
 use FKSDB\Submits\UploadException;
 use FKSDB\Exceptions\ModelException;
+use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -75,7 +76,7 @@ class TasksPresenter extends BasePresenter {
     }
 
     public function titleImport() {
-        $this->setTitle(_('Import úloh'), 'fa fa-upload');
+        $this->setPageTitle(new PageTitle(_('Import úloh'), 'fa fa-upload'));
     }
 
     /**

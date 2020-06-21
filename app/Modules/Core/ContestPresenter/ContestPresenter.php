@@ -6,7 +6,7 @@ use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelContest;
-use FKSDB\UI\PageStyleContainer;
+use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -82,24 +82,25 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
         return $this->getYearCalculator()->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 
-    protected function getPageStyleContainer(): PageStyleContainer {
-        $container = parent::getPageStyleContainer();
-        /** @var ModelContest $contest */
-        $contest = $this->getServiceContest()->findByPrimary($this->contestId);
-        if ($contest) {
-            $container->styleId = $contest->getContestSymbol();
-            $container->navBarClassName = 'navbar-dark bg-' . $contest->getContestSymbol();
+    protected function beforeRender() {
+        try {
+            $contest = $this->getSelectedContest();
+        } catch (BadRequestException $exception) {
+
         }
-        return $container;
+        if (isset($contest) && $contest) {
+            $this->getPageStyleContainer()->styleId = $contest->getContestSymbol();
+            $this->getPageStyleContainer()->navBarClassName = 'navbar-dark bg-' . $contest->getContestSymbol();
+        }
+        parent::beforeRender();
     }
 
     /**
-     * @param string $title
-     * @param string $icon
-     * @param string $subTitle
+     * @param PageTitle $pageTitle
      * @return void
      */
-    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
-        parent::setTitle($title, $icon, sprintf(_('%d. ročník'), $this->year) . ' ' . $subTitle);
+    protected function setPageTitle(PageTitle $pageTitle) {
+        $pageTitle->subTitle = sprintf(_('%d. ročník'), $this->year) . ' ' . $pageTitle->subTitle;
+        parent::setPageTitle($pageTitle);
     }
 }

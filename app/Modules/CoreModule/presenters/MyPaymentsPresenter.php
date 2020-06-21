@@ -4,6 +4,7 @@ namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Components\Grids\Payment\MyPaymentGrid;
+use FKSDB\UI\PageTitle;
 
 /**
  * Class MyPaymentsPresenter
@@ -12,7 +13,7 @@ use FKSDB\Components\Grids\Payment\MyPaymentGrid;
 class MyPaymentsPresenter extends AuthenticatedPresenter {
 
     public function titleDefault() {
-        $this->setTitle(_('My payments'), 'fa fa-credit-card');
+        $this->setPageTitle(new PageTitle(_('My payments'), 'fa fa-credit-card'));
     }
 
     protected function createComponentMyPaymentGrid(): MyPaymentGrid {

@@ -2,6 +2,7 @@
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
 
 /**
@@ -15,7 +16,7 @@ class DashboardPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleDefault() {
-        $this->setTitle(\sprintf(_('Event %s'), $this->getEvent()->name), 'fa fa-dashboard');
+        $this->setPageTitle(new PageTitle(\sprintf(_('Event %s'), $this->getEvent()->name), 'fa fa-dashboard'));
     }
 
     /**

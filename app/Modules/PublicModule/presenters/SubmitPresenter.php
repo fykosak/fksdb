@@ -19,6 +19,7 @@ use FKSDB\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Submits\ProcessingException;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\Submits\SubmitHandlerFactory;
+use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -115,7 +116,7 @@ class SubmitPresenter extends BasePresenter {
 
     /* ********************** TITLE **********************/
     public function titleDefault() {
-        $this->setTitle(_('Odevzdat řešení'), 'fa fa-cloud-upload');
+        $this->setPageTitle(new PageTitle(_('Odevzdat řešení'), 'fa fa-cloud-upload'));
     }
 
     public function titleAjax() {

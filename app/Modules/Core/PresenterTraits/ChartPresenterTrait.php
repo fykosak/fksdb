@@ -3,6 +3,7 @@
 namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Chart\IChart;
+use FKSDB\UI\PageTitle;
 use Nette\Application\UI\Control;
 
 /**
@@ -15,13 +16,12 @@ trait ChartPresenterTrait {
      */
     protected $selectedChart;
 
-
     public function titleChart() {
-        $this->setTitle($this->selectedChart->getTitle(), 'fa fa-pie-chart');
+        $this->setPageTitle(new PageTitle($this->selectedChart->getTitle(), 'fa fa-pie-chart'));
     }
 
     public function titleList() {
-        $this->setTitle(_('Charts'), 'fa fa fa-pie-chart');
+        $this->setPageTitle(new PageTitle(_('Charts'), 'fa fa fa-pie-chart'));
     }
 
     public function renderChart() {
@@ -55,7 +55,6 @@ trait ChartPresenterTrait {
     protected function createComponentChart(): Control {
         return $this->selectedChart->getControl();
     }
-
 
     abstract public function authorizedList();
 

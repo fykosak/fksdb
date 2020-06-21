@@ -6,6 +6,7 @@ use FKSDB\Components\Controls\Fyziklani\SeatingControl;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use FKSDB\React\ReactResponse;
+use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use ReactMessage;
@@ -34,7 +35,7 @@ class SeatingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleDefault() {
-        $this->setTitle(_('Rooming'), 'fa fa-arrows');
+        $this->setPageTitle(new PageTitle(_('Rooming'), 'fa fa-arrows'));
     }
 
     /**
@@ -42,7 +43,7 @@ class SeatingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleEdit() {
-        $this->setTitle(_('Edit routing'), 'fa fa-pencil');
+        $this->setPageTitle(new PageTitle(_('Edit routing'), 'fa fa-pencil'));
     }
 
     /**
@@ -50,7 +51,7 @@ class SeatingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleDownload() {
-        $this->setTitle(_('Download routing'), 'fa fa-download');
+        $this->setPageTitle(new PageTitle(_('Download routing'), 'fa fa-download'));
     }
 
     /**
@@ -58,7 +59,7 @@ class SeatingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleList() {
-        $this->setTitle(_('List of all teams'), 'fa fa-print');
+        $this->setPageTitle(new PageTitle(_('List of all teams'), 'fa fa-print'));
     }
 
     /**
@@ -66,7 +67,7 @@ class SeatingPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titlePreview() {
-        $this->setTitle(_('Preview'), 'fa fa-search');
+        $this->setPageTitle(new PageTitle(_('Preview'), 'fa fa-search'));
     }
 
     /**

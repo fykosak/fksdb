@@ -12,6 +12,7 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -28,12 +29,8 @@ class ClosePresenter extends BasePresenter {
     use EventEntityPresenterTrait;
 
     /* ******* TITLE ***********/
-    /**
-     * @return void
-     * @throws BadRequestException
-     */
-    public function titleList() {
-        $this->setTitle(_('Uzavírání bodování'), 'fa fa-check');
+    public function getTitleList(): PageTitle {
+        return new PageTitle(_('Uzavírání bodování'), 'fa fa-check');
     }
 
     /**
@@ -42,7 +39,7 @@ class ClosePresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleTeam() {
-        $this->setTitle(\sprintf(_('Uzavírání bodování týmu "%s"'), $this->getEntity()->name), 'fa fa-check-square-o');
+        $this->setPageTitle(new PageTitle(\sprintf(_('Uzavírání bodování týmu "%s"'), $this->getEntity()->name), 'fa fa-check-square-o'));
     }
 
     /**
