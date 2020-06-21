@@ -57,12 +57,10 @@ EOT
      */
     public function testDisplay(int $capacity, bool $disabled) {
         Assert::equal(2, (int)$this->connection->query('SELECT SUM(accomodation) FROM event_participant WHERE event_id = ?', $this->eventId)->fetchField());
-
         $this->connection->query('UPDATE event SET parameters = ? WHERE event_id = ?', <<<EOT
 accomodationCapacity: $capacity                
 EOT
             , $this->eventId);
-
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',
@@ -70,8 +68,8 @@ EOT
             'year' => 1,
             'eventId' => $this->tsafEventId,
         ]);
-
         $response = $this->fixture->run($request);
+
         Assert::type(TextResponse::class, $response);
 
         $source = $response->getSource();
