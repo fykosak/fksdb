@@ -174,7 +174,7 @@ class AjaxUpload extends ReactComponent {
     }
 
     /**
-     * @param $taskId
+     * @param int $taskId
      * @return ModelTask|null
      */
     private function isAvailableSubmit($taskId) {

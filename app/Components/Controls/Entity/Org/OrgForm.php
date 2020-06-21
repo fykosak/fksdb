@@ -13,6 +13,7 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
+use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
@@ -80,7 +81,7 @@ class OrgForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @throws AbortException
      */
     protected function handleFormSuccess(Form $form) {
-        $data = \FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
+        $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
         if (!isset($data['contest_id'])) {
             $data['contest_id'] = $this->contest->contest_id;
         }

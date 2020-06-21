@@ -6,7 +6,7 @@ use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelRole;
-use FKSDB\UI\PageStyleContainer;
+use FKSDB\UI\PageTitle;
 use Nette\Application\UI\InvalidLinkException;
 
 /**
@@ -99,12 +99,10 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Rozcestník'), 'fa fa-home');
+        $this->setPageTitle(new PageTitle(_('Rozcestník'), 'fa fa-home'));
     }
-
-    protected function getPageStyleContainer(): PageStyleContainer {
-        $container = parent::getPageStyleContainer();
-        $container->navBarClassName = 'bg-dark navbar-dark';
-        return $container;
+    protected function beforeRender() {
+        $this->getPageStyleContainer()->navBarClassName = 'bg-dark navbar-dark';
+        parent::beforeRender();
     }
 }

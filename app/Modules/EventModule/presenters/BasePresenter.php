@@ -11,7 +11,7 @@ use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
-use FKSDB\UI\PageStyleContainer;
+use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Security\IResource;
@@ -176,33 +176,28 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /* ********************** GUI ************************ */
     /**
-     * @param string $title
-     * @param string $icon
-     * @param string $subTitle
+     * @param PageTitle $pageTitle
+     * @return void
      * @throws BadRequestException
      */
-    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
-        parent::setTitle($title, $icon, $subTitle ?: $this->getEvent()->__toString());
+    protected function setPageTitle(PageTitle $pageTitle) {
+        $pageTitle->subTitle = $pageTitle->subTitle ?: $this->getEvent()->__toString();
+        parent::setPageTitle($pageTitle);
     }
 
-    /**
-     * @return PageStyleContainer
-     * @throws BadRequestException
-     */
-    protected function getPageStyleContainer(): PageStyleContainer {
-        $container = parent::getPageStyleContainer();
-        $container->styleId = 'event event-type-' . $this->getEvent()->event_type_id;
+    protected function beforeRender() {
+        $this->getPageStyleContainer()->styleId = 'event event-type-' . $this->getEvent()->event_type_id;
         switch ($this->getEvent()->event_type_id) {
             case 1:
-                $container->navBarClassName = 'bg-fyziklani navbar-dark';
+                $this->getPageStyleContainer()->navBarClassName = 'bg-fyziklani navbar-dark';
                 break;
             case 9:
-                $container->navBarClassName = 'bg-fol navbar-light';
+                $this->getPageStyleContainer()->navBarClassName = 'bg-fol navbar-light';
                 break;
             default:
-                $container->navBarClassName = 'bg-light navbar-light';
+                $this->getPageStyleContainer()->navBarClassName = 'bg-light navbar-light';
         }
-        return $container;
+        parent::beforeRender();
     }
 
     /**

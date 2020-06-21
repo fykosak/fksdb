@@ -28,7 +28,7 @@ use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\ServiceEvent;
-use FKSDB\UI\PageStyleContainer;
+use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -144,9 +144,9 @@ class ApplicationPresenter extends BasePresenter {
      */
     public function titleDefault() {
         if ($this->getEventApplication()) {
-            $this->setTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fa fa-calendar-check-o');
+            $this->setPageTitle(new PageTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fa fa-calendar-check-o'));
         } else {
-            $this->setTitle($this->getEvent(), 'fa fa-calendar-check-o');
+            $this->setPageTitle(new PageTitle($this->getEvent(), 'fa fa-calendar-check-o'));
         }
     }
 
@@ -156,9 +156,9 @@ class ApplicationPresenter extends BasePresenter {
     public function titleList() {
         $contest = $this->getSelectedContest();
         if ($contest) {
-            $this->setTitle(\sprintf(_('Moje přihlášky (%s)'), $contest->name), 'fa fa-calendar');
+            $this->setPageTitle(new PageTitle(\sprintf(_('Moje přihlášky (%s)'), $contest->name), 'fa fa-calendar'));
         } else {
-            $this->setTitle(_('Moje přihlášky'), 'fa fa-calendar');
+            $this->setPageTitle(new PageTitle(_('Moje přihlášky'), 'fa fa-calendar'));
         }
     }
 
@@ -434,13 +434,16 @@ class ApplicationPresenter extends BasePresenter {
         ];
     }
 
-    protected function getPageStyleContainer(): PageStyleContainer {
-        $container = parent::getPageStyleContainer();
+    /**
+     * @return void
+     * @throws BadRequestException
+     * @throws \ReflectionException
+     */
+    protected function beforeRender() {
         $event = $this->getEvent();
-        if (!$event) {
-            return $container;
+        if ($event) {
+            $this->getPageStyleContainer()->styleId = ' event-type-' . $event->event_type_id;
         }
-        $container->styleId = ' event-type-' . $event->event_type_id;
-        return $container;
+        parent::beforeRender();
     }
 }

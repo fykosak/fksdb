@@ -3,6 +3,7 @@
 namespace FKSDB\Tests\PageDisplay;
 
 use FKSDB\ORM\DbNames;
+use FKSDB\Tests\DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
@@ -14,7 +15,7 @@ use Tester\Assert;
  * Class PageDisplayTest
  * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class AbstractPageDisplayTestCase extends \DatabaseTestCase {
+abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
     use MockApplicationTrait;
 
     /** @var int */

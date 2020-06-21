@@ -31,9 +31,10 @@ class EventModule extends AbstractPageDisplayTestCase {
     public function getPages(): array {
         return [
             //TODO WORKS only for single events
-            //    ['Event:Application', ['eventId' => self::EVENT_ID, 'action' => 'list']],
-            //    ['Event:Application', ['eventId' => self::EVENT_ID, 'action' => 'import']],
-            //    ['Event:Application', ['eventId' => self::EVENT_ID, 'action' => 'transitions']],
+            // ['Event:Application', ['eventId' => self::EVENT_ID, 'action' => 'list']],
+            // ['Event:Application', ['eventId' => self::EVENT_ID, 'action' => 'import']],
+            // ['Event:Application', ['eventId' => self::EVENT_ID, 'action' => 'transitions']],
+
             ['Event:Chart', ['eventId' => self::EVENT_ID, 'action' => 'list']],
             ['Event:Dashboard', ['eventId' => self::EVENT_ID]],
             ['Event:Dispatch', []],

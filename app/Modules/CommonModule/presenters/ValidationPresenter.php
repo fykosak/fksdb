@@ -4,6 +4,7 @@ namespace FKSDB\Modules\CommonModule;
 
 use FKSDB\Components\Controls\DataTesting\PersonTestControl;
 use FKSDB\Components\Grids\DataTesting\PersonsGrid;
+use FKSDB\UI\PageTitle;
 
 /**
  * Class ValidationPresenter
@@ -11,15 +12,15 @@ use FKSDB\Components\Grids\DataTesting\PersonsGrid;
  */
 class ValidationPresenter extends BasePresenter {
     public function titleDefault() {
-        $this->setTitle(_('Data validation'), 'fa fa-check');
+        $this->setPageTitle(new PageTitle(_('Data validation'), 'fa fa-check'));
     }
 
     public function titleList() {
-        $this->setTitle(_('All test'), 'fa fa-check');
+        $this->setPageTitle(new PageTitle(_('All test'), 'fa fa-check'));
     }
 
     public function titlePreview() {
-        $this->setTitle(_('Select test'), 'fa fa-check');
+        $this->setPageTitle(new PageTitle(_('Select test'), 'fa fa-check'));
     }
 
     public function authorizedDefault() {

@@ -7,7 +7,9 @@ use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
+use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use FKSDB\Exceptions\NotImplementedException;
 
@@ -32,19 +34,21 @@ class EventPresenter extends BasePresenter {
         $this->serviceEvent = $serviceEvent;
     }
 
-    public function titleList() {
-        $this->setTitle(_('Events'), 'fa fa-calendar-check-o');
+    public function getTitleList(): PageTitle {
+        return new PageTitle(_('Events'), 'fa fa-calendar-check-o');
     }
 
-    public function titleCreate() {
-        $this->setTitle(_('Add event'), 'fa fa-calendar-plus-o');
+    public function getTitleCreate(): PageTitle {
+        return new PageTitle(_('Add event'), 'fa fa-calendar-plus-o');
     }
 
     /**
      * @return void
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
     public function titleEdit() {
-        $this->setTitle(sprintf(_('Edit event %s'), $this->getEntity()->name), 'fa fa-pencil');
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit event %s'), $this->getEntity()->name), 'fa fa-pencil'));
     }
 
     /**

@@ -1,8 +1,9 @@
 <?php
 
-namespace FKSDB\Events;
+namespace FKSDB\Tests\Events;
 
-use DatabaseTestCase;
+use FKSDB\Tests\DatabaseTestCase;
+use FKSDB\ORM\DbNames;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Request;
 use Nette\DI\Container;
@@ -43,16 +44,15 @@ abstract class EventTestCase extends DatabaseTestCase {
     }
 
     protected function tearDown() {
-        $this->connection->query("DELETE FROM event_participant");
-        $this->connection->query("DELETE FROM event_status");
-        $this->connection->query("DELETE FROM event");
-        $this->connection->query("DELETE FROM event_type");
-        $this->connection->query("DELETE FROM auth_token");
-
+        $this->connection->query('DELETE FROM event_participant');
+        $this->connection->query('DELETE FROM event_status');
+        $this->connection->query('DELETE FROM event');
+        $this->connection->query('DELETE FROM event_type');
+        $this->connection->query('DELETE FROM auth_token');
         parent::tearDown();
     }
 
-    protected function createEvent($data) {
+    protected function createEvent(array $data): int {
         if (!isset($data['year'])) {
             $data['year'] = 1;
         }
@@ -65,11 +65,10 @@ abstract class EventTestCase extends DatabaseTestCase {
         if (!isset($data['end'])) {
             $data['end'] = '2016-01-01';
         }
-        $this->connection->query('INSERT INTO event', $data);
-        return $this->connection->getInsertId();
+        return $this->insert(DbNames::TAB_EVENT, $data);
     }
 
-    protected function createPostRequest($postData, $post = []) {
+    protected function createPostRequest(array $postData, array $post = []): Request {
         $post = Helpers::merge($post, [
             'action' => 'default',
             'lang' => 'cs',
@@ -82,7 +81,7 @@ abstract class EventTestCase extends DatabaseTestCase {
         return new Request('Public:Application', 'POST', $post, $postData);
     }
 
-    protected function assertApplication($eventId, $email) {
+    protected function assertApplication(int $eventId, string $email): Row {
         $personId = $this->connection->fetchField('SELECT person_id FROM person_info WHERE email=?', $email);
         Assert::notEqual(false, $personId);
 
@@ -91,7 +90,7 @@ abstract class EventTestCase extends DatabaseTestCase {
         return $application;
     }
 
-    protected function assertExtendedApplication(Row $application, $table) {
+    protected function assertExtendedApplication(Row $application, string $table): Row {
         $application = $this->connection->fetch('SELECT * FROM `' . $table . '` WHERE event_participant_id = ?', $application->event_participant_id);
         Assert::notEqual(false, $application);
         return $application;

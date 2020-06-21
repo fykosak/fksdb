@@ -8,8 +8,8 @@ use FKSDB\ORM\Services\ServiceLogin;
 use Mail\MailTemplateFactory;
 use Nette\Application\IPresenter;
 use Nette\Application\IPresenterFactory;
-use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use Nette\Http\Session;
 use Tester\Assert;
 
 /**
@@ -18,9 +18,15 @@ use Tester\Assert;
  * @author Michal Koutný <michal@fykos.cz>
  */
 trait MockApplicationTrait {
-
+    /**
+     * @var Container
+     */
     private $container;
 
+    /**
+     * @param Container $container
+     * @return void
+     */
     protected function setContainer(Container $container) {
         $this->container = $container;
     }
@@ -42,8 +48,14 @@ trait MockApplicationTrait {
         $mailFactory->injectApplication($application);
     }
 
+    /**
+     * @param $token
+     * @param null $timeout
+     * @return void
+     */
     protected function fakeProtection($token, $timeout = null) {
         $container = $this->getContainer();
+        /** @var Session $session */
         $session = $container->getService('session');
         $section = $session->getSection('Nette.Forms.Form/CSRF');
         $key = "key$timeout";
@@ -62,7 +74,7 @@ trait MockApplicationTrait {
     }
 
     /**
-     * @param $presenterName
+     * @param string $presenterName
      * @return IPresenter
      */
     protected function createPresenter($presenterName): IPresenter {

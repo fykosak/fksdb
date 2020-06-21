@@ -2,6 +2,7 @@
 
 namespace FKSDB\Modules\FyziklaniModule;
 
+use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
 
 /**
@@ -14,7 +15,7 @@ class DashboardPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleDefault() {
-        $this->setTitle(_('Fyziklani game app'), 'fa fa-dashboard');
+        $this->setPageTitle(new PageTitle(_('Fyziklani game app'), 'fa fa-dashboard'));
     }
 
     /**

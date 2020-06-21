@@ -6,7 +6,7 @@ use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Components\Controls\Badges\ContestBadge;
 use FKSDB\Components\Grids\Events\DispatchGrid;
 use FKSDB\ORM\Models\ModelLogin;
-use FKSDB\UI\PageStyleContainer;
+use FKSDB\UI\PageTitle;
 
 /**
  * Class DispatchPresenter
@@ -25,13 +25,12 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('List of events'), 'fa fa-calendar');
+        $this->setPageTitle(new PageTitle(_('List of events'), 'fa fa-calendar'));
     }
 
-    protected function getPageStyleContainer(): PageStyleContainer {
-        $container = parent::getPageStyleContainer();
-        $container->styleId = 'event';
-        $container->navBarClassName = 'bg-dark navbar-dark';
-        return $container;
+    protected function beforeRender() {
+        $this->getPageStyleContainer()->styleId = 'event';
+        $this->getPageStyleContainer()->navBarClassName = 'bg-dark navbar-dark';
+        parent::beforeRender();
     }
 }

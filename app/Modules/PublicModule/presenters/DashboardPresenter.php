@@ -3,6 +3,7 @@
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
+use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -46,7 +47,7 @@ class DashboardPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Pultík'),'fa fa-dashboard');
+        $this->setPageTitle(new PageTitle(_('Dashboard'), 'fa fa-dashboard'));
     }
 
     /**
@@ -54,7 +55,7 @@ class DashboardPresenter extends BasePresenter {
      */
     public function renderDefault() {
         foreach ($this->news->getNews($this->getSelectedContest(), $this->getLang())
-	  as $new) {
+                 as $new) {
             $this->flashMessage($new);
         }
     }

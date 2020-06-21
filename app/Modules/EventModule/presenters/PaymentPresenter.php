@@ -14,6 +14,7 @@ use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\Machine;
+use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -51,7 +52,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleCreate() {
-        $this->setTitle(_('New payment'), 'fa fa-credit-card');
+        $this->setPageTitle(new PageTitle(_('New payment'), 'fa fa-credit-card'));
     }
 
     /**
@@ -60,7 +61,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleEdit() {
-        $this->setTitle(\sprintf(_('Edit payment #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card');
+        $this->setPageTitle(new PageTitle(\sprintf(_('Edit payment #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card'));
     }
 
     /**
@@ -69,7 +70,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleDetail() {
-        $this->setTitle(\sprintf(_('Payment detail #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card');
+        $this->setPageTitle(new PageTitle(\sprintf(_('Payment detail #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card'));
     }
 
     /**
@@ -77,7 +78,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleList() {
-        $this->setTitle(_('List of payments'), 'fa fa-credit-card');
+        $this->setPageTitle(new PageTitle(_('List of payments'), 'fa fa-credit-card'));
     }
 
     protected function isEnabled(): bool {

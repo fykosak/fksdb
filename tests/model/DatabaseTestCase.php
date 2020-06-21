@@ -1,8 +1,12 @@
 <?php
 
+namespace FKSDB\Tests;
+
 use Authentication\PasswordAuthenticator;
+use FKSDB\ORM\DbNames;
 use Nette\Database\Connection;
 use Nette\Database\Context;
+use Nette\Database\Row;
 use Nette\DI\Container;
 use Tester\Assert;
 use Tester\Environment;
@@ -21,7 +25,11 @@ abstract class DatabaseTestCase extends TestCase {
      */
     private $instanceNo;
 
-    function __construct(Container $container) {
+    /**
+     * DatabaseTestCase constructor.
+     * @param Container $container
+     */
+    public function __construct(Container $container) {
         $this->container = $container;
         /** @var Context $context */
         $context = $container->getByType(Context::class);
@@ -44,14 +52,14 @@ abstract class DatabaseTestCase extends TestCase {
     }
 
     protected function tearDown() {
-        $this->connection->query("DELETE FROM org");
-        $this->connection->query("DELETE FROM global_session");
-        $this->connection->query("DELETE FROM login");
-        $this->connection->query("DELETE FROM person_history");
-        $this->connection->query("DELETE FROM contest_year");
-        $this->connection->query("DELETE FROM school");
-        $this->connection->query("DELETE FROM address");
-        $this->connection->query("DELETE FROM person");
+        $this->connection->query('DELETE FROM org');
+        $this->connection->query('DELETE FROM global_session');
+        $this->connection->query('DELETE FROM login');
+        $this->connection->query('DELETE FROM person_history');
+        $this->connection->query('DELETE FROM contest_year');
+        $this->connection->query('DELETE FROM school');
+        $this->connection->query('DELETE FROM address');
+        $this->connection->query('DELETE FROM person');
     }
 
     /**
@@ -59,23 +67,23 @@ abstract class DatabaseTestCase extends TestCase {
      * @param string $name
      * @param string $surname
      * @param array $info
-     * @param boolean|array $loginData Login credentials
+     * @param bool|array $loginData Login credentials
      * @return int
      */
     protected function createPerson($name, $surname, $info = [], $loginData = false) {
-        $this->connection->query("INSERT INTO person (other_name, family_name) VALUES(?, ?)", $name, $surname);
+        $this->connection->query("INSERT INTO person (other_name, family_name,gender) VALUES(?, ?,'M')", $name, $surname);
         $personId = $this->connection->getInsertId();
 
         if ($info) {
             $info['person_id'] = $personId;
-            $this->connection->query("INSERT INTO person_info", $info);
+            $this->insert(DbNames::TAB_PERSON_INFO, $info);
         }
 
         if ($loginData) {
             $data = [
                 'login_id' => $personId,
                 'person_id' => $personId,
-                'active' => 1
+                'active' => 1,
             ];
 
             if (is_array($loginData)) {
@@ -84,7 +92,7 @@ abstract class DatabaseTestCase extends TestCase {
                 $loginData = $data;
             }
 
-            $this->connection->query("INSERT INTO login", $loginData);
+            $this->insert(DbNames::TAB_LOGIN, $loginData);
 
             if (isset($loginData['hash'])) {
                 $pseudoLogin = (object)$loginData;
@@ -96,21 +104,18 @@ abstract class DatabaseTestCase extends TestCase {
         return $personId;
     }
 
-    protected function assertPersonInfo($personId) {
+    protected function assertPersonInfo(int $personId): Row {
         $personInfo = $this->connection->fetch('SELECT * FROM person_info WHERE person_id = ?', $personId);
         Assert::notEqual(false, $personInfo);
         return $personInfo;
     }
 
-    protected function createPersonHistory($personId, $acYear, $school = null, $studyYear = null, $class = null) {
+    protected function createPersonHistory(int $personId, $acYear, $school = null, $studyYear = null, $class = null): int {
         $this->connection->query("INSERT INTO person_history (person_id, ac_year, school_id, class, study_year) VALUES(?, ?, ?, ?, ?)", $personId, $acYear, $school, $class, $studyYear);
-        $personHistoryId = $this->connection->getInsertId();
-
-
-        return $personHistoryId;
+        return $this->connection->getInsertId();
     }
 
-    protected function insert($table, $data) {
+    protected function insert(string $table, array $data): int {
         $this->connection->query("INSERT INTO `$table`", $data);
         return $this->connection->getInsertId();
     }

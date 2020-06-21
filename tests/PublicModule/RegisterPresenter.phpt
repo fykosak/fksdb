@@ -1,8 +1,11 @@
 <?php
 
+namespace FKSDB\Tests\PublicModule;
+
 $container = require '../bootstrap.php';
 
 use Authentication\LoginUserStorage;
+use FKSDB\Tests\DatabaseTestCase;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
@@ -23,7 +26,11 @@ class RegisterPresenterTest extends DatabaseTestCase {
      */
     private $fixture;
 
-    function __construct(Container $container) {
+    /**
+     * RegisterPresenterTest constructor.
+     * @param Container $container
+     */
+    public function __construct(Container $container) {
         parent::__construct($container);
         $this->container = $container;
     }
@@ -64,14 +71,13 @@ class RegisterPresenterTest extends DatabaseTestCase {
 
         $response = $this->fixture->run($request);
         Assert::type(TextResponse::class, $response);
-
+        /** @var ITemplate $source */
         $source = $response->getSource();
         Assert::type(ITemplate::class, $source);
 
-        $html = $source->__toString(true);
+        $html = $source->__toString();
         Assert::contains('registrace řešitele', $html);
     }
-
 }
 
 $testCase = new RegisterPresenterTest($container);

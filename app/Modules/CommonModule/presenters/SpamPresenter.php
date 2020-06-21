@@ -6,6 +6,7 @@ use FKSDB\Components\Grids\EmailsGrid;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Services\ServiceEmailMessage;
+use FKSDB\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 
@@ -29,15 +30,12 @@ class SpamPresenter extends BasePresenter {
         $this->serviceEmailMessage = $serviceEmailMessage;
     }
 
-    /**
-     * @return void
-     */
     public function titleDetail() {
-        $this->setTitle(sprintf(_('Detail of email #%s'), $this->getEntity()->getPrimary()), 'fa fa-envelope');
+        $this->setPageTitle(new PageTitle(sprintf(_('Detail of email #%s'), $this->getEntity()->getPrimary()), 'fa fa-envelope'));
     }
 
-    public function titleList() {
-        $this->setTitle(_('List of emails'), 'fa fa-envelope');
+    public function getTitleList(): PageTitle {
+        return new PageTitle(_('List of emails'), 'fa fa-envelope');
     }
 
     public function authorizedDetail() {

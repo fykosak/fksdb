@@ -8,6 +8,7 @@ use FKSDB\Components\Grids\Schedule\GroupsGrid;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
+use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
@@ -37,7 +38,7 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleList() {
-        $this->setTitle(_('Schedule'), 'fa fa-calendar-check-o');
+        $this->setPageTitle(new PageTitle(_('Schedule'), 'fa fa-calendar-check-o'));
     }
 
     /**
@@ -45,7 +46,7 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titlePersons() {
-        $this->setTitle(_('Whole program'), 'fa fa-calendar-check-o');
+        $this->setPageTitle(new PageTitle(_('Whole program'), 'fa fa-calendar-check-o'));
     }
 
     /**

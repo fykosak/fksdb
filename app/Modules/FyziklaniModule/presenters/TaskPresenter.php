@@ -7,6 +7,7 @@ use FKSDB\Components\Grids\Fyziklani\TaskGrid;
 use FKSDB\Fyziklani\FyziklaniTaskImportProcessor;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
+use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -26,7 +27,7 @@ class TaskPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleList() {
-        $this->setTitle(_('Tasks'), 'fa fa-tasks');
+        $this->setPageTitle(new PageTitle(_('Tasks'), 'fa fa-tasks'));
     }
 
     /**
@@ -34,7 +35,7 @@ class TaskPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleImport() {
-        $this->setTitle(_('Tasks Import'), 'fa fa-upload');
+        $this->setPageTitle(new PageTitle(_('Tasks Import'), 'fa fa-upload'));
     }
 
     /**

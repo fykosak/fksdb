@@ -6,7 +6,7 @@ use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
-use FormUtils;
+use FKSDB\Utils\FormUtils;
 use Nette\Forms\Form;
 use Nette\Security\User;
 use Nette\SmartObject;

@@ -2,9 +2,10 @@
 
 namespace FKSDB\Modules\PublicModule;
 
-use DatabaseTestCase;
+use FKSDB\Tests\DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Request;
+use Nette\Database\Row;
 use Nette\DI\Config\Helpers;
 use Nette\DI\Container;
 use Nette\Http\FileUpload;
@@ -21,7 +22,9 @@ abstract class SubmitTestCase extends DatabaseTestCase {
 
     protected $taskAll;
     protected $taskRestricted;
+    /** @var int */
     protected $personId;
+    /** @var int */
     protected $contestantId;
 
     /**
@@ -99,6 +102,7 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         $this->connection->query('DELETE FROM contestant_base');
         $params = $this->getContainer()->getParameters();
         $dir = $params['upload']['root'];
+        /** @var \SplFileInfo $f */
         foreach (Finder::find('*')->from($dir)->childFirst() as $f) {
             if ($f->isDir()) {
                 @rmdir($f->getPathname());
@@ -110,42 +114,44 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         parent::tearDown();
     }
 
-    protected function createPostRequest($postData, $post = []) {
+    protected function createPostRequest($postData, $post = []): Request {
         $post = Helpers::merge($post, [
-                    'action' => 'default',
-                    'lang' => 'cs',
-                    'contestId' => 1,
-                    'year' => 1,
-                    'do' => 'uploadForm-form-submit',
+            'action' => 'default',
+            'lang' => 'cs',
+            'contestId' => 1,
+            'year' => 1,
+            'do' => 'uploadForm-form-submit',
         ]);
-
-        //$request->setFlag(Request::SECURED);
         return new Request('Public:Submit', 'POST', $post, $postData);
     }
 
-    protected function createFileUpload() {
+    protected function createFileUpload(): array {
         $file = tempnam(TEMP_DIR, 'upload');
         copy(__DIR__ . DIRECTORY_SEPARATOR . self::FILE_01, $file);
 
         return ['file' => new FileUpload([
-                'name' => 'reseni2-8.pdf',
-                'type' => 'application/pdf',
-                'size' => filesize($file),
-                'tmp_name' => $file,
-                'error' => 0
+            'name' => 'reseni2-8.pdf',
+            'type' => 'application/pdf',
+            'size' => filesize($file),
+            'tmp_name' => $file,
+            'error' => 0,
         ])];
     }
 
-    protected function assertSubmit($contestantId, $taskId) {
+    protected function assertSubmit(int $contestantId, int $taskId): Row {
         $submit = $this->connection->fetch('SELECT * FROM submit WHERE ct_id = ? AND task_id = ?', $contestantId, $taskId);
         Assert::notEqual(false, $submit);
         return $submit;
     }
 
-    protected function assertNotSubmit($contestantId, $taskId) {
+    /**
+     * @param int $contestantId
+     * @param int $taskId
+     * @return void
+     */
+    protected function assertNotSubmit(int $contestantId, int $taskId) {
         $submit = $this->connection->fetch('SELECT * FROM submit WHERE ct_id = ? AND task_id = ?', $contestantId, $taskId);
         Assert::equal(false, $submit);
-        return $submit;
     }
 
 }

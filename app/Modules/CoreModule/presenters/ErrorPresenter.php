@@ -4,7 +4,7 @@ namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Modules\Core\BasePresenter;
 use Exception;
-use FKSDB\UI\PageStyleContainer;
+use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Http\Response;
@@ -15,11 +15,10 @@ use Tracy\Debugger;
  */
 class ErrorPresenter extends BasePresenter {
 
-    protected function getPageStyleContainer(): PageStyleContainer {
-        $container = parent::getPageStyleContainer();
-        $container->styleId = 'error';
-        $container->navBarClassName = 'bg-error navbar-dark';
-        return $container;
+    protected function beforeRender() {
+        $this->getPageStyleContainer()->styleId = 'error';
+        $this->getPageStyleContainer()->navBarClassName = 'bg-error navbar-dark';
+        parent::beforeRender();
     }
 
     protected function putIntoBreadcrumbs() {
@@ -27,7 +26,7 @@ class ErrorPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setTitle(_('Chyba'));
+        $this->setPageTitle(new PageTitle(_('Chyba')));
     }
 
     /**

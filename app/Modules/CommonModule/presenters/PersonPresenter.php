@@ -20,9 +20,11 @@ use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonInfo;
-use FormUtils;
+use FKSDB\UI\PageTitle;
+use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -122,37 +124,53 @@ class PersonPresenter extends BasePresenter {
     }
 
     /* *********** TITLE ***************/
+    /**
+     * @return void
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
     public function titleSearch() {
-        $this->setTitle(_('Find person'), 'fa fa-search');
+        $this->setPageTitle(new PageTitle(_('Find person'), 'fa fa-search'));
     }
 
     /**
      * @return void
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
     public function titleDetail() {
-        $this->setTitle(sprintf(_('Detail of person %s'), $this->getEntity()->getFullName()), 'fa fa-eye');
+        $this->setPageTitle(new PageTitle(sprintf(_('Detail of person %s'), $this->getEntity()->getFullName()), 'fa fa-eye'));
     }
 
     /**
      * @return void
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
     public function titleEdit() {
-        $this->setTitle(sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()), 'fa fa-user');
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()), 'fa fa-user'));
+    }
+
+    public function getTitleCreate(): PageTitle {
+        return new PageTitle(_('Create person'), 'fa fa-user-plus');
     }
 
     /**
      * @return void
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    public function titleCreate() {
-        $this->setTitle(_('Create person'), 'fa fa-user-plus');
-    }
-
     public function titleMerge() {
-        $this->setTitle(sprintf(_('Sloučení osob %s (%d) a %s (%d)'), $this->trunkPerson->getFullName(), $this->trunkPerson->person_id, $this->mergedPerson->getFullName(), $this->mergedPerson->person_id));
+        $this->setPageTitle(new PageTitle(sprintf(_('Sloučení osob %s (%d) a %s (%d)'), $this->trunkPerson->getFullName(), $this->trunkPerson->person_id, $this->mergedPerson->getFullName(), $this->mergedPerson->person_id)));
     }
 
+    /**
+     * @return void
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
     public function titlePizza() {
-        $this->setTitle(_('Pizza'), 'fa fa-cutlery');
+        $this->setPageTitle(new PageTitle(_('Pizza'), 'fa fa-cutlery'));
     }
 
     /* *********** AUTH ***************/

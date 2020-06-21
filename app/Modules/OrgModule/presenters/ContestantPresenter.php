@@ -5,6 +5,7 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Grids\ContestantsGrid;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Services\ServiceContestant;
+use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 
@@ -30,19 +31,16 @@ class ContestantPresenter extends ExtendedPersonPresenter {
         $this->serviceContestant = $serviceContestant;
     }
 
-    /**
-     * @param int $id
-     */
-    public function titleEdit($id) {
-        $this->setTitle(sprintf(_('Úprava řešitele %s'), $this->getModel()->getPerson()->getFullName()), 'fa fa-user');
+    public function titleEdit() {
+        $this->setPageTitle(new PageTitle(sprintf(_('Úprava řešitele %s'), $this->getModel()->getPerson()->getFullName()), 'fa fa-user'));
     }
 
     public function titleCreate() {
-        $this->setTitle(_('Založit řešitele'), 'fa fa-user-plus');
+        $this->setPageTitle(new PageTitle(_('Založit řešitele'), 'fa fa-user-plus'));
     }
 
     public function titleList() {
-        $this->setTitle(_('Řešitelé'), 'fa fa-users');
+        $this->setPageTitle(new PageTitle(_('Řešitelé'), 'fa fa-users'));
     }
 
     /**

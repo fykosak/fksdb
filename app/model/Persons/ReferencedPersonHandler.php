@@ -18,7 +18,7 @@ use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServicePersonInfo;
 use FKSDB\Submits\StorageException;
-use FormUtils;
+use FKSDB\Utils\FormUtils;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\ModelsMulti\ModelMPostContact;
 use Nette\InvalidArgumentException;

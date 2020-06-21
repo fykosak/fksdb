@@ -50,8 +50,6 @@ class SchoolsGrid extends BaseGrid {
      * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
-     * @throws InvalidLinkException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);
@@ -67,10 +65,5 @@ class SchoolsGrid extends BaseGrid {
 
         $this->addLinkButton('edit', 'edit', _('Edit'), false, ['id' => 'school_id']);
         $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'school_id']);
-
-        $this->addGlobalButton('add')
-            ->setLink($this->getPresenter()->link('create'))
-            ->setLabel(_('CreateSchool'))
-            ->setClass('btn btn-sm btn-primary');
     }
 }

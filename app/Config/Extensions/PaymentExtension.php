@@ -9,7 +9,7 @@ use Nette\DI\CompilerExtension;
 
 /**
  * Class PaymentExtension
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PaymentExtension extends CompilerExtension {
     const MACHINE_PREFIX = 'machine.';

@@ -7,7 +7,9 @@ use FKSDB\Components\Grids\SchoolsGrid;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
+use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 
@@ -30,26 +32,30 @@ class SchoolPresenter extends BasePresenter {
         $this->serviceSchool = $serviceSchool;
     }
 
-    public function titleList() {
-        $this->setTitle(_('Schools'), 'fa fa-university');
+    public function getTitleList(): PageTitle {
+        return new PageTitle(_('Schools'), 'fa fa-university');
     }
 
-    public function titleCreate() {
-        $this->setTitle(_('Založit školu'), 'fa fa-plus');
+    public function getTitleCreate(): PageTitle {
+        return new PageTitle(_('Založit školu'), 'fa fa-plus');
     }
 
     /**
      * @return void
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
     public function titleEdit() {
-        $this->setTitle(sprintf(_('Úprava školy %s'), $this->getEntity()->name_abbrev), 'fa fa-pencil');
+        $this->setPageTitle(new PageTitle(sprintf(_('Úprava školy %s'), $this->getEntity()->name_abbrev), 'fa fa-pencil'));
     }
 
     /**
      * @return void
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
     public function titleDetail() {
-        $this->setTitle(sprintf(_('Detail of school %s'), $this->getEntity()->name_abbrev), 'fa fa-university');
+        $this->setPageTitle(new PageTitle(sprintf(_('Detail of school %s'), $this->getEntity()->name_abbrev), 'fa fa-university'));
     }
 
     /**

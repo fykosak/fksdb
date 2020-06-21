@@ -14,8 +14,8 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\ORM\Services\ServicePerson;
-use FKSDB\UI\PageStyleContainer;
 use FKSDB\Modules\Core\ContestPresenter\IContestPresenter;
+use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -204,7 +204,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     public function titleContestant() {
         $contest = $this->getSelectedContest();
-        $this->setTitle(sprintf(_('%s – registrace řešitele (%s. ročník)'), $contest ? $contest->name : '', $this->getSelectedYear()));
+        $this->setPageTitle(new PageTitle(sprintf(_('%s – registrace řešitele (%s. ročník)'), $contest ? $contest->name : '', $this->getSelectedYear())));
     }
 
     public function actionContest() {
@@ -214,7 +214,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function titleContest() {
-        $this->setTitle(_('Zvolit seminář'));
+        $this->setPageTitle(new PageTitle(_('Zvolit seminář')));
     }
 
     public function actionYear() {
@@ -224,7 +224,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function titleYear() {
-        $this->setTitle(_('Zvolit ročník'), '', $this->getServiceContest()->findByPrimary($this->contestId)->name);
+        $this->setPageTitle(new PageTitle(_('Zvolit ročník'), '', $this->getServiceContest()->findByPrimary($this->contestId)->name));
     }
 
     public function actionEmail() {
@@ -235,7 +235,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function titleEmail() {
-        $this->setTitle(_('Zadejte e-mail'), 'fa fa-envelope', $this->getServiceContest()->findByPrimary($this->contestId)->name);
+        $this->setPageTitle(new PageTitle(_('Zadejte e-mail'), 'fa fa-envelope', $this->getServiceContest()->findByPrimary($this->contestId)->name));
     }
 
     public function renderContest() {
@@ -394,14 +394,17 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function messageExists(): string {
         return _('Řešitel je již registrován.');
     }
-
-    protected function getPageStyleContainer(): PageStyleContainer {
-        $container = parent::getPageStyleContainer();
+    /**
+     * @return void
+     * @throws BadRequestException
+     * @throws \ReflectionException
+     */
+    protected function beforeRender() {
         $contest = $this->getSelectedContest();
         if ($contest) {
-            $container->navBarClassName = 'bg-dark navbar-dark';
-            $container->styleId = $contest->getContestSymbol();
+            $this->getPageStyleContainer()->navBarClassName = 'bg-dark navbar-dark';
+            $this->getPageStyleContainer()->styleId = $contest->getContestSymbol();
         }
-        return $container;
+        parent::beforeRender();
     }
 }

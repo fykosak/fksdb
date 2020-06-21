@@ -10,12 +10,12 @@ use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Controls\Inbox\InboxControl;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
+use FKSDB\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\{SeriesPresenterTrait};
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Models\ModelTaskContribution;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServiceTaskContribution;
-use FKSDB\UI\PageStyleContainer;
 use FKSDB\Submits\SeriesTable;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -133,7 +133,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadRequestException
      */
     public function titleInbox() {
-        $this->setTitle(_('Inbox'), 'fa fa-envelope-open');
+        $this->setPageTitle(new PageTitle(_('Inbox'), 'fa fa-envelope-open'));
     }
 
     /**
@@ -141,7 +141,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadRequestException
      */
     public function titleDefault() {
-        $this->setTitle(_('Inbox dashboard'), 'fa fa-envelope-open');
+        $this->setPageTitle(new PageTitle(_('Inbox dashboard'), 'fa fa-envelope-open'));
     }
 
     /**
@@ -149,7 +149,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadRequestException
      */
     public function titleHandout() {
-        $this->setTitle(_('Rozdělení úloh opravovatelům'), 'fa fa-inbox');
+        $this->setPageTitle(new PageTitle(_('Rozdělení úloh opravovatelům'), 'fa fa-inbox'));
     }
 
     /**
@@ -157,7 +157,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadRequestException
      */
     public function titleList() {
-        $this->setTitle(_('List of submits'), 'fa fa-cloud-download');
+        $this->setPageTitle(new PageTitle(_('List of submits'), 'fa fa-cloud-download'));
     }
 
     /**
@@ -165,7 +165,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadRequestException
      */
     public function titleCorrected() {
-        $this->setTitle(_('Corrected'), 'fa fa-inbox');
+        $this->setPageTitle(new PageTitle(_('Corrected'), 'fa fa-inbox'));
     }
 
     /* *********** LIVE CYCLE *************/
@@ -298,22 +298,22 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
         $this->redirect('this');
     }
 
-    protected function getPageStyleContainer(): PageStyleContainer {
-        $container = parent::getPageStyleContainer();
+    protected function beforeRender() {
         switch ($this->getAction()) {
             case 'inbox':
-                $container->mainContainerClassName = str_replace('container ', 'container-fluid ', $container->mainContainerClassName) . ' px-3';
+                $this->getPageStyleContainer()->mainContainerClassName = str_replace('container ', 'container-fluid ', $this->getPageStyleContainer()->mainContainerClassName) . ' px-3';
         }
-        return $container;
+        parent::beforeRender();
     }
 
     /**
-     * @param string $title
-     * @param string $icon
-     * @param string $subTitle
+     * @param PageTitle $pageTitle
+     * @return void
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
-        parent::setTitle($title, $icon, $subTitle . ' ' . sprintf(_('%d. series'), $this->getSelectedSeries()));
+    protected function setPageTitle(PageTitle $pageTitle) {
+        $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
+        parent::setPageTitle($pageTitle);
     }
 }

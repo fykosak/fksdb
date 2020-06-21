@@ -15,6 +15,7 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonInfo;
+use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
@@ -139,7 +140,7 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
      */
     protected function handleFormSuccess(Form $form) {
         $values = $form->getValues();
-        $data = \FormUtils::emptyStrToNull($values, true);
+        $data = FormUtils::emptyStrToNull($values, true);
         try {
             $this->create ? $this->handleCreateSuccess($data) : $this->handleEditSuccess($data);
         } catch (ModelException $exception) {

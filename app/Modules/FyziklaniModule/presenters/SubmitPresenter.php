@@ -11,6 +11,7 @@ use FKSDB\Fyziklani\ClosedSubmittingException;
 use FKSDB\Fyziklani\PointsMismatchException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
+use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -30,7 +31,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleCreate() {
-        $this->setTitle(_('Zadávání bodů'), 'fa fa-pencil-square-o');
+        $this->setPageTitle(new PageTitle(_('Zadávání bodů'), 'fa fa-pencil-square-o'));
     }
 
     /**
@@ -38,14 +39,14 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function titleList() {
-        $this->setTitle(_('Submits'), 'fa fa-table');
+        $this->setPageTitle(new PageTitle(_('Submits'), 'fa fa-table'));
     }
 
     /**
      * @throws BadRequestException
      */
     public function titleEdit() {
-        $this->setTitle(_('Úprava bodování'), 'fa fa-pencil');
+        $this->setPageTitle(new PageTitle(_('Úprava bodování'), 'fa fa-pencil'));
     }
 
     /**
@@ -54,7 +55,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleDetail() {
-        $this->setTitle(sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id), 'fa fa-pencil');
+        $this->setPageTitle(new PageTitle(sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id), 'fa fa-pencil'));
     }
 
     /* ***** Authorized methods *****/

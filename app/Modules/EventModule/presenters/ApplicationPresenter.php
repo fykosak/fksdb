@@ -10,6 +10,7 @@ use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\ServiceEventParticipant;
+use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -24,7 +25,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws BadRequestException
      */
     public function titleImport() {
-        $this->setTitle(_('Application import'), 'fa fa-upload');
+        $this->setPageTitle(new PageTitle(_('Application import'), 'fa fa-upload'));
     }
 
     /**

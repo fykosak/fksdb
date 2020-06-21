@@ -18,7 +18,7 @@ use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Random;
-use Utils;
+use FKSDB\Utils\Utils;
 
 /**
  * Monitors user's traversal through the web and build the tree,

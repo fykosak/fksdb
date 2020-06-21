@@ -11,6 +11,7 @@ use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
+use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -63,12 +64,8 @@ class ScheduleItemPresenter extends BasePresenter {
         $this->serviceScheduleGroup = $serviceScheduleGroup;
     }
 
-    /**
-     * @return void
-     * @throws BadRequestException
-     */
-    public function titleList() {
-        $this->setTitle(\sprintf(_('Schedule items')), 'fa fa-calendar-check-o');
+    public function getTitleList(): PageTitle {
+        return new PageTitle(\sprintf(_('Schedule items')), 'fa fa-calendar-check-o');
     }
 
     /**
@@ -76,9 +73,9 @@ class ScheduleItemPresenter extends BasePresenter {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function titleDetail() {
+    public function getTitleDetail(): PageTitle {
         $item = $this->getEntity();
-        $this->setTitle(\sprintf(_('Schedule item "%s/%s"'), $item->name_cs, $item->name_en), 'fa fa-calendar-check-o');
+        return new PageTitle(\sprintf(_('Schedule item "%s/%s"'), $item->name_cs, $item->name_en), 'fa fa-calendar-check-o');
     }
 
     /**
@@ -182,12 +179,12 @@ class ScheduleItemPresenter extends BasePresenter {
     }
 
     /**
-     * @param string $title
-     * @param string $icon
-     * @param string $subTitle
+     * @param PageTitle $pageTitle
+     * @return void
      * @throws BadRequestException
      */
-    protected function setTitle(string $title, string $icon = '', string $subTitle = '') {
-        parent::setTitle($title, $icon, $subTitle . ' ->' . sprintf('"%s/%s"', $this->getGroup()->name_cs, $this->getGroup()->name_en));
+    protected function setPageTitle(PageTitle $pageTitle) {
+        $pageTitle->subTitle .= ' ->' . sprintf('"%s/%s"', $this->getGroup()->name_cs, $this->getGroup()->name_en);
+        parent::setPageTitle($pageTitle);
     }
 }
