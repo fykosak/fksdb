@@ -226,7 +226,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @param string $view
      * @return static
      */
-    public function setView($view): self {
+    public function setView($view) {
         parent::setView($view);
         $this->pageTitle = null;
         return $this;

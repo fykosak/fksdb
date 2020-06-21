@@ -72,7 +72,7 @@ trait ChartPresenterTrait {
     abstract public function getAction($fullyQualified = false);
 
     /**
-     * @param $id
+     * @param string $id
      * @return static
      */
     abstract public function setView($id);
