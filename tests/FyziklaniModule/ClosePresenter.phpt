@@ -17,7 +17,7 @@ class ClosePresenter extends FyziklaniTestCase {
     use MockApplicationTrait;
 
     /**
-     * @var ApplicationHandler
+     * @var ClosePresenter
      */
     private $fixture;
     /** @var int */

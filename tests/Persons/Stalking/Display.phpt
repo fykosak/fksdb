@@ -4,7 +4,6 @@ namespace FKSDB\Tests\Persons\Stalking;
 
 $container = require '../../bootstrap.php';
 
-use FKSDB\Tests\Persons\Stalking\StalkingTestCase;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;

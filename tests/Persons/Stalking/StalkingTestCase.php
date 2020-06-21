@@ -2,6 +2,7 @@
 
 namespace FKSDB\Tests\Persons\Stalking;
 
+use FKSDB\Modules\CommonModule\PersonPresenter;
 use FKSDB\ORM\DbNames;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Request;
@@ -18,7 +19,7 @@ abstract class StalkingTestCase extends DatabaseTestCase {
     /** @var int */
     protected $personId;
 
-    /** @var \FKSDB\Modules\CommonModule\PersonPresenter */
+    /** @var PersonPresenter */
     protected $fixture;
 
     /**

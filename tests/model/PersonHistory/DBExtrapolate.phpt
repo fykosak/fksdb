@@ -1,6 +1,6 @@
 <?php
 namespace FKSDB\Tests\PersonHistory;
-
+/** @var Container $container */
 $container = require '../../bootstrap.php';
 
 use FKSDB\ORM\Services\ServicePerson;

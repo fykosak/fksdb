@@ -9,6 +9,7 @@ use Mail\MailTemplateFactory;
 use Nette\Application\IPresenter;
 use Nette\Application\IPresenterFactory;
 use Nette\DI\Container;
+use Nette\Http\Session;
 use Tester\Assert;
 
 /**
@@ -54,6 +55,7 @@ trait MockApplicationTrait {
      */
     protected function fakeProtection($token, $timeout = null) {
         $container = $this->getContainer();
+        /** @var Session $session */
         $session = $container->getService('session');
         $section = $session->getSection('Nette.Forms.Form/CSRF');
         $key = "key$timeout";

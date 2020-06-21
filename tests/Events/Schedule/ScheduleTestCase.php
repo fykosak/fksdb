@@ -4,6 +4,7 @@ namespace FKSDB\Tests\Events\Schedule;
 
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\IPresenter;
+use Nette\Application\Request;
 use Nette\Utils\DateTime;
 
 abstract class ScheduleTestCase extends EventTestCase {
@@ -87,7 +88,7 @@ EOT
         ]);
     }
 
-    protected function createAccommodationRequest(): \Nette\Application\Request {
+    protected function createAccommodationRequest(): Request {
         return $this->createPostRequest([
             'participant' => [
                 'person_id' => "__promise",

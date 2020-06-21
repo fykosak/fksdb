@@ -102,6 +102,7 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         $this->connection->query('DELETE FROM contestant_base');
         $params = $this->getContainer()->getParameters();
         $dir = $params['upload']['root'];
+        /** @var \SplFileInfo $f */
         foreach (Finder::find('*')->from($dir)->childFirst() as $f) {
             if ($f->isDir()) {
                 @rmdir($f->getPathname());
