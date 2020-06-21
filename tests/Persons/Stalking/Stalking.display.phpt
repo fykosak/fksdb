@@ -34,7 +34,7 @@ class StalkingDisplay extends Stalking {
         Assert::type(TextResponse::class, $response);
 
         $source = $response->getSource();
-        Assert::type(\Nette\Application\UI\ITemplate::class, $source);
+        Assert::type(ITemplate::class, $source);
         $html = (string)$source;
 
         Assert::contains('Base info', $html); // contains headline

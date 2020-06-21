@@ -13,7 +13,11 @@ class ServiceAddressTest extends TestCase {
      */
     private $fixture;
 
-    function __construct(ServiceAddress $service) {
+    /**
+     * ServiceAddressTest constructor.
+     * @param ServiceAddress $service
+     */
+    public function __construct(ServiceAddress $service) {
         $this->fixture = $service;
     }
 
@@ -22,16 +26,16 @@ class ServiceAddressTest extends TestCase {
      */
     public function testStudyYear($postalCode, $region) {
         if ($region === null) {
-            Assert::exception(function()use($postalCode) {
-                        $this->fixture->inferRegion($postalCode);
-                    }, 'InvalidPostalCode');
+            Assert::exception(function () use ($postalCode) {
+                $this->fixture->inferRegion($postalCode);
+            }, 'InvalidPostalCode');
         } else {
             $inferredRegion = $this->fixture->inferRegion($postalCode);
             Assert::equal($region, $inferredRegion);
         }
     }
 
-    public function getPostalCodeData() {
+    public function getPostalCodeData(): array {
         return [
             ['01233', 2],
             ['67401', 3],

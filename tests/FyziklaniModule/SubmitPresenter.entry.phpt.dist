@@ -4,12 +4,17 @@ namespace FyziklaniModule;
 
 $container = require '../bootstrap.php';
 
-use Events\Model\ApplicationHandler;
-use FyziklaniModule\FyziklaniTestCase;
+use FKSDB\Events\Model\ApplicationHandler;
+use FKSDB\Modules\FyziklaniModule\FyziklaniTestCase;
+use FKSDB\Modules\FyziklaniModule\SubmitPresenter;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Request;
-use Nette\Config\Helpers;
+use Nette\Application\Responses\RedirectResponse;
+use Nette\Application\Responses\TextResponse;
+use Nette\Application\UI\ITemplate;
+use Nette\DI\Config\Helpers;
 use Nette\DI\Container;
+use Nette\Http\Response;
 use Tester\Assert;
 
 class SubmitPresenterTest extends FyziklaniTestCase {
@@ -19,15 +24,19 @@ class SubmitPresenterTest extends FyziklaniTestCase {
     const TOKEN = 'foo';
 
     /**
-     * @var ApplicationHandler
+     * @var SubmitPresenter
      */
     private $fixture;
-
+    /** @var int */
     private $teamId;
-
+    /** @var int */
     private $taskId;
 
-    function __construct(Container $container) {
+    /**
+     * SubmitPresenterTest constructor.
+     * @param Container $container
+     */
+    public function __construct(Container $container) {
         parent::__construct($container);
         $this->setContainer($container);
     }
@@ -35,9 +44,9 @@ class SubmitPresenterTest extends FyziklaniTestCase {
     protected function setUp() {
         parent::setUp();
 
-        $this->eventId = $this->createEvent(array());
-        $this->teamId = $this->createTeam(array('e_fyziklani_team_id' => 1));
-        $this->taskId = $this->createTask(array('label' => 'AA'));
+        $this->eventId = $this->createEvent([]);
+        $this->teamId = $this->createTeam(['e_fyziklani_team_id' => 1]);
+        $this->taskId = $this->createTask(['label' => 'AA']);
 
 
         $this->fixture = $this->createPresenter('Fyziklani:Submit');
@@ -51,7 +60,7 @@ class SubmitPresenterTest extends FyziklaniTestCase {
         parent::tearDown();
     }
 
-    private function createPostRequest($postData, $post = array()) {
+    private function createPostRequest($postData, $post = []): Request {
         $post = Helpers::merge($post, [
             'lang' => 'cs',
             'contestId' => 1,
@@ -60,8 +69,7 @@ class SubmitPresenterTest extends FyziklaniTestCase {
             'do' => 'entryQRControl-form-form-submit',
         ]);
 
-        $request = new Request('Fyziklani:Submit', 'POST', $post, $postData);
-        return $request;
+        return new Request('Fyziklani:Submit', 'POST', $post, $postData);
     }
 
     public function testEntryValid() {
@@ -72,7 +80,7 @@ class SubmitPresenterTest extends FyziklaniTestCase {
         ], ['action' => 'qrEntry', 'id' => '000001AA9']);
 
         $response = $this->fixture->run($request);
-        Assert::type(\Nette\Application\Responses\RedirectResponse::class, $response);
+        Assert::type(RedirectResponse::class, $response);
 
         $submit = $this->findSubmit($this->taskId, $this->teamId);
         Assert::notEqual(false, $submit);
@@ -87,18 +95,17 @@ class SubmitPresenterTest extends FyziklaniTestCase {
         ], ['action' => 'qrEntry', 'id' => '000001AA8']);
 
         $response = $this->fixture->run($request);
-        Assert::type(\Nette\Application\Responses\TextResponse::class, $response);
-
+        Assert::type(TextResponse::class, $response);
+        /** @var ITemplate $source */
         $source = $response->getSource();
-        Assert::type(\Nette\Templating\ITemplate::class, $source);
+        Assert::type(ITemplate::class, $source);
 
-        $html = $source->__toString(true);
+        $html = $source->__toString();
         Assert::contains('Chybně zadaný kód úlohy', $html);
 
         $submit = $this->findSubmit($this->taskId, $this->teamId);
         Assert::equal(false, $submit);
     }
-
 }
 
 $testCase = new SubmitPresenterTest($container);

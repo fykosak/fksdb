@@ -1,5 +1,7 @@
 <?php
 
+namespace FKSDB\Tests\PublicModule;
+
 $container = require '../bootstrap.php';
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -10,7 +12,7 @@ use Tester\Assert;
 class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
 
     protected function tearDown() {
-        $this->connection->query("DELETE FROM e_dsef_participant");
+        $this->connection->query('DELETE FROM e_dsef_participant');
         parent::tearDown();
     }
 
@@ -54,7 +56,7 @@ class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
 
         $application = $this->assertApplication($this->eventId, 'bila@hrad.cz');
         Assert::equal('applied', $application->status);
-        Assert::equal((int) $this->personId, $application->person_id);
+        Assert::equal((int)$this->personId, $application->person_id);
 
         $info = $this->assertPersonInfo($this->personId);
         Assert::equal('1231354', $info->id_number);

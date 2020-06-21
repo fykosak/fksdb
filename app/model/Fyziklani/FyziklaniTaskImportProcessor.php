@@ -40,8 +40,9 @@ class FyziklaniTaskImportProcessor {
     }
 
     /**
-     * @param ArrayHash|array $values
+     * @param ArrayHash $values
      * @param ILogger $logger
+     * @return void
      */
     public function __invoke($values, ILogger $logger) {
         $filename = $values->csvfile->getTemporaryFile();

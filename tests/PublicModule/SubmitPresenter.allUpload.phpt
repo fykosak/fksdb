@@ -1,9 +1,10 @@
 <?php
 
+namespace FKSDB\Tests\PublicModule;
+
 $container = require '../bootstrap.php';
 
 use Nette\Application\Responses\RedirectResponse;
-use Nette\DI\Container;
 use FKSDB\Modules\PublicModule\SubmitTestCase;
 use Tester\Assert;
 
@@ -28,7 +29,6 @@ class SubmitPresenterTest extends SubmitTestCase {
         $response = $this->fixture->run($request);
 
         Assert::type(RedirectResponse::class, $response);
-        dump($response);
 
         $this->assertSubmit($this->contestantId, $this->taskAll);
 

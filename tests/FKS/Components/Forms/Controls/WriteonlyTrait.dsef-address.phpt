@@ -3,6 +3,7 @@
 $container = require '../../../../bootstrap.php';
 
 use FKSDB\ORM\Models\ModelPostContact;
+use FKSDB\Tests\PublicModule\ApplicationPresenterDsefTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
@@ -11,7 +12,7 @@ use Nette\Utils\DateTime;
 use Tester\Assert;
 
 class WriteonlyTraitTest extends ApplicationPresenterDsefTestCase {
-
+    /** @var int */
     private $dsefAppId;
 
     protected function setUp() {
@@ -34,7 +35,7 @@ class WriteonlyTraitTest extends ApplicationPresenterDsefTestCase {
         $this->dsefAppId = $this->insert('event_participant', [
             'person_id' => $this->personId,
             'event_id' => $this->eventId,
-            'status' => 'applied'
+            'status' => 'applied',
         ]);
 
         $this->insert('e_dsef_participant', [
@@ -69,7 +70,7 @@ class WriteonlyTraitTest extends ApplicationPresenterDsefTestCase {
         Assert::type(TextResponse::class, $response);
 
         $source = $response->getSource();
-        Assert::type(\Nette\Application\UI\ITemplate::class, $source);
+        Assert::type(ITemplate::class, $source);
 
         $html = (string)$source;
         Assert::contains('Účastník', $html);

@@ -109,6 +109,7 @@ fksrouter:
         -
             mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/]<presenter %rootPresenters%>/<action=default>[/<id>]'
             subdomain: %subdomain.db%
+            module: Core
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED

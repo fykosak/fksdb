@@ -1,7 +1,8 @@
 <?php
-
+namespace FKSDB\Tests\PublicModule;
 $container = require '../bootstrap.php';
 
+use FKSDB\Tests\PublicModule\ApplicationPresenterDsefTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Utils\DateTime;
 use Tester\Assert;

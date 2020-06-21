@@ -30,7 +30,7 @@ class ModelTask extends AbstractModelSingle implements IContestReferencedModel {
      * @param string $type ModelTaskContribution::TYPE_*
      * @return ModelTaskContribution[] indexed by contribution_id
      */
-    public function getContributions($type = null): array {
+    public function getContributions(string $type = null): array {
         $contributions = $this->related(DbNames::TAB_TASK_CONTRIBUTION, 'task_id');
         if ($type !== null) {
             $contributions->where(['type' => $type]);

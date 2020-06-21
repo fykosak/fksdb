@@ -2,19 +2,20 @@
 
 namespace FKSDB\Events\Accommodation;
 
-
-use FKSDB\Events\EventTestCase;
+use FKSDB\Components\Controls\Breadcrumbs\Request;
+use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\IPresenter;
-use Nette\DI\Container;
 use Nette\Utils\DateTime;
 
 abstract class ScheduleTestCase extends EventTestCase {
+    /** @var int */
     protected $itemId;
     /** @var IPresenter */
     protected $fixture;
+    /** @var int */
     protected $groupId;
-
-    //protected $persons = [];
+    /** @var array */
+    protected $persons = [];
 
     protected function setUp() {
         parent::setUp();
@@ -24,6 +25,7 @@ abstract class ScheduleTestCase extends EventTestCase {
             'event_year' => 24,
             'parameters' => <<<EOT
 EOT
+            ,
         ]);
 
 
@@ -46,7 +48,7 @@ EOT
             'e_dsef_group_id' => 2,
             'event_id' => $this->eventId,
             'name' => 'Alpha',
-            'capacity' => 4
+            'capacity' => 4,
         ]);
 
 
@@ -86,8 +88,8 @@ EOT
         ]);
     }
 
-    protected function createAccommodationRequest() {
-        $request = $this->createPostRequest([
+    protected function createAccommodationRequest(): \Nette\Application\Request {
+        return $this->createPostRequest([
             'participant' => [
                 'person_id' => "__promise",
                 'person_id_1' => [
@@ -121,17 +123,16 @@ EOT
             'c_a_p_t_cha' => "pqrt",
             '__init__applied' => "Přihlásit účastníka",
         ]);
-        return $request;
     }
 
-    abstract public function getAccommodationCapacity():int;
+    abstract public function getAccommodationCapacity(): int;
 
     protected function tearDown() {
-        $this->connection->query("DELETE FROM e_dsef_participant");
-        $this->connection->query("DELETE FROM e_dsef_group");
-        $this->connection->query("DELETE FROM person_schedule");
-        $this->connection->query("DELETE FROM schedule_item");
-        $this->connection->query("DELETE FROM schedule_group");
+        $this->connection->query('DELETE FROM e_dsef_participant');
+        $this->connection->query('DELETE FROM e_dsef_group');
+        $this->connection->query('DELETE FROM person_schedule');
+        $this->connection->query('DELETE FROM schedule_item');
+        $this->connection->query('DELETE FROM schedule_group');
         parent::tearDown();
     }
 }

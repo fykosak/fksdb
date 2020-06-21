@@ -1,7 +1,8 @@
 <?php
 
-namespace FKSDB\Events\Model;
+namespace FKSDB\Tests\Events\FormAdjustment;
 
+use FKSDB\Tests\Events\FormAdjustments\ResourceAvailabilityTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;
@@ -10,8 +11,10 @@ use Tester\DomQuery;
 
 $container = require '../../bootstrap.php';
 
-class ResourceAvailabilityTest extends ResourceAvailabilityTestCase {
-
+class SecondaryLimitOk extends ResourceAvailabilityTestCase {
+    /**
+     * @var int
+     */
     private $tsafEventId;
 
     protected function setUp() {
@@ -21,8 +24,8 @@ class ResourceAvailabilityTest extends ResourceAvailabilityTestCase {
             'event_year' => 7,
             'parameters' => <<<EOT
 EOT
+            ,
         ]);
-
 
         foreach ($this->persons as $personId) {
             $eid = $this->insert('event_participant', [
@@ -38,7 +41,7 @@ EOT
     }
 
     protected function tearDown() {
-        $this->connection->query("DELETE FROM e_tsaf_participant");
+        $this->connection->query('DELETE FROM e_tsaf_participant');
         parent::tearDown();
     }
 
@@ -52,7 +55,7 @@ EOT
     /**
      * @dataProvider getTestData
      */
-    public function testDisplay($capacity, $diabled) {
+    public function testDisplay(int $capacity, bool $disabled) {
         Assert::equal(2, (int)$this->connection->query('SELECT SUM(accomodation) FROM event_participant WHERE event_id = ?', $this->eventId)->fetchField());
 
         $this->connection->query('UPDATE event SET parameters = ? WHERE event_id = ?', <<<EOT
@@ -72,19 +75,18 @@ EOT
         Assert::type(TextResponse::class, $response);
 
         $source = $response->getSource();
-        Assert::type(\Nette\Application\UI\ITemplate::class, $source);
+        Assert::type(ITemplate::class, $source);
 
         $html = (string)$source;
         $dom = DomQuery::fromHtml($html);
         Assert::true((bool)$dom->xpath('//input[@name="participantDsef[accomodation]"]'));
-        Assert::equal($diabled, (bool)$dom->xpath('//input[@name="participantDsef[accomodation]"][@disabled="disabled"]'));
+        Assert::equal($disabled, (bool)$dom->xpath('//input[@name="participantDsef[accomodation]"][@disabled="disabled"]'));
     }
 
-    public function getCapacity(): int {
+    protected function getCapacity(): int {
         return 3;
     }
-
 }
 
-$testCase = new ResourceAvailabilityTest($container);
+$testCase = new SecondaryLimitOk($container);
 $testCase->run();

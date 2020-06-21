@@ -1,13 +1,16 @@
 <?php
 
+namespace FKSDB\Tests\PublicModule;
+
 $container = require '../bootstrap.php';
 
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
 class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
-
+    /** @var int */
     private $tsafAppId;
+    /** @var int */
     private $dsefAppId;
 
     protected function setUp() {
@@ -24,7 +27,7 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
         $this->tsafAppId = $this->insert('event_participant', [
             'person_id' => $this->personId,
             'event_id' => $this->tsafEventId,
-            'status' => 'applied'
+            'status' => 'applied',
         ]);
 
         $this->insert('e_tsaf_participant', [
@@ -34,7 +37,7 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
         $this->dsefAppId = $this->insert('event_participant', [
             'person_id' => $this->personId,
             'event_id' => $this->dsefEventId,
-            'status' => 'applied.tsaf'
+            'status' => 'applied.tsaf',
         ]);
 
         $this->insert('e_dsef_participant', [
@@ -58,7 +61,7 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
                         'email' => "bila@hrad.cz",
                         'id_number' => "1231354",
                         'born' => "2014-09-15",
-                        'phone' => '+420987654321'
+                        'phone' => '+420987654321',
                     ],
                     'post_contact_d' => [
                         'address' => [

@@ -8,7 +8,7 @@ use Exports\Formats\PlainTextResponse;
 use Exports\StoredQueryFactory;
 use Exports\StoredQueryPostProcessing;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
-use Nette\DI\Container;
+use FKSDB\ORM\Models\ModelContest;
 use Tester\Assert;
 
 class AESOPFormatTest extends DatabaseTestCase {
@@ -55,6 +55,9 @@ class MockSeriesPresenter implements ISeriesPresenter {
         return 2000;
     }
 
+    /**
+     * @return ModelContest|object
+     */
     public function getSelectedContest() {
         return (object)[
             'contest_id' => 1,
@@ -66,10 +69,15 @@ class MockSeriesPresenter implements ISeriesPresenter {
         return 1;
     }
 
-    public function getSelectedYear() {
+    public function getSelectedYear(): int {
         return 1;
     }
 
+    /**
+     * @param string $message
+     * @param string $type
+     * @return void
+     */
     public function flashMessage($message, $type = 'info') {
     }
 }
@@ -78,7 +86,7 @@ class MockQueryParameter {
 
     public $name;
 
-    function __construct($name) {
+    public function __construct($name) {
         $this->name = $name;
     }
 
@@ -99,7 +107,7 @@ class MockProcessing extends StoredQueryPostProcessing {
     }
 
     public function getDescription(): string {
-
+        return '';
     }
 
     public function processData(PDOStatement $data) {

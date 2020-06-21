@@ -12,8 +12,11 @@ use Tester\Assert;
 $container = require '../../bootstrap.php';
 
 class ScheduleTest extends ScheduleTestCase {
+    /** @var int */
     protected $lastPersonId;
+    /** @var int */
     protected $dsefAppId;
+    /** @var int */
     private $lastPSId;
 
     public function setUp() {

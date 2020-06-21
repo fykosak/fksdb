@@ -1,8 +1,9 @@
 <?php
 
-use FKSDB\Events\EventTestCase;
+namespace FKSDB\Tests\PublicModule;
+
+use FKSDB\Tests\Events\EventTestCase;
 use Nette\Utils\DateTime;
-use Nette\DI\Container;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
 
 abstract class ApplicationPresenterDsefTestCase extends EventTestCase {
@@ -11,6 +12,7 @@ abstract class ApplicationPresenterDsefTestCase extends EventTestCase {
      * @var ApplicationPresenter
      */
     protected $fixture;
+    /** @var int */
     protected $personId;
 
     protected function setUp() {
@@ -22,13 +24,14 @@ abstract class ApplicationPresenterDsefTestCase extends EventTestCase {
             'registration_end' => new DateTime(date('c', time() + 1000)),
             'parameters' => <<<EOT
 EOT
+            ,
         ]);
 
         $this->insert('e_dsef_group', [
             'e_dsef_group_id' => 1,
             'event_id' => $this->eventId,
             'name' => 'Alpha',
-            'capacity' => 4
+            'capacity' => 4,
         ]);
 
         $this->fixture = $this->createPresenter('Public:Application');

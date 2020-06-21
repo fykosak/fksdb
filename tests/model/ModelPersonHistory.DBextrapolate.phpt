@@ -13,7 +13,12 @@ class ModelPersonHistoryTest extends DatabaseTestCase {
      */
     private $service;
 
-    function __construct(ServicePerson $service, Container $container) {
+    /**
+     * ModelPersonHistoryTest constructor.
+     * @param ServicePerson $service
+     * @param Container $container
+     */
+    public function __construct(ServicePerson $service, Container $container) {
         parent::__construct($container);
         $this->service = $service;
     }

@@ -1,4 +1,7 @@
 <?php
+
+namespace FKSDB\Tests\PublicModule;
+
 $container = require '../bootstrap.php';
 
 use Nette\Application\Request;
@@ -23,7 +26,7 @@ class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
         Assert::type(TextResponse::class, $response);
 
         $source = $response->getSource();
-        Assert::type(\Nette\Application\UI\ITemplate::class, $source);
+        Assert::type(ITemplate::class, $source);
 
         $html = (string) $source;
         Assert::contains('Účastník', $html);

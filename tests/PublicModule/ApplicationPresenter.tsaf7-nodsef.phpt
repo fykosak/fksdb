@@ -1,4 +1,5 @@
 <?php
+namespace FKSDB\Tests\PublicModule;
 
 $container = require '../bootstrap.php';
 
@@ -7,7 +8,7 @@ use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
 class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
-
+    /** @var int */
     private $tsafAppId;
 
     protected function setUp() {

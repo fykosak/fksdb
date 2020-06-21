@@ -2,6 +2,7 @@
 
 namespace FKSDB\Events\Model;
 
+use FKSDB\Tests\Events\FormAdjustments\ResourceAvailabilityTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;
@@ -13,8 +14,10 @@ use Tester\DomQuery;
 /** @var Container $container */
 $container = require '../../bootstrap.php';
 
-class ResourceAvailabilityTest extends ResourceAvailabilityTestCase {
-
+class PrimaryLast extends ResourceAvailabilityTestCase {
+    /**
+     * @var int
+     */
     private $appId;
 
     protected function setUp() {
@@ -48,7 +51,7 @@ class ResourceAvailabilityTest extends ResourceAvailabilityTestCase {
         Assert::type(TextResponse::class, $response);
 
         $source = $response->getSource();
-        Assert::type(\Nette\Application\UI\ITemplate::class, $source);
+        Assert::type(ITemplate::class, $source);
 
         $html = (string)$source;
         $dom = DomQuery::fromHtml($html);
@@ -56,11 +59,10 @@ class ResourceAvailabilityTest extends ResourceAvailabilityTestCase {
         Assert::false((bool)$dom->xpath('//input[@name="participant[accomodation]"][@disabled="disabled"]'));
     }
 
-    public function getCapacity() {
+    protected function getCapacity(): int {
         return 3;
     }
-
 }
 
-$testCase = new ResourceAvailabilityTest($container);
+$testCase = new PrimaryLast($container);
 $testCase->run();

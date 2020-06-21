@@ -11,6 +11,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read ActiveRow task
  * @property-read int task_id
  * @property-read int question_id
+ * @property-read int question_nr
  */
 class ModelQuizQuestion extends AbstractModelSingle implements IContestReferencedModel {
 

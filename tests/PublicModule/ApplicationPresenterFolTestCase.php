@@ -1,7 +1,9 @@
 <?php
 
-use FKSDB\Events\EventTestCase;
-use Nette\DI\Container;
+namespace FKSDB\Tests\PublicModule;
+
+use FKSDB\Tests\Events\EventTestCase;
+use Nette\Database\Row;
 use Nette\Utils\DateTime;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Tester\Assert;
@@ -12,6 +14,7 @@ abstract class ApplicationPresenterFolTestCase extends EventTestCase {
      * @var ApplicationPresenter
      */
     protected $fixture;
+    /** @var int */
     protected $personId;
 
     protected function setUp() {
@@ -25,6 +28,7 @@ abstract class ApplicationPresenterFolTestCase extends EventTestCase {
             'end' => $future,
             'parameters' => <<<EOT
 EOT
+            ,
         ]);
 
         $this->fixture = $this->createPresenter('Public:Application');
@@ -34,12 +38,12 @@ EOT
     }
 
     protected function tearDown() {
-        $this->connection->query("DELETE FROM e_fyziklani_participant");
-        $this->connection->query("DELETE FROM e_fyziklani_team");
+        $this->connection->query('DELETE FROM e_fyziklani_participant');
+        $this->connection->query('DELETE FROM e_fyziklani_team');
         parent::tearDown();
     }
 
-    protected function assertTeamApplication($eventId, $teamName) {
+    protected function assertTeamApplication(int $eventId, string $teamName): Row {
         $application = $this->connection->fetch('SELECT * FROM e_fyziklani_team WHERE event_id = ? AND name = ?', $eventId, $teamName);
         Assert::notEqual(false, $application);
         return $application;

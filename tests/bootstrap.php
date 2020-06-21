@@ -2,7 +2,6 @@
 
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Configurator;
-use Nette\Database\Context;
 use Nette\Utils\Finder;
 use Tracy\Debugger;
 

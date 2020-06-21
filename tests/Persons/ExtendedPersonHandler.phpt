@@ -15,7 +15,6 @@ use FKSDB\ORM\Services\ServiceContestant;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Tester\Assert;
-use Tester\Environment;
 
 class ExtendedPersonHandlerTest extends DatabaseTestCase {
 
@@ -34,7 +33,11 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
      */
     private $referencedPersonFactory;
 
-    function __construct(Container $container) {
+    /**
+     * ExtendedPersonHandlerTest constructor.
+     * @param Container $container
+     */
+    public function __construct(Container $container) {
         parent::__construct($container);
         $this->container = $container;
     }
@@ -136,7 +139,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
                         'agreed' => "on",
                     ],
                 ],
-            ]
+            ],
         ]);
         $form->validate();
 
@@ -160,7 +163,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         Assert::notEqual(null, $address->region_id);
     }
 
-    private function createForm($fieldsDefinition, $acYear) {
+    private function createForm(array $fieldsDefinition, int $acYear): Form {
         $form = new Form();
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);

@@ -1,5 +1,7 @@
 <?php
 
+namespace FKSDB\Tests\PublicModule;
+
 $container = require '../bootstrap.php';
 
 use FKSDB\Events\Spec\Fol\CategoryProcessing;
@@ -24,9 +26,9 @@ class ApplicationPresenterTest extends ApplicationPresenterFolTestCase {
         Assert::type(TextResponse::class, $response);
 
         $source = $response->getSource();
-        Assert::type(\Nette\Application\UI\ITemplate::class, $source);
+        Assert::type(ITemplate::class, $source);
 
-        $html = (string) $source;
+        $html = (string)$source;
         Assert::contains('Register team', $html);
     }
 

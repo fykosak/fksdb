@@ -13,7 +13,11 @@ class ModelPersonHistoryTest extends TestCase {
      */
     private $service;
 
-    function __construct(ServicePersonHistory $service) {
+    /**
+     * ModelPersonHistoryTest constructor.
+     * @param ServicePersonHistory $service
+     */
+    public function __construct(ServicePersonHistory $service) {
         $this->service = $service;
     }
 
@@ -52,7 +56,7 @@ class ModelPersonHistoryTest extends TestCase {
     /**
      * @dataProvider getStudyYearData
      */
-    public function testStudyYear($from, $step, $to) {
+    public function testStudyYear(int $from, int $step, $to) {
         $fixture = $this->service->createNew([
             'person_id' => 1,
             'ac_year' => 2000,
@@ -68,7 +72,7 @@ class ModelPersonHistoryTest extends TestCase {
         Assert::same($to, $extrapolated->study_year);
     }
 
-    public function getStudyYearData() {
+    public function getStudyYearData(): array {
         return [
             [6, 1, 7],
             [9, 1, 1],

@@ -5,7 +5,7 @@ namespace FKSDB\Events\Model;
 $container = require '../../bootstrap.php';
 
 use FKSDB\Events\EventDispatchFactory;
-use FKSDB\Events\EventTestCase;
+use FKSDB\Tests\Events\EventTestCase;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Logging\DevNullLogger;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -36,7 +36,11 @@ class ApplicationHandlerTest extends EventTestCase {
      */
     private $holder;
 
-    function __construct(Container $container) {
+    /**
+     * ApplicationHandlerTest constructor.
+     * @param Container $container
+     */
+    public function __construct(Container $container) {
         parent::__construct($container);
         $this->setContainer($container);
     }
@@ -64,8 +68,8 @@ class ApplicationHandlerTest extends EventTestCase {
     }
 
     protected function tearDown() {
-        $this->connection->query("DELETE FROM e_fyziklani_participant");
-        $this->connection->query("DELETE FROM e_fyziklani_team");
+        $this->connection->query('DELETE FROM e_fyziklani_participant');
+        $this->connection->query('DELETE FROM e_fyziklani_team');
 
         parent::tearDown();
     }
@@ -156,7 +160,7 @@ class ApplicationHandlerTest extends EventTestCase {
                 ],
             'p3' =>
                 [
-                    'person_id' => NULL,
+                    'person_id' => null,
                     'person_id_1' =>
                         [
                             '_c_search' => '',
@@ -171,7 +175,7 @@ class ApplicationHandlerTest extends EventTestCase {
                 ],
             'p4' =>
                 [
-                    'person_id' => NULL,
+                    'person_id' => null,
                     'person_id_1' =>
                         [
                             '_c_search' => '',
@@ -186,7 +190,7 @@ class ApplicationHandlerTest extends EventTestCase {
                 ],
             'p5' =>
                 [
-                    'person_id' => NULL,
+                    'person_id' => null,
                     'person_id_1' =>
                         [
                             '_c_search' => '',
@@ -213,7 +217,6 @@ class ApplicationHandlerTest extends EventTestCase {
         $count = $this->connection->fetchField('SELECT COUNT(1) FROM e_fyziklani_participant WHERE e_fyziklani_team_id = ?', $this->holder->getPrimaryHolder()->getModel()->getPrimary());
         Assert::equal(2, $count);
     }
-
 }
 
 $testCase = new ApplicationHandlerTest($container);

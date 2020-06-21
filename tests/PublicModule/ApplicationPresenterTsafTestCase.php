@@ -1,10 +1,13 @@
 <?php
 
+namespace FKSDB\Tests\PublicModule;
+
 use Nette\Utils\DateTime;
 
 abstract class ApplicationPresenterTsafTestCase extends ApplicationPresenterDsefTestCase {
-
+    /** @var int */
     protected $dsefEventId;
+    /** @var int */
     protected $tsafEventId;
 
     protected function setUp() {
@@ -18,13 +21,13 @@ abstract class ApplicationPresenterTsafTestCase extends ApplicationPresenterDsef
             'parameters' => <<<EOT
 capacity: 5
 EOT
+    ,
         ]);
     }
 
     protected function tearDown() {
-        $this->connection->query("DELETE FROM e_tsaf_participant");
-        $this->connection->query("DELETE FROM e_dsef_participant");
+        $this->connection->query('DELETE FROM e_tsaf_participant');
+        $this->connection->query('DELETE FROM e_dsef_participant');
         parent::tearDown();
     }
-
 }

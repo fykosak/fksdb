@@ -106,7 +106,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
      * @return FormControl
      * @throws BadRequestException
      */
-    protected function createComponentSettingsForm() {
+    protected function createComponentSettingsForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
         /**
@@ -163,7 +163,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
 
-        $loginData = FormUtils::emptyStrToNull($values[self::CONT_LOGIN]);
+        $loginData = FormUtils::emptyStrToNull($values[self::CONT_LOGIN], true);
         if ($loginData['password']) {
             $loginData['hash'] = $login->createHash($loginData['password']);
         }

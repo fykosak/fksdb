@@ -18,12 +18,14 @@ class WebServiceModelTest extends DatabaseTestCase {
      */
     private $fixture;
 
-    /**
-     * @var int
-     */
-    private $personId;
+    // /** @var int */
+    //  private $personId;
 
-    function __construct(Container $container) {
+    /**
+     * WebServiceModelTest constructor.
+     * @param Container $container
+     */
+    public function __construct(Container $container) {
         parent::__construct($container);
         $this->container = $container;
     }
@@ -46,14 +48,14 @@ class WebServiceModelTest extends DatabaseTestCase {
             'password' => '123456',
         ];
 
-        $this->fixture->AuthenticationCredentials((object) $header);
+        $this->fixture->authenticationCredentials((object)$header);
 
         $resultsReq = [
             'contest' => 'fykos',
             'year' => 1,
             'brojure' => '1 2 3 4 5 6',
         ];
-        $result = $this->fixture->GetResults((object) $resultsReq);
+        $result = $this->fixture->getResults((object)$resultsReq);
 
         Assert::type(SoapVar::class, $result);
     }

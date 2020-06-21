@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Modules\FyziklaniModule;
+namespace FKSDB\Tests\FyziklaniModule;
 
 $container = require '../bootstrap.php';
 
@@ -12,7 +12,7 @@ use Nette\DI\Config\Helpers;
 use Nette\DI\Container;
 use Tester\Assert;
 
-class ClosePresenterTest extends FyziklaniTestCase {
+class ClosePresenter extends FyziklaniTestCase {
 
     use MockApplicationTrait;
 
@@ -20,12 +20,16 @@ class ClosePresenterTest extends FyziklaniTestCase {
      * @var ApplicationHandler
      */
     private $fixture;
-
+    /** @var int */
     private $teamIds;
-
+    /** @var int */
     private $taskIds;
 
-    function __construct(Container $container) {
+    /**
+     * ClosePresenterTest constructor.
+     * @param Container $container
+     */
+    public function __construct(Container $container) {
         parent::__construct($container);
         $this->setContainer($container);
     }
@@ -128,7 +132,7 @@ class ClosePresenterTest extends FyziklaniTestCase {
         return new Request('Fyziklani:Diplomas:default', 'POST', $post, $postData);
     }
 
-    public function getTestTeams($category) {
+    public function getTestTeams(string $category): array {
         /* team ID, sum of points, rank_category, rank */
         $a = [
             'A' => [
@@ -143,7 +147,7 @@ class ClosePresenterTest extends FyziklaniTestCase {
         return $a[$category];
     }
 
-    public function getCategories() {
+    public function getCategories(): array {
         return [
             ['A'],
             ['B'],
@@ -153,7 +157,7 @@ class ClosePresenterTest extends FyziklaniTestCase {
     /**
      * Not a real test method.
      */
-    private function innertestCloseTeam($teamId, $pointsSum) {
+    private function innertestCloseTeam(int $teamId, $pointsSum) {
         $request = $this->createPostRequest([
             'id' => $teamId,
         ], [
@@ -220,5 +224,5 @@ class ClosePresenterTest extends FyziklaniTestCase {
 
 }
 
-$testCase = new ClosePresenterTest($container);
+$testCase = new ClosePresenter($container);
 $testCase->run();

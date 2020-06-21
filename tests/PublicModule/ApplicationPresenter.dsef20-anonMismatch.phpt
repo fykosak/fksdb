@@ -1,5 +1,7 @@
 <?php
 
+namespace FKSDB\Tests\PublicModule;
+
 $container = require '../bootstrap.php';
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -8,6 +10,9 @@ use Nette\Application\UI\ITemplate;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
+/**
+ * Class ApplicationPresenterTest
+ */
 class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
 
     public function testRegistration() {
@@ -49,7 +54,7 @@ class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
         Assert::type(TextResponse::class, $response);
 
         $source = $response->getSource();
-        Assert::type(\Nette\Application\UI\ITemplate::class, $source);
+        Assert::type(ITemplate::class, $source);
 
         $html = (string)$source;
         Assert::contains('<div

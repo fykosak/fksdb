@@ -1,8 +1,10 @@
 <?php
 
+namespace FKSDB\Tests\PublicModule;
+
 $container = require '../bootstrap.php';
 
-use FKSDB\Events\EventTestCase;
+use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\BadRequestException;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
@@ -25,15 +27,15 @@ class ApplicationPresenterTest extends EventTestCase {
 
     public function test404() {
         $fixture = $this->fixture;
-        Assert::exception(function() use ($fixture) {
-                    $request = new Request('Public:Register', 'GET', [
-                        'action' => 'default',
-                        'lang' => 'cs',
-                        'eventId' => 666,
-                    ]);
+        Assert::exception(function () use ($fixture) {
+            $request = new Request('Public:Register', 'GET', [
+                'action' => 'default',
+                'lang' => 'cs',
+                'eventId' => 666,
+            ]);
 
-                    $fixture->run($request);
-                }, BadRequestException::class, 'Neexistující akce.', 404);
+            $fixture->run($request);
+        }, BadRequestException::class, 'Neexistující akce.', 404);
     }
 
     public function test404Application() {
@@ -43,18 +45,18 @@ class ApplicationPresenterTest extends EventTestCase {
             'event_year' => 19,
             'registration_begin' => DateTime::from(time() + DateTime::DAY),
         ]);
-        Assert::exception(function() use ($fixture, $eventId) {
-                    $request = new Request('Public:Register', 'GET', [
-                        'action' => 'default',
-                        'lang' => 'cs',
-                        'id' => 666,
-                        'eventId' => $eventId,
-                        'contestId' => 1,
-                        'year' => 1,
-                    ]);
+        Assert::exception(function () use ($fixture, $eventId) {
+            $request = new Request('Public:Register', 'GET', [
+                'action' => 'default',
+                'lang' => 'cs',
+                'id' => 666,
+                'eventId' => $eventId,
+                'contestId' => 1,
+                'year' => 1,
+            ]);
 
-                    $fixture->run($request);
-                }, BadRequestException::class, 'Neexistující přihláška.', 404);
+            $fixture->run($request);
+        }, BadRequestException::class, 'Neexistující přihláška.', 404);
     }
 
     public function testClosed() {
@@ -76,9 +78,9 @@ class ApplicationPresenterTest extends EventTestCase {
         Assert::type(TextResponse::class, $response);
 
         $source = $response->getSource();
-        Assert::type(\Nette\Application\UI\ITemplate::class, $source);
+        Assert::type(ITemplate::class, $source);
 
-        $html = (string) $source;
+        $html = (string)$source;
         Assert::contains('Přihlašování není povoleno', $html);
     }
 
