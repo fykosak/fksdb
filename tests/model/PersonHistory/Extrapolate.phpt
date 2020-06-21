@@ -1,12 +1,14 @@
 <?php
 
-$container = require '../bootstrap.php';
+namespace FKSDB\Tests\PersonHistory;
+
+$container = require '../../bootstrap.php';
 
 use FKSDB\ORM\Services\ServicePersonHistory;
 use Tester\Assert;
 use Tester\TestCase;
 
-class ModelPersonHistoryTest extends TestCase {
+class Extrapolate extends TestCase {
 
     /**
      * @var ServicePersonHistory
@@ -81,8 +83,7 @@ class ModelPersonHistoryTest extends TestCase {
             [6, 7, 4],
         ];
     }
-
 }
 
-$testCase = new ModelPersonHistoryTest($container->getByType(ServicePersonHistory::class));
+$testCase = new Extrapolate($container->getByType(ServicePersonHistory::class));
 $testCase->run();

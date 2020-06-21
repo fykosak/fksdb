@@ -83,7 +83,6 @@ class ApplicationPresenterTest extends EventTestCase {
         $html = (string)$source;
         Assert::contains('Přihlašování není povoleno', $html);
     }
-
 }
 
 $testCase = new ApplicationPresenterTest($container);

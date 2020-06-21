@@ -45,5 +45,4 @@ EOT
         $this->connection->query('DELETE FROM e_dsef_group');
         parent::tearDown();
     }
-
 }

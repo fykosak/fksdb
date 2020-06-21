@@ -1,13 +1,14 @@
 <?php
+namespace FKSDB\Tests\PersonHistory;
 
-$container = require '../bootstrap.php';
+$container = require '../../bootstrap.php';
 
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\Tests\DatabaseTestCase;
 use Nette\DI\Container;
 use Tester\Assert;
 
-class ModelPersonHistoryTest extends DatabaseTestCase {
+class DBExtrapolate extends DatabaseTestCase {
 
     /**
      * @var ServicePerson
@@ -36,8 +37,7 @@ class ModelPersonHistoryTest extends DatabaseTestCase {
         Assert::same(null, $extrapolated->class);
         Assert::same(2, $extrapolated->study_year);
     }
-
 }
 
-$testCase = new ModelPersonHistoryTest($container->getByType(ServicePerson::class), $container);
+$testCase = new DBExtrapolate($container->getByType(ServicePerson::class), $container);
 $testCase->run();
