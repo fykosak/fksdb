@@ -153,5 +153,5 @@ class WriteOnlyTraitTest extends DsefTestCase {
 
 }
 
-$testCase = new WriteonlyTraitTest($container);
+$testCase = new WriteOnlyTraitTest($container);
 $testCase->run();
