@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Events\Accommodation;
+namespace FKSDB\Tests\Events\Schedule;
 
 use FKSDB\ORM\DbNames;
 use Nette\Application\Request;
@@ -11,7 +11,7 @@ use Tester\Assert;
 
 $container = require '../../bootstrap.php';
 
-class ScheduleTest extends ScheduleTestCase {
+class DeleteTest extends ScheduleTestCase {
     /** @var int */
     protected $lastPersonId;
     /** @var int */
@@ -105,5 +105,5 @@ class ScheduleTest extends ScheduleTestCase {
     }
 }
 
-$testCase = new ScheduleTest($container);
+$testCase = new DeleteTest($container);
 $testCase->run();

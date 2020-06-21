@@ -1,5 +1,7 @@
 <?php
 
+namespace FKSDB\Tests\Exports\Formats;
+
 $container = require '../../bootstrap.php';
 
 use Exports\ExportFormatFactory;
@@ -9,6 +11,7 @@ use Exports\StoredQueryFactory;
 use Exports\StoredQueryPostProcessing;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\ORM\Models\ModelContest;
+use FKSDB\Tests\DatabaseTestCase;
 use Tester\Assert;
 
 class AESOPFormatTest extends DatabaseTestCase {
@@ -29,7 +32,7 @@ class AESOPFormatTest extends DatabaseTestCase {
         $parameters = [
             'category' => new MockQueryParameter('category'),
         ];
-        $storedQuery = $queryFactory->createQueryFromSQL(new MockSeriesPresenter(), 'SELECT 1, \'ahoj\' FROM dual', $parameters, ['php_post_proc' => 'MockProcessing']);
+        $storedQuery = $queryFactory->createQueryFromSQL(new MockSeriesPresenter(), 'SELECT 1, \'ahoj\' FROM dual', $parameters, ['php_post_proc' => MockProcessing::class]);
 
         // AESOP format requires QID
         $storedQuery->getQueryPattern()->qid = 'aesop.ct';
@@ -95,7 +98,7 @@ class MockQueryParameter {
     }
 
     public function getPDOType() {
-        return PDO::PARAM_STR;
+        return \PDO::PARAM_STR;
     }
 
 }
@@ -110,7 +113,7 @@ class MockProcessing extends StoredQueryPostProcessing {
         return '';
     }
 
-    public function processData(PDOStatement $data) {
+    public function processData(\PDOStatement $data) {
         return $data;
     }
 

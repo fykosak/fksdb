@@ -1,12 +1,12 @@
 <?php
 
-namespace FKSDB\Tests\PublicModule;
+namespace FKSDB\Tests\PublicModule\ApplicationPresenter;
 
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Utils\DateTime;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
 
-abstract class ApplicationPresenterDsefTestCase extends EventTestCase {
+abstract class DsefTestCase extends EventTestCase {
 
     /**
      * @var ApplicationPresenter
@@ -41,8 +41,8 @@ EOT
     }
 
     protected function tearDown() {
-        $this->connection->query("DELETE FROM e_dsef_participant");
-        $this->connection->query("DELETE FROM e_dsef_group");
+        $this->connection->query('DELETE FROM e_dsef_participant');
+        $this->connection->query('DELETE FROM e_dsef_group');
         parent::tearDown();
     }
 

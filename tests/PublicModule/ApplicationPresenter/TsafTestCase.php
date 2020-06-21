@@ -1,10 +1,10 @@
 <?php
 
-namespace FKSDB\Tests\PublicModule;
+namespace FKSDB\Tests\PublicModule\ApplicationPresenter;
 
 use Nette\Utils\DateTime;
 
-abstract class ApplicationPresenterTsafTestCase extends ApplicationPresenterDsefTestCase {
+abstract class TsafTestCase extends DsefTestCase {
     /** @var int */
     protected $dsefEventId;
     /** @var int */
@@ -21,7 +21,7 @@ abstract class ApplicationPresenterTsafTestCase extends ApplicationPresenterDsef
             'parameters' => <<<EOT
 capacity: 5
 EOT
-    ,
+            ,
         ]);
     }
 

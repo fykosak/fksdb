@@ -1,18 +1,18 @@
 <?php
 
-namespace Persons;
+namespace FKSDB\Tests\Persons\Stalking;
 
 use FKSDB\ORM\DbNames;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Request;
 use Nette\DI\Container;
-use DatabaseTestCase;
+use FKSDB\Tests\DatabaseTestCase;
 
 /**
  * Class Stalking
  * @package Persons
  */
-abstract class Stalking extends DatabaseTestCase {
+abstract class StalkingTestCase extends DatabaseTestCase {
     use MockApplicationTrait;
 
     /** @var int */

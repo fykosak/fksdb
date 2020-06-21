@@ -1,9 +1,10 @@
 <?php
 
-namespace Persons;
+namespace FKSDB\Tests\Persons\Stalking;
 
 $container = require '../../bootstrap.php';
 
+use FKSDB\Tests\Persons\Stalking\StalkingTestCase;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;
@@ -14,7 +15,7 @@ use Tester\Assert;
  * Class Stalking
  * @package Persons
  */
-class StalkingDisplay extends Stalking {
+class Display extends StalkingTestCase {
     use MockApplicationTrait;
 
     /**
@@ -52,5 +53,5 @@ class StalkingDisplay extends Stalking {
     }
 }
 
-$testCase = new StalkingDisplay($container);
+$testCase = new Display($container);
 $testCase->run();

@@ -1,10 +1,12 @@
 <?php
 
-namespace FKSDB\Events\Model;
+namespace FKSDB\Tests\Events\Model;
 
 $container = require '../../bootstrap.php';
 
 use FKSDB\Events\EventDispatchFactory;
+use FKSDB\Events\Model\ApplicationHandler;
+use FKSDB\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Tests\Events\EventTestCase;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Logging\DevNullLogger;

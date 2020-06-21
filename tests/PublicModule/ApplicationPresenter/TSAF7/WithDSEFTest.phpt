@@ -1,36 +1,41 @@
 <?php
 
-namespace FKSDB\Tests\PublicModule;
+namespace FKSDB\Tests\PublicModule\ApplicationPresenter\TSAF7;
 
-$container = require '../bootstrap.php';
+$container = require '../../../bootstrap.php';
 
+use FKSDB\ORM\Models\ModelEventParticipant;
+use FKSDB\Tests\PublicModule\ApplicationPresenter\TsafTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
-class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
-    // /** @var int */
-    // private $tsafAppId;
+class WithDSEFTest extends TsafTestCase {
     /** @var int */
-    private $dsefAppId;
+    private $tsafAppId;
 
     protected function setUp() {
         parent::setUp();
-        $adminId = $this->createPerson('Admin', 'Adminovič', [], true);
-        $this->insert('grant', [
-            'login_id' => $adminId,
-            'role_id' => 5,
-            'contest_id' => 1,
-        ]);
-        $this->authenticate($adminId);
+        $this->authenticate($this->personId);
 
-        $this->dsefAppId = $this->insert('event_participant', [
+        $this->tsafAppId = $this->insert('event_participant', [
+            'person_id' => $this->personId,
+            'event_id' => $this->tsafEventId,
+            'status' => 'invited',
+        ]);
+
+
+        $this->insert('e_tsaf_participant', [
+            'event_participant_id' => $this->tsafAppId,
+        ]);
+
+        $dsefAppId = $this->insert('event_participant', [
             'person_id' => $this->personId,
             'event_id' => $this->dsefEventId,
             'status' => 'applied',
         ]);
 
         $this->insert('e_dsef_participant', [
-            'event_participant_id' => $this->dsefAppId,
+            'event_participant_id' => $dsefAppId,
             'e_dsef_group_id' => 1,
             'lunch_count' => 3,
         ]);
@@ -71,15 +76,16 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
             ],
             'privacy' => "on",
             'c_a_p_t_cha' => "pqrt",
-            '__init__applied' => "Přihlásit účastníka",
+            'invited__applied' => "Potvrdit účast",
         ], [
             'eventId' => $this->tsafEventId,
+            'id' => $this->tsafAppId,
         ]);
 
         $response = $this->fixture->run($request);
 
         Assert::type(RedirectResponse::class, $response);
-
+        /** @var ModelEventParticipant $application */
         $application = $this->assertApplication($this->tsafEventId, 'bila@hrad.cz');
         Assert::equal('applied', $application->status);
         Assert::equal('F_S', $application->tshirt_size);
@@ -94,8 +100,7 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
         Assert::equal(1, $eApplication->e_dsef_group_id);
         Assert::equal(3, $eApplication->lunch_count);
     }
-
 }
 
-$testCase = new ApplicationPresenterTest($container);
+$testCase = new WithDSEFTest($container);
 $testCase->run();

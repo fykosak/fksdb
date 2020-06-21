@@ -1,11 +1,11 @@
 <?php
 
-namespace Persons;
+namespace FKSDB\Tests\Person;
 
 $container = require '../bootstrap.php';
 
 use FKSDB\Modules\Core\BasePresenter;
-use DatabaseTestCase;
+use FKSDB\Tests\DatabaseTestCase;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\ORM\Models\ModelContest;
@@ -14,6 +14,12 @@ use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\ORM\Services\ServiceContestant;
 use Nette\DI\Container;
 use Nette\Forms\Form;
+use Persons\ExtendedPersonHandler;
+use Persons\ExtendedPersonHandlerFactory;
+use Persons\IExtendedPersonPresenter;
+use Persons\IModifiabilityResolver;
+use Persons\IVisibilityResolver;
+use Persons\ReferencedPersonHandler;
 use Tester\Assert;
 
 class ExtendedPersonHandlerTest extends DatabaseTestCase {

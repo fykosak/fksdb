@@ -1,27 +1,19 @@
 <?php
 
-namespace FKSDB\Tests\PublicModule;
+namespace FKSDB\Tests\PublicModule\ApplicationPresenter\DSEF20;
 
-$container = require '../bootstrap.php';
+$container = require '../../../bootstrap.php';
 
+use FKSDB\Tests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;
-use Nette\Utils\DateTime;
 use Tester\Assert;
 
-class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
-
-    protected function setUp() {
-        parent::setUp();
-
-        $this->authenticate($this->personId);
-    }
+class AnonymousTest extends DsefTestCase {
 
     public function testDisplay() {
-        Assert::equal(true, $this->fixture->getUser()->isLoggedIn());
-
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',
@@ -38,24 +30,20 @@ class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
 
         $html = (string)$source;
         Assert::contains('Účastník', $html);
-
-        Assert::contains('Paní Bílá', $html);
     }
 
-    public function testAuthRegistration() {
-        Assert::equal(true, $this->fixture->getUser()->isLoggedIn());
-
+    public function testAnonymousRegistration() {
         $request = $this->createPostRequest([
             'participant' => [
-                'person_id' => $this->personId,
+                'person_id' => "__promise",
                 'person_id_1' => [
                     '_c_compact' => " ",
                     'person' => [
-                        'other_name' => "Paní",
-                        'family_name' => "Bílá",
+                        'other_name' => "František",
+                        'family_name' => "Dobrota",
                     ],
                     'person_info' => [
-                        'email' => "bila@hrad.cz",
+                        'email' => "ksaad@kalo.cz",
                         'id_number' => "1231354",
                         'born' => "2014-09-15",
                     ],
@@ -80,14 +68,8 @@ class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
         $response = $this->fixture->run($request);
         Assert::type(RedirectResponse::class, $response);
 
-        $application = $this->assertApplication($this->eventId, 'bila@hrad.cz');
+        $application = $this->assertApplication($this->eventId, 'ksaad@kalo.cz');
         Assert::equal('applied', $application->status);
-        Assert::equal((int)$this->personId, $application->person_id);
-
-        $info = $this->assertPersonInfo($this->personId);
-        Assert::equal('1231354', $info->id_number);
-        Assert::equal(DateTime::from('2014-09-15'), $info->born);
-
 
         $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');
         Assert::equal(1, $eApplication->e_dsef_group_id);
@@ -96,5 +78,5 @@ class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
 
 }
 
-$testCase = new ApplicationPresenterTest($container);
+$testCase = new AnonymousTest($container);
 $testCase->run();

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\PublicModule;
 
-use DatabaseTestCase;
+use FKSDB\Tests\DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Request;
 use Nette\Database\Row;

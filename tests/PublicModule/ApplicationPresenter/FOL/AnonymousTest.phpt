@@ -1,17 +1,18 @@
 <?php
 
-namespace FKSDB\Tests\PublicModule;
+namespace FKSDB\Tests\PublicModule\ApplicationPresenter\FOL;
 
-$container = require '../bootstrap.php';
+$container = require '../../../bootstrap.php';
 
 use FKSDB\Events\Spec\Fol\CategoryProcessing;
+use FKSDB\Tests\PublicModule\ApplicationPresenter\FolTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;
 use Tester\Assert;
 
-class ApplicationPresenterTest extends ApplicationPresenterFolTestCase {
+class AnonymousTest extends FolTestCase {
 
     public function testDisplay() {
         $request = new Request('Public:Application', 'GET', [
@@ -77,5 +78,5 @@ class ApplicationPresenterTest extends ApplicationPresenterFolTestCase {
 
 }
 
-$testCase = new ApplicationPresenterTest($container);
+$testCase = new AnonymousTest($container);
 $testCase->run();

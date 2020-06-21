@@ -5,6 +5,7 @@ namespace FKSDB\Tests\PublicModule;
 $container = require '../bootstrap.php';
 
 use Authentication\LoginUserStorage;
+use FKSDB\Tests\DatabaseTestCase;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
@@ -13,7 +14,7 @@ use Nette\Application\UI\ITemplate;
 use FKSDB\Modules\PublicModule\RegisterPresenter;
 use Tester\Assert;
 
-class RegisterPresenterTest extends \DatabaseTestCase {
+class RegisterPresenterTest extends DatabaseTestCase {
 
     /**
      * @var Container

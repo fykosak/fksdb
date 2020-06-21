@@ -1,17 +1,16 @@
 <?php
 
-namespace FKSDB\Tests\PublicModule;
+namespace FKSDB\Tests\PublicModule\ApplicationPresenter\TSAF7;
 
-$container = require '../bootstrap.php';
+$container = require '../../../bootstrap.php';
 
+use FKSDB\Tests\PublicModule\ApplicationPresenter\TsafTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
-class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
+class CancelTest extends TsafTestCase {
     /** @var int */
     private $tsafAppId;
-    /** @var int */
-    private $dsefAppId;
 
     protected function setUp() {
         parent::setUp();
@@ -34,14 +33,14 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
             'event_participant_id' => $this->tsafAppId,
         ]);
 
-        $this->dsefAppId = $this->insert('event_participant', [
+        $dsefAppId = $this->insert('event_participant', [
             'person_id' => $this->personId,
             'event_id' => $this->dsefEventId,
             'status' => 'applied.tsaf',
         ]);
 
         $this->insert('e_dsef_participant', [
-            'event_participant_id' => $this->dsefAppId,
+            'event_participant_id' => $dsefAppId,
             'e_dsef_group_id' => 1,
             'lunch_count' => 3,
         ]);
@@ -109,5 +108,5 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
 
 }
 
-$testCase = new ApplicationPresenterTest($container);
+$testCase = new CancelTest($container);
 $testCase->run();

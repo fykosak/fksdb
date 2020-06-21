@@ -1,28 +1,35 @@
 <?php
-namespace FKSDB\Tests\PublicModule;
 
-$container = require '../bootstrap.php';
+namespace FKSDB\Tests\PublicModule\ApplicationPresenter\TSAF7;
 
-use FKSDB\ORM\Services\ServiceEmailMessage;
+$container = require '../../../bootstrap.php';
+
+use FKSDB\Tests\PublicModule\ApplicationPresenter\TsafTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
-class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
-    /** @var int */
-    private $tsafAppId;
+class WithDSEFAnonymousTest extends TsafTestCase {
 
     protected function setUp() {
         parent::setUp();
-        $this->authenticate($this->personId);
+        $adminId = $this->createPerson('Admin', 'Adminovič', [], true);
+        $this->insert('grant', [
+            'login_id' => $adminId,
+            'role_id' => 5,
+            'contest_id' => 1,
+        ]);
+        $this->authenticate($adminId);
 
-        $this->tsafAppId = $this->insert('event_participant', [
+        $dsefAppId = $this->insert('event_participant', [
             'person_id' => $this->personId,
-            'event_id' => $this->tsafEventId,
-            'status' => 'invited'
+            'event_id' => $this->dsefEventId,
+            'status' => 'applied',
         ]);
 
-        $this->insert('e_tsaf_participant', [
-            'event_participant_id' => $this->tsafAppId,
+        $this->insert('e_dsef_participant', [
+            'event_participant_id' => $dsefAppId,
+            'e_dsef_group_id' => 1,
+            'lunch_count' => 3,
         ]);
     }
 
@@ -40,7 +47,7 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
                         'email' => "bila@hrad.cz",
                         'id_number' => "1231354",
                         'born' => "2014-09-15",
-                        'phone' => '+420987654321'
+                        'phone' => '+420987654321',
                     ],
                     'post_contact_d' => [
                         'address' => [
@@ -61,14 +68,11 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
             ],
             'privacy' => "on",
             'c_a_p_t_cha' => "pqrt",
-            'invited__applied' => "Potvrdit účast",
+            '__init__applied' => "Přihlásit účastníka",
         ], [
             'eventId' => $this->tsafEventId,
-            'id' => $this->tsafAppId,
         ]);
-        /** @var ServiceEmailMessage $serviceEmail */
-        $serviceEmail = $this->getContainer()->getByType(ServiceEmailMessage::class);
-        $before = $serviceEmail->getTable()->count();
+
         $response = $this->fixture->run($request);
 
         Assert::type(RedirectResponse::class, $response);
@@ -86,11 +90,9 @@ class ApplicationPresenterTest extends ApplicationPresenterTsafTestCase {
         $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');
         Assert::equal(1, $eApplication->e_dsef_group_id);
         Assert::equal(3, $eApplication->lunch_count);
-
-        Assert::equal($before + 2, $serviceEmail->getTable()->count());
     }
 
 }
 
-$testCase = new ApplicationPresenterTest($container);
+$testCase = new WithDSEFAnonymousTest($container);
 $testCase->run();

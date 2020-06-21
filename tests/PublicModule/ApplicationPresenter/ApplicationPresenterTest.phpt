@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\Tests\PublicModule;
+namespace FKSDB\Tests\PublicModule\ApplicationPresenter;
 
-$container = require '../bootstrap.php';
+$container = require '../../bootstrap.php';
 
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\BadRequestException;

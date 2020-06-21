@@ -1,10 +1,11 @@
 <?php
 
-namespace FKSDB\Tests\PublicModule;
+namespace FKSDB\Tests\PublicModule\ApplicationPresenter\DSEF20;
 
-$container = require '../bootstrap.php';
+$container = require '../../../bootstrap.php';
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Tests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;
 use Nette\Utils\DateTime;
@@ -13,7 +14,7 @@ use Tester\Assert;
 /**
  * Class ApplicationPresenterTest
  */
-class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
+class AnonymousMissMatchTest extends DsefTestCase {
 
     public function testRegistration() {
         //Assert::equal(false, $this->fixture->getUser()->isLoggedIn()); (presnter not ready for redirect)
@@ -67,5 +68,5 @@ class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
 
 }
 
-$testCase = new ApplicationPresenterTest($container);
+$testCase = new AnonymousMissMatchTest($container);
 $testCase->run();

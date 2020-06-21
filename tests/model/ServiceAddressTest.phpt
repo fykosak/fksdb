@@ -1,5 +1,6 @@
 <?php
 
+namespace FKSDB\Tests;
 $container = require '../bootstrap.php';
 
 use FKSDB\ORM\Services\ServiceAddress;
@@ -24,7 +25,7 @@ class ServiceAddressTest extends TestCase {
     /**
      * @dataProvider getPostalCodeData
      */
-    public function testStudyYear($postalCode, $region) {
+    public function testStudyYear(string $postalCode, $region) {
         if ($region === null) {
             Assert::exception(function () use ($postalCode) {
                 $this->fixture->inferRegion($postalCode);

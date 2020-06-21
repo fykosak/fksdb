@@ -3,7 +3,7 @@
 $container = require '../../../../bootstrap.php';
 
 use FKSDB\ORM\Models\ModelPostContact;
-use FKSDB\Tests\PublicModule\ApplicationPresenterDsefTestCase;
+use FKSDB\Tests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
@@ -11,7 +11,7 @@ use Nette\Application\UI\ITemplate;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
-class WriteonlyTraitTest extends ApplicationPresenterDsefTestCase {
+class WriteOnlyTraitTest extends DsefTestCase {
     /** @var int */
     private $dsefAppId;
 

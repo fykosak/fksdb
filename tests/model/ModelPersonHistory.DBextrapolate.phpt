@@ -3,6 +3,7 @@
 $container = require '../bootstrap.php';
 
 use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\Tests\DatabaseTestCase;
 use Nette\DI\Container;
 use Tester\Assert;
 

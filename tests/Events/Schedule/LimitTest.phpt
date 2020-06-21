@@ -1,13 +1,13 @@
 <?php
 
-namespace FKSDB\Events\Accommodation;
+namespace FKSDB\Tests\Events\Schedule;
 
 use Nette\Application\Responses\TextResponse;
 use Tester\Assert;
 
 $container = require '../../bootstrap.php';
 
-class ScheduleTest extends ScheduleTestCase {
+class LimitTest extends ScheduleTestCase {
 
     public function testRegistration() {
         Assert::equal(2, (int)$this->connection->fetchField('SELECT count(*) FROM person_schedule WHERE schedule_item_id = ?', $this->itemId));
@@ -23,5 +23,5 @@ class ScheduleTest extends ScheduleTestCase {
     }
 }
 
-$testCase = new ScheduleTest($container);
+$testCase = new LimitTest($container);
 $testCase->run();

@@ -1,20 +1,28 @@
 <?php
-namespace FKSDB\Tests\PublicModule;
-$container = require '../bootstrap.php';
 
-use FKSDB\Tests\PublicModule\ApplicationPresenterDsefTestCase;
+namespace FKSDB\Tests\PublicModule\ApplicationPresenter\DSEF20;
+
+$container = require '../../../bootstrap.php';
+
+use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Tests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
-class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
+class AnonymousMatchTest extends DsefTestCase {
+
+    protected function tearDown() {
+        $this->connection->query('DELETE FROM e_dsef_participant');
+        parent::tearDown();
+    }
 
     public function testRegistration() {
         //Assert::equal(false, $this->fixture->getUser()->isLoggedIn()); (presnter not ready for redirect)
 
         $request = $this->createPostRequest([
             'participant' => [
-                'person_id' => $this->personId,
+                'person_id' => ReferencedId::VALUE_PROMISE,
                 'person_id_1' => [
                     '_c_compact' => " ",
                     'person' => [
@@ -24,7 +32,7 @@ class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
                     'person_info' => [
                         'email' => "bila@hrad.cz",
                         'id_number' => "1231354",
-                        'born' => "2014-09-15",
+                        'born' => "2000-01-01",
                     ],
                     'post_contact_p' => [
                         'address' => [
@@ -49,11 +57,11 @@ class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
 
         $application = $this->assertApplication($this->eventId, 'bila@hrad.cz');
         Assert::equal('applied', $application->status);
-        Assert::equal((int) $this->personId, $application->person_id);
+        Assert::equal((int)$this->personId, $application->person_id);
 
         $info = $this->assertPersonInfo($this->personId);
-        Assert::equal('1231354', $info->id_number); // TODO here would be better null (at least we don't rewrite existing data)
-        Assert::equal(DateTime::from('2000-01-01'), $info->born); // shouldn't be rewritten
+        Assert::equal('1231354', $info->id_number);
+        Assert::equal(DateTime::from('2000-01-01'), $info->born);
 
 
         $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');
@@ -63,5 +71,5 @@ class ApplicationPresenterTest extends ApplicationPresenterDsefTestCase {
 
 }
 
-$testCase = new ApplicationPresenterTest($container);
+$testCase = new AnonymousMatchTest($container);
 $testCase->run();

@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Tests\PublicModule;
+namespace FKSDB\Tests\PublicModule\ApplicationPresenter;
 
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Database\Row;
@@ -8,7 +8,7 @@ use Nette\Utils\DateTime;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Tester\Assert;
 
-abstract class ApplicationPresenterFolTestCase extends EventTestCase {
+abstract class FolTestCase extends EventTestCase {
 
     /**
      * @var ApplicationPresenter

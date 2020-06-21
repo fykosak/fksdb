@@ -1,8 +1,7 @@
 <?php
 
-namespace FKSDB\Events\Accommodation;
+namespace FKSDB\Tests\Events\Schedule;
 
-use FKSDB\Components\Controls\Breadcrumbs\Request;
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\IPresenter;
 use Nette\Utils\DateTime;

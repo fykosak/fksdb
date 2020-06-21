@@ -1,5 +1,7 @@
 <?php
 
+namespace FKSDB\Tests;
+
 use Authentication\PasswordAuthenticator;
 use FKSDB\ORM\DbNames;
 use Nette\Database\Connection;
@@ -108,12 +110,12 @@ abstract class DatabaseTestCase extends TestCase {
         return $personInfo;
     }
 
-    protected function createPersonHistory(int $personId, $acYear, $school = null, $studyYear = null, $class = null) {
+    protected function createPersonHistory(int $personId, $acYear, $school = null, $studyYear = null, $class = null): int {
         $this->connection->query("INSERT INTO person_history (person_id, ac_year, school_id, class, study_year) VALUES(?, ?, ?, ?, ?)", $personId, $acYear, $school, $class, $studyYear);
         return $this->connection->getInsertId();
     }
 
-    protected function insert(string $table, array $data) {
+    protected function insert(string $table, array $data): int {
         $this->connection->query("INSERT INTO `$table`", $data);
         return $this->connection->getInsertId();
     }

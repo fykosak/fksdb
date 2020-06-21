@@ -1,13 +1,13 @@
 <?php
 
-namespace FKSDB\Events\Accommodation;
+namespace FKSDB\Tests\Events\Schedule;
 
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
 $container = require '../../bootstrap.php';
 
-class ScheduleTest extends ScheduleTestCase {
+class CreateTest extends ScheduleTestCase {
 
     public function testRegistration() {
         $request = $this->createAccommodationRequest();
@@ -21,9 +21,7 @@ class ScheduleTest extends ScheduleTestCase {
     public function getAccommodationCapacity(): int {
         return 3;
     }
-
 }
 
-
-$testCase = new ScheduleTest($container);
+$testCase = new CreateTest($container);
 $testCase->run();

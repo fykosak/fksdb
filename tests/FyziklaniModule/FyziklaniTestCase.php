@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\FyziklaniModule;
 
-use DatabaseTestCase;
+use FKSDB\Tests\DatabaseTestCase;
 use FKSDB\ORM\DbNames;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Database\Row;
