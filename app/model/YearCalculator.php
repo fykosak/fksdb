@@ -8,7 +8,6 @@ use FKSDB\ORM\Models\ModelContestYear;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\ORM\Services\ServiceContestYear;
 use InvalidArgumentException;
-use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Utils\Arrays;
 
@@ -69,12 +68,12 @@ class YearCalculator {
     }
 
     /**
-     * @param ActiveRow|ModelContest $contest
-     * @param $year
+     * @param ModelContest $contest
+     * @param int $year
      * @return int
      * @throws InvalidArgumentException
      */
-    public function getAcademicYear(ActiveRow $contest, $year): int {
+    public function getAcademicYear(ModelContest $contest, int $year): int {
         if (!isset($this->cache[$contest->contest_id]) || !isset($this->cache[$contest->contest_id][$year])) {
             throw new InvalidArgumentException("No academic year defined for {$contest->contest_id}:$year.");
         }

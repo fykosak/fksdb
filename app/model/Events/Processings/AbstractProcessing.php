@@ -8,6 +8,7 @@ use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Logging\ILogger;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\Component;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\SmartObject;
@@ -171,6 +172,9 @@ abstract class AbstractProcessing implements IProcessing {
         /** @var Control $control */
         // TODO not type safe
         foreach ($form->getComponents(true, IControl::class) as $control) {
+            if ($control instanceof BaseControl) {
+                $control->loadHttpData();
+            }
             $path = $control->lookupPath(Form::class);
             $path = str_replace('_1', '', $path);
             $path = str_replace(Component::NAME_SEPARATOR, self::DELIMITER, $path);
