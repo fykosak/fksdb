@@ -90,6 +90,7 @@ events:
                         required: true
                         visible: neg(state('__init'))
                         modifiable: false
+                        factory: Chooser(_('Category'), FKSDB\Events\Spec\Fol\CategoryProcessing(%events.fol1.rulesVersion%))
                     note:
                         label: _('Kontaktní adresa')
                         required: false

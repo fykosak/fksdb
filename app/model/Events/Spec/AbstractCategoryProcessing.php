@@ -2,9 +2,14 @@
 
 namespace FKSDB\Events\Spec;
 
+use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
+use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\Field;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Events\Processings\AbstractProcessing;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelPersonHistory;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\YearCalculator;
 
@@ -12,7 +17,7 @@ use FKSDB\YearCalculator;
  * Class AbstractCategoryProcessing
  * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class AbstractCategoryProcessing extends AbstractProcessing {
+abstract class AbstractCategoryProcessing extends AbstractProcessing implements IOptionsProvider {
 
     /**
      * @var YearCalculator
@@ -42,22 +47,37 @@ abstract class AbstractCategoryProcessing extends AbstractProcessing {
             if ($name == 'team') {
                 continue;
             }
-            $studyYearValue = $this->getStudyYearValue($name);
+
             $schoolValue = $this->getSchoolValue($name);
-            if (!$studyYearValue && !$schoolValue && $this->isBaseReallyEmpty($name)) {
-                continue;
+            $studyYearValue = $this->getStudyYearValue($name);
+
+            if (!$schoolValue && !$studyYearValue) {
+                if ($this->isBaseReallyEmpty($name)) {
+                    continue;
+                }
+                $history = $this->getPersonHistory($baseHolder, $acYear);
+                $schoolValue = $history->school_id;
+                $studyYearValue = $history->study_year;
             }
 
-            /** @var ModelPerson $person */
-            $person = $baseHolder->getModel()->getMainModel()->person;
-            $history = $person->getHistory($acYear);
-
             $participants[] = [
-                'school_id' => $schoolValue ?: ($history ? $history->school_id : null),
-                'study_year' => $studyYearValue ?: ($history ? $history->study_year : null),
+                'school_id' => $schoolValue,
+                'study_year' => $studyYearValue,
             ];
         }
+
         return $participants;
+    }
+
+    /**
+     * @param BaseHolder $baseHolder
+     * @param int $acYear
+     * @return ModelPersonHistory|null
+     */
+    private function getPersonHistory(BaseHolder $baseHolder, int $acYear) {
+        /** @var ModelPerson $person */
+        $person = $baseHolder->getModel()->getMainModel()->person;
+        return $person->getHistory($acYear);
     }
 
     /**
@@ -91,5 +111,17 @@ abstract class AbstractCategoryProcessing extends AbstractProcessing {
     protected function getAcYear(Holder $holder): int {
         $event = $holder->getPrimaryHolder()->getEvent();
         return $this->yearCalculator->getAcademicYear($event->getEventType()->getContest(), $event->year);
+    }
+
+    /**
+     * @param Field $field
+     * @return array
+     */
+    public function getOptions(Field $field) {
+        $results = [];
+        foreach ([ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A, ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_B, ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_C, ModelFyziklaniTeam::CATEGORY_ABROAD, ModelFyziklaniTeam::CATEGORY_OPEN] as $category) {
+            $results[$category] = ModelFyziklaniTeam::mapCategoryToName($category);
+        }
+        return $results;
     }
 }
