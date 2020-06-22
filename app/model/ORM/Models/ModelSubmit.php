@@ -49,4 +49,14 @@ class ModelSubmit extends AbstractModelSingle implements IResource, ITaskReferen
             $this->raw_points,
         ]));
     }
+
+    public function canRevoke(): bool {
+        if ($this->source != self::SOURCE_UPLOAD) {
+            return false;
+        }
+        $now = time();
+        $start = $this->getTask()->submit_start ? $this->getTask()->submit_start->getTimestamp() : 0;
+        $deadline = $this->getTask()->submit_deadline ? $this->getTask()->submit_deadline->getTimestamp() : ($now + 1);
+        return ($now <= $deadline) && ($now >= $start);
+    }
 }
