@@ -54,23 +54,6 @@ class SubmitHandlerFactory {
     }
 
     /**
-     * @param ModelSubmit $submit
-     * @return bool
-     * @internal
-     */
-    public function canRevoke(ModelSubmit $submit): bool {
-        if ($submit->source != ModelSubmit::SOURCE_UPLOAD) {
-            return false;
-        }
-
-        $now = time();
-        $start = $submit->getTask()->submit_start ? $submit->getTask()->submit_start->getTimestamp() : 0;
-        $deadline = $submit->getTask()->submit_deadline ? $submit->getTask()->submit_deadline->getTimestamp() : ($now + 1);
-
-        return ($now <= $deadline) && ($now >= $start);
-    }
-
-    /**
      * @param Presenter $presenter
      * @param ILogger $logger
      * @param int $id
@@ -136,7 +119,7 @@ class SubmitHandlerFactory {
             $logger->log(new Message(_('Nedostatečné oprávnění.'), Message::LVL_DANGER));
             return null;
         }
-        if (!$this->canRevoke($submit)) {
+        if (!$submit->canRevoke()) {
             $logger->log(new Message(_('Nelze zrušit submit.'), Message::LVL_DANGER));
             return null;
         }
