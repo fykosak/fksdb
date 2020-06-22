@@ -14,6 +14,7 @@ fi
 for i in `seq 1 $COUNT` ; do
 
 mysql $DB_NAME$i <<EOD
+DELETE FROM email_message;
 DELETE FROM submit;
 DELETE FROM task;
 

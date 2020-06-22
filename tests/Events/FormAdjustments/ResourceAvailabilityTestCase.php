@@ -52,6 +52,7 @@ EOT
         $this->fixture = $this->createPresenter('Public:Application');
         $this->mockApplication();
 
+        $this->persons = [];
         $this->persons[] = $this->createPerson('Paní', 'Bílá', ['email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')]);
         $eid = $this->insert('event_participant', [
             'person_id' => end($this->persons),
