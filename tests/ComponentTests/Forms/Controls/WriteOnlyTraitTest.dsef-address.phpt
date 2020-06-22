@@ -1,6 +1,8 @@
 <?php
 
-$container = require '../../../../bootstrap.php';
+namespace FKSDB\Tests\ComponentTests\Form\Controls;
+
+$container = require '../../../bootstrap.php';
 
 use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\Tests\PublicModule\ApplicationPresenter\DsefTestCase;

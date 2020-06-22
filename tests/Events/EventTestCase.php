@@ -24,30 +24,9 @@ abstract class EventTestCase extends DatabaseTestCase {
         $this->setContainer($container);
     }
 
-    /** @var int */
-    protected $eventId;
-
-    protected function setUp() {
-        parent::setUp();
-        $this->connection->query("INSERT INTO event_type (event_type_id, contest_id, name) VALUES (1, 1, 'Fyziklání'), (2, 1, 'DSEF'), (7, 1, 'TSAF'), (9, 1, 'FoL')");
-        $this->connection->query("INSERT INTO event_status (status) VALUES
-            ('pending'),
-            ('spare'),
-            ('approved'),
-            ('participated'),
-            ('missed'),
-            ('cancelled'),
-            ('invited'),
-            ('applied'),
-            ('applied.tsaf'),
-            ('applied.notsaf')");
-    }
-
     protected function tearDown() {
         $this->connection->query('DELETE FROM event_participant');
-        $this->connection->query('DELETE FROM event_status');
         $this->connection->query('DELETE FROM event');
-        $this->connection->query('DELETE FROM event_type');
         $this->connection->query('DELETE FROM auth_token');
         parent::tearDown();
     }
@@ -74,12 +53,14 @@ abstract class EventTestCase extends DatabaseTestCase {
             'lang' => 'cs',
             'contestId' => 1,
             'year' => 1,
-            'eventId' => $this->eventId,
+            'eventId' => $this->getEventId(),
             'do' => 'application-form-form-submit',
         ]);
 
         return new Request('Public:Application', 'POST', $post, $postData);
     }
+
+    abstract protected function getEventId(): int;
 
     protected function assertApplication(int $eventId, string $email): Row {
         $personId = $this->connection->fetchField('SELECT person_id FROM person_info WHERE email=?', $email);

@@ -20,6 +20,10 @@ class ApplicationPresenterTest extends EventTestCase {
      */
     private $fixture;
 
+    protected function getEventId(): int {
+        return 0;
+    }
+
     protected function setUp() {
         parent::setUp();
         $this->fixture = $this->createPresenter('Public:Application');

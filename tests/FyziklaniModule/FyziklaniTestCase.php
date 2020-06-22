@@ -29,18 +29,6 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
 
     protected function setUp() {
         parent::setUp();
-        $this->connection->query("INSERT INTO event_type (event_type_id, contest_id, name) VALUES (1, 1, 'Fyziklání')");
-        $this->connection->query("INSERT INTO event_status (status) VALUES
-            ('pending'),
-            ('spare'),
-            ('approved'),
-            ('participated'),
-            ('missed'),
-            ('cancelled'),
-            ('invited'),
-            ('applied'),
-            ('applied.tsaf'),
-            ('applied.notsaf')");
 
         $this->userPersonId = $this->createPerson('Paní', 'Černá', ['email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')], true);
         $this->insert(DbNames::TAB_ORG, ['person_id' => $this->userPersonId, 'contest_id' => 1, 'since' => 0, 'order' => 0]);
@@ -50,11 +38,8 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
         $this->connection->query('DELETE FROM fyziklani_submit');
         $this->connection->query('DELETE FROM fyziklani_task');
         $this->connection->query('DELETE FROM e_fyziklani_team');
-        $this->connection->query('DELETE FROM event_status');
         $this->connection->query('DELETE FROM fyziklani_game_setup');
         $this->connection->query('DELETE FROM event');
-        $this->connection->query('DELETE FROM event_type');
-
         parent::tearDown();
     }
 

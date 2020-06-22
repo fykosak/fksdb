@@ -16,8 +16,16 @@ abstract class ResourceAvailabilityTestCase extends EventTestCase {
      * @var array
      */
     protected $persons = [];
+    /**
+     * @var int
+     */
+    protected $eventId;
 
     abstract protected function getCapacity(): int;
+
+    protected function getEventId(): int {
+        return $this->eventId;
+    }
 
     protected function setUp() {
         parent::setUp();

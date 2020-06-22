@@ -14,6 +14,14 @@ abstract class DsefTestCase extends EventTestCase {
     protected $fixture;
     /** @var int */
     protected $personId;
+    /**
+     * @var int
+     */
+    protected $eventId;
+
+    protected function getEventId(): int {
+        return $this->eventId;
+    }
 
     protected function setUp() {
         parent::setUp();

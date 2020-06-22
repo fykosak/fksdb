@@ -15,6 +15,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\ServiceEvent;
 use MockEnvironment\MockApplicationTrait;
+use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Utils\ArrayHash;
 use Tester\Assert;
@@ -45,6 +46,10 @@ class ApplicationHandlerTest extends EventTestCase {
     public function __construct(Container $container) {
         parent::__construct($container);
         $this->setContainer($container);
+    }
+
+    protected function getEventId(): int {
+        throw new BadRequestException();
     }
 
     protected function setUp() {

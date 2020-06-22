@@ -10,6 +10,10 @@ abstract class TsafTestCase extends DsefTestCase {
     /** @var int */
     protected $tsafEventId;
 
+    protected function getEventId(): int {
+        return $this->eventId;
+    }
+
     protected function setUp() {
         parent::setUp();
         $this->dsefEventId = $this->eventId;

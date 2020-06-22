@@ -16,7 +16,6 @@ class TeamEvent extends AbstractPageDisplayTestCase {
 
     protected function setUp() {
         parent::setUp();
-        $this->connection->query("INSERT INTO event_type (event_type_id, contest_id, name) VALUES (7, 1, 'TSAF')");
         $this->insert(DbNames::TAB_EVENT, [
             'event_id' => self::EVENT_ID,
             'event_type_id' => 7,
@@ -58,7 +57,6 @@ class TeamEvent extends AbstractPageDisplayTestCase {
 
     protected function tearDown() {
         $this->connection->query('DELETE FROM event');
-        $this->connection->query('DELETE FROM event_type');
         parent::tearDown();
     }
 }

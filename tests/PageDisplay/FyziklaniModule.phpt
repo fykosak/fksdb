@@ -16,8 +16,6 @@ class FyziklaniModule extends AbstractPageDisplayTestCase {
 
     protected function setUp() {
         parent::setUp();
-        $this->connection->query("INSERT INTO event_type (event_type_id, contest_id, name) VALUES (1, 1, 'Fyziklání')");
-
         $this->insert(DbNames::TAB_EVENT, [
             'event_id' => self::EVENT_ID,
             'event_type_id' => 1,
@@ -68,7 +66,6 @@ class FyziklaniModule extends AbstractPageDisplayTestCase {
     protected function tearDown() {
         $this->connection->query('DELETE FROM fyziklani_game_setup');
         $this->connection->query('DELETE FROM event');
-        $this->connection->query('DELETE FROM event_type');
         parent::tearDown();
     }
 }
