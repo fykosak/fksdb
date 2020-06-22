@@ -2,8 +2,6 @@
 
 namespace FKSDB\UI;
 
-use Tracy\Debugger;
-
 /**
  * Class PageStyleContainer
  * @author Michal Červeňák <miso@fykos.cz>
@@ -23,7 +21,6 @@ class PageStyleContainer {
      * @param string $mainContainerClassName
      */
     public function __construct(string $styleId = null, string $navBarClassName = 'bg-light navbar-light', string $mainContainerClassName = 'container bg-white-container') {
-        Debugger::barDump('C');
         $this->styleId = $styleId;
         $this->navBarClassName = $navBarClassName;
         $this->mainContainerClassName = $mainContainerClassName;

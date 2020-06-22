@@ -139,6 +139,11 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         $this->exportFormatFactory = $exportFormatFactory;
     }
 
+    protected function startup() {
+        $this->seriesTraitStartup();
+        parent::startup();
+    }
+
     /**
      * @return StoredQuery
      * @throws BadRequestException

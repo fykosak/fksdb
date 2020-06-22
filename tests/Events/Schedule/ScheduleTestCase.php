@@ -16,6 +16,12 @@ abstract class ScheduleTestCase extends EventTestCase {
     protected $groupId;
     /** @var array */
     protected $persons = [];
+    /** @var int */
+    protected $eventId;
+
+    protected function getEventId(): int {
+        return $this->eventId;
+    }
 
     protected function setUp() {
         parent::setUp();
