@@ -5,7 +5,7 @@ namespace FKSDB\Tests\ComponentTests\Form\Controls;
 $container = require '../../../bootstrap.php';
 
 use FKSDB\ORM\Models\ModelPostContact;
-use FKSDB\Tests\PublicModule\ApplicationPresenter\DsefTestCase;
+use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
