@@ -21,8 +21,8 @@ abstract class FyziklaniReactControl extends ReactComponent {
      * @param Container $container
      * @param ModelEvent $event
      */
-    public function __construct(Container $container, ModelEvent $event) {
-        parent::__construct($container);
+    public function __construct(Container $container, ModelEvent $event, string $reactId) {
+        parent::__construct($container, $reactId);
         $this->event = $event;
     }
 

@@ -8,7 +8,7 @@ $container = require '../../../bootstrap.php';
  * Class EventModule
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class TeamEvent extends EventModuleTestCase {
+class SingleEvent extends EventModuleTestCase {
     protected function getEventData(): array {
         return [
             'event_type_id' => 7,
@@ -38,5 +38,5 @@ class TeamEvent extends EventModuleTestCase {
     }
 }
 
-$testCase = new TeamEvent($container);
+$testCase = new SingleEvent($container);
 $testCase->run();

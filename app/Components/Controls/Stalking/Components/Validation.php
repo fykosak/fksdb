@@ -25,21 +25,13 @@ class Validation extends AbstractStalkingComponent {
         $this->validationFactory = $factory;
     }
 
-    protected function getHeadline(): string {
-        return _('Validation');
-    }
-
-    protected function getMinimalPermissions(): int {
-        return FieldLevelPermission::ALLOW_RESTRICT;
-    }
-
     /**
      * @param ModelPerson $person
      * @param int $userPermissions
      * @return void
      */
     public function render(ModelPerson $person, int $userPermissions) {
-        $this->beforeRender($person, $userPermissions);
+        $this->beforeRender($person, _('Validation'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
         $logger = new MemoryLogger();
         foreach ($this->validationFactory->getTests('person') as $test) {
             $test->run($logger, $person);

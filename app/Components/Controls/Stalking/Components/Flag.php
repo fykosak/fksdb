@@ -16,17 +16,9 @@ class Flag extends AbstractStalkingComponent {
      * @return void
      */
     public function render(ModelPerson $person, int $userPermissions) {
-        $this->beforeRender($person, $userPermissions);
+        $this->beforeRender($person, _('Flags'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
         $this->template->flags = $person->getMPersonHasFlags();
         $this->template->setFile(__DIR__ . '/Flag.latte');
         $this->template->render();
-    }
-
-    protected function getHeadline(): string {
-        return _('Flags');
-    }
-
-    protected function getMinimalPermissions(): int {
-        return FieldLevelPermission::ALLOW_RESTRICT;
     }
 }

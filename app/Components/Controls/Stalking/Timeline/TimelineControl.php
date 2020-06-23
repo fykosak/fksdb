@@ -11,6 +11,7 @@ use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\YearCalculator;
+use Nette\DI\Container;
 
 /**
  * Class TimelineControl
@@ -22,6 +23,13 @@ class TimelineControl extends ReactComponent {
      */
     private $yearCalculator;
 
+    /**
+     * TimelineControl constructor.
+     * @param Container $container
+     */
+    public function __construct(Container $container) {
+        parent::__construct($container, 'person.detail.timeline');
+    }
     /**
      * @param YearCalculator $yearCalculator
      * @return void
@@ -153,10 +161,6 @@ class TimelineControl extends ReactComponent {
             }
         }
         return [$first, $last];
-    }
-
-    protected function getReactId(...$args): string {
-        return 'person.detail.timeline';
     }
 
     /**

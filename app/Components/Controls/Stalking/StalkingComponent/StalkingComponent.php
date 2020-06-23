@@ -37,10 +37,8 @@ class StalkingComponent extends StalkingControl {
      */
     public function render(string $section, ModelPerson $person, int $userPermission) {
         $definition = $this->stalkingService->getSection($section);
-        $this->beforeRender($person, $userPermission);
-        $this->template->headline = _($definition['label']);
-        $this->template->minimalPermissions = $definition['minimalPermission'];
-
+        $this->beforeRender($person, _($definition['label']), $userPermission, $definition['minimalPermission']);
+        $this->template->userPermission = $userPermission;
         switch ($definition['layout']) {
             case 'single':
                 $this->renderSingle($definition, $person);
@@ -84,6 +82,7 @@ class StalkingComponent extends StalkingControl {
 
     /**
      * @param array $definition
+     * @param ModelPerson $person
      * @return void
      */
     private function renderMulti(array $definition, ModelPerson $person) {

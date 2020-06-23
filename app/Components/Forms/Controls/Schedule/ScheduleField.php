@@ -2,20 +2,18 @@
 
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
-use Exception;
 use FKSDB\Components\React\ReactField;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
-use Nette\ComponentModel\IComponent;
 use Nette\Forms\Controls\TextInput;
 use FKSDB\Exceptions\NotImplementedException;
 use Nette\Utils\JsonException;
 
 /**
  * Class ScheduleField
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ScheduleField extends TextInput {
 
@@ -47,16 +45,9 @@ class ScheduleField extends TextInput {
         $this->event = $event;
         $this->type = $type;
         $this->serviceScheduleItem = $serviceScheduleItem;
+        $this->registerReact('event.schedule.' . $type);
         $this->appendProperty();
-        $this->registerMonitor();
-    }
 
-    /**
-     * @param IComponent $obj
-     */
-    public function attached($obj) {
-        parent::attached($obj);
-        $this->attachedReact($obj);
     }
 
     /**
@@ -83,14 +74,6 @@ class ScheduleField extends TextInput {
         }
     }
 
-    protected function getReactId(...$args): string {
-        return 'event.schedule.' . $this->type;
-    }
-
-    /**
-     * @return string
-     * @throws Exception
-     */
     public function getData(...$args): string {
         $groups = $this->event->getScheduleGroups()->where('schedule_group_type', $this->type);
         $groupList = [];

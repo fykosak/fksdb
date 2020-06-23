@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Controls\Payment;
 
 use Exception;
 use FKSDB\Components\React\ReactField;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
@@ -12,11 +13,12 @@ use Nette\Utils\JsonException;
 
 /**
  * Class PaymentSelectField
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PaymentSelectField extends TextInput {
 
     use ReactField;
+
     /**
      * @var ServicePersonSchedule
      */
@@ -48,14 +50,16 @@ class PaymentSelectField extends TextInput {
         $this->event = $event;
         $this->groupTypes = $groupTypes;
         $this->showAll = $showAll;
+        $this->registerReact('payment.schedule-select');
         $this->appendProperty();
     }
 
     /**
+     * @param mixed ...$args
      * @return string
-     * @throws Exception
+     * @throws NotImplementedException
      */
-    public function getData(): string {
+    public function getData(...$args): string {
         $query = $this->servicePersonSchedule->getTable()->where('schedule_item.schedule_group.event_id', $this->event->event_id);
         if (count($this->groupTypes)) {
             $query->where('schedule_item.schedule_group.schedule_group_type IN', $this->groupTypes);
@@ -77,9 +81,5 @@ class PaymentSelectField extends TextInput {
             }
         }
         return \json_encode($items);
-    }
-
-    protected function getReactId(...$args): string {
-        return 'payment.schedule-select';
     }
 }

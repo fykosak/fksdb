@@ -3,7 +3,10 @@
 namespace FKSDB\Components\React;
 
 use FKSDB\Application\IJavaScriptCollector;
+use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
+use Nette\Forms\Controls\BaseControl;
+use Nette\Utils\Html;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
@@ -20,30 +23,53 @@ trait ReactField {
      * @var bool
      */
     private static $attachedJS = false;
+    /**
+     * @var string
+     */
+    protected $reactId;
+
+    /**
+     * @param string $reactId
+     * @return void
+     */
+    protected function registerReact(string $reactId) {
+        $this->reactId = $reactId;
+        $this->registerMonitor();
+    }
 
     /**
      * @throws JsonException
+     * @throws BadRequestException
+     * Can be used only with BaseControl
      */
     protected function appendProperty() {
-        $this->configure();
-        $this->setAttribute('data-react-root', true);
-        $this->setAttribute('data-react-id', $this->getReactId());
-        $this->setAttribute('data-data', $this->getData());
-        $this->setAttribute('data-actions', Json::encode($this->actions));
+        if(!$this instanceof BaseControl){
+            throw new BadRequestException('method appendProperty can be used only with BaseControl');
+        }
+        $this->appendPropertyTo($this->control);
     }
 
     /**
-     * @param IComponent $obj
+     * @param Html $html
+     * @param mixed ...$args
+     * @return void
+     * @throws JsonException
      */
-    protected function attachedReact($obj) {
-        if (!self::$attachedJS && $obj instanceof IJavaScriptCollector) {
-            self::$attachedJS = true;
-            $obj->registerJSFile('js/bundle.min.js');
-        }
+    protected function appendPropertyTo(Html $html, ...$args) {
+        $this->configure();
+        $html->setAttribute('data-react-root', true);
+        $html->setAttribute('data-react-id', $this->reactId);
+        $html->setAttribute('data-data', $this->getData(...$args));
+        $html->setAttribute('data-actions', Json::encode($this->actions));
     }
 
-    protected function registerMonitor() {
-        $this->monitor(IJavaScriptCollector::class);
+    private function registerMonitor() {
+        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
+            if (!self::$attachedJS) {
+                self::$attachedJS = true;
+                $collector->registerJSFile('js/bundle.min.js');
+            }
+        });
     }
 
     /**
@@ -60,8 +86,6 @@ trait ReactField {
     public function addAction(string $key, string $destination) {
         $this->actions[$key] = $destination;
     }
-
-    abstract protected function getReactId(...$args): string;
 
     abstract public function getData(...$args): string;
 }

@@ -382,18 +382,19 @@ class PersonPresenter extends BasePresenter {
 
     private function getUserPermissions(): int {
         if (!isset($this->userPermissions) || is_null($this->userPermissions)) {
+            $this->userPermissions = FieldLevelPermission::ALLOW_ANYBODY;
             try {
                 $person = $this->getEntity();
-                if ($this->isAnyContestAuthorized($person, 'stalk.full')) {
-                    $this->userPermissions = FieldLevelPermission::ALLOW_FULL;
+                if ($this->isAnyContestAuthorized($person, 'stalk.basic')) {
+                    $this->userPermissions = FieldLevelPermission::ALLOW_BASIC;
                 }
                 if ($this->isAnyContestAuthorized($person, 'stalk.restrict')) {
                     $this->userPermissions = FieldLevelPermission::ALLOW_RESTRICT;
                 }
-                if ($this->isAnyContestAuthorized($person, 'stalk.basic')) {
-                    $this->userPermissions = FieldLevelPermission::ALLOW_BASIC;
+                if ($this->isAnyContestAuthorized($person, 'stalk.full')) {
+                    $this->userPermissions = FieldLevelPermission::ALLOW_FULL;
                 }
-                $this->userPermissions = FieldLevelPermission::ALLOW_ANYBODY;
+
             } catch (InvalidStateException$exception) {
                 $this->userPermissions = FieldLevelPermission::ALLOW_FULL;
             }

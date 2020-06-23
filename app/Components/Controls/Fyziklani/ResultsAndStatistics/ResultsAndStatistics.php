@@ -36,21 +36,6 @@ class ResultsAndStatistics extends FyziklaniReactControl {
      * @var ServiceFyziklaniSubmit
      */
     private $serviceFyziklaniSubmit;
-    /**
-     * @var string
-     */
-    private $reactId;
-
-    /**
-     * ResultsAndStatistics constructor.
-     * @param string $reactId
-     * @param Container $container
-     * @param ModelEvent $event
-     */
-    public function __construct(Container $container, ModelEvent $event, string $reactId) {
-        parent::__construct($container, $event);
-        $this->reactId = $reactId;
-    }
 
     /**
      * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
@@ -68,11 +53,7 @@ class ResultsAndStatistics extends FyziklaniReactControl {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
-    protected function getReactId(): string {
-        return $this->reactId;
-    }
-
-    final public function getData(): string {
+    final public function getData(...$args): string {
         return '';
     }
 

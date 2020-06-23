@@ -42,8 +42,10 @@ class TaskCodeInput extends FyziklaniReactControl {
      * @param ModelEvent $event
      */
     public function __construct(Container $container, ModelEvent $event) {
-        parent::__construct($container, $event);
-        $this->monitor(IJavaScriptCollector::class);
+        parent::__construct($container, $event, 'fyziklani.submit-form');
+        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
+            $collector->registerJSFile('https://dmla.github.io/jsqrcode/src/qr_packed.js');
+        });
     }
 
     /**
@@ -57,27 +59,17 @@ class TaskCodeInput extends FyziklaniReactControl {
     }
 
     /**
+     * @param mixed ...$args
      * @return string
      * @throws JsonException
      * @throws NotSetGameParametersException
      */
-    public function getData(): string {
+    public function getData(...$args): string {
         return Json::encode([
             'availablePoints' => $this->getEvent()->getFyziklaniGameSetup()->getAvailablePoints(),
             'tasks' => $this->serviceFyziklaniTask->getTasksAsArray($this->getEvent()),
             'teams' => $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent()),
         ]);
-    }
-
-    /**
-     * @param $obj
-     * @return void
-     */
-    protected function attached($obj) {
-        if ($obj instanceof IJavaScriptCollector) {
-            $obj->registerJSFile('https://dmla.github.io/jsqrcode/src/qr_packed.js');
-        }
-        parent::attached($obj);
     }
 
     /**
@@ -109,9 +101,5 @@ class TaskCodeInput extends FyziklaniReactControl {
         }
         $this->getPresenter()->sendResponse($response);
 
-    }
-
-    protected function getReactId(): string {
-        return 'fyziklani.submit-form';
     }
 }

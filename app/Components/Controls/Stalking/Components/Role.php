@@ -19,7 +19,7 @@ class Role extends AbstractStalkingComponent {
      * @return void
      */
     public function render(ModelPerson $person, int $userPermissions) {
-        $this->beforeRender($person, $userPermissions);
+        $this->beforeRender($person,_('Roles'), $userPermissions,FieldLevelPermission::ALLOW_RESTRICT);
         $template = $this->template;
         $login = $person->getLogin();
         $roles = [];
@@ -32,13 +32,5 @@ class Role extends AbstractStalkingComponent {
         $this->template->roles = $roles;
         $template->setFile(__DIR__ . '/Role.latte');
         $template->render();
-    }
-
-    protected function getMinimalPermissions(): int {
-        return FieldLevelPermission::ALLOW_RESTRICT;
-    }
-
-    protected function getHeadline(): string {
-        return _('Roles');
     }
 }
