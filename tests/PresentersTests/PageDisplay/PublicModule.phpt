@@ -22,7 +22,7 @@ class PublicModule extends AbstractPageDisplayTestCase {
         $params['contestId'] = 1;
         return [$presenterName, $action, $params];
     }
-    
+
     public function getPages(): array {
         return [
             ['Public:Application', 'list'],
