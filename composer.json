@@ -43,12 +43,12 @@
     "test": [
       "@clearTestCache",
       "@clearTestDatabase",
-      "vendor/bin/tester tests -p php -s -c tests/php.ini -j 1"
+      "vendor/bin/tester tests -p php -s -c tests/php.ini"
     ],
     "testCoverage": [
       "@clearTestCache",
       "@clearTestDatabase",
-      "vendor/bin/tester tests -p php --coverage coverage.html --coverage-src app -s -c tests/php.ini -j 1"
+      "vendor/bin/tester tests -p php --coverage coverage.html --coverage-src app -s -c tests/php.ini"
     ]
   }
 }
