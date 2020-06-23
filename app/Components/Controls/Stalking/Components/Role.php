@@ -3,13 +3,14 @@
 namespace FKSDB\Components\Controls\Stalking;
 
 use Authorization\Grant;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelGrant;
 use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * Class Role
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Role extends AbstractStalkingComponent {
     /**
@@ -33,11 +34,8 @@ class Role extends AbstractStalkingComponent {
         $template->render();
     }
 
-    /**
-     * @return int[]
-     */
-    protected function getAllowedPermissions(): array {
-        return [self::PERMISSION_FULL, self::PERMISSION_RESTRICT];
+    protected function getMinimalPermissions(): int {
+        return FieldLevelPermission::ALLOW_RESTRICT;
     }
 
     protected function getHeadline(): string {

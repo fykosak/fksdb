@@ -2,11 +2,12 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * Class Flag
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Flag extends AbstractStalkingComponent {
     /**
@@ -25,10 +26,7 @@ class Flag extends AbstractStalkingComponent {
         return _('Flags');
     }
 
-    /**
-     * @return string[]
-     */
-    protected function getAllowedPermissions(): array {
-        return [self::PERMISSION_FULL, self::PERMISSION_RESTRICT];
+    protected function getMinimalPermissions(): int {
+        return FieldLevelPermission::ALLOW_RESTRICT;
     }
 }

@@ -4,6 +4,7 @@ namespace FKSDB\Components\DatabaseReflection\PersonHistory;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPersonHistory;
@@ -21,9 +22,8 @@ class SchoolIdRow extends AbstractColumnFactory {
         return _('School');
     }
 
-
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_ALLOW_BASIC;
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission(self::PERMISSION_ALLOW_BASIC, self::PERMISSION_ALLOW_BASIC);
     }
 
     /**

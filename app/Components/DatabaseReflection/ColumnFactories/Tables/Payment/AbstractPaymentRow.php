@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\Payment;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use Nette\Forms\Controls\BaseControl;
 use FKSDB\Exceptions\NotImplementedException;
 
@@ -20,7 +21,7 @@ abstract class AbstractPaymentRow extends AbstractColumnFactory {
         throw new NotImplementedException();
     }
 
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
     }
 }

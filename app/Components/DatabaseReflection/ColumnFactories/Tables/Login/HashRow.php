@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\Login;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\HashPrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelLogin;
@@ -26,7 +27,7 @@ class HashRow extends AbstractColumnFactory {
         return (new HashPrinter())($model->hash);
     }
 
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_ALLOW_RESTRICT;
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission(self::PERMISSION_ALLOW_RESTRICT, self::PERMISSION_ALLOW_RESTRICT);
     }
 }

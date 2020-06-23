@@ -2,7 +2,9 @@
 
 namespace FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam;
 
-use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
+use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
+use FKSDB\ORM\AbstractModelSingle;
+use Nette\Utils\Html;
 
 /**
  * Class GameLangRow
@@ -10,7 +12,6 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
  * TODO rendering
  */
 class GameLangRow extends AbstractFyziklaniTeamRow {
-    use DefaultPrinterTrait;
 
     public function getTitle(): string {
         return _('Game language');
@@ -18,5 +19,8 @@ class GameLangRow extends AbstractFyziklaniTeamRow {
 
     protected function getModelAccessKey(): string {
         return 'game_lang';
+    }
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
+        return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }
 }

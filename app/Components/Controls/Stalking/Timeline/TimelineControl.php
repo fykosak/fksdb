@@ -11,7 +11,6 @@ use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\YearCalculator;
-use Nette\DI\Container;
 
 /**
  * Class TimelineControl
@@ -22,20 +21,13 @@ class TimelineControl extends ReactComponent {
      * @var YearCalculator
      */
     private $yearCalculator;
-    /**
-     * @var ModelPerson
-     */
-    private $person;
 
     /**
-     * TimelineControl constructor.
-     * @param Container $container
-     * @param ModelPerson $person
+     * @param YearCalculator $yearCalculator
+     * @return void
      */
-    public function __construct(Container $container, ModelPerson $person) {
-        parent::__construct($container);
-        $this->person = $person;
-        $this->yearCalculator = $container->getByType(YearCalculator::class);
+    public function injectYearCalculator(YearCalculator $yearCalculator) {
+        $this->yearCalculator = $yearCalculator;
     }
 
     private function eventToArray(ModelEvent $event): array {
@@ -49,17 +41,18 @@ class TimelineControl extends ReactComponent {
     }
 
     /**
+     * @param ModelPerson $person
      * @return \array[][]
      * @throws \Exception
      */
-    private function calculateData() {
+    private function calculateData(ModelPerson $person) {
 
         $dates = [
             'since' => [],
-            'until' => []
+            'until' => [],
         ];
         $orgs = [];
-        foreach ($this->person->getOrgs() as $row) {
+        foreach ($person->getOrgs() as $row) {
             $org = ModelOrg::createFromActiveRow($row);
             $since = new \DateTime($this->yearCalculator->getAcademicYear($org->getContest(), $org->since) . '-' . YearCalculator::FIRST_AC_MONTH . '-1');
             $until = new \DateTime();
@@ -74,7 +67,7 @@ class TimelineControl extends ReactComponent {
             ]];
         }
         $contestants = [];
-        foreach ($this->person->getContestants() as $row) {
+        foreach ($person->getContestants() as $row) {
             $contestant = ModelContestant::createFromActiveRow($row);
             $year = $this->yearCalculator->getAcademicYear($contestant->getContest(), $contestant->year);
 
@@ -96,26 +89,22 @@ class TimelineControl extends ReactComponent {
         ]];
     }
 
-    /**
-     * @return array
-     * TODO better PHPDoc
-     */
-    private function calculateEvents(): array {
+    private function calculateEvents(ModelPerson $person): array {
         $events = [];
         $eventParticipants = [];
-        foreach ($this->person->getEventParticipant() as $row) {
+        foreach ($person->getEventParticipant() as $row) {
             $participant = ModelEventParticipant::createFromActiveRow($row);
             $events[] = $participant->getEvent();
             $eventParticipants[] = ['event' => $this->eventToArray($participant->getEvent()), 'model' => null];
         }
         $eventOrgs = [];
-        foreach ($this->person->getEventOrg() as $row) {
+        foreach ($person->getEventOrg() as $row) {
             $eventOrg = ModelEventOrg::createFromActiveRow($row);
             $events[] = $eventOrg->getEvent();
             $eventOrgs[] = ['event' => $this->eventToArray($eventOrg->getEvent()), 'model' => null];
         }
         $eventTeachers = [];
-        foreach ($this->person->getEventTeacher() as $row) {
+        foreach ($person->getEventTeacher() as $row) {
             $team = ModelFyziklaniTeam::createFromActiveRow($row);
             $eventTeachers[] = ['event' => $this->eventToArray($team->getEvent()), 'model' => null];
             $events[] = $team->getEvent();
@@ -129,13 +118,13 @@ class TimelineControl extends ReactComponent {
     }
 
     /**
-     * @param ModelEvent[] $events
-     * @param \DateTime[][] $dates
-     * @return \DateTime[]
-     * @throws \Exception
+     * @param ModelPerson $person
+     * @param array $events
+     * @param array $dates
+     * @return \DateTimeInterface[]
      */
-    private function calculateFirstAndLast(array $events, array $dates): array {
-        $first = $this->person->created;
+    private function calculateFirstAndLast(ModelPerson $person, array $events, array $dates): array {
+        $first = $person->created;
         $last = new \DateTime();
         foreach ($events as $event) {
             $begin = $event->begin;
@@ -166,18 +155,20 @@ class TimelineControl extends ReactComponent {
         return [$first, $last];
     }
 
-    protected function getReactId(): string {
+    protected function getReactId(...$args): string {
         return 'person.detail.timeline';
     }
 
     /**
+     * @param mixed ...$args
      * @return string
      * @throws \Exception
      */
-    public function getData(): string {
-        list($events, $calculatedEvents) = $this->calculateEvents();
-        list($dates, $longTimeEvents) = $this->calculateData();
-        list($first, $last) = $this->calculateFirstAndLast($events, $dates);
+    public function getData(...$args): string {
+        list($person) = $args;
+        list($events, $calculatedEvents) = $this->calculateEvents($person);
+        list($dates, $longTimeEvents) = $this->calculateData($person);
+        list($first, $last) = $this->calculateFirstAndLast($person, $events, $dates);
 
         $data = [
             'scale' => [

@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\StoredQuery\StoredQuery;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTagType;
@@ -14,8 +15,8 @@ use Nette\Utils\Html;
  */
 class TagsRow extends AbstractColumnFactory {
 
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
     }
 
     public function getTitle(): string {
@@ -34,7 +35,7 @@ class TagsRow extends AbstractColumnFactory {
             $baseEl->addHtml(Html::el('span')
                 ->addAttributes([
                     'class' => 'badge stored-query-tag stored-query-tag-' . $tag->color,
-                    'title' => $tag->description
+                    'title' => $tag->description,
                 ])
                 ->addText($tag->name));
         }

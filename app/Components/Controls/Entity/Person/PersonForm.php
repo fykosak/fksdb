@@ -59,20 +59,12 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
     /**
      * AbstractPersonFormControl constructor.
      * @param Container $container
-     * @param FieldLevelPermission $userPermission is required to model editing, otherwise is seted to 2048,2048
+     * @param int $userPermission is required to model editing, otherwise is setted to 2048
      * @param bool $create
      */
-    public function __construct(Container $container, bool $create, FieldLevelPermission $userPermission = null) {
+    public function __construct(Container $container, bool $create, int $userPermission) {
         parent::__construct($container, $create);
-        if (is_null($userPermission)) {
-            if ($create) {
-                $this->userPermission = new FieldLevelPermission(2048, 2048);
-            } else {
-                throw new InvalidArgumentException();
-            }
-        } else {
-            $this->userPermission = $userPermission;
-        }
+        $this->userPermission = new FieldLevelPermission($userPermission, $userPermission);
     }
 
     /**

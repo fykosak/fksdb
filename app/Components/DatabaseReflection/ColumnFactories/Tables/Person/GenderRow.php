@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\Person;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Forms\Controls\BaseControl;
@@ -19,8 +20,8 @@ class GenderRow extends AbstractColumnFactory {
         return _('Gender');
     }
 
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_ALLOW_FULL;
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission(self::PERMISSION_ALLOW_FULL, self::PERMISSION_ALLOW_FULL);
     }
 
     /**

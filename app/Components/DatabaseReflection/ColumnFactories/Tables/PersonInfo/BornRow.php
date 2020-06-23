@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\DatePrinter;
 use FKSDB\Components\Forms\Controls\WriteOnlyDatePicker;
 use FKSDB\ORM\AbstractModelSingle;
@@ -31,8 +32,8 @@ class BornRow extends AbstractColumnFactory {
         return $control;
     }
 
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_ALLOW_FULL;
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission(self::PERMISSION_ALLOW_FULL, self::PERMISSION_ALLOW_FULL);
     }
 
     /**

@@ -41,9 +41,9 @@ abstract class DefaultColumnFactory extends AbstractColumnFactory {
      */
     private $omitInputField = false;
     /**
-     * @var int
+     * @var FieldLevelPermission
      */
-    private $permissionValue = self::PERMISSION_USE_GLOBAL_ACL;
+    private $permission;
     /**
      * @var MetaDataFactory
      */
@@ -55,6 +55,7 @@ abstract class DefaultColumnFactory extends AbstractColumnFactory {
      */
     public function __construct(MetaDataFactory $metaDataFactory) {
         $this->metaDataFactory = $metaDataFactory;
+        $this->permission = new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
     }
 
     /**
@@ -92,11 +93,15 @@ abstract class DefaultColumnFactory extends AbstractColumnFactory {
     }
 
     /**
-     * @param string $value
+     * @param array $values
      * @return void
      */
-    final public function setPermissionValue(string $value) {
-        $this->permissionValue = constant(self::class . '::' . $value);
+    final public function setPermissionValue(array $values) {
+        $this->permission = new FieldLevelPermission(
+            constant(self::class . '::PERMISSION_ALLOW_' . $values['read']),
+            constant(self::class . '::PERMISSION_ALLOW_' . $values['write'])
+        );
+
     }
 
     /**
@@ -116,7 +121,7 @@ abstract class DefaultColumnFactory extends AbstractColumnFactory {
     }
 
     final public function getPermission(): FieldLevelPermission {
-        return new FieldLevelPermission($this->permissionValue, $this->permissionValue);
+        return $this->permission;
     }
 
     final public function getTitle(): string {

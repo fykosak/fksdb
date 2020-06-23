@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\ReferencedRows;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
@@ -11,13 +12,13 @@ use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
 
 /**
- * Class PersonNameRowFactory
- * *
+ * Class PersonNameRow
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonNameRow extends AbstractColumnFactory {
 
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
     }
 
     public function getTitle(): string {

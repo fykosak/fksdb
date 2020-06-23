@@ -2,11 +2,12 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * Class Address
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Address extends AbstractStalkingComponent {
     /**
@@ -25,10 +26,7 @@ class Address extends AbstractStalkingComponent {
         return _('Address');
     }
 
-    /**
-     * @return string[]
-     */
-    protected function getAllowedPermissions(): array {
-        return [self::PERMISSION_FULL, self::PERMISSION_RESTRICT];
+    protected function getMinimalPermissions(): int {
+        return FieldLevelPermission::ALLOW_RESTRICT;
     }
 }

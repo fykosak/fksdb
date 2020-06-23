@@ -61,7 +61,7 @@ trait ReactField {
         $this->actions[$key] = $destination;
     }
 
-    abstract protected function getReactId(): string;
+    abstract protected function getReactId(...$args): string;
 
-    abstract public function getData(): string;
+    abstract public function getData(...$args): string;
 }

@@ -3,11 +3,12 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * Class Schedule
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Schedule extends AbstractStalkingComponent {
     /**
@@ -22,11 +23,8 @@ class Schedule extends AbstractStalkingComponent {
         $this->template->render();
     }
 
-    /**
-     * @return int[]
-     */
-    protected function getAllowedPermissions(): array {
-        return [self::PERMISSION_FULL, self::PERMISSION_RESTRICT];
+    protected function getMinimalPermissions(): int {
+        return FieldLevelPermission::ALLOW_RESTRICT;
     }
 
     protected function getHeadline(): string {

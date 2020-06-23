@@ -2,17 +2,20 @@
 
 namespace FKSDB\Components\DatabaseReflection\Event;
 
-use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
+use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\DatabaseReflection\OmittedControlException;
+use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
+use FKSDB\ORM\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
+use Nette\Utils\Html;
 
 /**
  * Class EventYearRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class EventYearRow extends AbstractEventRowFactory {
-    use DefaultPrinterTrait;
+class EventYearRow extends AbstractColumnFactory {
 
     public function getTitle(): string {
         return _('Event year');
@@ -33,5 +36,12 @@ class EventYearRow extends AbstractEventRowFactory {
 
     protected function getModelAccessKey(): string {
         return 'event_year';
+    }
+
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
+    }
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
+        return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }
 }

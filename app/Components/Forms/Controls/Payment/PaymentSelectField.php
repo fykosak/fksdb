@@ -79,7 +79,7 @@ class PaymentSelectField extends TextInput {
         return \json_encode($items);
     }
 
-    protected function getReactId(): string {
+    protected function getReactId(...$args): string {
         return 'payment.schedule-select';
     }
 }

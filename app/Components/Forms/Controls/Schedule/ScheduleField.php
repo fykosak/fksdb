@@ -83,7 +83,7 @@ class ScheduleField extends TextInput {
         }
     }
 
-    protected function getReactId(): string {
+    protected function getReactId(...$args): string {
         return 'event.schedule.' . $this->type;
     }
 
@@ -91,7 +91,7 @@ class ScheduleField extends TextInput {
      * @return string
      * @throws Exception
      */
-    public function getData(): string {
+    public function getData(...$args): string {
         $groups = $this->event->getScheduleGroups()->where('schedule_group_type', $this->type);
         $groupList = [];
         foreach ($groups as $row) {

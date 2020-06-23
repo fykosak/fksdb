@@ -3,17 +3,19 @@
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
-use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
+use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
+use FKSDB\ORM\AbstractModelSingle;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
+use Nette\Utils\Html;
 
 /**
- * Class AccountField
- * *
+ * Class AccountRow
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class AccountRow extends AbstractColumnFactory {
-    use DefaultPrinterTrait;
 
     public function getTitle(): string {
         return _('Bank account');
@@ -28,11 +30,15 @@ class AccountRow extends AbstractColumnFactory {
         return $control;
     }
 
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_ALLOW_FULL;
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission(self::PERMISSION_ALLOW_FULL, self::PERMISSION_ALLOW_FULL);
     }
 
     protected function getModelAccessKey(): string {
         return 'account';
+    }
+
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
+        return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }
 }

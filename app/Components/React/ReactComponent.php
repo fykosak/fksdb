@@ -39,11 +39,11 @@ abstract class ReactComponent extends BaseComponent {
     /**
      * @throws JsonException
      */
-    final public function render() {
+    final public function render(...$args) {
         $this->configure();
-        $this->template->reactId = $this->getReactId();
+        $this->template->reactId = $this->getReactId(...$args);
         $this->template->actions = Json::encode($this->actions);
-        $this->template->data = $this->getData();
+        $this->template->data = $this->getData(...$args);
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ReactComponent.latte');
         $this->template->render();
     }

@@ -2,14 +2,14 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\DataTesting\DataTestingFactory;
-use Nette\DI\Container;
 
 /**
- * Class StalkingValidation
- * *
+ * Class Validation
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Validation extends AbstractStalkingComponent {
     /**
@@ -18,23 +18,19 @@ class Validation extends AbstractStalkingComponent {
     private $validationFactory;
 
     /**
-     * Validation constructor.
-     * @param Container $container
+     * @param DataTestingFactory $factory
+     * @return void
      */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->validationFactory = $container->getByType(DataTestingFactory::class);
+    public function injectDataTestingFactory(DataTestingFactory $factory) {
+        $this->validationFactory = $factory;
     }
 
     protected function getHeadline(): string {
         return _('Validation');
     }
 
-    /**
-     * @return int[]
-     */
-    protected function getAllowedPermissions(): array {
-        return [self::PERMISSION_RESTRICT, self::PERMISSION_FULL, self::PERMISSION_FULL];
+    protected function getMinimalPermissions(): int {
+        return FieldLevelPermission::ALLOW_RESTRICT;
     }
 
     /**
