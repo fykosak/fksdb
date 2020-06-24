@@ -5,7 +5,7 @@
         {control stalkingComponent "academic_degree", $person, $userPermissions}
         {control stalkingComponent "login", $person, $userPermissions}
         {control stalkingComponent "person_history", $person, $userPermissions}
-        {control flag, $person, $userPermissions}
+        {control flag $person, $userPermissions}
     </div>
 {/define}
 
@@ -13,7 +13,7 @@
     <div class="card-columns mt-3">
         {control stalkingComponent "contact_info", $person, $userPermissions}
         {control stalkingComponent "contact_parents", $person, $userPermissions}
-        {control address, $person, $userPermissions}
+        {control address $person, $userPermissions}
     </div>
 {/define}
 
@@ -21,7 +21,7 @@
     <div class="card-columns mt-3">
         {control stalkingComponent "contestant_base", $person, $userPermissions}
         {control stalkingComponent "org", $person, $userPermissions}
-        {control role, $person, $userPermissions}
+        {control role $person, $userPermissions}
         {control stalkingComponent "task_contribution", $person, $userPermissions}
     </div>
 {/define}

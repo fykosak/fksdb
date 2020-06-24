@@ -32,7 +32,7 @@ class StoredQueryComponent extends BaseComponent {
      * @persistent
      * @var array
      */
-    public $parameters;
+    public $parameters = [];
 
     /**
      * @var StoredQuery
