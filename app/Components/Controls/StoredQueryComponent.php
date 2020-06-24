@@ -66,16 +66,12 @@ class StoredQueryComponent extends BaseComponent {
     private $showParametrize = true;
 
     /**
-     * StoredQueryComponent constructor.
-     * @param StoredQuery $storedQuery
      * @param ContestAuthorizator $contestAuthorizator
      * @param StoredQueryFactory $storedQueryFormFactory
      * @param ExportFormatFactory $exportFormatFactory
-     * @param Container $container
+     * @return void
      */
-    public function __construct(StoredQuery $storedQuery, ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory, Container $container) {
-        parent::__construct($container);
-        $this->storedQuery = $storedQuery;
+    public function injectPrimary(ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory) {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->storedQueryFormFactory = $storedQueryFormFactory;
         $this->exportFormatFactory = $exportFormatFactory;
@@ -94,6 +90,14 @@ class StoredQueryComponent extends BaseComponent {
      */
     public function setShowParametrize($showParametrize) {
         $this->showParametrize = $showParametrize;
+    }
+
+    /**
+     * @param StoredQuery $query
+     * @return void
+     */
+    public function setStoredQuery(StoredQuery $query) {
+        $this->storedQuery = $query;
     }
 
     /**

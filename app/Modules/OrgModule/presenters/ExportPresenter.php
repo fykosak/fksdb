@@ -3,7 +3,6 @@
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
-use Exports\ExportFormatFactory;
 use Exports\StoredQuery;
 use Exports\StoredQueryFactory;
 use FKSDB\Components\Controls\ContestChooser;
@@ -76,11 +75,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      * @var StoredQueryFactory
      */
     private $storedQueryFactory;
-
-    /**
-     * @var ExportFormatFactory
-     */
-    private $exportFormatFactory;
     /**
      * @var StoredQuery
      */
@@ -129,14 +123,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      */
     public function injectStoredQueryFactory(StoredQueryFactory $storedQueryFactory) {
         $this->storedQueryFactory = $storedQueryFactory;
-    }
-
-    /**
-     * @param ExportFormatFactory $exportFormatFactory
-     * @return void
-     */
-    public function injectExportFormatFactory(ExportFormatFactory $exportFormatFactory) {
-        $this->exportFormatFactory = $exportFormatFactory;
     }
 
     protected function startup() {
@@ -456,8 +442,9 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         if ($storedQuery === null) { // workaround when session expires and persistent parameters from component are to be stored (because of redirect)
             return null;
         }
-        $grid = new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory, $this->exportFormatFactory, $this->getContext());
+        $grid = new StoredQueryComponent($this->getContext());
         $grid->setShowParametrize(false);
+        $grid->setStoredQuery($storedQuery);
         return $grid;
     }
 
@@ -470,7 +457,9 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         if ($storedQuery === null) { // workaround when session expires and persistent parameters from component are to be stored (because of redirect)
             return null;
         }
-        return new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory, $this->exportFormatFactory, $this->getContext());
+        $control = new StoredQueryComponent($this->getContext());
+        $control->setStoredQuery($storedQuery);
+        return $control;
     }
 
     protected function createComponentTagCloudList(): StoredQueryTagCloud {

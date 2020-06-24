@@ -2,13 +2,16 @@
 
 namespace FKSDB\Components\Controls\Entity\StoredQuery;
 
+use Exports\StoredQueryFactory;
 use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
-use FKSDB\Components\Forms\Factories\StoredQueryFactory;
+use FKSDB\Components\Controls\StoredQueryComponent;
+use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\Messages\Message;
 use FKSDB\Modules\OrgModule\BasePresenter;
+use FKSDB\Modules\OrgModule\StoredQueryPresenter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
@@ -22,12 +25,17 @@ use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Tracy\Debugger;
 
+/**
+ * Class StoredQueryForm
+ * @author Michal Červeňák <miso@fykos.cz>
+ * @method StoredQueryPresenter getPresenter($throw = true)
+ */
 class StoredQueryForm extends AbstractEntityFormControl implements IEditEntityForm {
     const CONT_CONSOLE = 'console';
     const CONT_PARAMS_META = 'paramsMeta';
     const CONT_META = 'meta';
 
-    /** @var StoredQueryFactory */
+    /** @var StoredQueryFormFactory */
     private $storedQueryFormFactory;
     /** @var ServiceStoredQuery */
     private $serviceStoredQuery;
@@ -35,6 +43,8 @@ class StoredQueryForm extends AbstractEntityFormControl implements IEditEntityFo
     private $serviceStoredQueryTag;
     /** @var ServiceStoredQueryParameter */
     private $serviceStoredQueryParameter;
+    /** @var StoredQueryFactory */
+    private $storedQueryFactory;
 
     /** @var ModelStoredQuery */
     private $model;
@@ -56,22 +66,25 @@ class StoredQueryForm extends AbstractEntityFormControl implements IEditEntityFo
     }
 
     /**
-     * @param StoredQueryFactory $storedQueryFormFactory
+     * @param StoredQueryFormFactory $storedQueryFormFactory
      * @param ServiceStoredQuery $serviceStoredQuery
      * @param ServiceStoredQueryTag $serviceStoredQueryTag
      * @param ServiceStoredQueryParameter $serviceStoredQueryParameter
+     * @param StoredQueryFactory $storedQueryFactory
      * @return void
      */
     public function injectPrimary(
-        StoredQueryFactory $storedQueryFormFactory,
+        StoredQueryFormFactory $storedQueryFormFactory,
         ServiceStoredQuery $serviceStoredQuery,
         ServiceStoredQueryTag $serviceStoredQueryTag,
-        ServiceStoredQueryParameter $serviceStoredQueryParameter
+        ServiceStoredQueryParameter $serviceStoredQueryParameter,
+        StoredQueryFactory $storedQueryFactory
     ) {
         $this->storedQueryFormFactory = $storedQueryFormFactory;
         $this->serviceStoredQuery = $serviceStoredQuery;
         $this->serviceStoredQueryTag = $serviceStoredQueryTag;
         $this->serviceStoredQueryParameter = $serviceStoredQueryParameter;
+        $this->storedQueryFactory = $storedQueryFactory;
     }
 
     /**
@@ -95,7 +108,7 @@ class StoredQueryForm extends AbstractEntityFormControl implements IEditEntityFo
             ->setValidationScope(false);
         $submit->getControlPrototype()->addAttributes(['class' => 'btn-success']);
         $submit->onClick[] = function (SubmitButton $button) {
-            // $this->handleComposeExecute($button);
+            $this->handleComposeExecute($button->getForm());
         };
     }
 
@@ -106,7 +119,7 @@ class StoredQueryForm extends AbstractEntityFormControl implements IEditEntityFo
      * @throws BadRequestException
      */
     private function handleEditSuccess(Form $form) {
-        $this->handleSave($form, false);
+        $this->handleSave($form);
         $this->getPresenter()->flashMessage(_('Query has been edited'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
@@ -118,25 +131,24 @@ class StoredQueryForm extends AbstractEntityFormControl implements IEditEntityFo
      * @throws BadRequestException
      */
     private function handleCreateSuccess(Form $form) {
-        $this->handleSave($form, true);
+        $this->handleSave($form);
         $this->getPresenter()->flashMessage(_('Query has been created'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 
     /**
      * @param Form $form
-     * @param bool $create
      * @return void
      * @throws BadRequestException TODO is still throw?
      */
-    private function handleSave(Form $form, bool $create) {
+    private function handleSave(Form $form) {
         $values = FormUtils::emptyStrToNull($form->getValues(), true);
         $connection = $this->serviceStoredQuery->getConnection();
         $connection->beginTransaction();
 
         $data = array_merge($values[self::CONT_CONSOLE], $values[self::CONT_META]);
 
-        if ($create) {
+        if ($this->create) {
             $model = $this->serviceStoredQuery->createNewModel($data);
         } else {
             $model = $this->model;
@@ -208,4 +220,44 @@ class StoredQueryForm extends AbstractEntityFormControl implements IEditEntityFo
         }
         $this->getForm()->setDefaults($values);
     }
+
+    protected function createComponentQueryResultsComponent(): StoredQueryComponent {
+        $grid = new StoredQueryComponent($this->getContext());
+        $grid->setShowParametrize(false);
+        return $grid;
+    }
+
+    /**
+     * @param Form $form
+     * @return void
+     * @throws BadRequestException
+     * TODO refactoring
+     */
+    private function handleComposeExecute(Form $form) {
+        $data = $form->getValues(true);
+        $parameters = [];
+        foreach ($data[self::CONT_PARAMS_META] as $paramMetaData) {
+            /** @var ModelStoredQueryParameter $parameter */
+            $parameter = $this->serviceStoredQueryParameter->createNew($paramMetaData);
+            $parameter->setDefaultValue($paramMetaData['default']);
+            $parameters[] = $parameter;
+        }
+        $query = $this->storedQueryFactory->createQueryFromSQL(
+            $this->getPresenter(),
+            $data[self::CONT_CONSOLE]['sql'],
+            $parameters
+        );
+        /** @var StoredQueryComponent $control */
+        $control = $this->getComponent('queryResultsComponent');
+        $control->setStoredQuery($query);
+    }
+
+    /**
+     * @return void
+     */
+    public function render() {
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
+        $this->template->render();
+    }
+
 }
