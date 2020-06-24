@@ -14,6 +14,7 @@ use Nette\Utils\Html;
 /**
  * Class AccountRow
  * @author Michal Červeňák <miso@fykos.cz>
+ * TODO to neon
  */
 class AccountRow extends AbstractColumnFactory {
 

@@ -5,6 +5,7 @@ namespace FKSDB\Components\DatabaseReflection\PersonHistory;
 use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPersonHistory;
@@ -38,12 +39,7 @@ class SchoolIdRow extends AbstractColumnFactory {
         return Html::el('span')->addText($model->getSchool()->name_abbrev);
     }
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     * @throws BadRequestException
-     */
     public function createField(...$args): BaseControl {
-        throw new NotImplementedException();
+        throw new OmittedControlException();
     }
 }

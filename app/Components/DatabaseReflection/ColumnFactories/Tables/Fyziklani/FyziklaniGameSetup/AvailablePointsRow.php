@@ -37,11 +37,7 @@ class AvailablePointsRow extends AbstractColumnFactory {
     public function getPermission(): FieldLevelPermission {
         return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
     }
-    /**
-     * @param mixed ...$args
-     * @return BaseControl
-     * @throws OmittedControlException
-     */
+
     public function createField(...$args): BaseControl {
         throw new OmittedControlException();
     }

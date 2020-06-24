@@ -35,7 +35,7 @@ final class TableReflectionFactory {
      * @throws BadTypeException
      * @throws MissingServiceException
      */
-    public function loadRowFactory(string $factoryName): IColumnFactory {
+    public function loadColumnFactory(string $factoryName): IColumnFactory {
         $service = $this->container->getService('DBReflection.' . $factoryName);
         if (!$service instanceof IColumnFactory) {
             throw new BadTypeException(IColumnFactory::class, $service);

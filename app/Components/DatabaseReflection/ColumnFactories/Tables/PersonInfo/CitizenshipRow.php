@@ -46,10 +46,7 @@ class CitizenshipRow extends AbstractColumnFactory {
         return $control;
     }
 
-    /**
-     * @return array
-     */
-    private function getCountries() {
+    private function getCountries(): array {
         $countries = $this->serviceRegion->getCountries();
         $results = [];
         /** @var ModelRegion $country */

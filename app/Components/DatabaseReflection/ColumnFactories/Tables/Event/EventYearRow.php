@@ -4,7 +4,6 @@ namespace FKSDB\Components\DatabaseReflection\Event;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
-use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
@@ -21,11 +20,6 @@ class EventYearRow extends AbstractColumnFactory {
         return _('Event year');
     }
 
-    /**
-     * @param mixed ...$args
-     * @return BaseControl
-     * @throws OmittedControlException
-     */
     public function createField(...$args): BaseControl {
         $control = parent::createField($args);
         $control->addRule(Form::INTEGER, _('%label musí být číslo.'))

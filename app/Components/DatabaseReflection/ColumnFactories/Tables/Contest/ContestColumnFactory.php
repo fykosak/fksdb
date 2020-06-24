@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\DatabaseReflection\ReferencedRows;
+namespace FKSDB\Components\DatabaseReflection\Contest;
 
 use FKSDB\Components\Controls\Badges\ContestBadge;
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
@@ -13,7 +13,7 @@ use Nette\Utils\Html;
  * Class ContestRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class ContestRow extends AbstractColumnFactory {
+class ContestColumnFactory extends AbstractColumnFactory {
 
     /**
      * @param AbstractModelSingle|ModelContest $model

@@ -12,8 +12,8 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
 /**
- * Class BornField
- * *
+ * Class BornRow
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class BornRow extends AbstractColumnFactory {
 

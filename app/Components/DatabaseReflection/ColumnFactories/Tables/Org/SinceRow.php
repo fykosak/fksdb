@@ -18,11 +18,6 @@ class SinceRow extends AbstractOrgRowFactory {
         return _('Since');
     }
 
-    /**
-     * @param mixed ...$args
-     * @return BaseControl
-     * @throws OmittedControlException
-     */
     public function createField(...$args): BaseControl {
         list($min, $max) = $args;
         if (\is_null($max) || \is_null($min)) {

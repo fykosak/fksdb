@@ -35,7 +35,7 @@ use Tracy\Debugger;
 
 /**
  * Class ExportPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     use SeriesPresenterTrait;

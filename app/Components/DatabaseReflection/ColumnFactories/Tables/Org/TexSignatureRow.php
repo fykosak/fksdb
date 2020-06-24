@@ -23,10 +23,6 @@ class TexSignatureRow extends AbstractOrgRowFactory {
         return 'tex_signature';
     }
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     */
     public function createField(...$args): BaseControl {
         $control = new TextInput($this->getTitle());
 

@@ -4,6 +4,7 @@ namespace FKSDB\Components\DatabaseReflection\Payment;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use Nette\Forms\Controls\BaseControl;
 use FKSDB\Exceptions\NotImplementedException;
 
@@ -11,14 +12,10 @@ use FKSDB\Exceptions\NotImplementedException;
  * Class AbstractPaymentRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class AbstractPaymentRow extends AbstractColumnFactory {
-    /**
-     * @param array $args
-     * @return BaseControl
-     * @throws NotImplementedException
-     */
+abstract class AbstractPaymentFactory extends AbstractColumnFactory {
+
     public function createField(...$args): BaseControl {
-        throw new NotImplementedException();
+        throw new OmittedControlException();
     }
 
     public function getPermission(): FieldLevelPermission {

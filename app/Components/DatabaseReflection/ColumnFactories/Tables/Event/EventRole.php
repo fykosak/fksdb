@@ -73,11 +73,6 @@ class EventRole extends AbstractColumnFactory {
         return _('Event role');
     }
 
-    /**
-     * @param mixed ...$args
-     * @return BaseControl
-     * @throws AbstractColumnException
-     */
     public function createField(...$args): BaseControl {
         throw new AbstractColumnException();
     }

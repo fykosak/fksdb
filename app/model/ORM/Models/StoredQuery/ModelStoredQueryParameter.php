@@ -55,6 +55,27 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
     }
 
     /**
+     * @param string $type
+     * @param $value
+     * @return void
+     */
+    public static function setInferDefaultValue(string $type, $value): array {
+        $data = [];
+        switch ($type) {
+            case self::TYPE_INT:
+            case self::TYPE_BOOL:
+                $data['default_integer'] = (int)$value;
+                break;
+            case self::TYPE_STRING:
+                $data['default_string'] = $value;
+                break;
+            default:
+                throw new InvalidStateException("Unsupported parameter type '{$type}'.");
+        }
+        return $data;
+    }
+
+    /**
      * @return int
      * @throws InvalidStateException
      */

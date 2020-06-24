@@ -12,17 +12,12 @@ use Nette\Utils\Html;
  * Class IdRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class UIdRow extends AbstractPaymentRow {
+class UIdRow extends AbstractPaymentFactory {
 
     public function getTitle(): string {
         return _('Payment UId');
     }
 
-    /**
-     * @param mixed ...$args
-     * @return BaseControl
-     * @throws AbstractColumnException
-     */
     public function createField(...$args): BaseControl {
         throw new AbstractColumnException();
     }

@@ -1,0 +1,13 @@
+{layout './layout.latte'}
+{define content}
+    <li class="list-group-item">
+        <div class="row">
+            <b class="col-6">{$title}
+                {include #description}
+            </b>
+            <span class="col-6">
+                {$html}
+            </span>
+        </div>
+    </li>
+{/define}

@@ -1,20 +1,20 @@
 <?php
 
-namespace FKSDB\Components\DatabaseReflection\ReferencedRows;
+namespace FKSDB\Components\DatabaseReflection\Person;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
+use FKSDB\Components\DatabaseReflection\ValuePrinters\PersonLink;
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\LinkGenerator;
-use FKSDB\ORM\Models\ModelEvent;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
 
 /**
- * Class EventLink
+ * Class PersonLinkRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class EventLink extends AbstractColumnFactory {
+class PersonLinkRow extends AbstractColumnFactory {
     /**
      * @var LinkGenerator
      */
@@ -33,17 +33,14 @@ class EventLink extends AbstractColumnFactory {
     }
 
     public function getTitle(): string {
-        return _('Event');
+        return _('Person');
     }
 
     /**
-     * @param ModelEvent|AbstractModelSingle $model
+     * @param AbstractModelSingle|ModelPerson $model
      * @return Html
-     * @throws InvalidLinkException
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return Html::el('a')->addAttributes(['href' => $this->presenterComponent->link(
-            'Event:Dashboard:default', ['eventId' => $model->event_id]
-        )])->addText($model->name);
+        return (new PersonLink($this->presenterComponent))($model);
     }
 }

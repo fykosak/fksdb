@@ -101,7 +101,6 @@ abstract class DefaultColumnFactory extends AbstractColumnFactory {
             constant(self::class . '::PERMISSION_ALLOW_' . $values['read']),
             constant(self::class . '::PERMISSION_ALLOW_' . $values['write'])
         );
-
     }
 
     /**
@@ -132,7 +131,7 @@ abstract class DefaultColumnFactory extends AbstractColumnFactory {
      * @return string|null
      */
     final public function getDescription() {
-        return $this->description ? _($this->description) : '';
+        return $this->description ? _($this->description) : null;
     }
 
     final protected function getModelAccessKey(): string {
@@ -147,5 +146,10 @@ abstract class DefaultColumnFactory extends AbstractColumnFactory {
         return $this->metaData;
     }
 
+    /**
+     * @param mixed ...$args
+     * @return BaseControl
+     * @throws OmittedControlException
+     */
     abstract protected function createFormControl(...$args): BaseControl;
 }

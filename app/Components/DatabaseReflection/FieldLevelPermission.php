@@ -1,7 +1,10 @@
 <?php
 
 namespace FKSDB\Components\DatabaseReflection;
-
+/**
+ * Class FieldLevelPermission
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class FieldLevelPermission {
 
     const ALLOW_ANYBODY = 1;

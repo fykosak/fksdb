@@ -83,14 +83,14 @@ DBReflection:
                     omitInputField: true
                 event_type: FKSDB\Components\DatabaseReflection\Event\EventTypeRow
                 event_type_id: FKSDB\Components\DatabaseReflection\Event\EventTypeRow
-                event_link: FKSDB\Components\DatabaseReflection\ReferencedRows\EventLink
+                event_link: FKSDB\Components\DatabaseReflection\Event\EventLink
          payment:
              modelClassName: FKSDB\ORM\Models\ModelPayment
              referencedAccess:
                   modelClassName: FKSDB\ORM\Models\IPaymentReferencedModel
                   method: getPayment
              factories:
-                 payment: FKSDB\Components\DatabaseReflection\ReferencedRows\PaymentRow
+                 payment: FKSDB\Components\DatabaseReflection\Payment\PaymentColumnFactory
                  payment_uid: FKSDB\Components\DatabaseReflection\Payment\UIdRow
                  bank_account:
                     type: string
@@ -149,7 +149,7 @@ DBReflection:
                 modelClassName: FKSDB\ORM\Models\IPersonReferencedModel
                 method: getPerson
              factories:
-                person_link: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonLinkRow
+                person_link: FKSDB\Components\DatabaseReflection\Person\PersonLinkRow
                 full_name: FKSDB\Components\DatabaseReflection\Person\FullNameRow
                 person_id:
                     type: primaryKey
@@ -584,7 +584,7 @@ DBReflection:
                 modelClassName: FKSDB\ORM\Models\IContestReferencedModel
                 method: getContest
              factories:
-                  contestBadge: FKSDB\Components\DatabaseReflection\ReferencedRows\ContestRow
+                 contestBadge: FKSDB\Components\DatabaseReflection\Contest\ContestColumnFactory
          school:
              modelClassName: FKSDB\ORM\Models\ModelSchool
              referencedAccess:

@@ -21,10 +21,6 @@ class ImRow extends AbstractColumnFactory {
         return _('ICQ, Jabber, apod.');
     }
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     */
     public function createField(...$args): BaseControl {
         $control = new  WriteOnlyInput($this->getTitle());
         $control->addRule(Form::MAX_LENGTH, null, 32);

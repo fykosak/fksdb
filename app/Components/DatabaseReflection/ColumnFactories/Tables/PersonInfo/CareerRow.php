@@ -13,6 +13,7 @@ use Nette\Utils\Html;
 /**
  * Class CareerRow
  * @author Michal Červeňák <miso@fykos.cz>
+ * TODO to neon
  */
 class CareerRow extends AbstractColumnFactory {
 

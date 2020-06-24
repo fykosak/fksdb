@@ -1,19 +1,21 @@
 <?php
 
-namespace FKSDB\Components\DatabaseReflection\ReferencedRows;
+namespace FKSDB\Components\DatabaseReflection\Payment;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
+use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
 /**
- * Class PaymentRow
+ * Class Payment
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PaymentRow extends AbstractColumnFactory {
+class PaymentColumnFactory extends AbstractColumnFactory {
     /**
      * @var TableReflectionFactory
      */
@@ -28,13 +30,22 @@ class PaymentRow extends AbstractColumnFactory {
     }
 
     /**
+     * @param mixed ...$args
+     * @return BaseControl
+     * @throws AbstractColumnException
+     */
+    public function createField(...$args): BaseControl {
+        throw new AbstractColumnException();
+    }
+
+    /**
      * @param AbstractModelSingle $model
      * @return Html
      * @throws BadTypeException
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        $factory = $this->reflectionFactory->loadRowFactory('payment.state');
-        $html = $factory->createHtmlValue($model);
+        $factory = $this->reflectionFactory->loadColumnFactory('payment.state');
+        $html = $factory->renderValue($model, FieldLevelPermission::ALLOW_FULL);
         $text = $html->getText();
         $html->setText('#' . $model->getPaymentId() . ' - ' . $text);
         return $html;

@@ -4,6 +4,7 @@ namespace FKSDB\Components\DatabaseReflection\EventParticipant;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use Nette\Forms\Controls\BaseControl;
 use FKSDB\Exceptions\NotImplementedException;
 
@@ -13,13 +14,8 @@ use FKSDB\Exceptions\NotImplementedException;
  */
 abstract class AbstractParticipantRow extends AbstractColumnFactory {
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     * @throws NotImplementedException
-     */
     public function createField(...$args): BaseControl {
-        throw new NotImplementedException();
+        throw new OmittedControlException();
     }
 
     public function getPermission(): FieldLevelPermission {

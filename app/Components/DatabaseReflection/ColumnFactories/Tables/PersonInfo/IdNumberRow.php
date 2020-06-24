@@ -28,10 +28,6 @@ class IdNumberRow extends AbstractColumnFactory {
         return _('U cizinců číslo pasu.');
     }
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     */
     public function createField(...$args): BaseControl {
         $control = new WriteOnlyInput($this->getTitle());
         $control->setOption('description', $this->getDescription());

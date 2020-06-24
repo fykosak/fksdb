@@ -21,10 +21,6 @@ class HomepageRow extends AbstractColumnFactory {
         return _('Homepage');
     }
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     */
     public function createField(...$args): BaseControl {
         $control = new TextInput($this->getTitle());
         $control->addCondition(Form::FILLED)->addRule(Form::URL);

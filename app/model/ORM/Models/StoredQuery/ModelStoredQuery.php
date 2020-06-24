@@ -29,6 +29,8 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
      */
     private $postProcessing;
 
+    const RESOURCE_ID = 'storedQuery';
+
     /**
      * @param bool $outer
      * @return ModelStoredQueryParameter[]
@@ -96,6 +98,6 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
     }
 
     public function getResourceId(): string {
-        return 'storedQuery';
+        return self::RESOURCE_ID;
     }
 }

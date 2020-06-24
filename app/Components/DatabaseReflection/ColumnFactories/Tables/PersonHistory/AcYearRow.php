@@ -4,6 +4,7 @@ namespace FKSDB\Components\DatabaseReflection\PersonHistory;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\AbstractModelSingle;
@@ -25,13 +26,8 @@ class AcYearRow extends AbstractColumnFactory {
         return new FieldLevelPermission(self::PERMISSION_ALLOW_BASIC, self::PERMISSION_ALLOW_BASIC);
     }
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     * @throws BadRequestException
-     */
     public function createField(...$args): BaseControl {
-        throw new NotImplementedException();
+        throw new OmittedControlException();
     }
 
     protected function getModelAccessKey(): string {

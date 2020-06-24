@@ -46,10 +46,6 @@ class PhoneColumnFactory extends DefaultColumnFactory implements ITestedColumnFa
         $this->isWriteOnly = $isWriteOnly;
     }
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     */
     public function createFormControl(...$args): BaseControl {
         $control = null;
         if ($this->isWriteOnly) {

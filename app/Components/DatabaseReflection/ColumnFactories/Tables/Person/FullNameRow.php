@@ -17,7 +17,6 @@ use Nette\Utils\Html;
  */
 class FullNameRow extends AbstractColumnFactory {
 
-
     public function getPermission(): FieldLevelPermission {
         return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
     }

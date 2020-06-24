@@ -3,9 +3,9 @@
 namespace FKSDB\Components\DatabaseReflection\ColumnFactories;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
-use FKSDB\Exceptions\NotImplementedException;
 use Nette\Utils\Html;
 
 /**
@@ -42,12 +42,7 @@ class StateColumnFactory extends DefaultColumnFactory {
         return ['badge' => '', 'label' => ''];
     }
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     * @throws NotImplementedException
-     */
     public function createFormControl(...$args): BaseControl {
-        throw new NotImplementedException();
+        throw new OmittedControlException();
     }
 }

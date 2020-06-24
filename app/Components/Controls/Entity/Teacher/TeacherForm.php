@@ -15,9 +15,13 @@ use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
 use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
-use Nette\Application\UI\Form;
+use Nette\Forms\Form;
 use Tracy\Debugger;
 
+/**
+ * Class TeacherForm
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class TeacherForm extends AbstractEntityFormControl implements IEditEntityForm {
 
     use ReferencedPersonTrait;
