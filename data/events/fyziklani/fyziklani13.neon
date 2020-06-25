@@ -5,7 +5,7 @@ parameters:
             scheduleField:
                 label: _('Schedule')
                 description: _('Program počas víkendu po fyziklani. Podrobnosti nájdete <a href="http://fyziklani.cz/program">na špecialni strance</a>.')
-                factory: FKSDB\Components\Forms\Factories\Events\ScheduleFactory(%events.fyziklani13.schedule%, neg(state('__init')))
+                #factory: FKSDB\Components\Forms\Factories\Events\ScheduleFactory(%events.fyziklani13.schedule%, neg(state('__init')))
 
             gameLangs:
                 en: English

@@ -64,7 +64,7 @@ class AjaxUpload extends ReactComponent {
      * @param ModelContestant $contestant
      */
     public function __construct(Container $container, TypedTableSelection $availableTasks, ModelContestant $contestant) {
-        parent::__construct($container);
+        parent::__construct($container, 'public.ajax-upload');
         $this->availableTasks = $availableTasks;
         $this->contestant = $contestant;
     }
@@ -81,10 +81,11 @@ class AjaxUpload extends ReactComponent {
     }
 
     /**
+     * @param mixed ...$args
      * @return string
      * @throws InvalidLinkException
      */
-    public function getData(): string {
+    public function getData(...$args): string {
         $data = [];
         /**
          * @var ModelTask $task
@@ -167,10 +168,6 @@ class AjaxUpload extends ReactComponent {
         $logger = new MemoryLogger();
         $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $logger, $submitId);
         die();
-    }
-
-    protected function getReactId(): string {
-        return 'public.ajax-upload';
     }
 
     /**

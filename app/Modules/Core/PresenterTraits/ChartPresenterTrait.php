@@ -44,8 +44,8 @@ trait ChartPresenterTrait {
     }
 
     protected function selectChart() {
-        foreach ($this->getCharts() as $chart) {
-            if ($chart->getAction() === $this->getAction()) {
+        foreach ($this->getCharts() as $action => $chart) {
+            if ($action === $this->getAction()) {
                 $this->selectedChart = $chart;
                 $this->setView('chart');
             }
