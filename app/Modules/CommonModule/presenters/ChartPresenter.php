@@ -2,6 +2,7 @@
 
 namespace FKSDB\Modules\CommonModule;
 
+use FKSDB\Components\Controls\Chart\IChart;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
 use FKSDB\Components\Controls\Chart\TotalPersonsChartControl;
 
@@ -26,11 +27,11 @@ class ChartPresenter extends BasePresenter {
     }
 
     /**
-     * @return array|TotalPersonsChartControl[]
+     * @return IChart[]
      */
     protected function registerCharts(): array {
         return [
-            new TotalPersonsChartControl($this->getContext()),
+            'totalPersons' => new TotalPersonsChartControl($this->getContext()),
         ];
     }
 }

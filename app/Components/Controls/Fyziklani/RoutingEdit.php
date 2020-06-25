@@ -51,17 +51,18 @@ class RoutingEdit extends FyziklaniReactControl {
     }
 
     /**
+     * @param mixed ...$args
      * @return string
      * @throws JsonException
      */
-    public function getData(): string {
+    public function getData(...$args): string {
         return Json::encode([
             'teams' => $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent()),
             'rooms' => $this->getRooms(),
         ]);
     }
 
-    protected function getReactId(): string {
+    public function getReactId(...$args): string {
         return 'fyziklani.routing';
     }
 
