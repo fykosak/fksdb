@@ -2,12 +2,12 @@
 
 namespace FKSDB\Components\Forms\Controls\Payment;
 
-use Exception;
-use FKSDB\Components\React\ReactField;
+use FKSDB\Components\React\ReactComponentTrait;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
+use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\JsonException;
 
@@ -17,7 +17,7 @@ use Nette\Utils\JsonException;
  */
 class PaymentSelectField extends TextInput {
 
-    use ReactField;
+    use ReactComponentTrait;
 
     /**
      * @var ServicePersonSchedule
@@ -40,9 +40,10 @@ class PaymentSelectField extends TextInput {
      * PaymentSelectField constructor.
      * @param ServicePersonSchedule $servicePersonSchedule
      * @param ModelEvent $event
-     * @param string[] $groupTypes
+     * @param array $groupTypes
      * @param bool $showAll
      * @throws JsonException
+     * @throws BadRequestException
      */
     public function __construct(ServicePersonSchedule $servicePersonSchedule, ModelEvent $event, array $groupTypes, bool $showAll = true) {
         parent::__construct();

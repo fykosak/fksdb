@@ -4,7 +4,6 @@ namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
 use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
 use FKSDB\Fyziklani\NotSetGameParametersException;
-use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
@@ -14,7 +13,6 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\ArgumentOutOfRangeException;
-use Nette\DI\Container;
 use Nette\Http\Response;
 use Nette\Utils\DateTime;
 

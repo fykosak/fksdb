@@ -4,7 +4,6 @@ namespace FKSDB\Components\React;
 
 use FKSDB\Application\IJavaScriptCollector;
 use Nette\Application\BadRequestException;
-use Nette\ComponentModel\IComponent;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 use Nette\Utils\Json;
@@ -14,7 +13,7 @@ use Nette\Utils\JsonException;
  * Trait ReactField
  * @author Michal Červeňák <miso@fykos.cz>
  */
-trait ReactField {
+trait ReactComponentTrait {
     /**
      * @var string[]
      */
@@ -38,15 +37,16 @@ trait ReactField {
     }
 
     /**
+     * @param mixed ...$args
      * @throws JsonException
      * @throws BadRequestException
      * Can be used only with BaseControl
      */
-    protected function appendProperty() {
-        if(!$this instanceof BaseControl){
+    protected function appendProperty(...$args) {
+        if (!$this instanceof BaseControl) {
             throw new BadRequestException('method appendProperty can be used only with BaseControl');
         }
-        $this->appendPropertyTo($this->control);
+        $this->appendPropertyTo($this->control, ...$args);
     }
 
     /**

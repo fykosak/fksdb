@@ -74,10 +74,6 @@ class TeamApplicationsTimeProgress extends ReactComponent implements IChart {
         return Json::encode($data);
     }
 
-    public function getAction(): string {
-        return 'teamApplicationProgress';
-    }
-
     public function getTitle(): string {
         return 'Team applications time progress';
     }

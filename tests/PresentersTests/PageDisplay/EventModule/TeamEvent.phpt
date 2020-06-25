@@ -2,8 +2,6 @@
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay\EventModule;
 
-use FKSDB\ORM\DbNames;
-
 $container = require '../../../bootstrap.php';
 
 /**
@@ -25,6 +23,9 @@ class TeamEvent extends EventModuleTestCase {
     public function getPages(): array {
         return [
             ['Event:Chart', 'list'],
+            ['Event:Chart', 'participantAcquaintance'],
+            ['Event:Chart', 'singleApplicationProgress'],
+            ['Event:Chart', 'teamApplicationProgress'],
             ['Event:Dashboard', 'default'],
             ['Event:Dispatch', 'default'],
             ['Event:EventOrg', 'list'],

@@ -2,11 +2,12 @@
 
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
-use FKSDB\Components\React\ReactField;
+use FKSDB\Components\React\ReactComponentTrait;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
+use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\TextInput;
 use FKSDB\Exceptions\NotImplementedException;
 use Nette\Utils\JsonException;
@@ -17,7 +18,7 @@ use Nette\Utils\JsonException;
  */
 class ScheduleField extends TextInput {
 
-    use ReactField;
+    use ReactComponentTrait;
 
     /**
      * @var ModelEvent
@@ -39,6 +40,7 @@ class ScheduleField extends TextInput {
      * @param ServiceScheduleItem $serviceScheduleItem
      * @throws JsonException
      * @throws NotImplementedException
+     * @throws BadRequestException
      */
     public function __construct(ModelEvent $event, string $type, ServiceScheduleItem $serviceScheduleItem) {
         parent::__construct($this->getLabelByType($type));

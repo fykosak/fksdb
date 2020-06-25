@@ -16,7 +16,7 @@ use Nette\Utils\JsonException;
  */
 abstract class ReactComponent extends BaseComponent {
 
-    use ReactField;
+    use ReactComponentTrait;
 
     /**
      * ReactComponent constructor.

@@ -31,10 +31,6 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
         $this->event = $event;
     }
 
-    public function getAction(): string {
-        return 'participantAcquaintance';
-    }
-
     /**
      * @param mixed ...$args
      * @return string

@@ -40,9 +40,9 @@ class ChartPresenter extends BasePresenter {
      */
     protected function registerCharts(): array {
         return [
-            new ParticipantAcquaintanceChartControl($this->getContext(), $this->getEvent()),
-            new SingleApplicationsTimeProgress($this->getContext(), $this->getEvent()),
-            new TeamApplicationsTimeProgress($this->getContext(), $this->getEvent()),
+            'participantAcquaintance' => new ParticipantAcquaintanceChartControl($this->getContext(), $this->getEvent()),
+            'singleApplicationProgress' => new SingleApplicationsTimeProgress($this->getContext(), $this->getEvent()),
+            'teamApplicationProgress' => new TeamApplicationsTimeProgress($this->getContext(), $this->getEvent()),
         ];
     }
 

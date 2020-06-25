@@ -35,11 +35,6 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
     public function injectServicePerson(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
     }
-
-    public function getAction(): string {
-        return 'totalPersons';
-    }
-
     /**
      * @param mixed ...$args
      * @return string

@@ -82,10 +82,6 @@ class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
         return Json::encode($data);
     }
 
-    public function getAction(): string {
-        return 'singleApplicationProgress';
-    }
-
     public function getTitle(): string {
         return 'Applications time progress';
     }

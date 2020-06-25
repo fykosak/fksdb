@@ -29,6 +29,7 @@ class CommonModule extends AbstractPageDisplayTestCase {
 
         return [
             ['Common:Chart', 'list'],
+            ['Common:Chart', 'totalPersons'],
             ['Common:Dashboard', 'default'],
             ['Common:Deduplicate', 'person'],
             ['Common:Person', 'create'],
