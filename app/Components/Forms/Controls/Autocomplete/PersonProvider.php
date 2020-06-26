@@ -65,11 +65,7 @@ class PersonProvider implements IFilteredDataProvider {
         return $this->getItems();
     }
 
-    /**
-     * @param int $id
-     * @return string
-     */
-    public function getItemLabel($id): string {
+    public function getItemLabel(int $id): string {
         $person = $this->servicePerson->findByPrimary($id);
         return $person->getFullName();
     }
@@ -105,7 +101,7 @@ class PersonProvider implements IFilteredDataProvider {
     }
 
     /**
-     * @param $id
+     * @param mixed $id
      */
     public function setDefaultValue($id) {
         /* intentionally blank */

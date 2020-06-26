@@ -3,7 +3,8 @@
 namespace FKSDB\Components\Controls\Choosers;
 
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\LangPresenterTrait;
+use FKSDB\Modules\Core\BasePresenter;
+use FKSDB\Modules\Core\PresenterTraits\LangPresenterTrait;
 use FKSDB\UI\Title;
 use Nette\Application\UI\InvalidLinkException;
 
@@ -56,8 +57,8 @@ class LanguageChooser extends Chooser {
     public function getItems() {
         if (!count($this->supportedLanguages)) {
             $presenter = $this->getPresenter();
-            if (!$presenter instanceof \BasePresenter) {
-                throw new BadTypeException(\BasePresenter::class, $presenter);
+            if (!$presenter instanceof BasePresenter) {
+                throw new BadTypeException(BasePresenter::class, $presenter);
             }
             $this->supportedLanguages = $presenter->getTranslator()->getSupportedLanguages();
         }

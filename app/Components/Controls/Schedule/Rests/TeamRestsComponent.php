@@ -21,7 +21,7 @@ class TeamRestsComponent extends BaseComponent {
         $this->template->render();
     }
 
-    public function createComponentSingleRestControl(): SingleRestComponent {
+    protected function createComponentSingleRestControl(): SingleRestComponent {
         return new SingleRestComponent($this->getContext());
     }
 }

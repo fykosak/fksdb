@@ -21,5 +21,5 @@ interface IReferencedSetter {
      * @param string $mode
      * @return void
      */
-    public function setModel(ReferencedContainer $container, IModel $model = null, $mode = self::MODE_NORMAL);
+    public function setModel(ReferencedContainer $container, IModel $model = null, string $mode = self::MODE_NORMAL);
 }

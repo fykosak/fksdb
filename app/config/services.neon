@@ -18,8 +18,7 @@ services:
     - Authorization\RelatedPersonAuthorizator
     - FKSDB\Components\Events\ExpressionPrinter
     downloader: FKSDB\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
-    Facebook:
-        class: Facebook({appId: %facebook.appId%, secret: %facebook.secret%})
+    - Facebook({appId: %facebook.appId%, secret: %facebook.secret%})
     globalParameters: FKSDB\Config\GlobalParameters
     yearCalculator: FKSDB\YearCalculator
     news: News
@@ -46,6 +45,7 @@ services:
             - addProcessing(@PDFStamper)
     submitCorrectedStorage:
                     class: FKSDB\Submits\FileSystemStorage\CorrectedStorage(%corrected.root%, %corrected.directoryMask%, %corrected.filenameMask%, %contestMapping%)
+    - FKSDB\Submits\SubmitHandlerFactory
     - FKSDB\Components\Forms\Controls\Schedule\Handler
     PDFStamper: FKSDB\Submits\PDFStamper(%stamper.fontSize%)
     readOnlyConnection:
@@ -66,7 +66,12 @@ services:
         class: LoggingMailer(Nette\Mail\SendmailMailer())
         setup:
             - setLogPath(%logDir%/mail)
+
+    #- FKSDB\Events\EventDispatchFactory
+
     - FKSDB\DataTesting\DataTestingFactory
+   # - Nette\Bridges\ApplicationLatte\TemplateFactory
+
 
 
     #

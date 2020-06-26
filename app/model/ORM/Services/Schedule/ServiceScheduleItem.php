@@ -1,6 +1,5 @@
 <?php
 
-
 namespace FKSDB\ORM\Services\Schedule;
 
 use FKSDB\ORM\AbstractServiceSingle;
@@ -9,7 +8,7 @@ use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 
 /**
  * Class ServiceScheduleItem
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ServiceScheduleItem extends AbstractServiceSingle {
 

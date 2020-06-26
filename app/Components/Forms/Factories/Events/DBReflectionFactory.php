@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
+use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\Holder\Field;
-use FKSDB\Components\Forms\Controls\TimeBox;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\AbstractServiceSingle;
@@ -71,7 +71,7 @@ class DBReflectionFactory extends AbstractFactory {
                 $tableName = $service->getMainService()->getTable()->getName();
             }
             if ($tableName) {
-                $element = $this->tableReflectionFactory->loadService($tableName, $columnName)->createField();
+                $element = $this->tableReflectionFactory->loadRowFactory($tableName . '.' . $columnName)->createField();
             }
         } catch (\Exception $e) {
         }
@@ -88,12 +88,14 @@ class DBReflectionFactory extends AbstractFactory {
             } elseif (substr_compare($type, 'INT', '-3') == 0) {
                 $element = new TextInput($field->getLabel());
                 $element->addCondition(Form::FILLED)
-                    ->addRule(Form::INTEGER, _('%label musí být celé číslo.'))
-                    ->addRule(Form::MAX_LENGTH, null, $size);
+                    ->addRule(Form::INTEGER, _('%label musí být celé číslo.'));
+                if ($size) {
+                    $element->addRule(Form::MAX_LENGTH, null, $size);
+                }
             } elseif ($type == 'TEXT') {
                 $element = new TextArea($field->getLabel());
             } elseif ($type == 'TIME') {
-                $element = new TimeBox($field->getLabel());
+                $element = new TimeInput($field->getLabel());
             } else {
                 $element = new TextInput($field->getLabel());
                 if ($size) {
@@ -111,7 +113,7 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
     /**
-     * @param BaseControl $component
+     * @param IControl $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
@@ -128,7 +130,7 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
     /**
-     * @param BaseControl $component
+     * @param IControl $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container

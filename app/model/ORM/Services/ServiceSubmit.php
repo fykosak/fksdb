@@ -64,7 +64,7 @@ class ServiceSubmit extends AbstractServiceSingle {
      * @return array
      * @throws InvalidLinkException
      */
-    public function serializeSubmit($submit, ModelTask $task, Presenter $presenter): array {
+    public static function serializeSubmit($submit, ModelTask $task, Presenter $presenter): array {
         return [
             'submitId' => $submit ? $submit->submit_id : null,
             'name' => $task->getFQName(),

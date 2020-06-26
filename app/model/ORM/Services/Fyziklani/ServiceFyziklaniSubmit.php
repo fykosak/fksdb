@@ -79,7 +79,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
             /* ugly, force current timestamp in database
              * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
              */
-            'created' => null
+            'created' => null,
         ]);
         $this->logEvent($submit, $user, 'created', \sprintf(' points %d', $points));
 
@@ -102,7 +102,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
         if (!$submit->canChange()) {
             throw new ClosedSubmittingException($submit->getFyziklaniTeam());
         }
-        $submit->update([
+        $this->updateModel2($submit, [
             'points' => $points,
             /* ugly, exclude previous value of `modified` from query
              * so that `modified` is set automatically by DB
@@ -134,14 +134,14 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
         if (!$submit->canRevoke()) {
             throw new BadRequestException(_('Submit can\'t be revoked'));
         }
-        $submit->update([
+        $this->updateModel2($submit, [
             'points' => null,
             'state' => ModelFyziklaniSubmit::STATE_NOT_CHECKED,
             /* ugly, exclude previous value of `modified` from query
              * so that `modified` is set automatically by DB
              * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
              */
-            'modified' => null
+            'modified' => null,
         ]);
         $this->logEvent($submit, $user, 'revoked');
         return new Message(\sprintf(_('Submit %d has been revoked.'), $submit->fyziklani_submit_id), ILogger::SUCCESS);
@@ -162,7 +162,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
         if ($submit->points != $points) {
             throw new PointsMismatchException();
         }
-        $submit->update([
+        $this->updateModel2($submit, [
             'state' => ModelFyziklaniSubmit::STATE_CHECKED,
             /* ugly, exclude previous value of `modified` from query
              * so that `modified` is set automatically by DB

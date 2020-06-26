@@ -12,11 +12,11 @@ use FKSDB\Expressions\EvaluatedExpression;
 class Leq extends EvaluatedExpression {
 
     /**
-     * @var
+     * @var mixed
      */
     private $aValue;
     /**
-     * @var
+     * @var mixed
      */
     private $bValue;
 
@@ -38,11 +38,7 @@ class Leq extends EvaluatedExpression {
         return $this->evaluateArgument($this->aValue, ...$args) <= $this->evaluateArgument($this->bValue, ...$args);
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return "{$this->aValue} <= {$this->bValue}";
     }
-
 }

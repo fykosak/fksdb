@@ -15,7 +15,7 @@ trait ClientDataTrait {
     private $clientData = [];
 
     /**
-     * @param $key
+     * @param string|int $key
      * @param $value
      */
     public function setClientData($key, $value) {

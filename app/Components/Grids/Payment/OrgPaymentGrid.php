@@ -2,11 +2,12 @@
 
 namespace FKSDB\Components\Grids\Payment;
 
-use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\DbNames;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -32,30 +33,30 @@ class OrgPaymentGrid extends PaymentGrid {
         $this->event = $event;
     }
 
+    protected function getData(): IDataSource {
+        $schools = $this->servicePayment->getTable()->where('event_id', $this->event->event_id);
+        return new NDataSource($schools);
+    }
+
     /**
-     * @param $presenter
+     * @param Presenter $presenter
+     * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws InvalidLinkException
      * @throws DuplicateGlobalButtonException
-     * @throws NotImplementedException
-     * @throws NotImplementedException
+     * @throws InvalidLinkException
+     * @throws BadTypeException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
 
-        $schools = $this->servicePayment->getTable()->where('event_id', $this->event->event_id);
-
-        $dataSource = new NDataSource($schools);
-        $this->setDataSource($dataSource);
-
         $this->addColumns([
-            DbNames::TAB_PAYMENT . '.id',
-            'referenced.person_name',
-            // 'referenced.event_name',
-            DbNames::TAB_PAYMENT . '.price',
-            DbNames::TAB_PAYMENT . '.state',
-            DbNames::TAB_PAYMENT . '.variable_symbol',
+            'payment.payment_uid',
+            'person.full_name',
+            'event.event',
+            'payment.price',
+            'payment.state',
+            'payment.variable_symbol',
         ]);
         $this->addLink('payment.detail', false);
         $this->paginate = false;

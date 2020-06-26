@@ -1,0 +1,5 @@
+{block content}
+    {foreach ['person.person_link','teacher.since','teacher.until','teacher.note','teacher.number_brochures','teacher.state'] as $field}
+        {control valuePrinter:row $field, $model,true}
+    {/foreach}
+{/block}

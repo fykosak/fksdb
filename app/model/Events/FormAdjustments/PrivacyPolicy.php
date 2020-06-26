@@ -9,7 +9,7 @@ use FKSDB\Events\Processings\IProcessing;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServicePersonInfo;
-use FormUtils;
+use FKSDB\Utils\FormUtils;
 use Nette\Forms\Form;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;

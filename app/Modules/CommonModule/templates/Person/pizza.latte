@@ -1,0 +1,10 @@
+{block content}
+    {control pizzaSelect}
+    <hr/>
+    {foreach $persons as $person}
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-12"><b>{$person->getFullName()}</b></div>
+            <div class="col-lg-9 col-md-6 col-sm-12"> {control valuePrinter:onlyValue 'person_info.pizza', $person->getInfo()}</div>
+        </div>
+    {/foreach}
+{/block}

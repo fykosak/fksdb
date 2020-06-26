@@ -138,10 +138,6 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
         return $persons;
     }
 
-    /**
-     * @param bool $includePosition
-     * @return array
-     */
     public function __toArray(bool $includePosition = false): array {
         $data = [
             'created' => $this->created->format('c'),

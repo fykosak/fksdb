@@ -38,17 +38,17 @@ class CSVParser implements Iterator {
      */
     private $currentRow;
     /**
-     * @var
+     * @var mixed
      */
     private $header;
 
     /**
      * CSVParser constructor.
-     * @param $filename
+     * @param string $filename
      * @param int $indexType
      * @param string $delimiter
      */
-    public function __construct($filename, $indexType = self::INDEX_NUMERIC, $delimiter = ';') {
+    public function __construct(string $filename, int $indexType = self::INDEX_NUMERIC, string $delimiter = ';') {
         $this->indexType = $indexType;
         $this->delimiter = $delimiter;
         $this->file = fopen($filename, 'r');

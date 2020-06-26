@@ -2,11 +2,12 @@
 
 namespace FKSDB\Components\Forms\Controls\Payment;
 
-use BasePresenter;
-use Exception;
+use FKSDB\Modules\Core\BasePresenter;
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPayment;
@@ -15,24 +16,17 @@ use FKSDB\ORM\Services\Schedule\ServiceSchedulePayment;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Payment\Handler\EmptyDataException;
-use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Payment\Transition\PaymentMachine;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
-use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 use Nette\Utils\JsonException;
 
 /**
  * Class SelectForm
- * *
- * @property FileTemplate $template
  */
-class SelectForm extends Control {
+class SelectForm extends BaseComponent {
     /**
      * @var string[]
      */
@@ -57,10 +51,6 @@ class SelectForm extends Control {
      * @var bool
      */
     private $isOrg;
-    /**
-     * @var ITranslator
-     */
-    private $translator;
 
     /**
      * @var PaymentMachine
@@ -87,28 +77,45 @@ class SelectForm extends Control {
      * @param string[] $types
      * @param PaymentMachine $machine
      */
-    public function __construct(Container $container,
-                                ModelEvent $event,
-                                bool $isOrg,
-                                array $types,
-                                PaymentMachine $machine
+    public function __construct(
+        Container $container,
+        ModelEvent $event,
+        bool $isOrg,
+        array $types,
+        PaymentMachine $machine
     ) {
-        parent::__construct();
+        parent::__construct($container);
         $this->event = $event;
         $this->machine = $machine;
         $this->isOrg = $isOrg;
         $this->types = $types;
+    }
 
-        $this->translator = $container->getByType(ITranslator::class);
-        $this->servicePayment = $container->getByType(ServicePayment::class);
-        $this->personFactory = $container->getByType(PersonFactory::class);
-        $this->personProvider = $container->getByType(PersonProvider::class);
-        $this->servicePersonSchedule = $container->getByType(ServicePersonSchedule::class);
-        $this->serviceSchedulePayment = $container->getByType(ServiceSchedulePayment::class);
+    /**
+     * @param ServicePayment $servicePayment
+     * @param PersonFactory $personFactory
+     * @param PersonProvider $personProvider
+     * @param ServicePersonSchedule $servicePersonSchedule
+     * @param ServiceSchedulePayment $serviceSchedulePayment
+     * @return void
+     */
+    public function injectPrimary(
+        ServicePayment $servicePayment,
+        PersonFactory $personFactory,
+        PersonProvider $personProvider,
+        ServicePersonSchedule $servicePersonSchedule,
+        ServiceSchedulePayment $serviceSchedulePayment
+    ) {
+        $this->servicePayment = $servicePayment;
+        $this->personFactory = $personFactory;
+        $this->personProvider = $personProvider;
+        $this->servicePersonSchedule = $servicePersonSchedule;
+        $this->serviceSchedulePayment = $serviceSchedulePayment;
     }
 
     /**
      * @param ModelPayment $modelPayment
+     * @return void
      */
     public function setModel(ModelPayment $modelPayment) {
         $this->model = $modelPayment;
@@ -116,32 +123,29 @@ class SelectForm extends Control {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
-     * @throws UnsupportedCurrencyException
+     * @throws BadTypeException
      * @throws JsonException
      */
-    public function createComponentFormEdit() {
+    protected function createComponentFormEdit(): FormControl {
         return $this->createForm(false);
     }
 
     /**
      * @return FormControl
-     * @throws BadRequestException
-     * @throws UnsupportedCurrencyException
+     * @throws BadTypeException
      * @throws JsonException
      */
-    public function createComponentFormCreate() {
+    protected function createComponentFormCreate(): FormControl {
         return $this->createForm(true);
     }
 
     /**
      * @param bool $create
      * @return FormControl
-     * @throws UnsupportedCurrencyException
-     * @throws BadRequestException
+     * @throws BadTypeException
      * @throws JsonException
      */
-    private function createForm(bool $create) {
+    private function createForm(bool $create): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
         if ($this->isOrg) {
@@ -163,9 +167,10 @@ class SelectForm extends Control {
     /**
      * @param Form $form
      * @param bool $create
+     * @return void
      * @throws AbortException
      * @throws ForbiddenRequestException
-     * @throws Exception
+     * @throws \Exception
      */
     private function handleSubmit(Form $form, bool $create) {
         $values = $form->getValues();
@@ -205,7 +210,8 @@ class SelectForm extends Control {
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
+     * @throws BadTypeException
      */
     public function renderCreate() {
         /**
@@ -219,13 +225,13 @@ class SelectForm extends Control {
         $control->getForm()->setDefaults([
             'person_id' => $login->getPerson()->person_id,
         ]);
-        $this->template->setTranslator($this->translator);
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'SelectForm.create.latte');
         $this->template->render();
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
+     * @throws BadTypeException
      */
     public function renderEdit() {
         $values = $this->model->toArray();
@@ -235,15 +241,11 @@ class SelectForm extends Control {
          */
         $control = $this->getComponent('formEdit');
         $control->getForm()->setDefaults($values);
-        $this->template->setTranslator($this->translator);
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'SelectForm.edit.latte');
         $this->template->render();
     }
 
-    /**
-     * @return string
-     */
-    private function serializeScheduleValue() {
+    private function serializeScheduleValue(): string {
         $query = $this->model->getRelatedPersonSchedule();
         $items = [];
         foreach ($query as $row) {

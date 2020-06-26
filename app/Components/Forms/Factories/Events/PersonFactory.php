@@ -29,23 +29,23 @@ class PersonFactory extends AbstractFactory {
     const VALUE_LOGIN = 'fromLogin';
 
     /**
-     * @var
+     * @var mixed
      */
     private $fieldsDefinition;
     /**
-     * @var
+     * @var mixed
      */
     private $searchType;
     /**
-     * @var
+     * @var mixed
      */
     private $allowClear;
     /**
-     * @var
+     * @var mixed
      */
     private $modifiable;
     /**
-     * @var
+     * @var mixed
      */
     private $visible;
 

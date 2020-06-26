@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
+use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\DataTesting\TestsLogger;
 use FKSDB\DataTesting\DataTestingFactory;
 use Nette\DI\Container;
 
@@ -44,12 +44,12 @@ class Validation extends AbstractStalkingComponent {
      */
     public function render(ModelPerson $person, int $userPermissions) {
         $this->beforeRender($person, $userPermissions);
-        $logger = new TestsLogger();
+        $logger = new MemoryLogger();
         foreach ($this->validationFactory->getTests('person') as $test) {
             $test->run($logger, $person);
         }
 
-        $this->template->logs = $logger->getLogs();
+        $this->template->logs = $logger->getMessages();
         $this->template->setFile(__DIR__ . '/Validation.latte');
         $this->template->render();
     }

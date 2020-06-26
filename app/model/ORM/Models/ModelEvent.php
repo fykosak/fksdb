@@ -26,6 +26,9 @@ use Nette\Security\IResource;
  * @property-read string parameters
  */
 class ModelEvent extends AbstractModelSingle implements IResource, IContestReferencedModel {
+
+    const TEAM_EVENTS = [1, 9, 13];
+
     const RESOURCE_ID = 'event';
 
     public function getEventType(): ModelEventType {
@@ -79,8 +82,8 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
             'eventYear' => $this->event_year,
             'begin' => $this->begin ? $this->begin->format('c') : null,
             'end' => $this->end ? $this->end->format('c') : null,
-            'registration_begin' => $this->registration_begin->format('c'),
-            'registration_end' => $this->registration_end->format('c'),
+            'registration_begin' => $this->registration_begin ? $this->registration_begin->format('c') : null,
+            'registration_end' => $this->registration_end ? $this->registration_end->format('c') : null,
             'name' => $this->name,
             'event_type_id' => $this->event_type_id,
         ];

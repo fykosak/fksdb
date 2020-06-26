@@ -6,11 +6,11 @@ use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\Breadcrumbs\Request as NaviRequest;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Exceptions\BadTypeException;
+use Nette\Application\IPresenterFactory;
 use Nette\Application\IRouter;
-use Nette\Application\PresenterFactory;
 use Nette\Application\Request as AppRequest;
 use Nette\Application\UI\Presenter;
-use Nette\Application\UI\PresenterComponentReflection;
+use Nette\Application\UI\ComponentReflection;
 use Nette\DI\Container;
 use Tracy\Debugger;
 use Nette\Http\Request as HttpRequest;
@@ -18,7 +18,7 @@ use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Random;
-use Utils;
+use FKSDB\Utils\Utils;
 
 /**
  * Monitors user's traversal through the web and build the tree,
@@ -55,7 +55,7 @@ class Breadcrumbs extends BaseComponent {
     private $httpRequest;
 
     /**
-     * @var PresenterFactory
+     * @var IPresenterFactory
      */
     private $presenterFactory;
 
@@ -83,10 +83,10 @@ class Breadcrumbs extends BaseComponent {
      * @param Session $session
      * @param IRouter $router
      * @param HttpRequest $httpRequest
-     * @param PresenterFactory $presenterFactory
+     * @param IPresenterFactory $presenterFactory
      * @return void
      */
-    public function injectPrimary(Session $session, IRouter $router, HttpRequest $httpRequest, PresenterFactory $presenterFactory) {
+    public function injectPrimary(Session $session, IRouter $router, HttpRequest $httpRequest, IPresenterFactory $presenterFactory) {
         $this->session = $session;
         $this->router = $router;
         $this->httpRequest = $httpRequest;
@@ -238,7 +238,7 @@ class Breadcrumbs extends BaseComponent {
                     $identifyingParameters[] = $param->name;
                 }
             }
-            $reflection = new PresenterComponentReflection($presenterClassName);
+            $reflection = new ComponentReflection($presenterClassName);
             $identifyingParameters += array_keys($reflection->getPersistentParams());
 
             $filteredParameters = [];

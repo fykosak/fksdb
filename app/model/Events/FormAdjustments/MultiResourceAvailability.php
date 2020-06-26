@@ -11,6 +11,7 @@ use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\AbstractServiceSingle;
 use Nette\Database\Context;
 use Nette\Forms\Form;
+use Nette\Forms\IControl;
 use Nette\Utils\Html;
 
 /**
@@ -187,6 +188,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
 
         $form->onValidate[] = function (Form $form) use ($capacities, $usage, $controls) {
             $controlsUsages = [];
+            /** @var IControl $control */
             foreach ($controls as $control) {
                 $k = $control->getValue();
                 /** kontrola ak je k null nieje zaujem o ubytovanie*/

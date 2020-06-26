@@ -2,9 +2,6 @@
 
 namespace Authorization;
 
-use Authorization\Assertions\EventOrgAssertion;
-use Authorization\Assertions\EventOrgByIdAssertion;
-use Authorization\Assertions\EventOrgByYearAssertion;
 use Authorization\Assertions\QIDAssertion;
 use Authorization\Assertions\StoredQueryTagAssertion;
 use FKSDB\Config\Expressions\Helpers;
@@ -21,9 +18,6 @@ class ACLExtension extends CompilerExtension {
     public static $semanticMap = [
         'qid' => QIDAssertion::class,
         'queryTag' => StoredQueryTagAssertion::class,
-        'isEventOrg' => EventOrgAssertion::class,
-        'isEventOrgById' => EventOrgByIdAssertion::class,
-        'isEventOrgByYear' => EventOrgByYearAssertion::class,
     ];
 
     public function __construct() {
@@ -35,7 +29,7 @@ class ACLExtension extends CompilerExtension {
 
         $builder = $this->getContainerBuilder();
         $definition = $builder->addDefinition('authorization')
-            ->setClass(Permission::class);
+            ->setFactory(Permission::class);
 
         $config = $this->getConfig();
 

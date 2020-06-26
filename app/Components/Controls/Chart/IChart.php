@@ -10,8 +10,6 @@ use Nette\Application\UI\Control;
  */
 interface IChart {
 
-    public function getAction(): string;
-
     public function getTitle(): string;
 
     public function getControl(): Control;

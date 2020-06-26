@@ -4,17 +4,15 @@ namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
 use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
 use FKSDB\Fyziklani\NotSetGameParametersException;
-use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\React\ReactResponse;
-use FyziklaniModule\BasePresenter;
+use FKSDB\Modules\FyziklaniModule\BasePresenter;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\ArgumentOutOfRangeException;
-use Nette\DI\Container;
 use Nette\Http\Response;
 use Nette\Utils\DateTime;
 
@@ -36,30 +34,24 @@ class ResultsAndStatistics extends FyziklaniReactControl {
      * @var ServiceFyziklaniSubmit
      */
     private $serviceFyziklaniSubmit;
-    /**
-     * @var string
-     */
-    private $reactId;
 
     /**
-     * ResultsAndStatistics constructor.
-     * @param string $reactId
-     * @param Container $container
-     * @param ModelEvent $event
+     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @return void
      */
-    public function __construct(Container $container, ModelEvent $event, string $reactId) {
-        parent::__construct($container, $event);
-        $this->reactId = $reactId;
-        $this->serviceFyziklaniSubmit = $this->getContext()->getByType(ServiceFyziklaniSubmit::class);
-        $this->serviceFyziklaniTask = $this->getContext()->getByType(ServiceFyziklaniTask::class);
-        $this->serviceFyziklaniTeam = $this->getContext()->getByType(ServiceFyziklaniTeam::class);
+    public function injectPrimary(
+        ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
+        ServiceFyziklaniTask $serviceFyziklaniTask,
+        ServiceFyziklaniTeam $serviceFyziklaniTeam
+    ) {
+        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
-    protected function getReactId(): string {
-        return $this->reactId;
-    }
-
-    final public function getData(): string {
+    final public function getData(...$args): string {
         return '';
     }
 

@@ -2,7 +2,7 @@
 
 namespace Exports;
 
-use BasePresenter;
+use FKSDB\Modules\Core\BasePresenter;
 use DOMDocument;
 use DOMNode;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
@@ -11,9 +11,9 @@ use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\Http\Response;
 use Nette\InvalidArgumentException;
-use Utils;
+use FKSDB\Utils\Utils;
 use WebService\IXMLNodeSerializer;
-use FKSDB\CoreModule\ISeriesPresenter;
+use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -82,7 +82,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
     }
 
     /**
-     * @param $qid
+     * @param string $qid
      * @param $parameters
      * @return StoredQuery
      */

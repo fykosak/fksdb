@@ -5,11 +5,13 @@ namespace FKSDB\Components\Forms\Containers\Models;
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\ReferencedId;
+use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\InvalidStateException;
@@ -78,24 +80,23 @@ class ReferencedContainer extends ContainerWithOptions {
         $this->referencedId->setReferencedContainer($this);
     }
 
-    /**
-     * @return ReferencedId
-     */
-    public function getReferencedId() {
+    public function getReferencedId(): ReferencedId {
         return $this->referencedId;
     }
 
     /**
      * @param bool $value
+     * @return void
      */
-    public function setDisabled($value = TRUE) {
+    public function setDisabled(bool $value = true) {
+        /** @var BaseControl $control */
         foreach ($this->getControls() as $control) {
             $control->setDisabled($value);
         }
     }
 
     /**
-     * @param IControl|null $control
+     * @param IControl|IComponent|null $control
      * @param callable|null $searchCallback
      * @param callable|null $termToValuesCallback
      */
@@ -112,22 +113,21 @@ class ReferencedContainer extends ContainerWithOptions {
         $this->createSearchButton();
     }
 
-    /**
-     * @return bool
-     */
-    public function getAllowClear() {
+    public function getAllowClear(): bool {
         return $this->allowClear;
     }
 
     /**
-     * @param $allowClear
+     * @param bool $allowClear
+     * @return void
      */
-    public function setAllowClear($allowClear) {
+    public function setAllowClear(bool $allowClear) {
         $this->allowClear = $allowClear;
     }
 
     /**
      * @param IComponent $child
+     * @return void
      */
     protected function validateChildComponent(IComponent $child) {
         if (!$child instanceof BaseControl && !$child instanceof ContainerWithOptions) {
@@ -135,10 +135,7 @@ class ReferencedContainer extends ContainerWithOptions {
         }
     }
 
-    /**
-     * @return bool
-     */
-    public function isSearchSubmitted() {
+    public function isSearchSubmitted(): bool {
         return $this->getForm(false) && $this->getComponent(self::SUBMIT_SEARCH)->isSubmittedBy();
     }
 
@@ -224,12 +221,11 @@ class ReferencedContainer extends ContainerWithOptions {
 
         $submit->getControlPrototype()->class[] = self::CSS_AJAX;
 
-        $submit->onClick[] = function () {
-
+        $submit->onClick[] = function (SubmitButton $button) {
             $term = $this->getComponent(self::CONTROL_SEARCH)->getValue();
             $model = ($this->searchCallback)($term);
 
-            $values = new ArrayHash();
+            $values = [];
             if (!$model) {
                 $model = ReferencedId::VALUE_PROMISE;
                 $values = ($this->termToValuesCallback)($term);
@@ -246,10 +242,12 @@ class ReferencedContainer extends ContainerWithOptions {
 
     private function invalidateFormGroup() {
         $form = $this->getForm();
+        /** @var Presenter $presenter */
         $presenter = $form->lookup(Presenter::class);
         if ($presenter->isAjax()) {
+            /** @var Control $control */
             $control = $form->getParent();
-            $control->invalidateControl(FormControl::SNIPPET_MAIN);
+            $control->redrawControl(FormControl::SNIPPET_MAIN);
             $control->getTemplate()->mainContainer = $this;
             $control->getTemplate()->level = 2; //TODO should depend on lookup path
             $payload = $presenter->getPayload();
@@ -270,7 +268,8 @@ class ReferencedContainer extends ContainerWithOptions {
     private $attachedAjax = false;
 
     /**
-     * @param $obj
+     * @param IComponent $obj
+     * @return void
      */
     protected function attached($obj) {
         parent::attached($obj);
@@ -286,7 +285,8 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     /**
-     * @param $obj
+     * @param IComponent $obj
+     * @return void
      */
     protected function detached($obj) {
         parent::detached($obj);
@@ -326,8 +326,8 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     /**
-     * @param $name
-     * @param ContainerWithOptions $component
+     * @param string $name
+     * @param ContainerWithOptions|IComponent $component
      */
     private function showComponent($name, $component) {
         $component->setOption('visible', true);

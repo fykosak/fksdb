@@ -2,9 +2,8 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
-use BasePresenter;
+use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom;
-use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
@@ -12,7 +11,6 @@ use FKSDB\React\ReactResponse;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\DI\Container;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 use ReactMessage;
@@ -37,29 +35,34 @@ class RoutingEdit extends FyziklaniReactControl {
     private $serviceFyziklaniTeamPosition;
 
     /**
-     * RoutingEdit constructor.
-     * @param Container $container
-     * @param ModelEvent $event
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
+     * @param ServiceFyziklaniRoom $serviceFyziklaniRoom
+     * @return void
      */
-    public function __construct(Container $container, ModelEvent $event) {
-        parent::__construct($container, $event);
-        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
-        $this->serviceFyziklaniTeamPosition = $container->getByType(ServiceFyziklaniTeamPosition::class);
-        $this->serviceFyziklaniRoom = $container->getByType(ServiceFyziklaniRoom::class);
+    public function injectPrimary(
+        ServiceFyziklaniTeam $serviceFyziklaniTeam,
+        ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
+        ServiceFyziklaniRoom $serviceFyziklaniRoom
+    ) {
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
+        $this->serviceFyziklaniRoom = $serviceFyziklaniRoom;
     }
 
     /**
+     * @param mixed ...$args
      * @return string
      * @throws JsonException
      */
-    public function getData(): string {
+    public function getData(...$args): string {
         return Json::encode([
             'teams' => $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent()),
             'rooms' => $this->getRooms(),
         ]);
     }
 
-    protected function getReactId(): string {
+    public function getReactId(...$args): string {
         return 'fyziklani.routing';
     }
 

@@ -32,14 +32,6 @@ class ModelFyziklaniSubmit extends AbstractModelSingle implements IFyziklaniTeam
 
     const RESOURCE_ID = 'fyziklani.submit';
 
-    /**
-     * @return ModelFyziklaniTask
-     * @deprecated
-     */
-    public function getTask(): ModelFyziklaniTask {
-        return $this->getFyziklaniTask();
-    }
-
     public function getFyziklaniTask(): ModelFyziklaniTask {
         return ModelFyziklaniTask::createFromActiveRow($this->fyziklani_task);
     }

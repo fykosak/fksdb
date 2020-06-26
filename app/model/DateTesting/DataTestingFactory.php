@@ -5,11 +5,10 @@ namespace FKSDB\DataTesting;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\DataTesting\Tests\Person\PersonTest;
 use FKSDB\ORM\Services\ServiceContest;
-use Nette\Application\BadRequestException;
 
 /**
  * Class DataTestingFactory
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DataTestingFactory {
     /**
@@ -29,7 +28,6 @@ class DataTestingFactory {
      * DataTestingFactory constructor.
      * @param ServiceContest $serviceContest
      * @param TableReflectionFactory $tableReflectionFactory
-     * @throws BadRequestException
      */
     public function __construct(ServiceContest $serviceContest, TableReflectionFactory $tableReflectionFactory) {
         $this->serviceContest = $serviceContest;
@@ -38,7 +36,7 @@ class DataTestingFactory {
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
      */
     private function registersTests() {
         $tests = [
@@ -46,7 +44,7 @@ class DataTestingFactory {
             new Tests\Person\ParticipantsDurationTest(),
             new Tests\Person\EventCoveringTest(),
         ];
-        foreach (['phone', 'phone_parent_d', 'phone_parent_m'] as $fieldName) {
+        foreach (['person_info.phone', 'person_info.phone_parent_d', 'person_info.phone_parent_m'] as $fieldName) {
             $tests[] = new Tests\Person\PersonInfoFieldTest($this->tableReflectionFactory, $fieldName);
         }
         $this->tests['person'] = $tests;

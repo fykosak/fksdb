@@ -45,10 +45,6 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
         $this->stored = !$value;
     }
 
-    /**
-     * @param ActiveRow $row
-     * @return static
-     */
     public static function createFromActiveRow(ActiveRow $row): self {
         if ($row instanceof static) {
             return $row;
@@ -61,7 +57,7 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
     }
 
     /**
-     * @param $key
+     * @param string|int $key
      * @param $value
      */
     public function __set($key, $value) {
@@ -80,7 +76,7 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
     }
 
     /**
-     * @param $key
+     * @param string|int $key
      * @return bool
      */
     public function __isset($key): bool {
@@ -95,7 +91,7 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
     }
 
     /**
-     * @param $key
+     * @param string|int $key
      */
     public function __unset($key) {
         unset($this->tmpData[$key]);

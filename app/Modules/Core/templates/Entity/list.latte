@@ -1,0 +1,8 @@
+{block content}
+    {if $control->authorized('create')}
+        {var $pageTitle = $control->getTitleCreate()}
+        <a href="{plink create}" class="btn btn-primary"><i class="{$pageTitle->icon} mr-1"></i>{$pageTitle->title}</a>
+    {/if}
+    <hr/>
+    {control grid}
+{/block}
