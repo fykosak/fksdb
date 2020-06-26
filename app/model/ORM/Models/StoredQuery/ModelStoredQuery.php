@@ -2,10 +2,8 @@
 
 namespace FKSDB\ORM\Models\StoredQuery;
 
-use FKSDB\StoredQuery\StoredQueryPostProcessing;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
-use InvalidArgumentException;
 use FKSDB\ORM\ModelsMulti\ModelMStoredQueryTag;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;

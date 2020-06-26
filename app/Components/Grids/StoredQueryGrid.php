@@ -20,15 +20,8 @@ use PDOException;
  */
 class StoredQueryGrid extends BaseGrid {
 
-    /**
-     * @var StoredQuery
-     */
+    /** @var StoredQuery */
     private $storedQuery;
-
-    /**
-     * @var ExportFormatFactory
-     */
-    private $exportFormatFactory;
 
     /**
      * StoredQueryGrid constructor.
@@ -38,14 +31,6 @@ class StoredQueryGrid extends BaseGrid {
     public function __construct(StoredQuery $storedQuery, Container $container) {
         parent::__construct($container);
         $this->storedQuery = $storedQuery;
-    }
-
-    /**
-     * @param ExportFormatFactory $exportFormatFactory
-     * @return void
-     */
-    public function injectExportFormatFactory(ExportFormatFactory $exportFormatFactory) {
-        $this->exportFormatFactory = $exportFormatFactory;
     }
 
     protected function getData(): IDataSource {
@@ -75,7 +60,7 @@ class StoredQueryGrid extends BaseGrid {
         // operations
         //
         if (!$this->storedQuery->hasQueryPattern()) {
-            $qid = $this->storedQuery->getQId();;
+            $qid = $this->storedQuery->getQId();
             if ($qid) {
                 $parameters = ['qid' => $qid, 'bc' => null];
                 $queryParameters = $this->storedQuery->getParameters();

@@ -2,18 +2,14 @@
 
 namespace FKSDB\Components\Grids;
 
-use Authorization\ContestAuthorizator;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
-use FKSDB\Components\Controls\StoredQueryTagCloud;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
 
 /**
  *

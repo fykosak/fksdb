@@ -4,7 +4,6 @@ namespace FKSDB\Components\Controls;
 
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTag;
-use Nette\DI\Container;
 use FKSDB\ORM\ServicesMulti\ServiceMStoredQueryTag;
 
 /**

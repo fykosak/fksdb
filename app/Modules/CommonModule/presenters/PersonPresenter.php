@@ -5,7 +5,6 @@ namespace FKSDB\Modules\CommonModule;
 use FKSDB\Components\Controls\Entity\Person\PersonForm;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
-use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -303,7 +302,7 @@ class PersonPresenter extends BasePresenter {
     }
 
     protected function createComponentTimeline(): Stalking\Timeline\TimelineControl {
-        return new Stalking\Timeline\TimelineControl($this->getContext(), $this->getEntity());
+        return new Stalking\Timeline\TimelineControl($this->getContext());
     }
 
     /**

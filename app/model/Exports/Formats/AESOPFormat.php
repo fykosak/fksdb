@@ -2,8 +2,6 @@
 
 namespace FKSDB\Exports\Formats;
 
-use FKSDB\Exports\Formats\PlainTextResponse;
-use FKSDB\Exports\Formats\XSLFormat;
 use FKSDB\StoredQuery\StoredQuery;
 use Nette\Application\IResponse;
 use WebService\IXMLNodeSerializer;
