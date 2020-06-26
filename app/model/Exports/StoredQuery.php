@@ -1,7 +1,8 @@
 <?php
 
-namespace Exports;
+namespace FKSDB\StoredQuery;
 
+use Exports\StoredQueryPostProcessing;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use Nette\Database\Connection;
@@ -48,7 +49,7 @@ class StoredQuery implements IDataSource, IResource {
      * @var array
      * default parameter of ModelStoredQueryParameter
      */
-    private $parameterDefaults = [];
+    private $parameterDefaultValues = [];
 
     /**
      * @var int|null
@@ -100,7 +101,7 @@ class StoredQuery implements IDataSource, IResource {
             $this->name = $queryPattern->name;
         }
         $this->sql = $this->queryPattern->sql;
-        $this->queryParameters = $queryPattern->getParameters();
+        $this->setQueryParameters($queryPattern->getParameters());
         $this->setPostProcessing($queryPattern->php_post_proc);
     }
 
@@ -190,7 +191,7 @@ class StoredQuery implements IDataSource, IResource {
      */
     public function getParameters($all = false) {
         if ($all) {
-            return array_merge($this->parameterDefaults, $this->parameterValues, $this->implicitParameterValues);
+            return array_merge($this->parameterDefaultValues, $this->parameterValues, $this->implicitParameterValues);
         } else {
             return $this->parameterValues;
         }
@@ -226,13 +227,17 @@ class StoredQuery implements IDataSource, IResource {
     }
 
     /**
-     * @param ModelStoredQueryParameter[] $queryParameters
+     * @param mixed[] $queryParameters
      * @return void
      */
     public function setQueryParameters(array $queryParameters) {
-        $this->parameterDefaults = [];
+        $this->parameterDefaultValues = [];
         foreach ($queryParameters as $parameter) {
-            $this->parameterDefaults[$parameter->name] = $parameter->getDefaultValue();
+            if ($parameter instanceof ModelStoredQueryParameter) {
+                $this->parameterDefaultValues[$parameter->name] = $parameter->getDefaultValue();
+            } elseif ($parameter instanceof StoredQueryParameter) {
+                $this->parameterDefaultValues[$parameter->getName()] = $parameter->getDefaultValue();
+            }
         }
         $this->queryParameters = $queryParameters;
     }
@@ -262,7 +267,7 @@ class StoredQuery implements IDataSource, IResource {
     }
 
     public function getParameterNames(): array {
-        return array_keys($this->parameterDefaults);
+        return array_keys($this->parameterDefaultValues);
     }
 
     private function bindParams(string $sql): \PDOStatement {

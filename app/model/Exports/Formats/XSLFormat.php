@@ -4,7 +4,7 @@ namespace Exports\Formats;
 
 use DOMDocument;
 use Exports\IExportFormat;
-use Exports\StoredQuery;
+use FKSDB\StoredQuery\StoredQuery;
 use Nette\Application\IResponse;
 use Nette\SmartObject;
 use WebService\IXMLNodeSerializer;

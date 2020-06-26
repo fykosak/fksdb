@@ -18,6 +18,7 @@ use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTag;
+use FKSDB\StoredQuery\StoredQueryParameter;
 use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -237,10 +238,11 @@ class StoredQueryForm extends AbstractEntityFormControl implements IEditEntityFo
         $data = $form->getValues(true);
         $parameters = [];
         foreach ($data[self::CONT_PARAMS_META] as $paramMetaData) {
-            /** @var ModelStoredQueryParameter $parameter */
-            $parameter = $this->serviceStoredQueryParameter->createNew($paramMetaData);
-            $parameter->setDefaultValue($paramMetaData['default']);
-            $parameters[] = $parameter;
+            $parameters[] = new StoredQueryParameter(
+                $paramMetaData['name'],
+                $paramMetaData['default'],
+                ModelStoredQueryParameter::staticGetPDOType($paramMetaData['type'])
+            );
         }
         $query = $this->storedQueryFactory->createQueryFromSQL(
             $this->getPresenter(),

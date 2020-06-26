@@ -5,7 +5,7 @@ namespace FKSDB\WebService;
 use Authorization\ContestAuthorizator;
 use DOMDocument;
 use DOMElement;
-use Exports\StoredQuery;
+use FKSDB\StoredQuery\StoredQuery;
 use Exports\StoredQueryFactory;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelLogin;

@@ -11,6 +11,7 @@ use Exports\StoredQueryFactory;
 use Exports\StoredQueryPostProcessing;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\ORM\Models\ModelContest;
+use FKSDB\StoredQuery\StoredQueryParameter;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
 use Tester\Assert;
 
@@ -85,22 +86,10 @@ class MockSeriesPresenter implements ISeriesPresenter {
     }
 }
 
-class MockQueryParameter {
-
-    public $name;
-
+class MockQueryParameter extends StoredQueryParameter {
     public function __construct($name) {
-        $this->name = $name;
+        parent::__construct($name, null, \PDO::PARAM_STR);
     }
-
-    public function getDefaultValue() {
-        return null;
-    }
-
-    public function getPDOType() {
-        return \PDO::PARAM_STR;
-    }
-
 }
 
 class MockProcessing extends StoredQueryPostProcessing {

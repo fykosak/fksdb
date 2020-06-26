@@ -2,7 +2,7 @@
 
 namespace Exports\Formats;
 
-use Exports\StoredQuery;
+use FKSDB\StoredQuery\StoredQuery;
 use Nette\Application\IResponse;
 use WebService\IXMLNodeSerializer;
 

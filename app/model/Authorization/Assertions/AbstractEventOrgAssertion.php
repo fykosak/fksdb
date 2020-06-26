@@ -2,7 +2,7 @@
 
 namespace Authorization\Assertions;
 
-use Exports\StoredQuery;
+use FKSDB\StoredQuery\StoredQuery;
 use FKSDB\ORM\DbNames;
 use Nette\Database\Context;
 use Nette\Security\IUserStorage;

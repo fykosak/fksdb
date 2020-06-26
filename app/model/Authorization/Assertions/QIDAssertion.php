@@ -2,7 +2,7 @@
 
 namespace Authorization\Assertions;
 
-use Exports\StoredQuery;
+use FKSDB\StoredQuery\StoredQuery;
 use Nette\InvalidArgumentException;
 use Nette\Security\IResource;
 use Nette\Security\Permission;

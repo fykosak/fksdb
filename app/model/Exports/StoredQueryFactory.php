@@ -6,7 +6,10 @@ use FKSDB\Modules\Core\BasePresenter;
 use DOMDocument;
 use DOMNode;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
+use FKSDB\StoredQuery\StoredQuery;
+use FKSDB\StoredQuery\StoredQueryParameter;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\Http\Response;
@@ -64,7 +67,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
     /**
      * @param ISeriesPresenter $presenter
      * @param string $sql
-     * @param array $parameters
+     * @param ModelStoredQueryParameter[]|StoredQueryParameter[] $parameters
      * @param string $postProcessingClass
      * @return StoredQuery
      * @throws BadRequestException

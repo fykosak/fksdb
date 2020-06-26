@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
-use Exports\StoredQuery;
+use FKSDB\StoredQuery\StoredQuery;
 use Exports\StoredQueryFactory;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Controls\FormControl\FormControl;
@@ -13,6 +13,7 @@ use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactor
 use FKSDB\Components\Grids\StoredQueriesGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
+use FKSDB\StoredQuery\StoredQueryParameter;
 use FKSDB\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\{SeriesPresenterTrait};
 use FKSDB\Exceptions\NotFoundException;
@@ -189,10 +190,11 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         $sql = $data[self::CONT_CONSOLE]['sql'];
         $parameters = [];
         foreach ($data[self::CONT_PARAMS_META] as $paramMetaData) {
-            /** @var ModelStoredQueryParameter $parameter */
-            $parameter = $this->serviceStoredQueryParameter->createNew($paramMetaData);
-            $parameter->setDefaultValue($paramMetaData['default']);
-            $parameters[] = $parameter;
+            $parameters[] = new StoredQueryParameter(
+                $paramMetaData['name'],
+                $paramMetaData['default'],
+                ModelStoredQueryParameter::staticGetPDOType($paramMetaData['type'])
+            );
         }
 
         return $this->storedQueryFactory->createQueryFromSQL($this, $sql, $parameters);

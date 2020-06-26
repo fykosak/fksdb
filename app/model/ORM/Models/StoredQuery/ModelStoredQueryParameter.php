@@ -58,8 +58,8 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
 
     /**
      * @param string $type
-     * @param $value
-     * @return void
+     * @param mixed $value
+     * @return array
      */
     public static function setInferDefaultValue(string $type, $value): array {
         $data = [];
@@ -81,8 +81,12 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
      * @return int
      * @throws InvalidStateException
      */
-    public function getPDOType() {
-        switch ($this->type) {
+    public function getPDOType(): int {
+        return static::staticGetPDOType($this->type);
+    }
+
+    static public function staticGetPDOType(string $type): int {
+        switch ($type) {
             case self::TYPE_INT:
             case self::TYPE_BOOL:
                 return PDO::PARAM_INT;
@@ -92,5 +96,4 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
                 throw new InvalidStateException("Unsupported parameter type '{$this->type}'.");
         }
     }
-
 }
