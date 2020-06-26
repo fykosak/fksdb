@@ -2,7 +2,6 @@
 
 namespace FKSDB\StoredQuery;
 
-use Exports\StoredQueryPostProcessing;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use Nette\Database\Connection;
@@ -104,7 +103,6 @@ class StoredQuery implements IDataSource, IResource {
             $this->name = $queryPattern->name;
         }
         $this->sql = $this->queryPattern->sql;
-        $this->setQueryParameters($queryPattern->getParameters());
         $this->setPostProcessing($queryPattern->php_post_proc);
     }
 

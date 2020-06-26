@@ -2,7 +2,7 @@
 
 namespace FKSDB\ORM\Models\StoredQuery;
 
-use Exports\StoredQueryPostProcessing;
+use FKSDB\StoredQuery\StoredQueryPostProcessing;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use InvalidArgumentException;

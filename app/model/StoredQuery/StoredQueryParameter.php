@@ -4,6 +4,10 @@ namespace FKSDB\StoredQuery;
 
 use Nette\InvalidStateException;
 
+/**
+ * Class StoredQueryParameter
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class StoredQueryParameter {
     /** @var mixed */
     private $defaultValue;
@@ -11,17 +15,23 @@ class StoredQueryParameter {
     private $name;
     /** @var int */
     private $PDOType;
+    /**
+     * @var string|null
+     */
+    private $description;
 
     /**
      * StoredQueryParameter constructor.
      * @param string $name
-     * @param $defaultValue
+     * @param mixed $defaultValue
      * @param int $PDOType
+     * @param string|null $description
      */
-    public function __construct(string $name, $defaultValue, int $PDOType) {
+    public function __construct(string $name, $defaultValue, int $PDOType, string $description = null) {
         $this->name = $name;
         $this->defaultValue = self::getTypedValue($defaultValue, $PDOType);
         $this->PDOType = $PDOType;
+        $this->description = $description;
     }
 
     /**
@@ -37,6 +47,13 @@ class StoredQueryParameter {
 
     public function getPDOType(): int {
         return $this->PDOType;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getDescription() {
+        return $this->description;
     }
 
     /**

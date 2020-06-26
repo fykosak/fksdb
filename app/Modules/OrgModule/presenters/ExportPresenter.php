@@ -4,7 +4,7 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\StoredQuery\StoredQuery;
-use Exports\StoredQueryFactory;
+use FKSDB\StoredQuery\StoredQueryFactory;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\ResultsComponent;

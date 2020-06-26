@@ -2,7 +2,7 @@
 
 namespace Exports\Processings;
 
-use Exports\StoredQueryPostProcessing;
+use FKSDB\StoredQuery\StoredQueryPostProcessing;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\Results\EvaluationStrategies\EvaluationStrategy;
 use FKSDB\Results\ModelCategory;

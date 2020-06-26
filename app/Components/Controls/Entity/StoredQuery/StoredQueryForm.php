@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Entity\StoredQuery;
 
-use Exports\StoredQueryFactory;
+use FKSDB\StoredQuery\StoredQueryFactory;
 use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Controls\ResultsComponent;
@@ -261,5 +261,4 @@ class StoredQueryForm extends AbstractEntityFormControl implements IEditEntityFo
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
     }
-
 }

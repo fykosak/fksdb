@@ -11,6 +11,7 @@ use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\StoredQuery\StoredQuery;
+use FKSDB\StoredQuery\StoredQueryFactory;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;

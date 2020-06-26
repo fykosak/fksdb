@@ -88,8 +88,9 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
     public static function staticGetPDOType(string $type): int {
         switch ($type) {
             case self::TYPE_INT:
-            case self::TYPE_BOOL:
                 return PDO::PARAM_INT;
+            case self::TYPE_BOOL:
+                return PDO::PARAM_BOOL;
             case self::TYPE_STRING:
                 return PDO::PARAM_STR;
             default:

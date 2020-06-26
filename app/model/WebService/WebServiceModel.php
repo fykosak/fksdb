@@ -6,7 +6,7 @@ use Authorization\ContestAuthorizator;
 use DOMDocument;
 use DOMElement;
 use FKSDB\StoredQuery\StoredQuery;
-use Exports\StoredQueryFactory;
+use FKSDB\StoredQuery\StoredQueryFactory;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceContest;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Exports;
+namespace FKSDB\StoredQuery;
 
 use FKSDB\Modules\Core\BasePresenter;
 use DOMDocument;
@@ -8,8 +8,6 @@ use DOMNode;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
-use FKSDB\StoredQuery\StoredQuery;
-use FKSDB\StoredQuery\StoredQueryParameter;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\Http\Response;
@@ -60,6 +58,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
     public function createQuery(ISeriesPresenter $presenter, ModelStoredQuery $patternQuery): StoredQuery {
         $storedQuery = new StoredQuery($this->connection);
         $storedQuery->setQueryPattern($patternQuery);
+        $storedQuery->setQueryParameters($patternQuery->getParameters());
         $storedQuery->setContextParameters($this->presenterContextParameters($presenter));
         return $storedQuery;
     }
@@ -90,6 +89,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         }
         $storedQuery = new StoredQuery($this->connection);
         $storedQuery->setQueryPattern($patternQuery);
+        $storedQuery->setQueryParameters($patternQuery->getParameters());
         $storedQuery->setContextParameters($parameters, false); // treat all parameters as implicit (better API for web service)
         return $storedQuery;
     }
@@ -100,23 +100,22 @@ class StoredQueryFactory implements IXMLNodeSerializer {
      * @throws BadRequestException
      */
     private function presenterContextParameters(ISeriesPresenter $presenter): array {
-        $series = null;
         try {
-            $series = $presenter->getSelectedSeries();
+            return [
+                self::PARAM_CONTEST_ID => $presenter->getSelectedContest()->contest_id,
+                self::PARAM_CONTEST => $presenter->getSelectedContest()->contest_id,
+                self::PARAM_YEAR => $presenter->getSelectedYear(),
+                self::PARAM_AC_YEAR => $presenter->getSelectedAcademicYear(),
+                self::PARAM_SERIES => $presenter->getSelectedSeries(),
+            ];
         } catch (BadRequestException $exception) {
             if ($exception->getCode() == Response::S500_INTERNAL_SERVER_ERROR) {
-                $presenter->flashMessage(_('Kontext série pro dotazy není dostupný'), BasePresenter::FLASH_WARNING);
+                $presenter->flashMessage(_('Kontext pro dotazy není dostupný'), BasePresenter::FLASH_WARNING);
+                return [];
             } else {
                 throw $exception;
             }
         }
-        return [
-            self::PARAM_CONTEST_ID => $presenter->getSelectedContest()->contest_id,
-            self::PARAM_CONTEST => $presenter->getSelectedContest()->contest_id,
-            self::PARAM_YEAR => $presenter->getSelectedYear(),
-            self::PARAM_AC_YEAR => $presenter->getSelectedAcademicYear(),
-            self::PARAM_SERIES => $series,
-        ];
     }
 
     /**
@@ -176,4 +175,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         }
     }
 
+    public function createParameterFromModel(ModelStoredQueryParameter $model): StoredQueryParameter {
+        return new StoredQueryParameter($model->name, $model->getDefaultValue(), $model->getPDOType(), $model->description);
+    }
 }

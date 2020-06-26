@@ -5,7 +5,7 @@ namespace FKSDB\Components\Controls;
 use Authorization\ContestAuthorizator;
 use Exports\ExportFormatFactory;
 use FKSDB\StoredQuery\StoredQuery;
-use Exports\StoredQueryFactory as StoredQueryFactorySQL;
+use FKSDB\StoredQuery\StoredQueryFactory as StoredQueryFactorySQL;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory;
 use FKSDB\Components\Grids\StoredQueryGrid;
@@ -98,7 +98,7 @@ class ResultsComponent extends BaseComponent {
     }
 
     /**
-     * @param $parameters
+     * @param array $parameters
      * @return void
      */
     public function setParameters(array $parameters) {
@@ -128,10 +128,10 @@ class ResultsComponent extends BaseComponent {
         $control = new FormControl();
         $form = $control->getForm();
 
-        $parameters = $this->storedQueryFormFactory->createParametersValues($this->storedQuery->getQueryParameters());
+        $parameters = $this->storedQueryFormFactory->createParametersValues($this->storedQuery->getQueryPattern()->getParameters());
         $form->addComponent($parameters, self::CONT_PARAMS);
 
-        $form->addSubmit('execute', _('Parametrizovat'));
+        $form->addSubmit('execute', _('Execute'));
         $form->onSuccess[] = function (Form $form) {
             $this->parameters = [];
             $values = $form->getValues();
