@@ -5,6 +5,7 @@ namespace FKSDB\Components\Controls;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTag;
 use Nette\Application\UI\Control;
+use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use FKSDB\ORM\ServicesMulti\ServiceMStoredQueryTag;
 
@@ -13,7 +14,7 @@ use FKSDB\ORM\ServicesMulti\ServiceMStoredQueryTag;
  *
  * @author Lukáš Timko <lukast@fykos.cz>
  */
-class StoredQueryTagCloud extends Control {
+class StoredQueryTagCloud extends BaseComponent {
 
     const MODE_LIST = 'mode-list';
     const MODE_DETAIL = 'mode-detail';
@@ -27,25 +28,28 @@ class StoredQueryTagCloud extends Control {
      * @var ModelStoredQuery
      */
     private $modelStoredQuery;
-
-    /**
-     * @var callable[]
-     */
-    private $onClick;
     /** @var string */
     private $mode;
-    /** @var int[] */
-    private $activeTagIds = [];
+
+    /** @persistent */
+    public $activeTagIds = [];
 
     /**
      * StoredQueryTagCloud constructor.
      * @param string $mode
-     * @param ServiceMStoredQueryTag $serviceMStoredQueryTag
+     * @param Container $container
      */
-    public function __construct(string $mode, ServiceMStoredQueryTag $serviceMStoredQueryTag) {
-        parent::__construct();
-        $this->serviceMStoredQueryTag = $serviceMStoredQueryTag;
+    public function __construct(string $mode, Container $container) {
+        parent::__construct($container);
         $this->mode = $mode;
+    }
+
+    /**
+     * @param ServiceMStoredQueryTag $serviceMStoredQueryTag
+     * @return void
+     */
+    public function injectPrimary(ServiceMStoredQueryTag $serviceMStoredQueryTag) {
+        $this->serviceMStoredQueryTag = $serviceMStoredQueryTag;
     }
 
     /**
@@ -57,23 +61,11 @@ class StoredQueryTagCloud extends Control {
     }
 
     /**
-     * @param callable $callback
-     * @return static
-     */
-    public function registerOnClick(callable $callback) {
-        $this->onClick[] = $callback;
-        return $this;
-    }
-
-    /**
      * @param array $activeTagIds
      * @return void
      */
     public function handleOnClick(array $activeTagIds) {
         $this->activeTagIds = $activeTagIds;
-        foreach ($this->onClick as $callback) {
-            call_user_func($callback, $activeTagIds);
-        }
     }
 
     public function render() {
