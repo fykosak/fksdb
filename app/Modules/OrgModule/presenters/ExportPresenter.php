@@ -424,7 +424,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     protected function createComponentGrid(): StoredQueriesGrid {
-        return new StoredQueriesGrid($this->getContext());
+        return new StoredQueriesGrid($this->getContext(), $this->getComponent('tagCloudList'));
     }
 
     /**
@@ -457,13 +457,11 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     protected function createComponentTagCloudList(): StoredQueryTagCloud {
-        $tagCloud = new StoredQueryTagCloud(StoredQueryTagCloud::MODE_LIST, $this->serviceMStoredQueryTag);
-        $tagCloud->registerOnClick($this->getComponent('grid')->getFilterByTagCallback());
-        return $tagCloud;
+        return new StoredQueryTagCloud(StoredQueryTagCloud::MODE_LIST, $this->getContext());
     }
 
     protected function createComponentTagCloudDetail(): StoredQueryTagCloud {
-        $tagCloud = new StoredQueryTagCloud(StoredQueryTagCloud::MODE_DETAIL, $this->serviceMStoredQueryTag);
+        $tagCloud = new StoredQueryTagCloud(StoredQueryTagCloud::MODE_DETAIL, $this->getContext());
         $tagCloud->setModelStoredQuery($this->getPatternQuery());
         return $tagCloud;
     }

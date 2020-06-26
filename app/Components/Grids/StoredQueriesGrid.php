@@ -3,10 +3,10 @@
 namespace FKSDB\Components\Grids;
 
 use Authorization\ContestAuthorizator;
-use Closure;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
+use FKSDB\Components\Controls\StoredQueryTagCloud;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -33,29 +33,30 @@ class StoredQueriesGrid extends BaseGrid {
      * @var ContestAuthorizator
      */
     private $contestAuthorizator;
-    /** @var bool */
-    private $isFilteredByTag = false;
+
+    /**
+     * @var StoredQueryTagCloud
+     */
+    private $storedQueryTagCloud;
 
     /**
      * StoredQueriesGrid constructor.
      * @param Container $container
+     * @param StoredQueryTagCloud $storedQueryTagCloud
      */
-    public function __construct(Container $container) {
+    public function __construct(Container $container, StoredQueryTagCloud $storedQueryTagCloud) {
         parent::__construct($container);
-        $this->serviceStoredQuery = $container->getByType(ServiceStoredQuery::class);
-        $this->contestAuthorizator = $container->getByType(ContestAuthorizator::class);
+        $this->storedQueryTagCloud = $storedQueryTagCloud;
     }
 
-    public function getFilterByTagCallback(): Closure {
-        return function (array $tagTypeId) {
-            if (empty($tagTypeId)) {
-                $this->isFilteredByTag = false;
-                return;
-            }
-            $queries = $this->serviceStoredQuery->findByTagType($tagTypeId)->order('name');
-            $this->setDataSource(new NDataSource($queries));
-            $this->isFilteredByTag = true;
-        };
+    /**
+     * @param ServiceStoredQuery $serviceStoredQuery
+     * @param ContestAuthorizator $contestAuthorizator
+     * @return void
+     */
+    public function injectPrimary(ServiceStoredQuery $serviceStoredQuery, ContestAuthorizator $contestAuthorizator) {
+        $this->serviceStoredQuery = $serviceStoredQuery;
+        $this->contestAuthorizator = $contestAuthorizator;
     }
 
     /**
@@ -72,7 +73,10 @@ class StoredQueriesGrid extends BaseGrid {
         //
         // data
         //
-        if (!$this->isFilteredByTag) {
+        if (!empty($this->storedQueryTagCloud->activeTagIds)) {
+            $queries = $this->serviceStoredQuery->findByTagType($this->storedQueryTagCloud->activeTagIds)->order('name');
+            $this->setDataSource(new NDataSource($queries));
+        } else {
             $queries = $this->serviceStoredQuery->getTable()->order('name');
             $this->setDataSource(new NDataSource($queries));
         }

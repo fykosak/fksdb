@@ -3,6 +3,7 @@
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Entity\StoredQuery\StoredQueryForm;
+use FKSDB\Components\Controls\StoredQueryTagCloud;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\StoredQueries2Grid;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
@@ -58,7 +59,13 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     protected function createComponentGrid(): BaseGrid {
-        return new StoredQueries2Grid($this->getContext());
+        /** @var StoredQueryTagCloud $cloud */
+        $cloud = $this->getComponent('tagCloudList');
+        return new StoredQueries2Grid($this->getContext(), $cloud->activeTagIds);
+    }
+
+    protected function createComponentTagCloudList(): StoredQueryTagCloud {
+        return new StoredQueryTagCloud(StoredQueryTagCloud::MODE_LIST, $this->getContext());
     }
 
     protected function getORMService(): ServiceStoredQuery {

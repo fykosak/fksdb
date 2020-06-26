@@ -6,6 +6,7 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use Nette\Application\UI\Presenter;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -23,6 +24,18 @@ class StoredQueries2Grid extends BaseGrid {
      * @var ServiceStoredQuery
      */
     private $serviceStoredQuery;
+    /** @var array */
+    private $activeTagIds;
+
+    /**
+     * StoredQueries2Grid constructor.
+     * @param Container $container
+     * @param array $activeTagIds
+     */
+    public function __construct(Container $container, array $activeTagIds) {
+        parent::__construct($container);
+        $this->activeTagIds = $activeTagIds;
+    }
 
     /**
      * @param ServiceStoredQuery $serviceStoredQuery
@@ -42,8 +55,13 @@ class StoredQueries2Grid extends BaseGrid {
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);
 
-        $queries = $this->serviceStoredQuery->getTable()->order('name');
-        $this->setDataSource(new NDataSource($queries));
+        if (!empty($this->activeTagIds)) {
+            $queries = $this->serviceStoredQuery->findByTagType($this->activeTagIds)->order('name');
+            $this->setDataSource(new NDataSource($queries));
+        } else {
+            $queries = $this->serviceStoredQuery->getTable()->order('name');
+            $this->setDataSource(new NDataSource($queries));
+        }
         $this->addColumn('query_id', _('Query Id'));
         $this->addColumn('name', _('Export name'));
         $this->addColumn('description', _('Description'))->setTruncate(self::DESCRIPTION_TRUNC);
