@@ -17,7 +17,6 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use PDOException;
-use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

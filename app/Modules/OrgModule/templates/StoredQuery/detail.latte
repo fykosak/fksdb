@@ -2,7 +2,6 @@
     {? $presenter->registerJSFile('js/codemirror.min.js')}
     {? $presenter->registerJSFile('js/sqlconsole.js')}
     {? $presenter->registerStylesheetFile('css/codemirror.css', array('screen', 'projection', 'tv'))}
-
     <div class="btn-group">
         <a href="{plink :Org:Export:execute ,'id' => $model->getPrimary()}"
            class="btn btn-primary"
@@ -45,5 +44,4 @@
     <pre class="syntax-sql">
 {$model->sql}
 </pre>
-
 {/block}
