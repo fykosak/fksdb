@@ -31,6 +31,9 @@ class StoredQuery implements IDataSource, IResource {
     /** @var string */
     private $name;
 
+    /** @var StoredQueryParameter[] */
+    private $queryParameters;
+
     /** @var Connection */
     private $connection;
 
@@ -136,7 +139,7 @@ class StoredQuery implements IDataSource, IResource {
             if ($strict && in_array($key, $parameterNames)) {
                 throw new InvalidArgumentException("Implicit parameter name '$key' collides with an explicit parameter.");
             }
-            if (!array_key_exists($key, $this->implicitParameterValues) || $this->implicitParameterValues[$key] != $value) {
+            if (isset($this->implicitParameterValues[$key]) || $this->implicitParameterValues[$key] != $value) {
                 $this->implicitParameterValues[$key] = $value;
                 $this->invalidateAll();
             }
@@ -185,11 +188,7 @@ class StoredQuery implements IDataSource, IResource {
         }
     }
 
-    /**
-     * @param bool $all
-     * @return array
-     */
-    public function getParameters($all = false) {
+    public function getParameters(bool $all = false): array {
         if ($all) {
             return array_merge($this->parameterDefaultValues, $this->parameterValues, $this->implicitParameterValues);
         } else {
@@ -216,11 +215,9 @@ class StoredQuery implements IDataSource, IResource {
         $this->qid = $qid;
     }
 
-    /** @var ModelStoredQueryParameter[] */
-    private $queryParameters;
 
     /**
-     * @return ModelStoredQueryParameter[]
+     * @return StoredQueryParameter[]
      */
     public function getQueryParameters(): array {
         return $this->queryParameters ?? [];
@@ -232,14 +229,16 @@ class StoredQuery implements IDataSource, IResource {
      */
     public function setQueryParameters(array $queryParameters) {
         $this->parameterDefaultValues = [];
+
         foreach ($queryParameters as $parameter) {
             if ($parameter instanceof ModelStoredQueryParameter) {
                 $this->parameterDefaultValues[$parameter->name] = $parameter->getDefaultValue();
+                $this->queryParameters = new StoredQueryParameter($parameter->name, $parameter->getDefaultValue(), $parameter->getPDOType());
             } elseif ($parameter instanceof StoredQueryParameter) {
                 $this->parameterDefaultValues[$parameter->getName()] = $parameter->getDefaultValue();
+                $this->queryParameters[] = $parameter;
             }
         }
-        $this->queryParameters = $queryParameters;
     }
 
     // return true if pattern query is real ORM model, it means is already stored in DB
@@ -290,7 +289,7 @@ class StoredQuery implements IDataSource, IResource {
 
         // bind explicit parameters
         foreach ($this->getQueryParameters() as $parameter) {
-            $key = $parameter->name;
+            $key = $parameter->getName();
             if (isset($this->parameterValues[$key])) {
                 $value = $this->parameterValues[$key];
             } else {

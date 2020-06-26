@@ -85,7 +85,7 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
         return static::staticGetPDOType($this->type);
     }
 
-    static public function staticGetPDOType(string $type): int {
+    public static function staticGetPDOType(string $type): int {
         switch ($type) {
             case self::TYPE_INT:
             case self::TYPE_BOOL:
@@ -93,7 +93,7 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
             case self::TYPE_STRING:
                 return PDO::PARAM_STR;
             default:
-                throw new InvalidStateException("Unsupported parameter type '{$this->type}'.");
+                throw new InvalidStateException("Unsupported parameter type '{$type}'.");
         }
     }
 }
