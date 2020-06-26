@@ -1,9 +1,9 @@
 <?php
 
-namespace Exports;
+namespace FKSDB\Exports;
 
-use CSVFormat;
-use Exports\Formats\AESOPFormat;
+use FKSDB\Exports\Formats\CSVFormat;
+use FKSDB\Exports\Formats\AESOPFormat;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Config\GlobalParameters;
 use FKSDB\ORM\Models\ModelContest;

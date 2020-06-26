@@ -1,9 +1,10 @@
 <?php
 
-namespace Exports\Formats;
+namespace FKSDB\Exports\Formats;
 
 use DOMDocument;
-use Exports\IExportFormat;
+use FKSDB\Exports\IExportFormat;
+use FKSDB\Exports\Formats\PlainTextResponse;
 use FKSDB\StoredQuery\StoredQuery;
 use Nette\Application\IResponse;
 use Nette\SmartObject;

@@ -4,9 +4,9 @@ namespace FKSDB\Tests\ModelTests\Exports\Formats;
 
 $container = require '../../../bootstrap.php';
 
-use Exports\ExportFormatFactory;
-use Exports\Formats\AESOPFormat;
-use Exports\Formats\PlainTextResponse;
+use FKSDB\Exports\ExportFormatFactory;
+use FKSDB\Exports\Formats\AESOPFormat;
+use FKSDB\Exports\Formats\PlainTextResponse;
 use FKSDB\StoredQuery\StoredQueryFactory;
 use FKSDB\StoredQuery\StoredQueryPostProcessing;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;

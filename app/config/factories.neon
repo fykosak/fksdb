@@ -6,7 +6,7 @@ services:
         class: Mail\MailTemplateFactory(%email.templatesDir%)
 
     - FKSDB\Events\Model\ApplicationHandlerFactory
-    - Exports\ExportFormatFactory
+    - FKSDB\Exports\ExportFormatFactory
     - FKSDB\Components\Forms\Factories\StoredQueryFactory
     referencedEventPersonFactory:
         class: FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedEventPersonFactory

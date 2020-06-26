@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls;
 
 use Authorization\ContestAuthorizator;
-use Exports\ExportFormatFactory;
+use FKSDB\Exports\ExportFormatFactory;
 use FKSDB\StoredQuery\StoredQuery;
 use FKSDB\StoredQuery\StoredQueryFactory as StoredQueryFactorySQL;
 use FKSDB\Components\Controls\FormControl\FormControl;

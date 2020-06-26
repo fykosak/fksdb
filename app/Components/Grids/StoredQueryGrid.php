@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Grids;
 
-use Exports\ExportFormatFactory;
+use FKSDB\Exports\ExportFormatFactory;
 use FKSDB\StoredQuery\StoredQuery;
 use FKSDB\Components\Controls\ResultsComponent;
 use Nette\Application\UI\InvalidLinkException;
