@@ -29,14 +29,6 @@ class StoredQueryTagCloud extends BaseComponent {
     public $activeTagIds = [];
 
     /**
-     * StoredQueryTagCloud constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-    }
-
-    /**
      * @param ServiceMStoredQueryTag $serviceMStoredQueryTag
      * @return void
      */
@@ -53,6 +45,7 @@ class StoredQueryTagCloud extends BaseComponent {
     }
 
     /**
+     * @param string $mode
      * @return void
      */
     public function render(string $mode) {
@@ -62,7 +55,7 @@ class StoredQueryTagCloud extends BaseComponent {
     }
 
     public function renderList() {
-        $this->template->tags = $this->serviceMStoredQueryTag->getMainService();
+        $this->template->tags = $this->serviceMStoredQueryTag->getMainService()->getTable();
         $this->template->activeTagIds = $this->activeTagIds;
         $this->template->nextActiveTagIds = $this->createNextActiveTagIds();
         $this->render(self::MODE_LIST);
@@ -77,10 +70,7 @@ class StoredQueryTagCloud extends BaseComponent {
         $this->render(self::MODE_DETAIL);
     }
 
-    /**
-     * @return array
-     */
-    private function createNextActiveTagIds() {
+    private function createNextActiveTagIds(): array {
         $tags = $this->serviceMStoredQueryTag->getMainService();
         $nextActiveTagIds = [];
         /** @var ModelStoredQueryTag $tag */

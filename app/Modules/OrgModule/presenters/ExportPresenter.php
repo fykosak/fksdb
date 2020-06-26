@@ -2,49 +2,36 @@
 
 namespace FKSDB\Modules\OrgModule;
 
+use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\StoredQuery\StoredQuery;
 use FKSDB\StoredQuery\StoredQueryFactory;
 use FKSDB\Components\Controls\ContestChooser;
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\ResultsComponent;
 use FKSDB\Components\Controls\StoredQueryTagCloud;
-use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
-use FKSDB\Components\Grids\StoredQueriesGrid;
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
-use FKSDB\StoredQuery\StoredQueryParameter;
 use FKSDB\UI\PageTitle;
-use FKSDB\Modules\Core\PresenterTraits\{SeriesPresenterTrait};
-use FKSDB\Exceptions\NotFoundException;
+use FKSDB\Modules\Core\PresenterTraits\{EntityPresenterTrait, SeriesPresenterTrait};
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
-use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
-use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter;
-use FKSDB\Utils\FormUtils;
-use FKSDB\Exceptions\ModelException;
-use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\InvalidLinkException;
-use Nette\Database\Table\ActiveRow;
-use Nette\Forms\Controls\SubmitButton;
+use Nette\Application\UI\Control;
+use Nette\Security\IResource;
 use Nette\Utils\Strings;
-use FKSDB\ORM\ServicesMulti\ServiceMStoredQueryTag;
-use Tracy\Debugger;
 
 /**
  * Class ExportPresenter
  * @author Michal Červeňák <miso@fykos.cz>
+ * @method ModelStoredQuery getEntity()
  */
 class ExportPresenter extends BasePresenter implements ISeriesPresenter {
+
+    use EntityPresenterTrait;
+
     use SeriesPresenterTrait;
 
-    const CONT_CONSOLE = 'console';
-    const CONT_PARAMS_META = 'paramsMeta';
-    const CONT_META = 'meta';
-    const SESSION_NS = 'sql';
-    const PARAM_LOAD_FROM_SESSION = 'lfs';
     const PARAM_HTTP_AUTH = 'ha';
 
     /**
@@ -58,21 +45,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     private $serviceStoredQuery;
 
     /**
-     * @var ServiceStoredQueryParameter
-     */
-    private $serviceStoredQueryParameter;
-
-    /**
-     * @var ServiceMStoredQueryTag
-     */
-    private $serviceMStoredQueryTag;
-
-    /**
-     * @var StoredQueryFormFactory
-     */
-    private $storedQueryFormFactory;
-
-    /**
      * @var StoredQueryFactory
      */
     private $storedQueryFactory;
@@ -82,40 +54,11 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     private $storedQuery;
 
     /**
-     * @var ModelStoredQuery
-     */
-    private $patternQuery = false;
-
-    /**
      * @param ServiceStoredQuery $serviceStoredQuery
      * @return void
      */
     public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery) {
         $this->serviceStoredQuery = $serviceStoredQuery;
-    }
-
-    /**
-     * @param StoredQueryFormFactory $storedQueryFormFactory
-     * @return void
-     */
-    public function injectStoredQueryFormFactory(StoredQueryFormFactory $storedQueryFormFactory) {
-        $this->storedQueryFormFactory = $storedQueryFormFactory;
-    }
-
-    /**
-     * @param ServiceStoredQueryParameter $serviceStoredQueryParameter
-     * @return void
-     */
-    public function injectServiceStoredQueryParameter(ServiceStoredQueryParameter $serviceStoredQueryParameter) {
-        $this->serviceStoredQueryParameter = $serviceStoredQueryParameter;
-    }
-
-    /**
-     * @param ServiceMStoredQueryTag $serviceMStoredQueryTag
-     * @return void
-     */
-    public function injectServiceMStoredQueryTag(ServiceMStoredQueryTag $serviceMStoredQueryTag) {
-        $this->serviceMStoredQueryTag = $serviceMStoredQueryTag;
     }
 
     /**
@@ -127,146 +70,59 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     protected function startup() {
+        switch ($this->getAction()) {
+            case 'edit':
+                $this->redirect(':Org:StoredQuery:edit', $this->getParameters());
+            case 'compose':
+                $this->redirect(':Org:StoredQuery:create', $this->getParameters());
+            case 'list':
+                $this->forward(':Org:StoredQuery:list', $this->getParameters());
+            case 'show':
+                $this->redirect(':Org:StoredQuery:detail', $this->getParameters());
+        }
         $this->seriesTraitStartup();
         parent::startup();
     }
 
     /**
-     * @return StoredQuery
+     * @return void
      * @throws BadRequestException
      */
-    public function getStoredQuery() {
-        if ($this->storedQuery) {
-            return $this->storedQuery;
-        } else {
-            return $this->getStoredQueryFromSession();
-        }
+    public function authorizedExecute() {
+        $this->contestAuthorizator->isAllowed($this->getStoredQuery(), 'excecute', $this->getSelectedContest());
     }
 
     /**
-     * @param StoredQuery $storedQuery
      * @return void
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    public function setStoredQuery(StoredQuery $storedQuery) {
-        $this->storedQuery = $storedQuery; //TODO
+    public function titleExecute() {
+        $this->setPageTitle(new PageTitle(sprintf(_('%s'), $this->getStoredQuery()->getName()), 'fa fa-play-circle-o'));
     }
 
     /**
-     * @param $values
      * @return void
-     */
-    private function storeDesignFormToSession($values) {
-        $section = $this->session->getSection(self::SESSION_NS);
-        $section->data = $values;
-    }
-
-    /**
-     * @return array|null
-     */
-    private function getDesignFormFromSession() {
-        // there may be invalid data in session, so we verify it by GET parameter
-        if (!$this->getParam(self::PARAM_LOAD_FROM_SESSION, false)) {
-            return null;
-        }
-        $section = $this->session->getSection(self::SESSION_NS);
-        return isset($section->data) ? $section->data : null;
-    }
-
-    private function clearSession() {
-        $section = $this->session->getSection(self::SESSION_NS);
-        unset($section->data);
-    }
-
-    /**
-     * @return StoredQuery|null
      * @throws BadRequestException
      */
-    protected function getStoredQueryFromSession() {
-        $data = $this->getDesignFormFromSession();
-        if (!$data) {
-            return null;
-        }
-
-        $sql = $data[self::CONT_CONSOLE]['sql'];
-        $parameters = [];
-        foreach ($data[self::CONT_PARAMS_META] as $paramMetaData) {
-            $parameters[] = new StoredQueryParameter(
-                $paramMetaData['name'],
-                $paramMetaData['default'],
-                ModelStoredQueryParameter::staticGetPDOType($paramMetaData['type'])
-            );
-        }
-
-        return $this->storedQueryFactory->createQueryFromSQL($this, $sql, $parameters);
-    }
-
-    /**
-     * @return ModelStoredQuery|ActiveRow|null
-     */
-    public function getPatternQuery() {
-        if ($this->patternQuery === false) {
-            $id = $this->getParam('id');
-            $this->patternQuery = $this->serviceStoredQuery->findByPrimary($id);
-            if (!$this->patternQuery && $this->getParam('qid')) {
-                $this->patternQuery = $this->serviceStoredQuery->findByQid($this->getParam('qid'));
+    public function actionExecute() {
+        $storedQuery = $this->getStoredQuery();
+        if ($storedQuery && $this->getParameter('qid')) {
+            $parameters = [];
+            foreach ($this->getParameters() as $key => $value) {
+                if (Strings::startsWith($key, ResultsComponent::PARAMETER_URL_PREFIX)) {
+                    $parameters[substr($key, strlen(ResultsComponent::PARAMETER_URL_PREFIX))] = $value;
+                }
             }
         }
-        return $this->patternQuery;
     }
 
     /**
      * @return void
      * @throws BadRequestException
      */
-    public function authorizedList() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('storedQuery', 'list', $this->getSelectedContest()));
-    }
-
-    /**
-     * @return void
-     * @throws BadRequestException
-     */
-    public function authorizedCompose() {
-        $this->setAuthorized(
-            ($this->getContestAuthorizator()->isAllowed('storedQuery', 'create', $this->getSelectedContest()) &&
-                $this->getContestAuthorizator()->isAllowed('export.adhoc', 'execute', $this->getSelectedContest()))
-        );
-    }
-
-    /**
-     * @param $id
-     * @throws BadRequestException
-     */
-    public function authorizedEdit($id) {
-        $query = $this->getPatternQuery();
-        if (!$query) {
-            throw new NotFoundException('Neexistující dotaz.');
-        }
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($query, 'edit', $this->getSelectedContest()));
-    }
-
-    /**
-     * @param $id
-     * @throws BadRequestException
-     */
-    public function authorizedShow($id) {
-        $query = $this->getPatternQuery();
-        if (!$query) {
-            throw new NotFoundException('Neexistující dotaz.');
-        }
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($query, 'show', $this->getSelectedContest()));
-    }
-
-    /**
-     * @param $id
-     * @throws BadRequestException
-     */
-    public function authorizedExecute($id) {
-        $query = $this->getPatternQuery();
-        if (!$query) {
-            throw new NotFoundException('Neexistující dotaz.');
-        }
-        // proper authorization is done in StoredQueryComponent
+    public function renderExecute() {
+        $this->template->model = $this->getStoredQuery()->getQueryPattern();
     }
 
     /**
@@ -288,129 +144,31 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     /**
-     * @param $id
+     * @return StoredQuery
      * @throws BadRequestException
-     * @throws AbortException
-     * @throws InvalidLinkException
      */
-    public function actionExecute($id) {
-        $query = $this->getPatternQuery();
-        $storedQuery = $this->storedQueryFactory->createQuery($this, $query);
-        $this->setStoredQuery($storedQuery);
-
-        if ($query && $this->getParameter('qid')) {
-            $parameters = [];
-            foreach ($this->getParameters() as $key => $value) {
-                if (Strings::startsWith($key, ResultsComponent::PARAMETER_URL_PREFIX)) {
-                    $parameters[substr($key, strlen(ResultsComponent::PARAMETER_URL_PREFIX))] = $value;
-                }
+    public function getStoredQuery(): StoredQuery {
+        if (!isset($this->storedQuery) || is_null($this->storedQuery)) {
+            $model = $this->getQueryByQId();
+            if (!$model) {
+                $model = $this->getEntity();
             }
+            $this->storedQuery = $this->storedQueryFactory->createQuery($this, $model);
         }
+        return $this->storedQuery;
     }
 
     /**
-     * @return void
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
+     * @return ModelStoredQuery|null
      */
-    public function titleEdit() {
-        $this->setPageTitle(new PageTitle(sprintf(_('Úprava dotazu %s'), $this->getPatternQuery()->name), 'fa fa-pencil'));
-    }
-
-    /**
-     * @param mixed $id
-     * @throws BadTypeException
-     */
-    public function renderEdit($id) {
-        $query = $this->getPatternQuery();
-
-        $values = $this->getDesignFormFromSession();
-        if (!$values) {
-            $values = [];
-            $values[self::CONT_CONSOLE] = $this->getPatternQuery();
-            $values[self::CONT_META] = $this->getPatternQuery()->toArray();
-            $values[self::CONT_META]['tags'] = $this->getPatternQuery()->getTags()->fetchPairs('tag_type_id', 'tag_type_id');
-            $values[self::CONT_PARAMS_META] = [];
-
-            foreach ($query->getParameters() as $parameter) {
-                $paramData = $parameter->toArray();
-                $paramData['default'] = $parameter->getDefaultValue();
-                $values[self::CONT_PARAMS_META][] = $paramData;
-            }
-            if ($this->getPatternQuery()->php_post_proc) {
-                $this->flashMessage(_('Výsledek dotazu je ještě zpracován v PHP. Dodržuj názvy sloupců a parametrů.'), BasePresenter::FLASH_WARNING);
-            }
-        }
-        /** @var FormControl $control */
-        $control = $this->getComponent('editForm');
-        $control->getForm()->setDefaults($values);
-    }
-
-    /**
-     * @return void
-     * @throws BadRequestException
-     */
-    public function titleCompose() {
-        $this->setPageTitle(new PageTitle(sprintf(_('Napsat dotaz')), 'fa fa-pencil'));
-    }
-
-    /**
-     * @return void
-     * @throws BadTypeException
-     */
-    public function renderCompose() {
-        $values = $this->getDesignFormFromSession();
-        if ($values) {
-            /** @var FormControl $control */
-            $control = $this->getComponent('composeForm');
-            $control->getForm()->setDefaults($values);
-        }
-    }
-
-    /**
-     * @return void
-     * @throws BadRequestException
-     */
-    public function titleList() {
-        $this->setPageTitle(new PageTitle(_('Exports'), 'fa fa-database'));
-    }
-
-    /**
-     * @return void
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     */
-    public function titleShow() {
-        $title = sprintf(_('Detail dotazu %s'), $this->getPatternQuery()->name);
-        $qid = $this->getPatternQuery()->qid;
+    public function getQueryByQId() {
+        $qid = $this->getParameter('qid');
         if ($qid) {
-            $title .= " ($qid)";
+            return $this->serviceStoredQuery->findByQid($qid);
         }
-
-        $this->setPageTitle(new PageTitle($title, 'fa fa-database'));
+        return null;
     }
 
-    /**
-     * @param mixed $id
-     */
-    public function renderShow($id) {
-        $this->template->storedQuery = $this->getPatternQuery();
-    }
-    /**
-     * @param mixed $id
-     */
-    public function renderExecute($id) {
-        $this->template->storedQuery = $this->getPatternQuery();
-    }
-
-    /**
-     * @return void
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     */
-    public function titleExecute() {
-        $this->setPageTitle(new PageTitle(sprintf(_('%s'), $this->getPatternQuery()->name), 'fa fa-play-circle-o'));
-    }
 
     protected function createComponentContestChooser(): ContestChooser {
         $component = parent::createComponentContestChooser();
@@ -422,216 +180,18 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         return $component;
     }
 
-    protected function createComponentGrid(): StoredQueriesGrid {
-        return new StoredQueriesGrid($this->getContext(), $this->getComponent('tagCloud'));
-    }
-
     /**
-     * @return ResultsComponent|null
+     * @return ResultsComponent
      * @throws BadRequestException
      */
-    protected function createComponentAdhocResultsComponent() {
-        $storedQuery = $this->getStoredQuery();
-        if ($storedQuery === null) { // workaround when session expires and persistent parameters from component are to be stored (because of redirect)
-            return null;
-        }
-        $grid = new ResultsComponent($this->getContext());
-        $grid->setShowParametrizeForm(false);
-        $grid->setStoredQuery($storedQuery);
-        return $grid;
-    }
-
-    /**
-     * @return ResultsComponent|null
-     * @throws BadRequestException
-     */
-    protected function createComponentResultsComponent() {
-        $storedQuery = $this->getStoredQuery();
-        if ($storedQuery === null) { // workaround when session expires and persistent parameters from component are to be stored (because of redirect)
-            return null;
-        }
+    protected function createComponentResultsComponent(): ResultsComponent {
         $control = new ResultsComponent($this->getContext());
-        $control->setStoredQuery($storedQuery);
+        $control->setStoredQuery($this->getStoredQuery());
         return $control;
     }
+
     protected function createComponentTagCloud(): StoredQueryTagCloud {
         return new StoredQueryTagCloud($this->getContext());
-    }
-
-    /**
-     * @return FormControl
-     * @throws BadRequestException
-     */
-    protected function createComponentComposeForm(): FormControl {
-        $control = $this->createDesignForm();
-        $control->getForm()->addSubmit('save', _('Save'))
-            ->onClick[] = function (SubmitButton $button) {
-            $this->handleComposeSuccess($button);
-        };
-        return $control;
-    }
-
-    /**
-     * @return FormControl
-     * @throws BadRequestException
-     */
-    protected function createComponentEditForm(): FormControl {
-        $control = $this->createDesignForm();
-        $control->getForm()->addSubmit('save', _('Save'))
-            ->onClick[] = function (SubmitButton $button) {
-            $this->handleEditSuccess($button);
-        };
-        return $control;
-    }
-
-    /**
-     * @return FormControl
-     * @throws BadRequestException
-     */
-    private function createDesignForm(): FormControl {
-        $control = new FormControl();
-        $form = $control->getForm();
-
-        $group = $form->addGroup(_('SQL'));
-
-        $console = $this->storedQueryFormFactory->createConsole($group);
-        $form->addComponent($console, self::CONT_CONSOLE);
-
-        $params = $this->storedQueryFormFactory->createParametersMetadata($group);
-        $form->addComponent($params, self::CONT_PARAMS_META);
-
-
-        $group = $form->addGroup(_('Metadata'));
-
-        $metadata = $this->storedQueryFormFactory->createMetadata($group);
-        $form->addComponent($metadata, self::CONT_META);
-
-        $form->setCurrentGroup();
-
-        $submit = $form->addSubmit('execute', _('Spustit'))
-            ->setValidationScope(false);
-        $submit->getControlPrototype()->addClass('btn-success');
-        $submit->onClick[] = function (SubmitButton $button) {
-            $this->handleComposeExecute($button);
-        };
-
-        return $control;
-    }
-
-    /**
-     * @param SubmitButton $button
-     * @throws AbortException
-     */
-    private function handleComposeExecute(SubmitButton $button) {
-        $form = $button->getForm();
-        $values = $form->getValues();
-        $this->storeDesignFormToSession($values);
-
-        if ($this->isAjax()) {
-            $this->redrawControl('adhocResultsComponent');
-        } else {
-            $this->redirect('this', [self::PARAM_LOAD_FROM_SESSION => true]);
-        }
-    }
-
-    /**
-     * @param SubmitButton $button
-     * @throws AbortException
-     * @throws \ReflectionException
-     */
-    private function handleEditSuccess(SubmitButton $button) {
-        try {
-            $storedQuery = $this->getPatternQuery();
-            if (!$this->getContestAuthorizator()->isAllowed($storedQuery, 'edit', $this->getSelectedContest())) {
-                throw new ForbiddenRequestException('Nedostatečné oprávnění ke vytvoření dotazu.');
-            }
-
-            $form = $button->getForm();
-            $values = $form->getValues();
-            $this->handleSave($values, $storedQuery);
-
-            $this->flashMessage(_('Dotaz upraven.'), self::FLASH_SUCCESS);
-            $this->backLinkRedirect();
-            $this->redirect('list'); // if there's no backlink
-        } catch (BadRequestException $exception) {
-            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
-        } catch (ModelException $exception) {
-            $this->flashMessage(_('Chyba při ukládání do databáze.'), self::FLASH_ERROR);
-            Debugger::log($exception);
-        }
-    }
-
-    /**
-     * @param SubmitButton $button
-     * @throws AbortException
-     * @throws \ReflectionException
-     */
-    private function handleComposeSuccess(SubmitButton $button) {
-        try {
-            if (!$this->getContestAuthorizator()->isAllowed('storedQuery', 'create', $this->getSelectedContest())) {
-                throw new ForbiddenRequestException('Nedostatečné oprávnění ke vytvoření dotazu.');
-            }
-
-            $form = $button->getForm();
-            $values = $form->getValues();
-            /** @var ModelStoredQuery $storedQuery */
-            $storedQuery = $this->serviceStoredQuery->createNew();
-            $this->handleSave($values, $storedQuery);
-
-            $this->flashMessage(_('Dotaz vytvořen.'), self::FLASH_SUCCESS);
-            $this->backLinkRedirect();
-            $this->redirect('list'); // if there's no backlink
-        } catch (BadRequestException $exception) {
-            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
-        } catch (ModelException $exception) {
-            $this->flashMessage(_('Chyba při ukládání do databáze.'), self::FLASH_ERROR);
-            Debugger::log($exception);
-        }
-    }
-
-    /**
-     * @param iterable $values
-     * @param ModelStoredQuery $storedQuery
-     */
-    private function handleSave($values, ModelStoredQuery $storedQuery) {
-        $connection = $this->serviceStoredQuery->getConnection();
-        $connection->beginTransaction();
-
-        $metadata = $values[self::CONT_META];
-        $metadata = FormUtils::emptyStrToNull($metadata);
-        $this->serviceStoredQuery->updateModel($storedQuery, $metadata);
-
-        $sqlData = $values[self::CONT_CONSOLE];
-        $this->serviceStoredQuery->updateModel($storedQuery, $sqlData);
-
-        $this->serviceStoredQuery->save($storedQuery);
-
-        $this->serviceMStoredQueryTag->getJoinedService()->getTable()->where([
-            'query_id' => $storedQuery->query_id,
-        ])->delete();
-        foreach ($metadata['tags'] as $tagTypeId) {
-            $data = [
-                'query_id' => $storedQuery->query_id,
-                'tag_type_id' => $tagTypeId,
-            ];
-            $tag = $this->serviceMStoredQueryTag->createNew($data);
-            $this->serviceMStoredQueryTag->save($tag);
-        }
-
-        $this->serviceStoredQueryParameter->getTable()
-            ->where(['query_id' => $storedQuery->query_id])->delete();
-
-        foreach ($values[self::CONT_PARAMS_META] as $paramMetaData) {
-            /** @var ModelStoredQueryParameter $parameter */
-            $parameter = $this->serviceStoredQueryParameter->createNew($paramMetaData);
-            $parameter->setDefaultValue($paramMetaData['default']);
-
-            $parameter->query_id = $storedQuery->query_id;
-            $this->serviceStoredQueryParameter->save($parameter);
-        }
-
-        $this->clearSession();
-        $connection->commit();
     }
 
     /**
@@ -643,5 +203,30 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     protected function setPageTitle(PageTitle $pageTitle) {
         $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
         parent::setPageTitle($pageTitle);
+    }
+
+    protected function createComponentCreateForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    protected function createComponentEditForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    protected function getORMService(): ServiceStoredQuery {
+        return $this->serviceStoredQuery;
+    }
+
+    /**
+     * @param IResource|string|null $resource
+     * @param string $privilege
+     * @return bool
+     */
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return false;
+    }
+
+    protected function createComponentGrid(): BaseGrid {
+        throw new NotImplementedException();
     }
 }

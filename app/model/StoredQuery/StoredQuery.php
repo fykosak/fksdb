@@ -103,7 +103,9 @@ class StoredQuery implements IDataSource, IResource {
             $this->name = $queryPattern->name;
         }
         $this->sql = $this->queryPattern->sql;
-        $this->setPostProcessing($queryPattern->php_post_proc);
+        if ($queryPattern->php_post_proc) {
+            $this->setPostProcessing($queryPattern->php_post_proc);
+        }
     }
 
     /**

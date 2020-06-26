@@ -8,11 +8,11 @@ use FKSDB\Components\Controls\ResultsComponent;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use Nette\Utils\Strings;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 use PDOException;
-use Tracy\Debugger;
 
 /**
  *
@@ -63,7 +63,7 @@ class StoredQueryGrid extends BaseGrid {
         $this->paginate = false;
         try {
             foreach ($this->storedQuery->getColumnNames() as $name) {
-                $this->addColumn($name, $name)->setRenderer(function (\stdClass $row) use ($name) {
+                $this->addColumn(str_replace('-', '_', Strings::webalize($name)), $name)->setRenderer(function (\stdClass $row) use ($name) {
                     return ((array)$row)[$name];
                 });
             }

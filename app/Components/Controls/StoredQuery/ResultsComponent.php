@@ -17,6 +17,7 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use PDOException;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -172,7 +173,6 @@ class ResultsComponent extends BaseComponent {
             $formControl = $this->getComponent('parametrizeForm');
             $formControl->getForm()->setDefaults([self::CONT_PARAMS => $defaults]);
         }
-
         $this->template->error = $this->isAuthorized() ? $this->getSqlError() : _('Permission denied');
         $this->template->hasParameters = $this->showParametrizeForm && count($this->storedQuery->getQueryParameters());
         $this->template->hasStoredQuery = $this->hasStoredQuery();
@@ -204,6 +204,7 @@ class ResultsComponent extends BaseComponent {
         }
     }
 
+    // TODO is this really need?
     private function isAuthorized(): bool {
         if (!$this->hasStoredQuery()) {
             return false;

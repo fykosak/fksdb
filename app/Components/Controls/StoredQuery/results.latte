@@ -13,7 +13,7 @@
         {if $storedQuery}
             {if $storedQuery->hasQueryPattern()}
                 <a class="btn btn-secondary btn-sm"
-                   href="{plink detail ['id'=>$storedQuery->getQueryPattern()->query_id]}">{_'Detail of the query'}</a>
+                   href="{plink :Org:StoredQuery:detail 'id'=>$storedQuery->getQueryPattern()->query_id}">{_'Detail of the query'}</a>
             {/if}
         {/if}
         {control grid}

@@ -5,10 +5,11 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Controls\Entity\StoredQuery\StoredQueryForm;
 use FKSDB\Components\Controls\StoredQueryTagCloud;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Components\Grids\StoredQueries2Grid;
+use FKSDB\Components\Grids\StoredQueriesGrid;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
@@ -19,6 +20,7 @@ use Nette\Security\IResource;
 /**
  * Class StoredQueryPresenter
  * @author Michal Červeňák <miso@fykos.cz>
+ * @method ModelStoredQuery getEntity()
  */
 class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
     use SeriesPresenterTrait;
@@ -37,7 +39,34 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
         $this->serviceStoredQuery = $serviceStoredQuery;
     }
 
+    public function titleEdit() {
+        $this->setPageTitle(new PageTitle(sprintf(_('Úprava dotazu %s'), $this->getEntity()->name), 'fa fa-pencil'));
+    }
+
+    public function getTitleCreate(): PageTitle {
+        return new PageTitle(sprintf(_('Create query')), 'fa fa-pencil');
+    }
+
+    public function titleList() {
+        $this->setPageTitle(new PageTitle(_('Exports'), 'fa fa-database'));
+    }
+
+    public function titleDetail() {
+        $title = sprintf(_('Detail of the query "%s"'), $this->getEntity()->name);
+        $qid = $this->getEntity()->qid;
+        if ($qid) {
+            $title .= " ($qid)";
+        }
+
+        $this->setPageTitle(new PageTitle($title, 'fa fa-database'));
+    }
+
+
     protected function startup() {
+        switch ($this->getAction()) {
+            case 'execute':
+                $this->redirect(':Org:Export:execute', $this->getParameters());
+        }
         parent::startup();
         $this->seriesTraitStartup();
     }
@@ -65,7 +94,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
     protected function createComponentGrid(): BaseGrid {
         /** @var StoredQueryTagCloud $cloud */
         $cloud = $this->getComponent('tagCloud');
-        return new StoredQueries2Grid($this->getContext(), $cloud->activeTagIds);
+        return new StoredQueriesGrid($this->getContext(), $cloud->activeTagIds);
     }
 
     protected function createComponentTagCloud(): StoredQueryTagCloud {
