@@ -1,37 +1,43 @@
 {block content}
-{? $presenter->registerJSFile('js/codemirror.min.js')}
-{? $presenter->registerJSFile('js/sqlconsole.js')}
-{? $presenter->registerStylesheetFile('css/codemirror.css', array('screen', 'projection', 'tv'))}
+    {? $presenter->registerJSFile('js/codemirror.min.js')}
+    {? $presenter->registerJSFile('js/sqlconsole.js')}
+    {? $presenter->registerStylesheetFile('css/codemirror.css', array('screen', 'projection', 'tv'))}
 
-<div class="btn-group">
-    <a n:href="execute $storedQuery->getPrimary()" class="btn btn-primary" title="{_('Spustit dotaz')}">{_('Spustit')}</a>
-    <a n:if="$presenter->authorized('edit', ['id' => $storedQuery->getPrimary()])" n:href="edit $storedQuery->getPrimary()" class="btn btn-secondary" title="{_('Upravit dotaz')}">{_('Upravit')}</a>
-</div>
+    <div class="btn-group">
+        <a n:href="execute $storedQuery->getPrimary()" class="btn btn-primary"
+                                                       title="{_('Spustit dotaz')}">{_('Spustit')}</a>
+        <a n:if="$presenter->authorized('edit', ['id' => $storedQuery->getPrimary()])" n:href="edit $storedQuery->getPrimary()"
+                class="btn btn-secondary" title="{_('Upravit dotaz')}">{_('Upravit')}</a>
+    </div>
 
-<p>{$storedQuery->description|noescape|nl2br}</p>
-{control tagCloudDetail}
+    <p>{$storedQuery->description|noescape|nl2br}</p>
+    {control tagCloud:detail $storedQuery}
 
-{if $storedQuery->getPostProcessing()}
-<h3>{_'PHP post processing'}</h3>
-<p>{$storedQuery->getPostProcessing()->getDescription()|noescape|nl2br}</p>
-{/if}
+    {if $storedQuery->php_post_proc}
+        <h3>{_'PHP post processing'}</h3>
+        <p>{$storedQuery->php_post_proc|noescape|nl2br}</p>
+    {/if}
 
-{if count($storedQuery->getParameters())}
-<h3>{_'Parametry'}</h3>
-<table class="table table-hover table-striped">
-    <tr><th>Název</th><th>Popis</th><th>Výchozí hodnota</th></tr>
-    {foreach $storedQuery->getParameters() as $param}
-    <tr>
-        <td>{$param->name}</td>
-        <td>{$param->description}</td>
-        <td>{$param->getDefaultValue()}</td>
-    </tr>
-    {/foreach}
-</table>
-{/if}
+    {if count($storedQuery->getParameters())}
+        <h3>{_'Parametry'}</h3>
+        <table class="table table-hover table-striped">
+            <tr>
+                <th>Název</th>
+                <th>Popis</th>
+                <th>Výchozí hodnota</th>
+            </tr>
+            {foreach $storedQuery->getParameters() as $param}
+                <tr>
+                    <td>{$param->name}</td>
+                    <td>{$param->description}</td>
+                    <td>{$param->getDefaultValue()}</td>
+                </tr>
+            {/foreach}
+        </table>
+    {/if}
 
-<h3>SQL</h3>
-<pre class="syntax-sql">
+    <h3>SQL</h3>
+    <pre class="syntax-sql">
 {$storedQuery->sql}
 </pre>
 

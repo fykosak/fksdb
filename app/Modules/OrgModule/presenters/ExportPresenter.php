@@ -396,6 +396,12 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     public function renderShow($id) {
         $this->template->storedQuery = $this->getPatternQuery();
     }
+    /**
+     * @param mixed $id
+     */
+    public function renderExecute($id) {
+        $this->template->storedQuery = $this->getPatternQuery();
+    }
 
     /**
      * @return void
@@ -404,13 +410,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      */
     public function titleExecute() {
         $this->setPageTitle(new PageTitle(sprintf(_('%s'), $this->getPatternQuery()->name), 'fa fa-play-circle-o'));
-    }
-
-    /**
-     * @param mixed $id
-     */
-    public function renderExecute($id) {
-        $this->template->storedQuery = $this->getPatternQuery();
     }
 
     protected function createComponentContestChooser(): ContestChooser {
@@ -424,7 +423,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     protected function createComponentGrid(): StoredQueriesGrid {
-        return new StoredQueriesGrid($this->getContext(), $this->getComponent('tagCloudList'));
+        return new StoredQueriesGrid($this->getContext(), $this->getComponent('tagCloud'));
     }
 
     /**
@@ -455,15 +454,8 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         $control->setStoredQuery($storedQuery);
         return $control;
     }
-
-    protected function createComponentTagCloudList(): StoredQueryTagCloud {
-        return new StoredQueryTagCloud(StoredQueryTagCloud::MODE_LIST, $this->getContext());
-    }
-
-    protected function createComponentTagCloudDetail(): StoredQueryTagCloud {
-        $tagCloud = new StoredQueryTagCloud(StoredQueryTagCloud::MODE_DETAIL, $this->getContext());
-        $tagCloud->setModelStoredQuery($this->getPatternQuery());
-        return $tagCloud;
+    protected function createComponentTagCloud(): StoredQueryTagCloud {
+        return new StoredQueryTagCloud($this->getContext());
     }
 
     /**

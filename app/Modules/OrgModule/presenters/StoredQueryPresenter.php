@@ -50,6 +50,10 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
         $this->traitActionEdit();
     }
 
+    public function renderDetail() {
+        $this->template->model = $this->getEntity();
+    }
+
     protected function createComponentCreateForm(): Control {
         return new StoredQueryForm($this->getContext(), true);
     }
@@ -60,12 +64,12 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
 
     protected function createComponentGrid(): BaseGrid {
         /** @var StoredQueryTagCloud $cloud */
-        $cloud = $this->getComponent('tagCloudList');
+        $cloud = $this->getComponent('tagCloud');
         return new StoredQueries2Grid($this->getContext(), $cloud->activeTagIds);
     }
 
-    protected function createComponentTagCloudList(): StoredQueryTagCloud {
-        return new StoredQueryTagCloud(StoredQueryTagCloud::MODE_LIST, $this->getContext());
+    protected function createComponentTagCloud(): StoredQueryTagCloud {
+        return new StoredQueryTagCloud($this->getContext());
     }
 
     protected function getORMService(): ServiceStoredQuery {

@@ -4,9 +4,7 @@ namespace FKSDB\Components\Controls;
 
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTag;
-use Nette\Application\UI\Control;
 use Nette\DI\Container;
-use Nette\InvalidArgumentException;
 use FKSDB\ORM\ServicesMulti\ServiceMStoredQueryTag;
 
 /**
@@ -24,10 +22,6 @@ class StoredQueryTagCloud extends BaseComponent {
      */
     private $serviceMStoredQueryTag;
 
-    /**
-     * @var ModelStoredQuery
-     */
-    private $modelStoredQuery;
     /** @var string */
     private $mode;
 
@@ -36,12 +30,10 @@ class StoredQueryTagCloud extends BaseComponent {
 
     /**
      * StoredQueryTagCloud constructor.
-     * @param string $mode
      * @param Container $container
      */
-    public function __construct(string $mode, Container $container) {
+    public function __construct(Container $container) {
         parent::__construct($container);
-        $this->mode = $mode;
     }
 
     /**
@@ -53,14 +45,6 @@ class StoredQueryTagCloud extends BaseComponent {
     }
 
     /**
-     * @param ModelStoredQuery $modelStoredQuery
-     * @return void
-     */
-    public function setModelStoredQuery(ModelStoredQuery $modelStoredQuery) {
-        $this->modelStoredQuery = $modelStoredQuery;
-    }
-
-    /**
      * @param array $activeTagIds
      * @return void
      */
@@ -68,23 +52,29 @@ class StoredQueryTagCloud extends BaseComponent {
         $this->activeTagIds = $activeTagIds;
     }
 
-    public function render() {
-        switch ($this->mode) {
-            case self::MODE_LIST:
-                $this->template->tags = $this->serviceMStoredQueryTag->getMainService();
-                $this->template->activeTagIds = $this->activeTagIds;
-                $this->template->nextActiveTagIds = $this->createNextActiveTagIds();
-                break;
-            case self::MODE_DETAIL:
-                $this->template->tags = $this->modelStoredQuery->getMStoredQueryTags();
-                break;
-            default :
-                throw new InvalidArgumentException();
-        }
-
-        $this->template->mode = $this->mode;
+    /**
+     * @return void
+     */
+    public function render(string $mode) {
+        $this->template->mode = $mode;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'StoredQueryTagCloud.latte');
         $this->template->render();
+    }
+
+    public function renderList() {
+        $this->template->tags = $this->serviceMStoredQueryTag->getMainService();
+        $this->template->activeTagIds = $this->activeTagIds;
+        $this->template->nextActiveTagIds = $this->createNextActiveTagIds();
+        $this->render(self::MODE_LIST);
+    }
+
+    /**
+     * @param ModelStoredQuery $query
+     * @return void
+     */
+    public function renderDetail(ModelStoredQuery $query) {
+        $this->template->tags = $query->getMStoredQueryTags();
+        $this->render(self::MODE_DETAIL);
     }
 
     /**
