@@ -104,8 +104,7 @@ class ExportFormatFactory {
      * @return array|mixed
      */
     public function getFormats(StoredQuery $storedQuery) {
-        $queryPattern = $storedQuery->getQueryPattern();
-        $qid = isset($queryPattern->qid) ? $queryPattern->qid : null;
+        $qid = $storedQuery->getQId();
         if (!$qid) {
             return $this->defaultFormats;
         } else {
@@ -123,7 +122,7 @@ class ExportFormatFactory {
         $parameters = $this->globalParameters['exports']['formats'][$name];
         $queryParameters = $storedQuery->getParameters(true);
 
-        $qid = $storedQuery->getQueryPattern()->qid;
+        $qid = $storedQuery->getQId();
 
         $xslFile = $parameters['template'];
         $contestName = $this->globalParameters['contestMapping'][$queryParameters['contest']];

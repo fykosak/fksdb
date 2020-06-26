@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\StoredQuery\StoredQuery;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTagType;

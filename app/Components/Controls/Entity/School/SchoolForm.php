@@ -15,7 +15,7 @@ use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Form;
+use Nette\Forms\Form;
 use Tracy\Debugger;
 
 /**

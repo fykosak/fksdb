@@ -1,0 +1,21 @@
+{if $hasParameters}
+    {control parametrizeForm}
+{/if}
+{if $hasStoredQuery}
+    {if $error}
+        <div class="alert alert-danger">
+            {$error}
+        </div>
+    {else}
+        {foreach $formats as $formatName => $label}
+            <a class="btn btn-secondary btn-sm" href="{link 'format!', 'format' => $formatName}">{$label}</a>
+        {/foreach}
+        {if $storedQuery}
+            {if $storedQuery->hasQueryPattern()}
+                <a class="btn btn-secondary btn-sm"
+                   href="{plink detail ['id'=>$storedQuery->getQueryPattern()->query_id]}">{_'Detail of the query'}</a>
+            {/if}
+        {/if}
+        {control grid}
+    {/if}
+{/if}

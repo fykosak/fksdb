@@ -350,11 +350,11 @@ class PersonPresenter extends BasePresenter {
     }
 
     protected function createComponentCreateForm(): Control {
-        return new PersonForm($this->getContext(), true);
+        return new PersonForm($this->getContext(), true, $this->getUserPermissions());
     }
 
     protected function createComponentEditForm(): Control {
-        return new PersonForm($this->getContext(), false, new FieldLevelPermission($this->getUserPermissions(), $this->getUserPermissions()));
+        return new PersonForm($this->getContext(), false, $this->getUserPermissions());
     }
 
     /**

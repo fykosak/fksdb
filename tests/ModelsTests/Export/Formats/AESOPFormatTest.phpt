@@ -32,10 +32,10 @@ class AESOPFormatTest extends DatabaseTestCase {
         $parameters = [
             'category' => new MockQueryParameter('category'),
         ];
-        $storedQuery = $queryFactory->createQueryFromSQL(new MockSeriesPresenter(), 'SELECT 1, \'ahoj\' FROM dual', $parameters, ['php_post_proc' => MockProcessing::class]);
+        $storedQuery = $queryFactory->createQueryFromSQL(new MockSeriesPresenter(), 'SELECT 1, \'ahoj\' FROM dual', $parameters, MockProcessing::class);
 
         // AESOP format requires QID
-        $storedQuery->getQueryPattern()->qid = 'aesop.ct';
+        $storedQuery->setQId('aesop.ct');
 
         $this->fixture = $exportFactory->createFormat(ExportFormatFactory::AESOP, $storedQuery);
     }

@@ -9,12 +9,12 @@ use Exports\StoredQueryFactory as StoredQueryFactorySQL;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory;
 use FKSDB\Components\Grids\StoredQueryGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotFoundException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Form;
-use Nette\DI\Container;
+use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use PDOException;
 
@@ -23,7 +23,7 @@ use PDOException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class StoredQueryComponent extends BaseComponent {
+class ResultsComponent extends BaseComponent {
 
     const CONT_PARAMS = 'params';
     const PARAMETER_URL_PREFIX = 'p_';
@@ -32,7 +32,7 @@ class StoredQueryComponent extends BaseComponent {
      * @persistent
      * @var array
      */
-    public $parameters;
+    public $parameters = [];
 
     /**
      * @var StoredQuery
@@ -63,44 +63,45 @@ class StoredQueryComponent extends BaseComponent {
     /**
      * @var bool
      */
-    private $showParametrize = true;
+    private $showParametrizeForm = true;
 
     /**
-     * StoredQueryComponent constructor.
-     * @param StoredQuery $storedQuery
      * @param ContestAuthorizator $contestAuthorizator
      * @param StoredQueryFactory $storedQueryFormFactory
      * @param ExportFormatFactory $exportFormatFactory
-     * @param Container $container
+     * @return void
      */
-    public function __construct(StoredQuery $storedQuery, ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory, Container $container) {
-        parent::__construct($container);
-        $this->storedQuery = $storedQuery;
+    public function injectPrimary(ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory) {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->storedQueryFormFactory = $storedQueryFormFactory;
         $this->exportFormatFactory = $exportFormatFactory;
     }
 
     /**
-     * @return bool
+     * @param bool $showParametersForm
+     * @return void
      */
-    public function getShowParametrize() {
-        return $this->showParametrize;
+    public function setShowParametrizeForm(bool $showParametersForm) {
+        $this->showParametrizeForm = $showParametersForm;
     }
 
     /**
-     * @param $showParametrize
+     * @param StoredQuery $query
      * @return void
      */
-    public function setShowParametrize($showParametrize) {
-        $this->showParametrize = $showParametrize;
+    public function setStoredQuery(StoredQuery $query) {
+        $this->storedQuery = $query;
+    }
+
+    private function hasStoredQuery(): bool {
+        return isset($this->storedQuery) && !is_null($this->storedQuery);
     }
 
     /**
      * @param $parameters
      * @return void
      */
-    public function setParameters($parameters) {
+    public function setParameters(array $parameters) {
         $this->parameters = $parameters;
     }
 
@@ -108,7 +109,7 @@ class StoredQueryComponent extends BaseComponent {
      * @param $parameters
      * @return void
      */
-    public function updateParameters($parameters) {
+    public function updateParameters(array $parameters) {
         if (!$this->parameters) {
             $this->parameters = [];
         }
@@ -127,8 +128,7 @@ class StoredQueryComponent extends BaseComponent {
         $control = new FormControl();
         $form = $control->getForm();
 
-        $queryPattern = $this->storedQuery->getQueryPattern();
-        $parameters = $this->storedQueryFormFactory->createParametersValues($queryPattern);
+        $parameters = $this->storedQueryFormFactory->createParametersValues($this->storedQuery->getQueryParameters());
         $form->addComponent($parameters, self::CONT_PARAMS);
 
         $form->addSubmit('execute', _('Parametrizovat'));
@@ -158,7 +158,8 @@ class StoredQueryComponent extends BaseComponent {
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
+     * @throws BadTypeException
      */
     public function render() {
         if ($this->parameters) {
@@ -167,29 +168,28 @@ class StoredQueryComponent extends BaseComponent {
             foreach ($this->parameters as $key => $value) {
                 $defaults[$key] = ['value' => $value];
             }
-            $defaults = [self::CONT_PARAMS => $defaults];
             /** @var FormControl $formControl */
             $formControl = $this->getComponent('parametrizeForm');
-            $formControl->getForm()->setDefaults($defaults);
+            $formControl->getForm()->setDefaults([self::CONT_PARAMS => $defaults]);
         }
-        if (!$this->isAuthorized()) {
-            $this->template->error = _('Nedostatečné oprávnění.');
-        } else {
-            $this->template->error = $this->getSqlError();
-        }
-        $this->template->hasParameters = $this->showParametrize && count($this->storedQuery->getQueryPattern()->getParameters());
 
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'StoredQueryComponent.latte');
+        $this->template->error = $this->isAuthorized() ? $this->getSqlError() : _('Permission denied');
+        $this->template->hasParameters = $this->showParametrizeForm && count($this->storedQuery->getQueryParameters());
+        $this->template->hasStoredQuery = $this->hasStoredQuery();
+        $this->template->storedQuery = $this->storedQuery ?? null;
+        $this->template->formats = $this->storedQuery ? $this->exportFormatFactory->getFormats($this->storedQuery) : [];
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'results.latte');
         $this->template->render();
     }
 
     /**
-     * @param $format
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
+     * @param string $format
+     * @return void
      * @throws AbortException
+     * @throws ForbiddenRequestException
+     * @throws NotFoundException
      */
-    public function handleFormat($format) {
+    public function handleFormat(string $format) {
         if ($this->parameters) {
             $this->storedQuery->setParameters($this->parameters);
         }
@@ -197,8 +197,7 @@ class StoredQueryComponent extends BaseComponent {
             throw new ForbiddenRequestException();
         }
         try {
-            $exportFormat = $this->exportFormatFactory->createFormat($format, $this->storedQuery);
-            $response = $exportFormat->getResponse();
+            $response = $this->exportFormatFactory->createFormat($format, $this->storedQuery)->getResponse();
             $this->presenter->sendResponse($response);
         } catch (InvalidArgumentException $exception) {
             throw new NotFoundException(sprintf('Neznámý formát \'%s\'.', $format), $exception);
@@ -206,6 +205,9 @@ class StoredQueryComponent extends BaseComponent {
     }
 
     private function isAuthorized(): bool {
+        if (!$this->hasStoredQuery()) {
+            return false;
+        }
         $implicitParameters = $this->storedQuery->getImplicitParameters();
         /*
          * Beware, that when export doesn't depend on contest_id directly further checks has to be done!

@@ -42,8 +42,7 @@ class StoredQueryFactory {
     public function createConsole(ControlGroup $group = null): ModelContainer {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
-
-        $control = new SQLConsole('SQL');
+        $control = new SQLConsole(_('SQL'));
         $container->addComponent($control, 'sql');
 
         return $container;
@@ -128,24 +127,24 @@ class StoredQueryFactory {
     }
 
     /**
-     * @param ModelStoredQuery $queryPattern
+     * @param ModelStoredQueryParameter[] $queryParameters
      * @param ControlGroup|null $group
      * @return ModelContainer
      */
-    public function createParametersValues(ModelStoredQuery $queryPattern, ControlGroup $group = null): ModelContainer {
+    public function createParametersValues(array $queryParameters, ControlGroup $group = null): ModelContainer {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
-        foreach ($queryPattern->getParameters() as $parameter) {
+        foreach ($queryParameters as $parameter) {
             $name = $parameter->name;
-            $subcontainer = new ModelContainer();
-            $container->addComponent($subcontainer, $name);
+            $subContainer = new ModelContainer();
+            $container->addComponent($subContainer, $name);
             // $subcontainer = $container->addContainer($name);
 
             switch ($parameter->type) {
                 case ModelStoredQueryParameter::TYPE_INT:
                 case ModelStoredQueryParameter::TYPE_STRING:
-                    $valueElement = $subcontainer->addText('value', $name);
+                    $valueElement = $subContainer->addText('value', $name);
                     $valueElement->setOption('description', $parameter->description);
                     if ($parameter->type == ModelStoredQueryParameter::TYPE_INT) {
                         $valueElement->addRule(Form::INTEGER, _('Parametr %label je číselný.'));
@@ -154,7 +153,7 @@ class StoredQueryFactory {
                     $valueElement->setDefaultValue($parameter->getDefaultValue());
                     break;
                 case ModelStoredQueryParameter::TYPE_BOOL:
-                    $valueElement = $subcontainer->addCheckbox('value', $name);
+                    $valueElement = $subContainer->addCheckbox('value', $name);
                     $valueElement->setOption('description', $parameter->description);
                     $valueElement->setDefaultValue((bool)$parameter->getDefaultValue());
                     break;

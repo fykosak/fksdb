@@ -3,12 +3,11 @@
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
-use Exports\ExportFormatFactory;
 use Exports\StoredQuery;
 use Exports\StoredQueryFactory;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\StoredQueryComponent;
+use FKSDB\Components\Controls\ResultsComponent;
 use FKSDB\Components\Controls\StoredQueryTagCloud;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Components\Grids\StoredQueriesGrid;
@@ -35,7 +34,7 @@ use Tracy\Debugger;
 
 /**
  * Class ExportPresenter
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     use SeriesPresenterTrait;
@@ -76,11 +75,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      * @var StoredQueryFactory
      */
     private $storedQueryFactory;
-
-    /**
-     * @var ExportFormatFactory
-     */
-    private $exportFormatFactory;
     /**
      * @var StoredQuery
      */
@@ -129,14 +123,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      */
     public function injectStoredQueryFactory(StoredQueryFactory $storedQueryFactory) {
         $this->storedQueryFactory = $storedQueryFactory;
-    }
-
-    /**
-     * @param ExportFormatFactory $exportFormatFactory
-     * @return void
-     */
-    public function injectExportFormatFactory(ExportFormatFactory $exportFormatFactory) {
-        $this->exportFormatFactory = $exportFormatFactory;
     }
 
     protected function startup() {
@@ -313,17 +299,9 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         if ($query && $this->getParameter('qid')) {
             $parameters = [];
             foreach ($this->getParameters() as $key => $value) {
-                if (Strings::startsWith($key, StoredQueryComponent::PARAMETER_URL_PREFIX)) {
-                    $parameters[substr($key, strlen(StoredQueryComponent::PARAMETER_URL_PREFIX))] = $value;
+                if (Strings::startsWith($key, ResultsComponent::PARAMETER_URL_PREFIX)) {
+                    $parameters[substr($key, strlen(ResultsComponent::PARAMETER_URL_PREFIX))] = $value;
                 }
-            }
-            /** @var StoredQueryComponent $storedQueryComponent */
-            $storedQueryComponent = $this->getComponent('resultsComponent');
-            $storedQueryComponent->updateParameters($parameters);
-
-            if ($this->getParameter('format')) {
-                $this->createRequest($storedQueryComponent, 'format!', ['format' => $this->getParameter('format')], 'forward');
-                $this->forward($this->lastCreatedRequest);
             }
         }
     }
@@ -357,7 +335,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
                 $paramData['default'] = $parameter->getDefaultValue();
                 $values[self::CONT_PARAMS_META][] = $paramData;
             }
-            if ($this->getPatternQuery()->getPostProcessing()) {
+            if ($this->getPatternQuery()->php_post_proc) {
                 $this->flashMessage(_('Výsledek dotazu je ještě zpracován v PHP. Dodržuj názvy sloupců a parametrů.'), BasePresenter::FLASH_WARNING);
             }
         }
@@ -448,7 +426,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     /**
-     * @return StoredQueryComponent|null
+     * @return ResultsComponent|null
      * @throws BadRequestException
      */
     protected function createComponentAdhocResultsComponent() {
@@ -456,13 +434,14 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         if ($storedQuery === null) { // workaround when session expires and persistent parameters from component are to be stored (because of redirect)
             return null;
         }
-        $grid = new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory, $this->exportFormatFactory, $this->getContext());
-        $grid->setShowParametrize(false);
+        $grid = new ResultsComponent($this->getContext());
+        $grid->setShowParametrizeForm(false);
+        $grid->setStoredQuery($storedQuery);
         return $grid;
     }
 
     /**
-     * @return StoredQueryComponent|null
+     * @return ResultsComponent|null
      * @throws BadRequestException
      */
     protected function createComponentResultsComponent() {
@@ -470,7 +449,9 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         if ($storedQuery === null) { // workaround when session expires and persistent parameters from component are to be stored (because of redirect)
             return null;
         }
-        return new StoredQueryComponent($storedQuery, $this->getContestAuthorizator(), $this->storedQueryFormFactory, $this->exportFormatFactory, $this->getContext());
+        $control = new ResultsComponent($this->getContext());
+        $control->setStoredQuery($storedQuery);
+        return $control;
     }
 
     protected function createComponentTagCloudList(): StoredQueryTagCloud {

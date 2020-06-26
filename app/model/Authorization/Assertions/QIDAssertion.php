@@ -45,8 +45,7 @@ class QIDAssertion {
         if (!$storedQuery instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');
         }
-        $qid = isset($storedQuery->getQueryPattern()->qid) ? $storedQuery->getQueryPattern()->qid : null;
-
+        $qid = $storedQuery->getQId();
         return (bool)$qid && in_array($qid, $this->qids);
     }
 

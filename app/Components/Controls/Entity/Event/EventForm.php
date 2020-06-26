@@ -21,7 +21,7 @@ use FKSDB\Utils\FormUtils;
 use FKSDB\Utils\Utils;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Form;
+use Nette\Forms\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
