@@ -305,3 +305,9 @@ parameters:
                 # place to others onfo
                 note:
                   required: false
+            post_contact_d:
+                address:
+                  required: false
+            post_contact_p:
+                address:
+                  required: false

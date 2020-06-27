@@ -219,6 +219,24 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         }
     }
 
+    /**
+     * Main delivery address of the contestant.
+     *
+     * @return ModelAddress|null
+     */
+    public function getDeliveryAddress2() {
+        $postContact = $this->getPostContacts()->where(['type' => ModelPostContact::TYPE_DELIVERY])->fetch();
+        return $postContact ? ModelPostContact::createFromActiveRow($postContact)->getAddress() : null;
+    }
+
+    /**
+     * @return ModelAddress|null
+     */
+    public function getPermanentAddress2() {
+        $postContact = $this->getPostContacts()->where(['type' => ModelPostContact::TYPE_PERMANENT])->fetch();
+        return $postContact ? ModelPostContact::createFromActiveRow($postContact)->getAddress() : null;
+    }
+
     public function getEventParticipant(): GroupedSelection {
         //return (new Selection($this->getTable()->data,bNames::TAB_EVENT_PARTICIPANT, $this->getTable()->getConnection()))->where('person_id', $this->person_id);
         return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');

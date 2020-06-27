@@ -5,6 +5,7 @@ namespace FKSDB\Components\Controls\Entity\Person;
 use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
+use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
 use FKSDB\Config\GlobalParameters;
@@ -20,6 +21,7 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
+use Persons\ReferencedPersonHandler;
 use Tracy\Debugger;
 
 /**
@@ -27,6 +29,9 @@ use Tracy\Debugger;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
+
+    const POST_CONTACT_DELIVERY = 'post_contact_d';
+    const POST_CONTACT_PERMANENT = 'post_contact_p';
     /**
      * @var PersonFactory
      */
@@ -35,6 +40,10 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @var PersonInfoFactory
      */
     protected $personInfoFactory;
+    /**
+     * @var AddressFactory
+     */
+    protected $addressFactory;
     /**
      * @var GlobalParameters
      */
@@ -81,6 +90,7 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @param PersonInfoFactory $personInfoFactory
      * @param ServicePerson $servicePerson
      * @param ServicePersonInfo $servicePersonInfo
+     * @param AddressFactory $addressFactory
      * @return void
      */
     public function injectFactories(
@@ -88,13 +98,15 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
         PersonFactory $personFactory,
         PersonInfoFactory $personInfoFactory,
         ServicePerson $servicePerson,
-        ServicePersonInfo $servicePersonInfo
+        ServicePersonInfo $servicePersonInfo,
+        AddressFactory $addressFactory
     ) {
         $this->personFactory = $personFactory;
         $this->globalParameters = $globalParameters;
         $this->personInfoFactory = $personInfoFactory;
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
+        $this->addressFactory = $addressFactory;
     }
 
     /**
@@ -112,6 +124,10 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
                 case 'person':
                     $control = $this->personFactory->createContainerWithMetadata($rows, $this->userPermission);
                     break;
+                case self::POST_CONTACT_DELIVERY:
+                case self::POST_CONTACT_PERMANENT:
+                    $control = $this->addressFactory->createAddressContainer($table);
+                    break;
                 default:
                     throw new InvalidArgumentException();
 
@@ -126,10 +142,14 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @throws BadTypeException
      */
     public function setModel(AbstractModelSingle $model) {
+        Debugger::barDump($model->getPermanentAddress(false));
+        Debugger::barDump($model->getPermanentAddress());
         $this->model = $model;
         $this->getForm()->setDefaults([
             'person' => $model->toArray(),
             'person_info' => $model->getInfo() ? $model->getInfo()->toArray() : null,
+            self::POST_CONTACT_DELIVERY => $model->getDeliveryAddress2() ?: [],
+            self::POST_CONTACT_PERMANENT => $model->getPermanentAddress2() ?: [],
         ]);
     }
 
