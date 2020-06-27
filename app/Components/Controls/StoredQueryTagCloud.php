@@ -4,7 +4,7 @@ namespace FKSDB\Components\Controls;
 
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTag;
-use FKSDB\ORM\ServicesMulti\ServiceMStoredQueryTag;
+use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -17,9 +17,9 @@ class StoredQueryTagCloud extends BaseComponent {
     const MODE_DETAIL = 'mode-detail';
 
     /**
-     * @var ServiceMStoredQueryTag
+     * @var ServiceStoredQueryTagType
      */
-    private $serviceMStoredQueryTag;
+    private $serviceStoredQueryTagType;
 
     /** @var string */
     private $mode;
@@ -28,11 +28,11 @@ class StoredQueryTagCloud extends BaseComponent {
     public $activeTagIds = [];
 
     /**
-     * @param ServiceMStoredQueryTag $serviceMStoredQueryTag
+     * @param ServiceStoredQueryTagType $serviceStoredQueryTagType
      * @return void
      */
-    public function injectPrimary(ServiceMStoredQueryTag $serviceMStoredQueryTag) {
-        $this->serviceMStoredQueryTag = $serviceMStoredQueryTag;
+    public function injectPrimary(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
+        $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
     }
 
     /**
@@ -54,7 +54,7 @@ class StoredQueryTagCloud extends BaseComponent {
     }
 
     public function renderList() {
-        $this->template->tags = $this->serviceMStoredQueryTag->getMainService()->getTable();
+        $this->template->tags = $this->serviceStoredQueryTagType->getTable();
         $this->template->activeTagIds = $this->activeTagIds;
         $this->template->nextActiveTagIds = $this->createNextActiveTagIds();
         $this->render(self::MODE_LIST);
@@ -70,7 +70,7 @@ class StoredQueryTagCloud extends BaseComponent {
     }
 
     private function createNextActiveTagIds(): array {
-        $tags = $this->serviceMStoredQueryTag->getMainService();
+        $tags = $this->serviceStoredQueryTagType->getTable();
         $nextActiveTagIds = [];
         /** @var ModelStoredQueryTag $tag */
         foreach ($tags as $tag) {

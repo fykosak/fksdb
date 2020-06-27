@@ -27,6 +27,7 @@ class ServiceMPersonHasFlag extends AbstractServiceMulti {
      * @param null|array $data
      * @return ModelMPersonHasFlag
      * @throws ModelException
+     * @deprecated
      */
     public function createNew($data = null) {
         $mainModel = $this->getMainService()->findByFid($data['fid']);

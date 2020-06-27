@@ -8,6 +8,7 @@ use FKSDB\Fyziklani\ClosedSubmittingException;
 use FKSDB\Fyziklani\PointsMismatchException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -22,6 +23,8 @@ use Tracy\Debugger;
  * @method ModelFyziklaniSubmit createNewModel(array $data)
  */
 class ServiceFyziklaniSubmit extends AbstractServiceSingle {
+    use DeprecatedLazyDBTrait;
+
     const DEBUGGER_LOG_PRIORITY = 'fyziklani-info';
 
     const LOG_FORMAT = 'Submit %d was %s by %s';

@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Services\StoredQuery;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Database\Context;
@@ -13,6 +14,7 @@ use Nette\Database\IConventions;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceStoredQuery extends AbstractServiceSingle {
+    use DeprecatedLazyDBTrait;
 
     public function getModelClassName(): string {
         return ModelStoredQuery::class;
@@ -22,10 +24,7 @@ class ServiceStoredQuery extends AbstractServiceSingle {
         return DbNames::TAB_STORED_QUERY;
     }
 
-    /**
-     *
-     * @var ServiceStoredQueryTag
-     */
+    /** @var ServiceStoredQueryTag */
     private $serviceStoredQueryTag;
 
     /**
