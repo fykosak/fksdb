@@ -8,7 +8,7 @@ use FKSDB\StoredQuery\StoredQuery;
 use FKSDB\StoredQuery\StoredQueryFactory as StoredQueryFactorySQL;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory;
-use FKSDB\Components\Grids\StoredQueryGrid;
+use FKSDB\Components\Grids\StoredQuery\ResultsGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotFoundException;
 use Nette\Application\AbortException;
@@ -116,8 +116,8 @@ class ResultsComponent extends BaseComponent {
         $this->parameters = array_merge($this->parameters, $parameters);
     }
 
-    protected function createComponentGrid(): StoredQueryGrid {
-        return new StoredQueryGrid($this->storedQuery, $this->getContext());
+    protected function createComponentGrid(): ResultsGrid {
+        return new ResultsGrid($this->storedQuery, $this->getContext());
     }
 
     /**
@@ -199,7 +199,7 @@ class ResultsComponent extends BaseComponent {
             $response = $this->exportFormatFactory->createFormat($format, $this->storedQuery)->getResponse();
             $this->presenter->sendResponse($response);
         } catch (InvalidArgumentException $exception) {
-            throw new NotFoundException(sprintf('Neznámý formát \'%s\'.', $format), $exception);
+            throw new NotFoundException(sprintf('Undefined format \'%s\'.', $format), $exception);
         }
     }
 

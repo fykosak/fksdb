@@ -24,7 +24,7 @@ navigation:
             - Org.Contestant.list
             - Common.School.list
             - Org.Teacher.list
-            - Org.Export.list
+            - Org.StoredQuery.list
             - Org.Org.list
             - Org.Event.list
             - Common.Deduplicate.person

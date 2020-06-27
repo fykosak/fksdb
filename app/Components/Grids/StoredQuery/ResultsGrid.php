@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\Components\Grids;
+namespace FKSDB\Components\Grids\StoredQuery;
 
-use FKSDB\Exports\ExportFormatFactory;
+use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\StoredQuery\StoredQuery;
 use FKSDB\Components\Controls\ResultsComponent;
 use Nette\Application\UI\InvalidLinkException;
@@ -18,7 +18,7 @@ use PDOException;
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class StoredQueryGrid extends BaseGrid {
+class ResultsGrid extends BaseGrid {
 
     /** @var StoredQuery */
     private $storedQuery;
@@ -70,9 +70,9 @@ class StoredQueryGrid extends BaseGrid {
                     }
                 }
                 $this->addGlobalButton('qid')
-                    ->setLabel(_('Odkaz'))
+                    ->setLabel(_('Link'))
                     ->setClass('btn btn-sm btn-secondary')
-                    ->setLink($this->getPresenter()->link('Export:execute', $parameters));
+                    ->setLink($this->getPresenter()->link(':Org:Export:execute', $parameters));
             }
         }
     }

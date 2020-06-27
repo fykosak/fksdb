@@ -70,13 +70,13 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     protected function startup() {
-        switch ($this->getAction()) {
+       switch ($this->getAction()) {
             case 'edit':
                 $this->redirect(':Org:StoredQuery:edit', $this->getParameters());
             case 'compose':
                 $this->redirect(':Org:StoredQuery:create', $this->getParameters());
             case 'list':
-                $this->forward(':Org:StoredQuery:list', $this->getParameters());
+                $this->forward(':Org:StoredQuery:list', $this->getParameters()); // forward purposely
             case 'show':
                 $this->redirect(':Org:StoredQuery:detail', $this->getParameters());
         }
@@ -89,7 +89,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadRequestException
      */
     public function authorizedExecute() {
-        $this->contestAuthorizator->isAllowed($this->getStoredQuery(), 'excecute', $this->getSelectedContest());
+        $this->contestAuthorizator->isAllowed($this->getStoredQuery(), 'execute', $this->getSelectedContest());
     }
 
     /**
