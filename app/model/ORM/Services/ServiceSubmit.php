@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Tables\TypedTableSelection;
@@ -14,6 +15,8 @@ use Nette\Application\UI\Presenter;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceSubmit extends AbstractServiceSingle {
+    use DeprecatedLazyDBTrait;
+
     /**
      * @var array
      */

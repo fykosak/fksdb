@@ -1,11 +1,12 @@
 <?php
 
-namespace Exports;
+namespace FKSDB\StoredQuery;
 
 use FKSDB\Modules\Core\BasePresenter;
 use DOMDocument;
 use DOMNode;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
@@ -22,6 +23,7 @@ use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
  */
 class StoredQueryFactory implements IXMLNodeSerializer {
 
+    const PARAM_CONTEST_ID = 'contest_id';
     const PARAM_CONTEST = 'contest';
     const PARAM_YEAR = 'year';
     const PARAM_SERIES = 'series';
@@ -54,75 +56,66 @@ class StoredQueryFactory implements IXMLNodeSerializer {
      * @throws BadRequestException
      */
     public function createQuery(ISeriesPresenter $presenter, ModelStoredQuery $patternQuery): StoredQuery {
-        $storedQuery = new StoredQuery($patternQuery, $this->connection);
-        $this->presenterContextToQuery($presenter, $storedQuery);
+        $storedQuery = new StoredQuery($this->connection);
+        $storedQuery->setQueryPattern($patternQuery);
+        $storedQuery->setQueryParameters($patternQuery->getParameters());
+        $storedQuery->setContextParameters($this->presenterContextParameters($presenter));
         return $storedQuery;
     }
 
     /**
      * @param ISeriesPresenter $presenter
-     * @param $sql
-     * @param $parameters
-     * @param array $queryData
+     * @param string $sql
+     * @param ModelStoredQueryParameter[]|StoredQueryParameter[] $parameters
+     * @param string $postProcessingClass
      * @return StoredQuery
      * @throws BadRequestException
      */
-    public function createQueryFromSQL(ISeriesPresenter $presenter, $sql, $parameters, $queryData = []): StoredQuery {
-        /** @var ModelStoredQuery $patternQuery */
-        $patternQuery = $this->serviceStoredQuery->createNew(array_merge([
-            'sql' => $sql,
-            'php_post_proc' => 0,
-        ], $queryData));
-
-        $patternQuery->setParameters($parameters);
-        $storedQuery = new StoredQuery($patternQuery, $this->connection);
-        $this->presenterContextToQuery($presenter, $storedQuery);
-
+    public function createQueryFromSQL(ISeriesPresenter $presenter, string $sql, array $parameters, string $postProcessingClass = null): StoredQuery {
+        $storedQuery = new StoredQuery($this->connection);
+        $storedQuery->setSQL($sql);
+        $storedQuery->setQueryParameters($parameters);
+        $storedQuery->setContextParameters($this->presenterContextParameters($presenter));
+        if ($postProcessingClass) {
+            $storedQuery->setPostProcessing($postProcessingClass);
+        }
         return $storedQuery;
     }
 
-    /**
-     * @param string $qid
-     * @param $parameters
-     * @return StoredQuery
-     */
-    public function createQueryFromQid($qid, $parameters): StoredQuery {
+    public function createQueryFromQid(string $qid, array $parameters): StoredQuery {
         $patternQuery = $this->serviceStoredQuery->findByQid($qid);
         if (!$patternQuery) {
             throw new InvalidArgumentException("Unknown QID '$qid'.");
         }
-        $storedQuery = new StoredQuery($patternQuery, $this->connection);
-        $storedQuery->setImplicitParameters($parameters, false); // treat all parameters as implicit (better API for web service)
-
+        $storedQuery = new StoredQuery($this->connection);
+        $storedQuery->setQueryPattern($patternQuery);
+        $storedQuery->setQueryParameters($patternQuery->getParameters());
+        $storedQuery->setContextParameters($parameters, false); // treat all parameters as implicit (better API for web service)
         return $storedQuery;
     }
 
     /**
      * @param ISeriesPresenter $presenter
-     * @param StoredQuery $storedQuery
+     * @return array
      * @throws BadRequestException
      */
-    private function presenterContextToQuery(ISeriesPresenter $presenter, StoredQuery $storedQuery) {
-        // if (!$presenter instanceof Presenter) {
-        //   throw new BadRequestException();
-        // TODO forced added to IContest Presenter method flashMessage cause of tests
-        // }
-        $series = null;
+    private function presenterContextParameters(ISeriesPresenter $presenter): array {
         try {
-            $series = $presenter->getSelectedSeries();
+            return [
+                self::PARAM_CONTEST_ID => $presenter->getSelectedContest()->contest_id,
+                self::PARAM_CONTEST => $presenter->getSelectedContest()->contest_id,
+                self::PARAM_YEAR => $presenter->getSelectedYear(),
+                self::PARAM_AC_YEAR => $presenter->getSelectedAcademicYear(),
+                self::PARAM_SERIES => $presenter->getSelectedSeries(),
+            ];
         } catch (BadRequestException $exception) {
             if ($exception->getCode() == Response::S500_INTERNAL_SERVER_ERROR) {
-                $presenter->flashMessage(_('Kontext série pro dotazy není dostupný'), BasePresenter::FLASH_WARNING);
+                $presenter->flashMessage(_('Kontext pro dotazy není dostupný'), BasePresenter::FLASH_WARNING);
+                return [];
             } else {
                 throw $exception;
             }
         }
-        $storedQuery->setImplicitParameters([
-            self::PARAM_CONTEST => $presenter->getSelectedContest()->contest_id,
-            self::PARAM_YEAR => $presenter->getSelectedYear(),
-            self::PARAM_AC_YEAR => $presenter->getSelectedAcademicYear(),
-            self::PARAM_SERIES => $series,
-        ]);
     }
 
     /**
@@ -182,4 +175,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         }
     }
 
+    public function createParameterFromModel(ModelStoredQueryParameter $model): StoredQueryParameter {
+        return new StoredQueryParameter($model->name, $model->getDefaultValue(), $model->getPDOType(), $model->description);
+    }
 }

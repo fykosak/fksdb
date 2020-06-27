@@ -2,7 +2,7 @@
 
 namespace Exports\Processings;
 
-use Exports\StoredQueryPostProcessing;
+use FKSDB\StoredQuery\StoredQueryPostProcessing;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\Results\EvaluationStrategies\EvaluationStrategy;
 use FKSDB\Results\ModelCategory;
@@ -69,7 +69,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
      * @return array
      * @throws BadRequestException
      */
-    private function filterCategory($data) {
+    private function filterCategory(\PDOStatement $data): array {
         $evaluationStrategy = $this->getEvaluationStrategy();
 
         $studyYears = [];
@@ -94,11 +94,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
         return $result;
     }
 
-    /**
-     * @param array|\Traversable $data
-     * @return array|\Traversable
-     */
-    private function calculateRank($data) {
+    private function calculateRank(array $data): array {
         $points = [];
         foreach ($data as $row) {
             if (!isset($points[$row[self::POINTS]])) {

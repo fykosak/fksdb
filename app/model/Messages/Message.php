@@ -7,7 +7,7 @@ use Nette\SmartObject;
 
 /**
  * Class Message
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Message {
     use SmartObject;

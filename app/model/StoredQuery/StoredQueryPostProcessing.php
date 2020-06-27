@@ -1,6 +1,6 @@
 <?php
 
-namespace Exports;
+namespace FKSDB\StoredQuery;
 
 use Nette\SmartObject;
 
@@ -39,8 +39,5 @@ abstract class StoredQueryPostProcessing {
      */
     abstract public function processData(\PDOStatement $data);
 
-    /**
-     * @return mixed
-     */
     abstract public function getDescription(): string;
 }

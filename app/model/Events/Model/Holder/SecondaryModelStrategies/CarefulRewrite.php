@@ -16,7 +16,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
     /**
      * @var array
      */
-    private $safeKeys = [];
+    private $safeKeys;
 
     /**
      * CarefulRewrite constructor.

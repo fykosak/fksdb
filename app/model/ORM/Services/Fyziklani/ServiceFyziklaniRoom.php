@@ -4,12 +4,15 @@ namespace FKSDB\ORM\Services\Fyziklani;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom;
 
 /**
- * Class FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom
+ * Class ServiceFyziklaniRoom
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ServiceFyziklaniRoom extends AbstractServiceSingle {
+    use DeprecatedLazyDBTrait;
 
     public function getModelClassName(): string {
         return ModelFyziklaniRoom::class;

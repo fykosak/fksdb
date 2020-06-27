@@ -6,8 +6,9 @@ use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Form;
+use Nette\Forms\Form;
 use Nette\DI\Container;
+use Nette\Forms\Controls\SubmitButton;
 
 /**
  * Class AbstractEntityFormControl
@@ -52,19 +53,15 @@ abstract class AbstractEntityFormControl extends BaseComponent {
     final protected function createComponentFormControl(): FormControl {
         $control = $this->createFormControl();
         $this->configureForm($control->getForm());
-        $this->appendSubmitButton($control->getForm());
-        $control->getForm()->onSuccess[] = function (Form $form) {
-            $this->handleFormSuccess($form);
+        $this->appendSubmitButton($control->getForm())
+            ->onClick[] = function (SubmitButton $button) {
+            $this->handleFormSuccess($button->getForm());
         };
         return $control;
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     */
-    protected function appendSubmitButton(Form $form) {
-        $form->addSubmit('submit', $this->create ? _('Create') : _('Save'));
+    protected function appendSubmitButton(Form $form): SubmitButton {
+        return $form->addSubmit('submit', $this->create ? _('Create') : _('Save'));
     }
 
     /**

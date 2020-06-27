@@ -6,7 +6,6 @@ use Authentication\SSO\GlobalSession;
 use FKSDB\Modules\Core\BasePresenter;
 use Exception;
 use FKSDB\Authentication\AccountManager;
-use Authentication\FacebookAuthenticator;
 use Authentication\LoginUserStorage;
 use Authentication\PasswordAuthenticator;
 use FKSDB\Authentication\RecoveryException;
@@ -57,11 +56,6 @@ final class AuthenticationPresenter extends BasePresenter {
     public $flag;
 
     /**
-     * @var FacebookAuthenticator
-     */
-    private $facebookAuthenticator;
-
-    /**
      * @var ServiceAuthToken
      */
     private $serviceAuthToken;
@@ -90,15 +84,6 @@ final class AuthenticationPresenter extends BasePresenter {
      * @var string
      */
     private $login;
-
-    /**
-     * @param FacebookAuthenticator $facebookAuthenticator
-     * @return void
-     */
-    public function injectFacebookAuthenticator(FacebookAuthenticator $facebookAuthenticator) {
-        $this->facebookAuthenticator = $facebookAuthenticator;
-    }
-
     /**
      * @param ServiceAuthToken $serviceAuthToken
      * @return void

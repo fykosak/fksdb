@@ -15,10 +15,14 @@ use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
 use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
-use Nette\Application\UI\Form;
+use Nette\Forms\Form;
 use Nette\DI\Container;
 use Tracy\Debugger;
 
+/**
+ * Class OrgForm
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class OrgForm extends AbstractEntityFormControl implements IEditEntityForm {
     use ReferencedPersonTrait;
 

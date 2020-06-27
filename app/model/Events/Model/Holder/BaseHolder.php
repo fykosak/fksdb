@@ -259,10 +259,7 @@ class BaseHolder {
         return $this->getEvaluator()->evaluate($this->modifiable, $this);
     }
 
-    /**
-     * @return IModel
-     */
-    public function &getModel() {
+    public function &getModel(): IModel {
         if (!$this->model) {
             $this->model = $this->getService()->createNew();
         }
