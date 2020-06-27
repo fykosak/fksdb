@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Entity\Org;
 
-use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
+use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Controls\Entity\ReferencedPersonTrait;
 use FKSDB\Components\Forms\Factories\OrgFactory;
@@ -23,7 +23,7 @@ use Tracy\Debugger;
  * Class OrgForm
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class OrgForm extends AbstractEntityFormControl implements IEditEntityForm {
+class OrgFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
     use ReferencedPersonTrait;
 
     const CONTAINER = 'org';

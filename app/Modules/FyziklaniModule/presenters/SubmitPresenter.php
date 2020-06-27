@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\FyziklaniModule;
 
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use FKSDB\Components\Controls\Entity\Fyziklani\Submit\EditControl;
+use FKSDB\Components\Controls\Entity\Fyziklani\Submit\Edit;
 use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
 use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
 use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
@@ -122,7 +122,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     protected function createComponentEditForm(): Control {
-        return new EditControl($this->getContext(), $this->getEvent());
+        return new Edit($this->getContext(), $this->getEvent());
     }
 
     /**

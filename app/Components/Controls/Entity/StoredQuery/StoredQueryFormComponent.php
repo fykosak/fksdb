@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls\Entity\StoredQuery;
 
 use FKSDB\StoredQuery\StoredQueryFactory;
-use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
+use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Controls\ResultsComponent;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
@@ -31,7 +31,7 @@ use Tracy\Debugger;
  * @author Michal Červeňák <miso@fykos.cz>
  * @method StoredQueryPresenter getPresenter($throw = true)
  */
-class StoredQueryForm extends AbstractEntityFormControl implements IEditEntityForm {
+class StoredQueryFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
     const CONT_CONSOLE = 'console';
     const CONT_PARAMS_META = 'paramsMeta';
     const CONT_META = 'meta';
@@ -258,7 +258,7 @@ class StoredQueryForm extends AbstractEntityFormControl implements IEditEntityFo
      * @return void
      */
     public function render() {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR);
         $this->template->render();
     }
 }

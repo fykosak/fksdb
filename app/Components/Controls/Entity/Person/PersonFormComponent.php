@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Entity\Person;
 
-use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
+use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -26,7 +26,7 @@ use Tracy\Debugger;
  * Class AbstractPersonFormControl
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
+class PersonFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
     /**
      * @var PersonFactory
      */

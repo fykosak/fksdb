@@ -7,6 +7,7 @@ use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Application\IStylesheetCollector;
 use FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs;
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory;
+use FKSDB\Components\Controls\Choosers\ThemeChooser;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Components\Controls\Navigation\Navigation;
 use FKSDB\Components\Controls\PresenterBuilder;
@@ -325,6 +326,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     protected function createComponentDetail(): DetailComponent {
         return new DetailComponent($this->getContext());
+    }
+
+    protected function createComponentThemeChooser(): ThemeChooser {
+        return new ThemeChooser($this->getContext());
     }
 
     /**

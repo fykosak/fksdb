@@ -14,7 +14,7 @@ use Nette\Forms\Controls\SubmitButton;
  * Class AbstractEntityFormControl
  * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class AbstractEntityFormControl extends BaseComponent {
+abstract class AbstractEntityFormComponent extends BaseComponent {
     /**
      * @var bool
      */
@@ -82,5 +82,6 @@ abstract class AbstractEntityFormControl extends BaseComponent {
      * @param Form $form
      * @return void
      */
-    abstract protected function configureForm(Form $form);
+    protected function configureForm(Form $form) {
+    }
 }

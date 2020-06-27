@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Entity\School;
 
-use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
+use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
@@ -22,7 +22,7 @@ use Tracy\Debugger;
  * Class AbstractForm
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class SchoolForm extends AbstractEntityFormControl implements IEditEntityForm {
+class SchoolFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
 
     const CONT_ADDRESS = 'address';
     const CONT_SCHOOL = 'school';

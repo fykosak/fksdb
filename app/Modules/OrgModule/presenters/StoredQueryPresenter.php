@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Entity\StoredQuery\StoredQueryForm;
+use FKSDB\Components\Controls\Entity\StoredQuery\StoredQueryFormComponent;
 use FKSDB\Components\Controls\StoredQueryTagCloud;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
@@ -85,11 +85,11 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     protected function createComponentCreateForm(): Control {
-        return new StoredQueryForm($this->getContext(), true);
+        return new StoredQueryFormComponent($this->getContext(), true);
     }
 
     protected function createComponentEditForm(): Control {
-        return new StoredQueryForm($this->getContext(), false);
+        return new StoredQueryFormComponent($this->getContext(), false);
     }
 
     protected function createComponentGrid(): BaseGrid {

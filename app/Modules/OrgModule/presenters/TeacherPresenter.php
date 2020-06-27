@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Entity\Teacher\TeacherForm;
+use FKSDB\Components\Controls\Entity\Teacher\TeacherFormComponent;
 use FKSDB\Components\Grids\TeachersGrid;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\ORM\Models\ModelTeacher;
@@ -76,11 +76,11 @@ class TeacherPresenter extends BasePresenter {
     }
 
     protected function createComponentCreateForm(): Control {
-        return new TeacherForm($this->getContext(), true);
+        return new TeacherFormComponent($this->getContext(), true);
     }
 
     protected function createComponentEditForm(): Control {
-        return new TeacherForm($this->getContext(), false);
+        return new TeacherFormComponent($this->getContext(), false);
     }
 
     /**

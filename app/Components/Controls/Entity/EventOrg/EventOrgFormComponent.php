@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Entity\EventOrg;
 
-use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
+use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Controls\Entity\ReferencedPersonTrait;
 use FKSDB\Components\Forms\Containers\ModelContainer;
@@ -19,7 +19,7 @@ use Nette\Forms\Form;
 use Nette\DI\Container;
 use Tracy\Debugger;
 
-class EventOrgForm extends AbstractEntityFormControl implements IEditEntityForm {
+class EventOrgFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
 
     use ReferencedPersonTrait;
 

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Entity\Fyziklani\Submit;
 
-use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
+use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Fyziklani\ClosedSubmittingException;
@@ -21,7 +21,7 @@ use Nette\Forms\Controls\RadioList;
  * Class EditControl
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class EditControl extends AbstractEntityFormControl implements IEditEntityForm {
+class Edit extends AbstractEntityFormComponent implements IEditEntityForm {
     /**
      * @var ServiceFyziklaniSubmit
      */

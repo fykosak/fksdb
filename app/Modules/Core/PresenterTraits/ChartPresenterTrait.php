@@ -3,6 +3,7 @@
 namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Chart\IChart;
+use FKSDB\Exceptions\NotFoundException;
 use FKSDB\UI\PageTitle;
 use Nette\Application\UI\Control;
 
@@ -15,6 +16,8 @@ trait ChartPresenterTrait {
      * @var IChart
      */
     protected $selectedChart;
+    /** @var IChart[] */
+    private $chartComponents;
 
     public function titleChart() {
         $this->setPageTitle(new PageTitle($this->selectedChart->getTitle(), 'fa fa-pie-chart'));
@@ -36,19 +39,16 @@ trait ChartPresenterTrait {
      * @return IChart[]
      */
     protected function getCharts(): array {
-        static $chartComponents;
-        if (!$chartComponents) {
-            $chartComponents = $this->registerCharts();
-        }
-        return $chartComponents;
+        $this->chartComponents = $this->chartComponents ?? $this->registerCharts();
+        return $this->chartComponents;
     }
 
     protected function selectChart() {
-        foreach ($this->getCharts() as $action => $chart) {
-            if ($action === $this->getAction()) {
-                $this->selectedChart = $chart;
-                $this->setView('chart');
-            }
+        $charts = $this->getCharts();
+        $action = $this->getAction();
+        if (isset($charts[$action])) {
+            $this->selectedChart = $charts[$action];
+            $this->setView('chart');
         }
     }
 
