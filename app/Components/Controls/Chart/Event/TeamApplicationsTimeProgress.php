@@ -8,6 +8,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventType;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\ServiceEvent;
+use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
 use Nette\Utils\Json;

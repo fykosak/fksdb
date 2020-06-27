@@ -44,7 +44,7 @@ abstract class SubmitsGrid extends BaseGrid {
      * @throws BadTypeException
      */
     protected function addColumnTeam() {
-        $this->addJoinedColumn('e_fyziklani_team', 'name_n_id', function ($row) {
+        $this->addJoinedColumn('e_fyziklani_team.name_n_id', function ($row) {
             if (!$row instanceof ModelFyziklaniSubmit) {
                 $row = ModelFyziklaniSubmit::createFromActiveRow($row);  // TODO is needed?
             }

@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPersonInfo;
 use Nette\Forms\Controls\BaseControl;
@@ -35,8 +36,8 @@ class HealthInsuranceRow extends AbstractColumnFactory {
         return _('Health insurance');
     }
 
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_ALLOW_FULL;
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission(self::PERMISSION_ALLOW_FULL, self::PERMISSION_ALLOW_FULL);
     }
 
     /**

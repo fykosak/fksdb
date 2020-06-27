@@ -32,11 +32,6 @@ class UntilRow extends AbstractOrgRowFactory {
         }
     }
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     * @throws \InvalidArgumentException
-     */
     public function createField(...$args): BaseControl {
         list($min, $max) = $args;
         if (\is_null($max) || \is_null($min)) {
