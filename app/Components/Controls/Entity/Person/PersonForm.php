@@ -143,7 +143,7 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
 
     /**
      * @param array $data
-     * @return mixed|void
+     * @return void
      * @throws AbortException
      */
     protected function handleCreateSuccess(array $data) {
