@@ -3,7 +3,7 @@
     {? $presenter->registerJSFile('js/sqlconsole.js')}
     {? $presenter->registerStylesheetFile('css/codemirror.css', array('screen', 'projection', 'tv'))}
     <div class="btn-group">
-        <a href="{plink :Org:Export:execute ,'id' => $model->getPrimary()}"
+        <a href="{plink execute ,'id' => $model->getPrimary()}"
            class="btn btn-primary"
            title="{_('Spustit dotaz')}">{_('Spustit')}</a>
         {if $presenter->authorized('edit', ['id' => $model->getPrimary()])}

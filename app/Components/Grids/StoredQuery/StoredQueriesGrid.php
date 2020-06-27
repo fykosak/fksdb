@@ -1,7 +1,8 @@
 <?php
 
-namespace FKSDB\Components\Grids;
+namespace FKSDB\Components\Grids\StoredQuery;
 
+use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
@@ -72,17 +73,17 @@ class StoredQueriesGrid extends BaseGrid {
         $this->addButton('edit', _('Edit'))
             ->setText(_('Edit'))
             ->setLink(function (ModelStoredQuery $row) {
-                return $this->getPresenter()->link('edit', ['id' => $row->query_id]);
+                return $this->getPresenter()->link(':Org:StoredQuery:edit', ['id' => $row->query_id]);
             });
         $this->addButton('detail', _('Detail'))
             ->setText(_('Detail'))
             ->setLink(function (ModelStoredQuery $row) {
-                return $this->getPresenter()->link('detail', ['id' => $row->query_id]);
+                return $this->getPresenter()->link(':Org:StoredQuery:detail', ['id' => $row->query_id]);
             });
 
         $this->addButton('execute', _('Execute'))
             ->setClass('btn btn-sm btn-primary')
-            ->setText(_('Spustit'))
+            ->setText(_('Execute'))
             ->setLink(function (ModelStoredQuery $row) {
                 return $this->getPresenter()->link('execute', ['id' => $row->query_id]);
             });

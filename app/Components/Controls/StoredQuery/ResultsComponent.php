@@ -8,7 +8,7 @@ use FKSDB\StoredQuery\StoredQuery;
 use FKSDB\StoredQuery\StoredQueryFactory as StoredQueryFactorySQL;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory;
-use FKSDB\Components\Grids\StoredQueryGrid;
+use FKSDB\Components\Grids\StoredQuery\QueryResultGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotFoundException;
 use Nette\Application\AbortException;
@@ -116,8 +116,8 @@ class ResultsComponent extends BaseComponent {
         $this->parameters = array_merge($this->parameters, $parameters);
     }
 
-    protected function createComponentGrid(): StoredQueryGrid {
-        return new StoredQueryGrid($this->storedQuery, $this->getContext());
+    protected function createComponentGrid(): QueryResultGrid {
+        return new QueryResultGrid($this->storedQuery, $this->getContext());
     }
 
     /**
