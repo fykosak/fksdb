@@ -2,7 +2,7 @@
 
 namespace MockEnvironment;
 
-use BasePresenter;
+use FKSDB\Modules\Core\BasePresenter;
 
 class MockApplication {
 
@@ -11,12 +11,18 @@ class MockApplication {
      */
     private $presenter;
 
+    /**
+     * MockApplication constructor.
+     * @param BasePresenter $presenter
+     */
     public function __construct(BasePresenter $presenter) {
         $this->presenter = $presenter;
     }
 
+    /**
+     * @return BasePresenter
+     */
     public function getPresenter() {
         return $this->presenter;
     }
-
 }

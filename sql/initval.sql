@@ -72,5 +72,45 @@ INSERT INTO `flag` (`flag_id`, `fid`, `name`, `description`, `type`) VALUES
 (4,'send_forum','Notifikace ze fóra','Ze starého fóra na FYKOSím webu.','global'),
 (5,'send_forum_dgst','Digesty z fóra','Posílat digesty ze starého fóra na FYKOSím webu.','global');
 
+INSERT INTO `event_type` (`event_type_id`, `contest_id`, `name`) VALUES
+(1,	1,	'FYKOSí Fyziklání'),
+(2,	1,	'Den s experimentální fyzikou'),
+(3,	1,	'FYKOSí víkend'),
+(4,	1,	'jarní soustředění'),
+(5,	1,	'podzimní soustředění'),
+(6,	1,	'soustředění/zájezd do CERNu'),
+(7,	1,	'Týden s aplikovanou fyzikou'),
+(8,	2,	'MFnáboj'),
+(9,	1,	'Fyziklání online'),
+(10,	2,	'(Letní) tábor'),
+(11,	2,	'Jarní setkání řešitelů'),
+(12,	2,	'Podzimní setkání řešitelů'),
+(13,	2,	'Náboj Junior'),
+(14,	1,	'Den s experimentální fyzikou 2');
 
-
+INSERT INTO `event_status` (`status`, `description`) VALUES
+('applied',	'obecně přihlášen'),
+('applied.nodsef',	'Přihlášení bez DSEFu.'),
+('applied.notsaf',	'Přihlášení vyplynulo z TSAFu, ale tam už není.'),
+('applied.tsaf',	'Přihlášení vyplynulo z TSAFu'),
+('approved',	'schváleno'),
+('auto.invited',	'pozván z dle heuristiky'),
+('auto.spare',	'náhradník z heuristiky'),
+('cancelled',	'místo smazání'),
+('disqualified',	NULL),
+('interested',	'projevil zájem, chce jet'),
+('invited',	'Pozvaný'),
+('invited1',	'Pozvaný s jednou upomínkou'),
+('invited2',	'Pozvaný se dvěma upomínkami'),
+('invited3',	'Pozvaný se třemi upomínkami'),
+('missed',	'nepřijel, při prezenci'),
+('out_of_db',	'Řeší se mimo FKSDB'),
+('paid',	'zaplatil'),
+('participated',	'opravdu se zúčastnil'),
+('pending',	'čeká na schválení'),
+('rejected',	'odmítnul, odmítnut'),
+('spare',	'náhradník'),
+('spare.tsaf',	'náhradník pro TSAF'),
+('spare1',	'Náhradník s jednou upomínkou'),
+('spare2',	'Náhradník se dvěma upomínkami'),
+('spare3',	'Náhradník se třemi upomínkami');

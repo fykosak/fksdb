@@ -7,12 +7,13 @@ use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Fyziklani\ClosedSubmittingException;
 use FKSDB\Fyziklani\NotSetGameParametersException;
+use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use Nette\Application\AbortException;
-use Nette\Application\UI\Form;
+use Nette\Forms\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;
 
@@ -102,7 +103,7 @@ class EditControl extends AbstractEntityFormControl implements IEditEntityForm {
             $this->getPresenter()->flashMessage($msg->getMessage(), $msg->getLevel());
             $this->redirect('this');
         } catch (ClosedSubmittingException $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             $this->redirect('this');
         }
     }

@@ -5,14 +5,12 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceOrg;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
 use SQL\SearchableDataSource;
 
 /**
@@ -69,8 +67,6 @@ class OrgsGrid extends BaseGrid {
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
-     * @throws InvalidLinkException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);
@@ -86,11 +82,5 @@ class OrgsGrid extends BaseGrid {
 
         $this->addLink('org.edit', true);
         $this->addLink('org.detail', true);
-
-        if ($presenter->authorized('create')) {
-            $this->addGlobalButton('add')
-                ->setLabel(_('Založit organizátora'))
-                ->setLink($this->getPresenter()->link('create'));
-        }
     }
 }

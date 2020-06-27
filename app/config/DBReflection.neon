@@ -452,27 +452,32 @@ DBReflection:
                  type: string
                  title: _(Name en)
          schedule_item:
-             require_id_number: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\RequireIdNumberRow
-             price_czk: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\PriceCZKRow
-             price_eur: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\PriceEURRow
-             name_en:
-                 type: string
-                 title: _(Name en)
-             name_cs:
-                 type: string
-                 title: _(Name cs)
-             description_en:
-                 type: string
-                 title: _(Description en)
-             description_cs:
-                 type: string
-                 title: _(Description cs)
-             capacity:
-                 type: int
-                 title: _(Total capacity)
-                 nullValueFormat: infinite
-             free_capacity: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\FreeCapacityRow
-             used_capacity: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\UsedCapacityRow
+             modelClassName: FKSDB\ORM\Models\Schedule\ModelScheduleItem
+             referencedAccess:
+                modelClassName: FKSDB\ORM\Models\IScheduleItemReferencedModel
+                method: getScheduleItem
+             fields:
+                require_id_number: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\RequireIdNumberRow
+                price_czk: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\PriceCZKRow
+                price_eur: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\PriceEURRow
+                name_en:
+                    type: string
+                    title: _(Name en)
+                name_cs:
+                    type: string
+                    title: _(Name cs)
+                description_en:
+                    type: string
+                    title: _(Description en)
+                description_cs:
+                    type: string
+                    title: _(Description cs)
+                capacity:
+                    type: int
+                    title: _(Total capacity)
+                    nullValueFormat: infinite
+                free_capacity: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\FreeCapacityRow
+                used_capacity: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\UsedCapacityRow
          teacher:
              state: FKSDB\Components\DatabaseReflection\Tables\Teacher\StateRow
              since: FKSDB\Components\DatabaseReflection\Tables\Teacher\SinceRow

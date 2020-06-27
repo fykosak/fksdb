@@ -48,9 +48,9 @@ class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupRef
     public function getPrice(string $currency): Price {
         switch ($currency) {
             case Price::CURRENCY_EUR:
-                return new Price($this->price_eur, $currency);
+                return new Price(+$this->price_eur, $currency);
             case Price::CURRENCY_CZK:
-                return new Price($this->price_czk, $currency);
+                return new Price(+$this->price_czk, $currency);
             default:
                 throw new UnsupportedCurrencyException($currency);
         }

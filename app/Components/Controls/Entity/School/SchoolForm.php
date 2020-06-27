@@ -7,13 +7,15 @@ use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Exceptions\ModelException;
+use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceAddress;
 use FKSDB\ORM\Services\ServiceSchool;
+use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Form;
+use Nette\Forms\Form;
 use Tracy\Debugger;
 
 /**
@@ -80,19 +82,19 @@ class SchoolForm extends AbstractEntityFormControl implements IEditEntityForm {
      */
     protected function handleFormSuccess(Form $form) {
         $values = $form->getValues();
-        $data = \FormUtils::emptyStrToNull($values, true);
+        $data = FormUtils::emptyStrToNull($values, true);
         $connection = $this->serviceSchool->getConnection();
         try {
             $connection->beginTransaction();
             $this->create ? $this->handleCreateSuccess($data) : $this->handleEditSuccess($data);
             $connection->commit();
 
-            $this->getPresenter()->flashMessage($this->create ? _('Škola založena') : _('Škola upravena'), \BasePresenter::FLASH_SUCCESS);
+            $this->getPresenter()->flashMessage($this->create ? _('Škola založena') : _('Škola upravena'), BasePresenter::FLASH_SUCCESS);
             $this->getPresenter()->redirect('list');
         } catch (ModelException $exception) {
             $connection->rollBack();
             Debugger::log($exception, Debugger::ERROR);
-            $this->getPresenter()->flashMessage($this->create ? _('Chyba při zakládání školy.') : _('Chyba při úpravě školy.'), \BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage($this->create ? _('Chyba při zakládání školy.') : _('Chyba při úpravě školy.'), BasePresenter::FLASH_ERROR);
         }
     }
 

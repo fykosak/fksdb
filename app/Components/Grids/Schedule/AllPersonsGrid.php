@@ -7,7 +7,6 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
-use FKSDB\Payment\Price;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
@@ -66,7 +65,7 @@ class AllPersonsGrid extends BaseGrid {
 
         $this->addColumn('person_schedule_id', _('#'));
 
-        $this->addColumns(['person.person_name']);
+        $this->addColumns(['person.full_name']);
 
         $this->addColumn('schedule_item', _('Schedule item'))->setRenderer(function (ModelPersonSchedule $model) {
             return $model->getScheduleItem()->getLabel();
@@ -75,12 +74,7 @@ class AllPersonsGrid extends BaseGrid {
             return $model->getScheduleItem()->getScheduleGroup()->getLabel();
         })->setSortable(false);
 
-        $this->addColumn('price', _('Price'))->setRenderer(function (ModelPersonSchedule $model) {
-            return $model->getScheduleItem()->getPrice(Price::CURRENCY_EUR)->__toString() .
-                '/' . $model->getScheduleItem()->getPrice(Price::CURRENCY_CZK)->__toString();
-        })->setSortable(false);
-
-        $this->addColumns(['event.role', 'payment.payment']);
+        $this->addColumns(['schedule_item.price_czk', 'schedule_item.price_eur', 'event.role', 'payment.payment']);
     }
 
     protected function getModelClassName(): string {

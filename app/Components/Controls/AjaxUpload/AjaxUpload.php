@@ -18,7 +18,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Http\FileUpload;
 use Nette\Http\Response;
-use PublicModule\SubmitPresenter;
+use FKSDB\Modules\PublicModule\SubmitPresenter;
 use ReactMessage;
 
 /**
@@ -64,7 +64,7 @@ class AjaxUpload extends ReactComponent {
      * @param ModelContestant $contestant
      */
     public function __construct(Container $container, TypedTableSelection $availableTasks, ModelContestant $contestant) {
-        parent::__construct($container);
+        parent::__construct($container, 'public.ajax-upload');
         $this->availableTasks = $availableTasks;
         $this->contestant = $contestant;
     }
@@ -81,10 +81,11 @@ class AjaxUpload extends ReactComponent {
     }
 
     /**
+     * @param mixed ...$args
      * @return string
      * @throws InvalidLinkException
      */
-    public function getData(): string {
+    public function getData(...$args): string {
         $data = [];
         /**
          * @var ModelTask $task
@@ -169,12 +170,8 @@ class AjaxUpload extends ReactComponent {
         die();
     }
 
-    protected function getReactId(): string {
-        return 'public.ajax-upload';
-    }
-
     /**
-     * @param $taskId
+     * @param int $taskId
      * @return ModelTask|null
      */
     private function isAvailableSubmit($taskId) {

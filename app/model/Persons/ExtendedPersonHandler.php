@@ -3,7 +3,7 @@
 namespace Persons;
 
 use FKSDB\Authentication\AccountManager;
-use BasePresenter;
+use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\ORM\AbstractModelSingle;
@@ -14,7 +14,7 @@ use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
-use FormUtils;
+use FKSDB\Utils\FormUtils;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use FKSDB\Exceptions\ModelException;
@@ -22,7 +22,7 @@ use Nette\Database\Connection;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
-use OrgModule\ContestantPresenter;
+use FKSDB\Modules\OrgModule\ContestantPresenter;
 use Tracy\Debugger;
 use Traversable;
 

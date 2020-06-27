@@ -5,7 +5,6 @@ namespace FKSDB\DataTesting;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\DataTesting\Tests\Person\PersonTest;
 use FKSDB\ORM\Services\ServiceContest;
-use Nette\Application\BadRequestException;
 
 /**
  * Class DataTestingFactory
@@ -29,7 +28,6 @@ class DataTestingFactory {
      * DataTestingFactory constructor.
      * @param ServiceContest $serviceContest
      * @param TableReflectionFactory $tableReflectionFactory
-     * @throws BadRequestException
      */
     public function __construct(ServiceContest $serviceContest, TableReflectionFactory $tableReflectionFactory) {
         $this->serviceContest = $serviceContest;
@@ -38,7 +36,7 @@ class DataTestingFactory {
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
      */
     private function registersTests() {
         $tests = [

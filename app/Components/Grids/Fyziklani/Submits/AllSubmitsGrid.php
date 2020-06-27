@@ -6,6 +6,7 @@ use Closure;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Fyziklani\TaskCodePreprocessor;
+use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -125,7 +126,7 @@ class AllSubmitsGrid extends SubmitsGrid {
                             $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
                             $table->where('e_fyziklani_team_id.e_fyziklani_team_id =? AND fyziklani_task.label =? ', $teamId, $taskLabel);
                         } else {
-                            $this->flashMessage(_('Wrong task code'), \BasePresenter::FLASH_WARNING);
+                            $this->flashMessage(_('Wrong task code'), BasePresenter::FLASH_WARNING);
                         }
                         break;
                     case 'not_null':
@@ -150,15 +151,15 @@ class AllSubmitsGrid extends SubmitsGrid {
          */
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
         if (!$submit) {
-            $this->flashMessage(_('Submit dos not exists.'), \BasePresenter::FLASH_ERROR);
+            $this->flashMessage(_('Submit dos not exists.'), BasePresenter::FLASH_ERROR);
             $this->redirect('this');
         }
         try {
             $log = $this->serviceFyziklaniSubmit->revokeSubmit($submit, $this->getPresenter()->getUser());
-            $this->flashMessage($log->getMessage(), \BasePresenter::FLASH_SUCCESS);
+            $this->flashMessage($log->getMessage(), BasePresenter::FLASH_SUCCESS);
             $this->redirect('this');
         } catch (BadRequestException $exception) {
-            $this->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
+            $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             $this->redirect('this');
         }
     }

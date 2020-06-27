@@ -1,6 +1,7 @@
 <?php
 
 use FKSDB\Config\GlobalParameters;
+use FKSDB\Utils\Utils;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\SmartObject;

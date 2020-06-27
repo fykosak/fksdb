@@ -14,8 +14,6 @@ use Nette;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Container;
 
-
-
 /**
  * @author Filip Procházka <filip@prochazka.su>
  * @author Jan Tvrdík

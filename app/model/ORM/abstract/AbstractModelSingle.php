@@ -10,7 +10,7 @@ use Nette\Database\Table\Selection;
  */
 abstract class AbstractModelSingle extends ActiveRow implements IModel {
     /** @var array */
-    private $tmpData = [];
+    private $tmpData;
 
     /**
      * AbstractModelSingle constructor.

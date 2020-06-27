@@ -1,8 +1,8 @@
 <?php
 
-namespace Exports\Formats;
+namespace FKSDB\Exports\Formats;
 
-use Exports\StoredQuery;
+use FKSDB\StoredQuery\StoredQuery;
 use Nette\Application\IResponse;
 use WebService\IXMLNodeSerializer;
 

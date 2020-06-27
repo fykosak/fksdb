@@ -13,8 +13,9 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEventOrg;
+use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
-use Nette\Application\UI\Form;
+use Nette\Forms\Form;
 use Nette\DI\Container;
 use Tracy\Debugger;
 
@@ -74,7 +75,7 @@ class EventOrgForm extends AbstractEntityFormControl implements IEditEntityForm 
      * @throws AbortException
      */
     protected function handleFormSuccess(Form $form) {
-        $data = \FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
+        $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
         if (!isset($data['event_id'])) {
             $data['event_id'] = $this->event->event_id;
         }

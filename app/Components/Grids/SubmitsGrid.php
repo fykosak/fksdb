@@ -90,7 +90,7 @@ class SubmitsGrid extends BaseGrid {
             ->setClass('btn btn-sm btn-warning')
             ->setText(_('Cancel'))
             ->setShow(function (ModelSubmit $row) {
-                return $this->submitHandlerFactory->canRevoke($row);
+                return $row->canRevoke();
             })
             ->setLink(function (ModelSubmit $row) {
                 return $this->link('revoke!', $row->submit_id);

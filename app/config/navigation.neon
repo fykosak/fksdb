@@ -17,14 +17,14 @@ navigation:
 
     structure:
         Org.Dashboard.default:
-            - Dispatch.default
+            - Core.Dispatch.default
             - Org.Inbox.default
             - Org.Points.entry
             - Org.Tasks.import
             - Org.Contestant.list
             - Common.School.list
             - Org.Teacher.list
-            - Org.Export.list
+            - Org.StoredQuery.list
             - Org.Org.list
             - Org.Event.list
             - Common.Deduplicate.person
@@ -42,7 +42,7 @@ navigation:
             - Common.Validation.preview
             - Common.Validation.list
         Public.Dashboard.default:
-            - Dispatch.Default
+            - Core.Dispatch.Default
             - Public.Submit.default
             - Public.Application.list
             - fykos

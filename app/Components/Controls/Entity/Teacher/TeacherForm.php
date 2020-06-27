@@ -13,10 +13,15 @@ use FKSDB\Messages\Message;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
+use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
-use Nette\Application\UI\Form;
+use Nette\Forms\Form;
 use Tracy\Debugger;
 
+/**
+ * Class TeacherForm
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class TeacherForm extends AbstractEntityFormControl implements IEditEntityForm {
 
     use ReferencedPersonTrait;
@@ -76,7 +81,7 @@ class TeacherForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @throws AbortException
      */
     protected function handleFormSuccess(Form $form) {
-        $data = \FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
+        $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
         try {
             $this->create ? $this->handleCreateSuccess($data) : $this->handleEditSuccess($data);
         } catch (ModelException $exception) {

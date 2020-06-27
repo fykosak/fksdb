@@ -2,7 +2,7 @@
 
 namespace Authorization\Assertions;
 
-use Exports\StoredQuery;
+use FKSDB\StoredQuery\StoredQuery;
 use Nette\InvalidArgumentException;
 use Nette\Security\IResource;
 use Nette\Security\Permission;
@@ -45,8 +45,7 @@ class QIDAssertion {
         if (!$storedQuery instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');
         }
-        $qid = isset($storedQuery->getQueryPattern()->qid) ? $storedQuery->getQueryPattern()->qid : null;
-
+        $qid = $storedQuery->getQId();
         return (bool)$qid && in_array($qid, $this->qids);
     }
 

@@ -13,11 +13,16 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
+use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
-use Nette\Application\UI\Form;
+use Nette\Forms\Form;
 use Nette\DI\Container;
 use Tracy\Debugger;
 
+/**
+ * Class OrgForm
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class OrgForm extends AbstractEntityFormControl implements IEditEntityForm {
     use ReferencedPersonTrait;
 
@@ -80,7 +85,7 @@ class OrgForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @throws AbortException
      */
     protected function handleFormSuccess(Form $form) {
-        $data = \FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
+        $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
         if (!isset($data['contest_id'])) {
             $data['contest_id'] = $this->contest->contest_id;
         }

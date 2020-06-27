@@ -21,7 +21,7 @@ use FKSDB\ORM\Services\ServicePerson;
 use Mail\MailTemplateFactory;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
-use PublicModule\ApplicationPresenter;
+use FKSDB\Modules\PublicModule\ApplicationPresenter;
 
 /**
  * Sends email with given template name (in standard template directory)

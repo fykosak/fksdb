@@ -5,7 +5,6 @@ namespace FKSDB\Components\DatabaseReflection\ColumnFactories;
 use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
-use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\BadRequestException;
@@ -35,11 +34,6 @@ abstract class AbstractColumnFactory implements IColumnFactory {
      */
     private $referencedAccess;
 
-    /**
-     * @param mixed ...$args
-     * @return BaseControl
-     * @throws OmittedControlException
-     */
     public function createField(...$args): BaseControl {
         return new TextInput($this->getTitle());
     }

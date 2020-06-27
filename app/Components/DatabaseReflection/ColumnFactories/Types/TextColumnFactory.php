@@ -3,7 +3,6 @@
 namespace FKSDB\Components\DatabaseReflection\ColumnFactories;
 
 use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
-use FKSDB\Components\DatabaseReflection\ColumnFactories\DefaultColumnFactory;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;

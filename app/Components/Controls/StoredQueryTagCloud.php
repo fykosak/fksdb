@@ -4,65 +4,35 @@ namespace FKSDB\Components\Controls;
 
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTag;
-use Nette\Application\UI\Control;
-use Nette\InvalidArgumentException;
-use FKSDB\ORM\ServicesMulti\ServiceMStoredQueryTag;
+use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Lukáš Timko <lukast@fykos.cz>
  */
-class StoredQueryTagCloud extends Control {
+class StoredQueryTagCloud extends BaseComponent {
 
     const MODE_LIST = 'mode-list';
     const MODE_DETAIL = 'mode-detail';
 
     /**
-     * @var ServiceMStoredQueryTag
+     * @var ServiceStoredQueryTagType
      */
-    private $serviceMStoredQueryTag;
+    private $serviceStoredQueryTagType;
 
-    /**
-     * @var ModelStoredQuery
-     */
-    private $modelStoredQuery;
-
-    /**
-     * @var callable[]
-     */
-    private $onClick;
     /** @var string */
     private $mode;
-    /** @var int[] */
-    private $activeTagIds = [];
+
+    /** @persistent */
+    public $activeTagIds = [];
 
     /**
-     * StoredQueryTagCloud constructor.
-     * @param string $mode
-     * @param ServiceMStoredQueryTag $serviceMStoredQueryTag
-     */
-    public function __construct(string $mode, ServiceMStoredQueryTag $serviceMStoredQueryTag) {
-        parent::__construct();
-        $this->serviceMStoredQueryTag = $serviceMStoredQueryTag;
-        $this->mode = $mode;
-    }
-
-    /**
-     * @param ModelStoredQuery $modelStoredQuery
+     * @param ServiceStoredQueryTagType $serviceStoredQueryTagType
      * @return void
      */
-    public function setModelStoredQuery(ModelStoredQuery $modelStoredQuery) {
-        $this->modelStoredQuery = $modelStoredQuery;
-    }
-
-    /**
-     * @param callable $callback
-     * @return static
-     */
-    public function registerOnClick(callable $callback) {
-        $this->onClick[] = $callback;
-        return $this;
+    public function injectPrimary(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
+        $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
     }
 
     /**
@@ -71,35 +41,36 @@ class StoredQueryTagCloud extends Control {
      */
     public function handleOnClick(array $activeTagIds) {
         $this->activeTagIds = $activeTagIds;
-        foreach ($this->onClick as $callback) {
-            call_user_func($callback, $activeTagIds);
-        }
     }
 
-    public function render() {
-        switch ($this->mode) {
-            case self::MODE_LIST:
-                $this->template->tags = $this->serviceMStoredQueryTag->getMainService();
-                $this->template->activeTagIds = $this->activeTagIds;
-                $this->template->nextActiveTagIds = $this->createNextActiveTagIds();
-                break;
-            case self::MODE_DETAIL:
-                $this->template->tags = $this->modelStoredQuery->getMStoredQueryTags();
-                break;
-            default :
-                throw new InvalidArgumentException();
-        }
-
-        $this->template->mode = $this->mode;
+    /**
+     * @param string $mode
+     * @return void
+     */
+    public function render(string $mode) {
+        $this->template->mode = $mode;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'StoredQueryTagCloud.latte');
         $this->template->render();
     }
 
+    public function renderList() {
+        $this->template->tags = $this->serviceStoredQueryTagType->getTable();
+        $this->template->activeTagIds = $this->activeTagIds;
+        $this->template->nextActiveTagIds = $this->createNextActiveTagIds();
+        $this->render(self::MODE_LIST);
+    }
+
     /**
-     * @return array
+     * @param ModelStoredQuery $query
+     * @return void
      */
-    private function createNextActiveTagIds() {
-        $tags = $this->serviceMStoredQueryTag->getMainService();
+    public function renderDetail(ModelStoredQuery $query) {
+        $this->template->tags = $query->getMStoredQueryTags();
+        $this->render(self::MODE_DETAIL);
+    }
+
+    private function createNextActiveTagIds(): array {
+        $tags = $this->serviceStoredQueryTagType->getTable();
         $nextActiveTagIds = [];
         /** @var ModelStoredQueryTag $tag */
         foreach ($tags as $tag) {
