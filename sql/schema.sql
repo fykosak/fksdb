@@ -746,7 +746,7 @@ CREATE TABLE IF NOT EXISTS `e_fyziklani_team` (
   `teacher_accomodation` TINYINT(1)  NOT NULL DEFAULT 0,
   `teacher_present`      TINYINT(1)  NOT NULL DEFAULT 0,
   `teacher_schedule`     TEXT        NULL     DEFAULT NULL
-  COMMENT 'serializovaný program',
+      COMMENT 'serializovaný program',
   `category`             CHAR(1)     NOT NULL,
   `created`              TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `phone`                VARCHAR(30) NULL     DEFAULT NULL,
@@ -755,8 +755,8 @@ CREATE TABLE IF NOT EXISTS `e_fyziklani_team` (
   `points`               INT(11)     NULL     DEFAULT NULL,
   `rank_category`        INT(11)     NULL     DEFAULT NULL,
   `rank_total`           INT(11)     NULL     DEFAULT NULL,
-  `room`                 VARCHAR(3)  NULL     DEFAULT NULL
-  COMMENT '@DEPRECATED',
+  `room`                 VARCHAR(3)  NULL     DEFAULT NULL COMMENT '@DEPRECATED',
+  `force_a`              TINYINT(1)  NULL     DEFAULT NULL,
   `game_lang`            VARCHAR(2)  NULL     DEFAULT NULL
   COMMENT 'Game lang',
   PRIMARY KEY (`e_fyziklani_team_id`),

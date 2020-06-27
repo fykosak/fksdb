@@ -3,6 +3,8 @@
 namespace FKSDB\Components\DatabaseReflection\Tables\Teacher;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelTeacher;
 use Nette\Forms\Controls\BaseControl;
@@ -11,9 +13,9 @@ use Nette\Utils\Html;
 
 /**
  * Class StateRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class StateRow extends AbstractTeacherRow {
+class StateRow extends AbstractColumnFactory {
 
     /**
      * @param AbstractModelSingle|ModelTeacher $model
@@ -62,5 +64,8 @@ class StateRow extends AbstractTeacherRow {
             'ended' => _('Ended'),
             'undefined' => _('Undefined')
         ];
+    }
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
     }
 }

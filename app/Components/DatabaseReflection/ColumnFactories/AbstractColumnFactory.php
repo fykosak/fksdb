@@ -4,13 +4,12 @@ namespace FKSDB\Components\DatabaseReflection\ColumnFactories;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
-use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\BadRequestException;
-use Nette\DeprecatedException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
+use Nette\InvalidStateException;
 use Nette\SmartObject;
 use Nette\Utils\Html;
 
@@ -21,7 +20,7 @@ use Nette\Utils\Html;
 abstract class AbstractColumnFactory implements IColumnFactory {
     use SmartObject;
 
-    const PERMISSION_USE_GLOBAL_ACL = 1;
+    const PERMISSION_ALLOW_ANYBODY = 1;
     const PERMISSION_ALLOW_BASIC = 16;
     const PERMISSION_ALLOW_RESTRICT = 128;
     const PERMISSION_ALLOW_FULL = 1024;
@@ -70,18 +69,20 @@ abstract class AbstractColumnFactory implements IColumnFactory {
         return $userValue >= $this->getPermission()->write;
     }
 
-    public function getPermission(): FieldLevelPermission {
-        return new FieldLevelPermission($this->getPermissionsValue(), $this->getPermissionsValue());
+    /**
+     * @param array $referencedAccess
+     * @return void
+     */
+    final public function setReferencedAccess(array $referencedAccess) {
+        $this->referencedAccess = $referencedAccess;
     }
 
     /**
      * @param string $modelClassName
-     * @param array $referencedAccess
      * @return void
      */
-    final public function setReferencedParams(string $modelClassName, array $referencedAccess) {
+    final public function setModelClassName(string $modelClassName) {
         $this->modelClassName = $modelClassName;
-        $this->referencedAccess = $referencedAccess;
     }
 
     /**
@@ -90,37 +91,38 @@ abstract class AbstractColumnFactory implements IColumnFactory {
      * @throws BadRequestException
      */
     protected function getModel(AbstractModelSingle $model) {
-        // if referenced access is not set return Model
-        //if (!isset($this->referencedAccess) || !isset($this->modelClassName)) {
-        if (!$this->referencedAccess || !$this->modelClassName) {
-            return $model;
-        }
-        // referenced access was called at this time
-        $modelClassName = $this->modelClassName;
         // model is already instance of desired model
-        if ($model instanceof $modelClassName) {
+        if ($model instanceof $this->modelClassName) {
             return $model;
         }
-        // try interface and access via get<Model>()
-        if ($model instanceof $this->referencedAccess['modelClassName']) {
-            $referencedModel = $model->{$this->referencedAccess['method']}();
-            if ($referencedModel) {
-                if ($referencedModel instanceof $modelClassName) {
-                    return $referencedModel;
-                }
-                throw new BadTypeException($modelClassName, $referencedModel);
-            }
-            return null;
+
+        // if referenced access is not set and model is not desired model throw exception
+        //if (!isset($this->referencedAccess)) {
+        if (!$this->referencedAccess) {
+            throw new InvalidStateException();
         }
-        throw new BadRequestException(sprintf('Can not access model %s from %s', $modelClassName, get_class($model)));
+        return $this->accessReferencedModel($model);
     }
 
     /**
-     * @return int
-     * @deprecated
+     * try interface and access via get<Model>()
+     * @param AbstractModelSingle $model
+     * @return AbstractModelSingle|null
+     * @throws BadRequestException
+     * @throws BadTypeException
      */
-    protected function getPermissionsValue(): int {
-        throw new DeprecatedException();
+    protected function accessReferencedModel(AbstractModelSingle $model) {
+        if ($model instanceof $this->referencedAccess['modelClassName']) {
+            $referencedModel = $model->{$this->referencedAccess['method']}();
+            if ($referencedModel) {
+                if ($referencedModel instanceof $this->modelClassName) {
+                    return $referencedModel;
+                }
+                throw new BadTypeException($this->modelClassName, $referencedModel);
+            }
+            return null;
+        }
+        throw new BadRequestException(sprintf('Can not access model %s from %s', $this->modelClassName, get_class($model)));
     }
 
     protected function createNullHtmlValue(): Html {

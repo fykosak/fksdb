@@ -7,37 +7,4 @@
         </a>
     {/if}
 {/define}
-{define test}
-    {if $testLog}
-        {$testLog->createHtmlIcon()}
-
-    {/if}
-{/define}
-
-{if $layout =='list-item'}
-    <li class="list-group-item">
-        <div class="row">
-            <b class="col-5">{$title}
-                {include #description}
-            </b>
-            <span class="col-1">
-                {include #test}
-            </span>
-            <span class="col-6">
-                {$html}
-            </span>
-        </div>
-    </li>
-{elseif $layout =='row'}
-    <div class="row mt-1">
-        <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{$title}
-            {include #description}
-        </b>
-        <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
-        {$html}
-            {include #test}
-    </span>
-    </div>
-{elseif $layout =='only-value'}
-    {$html}
-{/if}
+{include content}

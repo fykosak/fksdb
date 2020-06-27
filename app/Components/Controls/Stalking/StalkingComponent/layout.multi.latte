@@ -12,7 +12,7 @@
             </h3>
             <ul class="list-group list-group-flush">
                 {foreach $rows as $field}
-                    {control valuePrinter:listItem $field, $model}
+                    {control valuePrinter:listItem $field, $model,$userPermission}
                 {/foreach}
             </ul>
         {/foreach}

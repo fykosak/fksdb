@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\Stalking\StalkingControl;
 use FKSDB\Components\Controls\Stalking\StalkingService;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\BadRequestException;
-use Nette\DI\Container;
 use FKSDB\Exceptions\NotImplementedException;
 use Nette\InvalidStateException;
 
@@ -19,46 +18,33 @@ class StalkingComponent extends StalkingControl {
      * @var StalkingService
      */
     private $stalkingService;
-    /**
-     * @var int
-     */
-    private $userPermissions;
-    /**
-     * @var ModelPerson
-     */
-    private $person;
 
     /**
-     * StalkingComponent constructor.
-     * @param Container $container
-     * @param ModelPerson $person
-     * @param int $userPermissions
+     * @param StalkingService $stalkingService
+     * @return void
      */
-    public function __construct(Container $container, ModelPerson $person, int $userPermissions) {
-        parent::__construct($container);
-        $this->stalkingService = $container->getByType(StalkingService::class);
-        $this->userPermissions = $userPermissions;
-        $this->person = $person;
+    public function injectStalkingService(StalkingService $stalkingService) {
+        $this->stalkingService = $stalkingService;
     }
 
     /**
      * @param string $section
+     * @param ModelPerson $person
+     * @param int $userPermission
      * @return void
      * @throws BadRequestException
      * @throws NotImplementedException
      */
-    public function render(string $section) {
+    public function render(string $section, ModelPerson $person, int $userPermission) {
         $definition = $this->stalkingService->getSection($section);
-        $this->beforeRender($this->person, $this->userPermissions);
-        $this->template->headline = _($definition['label']);
-        $this->template->minimalPermissions = $definition['minimalPermission'];
-
+        $this->beforeRender($person, _($definition['label']), $userPermission, $definition['minimalPermission']);
+        $this->template->userPermission = $userPermission;
         switch ($definition['layout']) {
             case 'single':
-                $this->renderSingle($definition);
+                $this->renderSingle($definition, $person);
                 return;
             case 'multi':
-                $this->renderMulti($definition);
+                $this->renderMulti($definition, $person);
                 return;
             default:
                 throw new InvalidStateException();
@@ -67,21 +53,22 @@ class StalkingComponent extends StalkingControl {
 
     /**
      * @param array $definition
+     * @param ModelPerson $person
      * @return void
      * @throws NotImplementedException
      */
-    private function renderSingle(array $definition) {
+    private function renderSingle(array $definition, ModelPerson $person) {
 
         $model = null;
         switch ($definition['table']) {
             case 'person_info':
-                $model = $this->person->getInfo();
+                $model = $person->getInfo();
                 break;
             case 'person':
-                $model = $this->person;
+                $model = $person;
                 break;
             case 'login':
-                $model = $this->person->getLogin();
+                $model = $person->getLogin();
                 break;
             default:
                 throw new NotImplementedException();
@@ -95,11 +82,12 @@ class StalkingComponent extends StalkingControl {
 
     /**
      * @param array $definition
+     * @param ModelPerson $person
      * @return void
      */
-    private function renderMulti(array $definition) {
+    private function renderMulti(array $definition, ModelPerson $person) {
         $models = [];
-        $query = $this->person->related($definition['table']);
+        $query = $person->related($definition['table']);
         foreach ($query as $datum) {
             $models[] = ($definition['model'])::createFromActiveRow($datum);
         }

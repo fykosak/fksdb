@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\DatabaseReflection\EventParticipant;
+namespace FKSDB\Components\DatabaseReflection\Payment;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
@@ -9,10 +9,10 @@ use Nette\Forms\Controls\BaseControl;
 use FKSDB\Exceptions\NotImplementedException;
 
 /**
- * Class AbstractParticipantRow
+ * Class AbstractPaymentRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class AbstractParticipantRow extends AbstractColumnFactory {
+abstract class AbstractPaymentFactory extends AbstractColumnFactory {
 
     public function createField(...$args): BaseControl {
         throw new OmittedControlException();

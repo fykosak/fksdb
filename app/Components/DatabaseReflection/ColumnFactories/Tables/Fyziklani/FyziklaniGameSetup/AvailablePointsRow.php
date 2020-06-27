@@ -2,15 +2,19 @@
 
 namespace FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup;
 
+use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
 /**
  * Class AvailablePointsRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class AvailablePointsRow extends AbstractFyziklaniGameSetupRow {
+class AvailablePointsRow extends AbstractColumnFactory {
 
     public function getTitle(): string {
         return _('Available points');
@@ -28,5 +32,13 @@ class AvailablePointsRow extends AbstractFyziklaniGameSetupRow {
                 ->addText($points));
         }
         return $container;
+    }
+
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
+    }
+
+    public function createField(...$args): BaseControl {
+        throw new OmittedControlException();
     }
 }
