@@ -9,6 +9,7 @@ use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\IControl;
+use Persons\ReferencedPersonHandler;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -52,6 +53,20 @@ class AddressFactory {
         return $container;
     }
 
+    public function createAddressContainer(string $type): AddressContainer {
+        $container = new AddressContainer();
+        $this->buildAddress($container, self::NOT_WRITEONLY); // TODO is not safe
+        switch ($type) {
+            case ReferencedPersonHandler::POST_CONTACT_DELIVERY:
+                $container->setOption('label', _('Delivery address'));
+                break;
+            case ReferencedPersonHandler::POST_CONTACT_PERMANENT:
+                $container->setOption('label', _('Permanent address') . _('(when different from delivery address)'));
+                break;
+        }
+        return $container;
+    }
+
     /**
      * Appends elements to an existing container.
      * (Created because of KdybyReplicator.)
@@ -62,7 +77,6 @@ class AddressFactory {
      */
     public function buildAddress(AddressContainer $container, $options = 0, IControl $conditioningField = null) {
         $container->setServiceRegion($this->serviceRegion);
-
 
         if ($options & self::SHOW_EXTENDED_ROWS) {
             $container->addText('first_row', _('První řádek'))

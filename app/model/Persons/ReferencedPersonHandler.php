@@ -13,6 +13,8 @@ use FKSDB\Components\Forms\Controls\Schedule\Handler;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelPersonHistory;
+use FKSDB\ORM\Models\ModelPersonInfo;
 use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonHistory;
@@ -120,9 +122,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
     public function createFromValues(ArrayHash $values): ModelPerson {
         $email = isset($values['person_info']['email']) ? $values['person_info']['email'] : null;
         $person = $this->servicePerson->findByEmail($email);
-        if (!$person) {
-            $person = $this->servicePerson->createNew();
-        }
+        $person = $this->storePerson($person, (array)$values);
         $this->store($person, $values);
         return $person;
     }
@@ -173,20 +173,16 @@ class ReferencedPersonHandler implements IReferencedHandler {
 
             $models = [
                 'person' => &$person,
-                'person_info' => ($info = $person->getInfo()) ?: $this->servicePersonInfo->createNew(),
-                'person_history' => ($history = $person->getHistory($this->acYear)) ?: $this->servicePersonHistory->createNew(['ac_year' => $this->acYear]),
+                'person_info' => $person->getInfo() ?: null,
+                'person_history' => $person->getHistory($this->acYear) ?: null,
                 'person_schedule' => (($this->eventId && isset($data['person_schedule']) && $person->getSerializedSchedule($this->eventId, \array_keys((array)$data['person_schedule'])[0])) ?: null),
                 self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress()) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_DELIVERY]),
-                self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_PERMANENT])
+                self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_PERMANENT]),
             ];
             /**
-             * @var AbstractServiceSingle[] $services
+             * @var IService[]|null[] $services
              */
             $services = [
-                'person' => $this->servicePerson,
-                'person_info' => $this->servicePersonInfo,
-                'person_history' => $this->servicePersonHistory,
-                'person_schedule' => null,
                 self::POST_CONTACT_DELIVERY => $this->serviceMPostContact,
                 self::POST_CONTACT_PERMANENT => $this->serviceMPostContact,
             ];
@@ -202,18 +198,31 @@ class ReferencedPersonHandler implements IReferencedHandler {
             $data = FormUtils::emptyStrToNull($data);
             $data = FormUtils::removeEmptyHashes($data);
             $conflicts = $this->getConflicts($models, $data);
-
-            if ($this->resolution == self::RESOLUTION_EXCEPTION) {
+            if ($this->resolution === self::RESOLUTION_EXCEPTION) {
                 if (count($conflicts)) {
                     throw new ModelDataConflictException($conflicts);
                 }
-            } elseif ($this->resolution == self::RESOLUTION_KEEP) {
+            } elseif ($this->resolution === self::RESOLUTION_KEEP) {
                 $data = $this->removeConflicts($data, $conflicts);
             }
             // It's like this: $this->resolution == self::RESOLUTION_OVERWRITE) {
             //    $data = $conflicts;
 
             foreach ($models as $t => & $model) {
+
+                if ($t === 'person') {
+                    $model = $this->storePerson($model, (array)$data);
+                    continue;
+                } elseif ($t === 'person_info') {
+                    $this->storePersonInfo($models['person'], $model, (array)$data);
+                    continue;
+                } elseif ($t === 'person_history') {
+                    $this->storePersonHistory($models['person'], $model, (array)$data);
+                    continue;
+                } elseif ($t == 'person_schedule' && isset($data[$t])) {
+                    $this->eventScheduleHandler->prepareAndUpdate($data[$t], $models['person'], $this->eventId);
+                    continue;
+                }
 
                 if (!isset($data[$t])) {
                     if (\in_array($t, $originalModels) && \in_array($t, [self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT])) {
@@ -223,10 +232,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                     continue;
                 }
 
-                if ($t == 'person_schedule' && isset($data[$t])) {
-                    $this->eventScheduleHandler->prepareAndUpdate($data[$t], $models['person'], $this->eventId);
-                    continue;
-                }
+
                 $data[$t]['person_id'] = $models['person']->person_id; // this works even for person itself
                 // if ($services[$t] instanceof AbstractServiceSingle) {
                 //     $services[$t]->updateModel2($model, $data[$t]);
@@ -262,7 +268,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
         foreach ($values as $key => $value) {
             if (isset($model[$key])) {
                 if ($model[$key] instanceof IModel) {
-                    $subConflicts = $this->getConflicts($model[$key], $value);
+                    $subConflicts = $this->getModelConflicts($model[$key], (array)$value);
                     if (count($subConflicts)) {
                         $conflicts[$key] = $subConflicts;
                     }
@@ -273,6 +279,65 @@ class ReferencedPersonHandler implements IReferencedHandler {
         }
 
         return $conflicts;
+    }
+
+    private function getModelConflicts(IModel $model, array $values): array {
+        $conflicts = [];
+        foreach ($values as $key => $value) {
+            if (isset($model[$key]) && !is_null($model[$key]) && $model[$key] != $value) {
+                $conflicts[$key] = $value;
+            }
+        }
+        return $conflicts;
+    }
+
+    /**
+     * @param array $data
+     * @param ModelPerson|null $person
+     * @return ModelPerson
+     */
+    private function storePerson($person, array $data): ModelPerson {
+        $personData = (array)$data['person'];
+        if ($person) {
+            $this->servicePerson->updateModel2($person, $personData);
+            return $person;
+        } else {
+            return $this->servicePerson->createNewModel($personData);
+        }
+    }
+
+    /**
+     * @param ModelPerson $person
+     * @param ModelPersonInfo|null $info
+     * @param array $data
+     * @return void
+     */
+    private function storePersonInfo(ModelPerson $person, $info, array $data) {
+        $personInfoData = (array)$data['person_info'];
+        if ($info) {
+            $this->servicePersonInfo->updateModel2($info, $personInfoData);
+        } else {
+            $personInfoData['person_id'] = $person->person_id;
+            $this->servicePersonInfo->createNewModel($personInfoData);
+        }
+    }
+
+    /**
+     * @param ModelPerson $person
+     * @param ModelPersonHistory|null $history
+     * @param array $data
+     * @return void
+     */
+    private function storePersonHistory(ModelPerson $person, $history, array $data) {
+        $personHistoryData = (array)$data['person_history'];
+        if ($history) {
+            $this->servicePersonHistory->updateModel2($history, $personHistoryData);
+        } else {
+            $this->servicePersonHistory->createNewModel(array_merge($personHistoryData, [
+                'ac_year' => $this->acYear,
+                'person_id' => $person->person_id,
+            ]));
+        }
     }
 
     /**
