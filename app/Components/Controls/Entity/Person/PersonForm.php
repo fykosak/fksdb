@@ -11,6 +11,8 @@ use FKSDB\Components\Forms\Factories\PersonInfoFactory;
 use FKSDB\Config\GlobalParameters;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\ModelException;
+use FKSDB\Logging\FlashMessageDump;
+use FKSDB\Logging\MemoryLogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
@@ -69,6 +71,8 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
     private $servicePostContact;
     /** @var ServiceAddress */
     private $serviceAddress;
+    /** @var MemoryLogger */
+    private $logger;
     /**
      * @var FieldLevelPermission
      */
@@ -87,6 +91,7 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
     public function __construct(Container $container, bool $create, int $userPermission) {
         parent::__construct($container, $create);
         $this->userPermission = new FieldLevelPermission($userPermission, $userPermission);
+        $this->logger = new MemoryLogger();
     }
 
     /**
@@ -172,13 +177,14 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
         $data = FormUtils::emptyStrToNull($values, true);
         try {
             $this->servicePerson->getConnection()->beginTransaction();
-            
+            $this->logger->clear();
             $person = $this->storePerson($this->create ? null : $this->model, $data);
             $this->storePersonInfo($person, $data);
             $this->storeAddresses($person, $data);
 
             $this->servicePerson->getConnection()->commit();
-            $this->flashMessage($this->create ? _('Person has been created') : _('Data has been updated'), Message::LVL_SUCCESS);
+            $this->logger->log(new Message($this->create ? _('Person has been created') : _('Data has been updated'), Message::LVL_SUCCESS));
+            FlashMessageDump::dump($this->logger, $this->getPresenter(), true);
             $this->getPresenter()->redirect('this');
         } catch (ModelException $exception) {
             $this->servicePerson->getConnection()->rollBack();
@@ -246,7 +252,7 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
             if (count($datum)) {
                 if ($oldAddress) {
                     $this->serviceAddress->updateModel2($oldAddress, $datum);
-                    $this->flashMessage(_('Address has been updated'), Message::LVL_INFO);
+                    $this->logger->log(new Message(_('Address has been updated'), Message::LVL_INFO));
                 } else {
                     $address = $this->serviceAddress->createNewModel($datum);
                     $postContactData = [
@@ -255,7 +261,7 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
                         'address_id' => $address->address_id,
                     ];
                     $this->servicePostContact->createNewModel($postContactData);
-                    $this->flashMessage(_('Address has been created'), Message::LVL_INFO);
+                    $this->logger->log(new Message(_('Address has been created'), Message::LVL_INFO));
                 }
             } elseif ($oldAddress) {
                 $this->servicePostContact->getTable()->where([
@@ -263,7 +269,7 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
                     'person_id' => $person->person_id,
                 ])->delete();
                 $oldAddress->delete();
-                $this->flashMessage(_('Address has been deleted'), Message::LVL_INFO);
+                $this->logger->log(new Message(_('Address has been deleted'), Message::LVL_INFO));
             }
         }
     }
