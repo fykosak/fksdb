@@ -167,10 +167,10 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @param null $type
-     * @return array
+     * @param string|null $type
+     * @return ModelMPostContact[]
      */
-    public function getMPostContacts($type = null) {
+    public function getMPostContacts(string $type = null): array {
         $postContacts = $this->getPostContacts();
         if ($postContacts && $type !== null) {
             $postContacts->where(['type' => $type]);
@@ -193,7 +193,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     /**
      * Main delivery address of the contestant.
      *
-     * @return ModelPostContact|null
+     * @return ModelMPostContact|null
      */
     public function getDeliveryAddress() {
         $dAddresses = $this->getMPostContacts(ModelPostContact::TYPE_DELIVERY);
@@ -206,7 +206,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
 
     /**
      * @param bool $noFallback
-     * @return ModelPostContact|null
+     * @return ModelMPostContact|null
      */
     public function getPermanentAddress($noFallback = false) {
         $pAddresses = $this->getMPostContacts(ModelPostContact::TYPE_PERMANENT);
@@ -225,15 +225,22 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @return ModelAddress|null
      */
     public function getDeliveryAddress2() {
-        $postContact = $this->getPostContacts()->where(['type' => ModelPostContact::TYPE_DELIVERY])->fetch();
-        return $postContact ? ModelPostContact::createFromActiveRow($postContact)->getAddress() : null;
+        return $this->getAddress2(ModelPostContact::TYPE_DELIVERY);
     }
 
     /**
      * @return ModelAddress|null
      */
     public function getPermanentAddress2() {
-        $postContact = $this->getPostContacts()->where(['type' => ModelPostContact::TYPE_PERMANENT])->fetch();
+        return $this->getAddress2(ModelPostContact::TYPE_PERMANENT);
+    }
+
+    /**
+     * @param string $type
+     * @return ModelAddress|null
+     */
+    public function getAddress2(string $type) {
+        $postContact = $this->getPostContacts()->where(['type' => $type])->fetch();
         return $postContact ? ModelPostContact::createFromActiveRow($postContact)->getAddress() : null;
     }
 

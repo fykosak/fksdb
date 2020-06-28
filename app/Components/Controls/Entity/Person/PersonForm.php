@@ -14,14 +14,17 @@ use FKSDB\Exceptions\ModelException;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelPostContact;
+use FKSDB\ORM\Services\ServiceAddress;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonInfo;
+use FKSDB\ORM\Services\ServicePostContact;
+use FKSDB\ORM\ServicesMulti\ServiceMPostContact;
 use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
-use Persons\ReferencedPersonHandler;
 use Tracy\Debugger;
 
 /**
@@ -57,6 +60,12 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
      */
     protected $servicePersonInfo;
     /**
+     * @var ServiceMPostContact
+     */
+    private $servicePostContact;
+    /** @var ServiceAddress */
+    private $serviceAddress;
+    /**
      * @var FieldLevelPermission
      */
     private $userPermission;
@@ -91,6 +100,8 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @param ServicePerson $servicePerson
      * @param ServicePersonInfo $servicePersonInfo
      * @param AddressFactory $addressFactory
+     * @param ServicePostContact $servicePostContact
+     * @param ServiceAddress $serviceAddress
      * @return void
      */
     public function injectFactories(
@@ -99,7 +110,9 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
         PersonInfoFactory $personInfoFactory,
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,
-        AddressFactory $addressFactory
+        AddressFactory $addressFactory,
+        ServicePostContact $servicePostContact,
+        ServiceAddress $serviceAddress
     ) {
         $this->personFactory = $personFactory;
         $this->globalParameters = $globalParameters;
@@ -107,6 +120,8 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
         $this->addressFactory = $addressFactory;
+        $this->servicePostContact = $servicePostContact;
+        $this->serviceAddress = $serviceAddress;
     }
 
     /**
@@ -142,8 +157,6 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @throws BadTypeException
      */
     public function setModel(AbstractModelSingle $model) {
-        Debugger::barDump($model->getPermanentAddress(false));
-        Debugger::barDump($model->getPermanentAddress());
         $this->model = $model;
         $this->getForm()->setDefaults([
             'person' => $model->toArray(),
@@ -181,6 +194,7 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
         $personInfoData['person_id'] = $person->person_id;
         $this->servicePersonInfo->createNewModel($personInfoData);
 
+        $this->handleSaveAddresses($data, $person);
         $this->flashMessage(_('Person has been created'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('this');
     }
@@ -192,6 +206,7 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @throws \Exception
      */
     protected function handleEditSuccess(array $data) {
+        Debugger::barDump($data);
         $this->servicePerson->updateModel2($this->model, $data['person']);
         $personInfoData = $data['person_info'];
         if ($this->model->getInfo()) {
@@ -200,8 +215,35 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
             $personInfoData['person_id'] = $this->model->person_id;
             $this->servicePersonInfo->createNewModel($personInfoData);
         }
+        $this->handleSaveAddresses($data, $this->model);
 
         $this->flashMessage(_('Data has been saved'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('this');
+    }
+
+    /**
+     * @param array $data
+     * @param ModelPerson $person
+     * @return void
+     */
+    private function handleSaveAddresses(array $data, ModelPerson $person) {
+        foreach ([self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT] as $type) {
+            $datum = FormUtils::removeEmptyValues($data[$type]);
+            $shortType = ($type === self::POST_CONTACT_PERMANENT) ? ModelPostContact::TYPE_PERMANENT : ModelPostContact::TYPE_DELIVERY;
+            if (count($datum)) {
+                $oldAddress = $person->getAddress2($shortType);
+                if ($oldAddress) {
+                    $this->serviceAddress->updateModel2($oldAddress, $datum);
+                } else {
+                    $address = $this->serviceAddress->createNewModel($datum);
+                    $postContactData = [
+                        'type' => $shortType,
+                        'person_id' => $person->person_id,
+                        'address_id' => $address->address_id,
+                    ];
+                    $this->servicePostContact->createNewModel($postContactData);
+                }
+            }
+        }
     }
 }
