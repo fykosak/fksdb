@@ -66,7 +66,6 @@ class ServicePersonInfo extends AbstractServiceSingle {
      * @param IModel|AbstractModelSingle|ModelPersonInfo $model
      * @param array $data
      * @return bool
-     * @throws \Exception
      */
     public function updateModel2(AbstractModelSingle $model, array $data): bool {
         if (isset($data['agreed'])) {
