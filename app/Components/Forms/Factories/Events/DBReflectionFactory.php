@@ -71,7 +71,7 @@ class DBReflectionFactory extends AbstractFactory {
                 $tableName = $service->getMainService()->getTable()->getName();
             }
             if ($tableName) {
-                $element = $this->tableReflectionFactory->loadRowFactory($tableName . '.' . $columnName)->createField();
+                $element = $this->tableReflectionFactory->loadColumnFactory($tableName . '.' . $columnName)->createField();
             }
         } catch (\Exception $e) {
         }

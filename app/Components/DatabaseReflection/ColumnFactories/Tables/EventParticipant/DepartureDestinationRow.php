@@ -2,20 +2,21 @@
 
 namespace FKSDB\Components\DatabaseReflection\EventParticipant;
 
-use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
+use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
+use FKSDB\ORM\AbstractModelSingle;
+use Nette\Utils\Html;
 
 /**
  * Class DepartureDestinationRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class DepartureDestinationRow extends AbstractParticipantRow {
-    use DefaultPrinterTrait;
 
     public function getTitle(): string {
         return _('Departure destination');
     }
 
-    protected function getModelAccessKey(): string {
-        return 'departure_destination';
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
+        return (new StringPrinter())($model->departure_destination);
     }
 }

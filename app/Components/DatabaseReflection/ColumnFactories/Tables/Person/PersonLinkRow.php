@@ -1,8 +1,9 @@
 <?php
 
-namespace FKSDB\Components\DatabaseReflection\ReferencedRows;
+namespace FKSDB\Components\DatabaseReflection\Person;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\PersonLink;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
@@ -27,8 +28,8 @@ class PersonLinkRow extends AbstractColumnFactory {
         $this->presenterComponent = $presenterComponent;
     }
 
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
     }
 
     public function getTitle(): string {

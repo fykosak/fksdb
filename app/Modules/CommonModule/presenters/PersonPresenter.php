@@ -5,6 +5,7 @@ namespace FKSDB\Modules\CommonModule;
 use FKSDB\Components\Controls\Entity\Person\PersonForm;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -27,6 +28,7 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\InvalidStateException;
 use Nette\Security\IResource;
 use Nette\Utils\Html;
 use Persons\Deduplication\Merger;
@@ -81,14 +83,9 @@ class PersonPresenter extends BasePresenter {
      */
     private $personFactory;
 
-    /**
-     * @var ModelPerson
-     */
-    private $person;
-    /**
-     * @var int
-     */
-    private $mode;
+
+    /** @var FieldLevelPermission */
+    private $userPermissions;
 
     /**
      * @param ServicePerson $servicePerson
@@ -278,7 +275,7 @@ class PersonPresenter extends BasePresenter {
     /* ******************* COMPONENTS *******************/
 
     protected function createComponentStalkingComponent(): StalkingComponent {
-        return new StalkingComponent($this->getContext(), $this->getEntity(), $this->getUserPermissions());
+        return new StalkingComponent($this->getContext());
     }
 
     protected function createComponentAddress(): Stalking\Address {
@@ -315,14 +312,13 @@ class PersonPresenter extends BasePresenter {
         $form = $control->getForm();
         $form->addComponent($this->personFactory->createPersonSelect(true, _('Person'), new PersonProvider($this->servicePerson)), 'person_id');
 
-        $stalkSubmit = $form->addSubmit('stalk', _('Stalk'));
-        $editSubmit = $form->addSubmit('edit', _('Edit'));
-
-        $stalkSubmit->onClick[] = function (SubmitButton $button) {
+        $form->addSubmit('stalk', _('Stalk'))
+            ->onClick[] = function (SubmitButton $button) {
             $values = $button->getForm()->getValues();
             $this->redirect('detail', ['id' => $values['person_id']]);
         };
-        $editSubmit->onClick[] = function (SubmitButton $button) {
+        $form->addSubmit('edit', _('Edit'))
+            ->onClick[] = function (SubmitButton $button) {
             $values = $button->getForm()->getValues();
             $this->redirect('edit', ['id' => $values['person_id']]);
         };
@@ -385,18 +381,25 @@ class PersonPresenter extends BasePresenter {
     }
 
     private function getUserPermissions(): int {
-        if (!$this->mode) {
-            if ($this->isAnyContestAuthorized($this->getEntity(), 'stalk.basic')) {
-                $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_BASIC;
-            }
-            if ($this->isAnyContestAuthorized($this->getEntity(), 'stalk.restrict')) {
-                $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_RESTRICT;
-            }
-            if ($this->isAnyContestAuthorized($this->getEntity(), 'stalk.full')) {
-                $this->mode = Stalking\AbstractStalkingComponent::PERMISSION_FULL;
+        if (!isset($this->userPermissions) || is_null($this->userPermissions)) {
+            $this->userPermissions = FieldLevelPermission::ALLOW_ANYBODY;
+            try {
+                $person = $this->getEntity();
+                if ($this->isAnyContestAuthorized($person, 'stalk.basic')) {
+                    $this->userPermissions = FieldLevelPermission::ALLOW_BASIC;
+                }
+                if ($this->isAnyContestAuthorized($person, 'stalk.restrict')) {
+                    $this->userPermissions = FieldLevelPermission::ALLOW_RESTRICT;
+                }
+                if ($this->isAnyContestAuthorized($person, 'stalk.full')) {
+                    $this->userPermissions = FieldLevelPermission::ALLOW_FULL;
+                }
+
+            } catch (InvalidStateException$exception) {
+                $this->userPermissions = FieldLevelPermission::ALLOW_FULL;
             }
         }
-        return $this->mode;
+        return $this->userPermissions;
     }
 
     /**

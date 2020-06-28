@@ -1,0 +1,11 @@
+{layout './layout.latte'}
+{define content}
+    <div class="row mt-1">
+        <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{$title}
+            {include #description}
+        </b>
+        <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
+        {$html}
+    </span>
+    </div>
+{/define}

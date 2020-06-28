@@ -1,8 +1,9 @@
 <?php
 
-namespace FKSDB\Components\DatabaseReflection\ReferencedRows;
+namespace FKSDB\Components\DatabaseReflection\Event;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\LinkGenerator;
 use FKSDB\ORM\Models\ModelEvent;
@@ -27,8 +28,8 @@ class EventLink extends AbstractColumnFactory {
         $this->presenterComponent = $presenterComponent;
     }
 
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
     }
 
     public function getTitle(): string {

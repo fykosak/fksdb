@@ -10,6 +10,7 @@ use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\Components\Grids\StoredQueries2Grid;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
@@ -88,7 +89,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     protected function createComponentEditForm(): Control {
-        return new StoredQueryForm($this->getContext(), true);
+        return new StoredQueryForm($this->getContext(), false);
     }
 
     protected function createComponentGrid(): BaseGrid {
