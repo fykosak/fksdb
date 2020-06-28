@@ -13,6 +13,8 @@ use FKSDB\Components\Forms\Controls\Schedule\Handler;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelPersonHistory;
+use FKSDB\ORM\Models\ModelPersonInfo;
 use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonHistory;
@@ -171,20 +173,16 @@ class ReferencedPersonHandler implements IReferencedHandler {
 
             $models = [
                 'person' => &$person,
-                'person_info' => null,
-                'person_history' => null,
+                'person_info' => $person->getInfo() ?: null,
+                'person_history' => $person->getHistory($this->acYear) ?: null,
                 'person_schedule' => (($this->eventId && isset($data['person_schedule']) && $person->getSerializedSchedule($this->eventId, \array_keys((array)$data['person_schedule'])[0])) ?: null),
                 self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress()) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_DELIVERY]),
                 self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_PERMANENT]),
             ];
             /**
-             * @var AbstractServiceSingle[] $services
+             * @var IService[]|null[] $services
              */
             $services = [
-                'person' => null,
-                'person_info' => null,
-                'person_history' => null,
-                'person_schedule' => null,
                 self::POST_CONTACT_DELIVERY => $this->serviceMPostContact,
                 self::POST_CONTACT_PERMANENT => $this->serviceMPostContact,
             ];
@@ -200,26 +198,26 @@ class ReferencedPersonHandler implements IReferencedHandler {
             $data = FormUtils::emptyStrToNull($data);
             $data = FormUtils::removeEmptyHashes($data);
             $conflicts = $this->getConflicts($models, $data);
-
-            if ($this->resolution == self::RESOLUTION_EXCEPTION) {
+            if ($this->resolution === self::RESOLUTION_EXCEPTION) {
                 if (count($conflicts)) {
                     throw new ModelDataConflictException($conflicts);
                 }
-            } elseif ($this->resolution == self::RESOLUTION_KEEP) {
+            } elseif ($this->resolution === self::RESOLUTION_KEEP) {
                 $data = $this->removeConflicts($data, $conflicts);
             }
             // It's like this: $this->resolution == self::RESOLUTION_OVERWRITE) {
             //    $data = $conflicts;
 
             foreach ($models as $t => & $model) {
+
                 if ($t === 'person') {
                     $model = $this->storePerson($model, (array)$data);
                     continue;
                 } elseif ($t === 'person_info') {
-                    $this->storePersonInfo($models['person'], (array)$data);
+                    $this->storePersonInfo($models['person'], $model, (array)$data);
                     continue;
                 } elseif ($t === 'person_history') {
-                    $this->storePersonHistory($models['person'], (array)$data);
+                    $this->storePersonHistory($models['person'], $model, (array)$data);
                     continue;
                 } elseif ($t == 'person_schedule' && isset($data[$t])) {
                     $this->eventScheduleHandler->prepareAndUpdate($data[$t], $models['person'], $this->eventId);
@@ -270,7 +268,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
         foreach ($values as $key => $value) {
             if (isset($model[$key])) {
                 if ($model[$key] instanceof IModel) {
-                    $subConflicts = $this->getConflicts($model[$key], $value);
+                    $subConflicts = $this->getModelConflicts($model[$key], (array)$value);
                     if (count($subConflicts)) {
                         $conflicts[$key] = $subConflicts;
                     }
@@ -280,6 +278,16 @@ class ReferencedPersonHandler implements IReferencedHandler {
             }
         }
 
+        return $conflicts;
+    }
+
+    private function getModelConflicts(IModel $model, array $values): array {
+        $conflicts = [];
+        foreach ($values as $key => $value) {
+            if (isset($model[$key]) && !is_null($model[$key]) && $model[$key] != $value) {
+                $conflicts[$key] = $value;
+            }
+        }
         return $conflicts;
     }
 
@@ -300,13 +308,14 @@ class ReferencedPersonHandler implements IReferencedHandler {
 
     /**
      * @param ModelPerson $person
+     * @param ModelPersonInfo|null $info
      * @param array $data
      * @return void
      */
-    private function storePersonInfo(ModelPerson $person, array $data) {
+    private function storePersonInfo(ModelPerson $person, $info, array $data) {
         $personInfoData = (array)$data['person_info'];
-        if ($person->getInfo()) {
-            $this->servicePersonInfo->updateModel2($person->getInfo(), $personInfoData);
+        if ($info) {
+            $this->servicePersonInfo->updateModel2($info, $personInfoData);
         } else {
             $personInfoData['person_id'] = $person->person_id;
             $this->servicePersonInfo->createNewModel($personInfoData);
@@ -315,12 +324,12 @@ class ReferencedPersonHandler implements IReferencedHandler {
 
     /**
      * @param ModelPerson $person
+     * @param ModelPersonHistory|null $history
      * @param array $data
      * @return void
      */
-    private function storePersonHistory(ModelPerson $person, array $data) {
+    private function storePersonHistory(ModelPerson $person, $history, array $data) {
         $personHistoryData = (array)$data['person_history'];
-        $history = $person->getHistory($this->acYear);
         if ($history) {
             $this->servicePersonHistory->updateModel2($history, $personHistoryData);
         } else {

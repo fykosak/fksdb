@@ -37,7 +37,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
     }
 
     public function createNewModel(array $data): IModel {
-        if ($data && isset($data['agreed']) && $data['agreed'] == '1') {
+        if (isset($data['agreed']) && $data['agreed'] == '1') {
             $data['agreed'] = new DateTime();
         }
         return parent::createNewModel($data);

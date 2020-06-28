@@ -26,6 +26,7 @@ class ServiceEventParticipant extends AbstractServiceSingle {
 
     /**
      * @param ModelEventParticipant|IModel $model
+     * @deprecated
      */
     public function save(IModel &$model) {
         try {
@@ -33,6 +34,21 @@ class ServiceEventParticipant extends AbstractServiceSingle {
         } catch (ModelException $exception) {
             if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
                 throw new DuplicateApplicationException($model->getPerson(), $exception);
+            }
+            throw $exception;
+        }
+    }
+
+    /**
+     * @param array $data
+     * @return ModelEventParticipant
+     */
+    public function createNewModel(array $data): IModel {
+        try {
+            return parent::createNewModel($data);
+        } catch (ModelException $exception) {
+            if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
+                throw new DuplicateApplicationException(null, $exception);
             }
             throw $exception;
         }
