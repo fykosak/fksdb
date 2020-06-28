@@ -128,7 +128,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @param AbstractModelSingle|IModel $model
      * @return AbstractModelSingle|null
      */
-    public function refresh(AbstractModelSingle $model) {
+    public function refresh(AbstractModelSingle $model): AbstractModelSingle {
         return $this->findByPrimary($model->getPrimary(true));
     }
 

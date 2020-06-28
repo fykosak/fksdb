@@ -5,6 +5,7 @@ namespace FKSDB\Components\Controls\Entity\Person;
 use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
+use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonInfoFactory;
 use FKSDB\Config\GlobalParameters;
@@ -13,10 +14,15 @@ use FKSDB\Exceptions\ModelException;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelPostContact;
+use FKSDB\ORM\Services\ServiceAddress;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonInfo;
+use FKSDB\ORM\Services\ServicePostContact;
+use FKSDB\ORM\ServicesMulti\ServiceMPostContact;
 use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
+use Nette\Database\UniqueConstraintViolationException;
 use Nette\Forms\Form;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
@@ -27,6 +33,12 @@ use Tracy\Debugger;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
+
+    const POST_CONTACT_DELIVERY = 'post_contact_d';
+    const POST_CONTACT_PERMANENT = 'post_contact_p';
+
+    const PERSON_CONTAINER = 'person';
+    const PERSON_INFO_CONTAINER = 'person_info';
     /**
      * @var PersonFactory
      */
@@ -35,6 +47,10 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @var PersonInfoFactory
      */
     protected $personInfoFactory;
+    /**
+     * @var AddressFactory
+     */
+    protected $addressFactory;
     /**
      * @var GlobalParameters
      */
@@ -47,6 +63,12 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @var ServicePersonInfo
      */
     protected $servicePersonInfo;
+    /**
+     * @var ServiceMPostContact
+     */
+    private $servicePostContact;
+    /** @var ServiceAddress */
+    private $serviceAddress;
     /**
      * @var FieldLevelPermission
      */
@@ -73,6 +95,9 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @param PersonInfoFactory $personInfoFactory
      * @param ServicePerson $servicePerson
      * @param ServicePersonInfo $servicePersonInfo
+     * @param AddressFactory $addressFactory
+     * @param ServicePostContact $servicePostContact
+     * @param ServiceAddress $serviceAddress
      * @return void
      */
     public function injectFactories(
@@ -80,13 +105,19 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
         PersonFactory $personFactory,
         PersonInfoFactory $personInfoFactory,
         ServicePerson $servicePerson,
-        ServicePersonInfo $servicePersonInfo
+        ServicePersonInfo $servicePersonInfo,
+        AddressFactory $addressFactory,
+        ServicePostContact $servicePostContact,
+        ServiceAddress $serviceAddress
     ) {
         $this->personFactory = $personFactory;
         $this->globalParameters = $globalParameters;
         $this->personInfoFactory = $personInfoFactory;
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
+        $this->addressFactory = $addressFactory;
+        $this->servicePostContact = $servicePostContact;
+        $this->serviceAddress = $serviceAddress;
     }
 
     /**
@@ -98,11 +129,15 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
         $fields = $this->globalParameters['common']['editPerson'];
         foreach ($fields as $table => $rows) {
             switch ($table) {
-                case 'person_info':
+                case self::PERSON_INFO_CONTAINER:
                     $control = $this->personInfoFactory->createContainerWithMetadata($rows, $this->userPermission);
                     break;
-                case 'person':
+                case self::PERSON_CONTAINER:
                     $control = $this->personFactory->createContainerWithMetadata($rows, $this->userPermission);
+                    break;
+                case self::POST_CONTACT_DELIVERY:
+                case self::POST_CONTACT_PERMANENT:
+                    $control = $this->addressFactory->createAddressContainer($table);
                     break;
                 default:
                     throw new InvalidArgumentException();
@@ -120,8 +155,10 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
     public function setModel(AbstractModelSingle $model) {
         $this->model = $model;
         $this->getForm()->setDefaults([
-            'person' => $model->toArray(),
-            'person_info' => $model->getInfo() ? $model->getInfo()->toArray() : null,
+            self::PERSON_CONTAINER => $model->toArray(),
+            self::PERSON_INFO_CONTAINER => $model->getInfo() ? $model->getInfo()->toArray() : null,
+            self::POST_CONTACT_DELIVERY => $model->getDeliveryAddress2() ?: [],
+            self::POST_CONTACT_PERMANENT => $model->getPermanentAddress2() ?: [],
         ]);
     }
 
@@ -134,8 +171,16 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values, true);
         try {
+            $this->servicePerson->getConnection()->beginTransaction();
             $this->create ? $this->handleCreateSuccess($data) : $this->handleEditSuccess($data);
+            $this->servicePerson->getConnection()->commit();
         } catch (ModelException $exception) {
+            $this->servicePerson->getConnection()->rollBack();
+            $previous = $exception->getPrevious();
+            if ($previous && $previous instanceof UniqueConstraintViolationException) {
+                $this->flashMessage(sprintf(_('Person with same data already exists: "%s"'), $previous->errorInfo[2] ?? ''), Message::LVL_DANGER);
+                return;
+            }
             Debugger::log($exception);
             $this->flashMessage(_('Error'), Message::LVL_DANGER);
         }
@@ -147,11 +192,9 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @throws AbortException
      */
     protected function handleCreateSuccess(array $data) {
-        $person = $this->servicePerson->createNewModel($data['person']);
-        $personInfoData = $data['person_info'];
-
-        $personInfoData['person_id'] = $person->person_id;
-        $this->servicePersonInfo->createNewModel($personInfoData);
+        $person = $this->storePerson(null, $data);
+        $this->storePersonInfo($person, $data);
+        $this->storeAddresses($person, $data);
 
         $this->flashMessage(_('Person has been created'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('this');
@@ -161,19 +204,69 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @param array $data
      * @return void
      * @throws AbortException
-     * @throws \Exception
      */
     protected function handleEditSuccess(array $data) {
-        $this->servicePerson->updateModel2($this->model, $data['person']);
-        $personInfoData = $data['person_info'];
-        if ($this->model->getInfo()) {
-            $this->servicePersonInfo->updateModel2($this->model->getInfo(), $personInfoData);
-        } else {
-            $personInfoData['person_id'] = $this->model->person_id;
-            $this->servicePersonInfo->createNewModel($personInfoData);
-        }
+        $person = $this->storePerson($this->model, $data);
+        $this->storePersonInfo($person, $data);
+        $this->storeAddresses($person, $data);
 
         $this->flashMessage(_('Data has been saved'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('this');
+    }
+
+    /**
+     * @param array $data
+     * @param ModelPerson|null $person
+     * @return ModelPerson
+     */
+    private function storePerson($person, array $data): ModelPerson {
+        $personData = $data[self::PERSON_CONTAINER];
+        if ($person) {
+            $this->servicePerson->updateModel2($person, $personData);
+            return $person;
+        } else {
+            return $this->servicePerson->createNewModel($personData);
+        }
+    }
+
+    /**
+     * @param ModelPerson $person
+     * @param array $data
+     * @return void
+     */
+    private function storePersonInfo(ModelPerson $person, array $data) {
+        $personInfoData = $data[self::PERSON_INFO_CONTAINER];
+        if ($person->getInfo()) {
+            $this->servicePersonInfo->updateModel2($person->getInfo(), $personInfoData);
+        } else {
+            $personInfoData['person_id'] = $person->person_id;
+            $this->servicePersonInfo->createNewModel($personInfoData);
+        }
+    }
+
+    /**
+     * @param ModelPerson $person
+     * @param array $data
+     * @return void
+     */
+    private function storeAddresses(ModelPerson $person, array $data) {
+        foreach ([self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT] as $type) {
+            $datum = FormUtils::removeEmptyValues($data[$type]);
+            $shortType = ($type === self::POST_CONTACT_PERMANENT) ? ModelPostContact::TYPE_PERMANENT : ModelPostContact::TYPE_DELIVERY;
+            if (count($datum)) {
+                $oldAddress = $person->getAddress2($shortType);
+                if ($oldAddress) {
+                    $this->serviceAddress->updateModel2($oldAddress, $datum);
+                } else {
+                    $address = $this->serviceAddress->createNewModel($datum);
+                    $postContactData = [
+                        'type' => $shortType,
+                        'person_id' => $person->person_id,
+                        'address_id' => $address->address_id,
+                    ];
+                    $this->servicePostContact->createNewModel($postContactData);
+                }
+            }
+        }
     }
 }

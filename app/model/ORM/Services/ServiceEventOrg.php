@@ -3,6 +3,7 @@
 namespace FKSDB\ORM\Services;
 
 use DuplicateOrgException;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyDBTrait;
@@ -42,6 +43,21 @@ class ServiceEventOrg extends AbstractServiceSingle {
             throw $exception;
         }
     }*/
+
+    /**
+     * @param array $data
+     * @return ModelEventOrg
+     */
+    public function createNewModel(array $data): IModel {
+        try {
+            return parent::createNewModel($data);
+        } catch (ModelException $exception) {
+            if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
+                throw new DuplicateOrgException(null, $exception);
+            }
+            throw $exception;
+        }
+    }
 
     public function findByEvent(ModelEvent $event): TypedTableSelection {
         return $this->getTable()->where('event_id', $event->event_id);
