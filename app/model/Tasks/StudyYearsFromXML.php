@@ -128,9 +128,6 @@ class StudyYearsFromXML extends Stage {
                 'study_year' => $studyYear,
             ]);
         }
-
-
         $this->serviceTaskStudyYear->getConnection()->commit();
     }
-
 }

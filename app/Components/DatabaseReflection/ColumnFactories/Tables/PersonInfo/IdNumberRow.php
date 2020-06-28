@@ -3,17 +3,19 @@
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
-use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
+use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
+use FKSDB\ORM\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
+use Nette\Utils\Html;
 
 /**
- * Class IdNumberField
- * *
+ * Class IdNumberRow
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class IdNumberRow extends AbstractColumnFactory {
-    use DefaultPrinterTrait;
 
     public function getTitle(): string {
         return _('Číslo OP');
@@ -22,14 +24,10 @@ class IdNumberRow extends AbstractColumnFactory {
     /**
      * @return string|null
      */
-    public function getDescription()  {
+    public function getDescription() {
         return _('U cizinců číslo pasu.');
     }
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     */
     public function createField(...$args): BaseControl {
         $control = new WriteOnlyInput($this->getTitle());
         $control->setOption('description', $this->getDescription());
@@ -37,12 +35,16 @@ class IdNumberRow extends AbstractColumnFactory {
         return $control;
     }
 
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_ALLOW_FULL;
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission(self::PERMISSION_ALLOW_FULL, self::PERMISSION_ALLOW_FULL);
     }
 
     protected function getModelAccessKey(): string {
         return 'id_number';
+    }
+
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
+        return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }
 
 }

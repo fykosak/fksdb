@@ -6,7 +6,7 @@ services:
         class: Mail\MailTemplateFactory(%email.templatesDir%)
 
     - FKSDB\Events\Model\ApplicationHandlerFactory
-    - Exports\ExportFormatFactory
+    - FKSDB\Exports\ExportFormatFactory
     - FKSDB\Components\Forms\Factories\StoredQueryFactory
     referencedEventPersonFactory:
         class: FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedEventPersonFactory
@@ -16,7 +16,7 @@ services:
     breadcrumbFactory:
         class: FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory(%navigation.expiration%, ...)
     storedQueryFactory:
-        class: Exports\StoredQueryFactory(@readOnlyConnection,...)
+        class: FKSDB\StoredQuery\StoredQueryFactory(@readOnlyConnection,...)
     resultsModelFactory: FKSDB\Results\ResultsModelFactory
     - FKSDB\Stats\StatsModelFactory
     pipelineFactory:

@@ -4,6 +4,7 @@ namespace FKSDB\Components\DatabaseReflection\Person;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
@@ -16,9 +17,8 @@ use Nette\Utils\Html;
  */
 class FullNameRow extends AbstractColumnFactory {
 
-
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
     }
 
     public function getTitle(): string {

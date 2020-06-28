@@ -23,5 +23,4 @@ class NameNIdRow extends AbstractFyziklaniTeamRow {
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         return Html::el('span')->addText($model->name . ' (' . $model->e_fyziklani_team_id . ')');
     }
-
 }

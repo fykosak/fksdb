@@ -24,7 +24,7 @@ class ServiceFlag extends AbstractServiceSingle {
      * @param string $fid
      * @return ModelFlag|null
      */
-    public function findByFid(string $fid) {
+    public function findByFid($fid) {
         if (!$fid) {
             return null;
         }

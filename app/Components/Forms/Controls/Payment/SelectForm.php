@@ -18,6 +18,7 @@ use FKSDB\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Payment\Handler\EmptyDataException;
 use FKSDB\Payment\Transition\PaymentMachine;
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
@@ -123,6 +124,7 @@ class SelectForm extends BaseComponent {
 
     /**
      * @return FormControl
+     * @throws BadRequestException
      * @throws BadTypeException
      * @throws JsonException
      */
@@ -132,6 +134,7 @@ class SelectForm extends BaseComponent {
 
     /**
      * @return FormControl
+     * @throws BadRequestException
      * @throws BadTypeException
      * @throws JsonException
      */
@@ -144,6 +147,7 @@ class SelectForm extends BaseComponent {
      * @return FormControl
      * @throws BadTypeException
      * @throws JsonException
+     * @throws BadRequestException
      */
     private function createForm(bool $create): FormControl {
         $control = new FormControl();

@@ -2,27 +2,22 @@
 
 namespace FKSDB\Components\DatabaseReflection\Org;
 
-use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
 use FKSDB\Components\DatabaseReflection\OmittedControlException;
+use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
+use FKSDB\ORM\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
+use Nette\Utils\Html;
 
 /**
  * Class SinceRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class SinceRow extends AbstractOrgRowFactory {
-    use DefaultPrinterTrait;
-
     public function getTitle(): string {
         return _('Since');
     }
 
-    /**
-     * @param mixed ...$args
-     * @return BaseControl
-     * @throws OmittedControlException
-     */
     public function createField(...$args): BaseControl {
         list($min, $max) = $args;
         if (\is_null($max) || \is_null($min)) {
@@ -37,5 +32,9 @@ class SinceRow extends AbstractOrgRowFactory {
 
     protected function getModelAccessKey(): string {
         return 'since';
+    }
+
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
+        return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }
 }

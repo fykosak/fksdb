@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Services\Schedule;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\Payment\Handler\DuplicatePaymentException;
@@ -15,6 +16,7 @@ use Nette\Utils\ArrayHash;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ServiceSchedulePayment extends AbstractServiceSingle {
+    use DeprecatedLazyDBTrait;
 
     protected function getTableName(): string {
         return DbNames::TAB_SCHEDULE_PAYMENT;

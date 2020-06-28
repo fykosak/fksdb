@@ -3,16 +3,19 @@
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
-use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
+use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
+use FKSDB\ORM\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
+use Nette\Utils\Html;
 
 /**
- * Class CareerField
- * *
+ * Class CareerRow
+ * @author Michal Červeňák <miso@fykos.cz>
+ * TODO to neon
  */
 class CareerRow extends AbstractColumnFactory {
-    use DefaultPrinterTrait;
 
     public function getTitle(): string {
         return _('Co právě dělá');
@@ -35,11 +38,11 @@ class CareerRow extends AbstractColumnFactory {
         return $control;
     }
 
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_ALLOW_BASIC;
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission(self::PERMISSION_ALLOW_BASIC, self::PERMISSION_ALLOW_BASIC);
     }
 
-    protected function getModelAccessKey(): string {
-        return 'career';
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
+        return (new StringPrinter())($model->career);
     }
 }

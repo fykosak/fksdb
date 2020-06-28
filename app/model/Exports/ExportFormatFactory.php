@@ -1,15 +1,17 @@
 <?php
 
-namespace Exports;
+namespace FKSDB\Exports;
 
-use CSVFormat;
-use Exports\Formats\AESOPFormat;
+use FKSDB\Exports\Formats\CSVFormat;
+use FKSDB\Exports\Formats\AESOPFormat;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Config\GlobalParameters;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Services\ServiceTask;
+use FKSDB\StoredQuery\StoredQuery;
+use FKSDB\StoredQuery\StoredQueryFactory;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
@@ -104,8 +106,7 @@ class ExportFormatFactory {
      * @return array|mixed
      */
     public function getFormats(StoredQuery $storedQuery) {
-        $queryPattern = $storedQuery->getQueryPattern();
-        $qid = isset($queryPattern->qid) ? $queryPattern->qid : null;
+        $qid = $storedQuery->getQId();
         if (!$qid) {
             return $this->defaultFormats;
         } else {
@@ -123,7 +124,7 @@ class ExportFormatFactory {
         $parameters = $this->globalParameters['exports']['formats'][$name];
         $queryParameters = $storedQuery->getParameters(true);
 
-        $qid = $storedQuery->getQueryPattern()->qid;
+        $qid = $storedQuery->getQId();
 
         $xslFile = $parameters['template'];
         $contestName = $this->globalParameters['contestMapping'][$queryParameters['contest']];

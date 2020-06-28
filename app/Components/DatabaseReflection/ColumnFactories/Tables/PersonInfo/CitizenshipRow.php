@@ -3,18 +3,20 @@
 namespace FKSDB\Components\DatabaseReflection\PersonInfo;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
-use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
+use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
+use Nette\Utils\Html;
 
 /**
  * Class CitizenshipRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class CitizenshipRow extends AbstractColumnFactory {
-    use DefaultPrinterTrait;
 
     /**
      * @var ServiceRegion
@@ -44,10 +46,7 @@ class CitizenshipRow extends AbstractColumnFactory {
         return $control;
     }
 
-    /**
-     * @return array
-     */
-    private function getCountries() {
+    private function getCountries(): array {
         $countries = $this->serviceRegion->getCountries();
         $results = [];
         /** @var ModelRegion $country */
@@ -57,11 +56,11 @@ class CitizenshipRow extends AbstractColumnFactory {
         return $results;
     }
 
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_ALLOW_FULL;
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission(self::PERMISSION_ALLOW_FULL, self::PERMISSION_ALLOW_FULL);
     }
 
-    protected function getModelAccessKey(): string {
-        return 'citizenship';
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
+        return (new StringPrinter())($model->citizenship);
     }
 }

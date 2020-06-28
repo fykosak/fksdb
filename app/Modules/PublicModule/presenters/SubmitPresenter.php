@@ -289,7 +289,7 @@ class SubmitPresenter extends BasePresenter {
                 foreach ($questions as $question) {
                     $name = 'question' . $question->question_id;
                     $answer = $taskValues[$name];
-                    $this->submitQuizQuestionService->saveSubmitedQuestion($question, $this->getContestant(), $answer);
+                    $this->submitQuizQuestionService->saveSubmittedQuestion($question, $this->getContestant(), $answer);
                 }
 
                 if (!isset($taskValues['file'])) { // upload field was disabled

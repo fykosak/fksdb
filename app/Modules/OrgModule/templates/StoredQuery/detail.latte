@@ -1,0 +1,47 @@
+{block content}
+    {? $presenter->registerJSFile('js/codemirror.min.js')}
+    {? $presenter->registerJSFile('js/sqlconsole.js')}
+    {? $presenter->registerStylesheetFile('css/codemirror.css', array('screen', 'projection', 'tv'))}
+    <div class="btn-group">
+        <a href="{plink :Org:Export:execute ,'id' => $model->getPrimary()}"
+           class="btn btn-primary"
+           title="{_('Spustit dotaz')}">{_('Spustit')}</a>
+        {if $presenter->authorized('edit', ['id' => $model->getPrimary()])}
+            <a href="{plink edit,'id' => $model->getPrimary()}"
+               class="btn btn-secondary" title="{_('Upravit dotaz')}">{_('Upravit')}</a>
+        {/if}
+    </div>
+
+    <p>{$model->description|noescape|nl2br}</p>
+    {control tagCloud:detail $model}
+
+    {if $model->php_post_proc}
+        <h3>{_'PHP post processing'}</h3>
+        <p>{$model->php_post_proc|noescape|nl2br}</p>
+    {/if}
+
+    {if count($model->getParameters())}
+        <h3>{_'Parametry'}</h3>
+        <table class="table table-hover table-striped">
+            <tr>
+                <th>{_'Name'}</th>
+                <th>{_'Description'}</th>
+                <th>{_'Default value'}</th>
+                <th>{_'Type'}</th>
+            </tr>
+            {foreach $model->getParameters() as $param}
+                <tr>
+                    <td>{$param->name}</td>
+                    <td>{$param->description}</td>
+                    <td>{$param->getDefaultValue()}</td>
+                    <td>{$param->type}</td>
+                </tr>
+            {/foreach}
+        </table>
+    {/if}
+
+    <h3>{_'SQL'}</h3>
+    <pre class="syntax-sql">
+{$model->sql}
+</pre>
+{/block}

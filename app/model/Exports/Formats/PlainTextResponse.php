@@ -1,6 +1,6 @@
 <?php
 
-namespace Exports\Formats;
+namespace FKSDB\Exports\Formats;
 
 use Nette\Application\IResponse;
 use Nette\Http\IRequest;

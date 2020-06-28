@@ -4,6 +4,7 @@ namespace FKSDB\Components\DatabaseReflection\Event;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\EventRolePrinter;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
@@ -41,14 +42,11 @@ class EventRole extends AbstractColumnFactory {
      * @throws BadTypeException
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        $person = null;
-
         if ($model instanceof IPersonReferencedModel) {
             $person = $model->getPerson();
         } else {
             $person = $this->userStorage->getIdentity()->getPerson();
         }
-        $event = null;
         if ($model instanceof IEventReferencedModel) {
             $event = $model->getEvent();
         } elseif ($model instanceof ModelEvent) {
@@ -64,22 +62,17 @@ class EventRole extends AbstractColumnFactory {
      * @return AbstractModelSingle|null
      */
     protected function getModel(AbstractModelSingle $model) {
-        return $model; // need to be original model because of
+        return $model; // need to be original model because of referenced access
     }
 
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
     }
 
     public function getTitle(): string {
         return _('Event role');
     }
 
-    /**
-     * @param mixed ...$args
-     * @return BaseControl
-     * @throws AbstractColumnException
-     */
     public function createField(...$args): BaseControl {
         throw new AbstractColumnException();
     }

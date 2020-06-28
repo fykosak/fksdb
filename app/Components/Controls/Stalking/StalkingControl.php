@@ -16,11 +16,6 @@ use FKSDB\ORM\Models\ModelPerson;
  */
 abstract class StalkingControl extends BaseComponent {
 
-    const PERMISSION_FULL = 1024;
-    const PERMISSION_RESTRICT = 128;
-    const PERMISSION_BASIC = 16;
-    const PERMISSION_USE_FIELD_LEVEL = 2048;
-
     /**
      * @var TableReflectionFactory
      */
@@ -36,12 +31,18 @@ abstract class StalkingControl extends BaseComponent {
 
     /**
      * @param ModelPerson $person
+     * @param string $headline
      * @param int $userPermissions
+     * @param int $minimalPermissions
      * @return void
      */
-    public function beforeRender(ModelPerson $person, int $userPermissions) {
-        $this->template->userPermissions = $userPermissions;
+    public function beforeRender(ModelPerson $person, string $headline, int $userPermissions, int $minimalPermissions) {
         $this->template->gender = $person->gender;
+        $this->template->headline = $headline;
+        if ($userPermissions < $minimalPermissions) {
+            $this->template->setFile(__DIR__ . '/layout.permissionDenied.latte');
+            $this->template->render();
+        }
     }
 
     protected function createComponentContestBadge(): ContestBadge {

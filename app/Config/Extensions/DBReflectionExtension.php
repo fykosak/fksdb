@@ -2,11 +2,11 @@
 
 namespace FKSDB\Config\Extensions;
 
-use FKSDB\Components\DatabaseReflection\ColumnFactories\{
-    DateRow,
+use FKSDB\Components\DatabaseReflection\ColumnFactories\{DateRow,
     DateTimeRow,
     EmailColumnFactory,
     IntColumnFactory,
+    LogicColumnFactory,
     PrimaryKeyColumnFactory,
     StateColumnFactory,
     StringColumnFactory,
@@ -43,16 +43,11 @@ class DBReflectionExtension extends CompilerExtension {
     private function registerTables(array $tables) {
         foreach ($tables as $tableName => $fieldDefinitions) {
 
-            if (isset($fieldDefinitions['fields'])) {
-                $fields = $fieldDefinitions['fields'];
-            } else {
-                $fields = $fieldDefinitions;
-            }
-
-            foreach ($fields as $fieldName => $field) {
-                $factory = $this->createField($tableName, $fieldName, $field);
+            foreach ($fieldDefinitions['factories'] as $fieldName => $field) {
+                $factory = $this->createFactory($tableName, $fieldName, $field);
+                $factory->addSetup('setModelClassName', [$fieldDefinitions['modelClassName']]);
                 if (isset($fieldDefinitions['referencedAccess'])) {
-                    $factory->addSetup('setReferencedParams', [$fieldDefinitions['modelClassName'], $fieldDefinitions['referencedAccess']]);
+                    $factory->addSetup('setReferencedAccess', [$fieldDefinitions['referencedAccess']]);
                 }
             }
         }
@@ -94,7 +89,7 @@ class DBReflectionExtension extends CompilerExtension {
      * @return ServiceDefinition
      * @throws BadRequestException
      */
-    private function createField(string $tableName, string $fieldName, $field): ServiceDefinition {
+    private function createFactory(string $tableName, string $fieldName, $field): ServiceDefinition {
         $builder = $this->getContainerBuilder();
         $factory = null;
         if (is_array($field)) {
@@ -119,6 +114,8 @@ class DBReflectionExtension extends CompilerExtension {
                     return $this->registerStateRow($tableName, $fieldName, $field);
                 case 'int':
                     return $this->registerIntRow($tableName, $fieldName, $field);
+                case 'logic':
+                    return $this->registerLogicRow($tableName, $fieldName, $field);
                 default:
                     throw new NotImplementedException();
             }
@@ -152,6 +149,10 @@ class DBReflectionExtension extends CompilerExtension {
 
     private function registerStringRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
         return $this->setUpDefaultFactory($tableName, $fieldName, StringColumnFactory::class, $field);
+    }
+
+    private function registerLogicRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
+        return $this->setUpDefaultFactory($tableName, $fieldName, LogicColumnFactory::class, $field);
     }
 
     private function registerTextRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
@@ -216,7 +217,12 @@ class DBReflectionExtension extends CompilerExtension {
                 isset($field['description']) ? $this->translate($field['description']) : null,
             ]);
         if (isset($field['permission'])) {
-            $factory->addSetup('setPermissionValue', [$field['permission']]);
+            if (is_array($field['permission'])) {
+                $permission = $field['permission'];
+            } else {
+                $permission = ['read' => $field['permission'], 'write' => $field['permission']];
+            }
+            $factory->addSetup('setPermissionValue', [$permission]);
         }
         if (isset($field['omitInputField'])) {
             $factory->addSetup('setOmitInputField', [$field['omitInputField']]);

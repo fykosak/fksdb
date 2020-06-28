@@ -15,10 +15,6 @@ use Nette\Utils\Html;
  */
 class EmailColumnFactory extends DefaultColumnFactory {
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     */
     public function createFormControl(...$args): BaseControl {
         $control = new TextInput($this->getTitle());
         $control->addCondition(Form::FILLED)

@@ -19,10 +19,10 @@ class OrderRow extends AbstractOrgRowFactory {
     const ORDER_MAPPING = [
         0 => '0 - newbie',
         1 => '1 - pasivny org',
-        2 => '1 - org',
-        3 => '2 - aktívny org',
+        2 => '2 - org',
+        3 => '3 - aktívny org',
         4 => '4 - aktívnejši org',
-        5 => '5 - Vedíci akcii  a častí seminaru',
+        5 => '5 - Vedíci akcii a častí seminaru',
         6 => '6 - zástupca hlavního organizátora',
         7 => '7 - hlavní organizátor',
         9 => '9 - vedoucí semináře',

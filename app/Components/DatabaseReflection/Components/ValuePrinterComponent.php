@@ -13,9 +13,6 @@ use Nette\Application\BadRequestException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ValuePrinterComponent extends BaseComponent {
-    const LAYOUT_LIST_ITEM = 'list-item';
-    const LAYOUT_ROW = 'row';
-    const LAYOUT_ONLY_VALUE = 'only-value';
     /**
      * @var TableReflectionFactory
      */
@@ -38,12 +35,10 @@ class ValuePrinterComponent extends BaseComponent {
      * @throws BadRequestException
      */
     public function render(string $field, AbstractModelSingle $model, int $userPermission) {
-        $factory = $this->tableReflectionFactory->loadRowFactory($field);
+        $factory = $this->tableReflectionFactory->loadColumnFactory($field);
         $this->template->title = $factory->getTitle();
         $this->template->description = $factory->getDescription();
-        $this->template->testLog = null;
         $this->template->html = $factory->renderValue($model, $userPermission);
-        $this->template->setFile(__DIR__ . '/layout.latte');
         $this->template->render();
     }
 
@@ -55,8 +50,8 @@ class ValuePrinterComponent extends BaseComponent {
      * @throws BadRequestException
      * @throws BadTypeException
      */
-    public function renderRow(string $field, AbstractModelSingle $model, int $userPermission = 2048) {
-        $this->template->layout = self::LAYOUT_ROW;
+    public function renderRow(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL) {
+        $this->template->setFile(__DIR__ . '/layout.row.latte');
         $this->render($field, $model, $userPermission);
     }
 
@@ -68,8 +63,8 @@ class ValuePrinterComponent extends BaseComponent {
      * @throws BadRequestException
      * @throws BadTypeException
      */
-    public function renderListItem(string $field, AbstractModelSingle $model, int $userPermission = 2048) {
-        $this->template->layout = self::LAYOUT_LIST_ITEM;
+    public function renderListItem(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL) {
+        $this->template->setFile(__DIR__ . '/layout.listItem.latte');
         $this->render($field, $model, $userPermission);
     }
 
@@ -81,8 +76,8 @@ class ValuePrinterComponent extends BaseComponent {
      * @throws BadRequestException
      * @throws BadTypeException
      */
-    public function renderOnlyValue(string $field, AbstractModelSingle $model, int $userPermission = 2048) {
-        $this->template->layout = self::LAYOUT_ONLY_VALUE;
+    public function renderOnlyValue(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL) {
+        $this->template->setFile(__DIR__ . '/layout.onlyValue.latte');
         $this->render($field, $model, $userPermission);
     }
 }

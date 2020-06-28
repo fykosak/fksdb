@@ -3,18 +3,20 @@
 namespace FKSDB\Components\DatabaseReflection\PersonHistory;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
-use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
+use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\YearCalculator;
 use http\Exception\InvalidArgumentException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
+use Nette\Utils\Html;
 
 /**
  * Class StudyYearRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class StudyYearRow extends AbstractColumnFactory {
-    use DefaultPrinterTrait;
 
     /**
      * @var YearCalculator
@@ -33,8 +35,8 @@ class StudyYearRow extends AbstractColumnFactory {
         return _('Study year');
     }
 
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_ALLOW_BASIC;
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission(self::PERMISSION_ALLOW_BASIC, self::PERMISSION_ALLOW_BASIC);
     }
 
     /**
@@ -88,5 +90,9 @@ class StudyYearRow extends AbstractColumnFactory {
 
     protected function getModelAccessKey(): string {
         return 'study_year';
+    }
+
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
+        return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }
 }
