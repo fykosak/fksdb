@@ -64,6 +64,7 @@ class EventOrgForm extends AbstractEntityFormControl implements IEditEntityForm 
     protected function configureForm(Form $form) {
         $container = new ModelContainer();
         $personInput = $this->createPersonSelect();
+        $personInput->setDisabled(!$this->create);
         $container->addComponent($personInput, 'person_id');
         $container->addText('note', _('Note'));
         $form->addComponent($container, self::CONTAINER);

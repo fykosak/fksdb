@@ -1163,11 +1163,10 @@ CREATE TABLE IF NOT EXISTS `stored_query_tag` (
 -- Table `event_org`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `event_org` (
-  `e_org_id`  INT(11)  NOT NULL,
+  `e_org_id`  INT(11)  NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `note`      TEXT(32) NULL DEFAULT NULL,
   `event_id`  INT(11)  NOT NULL,
   `person_id` INT(11)  NOT NULL,
-  PRIMARY KEY (`e_org_id`),
   INDEX `event_id_idx` (`event_id` ASC),
   INDEX `fk_event_org_1_idx` (`person_id` ASC),
   UNIQUE INDEX `uq_event_id_person_id` (`event_id` ASC, `person_id` ASC),
