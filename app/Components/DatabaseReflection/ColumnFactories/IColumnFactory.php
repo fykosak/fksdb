@@ -13,6 +13,7 @@ interface IColumnFactory {
      * @param mixed ...$args
      * @return BaseControl
      * @throws OmittedControlException
+     * @throws AbstractColumnException
      */
     public function createField(...$args): BaseControl;
 

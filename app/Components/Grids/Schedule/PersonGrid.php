@@ -62,11 +62,11 @@ class PersonGrid extends BaseGrid {
             $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->getScheduleItem()->getLabel();
         });
-        $this->addJoinedColumn('schedule_item', 'price_czk', function ($row) {
+        $this->addJoinedColumn('schedule_item.price_czk', function ($row) {
             $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->getScheduleItem();
         });
-        $this->addJoinedColumn('schedule_item', 'price_eur', function ($row) {
+        $this->addJoinedColumn('schedule_item.price_eur', function ($row) {
             $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->getScheduleItem();
         });

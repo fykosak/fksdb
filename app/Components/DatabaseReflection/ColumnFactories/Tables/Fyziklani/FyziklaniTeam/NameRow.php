@@ -2,7 +2,9 @@
 
 namespace FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam;
 
-use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
+use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
+use FKSDB\ORM\AbstractModelSingle;
+use Nette\Utils\Html;
 
 /**
  * Class NameRow
@@ -10,7 +12,6 @@ use FKSDB\Components\DatabaseReflection\DefaultPrinterTrait;
  * TODO fix input
  */
 class NameRow extends AbstractFyziklaniTeamRow {
-    use DefaultPrinterTrait;
 
     public function getTitle(): string {
         return _('Team name');
@@ -19,6 +20,7 @@ class NameRow extends AbstractFyziklaniTeamRow {
     protected function getModelAccessKey(): string {
         return 'name';
     }
+
     /* TODO fix it
      *   public function createField(...$args): BaseControl {
      *       $control = new TextInput($this->getTitle());
@@ -26,4 +28,7 @@ class NameRow extends AbstractFyziklaniTeamRow {
      *       return $control;
      *   }
      * */
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
+        return (new StringPrinter())($model->{$this->getModelAccessKey()});
+    }
 }

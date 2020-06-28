@@ -40,7 +40,7 @@ abstract class PersonFileLevelTest extends PersonTest {
      */
     final protected function getRowFactory(): ITestedColumnFactory {
         if (!$this->rowFactory) {
-            $this->rowFactory = $this->tableReflectionFactory->loadRowFactory($this->fieldName);
+            $this->rowFactory = $this->tableReflectionFactory->loadColumnFactory($this->fieldName);
             if (!$this->rowFactory instanceof ITestedColumnFactory) {
                 throw new BadTypeException(ITestedColumnFactory::class, $this->rowFactory);
             }

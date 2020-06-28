@@ -217,7 +217,7 @@ abstract class BaseGrid extends Grid {
      * @throws DuplicateColumnException
      */
     private function addReflectionColumn(string $field): Column {
-        $factory = $this->tableReflectionFactory->loadRowFactory($field);
+        $factory = $this->tableReflectionFactory->loadColumnFactory($field);
         return $this->addColumn(str_replace('.', '__', $field), $factory->getTitle())->setRenderer(function ($model) use ($factory) {
             if (!$model instanceof AbstractModelSingle) {
                 $model = $this->getModelClassName()::createFromActiveRow($model);
@@ -227,16 +227,15 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @param string $tableName
-     * @param string $fieldName
+     * @param string $factoryName
      * @param callable $accessCallback
      * @return Column
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    protected function addJoinedColumn(string $tableName, string $fieldName, callable $accessCallback): Column {
-        $factory = $this->tableReflectionFactory->loadRowFactory($tableName . '.' . $fieldName);
-        return $this->addColumn($fieldName, $factory->getTitle())->setRenderer(function ($row) use ($factory, $fieldName, $accessCallback) {
+    protected function addJoinedColumn(string $factoryName, callable $accessCallback): Column {
+        $factory = $this->tableReflectionFactory->loadColumnFactory($factoryName);
+        return $this->addColumn(str_replace('.', '__', $factoryName), $factory->getTitle())->setRenderer(function ($row) use ($factory, $fieldName, $accessCallback) {
             $model = $accessCallback($row);
             return $factory->renderValue($model, 1);
         });

@@ -27,6 +27,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
      * @param null $data
      * @return AbstractModelSingle
      * @throws ModelException
+     * @deprecated
      */
     public function createNew($data = null) {
         if ($data && isset($data['agreed']) && $data['agreed'] == '1') {

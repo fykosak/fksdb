@@ -2,6 +2,8 @@
 
 namespace FKSDB\Components\DatabaseReflection\Tables\Teacher;
 
+use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\DatePrinter;
 use FKSDB\Components\Forms\Controls\DateInputs\DateInput;
 use FKSDB\ORM\AbstractModelSingle;
@@ -11,9 +13,9 @@ use Nette\Utils\Html;
 
 /**
  * Class UntilRow
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class UntilRow extends AbstractTeacherRow {
+class UntilRow extends AbstractColumnFactory {
 
     /**
      * @param AbstractModelSingle|ModelTeacher $model
@@ -36,5 +38,9 @@ class UntilRow extends AbstractTeacherRow {
      */
     public function createField(...$args): BaseControl {
         return new DateInput($this->getTitle());
+    }
+
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
     }
 }

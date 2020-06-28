@@ -14,6 +14,7 @@ interface IService {
 
     /**
      * @param array|Traversable $data
+     * @deprecated
      */
     public function createNew($data = null);
 

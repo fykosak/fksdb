@@ -88,6 +88,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     protected function startup() {
+        $this->seriesTraitStartup();
         parent::startup();
         $this->seriesTable->setContest($this->getSelectedContest());
         $this->seriesTable->setYear($this->getSelectedYear());

@@ -36,7 +36,7 @@ abstract class SingleReflectionFactory {
      * @throws \Exception
      */
     protected function loadFactory(string $fieldName): IColumnFactory {
-        return $this->tableReflectionFactory->loadRowFactory($this->getTableName() . '.' . $fieldName);
+        return $this->tableReflectionFactory->loadColumnFactory($this->getTableName() . '.' . $fieldName);
     }
 
     /**

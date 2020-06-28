@@ -68,4 +68,3 @@ services:
 
     ServiceMPersonHasFlag:   FKSDB\ORM\ServicesMulti\ServiceMPersonHasFlag
     ServiceMPostContact:     FKSDB\ORM\ServicesMulti\ServiceMPostContact
-    ServiceMStoredQueryTag:  FKSDB\ORM\ServicesMulti\ServiceMStoredQueryTag

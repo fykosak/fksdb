@@ -6,7 +6,7 @@ use Nette\Application\BadRequestException;
 
 /**
  * Class StalkingService
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class StalkingService {
     /**

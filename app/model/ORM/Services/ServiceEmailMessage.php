@@ -4,15 +4,17 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Database\Table\ActiveRow;
 
 /**
  * Class ServiceEmailMessage
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ServiceEmailMessage extends AbstractServiceSingle {
+    use DeprecatedLazyDBTrait;
 
     public function getMessagesToSend(int $limit): TypedTableSelection {
         return $this->getTable()->where('state', ModelEmailMessage::STATE_WAITING)->limit($limit);

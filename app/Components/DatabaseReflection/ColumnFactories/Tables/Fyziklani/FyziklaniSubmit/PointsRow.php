@@ -3,6 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use Nette\Utils\Html;
@@ -29,7 +30,7 @@ class PointsRow extends AbstractColumnFactory {
         return $el->addAttributes(['class' => 'badge badge-warning'])->addText(_('revoked'));
     }
 
-    public function getPermissionsValue(): int {
-        return self::PERMISSION_USE_GLOBAL_ACL;
+    public function getPermission(): FieldLevelPermission {
+        return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
     }
 }

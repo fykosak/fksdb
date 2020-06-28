@@ -4,13 +4,14 @@ namespace FKSDB\Tests\ModelTests\Exports\Formats;
 
 $container = require '../../../bootstrap.php';
 
-use Exports\ExportFormatFactory;
-use Exports\Formats\AESOPFormat;
-use Exports\Formats\PlainTextResponse;
-use Exports\StoredQueryFactory;
-use Exports\StoredQueryPostProcessing;
+use FKSDB\Exports\ExportFormatFactory;
+use FKSDB\Exports\Formats\AESOPFormat;
+use FKSDB\Exports\Formats\PlainTextResponse;
+use FKSDB\StoredQuery\StoredQueryFactory;
+use FKSDB\StoredQuery\StoredQueryPostProcessing;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\ORM\Models\ModelContest;
+use FKSDB\StoredQuery\StoredQueryParameter;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
 use Tester\Assert;
 
@@ -32,10 +33,10 @@ class AESOPFormatTest extends DatabaseTestCase {
         $parameters = [
             'category' => new MockQueryParameter('category'),
         ];
-        $storedQuery = $queryFactory->createQueryFromSQL(new MockSeriesPresenter(), 'SELECT 1, \'ahoj\' FROM dual', $parameters, ['php_post_proc' => MockProcessing::class]);
+        $storedQuery = $queryFactory->createQueryFromSQL(new MockSeriesPresenter(), 'SELECT 1, \'ahoj\' FROM dual', $parameters, MockProcessing::class);
 
         // AESOP format requires QID
-        $storedQuery->getQueryPattern()->qid = 'aesop.ct';
+        $storedQuery->setQId('aesop.ct');
 
         $this->fixture = $exportFactory->createFormat(ExportFormatFactory::AESOP, $storedQuery);
     }
@@ -85,22 +86,10 @@ class MockSeriesPresenter implements ISeriesPresenter {
     }
 }
 
-class MockQueryParameter {
-
-    public $name;
-
+class MockQueryParameter extends StoredQueryParameter {
     public function __construct($name) {
-        $this->name = $name;
+        parent::__construct($name, null, \PDO::PARAM_STR);
     }
-
-    public function getDefaultValue() {
-        return null;
-    }
-
-    public function getPDOType() {
-        return \PDO::PARAM_STR;
-    }
-
 }
 
 class MockProcessing extends StoredQueryPostProcessing {
