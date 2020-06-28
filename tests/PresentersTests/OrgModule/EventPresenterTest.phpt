@@ -13,6 +13,10 @@ use Nette\Application\Responses\TextResponse;
 use Nette\Utils\Html;
 use Tester\Assert;
 
+/**
+ * Class EventPresenterTest
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class EventPresenterTest extends EntityPresenterTestCase {
 
     /** @var int */

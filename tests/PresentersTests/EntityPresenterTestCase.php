@@ -13,6 +13,10 @@ use Nette\Application\UI\ITemplate;
 use Nette\DI\Container;
 use Tester\Assert;
 
+/**
+ * Class EntityPresenterTestCase
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 abstract class EntityPresenterTestCase extends DatabaseTestCase {
     use MockApplicationTrait;
 

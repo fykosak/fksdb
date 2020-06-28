@@ -11,6 +11,10 @@ use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
+/**
+ * Class OrgPresenterTest
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class OrgPresenterTest extends EntityPresenterTestCase {
 
     /** @var int */
