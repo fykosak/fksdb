@@ -165,15 +165,21 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
     /**
      * @param Form $form
      * @return void
-     * @throws \Exception
+     * @throws AbortException
      */
     protected function handleFormSuccess(Form $form) {
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values, true);
         try {
             $this->servicePerson->getConnection()->beginTransaction();
-            $this->create ? $this->handleCreateSuccess($data) : $this->handleEditSuccess($data);
+            
+            $person = $this->storePerson($this->create ? null : $this->model, $data);
+            $this->storePersonInfo($person, $data);
+            $this->storeAddresses($person, $data);
+
             $this->servicePerson->getConnection()->commit();
+            $this->flashMessage($this->create ? _('Person has been created') : _('Data has been updated'), Message::LVL_SUCCESS);
+            $this->getPresenter()->redirect('this');
         } catch (ModelException $exception) {
             $this->servicePerson->getConnection()->rollBack();
             $previous = $exception->getPrevious();
@@ -184,34 +190,6 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
             Debugger::log($exception);
             $this->flashMessage(_('Error'), Message::LVL_DANGER);
         }
-    }
-
-    /**
-     * @param array $data
-     * @return void
-     * @throws AbortException
-     */
-    protected function handleCreateSuccess(array $data) {
-        $person = $this->storePerson(null, $data);
-        $this->storePersonInfo($person, $data);
-        $this->storeAddresses($person, $data);
-
-        $this->flashMessage(_('Person has been created'), Message::LVL_SUCCESS);
-        $this->getPresenter()->redirect('this');
-    }
-
-    /**
-     * @param array $data
-     * @return void
-     * @throws AbortException
-     */
-    protected function handleEditSuccess(array $data) {
-        $person = $this->storePerson($this->model, $data);
-        $this->storePersonInfo($person, $data);
-        $this->storeAddresses($person, $data);
-
-        $this->flashMessage(_('Data has been saved'), Message::LVL_SUCCESS);
-        $this->getPresenter()->redirect('this');
     }
 
     /**
@@ -244,6 +222,17 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
         }
     }
 
+    public static function mapAddressContainerNameToType(string $containerName): string {
+        switch ($containerName) {
+            case self::POST_CONTACT_PERMANENT:
+                return ModelPostContact::TYPE_PERMANENT;
+            case self::POST_CONTACT_DELIVERY:
+                return ModelPostContact::TYPE_DELIVERY;
+            default:
+                throw new InvalidArgumentException();
+        }
+    }
+
     /**
      * @param ModelPerson $person
      * @param array $data
@@ -252,11 +241,12 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
     private function storeAddresses(ModelPerson $person, array $data) {
         foreach ([self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT] as $type) {
             $datum = FormUtils::removeEmptyValues($data[$type]);
-            $shortType = ($type === self::POST_CONTACT_PERMANENT) ? ModelPostContact::TYPE_PERMANENT : ModelPostContact::TYPE_DELIVERY;
+            $shortType = self::mapAddressContainerNameToType($type);
+            $oldAddress = $person->getAddress2($shortType);
             if (count($datum)) {
-                $oldAddress = $person->getAddress2($shortType);
                 if ($oldAddress) {
                     $this->serviceAddress->updateModel2($oldAddress, $datum);
+                    $this->flashMessage(_('Address has been updated'), Message::LVL_INFO);
                 } else {
                     $address = $this->serviceAddress->createNewModel($datum);
                     $postContactData = [
@@ -265,7 +255,15 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
                         'address_id' => $address->address_id,
                     ];
                     $this->servicePostContact->createNewModel($postContactData);
+                    $this->flashMessage(_('Address has been created'), Message::LVL_INFO);
                 }
+            } elseif ($oldAddress) {
+                $this->servicePostContact->getTable()->where([
+                    'type' => $shortType,
+                    'person_id' => $person->person_id,
+                ])->delete();
+                $oldAddress->delete();
+                $this->flashMessage(_('Address has been deleted'), Message::LVL_INFO);
             }
         }
     }
