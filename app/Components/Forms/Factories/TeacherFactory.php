@@ -2,24 +2,21 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
+use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\ORM\DbNames;
 
 /**
  *
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class TeacherFactory extends SingleReflectionFactory {
-
-    protected function getTableName(): string {
-        return DbNames::TAB_TEACHER;
-    }
-
     /**
      * @return ModelContainer
-     * @throws \Exception
+     * @throws AbstractColumnException
+     * @throws OmittedControlException
      */
     public function createTeacher(): ModelContainer {
-        return $this->createContainer(['state', 'since', 'until', 'number_brochures', 'note']);
+        return $this->createContainer(['teacher.state', 'teacher.since', 'teacher.until', 'teacher.number_brochures', 'teacher.note']);
     }
 }

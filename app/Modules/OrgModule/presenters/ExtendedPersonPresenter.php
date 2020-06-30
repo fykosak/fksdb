@@ -11,6 +11,7 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelContestant;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -56,7 +57,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @param IModel|null $model
+     * @param ModelContestant|IModel|null $model
      * @param Form $form
      */
     protected function setDefaults(IModel $model = null, Form $form) {
@@ -126,7 +127,8 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         $this->appendExtendedContainer($form);
 
         $handler = $this->handlerFactory->create($this->getORMService(), $this->getSelectedContest(), $this->getSelectedYear(), $this->globalParameters['invitation']['defaultLang']);
-        $submit = $form->addSubmit('send', $create ? _('Založit') : _('Save'));
+
+        $submit = $form->addSubmit('send', $create ? _('Create') : _('Save'));
 
         $submit->onClick[] = function (SubmitButton $button) use ($handler) {
             $form = $button->getForm();

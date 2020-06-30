@@ -2,16 +2,19 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
+use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\Components\DatabaseReflection\ColumnFactories\IColumnFactory;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Exceptions\NotImplementedException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\InvalidStateException;
 
 /**
  * Class SingleReflectionFactory
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class SingleReflectionFactory {
     /**
@@ -27,7 +30,9 @@ abstract class SingleReflectionFactory {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    abstract protected function getTableName(): string;
+    protected function getTableName(): string {
+        throw new NotImplementedException();
+    }
 
     /**
      * @param string $fieldName
@@ -36,14 +41,18 @@ abstract class SingleReflectionFactory {
      * @throws \Exception
      */
     protected function loadFactory(string $fieldName): IColumnFactory {
+        if (strpos($fieldName, '.') !== false) {
+            return $this->tableReflectionFactory->loadColumnFactory($fieldName);
+        }
         return $this->tableReflectionFactory->loadColumnFactory($this->getTableName() . '.' . $fieldName);
     }
 
     /**
      * @param string $fieldName
-     * @param array $args
+     * @param mixed ...$args
      * @return BaseControl
-     * @throws \Exception
+     * @throws AbstractColumnException
+     * @throws OmittedControlException
      */
     public function createField(string $fieldName, ...$args): BaseControl {
         return $this->loadFactory($fieldName)->createField(...$args);
@@ -52,14 +61,15 @@ abstract class SingleReflectionFactory {
     /**
      * @param array $fields
      * @return ModelContainer
-     * @throws \Exception
+     * @throws AbstractColumnException
+     * @throws OmittedControlException
      */
     public function createContainer(array $fields): ModelContainer {
         $container = new ModelContainer();
 
         foreach ($fields as $field) {
             $control = $this->createField($field);
-            $container->addComponent($control, $field);
+            $container->addComponent($control, str_replace('.', '__', $field));
         }
         return $container;
     }
@@ -73,9 +83,8 @@ abstract class SingleReflectionFactory {
     public function createContainerWithMetadata(array $fields, FieldLevelPermission $userPermissions): ModelContainer {
         $container = new ModelContainer();
         foreach ($fields as $field => $metadata) {
-            $control = $this->createField($field);
-
             $factory = $this->loadFactory($field);
+            $control = $factory->createField();
             $canWrite = $factory->hasWritePermissions($userPermissions->write);
             $canRead = $factory->hasReadPermissions($userPermissions->read);
             if ($control instanceof IWriteOnly) {

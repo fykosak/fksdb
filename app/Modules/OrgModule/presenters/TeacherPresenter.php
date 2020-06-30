@@ -11,6 +11,7 @@ use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
+use Nette\Security\IResource;
 
 /**
  * Class TeacherPresenter
@@ -84,8 +85,8 @@ class TeacherPresenter extends BasePresenter {
     }
 
     /**
-     * @param $resource
-     * @param string $privilege
+     * @param IResource|string|null $resource
+     * @param string|null $privilege
      * @return bool
      * @throws BadRequestException
      */
@@ -100,5 +101,4 @@ class TeacherPresenter extends BasePresenter {
     protected function getModelResource(): string {
         return ModelTeacher::RESOURCE_ID;
     }
-
 }

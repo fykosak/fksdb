@@ -154,15 +154,14 @@ class ReferencedId extends HiddenField {
             $this->model = $pValue;
         }
         if ($this->referencedContainer) {
-            $container = $this->referencedContainer;
             if (!$pValue) {
-                $container->setSearchButton(true);
-                $container->setClearButton(false);
+                $this->referencedContainer->setSearchButton(true);
+                $this->referencedContainer->setClearButton(false);
             } else {
-                $container->setSearchButton(false);
-                $container->setClearButton(true);
+                $this->referencedContainer->setSearchButton(false);
+                $this->referencedContainer->setClearButton(true);
             }
-            $this->referencedSetter->setModel($container, $pValue, $force ? IReferencedSetter::MODE_FORCE : IReferencedSetter::MODE_NORMAL);
+            $this->referencedSetter->setModel($this->referencedContainer, $pValue, $force ? IReferencedSetter::MODE_FORCE : IReferencedSetter::MODE_NORMAL);
         }
 
         if ($isPromise) {

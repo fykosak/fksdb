@@ -15,7 +15,6 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\Utils\FormUtils;
-use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
 use FKSDB\Exceptions\ModelException;
 use Nette\Database\Connection;
@@ -58,11 +57,6 @@ class ExtendedPersonHandler {
     private $connection;
 
     /**
-     * @var MailTemplateFactory
-     */
-    private $mailTemplateFactory;
-
-    /**
      * @var AccountManager
      */
     private $accountManager;
@@ -92,51 +86,39 @@ class ExtendedPersonHandler {
      * @param IService $service
      * @param ServicePerson $servicePerson
      * @param Connection $connection
-     * @param MailTemplateFactory $mailTemplateFactory
      * @param AccountManager $accountManager
+     * @param ModelContest $contest
+     * @param int $year
+     * @param string $invitationLang
      */
-    public function __construct(IService $service, ServicePerson $servicePerson, Connection $connection, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager) {
+    public function __construct(
+        IService $service,
+        ServicePerson $servicePerson,
+        Connection $connection,
+        AccountManager $accountManager,
+        ModelContest $contest,
+        int $year,
+        string $invitationLang
+    ) {
         $this->service = $service;
         $this->servicePerson = $servicePerson;
         $this->connection = $connection;
-        $this->mailTemplateFactory = $mailTemplateFactory;
         $this->accountManager = $accountManager;
+        $this->contest = $contest;
+        $this->year = $year;
+        $this->invitationLang = $invitationLang;
     }
 
     public function getContest(): ModelContest {
         return $this->contest;
     }
 
-    /**
-     * @param ModelContest $contest
-     * @return void
-     */
-    public function setContest(ModelContest $contest) {
-        $this->contest = $contest;
-    }
-
     public function getYear(): int {
         return $this->year;
     }
 
-    /**
-     * @param int $year
-     * @return void
-     */
-    public function setYear(int $year) {
-        $this->year = $year;
-    }
-
     public function getInvitationLang(): string {
         return $this->invitationLang;
-    }
-
-    /**
-     * @param string $invitationLang
-     * @return void
-     */
-    public function setInvitationLang(string $invitationLang) {
-        $this->invitationLang = $invitationLang;
     }
 
     public function getPerson(): ModelPerson {
@@ -164,38 +146,32 @@ class ExtendedPersonHandler {
 
         try {
             $this->connection->beginTransaction();
-            $values = $form->getValues();
             $create = !$presenter->getModel();
-            $person = $this->person = $this->getReferencedPerson($form);
-            $this->storeExtendedModel($person, $values, $presenter);
+            $form->getValues();
+            $this->person = $this->getReferencedPerson($form);
+            $this->storeExtendedModel($this->person, $form->getValues(true), $presenter);
 
             // create login
-            $email = $person->getInfo() ? $person->getInfo()->email : null;
-            $login = $person->getLogin();
+            $email = $this->person->getInfo() ? $this->person->getInfo()->email : null;
+            $login = $this->person->getLogin();
             $hasLogin = (bool)$login;
             if ($sendEmail && ($email && !$login)) {
-                // $template = $this->mailTemplateFactory->createLoginInvitation($presenter, $this->getInvitationLang());
                 try {
-                    $this->accountManager->createLoginWithInvitation($person, $email);
+                    $this->accountManager->createLoginWithInvitation($this->person, $email, $this->getInvitationLang());
                     $presenter->flashMessage(_('Zvací e-mail odeslán.'), BasePresenter::FLASH_INFO);
                 } catch (SendFailedException $exception) {
                     $presenter->flashMessage(_('Zvací e-mail se nepodařilo odeslat.'), BasePresenter::FLASH_ERROR);
                 }
             }
             // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
-            $person = $this->person = $this->servicePerson->findByPrimary($this->getReferencedPerson($form)->getPrimary());
+            $this->person = $this->servicePerson->findByPrimary($this->getReferencedPerson($form)->getPrimary());
 
             /*
              * Finalize
              */
             $this->connection->commit();
 
-            if ($create) {
-                $msg = $presenter->messageCreate();
-            } else {
-                $msg = $presenter->messageEdit();
-            }
-            $presenter->flashMessage(sprintf($msg, $person->getFullName()), ContestantPresenter::FLASH_SUCCESS);
+            $presenter->flashMessage(sprintf($create ? $presenter->messageCreate() : $presenter->messageEdit(), $this->person->getFullName()), ContestantPresenter::FLASH_SUCCESS);
 
             if (!$hasLogin) {
                 return self::RESULT_OK_NEW_LOGIN;
@@ -235,17 +211,17 @@ class ExtendedPersonHandler {
 
         if (!$model) {
             $data = [
-                'contest_id' => $this->getContest()->contest_id,
+                'contest_id' => $this->contest ? $this->getContest()->contest_id : null,
                 'person_id' => $person->getPrimary(),
-                'year' => $this->getYear(),
+                'year' => $this->year ? $this->getYear() : null,
             ];
-            $model = $this->service->createNewModel($data);
+            $model = $this->service->createNewModel((array)$data);
         }
 
         // update data
         if (isset($values[self::CONT_MODEL])) {
             $data = FormUtils::emptyStrToNull($values[self::CONT_MODEL]);
-            $this->service->updateModel2($model, $data);
+            $this->service->updateModel2($model, (array)$data);
         }
     }
 }

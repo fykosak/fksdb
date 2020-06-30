@@ -47,6 +47,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
      */
     public function __construct(Container $container) {
         parent::__construct($container);
+        $this->setContainer($container);
         $this->container = $container;
     }
 
@@ -58,21 +59,20 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $service = $this->container->getByType(ServiceContestant::class);
         $contest = $this->container->getByType(ServiceContest::class)->findByPrimary(ModelContest::ID_FYKOS);
         $this->fixture = $handlerFactory->create($service, $contest, 1, 'cs');
-
         $this->referencedPersonFactory = $this->container->getByType(ReferencedPersonFactory::class);
     }
 
     protected function tearDown() {
-        $this->connection->query("DELETE FROM contestant_base");
-        $this->connection->query("DELETE FROM auth_token");
-        $this->connection->query("DELETE FROM login");
+        $this->connection->query('DELETE FROM contestant_base');
+        $this->connection->query('DELETE FROM auth_token');
+        $this->connection->query('DELETE FROM login');
 
         parent::tearDown();
     }
 
 
     public function testNewPerson() {
-        Assert::true(true);
+
         $presenter = new PersonPresenter();
         // Define a form
 
@@ -183,7 +183,6 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
 
         return $form;
     }
-
 }
 
 /*

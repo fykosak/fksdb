@@ -23,7 +23,7 @@ use Tracy\Debugger;
 
 /**
  * Class Fyziklani13Payment
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Fyziklani13Payment extends AbstractTransitionsGenerator {
 

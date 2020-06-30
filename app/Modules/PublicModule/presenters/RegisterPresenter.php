@@ -350,6 +350,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         }
 
         $handler = $this->handlerFactory->create($this->serviceContestant, $this->getSelectedContest(), $this->getSelectedYear(), $this->getLang());
+
         $submit = $form->addSubmit('register', _('Registrovat'));
         $submit->onClick[] = function (SubmitButton $button) use ($handler) {
             $form = $button->getForm();

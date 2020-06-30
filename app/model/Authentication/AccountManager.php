@@ -11,6 +11,7 @@ use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\ORM\Services\ServiceLogin;
 use Mail\MailTemplateFactory;
 use Mail\SendFailedException;
+use Nette\Application\BadRequestException;
 use Nette\Utils\DateTime;
 
 /**
@@ -109,11 +110,11 @@ class AccountManager {
      *
      * @param ModelPerson $person
      * @param string $email
+     * @param string $lang
      * @return ModelLogin
-     * @throws SendFailedException
-     * @throws \Exception
+     * @throws BadRequestException
      */
-    public function createLoginWithInvitation(ModelPerson $person, string $email) {
+    public function createLoginWithInvitation(ModelPerson $person, string $email, string $lang) {
         $login = $this->createLogin($person);
 
         $until = DateTime::from($this->getInvitationExpiration());
@@ -126,7 +127,7 @@ class AccountManager {
             'until' => $until,
         ];
         $data = [];
-        $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation($person->getPreferredLang(), $templateParams);
+        $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation($person->getPreferredLang() ?: $lang, $templateParams);
         $data['subject'] = _('Založení účtu');
         $data['sender'] = $this->getEmailFrom();
         $data['recipient'] = $email;

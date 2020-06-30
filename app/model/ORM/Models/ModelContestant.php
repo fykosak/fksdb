@@ -10,6 +10,7 @@ use Nette\Security\IResource;
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read ActiveRow person
+ * @property-read int person_id
  * @property-read ActiveRow contest
  * @property-read int ct_id
  * @property-read int contest_id

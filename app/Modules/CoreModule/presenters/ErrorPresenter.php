@@ -26,7 +26,7 @@ class ErrorPresenter extends BasePresenter {
     }
 
     public function titleDefault() {
-        $this->setPageTitle(new PageTitle(_('Chyba')));
+        $this->setPageTitle(new PageTitle(_('Error')));
     }
 
     /**

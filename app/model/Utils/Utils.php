@@ -118,7 +118,11 @@ class Utils {
         } elseif ($object instanceof DateTimeInterface) {
             return $object->format('c');
         } else {
-            return (string)$object;
+            try {
+                return (string)$object;
+            } catch (\Error$error) {
+                return $error->__toString();
+            }
         }
     }
 
@@ -138,7 +142,11 @@ class Utils {
         } elseif ($object instanceof DateTimeInterface) {
             return $object->format('c');
         } else {
-            return (string)$object;
+            try {
+                return (string)$object;
+            } catch (\Error$error) {
+                return $error->__toString();
+            }
         }
     }
 
