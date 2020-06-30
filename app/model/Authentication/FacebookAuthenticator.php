@@ -108,23 +108,12 @@ class FacebookAuthenticator extends AbstractAuthenticator {
      * @return AbstractModelSingle|ModelLogin
      * @throws \Exception
      */
-    private function registerFromFB($fbUser) {
-        /** @var ModelPerson $person */
-        $person = $this->servicePerson->createNew($this->getPersonData($fbUser));
-        /** @var ModelPersonInfo $personInfo */
-        $personInfo = $this->servicePersonInfo->createNew($this->getPersonInfoData($fbUser));
-
+    private function registerFromFB($fbUser): ModelLogin {
         $this->servicePerson->getConnection()->beginTransaction();
-
-        $this->servicePerson->save($person);
-
-        $personInfo->person_id = $person->person_id;
-        $this->servicePersonInfo->save($personInfo);
-
+        $person = $this->servicePerson->createNewModel($this->getPersonData($fbUser));
+        $this->servicePersonInfo->createNewModel(array_merge(['person_id' => $person->person_id], $this->getPersonInfoData($fbUser)));
         $login = $this->accountManager->createLogin($person);
-
         $this->servicePerson->getConnection()->commit();
-
         return $login;
     }
 
@@ -134,6 +123,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
      * @throws \Exception
      */
     private function updateFromFB(ModelPerson $person, $fbUser) {
+        $this->servicePerson->getConnection()->beginTransaction();
         $personData = $this->getPersonData($fbUser);
         // there can be bullshit in this fields, so don't use it for update
         unset($personData['family_name']);
@@ -153,11 +143,8 @@ class FacebookAuthenticator extends AbstractAuthenticator {
             unset($personInfoData['email']);
         }
         /* Email nor fb_id can violate unique constraint here as we've used it to identify the person in authenticate. */
-        $this->servicePersonInfo->updateModel2($personInfo, $personInfoData);
+        $this->servicePersonInfo->updateModel2($personInfo, $personInfoData);;
 
-        $this->servicePerson->getConnection()->beginTransaction();
-        $this->servicePerson->save($person);
-        $this->servicePersonInfo->save($personInfo);
         $this->servicePerson->getConnection()->commit();
     }
 

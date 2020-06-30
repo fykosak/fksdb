@@ -40,6 +40,21 @@ class ServiceEventParticipant extends AbstractServiceSingle {
     }
 
     /**
+     * @param array $data
+     * @return ModelEventParticipant
+     */
+    public function createNewModel(array $data): IModel {
+        try {
+            return parent::createNewModel($data);
+        } catch (ModelException $exception) {
+            if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
+                throw new DuplicateApplicationException(null, $exception);
+            }
+            throw $exception;
+        }
+    }
+
+    /**
      * @param IModel|ModelEventParticipant $model
      * @param array $data
      * @param bool $alive

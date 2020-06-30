@@ -19,7 +19,7 @@ use Nette\Security\IIdentity;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
- * @method ContestPresenter getPresenter($need = TRUE)
+ * @method ContestPresenter getPresenter($need = true)
  */
 class ContestChooser extends BaseComponent {
 
@@ -147,10 +147,7 @@ class ContestChooser extends BaseComponent {
         $this->contestSource = $contestSource;
     }
 
-    /**
-     * @return bool
-     */
-    public function isValid() {
+    public function isValid(): bool {
         $this->init();
         return $this->valid;
     }
@@ -168,7 +165,7 @@ class ContestChooser extends BaseComponent {
         if ($this->year != $presenter->year || $contestId != $presenter->contestId) {
             $presenter->redirect('this', [
                 'contestId' => $contestId,
-                'year' => $this->year
+                'year' => $this->year,
             ]);
         }
     }

@@ -59,6 +59,7 @@ abstract class AbstractServiceMulti implements IService {
      */
     public function createNewModel(array $data): IModel {
         $mainModel = $this->getMainService()->createNewModel($data);
+        $data[$this->getJoiningColumn()] = $mainModel->{$this->getJoiningColumn()};
         $joinedModel = $this->getJoinedService()->createNewModel($data);
 
         $className = $this->getModelClassName();
@@ -86,7 +87,7 @@ abstract class AbstractServiceMulti implements IService {
      * @param IModel|AbstractModelMulti $model
      * @param $data
      */
-    public function updateModel2(IModel $model, $data) {
+    public function updateModel2(IModel $model, array $data) {
         $this->checkType($model);
         $this->getMainService()->updateModel2($model->getMainModel(), $data);
         $this->getJoinedService()->updateModel2($model->getJoinedModel(), $data);

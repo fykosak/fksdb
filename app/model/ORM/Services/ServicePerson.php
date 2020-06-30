@@ -48,4 +48,17 @@ class ServicePerson extends AbstractServiceSingle {
         parent::save($model);
     }
 
+    /**
+     * @param ModelPerson|null $person
+     * @param array $data
+     * @return ModelPerson
+     */
+    public function store($person, array $data): ModelPerson {
+        if ($person) {
+            $this->updateModel2($person, $data);
+            return $person;
+        } else {
+            return $this->createNewModel($data);
+        }
+    }
 }
