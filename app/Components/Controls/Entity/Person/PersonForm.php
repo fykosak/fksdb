@@ -16,6 +16,7 @@ use FKSDB\Logging\MemoryLogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelPersonInfo;
 use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Services\ServiceAddress;
 use FKSDB\ORM\Services\ServicePerson;
@@ -173,21 +174,22 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @throws AbortException
      */
     protected function handleFormSuccess(Form $form) {
+        $connection = $this->servicePerson->getConnection();
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values, true);
         try {
-            $this->servicePerson->getConnection()->beginTransaction();
+            $connection->beginTransaction();
             $this->logger->clear();
             $person = $this->storePerson($this->create ? null : $this->model, $data);
             $this->storePersonInfo($person, $data);
             $this->storeAddresses($person, $data);
 
-            $this->servicePerson->getConnection()->commit();
+            $connection->commit();
             $this->logger->log(new Message($this->create ? _('Person has been created') : _('Data has been updated'), Message::LVL_SUCCESS));
             FlashMessageDump::dump($this->logger, $this->getPresenter(), true);
             $this->getPresenter()->redirect('this');
         } catch (ModelException $exception) {
-            $this->servicePerson->getConnection()->rollBack();
+            $connection->rollBack();
             $previous = $exception->getPrevious();
             if ($previous && $previous instanceof UniqueConstraintViolationException) {
                 $this->flashMessage(sprintf(_('Person with same data already exists: "%s"'), $previous->errorInfo[2] ?? ''), Message::LVL_DANGER);
@@ -204,28 +206,11 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @return ModelPerson
      */
     private function storePerson($person, array $data): ModelPerson {
-        $personData = $data[self::PERSON_CONTAINER];
-        if ($person) {
-            $this->servicePerson->updateModel2($person, $personData);
-            return $person;
-        } else {
-            return $this->servicePerson->createNewModel($personData);
-        }
+        return $this->servicePerson->store($person, $data[self::PERSON_CONTAINER]);
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param array $data
-     * @return void
-     */
-    private function storePersonInfo(ModelPerson $person, array $data) {
-        $personInfoData = $data[self::PERSON_INFO_CONTAINER];
-        if ($person->getInfo()) {
-            $this->servicePersonInfo->updateModel2($person->getInfo(), $personInfoData);
-        } else {
-            $personInfoData['person_id'] = $person->person_id;
-            $this->servicePersonInfo->createNewModel($personInfoData);
-        }
+    private function storePersonInfo(ModelPerson $person, array $data): ModelPersonInfo {
+        return $this->servicePersonInfo->store($person, $person->getInfo(), $data[self::PERSON_INFO_CONTAINER]);
     }
 
     public static function mapAddressContainerNameToType(string $containerName): string {

@@ -209,6 +209,13 @@ class ReferencedPersonHandler implements IReferencedHandler {
             //    $data = $conflicts;
 
             foreach ($models as $t => & $model) {
+                if (!isset($data[$t])) {
+                    if (\in_array($t, $originalModels) && \in_array($t, [self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT])) {
+                        // delete only post contacts, other "children" could be left all-nulls
+                        $services[$t]->dispose($model);
+                    }
+                    continue;
+                }
 
                 if ($t === 'person') {
                     $model = $this->storePerson($model, (array)$data);
@@ -224,22 +231,13 @@ class ReferencedPersonHandler implements IReferencedHandler {
                     continue;
                 }
 
-                if (!isset($data[$t])) {
-                    if (\in_array($t, $originalModels) && \in_array($t, [self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT])) {
-                        // delete only post contacts, other "children" could be left all-nulls
-                        $services[$t]->dispose($model);
-                    }
-                    continue;
-                }
-
-
                 $data[$t]['person_id'] = $models['person']->person_id; // this works even for person itself
-                // if ($services[$t] instanceof AbstractServiceSingle) {
-                //     $services[$t]->updateModel2($model, $data[$t]);
-                //  } else {
-                $services[$t]->updateModel($model, $data[$t]);
-                $services[$t]->save($model);
-                //  }
+                if ($services[$t] instanceof AbstractServiceSingle) {
+                    $services[$t]->updateModel2($model, (array)$data[$t]);
+                } else {
+                    $services[$t]->updateModel($model, $data[$t]);
+                    $services[$t]->save($model);
+                }
             }
 
             $this->commit();
@@ -297,13 +295,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @return ModelPerson
      */
     private function storePerson($person, array $data): ModelPerson {
-        $personData = (array)$data['person'];
-        if ($person) {
-            $this->servicePerson->updateModel2($person, $personData);
-            return $person;
-        } else {
-            return $this->servicePerson->createNewModel($personData);
-        }
+        return $this->servicePerson->store($person, (array)$data['person']);
     }
 
     /**
@@ -313,13 +305,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @return void
      */
     private function storePersonInfo(ModelPerson $person, $info, array $data) {
-        $personInfoData = (array)$data['person_info'];
-        if ($info) {
-            $this->servicePersonInfo->updateModel2($info, $personInfoData);
-        } else {
-            $personInfoData['person_id'] = $person->person_id;
-            $this->servicePersonInfo->createNewModel($personInfoData);
-        }
+        $this->servicePersonInfo->store($person, $info, (array)$data['person_info']);
     }
 
     /**
@@ -329,15 +315,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @return void
      */
     private function storePersonHistory(ModelPerson $person, $history, array $data) {
-        $personHistoryData = (array)$data['person_history'];
-        if ($history) {
-            $this->servicePersonHistory->updateModel2($history, $personHistoryData);
-        } else {
-            $this->servicePersonHistory->createNewModel(array_merge($personHistoryData, [
-                'ac_year' => $this->acYear,
-                'person_id' => $person->person_id,
-            ]));
-        }
+        $this->servicePersonHistory->store($person, $history, (array)$data['person_history'], $this->acYear);
     }
 
     /**
