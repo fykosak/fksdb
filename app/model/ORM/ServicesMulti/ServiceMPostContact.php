@@ -4,6 +4,7 @@ namespace FKSDB\ORM\ServicesMulti;
 
 use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\AbstractServiceMulti;
+use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\ModelsMulti\ModelMPostContact;
 use FKSDB\ORM\Services\ServiceAddress;
@@ -11,6 +12,8 @@ use FKSDB\ORM\Services\ServicePostContact;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @method ServicePostContact getJoinedService()
+ * @method ServiceAddress getMainService()
  */
 class ServiceMPostContact extends AbstractServiceMulti {
 
