@@ -15,8 +15,8 @@ use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonHistoryFactory;
-use FKSDB\Components\Forms\Factories\PersonInfoFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
+use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
@@ -71,9 +71,9 @@ class ReferencedPersonFactory implements IReferencedSetter {
      */
     protected $personHistoryFactory;
     /**
-     * @var PersonInfoFactory
+     * @var SingleReflectionFormFactory
      */
-    protected $personInfoFactory;
+    protected $singleReflectionFormFactory;
 
     /**
      * @var ReferencedPersonHandlerFactory
@@ -116,7 +116,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @param ReferencedPersonHandlerFactory $referencedPersonHandlerFactory
      * @param PersonProvider $personProvider
      * @param ServiceFlag $serviceFlag
-     * @param PersonInfoFactory $personInfoFactory
+     * @param SingleReflectionFormFactory $singleReflectionFormFactory
      * @param PersonHistoryFactory $personHistoryFactory
      * @param PersonScheduleFactory $personScheduleFactory
      */
@@ -128,7 +128,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
         ReferencedPersonHandlerFactory $referencedPersonHandlerFactory,
         PersonProvider $personProvider,
         ServiceFlag $serviceFlag,
-        PersonInfoFactory $personInfoFactory,
+        SingleReflectionFormFactory $singleReflectionFormFactory,
         PersonHistoryFactory $personHistoryFactory,
         PersonScheduleFactory $personScheduleFactory
     ) {
@@ -138,7 +138,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
         $this->personProvider = $personProvider;
         $this->serviceFlag = $serviceFlag;
         $this->personHistoryFactory = $personHistoryFactory;
-        $this->personInfoFactory = $personInfoFactory;
+        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->flagFactory = $flagFactory;
         $this->addressFactory = $addressFactory;
         $this->personScheduleFactory = $personScheduleFactory;
@@ -249,8 +249,8 @@ class ReferencedPersonFactory implements IReferencedSetter {
         $container->getReferencedId()->getHandler()->setResolution($resolution);
 
         $container->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model ? $model->getFullName() : null);
-        foreach ($container->getComponents() as $sub => $subcontainer) {
-            if (!$subcontainer instanceof Container) {
+        foreach ($container->getComponents() as $sub => $subContainer) {
+            if (!$subContainer instanceof Container) {
                 continue;
             }
             /**
@@ -258,7 +258,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
              * @var BaseControl $component
              * TODO type safe
              */
-            foreach ($subcontainer->getComponents() as $fieldName => $component) {
+            foreach ($subContainer->getComponents() as $fieldName => $component) {
                 if (isset($container[ReferencedPersonHandler::POST_CONTACT_DELIVERY])) {
                     $options = self::TARGET_FORM | self::HAS_DELIVERY;
                 } else {
@@ -332,13 +332,13 @@ class ReferencedPersonFactory implements IReferencedSetter {
                     $control = $this->personScheduleFactory->createField($fieldName, $this->event);
                     break;
                 case 'person_info':
-                    $control = $this->personInfoFactory->createField($fieldName);
+                    $control = $this->singleReflectionFormFactory->createField('person_info', $fieldName);
                     break;
                 case 'person_history':
-                    $control = $this->personHistoryFactory->createField($fieldName, $acYear);
+                    $control = $this->personHistoryFactory->createField('person_history', $fieldName, $acYear);
                     break;
                 case 'person':
-                    $control = $this->personFactory->createField($fieldName);
+                    $control = $this->personFactory->createField('person', $fieldName);
                     break;
                 default:
                     throw new InvalidArgumentException();
@@ -428,7 +428,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
                 $control->setAttribute('autocomplete', 'email');
                 break;
             case self::SEARCH_ID:
-                $control = $this->personFactory->createPersonSelect(true, _('Jméno'), $this->personProvider);
+                $control = $this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider);
                 break;
             default:
                 throw new InvalidArgumentException(_('Unknown search type'));
@@ -467,6 +467,14 @@ class ReferencedPersonFactory implements IReferencedSetter {
         }
     }
 
+    /**
+     * @param ModelPerson $person
+     * @param string $sub
+     * @param string $field
+     * @param int $acYear
+     * @return bool
+     * @throws JsonException
+     */
     final public function isFilled(ModelPerson $person, string $sub, string $field, int $acYear): bool {
         $value = $this->getPersonValue($person, $sub, $field, $acYear, self::TARGET_VALIDATION);
         return !($value === null || $value === '');
@@ -481,7 +489,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @return bool|ModelPostContact|mixed|null
      * @throws JsonException
      */
-    protected function getPersonValue(ModelPerson $person = null, string $sub, string $field, int $acYear, $options) {
+    protected function getPersonValue($person, string $sub, string $field, int $acYear, $options) {
         if (!$person) {
             return null;
         }
@@ -501,13 +509,11 @@ class ReferencedPersonFactory implements IReferencedSetter {
                 return ($history = $person->getHistory($acYear, (bool)($options & self::EXTRAPOLATE))) ? $history[$field] : null;
             case 'post_contact_d':
                 return $person->getDeliveryAddress();
-                break;
             case 'post_contact_p':
                 if (($options & self::TARGET_VALIDATION) || !($options & self::HAS_DELIVERY)) {
                     return $person->getPermanentAddress();
                 }
                 return $person->getPermanentAddress(true);
-                break;
             case 'person_has_flag':
                 return ($flag = $person->getMPersonHasFlag($field)) ? (bool)$flag['value'] : null;
             default:

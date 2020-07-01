@@ -11,11 +11,7 @@ use FKSDB\ORM\DbNames;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class PersonFactory extends SingleReflectionFactory {
-
-    protected function getTableName(): string {
-        return DbNames::TAB_PERSON;
-    }
+class PersonFactory extends AbstractSingleReflectionFormFactory {
 
     /**
      * @param $ajax

@@ -4,11 +4,15 @@ namespace FKSDB\Components\Controls\Entity\Event;
 
 use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
-use FKSDB\Components\Forms\Factories\EventFactory;
+use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
+use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
@@ -40,9 +44,9 @@ class EventForm extends AbstractEntityFormControl implements IEditEntityForm {
      */
     protected $contest;
     /**
-     * @var EventFactory
+     * @var SingleReflectionFormFactory
      */
-    protected $eventFactory;
+    protected $singleReflectionFormFactory;
     /**
      * @var ServiceAuthToken
      */
@@ -79,20 +83,20 @@ class EventForm extends AbstractEntityFormControl implements IEditEntityForm {
     }
 
     /**
-     * @param EventFactory $eventFactory
+     * @param SingleReflectionFormFactory $singleReflectionFormFactory
      * @param ServiceAuthToken $serviceAuthToken
      * @param ServiceEvent $serviceEvent
      * @param EventDispatchFactory $eventDispatchFactory
      * @return void
      */
     public function injectPrimary(
-        EventFactory $eventFactory,
+        SingleReflectionFormFactory $singleReflectionFormFactory,
         ServiceAuthToken $serviceAuthToken,
         ServiceEvent $serviceEvent,
         EventDispatchFactory $eventDispatchFactory
     ) {
         $this->serviceAuthToken = $serviceAuthToken;
-        $this->eventFactory = $eventFactory;
+        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->serviceEvent = $serviceEvent;
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
@@ -100,10 +104,12 @@ class EventForm extends AbstractEntityFormControl implements IEditEntityForm {
     /**
      * @param Form $form
      * @return void
-     * @throws \Exception
+     * @throws AbstractColumnException
+     * @throws BadTypeException
+     * @throws OmittedControlException
      */
     protected function configureForm(Form $form) {
-        $eventContainer = $this->eventFactory->createEvent($this->contest);
+        $eventContainer = $this->createEventContainer();
         $form->addComponent($eventContainer, self::CONT_EVENT);
     }
 
@@ -222,5 +228,20 @@ class EventForm extends AbstractEntityFormControl implements IEditEntityForm {
             Debugger::log($exception);
             $this->flashMessage(_('Error'), Message::LVL_DANGER);
         }
+    }
+
+    /**
+     * @return ModelContainer
+     * @throws AbstractColumnException
+     * @throws OmittedControlException
+     * @throws BadTypeException
+     */
+    public function createEventContainer(): ModelContainer {
+        $container = new ModelContainer();
+        foreach (['event_type_id', 'event_year', 'name', 'begin', 'end', 'registration_begin', 'registration_end', 'report', 'parameters'] as $field) {
+            $control = $this->singleReflectionFormFactory->createField('event', $field, $this->contest);
+            $container->addComponent($control, $field);
+        }
+        return $container;
     }
 }

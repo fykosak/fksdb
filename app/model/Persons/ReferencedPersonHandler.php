@@ -14,8 +14,6 @@ use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Models\ModelPersonHistory;
-use FKSDB\ORM\Models\ModelPersonInfo;
 use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonHistory;
@@ -181,7 +179,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_PERMANENT]),
             ];
             /**
-             * @var IService[]|null[] $services
+             * @var IService[] $services
              */
             $services = [
                 self::POST_CONTACT_DELIVERY => $this->serviceMPostContact,
@@ -213,7 +211,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 if (!isset($data[$t])) {
                     if (\in_array($t, $originalModels) && \in_array($t, [self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT])) {
                         // delete only post contacts, other "children" could be left all-nulls
-                        $services[$t]->dispose($model);
+                        $this->serviceMPostContact->dispose($model);
                     }
                     continue;
                 }
@@ -227,7 +225,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 } elseif ($t === 'person_history') {
                     $this->servicePersonHistory->store($person, $model, (array)$data['person_history'], $this->acYear);
                     continue;
-                } elseif ($t == 'person_schedule' && isset($data[$t])) {
+                } elseif ($t === 'person_schedule' && isset($data[$t])) {
                     $this->eventScheduleHandler->prepareAndUpdate($data[$t], $models['person'], $this->event);
                     continue;
                 }
@@ -251,6 +249,24 @@ class ReferencedPersonHandler implements IReferencedHandler {
         } catch (StorageException $exception) {
             $this->rollback();
             throw $exception;
+        }
+    }
+
+    /**
+     * @param ModelPerson $person
+     * @param ModelMPostContact|null $model
+     * @param array $data
+     * @param string $type
+     * @return void
+     */
+    private function storePostContact(ModelPerson $person, $model, array $data, string $type) {
+        if (!$model) {
+            $this->serviceMPostContact->createNewModel(array_merge((array)$data, [
+                'person_id' => $person->person_id,
+                'type' => $type === self::POST_CONTACT_DELIVERY ? ModelPostContact::TYPE_DELIVERY : ModelPostContact::TYPE_PERMANENT,
+            ]));
+        } else {
+            $this->serviceMPostContact->updateModel2($model, $data);
         }
     }
 
@@ -365,7 +381,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param $models
      * @throws ModelException
      */
-    private function prepareFlagModels(ModelPerson &$person, ArrayHash &$data, &$models) {
+    private function prepareFlagModels(ModelPerson $person, ArrayHash &$data,array &$models) {
         if (!isset($data['person_has_flag'])) {
             return;
         }

@@ -2,11 +2,11 @@
 
 namespace FKSDB\Events\FormAdjustments;
 
+use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Events\Processings\IProcessing;
-use FKSDB\Components\Forms\Factories\PersonInfoFactory;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServicePersonInfo;
 use FKSDB\Utils\FormUtils;
@@ -31,18 +31,18 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
      */
     private $servicePersonInfo;
     /**
-     * @var PersonInfoFactory
+     * @var SingleReflectionFormFactory
      */
-    private $personInfoFactory;
+    private $singleReflectionFormFactory;
 
     /**
      * PrivacyPolicy constructor.
      * @param ServicePersonInfo $servicePersonInfo
-     * @param PersonInfoFactory $personInfoFactory
+     * @param SingleReflectionFormFactory $singleReflectionFormFactory
      */
-    public function __construct(ServicePersonInfo $servicePersonInfo, PersonInfoFactory $personInfoFactory) {
+    public function __construct(ServicePersonInfo $servicePersonInfo, SingleReflectionFormFactory $singleReflectionFormFactory) {
         $this->servicePersonInfo = $servicePersonInfo;
-        $this->personInfoFactory = $personInfoFactory;
+        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
     }
 
     /**
@@ -56,7 +56,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
             return;
         }
 
-        $control = $this->personInfoFactory->createField('agreed');
+        $control = $this->singleReflectionFormFactory->createField('person_info', 'agreed');
         $control->addRule(Form::FILLED, _('Před odesláním je třeba potvrdit souhlas se zpracováním osobních údajů.'));
 
         $firstSubmit = FormUtils::findFirstSubmit($form);

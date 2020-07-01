@@ -4,6 +4,7 @@ namespace FKSDB\Components\Controls\Stalking\StalkingComponent;
 
 use FKSDB\Components\Controls\Stalking\StalkingControl;
 use FKSDB\Components\Controls\Stalking\StalkingService;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\BadRequestException;
 use FKSDB\Exceptions\NotImplementedException;
@@ -81,7 +82,7 @@ class StalkingComponent extends StalkingControl {
     }
 
     /**
-     * @param array $definition
+     * @param mixed[]|AbstractModelSingle[] $definition
      * @param ModelPerson $person
      * @return void
      */
