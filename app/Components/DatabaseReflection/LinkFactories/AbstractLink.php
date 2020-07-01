@@ -2,60 +2,67 @@
 
 namespace FKSDB\Components\DatabaseReflection\LinkFactories;
 
-use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Components\DatabaseReflection\ReferencedFactory;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Component;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Utils\Html;
+use Nette\Application\UI\Presenter;
 
 /**
  * Class AbstractLink
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractLink implements ILinkFactory {
-    /**
-     * @var Component
-     */
-    protected $component;
+
+    /** @var ReferencedFactory */
+    protected $referencedFactory;
 
     /**
-     * @param Component $component
+     * @param ReferencedFactory $factory
      * @return void
      */
-    public function setComponent(Component $component) {
-        $this->component = $component;
+    public function setReferencedFactory(ReferencedFactory $factory) {
+        $this->referencedFactory = $factory;
     }
 
     /**
+     * @param Presenter $presenter
      * @param AbstractModelSingle $model
-     * @return Html
+     * @return string
      * @throws BadRequestException
      * @throws InvalidLinkException
      */
-    final public function __invoke(AbstractModelSingle $model): Html {
-        return Html::el('a')->addAttributes([
-            'class' => 'btn btn-outline-primary btn-sm',
-            'href' => $this->createLink($model),
-        ])->addText($this->getText());
+    public function create(Presenter $presenter, AbstractModelSingle $model): string {
+        return $presenter->link(...$this->createLinkParameters($model));
     }
 
-    abstract protected function getModelClassName(): string;
+    /**
+     * @param AbstractModelSingle $modelSingle
+     * @return AbstractModelSingle|null
+     * @throws BadRequestException
+     */
+    protected function getModel(AbstractModelSingle $modelSingle) {
+        return $this->referencedFactory->accessModel($modelSingle);
+    }
 
     /**
      * @param AbstractModelSingle $model
-     * @return string
-     * @throws BadTypeException
+     * @return array
+     * @throws BadRequestException
      * @throws InvalidLinkException
      */
-    private function createLink(AbstractModelSingle $model): string {
-        $modelClassName = $this->getModelClassName();
-        if (!$model instanceof $modelClassName) {
-            throw new BadTypeException($modelClassName, $model);
+    public function createLinkParameters(AbstractModelSingle $model): array {
+        $model = $this->getModel($model);
+        if (is_null($model)) {
+            throw new InvalidLinkException();
         }
-        return $this->component->getPresenter()->link(
+        return [
             $this->getDestination($model),
-            $this->prepareParams($model)
-        );
+            $this->prepareParams($model),
+        ];
     }
+
+    abstract protected function getDestination(AbstractModelSingle $model): string;
+
+    abstract protected function prepareParams(AbstractModelSingle $model): array;
 }

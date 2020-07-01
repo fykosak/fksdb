@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
 use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
@@ -49,14 +50,15 @@ class Handler {
     /**
      * @param ArrayHash $data
      * @param ModelPerson $person
-     * @param int $eventId
+     * @param ModelEvent $event
+     * @return void
      * @throws ExistingPaymentException
      * @throws FullCapacityException
      * @throws NotImplementedException
      */
-    public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, int $eventId) {
+    public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, ModelEvent $event) {
         foreach ($this->prepareData($data) as $type => $newScheduleData) {
-            $this->updateDataType($newScheduleData, $type, $person, $eventId);
+            $this->updateDataType($newScheduleData, $type, $person, $event);
         }
     }
 
@@ -64,15 +66,16 @@ class Handler {
      * @param array $newScheduleData
      * @param string $type
      * @param ModelPerson $person
-     * @param int $eventId
+     * @param ModelEvent $event
+     * @return void
      * @throws ExistingPaymentException
      * @throws FullCapacityException
      * @throws NotImplementedException
      */
-    private function updateDataType(array $newScheduleData, string $type, ModelPerson $person, int $eventId) {
+    private function updateDataType(array $newScheduleData, string $type, ModelPerson $person, ModelEvent $event) {
         $oldRows = $this->servicePersonSchedule->getTable()
             ->where('person_id', $person->person_id)
-            ->where('schedule_item.schedule_group.event_id', $eventId)->where('schedule_item.schedule_group.schedule_group_type', $type);
+            ->where('schedule_item.schedule_group.event_id', $event->event_id)->where('schedule_item.schedule_group.schedule_group_type', $type);
 
         /** @var ModelPersonSchedule $modelPersonSchedule */
         foreach ($oldRows as $modelPersonSchedule) {

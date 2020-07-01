@@ -15,16 +15,16 @@ class ArrayOptions implements IOptionsProvider {
     use SmartObject;
 
     /**
-     * @var mixed
+     * @var array
      */
     private $options;
 
     /**
      * ArrayOptions constructor.
-     * @param $options
+     * @param array $options
      * @param bool $useKeys
      */
-    public function __construct($options, $useKeys = true) {
+    public function __construct(array $options, bool $useKeys = true) {
         if (!$useKeys) {
             $this->options = array_combine($options, $options);
         } else {

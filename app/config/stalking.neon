@@ -104,7 +104,7 @@ stalking:
             itemHeadline: task.fq_name
             rows:
                 - task_contribution.type
-                - contest.contestBadge
+                - contest.contest
                 - task.year
                 - task.series
 
@@ -117,7 +117,7 @@ stalking:
             links:
                 - org.detail
                 - org.edit
-            itemHeadline: contest.contestBadge
+            itemHeadline: contest.contest
             rows:
                 - org.org_id
                 - org.since
@@ -147,11 +147,11 @@ stalking:
             table: contestant_base
             model: FKSDB\ORM\Models\ModelContestant
             links:
-                - contestatnt_base.edit
+                - contestant_base.edit
             itemHeadline: contestant_base.ct_id
             rows:
                 - contestant_base.year
-                - contest.contestBadge
+                - contest.contest
         event_participant:
             layout: multi
             label: Event Participant
@@ -171,7 +171,8 @@ stalking:
             minimalPermission: 128
             table: event_org
             model: FKSDB\ORM\Models\ModelEventOrg
-            links: []
+            links:
+                - event_org.edit
             itemHeadline: event_org.event_org_id
             rows:
                 - event.event_link
@@ -183,7 +184,7 @@ stalking:
             table: e_fyziklani_team
             model: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
             links:
-                - fyziklani_team.detail
+                - e_fyziklani_team.detail
             itemHeadline: e_fyziklani_team.name
             rows:
                 - event.event_link

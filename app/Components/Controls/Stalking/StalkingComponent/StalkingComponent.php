@@ -91,11 +91,7 @@ class StalkingComponent extends StalkingControl {
         foreach ($query as $datum) {
             $models[] = ($definition['model'])::createFromActiveRow($datum);
         }
-        $this->template->links = array_map(function ($link) {
-            $factory = $this->tableReflectionFactory->loadLinkFactory($link);
-            $factory->setComponent($this);
-            return $factory;
-        }, $definition['links']);
+        $this->template->links = $definition['links'];
         $this->template->rows = $definition['rows'];
         $this->template->models = $models;
         $this->template->itemHeadline = $definition['itemHeadline'];

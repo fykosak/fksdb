@@ -59,30 +59,13 @@ class EventOrgsGrid extends BaseGrid {
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
-     * @throws InvalidLinkException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);
-
-        $this->addColumns(['person.full_name']);
-        $this->addColumn('note', _('Note'));
-        $this->addButton('edit', _('Edit'))->setText(_('Edit'))
-            ->setLink(function (ModelEventOrg $model) {
-                return $this->getPresenter()->link('edit', [
-                    'id' => $model->e_org_id,
-                ]);
-            });
-
-        /*   $this->addButton('delete')->setText(_('Delete'))
-               ->setLink(function (ModelEventOrg $model) {
-                   return $this->getPresenter()->link('delete', $model->getPrimary());
-               });*/
-
-        if ($this->getPresenter()->authorized('create')) {
-            $this->addGlobalButton('create')
-                ->setLabel(_('Add organiser'))
-                ->setLink($this->getPresenter()->link('create'));
-        }
+        $this->addColumns(['person.full_name', 'event_org.note']);
+        $this->addLink('event_org.edit');
+      //  $this->addLinkButton('edit', 'edit', _('Edit'), false, ['id' => 'e_org_id']);
+        // $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'e_org_id']);
+        //  $this->addLinkButton('delete','delete',_('Delete'),false,['id' => 'e_org_id']);
     }
 }

@@ -9,7 +9,7 @@ use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Events\Model\Holder\DataValidator;
 use FKSDB\Events\Model\Holder\Field;
 use FKSDB\Events\Model\PersonContainerResolver;
-use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedEventPersonFactory;
+use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\ORM\Services\ServicePerson;
 use Nette\ComponentModel\Component;
@@ -51,9 +51,9 @@ class PersonFactory extends AbstractFactory {
     private $visible;
 
     /**
-     * @var ReferencedEventPersonFactory
+     * @var ReferencedPersonFactory
      */
-    private $referencedEventPersonFactory;
+    private $referencedPersonFactory;
 
     /**
      * @var SelfResolver
@@ -87,20 +87,20 @@ class PersonFactory extends AbstractFactory {
      * @param $allowClear
      * @param $modifiable
      * @param $visible
-     * @param ReferencedEventPersonFactory $referencedEventPersonFactory
+     * @param ReferencedPersonFactory $referencedPersonFactory
      * @param SelfResolver $selfResolver
      * @param ExpressionEvaluator $evaluator
      * @param User $user
      * @param ServicePerson $servicePerson
      * @param DIContainer $container
      */
-    public function __construct($fieldsDefinition, $searchType, $allowClear, $modifiable, $visible, ReferencedEventPersonFactory $referencedEventPersonFactory, SelfResolver $selfResolver, ExpressionEvaluator $evaluator, User $user, ServicePerson $servicePerson, DIContainer $container) {
+    public function __construct($fieldsDefinition, $searchType, $allowClear, $modifiable, $visible, ReferencedPersonFactory $referencedPersonFactory, SelfResolver $selfResolver, ExpressionEvaluator $evaluator, User $user, ServicePerson $servicePerson, DIContainer $container) {
         $this->fieldsDefinition = $fieldsDefinition;
         $this->searchType = $searchType;
         $this->allowClear = $allowClear;
         $this->modifiable = $modifiable;
         $this->visible = $visible;
-        $this->referencedEventPersonFactory = $referencedEventPersonFactory;
+        $this->referencedPersonFactory = $referencedPersonFactory;
         $this->selfResolver = $selfResolver;
         $this->evaluator = $evaluator;
         $this->user = $user;
@@ -120,13 +120,13 @@ class PersonFactory extends AbstractFactory {
         $allowClear = $this->evaluator->evaluate($this->allowClear, $field);
 
         $event = $field->getBaseHolder()->getEvent();
-        $this->referencedEventPersonFactory->setEvent($event);
+        $this->referencedPersonFactory->setEvent($event);
         $acYear = $event->getAcYear();
 
         $modifiableResolver = new PersonContainerResolver($field, $this->modifiable, $this->selfResolver, $this->evaluator);
         $visibleResolver = new PersonContainerResolver($field, $this->visible, $this->selfResolver, $this->evaluator);
         $fieldsDefinition = $this->evaluateFieldsDefinition($field);
-        $component = $this->referencedEventPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiableResolver, $visibleResolver);
+        $component = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiableResolver, $visibleResolver);
         $component->setOption('label', $field->getLabel());
         $component->setOption('description', $field->getDescription());
         return $component;
@@ -194,7 +194,7 @@ class PersonFactory extends AbstractFactory {
                 if (!is_array($metadata)) {
                     $metadata = ['required' => $metadata];
                 }
-                if ($metadata['required'] && !$this->referencedEventPersonFactory->isFilled($person, $subName, $fieldName, $acYear)) {
+                if ($metadata['required'] && !$this->referencedPersonFactory->isFilled($person, $subName, $fieldName, $acYear)) {
                     $validator->addError(sprintf(_('%s: %s je povinná položka.'), $field->getBaseHolder()->getLabel(), $field->getLabel() . '.' . $subName . '.' . $fieldName)); //TODO better GUI name than DB identifier
                 }
             }

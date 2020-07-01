@@ -21,31 +21,21 @@ class Link extends AbstractLink {
      * @var string
      */
     private $title;
-    /**
-     * @var string
-     */
-    private $modelClassName;
 
     /**
+     * Link constructor.
      * @param string $destination
      * @param array $params
      * @param string $title
-     * @param string $modelClassName
-     * @return void
      */
-    public function setParams(string $destination, array $params, string $title, string $modelClassName) {
+    public function __construct(string $destination, array $params, string $title) {
         $this->destination = $destination;
         $this->params = $params;
         $this->title = $title;
-        $this->modelClassName = $modelClassName;
     }
 
     public function getText(): string {
         return _($this->title);
-    }
-
-    protected function getModelClassName(): string {
-        return $this->modelClassName;
     }
 
     public function getDestination(AbstractModelSingle $model): string {
