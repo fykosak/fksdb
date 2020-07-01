@@ -300,7 +300,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
-        $components = $this->referencedPersonFactory->createReferencedPerson(
+        $component = $this->referencedPersonFactory->createReferencedPerson(
             $this->getFieldsDefinition(),
             $this->getSelectedAcademicYear(),
             ReferencedPersonFactory::SEARCH_NONE,
@@ -309,8 +309,8 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
             new SelfResolver($this->getUser())
         );
 
-        $container->addComponent($components[0], ExtendedPersonHandler::EL_PERSON);
-        $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
+        $container->addComponent($component->getReferencedId(), ExtendedPersonHandler::EL_PERSON);
+        $container->addComponent($component, ExtendedPersonHandler::CONT_PERSON);
 
 
         /*

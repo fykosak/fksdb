@@ -6,6 +6,7 @@ use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\Holder\DataValidator;
 use FKSDB\Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\IControl;
 
@@ -21,7 +22,7 @@ interface IFieldFactory {
      * @param BaseMachine $machine appropiate base machine
      * @param Container $container whole container of the base holder
      */
-    public function create(Field $field, BaseMachine $machine, Container $container);
+    public function create(Field $field, BaseMachine $machine, Container $container): IComponent;
 
     /**
      * For its own output, it must be able to find the control that may be used

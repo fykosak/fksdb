@@ -176,10 +176,10 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $searchType = ReferencedPersonFactory::SEARCH_NONE;
         $allowClear = false;
         $modifiabilityResolver = $visibilityResolver = new TestResolver();
-        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
+        $component = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
 
-        $container->addComponent($components[0], ExtendedPersonHandler::EL_PERSON);
-        $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
+        $container->addComponent($component->getReferencedId(), ExtendedPersonHandler::EL_PERSON);
+        $container->addComponent($component, ExtendedPersonHandler::CONT_PERSON);
 
         return $form;
     }

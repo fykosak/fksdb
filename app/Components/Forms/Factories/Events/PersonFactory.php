@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
+use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Events\EventsExtension;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\ExpressionEvaluator;
@@ -12,9 +13,9 @@ use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedEventPersonFacto
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\ORM\Services\ServicePerson;
 use Nette\ComponentModel\Component;
+use Nette\ComponentModel\IComponent;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\Container;
-use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\IControl;
 use Nette\Security\User;
 use Persons\SelfResolver;
@@ -111,10 +112,10 @@ class PersonFactory extends AbstractFactory {
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
-     * @return array|mixed
+     * @return ReferencedContainer
      * @throws \Exception
      */
-    protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
+    protected function createComponent(Field $field, BaseMachine $machine, Container $container): IComponent {
         $searchType = $this->evaluator->evaluate($this->searchType, $field);
         $allowClear = $this->evaluator->evaluate($this->allowClear, $field);
 
@@ -125,20 +126,19 @@ class PersonFactory extends AbstractFactory {
         $modifiableResolver = new PersonContainerResolver($field, $this->modifiable, $this->selfResolver, $this->evaluator);
         $visibleResolver = new PersonContainerResolver($field, $this->visible, $this->selfResolver, $this->evaluator);
         $fieldsDefinition = $this->evaluateFieldsDefinition($field);
-        $components = $this->referencedEventPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiableResolver, $visibleResolver);
-        $components[1]->setOption('label', $field->getLabel());
-        $components[1]->setOption('description', $field->getDescription());
-        return $components;
+        $component = $this->referencedEventPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiableResolver, $visibleResolver);
+        $component->setOption('label', $field->getLabel());
+        $component->setOption('description', $field->getDescription());
+        return $component;
     }
 
     /**
-     * @param HiddenField[] $component
+     * @param ReferencedContainer|IComponent $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
      */
-    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
-        $hiddenField = reset($component);
+    protected function setDefaultValue(IComponent $component, Field $field, BaseMachine $machine, Container $container) {
         $default = $field->getValue();
         if ($default == self::VALUE_LOGIN) {
             if ($this->user->isLoggedIn() && $this->user->getIdentity()->getPerson()) {
@@ -148,19 +148,18 @@ class PersonFactory extends AbstractFactory {
             }
         }
 
-        $hiddenField->setDefaultValue($default);
+        $component->getReferencedId()->setDefaultValue($default);
     }
 
     /**
-     * @param $component
+     * @param ReferencedContainer|IComponent $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
      * @return void
      */
-    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
-        $hiddenField = reset($component);
-        $hiddenField->setDisabled();
+    protected function setDisabled(IComponent $component, Field $field, BaseMachine $machine, Container $container) {
+        $container->getReferencedId()->setDisabled();
     }
 
     /**
@@ -220,8 +219,6 @@ class PersonFactory extends AbstractFactory {
                 }
             }
         }
-
         return $fieldsDefinition;
     }
-
 }

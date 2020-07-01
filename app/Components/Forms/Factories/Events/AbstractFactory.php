@@ -2,9 +2,11 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
+use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\Holder\DataValidator;
 use FKSDB\Events\Model\Holder\Field;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
@@ -22,7 +24,7 @@ abstract class AbstractFactory implements IFieldFactory {
      * @param Container $container
      * @return array|mixed
      */
-    public function create(Field $field, BaseMachine $machine, Container $container) {
+    public function create(Field $field, BaseMachine $machine, Container $container): IComponent {
         $component = $this->createComponent($field, $machine, $container);
 
         if (!$field->isModifiable()) {
@@ -30,7 +32,7 @@ abstract class AbstractFactory implements IFieldFactory {
         }
         $this->setDefaultValue($component, $field, $machine, $container);
 
-        $control = $this->getMainControl(is_array($component) ? reset($component) : $component);
+        $control = $this->getMainControl($component instanceof ReferencedContainer ? $component->getReferencedId() : $component);
         $this->appendRequiredRule($control, $field, $machine, $container);
 
         return $component;
@@ -75,22 +77,22 @@ abstract class AbstractFactory implements IFieldFactory {
     }
 
     /**
-     * @param $component
+     * @param IComponent $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
      * @return void
      */
-    abstract protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container);
+    abstract protected function setDisabled(IComponent $component, Field $field, BaseMachine $machine, Container $container);
 
     /**
-     * @param $component
+     * @param IComponent $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
      * @return void
      */
-    abstract protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container);
+    abstract protected function setDefaultValue(IComponent $component, Field $field, BaseMachine $machine, Container $container);
 
     /**
      * @param Field $field
@@ -98,5 +100,5 @@ abstract class AbstractFactory implements IFieldFactory {
      * @param Container $container
      * @return mixed
      */
-    abstract protected function createComponent(Field $field, BaseMachine $machine, Container $container);
+    abstract protected function createComponent(Field $field, BaseMachine $machine, Container $container): IComponent;
 }

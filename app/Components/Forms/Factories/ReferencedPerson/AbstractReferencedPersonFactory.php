@@ -127,7 +127,7 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
      * @param IModifiabilityResolver $modifiabilityResolver is person's filled field modifiable?
      * @param IVisibilityResolver $visibilityResolver is person's writeOnly field visible? (i.e. not writeOnly then)
      * @param int $evenId
-     * @return array
+     * @return ReferencedContainer
      * @throws \Exception
      */
     public function createReferencedPerson(array $fieldsDefinition, int $acYear, string $searchType, bool $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $evenId = 0) {
@@ -188,10 +188,8 @@ abstract class AbstractReferencedPersonFactory implements IReferencedSetter {
             $container->addComponent($subContainer, $sub);
         }
 
-        return [
-            $hiddenField,
-            $container,
-        ];
+        return $container;
+
     }
 
 

@@ -142,7 +142,7 @@ class Field {
      * @param Container $container
      * @return mixed
      */
-    public function createFormComponent(BaseMachine $machine, Container $container) {
+    public function createFormComponent(BaseMachine $machine, Container $container): IComponent {
         return $this->factory->create($this, $machine, $container);
     }
 

@@ -9,6 +9,7 @@ use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\AbstractServiceSingle;
 use Nette\ComponentModel\Component;
+use Nette\ComponentModel\IComponent;
 use Nette\Database\Connection;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
@@ -57,7 +58,7 @@ class DBReflectionFactory extends AbstractFactory {
      * @return BaseControl
      * @throws \Exception
      */
-    protected function createComponent(Field $field, BaseMachine $machine, Container $container): BaseControl {
+    protected function createComponent(Field $field, BaseMachine $machine, Container $container): IComponent {
         $element = null;
         try {
             $service = $field->getBaseHolder()->getService();
@@ -118,7 +119,7 @@ class DBReflectionFactory extends AbstractFactory {
      * @param BaseMachine $machine
      * @param Container $container
      */
-    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDefaultValue(IComponent $component, Field $field, BaseMachine $machine, Container $container) {
 
         if ($field->getBaseHolder()->getModelState() == BaseMachine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
@@ -135,7 +136,7 @@ class DBReflectionFactory extends AbstractFactory {
      * @param BaseMachine $machine
      * @param Container $container
      */
-    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDisabled(IComponent $component, Field $field, BaseMachine $machine, Container $container) {
         $component->setDisabled();
     }
 
