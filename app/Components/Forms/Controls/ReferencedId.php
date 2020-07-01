@@ -59,6 +59,9 @@ class ReferencedId extends HiddenField {
      */
     private $model;
 
+    /** @var bool */
+    private $attachedOnValidate = false;
+
     /**
      * ReferencedId constructor.
      * @param IService $service
@@ -70,13 +73,17 @@ class ReferencedId extends HiddenField {
         $this->handler = $handler;
         $this->referencedSetter = $referencedSetter;
         parent::__construct();
-        $this->monitor(Form::class);
+        $this->monitor(Form::class, function (Form $form) {
+            if (!$this->attachedOnValidate) {
+                $form->onValidate[] = function () {
+                    $this->createPromise();
+                };
+                $this->attachedOnValidate = true;
+            }
+        });
     }
 
-    /**
-     * @return ReferencedContainer
-     */
-    public function getReferencedContainer() {
+    public function getReferencedContainer(): ReferencedContainer {
         return $this->referencedContainer;
     }
 
@@ -145,6 +152,7 @@ class ReferencedId extends HiddenField {
      * @return HiddenField
      */
     public function setValue($pValue, bool $force = false) {
+
         $isPromise = ($pValue === self::VALUE_PROMISE);
         if (!($pValue instanceof IModel) && !$isPromise) {
             $pValue = $this->service->findByPrimary($pValue);
@@ -211,9 +219,11 @@ class ReferencedId extends HiddenField {
      * @return void
      */
     private function createPromise() {
+
         $values = $this->referencedContainer->getValues();
-        $promise = new Promise(function () use ($values) {
-            $referencedId = $this->getValue(false);
+        $referencedId = $this->getValue();
+        $promise = new Promise(function () use ($values, $referencedId) {
+            $this->loadHttpData();
             try {
                 if ($referencedId === self::VALUE_PROMISE) {
 
@@ -243,22 +253,4 @@ class ReferencedId extends HiddenField {
         $this->setValue($referencedId);
         $this->setPromise($promise);
     }
-
-    /** @var bool */
-    private $attachedOnValidate = false;
-
-    /**
-     * @param mixed $obj
-     * @return void
-     */
-    protected function attached($obj) {
-        parent::attached($obj);
-        if (!$this->attachedOnValidate && $obj instanceof Form) {
-            $obj->onValidate[] = function () {
-                $this->createPromise();
-            };
-            $this->attachedOnValidate = true;
-        }
-    }
-
 }
