@@ -58,8 +58,6 @@ class StoredQueryForm extends AbstractEntityFormControl implements IEditEntityFo
     protected function handleFormSuccess(Form $form) {
         try {
             $this->create ? $this->handleCreateSuccess($form) : $this->handleEditSuccess($form);
-        } catch (BadRequestException $exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
         } catch (ModelException $exception) {
             $this->flashMessage(_('Chyba při ukládání do databáze.'), Message::LVL_DANGER);
             Debugger::log($exception);
@@ -117,7 +115,6 @@ class StoredQueryForm extends AbstractEntityFormControl implements IEditEntityFo
      * @param Form $form
      * @return void
      * @throws AbortException
-     * @throws BadRequestException
      */
     private function handleEditSuccess(Form $form) {
         $this->handleSave($form);
@@ -129,7 +126,6 @@ class StoredQueryForm extends AbstractEntityFormControl implements IEditEntityFo
      * @param Form $form
      * @return void
      * @throws AbortException
-     * @throws BadRequestException
      */
     private function handleCreateSuccess(Form $form) {
         $this->handleSave($form);
@@ -140,7 +136,6 @@ class StoredQueryForm extends AbstractEntityFormControl implements IEditEntityFo
     /**
      * @param Form $form
      * @return void
-     * @throws BadRequestException TODO is still throw?
      */
     private function handleSave(Form $form) {
         $values = FormUtils::emptyStrToNull($form->getValues(), true);
@@ -232,7 +227,6 @@ class StoredQueryForm extends AbstractEntityFormControl implements IEditEntityFo
      * @param Form $form
      * @return void
      * @throws BadRequestException
-     * TODO refactoring
      */
     private function handleComposeExecute(Form $form) {
         $data = $form->getValues(true);

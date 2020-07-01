@@ -5,8 +5,6 @@ namespace FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam;
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\DatabaseReflection\OmittedControlException;
-use FKSDB\Exceptions\NotImplementedException;
-use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
 
 /**

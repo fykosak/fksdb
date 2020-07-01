@@ -276,6 +276,7 @@ DBReflection:
          person_history:
              modelClassName: FKSDB\ORM\Models\ModelPersonHistory
              columnFactories:
+                school_id: FKSDB\Components\DatabaseReflection\PersonHistory\SchoolIdRow
                 ac_year: FKSDB\Components\DatabaseReflection\PersonHistory\AcYearRow
                 study_year: FKSDB\Components\DatabaseReflection\PersonHistory\StudyYearRow
                 class:

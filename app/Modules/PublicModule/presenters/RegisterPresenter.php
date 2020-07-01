@@ -189,6 +189,10 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $this->template->contests = $this->getServiceContest()->getTable();
     }
 
+    /**
+     * @return void
+     * @throws AbortException
+     */
     public function renderYear() {
         $contest = $this->getSelectedContest();
         $forward = $this->getYearCalculator()->getForwardShift($contest);

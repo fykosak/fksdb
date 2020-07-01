@@ -6,7 +6,6 @@ use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use Nette\Forms\Controls\BaseControl;
-use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class AbstractPaymentRow

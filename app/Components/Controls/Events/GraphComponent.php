@@ -21,6 +21,8 @@ class GraphComponent extends BaseComponent {
     private $baseMachine;
     /** @var ExpressionPrinter */
     private $expressionPrinter;
+    /** @var bool */
+    private $attachedJS = false;
 
     /**
      * GraphComponent constructor.
@@ -29,9 +31,16 @@ class GraphComponent extends BaseComponent {
      */
     public function __construct(Container $container, BaseMachine $baseMachine) {
         parent::__construct($container);
-        $this->monitor(IJavaScriptCollector::class);
+        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
+            if (!$this->attachedJS) {
+                $this->attachedJS = true;
+                $collector->registerJSFile('js/graph/raphael.js');
+                $collector->registerJSFile('js/graph/dracula_graffle.js');
+                $collector->registerJSFile('js/graph/dracula_graph.js');
+                $collector->registerJSFile('js/eventModelGraph.js');
+            }
+        });
         $this->baseMachine = $baseMachine;
-
     }
 
     /**
@@ -40,24 +49,6 @@ class GraphComponent extends BaseComponent {
      */
     public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter) {
         $this->expressionPrinter = $expressionPrinter;
-    }
-
-    /** @var bool */
-    private $attachedJS = false;
-
-    /**
-     * @param IComponent $obj
-     * @return void
-     */
-    protected function attached($obj) {
-        parent::attached($obj);
-        if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
-            $this->attachedJS = true;
-            $obj->registerJSFile('js/graph/raphael.js');
-            $obj->registerJSFile('js/graph/dracula_graffle.js');
-            $obj->registerJSFile('js/graph/dracula_graph.js');
-            $obj->registerJSFile('js/eventModelGraph.js');
-        }
     }
 
     public function render() {
@@ -90,7 +81,7 @@ class GraphComponent extends BaseComponent {
             $nodes[] = [
                 'id' => $state,
                 'label' => $this->baseMachine->getStateName($state),
-                'type' => $state === BaseMachine::STATE_INIT ? 'init' : $state === BaseMachine::STATE_TERMINATED ? 'terminated' : 'default'
+                'type' => $state === BaseMachine::STATE_INIT ? 'init' : $state === BaseMachine::STATE_TERMINATED ? 'terminated' : 'default',
             ];
         }
         return $nodes;

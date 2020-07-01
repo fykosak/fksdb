@@ -30,7 +30,15 @@ class GroupedContainer extends Container {
      */
     public function __construct($prefix) {
         parent::__construct();
-        $this->monitor(Form::class);
+        $this->monitor(Form::class, function (Form $form) {
+            $this->getName();
+            foreach ($this->groups as $caption => $myGroup) {
+                $formGroup = $form->addGroup($this->prefix . '-' . $caption, false);
+                foreach ($myGroup->getControls() as $control) {
+                    $formGroup->add($control);
+                }
+            }
+        });
         $this->prefix = $prefix;
     }
 
@@ -43,7 +51,7 @@ class GroupedContainer extends Container {
     public function addGroup($caption, $setAsCurrent = true): ControlGroup {
         $group = new ControlGroup();
         $group->setOption('label', $caption);
-        $group->setOption('visual', TRUE);
+        $group->setOption('visual', true);
 
         if ($setAsCurrent) {
             $this->setCurrentGroup($group);
@@ -70,22 +78,4 @@ class GroupedContainer extends Container {
 //        }
 //        parent::addComponent($component, $name, $insertBefore);
 //    }
-
-    /**
-     * @param IComponent $obj
-     * @return void
-     */
-    protected function attached($obj) {
-        parent::attached($obj);
-        if ($obj instanceof Form) {
-            $this->getName();
-            foreach ($this->groups as $caption => $myGroup) {
-                $formGroup = $obj->addGroup($this->prefix . '-' . $caption, false);
-                foreach ($myGroup->getControls() as $control) {
-                    $formGroup->add($control);
-                }
-            }
-        }
-    }
-
 }

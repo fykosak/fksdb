@@ -3,9 +3,7 @@
 namespace FKSDB\Components\DatabaseReflection\LinkFactories;
 
 use FKSDB\ORM\AbstractModelSingle;
-use Nette\Application\UI\Component;
 use Nette\Application\UI\Presenter;
-use Nette\Utils\Html;
 
 interface ILinkFactory {
 

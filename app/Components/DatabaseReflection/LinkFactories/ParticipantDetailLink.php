@@ -3,7 +3,6 @@
 namespace FKSDB\Components\DatabaseReflection\LinkFactories;
 
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Application\BadRequestException;
 

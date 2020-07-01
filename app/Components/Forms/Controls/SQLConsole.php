@@ -4,7 +4,6 @@ namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Application\IStylesheetCollector;
-use Nette\ComponentModel\IComponent;
 use Nette\Forms\Controls\TextArea;
 use Nette\Utils\Html;
 
@@ -22,10 +21,21 @@ class SQLConsole extends TextArea {
      * SQLConsole constructor.
      * @param null $label
      */
-    public function __construct($label = NULL) {
+    public function __construct($label = null) {
         parent::__construct($label);
-        $this->monitor(IJavaScriptCollector::class);
-        $this->monitor(IStylesheetCollector::class);
+        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
+            if (!$this->attachedJS) {
+                $this->attachedJS = true;
+                $collector->registerJSFile('js/codemirror.min.js');
+                $collector->registerJSFile('js/sqlconsole.js');
+            }
+        });
+        $this->monitor(IStylesheetCollector::class, function (IStylesheetCollector $collector) {
+            if (!$this->attachedCSS) {
+                $this->attachedCSS = true;
+                $collector->registerStylesheetFile('css/codemirror.css', ['screen', 'projection', 'tv']);
+            }
+        });
     }
 
     /**
@@ -36,23 +46,6 @@ class SQLConsole extends TextArea {
      * @var bool
      */
     private $attachedCSS = false;
-
-    /**
-     * @param IComponent $component
-     * @return void
-     */
-    protected function attached($component) {
-        parent::attached($component);
-        if (!$this->attachedJS && $component instanceof IJavaScriptCollector) {
-            $this->attachedJS = true;
-            $component->registerJSFile('js/codemirror.min.js');
-            $component->registerJSFile('js/sqlconsole.js');
-        }
-        if (!$this->attachedCSS && $component instanceof IStylesheetCollector) {
-            $this->attachedCSS = true;
-            $component->registerStylesheetFile('css/codemirror.css', ['screen', 'projection', 'tv']);
-        }
-    }
 
     /**
      * @return Html

@@ -6,7 +6,6 @@ use FKSDB\Authentication\AccountManager;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Models\ModelPersonInfo;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonInfo;
@@ -143,7 +142,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
             unset($personInfoData['email']);
         }
         /* Email nor fb_id can violate unique constraint here as we've used it to identify the person in authenticate. */
-        $this->servicePersonInfo->updateModel2($personInfo, $personInfoData);;
+        $this->servicePersonInfo->updateModel2($personInfo, $personInfoData);
 
         $this->servicePerson->getConnection()->commit();
     }

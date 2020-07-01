@@ -114,10 +114,11 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
     /**
-     * @param IControl $component
+     * @param IComponent $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
+     * @return void
      */
     protected function setDefaultValue(IComponent $component, Field $field, BaseMachine $machine, Container $container) {
 
@@ -131,10 +132,11 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
     /**
-     * @param IControl $component
+     * @param IComponent|BaseControl $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
+     * @return void
      */
     protected function setDisabled(IComponent $component, Field $field, BaseMachine $machine, Container $container) {
         $component->setDisabled();

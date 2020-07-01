@@ -14,7 +14,6 @@ use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Components\Forms\Factories\PersonHistoryFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\ORM\IModel;
@@ -67,10 +66,6 @@ class ReferencedPersonFactory implements IReferencedSetter {
     protected $personFactory;
 
     /**
-     * @var PersonHistoryFactory
-     */
-    protected $personHistoryFactory;
-    /**
      * @var SingleReflectionFormFactory
      */
     protected $singleReflectionFormFactory;
@@ -117,7 +112,6 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @param PersonProvider $personProvider
      * @param ServiceFlag $serviceFlag
      * @param SingleReflectionFormFactory $singleReflectionFormFactory
-     * @param PersonHistoryFactory $personHistoryFactory
      * @param PersonScheduleFactory $personScheduleFactory
      */
     public function __construct(
@@ -129,7 +123,6 @@ class ReferencedPersonFactory implements IReferencedSetter {
         PersonProvider $personProvider,
         ServiceFlag $serviceFlag,
         SingleReflectionFormFactory $singleReflectionFormFactory,
-        PersonHistoryFactory $personHistoryFactory,
         PersonScheduleFactory $personScheduleFactory
     ) {
         $this->servicePerson = $servicePerson;
@@ -137,7 +130,6 @@ class ReferencedPersonFactory implements IReferencedSetter {
         $this->referencedPersonHandlerFactory = $referencedPersonHandlerFactory;
         $this->personProvider = $personProvider;
         $this->serviceFlag = $serviceFlag;
-        $this->personHistoryFactory = $personHistoryFactory;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->flagFactory = $flagFactory;
         $this->addressFactory = $addressFactory;
@@ -331,14 +323,12 @@ class ReferencedPersonFactory implements IReferencedSetter {
                 case 'person_schedule':
                     $control = $this->personScheduleFactory->createField($fieldName, $this->event);
                     break;
+                case 'person':
                 case 'person_info':
-                    $control = $this->singleReflectionFormFactory->createField('person_info', $fieldName);
+                    $control = $this->singleReflectionFormFactory->createField($sub, $fieldName);
                     break;
                 case 'person_history':
-                    $control = $this->personHistoryFactory->createField('person_history', $fieldName, $acYear);
-                    break;
-                case 'person':
-                    $control = $this->personFactory->createField('person', $fieldName);
+                    $control = $this->singleReflectionFormFactory->createField($sub, $fieldName, $acYear);
                     break;
                 default:
                     throw new InvalidArgumentException();

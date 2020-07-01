@@ -264,7 +264,7 @@ class ApplicationComponent extends BaseComponent {
      * @throws BadRequestException
      */
     private function getMachine() {
-        return $this->handler->getMachine($this->holder);
+        return $this->handler->getMachine();
     }
 
     /**

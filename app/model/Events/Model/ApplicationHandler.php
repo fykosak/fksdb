@@ -104,12 +104,11 @@ class ApplicationHandler {
     }
 
     /**
-     * @param Holder $holder
      * @return Machine
      * @throws BadRequestException
      */
-    public function getMachine(Holder $holder) {
-        $this->initializeMachine($holder);
+    public function getMachine() {
+        $this->initializeMachine();
         return $this->machine;
     }
 
@@ -147,7 +146,7 @@ class ApplicationHandler {
      * @throws BadRequestException
      */
     public function onlyExecute(Holder $holder, string $explicitTransitionName) {
-        $this->initializeMachine($holder);
+        $this->initializeMachine();
 
         try {
             $explicitMachineName = $this->machine->getPrimaryMachine()->getName();
@@ -341,10 +340,9 @@ class ApplicationHandler {
     }
 
     /**
-     * @param Holder $holder
      * @throws BadRequestException
      */
-    private function initializeMachine(Holder $holder) {
+    private function initializeMachine() {
         if (!$this->machine) {
             /** @var EventDispatchFactory $factory */
             $factory = $this->container->getByType(EventDispatchFactory::class);

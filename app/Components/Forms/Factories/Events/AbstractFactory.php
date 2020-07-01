@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\Holder\DataValidator;
 use FKSDB\Events\Model\Holder\Field;
@@ -33,7 +32,7 @@ abstract class AbstractFactory implements IFieldFactory {
         $this->setDefaultValue($component, $field, $machine, $container);
 
         $control = $this->getMainControl($component);
-        $this->appendRequiredRule($control, $field, $machine, $container);
+        $this->appendRequiredRule($control, $field, $container);
 
         return $component;
     }
@@ -41,11 +40,10 @@ abstract class AbstractFactory implements IFieldFactory {
     /**
      * @param IControl $element
      * @param Field $field
-     * @param BaseMachine $machine
      * @param Container $container
      * @return void
      */
-    final protected function appendRequiredRule(IControl $element, Field $field, BaseMachine $machine, Container $container) {
+    final protected function appendRequiredRule(IControl $element, Field $field, Container $container) {
         if ($field->isRequired()) {
             $conditioned = $element;
             foreach ($field->getBaseHolder()->getDeterminingFields() as $name => $determiningField) {

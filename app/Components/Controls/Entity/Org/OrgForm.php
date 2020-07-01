@@ -31,11 +31,8 @@ class OrgForm extends AbstractEntityFormControl implements IEditEntityForm {
     use ReferencedPersonTrait;
 
     const CONTAINER = 'org';
-    /**
-     * @var ServiceOrg
-     */
+    /** @var ServiceOrg */
     protected $serviceOrg;
-
     /** @var ModelContest */
     protected $contest;
     /** @var ModelOrg */
@@ -151,12 +148,12 @@ class OrgForm extends AbstractEntityFormControl implements IEditEntityForm {
         $max = $this->yearCalculator->getLastYear($this->contest);
 
         foreach (['since', 'until'] as $field) {
-            $control = $this->singleReflectionFormFactory->createField('org' , $field, $min, $max);
+            $control = $this->singleReflectionFormFactory->createField('org', $field, $min, $max);
             $container->addComponent($control, $field);
         }
 
         foreach (['role', 'tex_signature', 'domain_alias', 'order', 'contribution'] as $field) {
-            $control = $this->singleReflectionFormFactory->createField('org' ,$field);
+            $control = $this->singleReflectionFormFactory->createField('org', $field);
             $container->addComponent($control, $field);
         }
         return $container;

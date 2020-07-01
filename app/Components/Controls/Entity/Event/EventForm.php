@@ -195,7 +195,7 @@ class EventForm extends AbstractEntityFormControl implements IEditEntityForm {
     protected function handleEditSuccess(array $data) {
         $this->serviceEvent->updateModel2($this->model, $data);
         $this->updateTokens($this->model);
-        $this->flashMessage(sprintf(_('Akce %s uložena.'), $this->model->name), ILogger::SUCCESS);
+        $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $this->model->name), ILogger::SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 
@@ -207,11 +207,9 @@ class EventForm extends AbstractEntityFormControl implements IEditEntityForm {
     protected function handleCreateSuccess(array $data) {
         $data['year'] = $this->year;
         $model = $this->serviceEvent->createNewModel($data);
-
         $this->updateTokens($model);
-        $this->flashMessage(sprintf(_('Akce %s uložena.'), $model->name), ILogger::SUCCESS);
-
-        $this->getPresenter()->redirect('list'); // if there's no backlink
+        $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), ILogger::SUCCESS);
+        $this->getPresenter()->redirect('list');
     }
 
     /**

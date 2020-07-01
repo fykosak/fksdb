@@ -24,7 +24,7 @@ use Nette\Utils\Strings;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
- * @method BasePresenter getPresenter($need = TRUE)
+ * @method BasePresenter getPresenter($need = true)
  */
 class ApplicationsGrid extends BaseComponent {
 
@@ -68,6 +68,8 @@ class ApplicationsGrid extends BaseComponent {
      * @var bool
      */
     private $searchable = false;
+    /** @var bool */
+    private $attachedJS = false;
 
     /**
      * ApplicationsGrid constructor.
@@ -78,26 +80,17 @@ class ApplicationsGrid extends BaseComponent {
      */
     public function __construct(Container $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory) {
         parent::__construct($container);
-        $this->monitor(IJavaScriptCollector::class);
+        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
+            if (!$this->attachedJS) {
+                $this->attachedJS = true;
+                $collector->registerJSFile('js/searchTable.js');
+            }
+        });
         $this->source = $source;
         $this->handlerFactory = $handlerFactory;
         $this->processSource();
     }
 
-    /** @var bool */
-    private $attachedJS = false;
-
-    /**
-     * @param $obj
-     * @return void
-     */
-    protected function attached($obj) {
-        parent::attached($obj);
-        if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
-            $this->attachedJS = true;
-            $obj->registerJSFile('js/searchTable.js');
-        }
-    }
 
     /**
      * @param string $template name of the standard template or whole path

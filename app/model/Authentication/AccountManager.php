@@ -2,6 +2,7 @@
 
 namespace FKSDB\Authentication;
 
+use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
@@ -10,7 +11,6 @@ use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\ORM\Services\ServiceLogin;
 use Mail\MailTemplateFactory;
-use Mail\SendFailedException;
 use Nette\Application\BadRequestException;
 use Nette\Utils\DateTime;
 
@@ -113,6 +113,7 @@ class AccountManager {
      * @param string $lang
      * @return ModelLogin
      * @throws BadRequestException
+     * @throws ModelException
      */
     public function createLoginWithInvitation(ModelPerson $person, string $email, string $lang) {
         $login = $this->createLogin($person);
