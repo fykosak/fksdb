@@ -32,7 +32,7 @@ abstract class AbstractFactory implements IFieldFactory {
         }
         $this->setDefaultValue($component, $field, $machine, $container);
 
-        $control = $this->getMainControl($component instanceof ReferencedContainer ? $component->getReferencedId() : $component);
+        $control = $this->getMainControl($component);
         $this->appendRequiredRule($control, $field, $machine, $container);
 
         return $component;

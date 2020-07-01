@@ -51,10 +51,10 @@ class PasswordFactory extends AbstractFactory {
     }
 
     /**
-     * @param Component $component
+     * @param Component|IComponent $component
      * @return Component|IControl
      */
-    public function getMainControl(Component $component) {
+    public function getMainControl(IComponent $component): IControl {
         return $component;
     }
 

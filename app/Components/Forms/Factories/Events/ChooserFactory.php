@@ -82,7 +82,7 @@ class ChooserFactory extends AbstractFactory {
     }
 
     /**
-     * @param BaseControl $component
+     * @param BaseControl|IComponent $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
@@ -93,11 +93,10 @@ class ChooserFactory extends AbstractFactory {
     }
 
     /**
-     * @param Component $component
+     * @param Component|IComponent $component
      * @return Component|IControl
      */
-    public function getMainControl(Component $component) {
+    public function getMainControl(IComponent $component): IControl {
         return $component;
     }
-
 }

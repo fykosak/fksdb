@@ -28,10 +28,10 @@ interface IFieldFactory {
      * For its own output, it must be able to find the control that may be used
      * for form rules (dependecies).
      *
-     * @param Component $component
-     * @return IControl
+     * @param IComponent $component
+     * @return IComponent
      */
-    public function getMainControl(Component $component);
+    public function getMainControl(IComponent $component): IControl;
 
     /**
      * Checks whether data are filled correctly (more than form validation as the validity

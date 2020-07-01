@@ -56,8 +56,7 @@ class CheckboxFactory extends AbstractFactory {
      * @param Component $component
      * @return Component|IControl
      */
-    public function getMainControl(Component $component) {
+    public function getMainControl(IComponent $component): IControl {
         return $component;
     }
-
 }

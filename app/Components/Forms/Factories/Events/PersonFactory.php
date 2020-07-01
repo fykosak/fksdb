@@ -163,11 +163,11 @@ class PersonFactory extends AbstractFactory {
     }
 
     /**
-     * @param Component $component
+     * @param ReferencedContainer|IComponent $component
      * @return Component|IControl
      */
-    public function getMainControl(Component $component) {
-        return $component;
+    public function getMainControl(IComponent $component): IControl {
+        return $component->getReferencedId();
     }
 
     /**

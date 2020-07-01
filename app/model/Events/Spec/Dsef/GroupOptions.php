@@ -64,7 +64,7 @@ class GroupOptions implements IOptionsProvider {
         foreach ($groups as $name => $capacity) {
             $result[] = [
                 'label' => $name,
-                'capacity' => $capacity
+                'capacity' => $capacity,
             ];
         }
         return $result;
@@ -84,11 +84,7 @@ class GroupOptions implements IOptionsProvider {
         return $this->groups[$eventId];
     }
 
-    /**
-     * @param Field $field
-     * @return array
-     */
-    public function getOptions(Field $field) {
+    public function getOptions(Field $field): array {
         $baseHolder = $field->getBaseHolder();
         $event = $baseHolder->getEvent();
         $application = $baseHolder->getModel();
