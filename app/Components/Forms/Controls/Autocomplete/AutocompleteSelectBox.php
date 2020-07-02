@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\Application\IJavaScriptCollector;
-use Nette\ComponentModel\IComponent;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextBase;
 use Nette\InvalidArgumentException;

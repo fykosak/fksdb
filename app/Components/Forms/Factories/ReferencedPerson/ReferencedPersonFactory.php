@@ -3,7 +3,8 @@
 namespace FKSDB\Components\Forms\Factories\ReferencedPerson;
 
 use Closure;
-use FKSDB\Components\Forms\Containers\AddressContainer;
+use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
@@ -16,12 +17,15 @@ use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Services\ServiceFlag;
 use FKSDB\ORM\Services\ServicePerson;
+use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
@@ -149,10 +153,15 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @param int $acYear
      * @param string $searchType
      * @param bool $allowClear
-     * @param IModifiabilityResolver $modifiabilityResolver is person's filled field modifiable?
-     * @param IVisibilityResolver $visibilityResolver is person's writeOnly field visible? (i.e. not writeOnly then)
+     * @param IModifiabilityResolver $modifiabilityResolver
+     * @param IVisibilityResolver $visibilityResolver
      * @return ReferencedContainer
-     * @throws \Exception
+     * @throws AbstractColumnException
+     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws JsonException
+     * @throws NotImplementedException
+     * @throws OmittedControlException
      */
     public function createReferencedPerson(array $fieldsDefinition, int $acYear, string $searchType, bool $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver) {
         $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $this->event ?? null);
@@ -296,8 +305,13 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @param int $acYear
      * @param HiddenField $hiddenField
      * @param array $metadata
-     * @return AddressContainer|BaseControl|IComponent
-     * @throws \Exception
+     * @return IComponent
+     * @throws JsonException
+     * @throws AbstractColumnException
+     * @throws OmittedControlException
+     * @throws BadTypeException
+     * @throws NotImplementedException
+     * @throws BadRequestException
      */
     public function createField(string $sub, string $fieldName, int $acYear, HiddenField $hiddenField, array $metadata): IComponent {
         if (in_array($sub, [

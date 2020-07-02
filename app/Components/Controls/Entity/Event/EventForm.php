@@ -114,7 +114,8 @@ class EventForm extends AbstractEntityFormControl implements IEditEntityForm {
     }
 
     /**
-     * @param ModelEvent|AbstractModelSingle $event
+     * @param ModelEvent $event
+     * @return void
      */
     protected function updateTokens(ModelEvent $event) {
         $connection = $this->serviceAuthToken->getConnection();

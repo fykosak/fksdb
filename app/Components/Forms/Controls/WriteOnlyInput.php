@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Components\Forms\Containers\IWriteOnly;
-use Nette\ComponentModel\IComponent;
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
 

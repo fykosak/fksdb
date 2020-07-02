@@ -76,8 +76,8 @@ class SingleReflectionFormFactory {
      * @param FieldLevelPermission $userPermissions
      * @return ModelContainer
      * @throws AbstractColumnException
+     * @throws BadTypeException
      * @throws OmittedControlException
-     * @throws \Exception
      */
     public function createContainerWithMetadata(string $table, array $fields, FieldLevelPermission $userPermissions): ModelContainer {
         $container = new ModelContainer();

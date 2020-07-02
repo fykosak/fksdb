@@ -17,6 +17,7 @@ use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\Utils\FormUtils;
 use Mail\SendFailedException;
 use FKSDB\Exceptions\ModelException;
+use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
@@ -140,7 +141,7 @@ class ExtendedPersonHandler {
      * @param IExtendedPersonPresenter $presenter
      * @param bool $sendEmail
      * @return int
-     * @throws \Exception
+     * @throws BadRequestException
      */
     final public function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail): int {
 

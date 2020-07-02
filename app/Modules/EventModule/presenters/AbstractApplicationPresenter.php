@@ -112,7 +112,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws NeonSchemaException
      */
     protected function createComponentApplicationComponent(): ApplicationComponent {
-        $source = new SingleEventSource($this->getEvent(), $this->getContext());
+        $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->getEventDispatchFactory());
         foreach ($source->getHolders() as $key => $holder) {
             if ($key === $this->getEntity()->getPrimary()) {
                 return new ApplicationComponent($this->getContext(), $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);

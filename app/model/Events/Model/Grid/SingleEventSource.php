@@ -64,21 +64,22 @@ class SingleEventSource implements IHolderSource {
      * @var Holder[]
      */
     private $holders = [];
+    /** @var EventDispatchFactory */
+    private $eventDispatchFactory;
 
     /**
      * SingleEventSource constructor.
      * @param ModelEvent $event
      * @param Container $container
-     * @throws NeonSchemaException
+     * @param EventDispatchFactory $eventDispatchFactory
      * @throws BadRequestException
+     * @throws NeonSchemaException
      */
-    public function __construct(ModelEvent $event, Container $container) {
+    public function __construct(ModelEvent $event, Container $container, EventDispatchFactory $eventDispatchFactory) {
         $this->event = $event;
         $this->container = $container;
-        /** @var EventDispatchFactory $factory */
-        $factory = $this->container->getByType(EventDispatchFactory::class);
-        $this->dummyHolder = $factory->getDummyHolder($this->event);
-
+        $this->eventDispatchFactory = $eventDispatchFactory;
+        $this->dummyHolder = $eventDispatchFactory->getDummyHolder($this->event);
         $primaryHolder = $this->dummyHolder->getPrimaryHolder();
         $eventIdColumn = $primaryHolder->getEventId();
         $this->primarySelection = $primaryHolder->getService()->getTable()->where($eventIdColumn, $this->event->getPrimary());
@@ -155,9 +156,7 @@ class SingleEventSource implements IHolderSource {
             }
         }
         foreach ($this->primaryModels as $primaryPK => $primaryModel) {
-            /** @var EventDispatchFactory $factory */
-            $factory = $this->container->getByType(EventDispatchFactory::class);
-            $holder = $factory->getDummyHolder($this->event);
+            $holder = $this->eventDispatchFactory->getDummyHolder($this->event);
             $holder->setModel($primaryModel, isset($cache[$primaryPK]) ? $cache[$primaryPK] : []);
             $this->holders[$primaryPK] = $holder;
         }

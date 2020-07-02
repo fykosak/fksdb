@@ -139,7 +139,8 @@ class AccountManager {
     /**
      * @param ModelLogin $login
      * @param string|null $lang
-     * @throws \Exception
+     * @return void
+     * @throws BadRequestException
      */
     public function sendRecovery(ModelLogin $login, string $lang = null) {
         $person = $login->getPerson();

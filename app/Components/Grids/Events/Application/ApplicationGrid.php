@@ -2,14 +2,16 @@
 
 namespace FKSDB\Components\Grids\Events\Application;
 
-use Exception;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEventParticipant;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Database\Table\Selection;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 
 /**
  * Class ApplicationGrid
@@ -19,9 +21,12 @@ class ApplicationGrid extends AbstractApplicationGrid {
 
     /**
      * @param Presenter $presenter
-     * @throws DuplicateColumnException
+     * @return void
      * @throws DuplicateButtonException
-     * @throws Exception
+     * @throws DuplicateColumnException
+     * @throws BadTypeException
+     * @throws InvalidLinkException
+     * @throws DuplicateGlobalButtonException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);

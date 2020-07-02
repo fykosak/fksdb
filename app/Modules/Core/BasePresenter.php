@@ -2,7 +2,6 @@
 
 namespace FKSDB\Modules\Core;
 
-use Exception;
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Application\IStylesheetCollector;
 use FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs;
@@ -163,7 +162,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * @return void
-     * @throws Exception
+     * @throws BadRequestException
      */
     protected function startup() {
         parent::startup();

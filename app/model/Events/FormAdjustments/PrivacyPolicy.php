@@ -2,11 +2,14 @@
 
 namespace FKSDB\Events\FormAdjustments;
 
+use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Events\Processings\IProcessing;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServicePersonInfo;
 use FKSDB\Utils\FormUtils;
@@ -49,7 +52,10 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
      * @param Form $form
      * @param Machine $machine
      * @param Holder $holder
-     * @throws \Exception
+     * @return void
+     * @throws AbstractColumnException
+     * @throws OmittedControlException
+     * @throws BadTypeException
      */
     public function adjust(Form $form, Machine $machine, Holder $holder) {
         if ($holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT) {
@@ -70,7 +76,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
      * @param Holder $holder
      * @param ILogger $logger
      * @param Form|null $form
-     * @throws \Exception
+     * @return void
      */
     public function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
         $this->trySetAgreed($values);
@@ -78,7 +84,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
 
     /**
      * @param ArrayHash $values
-     * @throws \Exception
+     * @return void
      */
     private function trySetAgreed(ArrayHash $values) {
         foreach ($values as $key => $value) {

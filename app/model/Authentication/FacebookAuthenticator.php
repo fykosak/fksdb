@@ -12,7 +12,6 @@ use FKSDB\ORM\Services\ServicePersonInfo;
 use FKSDB\YearCalculator;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\AuthenticationException;
-use Nette\Security\Identity;
 use Tracy\Debugger;
 
 /**
@@ -54,10 +53,9 @@ class FacebookAuthenticator extends AbstractAuthenticator {
 
     /**
      * @param array $fbUser
-     * @return Identity
+     * @return AbstractModelSingle|ModelLogin
      * @throws AuthenticationException
      * @throws InactiveLoginException
-     * @throws \Exception
      */
     public function authenticate(array $fbUser) {
         $person = $this->findPerson($fbUser);
@@ -103,9 +101,8 @@ class FacebookAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @param $fbUser
-     * @return AbstractModelSingle|ModelLogin
-     * @throws \Exception
+     * @param string $fbUser
+     * @return ModelLogin
      */
     private function registerFromFB($fbUser): ModelLogin {
         $this->servicePerson->getConnection()->beginTransaction();
@@ -119,7 +116,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
     /**
      * @param ModelPerson $person
      * @param $fbUser
-     * @throws \Exception
+     * @return void
      */
     private function updateFromFB(ModelPerson $person, $fbUser) {
         $this->servicePerson->getConnection()->beginTransaction();

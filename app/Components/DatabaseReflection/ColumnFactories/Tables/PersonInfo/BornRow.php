@@ -21,11 +21,6 @@ class BornRow extends AbstractColumnFactory {
         return _('Datum narození');
     }
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     * @throws \Exception
-     */
     public function createField(...$args): BaseControl {
         $control = new WriteOnlyDatePicker($this->getTitle());
         $control->setDefaultValue((new \DateTime())->modify('-16 years'));

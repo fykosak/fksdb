@@ -124,6 +124,7 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @param Form $form
      * @return void
      * @throws AbstractColumnException
+     * @throws BadTypeException
      * @throws OmittedControlException
      */
     protected function configureForm(Form $form) {

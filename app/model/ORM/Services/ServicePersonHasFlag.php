@@ -47,8 +47,7 @@ class ServicePersonHasFlag extends AbstractServiceSingle {
      * @param IModel $model
      * @param array $data
      * @param bool $alive
-     * @return void
-     * @throws \Exception
+     * @return mixed|void
      */
     public function updateModel(IModel $model, $data, $alive = true) {
         if ($data === null) {

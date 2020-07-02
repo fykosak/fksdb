@@ -2,6 +2,8 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
+use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Events\EventsExtension;
 use FKSDB\Events\Machine\BaseMachine;
@@ -11,7 +13,10 @@ use FKSDB\Events\Model\Holder\Field;
 use FKSDB\Events\Model\PersonContainerResolver;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Services\ServicePerson;
+use Nette\Application\BadRequestException;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container as DIContainer;
@@ -113,8 +118,13 @@ class PersonFactory extends AbstractFactory {
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
-     * @return ReferencedContainer
-     * @throws \Exception
+     * @return IComponent
+     * @throws JsonException
+     * @throws AbstractColumnException
+     * @throws OmittedControlException
+     * @throws BadTypeException
+     * @throws NotImplementedException
+     * @throws BadRequestException
      */
     protected function createComponent(Field $field, BaseMachine $machine, Container $container): IComponent {
         $searchType = $this->evaluator->evaluate($this->searchType, $field);

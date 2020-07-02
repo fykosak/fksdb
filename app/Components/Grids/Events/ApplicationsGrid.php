@@ -70,6 +70,8 @@ class ApplicationsGrid extends BaseComponent {
     private $searchable = false;
     /** @var bool */
     private $attachedJS = false;
+    /** @var EventDispatchFactory */
+    private $eventDispatchFactory;
 
     /**
      * ApplicationsGrid constructor.
@@ -104,6 +106,14 @@ class ApplicationsGrid extends BaseComponent {
     }
 
     /**
+     * @param EventDispatchFactory $eventDispatchFactory
+     * @return void
+     */
+    public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory) {
+        $this->eventDispatchFactory = $eventDispatchFactory;
+    }
+
+    /**
      * @return bool
      */
     public function isSearchable() {
@@ -129,9 +139,7 @@ class ApplicationsGrid extends BaseComponent {
             $event = $holder->getPrimaryHolder()->getEvent();
             $this->eventApplications[$key] = $event;
             $this->holders[$key] = $holder;
-            /** @var EventDispatchFactory $factory */
-            $factory = $this->getContext()->getByType(EventDispatchFactory::class);
-            $this->machines[$key] = $factory->getEventMachine($event);
+            $this->machines[$key] = $this->eventDispatchFactory->getEventMachine($event);
             $this->handlers[$key] = $this->handlerFactory->create($event, new MemoryLogger()); //TODO it's a bit weird to create new logger for each handler
         }
     }

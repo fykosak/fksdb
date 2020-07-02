@@ -72,6 +72,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
 
     /**
      * @param Machine $machine
+     * @return void
      * @throws BadRequestException
      * @throws Exception
      */
@@ -99,6 +100,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
 
     /**
      * @param PaymentMachine $machine
+     * @return void
      * @throws Exception
      */
     private function addTransitionNewToWaiting(PaymentMachine $machine) {

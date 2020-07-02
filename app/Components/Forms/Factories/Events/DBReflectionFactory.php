@@ -51,13 +51,6 @@ class DBReflectionFactory extends AbstractFactory {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    /**
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return BaseControl
-     * @throws \Exception
-     */
     protected function createComponent(Field $field, BaseMachine $machine, Container $container): IComponent {
         $element = null;
         try {

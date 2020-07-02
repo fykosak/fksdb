@@ -15,7 +15,7 @@ use PDOException;
 
 /**
  * Class Handler
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Handler {
     /**

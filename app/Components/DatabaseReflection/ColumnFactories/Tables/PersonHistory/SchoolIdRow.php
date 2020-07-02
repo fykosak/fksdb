@@ -5,7 +5,6 @@ namespace FKSDB\Components\DatabaseReflection\PersonHistory;
 use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
-use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPersonHistory;

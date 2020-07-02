@@ -2,6 +2,7 @@
 
 namespace FKSDB\Modules\PublicModule;
 
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
@@ -22,6 +23,7 @@ use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
+use Nette\Utils\JsonException;
 use Persons\ExtendedPersonHandler;
 use Persons\ExtendedPersonHandlerFactory;
 use Persons\IExtendedPersonPresenter;
@@ -296,7 +298,8 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     /**
      * @return FormControl
      * @throws BadRequestException
-     * @throws \Exception
+     * @throws BadTypeException
+     * @throws JsonException
      */
     protected function createComponentContestantForm(): FormControl {
         $control = new FormControl();

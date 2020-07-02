@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Services\Schedule;
 
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyDBTrait;
@@ -28,10 +29,11 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
 
 
     /**
-     * @param ArrayHash $data
+     * @param $data
      * @param ModelPayment $payment
+     * @return void
      * @throws DuplicatePaymentException
-     * @throws \Exception
+     * @throws NotImplementedException
      */
     public function prepareAndUpdate($data, ModelPayment $payment) {
         $oldRows = $this->getTable()->where('payment_id', $payment->payment_id);

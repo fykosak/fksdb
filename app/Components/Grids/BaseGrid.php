@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Grids;
 
-use Exception;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
@@ -304,8 +303,8 @@ abstract class BaseGrid extends Grid {
      * @param string $linkId
      * @param bool $checkACL
      * @return Button
+     * @throws BadTypeException
      * @throws DuplicateButtonException
-     * @throws Exception
      */
     protected function addLink(string $linkId, bool $checkACL = false): Button {
         $factory = $this->tableReflectionFactory->loadLinkFactory($linkId);
