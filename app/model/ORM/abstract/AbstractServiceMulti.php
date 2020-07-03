@@ -81,12 +81,24 @@ abstract class AbstractServiceMulti implements IService {
 
     /**
      * @param IModel|AbstractModelMulti $model
-     * @param $data
+     * @param array $data
+     * @return bool
      */
-    public function updateModel2(IModel $model, array $data) {
+    public function updateModel2(IModel $model, array $data): bool {
         $this->checkType($model);
         $this->getMainService()->updateModel2($model->getMainModel(), $data);
-        $this->getJoinedService()->updateModel2($model->getJoinedModel(), $data);
+        return $this->getJoinedService()->updateModel2($model->getJoinedModel(), $data);
+    }
+
+    /**
+     * @param AbstractModelMulti|IModel $model
+     * @throws InvalidArgumentException
+     */
+    private function checkType(AbstractModelMulti $model) {
+        $modelClassName = $this->getModelClassName();
+        if (!$model instanceof $modelClassName) {
+            throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
+        }
     }
 
     /**
@@ -155,17 +167,6 @@ abstract class AbstractServiceMulti implements IService {
         $selection->select("$mainTable.*");
 
         return $selection;
-    }
-
-    /**
-     * @param IModel $model
-     * @throws InvalidArgumentException
-     */
-    protected function checkType(IModel $model) {
-        $className = $this->getModelClassName();
-        if (!$model instanceof $className) {
-            throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
-        }
     }
 
     abstract public function getJoiningColumn(): string;

@@ -59,7 +59,7 @@ abstract class AbstractFactory implements IFieldFactory {
                     $conditioned = $conditioned->addConditionOn($control, Form::FILLED);
                 }
             }
-            $conditioned->addRule(Form::FILLED, sprintf(_('%s je povinná položka.'), $field->getLabel()));
+            $conditioned->addRule(Form::FILLED, sprintf(_('%s is required.'), $field->getLabel()));
         }
     }
 
@@ -70,7 +70,7 @@ abstract class AbstractFactory implements IFieldFactory {
      */
     public function validate(Field $field, DataValidator $validator) {
         if ($field->isRequired() && ($field->getValue() === '' || $field->getValue() === null)) {
-            $validator->addError(sprintf(_('%s je povinná položka.'), $field->getLabel()));
+            $validator->addError(sprintf(_('%s is required'), $field->getLabel()));
         }
     }
 

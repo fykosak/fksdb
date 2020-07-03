@@ -16,7 +16,7 @@ class Address extends AbstractStalkingComponent {
      * @return void
      */
     public function render(ModelPerson $person, int $userPermissions) {
-        $this->beforeRender($person, _('Address'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
+        $this->beforeRender($person, _('Addresses'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
         $this->template->MAddress = $person->getMPostContacts();
         $this->template->setFile(__DIR__ . '/address.latte');
         $this->template->render();

@@ -109,7 +109,7 @@ class HandoutForm extends BaseComponent {
 
         $connection->commit();
 
-        $this->getPresenter()->flashMessage(_('Přiřazení opravovatelů uloženo.'), Message::LVL_SUCCESS);
+        $this->getPresenter()->flashMessage(_('Handout saved.'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('this');
     }
 

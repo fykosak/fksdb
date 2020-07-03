@@ -339,7 +339,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
     /**
      * @param ModelMPostContact[] $models
      */
-    private function preparePostContactModels(&$models) {
+    private function preparePostContactModels(array $models) {
         if ($models[self::POST_CONTACT_PERMANENT]->isNew()) {
             $data = $models[self::POST_CONTACT_DELIVERY]->toArray();
             unset($data['post_contact_id']);
@@ -381,7 +381,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param $models
      * @throws ModelException
      */
-    private function prepareFlagModels(ModelPerson $person, ArrayHash &$data,array &$models) {
+    private function prepareFlagModels(ModelPerson $person, ArrayHash &$data, array &$models) {
         if (!isset($data['person_has_flag'])) {
             return;
         }
@@ -403,7 +403,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param ArrayHash $data
      * @param IService[]|AbstractServiceSingle[]|AbstractServiceMulti[] $services
      */
-    private function prepareFlagServices(ArrayHash &$data, &$services) {
+    private function prepareFlagServices(ArrayHash $data, array &$services) {
         if (!isset($data['person_has_flag'])) {
             return;
         }

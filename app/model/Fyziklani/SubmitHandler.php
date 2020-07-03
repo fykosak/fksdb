@@ -10,7 +10,6 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Database\Table\ActiveRow;
-use Nette\DI\Container;
 use Nette\Security\User;
 
 /**

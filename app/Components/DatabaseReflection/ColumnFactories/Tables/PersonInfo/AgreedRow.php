@@ -18,7 +18,7 @@ use Nette\Utils\Html;
 class AgreedRow extends AbstractColumnFactory {
 
     public function getTitle(): string {
-        return _('Souhlasím se zpracováním osobních údajů');
+        return _('I agree with the privacy policy');
     }
 
     /**
@@ -28,7 +28,7 @@ class AgreedRow extends AbstractColumnFactory {
     public function createField(...$args): BaseControl {
         $control = new Checkbox($this->getTitle());
         $link = Html::el('a');
-        $link->setText(_('Text souhlasu'));
+        $link->setText(_('Agreement'));
         $link->addAttributes(['href' => _('http://fykos.cz/doc/souhlas.pdf'),
                               'target' => '_blank']);
         $control->setOption('description', $link);

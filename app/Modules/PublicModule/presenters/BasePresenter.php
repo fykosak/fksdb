@@ -11,9 +11,6 @@ use FKSDB\ORM\Models\ModelRole;
 use Nette\Application\BadRequestException;
 
 /**
- * Current year of FYKOS.
- *
- * @todo Contest should be from URL and year should be current.
  *
  * @author Michal Koutný <michal@fykos.cz>
  */

@@ -89,7 +89,7 @@ class SchoolForm extends AbstractEntityFormControl implements IEditEntityForm {
             $this->create ? $this->handleCreateSuccess($data) : $this->handleEditSuccess($data);
             $connection->commit();
 
-            $this->getPresenter()->flashMessage($this->create ? _('School has benn created') : _('School has benn updated'), BasePresenter::FLASH_SUCCESS);
+            $this->getPresenter()->flashMessage($this->create ? _('School has been created') : _('School has been updated'), BasePresenter::FLASH_SUCCESS);
             $this->getPresenter()->redirect('list');
         } catch (ModelException $exception) {
             $connection->rollBack();

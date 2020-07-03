@@ -57,7 +57,7 @@ class ServicePersonHasFlag extends AbstractServiceSingle {
         parent::updateModel($model, $data);
     }
 
-    public function updateModel2(AbstractModelSingle $model, array $data): bool {
+    public function updateModel2(IModel $model, array $data): bool {
         $data['modified'] = new DateTime();
         return parent::updateModel2($model, $data);
     }

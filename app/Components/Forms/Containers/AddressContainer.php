@@ -31,7 +31,7 @@ class AddressContainer extends ModelContainer {
     }
 
     /**
-     * Used for substituing form's IControl (via duck-typing).
+     * Used for substituting form's IControl (via duck-typing).
      *
      * @param \Traversable $value
      */
@@ -40,7 +40,7 @@ class AddressContainer extends ModelContainer {
     }
 
     /**
-     * Used for substituing form's IControl (via duck-typing).
+     * Used for substituting form's IControl (via duck-typing).
      *
      * @param \Traversable $value
      */

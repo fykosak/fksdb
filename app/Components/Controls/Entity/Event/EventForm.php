@@ -164,7 +164,7 @@ class EventForm extends AbstractEntityFormControl implements IEditEntityForm {
                 $control->addError($exception->getMessage());
                 return false;
             }
-        }, _('Parametry nesplňují Neon schéma'));
+        }, _('Parameters does not fulfill the Neon scheme'));
     }
 
 

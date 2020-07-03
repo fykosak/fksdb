@@ -129,7 +129,7 @@ class AccountManager {
         ];
         $data = [];
         $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation($person->getPreferredLang() ?: $lang, $templateParams);
-        $data['subject'] = _('Založení účtu');
+        $data['subject'] = _('Create an account');
         $data['sender'] = $this->getEmailFrom();
         $data['recipient'] = $email;
         $this->serviceEmailMessage->addMessageToSend($data);
@@ -166,7 +166,7 @@ class AccountManager {
         ];
         $data = [];
         $data['text'] = (string)$this->mailTemplateFactory->createPasswordRecovery($lang, $templateParams);
-        $data['subject'] = _('Obnova hesla');
+        $data['subject'] = _('Password recovery');
         $data['sender'] = $this->getEmailFrom();
         $data['recipient'] = $recoveryAddress;
 

@@ -132,7 +132,7 @@ abstract class AbstractProcessing implements IProcessing {
     final protected function isBaseReallyEmpty($name) {
         $baseHolder = $this->holder->getBaseHolder($name);
         if ($baseHolder->getModelState() == BaseMachine::STATE_INIT) {
-            return true; // it was empty since begining
+            return true; // it was empty since beginning
         }
         if (isset($this->states[$name]) && $this->states[$name] == BaseMachine::STATE_TERMINATED) {
             return true; // it has been deleted by user

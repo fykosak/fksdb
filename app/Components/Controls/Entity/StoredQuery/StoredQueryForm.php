@@ -59,7 +59,7 @@ class StoredQueryForm extends AbstractEntityFormControl implements IEditEntityFo
         try {
             $this->create ? $this->handleCreateSuccess($form) : $this->handleEditSuccess($form);
         } catch (ModelException $exception) {
-            $this->flashMessage(_('Chyba při ukládání do databáze.'), Message::LVL_DANGER);
+            $this->flashMessage(_('Database error (store).'), Message::LVL_DANGER);
             Debugger::log($exception);
         }
     }
@@ -212,7 +212,7 @@ class StoredQueryForm extends AbstractEntityFormControl implements IEditEntityFo
             $values[self::CONT_PARAMS_META][] = $paramData;
         }
         if ($model->php_post_proc) {
-            $this->flashMessage(_('Výsledek dotazu je ještě zpracován v PHP. Dodržuj názvy sloupců a parametrů.'), BasePresenter::FLASH_WARNING);
+            $this->flashMessage(_('Query result is still processed by PHP. Stick to the correct names of columns and parameters.'), BasePresenter::FLASH_WARNING);
         }
         $this->getForm()->setDefaults($values);
     }
