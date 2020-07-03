@@ -172,6 +172,14 @@ class MailSender {
             'machine' => $machine,
             'baseMachine' => $baseMachine,
             'baseHolder' => $baseHolder,
+            'linkArgs' => [
+                '//:Public:Application:',
+                [
+                    'eventId' => $event->event_id,
+                    'contestId' => $event->getEventType()->contest_id,
+                    'at' => $token->token,
+                ],
+            ],
         ];
         $template = $this->mailTemplateFactory->createWithParameters($filename, null, $templateParams);
 
