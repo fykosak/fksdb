@@ -116,7 +116,7 @@ class EventOrgForm extends AbstractEntityFormControl implements IEditEntityForm 
      */
     protected function handleEditSuccess(array $data) {
         $this->getORMService()->updateModel2($this->model, $data);
-        $this->getPresenter()->flashMessage(_('Org has been updated'), Message::LVL_SUCCESS);
+        $this->getPresenter()->flashMessage(_('Event org has been updated'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 

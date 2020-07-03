@@ -4,6 +4,7 @@ namespace FKSDB\Components\Controls\Stalking\StalkingComponent;
 
 use FKSDB\Components\Controls\Stalking\StalkingControl;
 use FKSDB\Components\Controls\Stalking\StalkingService;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\BadRequestException;
 use FKSDB\Exceptions\NotImplementedException;
@@ -81,7 +82,7 @@ class StalkingComponent extends StalkingControl {
     }
 
     /**
-     * @param array $definition
+     * @param mixed[]|AbstractModelSingle[] $definition
      * @param ModelPerson $person
      * @return void
      */
@@ -91,11 +92,7 @@ class StalkingComponent extends StalkingControl {
         foreach ($query as $datum) {
             $models[] = ($definition['model'])::createFromActiveRow($datum);
         }
-        $this->template->links = array_map(function ($link) {
-            $factory = $this->tableReflectionFactory->loadLinkFactory($link);
-            $factory->setComponent($this);
-            return $factory;
-        }, $definition['links']);
+        $this->template->links = $definition['links'];
         $this->template->rows = $definition['rows'];
         $this->template->models = $models;
         $this->template->itemHeadline = $definition['itemHeadline'];

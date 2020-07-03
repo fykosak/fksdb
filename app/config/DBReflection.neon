@@ -35,7 +35,7 @@ DBReflection:
              referencedAccess:
                 modelClassName: FKSDB\ORM\Models\IEventReferencedModel
                 method: getEvent
-             factories:
+             columnFactories:
                 event:
                     type: string
                     title: _(Event)
@@ -84,12 +84,14 @@ DBReflection:
                 event_type: FKSDB\Components\DatabaseReflection\Event\EventTypeRow
                 event_type_id: FKSDB\Components\DatabaseReflection\Event\EventTypeRow
                 event_link: FKSDB\Components\DatabaseReflection\Event\EventLink
+             linkFactories:
+                 application.list: FKSDB\Components\DatabaseReflection\LinkFactories\ParticipantListLink
          payment:
              modelClassName: FKSDB\ORM\Models\ModelPayment
              referencedAccess:
                   modelClassName: FKSDB\ORM\Models\IPaymentReferencedModel
                   method: getPayment
-             factories:
+             columnFactories:
                  payment: FKSDB\Components\DatabaseReflection\Payment\PaymentColumnFactory
                  payment_uid: FKSDB\Components\DatabaseReflection\Payment\UIdRow
                  bank_account:
@@ -125,9 +127,16 @@ DBReflection:
                          canceled: [badge: 'badge badge-secondary', label: 'Payment canceled']
                          received: [badge: 'badge badge-success', label: 'Payment received']
                          new: [badge: 'badge badge-primary', label: 'New payment']
+             linkFactories:
+                 detail:
+                      destination: ':Event:Payment:detail'
+                      params:
+                          eventId: event_id
+                          id: payment_id
+                      title: Detail
          org:
              modelClassName: FKSDB\ORM\Models\ModelOrg
-             factories:
+             columnFactories:
                 org_id:
                     type: primaryKey
                     title: _(Org Id)
@@ -143,12 +152,25 @@ DBReflection:
                 role:
                     type: string
                     title: Role
+             linkFactories:
+                 detail:
+                    destination: ':Org:Org:detail'
+                    params:
+                        contestId: contest_id
+                        id: org_id
+                    title: Detail
+                 edit:
+                    destination: ':Org:Org:edit'
+                    params:
+                        contestId: contest_id
+                        id: org_id
+                    title: Edit
          person:
              modelClassName: FKSDB\ORM\Models\ModelPerson
              referencedAccess:
                 modelClassName: FKSDB\ORM\Models\IPersonReferencedModel
                 method: getPerson
-             factories:
+             columnFactories:
                 person_link: FKSDB\Components\DatabaseReflection\Person\PersonLinkRow
                 full_name: FKSDB\Components\DatabaseReflection\Person\FullNameRow
                 person_id:
@@ -179,7 +201,7 @@ DBReflection:
                     permission: BASIC
          person_info:
              modelClassName: FKSDB\ORM\Models\ModelPersonInfo
-             factories:
+             columnFactories:
                 email: FKSDB\Components\DatabaseReflection\PersonInfo\EmailRow
                 health_insurance: FKSDB\Components\DatabaseReflection\PersonInfo\HealthInsuranceRow
                 citizenship: FKSDB\Components\DatabaseReflection\PersonInfo\CitizenshipRow
@@ -253,7 +275,8 @@ DBReflection:
 
          person_history:
              modelClassName: FKSDB\ORM\Models\ModelPersonHistory
-             factories:
+             columnFactories:
+                school_id: FKSDB\Components\DatabaseReflection\PersonHistory\SchoolIdRow
                 ac_year: FKSDB\Components\DatabaseReflection\PersonHistory\AcYearRow
                 study_year: FKSDB\Components\DatabaseReflection\PersonHistory\StudyYearRow
                 class:
@@ -262,7 +285,7 @@ DBReflection:
                     permissions: RESTRICT
          login:
              modelClassName: FKSDB\ORM\Models\ModelLogin
-             factories:
+             columnFactories:
                 login_id:
                     type: primaryKey
                     title: _(login Id)
@@ -276,7 +299,7 @@ DBReflection:
                     permission: RESTRICT
          event_participant:
              modelClassName: FKSDB\ORM\Models\ModelEventParticipant
-             factories:
+             columnFactories:
                 team: FKSDB\Components\DatabaseReflection\EventParticipant\TeamRow
                 status:
                     type: state
@@ -316,18 +339,27 @@ DBReflection:
                 event_participant_id:
                     type: primaryKey
                     title:  _(Event participant Id)
+             linkFactories:
+                   detail: FKSDB\Components\DatabaseReflection\LinkFactories\ParticipantDetailLink
          contestant_base:
              modelClassName: FKSDB\ORM\Models\ModelContestant
-             factories:
+             columnFactories:
                 ct_id:
                     type: primaryKey
                     title: _(Contestant Id)
                 year:
                     type: string
                     title: _(Year)
+             linkFactories:
+                 edit:
+                    destination: ':Org:Contestant:edit'
+                    params:
+                        contestId: contest_id
+                        id: ct_id
+                    title: Edit
          event_org:
              modelClassName: FKSDB\ORM\Models\ModelEventOrg
-             factories:
+             columnFactories:
                 event_org_id:
                     accessKey: e_org_id
                     type: primaryKey
@@ -335,9 +367,16 @@ DBReflection:
                 note:
                     type: string
                     title: _(Note)
+             linkFactories:
+                 edit:
+                    destination: ':Event:Eventorg:edit'
+                    params:
+                        eventId: event_id
+                        id: e_org_id
+                    title: Edit
          email_message:
              modelClassName: FKSDB\ORM\Models\ModelEmailMessage
-             factories:
+             columnFactories:
                 email_message_id:
                     type: primaryKey
                     title: _(Message Id)
@@ -376,7 +415,7 @@ DBReflection:
              #send:
          fyziklani_submit:
              modelClassName: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit
-             factories:
+             columnFactories:
                 fyziklani_submit_id:
                     type: primaryKey
                     title: _(Submit Id)
@@ -400,7 +439,7 @@ DBReflection:
              referencedAccess:
                 modelClassName: FKSDB\ORM\Models\IFyziklaniTaskReferencedModel
                 method: getFyziklaniTask
-             factories:
+             columnFactories:
                 fyziklani_task_id:
                     type: primaryKey
                     title: _(Task Id)
@@ -412,7 +451,7 @@ DBReflection:
                     title: _(Label)
          fyziklani_game_setup:
              modelClassName: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup
-             factories:
+             columnFactories:
                 tasks_on_board:
                     type: string
                     title: Tasks on board
@@ -441,7 +480,7 @@ DBReflection:
              referencedAccess:
                  modelClassName: FKSDB\ORM\Models\IFyziklaniTeamReferencedModel
                  method: getFyziklaniTeam
-             factories:
+             columnFactories:
                 e_fyziklani_team_id:
                   type: primaryKey
                   title: _(Team Id)
@@ -484,14 +523,21 @@ DBReflection:
                 name: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NameRow
                 name_n_id: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NameNIdRow
                 opened_submitting: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\OpenedSubmittingRow
+             linkFactories:
+                detail:
+                    destination: ':Event:TeamApplication:detail'
+                    params:
+                       eventId: event_id
+                       id: e_fyziklani_team_id
+                    title: Detail
          stored_query:
              modelClassName: FKSDB\ORM\Models\StoredQuery\ModelStoredQuery
-             factories:
+             columnFactories:
                 qid: FKSDB\Components\DatabaseReflection\StoredQuery\StoredQuery\QIDRow
                 tags: FKSDB\Components\DatabaseReflection\StoredQuery\StoredQuery\TagsRow
          schedule_group:
              modelClassName: FKSDB\ORM\Models\Schedule\ModelScheduleGroup
-             factories:
+             columnFactories:
                 schedule_group_type: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleGroup\ScheduleGroupTypeRow
                 start:
                     type: dateTime
@@ -510,7 +556,7 @@ DBReflection:
              referencedAccess:
                 modelClassName: FKSDB\ORM\Models\IScheduleItemReferencedModel
                 method: getScheduleItem
-             factories:
+             columnFactories:
                 require_id_number:
                     type: logic
                     title: _(Require Id number)
@@ -536,7 +582,7 @@ DBReflection:
                 used_capacity: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\UsedCapacityRow
          teacher:
              modelClassName: FKSDB\ORM\Models\ModelTeacher
-             factories:
+             columnFactories:
                 state: FKSDB\Components\DatabaseReflection\Tables\Teacher\StateRow
                 since: FKSDB\Components\DatabaseReflection\Tables\Teacher\SinceRow
                 until: FKSDB\Components\DatabaseReflection\Tables\Teacher\UntilRow
@@ -549,7 +595,7 @@ DBReflection:
                     title: _(Note)
          task_contribution:
              modelClassName: FKSDB\ORM\Models\ModelTaskContribution
-             factories:
+             columnFactories:
                  type:
                     type: string
                     title: _(Type)
@@ -558,7 +604,7 @@ DBReflection:
              referencedAccess:
                 modelClassName: FKSDB\ORM\Models\ITaskReferencedModel
                 method: getTask
-             factories:
+             columnFactories:
                  fq_name: FKSDB\Components\DatabaseReflection\Tables\Task\FQNameRow
                  series:
                     type: string
@@ -583,57 +629,18 @@ DBReflection:
              referencedAccess:
                 modelClassName: FKSDB\ORM\Models\IContestReferencedModel
                 method: getContest
-             factories:
-                 contestBadge: FKSDB\Components\DatabaseReflection\Contest\ContestColumnFactory
+             columnFactories:
+                 contest: FKSDB\Components\DatabaseReflection\Contest\ContestColumnFactory
          school:
              modelClassName: FKSDB\ORM\Models\ModelSchool
              referencedAccess:
                 modelClassName: FKSDB\ORM\Models\ISchoolReferencedModel
                 method: getSchool
-             factories:
+             columnFactories:
                  school:
                      type: string
                      title: _(School)
                      accessKey: name_abbrev
-
-    links:
-        payment.detail:
-            destination: ':Event:Payment:detail'
-            params:
-                eventId: event_id
-                id: payment_id
-            title: Detail
-            model: FKSDB\ORM\Models\ModelPayment
-        org.detail:
-            destination: ':Org:Org:detail'
-            params:
-                contestId: contest_id
-                id: org_id
-            title: Detail
-            model: FKSDB\ORM\Models\ModelOrg
-        org.edit:
-            destination: ':Org:Org:edit'
-            params:
-                contestId: contest_id
-                id: org_id
-            title: Edit
-            model: FKSDB\ORM\Models\ModelOrg
-        contestatnt_base.edit:
-            destination: ':Org:Contestant:edit'
-            params:
-                contestId: contest_id
-                id: ct_id
-            title: Edit
-            model: FKSDB\ORM\Models\ModelContestant
-        event_participant.detail: FKSDB\Components\DatabaseReflection\LinkFactories\ParticipantDetailLink
-        event_participant.list: FKSDB\Components\DatabaseReflection\LinkFactories\ParticipantListLink
-        fyziklani_team.detail:
-            destination: ':Event:TeamApplication:detail'
-            params:
-                eventId: event_id
-                id: e_fyziklani_team_id
-            title: Detail
-            model: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
     details:
         fyziklani.submit:
             -

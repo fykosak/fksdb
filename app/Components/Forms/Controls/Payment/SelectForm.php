@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls\Payment;
 
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
@@ -17,6 +18,7 @@ use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Payment\Handler\EmptyDataException;
 use FKSDB\Payment\Transition\PaymentMachine;
+use FKSDB\Transitions\UnavailableTransitionsException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -173,8 +175,10 @@ class SelectForm extends BaseComponent {
      * @param bool $create
      * @return void
      * @throws AbortException
+     * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws \Exception
+     * @throws NotImplementedException
+     * @throws UnavailableTransitionsException
      */
     private function handleSubmit(Form $form, bool $create) {
         $values = $form->getValues();

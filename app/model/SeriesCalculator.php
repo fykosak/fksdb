@@ -32,11 +32,6 @@ class SeriesCalculator {
         $this->yearCalculator = $yearCalculator;
     }
 
-    /**
-     * @param ModelContest $contest
-     * @return int
-     * @throws \Exception
-     */
     public function getCurrentSeries(ModelContest $contest): int {
         $year = $this->yearCalculator->getCurrentYear($contest);
         $currentSeries = $this->serviceTask->getTable()->where([

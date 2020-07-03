@@ -4,10 +4,11 @@ namespace FKSDB\Components\Controls\Entity\Person;
 
 use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
+use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Components\Forms\Factories\AddressFactory;
-use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Components\Forms\Factories\PersonInfoFactory;
+use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Config\GlobalParameters;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\ModelException;
@@ -43,13 +44,9 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
     const PERSON_CONTAINER = 'person';
     const PERSON_INFO_CONTAINER = 'person_info';
     /**
-     * @var PersonFactory
+     * @var SingleReflectionFormFactory
      */
-    protected $personFactory;
-    /**
-     * @var PersonInfoFactory
-     */
-    protected $personInfoFactory;
+    protected $singleReflectionFormFactory;
     /**
      * @var AddressFactory
      */
@@ -97,8 +94,7 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
 
     /**
      * @param GlobalParameters $globalParameters
-     * @param PersonFactory $personFactory
-     * @param PersonInfoFactory $personInfoFactory
+     * @param SingleReflectionFormFactory $singleReflectionFormFactory
      * @param ServicePerson $servicePerson
      * @param ServicePersonInfo $servicePersonInfo
      * @param AddressFactory $addressFactory
@@ -108,17 +104,15 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
      */
     public function injectFactories(
         GlobalParameters $globalParameters,
-        PersonFactory $personFactory,
-        PersonInfoFactory $personInfoFactory,
+        SingleReflectionFormFactory $singleReflectionFormFactory,
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,
         AddressFactory $addressFactory,
         ServicePostContact $servicePostContact,
         ServiceAddress $serviceAddress
     ) {
-        $this->personFactory = $personFactory;
         $this->globalParameters = $globalParameters;
-        $this->personInfoFactory = $personInfoFactory;
+        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
         $this->addressFactory = $addressFactory;
@@ -129,17 +123,17 @@ class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
     /**
      * @param Form $form
      * @return void
-     * @throws \Exception
+     * @throws AbstractColumnException
+     * @throws BadTypeException
+     * @throws OmittedControlException
      */
     protected function configureForm(Form $form) {
         $fields = $this->globalParameters['common']['editPerson'];
         foreach ($fields as $table => $rows) {
             switch ($table) {
                 case self::PERSON_INFO_CONTAINER:
-                    $control = $this->personInfoFactory->createContainerWithMetadata($rows, $this->userPermission);
-                    break;
                 case self::PERSON_CONTAINER:
-                    $control = $this->personFactory->createContainerWithMetadata($rows, $this->userPermission);
+                    $control = $this->singleReflectionFormFactory->createContainerWithMetadata($table, $rows, $this->userPermission);
                     break;
                 case self::POST_CONTACT_DELIVERY:
                 case self::POST_CONTACT_PERMANENT:

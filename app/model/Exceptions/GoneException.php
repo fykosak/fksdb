@@ -7,7 +7,7 @@ use Nette\Http\Response;
 
 /**
  * Class GoneException
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class GoneException extends BadRequestException {
     /**

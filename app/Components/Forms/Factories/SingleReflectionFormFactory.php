@@ -2,18 +2,20 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
+use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\Components\DatabaseReflection\ColumnFactories\IColumnFactory;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Exceptions\BadTypeException;
 use Nette\Forms\Controls\BaseControl;
-use Nette\InvalidStateException;
 
 /**
  * Class SingleReflectionFactory
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class SingleReflectionFactory {
+class SingleReflectionFormFactory {
     /**
      * @var TableReflectionFactory
      */
@@ -27,55 +29,61 @@ abstract class SingleReflectionFactory {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    abstract protected function getTableName(): string;
-
     /**
+     * @param string $tableName
      * @param string $fieldName
      * @return IColumnFactory
-     * @throws InvalidStateException
-     * @throws \Exception
+     * @throws BadTypeException
      */
-    protected function loadFactory(string $fieldName): IColumnFactory {
-        return $this->tableReflectionFactory->loadColumnFactory($this->getTableName() . '.' . $fieldName);
+    protected function loadFactory(string $tableName, string $fieldName): IColumnFactory {
+        return $this->tableReflectionFactory->loadColumnFactory($tableName . '.' . $fieldName);
     }
 
     /**
+     * @param string $tableName
      * @param string $fieldName
-     * @param array $args
+     * @param mixed ...$args
      * @return BaseControl
-     * @throws \Exception
+     * @throws AbstractColumnException
+     * @throws OmittedControlException
+     * @throws BadTypeException
      */
-    public function createField(string $fieldName, ...$args): BaseControl {
-        return $this->loadFactory($fieldName)->createField(...$args);
+    public function createField(string $tableName, string $fieldName, ...$args): BaseControl {
+        return $this->loadFactory($tableName, $fieldName)->createField(...$args);
     }
 
     /**
+     * @param string $table
      * @param array $fields
      * @return ModelContainer
-     * @throws \Exception
+     * @throws AbstractColumnException
+     * @throws OmittedControlException
+     * @throws BadTypeException
      */
-    public function createContainer(array $fields): ModelContainer {
+    public function createContainer(string $table, array $fields): ModelContainer {
         $container = new ModelContainer();
 
         foreach ($fields as $field) {
-            $control = $this->createField($field);
+            $control = $this->createField($table, $field);
             $container->addComponent($control, $field);
         }
         return $container;
     }
 
     /**
+     * @param string $table
      * @param array $fields
      * @param FieldLevelPermission $userPermissions
      * @return ModelContainer
-     * @throws \Exception
+     * @throws AbstractColumnException
+     * @throws BadTypeException
+     * @throws OmittedControlException
      */
-    public function createContainerWithMetadata(array $fields, FieldLevelPermission $userPermissions): ModelContainer {
+    public function createContainerWithMetadata(string $table, array $fields, FieldLevelPermission $userPermissions): ModelContainer {
         $container = new ModelContainer();
         foreach ($fields as $field => $metadata) {
-            $control = $this->createField($field);
-
-            $factory = $this->loadFactory($field);
+            $factory = $this->loadFactory($table, $field);
+            $control = $factory->createField();
             $canWrite = $factory->hasWritePermissions($userPermissions->write);
             $canRead = $factory->hasReadPermissions($userPermissions->read);
             if ($control instanceof IWriteOnly) {

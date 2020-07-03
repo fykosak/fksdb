@@ -42,9 +42,8 @@ class EventDispatchFactory {
 
     /**
      * @param ModelEvent $event
-     * @return mixed
+     * @return Machine
      * @throws BadRequestException
-     * @throws \Exception
      */
     public function getEventMachine(ModelEvent $event): Machine {
         $definition = $this->findDefinition($event);

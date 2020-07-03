@@ -5,6 +5,7 @@ namespace FKSDB\Components\Forms\Factories\Events;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\IControl;
@@ -22,7 +23,7 @@ class PasswordFactory extends AbstractFactory {
      * @param Container $container
      * @return TextInput
      */
-    protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
+    protected function createComponent(Field $field, BaseMachine $machine, Container $container): IComponent {
         $element = new TextInput($field->getLabel());
         $element->setType('password');
         $element->setOption('description', $field->getDescription());
@@ -30,30 +31,30 @@ class PasswordFactory extends AbstractFactory {
     }
 
     /**
-     * @param TextInput $component
+     * @param TextInput|IComponent $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
      */
-    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDefaultValue(IComponent $component, Field $field, BaseMachine $machine, Container $container) {
         $component->setDefaultValue('');
     }
 
     /**
-     * @param TextInput $component
+     * @param TextInput|IComponent $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
      */
-    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDisabled(IComponent $component, Field $field, BaseMachine $machine, Container $container) {
         $component->setDisabled();
     }
 
     /**
-     * @param Component $component
+     * @param Component|IComponent $component
      * @return Component|IControl
      */
-    public function getMainControl(Component $component) {
+    public function getMainControl(IComponent $component): IControl {
         return $component;
     }
 

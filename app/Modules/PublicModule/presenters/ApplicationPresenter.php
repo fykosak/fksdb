@@ -82,6 +82,8 @@ class ApplicationPresenter extends BasePresenter {
      * @var ApplicationHandlerFactory
      */
     private $handlerFactory;
+    /** @var EventDispatchFactory */
+    private $eventDispatchFactory;
 
     /**
      * @param ServiceEvent $serviceEvent
@@ -113,6 +115,14 @@ class ApplicationPresenter extends BasePresenter {
      */
     public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory) {
         $this->handlerFactory = $handlerFactory;
+    }
+
+    /**
+     * @param EventDispatchFactory $eventDispatchFactory
+     * @return void
+     */
+    public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory) {
+        $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
     /**
@@ -326,7 +336,7 @@ class ApplicationPresenter extends BasePresenter {
             ->where('registration_begin <= NOW()')
             ->where('registration_end >= NOW()');
 
-        $source = new InitSource($events, $this->getContext());
+        $source = new InitSource($events, $this->getContext(), $this->eventDispatchFactory);
         $grid = new ApplicationsGrid($this->getContext(), $source, $this->handlerFactory);
         $grid->setTemplate('myApplications');
 
@@ -390,9 +400,7 @@ class ApplicationPresenter extends BasePresenter {
      */
     private function getHolder() {
         if (!$this->holder) {
-            /** @var EventDispatchFactory $factory */
-            $factory = $this->getContext()->getByType(EventDispatchFactory::class);
-            $this->holder = $factory->getDummyHolder($this->getEvent());
+            $this->holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
         }
         return $this->holder;
     }
@@ -403,9 +411,7 @@ class ApplicationPresenter extends BasePresenter {
      */
     private function getMachine() {
         if (!$this->machine) {
-            /** @var EventDispatchFactory $factory */
-            $factory = $this->getContext()->getByType(EventDispatchFactory::class);
-            $this->machine = $factory->getEventMachine($this->getEvent());
+            $this->machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
         }
         return $this->machine;
     }

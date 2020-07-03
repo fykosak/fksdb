@@ -209,12 +209,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
         }
     }
 
-    /**
-     * @param Field $field
-     * @return array
-     */
-    public function getOptions(Field $field) {
+    public function getOptions(Field $field): array {
         return $this->categoryNames;
     }
-
 }

@@ -52,6 +52,8 @@ interface IService {
      */
     public function updateModel(IModel $model, $data);
 
+    public function updateModel2(IModel $model, array $data): bool;
+
     /**
      * @return string|AbstractModelSingle|AbstractModelMulti
      */

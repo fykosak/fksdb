@@ -34,7 +34,7 @@ events:
 
         baseMachines:
             PARTICIPANT:
-                service: @event.ServiceMSousParticipant
+                service: @event.ServiceEventParticipant
 
                 states:
                     invited: Pozvaný

@@ -136,21 +136,11 @@ class Field {
     /*
      * Forms
      */
-
-    /**
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return mixed
-     */
-    public function createFormComponent(BaseMachine $machine, Container $container) {
+    public function createFormComponent(BaseMachine $machine, Container $container): IComponent {
         return $this->factory->create($this, $machine, $container);
     }
 
-    /**
-     * @param IComponent $component
-     * @return IControl
-     */
-    public function getMainControl(IComponent $component) {
+    public function getMainControl(IComponent $component): IControl {
         return $this->factory->getMainControl($component);
     }
 

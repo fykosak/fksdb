@@ -256,10 +256,9 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @param Form $form
-     * @throws BadRequestException
+     * @return void
      * @throws AbortException
-     * @throws \Exception
-     * @internal
+     * @throws BadRequestException
      */
     private function handleUploadFormSuccess(Form $form) {
         $values = $form->getValues();
@@ -335,13 +334,5 @@ class SubmitPresenter extends BasePresenter {
         $tasks->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
 
         return $tasks;
-    }
-
-    protected function getUploadedStorage(): UploadedStorage {
-        return $this->getContext()->getByType(UploadedStorage::class);
-    }
-
-    protected function getServiceSubmit(): ServiceSubmit {
-        return $this->submitService;
     }
 }

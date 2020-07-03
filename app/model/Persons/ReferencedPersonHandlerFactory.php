@@ -3,6 +3,7 @@
 namespace Persons;
 
 use FKSDB\Components\Forms\Controls\Schedule\Handler;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServicePersonInfo;
@@ -75,10 +76,10 @@ class ReferencedPersonHandlerFactory {
     /**
      * @param int $acYear
      * @param string $resolution
-     * @param int $eventId
+     * @param ModelEvent|null $event
      * @return ReferencedPersonHandler
      */
-    public function create(int $acYear, $resolution = ReferencedPersonHandler::RESOLUTION_EXCEPTION, int $eventId): ReferencedPersonHandler {
+    public function create(int $acYear, $resolution = ReferencedPersonHandler::RESOLUTION_EXCEPTION, ModelEvent $event = null): ReferencedPersonHandler {
         $handler = new ReferencedPersonHandler(
             $this->servicePerson,
             $this->servicePersonInfo,
@@ -89,7 +90,9 @@ class ReferencedPersonHandlerFactory {
             $acYear,
             $resolution
         );
-        $handler->setEventId($eventId);
+        if ($event) {
+            $handler->setEvent($event);
+        }
         return $handler;
     }
 

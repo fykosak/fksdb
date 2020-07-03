@@ -42,7 +42,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
      * @param array $data
      * @return bool
      */
-    public function updateModel2(AbstractModelSingle $model, array $data): bool {
+    public function updateModel2(IModel $model, array $data): bool {
         if (isset($data['agreed'])) {
             if ($data['agreed'] == '1') {
                 $data['agreed'] = new DateTime();

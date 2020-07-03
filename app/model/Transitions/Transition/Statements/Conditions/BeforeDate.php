@@ -16,7 +16,7 @@ class BeforeDate extends Statement {
     private $to;
 
     /**
-     * DateBetween constructor.
+     * BeforeDate constructor.
      * @param string $to
      * @throws \Exception
      */

@@ -5,11 +5,9 @@ namespace FKSDB\Components\DatabaseReflection\PersonHistory;
 use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
-use FKSDB\Components\DatabaseReflection\OmittedControlException;
-use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPersonHistory;
-use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
@@ -18,6 +16,16 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class SchoolIdRow extends AbstractColumnFactory {
+    /** @var SchoolFactory */
+    private $schoolFactory;
+
+    /***
+     * SchoolIdRow constructor.
+     * @param SchoolFactory $schoolFactory
+     */
+    public function __construct(SchoolFactory $schoolFactory) {
+        $this->schoolFactory = $schoolFactory;
+    }
 
     public function getTitle(): string {
         return _('School');
@@ -35,11 +43,10 @@ class SchoolIdRow extends AbstractColumnFactory {
         if (is_null($model->school_id)) {
             return NotSetBadge::getHtml();
         }
-
-        return Html::el('span')->addText($model->getSchool()->name_abbrev);
+        return Html::el('span')->addText('#' . $model->school_id);
     }
 
     public function createField(...$args): BaseControl {
-        throw new OmittedControlException();
+        return $this->schoolFactory->createSchoolSelect();
     }
 }

@@ -21,14 +21,18 @@ use Nette\DI\Container;
  * @method SingleEventSource count()
  */
 class InitSource extends AggregatedPersonSource implements IHolderSource {
+    /** @var EventDispatchFactory */
+    private $eventDispatchFactory;
 
     /**
      * InitSource constructor.
      * @param TypedTableSelection $events
      * @param Container $container
+     * @param EventDispatchFactory $eventDispatchFactory
      */
-    public function __construct(TypedTableSelection $events, Container $container) {
+    public function __construct(TypedTableSelection $events, Container $container, EventDispatchFactory $eventDispatchFactory) {
         parent::__construct($events, $container);
+        $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
     /**
@@ -38,9 +42,7 @@ class InitSource extends AggregatedPersonSource implements IHolderSource {
      * @throws NeonSchemaException
      */
     public function processEvent(ModelEvent $event) {
-        /** @var EventDispatchFactory $factory */
-        $factory = $this->container->getByType(EventDispatchFactory::class);
-        $holder = $factory->getDummyHolder($event);
+        $holder = $this->eventDispatchFactory->getDummyHolder($event);
         $holder->setModel();
         return $holder;
     }

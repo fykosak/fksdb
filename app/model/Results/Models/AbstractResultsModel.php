@@ -132,11 +132,11 @@ abstract class AbstractResultsModel {
             if (is_array($value)) {
                 $set = [];
                 $hasNull = false;
-                foreach ($value as $subvalue) {
-                    if ($subvalue === null) {
+                foreach ($value as $subValue) {
+                    if ($subValue === null) {
                         $hasNull = true;
                     } else {
-                        $set[] = $subvalue;
+                        $set[] = $subValue;
                     }
                 }
                 $inClause = "$col IN (" . implode(',', $set) . ")";

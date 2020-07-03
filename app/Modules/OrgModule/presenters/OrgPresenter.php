@@ -15,11 +15,13 @@ use Nette\Application\UI\Control;
 /**
  * Class OrgPresenter
  * *
- * @method ModelOrg getEntity()
+ * @method ModelOrg traitGetEntity()
  */
 class OrgPresenter extends BasePresenter {
 
-    use EntityPresenterTrait;
+    use EntityPresenterTrait {
+        getEntity as traitGetEntity;
+    }
 
     /**
      * @var ServiceOrg
@@ -63,17 +65,28 @@ class OrgPresenter extends BasePresenter {
     /**
      * @return void
      * @throws BadRequestException
-     * @throws ForbiddenRequestException
      */
     public function actionEdit() {
-        if ($this->getEntity()->contest_id != $this->getSelectedContest()->contest_id) {
-            throw new ForbiddenRequestException(_('Editace organizátora mimo zvolený seminář.'));
-        }
         $this->traitActionEdit();
     }
 
     /**
+     * @return ModelOrg
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
+    public function getEntity(): ModelOrg {
+        $entity = $this->traitGetEntity();
+        if ($entity->contest_id != $this->getSelectedContest()->contest_id) {
+            throw new ForbiddenRequestException(_('Editace organizátora mimo zvolený seminář.'));
+        }
+        return $entity;
+    }
+
+    /**
      * @return void
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
     public function renderDetail() {
         $this->template->model = $this->getEntity();

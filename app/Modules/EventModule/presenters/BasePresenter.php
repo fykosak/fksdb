@@ -14,6 +14,7 @@ use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
 
 /**
@@ -66,9 +67,11 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
      * @throws AbortException
-     * @throws \Exception
+     * @throws BadRequestException
+     * @throws NotImplementedException
+     * @throws ForbiddenRequestException
      */
     protected function startup() {
         if (!$this->isEnabled()) {

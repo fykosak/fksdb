@@ -4,6 +4,7 @@ namespace FKSDB\Modules\CommonModule;
 
 use FKSDB\Components\Controls\Entity\Person\PersonForm;
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\Person\PizzaControl;
 use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
@@ -49,10 +50,6 @@ use Tracy\Debugger;
 class PersonPresenter extends BasePresenter {
     use EntityPresenterTrait;
 
-    /**
-     * @var ModelPerson[]
-     */
-    private $persons = [];
 
     /**
      * @var ServicePerson
@@ -236,9 +233,10 @@ class PersonPresenter extends BasePresenter {
     /**
      * @param $trunkId
      * @param $mergedId
+     * @return void
      * @throws AbortException
+     * @throws BadTypeException
      * @throws ReflectionException
-     * @throws \Exception
      */
     public function actionDontMerge($trunkId, $mergedId) {
         $mergedPI = $this->servicePersonInfo->findByPrimary($mergedId);
@@ -266,10 +264,6 @@ class PersonPresenter extends BasePresenter {
         Debugger::log(sprintf('%s (%d) stalk %s (%d)',
             $userPerson->getFullName(), $userPerson->person_id,
             $person->getFullName(), $person->person_id), 'stalking-log');
-    }
-
-    public function renderPizza() {
-        $this->template->persons = $this->persons;
     }
 
     /* ******************* COMPONENTS *******************/
@@ -304,8 +298,7 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
-     * @throws \Exception
+     * @throws BadTypeException
      */
     protected function createComponentFormSearch(): FormControl {
         $control = new FormControl();
@@ -352,24 +345,8 @@ class PersonPresenter extends BasePresenter {
         return new PersonForm($this->getContext(), false, $this->getUserPermissions());
     }
 
-    /**
-     * @return FormControl
-     * @throws BadRequestException
-     */
-    protected function createComponentPizzaSelect(): FormControl {
-        $control = new FormControl();
-        $form = $control->getForm();
-        $personsField = $this->personFactory->createPersonSelect(true, _('Persons'), new PersonProvider($this->servicePerson));
-        $personsField->setMultiSelect(true);
-        $form->addComponent($personsField, 'persons');
-        $form->addSubmit('submit', _('Get pizza information!'));
-        $form->onSuccess[] = function (Form $form) {
-            $values = $form->getValues();
-            foreach ($values['persons'] as $personId) {
-                $this->persons[] = $this->servicePerson->findByPrimary($personId);
-            }
-        };
-        return $control;
+    protected function createComponentPizzaSelect(): PizzaControl {
+        return new PizzaControl($this->getContext());
     }
 
     /**

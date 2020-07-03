@@ -48,7 +48,7 @@ class RegisterPresenterTest extends DatabaseTestCase {
     public function testDispatch() {
         $request = new Request('Public:Register', 'GET', [
             'action' => 'contest',
-            'lang' => 'cs',
+            'lang' => 'en',
         ]);
 
         $response = $this->fixture->run($request);
@@ -58,7 +58,7 @@ class RegisterPresenterTest extends DatabaseTestCase {
         Assert::type(ITemplate::class, $source);
 
         $html = (string)$source;
-        Assert::contains('Zvolit seminář', $html);
+        Assert::contains('Select contest', $html);
     }
 
     public function testForm() {
@@ -66,7 +66,7 @@ class RegisterPresenterTest extends DatabaseTestCase {
             'action' => 'contestant',
             'contestId' => 1,
             'year' => 1,
-            'lang' => 'cs',
+            'lang' => 'en',
         ]);
 
         $response = $this->fixture->run($request);
@@ -76,7 +76,7 @@ class RegisterPresenterTest extends DatabaseTestCase {
         Assert::type(ITemplate::class, $source);
 
         $html = $source->__toString();
-        Assert::contains('registrace řešitele', $html);
+        Assert::contains('contestant application', $html);
     }
 }
 

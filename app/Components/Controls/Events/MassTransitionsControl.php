@@ -68,7 +68,7 @@ class MassTransitionsControl extends BaseComponent {
      * @throws AbortException
      */
     public function handleTransition(string $name) {
-        $source = new SingleEventSource($this->event, $this->getContext());
+        $source = new SingleEventSource($this->event, $this->getContext(),$this->eventDispatchFactory);
         $logger = new MemoryLogger();
         $total = 0;
         $errored = 0;

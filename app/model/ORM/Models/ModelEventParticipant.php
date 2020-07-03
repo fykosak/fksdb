@@ -42,6 +42,9 @@ use Nette\Security\IResource;
 class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel, IPaymentModel, IPersonReferencedModel, IResource {
     const RESOURCE_ID = 'event.participant';
 
+    const STATE_AUTO_INVITED = 'auto.invited';
+    const STATE_AUTO_SPARE = 'auto.spare';
+
     /**
      * @return ModelPerson|null
      */

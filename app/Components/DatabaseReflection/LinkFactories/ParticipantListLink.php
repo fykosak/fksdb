@@ -20,7 +20,7 @@ class ParticipantListLink extends AbstractLink {
      * @return string
      */
     public function getDestination(AbstractModelSingle $model): string {
-        if (in_array($model->event_type_id, ModelEvent::TEAM_EVENTS)) {
+        if ($model->isTeamEvent()) {
             return ':Event:TeamApplication:list';
         } else {
             return ':Event:Application:list';
@@ -35,9 +35,5 @@ class ParticipantListLink extends AbstractLink {
         return [
             'eventId' => $model->event_id,
         ];
-    }
-
-    protected function getModelClassName(): string {
-        return ModelEvent::class;
     }
 }

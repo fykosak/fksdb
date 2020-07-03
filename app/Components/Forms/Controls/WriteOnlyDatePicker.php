@@ -4,7 +4,6 @@ namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Controls\DateInputs\DateInput;
-use Nette\ComponentModel\IComponent;
 use Nette\Utils\Html;
 
 /**
@@ -52,14 +51,4 @@ class WriteOnlyDatePicker extends DateInput implements IWriteOnly {
         parent::loadHttpData();
         $this->writeOnlyLoadHttpData();
     }
-
-    /**
-     * @param IComponent $obj
-     * @return void
-     */
-    protected function attached($obj) {
-        parent::attached($obj);
-        $this->writeOnlyAttached($obj);
-    }
-
 }

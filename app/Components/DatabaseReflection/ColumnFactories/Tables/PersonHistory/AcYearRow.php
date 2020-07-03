@@ -6,9 +6,7 @@ use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnFactory;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Components\DatabaseReflection\ValuePrinters\StringPrinter;
-use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\AbstractModelSingle;
-use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 

@@ -7,6 +7,7 @@ use FKSDB\Components\Grids\Fyziklani\TaskGrid;
 use FKSDB\Fyziklani\FyziklaniTaskImportProcessor;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
+use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -80,9 +81,9 @@ class TaskPresenter extends BasePresenter {
      */
     private function taskImportFormSucceeded(Form $form) {
         $values = $form->getValues();
-        $taskImportProcessor = new FyziklaniTaskImportProcessor($this->getContext(), $this->getEvent());
+        $taskImportProcessor = new FyziklaniTaskImportProcessor($this->getContext()->getByType(ServiceFyziklaniTask::class), $this->getEvent());
         $logger = new MemoryLogger();
-        $taskImportProcessor($values, $logger);
+        $taskImportProcessor->process($values, $logger);
         FlashMessageDump::dump($logger, $this);
         $this->redirect('this');
     }

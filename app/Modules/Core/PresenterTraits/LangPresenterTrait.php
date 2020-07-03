@@ -38,7 +38,8 @@ trait LangPresenterTrait {
     }
 
     /**
-     * @throws \Exception
+     * @return void
+     * @throws BadRequestException
      */
     final protected function langTraitStartup() {
         $this->translator->setLang($this->getLang());

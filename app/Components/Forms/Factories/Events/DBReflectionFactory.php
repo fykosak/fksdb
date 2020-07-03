@@ -9,6 +9,7 @@ use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\AbstractServiceSingle;
 use Nette\ComponentModel\Component;
+use Nette\ComponentModel\IComponent;
 use Nette\Database\Connection;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
@@ -50,14 +51,7 @@ class DBReflectionFactory extends AbstractFactory {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    /**
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return BaseControl
-     * @throws \Exception
-     */
-    protected function createComponent(Field $field, BaseMachine $machine, Container $container): BaseControl {
+    protected function createComponent(Field $field, BaseMachine $machine, Container $container): IComponent {
         $element = null;
         try {
             $service = $field->getBaseHolder()->getService();
@@ -113,12 +107,13 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
     /**
-     * @param IControl $component
+     * @param IComponent $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
+     * @return void
      */
-    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDefaultValue(IComponent $component, Field $field, BaseMachine $machine, Container $container) {
 
         if ($field->getBaseHolder()->getModelState() == BaseMachine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
@@ -130,20 +125,21 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
     /**
-     * @param IControl $component
+     * @param IComponent|BaseControl $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
+     * @return void
      */
-    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDisabled(IComponent $component, Field $field, BaseMachine $machine, Container $container) {
         $component->setDisabled();
     }
 
     /**
-     * @param Component $component
+     * @param Component|IComponent $component
      * @return Component|IControl
      */
-    public function getMainControl(Component $component) {
+    public function getMainControl(IComponent $component): IControl {
         return $component;
     }
 

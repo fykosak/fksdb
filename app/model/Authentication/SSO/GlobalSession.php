@@ -140,7 +140,7 @@ class GlobalSession implements IGlobalSession {
     /**
      * @param mixed $offset
      * @param mixed $value
-     * @throws \Exception
+     * @return void
      */
     public function offsetSet($offset, $value) {
         if (!$this->started) {

@@ -47,6 +47,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
      */
     public function __construct(Container $container) {
         parent::__construct($container);
+        $this->setContainer($container);
         $this->container = $container;
     }
 
@@ -58,21 +59,20 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $service = $this->container->getByType(ServiceContestant::class);
         $contest = $this->container->getByType(ServiceContest::class)->findByPrimary(ModelContest::ID_FYKOS);
         $this->fixture = $handlerFactory->create($service, $contest, 1, 'cs');
-
         $this->referencedPersonFactory = $this->container->getByType(ReferencedPersonFactory::class);
     }
 
     protected function tearDown() {
-        $this->connection->query("DELETE FROM contestant_base");
-        $this->connection->query("DELETE FROM auth_token");
-        $this->connection->query("DELETE FROM login");
+        $this->connection->query('DELETE FROM contestant_base');
+        $this->connection->query('DELETE FROM auth_token');
+        $this->connection->query('DELETE FROM login');
 
         parent::tearDown();
     }
 
 
     public function testNewPerson() {
-        Assert::true(true);
+
         $presenter = new PersonPresenter();
         // Define a form
 
@@ -176,14 +176,13 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $searchType = ReferencedPersonFactory::SEARCH_NONE;
         $allowClear = false;
         $modifiabilityResolver = $visibilityResolver = new TestResolver();
-        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
+        $component = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
 
-        $container->addComponent($components[0], ExtendedPersonHandler::EL_PERSON);
-        $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
+        $container->addComponent($component->getReferencedId(), ExtendedPersonHandler::EL_PERSON);
+        $container->addComponent($component, ExtendedPersonHandler::CONT_PERSON);
 
         return $form;
     }
-
 }
 
 /*
