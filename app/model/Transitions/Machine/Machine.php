@@ -135,10 +135,9 @@ abstract class Machine {
      * @param string $id
      * @param IStateModel $model
      * @return IStateModel
-     * @throws UnavailableTransitionsException
-     * @throws ForbiddenRequestException
      * @throws BadRequestException
-     * @throws Exception
+     * @throws ForbiddenRequestException
+     * @throws UnavailableTransitionsException
      */
     public function executeTransition(string $id, IStateModel $model): IStateModel {
         $transition = $this->findTransitionById($id, $model);
@@ -185,7 +184,7 @@ abstract class Machine {
 
     /**
      * @return Transition
-     * @throws Exception
+     * @throws UnavailableTransitionsException
      */
     private function getCreatingTransition(): Transition {
         $transitions = \array_filter($this->getTransitions(), function (Transition $transition) {
@@ -206,8 +205,9 @@ abstract class Machine {
      * @param $data
      * @param IService $service
      * @return IStateModel
+     * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws Exception
+     * @throws UnavailableTransitionsException
      */
     public function createNewModel($data, IService $service): IStateModel {
         $transition = $this->getCreatingTransition();

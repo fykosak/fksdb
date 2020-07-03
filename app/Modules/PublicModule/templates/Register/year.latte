@@ -2,6 +2,7 @@
 
 {block content}
     {foreach $years as $year}
-        <a href="{link changeYear! $year}" class="col-12 btn btn-primary btn-lg btn-block">{$year}. {_('Ročník')}</a>
+        <a href="{link 'email', 'year'=> $year}" class="col-12 btn btn-primary btn-lg btn-block">{$year}
+            . {_('Ročník')}</a>
     {/foreach}
 {/block}

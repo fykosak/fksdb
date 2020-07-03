@@ -3,6 +3,7 @@
 namespace FKSDB\Events\Model\Grid;
 
 use FKSDB\Config\NeonSchemaException;
+use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Events\UndeclaredEventException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
@@ -48,7 +49,7 @@ class RelatedPersonSource extends AggregatedPersonSource implements IHolderSourc
         $personId = $this->person->getPrimary();
 
         try {
-            $eventSource = new SingleEventSource($event, $this->container);
+            $eventSource = new SingleEventSource($event, $this->container, $this->container->getByType(EventDispatchFactory::class));
         } catch (UndeclaredEventException $exception) {
             return null;
         }

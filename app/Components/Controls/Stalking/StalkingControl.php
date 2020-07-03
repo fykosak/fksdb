@@ -6,6 +6,7 @@ use FKSDB\Components\Controls\Badges\ContestBadge;
 use FKSDB\Components\Controls\Badges\NoRecordsBadge;
 use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
 use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Components\DatabaseReflection\LinkPrinterComponent;
 use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
@@ -59,5 +60,8 @@ abstract class StalkingControl extends BaseComponent {
 
     protected function createComponentValuePrinter(): ValuePrinterComponent {
         return new ValuePrinterComponent($this->getContext());
+    }
+    protected function createComponentLinkPrinter(): LinkPrinterComponent {
+        return new LinkPrinterComponent($this->getContext());
     }
 }

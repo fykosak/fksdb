@@ -6,14 +6,12 @@ use FKSDB\Authentication\AccountManager;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Models\ModelPersonInfo;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonInfo;
 use FKSDB\YearCalculator;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\AuthenticationException;
-use Nette\Security\Identity;
 use Tracy\Debugger;
 
 /**
@@ -55,10 +53,9 @@ class FacebookAuthenticator extends AbstractAuthenticator {
 
     /**
      * @param array $fbUser
-     * @return Identity
+     * @return AbstractModelSingle|ModelLogin
      * @throws AuthenticationException
      * @throws InactiveLoginException
-     * @throws \Exception
      */
     public function authenticate(array $fbUser) {
         $person = $this->findPerson($fbUser);
@@ -104,9 +101,8 @@ class FacebookAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @param $fbUser
-     * @return AbstractModelSingle|ModelLogin
-     * @throws \Exception
+     * @param string $fbUser
+     * @return ModelLogin
      */
     private function registerFromFB($fbUser): ModelLogin {
         $this->servicePerson->getConnection()->beginTransaction();
@@ -120,7 +116,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
     /**
      * @param ModelPerson $person
      * @param $fbUser
-     * @throws \Exception
+     * @return void
      */
     private function updateFromFB(ModelPerson $person, $fbUser) {
         $this->servicePerson->getConnection()->beginTransaction();
@@ -143,7 +139,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
             unset($personInfoData['email']);
         }
         /* Email nor fb_id can violate unique constraint here as we've used it to identify the person in authenticate. */
-        $this->servicePersonInfo->updateModel2($personInfo, $personInfoData);;
+        $this->servicePersonInfo->updateModel2($personInfo, $personInfoData);
 
         $this->servicePerson->getConnection()->commit();
     }

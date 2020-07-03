@@ -195,7 +195,7 @@ class ApplicationComponent extends BaseComponent {
         /*
          * Create cancel button
          */
-        $submit = $form->addSubmit('cancel', _('Storno'));
+        $submit = $form->addSubmit('cancel', _('Cancel'));
         $submit->setOption('row', 1);
         $submit->setValidationScope(false);
         $submit->getControlPrototype()->addAttributes(['class' => 'btn-warning']);
@@ -264,7 +264,7 @@ class ApplicationComponent extends BaseComponent {
      * @throws BadRequestException
      */
     private function getMachine() {
-        return $this->handler->getMachine($this->holder);
+        return $this->handler->getMachine();
     }
 
     /**

@@ -47,8 +47,7 @@ class ServicePersonHasFlag extends AbstractServiceSingle {
      * @param IModel $model
      * @param array $data
      * @param bool $alive
-     * @return void
-     * @throws \Exception
+     * @return mixed|void
      */
     public function updateModel(IModel $model, $data, $alive = true) {
         if ($data === null) {
@@ -58,7 +57,7 @@ class ServicePersonHasFlag extends AbstractServiceSingle {
         parent::updateModel($model, $data);
     }
 
-    public function updateModel2(AbstractModelSingle $model, array $data): bool {
+    public function updateModel2(IModel $model, array $data): bool {
         $data['modified'] = new DateTime();
         return parent::updateModel2($model, $data);
     }

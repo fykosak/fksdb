@@ -5,7 +5,7 @@ namespace FKSDB\Components\Forms\Factories\Events;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\Holder\DataValidator;
 use FKSDB\Events\Model\Holder\Field;
-use Nette\ComponentModel\Component;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\IControl;
 
@@ -21,16 +21,16 @@ interface IFieldFactory {
      * @param BaseMachine $machine appropiate base machine
      * @param Container $container whole container of the base holder
      */
-    public function create(Field $field, BaseMachine $machine, Container $container);
+    public function create(Field $field, BaseMachine $machine, Container $container): IComponent;
 
     /**
      * For its own output, it must be able to find the control that may be used
      * for form rules (dependecies).
      *
-     * @param Component $component
+     * @param IComponent $component
      * @return IControl
      */
-    public function getMainControl(Component $component);
+    public function getMainControl(IComponent $component): IControl;
 
     /**
      * Checks whether data are filled correctly (more than form validation as the validity

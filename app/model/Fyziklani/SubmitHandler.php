@@ -10,7 +10,6 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Database\Table\ActiveRow;
-use Nette\DI\Container;
 use Nette\Security\User;
 
 /**
@@ -38,13 +37,20 @@ class SubmitHandler {
 
     /**
      * TaskCodeHandler constructor.
-     * @param Container $container
      * @param ModelEvent $event
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
+     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      */
-    public function __construct(Container $container, ModelEvent $event) {
-        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
-        $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
-        $this->serviceFyziklaniSubmit = $container->getByType(ServiceFyziklaniSubmit::class);
+    public function __construct(
+        ModelEvent $event,
+        ServiceFyziklaniTeam $serviceFyziklaniTeam,
+        ServiceFyziklaniTask $serviceFyziklaniTask,
+        ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+    ) {
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->event = $event;
     }
 
@@ -57,7 +63,8 @@ class SubmitHandler {
      * @throws PointsMismatchException
      * @throws TaskCodeException
      */
-    public function preProcess(string $code, int $points, User $user): Message {
+    public
+    function preProcess(string $code, int $points, User $user): Message {
         $this->checkTaskCode($code);
         return $this->savePoints($code, $points, $user);
     }
@@ -71,7 +78,8 @@ class SubmitHandler {
      * @throws PointsMismatchException
      * @throws TaskCodeException
      */
-    private function savePoints(string $code, int $points, User $user): Message {
+    private
+    function savePoints(string $code, int $points, User $user): Message {
         $task = $this->getTask($code);
         $team = $this->getTeam($code);
 
@@ -93,7 +101,8 @@ class SubmitHandler {
      * @throws ClosedSubmittingException
      * @throws TaskCodeException
      */
-    public function checkTaskCode(string $code): bool {
+    public
+    function checkTaskCode(string $code): bool {
         $fullCode = TaskCodePreprocessor::createFullCode($code);
         /* skontroluje pratnosť kontrolu */
         if (!TaskCodePreprocessor::checkControlNumber($fullCode)) {
@@ -113,7 +122,8 @@ class SubmitHandler {
      * @return ModelFyziklaniTeam|ActiveRow
      * @throws TaskCodeException
      */
-    public function getTeam(string $code): ModelFyziklaniTeam {
+    public
+    function getTeam(string $code): ModelFyziklaniTeam {
         $fullCode = TaskCodePreprocessor::createFullCode($code);
 
         $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
@@ -129,7 +139,8 @@ class SubmitHandler {
      * @return ModelFyziklaniTask
      * @throws TaskCodeException
      */
-    public function getTask(string $code): ModelFyziklaniTask {
+    public
+    function getTask(string $code): ModelFyziklaniTask {
         $fullCode = TaskCodePreprocessor::createFullCode($code);
         /* správny label */
         $taskLabel = TaskCodePreprocessor::extractTaskLabel($fullCode);

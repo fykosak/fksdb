@@ -223,7 +223,7 @@ class PaymentPresenter extends BasePresenter {
      * @return PaymentMachine
      * @throws AbortException
      * @throws BadRequestException
-     * @throws \Exception
+     * @throws BadTypeException
      */
     private function getMachine(): PaymentMachine {
         if (!$this->machine) {

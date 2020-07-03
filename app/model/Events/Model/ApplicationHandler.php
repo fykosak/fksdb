@@ -73,6 +73,8 @@ class ApplicationHandler {
      * @var Machine
      */
     private $machine;
+    /** @var EventDispatchFactory */
+    private $eventDispatchFactory;
 
     /**
      * ApplicationHandler constructor.
@@ -80,12 +82,14 @@ class ApplicationHandler {
      * @param ILogger $logger
      * @param Connection $connection
      * @param Container $container
+     * @param EventDispatchFactory $eventDispatchFactory
      */
-    public function __construct(ModelEvent $event, ILogger $logger, Connection $connection, Container $container) {
+    public function __construct(ModelEvent $event, ILogger $logger, Connection $connection, Container $container, EventDispatchFactory $eventDispatchFactory) {
         $this->event = $event;
         $this->logger = $logger;
         $this->connection = $connection;
         $this->container = $container;
+        $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
     /**
@@ -104,12 +108,11 @@ class ApplicationHandler {
     }
 
     /**
-     * @param Holder $holder
      * @return Machine
      * @throws BadRequestException
      */
-    public function getMachine(Holder $holder) {
-        $this->initializeMachine($holder);
+    public function getMachine() {
+        $this->initializeMachine();
         return $this->machine;
     }
 
@@ -147,7 +150,7 @@ class ApplicationHandler {
      * @throws BadRequestException
      */
     public function onlyExecute(Holder $holder, string $explicitTransitionName) {
-        $this->initializeMachine($holder);
+        $this->initializeMachine();
 
         try {
             $explicitMachineName = $this->machine->getPrimaryMachine()->getName();
@@ -213,7 +216,7 @@ class ApplicationHandler {
      * @throws JsonException
      */
     private function _storeAndExecute(Holder $holder, $data, $explicitTransitionName, $execute) {
-        $this->initializeMachine($holder);
+        $this->initializeMachine();
 
         try {
             $explicitMachineName = $this->machine->getPrimaryMachine()->getName();
@@ -341,14 +344,11 @@ class ApplicationHandler {
     }
 
     /**
-     * @param Holder $holder
      * @throws BadRequestException
      */
-    private function initializeMachine(Holder $holder) {
+    private function initializeMachine() {
         if (!$this->machine) {
-            /** @var EventDispatchFactory $factory */
-            $factory = $this->container->getByType(EventDispatchFactory::class);
-            $this->machine = $factory->getEventMachine($this->event);
+            $this->machine = $this->eventDispatchFactory->getEventMachine($this->event);
         }
     }
 

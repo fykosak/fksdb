@@ -16,10 +16,10 @@ use Traversable;
 
 /**
  * Service class to high-level manipulation with ORM objects.
- * Use singleton descedants implemetations.
+ * Use singleton descendant implementations.
  *
  * @note Because of compatibility with PHP 5.2 (no LSB), part of the code has to be
- *       duplicated in all descedant classes.
+ *       duplicated in all descendant classes.
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @author Michal Červeňak <miso@fykos.cz>
@@ -137,7 +137,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @param Traversable|array $data
      * @return bool
      */
-    public function updateModel2(AbstractModelSingle $model, array $data): bool {
+    public function updateModel2(IModel $model, array $data): bool {
         $this->checkType($model);
         $data = $this->filterData($data);
         return $model->update($data);

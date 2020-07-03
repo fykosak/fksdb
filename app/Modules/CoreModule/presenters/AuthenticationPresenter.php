@@ -19,6 +19,7 @@ use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\UI\PageTitle;
 use Mail\SendFailedException;
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\Url;
@@ -290,8 +291,9 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * @param Form $form
+     * @return void
      * @throws AbortException
-     * @throws Exception
+     * @throws BadRequestException
      */
     private function recoverFormSubmitted(Form $form) {
         $connection = $this->serviceAuthToken->getConnection();

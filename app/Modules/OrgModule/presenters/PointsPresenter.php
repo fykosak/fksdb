@@ -152,6 +152,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     /**
+     * @return void
      * @throws AbortException
      */
     public function handleInvalidate() {
@@ -167,6 +168,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     /**
+     * @return void
      * @throws AbortException
      * @throws BadRequestException
      */

@@ -2,6 +2,7 @@
 
 namespace FKSDB\Authentication;
 
+use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
@@ -10,7 +11,7 @@ use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\ORM\Services\ServiceLogin;
 use Mail\MailTemplateFactory;
-use Mail\SendFailedException;
+use Nette\Application\BadRequestException;
 use Nette\Utils\DateTime;
 
 /**
@@ -109,11 +110,12 @@ class AccountManager {
      *
      * @param ModelPerson $person
      * @param string $email
+     * @param string $lang
      * @return ModelLogin
-     * @throws SendFailedException
-     * @throws \Exception
+     * @throws BadRequestException
+     * @throws ModelException
      */
-    public function createLoginWithInvitation(ModelPerson $person, string $email) {
+    public function createLoginWithInvitation(ModelPerson $person, string $email, string $lang) {
         $login = $this->createLogin($person);
 
         $until = DateTime::from($this->getInvitationExpiration());
@@ -126,8 +128,8 @@ class AccountManager {
             'until' => $until,
         ];
         $data = [];
-        $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation($person->getPreferredLang(), $templateParams);
-        $data['subject'] = _('Založení účtu');
+        $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation($person->getPreferredLang() ?: $lang, $templateParams);
+        $data['subject'] = _('Create an account');
         $data['sender'] = $this->getEmailFrom();
         $data['recipient'] = $email;
         $this->serviceEmailMessage->addMessageToSend($data);
@@ -137,7 +139,8 @@ class AccountManager {
     /**
      * @param ModelLogin $login
      * @param string|null $lang
-     * @throws \Exception
+     * @return void
+     * @throws BadRequestException
      */
     public function sendRecovery(ModelLogin $login, string $lang = null) {
         $person = $login->getPerson();
@@ -163,7 +166,7 @@ class AccountManager {
         ];
         $data = [];
         $data['text'] = (string)$this->mailTemplateFactory->createPasswordRecovery($lang, $templateParams);
-        $data['subject'] = _('Obnova hesla');
+        $data['subject'] = _('Password recovery');
         $data['sender'] = $this->getEmailFrom();
         $data['recipient'] = $recoveryAddress;
 

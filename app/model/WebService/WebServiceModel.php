@@ -205,7 +205,7 @@ class WebServiceModel {
     }
 
     /**
-     * @param $args
+     * @param stdClass $args
      * @return SoapVar
      * @throws SoapFault
      */
@@ -222,7 +222,7 @@ class WebServiceModel {
         $statsNode = $doc->createElement('stats');
         $doc->appendChild($statsNode);
 
-        $model = $this->statsModelFactory->createTaskStatsModel($contest,(int) $year);
+        $model = $this->statsModelFactory->createTaskStatsModel($contest, (int)$year);
 
         if (isset($args->series)) {
             if (!is_array($args->series)) {
@@ -259,7 +259,7 @@ class WebServiceModel {
     }
 
     /**
-     * @param $args
+     * @param stdClass $args
      * @return SoapVar
      * @throws SoapFault
      * @throws BadRequestException

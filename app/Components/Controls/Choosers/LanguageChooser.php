@@ -28,7 +28,6 @@ class LanguageChooser extends Chooser {
      * @param string $lang
      * @param bool $modifiable
      * @return void
-     * @throws \Exception
      */
     public function setLang(string $lang, bool $modifiable) {
         $this->language = $lang;

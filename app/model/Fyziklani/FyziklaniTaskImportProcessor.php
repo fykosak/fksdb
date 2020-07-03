@@ -9,7 +9,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Utils\CSVParser;
 use FKSDB\Modules\FyziklaniModule\TaskPresenter;
-use Nette\DI\Container;
 use Nette\Utils\ArrayHash;
 use Tracy\Debugger;
 
@@ -31,12 +30,12 @@ class FyziklaniTaskImportProcessor {
 
     /**
      * FyziklaniTaskImportProcessor constructor.
-     * @param Container $container
+     * @param ServiceFyziklaniTask $serviceFyziklaniTask
      * @param ModelEvent $event
      */
-    public function __construct(Container $container, ModelEvent $event) {
+    public function __construct(ServiceFyziklaniTask $serviceFyziklaniTask, ModelEvent $event) {
         $this->event = $event;
-        $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 
     /**
@@ -44,7 +43,7 @@ class FyziklaniTaskImportProcessor {
      * @param ILogger $logger
      * @return void
      */
-    public function __invoke($values, ILogger $logger) {
+    public function process($values, ILogger $logger) {
         $filename = $values->csvfile->getTemporaryFile();
         $connection = $this->serviceFyziklaniTask->getConnection();
         $connection->beginTransaction();
@@ -66,7 +65,7 @@ class FyziklaniTaskImportProcessor {
                 } elseif ($values->state == TaskPresenter::IMPORT_STATE_UPDATE_N_INSERT) {
                     $this->serviceFyziklaniTask->updateModel2($task, [
                         'label' => $row['label'],
-                        'name' => $row['name']
+                        'name' => $row['name'],
                     ]);
                     $logger->log(new Message(sprintf(_('Úloha %s "%s" byla aktualizována'), $row['label'], $row['name']), BasePresenter::FLASH_INFO));
                 } else {

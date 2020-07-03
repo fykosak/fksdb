@@ -61,7 +61,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws NeonSchemaException
      */
     protected function createComponentImport(): ImportComponent {
-        $source = new SingleEventSource($this->getEvent(), $this->getContext());
+        $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->getEventDispatchFactory());
         $machine = $this->getEventDispatchFactory()->getEventMachine($this->getEvent());
         $handler = $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger());
 

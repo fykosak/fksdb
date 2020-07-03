@@ -8,7 +8,6 @@ use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Machine\Transition;
 use FKSDB\Events\Model\Holder\BaseHolder;
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelEmailMessage;
@@ -19,6 +18,7 @@ use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\ORM\Services\ServicePerson;
 use Mail\MailTemplateFactory;
+use Nette\Application\BadRequestException;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
@@ -108,7 +108,7 @@ class MailSender {
      * @param Transition $transition
      * @param Holder $holder
      * @return void
-     * @throws \Exception
+     * @throws BadRequestException
      */
     public function __invoke(Transition $transition, Holder $holder) {
         $this->send($transition, $holder);
@@ -118,7 +118,7 @@ class MailSender {
      * @param Transition $transition
      * @param Holder $holder
      * @return void
-     * @throws \Exception
+     * @throws BadRequestException
      */
     private function send(Transition $transition, Holder $holder) {
         $personIds = $this->resolveAdressees($transition, $holder);
@@ -147,8 +147,8 @@ class MailSender {
      * @param ModelLogin $login
      * @param BaseMachine $baseMachine
      * @param BaseHolder $baseHolder
-     * @return ModelEmailMessage|AbstractModelSingle
-     * @throws \Exception
+     * @return ModelEmailMessage
+     * @throws BadRequestException
      */
     private function createMessage(string $filename, ModelLogin $login, BaseMachine $baseMachine, BaseHolder $baseHolder): ModelEmailMessage {
         $machine = $baseMachine->getMachine();
@@ -172,6 +172,14 @@ class MailSender {
             'machine' => $machine,
             'baseMachine' => $baseMachine,
             'baseHolder' => $baseHolder,
+            'linkArgs' => [
+                '//:Public:Application:',
+                [
+                    'eventId' => $event->event_id,
+                    'contestId' => $event->getEventType()->contest_id,
+                    'at' => $token->token,
+                ],
+            ],
         ];
         $template = $this->mailTemplateFactory->createWithParameters($filename, null, $templateParams);
 
@@ -189,13 +197,6 @@ class MailSender {
 
     }
 
-    /**
-     * @param ModelLogin $login
-     * @param ModelEvent $event
-     * @param IModel $application
-     * @return ModelAuthToken
-     * @throws \Exception
-     */
     private function createToken(ModelLogin $login, ModelEvent $event, IModel $application): ModelAuthToken {
         $until = $this->getUntil($event);
         $data = ApplicationPresenter::encodeParameters($event->getPrimary(), $application->getPrimary());

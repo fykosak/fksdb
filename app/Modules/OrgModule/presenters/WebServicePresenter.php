@@ -13,14 +13,23 @@ use FKSDB\WebService\SoapResponse;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class WebServicePresenter extends BasePresenter {
+    /** @var \SoapServer */
+    private $server;
+
+    /**
+     * @param \SoapServer $server
+     * @return void
+     */
+    public function injectSoapServer(\SoapServer $server) {
+        $this->server = $server;
+    }
+
     /**
      * @throws AbortException
      */
     public function renderDefault() {
-        /** @var \SoapServer $server */
-        $server = $this->getContext()->getByType(\SoapServer::class);
         try {
-            $response = new SoapResponse($server);
+            $response = new SoapResponse($this->server);
             $this->sendResponse($response);
         } catch (AbortException $exception) {
             throw $exception;

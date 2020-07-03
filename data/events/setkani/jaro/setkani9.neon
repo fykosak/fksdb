@@ -57,7 +57,7 @@ events:
 
         baseMachines:
             PARTICIPANT:
-                service: @event.ServiceMVikendParticipant
+                service: @event.ServiceEventParticipant
 
                 states:
                     applied: _('Přihlášen')

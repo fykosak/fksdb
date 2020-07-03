@@ -30,7 +30,7 @@ abstract class AbstractModelMulti implements IModel {
     protected $service;
 
     /**
-     * @note DO NOT use directly, use AbstracServiceMulti::composeModel or FKSDB\ORM\AbstractModelMulti::createFromExistingModels.
+     * @note DO NOT use directly, use AbstractServiceMulti::composeModel or FKSDB\ORM\AbstractModelMulti::createFromExistingModels.
      *
      * @param AbstractServiceMulti $service
      * @param AbstractModelSingle $mainModel
@@ -73,7 +73,7 @@ abstract class AbstractModelMulti implements IModel {
      */
     public function setMainModel(AbstractModelSingle $mainModel) {
         if (!$this->service) {
-            throw new InvalidStateException('Cannot set main model on multimodel w/out service.');
+            throw new InvalidStateException('Cannot set main model on multiModel w/out service.');
         }
         $this->mainModel = $mainModel;
         if (!$mainModel->isNew() && $this->getJoinedModel()) { // bind via foreign key
@@ -138,14 +138,14 @@ abstract class AbstractModelMulti implements IModel {
      * @param $value
      */
     public function __set($name, $value) {
-        throw new LogicException("Cannot update multimodel directly.");
+        throw new LogicException("Cannot update multiModel directly.");
     }
 
     /**
      * @param string|int $name
      */
     public function __unset($name) {
-        throw new LogicException("Cannot update multimodel directly.");
+        throw new LogicException("Cannot update multiModel directly.");
     }
 
     /**
@@ -189,14 +189,14 @@ abstract class AbstractModelMulti implements IModel {
      * @param mixed $value
      */
     public function offsetSet($offset, $value) {
-        throw new LogicException("Cannot update multimodel directly.");
+        throw new LogicException("Cannot update multiModel directly.");
     }
 
     /**
      * @param mixed $offset
      */
     public function offsetUnset($offset) {
-        throw new LogicException("Cannot update multimodel directly.");
+        throw new LogicException("Cannot update multiModel directly.");
     }
 
 }

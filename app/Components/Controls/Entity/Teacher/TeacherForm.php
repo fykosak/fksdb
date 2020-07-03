@@ -5,8 +5,11 @@ namespace FKSDB\Components\Controls\Entity\Teacher;
 use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Controls\Entity\ReferencedPersonTrait;
+use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
+use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
-use FKSDB\Components\Forms\Factories\TeacherFactory;
+use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\Messages\Message;
@@ -26,16 +29,16 @@ class TeacherForm extends AbstractEntityFormControl implements IEditEntityForm {
 
     use ReferencedPersonTrait;
 
-    const CONTAINER = 'event_org';
+    const CONTAINER = 'teacher';
 
     /**
      * @var SchoolFactory
      */
     protected $schoolFactory;
     /**
-     * @var TeacherFactory
+     * @var SingleReflectionFormFactory
      */
-    private $teacherFactory;
+    private $singleReflectionFormFactory;
     /**
      * @var ServiceTeacher
      */
@@ -47,13 +50,13 @@ class TeacherForm extends AbstractEntityFormControl implements IEditEntityForm {
     private $model;
 
     /**
-     * @param TeacherFactory $teacherFactory
+     * @param SingleReflectionFormFactory $singleReflectionFormFactory
      * @param SchoolFactory $schoolFactory
      * @param ServiceTeacher $serviceTeacher
      * @return void
      */
-    public function injectPrimary(TeacherFactory $teacherFactory, SchoolFactory $schoolFactory, ServiceTeacher $serviceTeacher) {
-        $this->teacherFactory = $teacherFactory;
+    public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, SchoolFactory $schoolFactory, ServiceTeacher $serviceTeacher) {
+        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->schoolFactory = $schoolFactory;
         $this->serviceTeacher = $serviceTeacher;
     }
@@ -61,10 +64,12 @@ class TeacherForm extends AbstractEntityFormControl implements IEditEntityForm {
     /**
      * @param Form $form
      * @return void
-     * @throws \Exception
+     * @throws AbstractColumnException
+     * @throws BadTypeException
+     * @throws OmittedControlException
      */
     protected function configureForm(Form $form) {
-        $container = $this->teacherFactory->createTeacher();
+        $container = $this->createTeacherContainer();
         $schoolContainer = $this->schoolFactory->createSchoolSelect();
         $container->addComponent($schoolContainer, 'school_id');
         $personInput = $this->createPersonSelect();
@@ -118,11 +123,21 @@ class TeacherForm extends AbstractEntityFormControl implements IEditEntityForm {
      */
     protected function handleEditSuccess(array $data) {
         $this->getORMService()->updateModel2($this->model, $data);
-        $this->getPresenter()->flashMessage(_('Org has been updated'), Message::LVL_SUCCESS);
+        $this->getPresenter()->flashMessage(_('Event org has been updated'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 
     protected function getORMService(): ServiceTeacher {
         return $this->serviceTeacher;
+    }
+
+    /**
+     * @return ModelContainer
+     * @throws AbstractColumnException
+     * @throws BadTypeException
+     * @throws OmittedControlException
+     */
+    public function createTeacherContainer(): ModelContainer {
+        return $this->singleReflectionFormFactory->createContainer('teacher', ['state', 'since', 'until', 'number_brochures', 'note']);
     }
 }

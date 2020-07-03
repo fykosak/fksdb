@@ -139,9 +139,10 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
+     * @return void
+     * @throws AbortException
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws AbortException
      * @throws Exception
      */
     protected function startup() {

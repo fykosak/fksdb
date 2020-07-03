@@ -55,7 +55,7 @@ class PaymentColumnFactory extends AbstractColumnFactory {
         return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
     }
 
-    protected function createNullHtmlValue(): Html {
+    protected function renderNullValue(): Html {
         return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText(_('Payment not found'));
     }
 

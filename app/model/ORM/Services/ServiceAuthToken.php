@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Services;
 
+use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelAuthToken;
@@ -33,7 +34,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
      * @param bool $refresh
      * @param DateTime $since
      * @return ModelAuthToken
-     * @throws \Exception
+     * @throws ModelException
      */
     public function createToken(ModelLogin $login, $type, \DateTimeInterface $until = null, $data = null, $refresh = false, DateTime $since = null) {
         if ($since === null) {

@@ -99,9 +99,8 @@ class AjaxUpload extends ReactComponent {
 
     /**
      * @return void
-     * @throws BadRequestException
      * @throws AbortException
-     * @throws \Exception
+     * @throws BadRequestException
      * @throws InvalidLinkException
      */
     public function handleUpload() {

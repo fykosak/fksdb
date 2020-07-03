@@ -80,6 +80,7 @@ class LoggingMailer implements IMailer {
 
     /**
      * @param Message $mail
+     * @return void
      * @throws Exception
      */
     public function send(Message $mail) {

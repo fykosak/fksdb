@@ -21,10 +21,9 @@ class ParticipantDetailLink extends AbstractLink {
      * @return string
      */
     public function getDestination(AbstractModelSingle $model): string {
-        try {
-            $model->getFyziklaniTeam();
+        if ($model->getEvent()->isTeamEvent()) {
             return ':Event:TeamApplication:detail';
-        } catch (BadRequestException$exception) {
+        } else {
             return ':Event:Application:detail';
         }
     }
@@ -32,23 +31,19 @@ class ParticipantDetailLink extends AbstractLink {
     /**
      * @param AbstractModelSingle|ModelEventParticipant $model
      * @return array
+     * @throws BadRequestException
      */
     public function prepareParams(AbstractModelSingle $model): array {
-        try {
-            $team = $model->getFyziklaniTeam();
+        if ($model->getEvent()->isTeamEvent()) {
             return [
                 'eventId' => $model->event_id,
-                'id' => $team->e_fyziklani_team_id,
+                'id' => $model->getFyziklaniTeam()->e_fyziklani_team_id,
             ];
-        } catch (BadRequestException$exception) {
+        } else {
             return [
                 'eventId' => $model->event_id,
                 'id' => $model->event_participant_id,
             ];
         }
-    }
-
-    protected function getModelClassName(): string {
-        return ModelEventParticipant::class;
     }
 }
