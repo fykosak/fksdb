@@ -16,6 +16,8 @@ use Nette\Forms\IControl;
 use Nette\InvalidStateException;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Arrays;
+use Persons\IModifiabilityResolver;
+use Persons\IVisibilityResolver;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -65,6 +67,10 @@ class ReferencedContainer extends ContainerWithOptions {
      * @var bool
      */
     private $attachedJS = false;
+    /** @var IModifiabilityResolver */
+    public $modifiabilityResolver;
+    /** @var IVisibilityResolver */
+    public $visibilityResolver;
 
     /**
      * ReferencedContainer constructor.
@@ -201,7 +207,7 @@ class ReferencedContainer extends ContainerWithOptions {
             $value = false;
         }
         if ($value) {
-            $component = Arrays::get($this->hiddenComponents, self::SUBMIT_CLEAR, null);
+            $component = $this->hiddenComponents[self::SUBMIT_CLEAR] ?? null;
             if ($component) {
                 $this->showComponent(self::SUBMIT_CLEAR, $component);
             }

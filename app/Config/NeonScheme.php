@@ -45,10 +45,10 @@ class NeonScheme {
                 $result[$key] = isset($section[$key]) ? $section[$key] : $metadata['default'];
             }
 
-            $typeDef = Arrays::get($metadata, 'type', self::TYPE_NEON);
+            $typeDef = $metadata['type'] ?? self::TYPE_NEON;
             $typeDef = explode(' ', $typeDef);
             $type = $typeDef[0];
-            $qualifier = Arrays::get($typeDef, 1, null);
+            $qualifier = $typeDef[1] ?? null;
 
             if ($type == self::TYPE_EXPRESSION) {
                 if ($qualifier == self::QUALIFIER_ARRAY) {

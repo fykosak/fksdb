@@ -5,6 +5,7 @@ namespace FKSDB\Components\Forms\Factories\ReferencedPerson;
 use Closure;
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\Components\DatabaseReflection\OmittedControlException;
+use FKSDB\Components\Forms\Containers\AddressContainer;
 use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
@@ -35,7 +36,6 @@ use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
-use Nette\Utils\Arrays;
 use Nette\Utils\JsonException;
 use Persons\IModifiabilityResolver;
 use Persons\IVisibilityResolver;
@@ -177,8 +177,9 @@ class ReferencedPersonFactory implements IReferencedSetter {
 
         $container->setAllowClear($allowClear);
         $container->setOption('acYear', $acYear);
-        $container->setOption('modifiabilityResolver', $modifiabilityResolver);
-        $container->setOption('visibilityResolver', $visibilityResolver);
+        $container->modifiabilityResolver = $modifiabilityResolver;
+        $container->visibilityResolver = $visibilityResolver;
+
         foreach ($fieldsDefinition as $sub => $fields) {
             $subContainer = new ContainerWithOptions();
             if ($sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
@@ -235,13 +236,9 @@ class ReferencedPersonFactory implements IReferencedSetter {
      */
     public function setModel(ReferencedContainer $container, IModel $model = null, string $mode = self::MODE_NORMAL) {
         $acYear = $container->getOption('acYear');
-        /** @var IModifiabilityResolver $modifiabilityResolver */
-        $modifiabilityResolver = $container->getOption('modifiabilityResolver');
-        /** @var IVisibilityResolver $visibilityResolver */
-        $visibilityResolver = $container->getOption('visibilityResolver');
-        $modifiable = $model ? $modifiabilityResolver->isModifiable($model) : true;
-        $resolution = $model ? $modifiabilityResolver->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
-        $visible = $model ? $visibilityResolver->isVisible($model) : true;
+        $modifiable = $model ? $container->modifiabilityResolver->isModifiable($model) : true;
+        $resolution = $model ? $container->modifiabilityResolver->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
+        $visible = $model ? $container->visibilityResolver->isVisible($model) : true;
         $submittedBySearch = $container->isSearchSubmitted();
         $force = ($mode === self::MODE_FORCE);
         if ($mode === self::MODE_ROLLBACK) {
@@ -305,7 +302,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @param int $acYear
      * @param HiddenField $hiddenField
      * @param array $metadata
-     * @return IComponent
+     * @return IComponent|AddressContainer|BaseControl
      * @throws JsonException
      * @throws AbstractColumnException
      * @throws OmittedControlException
@@ -319,7 +316,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
             ReferencedPersonHandler::POST_CONTACT_PERMANENT,
         ])) {
             if ($fieldName == 'address') {
-                $required = Arrays::get($metadata, 'required', false);
+                $required = (bool)$metadata['required'] ?? false;
                 if ($required) {
                     $options = AddressFactory::REQUIRED;
                 } else {

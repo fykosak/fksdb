@@ -9,6 +9,7 @@ use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -25,7 +26,9 @@ abstract class AbstractFactory implements IFieldFactory {
      */
     public function create(Field $field, BaseMachine $machine, Container $container): IComponent {
         $component = $this->createComponent($field, $machine, $container);
-
+        Debugger::barDump($field);
+        Debugger::barDump($this);
+        Debugger::barDump($component);
         if (!$field->isModifiable()) {
             $this->setDisabled($component, $field, $machine, $container);
         }

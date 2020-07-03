@@ -7,7 +7,6 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use Traversable;
 
 /**
  * Class ServiceFyziklaniTeamPosition
@@ -34,11 +33,7 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
         return $row ? $row : null;
     }
 
-    /**
-     * @param Traversable $data
-     * @return string[]
-     */
-    public function updateRouting(Traversable $data): array {
+    public function updateRouting(array $data): array {
         $updatedTeams = [];
         foreach ($data as $teamData) {
             $teamData = (object)$teamData;
