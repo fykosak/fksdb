@@ -183,10 +183,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
             /**
              * @var IService[] $services
              */
-            $services = [
-                self::POST_CONTACT_DELIVERY => $this->serviceMPostContact,
-                self::POST_CONTACT_PERMANENT => $this->serviceMPostContact,
-            ];
+            $services = [];
 
             $originalModels = \array_keys(iterator_to_array($data));
 
@@ -208,7 +205,6 @@ class ReferencedPersonHandler implements IReferencedHandler {
             }
             // It's like this: $this->resolution == self::RESOLUTION_OVERWRITE) {
             //    $data = $conflicts;
-            Debugger::log(array_keys($services), 'services');
             foreach ($models as $t => & $model) {
                 if (!isset($data[$t])) {
                     if (\in_array($t, $originalModels) && \in_array($t, [self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT])) {
@@ -236,9 +232,9 @@ class ReferencedPersonHandler implements IReferencedHandler {
                     $datum = (array)$data[$t];
                     $datum['person_id'] = $person->person_id;
                     if ($models[$t]) {
-                        $services[$t]->updateModel2($model, $datum);
+                        $this->serviceMPostContact->updateModel2($model, $datum);
                     } else {
-                        $services[$t]->createNewModel(array_merge($datum, ['type' => PersonForm::mapAddressContainerNameToType($t)]));
+                        $this->serviceMPostContact->createNewModel(array_merge($datum, ['type' => PersonForm::mapAddressContainerNameToType($t)]));
                     }
                     continue;
                 }
