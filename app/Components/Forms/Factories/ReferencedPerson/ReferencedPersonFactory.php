@@ -28,6 +28,7 @@ use FKSDB\ORM\Services\ServiceFlag;
 use FKSDB\ORM\Services\ServicePerson;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
+use Nette\ComponentModel\IContainer;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
@@ -228,7 +229,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
 
 
     /**
-     * @param ReferencedContainer $container
+     * @param ReferencedContainer|IContainer[] $container
      * @param IModel|ModelPerson|null $model
      * @param string $mode
      * @return void

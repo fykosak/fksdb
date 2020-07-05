@@ -19,7 +19,7 @@ abstract class SecondaryModelStrategy {
      * @param IModel[] $models
      * @return void
      */
-    public function setSecondaryModels(array $holders, array $models) {
+    public function setSecondaryModels(array $holders, $models) {
         $filledHolders = 0;
         foreach ($models as $secondaryModel) {
             $holders[$filledHolders]->setModel($secondaryModel);
