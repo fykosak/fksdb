@@ -16,7 +16,7 @@ class FormUtils {
     /**
      * Convert empty strings to nulls.
      *
-     * @param string|array|Traversable $values
+     * @param string|iterable $values
      * @param bool $asArray
      * @return ArrayHash|array|null
      * @todo Move to general utils.

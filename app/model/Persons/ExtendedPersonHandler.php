@@ -24,7 +24,6 @@ use Nette\InvalidStateException;
 use Nette\SmartObject;
 use FKSDB\Modules\OrgModule\ContestantPresenter;
 use Tracy\Debugger;
-use Traversable;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -200,7 +199,7 @@ class ExtendedPersonHandler {
 
     /**
      * @param ModelPerson $person
-     * @param array|Traversable $values
+     * @param iterable $values
      * @param IExtendedPersonPresenter $presenter
      */
     protected function storeExtendedModel(ModelPerson $person, $values, IExtendedPersonPresenter $presenter) {

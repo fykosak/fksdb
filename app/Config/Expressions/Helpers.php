@@ -13,7 +13,6 @@ use Nette\DI\Container;
 use Nette\DI\Helpers as DIHelpers;
 use Nette\DI\Statement;
 use Nette\Reflection\ClassType;
-use Nette\Utils\Arrays;
 use Traversable;
 
 /**
@@ -53,7 +52,7 @@ class Helpers {
             foreach ($expression->arguments as $attribute) {
                 $arguments[] = self::statementFromExpression($attribute);
             }
-            $class = Arrays::get(self::$semanticMap, $expression->entity, $expression->entity);
+            $class = self::$semanticMap[$expression->entity] ?? $expression->entity;
             if (function_exists($class)) { // workaround for Nette interpretation of entities
                 $class = ['', $class];
             }
@@ -85,7 +84,7 @@ class Helpers {
                 $arguments[] = self::evalExpression($attribute, $container);
             }
 
-            $entity = Arrays::get(self::$semanticMap, $expression->entity, $expression->entity);
+            $entity = self::$semanticMap[$expression->entity] ?? $expression->entity;
             if (function_exists($entity)) {
                 return call_user_func_array($entity, $arguments);
             } else {
@@ -98,7 +97,7 @@ class Helpers {
     }
 
     /**
-     * @param $expressionArray
+     * @param iterable $expressionArray
      * @param Container $container
      * @return array|mixed
      */

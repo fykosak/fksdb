@@ -3,7 +3,6 @@
 namespace FKSDB\ORM;
 
 use Nette\Database\Table\Selection;
-use Traversable;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -13,7 +12,7 @@ use Traversable;
 interface IService {
 
     /**
-     * @param array|Traversable $data
+     * @param iterable $data
      * @deprecated
      */
     public function createNew($data = null);

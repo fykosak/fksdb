@@ -30,7 +30,6 @@ use Nette\DI\Container;
 use Nette\DI\ServiceDefinition;
 use Nette\DI\Statement;
 use Nette\InvalidArgumentException;
-use Nette\Utils\Arrays;
 use Nette\Utils\Strings;
 
 /**
@@ -156,7 +155,7 @@ class EventsExtension extends CompilerExtension {
             /*
              * Find prototype configuration
              */
-            $prototype = Arrays::get($baseMachineDef, 'prototype', null);
+            $prototype = $baseMachineDef['prototype'] ?? null;
             unset($baseMachineDef['prototype']);
             if (!$prototype) {
                 $this->baseMachineConfig[$key] = $baseMachineDef;
@@ -309,7 +308,7 @@ class EventsExtension extends CompilerExtension {
          * Set other attributes of the machine.
          */
         foreach (array_keys($machinesDef['baseMachines']) as $instanceName) {
-            $joins = Arrays::get($machinesDef['joins'], $instanceName, []);
+            $joins = $machinesDef['joins'][$instanceName] ?? [];
 
             foreach ($joins as $mask => $induced) {
                 $factory->addSetup("\$service->getBaseMachine(?)->addInducedTransition(?, ?)", [$instanceName, $mask, $induced]);

@@ -5,7 +5,6 @@ use FKSDB\Utils\Utils;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\SmartObject;
-use Nette\Utils\Arrays;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -85,7 +84,7 @@ class LoggingMailer implements IMailer {
      */
     public function send(Message $mail) {
         try {
-            if (!Arrays::get($this->parameters['email'], 'disabled', false)) {// do not really send emails when debugging
+            if (!$this->parameters['email']['disabled'] ?? false) {// do not really send emails when debugging
                 $this->mailer->send($mail);
             }
             $this->logMessage($mail);

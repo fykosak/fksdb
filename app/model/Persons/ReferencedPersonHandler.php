@@ -2,6 +2,7 @@
 
 namespace Persons;
 
+use FKSDB\Components\Controls\Entity\Person\PersonForm;
 use FKSDB\Components\Forms\Controls\IReferencedHandler;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
@@ -28,6 +29,7 @@ use Nette\Utils\ArrayHash;
 use Nette\Utils\JsonException;
 use FKSDB\ORM\ServicesMulti\ServiceMPersonHasFlag;
 use FKSDB\ORM\ServicesMulti\ServiceMPostContact;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -175,16 +177,13 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 'person_info' => $person->getInfo() ?: null,
                 'person_history' => $person->getHistory($this->acYear) ?: null,
                 'person_schedule' => (($this->event && isset($data['person_schedule']) && $person->getSerializedSchedule($this->event->event_id, \array_keys((array)$data['person_schedule'])[0])) ?: null),
-                self::POST_CONTACT_DELIVERY => ($dataPostContact = $person->getDeliveryAddress()) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_DELIVERY]),
-                self::POST_CONTACT_PERMANENT => ($dataPostContact = $person->getPermanentAddress(true)) ?: $this->serviceMPostContact->createNew(['type' => ModelPostContact::TYPE_PERMANENT]),
+                self::POST_CONTACT_DELIVERY => $person->getDeliveryAddress() ?: null,
+                self::POST_CONTACT_PERMANENT => $person->getPermanentAddress(true) ?: null,
             ];
             /**
              * @var IService[] $services
              */
-            $services = [
-                self::POST_CONTACT_DELIVERY => $this->serviceMPostContact,
-                self::POST_CONTACT_PERMANENT => $this->serviceMPostContact,
-            ];
+            $services = [];
 
             $originalModels = \array_keys(iterator_to_array($data));
 
@@ -206,12 +205,13 @@ class ReferencedPersonHandler implements IReferencedHandler {
             }
             // It's like this: $this->resolution == self::RESOLUTION_OVERWRITE) {
             //    $data = $conflicts;
-
             foreach ($models as $t => & $model) {
                 if (!isset($data[$t])) {
                     if (\in_array($t, $originalModels) && \in_array($t, [self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT])) {
                         // delete only post contacts, other "children" could be left all-nulls
-                        $this->serviceMPostContact->dispose($model);
+                        if ($model) {
+                            $this->serviceMPostContact->dispose($model);
+                        }
                     }
                     continue;
                 }
@@ -227,6 +227,15 @@ class ReferencedPersonHandler implements IReferencedHandler {
                     continue;
                 } elseif ($t === 'person_schedule' && isset($data[$t])) {
                     $this->eventScheduleHandler->prepareAndUpdate($data[$t], $models['person'], $this->event);
+                    continue;
+                } elseif ($t === self::POST_CONTACT_PERMANENT || $t === self::POST_CONTACT_DELIVERY) {
+                    $datum = (array)$data[$t];
+                    $datum['person_id'] = $person->person_id;
+                    if ($models[$t]) {
+                        $this->serviceMPostContact->updateModel2($model, $datum);
+                    } else {
+                        $this->serviceMPostContact->createNewModel(array_merge($datum, ['type' => PersonForm::mapAddressContainerNameToType($t)]));
+                    }
                     continue;
                 }
 
@@ -339,13 +348,14 @@ class ReferencedPersonHandler implements IReferencedHandler {
     /**
      * @param ModelMPostContact[] $models
      */
-    private function preparePostContactModels(array $models) {
-        if ($models[self::POST_CONTACT_PERMANENT]->isNew()) {
+    private function preparePostContactModels(array &$models) {
+        if (!$models[self::POST_CONTACT_PERMANENT] && $models[self::POST_CONTACT_DELIVERY]) {
             $data = $models[self::POST_CONTACT_DELIVERY]->toArray();
             unset($data['post_contact_id']);
             unset($data['address_id']);
             unset($data['type']);
-            $this->serviceMPostContact->updateModel($models[self::POST_CONTACT_PERMANENT], $data);
+            $models[self::POST_CONTACT_PERMANENT] = $this->serviceMPostContact->createNewModel(array_merge($data, ['type' => ModelPostContact::TYPE_PERMANENT]));
+            //     $this->serviceMPostContact->updateModel($models[self::POST_CONTACT_PERMANENT], $data);
         }
     }
 

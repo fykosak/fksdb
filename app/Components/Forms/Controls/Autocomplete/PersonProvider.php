@@ -44,7 +44,7 @@ class PersonProvider implements IFilteredDataProvider {
     public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator) {
         $this->searchTable = $this->servicePerson->getTable()
             ->where([
-                ':org.contest_id' => $contest->contest_id
+                ':org.contest_id' => $contest->contest_id,
             ])
             ->where(':org.since <= ?', $yearCalculator->getCurrentYear($contest))
             ->where(':org.until IS NULL OR :org.until <= ?', $yearCalculator->getCurrentYear($contest));
@@ -57,7 +57,7 @@ class PersonProvider implements IFilteredDataProvider {
      * @param string $search
      * @return array
      */
-    public function getFilteredItems($search) {
+    public function getFilteredItems(string $search): array {
         $search = trim($search);
         $search = str_replace(' ', '', $search);
         $this->searchTable

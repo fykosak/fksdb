@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
-use FKSDB\Modules\Core\BasePresenter;
+use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
@@ -84,7 +84,7 @@ class RoutingEdit extends FyziklaniReactControl {
         $response = new ReactResponse();
         $response->setAct('update-teams');
         $response->setData(['updatedTeams' => $updatedTeams]);
-        $response->addMessage(new ReactMessage(_('Zmeny boli uložené'), BasePresenter::FLASH_SUCCESS));
+        $response->addMessage(new ReactMessage(_('Zmeny boli uložené'), Message::LVL_SUCCESS));
         $this->getPresenter()->sendResponse($response);
     }
 

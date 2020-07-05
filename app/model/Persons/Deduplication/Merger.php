@@ -126,7 +126,7 @@ class Merger {
     public function merge($commit = null) {
         // This workaround fixes inproper caching of referenced tables.
         $this->context->getConnection()->getCache()->clean([Cache::ALL => true]);
-        $this->context->getConnection()->getDatabaseReflection()->setConnection($this->context->getConnection());
+        $this->context->getConnection()->getDatabaseReflection()->setConnection($this->context->getConnection()); // TODO
 
         $table = $this->trunkRow->getTable()->getName();
         $tableMerger = $this->getMerger($table);

@@ -43,7 +43,7 @@ class SchoolProvider implements IFilteredDataProvider {
      * @param string $search
      * @return array
      */
-    public function getFilteredItems($search) {
+    public function getFilteredItems(string $search): array {
         $search = trim($search);
         $tokens = preg_split('/[ ,\.]+/', $search);
 
