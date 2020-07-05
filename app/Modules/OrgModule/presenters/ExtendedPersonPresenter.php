@@ -15,6 +15,7 @@ use FKSDB\ORM\Models\ModelContestant;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\IControl;
 use Nette\Utils\JsonException;
 use Persons\AclResolver;
 use Persons\ExtendedPersonHandler;
@@ -59,7 +60,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     /**
      * @param ModelContestant|IModel|null $model
-     * @param Form $form
+     * @param Form|IControl[][] $form
      */
     protected function setDefaults(IModel $model = null, Form $form) {
         if (!$model) {

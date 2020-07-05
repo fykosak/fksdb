@@ -165,7 +165,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
             }
         } else {
             $email = $this->getHttpRequest()->getQuery('email');
-            Debugger::barDump($email);
             $person = $this->servicePerson->findByEmail($email);
             if ($person) {
                 if ($person->getLogin()) {

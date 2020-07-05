@@ -17,15 +17,8 @@ use Nette\Forms\IControl;
  */
 abstract class AbstractFactory implements IFieldFactory {
 
-    /**
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return array|mixed
-     */
     public function create(Field $field, BaseMachine $machine, Container $container): IComponent {
         $component = $this->createComponent($field, $machine, $container);
-
         if (!$field->isModifiable()) {
             $this->setDisabled($component, $field, $machine, $container);
         }
@@ -66,7 +59,7 @@ abstract class AbstractFactory implements IFieldFactory {
     /**
      * @param Field $field
      * @param DataValidator $validator
-     * @return bool|void
+     * @return bool|void TODO what is the return type?
      */
     public function validate(Field $field, DataValidator $validator) {
         if ($field->isRequired() && ($field->getValue() === '' || $field->getValue() === null)) {
@@ -92,11 +85,5 @@ abstract class AbstractFactory implements IFieldFactory {
      */
     abstract protected function setDefaultValue(IComponent $component, Field $field, BaseMachine $machine, Container $container);
 
-    /**
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return mixed
-     */
     abstract protected function createComponent(Field $field, BaseMachine $machine, Container $container): IComponent;
 }

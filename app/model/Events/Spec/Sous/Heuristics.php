@@ -33,7 +33,7 @@ class Heuristics /*extends StoredQueryPostProcessing */{ /* uncomment to use */
 
     /**
      * @param \PDOStatement $data
-     * @return \Traversable|array|\ArrayIterator
+     * @return iterable
      */
     public function processData(\PDOStatement $data) {
 

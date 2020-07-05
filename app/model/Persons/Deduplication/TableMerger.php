@@ -179,6 +179,7 @@ class TableMerger {
                 $secondaryKeys = array_unique($secondaryKeys);
                 foreach ($secondaryKeys as $secondaryKey) {
                     $refTrunk = isset($groupedTrunks[$secondaryKey]) ? $groupedTrunks[$secondaryKey] : null;
+                    /** @var ActiveRow|null $refMerged */
                     $refMerged = isset($groupedMerged[$secondaryKey]) ? $groupedMerged[$secondaryKey] : null;
                     if ($refTrunk && $refMerged) {
                         $backTrunk = $referencingMerger->trunkRow;
@@ -354,17 +355,17 @@ class TableMerger {
     }
 
     /**
-     * @var mixed
+     * @var string
      */
     private $primaryKey;
 
     /**
-     * @param $column
+     * @param string $column
      * @return bool
      */
-    private function isPrimaryKey($column) {
+    private function isPrimaryKey($column): bool {
         if ($this->primaryKey === null) {
-            $this->primaryKey = $this->context->getDatabaseReflection()->getPrimary($this->table);
+            $this->primaryKey = $this->context->getConventions()->getPrimary($this->table);
         }
         return $column == $this->primaryKey;
     }

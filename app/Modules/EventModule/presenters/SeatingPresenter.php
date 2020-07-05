@@ -3,6 +3,7 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Fyziklani\SeatingControl;
+use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use FKSDB\React\ReactResponse;
@@ -122,7 +123,7 @@ class SeatingPresenter extends BasePresenter {
             $response = new ReactResponse();
             $response->setAct('update-teams');
             $response->setData(['updatedTeams' => $updatedTeams]);
-            $response->addMessage(new ReactMessage(_('changes has been saved'), \FKSDB\Modules\Core\BasePresenter::FLASH_SUCCESS));
+            $response->addMessage(new ReactMessage(_('Changes has been saved'), Message::LVL_SUCCESS));
             $this->sendResponse($response);
         }
     }

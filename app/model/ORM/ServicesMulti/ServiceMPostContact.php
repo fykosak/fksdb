@@ -4,6 +4,7 @@ namespace FKSDB\ORM\ServicesMulti;
 
 use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\AbstractServiceMulti;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\ModelsMulti\ModelMPostContact;
 use FKSDB\ORM\Services\ServiceAddress;
@@ -15,6 +16,7 @@ use FKSDB\ORM\Services\ServicePostContact;
  * @method ServiceAddress getMainService()
  */
 class ServiceMPostContact extends AbstractServiceMulti {
+    use DeprecatedLazyDBTrait;
 
     /**
      * ServiceMPostContact constructor.

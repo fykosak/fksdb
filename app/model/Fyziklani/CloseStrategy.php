@@ -10,7 +10,6 @@ use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Modules\FyziklaniModule\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
-use Traversable;
 
 /**
  *
@@ -69,11 +68,6 @@ class CloseStrategy {
         return $this->close($category);
     }
 
-    /**
-     * @param Traversable|array $data
-     * @param $total
-     * @return Html
-     */
     private function saveResults(array $data, bool $total): Html {
         $log = Html::el('ul');
         foreach ($data as $index => $teamData) {

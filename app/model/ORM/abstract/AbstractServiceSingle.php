@@ -12,7 +12,6 @@ use Nette\Database\Table\Selection;
 use Nette\InvalidStateException;
 use PDOException;
 use Tracy\Debugger;
-use Traversable;
 
 /**
  * Service class to high-level manipulation with ORM objects.
@@ -62,7 +61,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     /**
      * Use this method to create new models!
      *
-     * @param Traversable $data
+     * @param iterable $data
      * @return AbstractModelSingle
      * @throws ModelException
      * @deprecated use createNewModel
@@ -134,7 +133,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
 
     /**
      * @param AbstractModelSingle|IModel $model
-     * @param Traversable|array $data
+     * @param array $data
      * @return bool
      */
     public function updateModel2(IModel $model, array $data): bool {

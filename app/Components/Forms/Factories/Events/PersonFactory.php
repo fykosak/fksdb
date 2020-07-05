@@ -25,6 +25,7 @@ use Nette\Forms\IControl;
 use Nette\Security\User;
 use Nette\Utils\JsonException;
 use Persons\SelfResolver;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -170,7 +171,7 @@ class PersonFactory extends AbstractFactory {
      * @return void
      */
     protected function setDisabled(IComponent $component, Field $field, BaseMachine $machine, Container $container) {
-        $container->getReferencedId()->setDisabled();
+        $component->getReferencedId()->setDisabled();
     }
 
     /**

@@ -10,7 +10,6 @@ use FKSDB\ORM\Services\ServiceContestYear;
 use InvalidArgumentException;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
-use Nette\Utils\Arrays;
 
 /**
  * Class FKSDB\YearCalculator
@@ -64,7 +63,7 @@ class YearCalculator {
         $this->serviceContestYear = $serviceContestYear;
         $this->serviceContest = $serviceContest;
         $this->globalParameters = $globalParameters;
-        $this->acYear = Arrays::get($this->globalParameters['tester'], 'acYear', null);
+        $this->acYear = $this->globalParameters['tester']['acYear'] ?? null;
         $this->preloadCache();
     }
 

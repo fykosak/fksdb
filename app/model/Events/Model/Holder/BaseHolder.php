@@ -16,7 +16,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Neon\Neon;
-use Nette\Utils\Arrays;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -519,7 +518,7 @@ class BaseHolder {
     public
     function getParameter($name, $default = null) {
         try {
-            return Arrays::get($this->parameters, $name, $default);
+            return $this->parameters[$name] ?? $default;
         } catch (InvalidArgumentException $exception) {
             throw new InvalidArgumentException("No parameter '$name' for event " . $this->getEvent() . ".", null, $exception);
         }
