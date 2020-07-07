@@ -2,14 +2,15 @@
 
 namespace FKSDB\Components\Forms\Controls\Payment;
 
+use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
+use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
@@ -22,18 +23,16 @@ use FKSDB\Transitions\UnavailableTransitionsException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Form;
 use Nette\DI\Container;
+use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\Form;
 use Nette\Utils\JsonException;
 
 /**
  * Class SelectForm
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class SelectForm extends BaseComponent {
-    /**
-     * @var string[]
-     */
-    private $types;
+class SelectForm extends AbstractEntityFormControl implements IEditEntityForm {
     /**
      * @var PersonFactory
      */
@@ -46,10 +45,6 @@ class SelectForm extends BaseComponent {
      * @var ServicePersonSchedule
      */
     private $servicePersonSchedule;
-    /**
-     * @var ModelEvent
-     */
-    private $event;
     /**
      * @var bool
      */
@@ -75,23 +70,19 @@ class SelectForm extends BaseComponent {
     /**
      * SelectForm constructor.
      * @param Container $container
-     * @param ModelEvent $event
      * @param bool $isOrg
-     * @param string[] $types
      * @param PaymentMachine $machine
+     * @param bool $create
      */
     public function __construct(
         Container $container,
-        ModelEvent $event,
         bool $isOrg,
-        array $types,
-        PaymentMachine $machine
+        PaymentMachine $machine,
+        bool $create
     ) {
-        parent::__construct($container);
-        $this->event = $event;
+        parent::__construct($container, $create);
         $this->machine = $machine;
         $this->isOrg = $isOrg;
-        $this->types = $types;
     }
 
     /**
@@ -117,62 +108,50 @@ class SelectForm extends BaseComponent {
     }
 
     /**
-     * @param ModelPayment $modelPayment
+     * @param ModelPayment|AbstractModelSingle $modelPayment
      * @return void
+     * @throws BadTypeException
      */
-    public function setModel(ModelPayment $modelPayment) {
+    public function setModel(AbstractModelSingle $modelPayment) {
         $this->model = $modelPayment;
+        $values = $this->model->toArray();
+        $values['payment_accommodation'] = $this->serializeScheduleValue();
+        /**
+         * @var FormControl $control
+         */
+        $control = $this->getComponent('form');
+        $control->getForm()->setDefaults($values);
     }
 
-    /**
-     * @return FormControl
-     * @throws BadRequestException
-     * @throws BadTypeException
-     * @throws JsonException
-     */
-    protected function createComponentFormEdit(): FormControl {
-        return $this->createForm(false);
-    }
-
-    /**
-     * @return FormControl
-     * @throws BadRequestException
-     * @throws BadTypeException
-     * @throws JsonException
-     */
-    protected function createComponentFormCreate(): FormControl {
-        return $this->createForm(true);
-    }
-
-    /**
-     * @param bool $create
-     * @return FormControl
-     * @throws BadTypeException
-     * @throws JsonException
-     * @throws BadRequestException
-     */
-    private function createForm(bool $create): FormControl {
-        $control = new FormControl();
-        $form = $control->getForm();
-        if ($this->isOrg) {
-            $form->addComponent($this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider), 'person_id');
-        } else {
-            $form->addHidden('person_id');
+    public function render() {
+        if ($this->create) {
+            /**
+             * @var FormControl $control
+             */
+            $control = $this->getComponent('form');
+            /**
+             * @var ModelLogin $login
+             */
+            $login = $this->getPresenter()->getUser()->getIdentity();
+            $control->getForm()->setDefaults([
+                'person_id' => $login->getPerson()->person_id,
+            ]);
         }
-        $currencyField = new CurrencyField();
-        $currencyField->setRequired(_('Please select currency'));
-        $form->addComponent($currencyField, 'currency');
-        $form->addComponent(new PaymentSelectField($this->servicePersonSchedule, $this->event, $this->types, !$create), 'payment_accommodation');
-        $form->addSubmit('submit', $create ? _('Proceed to summary') : _('Save payment'));
-        $form->onSuccess[] = function (Form $form) use ($create) {
-            $this->handleSubmit($form, $create);
-        };
-        return $control;
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'SelectForm.latte');
+        $this->template->render();
+    }
+
+    private function serializeScheduleValue(): string {
+        $query = $this->model->getRelatedPersonSchedule();
+        $items = [];
+        foreach ($query as $row) {
+            $items[$row->person_schedule_id] = true;
+        }
+        return \json_encode($items);
     }
 
     /**
      * @param Form $form
-     * @param bool $create
      * @return void
      * @throws AbortException
      * @throws BadRequestException
@@ -180,20 +159,20 @@ class SelectForm extends BaseComponent {
      * @throws NotImplementedException
      * @throws UnavailableTransitionsException
      */
-    private function handleSubmit(Form $form, bool $create) {
+    protected function handleFormSuccess(Form $form) {
         $values = $form->getValues();
-        if ($create) {
+        if ($this->create) {
             $model = $this->machine->createNewModel([
-                'person_id' => $values->person_id,
-                'event_id' => $this->event->event_id,
+                'person_id' => $values['person_id'],
+                'event_id' => $this->machine->getEvent()->event_id,
             ], $this->servicePayment);
 
         } else {
             $model = $this->model;
         }
-        $model->update([
-                'currency' => $values->currency,
-                'person_id' => $values->offsetExists('person_id') ? $values->person_id : $model->person_id,
+        $this->servicePayment->updateModel2($model, [
+                'currency' => $values['currency'],
+                'person_id' => $values['person_id'],
             ]
         );
 
@@ -201,7 +180,7 @@ class SelectForm extends BaseComponent {
         $connection->beginTransaction();
 
         try {
-            $this->serviceSchedulePayment->prepareAndUpdate($values->payment_accommodation, $model);
+            $this->serviceSchedulePayment->prepareAndUpdate($values['payment_accommodation'], $model);
         } catch (DuplicatePaymentException $exception) {
             $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             $connection->rollBack();
@@ -213,52 +192,29 @@ class SelectForm extends BaseComponent {
         }
         $connection->commit();
 
-        $this->getPresenter()->flashMessage($create ? _('Payment has been created.') : _('Payment has been updated.'));
+        $this->getPresenter()->flashMessage($this->create ? _('Payment has been created.') : _('Payment has been updated.'));
         $this->getPresenter()->redirect('detail', ['id' => $model->payment_id]);
     }
 
     /**
+     * @param Form $form
      * @return void
-     * @throws BadTypeException
+     * @throws BadRequestException
+     * @throws JsonException
      */
-    public function renderCreate() {
-        /**
-         * @var FormControl $control
-         */
-        $control = $this->getComponent('formCreate');
-        /**
-         * @var ModelLogin $login
-         */
-        $login = $this->getPresenter()->getUser()->getIdentity();
-        $control->getForm()->setDefaults([
-            'person_id' => $login->getPerson()->person_id,
-        ]);
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'SelectForm.create.latte');
-        $this->template->render();
-    }
-
-    /**
-     * @return void
-     * @throws BadTypeException
-     */
-    public function renderEdit() {
-        $values = $this->model->toArray();
-        $values['payment_accommodation'] = $this->serializeScheduleValue();
-        /**
-         * @var FormControl $control
-         */
-        $control = $this->getComponent('formEdit');
-        $control->getForm()->setDefaults($values);
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'SelectForm.edit.latte');
-        $this->template->render();
-    }
-
-    private function serializeScheduleValue(): string {
-        $query = $this->model->getRelatedPersonSchedule();
-        $items = [];
-        foreach ($query as $row) {
-            $items[$row->person_schedule_id] = true;
+    protected function configureForm(Form $form) {
+        if ($this->isOrg) {
+            $form->addComponent($this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider), 'person_id');
+        } else {
+            $form->addHidden('person_id');
         }
-        return \json_encode($items);
+        $currencyField = new CurrencyField();
+        $currencyField->setRequired(_('Please select currency'));
+        $form->addComponent($currencyField, 'currency');
+        $form->addComponent(new PaymentSelectField($this->servicePersonSchedule, $this->machine->getEvent(), $this->machine->getScheduleGroupTypes(), !$this->create), 'payment_accommodation');
+    }
+
+    protected function appendSubmitButton(Form $form): SubmitButton {
+        return $form->addSubmit('submit', $this->create ? _('Proceed to summary') : _('Save payment'));
     }
 }

@@ -43,5 +43,4 @@ trait EventEntityPresenterTrait {
      * @throws AbortException
      */
     abstract protected function getEvent(): ModelEvent;
-
 }

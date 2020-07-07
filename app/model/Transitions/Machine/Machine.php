@@ -69,7 +69,7 @@ abstract class Machine {
      * @return Transition[]
      */
     public function getAvailableTransitions(IStateModel $model = null): array {
-        $state = $model ? $model->getState() : NULL;
+        $state = $model ? $model->getState() : null;
         if (\is_null($state)) {
             $state = self::STATE_INIT;
         }
@@ -77,6 +77,7 @@ abstract class Machine {
             return ($transition->getFromState() === $state) && $this->canExecute($transition, $model);
         });
     }
+
     /**
      * @param string $id
      * @param IStateModel $model
@@ -209,7 +210,7 @@ abstract class Machine {
      * @throws ForbiddenRequestException
      * @throws UnavailableTransitionsException
      */
-    public function createNewModel($data, IService $service): IStateModel {
+    public function createNewModel(array $data, IService $service): IStateModel {
         $transition = $this->getCreatingTransition();
         if (!$this->canExecute($transition, null)) {
             throw new ForbiddenRequestException(_('Model sa nedá vytvoriť'));

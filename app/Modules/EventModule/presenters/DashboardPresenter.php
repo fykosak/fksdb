@@ -32,7 +32,6 @@ class DashboardPresenter extends BasePresenter {
     public function renderDefault() {
         $this->template->event = $this->getEvent();
         $this->template->webUrl = $this->getWebUrl();
-        $this->template->fields = ['event_type', 'year', 'event_year', 'begin', 'end'];
     }
 
     /**

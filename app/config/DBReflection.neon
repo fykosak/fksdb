@@ -119,6 +119,7 @@ DBReflection:
                     type: string
                     title: _(Recipient)
                  price: FKSDB\Components\DatabaseReflection\Payment\PriceRow
+                 #currency:
                  state:
                      type: state
                      title: _(State)

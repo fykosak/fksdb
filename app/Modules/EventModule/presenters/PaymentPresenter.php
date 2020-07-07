@@ -4,11 +4,9 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\Components\Forms\Controls\Payment\SelectForm;
-use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
 use FKSDB\Config\Extensions\PaymentExtension;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
@@ -18,7 +16,6 @@ use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 
 /**
@@ -88,15 +85,6 @@ class PaymentPresenter extends BasePresenter {
     /* ********* Authorization *****************/
 
     /**
-     * @return void
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    public function authorizedEdit() {
-        $this->setAuthorized($this->canEdit());
-    }
-
-    /**
      * @param IResource|string|null $resource
      * @param string $privilege
      * @return bool
@@ -107,30 +95,17 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /* ********* actions *****************/
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     */
-    public function actionDetail() {
-        $this->getEntity();
-    }
 
     /**
      * @throws AbortException
      * @throws BadRequestException
      */
     public function actionEdit() {
-        $payment = $this->getEntity();
-        if (!$this->canEdit()) {
-            $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $payment->getPaymentId()), \FKSDB\Modules\Core\BasePresenter::FLASH_ERROR);
+        if (!$this->isContestsOrgAuthorized($this->getEntity(), 'edit')) {
+            $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()), \FKSDB\Modules\Core\BasePresenter::FLASH_ERROR);
             $this->redirect(':Core:MyPayments:');
         }
-        /**
-         * @var SelectForm $component
-         */
-        $component = $this->getComponent('form');
-        $component->setModel($payment);
+        $this->traitActionEdit();
     }
 
     /**
@@ -166,55 +141,11 @@ class PaymentPresenter extends BasePresenter {
         $this->template->model = $payment;
         $this->template->isOrg = $this->isOrg();
     }
-    /* ********* Components *****************/
-    /**
-     * @return OrgPaymentGrid
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    protected function createComponentOrgGrid(): OrgPaymentGrid {
-        return new OrgPaymentGrid($this->getEvent(), $this->getContext());
-    }
-
-    /**
-     * @return SelectForm
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    protected function createComponentForm(): SelectForm {
-        return new SelectForm(
-            $this->getContext(),
-            $this->getEvent(),
-            $this->isOrg(),
-            ['accommodation'],
-            $this->getMachine()
-        );
-    }
-
-    /**
-     * @return TransitionButtonsControl
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    protected function createComponentTransitionButtons(): TransitionButtonsControl {
-        return new TransitionButtonsControl($this->getMachine(), $this->getContext(), $this->getEntity());
-    }
-
-
-    /**
-     * Is org or (is own payment and can edit)
-     * @return bool
-     * @throws BadRequestException
-     * @throws AbortException
-     */
-    private function canEdit(): bool {
-        return ($this->getEntity()->canEdit() && $this->isContestsOrgAuthorized($this->getEntity(), 'edit')) ||
-            $this->isOrg();
-    }
 
     /**
      * @return bool
      * @throws BadRequestException
+     * TODO!!!!
      */
     private function isOrg(): bool {
         return $this->isContestsOrgAuthorized($this->getModelResource(), 'org');
@@ -248,28 +179,52 @@ class PaymentPresenter extends BasePresenter {
     protected function getORMService(): ServicePayment {
         return $this->servicePayment;
     }
-
+    /* ********* Components *****************/
     /**
-     * @return BaseGrid
-     * @throws NotImplementedException
+     * @return TransitionButtonsControl
+     * @throws AbortException
+     * @throws BadRequestException
      */
-    protected function createComponentGrid(): BaseGrid {
-        throw new NotImplementedException();
+    protected function createComponentTransitionButtons(): TransitionButtonsControl {
+        return new TransitionButtonsControl($this->getMachine(), $this->getContext(), $this->getEntity());
     }
 
     /**
-     * @return Control
-     * @throws NotImplementedException
+     * @return OrgPaymentGrid
+     * @throws AbortException
+     * @throws BadRequestException
      */
-    protected function createComponentCreateForm(): Control {
-        throw new NotImplementedException();
+    protected function createComponentGrid(): OrgPaymentGrid {
+        return new OrgPaymentGrid($this->getEvent(), $this->getContext());
     }
 
     /**
-     * @return Control
-     * @throws NotImplementedException
+     * @return SelectForm
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws BadTypeException
      */
-    protected function createComponentEditForm(): Control {
-        throw new NotImplementedException();
+    protected function createComponentCreateForm(): SelectForm {
+        return new SelectForm(
+            $this->getContext(),
+            $this->isOrg(),
+            $this->getMachine(),
+            true
+        );
+    }
+
+    /**
+     * @return SelectForm
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws BadTypeException
+     */
+    protected function createComponentEditForm(): SelectForm {
+        return new SelectForm(
+            $this->getContext(),
+            $this->isOrg(),
+            $this->getMachine(),
+            false
+        );
     }
 }

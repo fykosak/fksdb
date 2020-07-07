@@ -8,6 +8,7 @@
 services:
     # assertions
     ownerAssertion: Authorization\Assertions\OwnerAssertion
+    stateAssertion: Authorization\Assertions\StateAssertion
 
     # data services
     #- authorizator:
@@ -173,7 +174,9 @@ acl:
 
     # payment
     - allow(registered, event.payment, detail, [@ownerAssertion, 'isSelf'])
-    - allow(registered, event.payment, edit, [@ownerAssertion, 'isSelf'])
+    - allow(registered, event.payment, edit, and([@ownerAssertion, 'isSelf'],[@stateAssertion,'isPaymentEditable']))
+    - allow(registered, event.payment, edit, and([@ownerAssertion, 'isSelf'],[@stateAssertion,'isPaymentEffaceable']))
+
     - allow(registered, event.payment, create)
     #paymnet org
     - allow(org, event.payment, ::constant(Nette\Security\Permission::ALL))
