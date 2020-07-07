@@ -10,7 +10,6 @@ use FKSDB\ORM\Services\ServiceTeacher;
 use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 
 /**
@@ -76,11 +75,11 @@ class TeacherPresenter extends BasePresenter {
         return new TeachersGrid($this->getContext());
     }
 
-    protected function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): TeacherForm {
         return new TeacherForm($this->getContext(), true);
     }
 
-    protected function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): TeacherForm {
         return new TeacherForm($this->getContext(), false);
     }
 

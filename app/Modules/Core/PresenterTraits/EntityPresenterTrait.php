@@ -2,8 +2,8 @@
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
+use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Exceptions;
 use FKSDB\Exceptions\BadTypeException;
@@ -168,14 +168,14 @@ trait EntityPresenterTrait {
     }
 
     /**
-     * @return FormControl
+     * @return AbstractEntityFormControl
      * @throws BadRequestException
      * @throws NotImplementedException
      */
     abstract protected function createComponentCreateForm(): Control;
 
     /**
-     * @return FormControl
+     * @return AbstractEntityFormControl
      * @throws BadRequestException
      * @throws NotImplementedException
      */

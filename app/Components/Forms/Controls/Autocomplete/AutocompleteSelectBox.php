@@ -64,9 +64,9 @@ class AutocompleteSelectBox extends TextBase {
 
     /**
      * AutocompleteSelectBox constructor.
-     * @param $ajax
-     * @param string $label
-     * @param string $renderMethod
+     * @param bool $ajax
+     * @param string|null $label
+     * @param string|null $renderMethod
      */
     public function __construct(bool $ajax, $label = null, $renderMethod = null) {
         parent::__construct($label);
@@ -191,7 +191,7 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @return TextBase
      */
     public function setValue($value) {
@@ -215,7 +215,7 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @return BaseControl
      */
     public function setDefaultValue($value) {
@@ -233,11 +233,10 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     /**
-     * @param $multiSelect
+     * @param bool $multiSelect
      * @return void
      */
-    public function setMultiSelect($multiSelect) {
+    public function setMultiSelect(bool $multiSelect) {
         $this->multiSelect = $multiSelect;
     }
-
 }

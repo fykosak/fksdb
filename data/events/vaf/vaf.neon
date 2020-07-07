@@ -32,7 +32,7 @@ parameters:
 events:
     vikend:
         event_type_id: 3
-        eventYears: [1,2]
+        #eventYears: [1,2]
         tableLayout: event.grid
         formLayout: vikend.form
         paramScheme:

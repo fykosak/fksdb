@@ -19,6 +19,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
+use Nette\Security\IResource;
 
 /**
  * Class PaymentPresenter
@@ -96,7 +97,7 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @param $resource
+     * @param IResource|string|null $resource
      * @param string $privilege
      * @return bool
      * @throws BadRequestException

@@ -22,8 +22,8 @@ class Leq extends EvaluatedExpression {
 
     /**
      * Leq constructor.
-     * @param $aValue
-     * @param $bValue
+     * @param mixed $aValue
+     * @param mixed $bValue
      */
     public function __construct($aValue, $bValue) {
         $this->aValue = $aValue;

@@ -182,10 +182,11 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * IJSONProvider
      * ****************************** */
     /**
-     * @param $acName
-     * @param $acQ
-     * @throws BadRequestException
+     * @param mixed|string $acName
+     * @param mixed|string $acQ
+     * @return void
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function handleAutocomplete($acName, $acQ) {
         if (!$this->isAjax()) {
@@ -363,7 +364,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
-     * @param $element
+     * @param mixed $element
      * @throws ForbiddenRequestException
      */
     public function checkRequirements($element) {
@@ -372,7 +373,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
-     * @param $destination
+     * @param string $destination
      * @param null $args
      * @return bool|mixed
      * @throws BadRequestException

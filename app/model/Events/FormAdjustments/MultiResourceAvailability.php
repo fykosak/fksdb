@@ -48,7 +48,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
     private $database;
 
     /**
-     * @param $fields
+     * @param array|string $fields
      * @return void
      */
     private function setFields($fields) {

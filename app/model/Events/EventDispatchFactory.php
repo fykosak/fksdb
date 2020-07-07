@@ -8,10 +8,11 @@ use FKSDB\Events\Machine\Machine;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
+use Tracy\Debugger;
 
 /**
  * Class EventDispatchFactory
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventDispatchFactory {
     /** @var array */
@@ -67,6 +68,7 @@ class EventDispatchFactory {
                 return $definition;
             }
         }
+        Debugger::barDump($event);
         throw new BadRequestException();
     }
 

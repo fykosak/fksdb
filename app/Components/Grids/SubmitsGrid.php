@@ -77,7 +77,7 @@ class SubmitsGrid extends BaseGrid {
         // columns
         //
         $this->addColumn('task', _('Task'))
-            ->setRenderer(function (ModelSubmit $row) use ($presenter) {
+            ->setRenderer(function (ModelSubmit $row) {
                 return $row->getTask()->getFQName();
             });
         $this->addColumn('submitted_on', _('Čas odevzdání'));
@@ -114,7 +114,7 @@ class SubmitsGrid extends BaseGrid {
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @throws InvalidLinkException
      */
     public function handleRevoke(int $id) {

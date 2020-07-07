@@ -170,9 +170,9 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
     /**
-     * @param $table
-     * @param $column
-     * @return null
+     * @param string $table
+     * @param string $column
+     * @return array|null
      */
     private function getColumnMetadata($table, $column) {
         if (!isset($this->columns[$table])) {

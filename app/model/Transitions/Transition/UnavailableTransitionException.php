@@ -3,6 +3,7 @@
 namespace FKSDB\Transitions;
 
 use FKSDB\Events\Machine\Transition as EventTransition;
+use FKSDB\ORM\IModel;
 use Nette\InvalidStateException;
 
 /**
@@ -13,7 +14,7 @@ class UnavailableTransitionException extends \Exception {
     /**
      * UnavailableTransitionException constructor.
      * @param EventTransition|Transition $transition
-     * @param $model
+     * @param IModel $model
      */
     public function __construct($transition, $model) {
         if ($transition instanceof EventTransition) {

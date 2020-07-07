@@ -59,7 +59,7 @@ class Merger {
 
     /**
      * Merger constructor.
-     * @param $configuration
+     * @param mixed $configuration
      * @param Context $context
      */
     public function __construct($configuration, Context $context) {
@@ -170,7 +170,7 @@ class Merger {
     }
 
     /**
-     * @param $table
+     * @param string $table
      * @return TableMerger
      */
     private function createTableMerger($table) {
@@ -269,8 +269,8 @@ class Merger {
     }
 
     /**
-     * @param $table
-     * @param $pairId
+     * @param string $table
+     * @param int $pairId
      * @return mixed
      */
     private function & getPairDataById($table, $pairId) {

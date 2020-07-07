@@ -187,8 +187,8 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @param $trunkId
-     * @param $mergedId
+     * @param int $trunkId
+     * @param int $mergedId
      * @throws BadRequestException
      */
     public function authorizedMerge($trunkId, $mergedId) {
@@ -203,8 +203,8 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @param $trunkId
-     * @param $mergedId
+     * @param int $trunkId
+     * @param int $mergedId
      * @throws BadRequestException
      */
     public function authorizedDontMerge($trunkId, $mergedId) {
@@ -213,8 +213,8 @@ class PersonPresenter extends BasePresenter {
 
     /* ********************* ACTIONS **************/
     /**
-     * @param $trunkId
-     * @param $mergedId
+     * @param int $trunkId
+     * @param int $mergedId
      * @return void
      */
     public function actionMerge($trunkId, $mergedId) {
@@ -231,8 +231,8 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @param $trunkId
-     * @param $mergedId
+     * @param int $trunkId
+     * @param int $mergedId
      * @return void
      * @throws AbortException
      * @throws BadTypeException
@@ -484,7 +484,7 @@ class PersonPresenter extends BasePresenter {
      * ****************************** */
 
     /**
-     * @param $conflicts
+     * @param iterable $conflicts
      * @return void
      */
     private function setMergeConflicts($conflicts) {

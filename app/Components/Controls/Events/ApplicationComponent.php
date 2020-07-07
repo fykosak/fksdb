@@ -229,7 +229,7 @@ class ApplicationComponent extends BaseComponent {
     }
 
     /**
-     * @param $transitionName
+     * @param string $transitionName
      * @throws AbortException
      * @throws JsonException
      * @throws BadRequestException

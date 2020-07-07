@@ -198,7 +198,7 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @param null $label
      * @return GlobalButton
      * @throws DuplicateGlobalButtonException
@@ -236,7 +236,7 @@ abstract class BaseGrid extends Grid {
      */
     protected function addJoinedColumn(string $factoryName, callable $accessCallback): Column {
         $factory = $this->tableReflectionFactory->loadColumnFactory($factoryName);
-        return $this->addColumn(str_replace('.', '__', $factoryName), $factory->getTitle())->setRenderer(function ($row) use ($factory, $fieldName, $accessCallback) {
+        return $this->addColumn(str_replace('.', '__', $factoryName), $factory->getTitle())->setRenderer(function ($row) use ($factory, $accessCallback) {
             $model = $accessCallback($row);
             return $factory->renderValue($model, 1);
         });

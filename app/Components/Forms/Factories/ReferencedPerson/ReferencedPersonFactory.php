@@ -415,10 +415,10 @@ class ReferencedPersonFactory implements IReferencedSetter {
     }
 
     /**
-     * @param $searchType
+     * @param string $searchType
      * @return AutocompleteSelectBox|TextInput
      */
-    protected function createSearchControl($searchType) {
+    protected function createSearchControl(string $searchType) {
 
         switch ($searchType) {
             case self::SEARCH_EMAIL:
@@ -487,7 +487,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @param string $sub
      * @param string $field
      * @param int $acYear
-     * @param $options
+     * @param int $options
      * @return bool|ModelPostContact|mixed|null
      * @throws JsonException
      */

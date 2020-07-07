@@ -19,7 +19,7 @@ use Nette\Forms\IControl;
 class ResourceAvailability extends AbstractAdjustment {
 
     /**
-     * @var array[] fields that specifies amount used (string masks)
+     * @var array fields that specifies amount used (string masks)
      */
     private $fields;
 
@@ -41,7 +41,7 @@ class ResourceAvailability extends AbstractAdjustment {
     private $message;
 
     /**
-     * @param $fields
+     * @param array|string $fields
      * @return void
      */
     private function setFields($fields) {

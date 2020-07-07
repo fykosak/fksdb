@@ -54,7 +54,7 @@ abstract class EntityPresenter extends BasePresenter {
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @throws BadRequestException
      */
     public function authorizedDelete($id) {
@@ -62,7 +62,7 @@ abstract class EntityPresenter extends BasePresenter {
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @throws BadRequestException
      */
     public function renderEdit($id) {
@@ -105,7 +105,7 @@ abstract class EntityPresenter extends BasePresenter {
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @return AbstractModelSingle
      */
     abstract protected function loadModel($id);

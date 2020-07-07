@@ -86,7 +86,7 @@ abstract class SecondaryModelStrategy {
 
     /**
      * @param BaseHolder $holder
-     * @param $secondaries
+     * @param array $secondaries
      * @param array $joinData
      * @return void
      */

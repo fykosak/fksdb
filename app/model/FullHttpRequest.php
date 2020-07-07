@@ -22,7 +22,7 @@ class FullHttpRequest {
     /**
      * FullHttpRequest constructor.
      * @param Request $request
-     * @param $payload
+     * @param mixed $payload
      */
     public function __construct(Request $request, $payload) {
         $this->request = $request;

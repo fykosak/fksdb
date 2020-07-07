@@ -177,7 +177,8 @@ class SingleEventSource implements IHolderSource {
             'limit' => false,
             'count' => true,
         ];
-        $result = call_user_func_array([$this->primarySelection, $name], $args);
+        $result = $this->primarySelection->{$name}(...$args);
+       // $result = call_user_func_array([$this->primarySelection, $name], $args);
         $this->primaryModels = null;
 
         if ($delegated[$name]) {

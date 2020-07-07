@@ -125,7 +125,7 @@ class ApplicationHandler {
 
     /**
      * @param Holder $holder
-     * @param $data
+     * @param iterable $data
      * @throws BadRequestException
      * @throws JsonException
      */
@@ -209,9 +209,9 @@ class ApplicationHandler {
 
     /**
      * @param Holder $holder
-     * @param $data
-     * @param $explicitTransitionName
-     * @param $execute
+     * @param iterable $data
+     * @param string $explicitTransitionName
+     * @param bool|mixed $execute
      * @throws BadRequestException
      * @throws JsonException
      */
@@ -304,8 +304,8 @@ class ApplicationHandler {
     }
 
     /**
-     * @param $data
-     * @param $transitions
+     * @param iterable $data
+     * @param array $transitions
      * @param Holder $holder
      * @param string $execute
      * @return mixed
@@ -353,7 +353,7 @@ class ApplicationHandler {
     }
 
     /**
-     * @param $data
+     * @param iterable $data
      * @return void
      */
     private function formRollback($data) {

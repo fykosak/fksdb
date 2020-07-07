@@ -65,7 +65,7 @@ trait SeriesPresenterTrait {
     }
 
     /**
-     * @param $series
+     * @param int|null $series
      * @return bool
      * @throws BadRequestException
      */

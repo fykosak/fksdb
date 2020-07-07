@@ -70,7 +70,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
     }
 
     /**
-     * @param $states
+     * @param array $states
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder

@@ -40,11 +40,11 @@ class DispatchPresenter extends AuthenticatedPresenter {
     /**
      * @param ModelLogin $login
      * @param ModelContest $contest
-     * @param $role
+     * @param string $role
      * @return array
      * @throws InvalidLinkException
      */
-    private function check(ModelLogin $login, ModelContest $contest, $role) {
+    private function check(ModelLogin $login, ModelContest $contest, string $role) {
         switch ($role) {
             case ModelRole::ORG:
                 foreach ($login->getActiveOrgs($this->getYearCalculator()) as $contestId => $org) {
@@ -89,18 +89,14 @@ class DispatchPresenter extends AuthenticatedPresenter {
         }
     }
 
-    /**
-     * @param ModelContest $contest
-     * @param $role
-     * @return string
-     */
-    private function getLabel(ModelContest $contest, $role) {
+    private function getLabel(ModelContest $contest, string $role): string {
         return $contest->name . ' - ' . _($role);
     }
 
     public function titleDefault() {
         $this->setPageTitle(new PageTitle(_('Rozcestník'), 'fa fa-home'));
     }
+
     protected function beforeRender() {
         $this->getPageStyleContainer()->navBarClassName = 'bg-dark navbar-dark';
         parent::beforeRender();

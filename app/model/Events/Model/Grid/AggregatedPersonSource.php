@@ -92,7 +92,8 @@ abstract class AggregatedPersonSource implements IHolderSource {
             'limit' => false,
             'count' => true,
         ];
-        $result = call_user_func_array([$this->events, $name], $args);
+        $result = $this->events->{$name}(...$args);
+        //$result = call_user_func_array([$this->events, $name], $args);
         $this->holders = null;
 
         if ($delegated[$name]) {

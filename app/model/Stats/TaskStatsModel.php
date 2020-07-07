@@ -36,7 +36,7 @@ class TaskStatsModel {
     /**
      * TaskStatsModel constructor.
      * @param ModelContest $contest
-     * @param $year
+     * @param int $year
      * @param Connection $connection
      */
     public function __construct(ModelContest $contest, int $year, Connection $connection) {

@@ -45,7 +45,7 @@ class CategoryProcessing extends AbstractProcessing {
     }
 
     /**
-     * @param $states
+     * @param array $states
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder
@@ -116,7 +116,7 @@ class CategoryProcessing extends AbstractProcessing {
     }
 
     /**
-     * @param $participants
+     * @param array $participants
      * @return string
      */
     private function getCategory($participants) {

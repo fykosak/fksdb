@@ -80,7 +80,7 @@ class MailSender {
 
     /**
      * MailSender constructor.
-     * @param $filename
+     * @param string $filename
      * @param array|string $addresees
      * @param MailTemplateFactory $mailTemplateFactory
      * @param AccountManager $accountManager
@@ -88,13 +88,15 @@ class MailSender {
      * @param ServicePerson $servicePerson
      * @param ServiceEmailMessage $serviceEmailMessage
      */
-    public function __construct($filename,
-                                $addresees,
-                                MailTemplateFactory $mailTemplateFactory,
-                                AccountManager $accountManager,
-                                ServiceAuthToken $serviceAuthToken,
-                                ServicePerson $servicePerson,
-                                ServiceEmailMessage $serviceEmailMessage) {
+    public function __construct(
+        $filename,
+        $addresees,
+        MailTemplateFactory $mailTemplateFactory,
+        AccountManager $accountManager,
+        ServiceAuthToken $serviceAuthToken,
+        ServicePerson $servicePerson,
+        ServiceEmailMessage $serviceEmailMessage
+    ) {
         $this->filename = $filename;
         $this->addressees = $addresees;
         $this->mailTemplateFactory = $mailTemplateFactory;

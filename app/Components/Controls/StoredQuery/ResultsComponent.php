@@ -106,7 +106,7 @@ class ResultsComponent extends BaseComponent {
     }
 
     /**
-     * @param $parameters
+     * @param array $parameters
      * @return void
      */
     public function updateParameters(array $parameters) {

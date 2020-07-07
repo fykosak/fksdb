@@ -202,7 +202,7 @@ abstract class Machine {
     }
 
     /**
-     * @param $data
+     * @param array $data
      * @param IService $service
      * @return IStateModel
      * @throws BadRequestException

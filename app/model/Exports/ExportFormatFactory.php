@@ -115,7 +115,7 @@ class ExportFormatFactory {
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @param StoredQuery $storedQuery
      * @return AESOPFormat
      */

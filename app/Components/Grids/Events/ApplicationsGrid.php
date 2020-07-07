@@ -121,7 +121,7 @@ class ApplicationsGrid extends BaseComponent {
     }
 
     /**
-     * @param $searchable
+     * @param bool $searchable
      * @return void
      */
     public function setSearchable($searchable) {
@@ -145,7 +145,7 @@ class ApplicationsGrid extends BaseComponent {
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return ApplicationComponent|IComponent
      */
     protected function createComponent($name) {

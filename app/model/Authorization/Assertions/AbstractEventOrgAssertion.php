@@ -5,6 +5,8 @@ namespace Authorization\Assertions;
 use FKSDB\StoredQuery\StoredQuery;
 use FKSDB\ORM\DbNames;
 use Nette\Database\Context;
+use Nette\Security\IResource;
+use Nette\Security\IRole;
 use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
 use Nette\SmartObject;
@@ -36,7 +38,7 @@ abstract class AbstractEventOrgAssertion {
 
     /**
      * AbstractEventOrgAssertion constructor.
-     * @param $parameterName
+     * @param string $parameterName
      * @param IUserStorage $user
      * @param Context $connection
      */
@@ -48,9 +50,9 @@ abstract class AbstractEventOrgAssertion {
 
     /**
      * @param Permission $acl
-     * @param $role
-     * @param $resourceId
-     * @param $privilege
+     * @param IRole $role
+     * @param IResource|string|null $resourceId
+     * @param string $privilege
      * @param null $parameterValue
      * @return bool
      */

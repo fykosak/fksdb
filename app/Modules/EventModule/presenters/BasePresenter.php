@@ -155,7 +155,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @param $resource
+     * @param IResource|string|null $resource
      * @param string $privilege
      * @return bool
      * @throws BadRequestException
@@ -167,8 +167,8 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @param $resource
-     * @param $privilege
+     * @param IResource|string|null $resource
+     * @param string|null $privilege
      * @return bool
      * @throws BadRequestException
      * Check if has contest permission or is Event org

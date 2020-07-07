@@ -30,7 +30,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
     }
 
     /**
-     * @param $data
+     * @param \PDOStatement $data
      * @return mixed
      * @throws BadRequestException
      */
@@ -65,7 +65,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
     }
 
     /**
-     * @param $data
+     * @param \PDOStatement $data
      * @return array
      * @throws BadRequestException
      */
@@ -135,8 +135,8 @@ class AESOPContestant extends StoredQueryPostProcessing {
     }
 
     /**
-     * @param $studyYear
-     * @param $acYear
+     * @param int $studyYear
+     * @param int $acYear
      * @return int|null
      */
     private function studyYearToGraduation($studyYear, $acYear) {

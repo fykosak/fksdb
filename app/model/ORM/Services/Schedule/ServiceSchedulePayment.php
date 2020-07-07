@@ -10,7 +10,6 @@ use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Submits\StorageException;
-use Nette\Utils\ArrayHash;
 
 /**
  * Class ServiceSchedulePayment
@@ -29,7 +28,7 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
 
 
     /**
-     * @param $data
+     * @param iterable $data
      * @param ModelPayment $payment
      * @return void
      * @throws DuplicatePaymentException
@@ -73,7 +72,7 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
     }
 
     /**
-     * @param ArrayHash $data
+     * @param iterable $data
      * @return array
      */
     private function prepareData($data): array {

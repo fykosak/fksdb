@@ -56,7 +56,7 @@ class GroupOptions implements IOptionsProvider {
     }
 
     /**
-     * @param $groups
+     * @param iterable $groups
      * @return array
      */
     private function transformGroups($groups) {
@@ -71,7 +71,7 @@ class GroupOptions implements IOptionsProvider {
     }
 
     /**
-     * @param $eventId
+     * @param int $eventId
      * @return mixed
      */
     private function getGroups($eventId) {

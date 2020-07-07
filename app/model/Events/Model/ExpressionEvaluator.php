@@ -14,15 +14,16 @@ class ExpressionEvaluator {
     use SmartObject;
 
     /**
-     * @param $condition
-     * @param $context
+     * @param mixed $condition
+     * @param mixed $context
      * @return mixed
      */
     public function evaluate($condition, $context) {
         if (is_scalar($condition)) {
             return $condition;
         } elseif (is_callable($condition)) {
-            return call_user_func($condition, $context);
+            return $condition($context);
+           // return call_user_func($condition, $context);
         } else {
             throw new InvalidArgumentException("Cannot evaluate condition $condition.");
         }

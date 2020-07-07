@@ -49,7 +49,7 @@ class AddressContainer extends ModelContainer {
     }
 
     /**
-     * @param $values
+     * @param iterable|mixed $values
      * @param bool $erase
      * @return Container|void
      */

@@ -161,7 +161,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @return AbstractModelSingle
      */
     protected function loadModel($id) {

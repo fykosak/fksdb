@@ -28,8 +28,6 @@ use Persons\ExtendedPersonHandler;
 use Persons\ExtendedPersonHandlerFactory;
 use Persons\IExtendedPersonPresenter;
 use Persons\SelfResolver;
-use Tracy\Debugger;
-
 /**
  * INPUT:
  *   contest (nullable)

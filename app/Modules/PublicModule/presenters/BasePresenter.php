@@ -17,9 +17,9 @@ use Nette\Application\BadRequestException;
 abstract class BasePresenter extends ContestPresenter {
 
     /**
-     * @var ModelContestant|null|false
+     * @var ModelContestant|null
      */
-    private $contestant = false;
+    private $contestant;
 
     protected function createComponentContestChooser(): ContestChooser {
         $control = new ContestChooser($this->getContext());
@@ -28,16 +28,16 @@ abstract class BasePresenter extends ContestPresenter {
     }
 
     /**
-     * @return false|ModelContestant|null
+     * @return ModelContestant|null
      * @throws BadRequestException
      */
     public function getContestant() {
-        if ($this->contestant === false) {
+        if (!isset($this->contestant) || is_null($this->contestant)) {
             /** @var ModelPerson $person */
             $person = $this->user->getIdentity()->getPerson();
             $contestant = $person->related(DbNames::TAB_CONTESTANT_BASE, 'person_id')->where([
                 'contest_id' => $this->getSelectedContest()->contest_id,
-                'year' => $this->getSelectedYear()
+                'year' => $this->getSelectedYear(),
             ])->fetch();
 
             $this->contestant = $contestant ? ModelContestant::createFromActiveRow($contestant) : null;

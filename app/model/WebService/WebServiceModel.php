@@ -117,7 +117,7 @@ class WebServiceModel {
     }
 
     /**
-     * @param $args
+     * @param mixed $args
      * @return SoapVar
      * @throws SoapFault
      * @throws BadRequestException
@@ -314,7 +314,7 @@ class WebServiceModel {
     }
 
     /**
-     * @param $serviceName
+     * @param string $serviceName
      * @param null $arg
      * @throws SoapFault
      */
@@ -338,7 +338,7 @@ class WebServiceModel {
     }
 
     /**
-     * @param $msg
+     * @param string $msg
      * @return void
      */
     private function log($msg) {

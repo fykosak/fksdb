@@ -54,8 +54,7 @@ class DashboardPresenter extends BasePresenter {
      * @throws BadRequestException
      */
     public function renderDefault() {
-        foreach ($this->news->getNews($this->getSelectedContest(), $this->getLang())
-                 as $new) {
+        foreach ($this->news->getNews($this->getSelectedContest(), $this->getLang()) as $new) {
             $this->flashMessage($new);
         }
     }

@@ -16,7 +16,7 @@ class ViewDataSource extends NDataSource {
     /**
      * ViewDataSource constructor.
      * @param string $primaryKey
-     * @param $table
+     * @param string $table
      */
     public function __construct(string $primaryKey, $table) {
         parent::__construct($table);

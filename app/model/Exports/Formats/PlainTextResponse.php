@@ -21,7 +21,7 @@ class PlainTextResponse implements IResponse {
 
     /**
      * PlainTextResponse constructor.
-     * @param $content
+     * @param string $content
      */
     public function __construct(string $content) {
         $this->content = $content;

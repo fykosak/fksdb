@@ -86,7 +86,7 @@ class Helpers {
 
             $entity = self::$semanticMap[$expression->entity] ?? $expression->entity;
             if (function_exists($entity)) {
-                return call_user_func_array($entity, $arguments);
+                return$entity(...$arguments);
             } else {
                 $rc = ClassType::from($entity);
                 return $rc->newInstanceArgs(DIHelpers::autowireArguments($rc->getConstructor(), $arguments, $container));

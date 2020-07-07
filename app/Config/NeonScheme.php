@@ -19,8 +19,8 @@ class NeonScheme {
     const QUALIFIER_ARRAY = 'array';
 
     /**
-     * @param $section
-     * @param $sectionScheme
+     * @param array $section
+     * @param array $sectionScheme
      * @return array
      * @throws NeonSchemaException
      */

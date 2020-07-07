@@ -124,7 +124,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     * @param $element
+     * @param mixed $element
      * @throws ForbiddenRequestException
      */
     public function checkRequirements($element) {

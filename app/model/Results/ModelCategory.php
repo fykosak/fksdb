@@ -23,8 +23,8 @@ class ModelCategory {
     public $id;
 
     /**
-     * FKSDB\Results\ModelCategory constructor.
-     * @param $id
+     * ModelCategory constructor.
+     * @param string $id
      */
     public function __construct(string $id) {
         $this->id = $id;

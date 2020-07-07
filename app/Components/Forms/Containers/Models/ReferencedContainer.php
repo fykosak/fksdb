@@ -283,7 +283,7 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @param ContainerWithOptions $component
      */
     private function hideComponent($name, $component) {

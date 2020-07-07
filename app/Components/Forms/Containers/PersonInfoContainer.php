@@ -12,7 +12,7 @@ use Nette\Forms\Container;
 class PersonInfoContainer extends ModelContainer {
 
     /**
-     * @param $values
+     * @param mixed|iterable $values
      * @param bool $erase
      * @return Container|void
      */

@@ -2,6 +2,9 @@
 
 namespace Github;
 
+use Github\Events\Event;
+use Github\Events\PingEvent;
+use Github\Events\PushEvent;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 
@@ -12,6 +15,7 @@ use Nette\SmartObject;
  */
 class EventFactory {
     use SmartObject;
+
     const HTTP_HEADER = 'X-GitHub-Event';
 
     /**
@@ -23,16 +27,11 @@ class EventFactory {
     ];
 
     /**
-     * @var array
+     * @var Repository[]
      */
     private $repositoryCache = [];
 
-    /**
-     * @param $type
-     * @param $data
-     * @return mixed
-     */
-    public function createEvent($type, $data) {
+    public function createEvent(string $type, array $data): Event {
         if (!array_key_exists($type, self::$typeMap)) {
             throw new UnsupportedEventException('Unsupported event type.'); // is it XSS safe print the type?
         }
@@ -40,33 +39,21 @@ class EventFactory {
         return $this->$method($data);
     }
 
-    /**
-     * @param $data
-     * @return Events\PingEvent
-     */
-    private function createPing($data) {
+    private function createPing(array $data): PingEvent {
         $event = new Events\PingEvent();
         $this->fillBase($event, $data);
         self::fillHelper(['zen', 'hook_id'], $event, $data);
         return $event;
     }
 
-    /**
-     * @param $data
-     * @return Events\PushEvent
-     */
-    private function createPush($data) {
+    private function createPush(array $data): PushEvent {
         $event = new Events\PushEvent();
         $this->fillBase($event, $data);
         self::fillHelper(['before', 'after', 'ref'], $event, $data);
         return $event;
     }
 
-    /**
-     * @param $data
-     * @return mixed
-     */
-    private function createRepository($data) {
+    private function createRepository(array $data): Repository {
         if (!array_key_exists('id', $data)) {
             throw new MissingEventFieldException('id');
         }
@@ -97,10 +84,10 @@ class EventFactory {
     }
 
     /**
-     * @param $data
+     * @param mixed $data
      * @return User
      */
-    private function createUser($data) {
+    private function createUser(array $data): User {
         /* Github API is underspecified mess regarding users/their
          * attributes so just create a new User instance every time and fill it with
           * whatever we can store.
@@ -112,10 +99,11 @@ class EventFactory {
     }
 
     /**
-     * @param mixed $event
-     * @param mixed $data
+     * @param Event $event
+     * @param array $data
+     * @return void
      */
-    private function fillBase($event, $data) {
+    private function fillBase(Event $event, array $data) {
         if (!array_key_exists('repository', $data)) {
             throw new MissingEventFieldException('repository');
         }
@@ -128,12 +116,13 @@ class EventFactory {
     }
 
     /**
-     * @param $definition
-     * @param $object
-     * @param $data
+     * @param array $definition
+     * @param object $object
+     * @param array $data
      * @param bool $strict
+     * @return void
      */
-    private static function fillHelper($definition, $object, $data, $strict = false) {
+    private static function fillHelper(array $definition, $object, array $data, bool $strict = false) {
         foreach ($definition as $key) {
             if (!array_key_exists($key, $data)) {
                 if ($strict) {
@@ -145,7 +134,6 @@ class EventFactory {
             $object->$key = $data[$key];
         }
     }
-
 }
 
 /**

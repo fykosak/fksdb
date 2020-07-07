@@ -126,8 +126,8 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param $eventId
-     * @param $id
+     * @param int $eventId
+     * @param int $id
      * @throws BadRequestException
      */
     public function authorizedDefault($eventId, $id) {
@@ -197,8 +197,8 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param $eventId
-     * @param $id
+     * @param int $eventId
+     * @param int $id
      * @throws BadRequestException
      * @throws AbortException
      * @throws NeonSchemaException
@@ -417,8 +417,8 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param $eventId
-     * @param $id
+     * @param int $eventId
+     * @param int $id
      * @return string
      */
     public static function encodeParameters($eventId, $id) {
@@ -426,7 +426,7 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param $data
+     * @param string $data
      * @return array
      */
     public static function decodeParameters($data) {

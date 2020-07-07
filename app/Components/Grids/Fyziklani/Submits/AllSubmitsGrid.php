@@ -142,7 +142,7 @@ class AllSubmitsGrid extends SubmitsGrid {
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @throws AbortException
      */
     public function handleDelete($id) {

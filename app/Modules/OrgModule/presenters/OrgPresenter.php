@@ -11,6 +11,7 @@ use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
+use Nette\Security\IResource;
 
 /**
  * Class OrgPresenter
@@ -126,7 +127,7 @@ class OrgPresenter extends BasePresenter {
 
 
     /**
-     * @param $resource
+     * @param IResource|string|null $resource
      * @param string $privilege
      * @return bool
      * @throws BadRequestException

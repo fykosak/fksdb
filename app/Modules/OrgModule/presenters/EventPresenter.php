@@ -12,6 +12,7 @@ use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use FKSDB\Exceptions\NotImplementedException;
+use Nette\Security\IResource;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -95,7 +96,7 @@ class EventPresenter extends BasePresenter {
     }
 
     /**
-     * @param $resource
+     * @param IResource|string|null $resource
      * @param string $privilege
      * @return bool
      * @throws BadRequestException

@@ -69,7 +69,7 @@ abstract class AbstractServiceMulti implements IService {
 
     /**
      * @param IModel|AbstractModelMulti $model
-     * @param $data
+     * @param iterable $data
      * @param bool $alive
      * @return void
      */

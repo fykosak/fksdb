@@ -14,7 +14,6 @@ use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 
 /**
@@ -40,7 +39,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     public function titleEdit() {
-        $this->setPageTitle(new PageTitle(sprintf(_('Úprava dotazu %s'), $this->getEntity()->name), 'fa fa-pencil'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit query %s'), $this->getEntity()->name), 'fa fa-pencil'));
     }
 
     public function getTitleCreate(): PageTitle {
@@ -83,11 +82,11 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
         $this->template->model = $this->getEntity();
     }
 
-    protected function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): StoredQueryForm {
         return new StoredQueryForm($this->getContext(), true);
     }
 
-    protected function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): StoredQueryForm {
         return new StoredQueryForm($this->getContext(), false);
     }
 
@@ -106,7 +105,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     /**
-     * @param IResource|string $resource
+     * @param IResource|string|null $resource
      * @param string|null $privilege
      * @return bool
      * @throws BadRequestException

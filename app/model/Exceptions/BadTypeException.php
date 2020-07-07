@@ -13,7 +13,7 @@ class BadTypeException extends BadRequestException {
     /**
      * BadTypeException constructor.
      * @param string $expected
-     * @param $got
+     * @param object|mixed $got
      * @param \Exception|NULL $previous
      */
     public function __construct(string $expected, $got, \Exception $previous = NULL) {

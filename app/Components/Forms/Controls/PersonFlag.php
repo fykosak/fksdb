@@ -55,7 +55,7 @@ class PersonFlag extends SelectBox {
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @return static
      */
     public function setValue($value) {

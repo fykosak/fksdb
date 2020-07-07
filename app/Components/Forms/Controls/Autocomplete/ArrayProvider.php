@@ -59,7 +59,7 @@ class ArrayProvider implements IFilteredDataProvider {
     }
 
     /**
-     * @param $id
+     * @param mixed $id
      * @return void
      */
     public function setDefaultValue($id) {

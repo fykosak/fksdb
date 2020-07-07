@@ -96,7 +96,7 @@ class ModelPersonSchedule extends AbstractModelSingle implements
     }
 
     /**
-     * @param $newState
+     * @param string|null $newState
      * @return void
      */
     public function updateState($newState) {

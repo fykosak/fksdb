@@ -48,7 +48,7 @@ class LayoutResolver {
 
     /**
      * @param ModelEvent $event
-     * @param $type
+     * @param string $type
      * @return string
      * @throws NotImplementedException
      */

@@ -68,7 +68,7 @@ class TableMerger {
 
     /**
      * TableMerger constructor.
-     * @param $table
+     * @param string $table
      * @param Merger $merger
      * @param Context $context
      * @param IMergeStrategy $globalMergeStrategy
@@ -98,7 +98,7 @@ class TableMerger {
     }
 
     /**
-     * @param $column
+     * @param string $column
      * @param IMergeStrategy|null $mergeStrategy
      */
     public function setColumnMergeStrategy($column, IMergeStrategy $mergeStrategy = null) {
@@ -235,11 +235,11 @@ class TableMerger {
     }
 
     /**
-     * @param $rows
-     * @param $parentColumn
+     * @param mixed $rows
+     * @param mixed $parentColumn
      * @return array
      */
-    private function groupBySecondaryKey($rows, $parentColumn) {
+    private function groupBySecondaryKey($rows, $parentColumn): array {
         $result = [];
         foreach ($rows as $row) {
             $key = $this->getSecondaryKeyValue($row, $parentColumn);
@@ -253,7 +253,7 @@ class TableMerger {
 
     /**
      * @param ActiveRow $row
-     * @param $parentColumn
+     * @param mixed $parentColumn
      * @return string
      */
     private function getSecondaryKeyValue(ActiveRow $row, $parentColumn) {
@@ -273,7 +273,7 @@ class TableMerger {
 
     /**
      * @param ActiveRow $row
-     * @param $changes
+     * @param iterable $changes
      * @return void
      */
     private function logUpdate(ActiveRow $row, $changes) {
@@ -380,7 +380,7 @@ class TableMerger {
     private static $refreshReferenced = true;
 
     /**
-     * @param $column
+     * @param string $column
      * @return mixed
      */
     private function getReferencedTable($column) {
@@ -419,7 +419,7 @@ class TableMerger {
     }
 
     /**
-     * @param $secondaryKey
+     * @param string $secondaryKey
      * @return void
      */
     public function setSecondaryKey($secondaryKey) {

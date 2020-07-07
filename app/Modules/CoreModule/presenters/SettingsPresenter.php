@@ -154,7 +154,6 @@ class SettingsPresenter extends AuthenticatedPresenter {
     /**
      * @param Form $form
      * @throws AbortException
-     * @internal
      */
     private function handleSettingsFormSuccess(Form $form) {
         $values = $form->getValues();
