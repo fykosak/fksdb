@@ -88,7 +88,8 @@ class SubmitPresenter extends BasePresenter {
     public function injectQuizQuestionService(ServiceQuizQuestion $quizQuestionService) {
         $this->quizQuestionService = $quizQuestionService;
     }
-/** @var SubmitHandlerFactory */
+
+    /** @var SubmitHandlerFactory */
     private $submitHandlerFactory;
 
     /**
@@ -156,7 +157,7 @@ class SubmitPresenter extends BasePresenter {
      * @return FormControl
      * @throws BadRequestException
      */
-    protected function createComponentUploadForm() {
+    protected function createComponentUploadForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
 

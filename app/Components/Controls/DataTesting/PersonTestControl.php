@@ -65,7 +65,7 @@ class PersonTestControl extends BaseComponent {
      * @return FormControl
      * @throws BadRequestException
      */
-    protected function createComponentForm() {
+    protected function createComponentForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
         $form->addText('start_id', _('From person_id'))

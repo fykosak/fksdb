@@ -30,10 +30,6 @@ use FKSDB\Utils\Utils;
 /**
  * Class AuthenticationPresenter
  */
-
-/**
- * Class AuthenticationPresenter
- */
 final class AuthenticationPresenter extends BasePresenter {
 
     const PARAM_GSID = 'gsid';
@@ -85,6 +81,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @var string
      */
     private $login;
+
     /**
      * @param ServiceAuthToken $serviceAuthToken
      * @return void
@@ -219,7 +216,7 @@ final class AuthenticationPresenter extends BasePresenter {
      *
      * @return bool
      */
-    private function isLoggedIn() {
+    private function isLoggedIn(): bool {
         return $this->getUser()->isLoggedIn() || isset($this->globalSession[IGlobalSession::UID]);
     }
 
@@ -229,7 +226,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * Login form component factory.
      * @return Form
      */
-    protected function createComponentLoginForm() {
+    protected function createComponentLoginForm(): Form {
         $form = new Form($this, 'loginForm');
         $form->addText('id', _('Přihlašovací jméno nebo email'))
             ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'))
@@ -258,7 +255,7 @@ final class AuthenticationPresenter extends BasePresenter {
      *
      * @return Form
      */
-    protected function createComponentRecoverForm() {
+    protected function createComponentRecoverForm(): Form {
         $form = new Form();
         $form->addText('id', _('Přihlašovací jméno nebo email'))
             ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'));

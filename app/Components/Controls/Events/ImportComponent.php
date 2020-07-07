@@ -60,7 +60,7 @@ class ImportComponent extends BaseComponent {
      * @return FormControl
      * @throws BadRequestException
      */
-    protected function createComponentFormImport() {
+    protected function createComponentFormImport(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
 
