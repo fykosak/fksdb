@@ -52,8 +52,6 @@ class DashboardPresenter extends BasePresenter {
     }
 
     /**
-     *
-     *
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      * @throws UnsupportedLanguageException

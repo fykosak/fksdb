@@ -42,8 +42,6 @@ class PaymentSelectField extends TextInput {
      * @param ModelEvent $event
      * @param array $groupTypes
      * @param bool $showAll
-     *
-     *
      * @throws BadRequestException
      * @throws JsonException
      */

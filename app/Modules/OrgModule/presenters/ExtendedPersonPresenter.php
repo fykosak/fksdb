@@ -170,15 +170,12 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     /**
      * @return FormControl
-     *
      * @throws BadTypeException
      * @throws JsonException
      * @throws AbstractColumnException
      * @throws OmittedControlException
      * @throws NotImplementedException
      * @throws ForbiddenRequestException
-     *
-     *
      */
     final protected function createComponentEditComponent(): FormControl {
         return $this->createComponentFormControl(false);

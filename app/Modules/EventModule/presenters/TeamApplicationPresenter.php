@@ -75,8 +75,6 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
 
     /**
      * @return AbstractApplicationGrid
-     *
-     *
      * @throws EventNotFoundException
      * @throws NeonSchemaException
      */

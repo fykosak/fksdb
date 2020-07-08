@@ -105,8 +105,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @return Holder
-     *
-     *
      * @throws EventNotFoundException
      * @throws NeonSchemaException
      */
@@ -193,9 +191,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @return void
-     *
-     *
-     *
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws UnsupportedLanguageException

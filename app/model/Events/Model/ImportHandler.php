@@ -150,8 +150,6 @@ class ImportHandler {
 
     /**
      * @return Holder[]
-     *
-     *
      * @throws NeonSchemaException
      */
     private function createHoldersMap(): array {

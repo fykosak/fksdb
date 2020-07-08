@@ -119,8 +119,6 @@ class WebServiceModel {
     /**
      * @param mixed $args
      * @return SoapVar
-     *
-     *
      * @throws BadRequestException
      * @throws SoapFault
      */
@@ -263,8 +261,6 @@ class WebServiceModel {
     /**
      * @param stdClass $args
      * @return SoapVar
-     *
-     *
      * @throws BadRequestException
      * @throws SoapFault
      */

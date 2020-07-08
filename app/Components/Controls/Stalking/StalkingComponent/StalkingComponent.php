@@ -32,9 +32,6 @@ class StalkingComponent extends StalkingControl {
      * @param ModelPerson $person
      * @param int $userPermission
      * @return void
-     *
-     *
-     *
      * @throws NotImplementedException
      */
     public function render(string $section, ModelPerson $person, int $userPermission) {

@@ -48,8 +48,6 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
 
     /**
      * @return AbstractApplicationGrid
-     *
-     *
      * @throws EventNotFoundException
      * @throws NeonSchemaException
      */
@@ -59,8 +57,6 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
 
     /**
      * @return ImportComponent
-     *
-     *
      * @throws EventNotFoundException
      * @throws NeonSchemaException
      */
@@ -74,8 +70,6 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
 
     /**
      * @return void
-     *
-     *
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException

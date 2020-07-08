@@ -37,8 +37,6 @@ class InitSource extends AggregatedPersonSource implements IHolderSource {
     /**
      * @param ModelEvent $event
      * @return Holder
-     *
-     *
      * @throws NeonSchemaException
      */
     public function processEvent(ModelEvent $event) {

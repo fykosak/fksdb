@@ -157,13 +157,10 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @param IVisibilityResolver $visibilityResolver
      * @return ReferencedContainer
      * @throws AbstractColumnException
-     *
      * @throws BadTypeException
      * @throws JsonException
      * @throws NotImplementedException
      * @throws OmittedControlException
-     *
-     *
      */
     public function createReferencedPerson(array $fieldsDefinition, int $acYear, string $searchType, bool $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver) {
         $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $this->event ?? null);

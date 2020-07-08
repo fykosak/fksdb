@@ -297,8 +297,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @return FormControl
-     *
-     *
      * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws JsonException
@@ -382,9 +380,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @return void
-     *
-     *
-     *
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      * @throws \ReflectionException

@@ -122,8 +122,6 @@ class ApplicationComponent extends BaseComponent {
     /**
      * @param string $mode
      * @return void
-     *
-     *
      */
     public function renderInline($mode) {
         $this->template->mode = $mode;
@@ -245,8 +243,6 @@ class ApplicationComponent extends BaseComponent {
      * @param null $explicitTransitionName
      * @throws AbortException
      * @throws JsonException
-     *
-     *
      */
     private function execute(Form $form = null, $explicitTransitionName = null) {
         try {

@@ -38,8 +38,6 @@ trait ReactComponentTrait {
 
     /**
      * @param mixed ...$args
-     *
-     *
      * @throws BadRequestException
      * @throws JsonException Can be used only with BaseControl
      */

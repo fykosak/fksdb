@@ -90,9 +90,6 @@ class Navigation extends BaseComponent {
     /**
      * @param array $node
      * @return bool
-     *
-     *
-     *
      * @throws BadTypeException
      * @throws \ReflectionException
      * @throws BadRequestException
@@ -133,12 +130,10 @@ class Navigation extends BaseComponent {
     /**
      * @param array $node
      * @return null|string
-     *
-     *
-     *
      * @throws BadTypeException
      * @throws InvalidLinkException
      * @throws \ReflectionException
+     * @throws BadRequestException
      */
     public function getLink(array $node) {
         if (isset($node['link'])) {
@@ -229,9 +224,6 @@ class Navigation extends BaseComponent {
      * @param Presenter $presenter
      * @param array $node
      * @return bool
-     *
-     *
-     *
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws \ReflectionException

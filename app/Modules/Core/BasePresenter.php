@@ -276,10 +276,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
-     *
-     *
-     *
-     *
      * @throws BadTypeException
      * @throws ReflectionException
      * @throws UnsupportedLanguageException

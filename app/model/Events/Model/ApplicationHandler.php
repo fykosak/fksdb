@@ -125,8 +125,6 @@ class ApplicationHandler {
     /**
      * @param Holder $holder
      * @param iterable $data
-     *
-     *
      * @throws JsonException
      */
     final public function store(Holder $holder, $data) {
@@ -211,8 +209,6 @@ class ApplicationHandler {
      * @param iterable $data
      * @param string $explicitTransitionName
      * @param bool|mixed $execute
-     *
-     *
      * @throws JsonException
      */
     private function _storeAndExecute(Holder $holder, $data, $explicitTransitionName, $execute) {

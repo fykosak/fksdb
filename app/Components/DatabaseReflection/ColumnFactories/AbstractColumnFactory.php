@@ -49,8 +49,6 @@ abstract class AbstractColumnFactory implements IColumnFactory {
      * @param AbstractModelSingle $model
      * @param int $userPermissionsLevel
      * @return Html
-     *
-     *
      * @throws BadTypeException
      */
     final public function renderValue(AbstractModelSingle $model, int $userPermissionsLevel): Html {
@@ -67,9 +65,6 @@ abstract class AbstractColumnFactory implements IColumnFactory {
     /**
      * @param AbstractModelSingle $modelSingle
      * @return AbstractModelSingle|null
-     *
-     *
-     *
      * @throws BadTypeException
      */
     protected function getModel(AbstractModelSingle $modelSingle) {

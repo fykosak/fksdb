@@ -30,8 +30,6 @@ class ModelPresenter extends BasePresenter {
 
     /**
      * @return GraphComponent
-     *
-     *
      * @throws EventNotFoundException
      */
     protected function createComponentGraphComponent(): GraphComponent {

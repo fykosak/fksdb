@@ -88,8 +88,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     *
-     *
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws ForbiddenRequestException
@@ -101,9 +99,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     *
-     *
-     *
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws ForbiddenRequestException
@@ -134,8 +129,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     *
-     *
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
@@ -163,8 +156,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return StoredQuery
-     *
-     *
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
@@ -203,8 +194,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return ResultsComponent
-     *
-     *
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
