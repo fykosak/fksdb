@@ -7,7 +7,6 @@ use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 
 /**
@@ -38,7 +37,6 @@ class InitSource extends AggregatedPersonSource implements IHolderSource {
     /**
      * @param ModelEvent $event
      * @return Holder
-     * @throws BadRequestException
      * @throws NeonSchemaException
      */
     public function processEvent(ModelEvent $event) {

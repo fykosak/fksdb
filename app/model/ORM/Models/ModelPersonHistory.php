@@ -48,9 +48,9 @@ class ModelPersonHistory extends AbstractModelSingle implements ISchoolReference
     ];
 
     /**
-     * @param $class
-     * @param $diff
-     * @return null|string|string[]
+     * @param string|null $class
+     * @param int $diff
+     * @return string|string[]|null
      */
     private function extrapolateClass(string $class = null, int $diff = 0) {
         if (!$class) {
@@ -72,8 +72,8 @@ class ModelPersonHistory extends AbstractModelSingle implements ISchoolReference
     }
 
     /**
-     * @param $studyYear
-     * @param $diff
+     * @param int|null $studyYear
+     * @param int $diff
      * @return int|null
      */
     private function extrapolateStudyYear(int $studyYear = null, int $diff = 0) {

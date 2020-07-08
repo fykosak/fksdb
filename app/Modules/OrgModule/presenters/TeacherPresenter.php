@@ -4,13 +4,13 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Entity\Teacher\TeacherForm;
 use FKSDB\Components\Grids\TeachersGrid;
+use FKSDB\Entity\ModelNotFoundException;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
 use FKSDB\UI\PageTitle;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 
 /**
@@ -36,8 +36,9 @@ class TeacherPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     public function titleEdit() {
         $this->setPageTitle(new PageTitle(sprintf(_('Edit teacher %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-pencil'));
@@ -53,20 +54,25 @@ class TeacherPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
      */
     public function titleDetail() {
         $this->setPageTitle(new PageTitle(_('Teacher detail'), 'fa fa-graduation-cap'));
     }
 
+    /**
+     * @return void
+     * @throws ModelNotFoundException
+     */
     public function renderDetail() {
         $this->template->model = $this->getEntity();
     }
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws ModelNotFoundException
+     * @throws BadTypeException
      */
     public function actionEdit() {
         $this->traitActionEdit();
@@ -76,11 +82,11 @@ class TeacherPresenter extends BasePresenter {
         return new TeachersGrid($this->getContext());
     }
 
-    protected function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): TeacherForm {
         return new TeacherForm($this->getContext(), true);
     }
 
-    protected function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): TeacherForm {
         return new TeacherForm($this->getContext(), false);
     }
 
@@ -88,7 +94,8 @@ class TeacherPresenter extends BasePresenter {
      * @param IResource|string|null $resource
      * @param string|null $privilege
      * @return bool
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());

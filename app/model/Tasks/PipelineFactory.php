@@ -63,9 +63,9 @@ class PipelineFactory {
 
     /**
      * PipelineFactory constructor.
-     * @param $columnMappings
-     * @param $contributionMappings
-     * @param $defaultStudyYears
+     * @param array $columnMappings
+     * @param array $contributionMappings
+     * @param array $defaultStudyYears
      * @param ServiceTask $serviceTask
      * @param ServiceTaskContribution $serviceTaskContribution
      * @param ServiceTaskStudyYear $serviceTaskStudyYear

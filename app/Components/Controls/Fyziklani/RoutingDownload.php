@@ -5,7 +5,6 @@ namespace FKSDB\Components\Controls\Fyziklani;
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
 
@@ -26,10 +25,6 @@ class RoutingDownload extends BaseComponent {
      * @var ServiceFyziklaniTeam
      */
     private $serviceFyziklaniTeam;
-    /**
-     * @var ServiceFyziklaniRoom
-     */
-    private $serviceFyziklaniRoom;
 
     /**
      * RoutingDownload constructor.
@@ -51,12 +46,10 @@ class RoutingDownload extends BaseComponent {
 
     /**
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param ServiceFyziklaniRoom $serviceFyziklaniRoom
      * @return void
      */
-    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniRoom $serviceFyziklaniRoom) {
+    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->serviceFyziklaniRoom = $serviceFyziklaniRoom;
     }
 
     /**

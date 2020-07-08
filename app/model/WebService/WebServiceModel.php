@@ -117,17 +117,16 @@ class WebServiceModel {
     }
 
     /**
-     * @param $args
+     * @param mixed $args
      * @return SoapVar
-     * @throws SoapFault
      * @throws BadRequestException
+     * @throws SoapFault
      */
     public function getResults($args): SoapVar {
         $this->checkAuthentication(__FUNCTION__);
         if (!isset($this->inverseContestMap[$args->contest])) {
             throw new SoapFault('Sender', 'Unknown contest.');
         }
-        /** @var ModelContest $contest */
         $contest = $this->serviceContest->findByPrimary($this->inverseContestMap[$args->contest]);
         $doc = new DOMDocument();
         $resultsNode = $doc->createElement('results');
@@ -214,7 +213,6 @@ class WebServiceModel {
         if (!isset($this->inverseContestMap[$args->contest])) {
             throw new SoapFault('Sender', 'Unknown contest.');
         }
-        /** @var ModelContest $contest */
         $contest = $this->serviceContest->findByPrimary($this->inverseContestMap[$args->contest]);
         $year = (string)$args->year;
 
@@ -261,8 +259,8 @@ class WebServiceModel {
     /**
      * @param stdClass $args
      * @return SoapVar
-     * @throws SoapFault
      * @throws BadRequestException
+     * @throws SoapFault
      */
     public function getExport($args): SoapVar {
         // parse arguments
@@ -314,7 +312,7 @@ class WebServiceModel {
     }
 
     /**
-     * @param $serviceName
+     * @param string $serviceName
      * @param null $arg
      * @throws SoapFault
      */
@@ -338,7 +336,7 @@ class WebServiceModel {
     }
 
     /**
-     * @param $msg
+     * @param string $msg
      * @return void
      */
     private function log($msg) {

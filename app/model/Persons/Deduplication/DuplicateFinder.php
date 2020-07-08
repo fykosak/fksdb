@@ -138,8 +138,8 @@ class DuplicateFinder {
     }
 
     /**
-     * @param $a
-     * @param $b
+     * @param string $a
+     * @param string $b
      * @return float|int
      */
     private function stringScore($a, $b) {
@@ -147,8 +147,8 @@ class DuplicateFinder {
     }
 
     /**
-     * @param $a
-     * @param $b
+     * @param string $a
+     * @param string $b
      * @return float|int
      */
     private function relativeDistance($a, $b) {

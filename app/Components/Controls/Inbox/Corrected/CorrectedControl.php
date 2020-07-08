@@ -3,10 +3,10 @@
 namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\ILogger;
 use FKSDB\Submits\FileSystemStorage\CorrectedStorage;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 
 /**
@@ -35,7 +35,7 @@ class CorrectedControl extends SeriesTableComponent {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function createComponentForm(): FormControl {
         $control = new FormControl();

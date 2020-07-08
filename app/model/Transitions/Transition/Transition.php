@@ -6,9 +6,8 @@ use FKSDB\Logging\ILogger;
 use FKSDB\Transitions\Statements\Statement;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
+ * Class Transition
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 final class Transition {
     const TYPE_SUCCESS = ILogger::SUCCESS;

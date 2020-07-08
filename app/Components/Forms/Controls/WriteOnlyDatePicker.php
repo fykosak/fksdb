@@ -35,7 +35,7 @@ class WriteOnlyDatePicker extends DateInput implements IWriteOnly {
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @return static
      */
     public function setValue($value) {

@@ -115,7 +115,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
 
     /**
      * @param ModelPerson $person
-     * @param $fbUser
+     * @param int|string $fbUser
      * @return void
      */
     private function updateFromFB(ModelPerson $person, $fbUser) {
@@ -145,7 +145,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @param $fbUser
+     * @param int|string $fbUser
      * @return array
      */
     private function getPersonData($fbUser) {
@@ -158,7 +158,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @param $fbUser
+     * @param int|string $fbUser
      * @return array
      */
     private function getPersonInfoData($fbUser) {

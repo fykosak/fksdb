@@ -24,7 +24,7 @@ class LoggingMailer implements IMailer {
      */
     private $parameters;
     /**
-     * @var mixed
+     * @var string
      */
     private $logPath;
     /**
@@ -46,34 +46,28 @@ class LoggingMailer implements IMailer {
         $this->parameters = $parameters;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getLogPath() {
+    public function getLogPath(): string {
         return $this->logPath;
     }
 
     /**
-     * @param $logPath
+     * @param string $logPath
      * @return void
      */
-    public function setLogPath($logPath) {
+    public function setLogPath(string $logPath) {
         $this->logPath = $logPath;
         @mkdir($this->logPath, 0770, true);
     }
 
-    /**
-     * @return bool
-     */
-    public function getLogging() {
+    public function getLogging(): bool {
         return $this->logging;
     }
 
     /**
-     * @param $logging
+     * @param bool $logging
      * @return void
      */
-    public function setLogging($logging) {
+    public function setLogging(bool $logging) {
         $this->logging = $logging;
     }
 
@@ -94,10 +88,7 @@ class LoggingMailer implements IMailer {
         }
     }
 
-    /**
-     * @return int
-     */
-    public function getSentMessages() {
+    public function getSentMessages(): int {
         return $this->sentMessages;
     }
 

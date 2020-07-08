@@ -23,7 +23,6 @@ use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\Transitions\UnavailableTransitionException;
 use FKSDB\Utils\FormUtils;
-use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -109,7 +108,7 @@ class ApplicationHandler {
 
     /**
      * @return Machine
-     * @throws BadRequestException
+     *
      */
     public function getMachine() {
         $this->initializeMachine();
@@ -125,8 +124,7 @@ class ApplicationHandler {
 
     /**
      * @param Holder $holder
-     * @param $data
-     * @throws BadRequestException
+     * @param iterable $data
      * @throws JsonException
      */
     final public function store(Holder $holder, $data) {
@@ -136,8 +134,7 @@ class ApplicationHandler {
     /**
      * @param Holder $holder
      * @param Form|ArrayHash|null $data
-     * @param mixed $explicitTransitionName
-     * @throws BadRequestException
+     * @param string|null $explicitTransitionName
      * @throws JsonException
      */
     public function storeAndExecute(Holder $holder, $data = null, $explicitTransitionName = null) {
@@ -147,7 +144,7 @@ class ApplicationHandler {
     /**
      * @param Holder $holder
      * @param string $explicitTransitionName
-     * @throws BadRequestException
+     * @return void
      */
     public function onlyExecute(Holder $holder, string $explicitTransitionName) {
         $this->initializeMachine();
@@ -209,10 +206,9 @@ class ApplicationHandler {
 
     /**
      * @param Holder $holder
-     * @param $data
-     * @param $explicitTransitionName
-     * @param $execute
-     * @throws BadRequestException
+     * @param iterable $data
+     * @param string $explicitTransitionName
+     * @param bool|mixed $execute
      * @throws JsonException
      */
     private function _storeAndExecute(Holder $holder, $data, $explicitTransitionName, $execute) {
@@ -304,8 +300,8 @@ class ApplicationHandler {
     }
 
     /**
-     * @param $data
-     * @param $transitions
+     * @param iterable $data
+     * @param array $transitions
      * @param Holder $holder
      * @param string $execute
      * @return mixed
@@ -344,7 +340,7 @@ class ApplicationHandler {
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
      */
     private function initializeMachine() {
         if (!$this->machine) {
@@ -353,7 +349,7 @@ class ApplicationHandler {
     }
 
     /**
-     * @param $data
+     * @param iterable $data
      * @return void
      */
     private function formRollback($data) {

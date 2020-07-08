@@ -119,7 +119,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
     }
 
     /**
-     * @param $dataSource
+     * @param StoredQuery $dataSource
      * @param DOMNode $node
      * @param DOMDocument $doc
      * @param int $format

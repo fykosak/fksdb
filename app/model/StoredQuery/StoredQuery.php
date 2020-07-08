@@ -172,7 +172,7 @@ class StoredQuery implements IDataSource, IResource {
     }
 
     /**
-     * @param $parameters
+     * @param iterable $parameters
      * @return void
      */
     public function setParameters($parameters) {

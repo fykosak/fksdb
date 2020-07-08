@@ -107,7 +107,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * Updates values in model from given data.
      *
      * @param IModel $model
-     * @param array $data
+     * @param iterable $data
      * @param bool $alive
      * @deprecated
      */
@@ -245,7 +245,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     /**
      * Omits array elements whose keys aren't columns in the table.
      *
-     * @param array|null $data
+     * @param iterable|null $data
      * @return array|null
      */
     protected function filterData($data) {

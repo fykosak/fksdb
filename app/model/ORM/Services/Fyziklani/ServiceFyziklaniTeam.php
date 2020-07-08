@@ -4,7 +4,6 @@ namespace FKSDB\ORM\Services\Fyziklani;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
@@ -58,8 +57,7 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
             $query->where('category', $category);
         }
         $query->where('points', null);
-        $count = $query->count();
-        return $count == 0;
+        return $query->count() == 0;
     }
 
 }

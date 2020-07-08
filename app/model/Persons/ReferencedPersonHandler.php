@@ -29,7 +29,6 @@ use Nette\Utils\ArrayHash;
 use Nette\Utils\JsonException;
 use FKSDB\ORM\ServicesMulti\ServiceMPersonHasFlag;
 use FKSDB\ORM\ServicesMulti\ServiceMPostContact;
-use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -388,7 +387,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
     /**
      * @param ModelPerson $person
      * @param ArrayHash $data
-     * @param $models
+     * @param array $models
      * @throws ModelException
      */
     private function prepareFlagModels(ModelPerson $person, ArrayHash &$data, array &$models) {

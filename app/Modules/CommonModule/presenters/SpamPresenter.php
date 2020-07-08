@@ -3,10 +3,12 @@
 namespace FKSDB\Modules\CommonModule;
 
 use FKSDB\Components\Grids\EmailsGrid;
+use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\UI\PageTitle;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 
@@ -30,6 +32,11 @@ class SpamPresenter extends BasePresenter {
         $this->serviceEmailMessage = $serviceEmailMessage;
     }
 
+    /**
+     * @return void
+     * @throws ModelNotFoundException
+     * @throws ForbiddenRequestException
+     */
     public function titleDetail() {
         $this->setPageTitle(new PageTitle(sprintf(_('Detail of email #%s'), $this->getEntity()->getPrimary()), 'fa fa-envelope'));
     }
@@ -48,6 +55,7 @@ class SpamPresenter extends BasePresenter {
 
     /**
      * @return void
+     * @throws ModelNotFoundException
      */
     public function renderDetail() {
         $this->template->model = $this->getEntity();

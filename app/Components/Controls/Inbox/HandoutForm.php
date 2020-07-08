@@ -15,7 +15,6 @@ use FKSDB\ORM\Services\ServiceTaskContribution;
 use FKSDB\Submits\SeriesTable;
 use FKSDB\YearCalculator;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 
@@ -58,7 +57,7 @@ class HandoutForm extends BaseComponent {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function createComponentForm(): FormControl {
         $formControl = new FormControl();

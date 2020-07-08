@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Fyziklani;
+namespace FKSDB\Fyziklani\Ranking;
 
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -8,7 +8,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Modules\FyziklaniModule\BasePresenter;
-use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
 
 /**
@@ -16,7 +15,7 @@ use Nette\Utils\Html;
  * @author Michal Červeňák
  * @author Lukáš Timko
  */
-class CloseStrategy {
+class RankingStrategy {
     /**
      * @var BasePresenter
      * @deprecated
@@ -45,7 +44,8 @@ class CloseStrategy {
     /**
      * @param string|null $category
      * @return Html
-     * @throws BadRequestException
+     *
+     * @throws NotClosedTeamException
      * @internal
      */
     public function close(string $category = null): Html {
@@ -62,7 +62,7 @@ class CloseStrategy {
     /**
      * @param string|null $category
      * @return Html
-     * @throws BadRequestException
+     * @throws NotClosedTeamException
      */
     public function __invoke(string $category = null): Html {
         return $this->close($category);
@@ -87,14 +87,14 @@ class CloseStrategy {
     /**
      * @param TypedTableSelection $teams
      * @return array[]
-     * @throws BadRequestException
+     * @throws NotClosedTeamException
      */
     private function getTeamsStats(TypedTableSelection $teams): array {
         $teamsData = [];
         /** @var ModelFyziklaniTeam $team */
         foreach ($teams as $team) {
             if ($team->hasOpenSubmitting()) {
-                throw new BadRequestException('Tým ' . $team->name . '(' . $team->e_fyziklani_team_id . ') nemá uzavřené bodování');
+                throw new NotClosedTeamException($team);
             }
             $teamData = [
                 'points' => $team->points,
@@ -152,7 +152,7 @@ class CloseStrategy {
                 $arraySubmits[] = [
                     'task_id' => $submit->fyziklani_task_id,
                     'points' => $submit->points,
-                    'time' => $submit->modified
+                    'time' => $submit->modified,
                 ];
             }
         }

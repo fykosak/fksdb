@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
-use Nette\Application\BadRequestException;
 
 /**
  * Class ValuePrinterComponent
@@ -32,7 +31,6 @@ class ValuePrinterComponent extends BaseComponent {
      * @param int $userPermission
      * @return void
      * @throws BadTypeException
-     * @throws BadRequestException
      */
     public function render(string $field, AbstractModelSingle $model, int $userPermission) {
         $factory = $this->tableReflectionFactory->loadColumnFactory($field);
@@ -47,7 +45,7 @@ class ValuePrinterComponent extends BaseComponent {
      * @param AbstractModelSingle $model
      * @param int $userPermission
      * @return void
-     * @throws BadRequestException
+     *
      * @throws BadTypeException
      */
     public function renderRow(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL) {
@@ -60,7 +58,6 @@ class ValuePrinterComponent extends BaseComponent {
      * @param AbstractModelSingle $model
      * @param int $userPermission
      * @return void
-     * @throws BadRequestException
      * @throws BadTypeException
      */
     public function renderListItem(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL) {
@@ -73,7 +70,7 @@ class ValuePrinterComponent extends BaseComponent {
      * @param AbstractModelSingle $model
      * @param int $userPermission
      * @return void
-     * @throws BadRequestException
+     *
      * @throws BadTypeException
      */
     public function renderOnlyValue(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL) {

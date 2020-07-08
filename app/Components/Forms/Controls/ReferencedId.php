@@ -132,7 +132,7 @@ class ReferencedId extends HiddenField {
     }
 
     /**
-     * @param $modelCreated
+     * @param mixed $modelCreated
      * @return void
      */
     public function setModelCreated($modelCreated) {

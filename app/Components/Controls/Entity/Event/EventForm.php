@@ -24,7 +24,6 @@ use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\Utils\FormUtils;
 use FKSDB\Utils\Utils;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
@@ -135,8 +134,9 @@ class EventForm extends AbstractEntityFormControl implements IEditEntityForm {
     }
 
     /**
-     * @param AbstractModelSingle|ModelEvent $model
-     * @throws BadRequestException
+     * @param AbstractModelSingle $model
+     * @return void
+     * @throws BadTypeException
      * @throws NeonSchemaException
      */
     public function setModel(AbstractModelSingle $model) {

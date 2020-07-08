@@ -8,7 +8,7 @@ use FKSDB\Transitions\Statements\Statement;
 
 /**
  * Class DateBetween
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DateBetween extends Statement {
     /**

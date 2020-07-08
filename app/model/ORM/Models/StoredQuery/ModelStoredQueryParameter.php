@@ -39,7 +39,7 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @throws InvalidStateException
      */
     public function setDefaultValue($value) {

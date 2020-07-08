@@ -4,13 +4,15 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Entity\Org\OrgForm;
 use FKSDB\Components\Grids\OrgsGrid;
+use FKSDB\Entity\ModelNotFoundException;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
 use FKSDB\UI\PageTitle;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
+use Nette\Security\IResource;
 
 /**
  * Class OrgPresenter
@@ -38,8 +40,10 @@ class OrgPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws BadTypeException
      */
     public function titleEdit() {
         $this->setPageTitle(new PageTitle(sprintf(_('Úprava organizátora %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-pencil'));
@@ -47,8 +51,10 @@ class OrgPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws BadTypeException
      */
     public function titleDetail() {
         $this->setPageTitle(new PageTitle(sprintf(_('Org %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-user'));
@@ -64,7 +70,8 @@ class OrgPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws ModelNotFoundException
+     * @throws BadTypeException
      */
     public function actionEdit() {
         $this->traitActionEdit();
@@ -72,8 +79,10 @@ class OrgPresenter extends BasePresenter {
 
     /**
      * @return ModelOrg
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws BadTypeException
      */
     public function getEntity(): ModelOrg {
         $entity = $this->traitGetEntity();
@@ -85,8 +94,10 @@ class OrgPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws BadTypeException
      */
     public function renderDetail() {
         $this->template->model = $this->getEntity();
@@ -102,7 +113,8 @@ class OrgPresenter extends BasePresenter {
 
     /**
      * @return Control
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
     protected function createComponentCreateForm(): Control {
         return new OrgForm($this->getContext(), $this->getSelectedContest(), true);
@@ -110,7 +122,8 @@ class OrgPresenter extends BasePresenter {
 
     /**
      * @return Control
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
     protected function createComponentEditForm(): Control {
         return new OrgForm($this->getContext(), $this->getSelectedContest(), false);
@@ -118,7 +131,8 @@ class OrgPresenter extends BasePresenter {
 
     /**
      * @return OrgsGrid
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
     protected function createComponentGrid(): OrgsGrid {
         return new OrgsGrid($this->getContext(), $this->getSelectedContest());
@@ -126,10 +140,11 @@ class OrgPresenter extends BasePresenter {
 
 
     /**
-     * @param $resource
+     * @param IResource|string|null $resource
      * @param string $privilege
      * @return bool
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());

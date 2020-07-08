@@ -123,10 +123,8 @@ class AddressFactory {
         $target->addConditionOn($country, Form::FILLED)->addRule(Form::FILLED, _('Při vyplněném státu musí mít adresa vyplněno i místo.'));
 
         /* Country + postal code validation */
-        $addressService = $this->serviceAddress;
-        $regionService = $this->serviceRegion;
-        $validPostalCode = function (BaseControl $control) use ($addressService) {
-            return $addressService->tryInferRegion($control->getValue());
+        $validPostalCode = function (BaseControl $control) {
+            return $this->serviceAddress->tryInferRegion($control->getValue());
         };
 
         if ($options & self::REQUIRED) {
@@ -141,14 +139,14 @@ class AddressFactory {
 
         if ($options & self::REQUIRED) {
             $conditioned = $conditioningField ? $country->addConditionOn($conditioningField, Form::FILLED) : $country;
-            $conditioned->addConditionOn($postalCode, function (BaseControl $control) use ($addressService) {
-                return !$addressService->tryInferRegion($control->getValue());
+            $conditioned->addConditionOn($postalCode, function (BaseControl $control) {
+                return !$this->serviceAddress->tryInferRegion($control->getValue());
             })->addRule(Form::FILLED, _('Stát musí být vyplněn.'));
         }
         $country->addCondition(Form::FILLED)
-            ->addConditionOn($postalCode, $validPostalCode)->addRule(function (BaseControl $control) use ($regionService, $addressService, $postalCode) {
-                $regionId = $addressService->inferRegion($postalCode->getValue());
-                $region = $regionService->findByPrimary($regionId);
+            ->addConditionOn($postalCode, $validPostalCode)->addRule(function (BaseControl $control) use ($postalCode) {
+                $regionId = $this->serviceAddress->inferRegion($postalCode->getValue());
+                $region = $this->serviceRegion->findByPrimary($regionId);
                 return $region->country_iso == $control->getValue();
             }, _('Zvolený stát neodpovídá zadanému PSČ.'));
     }

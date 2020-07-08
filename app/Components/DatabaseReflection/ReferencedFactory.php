@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\DatabaseReflection;
 
+use FKSDB\Entity\CannotAccessModelException;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
-use Nette\Application\BadRequestException;
 
 /**
  * Class ReferencedFactory
@@ -36,7 +36,8 @@ final class ReferencedFactory {
     /**
      * @param AbstractModelSingle $model
      * @return AbstractModelSingle|null
-     * @throws BadRequestException
+     * @throws CannotAccessModelException
+     * @throws BadTypeException
      */
     public function accessModel(AbstractModelSingle $model) {
         // model is already instance of desired model
@@ -46,7 +47,7 @@ final class ReferencedFactory {
 
         // if referenced access is not set and model is not desired model throw exception
         if (!isset($this->referencedAccess) || is_null($this->referencedAccess)) {
-            throw new  BadTypeException($this->modelClassName, get_class($model));
+            throw new BadTypeException($this->modelClassName, get_class($model));
         }
         return $this->accessReferencedModel($model);
     }
@@ -59,7 +60,7 @@ final class ReferencedFactory {
      * try interface and access via get<Model>()
      * @param AbstractModelSingle $model
      * @return AbstractModelSingle|null
-     * @throws BadRequestException
+     * @throws CannotAccessModelException
      * @throws BadTypeException
      */
     private function accessReferencedModel(AbstractModelSingle $model) {
@@ -73,6 +74,6 @@ final class ReferencedFactory {
             }
             return null;
         }
-        throw new BadRequestException(sprintf('Can not access model %s from %s', $this->modelClassName, get_class($model)));
+        throw new CannotAccessModelException($this->modelClassName, $model);
     }
 }

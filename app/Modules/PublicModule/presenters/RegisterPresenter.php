@@ -2,7 +2,11 @@
 
 namespace FKSDB\Modules\PublicModule;
 
+use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
@@ -28,8 +32,6 @@ use Persons\ExtendedPersonHandler;
 use Persons\ExtendedPersonHandlerFactory;
 use Persons\IExtendedPersonPresenter;
 use Persons\SelfResolver;
-use Tracy\Debugger;
-
 /**
  * INPUT:
  *   contest (nullable)
@@ -208,7 +210,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     /**
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     public function renderContestant() {
         $person = $this->getPerson();
@@ -262,7 +264,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function createComponentEmailForm(): FormControl {
         $control = new FormControl();
@@ -296,9 +298,13 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws JsonException
+     * @throws NotImplementedException
+     * @throws OmittedControlException
+     * @throws UnsupportedLanguageException
+     * @throws BadRequestException
      */
     protected function createComponentContestantForm(): FormControl {
         $control = new FormControl();
@@ -376,7 +382,8 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws UnsupportedLanguageException
      * @throws \ReflectionException
      */
     protected function beforeRender() {

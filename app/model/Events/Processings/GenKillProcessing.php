@@ -25,7 +25,7 @@ class GenKillProcessing implements IProcessing {
     use SmartObject;
 
     /**
-     * @param $states
+     * @param array $states
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder

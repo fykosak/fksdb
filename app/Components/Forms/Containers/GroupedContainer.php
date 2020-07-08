@@ -25,7 +25,7 @@ class GroupedContainer extends Container {
 
     /**
      * GroupedContainer constructor.
-     * @param $prefix
+     * @param string $prefix
      */
     public function __construct($prefix) {
         parent::__construct();

@@ -127,7 +127,7 @@ class TimelineControl extends ReactComponent {
 
     /**
      * @param ModelPerson $person
-     * @param array $events
+     * @param ModelEvent[] $events
      * @param array $dates
      * @return \DateTimeInterface[]
      */
@@ -164,7 +164,7 @@ class TimelineControl extends ReactComponent {
     }
 
     /**
-     * @param mixed ...$args
+     * @param ModelPerson ...$args
      * @return string
      * @throws \Exception
      */

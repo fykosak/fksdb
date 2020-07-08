@@ -18,7 +18,7 @@ class FormUtils {
      *
      * @param string|iterable $values
      * @param bool $asArray
-     * @return ArrayHash|array|null
+     * @return iterable|null
      * @todo Move to general utils.
      */
     public static function emptyStrToNull($values, bool $asArray = false) {

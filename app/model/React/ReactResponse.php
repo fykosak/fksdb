@@ -48,7 +48,7 @@ final class ReactResponse implements Nette\Application\IResponse {
     }
 
     /**
-     * @param $data
+     * @param mixed $data
      * @return void
      */
     public function setData($data) {

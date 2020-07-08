@@ -27,15 +27,15 @@ class Field {
     /** @var string|null */
     private $label;
 
-    /** @return string */
+    /** @return string|null */
     public function getLabel() {
         return $this->label;
     }
 
     /**
      * Field constructor.
-     * @param $name
-     * @param $label
+     * @param string $name
+     * @param string|null $label
      */
     public function __construct(string $name, string $label = null) {
         $this->name = $name;
@@ -70,7 +70,7 @@ class Field {
     }
 
     /**
-     * @param $description
+     * @param string|null $description
      * @return void
      */
     public function setDescription($description) {
@@ -103,7 +103,7 @@ class Field {
     }
 
     /**
-     * @param $default
+     * @param mixed $default
      * @return void
      */
     public function setDefault($default) {
@@ -178,7 +178,7 @@ class Field {
     }
 
     /**
-     * @param $visible
+     * @param callable|bool $visible
      * @return void
      */
     public function setVisible($visible) {

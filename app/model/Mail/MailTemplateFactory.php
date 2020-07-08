@@ -2,11 +2,11 @@
 
 namespace Mail;
 
+use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\Application;
 use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
-use Nette\Application\BadRequestException;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 use Nette\Localization\ITranslator;
@@ -56,7 +56,7 @@ class MailTemplateFactory {
      * @param string $lang ISO 639-1
      * @param array $data
      * @return ITemplate
-     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
     public function createLoginInvitation(string $lang = null, array $data = []): ITemplate {
         return $this->createWithParameters('loginInvitation', $lang, $data);
@@ -66,7 +66,7 @@ class MailTemplateFactory {
      * @param string $lang ISO 639-1
      * @param array $data
      * @return ITemplate
-     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
     public function createPasswordRecovery(string $lang = null, array $data = []): ITemplate {
         return $this->createWithParameters('passwordRecovery', $lang, $data);
@@ -77,7 +77,7 @@ class MailTemplateFactory {
      * @param string $lang ISO 639-1
      * @param array $data
      * @return ITemplate
-     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
     public function createWithParameters(string $templateFile, string $lang = null, array $data = []): ITemplate {
         $template = $this->createFromFile($templateFile, $lang);
@@ -92,7 +92,7 @@ class MailTemplateFactory {
      * @param string $filename
      * @param string $lang ISO 639-1
      * @return ITemplate
-     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
     final public function createFromFile(string $filename, string $lang = null): ITemplate {
         /** @var Presenter $presenter */

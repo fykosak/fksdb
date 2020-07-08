@@ -59,7 +59,7 @@ class TransitionUnsatisfiedTargetException extends MachineExecutionException {
 
     /**
      * TransitionUnsatisfiedTargetException constructor.
-     * @param iterable $validationResult
+     * @param mixed $validationResult
      * @param null $code
      * @param null $previous
      */

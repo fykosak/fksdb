@@ -3,6 +3,7 @@
 namespace FKSDB\Modules\CoreModule;
 
 use Authentication\SSO\GlobalSession;
+use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\BasePresenter;
 use Exception;
 use FKSDB\Authentication\AccountManager;
@@ -15,21 +16,15 @@ use FKSDB\Authentication\SSO\ServiceSide\Authentication;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceAuthToken;
-use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\UI\PageTitle;
 use Mail\SendFailedException;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\DateTime;
 use FKSDB\Utils\Utils;
-
-/**
- * Class AuthenticationPresenter
- */
 
 /**
  * Class AuthenticationPresenter
@@ -76,15 +71,11 @@ final class AuthenticationPresenter extends BasePresenter {
      * @var AccountManager
      */
     private $accountManager;
-
-    /**
-     * @var ServicePerson
-     */
-    protected $servicePerson;
     /**
      * @var string
      */
     private $login;
+
     /**
      * @param ServiceAuthToken $serviceAuthToken
      * @return void
@@ -117,12 +108,12 @@ final class AuthenticationPresenter extends BasePresenter {
         $this->accountManager = $accountManager;
     }
 
-    /**
-     * @param ServicePerson $servicePerson
-     * @return void
-     */
-    public function injectServicePerson(ServicePerson $servicePerson) {
-        $this->servicePerson = $servicePerson;
+    public function titleLogin() {
+        $this->setPageTitle(new PageTitle(_('Login')));
+    }
+
+    public function titleRecover() {
+        $this->setPageTitle(new PageTitle(_('Obnova hesla')));
     }
 
     /**
@@ -204,12 +195,8 @@ final class AuthenticationPresenter extends BasePresenter {
         }
     }
 
-    public function titleLogin() {
-        $this->setPageTitle(new PageTitle(_('Login')));
-    }
-
-    public function titleRecover() {
-        $this->setPageTitle(new PageTitle(_('Obnova hesla')));
+    public function renderLogin() {
+        $this->template->login = $this->login;
     }
 
     /**
@@ -219,7 +206,7 @@ final class AuthenticationPresenter extends BasePresenter {
      *
      * @return bool
      */
-    private function isLoggedIn() {
+    private function isLoggedIn(): bool {
         return $this->getUser()->isLoggedIn() || isset($this->globalSession[IGlobalSession::UID]);
     }
 
@@ -229,7 +216,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * Login form component factory.
      * @return Form
      */
-    protected function createComponentLoginForm() {
+    protected function createComponentLoginForm(): Form {
         $form = new Form($this, 'loginForm');
         $form->addText('id', _('Přihlašovací jméno nebo email'))
             ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'))
@@ -258,7 +245,7 @@ final class AuthenticationPresenter extends BasePresenter {
      *
      * @return Form
      */
-    protected function createComponentRecoverForm() {
+    protected function createComponentRecoverForm(): Form {
         $form = new Form();
         $form->addText('id', _('Přihlašovací jméno nebo email'))
             ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'));
@@ -279,6 +266,7 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     private function loginFormSubmitted(Form $form) {
         try {
+            // TODO use form->getValues()
             $this->user->login($form['id']->value, $form['password']->value);
             /** @var ModelLogin $login */
             $login = $this->user->getIdentity();
@@ -293,7 +281,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @param Form $form
      * @return void
      * @throws AbortException
-     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
     private function recoverFormSubmitted(Form $form) {
         $connection = $this->serviceAuthToken->getConnection();
@@ -320,7 +308,7 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
-     * @param null $login
+     * @param ModelLogin|null $login
      * @throws AbortException
      * @throws Exception
      */
@@ -368,10 +356,6 @@ final class AuthenticationPresenter extends BasePresenter {
             $this->restoreRequest($this->backlink);
         }
         $this->redirect(':Core:Dispatch:');
-    }
-
-    public function renderLogin() {
-        $this->template->login = $this->login;
     }
 
     protected function beforeRender() {

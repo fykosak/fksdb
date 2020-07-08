@@ -143,7 +143,7 @@ class ResultsModelFactory implements IXMLNodeSerializer {
     }
 
     /**
-     * @param $dataSource
+     * @param AbstractResultsModel $dataSource
      * @param DOMNode $node
      * @param DOMDocument $doc
      * @param int $format

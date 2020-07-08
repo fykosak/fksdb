@@ -158,11 +158,11 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @param IVisibilityResolver $visibilityResolver
      * @return ReferencedContainer
      * @throws AbstractColumnException
-     * @throws BadRequestException
      * @throws BadTypeException
      * @throws JsonException
      * @throws NotImplementedException
      * @throws OmittedControlException
+     * @throws BadRequestException
      */
     public function createReferencedPerson(array $fieldsDefinition, int $acYear, string $searchType, bool $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver) {
         $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $this->event ?? null);
@@ -304,11 +304,11 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @param HiddenField $hiddenField
      * @param array $metadata
      * @return IComponent|AddressContainer|BaseControl
-     * @throws JsonException
      * @throws AbstractColumnException
-     * @throws OmittedControlException
      * @throws BadTypeException
+     * @throws JsonException
      * @throws NotImplementedException
+     * @throws OmittedControlException
      * @throws BadRequestException
      */
     public function createField(string $sub, string $fieldName, int $acYear, HiddenField $hiddenField, array $metadata): IComponent {
@@ -415,10 +415,10 @@ class ReferencedPersonFactory implements IReferencedSetter {
     }
 
     /**
-     * @param $searchType
+     * @param string $searchType
      * @return AutocompleteSelectBox|TextInput
      */
-    protected function createSearchControl($searchType) {
+    protected function createSearchControl(string $searchType) {
 
         switch ($searchType) {
             case self::SEARCH_EMAIL:
@@ -487,7 +487,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @param string $sub
      * @param string $field
      * @param int $acYear
-     * @param $options
+     * @param int $options
      * @return bool|ModelPostContact|mixed|null
      * @throws JsonException
      */

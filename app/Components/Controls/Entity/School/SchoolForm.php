@@ -6,6 +6,7 @@ use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\AbstractModelSingle;
@@ -14,7 +15,6 @@ use FKSDB\ORM\Services\ServiceAddress;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
 use Tracy\Debugger;
 
@@ -100,7 +100,8 @@ class SchoolForm extends AbstractEntityFormControl implements IEditEntityForm {
 
     /**
      * @param AbstractModelSingle|ModelSchool $model
-     * @throws BadRequestException
+     * @return void
+     * @throws BadTypeException
      */
     public function setModel(AbstractModelSingle $model) {
         $this->model = $model;

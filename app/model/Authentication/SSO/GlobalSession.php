@@ -44,7 +44,7 @@ class GlobalSession implements IGlobalSession {
 
     /**
      * GlobalSession constructor.
-     * @param $expiration
+     * @param string $expiration
      * @param ServiceGlobalSession $serviceGlobalSession
      * @param IGSIDHolder $gsidHolder
      */

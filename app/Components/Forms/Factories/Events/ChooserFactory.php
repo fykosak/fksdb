@@ -34,7 +34,7 @@ class ChooserFactory extends AbstractFactory {
 
     /**
      * ChooserFactory constructor.
-     * @param $prompt
+     * @param string $prompt
      * @param IOptionsProvider $optionsProvider
      */
     public function __construct($prompt, IOptionsProvider $optionsProvider) {

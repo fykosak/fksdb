@@ -42,8 +42,8 @@ class PaymentSelectField extends TextInput {
      * @param ModelEvent $event
      * @param array $groupTypes
      * @param bool $showAll
-     * @throws JsonException
      * @throws BadRequestException
+     * @throws JsonException
      */
     public function __construct(ServicePersonSchedule $servicePersonSchedule, ModelEvent $event, array $groupTypes, bool $showAll = true) {
         parent::__construct();

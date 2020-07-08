@@ -42,7 +42,7 @@ class PersonContainerResolver implements IVisibilityResolver, IModifiabilityReso
     /**
      * PersonContainerResolver constructor.
      * @param Field $field
-     * @param $condition
+     * @param mixed $condition
      * @param SelfResolver $selfResolver
      * @param ExpressionEvaluator $evaluator
      */

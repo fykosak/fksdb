@@ -25,7 +25,6 @@ use Nette\Forms\IControl;
 use Nette\Security\User;
 use Nette\Utils\JsonException;
 use Persons\SelfResolver;
-use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -89,11 +88,11 @@ class PersonFactory extends AbstractFactory {
 
     /**
      * PersonFactory constructor.
-     * @param $fieldsDefinition
-     * @param $searchType
-     * @param $allowClear
-     * @param $modifiable
-     * @param $visible
+     * @param array $fieldsDefinition
+     * @param string $searchType
+     * @param bool $allowClear
+     * @param bool $modifiable
+     * @param bool $visible
      * @param ReferencedPersonFactory $referencedPersonFactory
      * @param SelfResolver $selfResolver
      * @param ExpressionEvaluator $evaluator
@@ -120,12 +119,13 @@ class PersonFactory extends AbstractFactory {
      * @param BaseMachine $machine
      * @param Container $container
      * @return IComponent
-     * @throws JsonException
      * @throws AbstractColumnException
-     * @throws OmittedControlException
      * @throws BadTypeException
+     * @throws JsonException
      * @throws NotImplementedException
+     * @throws OmittedControlException
      * @throws BadRequestException
+     *
      */
     protected function createComponent(Field $field, BaseMachine $machine, Container $container): IComponent {
         $searchType = $this->evaluator->evaluate($this->searchType, $field);

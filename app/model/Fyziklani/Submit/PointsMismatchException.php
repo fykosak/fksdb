@@ -1,14 +1,12 @@
 <?php
 
-
-namespace FKSDB\Fyziklani;
-
+namespace FKSDB\Fyziklani\Submit;
 
 use Throwable;
 
 /**
  * Class PointsMismatchException
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PointsMismatchException extends TaskCodeException {
     /**

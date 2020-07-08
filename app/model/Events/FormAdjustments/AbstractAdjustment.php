@@ -44,7 +44,7 @@ abstract class AbstractAdjustment implements IFormAdjustment {
     abstract protected function _adjust(Form $form, Machine $machine, Holder $holder);
 
     /**
-     * @param $mask
+     * @param string $mask
      * @return bool
      */
     final protected function hasWildcart($mask) {

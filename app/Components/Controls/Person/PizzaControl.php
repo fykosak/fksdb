@@ -7,9 +7,9 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 
 class PizzaControl extends BaseComponent {
@@ -33,7 +33,7 @@ class PizzaControl extends BaseComponent {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function createComponentForm(): FormControl {
         $control = new FormControl();

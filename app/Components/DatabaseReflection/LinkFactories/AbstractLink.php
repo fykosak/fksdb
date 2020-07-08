@@ -3,8 +3,9 @@
 namespace FKSDB\Components\DatabaseReflection\LinkFactories;
 
 use FKSDB\Components\DatabaseReflection\ReferencedFactory;
+use FKSDB\Entity\CannotAccessModelException;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 
@@ -29,8 +30,9 @@ abstract class AbstractLink implements ILinkFactory {
      * @param Presenter $presenter
      * @param AbstractModelSingle $model
      * @return string
-     * @throws BadRequestException
+     * @throws BadTypeException
      * @throws InvalidLinkException
+     * @throws CannotAccessModelException
      */
     public function create(Presenter $presenter, AbstractModelSingle $model): string {
         return $presenter->link(...$this->createLinkParameters($model));
@@ -39,7 +41,8 @@ abstract class AbstractLink implements ILinkFactory {
     /**
      * @param AbstractModelSingle $modelSingle
      * @return AbstractModelSingle|null
-     * @throws BadRequestException
+     * @throws CannotAccessModelException
+     * @throws BadTypeException
      */
     protected function getModel(AbstractModelSingle $modelSingle) {
         return $this->referencedFactory->accessModel($modelSingle);
@@ -48,7 +51,8 @@ abstract class AbstractLink implements ILinkFactory {
     /**
      * @param AbstractModelSingle $model
      * @return array
-     * @throws BadRequestException
+     * @throws CannotAccessModelException
+     * @throws BadTypeException
      * @throws InvalidLinkException
      */
     public function createLinkParameters(AbstractModelSingle $model): array {

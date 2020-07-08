@@ -42,7 +42,7 @@ class StudyYearsFromXML extends Stage {
 
     /**
      * StudyYearsFromXML2 constructor.
-     * @param $defaultStudyYears
+     * @param iterable $defaultStudyYears
      * @param ServiceTaskStudyYear $serviceTaskStudyYear
      * @param ServiceStudyYear $serviceStudyYear
      */

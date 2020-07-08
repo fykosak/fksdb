@@ -2,10 +2,12 @@
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Events\EventNotFoundException;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\EventDispatchFactory;
-use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelContest;
@@ -13,7 +15,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
 
@@ -69,7 +70,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     /**
      * @return void
      * @throws AbortException
-     * @throws BadRequestException
+     *
      * @throws NotImplementedException
      * @throws ForbiddenRequestException
      */
@@ -89,13 +90,13 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @return ModelEvent
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function getEvent(): ModelEvent {
         if (!$this->event) {
             $model = $this->getServiceEvent()->findByPrimary($this->eventId);
             if (!$model) {
-                throw new NotFoundException('Event not found.');
+                throw new EventNotFoundException();
             }
             $this->event = $model;
         }
@@ -104,7 +105,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @return Holder
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      * @throws NeonSchemaException
      */
     protected function getHolder(): Holder {
@@ -116,7 +117,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @return int
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function getAcYear(): int {
         return $this->getYearCalculator()->getAcademicYear($this->getContest(), $this->getEvent()->year);
@@ -124,7 +125,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @return ModelContest
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     final protected function getContest(): ModelContest {
         return $this->getEvent()->getContest();
@@ -136,7 +137,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @return bool
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function isTeamEvent(): bool {
         return (bool)in_array($this->getEvent()->event_type_id, ModelEvent::TEAM_EVENTS);
@@ -144,34 +145,34 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /* **************** ACL *********************** */
     /**
-     * @param IResource|string $resource
-     * @param string $privilege
+     * @param IResource|string|null $resource
+     * @param string|null $privilege
      * @return bool
      * Standard ACL from acl.neon
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
-    protected function isContestsOrgAuthorized($resource, string $privilege): bool {
+    protected function isContestsOrgAuthorized($resource, $privilege): bool {
         return $this->getEventAuthorizator()->isContestOrgAllowed($resource, $privilege, $this->getEvent());
     }
 
     /**
-     * @param $resource
+     * @param IResource|string|null $resource
      * @param string $privilege
      * @return bool
-     * @throws BadRequestException
      * Check if is contest and event org
      * TODO vyfakuje to aj cartesianov
+     * @throws EventNotFoundException
      */
     protected function isEventAndContestOrgAuthorized($resource, string $privilege): bool {
         return $this->getEventAuthorizator()->isEventAndContestOrgAllowed($resource, $privilege, $this->getEvent());
     }
 
     /**
-     * @param $resource
-     * @param $privilege
+     * @param IResource|string|null $resource
+     * @param string|null $privilege
      * @return bool
-     * @throws BadRequestException
      * Check if has contest permission or is Event org
+     * @throws EventNotFoundException
      */
     public function isEventOrContestOrgAuthorized($resource, $privilege): bool {
         return $this->getEventAuthorizator()->isEventOrContestOrgAllowed($resource, $privilege, $this->getEvent());
@@ -181,13 +182,20 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     /**
      * @param PageTitle $pageTitle
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function setPageTitle(PageTitle $pageTitle) {
         $pageTitle->subTitle = $pageTitle->subTitle ?: $this->getEvent()->__toString();
         parent::setPageTitle($pageTitle);
     }
 
+    /**
+     * @return void
+     * @throws BadTypeException
+     * @throws EventNotFoundException
+     * @throws UnsupportedLanguageException
+     * @throws \ReflectionException
+     */
     protected function beforeRender() {
         $this->getPageStyleContainer()->styleId = 'event event-type-' . $this->getEvent()->event_type_id;
         switch ($this->getEvent()->event_type_id) {
@@ -204,7 +212,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @return array|string[]
+     * @return string[]
      */
     protected function getNavRoots(): array {
         return ['Event.Dashboard.default'];

@@ -60,9 +60,9 @@ class EventAuthorizator {
     }
 
     /**
-     * @param $resource
-     * @param $privilege
-     * @param $event
+     * @param IResource|string|null $resource
+     * @param string|null $privilege
+     * @param ModelEvent $event
      * @return bool
      * @deprecated
      */
@@ -72,8 +72,8 @@ class EventAuthorizator {
 
     /**
      * @param IResource|string $resource
-     * @param $privilege
-     * @param $event
+     * @param string|null $privilege
+     * @param ModelEvent $event
      * @return bool
      */
     public function isContestOrgAllowed($resource, $privilege, ModelEvent $event): bool {
@@ -114,7 +114,7 @@ class EventAuthorizator {
 
     /**
      * @param IResource|string $resource
-     * @param $privilege
+     * @param string|null $privilege
      * @param ModelEvent $event
      * @return bool
      */

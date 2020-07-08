@@ -20,8 +20,8 @@ class TypedTableSelection extends Selection {
 
     /**
      * TypedTableSelection constructor.
-     * @param $modelClassName
-     * @param $table
+     * @param string $modelClassName
+     * @param string $table
      * @param Context $connection
      * @param IConventions $conventions
      */

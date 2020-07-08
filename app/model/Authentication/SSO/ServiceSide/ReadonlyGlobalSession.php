@@ -10,7 +10,6 @@ use Nette\Database\Connection;
 /**
  * Read-only global session implementation (i.e. cannot allocate new GSID).
  *
- *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ReadonlyGlobalSession implements IGlobalSession {
