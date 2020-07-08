@@ -11,10 +11,6 @@ use FKSDB\Expressions\VariadicExpression;
  */
 class LogicAnd extends VariadicExpression {
 
-    /**
-     * @param $args
-     * @return bool|mixed
-     */
     protected function evaluate(...$args): bool {
         foreach ($this->arguments as $argument) {
             if (!$this->evaluateArgument($argument, ...$args)) {

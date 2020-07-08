@@ -29,8 +29,9 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
     public $year;
 
     /**
-     * @throws BadRequestException
+     *
      * @throws AbortException
+     * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
     protected function startup() {
@@ -46,7 +47,8 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
 
     /**
      * @return ModelContest
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function getSelectedContest(): ModelContest {
         $contestChooser = $this->getComponent('contestChooser');
@@ -61,7 +63,8 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
 
     /**
      * @return int
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function getSelectedYear(): int {
         $contestChooser = $this->getComponent('contestChooser');
@@ -76,7 +79,8 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
 
     /**
      * @return int
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function getSelectedAcademicYear(): int {
         return $this->getYearCalculator()->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());

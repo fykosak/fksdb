@@ -2,8 +2,8 @@
 
 namespace FKSDB\Modules\FyziklaniModule;
 
+use FKSDB\Events\EventNotFoundException;
 use FKSDB\UI\PageTitle;
-use Nette\Application\BadRequestException;
 
 /**
  * Class DashboardPresenter
@@ -12,7 +12,7 @@ use Nette\Application\BadRequestException;
 class DashboardPresenter extends BasePresenter {
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function titleDefault() {
         $this->setPageTitle(new PageTitle(_('Fyziklani game app'), 'fa fa-dashboard'));
@@ -20,7 +20,7 @@ class DashboardPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function authorizedDefault() {
         $this->setAuthorized($this->isEventOrContestOrgAuthorized('fyziklani.dashboard', 'default'));

@@ -6,12 +6,11 @@ use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 
 /**
  * Class EventDispatchFactory
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventDispatchFactory {
     /** @var array */
@@ -42,9 +41,8 @@ class EventDispatchFactory {
 
     /**
      * @param ModelEvent $event
-     * @return mixed
-     * @throws BadRequestException
-     * @throws \Exception
+     * @return Machine
+     * @throws ConfigurationNotFoundException
      */
     public function getEventMachine(ModelEvent $event): Machine {
         $definition = $this->findDefinition($event);
@@ -53,8 +51,8 @@ class EventDispatchFactory {
 
     /**
      * @param ModelEvent $event
-     * @return string[]
-     * @throws BadRequestException
+     * @return array
+     * @throws ConfigurationNotFoundException
      */
     private function findDefinition(ModelEvent $event): array {
         $key = $this->createKey($event);
@@ -68,13 +66,13 @@ class EventDispatchFactory {
                 return $definition;
             }
         }
-        throw new BadRequestException();
+        throw new ConfigurationNotFoundException($event);
     }
 
     /**
      * @param ModelEvent $event
      * @return Holder
-     * @throws BadRequestException
+     * @throws ConfigurationNotFoundException
      * @throws NeonSchemaException
      */
     public function getDummyHolder(ModelEvent $event): Holder {

@@ -6,16 +6,15 @@ use FKSDB\Components\Controls\Entity\StoredQuery\StoredQueryFormComponent;
 use FKSDB\Components\Controls\StoredQueryTagCloud;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
+use FKSDB\Entity\ModelNotFoundException;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
-use FKSDB\Components\Grids\StoredQueries2Grid;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use FKSDB\UI\PageTitle;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 
 /**
@@ -40,18 +39,35 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
         $this->serviceStoredQuery = $serviceStoredQuery;
     }
 
+    /**
+     * @return void
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     */
     public function titleEdit() {
-        $this->setPageTitle(new PageTitle(sprintf(_('Úprava dotazu %s'), $this->getEntity()->name), 'fa fa-pencil'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit query %s'), $this->getEntity()->name), 'fa fa-pencil'));
     }
 
     public function getTitleCreate(): PageTitle {
         return new PageTitle(sprintf(_('Create query')), 'fa fa-pencil');
     }
 
+    /**
+     * @return void
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
+     */
     public function titleList() {
         $this->setPageTitle(new PageTitle(_('Exports'), 'fa fa-database'));
     }
 
+    /**
+     * @return void
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     */
     public function titleDetail() {
         $title = sprintf(_('Detail of the query "%s"'), $this->getEntity()->name);
         $qid = $this->getEntity()->qid;
@@ -74,21 +90,26 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws ModelNotFoundException
+     * @throws BadTypeException
      */
     public function actionEdit() {
         $this->traitActionEdit();
     }
 
+    /**
+     * @return void
+     * @throws ModelNotFoundException
+     */
     public function renderDetail() {
         $this->template->model = $this->getEntity();
     }
 
-    protected function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): StoredQueryFormComponent {
         return new StoredQueryFormComponent($this->getContext(), true);
     }
 
-    protected function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): StoredQueryFormComponent {
         return new StoredQueryFormComponent($this->getContext(), false);
     }
 
@@ -107,10 +128,11 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     /**
-     * @param IResource|string $resource
+     * @param IResource|string|null $resource
      * @param string|null $privilege
      * @return bool
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
         return $this->getContestAuthorizator()->isAllowed($resource, $privilege, $this->getSelectedContest());
@@ -119,8 +141,9 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
     /**
      * @param PageTitle $pageTitle
      * @return void
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
     protected function setPageTitle(PageTitle $pageTitle) {
         $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());

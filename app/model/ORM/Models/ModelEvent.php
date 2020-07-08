@@ -51,6 +51,10 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
         return $this->name;
     }
 
+    public function isTeamEvent(): bool {
+        return in_array($this->event_type_id, ModelEvent::TEAM_EVENTS);
+    }
+
     /**
      * @return ModelFyziklaniGameSetup
      * @throws NotSetGameParametersException
@@ -58,7 +62,7 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
     public function getFyziklaniGameSetup(): ModelFyziklaniGameSetup {
         $gameSetupRow = $this->related(DbNames::TAB_FYZIKLANI_GAME_SETUP, 'event_id')->fetch();
         if (!$gameSetupRow) {
-            throw new NotSetGameParametersException(_('Herné parametre niesu nastavené'));
+            throw new NotSetGameParametersException();
         }
         return ModelFyziklaniGameSetup::createFromActiveRow($gameSetupRow);
     }

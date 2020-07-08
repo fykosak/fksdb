@@ -9,6 +9,7 @@ use FKSDB\ORM\Models\ModelContest;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @method ModelContest findByPrimary($key)
  */
 class ServiceContest extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;

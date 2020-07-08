@@ -30,7 +30,7 @@ abstract class VariadicExpression extends EvaluatedExpression {
     }
 
     /**
-     * @param $args
+     * @param mixed $args
      * @return mixed
      */
     abstract protected function evaluate(...$args);

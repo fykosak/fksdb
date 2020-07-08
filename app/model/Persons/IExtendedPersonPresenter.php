@@ -34,7 +34,7 @@ interface IExtendedPersonPresenter {
     public function messageExists(): string;
 
     /**
-     * @param $message
+     * @param string $message
      * @param string $type
      * @return void
      */

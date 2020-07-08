@@ -3,16 +3,17 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Config\NeonSchemaException;
+use FKSDB\Entity\ModelNotFoundException;
+use FKSDB\Events\EventNotFoundException;
 use FKSDB\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Events\ImportComponent;
 use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
 use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\ServiceEventParticipant;
 use FKSDB\UI\PageTitle;
-use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
 /**
@@ -22,7 +23,7 @@ use Nette\Application\ForbiddenRequestException;
 class ApplicationPresenter extends AbstractApplicationPresenter {
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function titleImport() {
         $this->setPageTitle(new PageTitle(_('Application import'), 'fa fa-upload'));
@@ -30,24 +31,24 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
 
     /**
      * @return bool
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function isEnabled(): bool {
         return !$this->isTeamEvent();
     }
 
     /**
-     * @throws BadRequestException
+     *
      * use same method of permissions as trait
+     * @throws EventNotFoundException
      */
     public function authorizedImport() {
         $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'import'));
     }
 
     /**
-     * @return ApplicationGrid
-     * @throws AbortException
-     * @throws BadRequestException
+     * @return AbstractApplicationGrid
+     * @throws EventNotFoundException
      * @throws NeonSchemaException
      */
     protected function createComponentGrid(): AbstractApplicationGrid {
@@ -56,12 +57,11 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
 
     /**
      * @return ImportComponent
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      * @throws NeonSchemaException
      */
     protected function createComponentImport(): ImportComponent {
-        $source = new SingleEventSource($this->getEvent(), $this->getContext());
+        $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->getEventDispatchFactory());
         $machine = $this->getEventDispatchFactory()->getEventMachine($this->getEvent());
         $handler = $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger());
 
@@ -69,9 +69,11 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @throws AbortException
-     * @throws BadRequestException
+     * @return void
+     * @throws BadTypeException
+     * @throws EventNotFoundException
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      * @throws NeonSchemaException
      */
     public function renderDetail() {

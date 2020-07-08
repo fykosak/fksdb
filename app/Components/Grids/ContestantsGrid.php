@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Services\ServiceContestant;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
@@ -70,32 +71,22 @@ class ContestantsGrid extends BaseGrid {
 
         $this->setDefaultOrder('name_lex ASC');
 
-        //
-        // columns
-        //
         $this->addColumn('name', _('Name'));
         $this->addColumn('study_year', _('Ročník'));
         $this->addColumn('school_name', _('Škola'));
 
-        //
-        // operations
-        //
-        $this->addButton('editPerson', _('Edit'))
-            ->setText(_('Edit'))
-            ->setLink(function ($row) use ($presenter) {
-                return $presenter->link('Contestant:edit', [
-                    'id' => $row->ct_id,
-                ]);
-            });
+
+        $this->addLinkButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'ct_id']);
+        // $this->addLinkButton('Contestant:detail', 'detail', _('Detail'), false, ['id' => 'ct_id']);
 
         $this->addGlobalButton('add')
             ->setLabel(_('Založit řešitele'))
             ->setLink($this->getPresenter()->link('create'));
 
-
-        //
-        // appeareance
-        //
         $this->paginate = false;
+    }
+
+    protected function getModelClassName(): string {
+        return ModelContestant::class;
     }
 }

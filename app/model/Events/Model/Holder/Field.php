@@ -27,15 +27,15 @@ class Field {
     /** @var string|null */
     private $label;
 
-    /** @return string */
+    /** @return string|null */
     public function getLabel() {
         return $this->label;
     }
 
     /**
      * Field constructor.
-     * @param $name
-     * @param $label
+     * @param string $name
+     * @param string|null $label
      */
     public function __construct(string $name, string $label = null) {
         $this->name = $name;
@@ -70,7 +70,7 @@ class Field {
     }
 
     /**
-     * @param $description
+     * @param string|null $description
      * @return void
      */
     public function setDescription($description) {
@@ -103,7 +103,7 @@ class Field {
     }
 
     /**
-     * @param $default
+     * @param mixed $default
      * @return void
      */
     public function setDefault($default) {
@@ -136,21 +136,11 @@ class Field {
     /*
      * Forms
      */
-
-    /**
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return mixed
-     */
-    public function createFormComponent(BaseMachine $machine, Container $container) {
+    public function createFormComponent(BaseMachine $machine, Container $container): IComponent {
         return $this->factory->create($this, $machine, $container);
     }
 
-    /**
-     * @param IComponent $component
-     * @return IControl
-     */
-    public function getMainControl(IComponent $component) {
+    public function getMainControl(IComponent $component): IControl {
         return $this->factory->getMainControl($component);
     }
 
@@ -188,7 +178,7 @@ class Field {
     }
 
     /**
-     * @param $visible
+     * @param callable|bool $visible
      * @return void
      */
     public function setVisible($visible) {

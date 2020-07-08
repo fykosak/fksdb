@@ -20,7 +20,7 @@ class Parameter {
 
     /**
      * Parameter constructor.
-     * @param $parameter
+     * @param string $parameter
      */
     public function __construct($parameter) {
         $this->parameter = $parameter;

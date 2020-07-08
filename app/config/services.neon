@@ -88,6 +88,7 @@ services:
     - FKSDB\Components\Forms\Factories\TableReflectionFactory
     - FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory
     - FKSDB\Components\DatabaseReflection\MetaDataFactory
+    - FKSDB\Fyziklani\Submit\HandlerFactory
 
 includes:
     - merger.neon

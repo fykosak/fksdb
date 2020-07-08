@@ -39,7 +39,7 @@ class ArrayProvider implements IFilteredDataProvider {
      * @param string $search
      * @return array
      */
-    public function getFilteredItems($search) {
+    public function getFilteredItems(string $search): array {
         $result = [];
         foreach ($this->data as $item) {
             $label = $item[self::LABEL];
@@ -59,7 +59,7 @@ class ArrayProvider implements IFilteredDataProvider {
     }
 
     /**
-     * @param $id
+     * @param mixed $id
      * @return void
      */
     public function setDefaultValue($id) {

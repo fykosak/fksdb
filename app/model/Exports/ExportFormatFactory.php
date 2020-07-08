@@ -15,7 +15,6 @@ use FKSDB\StoredQuery\StoredQueryFactory;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
-use Nette\Utils\Arrays;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -76,7 +75,7 @@ class ExportFormatFactory {
         $this->defaultFormats = [
             self::CSV_HEAD => _('Save CSV'),
             self::CSV_HEADLESS => _('Uložit CSV (bez hlavičky)'),
-            self::CSV_QUOTE_HEAD => _('Uložit CSV s uvozovkami')
+            self::CSV_QUOTE_HEAD => _('Uložit CSV s uvozovkami'),
         ];
     }
 
@@ -110,13 +109,13 @@ class ExportFormatFactory {
         if (!$qid) {
             return $this->defaultFormats;
         } else {
-            $formats = Arrays::get($this->globalParameters['exports']['specialFormats'], $qid, []);
+            $formats = $this->globalParameters['exports']['specialFormats'][$qid] ?? [];
             return $this->defaultFormats + Helpers::evalExpressionArray($formats, $this->container);
         }
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @param StoredQuery $storedQuery
      * @return AESOPFormat
      */
@@ -128,8 +127,8 @@ class ExportFormatFactory {
 
         $xslFile = $parameters['template'];
         $contestName = $this->globalParameters['contestMapping'][$queryParameters['contest']];
-        $maintainer = Arrays::get($parameters, 'maintainer', $this->globalParameters['exports']['maintainer']);
-        $category = Arrays::get($queryParameters, 'category', null);
+        $maintainer = $parameters['maintainer'] ?? $this->globalParameters['exports']['maintainer'];
+        $category = $queryParameters['category'] ?? null;
         $eventId = sprintf($parameters[$qid]['idMask'], $contestName, $queryParameters['year'], $category);
 
         $format = new AESOPFormat($storedQuery, $xslFile, $this->storedQueryFactory);
@@ -140,7 +139,6 @@ class ExportFormatFactory {
         ]);
 
         if (array_key_exists('eventTypeId', $parameters[$qid])) {
-            /** @var ModelContest $contest */
             $contest = $this->serviceContest->findByPrimary($queryParameters['contest']);
             $event = $this->serviceEvent->getByEventTypeId($contest, $queryParameters['year'], $parameters[$qid]['eventTypeId']);
             $format->addParameters([

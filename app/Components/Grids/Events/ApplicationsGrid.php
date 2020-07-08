@@ -13,7 +13,6 @@ use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
@@ -24,7 +23,7 @@ use Nette\Utils\Strings;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
- * @method BasePresenter getPresenter($need = TRUE)
+ * @method BasePresenter getPresenter($need = true)
  */
 class ApplicationsGrid extends BaseComponent {
 
@@ -68,36 +67,31 @@ class ApplicationsGrid extends BaseComponent {
      * @var bool
      */
     private $searchable = false;
+    /** @var bool */
+    private $attachedJS = false;
+    /** @var EventDispatchFactory */
+    private $eventDispatchFactory;
 
     /**
      * ApplicationsGrid constructor.
      * @param Container $container
      * @param IHolderSource $source
      * @param ApplicationHandlerFactory $handlerFactory
-     * @throws BadRequestException
+     *
      */
     public function __construct(Container $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory) {
         parent::__construct($container);
-        $this->monitor(IJavaScriptCollector::class);
+        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
+            if (!$this->attachedJS) {
+                $this->attachedJS = true;
+                $collector->registerJSFile('js/searchTable.js');
+            }
+        });
         $this->source = $source;
         $this->handlerFactory = $handlerFactory;
         $this->processSource();
     }
 
-    /** @var bool */
-    private $attachedJS = false;
-
-    /**
-     * @param $obj
-     * @return void
-     */
-    protected function attached($obj) {
-        parent::attached($obj);
-        if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
-            $this->attachedJS = true;
-            $obj->registerJSFile('js/searchTable.js');
-        }
-    }
 
     /**
      * @param string $template name of the standard template or whole path
@@ -111,6 +105,14 @@ class ApplicationsGrid extends BaseComponent {
     }
 
     /**
+     * @param EventDispatchFactory $eventDispatchFactory
+     * @return void
+     */
+    public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory) {
+        $this->eventDispatchFactory = $eventDispatchFactory;
+    }
+
+    /**
      * @return bool
      */
     public function isSearchable() {
@@ -118,7 +120,7 @@ class ApplicationsGrid extends BaseComponent {
     }
 
     /**
-     * @param $searchable
+     * @param bool $searchable
      * @return void
      */
     public function setSearchable($searchable) {
@@ -127,7 +129,7 @@ class ApplicationsGrid extends BaseComponent {
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
      */
     private function processSource() {
         $this->eventApplications = [];
@@ -136,15 +138,13 @@ class ApplicationsGrid extends BaseComponent {
             $event = $holder->getPrimaryHolder()->getEvent();
             $this->eventApplications[$key] = $event;
             $this->holders[$key] = $holder;
-            /** @var EventDispatchFactory $factory */
-            $factory = $this->getContext()->getByType(EventDispatchFactory::class);
-            $this->machines[$key] = $factory->getEventMachine($event);
+            $this->machines[$key] = $this->eventDispatchFactory->getEventMachine($event);
             $this->handlers[$key] = $this->handlerFactory->create($event, new MemoryLogger()); //TODO it's a bit weird to create new logger for each handler
         }
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return ApplicationComponent|IComponent
      */
     protected function createComponent($name) {

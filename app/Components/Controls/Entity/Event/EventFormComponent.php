@@ -4,11 +4,15 @@ namespace FKSDB\Components\Controls\Entity\Event;
 
 use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
-use FKSDB\Components\Forms\Factories\EventFactory;
+use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
+use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
@@ -20,7 +24,6 @@ use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\Utils\FormUtils;
 use FKSDB\Utils\Utils;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
@@ -40,9 +43,9 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
      */
     protected $contest;
     /**
-     * @var EventFactory
+     * @var SingleReflectionFormFactory
      */
-    protected $eventFactory;
+    protected $singleReflectionFormFactory;
     /**
      * @var ServiceAuthToken
      */
@@ -79,20 +82,20 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
     }
 
     /**
-     * @param EventFactory $eventFactory
+     * @param SingleReflectionFormFactory $singleReflectionFormFactory
      * @param ServiceAuthToken $serviceAuthToken
      * @param ServiceEvent $serviceEvent
      * @param EventDispatchFactory $eventDispatchFactory
      * @return void
      */
     public function injectPrimary(
-        EventFactory $eventFactory,
+        SingleReflectionFormFactory $singleReflectionFormFactory,
         ServiceAuthToken $serviceAuthToken,
         ServiceEvent $serviceEvent,
         EventDispatchFactory $eventDispatchFactory
     ) {
         $this->serviceAuthToken = $serviceAuthToken;
-        $this->eventFactory = $eventFactory;
+        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->serviceEvent = $serviceEvent;
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
@@ -100,15 +103,18 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
     /**
      * @param Form $form
      * @return void
-     * @throws \Exception
+     * @throws AbstractColumnException
+     * @throws BadTypeException
+     * @throws OmittedControlException
      */
     protected function configureForm(Form $form) {
-        $eventContainer = $this->eventFactory->createEvent($this->contest);
+        $eventContainer = $this->createEventContainer();
         $form->addComponent($eventContainer, self::CONT_EVENT);
     }
 
     /**
-     * @param ModelEvent|AbstractModelSingle $event
+     * @param ModelEvent $event
+     * @return void
      */
     protected function updateTokens(ModelEvent $event) {
         $connection = $this->serviceAuthToken->getConnection();
@@ -128,8 +134,9 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
     }
 
     /**
-     * @param AbstractModelSingle|ModelEvent $model
-     * @throws BadRequestException
+     * @param AbstractModelSingle $model
+     * @return void
+     * @throws BadTypeException
      * @throws NeonSchemaException
      */
     public function setModel(AbstractModelSingle $model) {
@@ -157,7 +164,7 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
                 $control->addError($exception->getMessage());
                 return false;
             }
-        }, _('Parametry nesplňují Neon schéma'));
+        }, _('Parameters does not fulfill the Neon scheme'));
     }
 
 
@@ -189,7 +196,7 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
     protected function handleEditSuccess(array $data) {
         $this->serviceEvent->updateModel2($this->model, $data);
         $this->updateTokens($this->model);
-        $this->flashMessage(sprintf(_('Akce %s uložena.'), $this->model->name), ILogger::SUCCESS);
+        $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $this->model->name), ILogger::SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 
@@ -201,11 +208,9 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
     protected function handleCreateSuccess(array $data) {
         $data['year'] = $this->year;
         $model = $this->serviceEvent->createNewModel($data);
-
         $this->updateTokens($model);
-        $this->flashMessage(sprintf(_('Akce %s uložena.'), $model->name), ILogger::SUCCESS);
-
-        $this->getPresenter()->redirect('list'); // if there's no backlink
+        $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), ILogger::SUCCESS);
+        $this->getPresenter()->redirect('list');
     }
 
     /**
@@ -222,5 +227,20 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
             Debugger::log($exception);
             $this->flashMessage(_('Error'), Message::LVL_DANGER);
         }
+    }
+
+    /**
+     * @return ModelContainer
+     * @throws AbstractColumnException
+     * @throws OmittedControlException
+     * @throws BadTypeException
+     */
+    public function createEventContainer(): ModelContainer {
+        $container = new ModelContainer();
+        foreach (['event_type_id', 'event_year', 'name', 'begin', 'end', 'registration_begin', 'registration_end', 'report', 'parameters'] as $field) {
+            $control = $this->singleReflectionFormFactory->createField('event', $field, $this->contest);
+            $container->addComponent($control, $field);
+        }
+        return $container;
     }
 }

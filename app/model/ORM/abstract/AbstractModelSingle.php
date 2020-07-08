@@ -58,14 +58,14 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
 
     /**
      * @param string|int $key
-     * @param $value
+     * @param mixed $value
      */
     public function __set($key, $value) {
         $this->tmpData[$key] = $value;
     }
 
     /**
-     * @param $key
+     * @param int|string $key
      * @return bool|mixed|ActiveRow|Selection|null
      */
     public function &__get($key) {

@@ -4,7 +4,6 @@ namespace FKSDB\Components\React;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Exceptions\BadTypeException;
-use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Http\IRequest;
 use Nette\Utils\Html;
@@ -43,7 +42,7 @@ abstract class ReactComponent extends BaseComponent {
 
     /**
      * @return IRequest
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function getHttpRequest(): IRequest {
         $service = $this->getContext()->getByType(IRequest::class);
@@ -55,7 +54,7 @@ abstract class ReactComponent extends BaseComponent {
 
     /**
      * @return object
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function getReactRequest() {
         $requestData = $this->getHttpRequest()->getPost('requestData');

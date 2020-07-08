@@ -3,17 +3,24 @@
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelContestant;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\IControl;
+use Nette\Utils\JsonException;
 use Persons\AclResolver;
 use Persons\ExtendedPersonHandler;
 use Persons\ExtendedPersonHandlerFactory;
@@ -56,8 +63,8 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @param IModel|null $model
-     * @param Form $form
+     * @param ModelContestant|IModel|null $model
+     * @param Form|IControl[][] $form
      */
     protected function setDefaults(IModel $model = null, Form $form) {
         if (!$model) {
@@ -71,7 +78,8 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     /**
      * @return array
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     protected function getFieldsDefinition() {
         $contestId = $this->getSelectedContest()->contest_id;
@@ -100,9 +108,16 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     /**
      * @param bool $create
      * @return FormControl
-     * @throws BadRequestException
+     *
+     * @throws AbstractColumnException
+     *
      * @throws BadTypeException
-     * @throws \Exception
+     * @throws ForbiddenRequestException
+     * @throws JsonException
+     * @throws NotImplementedException
+     * @throws OmittedControlException
+     * @throws BadRequestException
+     *
      */
     private function createComponentFormControl(bool $create): FormControl {
         $control = new FormControl();
@@ -116,17 +131,18 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         $searchType = ReferencedPersonFactory::SEARCH_ID;
         $allowClear = $create;
         $modifiabilityResolver = $visibilityResolver = new AclResolver($this->contestAuthorizator, $this->getSelectedContest());
-        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
-        $components[0]->addRule(Form::FILLED, _('Osobu je třeba zadat.'));
-        $components[1]->setOption('label', _('Osoba'));
+        $component = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
+        $component->getReferencedId()->addRule(Form::FILLED, _('Osobu je třeba zadat.'));
+        $component->setOption('label', _('Osoba'));
 
-        $container->addComponent($components[0], ExtendedPersonHandler::EL_PERSON);
-        $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
+        $container->addComponent($component->getReferencedId(), ExtendedPersonHandler::EL_PERSON);
+        $container->addComponent($component, ExtendedPersonHandler::CONT_PERSON);
 
         $this->appendExtendedContainer($form);
 
         $handler = $this->handlerFactory->create($this->getORMService(), $this->getSelectedContest(), $this->getSelectedYear(), $this->globalParameters['invitation']['defaultLang']);
-        $submit = $form->addSubmit('send', $create ? _('Založit') : _('Save'));
+
+        $submit = $form->addSubmit('send', $create ? _('Create') : _('Save'));
 
         $submit->onClick[] = function (SubmitButton $button) use ($handler) {
             $form = $button->getForm();
@@ -140,7 +156,16 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     /**
      * @return FormControl
+     *
+     * @throws AbstractColumnException
+     *
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
+     * @throws JsonException
+     * @throws NotImplementedException
+     * @throws OmittedControlException
      * @throws BadRequestException
+     *
      */
     final protected function createComponentCreateComponent(): FormControl {
         return $this->createComponentFormControl(true);
@@ -148,6 +173,12 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     /**
      * @return FormControl
+     * @throws BadTypeException
+     * @throws JsonException
+     * @throws AbstractColumnException
+     * @throws OmittedControlException
+     * @throws NotImplementedException
+     * @throws ForbiddenRequestException
      * @throws BadRequestException
      */
     final protected function createComponentEditComponent(): FormControl {
@@ -155,7 +186,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @return AbstractModelSingle
      */
     protected function loadModel($id) {

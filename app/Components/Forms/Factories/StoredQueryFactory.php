@@ -102,7 +102,7 @@ class StoredQueryFactory {
 
     /**
      * @param Container $container
-     * @param mixed $group
+     * @param ControlGroup $group
      * @internal
      */
     public function buildParameterMetadata(Container $container, ControlGroup $group) {

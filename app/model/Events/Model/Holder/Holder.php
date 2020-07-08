@@ -85,9 +85,9 @@ class Holder {
      * @return void
      */
     public function setPrimaryHolder(string $name) {
-        $primaryHolder = $this->primaryHolder = $this->getBaseHolder($name);
-        $this->secondaryBaseHolders = array_filter($this->baseHolders, function (BaseHolder $baseHolder) use ($primaryHolder) {
-            return $baseHolder !== $primaryHolder;
+        $this->primaryHolder = $this->getBaseHolder($name);
+        $this->secondaryBaseHolders = array_filter($this->baseHolders, function (BaseHolder $baseHolder) {
+            return $baseHolder !== $this->primaryHolder;
         });
     }
 

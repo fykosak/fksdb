@@ -16,15 +16,15 @@ class ConstantStrategy implements IMergeStrategy {
 
     /**
      * ConstantStrategy constructor.
-     * @param $constant
+     * @param mixed $constant
      */
     public function __construct($constant) {
         $this->constant = $constant;
     }
 
     /**
-     * @param $trunk
-     * @param $merged
+     * @param mixed $trunk
+     * @param mixed $merged
      * @return mixed
      */
     public function mergeValues($trunk, $merged) {

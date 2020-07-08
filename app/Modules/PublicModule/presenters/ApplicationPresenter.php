@@ -18,6 +18,8 @@ use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\GoneException;
 use FKSDB\Exceptions\NotFoundException;
+use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\AbstractModelSingle;
@@ -30,7 +32,6 @@ use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidArgumentException;
 
@@ -82,6 +83,8 @@ class ApplicationPresenter extends BasePresenter {
      * @var ApplicationHandlerFactory
      */
     private $handlerFactory;
+    /** @var EventDispatchFactory */
+    private $eventDispatchFactory;
 
     /**
      * @param ServiceEvent $serviceEvent
@@ -116,9 +119,17 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param $eventId
-     * @param $id
-     * @throws BadRequestException
+     * @param EventDispatchFactory $eventDispatchFactory
+     * @return void
+     */
+    public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory) {
+        $this->eventDispatchFactory = $eventDispatchFactory;
+    }
+
+    /**
+     * @param int $eventId
+     * @param int $id
+     * @throws GoneException
      */
     public function authorizedDefault($eventId, $id) {
         /**
@@ -151,7 +162,8 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function titleList() {
         $contest = $this->getSelectedContest();
@@ -164,7 +176,6 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
      * @throws ForbiddenRequestException
      * @throws NeonSchemaException
      */
@@ -187,11 +198,15 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param $eventId
-     * @param $id
-     * @throws BadRequestException
+     * @param int $eventId
+     * @param int $id
+     *
      * @throws AbortException
+     *
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      * @throws NeonSchemaException
+     * @throws NotFoundException
      */
     public function actionDefault($eventId, $id) {
         if (!$this->getEvent()) {
@@ -241,7 +256,8 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function actionList() {
         if (!$this->getSelectedContest()) {
@@ -251,7 +267,6 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
      * @throws NeonSchemaException
      */
     private function initializeMachine() {
@@ -260,7 +275,7 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @return ContestChooser
-     * @throws BadRequestException
+     * @throws NotFoundException
      */
     protected function createComponentContestChooser(): ContestChooser {
         $component = parent::createComponentContestChooser();
@@ -279,8 +294,8 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @return ApplicationComponent
-     * @throws BadRequestException
      * @throws NeonSchemaException
+     * @throws NotImplementedException
      */
     protected function createComponentApplication() {
         $logger = new MemoryLogger();
@@ -300,7 +315,9 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @return ApplicationsGrid
-     * @throws BadRequestException
+     *
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     protected function createComponentApplicationsGrid() {
         $person = $this->getUser()->getIdentity()->getPerson();
@@ -318,7 +335,9 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @return ApplicationsGrid
-     * @throws BadRequestException
+     *
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     protected function createComponentNewApplicationsGrid() {
         $events = $this->serviceEvent->getTable();
@@ -326,7 +345,7 @@ class ApplicationPresenter extends BasePresenter {
             ->where('registration_begin <= NOW()')
             ->where('registration_end >= NOW()');
 
-        $source = new InitSource($events, $this->getContext());
+        $source = new InitSource($events, $this->getContext(), $this->eventDispatchFactory);
         $grid = new ApplicationsGrid($this->getContext(), $source, $this->handlerFactory);
         $grid->setTemplate('myApplications');
 
@@ -358,7 +377,6 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @return AbstractModelMulti|AbstractModelSingle|IModel|ModelFyziklaniTeam|ModelEventParticipant|IEventReferencedModel
-     * @throws BadRequestException
      * @throws NeonSchemaException
      */
     private function getEventApplication() {
@@ -385,34 +403,29 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @return Holder
-     * @throws BadRequestException
      * @throws NeonSchemaException
      */
     private function getHolder() {
         if (!$this->holder) {
-            /** @var EventDispatchFactory $factory */
-            $factory = $this->getContext()->getByType(EventDispatchFactory::class);
-            $this->holder = $factory->getDummyHolder($this->getEvent());
+            $this->holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
         }
         return $this->holder;
     }
 
     /**
      * @return Machine
-     * @throws BadRequestException
+     *
      */
     private function getMachine() {
         if (!$this->machine) {
-            /** @var EventDispatchFactory $factory */
-            $factory = $this->getContext()->getByType(EventDispatchFactory::class);
-            $this->machine = $factory->getEventMachine($this->getEvent());
+            $this->machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
         }
         return $this->machine;
     }
 
     /**
-     * @param $eventId
-     * @param $id
+     * @param int $eventId
+     * @param int $id
      * @return string
      */
     public static function encodeParameters($eventId, $id) {
@@ -420,7 +433,7 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @param $data
+     * @param string $data
      * @return array
      */
     public static function decodeParameters($data) {
@@ -436,7 +449,8 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws UnsupportedLanguageException
      * @throws \ReflectionException
      */
     protected function beforeRender() {

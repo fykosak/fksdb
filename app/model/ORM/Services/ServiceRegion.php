@@ -10,6 +10,7 @@ use FKSDB\ORM\Tables\TypedTableSelection;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @method ModelRegion findByPrimary($key)
  */
 class ServiceRegion extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;

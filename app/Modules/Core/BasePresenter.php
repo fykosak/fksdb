@@ -2,7 +2,6 @@
 
 namespace FKSDB\Modules\Core;
 
-use Exception;
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Application\IStylesheetCollector;
 use FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs;
@@ -18,6 +17,7 @@ use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
 use FKSDB\Config\GlobalParameters;
 use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Logging\ILogger;
 use FKSDB\Modules\Core\PresenterTraits\CollectorPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\LangPresenterTrait;
@@ -58,7 +58,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     public $tld;
 
     /**
-     * Backlink for tree construction for breadcrumbs.
+     * BackLink for tree construction for breadcrumbs.
      *
      * @persistent
      */
@@ -164,7 +164,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * @return void
-     * @throws Exception
+     * @throws UnsupportedLanguageException
      */
     protected function startup() {
         parent::startup();
@@ -184,10 +184,11 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * IJSONProvider
      * ****************************** */
     /**
-     * @param $acName
-     * @param $acQ
-     * @throws BadRequestException
+     * @param mixed|string $acName
+     * @param mixed|string $acQ
+     * @return void
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function handleAutocomplete($acName, $acQ) {
         if (!$this->isAjax()) {
@@ -276,9 +277,9 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
-     *
-     * @throws BadRequestException
+     * @throws BadTypeException
      * @throws ReflectionException
+     * @throws UnsupportedLanguageException
      */
     protected function beforeRender() {
         parent::beforeRender();
@@ -369,7 +370,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
-     * @param $element
+     * @param mixed $element
      * @throws ForbiddenRequestException
      */
     public function checkRequirements($element) {
@@ -378,9 +379,12 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
-     * @param $destination
+     * @param string $destination
      * @param null $args
      * @return bool|mixed
+     *
+     *
+     *
      * @throws BadRequestException
      * @throws InvalidLinkException
      */

@@ -5,7 +5,6 @@ use FKSDB\Utils\Utils;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\SmartObject;
-use Nette\Utils\Arrays;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -25,7 +24,7 @@ class LoggingMailer implements IMailer {
      */
     private $parameters;
     /**
-     * @var mixed
+     * @var string
      */
     private $logPath;
     /**
@@ -47,44 +46,39 @@ class LoggingMailer implements IMailer {
         $this->parameters = $parameters;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getLogPath() {
+    public function getLogPath(): string {
         return $this->logPath;
     }
 
     /**
-     * @param $logPath
+     * @param string $logPath
      * @return void
      */
-    public function setLogPath($logPath) {
+    public function setLogPath(string $logPath) {
         $this->logPath = $logPath;
         @mkdir($this->logPath, 0770, true);
     }
 
-    /**
-     * @return bool
-     */
-    public function getLogging() {
+    public function getLogging(): bool {
         return $this->logging;
     }
 
     /**
-     * @param $logging
+     * @param bool $logging
      * @return void
      */
-    public function setLogging($logging) {
+    public function setLogging(bool $logging) {
         $this->logging = $logging;
     }
 
     /**
      * @param Message $mail
+     * @return void
      * @throws Exception
      */
     public function send(Message $mail) {
         try {
-            if (!Arrays::get($this->parameters['email'], 'disabled', false)) {// do not really send emails when debugging
+            if (!$this->parameters['email']['disabled'] ?? false) {// do not really send emails when debugging
                 $this->mailer->send($mail);
             }
             $this->logMessage($mail);
@@ -94,10 +88,7 @@ class LoggingMailer implements IMailer {
         }
     }
 
-    /**
-     * @return int
-     */
-    public function getSentMessages() {
+    public function getSentMessages(): int {
         return $this->sentMessages;
     }
 

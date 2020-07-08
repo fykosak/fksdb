@@ -71,7 +71,7 @@ abstract class AbstractResultsModel {
      * @param ModelContest $contest
      * @param ServiceTask $serviceTask
      * @param Connection $connection
-     * @param $year
+     * @param int $year
      * @param EvaluationStrategy $evaluationStrategy
      */
     public function __construct(ModelContest $contest, ServiceTask $serviceTask, Connection $connection, $year, EvaluationStrategy $evaluationStrategy) {
@@ -132,11 +132,11 @@ abstract class AbstractResultsModel {
             if (is_array($value)) {
                 $set = [];
                 $hasNull = false;
-                foreach ($value as $subvalue) {
-                    if ($subvalue === null) {
+                foreach ($value as $subValue) {
+                    if ($subValue === null) {
                         $hasNull = true;
                     } else {
-                        $set[] = $subvalue;
+                        $set[] = $subValue;
                     }
                 }
                 $inClause = "$col IN (" . implode(',', $set) . ")";

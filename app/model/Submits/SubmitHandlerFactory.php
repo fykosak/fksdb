@@ -8,6 +8,7 @@ use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
@@ -60,6 +61,8 @@ class SubmitHandlerFactory {
      * @return void
      * @throws AbortException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws NotFoundException
      */
     public function handleDownloadUploaded(Presenter $presenter, ILogger $logger, int $id) {
         $submit = $this->getSubmit($id, 'download.uploaded');
@@ -83,6 +86,8 @@ class SubmitHandlerFactory {
      * @return void
      * @throws AbortException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws NotFoundException
      */
     public function handleDownloadCorrected(Presenter $presenter, ILogger $logger, int $id) {
         $submit = $this->getSubmit($id, 'download.corrected');
@@ -145,8 +150,7 @@ class SubmitHandlerFactory {
      * @param FileUpload $file
      * @param ModelTask $task
      * @param ModelContestant $contestant
-     * @return AbstractModelSingle|ModelSubmit
-     * @throws \Exception
+     * @return AbstractModelSingle|IModel|ModelSubmit
      */
     public function handleSave(FileUpload $file, ModelTask $task, ModelContestant $contestant) {
         $submit = $this->serviceSubmit->findByContestant($contestant->ct_id, $task->task_id);
@@ -172,7 +176,8 @@ class SubmitHandlerFactory {
      * @param int $id
      * @param string $privilege
      * @return ModelSubmit
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws NotFoundException
      */
     private function getSubmit(int $id, string $privilege): ModelSubmit {
         /** @var ModelSubmit $submit */
@@ -182,7 +187,7 @@ class SubmitHandlerFactory {
             throw new NotFoundException('Neexistující submit.');
         }
         if (!$this->contestAuthorizator->isAllowed($submit, $privilege, $submit->getContestant()->getContest())) {
-            throw new  ForbiddenRequestException('Nedostatečné oprávnění.');
+            throw new ForbiddenRequestException('Nedostatečné oprávnění.');
         }
         return $submit;
     }

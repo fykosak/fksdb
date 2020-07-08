@@ -4,12 +4,14 @@ namespace FKSDB\Modules\CommonModule;
 
 use FKSDB\Components\Controls\Entity\Person\PersonFormComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\Person\PizzaControl;
 use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotFoundException;
@@ -23,7 +25,6 @@ use FKSDB\ORM\Services\ServicePersonInfo;
 use FKSDB\UI\PageTitle;
 use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
@@ -49,10 +50,6 @@ use Tracy\Debugger;
 class PersonPresenter extends BasePresenter {
     use EntityPresenterTrait;
 
-    /**
-     * @var ModelPerson[]
-     */
-    private $persons = [];
 
     /**
      * @var ServicePerson
@@ -122,7 +119,7 @@ class PersonPresenter extends BasePresenter {
     /* *********** TITLE ***************/
     /**
      * @return void
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
      */
     public function titleSearch() {
@@ -131,8 +128,9 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     public function titleDetail() {
         $this->setPageTitle(new PageTitle(sprintf(_('Detail of person %s'), $this->getEntity()->getFullName()), 'fa fa-eye'));
@@ -140,8 +138,9 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     public function titleEdit() {
         $this->setPageTitle(new PageTitle(sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()), 'fa fa-user'));
@@ -153,7 +152,7 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
      */
     public function titleMerge() {
@@ -162,7 +161,7 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
      */
     public function titlePizza() {
@@ -180,6 +179,10 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @return void
+     * @throws ModelNotFoundException
+     * @throws ModelNotFoundException
+     * @throws ModelNotFoundException
+     * @throws ModelNotFoundException
      */
     public function authorizedDetail() {
         $full = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.full');
@@ -190,9 +193,9 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @param $trunkId
-     * @param $mergedId
-     * @throws BadRequestException
+     * @param int $trunkId
+     * @param int $mergedId
+     * @throws NotFoundException
      */
     public function authorizedMerge($trunkId, $mergedId) {
         $this->trunkPerson = $this->servicePerson->findByPrimary($trunkId);
@@ -206,9 +209,9 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @param $trunkId
-     * @param $mergedId
-     * @throws BadRequestException
+     * @param int $trunkId
+     * @param int $mergedId
+     * @throws NotFoundException
      */
     public function authorizedDontMerge($trunkId, $mergedId) {
         $this->authorizedMerge($trunkId, $mergedId);
@@ -216,8 +219,8 @@ class PersonPresenter extends BasePresenter {
 
     /* ********************* ACTIONS **************/
     /**
-     * @param $trunkId
-     * @param $mergedId
+     * @param int $trunkId
+     * @param int $mergedId
      * @return void
      */
     public function actionMerge($trunkId, $mergedId) {
@@ -227,18 +230,20 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ModelNotFoundException
      */
     public function actionEdit() {
         $this->traitActionEdit();
     }
 
     /**
-     * @param $trunkId
-     * @param $mergedId
+     * @param int $trunkId
+     * @param int $mergedId
+     * @return void
      * @throws AbortException
+     * @throws BadTypeException
      * @throws ReflectionException
-     * @throws \Exception
      */
     public function actionDontMerge($trunkId, $mergedId) {
         $mergedPI = $this->servicePersonInfo->findByPrimary($mergedId);
@@ -255,6 +260,7 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @return void
+     * @throws ModelNotFoundException
      */
     public function renderDetail() {
         $person = $this->getEntity();
@@ -266,10 +272,6 @@ class PersonPresenter extends BasePresenter {
         Debugger::log(sprintf('%s (%d) stalk %s (%d)',
             $userPerson->getFullName(), $userPerson->person_id,
             $person->getFullName(), $person->person_id), 'stalking-log');
-    }
-
-    public function renderPizza() {
-        $this->template->persons = $this->persons;
     }
 
     /* ******************* COMPONENTS *******************/
@@ -304,8 +306,7 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
-     * @throws \Exception
+     * @throws BadTypeException
      */
     protected function createComponentFormSearch(): FormControl {
         $control = new FormControl();
@@ -328,7 +329,7 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function createComponentMergeForm(): FormControl {
         $control = new FormControl();
@@ -344,32 +345,24 @@ class PersonPresenter extends BasePresenter {
         return $control;
     }
 
+    /**
+     * @return Control
+     * @throws ModelNotFoundException
+     */
     protected function createComponentCreateForm(): Control {
         return new PersonFormComponent($this->getContext(), true, $this->getUserPermissions());
     }
 
+    /**
+     * @return Control
+     * @throws ModelNotFoundException
+     */
     protected function createComponentEditForm(): Control {
         return new PersonFormComponent($this->getContext(), false, $this->getUserPermissions());
     }
 
-    /**
-     * @return FormControl
-     * @throws BadRequestException
-     */
-    protected function createComponentPizzaSelect(): FormControl {
-        $control = new FormControl();
-        $form = $control->getForm();
-        $personsField = $this->personFactory->createPersonSelect(true, _('Persons'), new PersonProvider($this->servicePerson));
-        $personsField->setMultiSelect(true);
-        $form->addComponent($personsField, 'persons');
-        $form->addSubmit('submit', _('Get pizza information!'));
-        $form->onSuccess[] = function (Form $form) {
-            $values = $form->getValues();
-            foreach ($values['persons'] as $personId) {
-                $this->persons[] = $this->servicePerson->findByPrimary($personId);
-            }
-        };
-        return $control;
+    protected function createComponentPizzaSelect(): PizzaControl {
+        return new PizzaControl($this->getContext());
     }
 
     /**
@@ -380,6 +373,10 @@ class PersonPresenter extends BasePresenter {
         throw new NotImplementedException();
     }
 
+    /**
+     * @return int
+     * @throws ModelNotFoundException
+     */
     private function getUserPermissions(): int {
         if (!isset($this->userPermissions) || is_null($this->userPermissions)) {
             $this->userPermissions = FieldLevelPermission::ALLOW_ANYBODY;
@@ -507,7 +504,7 @@ class PersonPresenter extends BasePresenter {
      * ****************************** */
 
     /**
-     * @param $conflicts
+     * @param iterable $conflicts
      * @return void
      */
     private function setMergeConflicts($conflicts) {

@@ -18,7 +18,7 @@ class Not extends EvaluatedExpression {
 
     /**
      * Not constructor.
-     * @param $expression
+     * @param callable|mixed $expression
      */
     public function __construct($expression) {
         $this->expression = $expression;

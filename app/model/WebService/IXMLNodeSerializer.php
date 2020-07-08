@@ -16,7 +16,7 @@ interface IXMLNodeSerializer {
     const EXPORT_FORMAT_2 = 2;
 
     /**
-     * @param $dataSource
+     * @param mixed $dataSource
      * @param DOMNode $node
      * @param DOMDocument $doc
      * @param int $formatVersion

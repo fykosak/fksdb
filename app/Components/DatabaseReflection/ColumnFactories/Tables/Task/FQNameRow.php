@@ -7,7 +7,6 @@ use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelTask;
-use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
@@ -34,9 +33,9 @@ class FQNameRow extends AbstractColumnFactory {
     }
 
     /**
-     * @param array $args
+     * @param mixed ...$args
      * @return BaseControl
-     * @throws BadRequestException
+     * @throws NotImplementedException
      */
     public function createField(...$args): BaseControl {
         throw new NotImplementedException();

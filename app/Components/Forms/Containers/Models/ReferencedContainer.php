@@ -12,11 +12,12 @@ use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SubmitButton;
-use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\InvalidStateException;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\Arrays;
+use Persons\IModifiabilityResolver;
+use Persons\IVisibilityResolver;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -62,6 +63,14 @@ class ReferencedContainer extends ContainerWithOptions {
      * @var callable
      */
     private $termToValuesCallback;
+    /**
+     * @var bool
+     */
+    private $attachedJS = false;
+    /** @var IModifiabilityResolver */
+    public $modifiabilityResolver;
+    /** @var IVisibilityResolver */
+    public $visibilityResolver;
 
     /**
      * ReferencedContainer constructor.
@@ -69,13 +78,18 @@ class ReferencedContainer extends ContainerWithOptions {
      */
     public function __construct(ReferencedId $referencedId) {
         parent::__construct();
-        $this->monitor(IJavaScriptCollector::class);
-        $this->monitor(Form::class);
-
+        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
+            if (!$this->attachedJS) {
+                $this->attachedJS = true;
+                $collector->registerJSFile('js/referencedContainer.js');
+                $this->updateHtmlData();
+            }
+        }, function (IJavaScriptCollector $collector) {
+            $this->attachedJS = false;
+            $collector->unregisterJSFile('js/referencedContainer.js');
+        });
         $this->referencedId = $referencedId;
-
         $this->createClearButton();
-
         $this->createCompactValue();
         $this->referencedId->setReferencedContainer($this);
     }
@@ -193,7 +207,7 @@ class ReferencedContainer extends ContainerWithOptions {
             $value = false;
         }
         if ($value) {
-            $component = Arrays::get($this->hiddenComponents, self::SUBMIT_CLEAR, null);
+            $component = $this->hiddenComponents[self::SUBMIT_CLEAR] ?? null;
             if ($component) {
                 $this->showComponent(self::SUBMIT_CLEAR, $component);
             }
@@ -259,44 +273,6 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     /**
-     * @var bool
-     */
-    private $attachedJS = false;
-    /**
-     * @var bool
-     */
-    private $attachedAjax = false;
-
-    /**
-     * @param IComponent $obj
-     * @return void
-     */
-    protected function attached($obj) {
-        parent::attached($obj);
-        if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
-            $this->attachedJS = true;
-            $obj->registerJSFile('js/referencedContainer.js');
-            $this->updateHtmlData();
-        }
-        if (!$this->attachedAjax && $obj instanceof Form) {
-            $this->attachedAjax = true;
-            //  $this->getForm()->getElementPrototype()->class[] = self::CSS_AJAX;
-        }
-    }
-
-    /**
-     * @param IComponent $obj
-     * @return void
-     */
-    protected function detached($obj) {
-        parent::detached($obj);
-        if ($obj instanceof IJavaScriptCollector) {
-            $this->attachedJS = false;
-            $obj->unregisterJSFile('js/referencedContainer.js');
-        }
-    }
-
-    /**
      * @note Must be called after a form is attached.
      */
     private function updateHtmlData() {
@@ -307,7 +283,7 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @param ContainerWithOptions $component
      */
     private function hideComponent($name, $component) {
@@ -319,8 +295,8 @@ class ReferencedContainer extends ContainerWithOptions {
             //$component->setOption('wasDisabled', $component->isDisabled());
             $component->setDisabled(true);
         } elseif ($component instanceof Container) {
-            foreach ($component->getComponents() as $subcomponent) {
-                $this->hideComponent(null, $subcomponent);
+            foreach ($component->getComponents() as $subComponent) {
+                $this->hideComponent(null, $subComponent);
             }
         }
     }
@@ -338,8 +314,8 @@ class ReferencedContainer extends ContainerWithOptions {
             //$component->setDisabled($component->getOption('wasDisabled', $component->isDisabled()));
             $component->setDisabled(false);
         } elseif ($component instanceof Container) {
-            foreach ($component->getComponents() as $subcomponent) {
-                $this->showComponent(null, $subcomponent);
+            foreach ($component->getComponents() as $subComponent) {
+                $this->showComponent(null, $subComponent);
             }
         }
     }

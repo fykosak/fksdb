@@ -16,7 +16,7 @@ use Nette\Utils\ArrayHash;
 interface IProcessing {
 
     /**
-     * @param $states
+     * @param array $states
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder

@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\Choosers\SeriesChooser;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\SeriesCalculator;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 
@@ -41,7 +40,8 @@ trait SeriesPresenterTrait {
 
     /**
      * @return array
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     private function getAllowedSeries(): array {
         return $this->getSeriesCalculator()->getAllowedSeries($this->getSelectedContest(), $this->getSelectedYear());
@@ -49,7 +49,7 @@ trait SeriesPresenterTrait {
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
@@ -65,9 +65,10 @@ trait SeriesPresenterTrait {
     }
 
     /**
-     * @param $series
+     * @param int|null $series
      * @return bool
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     private function isValidSeries($series): bool {
         return in_array($series, $this->getAllowedSeries());
@@ -75,8 +76,8 @@ trait SeriesPresenterTrait {
 
     /**
      * @return int
+     * @throws BadTypeException
      * @throws ForbiddenRequestException
-     * @throws BadRequestException
      */
     public function getSelectedSeries(): int {
         $candidate = $this->series ?? $this->getSeriesCalculator()->getLastSeries($this->getSelectedContest(), $this->getSelectedYear());

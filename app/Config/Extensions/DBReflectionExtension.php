@@ -16,7 +16,7 @@ use FKSDB\Components\DatabaseReflection\ColumnFactories\{DateRow,
 };
 use FKSDB\Components\DatabaseReflection\DetailFactory;
 use FKSDB\Components\DatabaseReflection\LinkFactories\Link;
-use Nette\Application\BadRequestException;
+use FKSDB\Components\DatabaseReflection\ReferencedFactory;
 use Nette\DI\CompilerExtension;
 use Nette\DI\ServiceDefinition;
 use Nette\DI\Statement;
@@ -28,47 +28,11 @@ use FKSDB\Exceptions\NotImplementedException;
  */
 class DBReflectionExtension extends CompilerExtension {
     /**
-     * @throws BadRequestException
+     * @throws NotImplementedException
      */
     public function loadConfiguration() {
-        $this->registerTables($this->config['tables']);
-        $this->registerLinks($this->config['links']);
+        $this->registerFactories($this->config['tables']);
         $this->registerDetails($this->config['details']);
-    }
-
-    /**
-     * @param array $tables
-     * @throws BadRequestException
-     */
-    private function registerTables(array $tables) {
-        foreach ($tables as $tableName => $fieldDefinitions) {
-
-            foreach ($fieldDefinitions['factories'] as $fieldName => $field) {
-                $factory = $this->createFactory($tableName, $fieldName, $field);
-                $factory->addSetup('setModelClassName', [$fieldDefinitions['modelClassName']]);
-                if (isset($fieldDefinitions['referencedAccess'])) {
-                    $factory->addSetup('setReferencedAccess', [$fieldDefinitions['referencedAccess']]);
-                }
-            }
-        }
-    }
-
-    /**
-     * @param array $links
-     * @return void
-     */
-    private function registerLinks(array $links) {
-        $builder = $this->getContainerBuilder();
-        foreach ($links as $linkId => $def) {
-            if (is_array($def)) {
-                $builder->addDefinition($this->prefix('link.' . $linkId))
-                    ->setFactory(Link::class)
-                    ->addSetup('setParams', [$def['destination'], $def['params'], $def['title'], $def['model']]);
-            } elseif (is_string($def)) {
-                $builder->addDefinition($this->prefix('link.' . $linkId))
-                    ->setFactory($def);
-            }
-        }
     }
 
     /**
@@ -83,58 +47,123 @@ class DBReflectionExtension extends CompilerExtension {
     }
 
     /**
+     * @param array $tables
+     * @throws NotImplementedException
+     */
+    private function registerFactories(array $tables) {
+        foreach ($tables as $tableName => $fieldDefinitions) {
+            $referencedFactory = $this->createReferencedFactory($tableName, $fieldDefinitions);
+
+            foreach ($fieldDefinitions['columnFactories'] as $fieldName => $field) {
+                $factory = $this->createColumnFactory($tableName, $fieldName, $field);
+                $factory->addSetup('setReferencedFactory', [$referencedFactory]);
+            }
+            foreach ($fieldDefinitions['linkFactories'] as $fieldName => $field) {
+                $factory = $this->createLinkFactory($tableName, $fieldName, $field);
+                $factory->addSetup('setReferencedFactory', [$referencedFactory]);
+            }
+        }
+    }
+
+    private function createReferencedFactory(string $tableName, array $fieldDefinitions): ServiceDefinition {
+        $builder = $this->getContainerBuilder();
+        $factory = $builder->addDefinition($this->prefix('referencedFactory.' . $tableName));
+        $factory->setFactory(ReferencedFactory::class, [$fieldDefinitions['modelClassName'], $fieldDefinitions['referencedAccess'] ?? null]);
+        return $factory;
+    }
+
+    /**
+     * @param string $tableName
+     * @param string $linkId
+     * @param string|array $def
+     * @return ServiceDefinition
+     */
+    private function createLinkFactory(string $tableName, string $linkId, $def): ServiceDefinition {
+        $builder = $this->getContainerBuilder();
+        $factory = $builder->addDefinition($this->prefix('link.' . $tableName . '.' . $linkId));
+        if (is_array($def)) {
+            $factory->setFactory(Link::class, [$def['destination'], $def['params'], $def['title'], $def['model']]);
+        } elseif (is_string($def)) {
+            $factory->setFactory($def);
+        }
+        return $factory;
+    }
+
+    /**
      * @param string $tableName
      * @param string $fieldName
      * @param array|string $field
      * @return ServiceDefinition
-     * @throws BadRequestException
+     * @throws NotImplementedException
      */
-    private function createFactory(string $tableName, string $fieldName, $field): ServiceDefinition {
+    private function createColumnFactory(string $tableName, string $fieldName, $field): ServiceDefinition {
         $builder = $this->getContainerBuilder();
-        $factory = null;
+        $factory = $builder->addDefinition($this->prefix('column.' . $tableName . '.' . $fieldName));
         if (is_array($field)) {
             switch ($field['type']) {
                 case 'primaryKey':
-                    return $this->registerPrimaryKeyRow($tableName, $fieldName, $field);
+                    $this->registerPrimaryKeyRow($factory, $tableName, $fieldName, $field);
+                    break;
                 case 'string':
-                    return $this->registerStringRow($tableName, $fieldName, $field);
+                    $this->registerStringRow($factory, $tableName, $fieldName, $field);
+                    break;
                 case 'text':
-                    return $this->registerTextRow($tableName, $fieldName, $field);
+                    $this->registerTextRow($factory, $tableName, $fieldName, $field);
+                    break;
                 case 'dateTime':
-                    return $this->registerDateTimeRow($tableName, $fieldName, $field);
+                    $this->registerDateTimeRow($factory, $tableName, $fieldName, $field);
+                    break;
                 case 'date':
-                    return $this->registerDateRow($tableName, $fieldName, $field);
+                    $this->registerDateRow($factory, $tableName, $fieldName, $field);
+                    break;
                 case 'time':
-                    return $this->registerTimeRow($tableName, $fieldName, $field);
+                    $this->registerTimeRow($factory, $tableName, $fieldName, $field);
+                    break;
                 case 'phone':
-                    return $this->registerPhoneRow($tableName, $fieldName, $field);
+                    $this->registerPhoneRow($factory, $tableName, $fieldName, $field);
+                    break;
                 case 'email':
-                    return $this->registerEmailRow($tableName, $fieldName, $field);
+                    $this->registerEmailRow($factory, $tableName, $fieldName, $field);
+                    break;
                 case 'state':
-                    return $this->registerStateRow($tableName, $fieldName, $field);
+                    $this->registerStateRow($factory, $tableName, $fieldName, $field);
+                    break;
                 case 'int':
-                    return $this->registerIntRow($tableName, $fieldName, $field);
+                    $this->registerIntRow($factory, $tableName, $fieldName, $field);
+                    break;
                 case 'logic':
-                    return $this->registerLogicRow($tableName, $fieldName, $field);
+                    $this->registerLogicRow($factory, $tableName, $fieldName, $field);
+                    break;
                 default:
                     throw new NotImplementedException();
             }
+        } elseif (is_string($field) && preg_match('/([A-Za-z0-9]+\\\\)*/', $field)) {
+            $factory->setFactory($field);
         }
-        if (is_string($field) && preg_match('/([A-Za-z0-9]+\\\\)*/', $field)) {
-            return $builder->addDefinition($this->prefix($tableName . '.' . $fieldName))
-                ->setFactory($field);
-        }
-        throw new BadRequestException('Expected string or array give ' . get_class($field));
-    }
-
-    private function registerStateRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
-        $factory = $this->setUpDefaultFactory($tableName, $fieldName, StateColumnFactory::class, $field);
-        $factory->addSetup('setStates', [$field['states']]);
         return $factory;
     }
 
-    private function registerIntRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
-        $factory = $this->setUpDefaultFactory($tableName, $fieldName, IntColumnFactory::class, $field);
+    /**
+     * @param ServiceDefinition $factory
+     * @param string $tableName
+     * @param string $fieldName
+     * @param array $field
+     * @return void
+     */
+    private function registerStateRow(ServiceDefinition $factory, string $tableName, string $fieldName, array $field) {
+        $this->setUpDefaultFactory($factory, $tableName, $fieldName, StateColumnFactory::class, $field);
+        $factory->addSetup('setStates', [$field['states']]);
+    }
+
+    /**
+     * @param ServiceDefinition $factory
+     * @param string $tableName
+     * @param string $fieldName
+     * @param array $field
+     * @return void
+     */
+    private function registerIntRow(ServiceDefinition $factory, string $tableName, string $fieldName, array $field) {
+        $this->setUpDefaultFactory($factory, $tableName, $fieldName, IntColumnFactory::class, $field);
         if (isset($field['nullValueFormat'])) {
             $factory->addSetup('setNullValueFormat', [$field['nullValueFormat']]);
         }
@@ -144,55 +173,123 @@ class DBReflectionExtension extends CompilerExtension {
         if (isset($field['suffix'])) {
             $factory->addSetup('setSuffix', [$field['suffix']]);
         }
-        return $factory;
     }
 
-    private function registerStringRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
-        return $this->setUpDefaultFactory($tableName, $fieldName, StringColumnFactory::class, $field);
+    /**
+     * @param ServiceDefinition $factory
+     * @param string $tableName
+     * @param string $fieldName
+     * @param array $field
+     * @return void
+     */
+    private function registerStringRow(ServiceDefinition $factory, string $tableName, string $fieldName, array $field) {
+        $this->setUpDefaultFactory($factory, $tableName, $fieldName, StringColumnFactory::class, $field);
     }
 
-    private function registerLogicRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
-        return $this->setUpDefaultFactory($tableName, $fieldName, LogicColumnFactory::class, $field);
+    /**
+     * @param ServiceDefinition $factory
+     * @param string $tableName
+     * @param string $fieldName
+     * @param array $field
+     * @return void
+     */
+    private function registerLogicRow(ServiceDefinition $factory, string $tableName, string $fieldName, array $field) {
+        $this->setUpDefaultFactory($factory, $tableName, $fieldName, LogicColumnFactory::class, $field);
     }
 
-    private function registerTextRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
-        return $this->setUpDefaultFactory($tableName, $fieldName, TextColumnFactory::class, $field);
+    /**
+     * @param ServiceDefinition $factory
+     * @param string $tableName
+     * @param string $fieldName
+     * @param array $field
+     * @return void
+     */
+    private function registerTextRow(ServiceDefinition $factory, string $tableName, string $fieldName, array $field) {
+        $this->setUpDefaultFactory($factory, $tableName, $fieldName, TextColumnFactory::class, $field);
     }
 
-    private function registerDateTimeRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
-        return $this->registerAbstractDateTimeRow($tableName, $fieldName, DateTimeRow::class, $field);
+    /**
+     * @param ServiceDefinition $factory
+     * @param string $tableName
+     * @param string $fieldName
+     * @param array $field
+     * @return void
+     */
+    private function registerDateTimeRow(ServiceDefinition $factory, string $tableName, string $fieldName, array $field) {
+        $this->registerAbstractDateTimeRow($factory, $tableName, $fieldName, DateTimeRow::class, $field);
     }
 
-    private function registerDateRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
-        return $this->registerAbstractDateTimeRow($tableName, $fieldName, DateRow::class, $field);
+    /**
+     * @param ServiceDefinition $factory
+     * @param string $tableName
+     * @param string $fieldName
+     * @param array $field
+     * @return void
+     */
+    private function registerDateRow(ServiceDefinition $factory, string $tableName, string $fieldName, array $field) {
+        $this->registerAbstractDateTimeRow($factory, $tableName, $fieldName, DateRow::class, $field);
     }
 
-    private function registerTimeRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
-        return $this->registerAbstractDateTimeRow($tableName, $fieldName, TimeRow::class, $field);
+    /**
+     * @param ServiceDefinition $factory
+     * @param string $tableName
+     * @param string $fieldName
+     * @param array $field
+     * @return void
+     */
+    private function registerTimeRow(ServiceDefinition $factory, string $tableName, string $fieldName, array $field) {
+        $this->registerAbstractDateTimeRow($factory, $tableName, $fieldName, TimeRow::class, $field);
     }
 
-    private function registerAbstractDateTimeRow(string $tableName, string $fieldName, string $factoryClassName, array $field): ServiceDefinition {
-        $factory = $this->setUpDefaultFactory($tableName, $fieldName, $factoryClassName, $field);
+    /**
+     * @param ServiceDefinition $factory
+     * @param string $tableName
+     * @param string $fieldName
+     * @param string $factoryClassName
+     * @param array $field
+     * @return void
+     */
+    private function registerAbstractDateTimeRow(ServiceDefinition $factory, string $tableName, string $fieldName, string $factoryClassName, array $field) {
+        $this->setUpDefaultFactory($factory, $tableName, $fieldName, $factoryClassName, $field);
         if (isset($field['format'])) {
             $factory->addSetup('setFormat', [$field['format']]);
         }
-        return $factory;
     }
 
-    private function registerPrimaryKeyRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
-        return $this->setUpDefaultFactory($tableName, $fieldName, PrimaryKeyColumnFactory::class, $field);
+    /**
+     * @param ServiceDefinition $factory
+     * @param string $tableName
+     * @param string $fieldName
+     * @param array $field
+     * @return void
+     */
+    private function registerPrimaryKeyRow(ServiceDefinition $factory, string $tableName, string $fieldName, array $field) {
+        $this->setUpDefaultFactory($factory, $tableName, $fieldName, PrimaryKeyColumnFactory::class, $field);
     }
 
-    private function registerPhoneRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
-        $factory = $this->setUpDefaultFactory($tableName, $fieldName, PhoneColumnFactory::class, $field);
+    /**
+     * @param ServiceDefinition $factory
+     * @param string $tableName
+     * @param string $fieldName
+     * @param array $field
+     * @return void
+     */
+    private function registerPhoneRow(ServiceDefinition $factory, string $tableName, string $fieldName, array $field) {
+        $this->setUpDefaultFactory($factory, $tableName, $fieldName, PhoneColumnFactory::class, $field);
         if (isset($field['writeOnly'])) {
             $factory->addSetup('setWriteOnly', [$field['writeOnly']]);
         }
-        return $factory;
     }
 
-    private function registerEmailRow(string $tableName, string $fieldName, array $field): ServiceDefinition {
-        return $this->setUpDefaultFactory($tableName, $fieldName, EmailColumnFactory::class, $field);
+    /**
+     * @param ServiceDefinition $factory
+     * @param string $tableName
+     * @param string $fieldName
+     * @param array $field
+     * @return void
+     */
+    private function registerEmailRow(ServiceDefinition $factory, string $tableName, string $fieldName, array $field) {
+        $this->setUpDefaultFactory($factory, $tableName, $fieldName, EmailColumnFactory::class, $field);
     }
 
     /**
@@ -206,10 +303,16 @@ class DBReflectionExtension extends CompilerExtension {
         return $value;
     }
 
-    private function setUpDefaultFactory(string $tableName, string $fieldName, string $factoryClassName, array $field): ServiceDefinition {
-        $builder = $this->getContainerBuilder();
-        $factory = $builder->addDefinition($this->prefix($tableName . '.' . $fieldName))
-            ->setFactory($factoryClassName)
+    /**
+     * @param ServiceDefinition $factory
+     * @param string $tableName
+     * @param string $fieldName
+     * @param string $factoryClassName
+     * @param array $field
+     * @return void
+     */
+    private function setUpDefaultFactory(ServiceDefinition $factory, string $tableName, string $fieldName, string $factoryClassName, array $field) {
+        $factory->setFactory($factoryClassName)
             ->addSetup('setUp', [
                 $tableName,
                 isset($field['accessKey']) ? $field['accessKey'] : $fieldName,
@@ -230,6 +333,5 @@ class DBReflectionExtension extends CompilerExtension {
         if (isset($field['required'])) {
             $factory->addSetup('setRequired', [$field['required']]);
         }
-        return $factory;
     }
 }

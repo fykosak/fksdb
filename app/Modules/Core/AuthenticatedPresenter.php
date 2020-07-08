@@ -11,7 +11,6 @@ use Exception;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use FKSDB\ORM\Models\ModelAuthToken;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Http\Response;
 use ReflectionClass;
@@ -124,7 +123,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     * @param $element
+     * @param mixed $element
      * @throws ForbiddenRequestException
      */
     public function checkRequirements($element) {
@@ -139,9 +138,10 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
+     * @return void
      * @throws AbortException
+     *
+     * @throws ForbiddenRequestException
      * @throws Exception
      */
     protected function startup() {
@@ -294,7 +294,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
     private function tryGithub() {
         if (!$this->getHttpRequest()->getHeader('X-GitHub-Event')) {

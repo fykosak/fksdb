@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
 use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
@@ -68,6 +69,7 @@ class ResultsAndStatistics extends FyziklaniReactControl {
      * @return void
      * @throws AbortException
      * @throws BadRequestException
+     * @throws BadTypeException
      * @throws NotSetGameParametersException
      */
     public function handleRefresh() {

@@ -5,7 +5,10 @@ namespace FKSDB\Components\Controls\Entity\Org;
 use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Controls\Entity\ReferencedPersonTrait;
-use FKSDB\Components\Forms\Factories\OrgFactory;
+use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
+use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\Messages\Message;
@@ -14,6 +17,7 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
 use FKSDB\Utils\FormUtils;
+use FKSDB\YearCalculator;
 use Nette\Application\AbortException;
 use Nette\Forms\Form;
 use Nette\DI\Container;
@@ -27,21 +31,16 @@ class OrgFormComponent extends AbstractEntityFormComponent implements IEditEntit
     use ReferencedPersonTrait;
 
     const CONTAINER = 'org';
-    /**
-     * @var ServiceOrg
-     */
+    /** @var ServiceOrg */
     protected $serviceOrg;
-
-    /**
-     * @var OrgFactory
-     */
-    protected $orgFactory;
-    /**
-     * @var ModelContest
-     */
+    /** @var ModelContest */
     protected $contest;
     /** @var ModelOrg */
     private $model;
+    /** @var SingleReflectionFormFactory */
+    private $singleReflectionFormFactory;
+    /** @var YearCalculator */
+    private $yearCalculator;
 
     /**
      * AbstractForm constructor.
@@ -55,22 +54,26 @@ class OrgFormComponent extends AbstractEntityFormComponent implements IEditEntit
     }
 
     /**
-     * @param OrgFactory $orgFactory
+     * @param SingleReflectionFormFactory $singleReflectionFormFactory
      * @param ServiceOrg $serviceOrg
+     * @param YearCalculator $yearCalculator
      * @return void
      */
-    public function injectPrimary(OrgFactory $orgFactory, ServiceOrg $serviceOrg) {
-        $this->orgFactory = $orgFactory;
+    public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, ServiceOrg $serviceOrg, YearCalculator $yearCalculator) {
+        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->serviceOrg = $serviceOrg;
+        $this->yearCalculator = $yearCalculator;
     }
 
     /**
      * @param Form $form
      * @return void
-     * @throws \Exception
+     * @throws AbstractColumnException
+     * @throws BadTypeException
+     * @throws OmittedControlException
      */
     protected function configureForm(Form $form) {
-        $container = $this->orgFactory->createOrg($this->contest);
+        $container = $this->createOrgContainer();
         $personInput = $this->createPersonSelect();
         if (!$this->create) {
             $personInput->setDisabled(true);
@@ -131,5 +134,28 @@ class OrgFormComponent extends AbstractEntityFormComponent implements IEditEntit
 
     protected function getORMService(): ServiceOrg {
         return $this->serviceOrg;
+    }
+
+    /**
+     * @return ModelContainer
+     * @throws BadTypeException
+     * @throws AbstractColumnException
+     * @throws OmittedControlException
+     */
+    private function createOrgContainer(): ModelContainer {
+        $container = new ModelContainer();
+        $min = $this->yearCalculator->getFirstYear($this->contest);
+        $max = $this->yearCalculator->getLastYear($this->contest);
+
+        foreach (['since', 'until'] as $field) {
+            $control = $this->singleReflectionFormFactory->createField('org', $field, $min, $max);
+            $container->addComponent($control, $field);
+        }
+
+        foreach (['role', 'tex_signature', 'domain_alias', 'order', 'contribution'] as $field) {
+            $control = $this->singleReflectionFormFactory->createField('org', $field);
+            $container->addComponent($control, $field);
+        }
+        return $container;
     }
 }

@@ -43,6 +43,21 @@ class ServiceEventOrg extends AbstractServiceSingle {
         }
     }*/
 
+    /**
+     * @param array $data
+     * @return ModelEventOrg
+     */
+    public function createNewModel(array $data): IModel {
+        try {
+            return parent::createNewModel($data);
+        } catch (ModelException $exception) {
+            if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
+                throw new DuplicateOrgException(null, $exception);
+            }
+            throw $exception;
+        }
+    }
+
     public function findByEvent(ModelEvent $event): TypedTableSelection {
         return $this->getTable()->where('event_id', $event->event_id);
     }

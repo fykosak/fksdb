@@ -25,6 +25,10 @@ class SchoolCheckComponent extends BaseComponent {
      * @var int
      */
     private $acYear;
+    /** @var ServiceSchool */
+    private $serviceSchool;
+    /** @var ServiceFyziklaniTeam */
+    private $serviceFyziklaniTeam;
 
     /**
      * SchoolCheckControl constructor.
@@ -39,17 +43,22 @@ class SchoolCheckComponent extends BaseComponent {
     }
 
     /**
+     * @param ServiceSchool $serviceSchool
+     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
+     * @return void
+     */
+    public function injectPrimary(ServiceSchool $serviceSchool, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+        $this->serviceSchool = $serviceSchool;
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+    }
+
+    /**
      * @param ModelFyziklaniTeam $currentTeam
      * @return void
      */
     public function render(ModelFyziklaniTeam $currentTeam) {
         $schools = [];
-
-        /** @var ServiceSchool $serviceSchool */
-        $serviceSchool = $this->getContext()->getByType(ServiceSchool::class);
-        /** @var ServiceFyziklaniTeam $serviceFyziklaniTeam */
-        $serviceFyziklaniTeam = $this->getContext()->getByType(ServiceFyziklaniTeam::class);
-        $query = $serviceSchool->getConnection()->queryArgs(
+        $query = $this->serviceSchool->getConnection()->queryArgs(
             'select GROUP_CONCAT(DISTINCT e_fyziklani_team_id) as `teams`, school_id
 from event_participant ep
          JOIN person_history ph ON ph.person_id = ep.person_id and ac_year = ? and school_id IN (?)
@@ -57,11 +66,12 @@ from event_participant ep
          JOIN e_fyziklani_team eft USING (e_fyziklani_team_id)
 WHERE ep.event_id = ?
 group by school_id', [$this->acYear, array_keys($this->getSchoolsFromTeam($currentTeam)), $this->event->getPrimary()]);
+
         foreach ($query as $row) {
-            $schools[$row->school_id] = array_map(function ($teamId) use ($serviceFyziklaniTeam) {
-                return $serviceFyziklaniTeam->findByPrimary($teamId);
+            $schools[$row->school_id] = array_map(function ($teamId) {
+                return $this->serviceFyziklaniTeam->findByPrimary($teamId);
             }, explode(',', $row->teams));
-            $schools[$row->school_id]['school'] = $serviceSchool->findByPrimary($row->school_id);
+            $schools[$row->school_id]['school'] = $this->serviceSchool->findByPrimary($row->school_id);
         }
         $this->template->schools = $schools;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'SchoolCheckControl.latte');
@@ -83,10 +93,6 @@ group by school_id', [$this->acYear, array_keys($this->getSchoolsFromTeam($curre
         return $schools;
     }
 
-    /**
-     * @return ValuePrinterComponent
-     * @throws \Exception
-     */
     protected function createComponentValuePrinter(): ValuePrinterComponent {
         return new ValuePrinterComponent($this->getContext());
     }

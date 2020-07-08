@@ -64,6 +64,7 @@ class EventOrgFormComponent extends AbstractEntityFormComponent implements IEdit
     protected function configureForm(Form $form) {
         $container = new ModelContainer();
         $personInput = $this->createPersonSelect();
+        $personInput->setDisabled(!$this->create);
         $container->addComponent($personInput, 'person_id');
         $container->addText('note', _('Note'));
         $form->addComponent($container, self::CONTAINER);
@@ -99,7 +100,7 @@ class EventOrgFormComponent extends AbstractEntityFormComponent implements IEdit
 
     /**
      * @param array $data
-     * @return mixed|void
+     * @return void
      * @throws AbortException
      */
     protected function handleCreateSuccess(array $data) {
@@ -115,7 +116,7 @@ class EventOrgFormComponent extends AbstractEntityFormComponent implements IEdit
      */
     protected function handleEditSuccess(array $data) {
         $this->getORMService()->updateModel2($this->model, $data);
-        $this->getPresenter()->flashMessage(_('Org has been updated'), Message::LVL_SUCCESS);
+        $this->getPresenter()->flashMessage(_('Event org has been updated'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 

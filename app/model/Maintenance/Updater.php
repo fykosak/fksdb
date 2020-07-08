@@ -26,7 +26,7 @@ class Updater {
     }
 
     /**
-     * @param $requestedBranch
+     * @param string $requestedBranch
      * @return void
      */
     public function installBranch($requestedBranch) {

@@ -4,15 +4,17 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Astrid\Downloader;
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\SeriesCalculator;
 use FKSDB\Submits\UploadException;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DeprecatedException;
+use Nette\InvalidStateException;
 use Tracy\Debugger;
 use Pipeline\PipelineException;
 use SimpleXMLElement;
@@ -69,7 +71,8 @@ class TasksPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function authorizedImport() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'insert', $this->getSelectedContest()));
@@ -81,7 +84,8 @@ class TasksPresenter extends BasePresenter {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     protected function createComponentSeriesForm(): FormControl {
         $control = new FormControl();
@@ -116,8 +120,10 @@ class TasksPresenter extends BasePresenter {
 
     /**
      * @param Form $seriesForm
+     * @return void
      * @throws AbortException
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     private function validSubmitSeriesForm(Form $seriesForm) {
         $values = $seriesForm->getValues();
@@ -135,7 +141,7 @@ class TasksPresenter extends BasePresenter {
                 $file = $values['file']->getTemporaryFile();
                 break;
             default:
-                throw new BadRequestException();
+                throw new InvalidStateException();
         }
 
         try {

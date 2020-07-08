@@ -8,7 +8,7 @@ use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Machine\Transition;
 use FKSDB\Events\Model\Holder\BaseHolder;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelEmailMessage;
@@ -80,7 +80,7 @@ class MailSender {
 
     /**
      * MailSender constructor.
-     * @param $filename
+     * @param string $filename
      * @param array|string $addresees
      * @param MailTemplateFactory $mailTemplateFactory
      * @param AccountManager $accountManager
@@ -88,13 +88,15 @@ class MailSender {
      * @param ServicePerson $servicePerson
      * @param ServiceEmailMessage $serviceEmailMessage
      */
-    public function __construct($filename,
-                                $addresees,
-                                MailTemplateFactory $mailTemplateFactory,
-                                AccountManager $accountManager,
-                                ServiceAuthToken $serviceAuthToken,
-                                ServicePerson $servicePerson,
-                                ServiceEmailMessage $serviceEmailMessage) {
+    public function __construct(
+        $filename,
+        $addresees,
+        MailTemplateFactory $mailTemplateFactory,
+        AccountManager $accountManager,
+        ServiceAuthToken $serviceAuthToken,
+        ServicePerson $servicePerson,
+        ServiceEmailMessage $serviceEmailMessage
+    ) {
         $this->filename = $filename;
         $this->addressees = $addresees;
         $this->mailTemplateFactory = $mailTemplateFactory;
@@ -108,7 +110,7 @@ class MailSender {
      * @param Transition $transition
      * @param Holder $holder
      * @return void
-     * @throws \Exception
+     * @throws UnsupportedLanguageException
      */
     public function __invoke(Transition $transition, Holder $holder) {
         $this->send($transition, $holder);
@@ -118,7 +120,7 @@ class MailSender {
      * @param Transition $transition
      * @param Holder $holder
      * @return void
-     * @throws \Exception
+     * @throws UnsupportedLanguageException
      */
     private function send(Transition $transition, Holder $holder) {
         $personIds = $this->resolveAdressees($transition, $holder);
@@ -147,8 +149,8 @@ class MailSender {
      * @param ModelLogin $login
      * @param BaseMachine $baseMachine
      * @param BaseHolder $baseHolder
-     * @return ModelEmailMessage|AbstractModelSingle
-     * @throws \Exception
+     * @return ModelEmailMessage
+     * @throws UnsupportedLanguageException
      */
     private function createMessage(string $filename, ModelLogin $login, BaseMachine $baseMachine, BaseHolder $baseHolder): ModelEmailMessage {
         $machine = $baseMachine->getMachine();
@@ -172,6 +174,14 @@ class MailSender {
             'machine' => $machine,
             'baseMachine' => $baseMachine,
             'baseHolder' => $baseHolder,
+            'linkArgs' => [
+                '//:Public:Application:',
+                [
+                    'eventId' => $event->event_id,
+                    'contestId' => $event->getEventType()->contest_id,
+                    'at' => $token->token,
+                ],
+            ],
         ];
         $template = $this->mailTemplateFactory->createWithParameters($filename, null, $templateParams);
 
@@ -189,13 +199,6 @@ class MailSender {
 
     }
 
-    /**
-     * @param ModelLogin $login
-     * @param ModelEvent $event
-     * @param IModel $application
-     * @return ModelAuthToken
-     * @throws \Exception
-     */
     private function createToken(ModelLogin $login, ModelEvent $event, IModel $application): ModelAuthToken {
         $until = $this->getUntil($event);
         $data = ApplicationPresenter::encodeParameters($event->getPrimary(), $application->getPrimary());

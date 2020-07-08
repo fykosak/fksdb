@@ -2,6 +2,11 @@
 
 namespace FKSDB\Modules\PublicModule;
 
+use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
@@ -22,11 +27,11 @@ use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
+use Nette\Utils\JsonException;
 use Persons\ExtendedPersonHandler;
 use Persons\ExtendedPersonHandlerFactory;
 use Persons\IExtendedPersonPresenter;
 use Persons\SelfResolver;
-
 /**
  * INPUT:
  *   contest (nullable)
@@ -124,42 +129,23 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $this->handlerFactory = $handlerFactory;
     }
 
-    /**
-     * @return ModelContest|ActiveRow|null
-     */
-    public function getSelectedContest() {
-        return $this->contestId ? $this->getServiceContest()->findByPrimary($this->contestId) : null;
+    /* ********************* TITLE ***************** */
+    public function titleContest() {
+        $this->setPageTitle(new PageTitle(_('Select contest')));
     }
 
-    /**
-     * @return int
-     */
-    public function getSelectedYear() {
-        return $this->year;
+    public function titleYear() {
+        $this->setPageTitle(new PageTitle(_('Select year'), '', $this->getSelectedContest()->name));
     }
 
-    public function getSelectedAcademicYear(): int {
-        if (!$this->getSelectedContest()) {
-            throw new InvalidStateException("Cannot get acadamic year without selected contest.");
-        }
-        return $this->getYearCalculator()->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
+    public function titleEmail() {
+        $this->setPageTitle(new PageTitle(_('Zadejte e-mail'), 'fa fa-envelope', $this->getSelectedContest()->name));
     }
 
-    /**
-     * @return ModelPerson|null
-     */
-    private function getPerson() {
-        if (!$this->person) {
-
-            if ($this->user->isLoggedIn()) {
-                $this->person = $this->user->getIdentity()->getPerson();
-            } else {
-                $this->person = null;
-            }
-        }
-        return $this->person;
+    public function titleContestant() {
+        $this->setPageTitle(new PageTitle(sprintf(_('%s – registrace řešitele (%s. ročník)'), $this->getSelectedContest()->name, $this->getSelectedYear())));
     }
-
+    /* ********************* ACTIONS ***************** */
     /**
      * @throws AbortException
      */
@@ -202,99 +188,29 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         }
     }
 
-    public function titleContestant() {
-        $contest = $this->getSelectedContest();
-        $this->setPageTitle(new PageTitle(sprintf(_('%s – registrace řešitele (%s. ročník)'), $contest ? $contest->name : '', $this->getSelectedYear())));
-    }
-
-    public function actionContest() {
-        if ($this->contestId) {
-            $this->changeAction('year');
-        }
-    }
-
-    public function titleContest() {
-        $this->setPageTitle(new PageTitle(_('Zvolit seminář')));
-    }
-
-    public function actionYear() {
-        if ($this->year) {
-            $this->changeAction('email');
-        }
-    }
-
-    public function titleYear() {
-        $this->setPageTitle(new PageTitle(_('Zvolit ročník'), '', $this->getServiceContest()->findByPrimary($this->contestId)->name));
-    }
-
-    public function actionEmail() {
-
-        if ($this->getParameter('email')) {
-            $this->changeAction('contestant');
-        }
-    }
-
-    public function titleEmail() {
-        $this->setPageTitle(new PageTitle(_('Zadejte e-mail'), 'fa fa-envelope', $this->getServiceContest()->findByPrimary($this->contestId)->name));
-    }
-
     public function renderContest() {
-        $pk = $this->getServiceContest()->getPrimary();
-
-        $this->template->contests = array_map(function ($value) {
-            return $this->getServiceContest()->findByPrimary($value);
-        }, $this->getServiceContest()->fetchPairs($pk, $pk));
+        $this->template->contests = $this->getServiceContest()->getTable();
     }
 
+    /**
+     * @return void
+     * @throws AbortException
+     */
     public function renderYear() {
-        /** @var ModelContest $contest */
-        $contest = $this->getServiceContest()->findByPrimary($this->contestId);
-        $this->template->years = [];
-        $this->template->years[] = $this->getYearCalculator()->getCurrentYear($contest) + $this->getYearCalculator()->getForwardShift($contest);
+        $contest = $this->getSelectedContest();
+        $forward = $this->getYearCalculator()->getForwardShift($contest);
+        if ($forward) {
+            $years = [];
+            $years[] = $this->getYearCalculator()->getCurrentYear($contest);
+            $years[] = $this->getYearCalculator()->getCurrentYear($contest) + $this->getYearCalculator()->getForwardShift($contest);
+            $this->template->years = $years;
+        } else {
+            $this->redirect('this', ['year' => $this->getYearCalculator()->getCurrentYear($contest),]);
+        }
     }
 
     /**
-     * @param $contestId
-     * @throws AbortException
-     */
-    public function handleChangeContest($contestId) {
-        $this->redirect('this', ['contestId' => $contestId,]);
-    }
-
-    /**
-     * @param $year
-     * @throws AbortException
-     */
-    public function handleChangeYear($year) {
-        $this->redirect('this', ['year' => $year,]);
-    }
-
-    /**
-     * @return FormControl
-     * @throws BadRequestException
-     */
-    protected function createComponentEmailForm(): FormControl {
-        $control = new FormControl();
-        $form = $control->getForm();
-        $form->addText('email', _('e-mail'));
-        $form->addSubmit('submit', _('Vyhledat'));
-        $form->onSuccess[] = function (Form $form) {
-            $this->emailFormSucceeded($form);
-        };
-        return $control;
-    }
-
-    /**
-     * @param Form $form
-     * @throws AbortException
-     */
-    private function emailFormSucceeded(Form $form) {
-        $values = $form->getValues();
-        $this->redirect('this', ['email' => $values->email,]);
-    }
-
-    /**
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     public function renderContestant() {
         $person = $this->getPerson();
@@ -309,6 +225,68 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         }
     }
 
+
+    /**
+     * @return ModelContest|ActiveRow|null
+     */
+    public function getSelectedContest() {
+        return $this->contestId ? $this->getServiceContest()->findByPrimary($this->contestId) : null;
+    }
+
+    /**
+     * @return int
+     */
+    public function getSelectedYear() {
+        return $this->year;
+    }
+
+    public function getSelectedAcademicYear(): int {
+        if (!$this->getSelectedContest()) {
+            throw new InvalidStateException("Cannot get acadamic year without selected contest.");
+        }
+        return $this->getYearCalculator()->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
+    }
+
+    /**
+     * @return ModelPerson|null
+     */
+    private function getPerson() {
+        if (!$this->person) {
+
+            if ($this->user->isLoggedIn()) {
+                $this->person = $this->user->getIdentity()->getPerson();
+            } else {
+                $this->person = null;
+            }
+        }
+        return $this->person;
+    }
+
+    /**
+     * @return FormControl
+     * @throws BadTypeException
+     */
+    protected function createComponentEmailForm(): FormControl {
+        $control = new FormControl();
+        $form = $control->getForm();
+        $form->addText('email', _('e-mail'));
+        $form->addSubmit('submit', _('Find'));
+        $form->onSuccess[] = function (Form $form) {
+            $this->emailFormSucceeded($form);
+        };
+        return $control;
+    }
+
+    /**
+     * @param Form $form
+     * @throws AbortException
+     */
+    private function emailFormSucceeded(Form $form) {
+        $values = $form->getValues();
+        $this->redirect('contestant', ['email' => $values['email'],]);
+    }
+
+
     /**
      * @return array
      */
@@ -320,8 +298,13 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @return FormControl
+     * @throws AbstractColumnException
+     * @throws BadTypeException
+     * @throws JsonException
+     * @throws NotImplementedException
+     * @throws OmittedControlException
+     * @throws UnsupportedLanguageException
      * @throws BadRequestException
-     * @throws \Exception
      */
     protected function createComponentContestantForm(): FormControl {
         $control = new FormControl();
@@ -329,16 +312,17 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
+        $component = $this->referencedPersonFactory->createReferencedPerson(
+            $this->getFieldsDefinition(),
+            $this->getSelectedAcademicYear(),
+            ReferencedPersonFactory::SEARCH_NONE,
+            false,
+            new SelfResolver($this->getUser()),
+            new SelfResolver($this->getUser())
+        );
 
-        $fieldsDefinition = $this->getFieldsDefinition();
-        $acYear = $this->getSelectedAcademicYear();
-        $searchType = ReferencedPersonFactory::SEARCH_NONE;
-        $allowClear = false;
-        $modifiabilityResolver = $visibilityResolver = new SelfResolver($this->getUser());
-        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
-
-        $container->addComponent($components[0], ExtendedPersonHandler::EL_PERSON);
-        $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
+        $container->addComponent($component->getReferencedId(), ExtendedPersonHandler::EL_PERSON);
+        $container->addComponent($component, ExtendedPersonHandler::CONT_PERSON);
 
 
         /*
@@ -350,7 +334,8 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         }
 
         $handler = $this->handlerFactory->create($this->serviceContestant, $this->getSelectedContest(), $this->getSelectedYear(), $this->getLang());
-        $submit = $form->addSubmit('register', _('Registrovat'));
+
+        $submit = $form->addSubmit('register', _('Register'));
         $submit->onClick[] = function (SubmitButton $button) use ($handler) {
             $form = $button->getForm();
             $result = $handler->handleForm($form, $this, true);
@@ -394,9 +379,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     public function messageExists(): string {
         return _('Řešitel je již registrován.');
     }
+
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws UnsupportedLanguageException
      * @throws \ReflectionException
      */
     protected function beforeRender() {

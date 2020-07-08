@@ -23,7 +23,6 @@ use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\Transitions\UnavailableTransitionException;
 use FKSDB\Utils\FormUtils;
-use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -73,6 +72,8 @@ class ApplicationHandler {
      * @var Machine
      */
     private $machine;
+    /** @var EventDispatchFactory */
+    private $eventDispatchFactory;
 
     /**
      * ApplicationHandler constructor.
@@ -80,12 +81,14 @@ class ApplicationHandler {
      * @param ILogger $logger
      * @param Connection $connection
      * @param Container $container
+     * @param EventDispatchFactory $eventDispatchFactory
      */
-    public function __construct(ModelEvent $event, ILogger $logger, Connection $connection, Container $container) {
+    public function __construct(ModelEvent $event, ILogger $logger, Connection $connection, Container $container, EventDispatchFactory $eventDispatchFactory) {
         $this->event = $event;
         $this->logger = $logger;
         $this->connection = $connection;
         $this->container = $container;
+        $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
     /**
@@ -104,12 +107,11 @@ class ApplicationHandler {
     }
 
     /**
-     * @param Holder $holder
      * @return Machine
-     * @throws BadRequestException
+     *
      */
-    public function getMachine(Holder $holder) {
-        $this->initializeMachine($holder);
+    public function getMachine() {
+        $this->initializeMachine();
         return $this->machine;
     }
 
@@ -122,8 +124,7 @@ class ApplicationHandler {
 
     /**
      * @param Holder $holder
-     * @param $data
-     * @throws BadRequestException
+     * @param iterable $data
      * @throws JsonException
      */
     final public function store(Holder $holder, $data) {
@@ -133,8 +134,7 @@ class ApplicationHandler {
     /**
      * @param Holder $holder
      * @param Form|ArrayHash|null $data
-     * @param mixed $explicitTransitionName
-     * @throws BadRequestException
+     * @param string|null $explicitTransitionName
      * @throws JsonException
      */
     public function storeAndExecute(Holder $holder, $data = null, $explicitTransitionName = null) {
@@ -144,10 +144,10 @@ class ApplicationHandler {
     /**
      * @param Holder $holder
      * @param string $explicitTransitionName
-     * @throws BadRequestException
+     * @return void
      */
     public function onlyExecute(Holder $holder, string $explicitTransitionName) {
-        $this->initializeMachine($holder);
+        $this->initializeMachine();
 
         try {
             $explicitMachineName = $this->machine->getPrimaryMachine()->getName();
@@ -206,14 +206,13 @@ class ApplicationHandler {
 
     /**
      * @param Holder $holder
-     * @param $data
-     * @param $explicitTransitionName
-     * @param $execute
-     * @throws BadRequestException
+     * @param iterable $data
+     * @param string $explicitTransitionName
+     * @param bool|mixed $execute
      * @throws JsonException
      */
     private function _storeAndExecute(Holder $holder, $data, $explicitTransitionName, $execute) {
-        $this->initializeMachine($holder);
+        $this->initializeMachine();
 
         try {
             $explicitMachineName = $this->machine->getPrimaryMachine()->getName();
@@ -301,8 +300,8 @@ class ApplicationHandler {
     }
 
     /**
-     * @param $data
-     * @param $transitions
+     * @param iterable $data
+     * @param array $transitions
      * @param Holder $holder
      * @param string $execute
      * @return mixed
@@ -341,19 +340,16 @@ class ApplicationHandler {
     }
 
     /**
-     * @param Holder $holder
-     * @throws BadRequestException
+     * @return void
      */
-    private function initializeMachine(Holder $holder) {
+    private function initializeMachine() {
         if (!$this->machine) {
-            /** @var EventDispatchFactory $factory */
-            $factory = $this->container->getByType(EventDispatchFactory::class);
-            $this->machine = $factory->getEventMachine($this->event);
+            $this->machine = $this->eventDispatchFactory->getEventMachine($this->event);
         }
     }
 
     /**
-     * @param $data
+     * @param iterable $data
      * @return void
      */
     private function formRollback($data) {

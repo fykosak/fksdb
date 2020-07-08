@@ -172,7 +172,7 @@ class StoredQuery implements IDataSource, IResource {
     }
 
     /**
-     * @param $parameters
+     * @param iterable $parameters
      * @return void
      */
     public function setParameters($parameters) {
@@ -233,7 +233,7 @@ class StoredQuery implements IDataSource, IResource {
         foreach ($queryParameters as $parameter) {
             if ($parameter instanceof ModelStoredQueryParameter) {
                 $this->parameterDefaultValues[$parameter->name] = $parameter->getDefaultValue();
-                $this->queryParameters = new StoredQueryParameter($parameter->name, $parameter->getDefaultValue(), $parameter->getPDOType());
+                $this->queryParameters[] = new StoredQueryParameter($parameter->name, $parameter->getDefaultValue(), $parameter->getPDOType());
             } elseif ($parameter instanceof StoredQueryParameter) {
                 $this->parameterDefaultValues[$parameter->getName()] = $parameter->getDefaultValue();
                 $this->queryParameters[] = $parameter;

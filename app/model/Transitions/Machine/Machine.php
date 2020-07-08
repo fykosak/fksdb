@@ -3,18 +3,17 @@
 namespace FKSDB\Transitions;
 
 use Exception;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use LogicException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Context;
 use Nette\Database\Table\ActiveRow;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
+ * Class Machine
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class Machine {
 
@@ -69,7 +68,7 @@ abstract class Machine {
      * @return Transition[]
      */
     public function getAvailableTransitions(IStateModel $model = null): array {
-        $state = $model ? $model->getState() : NULL;
+        $state = $model ? $model->getState() : null;
         if (\is_null($state)) {
             $state = self::STATE_INIT;
         }
@@ -77,6 +76,7 @@ abstract class Machine {
             return ($transition->getFromState() === $state) && $this->canExecute($transition, $model);
         });
     }
+
     /**
      * @param string $id
      * @param IStateModel $model
@@ -135,9 +135,9 @@ abstract class Machine {
      * @param string $id
      * @param IStateModel $model
      * @return IStateModel
-     * @throws UnavailableTransitionsException
+     *
      * @throws ForbiddenRequestException
-     * @throws BadRequestException
+     * @throws UnavailableTransitionsException
      * @throws Exception
      */
     public function executeTransition(string $id, IStateModel $model): IStateModel {
@@ -152,7 +152,7 @@ abstract class Machine {
      * @param Transition $transition
      * @param IStateModel|null $model
      * @return IStateModel
-     * @throws BadRequestException
+     * @throws BadTypeException
      * @throws Exception
      */
     private function execute(Transition $transition, IStateModel $model = null): IStateModel {
@@ -166,7 +166,7 @@ abstract class Machine {
             throw $exception;
         }
         if (!$model instanceof IModel) {
-            throw new BadRequestException(_('Expected instance of IModel'));
+            throw new BadTypeException(IModel::class, $model);
         }
 
         $this->context->getConnection()->commit();
@@ -185,7 +185,7 @@ abstract class Machine {
 
     /**
      * @return Transition
-     * @throws Exception
+     * @throws UnavailableTransitionsException
      */
     private function getCreatingTransition(): Transition {
         $transitions = \array_filter($this->getTransitions(), function (Transition $transition) {
@@ -203,13 +203,15 @@ abstract class Machine {
     }
 
     /**
-     * @param $data
+     * @param array $data
      * @param IService $service
      * @return IStateModel
+     *
      * @throws ForbiddenRequestException
+     * @throws UnavailableTransitionsException
      * @throws Exception
      */
-    public function createNewModel($data, IService $service): IStateModel {
+    public function createNewModel(array $data, IService $service): IStateModel {
         $transition = $this->getCreatingTransition();
         if (!$this->canExecute($transition, null)) {
             throw new ForbiddenRequestException(_('Model sa nedá vytvoriť'));

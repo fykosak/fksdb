@@ -2,6 +2,7 @@
 
 namespace FKSDB\Events\Model\Holder;
 
+use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
@@ -15,7 +16,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Neon\Neon;
-use Nette\Utils\Arrays;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -126,7 +126,7 @@ class BaseHolder {
 
     /**
      * BaseHolder constructor.
-     * @param $name
+     * @param string $name
      */
     public function __construct(string $name) {
         $this->name = $name;
@@ -162,7 +162,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $modifiable
+     * @param bool|callable $modifiable
      * @return void
      */
     public function setModifiable($modifiable) {
@@ -170,7 +170,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $visible
+     * @param bool|callable $visible
      * @return void
      */
     public function setVisible($visible) {
@@ -217,7 +217,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $paramScheme
+     * @param mixed $paramScheme
      * @return void
      */
     public function setParamScheme($paramScheme) {
@@ -261,7 +261,7 @@ class BaseHolder {
 
     public function &getModel(): IModel {
         if (!$this->model) {
-            $this->model = $this->getService()->createNew();
+            $this->model = $this->getService()->createNew(); // TODO!!!
         }
         return $this->model;
     }
@@ -308,7 +308,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $values
+     * @param iterable $values
      * @param bool $alive
      */
     public function updateModel($values, $alive = true) {
@@ -399,7 +399,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $personIds
+     * @param array $personIds
      * @return void
      */
     public function setPersonIds($personIds) {
@@ -421,7 +421,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $eventId
+     * @param int $eventId
      * @return void
      */
     public function setEventId($eventId) {
@@ -436,7 +436,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $column
+     * @param string $column
      * @return bool|mixed|string
      */
     public static function getBareColumn($column) {
@@ -463,25 +463,21 @@ class BaseHolder {
             if (!$field->isVisible()) {
                 continue;
             }
-            $components = $field->createFormComponent($machine, $container);
-            if (!is_array($components)) {
-                $components = [$components];
-            }
-            $i = 0;
-            foreach ($components as $component) {
-                $componentName = ($i == 0) ? $name : "{$name}_{$i}";
-                $container->addComponent($component, $componentName);
-                ++$i;
+            $component = $field->createFormComponent($machine, $container);
+            if ($component instanceof ReferencedContainer) {
+                $container->addComponent($component->getReferencedId(), $name);
+                $container->addComponent($component, $name . '_1');
+            } else {
+                $container->addComponent($component, $name);
             }
         }
-
         return $container;
     }
 
     /**
      * @return int|null  ID of a person associated with the application
      */
-    public function getPersonId() {
+    public    function getPersonId() {
         $personColumns = $this->getPersonIds();
         if (!$personColumns) {
             return null;
@@ -495,7 +491,7 @@ class BaseHolder {
     /**
      * @return string
      */
-    public function __toString() {
+    public    function __toString() {
         return $this->name;
     }
 
@@ -505,7 +501,7 @@ class BaseHolder {
     /**
      * @throws NeonSchemaException
      */
-    private function cacheParameters() {
+    private    function cacheParameters() {
         $parameters = isset($this->getEvent()->parameters) ? $this->getEvent()->parameters : '';
         $parameters = $parameters ? Neon::decode($parameters) : [];
         $this->parameters = NeonScheme::readSection($parameters, $this->getParamScheme());
@@ -516,9 +512,9 @@ class BaseHolder {
      * @param null $default
      * @return mixed
      */
-    public function getParameter($name, $default = null) {
+    public    function getParameter($name, $default = null) {
         try {
-            return Arrays::get($this->parameters, $name, $default);
+            return $this->parameters[$name] ?? $default;
         } catch (InvalidArgumentException $exception) {
             throw new InvalidArgumentException("No parameter '$name' for event " . $this->getEvent() . ".", null, $exception);
         }

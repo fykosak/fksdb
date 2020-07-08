@@ -188,9 +188,9 @@ php:
 database:
     reflection: discovered
 application:
+    errorPresenter: Core:Error
     mapping:
         *: FKSDB\Modules\*Module\*Presenter
-
 session:
    expiration: 14 days
    autoStart: true

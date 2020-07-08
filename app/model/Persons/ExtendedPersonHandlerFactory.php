@@ -3,11 +3,9 @@
 namespace Persons;
 
 use FKSDB\Authentication\AccountManager;
-use FKSDB\Config\GlobalParameters;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServicePerson;
-use Mail\MailTemplateFactory;
 use Nette\Database\Connection;
 
 /**
@@ -28,11 +26,6 @@ class ExtendedPersonHandlerFactory {
     private $connection;
 
     /**
-     * @var MailTemplateFactory
-     */
-    private $mailTemplateFactory;
-
-    /**
      * @var AccountManager
      */
     private $accountManager;
@@ -41,22 +34,15 @@ class ExtendedPersonHandlerFactory {
      * ExtendedPersonHandlerFactory constructor.
      * @param ServicePerson $servicePerson
      * @param Connection $connection
-     * @param MailTemplateFactory $mailTemplateFactory
      * @param AccountManager $accountManager
-     * @param GlobalParameters $globalParameters
      */
-    public function __construct(ServicePerson $servicePerson, Connection $connection, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager, GlobalParameters $globalParameters) {
+    public function __construct(ServicePerson $servicePerson, Connection $connection, AccountManager $accountManager) {
         $this->servicePerson = $servicePerson;
         $this->connection = $connection;
-        $this->mailTemplateFactory = $mailTemplateFactory;
         $this->accountManager = $accountManager;
     }
 
     public function create(IService $service, ModelContest $contest, int $year, string $invitationLang): ExtendedPersonHandler {
-        $handler = new ExtendedPersonHandler($service, $this->servicePerson, $this->connection, $this->mailTemplateFactory, $this->accountManager);
-        $handler->setContest($contest);
-        $handler->setYear($year);
-        $handler->setInvitationLang($invitationLang);
-        return $handler;
+        return new ExtendedPersonHandler($service, $this->servicePerson, $this->connection, $this->accountManager, $contest, $year, $invitationLang);
     }
 }

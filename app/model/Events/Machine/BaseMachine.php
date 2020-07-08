@@ -39,7 +39,7 @@ class BaseMachine {
 
     /**
      * BaseMachine constructor.
-     * @param $name
+     * @param string $name
      */
     public function __construct(string $name) {
         $this->name = $name;
@@ -98,11 +98,11 @@ class BaseMachine {
 
 
     /**
-     * @param $transitionMask
-     * @param $induced
+     * @param string $transitionMask
+     * @param array $induced
      * @return void
      */
-    public function addInducedTransition($transitionMask, $induced) {
+    public function addInducedTransition(string $transitionMask, array $induced) {
         foreach ($this->getMatchingTransitions($transitionMask) as $transition) {
             foreach ($induced as $machineName => $state) {
                 $targetMachine = $this->getMachine()->getBaseMachine($machineName);

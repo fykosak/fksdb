@@ -16,9 +16,9 @@ class FormUtils {
     /**
      * Convert empty strings to nulls.
      *
-     * @param string|array|Traversable $values
+     * @param string|iterable $values
      * @param bool $asArray
-     * @return ArrayHash|array|null
+     * @return iterable|null
      * @todo Move to general utils.
      */
     public static function emptyStrToNull($values, bool $asArray = false) {

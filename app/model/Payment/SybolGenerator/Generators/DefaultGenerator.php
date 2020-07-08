@@ -10,8 +10,8 @@ use Nette\Http\Response;
 use Nette\OutOfRangeException;
 
 /**
- * Class Fyziklani13Generator
- * *
+ * Class DefaultGenerator
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DefaultGenerator extends AbstractSymbolGenerator {
     /**

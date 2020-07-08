@@ -99,7 +99,7 @@ class LoginUserStorage extends UserStorage {
     }
 
     /**
-     * @param $state
+     * @param mixed $state
      * @return UserStorage|void
      */
     public function setAuthenticated($state) {

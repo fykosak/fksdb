@@ -28,14 +28,15 @@ class PersonScheduleFactory {
     }
 
     /**
-     * @param $fieldName
+     * @param string $fieldName
      * @param ModelEvent $event
      * @return ScheduleField
+     * @throws BadRequestException
      * @throws JsonException
      * @throws NotImplementedException
      * @throws BadRequestException
      */
-    public function createField($fieldName, ModelEvent $event) {
+    public function createField(string $fieldName, ModelEvent $event) {
         return new ScheduleField($event, $fieldName, $this->serviceScheduleItem);
     }
 }

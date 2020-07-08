@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\Application\IJavaScriptCollector;
-use Nette\ComponentModel\IComponent;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextBase;
 use Nette\InvalidArgumentException;
@@ -54,22 +53,6 @@ class AutocompleteSelectBox extends TextBase {
      * @var string
      */
     private $renderMethod;
-
-    /**
-     * AutocompleteSelectBox constructor.
-     * @param $ajax
-     * @param string $label
-     * @param string $renderMethod
-     */
-    public function __construct(bool $ajax, $label = null, $renderMethod = null) {
-        parent::__construct($label);
-
-        $this->monitor(IAutocompleteJSONProvider::class);
-        $this->monitor(IJavaScriptCollector::class);
-        $this->ajax = $ajax;
-        $this->renderMethod = $renderMethod;
-    }
-
     /**
      * @var bool
      */
@@ -80,23 +63,32 @@ class AutocompleteSelectBox extends TextBase {
     private $attachedJS = false;
 
     /**
-     * @param IComponent $obj
-     * @return void
+     * AutocompleteSelectBox constructor.
+     * @param bool $ajax
+     * @param string|null $label
+     * @param string|null $renderMethod
      */
-    protected function attached($obj) {
-        parent::attached($obj);
-        if (!$this->attachedJSON && $obj instanceof IAutocompleteJSONProvider) {
-            $this->attachedJSON = true;
-            $name = $this->lookupPath(IAutocompleteJSONProvider::class);
+    public function __construct(bool $ajax, $label = null, $renderMethod = null) {
+        parent::__construct($label);
 
-            $this->ajaxUrl = $obj->link('autocomplete!', [
-                self::PARAM_NAME => $name,
-            ]);
-        }
-        if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
-            $this->attachedJS = true;
-            $obj->registerJSFile('js/autocompleteSelect.js');
-        }
+        $this->monitor(IAutocompleteJSONProvider::class, function (IAutocompleteJSONProvider $provider) {
+            if (!$this->attachedJSON) {
+                $this->attachedJSON = true;
+                $name = $this->lookupPath(IAutocompleteJSONProvider::class);
+                $this->ajaxUrl = $provider->link('autocomplete!', [
+                    self::PARAM_NAME => $name,
+                ]);
+            }
+        });
+        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
+            if (!$this->attachedJS) {
+                $this->attachedJS = true;
+                $collector->registerJSFile('js/autocompleteSelect.js');
+            }
+        });
+
+        $this->ajax = $ajax;
+        $this->renderMethod = $renderMethod;
     }
 
     public function getDataProvider(): IDataProvider {
@@ -199,7 +191,7 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @return TextBase
      */
     public function setValue($value) {
@@ -223,7 +215,7 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @return BaseControl
      */
     public function setDefaultValue($value) {
@@ -241,11 +233,10 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     /**
-     * @param $multiSelect
+     * @param bool $multiSelect
      * @return void
      */
-    public function setMultiSelect($multiSelect) {
+    public function setMultiSelect(bool $multiSelect) {
         $this->multiSelect = $multiSelect;
     }
-
 }

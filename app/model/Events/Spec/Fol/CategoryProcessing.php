@@ -84,7 +84,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
     }
 
     /**
-     * @param $states
+     * @param array $states
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder
@@ -158,7 +158,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
      *   ČR - A - (3,4]
      *   ČR - B - (2,3] - max. 2 ze 4. ročníku
      *   ČR - C - [0,2] - nikdo ze 4. ročníku, max. 2 z 3 ročníku
-     * @param $competitors
+     * @param iterable $competitors
      * @return string
      */
     private function getCategory($competitors) {
@@ -209,12 +209,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
         }
     }
 
-    /**
-     * @param Field $field
-     * @return array
-     */
-    public function getOptions(Field $field) {
+    public function getOptions(Field $field): array {
         return $this->categoryNames;
     }
-
 }

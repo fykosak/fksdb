@@ -38,8 +38,8 @@ class PaymentExtension extends CompilerExtension {
                 ->addSetup('setEventId', [$item['eventId']])
                 ->addSetup('setPriceCalculator', [$priceCalculator])
                 ->addSetup('setSymbolGenerator', [$symbolGenerator])
-                ->addSetup('setTransitions', [$transitionsGenerator]);
-
+                ->addSetup('setTransitions', [$transitionsGenerator])
+                ->addSetup('setScheduleGroupTypes', [$item['scheduleGroupType']]);
         }
     }
 }

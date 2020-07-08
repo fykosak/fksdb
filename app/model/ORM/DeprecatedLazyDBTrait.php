@@ -29,7 +29,7 @@ trait DeprecatedLazyDBTrait {
 
     /**
      * @param IModel $model
-     * @param $data
+     * @param iterable $data
      * @param bool $alive
      * @return mixed
      * @deprecated

@@ -25,7 +25,7 @@ class News {
 
     /**
      * @param ModelContest $contest
-     * @param $lang
+     * @param string $lang
      * @return array
      */
     public function getNews(ModelContest $contest, $lang) {

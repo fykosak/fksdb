@@ -13,7 +13,7 @@ class ExpressionPrinter {
     use SmartObject;
 
     /**
-     * @param $expression
+     * @param callable|mixed $expression
      * @return string
      */
     public function printExpression($expression) {

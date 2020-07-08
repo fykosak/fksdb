@@ -4,7 +4,7 @@ namespace FKSDB\Transitions;
 
 /**
  * Class AbstractTransitionsGenerator
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractTransitionsGenerator {
     /**

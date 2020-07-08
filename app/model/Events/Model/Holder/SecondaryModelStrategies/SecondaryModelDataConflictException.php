@@ -14,9 +14,9 @@ class SecondaryModelDataConflictException extends SecondaryModelConflictExceptio
 
     /**
      * SecondaryModelDataConflictException constructor.
-     * @param $conflictData
+     * @param array $conflictData
      * @param BaseHolder $baseHolder
-     * @param $conflicts
+     * @param iterable $conflicts
      * @param null $code
      * @param null $previous
      */

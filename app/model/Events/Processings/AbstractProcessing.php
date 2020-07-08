@@ -46,7 +46,7 @@ abstract class AbstractProcessing implements IProcessing {
     private $values;
 
     /**
-     * @param $states
+     * @param array $states
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder
@@ -62,7 +62,7 @@ abstract class AbstractProcessing implements IProcessing {
     }
 
     /**
-     * @param $states
+     * @param array $states
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder
@@ -73,7 +73,7 @@ abstract class AbstractProcessing implements IProcessing {
     abstract protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null);
 
     /**
-     * @param $mask
+     * @param string $mask
      * @return bool
      */
     final protected function hasWildcart($mask) {
@@ -126,13 +126,13 @@ abstract class AbstractProcessing implements IProcessing {
      * When it returns false, correct value can be loaded from the model
      * (which is not updated yet).
      *
-     * @param $name
+     * @param string $name
      * @return bool
      */
     final protected function isBaseReallyEmpty($name) {
         $baseHolder = $this->holder->getBaseHolder($name);
         if ($baseHolder->getModelState() == BaseMachine::STATE_INIT) {
-            return true; // it was empty since begining
+            return true; // it was empty since beginning
         }
         if (isset($this->states[$name]) && $this->states[$name] == BaseMachine::STATE_TERMINATED) {
             return true; // it has been deleted by user

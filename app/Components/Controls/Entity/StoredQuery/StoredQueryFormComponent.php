@@ -58,10 +58,8 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
     protected function handleFormSuccess(Form $form) {
         try {
             $this->create ? $this->handleCreateSuccess($form) : $this->handleEditSuccess($form);
-        } catch (BadRequestException $exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
         } catch (ModelException $exception) {
-            $this->flashMessage(_('Chyba při ukládání do databáze.'), Message::LVL_DANGER);
+            $this->flashMessage(_('Database error (store).'), Message::LVL_DANGER);
             Debugger::log($exception);
         }
     }
@@ -117,7 +115,6 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
      * @param Form $form
      * @return void
      * @throws AbortException
-     * @throws BadRequestException
      */
     private function handleEditSuccess(Form $form) {
         $this->handleSave($form);
@@ -129,7 +126,6 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
      * @param Form $form
      * @return void
      * @throws AbortException
-     * @throws BadRequestException
      */
     private function handleCreateSuccess(Form $form) {
         $this->handleSave($form);
@@ -140,7 +136,6 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
     /**
      * @param Form $form
      * @return void
-     * @throws BadRequestException TODO is still throw?
      */
     private function handleSave(Form $form) {
         $values = FormUtils::emptyStrToNull($form->getValues(), true);
@@ -217,7 +212,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
             $values[self::CONT_PARAMS_META][] = $paramData;
         }
         if ($model->php_post_proc) {
-            $this->flashMessage(_('Výsledek dotazu je ještě zpracován v PHP. Dodržuj názvy sloupců a parametrů.'), BasePresenter::FLASH_WARNING);
+            $this->flashMessage(_('Query result is still processed by PHP. Stick to the correct names of columns and parameters.'), BasePresenter::FLASH_WARNING);
         }
         $this->getForm()->setDefaults($values);
     }
@@ -232,7 +227,6 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
      * @param Form $form
      * @return void
      * @throws BadRequestException
-     * TODO refactoring
      */
     private function handleComposeExecute(Form $form) {
         $data = $form->getValues(true);

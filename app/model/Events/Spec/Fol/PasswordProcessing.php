@@ -18,7 +18,7 @@ use Nette\Utils\ArrayHash;
 class PasswordProcessing extends AbstractProcessing {
 
     /**
-     * @param $states
+     * @param array $states
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder
@@ -45,10 +45,10 @@ class PasswordProcessing extends AbstractProcessing {
     }
 
     /**
-     * @param $string
+     * @param string $string
      * @return string
      */
-    private function hash($string) {
+    private function hash($string): string {
         return sha1($string);
     }
 

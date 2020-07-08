@@ -3,26 +3,24 @@
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\ContestChooser;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\ContestPresenter\ContestPresenter;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelRole;
-use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
 /**
- * Current year of FYKOS.
- *
- * @todo Contest should be from URL and year should be current.
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class BasePresenter extends ContestPresenter {
 
     /**
-     * @var ModelContestant|null|false
+     * @var ModelContestant|null
      */
-    private $contestant = false;
+    private $contestant;
 
     protected function createComponentContestChooser(): ContestChooser {
         $control = new ContestChooser($this->getContext());
@@ -31,16 +29,17 @@ abstract class BasePresenter extends ContestPresenter {
     }
 
     /**
-     * @return false|ModelContestant|null
-     * @throws BadRequestException
+     * @return ModelContestant|null
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function getContestant() {
-        if ($this->contestant === false) {
+        if (!isset($this->contestant) || is_null($this->contestant)) {
             /** @var ModelPerson $person */
             $person = $this->user->getIdentity()->getPerson();
             $contestant = $person->related(DbNames::TAB_CONTESTANT_BASE, 'person_id')->where([
                 'contest_id' => $this->getSelectedContest()->contest_id,
-                'year' => $this->getSelectedYear()
+                'year' => $this->getSelectedYear(),
             ])->fetch();
 
             $this->contestant = $contestant ? ModelContestant::createFromActiveRow($contestant) : null;

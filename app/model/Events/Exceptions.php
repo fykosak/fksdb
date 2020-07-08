@@ -5,7 +5,6 @@ namespace FKSDB\Events;
 use FKSDB\Events\Machine\Transition;
 use Nette\InvalidArgumentException;
 use RuntimeException;
-use Traversable;
 
 /**
  * Class MachineExecutionException
@@ -54,13 +53,13 @@ class TransitionConditionFailedException extends MachineExecutionException {
 class TransitionUnsatisfiedTargetException extends MachineExecutionException {
 
     /**
-     * @var Traversable|array
+     * @var iterable
      */
     private $validationResult;
 
     /**
      * TransitionUnsatisfiedTargetException constructor.
-     * @param $validationResult
+     * @param mixed $validationResult
      * @param null $code
      * @param null $previous
      */
@@ -74,7 +73,7 @@ class TransitionUnsatisfiedTargetException extends MachineExecutionException {
     }
 
     /**
-     * @return array|Traversable
+     * @return iterable
      */
     public function getValidationResult() {
         return $this->validationResult;

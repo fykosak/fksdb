@@ -47,7 +47,7 @@ class Role extends EvaluatedExpression {
 
     /**
      * Role constructor.
-     * @param $role
+     * @param int|null $role
      * @param User $user
      * @param ContestAuthorizator $contestAuthorizator
      * @param RelatedPersonAuthorizator $relatedAuthorizator

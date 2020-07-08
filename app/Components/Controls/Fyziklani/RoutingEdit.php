@@ -2,18 +2,17 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
-use FKSDB\Modules\Core\BasePresenter;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use FKSDB\React\ReactResponse;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
-use ReactMessage;
 
 /**
  * Class Routing
@@ -75,8 +74,9 @@ class RoutingEdit extends FyziklaniReactControl {
     }
 
     /**
+     * @return void
      * @throws AbortException
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     public function handleSave() {
         $data = $this->getHttpRequest()->getPost('requestData');
@@ -84,7 +84,7 @@ class RoutingEdit extends FyziklaniReactControl {
         $response = new ReactResponse();
         $response->setAct('update-teams');
         $response->setData(['updatedTeams' => $updatedTeams]);
-        $response->addMessage(new ReactMessage(_('Zmeny boli uložené'), BasePresenter::FLASH_SUCCESS));
+        $response->addMessage(new Message(_('Zmeny boli uložené'), Message::LVL_SUCCESS));
         $this->getPresenter()->sendResponse($response);
     }
 

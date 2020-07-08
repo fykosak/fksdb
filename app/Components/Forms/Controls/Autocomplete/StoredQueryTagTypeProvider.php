@@ -40,7 +40,7 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
      * @param string $search
      * @return array
      */
-    public function getFilteredItems($search) {
+    public function getFilteredItems(string $search): array {
         $search = trim($search);
         $search = str_replace(' ', '', $search);
         $this->searchTable
@@ -74,7 +74,7 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
     }
 
     /**
-     * @param $id
+     * @param mixed $id
      * @return void
      */
     public function setDefaultValue($id) {

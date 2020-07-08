@@ -2,7 +2,7 @@
 
 namespace FKSDB\Authentication;
 
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
@@ -10,7 +10,6 @@ use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\ORM\Services\ServiceLogin;
 use Mail\MailTemplateFactory;
-use Mail\SendFailedException;
 use Nette\Utils\DateTime;
 
 /**
@@ -34,7 +33,7 @@ class AccountManager {
      */
     private $recoveryExpiration = '+1 day';
     /**
-     * @var mixed
+     * @var string
      */
     private $emailFrom;
     /** @var ServiceEmailMessage */
@@ -49,10 +48,12 @@ class AccountManager {
      * @param ServiceAuthToken $serviceAuthToken
      * @param ServiceEmailMessage $serviceEmailMessage
      */
-    public function __construct(MailTemplateFactory $mailTemplateFactory,
-                                ServiceLogin $serviceLogin,
-                                ServiceAuthToken $serviceAuthToken,
-                                ServiceEmailMessage $serviceEmailMessage) {
+    public function __construct(
+        MailTemplateFactory $mailTemplateFactory,
+        ServiceLogin $serviceLogin,
+        ServiceAuthToken $serviceAuthToken,
+        ServiceEmailMessage $serviceEmailMessage
+    ) {
         $this->serviceLogin = $serviceLogin;
         $this->serviceAuthToken = $serviceAuthToken;
         $this->serviceEmailMessage = $serviceEmailMessage;
@@ -67,7 +68,7 @@ class AccountManager {
     }
 
     /**
-     * @param $invitationExpiration
+     * @param string $invitationExpiration
      * @return void
      */
     public function setInvitationExpiration($invitationExpiration) {
@@ -82,25 +83,22 @@ class AccountManager {
     }
 
     /**
-     * @param $recoveryExpiration
+     * @param string $recoveryExpiration
      * @return void
      */
     public function setRecoveryExpiration($recoveryExpiration) {
         $this->recoveryExpiration = $recoveryExpiration;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getEmailFrom() {
+    public function getEmailFrom(): string {
         return $this->emailFrom;
     }
 
     /**
-     * @param $emailFrom
+     * @param string $emailFrom
      * @return void
      */
-    public function setEmailFrom($emailFrom) {
+    public function setEmailFrom(string $emailFrom) {
         $this->emailFrom = $emailFrom;
     }
 
@@ -109,11 +107,11 @@ class AccountManager {
      *
      * @param ModelPerson $person
      * @param string $email
+     * @param string $lang
      * @return ModelLogin
-     * @throws SendFailedException
-     * @throws \Exception
+     * @throws UnsupportedLanguageException
      */
-    public function createLoginWithInvitation(ModelPerson $person, string $email) {
+    public function createLoginWithInvitation(ModelPerson $person, string $email, string $lang): ModelLogin {
         $login = $this->createLogin($person);
 
         $until = DateTime::from($this->getInvitationExpiration());
@@ -126,8 +124,8 @@ class AccountManager {
             'until' => $until,
         ];
         $data = [];
-        $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation($person->getPreferredLang(), $templateParams);
-        $data['subject'] = _('Založení účtu');
+        $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation($person->getPreferredLang() ?: $lang, $templateParams);
+        $data['subject'] = _('Create an account');
         $data['sender'] = $this->getEmailFrom();
         $data['recipient'] = $email;
         $this->serviceEmailMessage->addMessageToSend($data);
@@ -137,7 +135,8 @@ class AccountManager {
     /**
      * @param ModelLogin $login
      * @param string|null $lang
-     * @throws \Exception
+     * @return void
+     * @throws UnsupportedLanguageException
      */
     public function sendRecovery(ModelLogin $login, string $lang = null) {
         $person = $login->getPerson();
@@ -163,7 +162,7 @@ class AccountManager {
         ];
         $data = [];
         $data['text'] = (string)$this->mailTemplateFactory->createPasswordRecovery($lang, $templateParams);
-        $data['subject'] = _('Obnova hesla');
+        $data['subject'] = _('Password recovery');
         $data['sender'] = $this->getEmailFrom();
         $data['recipient'] = $recoveryAddress;
 
@@ -181,13 +180,7 @@ class AccountManager {
         ])->delete();
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param string $login
-     * @param string $password
-     * @return AbstractModelSingle|ModelLogin
-     */
-    final public function createLogin(ModelPerson $person, string $login = null, string $password = null) {
+    final public function createLogin(ModelPerson $person, string $login = null, string $password = null): ModelLogin {
         /** @var ModelLogin $login */
         $login = $this->serviceLogin->createNewModel([
             'person_id' => $person->person_id,

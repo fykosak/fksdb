@@ -48,8 +48,8 @@ class CummulativeStrategy implements IMergeStrategy {
     }
 
     /**
-     * @param $trunk
-     * @param $merged
+     * @param mixed $trunk
+     * @param mixed $merged
      * @return bool
      */
     private function equals($trunk, $merged) {

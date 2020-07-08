@@ -46,7 +46,7 @@ class TransitionButtonsControl extends BaseComponent {
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @throws AbortException
      */
     public function handleTransition($name) {

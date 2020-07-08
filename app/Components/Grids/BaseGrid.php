@@ -2,14 +2,13 @@
 
 namespace FKSDB\Components\Grids;
 
-use Exception;
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\ITemplate;
@@ -157,7 +156,7 @@ abstract class BaseGrid extends Grid {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function createComponentSearchForm(): FormControl {
         if (!$this->isSearchable()) {
@@ -198,7 +197,7 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @param null $label
      * @return GlobalButton
      * @throws DuplicateGlobalButtonException
@@ -212,17 +211,18 @@ abstract class BaseGrid extends Grid {
 
     /**
      * @param string $field
+     * @param int $userPermission
      * @return Column
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    private function addReflectionColumn(string $field): Column {
+    private function addReflectionColumn(string $field, int $userPermission = FieldLevelPermission::ALLOW_FULL): Column {
         $factory = $this->tableReflectionFactory->loadColumnFactory($field);
-        return $this->addColumn(str_replace('.', '__', $field), $factory->getTitle())->setRenderer(function ($model) use ($factory) {
+        return $this->addColumn(str_replace('.', '__', $field), $factory->getTitle())->setRenderer(function ($model) use ($factory, $userPermission) {
             if (!$model instanceof AbstractModelSingle) {
                 $model = $this->getModelClassName()::createFromActiveRow($model);
             }
-            return $factory->renderValue($model, 1);
+            return $factory->renderValue($model, $userPermission);
         })->setSortable(false);
     }
 
@@ -235,7 +235,7 @@ abstract class BaseGrid extends Grid {
      */
     protected function addJoinedColumn(string $factoryName, callable $accessCallback): Column {
         $factory = $this->tableReflectionFactory->loadColumnFactory($factoryName);
-        return $this->addColumn(str_replace('.', '__', $factoryName), $factory->getTitle())->setRenderer(function ($row) use ($factory, $fieldName, $accessCallback) {
+        return $this->addColumn(str_replace('.', '__', $factoryName), $factory->getTitle())->setRenderer(function ($row) use ($factory, $accessCallback) {
             $model = $accessCallback($row);
             return $factory->renderValue($model, 1);
         });
@@ -302,12 +302,11 @@ abstract class BaseGrid extends Grid {
      * @param string $linkId
      * @param bool $checkACL
      * @return Button
+     * @throws BadTypeException
      * @throws DuplicateButtonException
-     * @throws Exception
      */
     protected function addLink(string $linkId, bool $checkACL = false): Button {
         $factory = $this->tableReflectionFactory->loadLinkFactory($linkId);
-        $factory->setComponent($this);
         /** @var Button $button */
         $button = $this->addButton(str_replace('.', '_', $linkId), $factory->getText())
             ->setText($factory->getText())
@@ -315,14 +314,14 @@ abstract class BaseGrid extends Grid {
                 if (!$model instanceof AbstractModelSingle) {
                     $model = $this->getModelClassName()::createFromActiveRow($model);
                 }
-                return $this->getPresenter()->link($factory->getDestination($model), $factory->prepareParams($model));
+                return $factory->create($this->getPresenter(), $model);
             });
         if ($checkACL) {
             $button->setShow(function ($model) use ($factory) {
                 if (!$model instanceof AbstractModelSingle) {
                     $model = $this->getModelClassName()::createFromActiveRow($model);
                 }
-                return $this->getPresenter()->authorized($factory->getDestination($model), $factory->prepareParams($model));
+                return $this->getPresenter()->authorized(...$factory->createLinkParameters($model));
             });
         }
         return $button;

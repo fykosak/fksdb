@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceEvent;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -61,11 +61,12 @@ class EventsGrid extends BaseGrid {
 
     /**
      * @param Presenter $presenter
-     * @throws BadRequestException
+     *
+     * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
-     * @throws DuplicateButtonException
+     * @throws BadTypeException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);
@@ -82,7 +83,7 @@ class EventsGrid extends BaseGrid {
         $this->addLinkButton(':Event:Dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
         $this->addLinkButton('edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
 
-        $this->addLink('event_participant.list');
+        $this->addLink('event.application.list');
 
         $this->addLinkButton(':Event:EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
 
