@@ -40,7 +40,6 @@ class PaymentExtension extends CompilerExtension {
                 ->addSetup('setSymbolGenerator', [$symbolGenerator])
                 ->addSetup('setTransitions', [$transitionsGenerator])
                 ->addSetup('setScheduleGroupTypes', [$item['scheduleGroupType']]);
-
         }
     }
 }

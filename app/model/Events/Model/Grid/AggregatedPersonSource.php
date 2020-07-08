@@ -6,7 +6,6 @@ use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\SmartObject;
 
@@ -50,8 +49,8 @@ abstract class AggregatedPersonSource implements IHolderSource {
 
     /**
      * @return void
+     *
      * @throws NeonSchemaException
-     * @throws BadRequestException
      */
     private function loadData() {
         $this->holders = [];
@@ -105,8 +104,9 @@ abstract class AggregatedPersonSource implements IHolderSource {
 
     /**
      * @return Holder[]
-     * @throws BadRequestException
+     *
      * @throws NeonSchemaException
+     *
      */
     public function getHolders(): array {
         if ($this->holders === null) {

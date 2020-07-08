@@ -119,8 +119,10 @@ class WebServiceModel {
     /**
      * @param mixed $args
      * @return SoapVar
-     * @throws SoapFault
+     *
+     *
      * @throws BadRequestException
+     * @throws SoapFault
      */
     public function getResults($args): SoapVar {
         $this->checkAuthentication(__FUNCTION__);
@@ -261,8 +263,10 @@ class WebServiceModel {
     /**
      * @param stdClass $args
      * @return SoapVar
-     * @throws SoapFault
+     *
+     *
      * @throws BadRequestException
+     * @throws SoapFault
      */
     public function getExport($args): SoapVar {
         // parse arguments

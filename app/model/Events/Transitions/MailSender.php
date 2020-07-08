@@ -8,6 +8,7 @@ use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Machine\Transition;
 use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelEmailMessage;
@@ -18,7 +19,6 @@ use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\ORM\Services\ServicePerson;
 use Mail\MailTemplateFactory;
-use Nette\Application\BadRequestException;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
@@ -110,7 +110,7 @@ class MailSender {
      * @param Transition $transition
      * @param Holder $holder
      * @return void
-     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
     public function __invoke(Transition $transition, Holder $holder) {
         $this->send($transition, $holder);
@@ -120,7 +120,7 @@ class MailSender {
      * @param Transition $transition
      * @param Holder $holder
      * @return void
-     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
     private function send(Transition $transition, Holder $holder) {
         $personIds = $this->resolveAdressees($transition, $holder);
@@ -150,7 +150,7 @@ class MailSender {
      * @param BaseMachine $baseMachine
      * @param BaseHolder $baseHolder
      * @return ModelEmailMessage
-     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
     private function createMessage(string $filename, ModelLogin $login, BaseMachine $baseMachine, BaseHolder $baseHolder): ModelEmailMessage {
         $machine = $baseMachine->getMachine();

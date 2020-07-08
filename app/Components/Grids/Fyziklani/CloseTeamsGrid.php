@@ -83,7 +83,7 @@ class CloseTeamsGrid extends BaseGrid {
             'id' => 'e_fyziklani_team_id',
             'eventId' => 'event_id',
         ])->setShow(function (ModelFyziklaniTeam $row) {
-            return $row->isReadyForClosing();
+            return $row->canClose(false);
         });
     }
 

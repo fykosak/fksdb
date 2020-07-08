@@ -38,9 +38,10 @@ trait ReactComponentTrait {
 
     /**
      * @param mixed ...$args
-     * @throws JsonException
+     *
+     *
      * @throws BadRequestException
-     * Can be used only with BaseControl
+     * @throws JsonException Can be used only with BaseControl
      */
     protected function appendProperty(...$args) {
         if (!$this instanceof BaseControl) {

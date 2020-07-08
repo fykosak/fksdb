@@ -13,7 +13,6 @@ use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
@@ -78,7 +77,7 @@ class ApplicationsGrid extends BaseComponent {
      * @param Container $container
      * @param IHolderSource $source
      * @param ApplicationHandlerFactory $handlerFactory
-     * @throws BadRequestException
+     *
      */
     public function __construct(Container $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory) {
         parent::__construct($container);
@@ -130,7 +129,7 @@ class ApplicationsGrid extends BaseComponent {
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
      */
     private function processSource() {
         $this->eventApplications = [];

@@ -26,7 +26,6 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Services\ServiceFlag;
 use FKSDB\ORM\Services\ServicePerson;
-use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
 use Nette\ComponentModel\IContainer;
 use Nette\Forms\Container;
@@ -158,11 +157,13 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @param IVisibilityResolver $visibilityResolver
      * @return ReferencedContainer
      * @throws AbstractColumnException
-     * @throws BadRequestException
+     *
      * @throws BadTypeException
      * @throws JsonException
      * @throws NotImplementedException
      * @throws OmittedControlException
+     *
+     *
      */
     public function createReferencedPerson(array $fieldsDefinition, int $acYear, string $searchType, bool $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver) {
         $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $this->event ?? null);
@@ -304,12 +305,12 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @param HiddenField $hiddenField
      * @param array $metadata
      * @return IComponent|AddressContainer|BaseControl
-     * @throws JsonException
      * @throws AbstractColumnException
-     * @throws OmittedControlException
+     *
      * @throws BadTypeException
+     * @throws JsonException
      * @throws NotImplementedException
-     * @throws BadRequestException
+     * @throws OmittedControlException
      */
     public function createField(string $sub, string $fieldName, int $acYear, HiddenField $hiddenField, array $metadata): IComponent {
         if (in_array($sub, [

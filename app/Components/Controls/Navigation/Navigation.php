@@ -90,8 +90,12 @@ class Navigation extends BaseComponent {
     /**
      * @param array $node
      * @return bool
-     * @throws BadRequestException
+     *
+     *
+     *
+     * @throws BadTypeException
      * @throws \ReflectionException
+     * @throws BadRequestException
      */
     public function isVisible(array $node): bool {
         if (isset($node['visible'])) {
@@ -108,7 +112,10 @@ class Navigation extends BaseComponent {
     /**
      * @param array $node
      * @return PageTitle
+     *
+     *
      * @throws BadRequestException
+     * @throws BadTypeException
      */
     public function getTitle(array $node): PageTitle {
         if (isset($node['title'])) {
@@ -126,7 +133,10 @@ class Navigation extends BaseComponent {
     /**
      * @param array $node
      * @return null|string
-     * @throws BadRequestException
+     *
+     *
+     *
+     * @throws BadTypeException
      * @throws InvalidLinkException
      * @throws \ReflectionException
      */
@@ -200,7 +210,11 @@ class Navigation extends BaseComponent {
      * @param Presenter $presenter
      * @param array $node
      * @return string
+     *
+     *
+     *
      * @throws BadRequestException
+     * @throws BadTypeException
      * @throws InvalidLinkException
      * @throws \ReflectionException
      */
@@ -215,7 +229,11 @@ class Navigation extends BaseComponent {
      * @param Presenter $presenter
      * @param array $node
      * @return bool
+     *
+     *
+     *
      * @throws BadRequestException
+     * @throws BadTypeException
      * @throws \ReflectionException
      */
     private function isAllowed(Presenter $presenter, array $node): bool {
@@ -251,7 +269,10 @@ class Navigation extends BaseComponent {
      * @param string $action
      * @param string $providedParams
      * @return Presenter|INavigablePresenter
+     *
+     *
      * @throws BadRequestException
+     * @throws BadTypeException
      */
     public function preparePresenter(string $presenterName, string $action, $providedParams): Presenter {
         $ownPresenter = $this->getPresenter();

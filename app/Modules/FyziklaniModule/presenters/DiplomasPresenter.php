@@ -3,10 +3,11 @@
 namespace FKSDB\Modules\FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\FinalResults;
-use FKSDB\Fyziklani\CloseStrategy;
+use FKSDB\Events\EventNotFoundException;
+use FKSDB\Fyziklani\Ranking\NotClosedTeamException;
+use FKSDB\Fyziklani\Ranking\RankingStrategy;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
 
 /**
@@ -16,7 +17,7 @@ use Nette\Utils\Html;
 class DiplomasPresenter extends BasePresenter {
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function titleResults() {
         $this->setPageTitle(new PageTitle(_('Final results'), 'fa fa-trophy'));
@@ -24,28 +25,29 @@ class DiplomasPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function titleDefault() {
         $this->setPageTitle(new PageTitle(_('Calculate ranking'), 'fa fa-check'));
     }
 
     /**
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function authorizedResults() {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.diplomas', 'results'));
     }
 
     /**
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function authorizeDefault() {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.diplomas', 'calculate'));
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
+     * @throws EventNotFoundException
      */
     public function renderDefault() {
         $items = [];
@@ -69,19 +71,20 @@ class DiplomasPresenter extends BasePresenter {
     /**
      * @param string|null $category
      * @throws AbortException
-     * @throws BadRequestException
+     * @throws EventNotFoundException
+     * @throws NotClosedTeamException
      */
     public function handleCalculate(string $category = null) {
-        $closeStrategy = new CloseStrategy($this->getEvent(), $this->getServiceFyziklaniTeam());
+        $closeStrategy = new RankingStrategy($this->getEvent(), $this->getServiceFyziklaniTeam());
         $log = $closeStrategy($category);
         $this->flashMessage(Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(Html::el('ul')->addHtml($log)), \FKSDB\Modules\Core\BasePresenter::FLASH_SUCCESS);
         $this->redirect('this');
     }
 
     /**
-     * @param string $category
+     * @param string|null $category
      * @return bool
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function isReadyAllToCalculate(string $category = null): bool {
         return $this->getServiceFyziklaniTeam()->isCategoryReadyForClosing($this->getEvent(), $category);
@@ -89,7 +92,7 @@ class DiplomasPresenter extends BasePresenter {
 
     /**
      * @return FinalResults
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function createComponentResults(): FinalResults {
         return new FinalResults($this->getContext(), $this->getEvent());

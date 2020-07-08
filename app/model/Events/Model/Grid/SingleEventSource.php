@@ -10,7 +10,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Events\Model\Holder\Holder;
-use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
@@ -72,7 +71,8 @@ class SingleEventSource implements IHolderSource {
      * @param ModelEvent $event
      * @param Container $container
      * @param EventDispatchFactory $eventDispatchFactory
-     * @throws BadRequestException
+     *
+     *
      * @throws NeonSchemaException
      */
     public function __construct(ModelEvent $event, Container $container, EventDispatchFactory $eventDispatchFactory) {
@@ -138,7 +138,8 @@ class SingleEventSource implements IHolderSource {
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
+     *
      * @throws NeonSchemaException
      */
     private function createHolders() {
@@ -190,7 +191,8 @@ class SingleEventSource implements IHolderSource {
 
     /**
      * @return Holder[]
-     * @throws BadRequestException
+     *
+     *
      * @throws NeonSchemaException
      */
     public function getHolders(): array {

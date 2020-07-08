@@ -3,10 +3,10 @@
 namespace FKSDB\Transitions;
 
 use Exception;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use LogicException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Context;
 use Nette\Database\Table\ActiveRow;
@@ -136,9 +136,10 @@ abstract class Machine {
      * @param string $id
      * @param IStateModel $model
      * @return IStateModel
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
      * @throws UnavailableTransitionsException
+     * @throws Exception
      */
     public function executeTransition(string $id, IStateModel $model): IStateModel {
         $transition = $this->findTransitionById($id, $model);
@@ -152,7 +153,7 @@ abstract class Machine {
      * @param Transition $transition
      * @param IStateModel|null $model
      * @return IStateModel
-     * @throws BadRequestException
+     * @throws BadTypeException
      * @throws Exception
      */
     private function execute(Transition $transition, IStateModel $model = null): IStateModel {
@@ -166,7 +167,7 @@ abstract class Machine {
             throw $exception;
         }
         if (!$model instanceof IModel) {
-            throw new BadRequestException(_('Expected instance of IModel'));
+            throw new BadTypeException(IModel::class, $model);
         }
 
         $this->context->getConnection()->commit();
@@ -206,9 +207,10 @@ abstract class Machine {
      * @param array $data
      * @param IService $service
      * @return IStateModel
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
      * @throws UnavailableTransitionsException
+     * @throws Exception
      */
     public function createNewModel(array $data, IService $service): IStateModel {
         $transition = $this->getCreatingTransition();

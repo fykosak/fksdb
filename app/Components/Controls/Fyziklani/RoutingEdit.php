@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
@@ -9,7 +10,6 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use FKSDB\React\ReactResponse;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
@@ -75,8 +75,9 @@ class RoutingEdit extends FyziklaniReactControl {
     }
 
     /**
+     * @return void
      * @throws AbortException
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     public function handleSave() {
         $data = $this->getHttpRequest()->getPost('requestData');

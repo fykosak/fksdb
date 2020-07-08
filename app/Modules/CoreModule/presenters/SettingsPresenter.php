@@ -2,6 +2,7 @@
 
 namespace FKSDB\Modules\CoreModule;
 
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use Authentication\PasswordAuthenticator;
 use FKSDB\Components\Controls\FormControl\FormControl;
@@ -14,7 +15,6 @@ use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\UI\PageTitle;
 use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 
@@ -105,7 +105,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function createComponentSettingsForm(): FormControl {
         $control = new FormControl();

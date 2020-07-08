@@ -4,11 +4,12 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Entity\Event\EventForm;
 use FKSDB\Components\Grids\Events\EventsGrid;
+use FKSDB\Entity\ModelNotFoundException;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\UI\PageTitle;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use FKSDB\Exceptions\NotImplementedException;
@@ -45,8 +46,9 @@ class EventPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     public function titleEdit() {
         $this->setPageTitle(new PageTitle(sprintf(_('Edit event %s'), $this->getEntity()->name), 'fa fa-pencil'));
@@ -61,7 +63,8 @@ class EventPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws ModelNotFoundException
+     * @throws BadTypeException
      */
     public function actionEdit() {
         $this->traitActionEdit();
@@ -69,7 +72,8 @@ class EventPresenter extends BasePresenter {
 
     /**
      * @return EventsGrid
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
     protected function createComponentGrid(): EventsGrid {
         return new EventsGrid($this->getContext(), $this->getSelectedContest(), $this->getSelectedYear());
@@ -77,7 +81,8 @@ class EventPresenter extends BasePresenter {
 
     /**
      * @return Control
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
     protected function createComponentCreateForm(): Control {
         return new EventForm($this->getSelectedContest(), $this->getContext(), $this->getSelectedYear(), true);
@@ -85,7 +90,8 @@ class EventPresenter extends BasePresenter {
 
     /**
      * @return Control
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
     protected function createComponentEditForm(): Control {
         return new EventForm($this->getSelectedContest(), $this->getContext(), $this->getSelectedYear(), false);
@@ -99,7 +105,8 @@ class EventPresenter extends BasePresenter {
      * @param IResource|string|null $resource
      * @param string $privilege
      * @return bool
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
         return $this->getContestAuthorizator()->isAllowed($resource, $privilege, $this->getSelectedContest());

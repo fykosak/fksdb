@@ -5,6 +5,9 @@ namespace FKSDB\Modules\EventModule;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\ItemsGrid;
 use FKSDB\Components\Grids\Schedule\PersonsGrid;
+use FKSDB\Entity\ModelNotFoundException;
+use FKSDB\Events\EventNotFoundException;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
@@ -12,8 +15,6 @@ use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
 use FKSDB\UI\PageTitle;
-use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\InvalidStateException;
@@ -69,9 +70,11 @@ class ScheduleItemPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
-     * @throws BadRequestException
+     * @return PageTitle
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws EventNotFoundException
+     * @throws BadTypeException
      */
     public function getTitleDetail(): PageTitle {
         $item = $this->getEntity();
@@ -80,9 +83,10 @@ class ScheduleItemPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws AbortException
-     * @throws BadRequestException
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws EventNotFoundException
+     * @throws BadTypeException
      */
     public function actionDetail() {
         $this->getEntity();
@@ -96,9 +100,11 @@ class ScheduleItemPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
-     * @throws AbortException
+     *
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws EventNotFoundException
+     * @throws BadTypeException
      */
     public function renderDetail() {
         $this->template->group = $this->getGroup();
@@ -107,9 +113,11 @@ class ScheduleItemPresenter extends BasePresenter {
 
     /**
      * @return ModelScheduleItem
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
-     * @throws AbortException
+     * @throws ModelNotFoundException
+     * @throws EventNotFoundException
+     * @throws BadTypeException
      */
     protected function getEntity(): ModelScheduleItem {
         $entity = $this->traitGetEntity();
@@ -156,9 +164,10 @@ class ScheduleItemPresenter extends BasePresenter {
 
     /**
      * @return PersonsGrid
-     * @throws AbortException
-     * @throws BadRequestException
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws EventNotFoundException
+     * @throws BadTypeException
      */
     protected function createComponentPersonsGrid(): PersonsGrid {
         return new PersonsGrid($this->getContext(), $this->getEntity());
@@ -172,7 +181,7 @@ class ScheduleItemPresenter extends BasePresenter {
      * @param string|IResource $resource
      * @param string $privilege
      * @return bool
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
         return $this->isContestsOrgAuthorized($resource, $privilege);
@@ -181,7 +190,7 @@ class ScheduleItemPresenter extends BasePresenter {
     /**
      * @param PageTitle $pageTitle
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function setPageTitle(PageTitle $pageTitle) {
         $pageTitle->subTitle .= ' ->' . sprintf('"%s/%s"', $this->getGroup()->name_cs, $this->getGroup()->name_en);

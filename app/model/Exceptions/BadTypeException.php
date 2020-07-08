@@ -7,7 +7,7 @@ use Nette\Http\Response;
 
 /**
  * Class BadTypeException
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class BadTypeException extends BadRequestException {
     /**

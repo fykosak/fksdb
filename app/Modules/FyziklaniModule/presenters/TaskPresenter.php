@@ -4,13 +4,14 @@ namespace FKSDB\Modules\FyziklaniModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Fyziklani\TaskGrid;
+use FKSDB\Events\EventNotFoundException;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Fyziklani\FyziklaniTaskImportProcessor;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 
 /**
@@ -25,7 +26,7 @@ class TaskPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function titleList() {
         $this->setPageTitle(new PageTitle(_('Tasks'), 'fa fa-tasks'));
@@ -33,21 +34,21 @@ class TaskPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function titleImport() {
         $this->setPageTitle(new PageTitle(_('Tasks Import'), 'fa fa-upload'));
     }
 
     /**
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function authorizedList() {
         $this->setAuthorized($this->isEventOrContestOrgAuthorized('fyziklani.task', 'list'));
     }
 
     /**
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function authorizedImport() {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.task', 'import'));
@@ -55,7 +56,7 @@ class TaskPresenter extends BasePresenter {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function createComponentTaskImportForm(): FormControl {
         $control = new FormControl();
@@ -76,8 +77,9 @@ class TaskPresenter extends BasePresenter {
 
     /**
      * @param Form $form
+     * @return void
      * @throws AbortException
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     private function taskImportFormSucceeded(Form $form) {
         $values = $form->getValues();
@@ -90,7 +92,7 @@ class TaskPresenter extends BasePresenter {
 
     /**
      * @return TaskGrid
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function createComponentGrid(): TaskGrid {
         return new TaskGrid($this->getEvent(), $this->getContext());

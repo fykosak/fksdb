@@ -26,15 +26,18 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
         return ModelSchedulePayment::class;
     }
 
-
     /**
-     * @param iterable $data
+     * @param string $data
      * @param ModelPayment $payment
      * @return void
      * @throws DuplicatePaymentException
      * @throws NotImplementedException
      */
-    public function prepareAndUpdate($data, ModelPayment $payment) {
+    public function prepareAndUpdate(string $data, ModelPayment $payment) {
+        if (!$this->getConnection()->getPdo()->inTransaction()) {
+            throw new StorageException(_('Not in transaction!'));
+        }
+
         $oldRows = $this->getTable()->where('payment_id', $payment->payment_id);
 
         $newScheduleIds = $this->prepareData($data);
@@ -53,9 +56,7 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
                 $row->delete();
             }
         }
-        if (!$this->getConnection()->getPdo()->inTransaction()) {
-            throw new StorageException(_('Not in transaction!'));
-        }
+
         foreach ($newScheduleIds as $id) {
             $query = $this->getTable()->where('person_schedule_id', $id)->where('payment.state !=? OR payment.state IS NULL', ModelPayment::STATE_CANCELED);
             $count = $query->count();
@@ -71,11 +72,7 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
         }
     }
 
-    /**
-     * @param iterable $data
-     * @return array
-     */
-    private function prepareData($data): array {
+    private function prepareData(string $data): array {
         $data = (array)json_decode($data);
         return array_keys(array_filter($data, function ($value) {
             return $value;

@@ -3,6 +3,8 @@
 namespace FKSDB\Components\Control\AjaxUpload;
 
 use FKSDB\Components\React\ReactComponent;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\ILogger;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelContestant;
@@ -14,6 +16,7 @@ use FKSDB\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Submits\SubmitHandlerFactory;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Http\FileUpload;
@@ -100,8 +103,8 @@ class AjaxUpload extends ReactComponent {
     /**
      * @return void
      * @throws AbortException
-     * @throws BadRequestException
      * @throws InvalidLinkException
+     * @throws BadTypeException
      */
     public function handleUpload() {
         $response = new ReactResponse();
@@ -141,9 +144,9 @@ class AjaxUpload extends ReactComponent {
 
     /**
      * @return void
-     * @throws InvalidLinkException
-     * @throws BadRequestException
      * @throws AbortException
+     * @throws InvalidLinkException
+     * @throws BadTypeException
      */
     public function handleRevoke() {
         $submitId = $this->getReactRequest()->requestData['submitId'];
@@ -161,6 +164,9 @@ class AjaxUpload extends ReactComponent {
      * @return void
      * @throws AbortException
      * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
+     * @throws NotFoundException
      */
     public function handleDownload() {
         $submitId = $this->getReactRequest()->requestData['submitId'];

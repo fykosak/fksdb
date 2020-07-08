@@ -4,9 +4,10 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
-use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 
 /**
@@ -33,21 +34,24 @@ abstract class EntityPresenter extends BasePresenter {
     private $model;
 
     /**
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function authorizedCreate() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModelResource(), 'create', $this->getSelectedContest()));
     }
 
     /**
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function authorizedEdit() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModel(), 'edit', $this->getSelectedContest()));
     }
 
     /**
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function authorizedList() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModelResource(), 'list', $this->getSelectedContest()));
@@ -55,7 +59,8 @@ abstract class EntityPresenter extends BasePresenter {
 
     /**
      * @param int $id
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function authorizedDelete($id) {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModel(), 'delete', $this->getSelectedContest()));
@@ -63,7 +68,7 @@ abstract class EntityPresenter extends BasePresenter {
 
     /**
      * @param int $id
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     public function renderEdit($id) {
         /** @var FormControl $component */
@@ -73,7 +78,7 @@ abstract class EntityPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     public function renderCreate() {
         /** @var FormControl $component */

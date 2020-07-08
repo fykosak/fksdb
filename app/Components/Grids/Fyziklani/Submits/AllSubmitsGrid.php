@@ -5,7 +5,10 @@ namespace FKSDB\Components\Grids\Fyziklani;
 use Closure;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Fyziklani\TaskCodePreprocessor;
+use FKSDB\Fyziklani\Submit\HandlerFactory;
+use FKSDB\Fyziklani\Submit\TaskCodePreprocessor;
+use FKSDB\Logging\FlashMessageDump;
+use FKSDB\Logging\MemoryLogger;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
@@ -43,6 +46,8 @@ class AllSubmitsGrid extends SubmitsGrid {
      * @var ServiceFyziklaniTask
      */
     private $serviceFyziklaniTask;
+    /** @var HandlerFactory */
+    private $handlerFactory;
 
     /**
      * FyziklaniSubmitsGrid constructor.
@@ -55,13 +60,15 @@ class AllSubmitsGrid extends SubmitsGrid {
     }
 
     /**
+     * @param HandlerFactory $handlerFactory
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      * @param ServiceFyziklaniTask $serviceFyziklaniTask
      * @return void
      */
-    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask) {
+    public function injectPrimary(HandlerFactory $handlerFactory, ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->handlerFactory = $handlerFactory;
     }
 
     protected function getData(): IDataSource {
@@ -74,11 +81,10 @@ class AllSubmitsGrid extends SubmitsGrid {
 
     /**
      * @param Presenter $presenter
+     * @return void
+     * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws BadTypeException
-     * @throws BadTypeException
-     * @throws BadTypeException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);
@@ -155,8 +161,10 @@ class AllSubmitsGrid extends SubmitsGrid {
             $this->redirect('this');
         }
         try {
-            $log = $this->serviceFyziklaniSubmit->revokeSubmit($submit, $this->getPresenter()->getUser());
-            $this->flashMessage($log->getMessage(), BasePresenter::FLASH_SUCCESS);
+            $logger = new MemoryLogger();
+            $handler = $this->handlerFactory->create($this->event);
+            $handler->revokeSubmit($logger, $submit);
+            FlashMessageDump::dump($logger, $this);
             $this->redirect('this');
         } catch (BadRequestException $exception) {
             $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
@@ -166,7 +174,7 @@ class AllSubmitsGrid extends SubmitsGrid {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function createComponentSearchForm(): FormControl {
         if (!$this->isSearchable()) {

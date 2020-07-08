@@ -3,12 +3,13 @@
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\ContestChooser;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\ContestPresenter\ContestPresenter;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelRole;
-use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
 /**
  *
@@ -29,7 +30,8 @@ abstract class BasePresenter extends ContestPresenter {
 
     /**
      * @return ModelContestant|null
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function getContestant() {
         if (!isset($this->contestant) || is_null($this->contestant)) {

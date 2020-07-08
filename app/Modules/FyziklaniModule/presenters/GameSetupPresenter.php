@@ -2,11 +2,11 @@
 
 namespace FKSDB\Modules\FyziklaniModule;
 
+use FKSDB\Events\EventNotFoundException;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use FKSDB\UI\PageTitle;
-use Nette\Application\BadRequestException;
 
 /**
  * Class GameSetupPresenter
@@ -20,14 +20,16 @@ class GameSetupPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function titleDefault() {
         $this->setPageTitle(new PageTitle(_('Fyziklani game setup'), 'fa fa-cogs'));
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
+     * @throws EventNotFoundException
+     * @throws NotFoundException
      * @throws NotSetGameParametersException
      */
     public function renderDefault() {
@@ -36,7 +38,7 @@ class GameSetupPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function authorizedDefault() {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.gameSetup', 'default'));
@@ -44,8 +46,9 @@ class GameSetupPresenter extends BasePresenter {
 
     /**
      * @return ModelFyziklaniGameSetup
-     * @throws BadRequestException
+     * @throws NotFoundException
      * @throws NotSetGameParametersException
+     * @throws EventNotFoundException
      */
     protected function getGameSetup(): ModelFyziklaniGameSetup {
         if (!isset($this->gameSetup) || is_null($this->gameSetup)) {

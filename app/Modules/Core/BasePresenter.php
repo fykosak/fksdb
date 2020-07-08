@@ -16,6 +16,7 @@ use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
 use FKSDB\Config\GlobalParameters;
 use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Logging\ILogger;
 use FKSDB\Modules\Core\PresenterTraits\CollectorPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\LangPresenterTrait;
@@ -162,7 +163,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
     protected function startup() {
         parent::startup();
@@ -276,8 +277,12 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      *
-     * @throws BadRequestException
+     *
+     *
+     *
+     * @throws BadTypeException
      * @throws ReflectionException
+     * @throws UnsupportedLanguageException
      */
     protected function beforeRender() {
         parent::beforeRender();
@@ -376,6 +381,9 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @param string $destination
      * @param null $args
      * @return bool|mixed
+     *
+     *
+     *
      * @throws BadRequestException
      * @throws InvalidLinkException
      */

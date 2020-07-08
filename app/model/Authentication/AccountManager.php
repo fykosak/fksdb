@@ -2,7 +2,7 @@
 
 namespace FKSDB\Authentication;
 
-use FKSDB\Exceptions\ModelException;
+use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
@@ -10,7 +10,6 @@ use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\ORM\Services\ServiceLogin;
 use Mail\MailTemplateFactory;
-use Nette\Application\BadRequestException;
 use Nette\Utils\DateTime;
 
 /**
@@ -110,8 +109,7 @@ class AccountManager {
      * @param string $email
      * @param string $lang
      * @return ModelLogin
-     * @throws BadRequestException
-     * @throws ModelException
+     * @throws UnsupportedLanguageException
      */
     public function createLoginWithInvitation(ModelPerson $person, string $email, string $lang): ModelLogin {
         $login = $this->createLogin($person);
@@ -138,7 +136,7 @@ class AccountManager {
      * @param ModelLogin $login
      * @param string|null $lang
      * @return void
-     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
     public function sendRecovery(ModelLogin $login, string $lang = null) {
         $person = $login->getPerson();

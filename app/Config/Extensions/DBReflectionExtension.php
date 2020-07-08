@@ -17,7 +17,6 @@ use FKSDB\Components\DatabaseReflection\ColumnFactories\{DateRow,
 use FKSDB\Components\DatabaseReflection\DetailFactory;
 use FKSDB\Components\DatabaseReflection\LinkFactories\Link;
 use FKSDB\Components\DatabaseReflection\ReferencedFactory;
-use Nette\Application\BadRequestException;
 use Nette\DI\CompilerExtension;
 use Nette\DI\ServiceDefinition;
 use Nette\DI\Statement;
@@ -29,7 +28,7 @@ use FKSDB\Exceptions\NotImplementedException;
  */
 class DBReflectionExtension extends CompilerExtension {
     /**
-     * @throws BadRequestException
+     * @throws NotImplementedException
      */
     public function loadConfiguration() {
         $this->registerFactories($this->config['tables']);
@@ -49,7 +48,7 @@ class DBReflectionExtension extends CompilerExtension {
 
     /**
      * @param array $tables
-     * @throws BadRequestException
+     * @throws NotImplementedException
      */
     private function registerFactories(array $tables) {
         foreach ($tables as $tableName => $fieldDefinitions) {
@@ -95,7 +94,7 @@ class DBReflectionExtension extends CompilerExtension {
      * @param string $fieldName
      * @param array|string $field
      * @return ServiceDefinition
-     * @throws BadRequestException
+     * @throws NotImplementedException
      */
     private function createColumnFactory(string $tableName, string $fieldName, $field): ServiceDefinition {
         $builder = $this->getContainerBuilder();

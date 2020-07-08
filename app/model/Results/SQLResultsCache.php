@@ -5,8 +5,9 @@ namespace FKSDB\Results;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceTask;
-use Nette;
+use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
+use Nette\InvalidArgumentException;
 
 /**
  * Fill caclulated points into database.
@@ -65,12 +66,12 @@ class SQLResultsCache {
      *
      * @param ModelContest $contest
      * @param int $year
-     * @throws Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
     public function recalculate(ModelContest $contest, $year) {
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($contest, $year);
         if ($evaluationStrategy === null) {
-            throw new Nette\InvalidArgumentException('Undefined evaluation strategy for ' . $contest->name . '@' . $year);
+            throw new InvalidArgumentException('Undefined evaluation strategy for ' . $contest->name . '@' . $year);
         }
 
         $tasks = $this->serviceTask->getTable()

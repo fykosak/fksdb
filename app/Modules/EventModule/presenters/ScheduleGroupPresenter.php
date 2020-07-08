@@ -5,12 +5,11 @@ namespace FKSDB\Modules\EventModule;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\AllPersonsGrid;
 use FKSDB\Components\Grids\Schedule\GroupsGrid;
+use FKSDB\Events\EventNotFoundException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\UI\PageTitle;
-use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 
@@ -36,7 +35,7 @@ class ScheduleGroupPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function titleList() {
         $this->setPageTitle(new PageTitle(_('Schedule'), 'fa fa-calendar-check-o'));
@@ -44,7 +43,7 @@ class ScheduleGroupPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function titlePersons() {
         $this->setPageTitle(new PageTitle(_('Whole program'), 'fa fa-calendar-check-o'));
@@ -68,8 +67,7 @@ class ScheduleGroupPresenter extends BasePresenter {
 
     /**
      * @return BaseGrid
-     * @throws BadRequestException
-     * @throws AbortException
+     * @throws EventNotFoundException
      */
     protected function createComponentGrid(): BaseGrid {
         return new GroupsGrid($this->getEvent(), $this->getContext());
@@ -77,8 +75,7 @@ class ScheduleGroupPresenter extends BasePresenter {
 
     /**
      * @return AllPersonsGrid
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function createComponentAllPersonsGrid(): AllPersonsGrid {
         return new AllPersonsGrid($this->getContext(), $this->getEvent());
@@ -92,7 +89,7 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @param IResource|string|null $resource
      * @param string $privilege
      * @return bool
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
         return $this->isContestsOrgAuthorized($resource, $privilege);

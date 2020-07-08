@@ -28,8 +28,8 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     }
 
     /**
-     * @param IResource|string $resource
-     * @param string $privilege
+     * @param IResource|string|null $resource
+     * @param string|null $privilege
      * @return bool
      */
     protected function isAnyContestAuthorized($resource, string $privilege): bool {

@@ -13,7 +13,6 @@ use FKSDB\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\{SeriesPresenterTrait};
 use FKSDB\Submits\SeriesTable;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Permission;
 
@@ -42,8 +41,9 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
-     * @throws BadRequestException
+     *
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function authorizedDefault() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
@@ -51,7 +51,8 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function authorizedInbox() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
@@ -59,7 +60,8 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function authorizedList() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'list', $this->getSelectedContest()));
@@ -67,7 +69,8 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function authorizedHandout() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest()));
@@ -75,7 +78,8 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function authorizedCorrected() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'corrected', $this->getSelectedContest()));
@@ -84,7 +88,8 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
     /* ***************** TITLES ***********************/
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function titleInbox() {
         $this->setPageTitle(new PageTitle(_('Inbox'), 'fa fa-envelope-open'));
@@ -92,7 +97,8 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function titleDefault() {
         $this->setPageTitle(new PageTitle(_('Inbox dashboard'), 'fa fa-envelope-open'));
@@ -100,7 +106,8 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function titleHandout() {
         $this->setPageTitle(new PageTitle(_('Rozdělení úloh opravovatelům'), 'fa fa-inbox'));
@@ -108,7 +115,8 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function titleList() {
         $this->setPageTitle(new PageTitle(_('List of submits'), 'fa fa-cloud-download'));
@@ -116,7 +124,8 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function titleCorrected() {
         $this->setPageTitle(new PageTitle(_('Corrected'), 'fa fa-inbox'));
@@ -125,7 +134,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
     /* *********** LIVE CYCLE *************/
     /**
      * @throws AbortException
-     * @throws BadRequestException
+     * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
     protected function startup() {
@@ -184,7 +193,8 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
     /**
      * @param PageTitle $pageTitle
      * @return void
-     * @throws BadRequestException
+     *
+     * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
     protected function setPageTitle(PageTitle $pageTitle) {

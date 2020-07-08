@@ -1,13 +1,12 @@
 <?php
 
-
-namespace FKSDB\Fyziklani;
+namespace FKSDB\Fyziklani\Submit;
 
 use Throwable;
 
 /**
  * Class ControlMismatchException
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ControlMismatchException extends TaskCodeException {
     /**

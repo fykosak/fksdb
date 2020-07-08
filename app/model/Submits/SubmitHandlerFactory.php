@@ -61,6 +61,8 @@ class SubmitHandlerFactory {
      * @return void
      * @throws AbortException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws NotFoundException
      */
     public function handleDownloadUploaded(Presenter $presenter, ILogger $logger, int $id) {
         $submit = $this->getSubmit($id, 'download.uploaded');
@@ -84,6 +86,8 @@ class SubmitHandlerFactory {
      * @return void
      * @throws AbortException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws NotFoundException
      */
     public function handleDownloadCorrected(Presenter $presenter, ILogger $logger, int $id) {
         $submit = $this->getSubmit($id, 'download.corrected');
@@ -172,7 +176,8 @@ class SubmitHandlerFactory {
      * @param int $id
      * @param string $privilege
      * @return ModelSubmit
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws NotFoundException
      */
     private function getSubmit(int $id, string $privilege): ModelSubmit {
         /** @var ModelSubmit $submit */
@@ -182,7 +187,7 @@ class SubmitHandlerFactory {
             throw new NotFoundException('Neexistující submit.');
         }
         if (!$this->contestAuthorizator->isAllowed($submit, $privilege, $submit->getContestant()->getContest())) {
-            throw new  ForbiddenRequestException('Nedostatečné oprávnění.');
+            throw new ForbiddenRequestException('Nedostatečné oprávnění.');
         }
         return $submit;
     }

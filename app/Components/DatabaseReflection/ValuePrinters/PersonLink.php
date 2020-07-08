@@ -4,7 +4,6 @@ namespace FKSDB\Components\DatabaseReflection\ValuePrinters;
 
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelPerson;
-use Nette\Application\BadRequestException;
 use Nette\Application\LinkGenerator;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Html;
@@ -31,7 +30,7 @@ class PersonLink extends AbstractValuePrinter {
      * @param ModelPerson|null $person
      * @return Html
      * @throws InvalidLinkException
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     public function getHtml($person): Html {
         if (!$person instanceof ModelPerson) {

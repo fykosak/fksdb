@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelContestant;
@@ -10,6 +11,7 @@ use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\Submits\SubmitHandlerFactory;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -127,6 +129,8 @@ class SubmitsGrid extends BaseGrid {
      * @param int $id
      * @throws AbortException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws NotFoundException
      */
     public function handleDownloadUploaded(int $id) {
         $logger = new MemoryLogger();
@@ -138,6 +142,8 @@ class SubmitsGrid extends BaseGrid {
      * @param int $id
      * @throws AbortException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws NotFoundException
      */
     public function handleDownloadCorrected(int $id) {
         $logger = new MemoryLogger();

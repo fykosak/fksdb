@@ -87,7 +87,7 @@ class GettextTranslator implements ITranslator {
      * @param object $object
      * @param string $field
      * @param string $lang
-     * @return misxed
+     * @return mixed
      */
     public static function i18nHelper($object, $field, $lang) {
         return $object->{$field . '_' . $lang};

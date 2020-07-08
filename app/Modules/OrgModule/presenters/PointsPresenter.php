@@ -5,6 +5,7 @@ namespace FKSDB\Modules\OrgModule;
 use Exception;
 use FKSDB\Components\Controls\Inbox\PointsFormControl;
 use FKSDB\Components\Controls\Inbox\PointsPreviewControl;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
@@ -97,7 +98,8 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
     public function titleEntry() {
         $this->setPageTitle(new PageTitle(sprintf(_('Zadávání bodů %d. série'), $this->getSelectedSeries()), 'fa fa-trophy'));
@@ -105,7 +107,8 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function titlePreview() {
         $this->setPageTitle(new PageTitle(_('Points'), 'fa fa-inbox'));
@@ -113,7 +116,8 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
     public function authorizedEntry() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'edit', $this->getSelectedContest()));
@@ -121,7 +125,8 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
     public function authorizedPreview() {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'points', $this->getSelectedContest()));
@@ -171,6 +176,8 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      * @return void
      * @throws AbortException
      * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function handleRecalculateAll() {
         try {
@@ -225,8 +232,9 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
     /**
      * @param PageTitle $pageTitle
      * @return void
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
     protected function setPageTitle(PageTitle $pageTitle) {
         $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());

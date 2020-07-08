@@ -3,16 +3,19 @@
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelContestant;
-use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\IControl;
@@ -74,7 +77,8 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     /**
      * @return array
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     protected function getFieldsDefinition() {
         $contestId = $this->getSelectedContest()->contest_id;
@@ -103,9 +107,15 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     /**
      * @param bool $create
      * @return FormControl
-     * @throws BadRequestException
+     *
+     * @throws AbstractColumnException
+     *
      * @throws BadTypeException
+     * @throws ForbiddenRequestException
      * @throws JsonException
+     * @throws NotImplementedException
+     * @throws OmittedControlException
+     *
      */
     private function createComponentFormControl(bool $create): FormControl {
         $control = new FormControl();
@@ -144,8 +154,15 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     *
+     * @throws AbstractColumnException
+     *
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      * @throws JsonException
+     * @throws NotImplementedException
+     * @throws OmittedControlException
+     *
      */
     final protected function createComponentCreateComponent(): FormControl {
         return $this->createComponentFormControl(true);
@@ -153,8 +170,15 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     *
+     * @throws BadTypeException
      * @throws JsonException
+     * @throws AbstractColumnException
+     * @throws OmittedControlException
+     * @throws NotImplementedException
+     * @throws ForbiddenRequestException
+     *
+     *
      */
     final protected function createComponentEditComponent(): FormControl {
         return $this->createComponentFormControl(false);

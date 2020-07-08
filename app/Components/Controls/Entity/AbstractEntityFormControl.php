@@ -5,7 +5,6 @@ namespace FKSDB\Components\Controls\Entity;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
-use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
@@ -48,7 +47,7 @@ abstract class AbstractEntityFormControl extends BaseComponent {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     final protected function createComponentFormControl(): FormControl {
         $control = $this->createFormControl();

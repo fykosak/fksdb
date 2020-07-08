@@ -9,13 +9,13 @@ use FKSDB\Events\Model\ApplicationHandler;
 use FKSDB\Events\Model\ApplicationHandlerException;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\DI\Container;
-use \Nette\Forms\Form;
+use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 use Nette\Utils\JsonException;
@@ -96,7 +96,7 @@ class ApplicationComponent extends BaseComponent {
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
      */
     public function render() {
         $this->renderForm();
@@ -104,7 +104,7 @@ class ApplicationComponent extends BaseComponent {
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
      */
     public function renderForm() {
         if (!$this->templateFile) {
@@ -122,7 +122,8 @@ class ApplicationComponent extends BaseComponent {
     /**
      * @param string $mode
      * @return void
-     * @throws BadRequestException
+     *
+     *
      */
     public function renderInline($mode) {
         $this->template->mode = $mode;
@@ -137,7 +138,8 @@ class ApplicationComponent extends BaseComponent {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
+     *
      */
     protected function createComponentForm(): FormControl {
         $result = new FormControl();
@@ -221,8 +223,8 @@ class ApplicationComponent extends BaseComponent {
      * @param Form $form
      * @param null $explicitTransitionName
      * @throws AbortException
+     *
      * @throws JsonException
-     * @throws BadRequestException
      */
     public function handleSubmit(Form $form, $explicitTransitionName = null) {
         $this->execute($form, $explicitTransitionName);
@@ -231,8 +233,8 @@ class ApplicationComponent extends BaseComponent {
     /**
      * @param string $transitionName
      * @throws AbortException
+     *
      * @throws JsonException
-     * @throws BadRequestException
      */
     public function handleTransition($transitionName) {
         $this->execute(null, $transitionName);
@@ -243,7 +245,8 @@ class ApplicationComponent extends BaseComponent {
      * @param null $explicitTransitionName
      * @throws AbortException
      * @throws JsonException
-     * @throws BadRequestException
+     *
+     *
      */
     private function execute(Form $form = null, $explicitTransitionName = null) {
         try {
@@ -261,7 +264,7 @@ class ApplicationComponent extends BaseComponent {
 
     /**
      * @return Machine
-     * @throws BadRequestException
+     *
      */
     private function getMachine() {
         return $this->handler->getMachine();

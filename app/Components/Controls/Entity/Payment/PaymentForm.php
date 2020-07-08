@@ -1,12 +1,11 @@
 <?php
 
-namespace FKSDB\Components\Forms\Controls\Payment;
+namespace FKSDB\Components\Controls\Entity;
 
-use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
-use FKSDB\Components\Controls\Entity\IEditEntityForm;
+use FKSDB\Components\Forms\Controls\Payment\CurrencyField;
+use FKSDB\Components\Forms\Controls\Payment\PaymentSelectField;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Exceptions\BadTypeException;
@@ -32,7 +31,7 @@ use Nette\Utils\JsonException;
  * Class SelectForm
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class SelectForm extends AbstractEntityFormControl implements IEditEntityForm {
+class PaymentForm extends AbstractEntityFormControl implements IEditEntityForm {
     /**
      * @var PersonFactory
      */
@@ -116,29 +115,24 @@ class SelectForm extends AbstractEntityFormControl implements IEditEntityForm {
         $this->model = $modelPayment;
         $values = $this->model->toArray();
         $values['payment_accommodation'] = $this->serializeScheduleValue();
-        /**
-         * @var FormControl $control
-         */
-        $control = $this->getComponent('form');
-        $control->getForm()->setDefaults($values);
+        $this->getForm()->setDefaults($values);
     }
 
+    /**
+     * @return void
+     * @throws BadTypeException
+     */
     public function render() {
         if ($this->create) {
-            /**
-             * @var FormControl $control
-             */
-            $control = $this->getComponent('form');
             /**
              * @var ModelLogin $login
              */
             $login = $this->getPresenter()->getUser()->getIdentity();
-            $control->getForm()->setDefaults([
+            $this->getForm()->setDefaults([
                 'person_id' => $login->getPerson()->person_id,
             ]);
         }
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'SelectForm.latte');
-        $this->template->render();
+        parent::render();
     }
 
     private function serializeScheduleValue(): string {
@@ -154,27 +148,26 @@ class SelectForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @param Form $form
      * @return void
      * @throws AbortException
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
      * @throws NotImplementedException
      * @throws UnavailableTransitionsException
      */
     protected function handleFormSuccess(Form $form) {
         $values = $form->getValues();
+        $data = [
+            'currency' => $values['currency'],
+            'person_id' => $values['person_id'],
+        ];
         if ($this->create) {
-            $model = $this->machine->createNewModel([
-                'person_id' => $values['person_id'],
+            $model = $this->machine->createNewModel(array_merge($data, [
                 'event_id' => $this->machine->getEvent()->event_id,
-            ], $this->servicePayment);
+            ]), $this->servicePayment);
 
         } else {
             $model = $this->model;
+            $this->servicePayment->updateModel2($model, $data);
         }
-        $this->servicePayment->updateModel2($model, [
-                'currency' => $values['currency'],
-                'person_id' => $values['person_id'],
-            ]
-        );
 
         $connection = $this->servicePayment->getConnection();
         $connection->beginTransaction();
@@ -201,6 +194,7 @@ class SelectForm extends AbstractEntityFormControl implements IEditEntityForm {
      * @return void
      * @throws BadRequestException
      * @throws JsonException
+     * @throws BadRequestException
      */
     protected function configureForm(Form $form) {
         if ($this->isOrg) {

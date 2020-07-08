@@ -3,6 +3,8 @@
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Entity\ModelNotFoundException;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\StoredQuery\StoredQuery;
@@ -86,7 +88,12 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
+     *
+     *
      * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     public function authorizedExecute() {
         $this->contestAuthorizator->isAllowed($this->getStoredQuery(), 'execute', $this->getSelectedContest());
@@ -94,8 +101,13 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
+     *
+     *
+     *
      * @throws BadRequestException
+     * @throws BadTypeException
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     public function titleExecute() {
         $this->setPageTitle(new PageTitle(sprintf(_('%s'), $this->getStoredQuery()->getName()), 'fa fa-play-circle-o'));
@@ -103,7 +115,10 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
+     *
+     *
      * @throws BadRequestException
+     * @throws ModelNotFoundException
      */
     public function actionExecute() {
         $storedQuery = $this->getStoredQuery();
@@ -119,7 +134,10 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
+     *
+     *
      * @throws BadRequestException
+     * @throws ModelNotFoundException
      */
     public function renderExecute() {
         $this->template->model = $this->getStoredQuery()->getQueryPattern();
@@ -145,7 +163,10 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return StoredQuery
+     *
+     *
      * @throws BadRequestException
+     * @throws ModelNotFoundException
      */
     public function getStoredQuery(): StoredQuery {
         if (!isset($this->storedQuery) || is_null($this->storedQuery)) {
@@ -182,7 +203,10 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return ResultsComponent
+     *
+     *
      * @throws BadRequestException
+     * @throws ModelNotFoundException
      */
     protected function createComponentResultsComponent(): ResultsComponent {
         $control = new ResultsComponent($this->getContext());
@@ -197,8 +221,9 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     /**
      * @param PageTitle $pageTitle
      * @return void
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
     protected function setPageTitle(PageTitle $pageTitle) {
         $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());

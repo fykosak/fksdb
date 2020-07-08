@@ -2,10 +2,12 @@
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Components\Controls\Entity\PaymentForm;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
-use FKSDB\Components\Forms\Controls\Payment\SelectForm;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
 use FKSDB\Config\Extensions\PaymentExtension;
+use FKSDB\Entity\ModelNotFoundException;
+use FKSDB\Events\EventNotFoundException;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\ORM\Models\ModelPayment;
@@ -14,7 +16,6 @@ use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\Machine;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
 
@@ -47,25 +48,27 @@ class PaymentPresenter extends BasePresenter {
     /* ********* titles *****************/
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function titleCreate() {
         $this->setPageTitle(new PageTitle(_('New payment'), 'fa fa-credit-card'));
     }
 
     /**
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws EventNotFoundException
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     public function titleEdit() {
         $this->setPageTitle(new PageTitle(\sprintf(_('Edit payment #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card'));
     }
 
     /**
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws EventNotFoundException
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     public function titleDetail() {
         $this->setPageTitle(new PageTitle(\sprintf(_('Payment detail #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card'));
@@ -73,7 +76,7 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function titleList() {
         $this->setPageTitle(new PageTitle(_('List of payments'), 'fa fa-credit-card'));
@@ -86,9 +89,9 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @param IResource|string|null $resource
-     * @param string $privilege
+     * @param string|null $privilege
      * @return bool
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
         return $this->isContestsOrgAuthorized($resource, $privilege);
@@ -98,7 +101,10 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @throws AbortException
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     public function actionEdit() {
         if (!$this->isContestsOrgAuthorized($this->getEntity(), 'edit')) {
@@ -109,8 +115,10 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
+     *
      * @throws AbortException
+     * @throws BadTypeException
+     * @throws EventNotFoundException
      */
     public function actionCreate() {
         if (\count($this->getMachine()->getAvailableTransitions(null)) === 0) {
@@ -123,17 +131,20 @@ class PaymentPresenter extends BasePresenter {
 
     /* ********* render *****************/
     /**
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws EventNotFoundException
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     public function renderEdit() {
         $this->template->model = $this->getEntity();
     }
 
     /**
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     public function renderDetail() {
         $payment = $this->getEntity();
@@ -144,8 +155,9 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @return bool
-     * @throws BadRequestException
+     *
      * TODO!!!!
+     * @throws EventNotFoundException
      */
     private function isOrg(): bool {
         return $this->isContestsOrgAuthorized($this->getModelResource(), 'org');
@@ -153,9 +165,8 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @return PaymentMachine
-     * @throws AbortException
-     * @throws BadRequestException
      * @throws BadTypeException
+     * @throws EventNotFoundException
      */
     private function getMachine(): PaymentMachine {
         if (!$this->machine) {
@@ -182,8 +193,10 @@ class PaymentPresenter extends BasePresenter {
     /* ********* Components *****************/
     /**
      * @return TransitionButtonsControl
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     protected function createComponentTransitionButtons(): TransitionButtonsControl {
         return new TransitionButtonsControl($this->getMachine(), $this->getContext(), $this->getEntity());
@@ -191,21 +204,19 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @return OrgPaymentGrid
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function createComponentGrid(): OrgPaymentGrid {
         return new OrgPaymentGrid($this->getEvent(), $this->getContext());
     }
 
     /**
-     * @return SelectForm
-     * @throws AbortException
-     * @throws BadRequestException
+     * @return PaymentForm
      * @throws BadTypeException
+     * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): SelectForm {
-        return new SelectForm(
+    protected function createComponentCreateForm(): PaymentForm {
+        return new PaymentForm(
             $this->getContext(),
             $this->isOrg(),
             $this->getMachine(),
@@ -214,13 +225,12 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @return SelectForm
-     * @throws AbortException
-     * @throws BadRequestException
+     * @return PaymentForm
      * @throws BadTypeException
+     * @throws EventNotFoundException
      */
-    protected function createComponentEditForm(): SelectForm {
-        return new SelectForm(
+    protected function createComponentEditForm(): PaymentForm {
+        return new PaymentForm(
             $this->getContext(),
             $this->isOrg(),
             $this->getMachine(),

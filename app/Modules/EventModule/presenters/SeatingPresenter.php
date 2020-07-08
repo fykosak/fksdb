@@ -3,13 +3,13 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Fyziklani\SeatingControl;
+use FKSDB\Events\EventNotFoundException;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use FKSDB\React\ReactResponse;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use ReactMessage;
 
 /**
@@ -33,7 +33,7 @@ class SeatingPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function titleDefault() {
         $this->setPageTitle(new PageTitle(_('Rooming'), 'fa fa-arrows'));
@@ -41,7 +41,7 @@ class SeatingPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function titleEdit() {
         $this->setPageTitle(new PageTitle(_('Edit routing'), 'fa fa-pencil'));
@@ -49,7 +49,7 @@ class SeatingPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function titleDownload() {
         $this->setPageTitle(new PageTitle(_('Download routing'), 'fa fa-download'));
@@ -57,7 +57,7 @@ class SeatingPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function titleList() {
         $this->setPageTitle(new PageTitle(_('List of all teams'), 'fa fa-print'));
@@ -65,7 +65,7 @@ class SeatingPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function titlePreview() {
         $this->setPageTitle(new PageTitle(_('Preview'), 'fa fa-search'));
@@ -73,7 +73,7 @@ class SeatingPresenter extends BasePresenter {
 
     /**
      * @return bool
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function isEnabled(): bool {
         return $this->getEvent()->event_type_id === 1;
@@ -90,21 +90,21 @@ class SeatingPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function authorizedPreview() {
         $this->setAuthorized($this->isContestsOrgAuthorized('event.seating', 'preview'));
     }
 
     /**
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function authorizedList() {
         $this->setAuthorized($this->isContestsOrgAuthorized('event.seating', 'list'));
     }
 
     /**
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function authorizedDefault() {
         $download = $this->isContestsOrgAuthorized('event.seating', 'download');
@@ -129,7 +129,8 @@ class SeatingPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
+     * @throws EventNotFoundException
      */
     public function renderList() {
         $this->template->event = $this->getEvent();
@@ -143,9 +144,9 @@ class SeatingPresenter extends BasePresenter {
         $this->template->toPay = $toPayAll;
     }
 
-
     /**
-     * @throws BadRequestException
+     * @return void
+     * @throws EventNotFoundException
      */
     public function renderPreview() {
         $this->template->event = $this->getEvent();

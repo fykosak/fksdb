@@ -81,7 +81,7 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
     public function getFyziklaniTeam(): ModelFyziklaniTeam {
         $row = $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'event_participant_id')->select('e_fyziklani_team.*')->fetch();
         if (!$row) {
-            throw new BadRequestException('Event is not fyziklani');
+            throw new BadRequestException('Event is not fyziklani!');
         }
         return ModelFyziklaniTeam::createFromActiveRow($row);
     }

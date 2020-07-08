@@ -10,7 +10,6 @@ use FKSDB\ORM\Models\ModelRole;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\YearCalculator;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
@@ -335,7 +334,8 @@ class ContestChooser extends BaseComponent {
 
     /**
      * @param null $class
-     * @throws BadRequestException
+     * @return void
+     * @throws ForbiddenRequestException
      */
     public function render($class = null) {
         if (!$this->isValid()) {

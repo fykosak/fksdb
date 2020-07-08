@@ -8,7 +8,6 @@ use FKSDB\Events\Model\Grid\SingleEventSource;
 use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Utils\CSVParser;
-use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
@@ -72,9 +71,9 @@ class ImportHandler {
      * @param string $errorMode
      * @param string $stateless
      * @return bool
-     * @throws NeonSchemaException
-     * @throws BadRequestException
+     *
      * @throws JsonException
+     * @throws NeonSchemaException
      */
     public function import(ApplicationHandler $handler, string $errorMode, string $stateless): bool {
         set_time_limit(0);
@@ -151,7 +150,8 @@ class ImportHandler {
 
     /**
      * @return Holder[]
-     * @throws BadRequestException
+     *
+     *
      * @throws NeonSchemaException
      */
     private function createHoldersMap(): array {

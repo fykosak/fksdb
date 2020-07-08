@@ -17,18 +17,25 @@ class DispatchPresenter extends AuthenticatedPresenter {
     /** @var array */
     private $contestsProperty;
 
+    public function titleDefault() {
+        $this->setPageTitle(new PageTitle(_('Rozcestník'), 'fa fa-home'));
+    }
+
     /**
      * @throws InvalidLinkException
      */
     public function renderDefault() {
-        /**
-         * @var ModelLogin $login
-         */
+        /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         $person = $login->getPerson();
         $this->template->contestants = $person ? $this->getAllContestants($person) : [];
         $this->template->orgs = $this->getAllOrgs($login);
         $this->template->contestsProperty = $this->getContestsProperty();
+    }
+
+    protected function beforeRender() {
+        $this->getPageStyleContainer()->navBarClassName = 'bg-dark navbar-dark';
+        parent::beforeRender();
     }
 
     /**
@@ -49,21 +56,13 @@ class DispatchPresenter extends AuthenticatedPresenter {
         return $results;
     }
 
-    public function titleDefault() {
-        $this->setPageTitle(new PageTitle(_('Rozcestník'), 'fa fa-home'));
-    }
-
-    protected function beforeRender() {
-        $this->getPageStyleContainer()->navBarClassName = 'bg-dark navbar-dark';
-        parent::beforeRender();
-    }
-
     private function getContestProperty(int $contestId): array {
         return $this->getContestsProperty()[$contestId];
     }
 
     private function getContestsProperty(): array {
         if (!isset($this->contestsProperty) || is_null($this->contestsProperty)) {
+            $this->contestsProperty = [];
             $query = $this->getServiceContest()->getTable();
             /** @var ModelContest $contest */
             foreach ($query as $contest) {

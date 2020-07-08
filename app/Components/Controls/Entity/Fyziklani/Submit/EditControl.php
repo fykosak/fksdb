@@ -5,13 +5,15 @@ namespace FKSDB\Components\Controls\Entity\Fyziklani\Submit;
 use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Fyziklani\ClosedSubmittingException;
 use FKSDB\Fyziklani\NotSetGameParametersException;
+use FKSDB\Fyziklani\Submit\ClosedSubmittingException;
+use FKSDB\Fyziklani\Submit\HandlerFactory;
+use FKSDB\Logging\FlashMessageDump;
+use FKSDB\Logging\MemoryLogger;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use Nette\Application\AbortException;
 use Nette\Forms\Form;
 use Nette\DI\Container;
@@ -23,10 +25,6 @@ use Nette\Forms\Controls\RadioList;
  */
 class EditControl extends AbstractEntityFormControl implements IEditEntityForm {
     /**
-     * @var ServiceFyziklaniSubmit
-     */
-    private $serviceFyziklaniSubmit;
-    /**
      * @var ModelFyziklaniSubmit
      */
     private $submit;
@@ -34,6 +32,8 @@ class EditControl extends AbstractEntityFormControl implements IEditEntityForm {
      * @var ModelEvent
      */
     private $event;
+    /** @var HandlerFactory */
+    private $handlerFactory;
 
     /**
      * EditControl constructor.
@@ -55,11 +55,11 @@ class EditControl extends AbstractEntityFormControl implements IEditEntityForm {
     }
 
     /**
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
+     * @param HandlerFactory $handlerFactory
      * @return void
      */
-    public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
-        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
+    public function injectHandlerFactory(HandlerFactory $handlerFactory) {
+        $this->handlerFactory = $handlerFactory;
     }
 
     /**
@@ -99,8 +99,10 @@ class EditControl extends AbstractEntityFormControl implements IEditEntityForm {
     protected function handleFormSuccess(Form $form) {
         $values = $form->getValues();
         try {
-            $msg = $this->serviceFyziklaniSubmit->changePoints($this->submit, $values->points, $this->getPresenter()->getUser());
-            $this->getPresenter()->flashMessage($msg->getMessage(), $msg->getLevel());
+            $logger = new MemoryLogger();
+            $handler = $this->handlerFactory->create($this->event);
+            $handler->changePoints($logger, $this->submit, $values['points']);
+            FlashMessageDump::dump($logger, $this->getPresenter());
             $this->redirect('this');
         } catch (ClosedSubmittingException $exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
