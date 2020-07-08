@@ -14,7 +14,7 @@ interface IStateModel {
      * @param string $newState
      * @return void
      */
-    public function updateState($newState);
+    public function updateState(string $newState);
 
     /**
      * @return string|null

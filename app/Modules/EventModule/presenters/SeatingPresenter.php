@@ -10,7 +10,6 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use FKSDB\React\ReactResponse;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
-use ReactMessage;
 
 /**
  *
@@ -123,7 +122,7 @@ class SeatingPresenter extends BasePresenter {
             $response = new ReactResponse();
             $response->setAct('update-teams');
             $response->setData(['updatedTeams' => $updatedTeams]);
-            $response->addMessage(new ReactMessage(_('Changes has been saved'), Message::LVL_SUCCESS));
+            $response->addMessage(new Message(_('Changes has been saved'), Message::LVL_SUCCESS));
             $this->sendResponse($response);
         }
     }

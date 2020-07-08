@@ -99,7 +99,7 @@ class ModelPersonSchedule extends AbstractModelSingle implements
      * @param string|null $newState
      * @return void
      */
-    public function updateState($newState) {
+    public function updateState(string $newState) {
         $this->update(['state' => $newState]);
     }
 

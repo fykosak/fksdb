@@ -8,7 +8,7 @@ use FKSDB\Payment\Price;
 
 /**
  * Class EventPrice
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventPrice implements IPreprocess {
     /**

@@ -7,6 +7,7 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\ILogger;
 use FKSDB\Logging\MemoryLogger;
+use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
@@ -22,7 +23,6 @@ use Nette\DI\Container;
 use Nette\Http\FileUpload;
 use Nette\Http\Response;
 use FKSDB\Modules\PublicModule\SubmitPresenter;
-use ReactMessage;
 
 /**
  * Class AjaxUpload
@@ -114,28 +114,28 @@ class AjaxUpload extends ReactComponent {
             $this->serviceSubmit->getConnection()->beginTransaction();
             $this->uploadedStorage->beginTransaction();
             if (!preg_match('/task([0-9]+)/', $name, $matches)) {
-                $response->addMessage(new ReactMessage(_('Task not found'), ILogger::WARNING));
+                $response->addMessage(new Message(_('Task not found'), ILogger::WARNING));
                 continue;
             }
             $task = $this->isAvailableSubmit($matches[1]);
             if (!$task) {
 
                 $response->setCode(Response::S403_FORBIDDEN);
-                $response->addMessage(new ReactMessage(_('Upload not allowed'), ILogger::ERROR));
+                $response->addMessage(new Message(_('Upload not allowed'), ILogger::ERROR));
                 $this->getPresenter()->sendResponse($response);
             }
             /** @var FileUpload $file */
             $file = $fileContainer;
             if (!$file->isOk()) {
                 $response->setCode(Response::S500_INTERNAL_SERVER_ERROR);
-                $response->addMessage(new ReactMessage(_('File is not Ok'), ILogger::ERROR));
+                $response->addMessage(new Message(_('File is not Ok'), ILogger::ERROR));
                 $this->getPresenter()->sendResponse($response);
             }
             // store submit
             $submit = $this->submitHandlerFactory->handleSave($file, $task, $this->contestant);
             $this->uploadedStorage->commit();
             $this->serviceSubmit->getConnection()->commit();
-            $response->addMessage(new ReactMessage(_('Upload successful'), ILogger::SUCCESS));
+            $response->addMessage(new Message(_('Upload successful'), ILogger::SUCCESS));
             $response->setAct('upload');
             $response->setData($this->serviceSubmit->serializeSubmit($submit, $task, $this->getPresenter()));
             $this->getPresenter()->sendResponse($response);

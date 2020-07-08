@@ -13,7 +13,6 @@ use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
-use ReactMessage;
 
 /**
  * Class Routing
@@ -85,7 +84,7 @@ class RoutingEdit extends FyziklaniReactControl {
         $response = new ReactResponse();
         $response->setAct('update-teams');
         $response->setData(['updatedTeams' => $updatedTeams]);
-        $response->addMessage(new ReactMessage(_('Zmeny boli uložené'), Message::LVL_SUCCESS));
+        $response->addMessage(new Message(_('Zmeny boli uložené'), Message::LVL_SUCCESS));
         $this->getPresenter()->sendResponse($response);
     }
 

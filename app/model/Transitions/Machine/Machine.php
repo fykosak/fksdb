@@ -12,9 +12,8 @@ use Nette\Database\Context;
 use Nette\Database\Table\ActiveRow;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
+ * Class Machine
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class Machine {
 
