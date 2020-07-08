@@ -39,7 +39,6 @@ trait EventEntityPresenterTrait {
     }
 
     /**
-     * @return ModelEvent
      * @throws EventNotFoundException
      */
     abstract protected function getEvent(): ModelEvent;

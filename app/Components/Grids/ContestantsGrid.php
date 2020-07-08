@@ -72,8 +72,8 @@ class ContestantsGrid extends BaseGrid {
         $this->setDefaultOrder('name_lex ASC');
 
         $this->addColumn('name', _('Name'));
-        $this->addColumn('study_year', _('Ročník'));
-        $this->addColumn('school_name', _('Škola'));
+        $this->addColumn('study_year', _('Study year'));
+        $this->addColumn('school_name', _('School'));
 
 
         $this->addLinkButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'ct_id']);

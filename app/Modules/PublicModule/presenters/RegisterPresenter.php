@@ -225,7 +225,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         }
     }
 
-
     /**
      * @return ModelContest|ActiveRow|null
      */
@@ -337,8 +336,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
         $submit = $form->addSubmit('register', _('Register'));
         $submit->onClick[] = function (SubmitButton $button) use ($handler) {
-            $form = $button->getForm();
-            $result = $handler->handleForm($form, $this, true);
+            $result = $handler->handleForm($button->getForm(), $this, true);
             if ($result) { // intentionally =
                 /*
                  * Do not automatically log in user with existing logins for security reasons.

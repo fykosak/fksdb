@@ -148,7 +148,6 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
      * @param Form $form
      * @return void
      * @throws AbortException
-     *
      * @throws ForbiddenRequestException
      * @throws NotImplementedException
      * @throws UnavailableTransitionsException

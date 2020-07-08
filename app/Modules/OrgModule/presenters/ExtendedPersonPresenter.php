@@ -108,9 +108,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     /**
      * @param bool $create
      * @return FormControl
-     *
      * @throws AbstractColumnException
-     *
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      * @throws JsonException
@@ -126,14 +124,16 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
 
-        $fieldsDefinition = $this->getFieldsDefinition();
-        $acYear = $this->getAcYearFromModel() ? $this->getAcYearFromModel() : $this->getSelectedAcademicYear();
-        $searchType = ReferencedPersonFactory::SEARCH_ID;
-        $allowClear = $create;
-        $modifiabilityResolver = $visibilityResolver = new AclResolver($this->contestAuthorizator, $this->getSelectedContest());
-        $component = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
+        $component = $this->referencedPersonFactory->createReferencedPerson(
+            $this->getFieldsDefinition(),
+            $this->getAcYearFromModel() ?: $this->getSelectedAcademicYear(),
+            ReferencedPersonFactory::SEARCH_ID,
+            $create,
+            new AclResolver($this->contestAuthorizator, $this->getSelectedContest()),
+            new AclResolver($this->contestAuthorizator, $this->getSelectedContest())
+        );
         $component->getReferencedId()->addRule(Form::FILLED, _('Osobu je třeba zadat.'));
-        $component->setOption('label', _('Osoba'));
+        $component->setOption('label', _('Person'));
 
         $container->addComponent($component->getReferencedId(), ExtendedPersonHandler::EL_PERSON);
         $container->addComponent($component, ExtendedPersonHandler::CONT_PERSON);

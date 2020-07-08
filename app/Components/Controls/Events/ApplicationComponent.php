@@ -231,7 +231,6 @@ class ApplicationComponent extends BaseComponent {
     /**
      * @param string $transitionName
      * @throws AbortException
-     *
      * @throws JsonException
      */
     public function handleTransition($transitionName) {

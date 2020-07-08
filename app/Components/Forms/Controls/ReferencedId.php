@@ -13,6 +13,7 @@ use FKSDB\Utils\Promise;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
+use Tracy\Debugger;
 
 /**
  * Be careful when calling getValue as it executes SQL queries and thus
@@ -223,7 +224,6 @@ class ReferencedId extends HiddenField {
         $values = $this->referencedContainer->getValues();
         $referencedId = $this->getValue();
         $promise = new Promise(function () use ($values, $referencedId) {
-            $this->loadHttpData();
             try {
                 if ($referencedId === self::VALUE_PROMISE) {
 

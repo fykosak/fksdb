@@ -85,8 +85,8 @@ class ModelPersonSchedule extends AbstractModelSingle implements
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
                 return sprintf(_('Accommodation for %s from %s to %s in %s'),
                     $this->getPerson()->getFullName(),
-                    $group->start->format(_('__date_format')),
-                    $group->end->format(_('__date_format')),
+                    $group->start->format(_('__date')),
+                    $group->end->format(_('__date')),
                     $item->name_cs);
             case ModelScheduleGroup::TYPE_WEEKEND:
                 return $item->getLabel();

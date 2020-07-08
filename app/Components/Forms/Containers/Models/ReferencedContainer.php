@@ -175,7 +175,7 @@ class ReferencedContainer extends ContainerWithOptions {
      * @staticvar array $searchComponents
      * @param bool $value
      */
-    public function setSearchButton($value) {
+    public function setSearchButton(bool $value) {
         static $searchComponents = [
             self::CONTROL_SEARCH,
             self::SUBMIT_SEARCH,
@@ -202,7 +202,7 @@ class ReferencedContainer extends ContainerWithOptions {
      *
      * @param bool $value
      */
-    public function setClearButton($value) {
+    public function setClearButton(bool $value) {
         if (!$this->getAllowClear()) {
             $value = false;
         }
