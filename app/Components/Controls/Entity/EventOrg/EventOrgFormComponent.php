@@ -19,6 +19,10 @@ use Nette\Forms\Form;
 use Nette\DI\Container;
 use Tracy\Debugger;
 
+/**
+ * Class EventOrgFormComponent
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class EventOrgFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
 
     use ReferencedPersonTrait;
