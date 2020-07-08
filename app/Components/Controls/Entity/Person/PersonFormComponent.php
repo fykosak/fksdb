@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Entity\Person;
 
-use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
+use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
@@ -36,7 +36,7 @@ use Tracy\Debugger;
  * Class AbstractPersonFormControl
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PersonForm extends AbstractEntityFormControl implements IEditEntityForm {
+class PersonFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
 
     const POST_CONTACT_DELIVERY = 'post_contact_d';
     const POST_CONTACT_PERMANENT = 'post_contact_p';

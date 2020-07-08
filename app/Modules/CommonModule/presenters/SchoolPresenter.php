@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\CommonModule;
 
-use FKSDB\Components\Controls\Entity\School\SchoolForm;
+use FKSDB\Components\Controls\Entity\School\SchoolFormComponent;
 use FKSDB\Components\Grids\ContestantsFromSchoolGrid;
 use FKSDB\Components\Grids\SchoolsGrid;
 use FKSDB\Entity\ModelNotFoundException;
@@ -81,12 +81,12 @@ class SchoolPresenter extends BasePresenter {
         return new SchoolsGrid($this->getContext());
     }
 
-    protected function createComponentEditForm(): SchoolForm {
-        return new SchoolForm($this->getContext(), false);
+    protected function createComponentEditForm(): SchoolFormComponent {
+        return new SchoolFormComponent($this->getContext(), false);
     }
 
-    protected function createComponentCreateForm(): SchoolForm {
-        return new SchoolForm($this->getContext(), true);
+    protected function createComponentCreateForm(): SchoolFormComponent {
+        return new SchoolFormComponent($this->getContext(), true);
     }
 
     /**

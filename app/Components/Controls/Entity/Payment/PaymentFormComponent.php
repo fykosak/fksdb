@@ -31,7 +31,7 @@ use Nette\Utils\JsonException;
  * Class SelectForm
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PaymentForm extends AbstractEntityFormControl implements IEditEntityForm {
+class PaymentFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
     /**
      * @var PersonFactory
      */

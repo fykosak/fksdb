@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Entity\PaymentForm;
+use FKSDB\Components\Controls\Entity\PaymentFormComponent;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
 use FKSDB\Config\Extensions\PaymentExtension;
@@ -211,12 +211,12 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @return PaymentForm
+     * @return PaymentFormComponent
      * @throws BadTypeException
      * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): PaymentForm {
-        return new PaymentForm(
+    protected function createComponentCreateForm(): PaymentFormComponent {
+        return new PaymentFormComponent(
             $this->getContext(),
             $this->isOrg(),
             $this->getMachine(),
@@ -225,12 +225,12 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @return PaymentForm
+     * @return PaymentFormComponent
      * @throws BadTypeException
      * @throws EventNotFoundException
      */
-    protected function createComponentEditForm(): PaymentForm {
-        return new PaymentForm(
+    protected function createComponentEditForm(): PaymentFormComponent {
+        return new PaymentFormComponent(
             $this->getContext(),
             $this->isOrg(),
             $this->getMachine(),

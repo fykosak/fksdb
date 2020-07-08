@@ -10,7 +10,7 @@ use FKSDB\Fyziklani\Submit\HandlerFactory;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use FKSDB\Components\Controls\Entity\Fyziklani\Submit\EditControl;
+use FKSDB\Components\Controls\Entity\Fyziklani\Submit\EditComponent;
 use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
 use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
 use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
@@ -142,11 +142,11 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @return EditControl
+     * @return EditComponent
      * @throws EventNotFoundException
      */
-    protected function createComponentEditForm(): EditControl {
-        return new EditControl($this->getContext(), $this->getEvent());
+    protected function createComponentEditForm(): EditComponent {
+        return new EditComponent($this->getContext(), $this->getEvent());
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Entity\Org\OrgForm;
+use FKSDB\Components\Controls\Entity\Org\OrgFormComponent;
 use FKSDB\Components\Grids\OrgsGrid;
 use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Exceptions\BadTypeException;
@@ -117,7 +117,7 @@ class OrgPresenter extends BasePresenter {
      * @throws BadTypeException
      */
     protected function createComponentCreateForm(): Control {
-        return new OrgForm($this->getContext(), $this->getSelectedContest(), true);
+        return new OrgFormComponent($this->getContext(), $this->getSelectedContest(), true);
     }
 
     /**
@@ -126,7 +126,7 @@ class OrgPresenter extends BasePresenter {
      * @throws BadTypeException
      */
     protected function createComponentEditForm(): Control {
-        return new OrgForm($this->getContext(), $this->getSelectedContest(), false);
+        return new OrgFormComponent($this->getContext(), $this->getSelectedContest(), false);
     }
 
     /**

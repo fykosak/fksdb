@@ -3,6 +3,7 @@
 namespace Persons;
 
 use FKSDB\Components\Controls\Entity\Person\PersonForm;
+use FKSDB\Components\Controls\Entity\Person\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\IReferencedHandler;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
@@ -233,7 +234,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                     if ($models[$t]) {
                         $this->serviceMPostContact->updateModel2($model, $datum);
                     } else {
-                        $this->serviceMPostContact->createNewModel(array_merge($datum, ['type' => PersonForm::mapAddressContainerNameToType($t)]));
+                        $this->serviceMPostContact->createNewModel(array_merge($datum, ['type' => PersonFormComponent::mapAddressContainerNameToType($t)]));
                     }
                     continue;
                 }

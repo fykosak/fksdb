@@ -4,7 +4,7 @@ namespace FKSDB\Tests\PresentersTests\OrgModule;
 
 $container = require '../../bootstrap.php';
 
-use FKSDB\Components\Controls\Entity\Org\OrgForm;
+use FKSDB\Components\Controls\Entity\Org\OrgFormComponent;
 use FKSDB\ORM\DbNames;
 use FKSDB\Tests\PresentersTests\EntityPresenterTestCase;
 use Nette\Application\Request;
@@ -118,7 +118,7 @@ class OrgPresenterTest extends EntityPresenterTestCase {
     }
 
     protected function getContainerName(): string {
-        return OrgForm::CONTAINER;
+        return OrgFormComponent::CONTAINER;
     }
 
     protected function createPostRequest(string $action, array $params, array $postData = []): Request {

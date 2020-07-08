@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Entity\EventOrg\EventOrgForm;
+use FKSDB\Components\Controls\Entity\EventOrg\EventOrgFormComponent;
 use FKSDB\Components\Grids\EventOrgsGrid;
 use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Events\EventNotFoundException;
@@ -107,7 +107,7 @@ class EventOrgPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     protected function createComponentCreateForm(): Control {
-        return new EventOrgForm($this->getContext(), $this->getEvent(), true);
+        return new EventOrgFormComponent($this->getContext(), $this->getEvent(), true);
     }
 
     /**
@@ -115,7 +115,7 @@ class EventOrgPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     protected function createComponentEditForm(): Control {
-        return new EventOrgForm($this->getContext(), $this->getEvent(), false);
+        return new EventOrgFormComponent($this->getContext(), $this->getEvent(), false);
     }
 
 }

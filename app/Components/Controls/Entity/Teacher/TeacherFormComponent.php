@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Entity\Teacher;
 
-use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
+use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Controls\Entity\ReferencedPersonTrait;
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
@@ -25,7 +25,7 @@ use Tracy\Debugger;
  * Class TeacherForm
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class TeacherForm extends AbstractEntityFormControl implements IEditEntityForm {
+class TeacherFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
 
     use ReferencedPersonTrait;
 

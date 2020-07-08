@@ -4,13 +4,12 @@ namespace FKSDB\Tests\PresentersTests\OrgModule;
 
 $container = require '../../bootstrap.php';
 
-use FKSDB\Components\Controls\Entity\Event\EventForm;
+use FKSDB\Components\Controls\Entity\Event\EventFormComponent;
 use FKSDB\ORM\DbNames;
 use FKSDB\Tests\PresentersTests\EntityPresenterTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
-use Nette\Utils\Html;
 use Tester\Assert;
 
 /**
@@ -124,7 +123,7 @@ class EventPresenterTest extends EntityPresenterTestCase {
     }
 
     protected function getContainerName(): string {
-        return EventForm::CONT_EVENT;
+        return EventFormComponent::CONT_EVENT;
     }
 }
 

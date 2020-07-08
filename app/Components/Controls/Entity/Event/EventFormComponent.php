@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Entity\Event;
 
-use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
+use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\Components\DatabaseReflection\OmittedControlException;
@@ -36,7 +36,7 @@ use Tracy\Debugger;
  * Class AbstractForm
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class EventForm extends AbstractEntityFormControl implements IEditEntityForm {
+class EventFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
     const CONT_EVENT = 'event';
     /**
      * @var ModelContest
