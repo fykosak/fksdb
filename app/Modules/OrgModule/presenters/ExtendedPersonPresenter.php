@@ -15,6 +15,7 @@ use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelContestant;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -115,6 +116,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @throws JsonException
      * @throws NotImplementedException
      * @throws OmittedControlException
+     * @throws BadRequestException
      *
      */
     private function createComponentFormControl(bool $create): FormControl {
@@ -162,6 +164,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @throws JsonException
      * @throws NotImplementedException
      * @throws OmittedControlException
+     * @throws BadRequestException
      *
      */
     final protected function createComponentCreateComponent(): FormControl {
@@ -176,6 +179,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @throws OmittedControlException
      * @throws NotImplementedException
      * @throws ForbiddenRequestException
+     * @throws BadRequestException
      */
     final protected function createComponentEditComponent(): FormControl {
         return $this->createComponentFormControl(false);

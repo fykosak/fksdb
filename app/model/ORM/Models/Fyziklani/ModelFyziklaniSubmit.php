@@ -70,7 +70,7 @@ class ModelFyziklaniSubmit extends AbstractModelSingle implements IFyziklaniTeam
             if (!$throws) {
                 return false;
             }
-            throw new AlreadyRevokedSubmitException(_('Submit can\'t be revoked'));
+            throw new AlreadyRevokedSubmitException();
         } elseif ($this->getFyziklaniTeam()->hasOpenSubmitting()) {
             if (!$throws) {
                 return false;

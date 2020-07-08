@@ -139,7 +139,6 @@ class ExportFormatFactory {
         ]);
 
         if (array_key_exists('eventTypeId', $parameters[$qid])) {
-            /** @var ModelContest $contest */
             $contest = $this->serviceContest->findByPrimary($queryParameters['contest']);
             $event = $this->serviceEvent->getByEventTypeId($contest, $queryParameters['year'], $parameters[$qid]['eventTypeId']);
             $format->addParameters([

@@ -99,7 +99,7 @@ class SchoolForm extends AbstractEntityFormControl implements IEditEntityForm {
     }
 
     /**
-     * @param AbstractModelSingle $model
+     * @param AbstractModelSingle|ModelSchool $model
      * @return void
      * @throws BadTypeException
      */

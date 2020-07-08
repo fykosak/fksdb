@@ -112,5 +112,4 @@ class Helpers {
             return self::evalExpression($expressionArray, $container);
         }
     }
-
 }

@@ -8,7 +8,7 @@ use Nette\Security\IResource;
 
 /**
  * Class ImplicitEventRole
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ImplicitEventRole extends EventRole {
 

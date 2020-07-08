@@ -22,6 +22,7 @@ use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\Modules\Core\ContestPresenter\IContestPresenter;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\SubmitButton;
@@ -303,6 +304,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @throws NotImplementedException
      * @throws OmittedControlException
      * @throws UnsupportedLanguageException
+     * @throws BadRequestException
      */
     protected function createComponentContestantForm(): FormControl {
         $control = new FormControl();

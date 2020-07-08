@@ -16,6 +16,7 @@ use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Services\ServicePerson;
+use Nette\Application\BadRequestException;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container as DIContainer;
@@ -119,11 +120,11 @@ class PersonFactory extends AbstractFactory {
      * @param Container $container
      * @return IComponent
      * @throws AbstractColumnException
-     *
      * @throws BadTypeException
      * @throws JsonException
      * @throws NotImplementedException
      * @throws OmittedControlException
+     * @throws BadRequestException
      *
      */
     protected function createComponent(Field $field, BaseMachine $machine, Container $container): IComponent {

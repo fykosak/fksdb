@@ -284,7 +284,6 @@ class ContestChooser extends BaseComponent {
             }
             $this->contests = [];
             foreach ($contests as $id) {
-                /** @var ModelContest $contest */
                 $contest = $this->serviceContest->findByPrimary($id);
                 $years = $this->getYears($contest);
                 $this->contests[$id] = (object)[
