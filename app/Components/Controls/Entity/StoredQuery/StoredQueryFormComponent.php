@@ -252,7 +252,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
      * @return void
      */
     public function render() {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR);
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'StoredQueryFormComponent.latte');
         $this->template->render();
     }
 }
