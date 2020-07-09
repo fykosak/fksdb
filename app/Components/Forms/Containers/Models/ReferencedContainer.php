@@ -13,6 +13,7 @@ use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\JsonException;
@@ -100,16 +101,15 @@ abstract class ReferencedContainer extends ContainerWithOptions {
         }
     }
 
-    public function getAllowClear(): bool {
-        return $this->allowClear;
-    }
-
     /**
      * @param bool $allowClear
      * @return void
      */
-    public function setAllowClear(bool $allowClear) {
+    protected function setAllowClear(bool $allowClear) {
         $this->allowClear = $allowClear;
+        /** @var SubmitButton $control */
+        $control = $this->getComponent(self::SUBMIT_CLEAR);
+        $control->setOption('visible', $allowClear);
     }
 
     /**

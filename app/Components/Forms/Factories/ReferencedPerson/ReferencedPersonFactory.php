@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Forms\Factories\ReferencedPerson;
 
-use Closure;
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\IWriteOnly;
@@ -11,7 +10,6 @@ use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
-use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\PersonFactory;
@@ -27,8 +25,6 @@ use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\Controls\TextInput;
-use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
@@ -44,16 +40,7 @@ use Persons\ReferencedPersonHandlerFactory;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ReferencedPersonFactory implements IReferencedSetter {
-
     use SmartObject;
-
-    const SEARCH_EMAIL = 'email';
-    const SEARCH_ID = 'id';
-    const SEARCH_NONE = 'none';
-    const TARGET_FORM = 0x1;
-    const TARGET_VALIDATION = 0x2;
-    const EXTRAPOLATE = 0x4;
-    const HAS_DELIVERY = 0x8;
 
     /**
      * @var ServicePerson
@@ -104,7 +91,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
         PersonScheduleFactory $personScheduleFactory,
         \Nette\DI\Container $context
     ) {
-       $this->servicePerson = $servicePerson;
+        $this->servicePerson = $servicePerson;
         $this->personFactory = $personFactory;
         $this->referencedPersonHandlerFactory = $referencedPersonHandlerFactory;
         $this->personProvider = $personProvider;
@@ -135,7 +122,8 @@ class ReferencedPersonFactory implements IReferencedSetter {
         bool $allowClear,
         IModifiabilityResolver $modifiabilityResolver,
         IVisibilityResolver $visibilityResolver,
-        $event = null): ReferencedId {
+        $event = null
+    ): ReferencedId {
         $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $event ?? null);
 
         $hiddenField = new ReferencedId(
@@ -147,10 +135,6 @@ class ReferencedPersonFactory implements IReferencedSetter {
         );
         /** @var ReferencedPersonContainer $container */
         $container = $hiddenField->getReferencedContainer();
-
-        $container->setOption('acYear', $acYear);
-        $container->modifiabilityResolver = $modifiabilityResolver;
-        $container->visibilityResolver = $visibilityResolver;
 
         foreach ($fieldsDefinition as $sub => $fields) {
             $subContainer = new ContainerWithOptions();
@@ -193,9 +177,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
             }
             $container->addComponent($subContainer, $sub);
         }
-
         return $hiddenField;
-
     }
 
 
@@ -230,12 +212,12 @@ class ReferencedPersonFactory implements IReferencedSetter {
              */
             foreach ($subContainer->getComponents() as $fieldName => $component) {
                 if (isset($container[ReferencedPersonHandler::POST_CONTACT_DELIVERY])) {
-                    $options = self::TARGET_FORM | self::HAS_DELIVERY;
+                    $options = ReferencedPersonContainer::TARGET_FORM | ReferencedPersonContainer::HAS_DELIVERY;
                 } else {
-                    $options = self::TARGET_FORM;
+                    $options = ReferencedPersonContainer::TARGET_FORM;
                 }
                 $realValue = $this->getPersonValue($model, $sub, $fieldName, $container->acYear, $options, $event); // not extrapolated
-                $value = $this->getPersonValue($model, $sub, $fieldName, $container->acYear, $options | self::EXTRAPOLATE, $event);
+                $value = $this->getPersonValue($model, $sub, $fieldName, $container->acYear, $options | ReferencedPersonContainer::EXTRAPOLATE, $event);
                 $controlModifiable = ($realValue !== null) ? $modifiable : true;
                 $controlVisible = $this->isWriteOnly($component) ? $visible : true;
 
@@ -297,61 +279,6 @@ class ReferencedPersonFactory implements IReferencedSetter {
     }
 
     /**
-     * @param string $searchType
-     * @return AutocompleteSelectBox|TextInput
-     */
-    protected function createSearchControl(string $searchType) {
-
-        switch ($searchType) {
-            case self::SEARCH_EMAIL:
-                $control = new TextInput(_('E-mail'));
-                $control->addCondition(Form::FILLED)
-                    ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
-                $control->setOption('description', _('Nejprve zkuste najít osobu v naší databázi podle e-mailu.'));
-                $control->setAttribute('placeholder', 'your-email@exmaple.com');
-                $control->setAttribute('autocomplete', 'email');
-                break;
-            case self::SEARCH_ID:
-                $control = $this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider);
-                break;
-            default:
-                throw new InvalidArgumentException(_('Unknown search type'));
-        }
-        return $control;
-    }
-
-    protected function createSearchCallback(string $searchType): Closure {
-        switch ($searchType) {
-            case self::SEARCH_EMAIL:
-                return function ($term) {
-                    return $this->servicePerson->findByEmail($term);
-                };
-            case self::SEARCH_ID:
-                return function ($term) {
-                    return $this->servicePerson->findByPrimary($term);
-                };
-            default:
-                throw new InvalidArgumentException(_('Unknown search type'));
-        }
-    }
-
-    protected function createTermToValuesCallback(string $searchType): Closure {
-        switch ($searchType) {
-            case self::SEARCH_EMAIL:
-                return function ($term) {
-                    return ['person_info' => ['email' => $term]];
-                };
-                break;
-            case self::SEARCH_ID:
-                return function () {
-                    return [];
-                };
-            default:
-                throw new InvalidArgumentException(_('Unknown search type'));
-        }
-    }
-
-    /**
      * @param ModelPerson $person
      * @param string $sub
      * @param string $field
@@ -360,7 +287,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @throws JsonException
      */
     final public function isFilled(ModelPerson $person, string $sub, string $field, int $acYear): bool {
-        $value = $this->getPersonValue($person, $sub, $field, $acYear, self::TARGET_VALIDATION);
+        $value = $this->getPersonValue($person, $sub, $field, $acYear, ReferencedPersonContainer::TARGET_VALIDATION);
         return !($value === null || $value === '');
     }
 
@@ -391,11 +318,11 @@ class ReferencedPersonFactory implements IReferencedSetter {
                 }
                 return $result;
             case 'person_history':
-                return ($history = $person->getHistory($acYear, (bool)($options & self::EXTRAPOLATE))) ? $history[$field] : null;
+                return ($history = $person->getHistory($acYear, (bool)($options & ReferencedPersonContainer::EXTRAPOLATE))) ? $history[$field] : null;
             case 'post_contact_d':
                 return $person->getDeliveryAddress();
             case 'post_contact_p':
-                if (($options & self::TARGET_VALIDATION) || !($options & self::HAS_DELIVERY)) {
+                if (($options & ReferencedPersonContainer::TARGET_VALIDATION) || !($options & ReferencedPersonContainer::HAS_DELIVERY)) {
                     return $person->getPermanentAddress();
                 }
                 return $person->getPermanentAddress(true);

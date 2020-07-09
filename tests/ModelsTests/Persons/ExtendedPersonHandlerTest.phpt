@@ -4,6 +4,7 @@ namespace FKSDB\Tests\ModelTests\Person;
 
 $container = require '../../bootstrap.php';
 
+use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
@@ -172,11 +173,11 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $form = new Form();
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
-        
+
         $component = $this->referencedPersonFactory->createReferencedPerson(
             $fieldsDefinition,
             $acYear,
-            ReferencedPersonFactory::SEARCH_NONE,
+            PersonSearchContainer::SEARCH_NONE,
             false,
             new TestResolver(),
             new TestResolver()

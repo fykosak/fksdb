@@ -4,6 +4,7 @@ namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\Components\DatabaseReflection\OmittedControlException;
+use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Localization\UnsupportedLanguageException;
@@ -315,7 +316,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $component = $this->referencedPersonFactory->createReferencedPerson(
             $this->getFieldsDefinition(),
             $this->getSelectedAcademicYear(),
-            ReferencedPersonFactory::SEARCH_NONE,
+            PersonSearchContainer::SEARCH_NONE,
             false,
             new SelfResolver($this->getUser()),
             new SelfResolver($this->getUser())
