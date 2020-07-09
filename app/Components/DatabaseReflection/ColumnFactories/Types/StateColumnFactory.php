@@ -42,7 +42,7 @@ class StateColumnFactory extends DefaultColumnFactory {
         return ['badge' => '', 'label' => ''];
     }
 
-    public function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         throw new OmittedControlException();
     }
 }

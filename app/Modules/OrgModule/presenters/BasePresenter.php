@@ -19,7 +19,7 @@ abstract class BasePresenter extends ContestPresenter {
         return $control;
     }
 
-    public function getNavRoots(): array {
+    protected function getNavRoots(): array {
         return ['Org.Dashboard.default'];
     }
 }

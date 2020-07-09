@@ -45,7 +45,7 @@ class LanguageChooser extends Chooser {
         $this->template->render();
     }
 
-    public function getTitle(): Title {
+    protected function getTitle(): Title {
         return new Title(isset(LangPresenterTrait::$languageNames[$this->language]) ? LangPresenterTrait::$languageNames[$this->language] : _('Language'), 'fa fa-language');
     }
 
@@ -53,7 +53,7 @@ class LanguageChooser extends Chooser {
      * @return array|iterable
      * @throws BadTypeException
      */
-    public function getItems() {
+    protected function getItems() {
         if (!count($this->supportedLanguages)) {
             $presenter = $this->getPresenter();
             if (!$presenter instanceof BasePresenter) {

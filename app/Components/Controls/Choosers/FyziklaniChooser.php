@@ -56,7 +56,7 @@ class FyziklaniChooser extends Chooser {
         return $item->event_id === $this->event->event_id;
     }
 
-    public function getTitle(): Title {
+    protected function getTitle(): Title {
         return new Title(_('Event'));
     }
 

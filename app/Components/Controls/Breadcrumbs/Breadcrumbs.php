@@ -228,7 +228,7 @@ class Breadcrumbs extends BaseComponent {
             $presenterName = $request->getPresenterName();
             $presenterClassName = $this->presenterFactory->formatPresenterClass($presenterName);
             $action = $parameters[Presenter::ACTION_KEY];
-            $methodName =  ($presenterClassName)::publicFormatActionMethod($action);
+            $methodName = ($presenterClassName)::publicFormatActionMethod($action);
             $identifyingParameters = [Presenter::ACTION_KEY];
             /** @var \ReflectionClass $rc */
             $rc = ($presenterClassName)::getReflection();
@@ -307,7 +307,7 @@ class Breadcrumbs extends BaseComponent {
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    protected function createNaviRequest(Presenter $presenter, AppRequest $request, $backLink) {
+    protected function createNaviRequest(Presenter $presenter, AppRequest $request, $backLink): NaviRequest {
         $pathKey = $this->getPathKey($request);
         if (!$presenter instanceof INavigablePresenter) {
             throw new BadTypeException(INavigablePresenter::class, $presenter);

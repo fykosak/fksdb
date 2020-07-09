@@ -205,9 +205,6 @@ class Navigation extends BaseComponent {
      * @param Presenter $presenter
      * @param array $node
      * @return string
-     *
-     *
-     *
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws InvalidLinkException

@@ -35,7 +35,7 @@ class BornRow extends AbstractColumnFactory {
      * @param AbstractModelSingle|ModelPersonInfo $model
      * @return Html
      */
-    public function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
         return (new DatePrinter('d.m.Y'))($model->born);
     }
 }

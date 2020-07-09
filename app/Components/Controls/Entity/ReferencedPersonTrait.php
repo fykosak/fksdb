@@ -11,12 +11,12 @@ trait ReferencedPersonTrait {
     /**
      * @var PersonFactory
      */
-    private $personFactory;
+    protected $personFactory;
 
     /**
      * @var ServicePerson
      */
-    private $servicePerson;
+    protected $servicePerson;
 
     protected function createPersonSelect(): AutocompleteSelectBox {
         return $this->personFactory->createPersonSelect(true, _('Person'), new PersonProvider($this->servicePerson));

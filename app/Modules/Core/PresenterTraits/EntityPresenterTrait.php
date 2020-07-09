@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\Components\Controls\Entity\AbstractEntityFormControl;
+use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Entity\ModelNotFoundException;
@@ -74,7 +74,6 @@ trait EntityPresenterTrait {
     /* ****************** TITLES ***************************** */
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      */
     public function titleList() {
@@ -87,7 +86,6 @@ trait EntityPresenterTrait {
 
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      */
     final public function titleCreate() {
@@ -100,7 +98,6 @@ trait EntityPresenterTrait {
 
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      */
     public function titleEdit() {
@@ -109,7 +106,6 @@ trait EntityPresenterTrait {
 
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      */
     public function titleDetail() {
@@ -170,15 +166,11 @@ trait EntityPresenterTrait {
     }
 
     /**
-     * @return AbstractEntityFormControl
-     *
      * @throws NotImplementedException
      */
     abstract protected function createComponentCreateForm(): Control;
 
     /**
-     * @return AbstractEntityFormControl
-     *
      * @throws NotImplementedException
      */
     abstract protected function createComponentEditForm(): Control;

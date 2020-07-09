@@ -15,7 +15,7 @@ use Nette\Utils\Html;
  */
 class EmailColumnFactory extends DefaultColumnFactory {
 
-    public function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         $control = new TextInput($this->getTitle());
         $control->addCondition(Form::FILLED)
             ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
