@@ -7,6 +7,7 @@ use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
@@ -127,7 +128,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         $referencedId = $this->referencedPersonFactory->createReferencedPerson(
             $this->getFieldsDefinition(),
             $this->getAcYearFromModel() ?: $this->getSelectedAcademicYear(),
-            ReferencedPersonFactory::SEARCH_ID,
+            PersonSearchContainer::SEARCH_ID,
             $create,
             new AclResolver($this->contestAuthorizator, $this->getSelectedContest()),
             new AclResolver($this->contestAuthorizator, $this->getSelectedContest())

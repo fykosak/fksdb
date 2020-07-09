@@ -6,6 +6,7 @@ $container = require '../../bootstrap.php';
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\Components\DatabaseReflection\OmittedControlException;
+use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\BasePresenter;
@@ -190,10 +191,14 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
 
-        $searchType = ReferencedPersonFactory::SEARCH_NONE;
-        $allowClear = false;
-        $modifiabilityResolver = $visibilityResolver = new TestResolver();
-        $referencedId = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson(
+            $fieldsDefinition,
+            $acYear,
+            PersonSearchContainer::SEARCH_NONE,
+            false,
+            new TestResolver(),
+            new TestResolver()
+        );
 
         $container->addComponent($referencedId, ExtendedPersonHandler::EL_PERSON);
         $container->addComponent($referencedId->getReferencedContainer(), ExtendedPersonHandler::CONT_PERSON);

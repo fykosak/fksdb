@@ -91,7 +91,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @return array
+     * @return mixed
      */
     public function getTokenData() {
         if (!$this->isAuthenticatedByToken()) {

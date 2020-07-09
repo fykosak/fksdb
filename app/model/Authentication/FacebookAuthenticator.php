@@ -100,11 +100,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         }
     }
 
-    /**
-     * @param string $fbUser
-     * @return ModelLogin
-     */
-    private function registerFromFB($fbUser): ModelLogin {
+    private function registerFromFB(array $fbUser): ModelLogin {
         $this->servicePerson->getConnection()->beginTransaction();
         $person = $this->servicePerson->createNewModel($this->getPersonData($fbUser));
         $this->servicePersonInfo->createNewModel(array_merge(['person_id' => $person->person_id], $this->getPersonInfoData($fbUser)));
@@ -115,10 +111,10 @@ class FacebookAuthenticator extends AbstractAuthenticator {
 
     /**
      * @param ModelPerson $person
-     * @param int|string $fbUser
+     * @param array $fbUser
      * @return void
      */
-    private function updateFromFB(ModelPerson $person, $fbUser) {
+    private function updateFromFB(ModelPerson $person, array $fbUser) {
         $this->servicePerson->getConnection()->beginTransaction();
         $personData = $this->getPersonData($fbUser);
         // there can be bullshit in this fields, so don't use it for update
@@ -145,10 +141,10 @@ class FacebookAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @param int|string $fbUser
+     * @param array $fbUser
      * @return array
      */
-    private function getPersonData($fbUser) {
+    private function getPersonData(array $fbUser) {
         return [
             'family_name' => $fbUser['last_name'],
             'other_name' => $fbUser['first_name'],
@@ -157,11 +153,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         ];
     }
 
-    /**
-     * @param int|string $fbUser
-     * @return array
-     */
-    private function getPersonInfoData($fbUser) {
+    private function getPersonInfoData(array $fbUser): array {
         return [
             'email' => $fbUser['email'],
             'fb_id' => $fbUser['id'],

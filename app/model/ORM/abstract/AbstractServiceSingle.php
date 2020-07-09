@@ -245,7 +245,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     /**
      * Omits array elements whose keys aren't columns in the table.
      *
-     * @param iterable|null $data
+     * @param array|null $data
      * @return array|null
      */
     protected function filterData($data) {

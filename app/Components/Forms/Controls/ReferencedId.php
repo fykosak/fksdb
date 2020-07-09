@@ -2,14 +2,18 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
-use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
+use FKSDB\Components\Forms\Containers\SearchContainer\SearchContainer;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\Utils\Promise;
+use Nette\Application\UI\Control;
+use Nette\Application\UI\Presenter;
+use Nette\ComponentModel\IContainer;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
@@ -22,7 +26,13 @@ use Nette\Forms\Form;
  */
 class ReferencedId extends HiddenField {
 
+    const MODE_NORMAL = 'MODE_NORMAL';
+    const MODE_FORCE = 'MODE_FORCE';
+    const MODE_ROLLBACK = 'MODE_ROLLBACK';
+
     const VALUE_PROMISE = '__promise';
+
+    const JSON_DATA = 'referencedContainer';
 
     /**
      * @var ReferencedContainer
@@ -44,10 +54,8 @@ class ReferencedId extends HiddenField {
      */
     private $handler;
 
-    /**
-     * @var IReferencedSetter
-     */
-    private $referencedSetter;
+    /** @var SearchContainer */
+    private $searchContainer;
 
     /**
      * @var bool
@@ -61,20 +69,25 @@ class ReferencedId extends HiddenField {
 
     /** @var bool */
     private $attachedOnValidate = false;
+    /** @var bool */
+    private $attachedSearch = false;
 
     /**
      * ReferencedId constructor.
-     * @param ReferencedContainer $container
+     * @param SearchContainer $searchContainer
+     * @param ReferencedContainer $referencedContainer
      * @param IService $service
      * @param IReferencedHandler $handler
-     * @param IReferencedSetter $referencedSetter
      */
-    public function __construct(ReferencedContainer $container, IService $service, IReferencedHandler $handler, IReferencedSetter $referencedSetter) {
-        $this->referencedContainer = $container;
-        $container->setReferencedId($this);
+    public function __construct(SearchContainer $searchContainer, ReferencedContainer $referencedContainer, IService $service, IReferencedHandler $handler) {
+        $this->referencedContainer = $referencedContainer;
+        $this->getReferencedContainer()->setReferencedId($this);
+
+        $this->searchContainer = $searchContainer;
+        $this->getSearchContainer()->setReferencedId($this);
+
         $this->service = $service;
         $this->handler = $handler;
-        $this->referencedSetter = $referencedSetter;
         parent::__construct();
         $this->monitor(Form::class, function (Form $form) {
             if (!$this->attachedOnValidate) {
@@ -84,14 +97,25 @@ class ReferencedId extends HiddenField {
                 $this->attachedOnValidate = true;
             }
         });
+        $this->monitor(IContainer::class, function (IContainer $container) {
+            if (!$this->attachedSearch) {
+                // $container->addComponent($this->getReferencedContainer(), $this->getName() . '_1');
+                $container->addComponent($this->getSearchContainer(), $this->getName() . '_2');
+                $this->attachedSearch = true;
+            }
+        });
     }
 
     public function getReferencedContainer(): ReferencedContainer {
         return $this->referencedContainer;
     }
 
+    public function getSearchContainer(): SearchContainer {
+        return $this->searchContainer;
+    }
+
     /**
-     * @return Promise
+     * @return Promise|null
      */
     protected function getPromise() {
         return $this->promise;
@@ -105,17 +129,11 @@ class ReferencedId extends HiddenField {
         $this->promise = $promise;
     }
 
-    /**
-     * @return IService
-     */
-    public function getService() {
+    public function getService(): IService {
         return $this->service;
     }
 
-    /**
-     * @return IReferencedHandler
-     */
-    public function getHandler() {
+    public function getHandler(): IReferencedHandler {
         return $this->handler;
     }
 
@@ -149,25 +167,23 @@ class ReferencedId extends HiddenField {
     public function setValue($pValue, bool $force = false) {
 
         if ($pValue instanceof IModel) {
-            $personModel = $this->model = $pValue;
+            $personModel = $pValue;
         } elseif ($pValue === self::VALUE_PROMISE) {
             $personModel = $this->service->createNew();
         } else {
             $personModel = $this->service->findByPrimary($pValue);
         }
 
-        if (!$personModel) {
-            $this->referencedContainer->setSearchButton(true);
-            $this->referencedContainer->setClearButton(false);
-        } else {
-            $this->referencedContainer->setSearchButton(false);
-            $this->referencedContainer->setClearButton(true);
+        if ($personModel && !$personModel->isNew()) {
+            $this->model = $personModel;
         }
-        $this->referencedSetter->setModel($this->referencedContainer, $personModel, $force ? IReferencedSetter::MODE_FORCE : IReferencedSetter::MODE_NORMAL);
+        $this->setModel($personModel, $force ? self::MODE_FORCE : self::MODE_NORMAL);
 
         if ($pValue instanceof IModel) {
             $pValue = $personModel->getPrimary();
         }
+        $this->getSearchContainer()->setOption('visible', !$pValue);
+        $this->getReferencedContainer()->setOption('visible', (bool)$pValue);
         return parent::setValue($pValue);
     }
 
@@ -189,7 +205,7 @@ class ReferencedId extends HiddenField {
 
     public function rollback() {
         if ($this->getModelCreated()) {
-            $this->referencedSetter->setModel($this->referencedContainer, null, IReferencedSetter::MODE_ROLLBACK);
+            $this->setModel(null, self::MODE_ROLLBACK);
             if (parent::getValue()) {
                 parent::setValue(self::VALUE_PROMISE);
             }
@@ -201,7 +217,7 @@ class ReferencedId extends HiddenField {
      * @return BaseControl|void
      */
     public function setDisabled($value = true) {
-        $this->referencedContainer->setDisabled($value);
+        $this->getReferencedContainer()->setDisabled($value);
     }
 
     /**
@@ -209,14 +225,14 @@ class ReferencedId extends HiddenField {
      */
     private function createPromise() {
 
-        $values = $this->referencedContainer->getValues();
+        $values = $this->getReferencedContainer()->getValues();
         $referencedId = $this->getValue();
         $promise = new Promise(function () use ($values, $referencedId) {
             try {
                 if ($referencedId === self::VALUE_PROMISE) {
 
                     $model = $this->handler->createFromValues($values);
-                    $this->setValue($model, IReferencedSetter::MODE_FORCE);
+                    $this->setValue($model, self::MODE_FORCE);
                     $this->setModelCreated(true);
                     return $model->getPrimary();
                 } elseif ($referencedId) {
@@ -224,10 +240,10 @@ class ReferencedId extends HiddenField {
                     $this->handler->update($model, $values);
                     // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
                     $model = $this->getService()->findByPrimary($model->getPrimary());
-                    $this->setValue($model, IReferencedSetter::MODE_FORCE);
+                    $this->setValue($model, self::MODE_FORCE);
                     return $referencedId;
                 } else {
-                    $this->setValue(null, IReferencedSetter::MODE_FORCE);
+                    $this->setValue(null, self::MODE_FORCE);
                 }
             } catch (ModelDataConflictException $exception) {
                 $exception->setReferencedId($this);
@@ -240,5 +256,33 @@ class ReferencedId extends HiddenField {
         $referencedId = $this->getValue();
         $this->setValue($referencedId);
         $this->setPromise($promise);
+    }
+
+    public function invalidateFormGroup() {
+        $form = $this->getForm();
+        /** @var Presenter $presenter */
+        $presenter = $form->lookup(Presenter::class);
+        if ($presenter->isAjax()) {
+            /** @var Control $control */
+            $control = $form->getParent();
+            $control->redrawControl(FormControl::SNIPPET_MAIN);
+            $control->getTemplate()->mainContainer = $this->parent;
+            $control->getTemplate()->level = 2;
+            $payload = $presenter->getPayload();
+            $payload->{self::JSON_DATA} = (object)[
+                'id' => $this->getHtmlId(),
+                'value' => $this->getValue(),
+            ];
+        }
+    }
+
+    /**
+     * @param IModel|null $model
+     * @param string $mode
+     * @return void
+     */
+    protected function setModel(IModel $model = null, string $mode = self::MODE_NORMAL) {
+        $container = $this->getReferencedContainer();
+        $container->setModel($model, $mode);
     }
 }
