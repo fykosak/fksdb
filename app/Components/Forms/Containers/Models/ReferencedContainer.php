@@ -25,10 +25,6 @@ use Nette\Utils\JsonException;
  */
 abstract class ReferencedContainer extends ContainerWithOptions {
 
-    const MODE_NORMAL = 'MODE_NORMAL';
-    const MODE_FORCE = 'MODE_FORCE';
-    const MODE_ROLLBACK = 'MODE_ROLLBACK';
-
     const ID_MASK = 'frm%s-%s';
     const CSS_AJAX = 'ajax';
     const CONTROL_COMPACT = '_c_compact';
@@ -52,12 +48,6 @@ abstract class ReferencedContainer extends ContainerWithOptions {
      * ReferencedContainer constructor.
      * @param \Nette\DI\Container $container
      * @param bool $allowClear
-     * @throws AbstractColumnException
-     * @throws BadRequestException
-     * @throws BadTypeException
-     * @throws JsonException
-     * @throws NotImplementedException
-     * @throws OmittedControlException
      */
     public function __construct(\Nette\DI\Container $container, bool $allowClear) {
         parent::__construct($container);
@@ -75,7 +65,7 @@ abstract class ReferencedContainer extends ContainerWithOptions {
         $this->createCompactValue();
 
         $this->setAllowClear($allowClear);
-        $this->configure();
+
     }
 
     public function getReferencedId(): ReferencedId {
@@ -180,5 +170,5 @@ abstract class ReferencedContainer extends ContainerWithOptions {
      * @param string $mode
      * @return void
      */
-    abstract public function setModel(IModel $model = null, string $mode = self::MODE_NORMAL);
+    abstract public function setModel(IModel $model = null, string $mode = ReferencedId::MODE_NORMAL);
 }

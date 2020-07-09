@@ -88,14 +88,15 @@ class ReferencedId extends HiddenField {
     public function __construct(SearchContainer $searchContainer, ReferencedContainer $referencedContainer, IService $service, IReferencedHandler $handler, IReferencedSetter $referencedSetter) {
         $this->referencedContainer = $referencedContainer;
         $this->getReferencedContainer()->setReferencedId($this);
-
         $this->searchContainer = $searchContainer;
         $this->getSearchContainer()->setReferencedId($this);
 
         $this->service = $service;
         $this->handler = $handler;
         $this->referencedSetter = $referencedSetter;
+
         parent::__construct();
+
         $this->monitor(Form::class, function (Form $form) {
             if (!$this->attachedOnValidate) {
                 $form->onValidate[] = function () {

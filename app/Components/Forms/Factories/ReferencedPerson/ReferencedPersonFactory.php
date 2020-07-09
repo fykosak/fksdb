@@ -2,10 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories\ReferencedPerson;
 
-use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\IWriteOnly;
-use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
@@ -14,19 +11,15 @@ use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Services\ServicePerson;
-use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
 use Nette\SmartObject;
 use Nette\Utils\JsonException;
 use Persons\IModifiabilityResolver;
@@ -108,12 +101,6 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @param IVisibilityResolver $visibilityResolver
      * @param ModelEvent|null $event
      * @return ReferencedId
-     * @throws AbstractColumnException
-     * @throws BadRequestException
-     * @throws BadTypeException
-     * @throws JsonException
-     * @throws NotImplementedException
-     * @throws OmittedControlException
      */
     public function createReferencedPerson(
         array $fieldsDefinition,
@@ -124,62 +111,16 @@ class ReferencedPersonFactory implements IReferencedSetter {
         IVisibilityResolver $visibilityResolver,
         $event = null
     ): ReferencedId {
-        $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $event ?? null);
 
-        $hiddenField = new ReferencedId(
+        $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $event);
+        return new ReferencedId(
             new PersonSearchContainer($this->context, $searchType),
             new ReferencedPersonContainer($this->context, $modifiabilityResolver, $visibilityResolver, $acYear, $fieldsDefinition, $event, $allowClear),
             $this->servicePerson,
             $handler,
             $this
         );
-        /** @var ReferencedPersonContainer $container */
-        $container = $hiddenField->getReferencedContainer();
-
-        foreach ($fieldsDefinition as $sub => $fields) {
-            $subContainer = new ContainerWithOptions();
-            if ($sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
-                $subContainer->setOption('showGroup', true);
-                $subContainer->setOption('label', _('Doručovací adresa'));
-            } elseif ($sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
-                $subContainer->setOption('showGroup', true);
-                $label = _('Trvalá adresa');
-                if (isset($container[ReferencedPersonHandler::POST_CONTACT_DELIVERY])) {
-                    $label .= ' ' . _('(je-li odlišná od doručovací)');
-                }
-                $subContainer->setOption('label', $label);
-            }
-            foreach ($fields as $fieldName => $metadata) {
-                $control = $container->createField($sub, $fieldName, $metadata);
-                $fullFieldName = "$sub.$fieldName";
-                if ($handler->isSecondaryKey($fullFieldName)) {
-                    if ($fieldName != 'email') {
-                        throw new InvalidStateException("Should define uniqueness validator for field $sub.$fieldName.");
-                    }
-
-                    $control->addCondition(function () use ($hiddenField) { // we use this workaround not to call getValue inside validation out of transaction
-                        $personId = $hiddenField->getValue(false);
-                        return $personId && $personId != ReferencedId::VALUE_PROMISE;
-                    })
-                        ->addRule(function (BaseControl $control) use ($fullFieldName, $hiddenField, $handler) {
-                            $personId = $hiddenField->getValue(false);
-
-                            $foundPerson = $handler->findBySecondaryKey($fullFieldName, $control->getValue());
-                            if ($foundPerson && $foundPerson->getPrimary() != $personId) {
-                                $hiddenField->setValue($foundPerson, ReferencedId::MODE_FORCE);
-                                return false;
-                            }
-                            return true;
-                        }, _('S e-mailem %value byla nalezena (formálně) jiná (ale pravděpodobně duplicitní) osoba, a tak ve formuláři nahradila původní.'));
-                }
-
-                $subContainer->addComponent($control, $fieldName);
-            }
-            $container->addComponent($subContainer, $sub);
-        }
-        return $hiddenField;
     }
-
 
     /**
      * @param ReferencedContainer|ReferencedPersonContainer $container
