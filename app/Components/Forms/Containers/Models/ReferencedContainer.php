@@ -13,8 +13,6 @@ use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\InvalidStateException;
 use Nette\Utils\ArrayHash;
-use Persons\IModifiabilityResolver;
-use Persons\IVisibilityResolver;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -47,17 +45,14 @@ class ReferencedContainer extends ContainerWithOptions {
      * @var bool
      */
     private $attachedJS = false;
-    /** @var IModifiabilityResolver */
-    public $modifiabilityResolver;
-    /** @var IVisibilityResolver */
-    public $visibilityResolver;
 
     /**
      * ReferencedContainer constructor.
-     * @param ReferencedId $referencedId
+     * @param \Nette\DI\Container $container
+     * @param bool $allowClear
      */
-    public function __construct(ReferencedId $referencedId) {
-        parent::__construct();
+    public function __construct(\Nette\DI\Container $container, bool $allowClear) {
+        parent::__construct($container);
         $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
             if (!$this->attachedJS) {
                 $this->attachedJS = true;
@@ -68,14 +63,21 @@ class ReferencedContainer extends ContainerWithOptions {
             $this->attachedJS = false;
             $collector->unregisterJSFile('js/referencedContainer.js');
         });
-        $this->referencedId = $referencedId;
         $this->createClearButton();
         $this->createCompactValue();
-        $this->referencedId->setReferencedContainer($this);
+        $this->setAllowClear($allowClear);
     }
 
     public function getReferencedId(): ReferencedId {
         return $this->referencedId;
+    }
+
+    /**
+     * @param ReferencedId $referencedId
+     * @return void
+     */
+    public function setReferencedId(ReferencedId $referencedId) {
+        $this->referencedId = $referencedId;
     }
 
     /**

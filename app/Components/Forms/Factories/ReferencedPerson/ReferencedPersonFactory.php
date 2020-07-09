@@ -10,6 +10,7 @@ use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
+use FKSDB\Components\Forms\Containers\Models\ReferencedPersonContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
@@ -29,7 +30,6 @@ use FKSDB\ORM\Services\ServiceFlag;
 use FKSDB\ORM\Services\ServicePerson;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
-use Nette\ComponentModel\IContainer;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
@@ -121,6 +121,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @param ServiceFlag $serviceFlag
      * @param SingleReflectionFormFactory $singleReflectionFormFactory
      * @param PersonScheduleFactory $personScheduleFactory
+     * @param \Nette\DI\Container $context
      */
     public function __construct(
         AddressFactory $addressFactory,
@@ -147,38 +148,33 @@ class ReferencedPersonFactory implements IReferencedSetter {
     }
 
     /**
-     * @param ModelEvent $event
-     * @return void
-     */
-    public function setEvent(ModelEvent $event) {
-        $this->event = $event;
-    }
-
-    /**
      * @param array $fieldsDefinition
      * @param int $acYear
      * @param string $searchType
      * @param bool $allowClear
      * @param IModifiabilityResolver $modifiabilityResolver
      * @param IVisibilityResolver $visibilityResolver
+     * @param ModelEvent|null $event
      * @return ReferencedContainer
      * @throws AbstractColumnException
+     * @throws BadRequestException
      * @throws BadTypeException
      * @throws JsonException
      * @throws NotImplementedException
      * @throws OmittedControlException
-     * @throws BadRequestException
      */
-    public function createReferencedPerson(array $fieldsDefinition, int $acYear, string $searchType, bool $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver) {
-        $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $this->event ?? null);
+    public function createReferencedPerson(array $fieldsDefinition, int $acYear, string $searchType, bool $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $event = null) {
+        $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $event ?? null);
 
         $hiddenField = new ReferencedId(
             new PersonSearchContainer($this->context, $searchType),
+            new ReferencedPersonContainer($this->context, $modifiabilityResolver, $visibilityResolver, $acYear, $fieldsDefinition, $event, $allowClear),
             $this->servicePerson,
             $handler,
-            $this);
-
-        $container = new ReferencedContainer($hiddenField);
+            $this
+        );
+        /** @var ReferencedPersonContainer $container */
+        $container = $hiddenField->getReferencedContainer();
 
         $container->setAllowClear($allowClear);
         $container->setOption('acYear', $acYear);
@@ -199,7 +195,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
                 $subContainer->setOption('label', $label);
             }
             foreach ($fields as $fieldName => $metadata) {
-                $control = $this->createField($sub, $fieldName, $acYear, $hiddenField, $metadata);
+                $control = $this->createField($sub, $fieldName, $acYear, $hiddenField, $metadata, $event);
                 $fullFieldName = "$sub.$fieldName";
                 if ($handler->isSecondaryKey($fullFieldName)) {
                     if ($fieldName != 'email') {
@@ -215,7 +211,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
 
                             $foundPerson = $handler->findBySecondaryKey($fullFieldName, $control->getValue());
                             if ($foundPerson && $foundPerson->getPrimary() != $personId) {
-                                $hiddenField->setValue($foundPerson, IReferencedSetter::MODE_FORCE);
+                                $hiddenField->setValue($foundPerson, ReferencedId::MODE_FORCE);
                                 return false;
                             }
                             return true;
@@ -233,20 +229,21 @@ class ReferencedPersonFactory implements IReferencedSetter {
 
 
     /**
-     * @param ReferencedContainer|IContainer[] $container
+     * @param ReferencedContainer|ReferencedPersonContainer $container
      * @param IModel|ModelPerson|null $model
      * @param string $mode
+     * @param ModelEvent|null $event
      * @return void
      * @throws JsonException
      */
-    public function setModel(ReferencedContainer $container, IModel $model = null, string $mode = self::MODE_NORMAL) {
+    public function setModel(ReferencedContainer $container, IModel $model = null, string $mode = ReferencedId::MODE_NORMAL, $event = null) {
         $acYear = $container->getOption('acYear');
         $modifiable = $model ? $container->modifiabilityResolver->isModifiable($model) : true;
         $resolution = $model ? $container->modifiabilityResolver->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
         $visible = $model ? $container->visibilityResolver->isVisible($model) : true;
         $submittedBySearch = $container->getReferencedId()->getSearchContainer()->isSearchSubmitted();
-        $force = ($mode === self::MODE_FORCE);
-        if ($mode === self::MODE_ROLLBACK) {
+        $force = ($mode === ReferencedId::MODE_FORCE);
+        if ($mode === ReferencedId::MODE_ROLLBACK) {
             $model = null;
         }
         $container->getReferencedId()->getHandler()->setResolution($resolution);
@@ -267,8 +264,8 @@ class ReferencedPersonFactory implements IReferencedSetter {
                 } else {
                     $options = self::TARGET_FORM;
                 }
-                $realValue = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options); // not extrapolated
-                $value = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options | self::EXTRAPOLATE);
+                $realValue = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options, $event); // not extrapolated
+                $value = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options | self::EXTRAPOLATE, $event);
                 $controlModifiable = ($realValue !== null) ? $modifiable : true;
                 $controlVisible = $this->isWriteOnly($component) ? $visible : true;
 
@@ -284,7 +281,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
                     $this->setWriteOnly($component, false);
                     $component->setDisabled(false);
                 }
-                if ($mode == self::MODE_ROLLBACK) {
+                if ($mode == ReferencedId::MODE_ROLLBACK) {
                     $component->setDisabled(false);
                     $this->setWriteOnly($component, false);
                 } else {
@@ -307,15 +304,16 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @param int $acYear
      * @param HiddenField $hiddenField
      * @param array $metadata
+     * @param ModelEvent|null $event
      * @return IComponent|AddressContainer|BaseControl
      * @throws AbstractColumnException
+     * @throws BadRequestException
      * @throws BadTypeException
      * @throws JsonException
      * @throws NotImplementedException
      * @throws OmittedControlException
-     * @throws BadRequestException
      */
-    public function createField(string $sub, string $fieldName, int $acYear, HiddenField $hiddenField, array $metadata): IComponent {
+    public function createField(string $sub, string $fieldName, int $acYear, HiddenField $hiddenField, array $metadata, $event = null): IComponent {
         if (in_array($sub, [
             ReferencedPersonHandler::POST_CONTACT_DELIVERY,
             ReferencedPersonHandler::POST_CONTACT_PERMANENT,
@@ -337,7 +335,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
             $control = null;
             switch ($sub) {
                 case 'person_schedule':
-                    $control = $this->personScheduleFactory->createField($fieldName, $this->event);
+                    $control = $this->personScheduleFactory->createField($fieldName, $event);
                     break;
                 case 'person':
                 case 'person_info':
@@ -492,16 +490,17 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @param string $field
      * @param int $acYear
      * @param int $options
+     * @param ModelEvent|null $event
      * @return bool|ModelPostContact|mixed|null
      * @throws JsonException
      */
-    protected function getPersonValue($person, string $sub, string $field, int $acYear, $options) {
+    protected function getPersonValue($person, string $sub, string $field, int $acYear, $options, $event = null) {
         if (!$person) {
             return null;
         }
         switch ($sub) {
             case 'person_schedule':
-                return $person->getSerializedSchedule($this->event->event_id, $field);
+                return $person->getSerializedSchedule($event->event_id, $field);
             case 'person':
                 return $person[$field];
             case 'person_info':

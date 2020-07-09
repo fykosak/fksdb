@@ -2,7 +2,9 @@
 
 namespace FKSDB\Components\Forms\Containers\Models;
 
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelEvent;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -11,15 +13,12 @@ use FKSDB\ORM\IModel;
  */
 interface IReferencedSetter {
 
-    const MODE_NORMAL = 'MODE_NORMAL';
-    const MODE_FORCE = 'MODE_FORCE';
-    const MODE_ROLLBACK = 'MODE_ROLLBACK';
-
     /**
      * @param ReferencedContainer $container
      * @param IModel|null $model
      * @param string $mode
+     * @param ModelEvent|null $event
      * @return void
      */
-    public function setModel(ReferencedContainer $container, IModel $model = null, string $mode = self::MODE_NORMAL);
+    public function setModel(ReferencedContainer $container, IModel $model = null, string $mode = ReferencedId::MODE_NORMAL,$event=null);
 }
