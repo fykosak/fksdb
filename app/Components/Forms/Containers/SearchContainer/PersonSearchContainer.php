@@ -20,7 +20,6 @@ class PersonSearchContainer extends SearchContainer {
     const SEARCH_ID = 'id';
     const SEARCH_NONE = 'none';
 
-
     /** @var PersonFactory */
     protected $personFactory;
     /** @var string */

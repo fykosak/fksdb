@@ -30,18 +30,11 @@ abstract class ReferencedContainer extends ContainerWithOptions {
     const CONTROL_COMPACT = '_c_compact';
     const SUBMIT_CLEAR = '__clear';
 
-    /**
-     * @var ReferencedId
-     */
+    /** @var ReferencedId */
     private $referencedId;
-
-    /**
-     * @var bool
-     */
+    /** @var bool */
     protected $allowClear = true;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $attachedJS = false;
 
     /**

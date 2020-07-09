@@ -5,16 +5,19 @@ namespace FKSDB\Components\Forms\Containers\Models;
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\AddressContainer;
+use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
+use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Services\ServicePerson;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
@@ -48,32 +51,17 @@ class ReferencedPersonContainer extends ReferencedContainer {
     public $acYear;
     /** @var array */
     private $fieldsDefinition;
-
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     protected $servicePerson;
-
-    /**
-     * @var SingleReflectionFormFactory
-     */
+    /** @var SingleReflectionFormFactory */
     protected $singleReflectionFormFactory;
-
-    /**
-     * @var FlagFactory
-     */
+    /**@var FlagFactory */
     protected $flagFactory;
-    /**
-     * @var AddressFactory
-     */
+    /** @var AddressFactory */
     protected $addressFactory;
-    /**
-     * @var PersonScheduleFactory
-     */
+    /** @var PersonScheduleFactory */
     private $personScheduleFactory;
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     protected $event;
     /** @var bool */
     private $configured = false;
@@ -189,9 +177,68 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @param IModel|ModelPerson|null $model
      * @param string $mode
      * @return void
+     * @throws JsonException
      */
     public function setModel(IModel $model = null, string $mode = ReferencedId::MODE_NORMAL) {
-        $this->getReferencedId()->referencedSetter->setModel($this, $model, $mode, $this->event);
+
+        $modifiable = $model ? $this->modifiabilityResolver->isModifiable($model) : true;
+        $resolution = $model ? $this->modifiabilityResolver->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
+        $visible = $model ? $this->visibilityResolver->isVisible($model) : true;
+        $submittedBySearch = $this->getReferencedId()->getSearchContainer()->isSearchSubmitted();
+        $force = ($mode === ReferencedId::MODE_FORCE);
+        if ($mode === ReferencedId::MODE_ROLLBACK) {
+            $model = null;
+        }
+        $this->getReferencedId()->getHandler()->setResolution($resolution);
+
+        $this->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model ? $model->getFullName() : null);
+        foreach ($this->getComponents() as $sub => $subContainer) {
+            if (!$subContainer instanceof \Nette\Forms\Container) {
+                continue;
+            }
+            /**
+             * @var string $fieldName
+             * @var BaseControl $component
+             * TODO type safe
+             */
+            foreach ($subContainer->getComponents() as $fieldName => $component) {
+                if (isset($this[ReferencedPersonHandler::POST_CONTACT_DELIVERY])) {
+                    $options = self::TARGET_FORM | self::HAS_DELIVERY;
+                } else {
+                    $options = self::TARGET_FORM;
+                }
+                $realValue = $this->getPersonValue($model, $sub, $fieldName, $options); // not extrapolated
+                $value = $this->getPersonValue($model, $sub, $fieldName, $options | self::EXTRAPOLATE);
+                $controlModifiable = ($realValue !== null) ? $modifiable : true;
+                $controlVisible = $this->isWriteOnly($component) ? $visible : true;
+
+                if (!$controlVisible && !$controlModifiable) {
+                    $this[$sub]->removeComponent($component);
+                } elseif (!$controlVisible && $controlModifiable) {
+                    $this->setWriteOnly($component, true);
+                    $component->setDisabled(false);
+                } elseif ($controlVisible && !$controlModifiable) {
+                    $component->setDisabled();
+                    $component->setValue($value);
+                } elseif ($controlVisible && $controlModifiable) {
+                    $this->setWriteOnly($component, false);
+                    $component->setDisabled(false);
+                }
+                if ($mode == ReferencedId::MODE_ROLLBACK) {
+                    $component->setDisabled(false);
+                    $this->setWriteOnly($component, false);
+                } else {
+                    if ($submittedBySearch || $force) {
+                        $component->setValue($value);
+                    } else {
+                        $component->setDefaultValue($value);
+                    }
+                    if ($realValue && $resolution == ReferencedPersonHandler::RESOLUTION_EXCEPTION) {
+                        $component->setDisabled(); // could not store different value anyway
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -278,5 +325,57 @@ class ReferencedPersonContainer extends ReferencedContainer {
                     }
             }
         }
+    }
+
+    /**
+     * @param IComponent $component
+     * @param bool $value
+     * @return void
+     */
+    protected function setWriteOnly(IComponent $component, bool $value) {
+        if ($component instanceof IWriteOnly) {
+            $component->setWriteOnly($value);
+        } elseif ($component instanceof IContainer) {
+            foreach ($component->getComponents() as $subComponent) {
+                $this->setWriteOnly($subComponent, $value);
+            }
+        }
+    }
+
+    protected function isWriteOnly(IComponent $component): bool {
+        if ($component instanceof IWriteOnly) {
+            return true;
+        } elseif ($component instanceof IContainer) {
+            foreach ($component->getComponents() as $subComponent) {
+                if ($this->isWriteOnly($subComponent)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @param ModelPerson $person
+     * @param string $sub
+     * @param string $field
+     * @return bool
+     * @throws JsonException
+     */
+    final public function isFilled(ModelPerson $person, string $sub, string $field): bool {
+        $value = $this->getPersonValue($person, $sub, $field, ReferencedPersonContainer::TARGET_VALIDATION);
+        return !($value === null || $value === '');
+    }
+
+    /**
+     * @param ModelPerson|null $person
+     * @param string $sub
+     * @param string $field
+     * @param int $options
+     * @return bool|ModelPostContact|mixed|null
+     * @throws JsonException
+     */
+    protected function getPersonValue($person, string $sub, string $field, $options) {
+        return ReferencedPersonFactory::getPersonValue($person, $sub, $field, $this->acYear, $options, $this->event);
     }
 }

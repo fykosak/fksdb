@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\SearchContainer;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
@@ -35,43 +34,20 @@ class ReferencedId extends HiddenField {
 
     const JSON_DATA = 'referencedContainer';
 
-    /**
-     * @var ReferencedContainer
-     */
+    /** @var ReferencedContainer */
     private $referencedContainer;
-
-    /**
-     * @var Promise
-     */
+    /** @var Promise */
     private $promise;
-
-    /**
-     * @var IService
-     */
+    /** @var IService */
     private $service;
-
-    /**
-     * @var IReferencedHandler
-     */
+    /** @var IReferencedHandler */
     private $handler;
-
     /** @var SearchContainer */
     private $searchContainer;
-    /**
-     * @var IReferencedSetter
-     */
-    public $referencedSetter;
-
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $modelCreated;
-
-    /**
-     * @var IModel
-     */
+    /** @var IModel */
     private $model;
-
     /** @var bool */
     private $attachedOnValidate = false;
     /** @var bool */
@@ -83,9 +59,8 @@ class ReferencedId extends HiddenField {
      * @param ReferencedContainer $referencedContainer
      * @param IService $service
      * @param IReferencedHandler $handler
-     * @param IReferencedSetter $referencedSetter
      */
-    public function __construct(SearchContainer $searchContainer, ReferencedContainer $referencedContainer, IService $service, IReferencedHandler $handler, IReferencedSetter $referencedSetter) {
+    public function __construct(SearchContainer $searchContainer, ReferencedContainer $referencedContainer, IService $service, IReferencedHandler $handler) {
         $this->referencedContainer = $referencedContainer;
         $this->getReferencedContainer()->setReferencedId($this);
         $this->searchContainer = $searchContainer;
@@ -93,7 +68,6 @@ class ReferencedId extends HiddenField {
 
         $this->service = $service;
         $this->handler = $handler;
-        $this->referencedSetter = $referencedSetter;
 
         parent::__construct();
 
