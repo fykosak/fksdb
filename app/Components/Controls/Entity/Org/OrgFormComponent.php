@@ -93,13 +93,7 @@ class OrgFormComponent extends AbstractEntityFormComponent implements IEditEntit
             $data['contest_id'] = $this->contest->contest_id;
         }
         try {
-            if ($this->create) {
-                $this->getORMService()->createNewModel($data);
-            } else {
-                $this->getORMService()->updateModel2($this->model, $data);
-            }
-            $this->getPresenter()->flashMessage($this->create ? _('Org has been created.') : _('Org has been updated.'), Message::LVL_SUCCESS);
-            $this->getPresenter()->redirect('list');
+            $this->create ? $this->handleCreateSuccess($data) : $this->handleEditSuccess($data);
         } catch (ModelException $exception) {
             Debugger::log($exception);
             $this->flashMessage(_('Error'), Message::LVL_DANGER);
@@ -114,6 +108,28 @@ class OrgFormComponent extends AbstractEntityFormComponent implements IEditEntit
     public function setModel(AbstractModelSingle $model) {
         $this->model = $model;
         $this->getForm()->setDefaults([self::CONTAINER => $model->toArray()]);
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     * @throws AbortException
+     */
+    protected function handleCreateSuccess(array $data) {
+        $this->getORMService()->createNewModel($data);
+        $this->getPresenter()->flashMessage(_('Org has been created'), Message::LVL_SUCCESS);
+        $this->getPresenter()->redirect('list');
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     * @throws AbortException
+     */
+    protected function handleEditSuccess(array $data) {
+        $this->getORMService()->updateModel2($this->model, $data);
+        $this->getPresenter()->flashMessage(_('Org has been updated'), Message::LVL_SUCCESS);
+        $this->getPresenter()->redirect('list');
     }
 
     protected function getORMService(): ServiceOrg {

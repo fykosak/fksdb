@@ -189,6 +189,31 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
     }
 
     /**
+     * @param array $data
+     * @return void
+     * @throws AbortException
+     */
+    protected function handleEditSuccess(array $data) {
+        $this->serviceEvent->updateModel2($this->model, $data);
+        $this->updateTokens($this->model);
+        $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $this->model->name), ILogger::SUCCESS);
+        $this->getPresenter()->redirect('list');
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     * @throws AbortException
+     */
+    protected function handleCreateSuccess(array $data) {
+        $data['year'] = $this->year;
+        $model = $this->serviceEvent->createNewModel($data);
+        $this->updateTokens($model);
+        $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), ILogger::SUCCESS);
+        $this->getPresenter()->redirect('list');
+    }
+
+    /**
      * @param Form $form
      * @return void
      * @throws AbortException
@@ -197,16 +222,7 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT], true);
         try {
-            if ($this->create) {
-                $data['year'] = $this->year;
-                $model = $this->serviceEvent->createNewModel($data);
-            } else {
-                $model = $this->model;
-                $this->serviceEvent->updateModel2($model, $data);
-            }
-            $this->updateTokens($model);
-            $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), ILogger::SUCCESS);
-            $this->getPresenter()->redirect('list');
+            $this->create ? $this->handleCreateSuccess($data) : $this->handleEditSuccess($data);
         } catch (ModelException $exception) {
             Debugger::log($exception);
             $this->flashMessage(_('Error'), Message::LVL_DANGER);
@@ -214,6 +230,7 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
     }
 
     /**
+     * @return ModelContainer
      * @throws AbstractColumnException
      * @throws OmittedControlException
      * @throws BadTypeException

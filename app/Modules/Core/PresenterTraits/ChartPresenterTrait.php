@@ -3,6 +3,7 @@
 namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Chart\IChart;
+use FKSDB\Exceptions\NotFoundException;
 use FKSDB\UI\PageTitle;
 use Nette\Application\UI\Control;
 

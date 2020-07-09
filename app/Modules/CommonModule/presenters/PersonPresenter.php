@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\CommonModule;
 
-use FKSDB\Components\Controls\Entity\Person\PersonForm;
+use FKSDB\Components\Controls\Entity\Person\PersonFormComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Person\PizzaControl;
 use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
@@ -350,7 +350,7 @@ class PersonPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      */
     protected function createComponentCreateForm(): Control {
-        return new PersonForm($this->getContext(), true, $this->getUserPermissions());
+        return new PersonFormComponent($this->getContext(), true, $this->getUserPermissions());
     }
 
     /**
@@ -358,7 +358,7 @@ class PersonPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): Control {
-        return new PersonForm($this->getContext(), false, $this->getUserPermissions());
+        return new PersonFormComponent($this->getContext(), false, $this->getUserPermissions());
     }
 
     protected function createComponentPizzaSelect(): PizzaControl {

@@ -88,13 +88,7 @@ class TeacherFormComponent extends AbstractEntityFormComponent implements IEditE
     protected function handleFormSuccess(Form $form) {
         $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
         try {
-            if ($this->create) {
-                $this->getORMService()->createNewModel($data);
-            } else {
-                $this->getORMService()->updateModel2($this->model, $data);
-            }
-            $this->getPresenter()->flashMessage($this->create ? _('Teacher has been created') : _('Teacher has been updated'), Message::LVL_SUCCESS);
-            $this->getPresenter()->redirect('list');
+            $this->create ? $this->handleCreateSuccess($data) : $this->handleEditSuccess($data);
         } catch (ModelException $exception) {
             Debugger::log($exception);
             $this->flashMessage(_('Error'), Message::LVL_DANGER);
@@ -109,6 +103,28 @@ class TeacherFormComponent extends AbstractEntityFormComponent implements IEditE
     public function setModel(AbstractModelSingle $model) {
         $this->model = $model;
         $this->getForm()->setDefaults([self::CONTAINER => $model->toArray()]);
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     * @throws AbortException
+     */
+    protected function handleCreateSuccess(array $data) {
+        $this->getORMService()->createNewModel($data);
+        $this->getPresenter()->flashMessage(_('Event org has been created'), Message::LVL_SUCCESS);
+        $this->getPresenter()->redirect('list');
+    }
+
+    /**
+     * @param array $data
+     * @return void
+     * @throws AbortException
+     */
+    protected function handleEditSuccess(array $data) {
+        $this->getORMService()->updateModel2($this->model, $data);
+        $this->getPresenter()->flashMessage(_('Event org has been updated'), Message::LVL_SUCCESS);
+        $this->getPresenter()->redirect('list');
     }
 
     protected function getORMService(): ServiceTeacher {
