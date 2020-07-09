@@ -5,7 +5,6 @@ namespace FKSDB\Components\Forms\Factories\ReferencedPerson;
 use Closure;
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\Components\DatabaseReflection\OmittedControlException;
-use FKSDB\Components\Forms\Containers\AddressContainer;
 use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
@@ -15,24 +14,19 @@ use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Components\Forms\Factories\AddressFactory;
-use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
-use FKSDB\ORM\Services\ServiceFlag;
 use FKSDB\ORM\Services\ServicePerson;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
-use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
@@ -71,10 +65,6 @@ class ReferencedPersonFactory implements IReferencedSetter {
      */
     protected $personFactory;
 
-    /**
-     * @var SingleReflectionFormFactory
-     */
-    protected $singleReflectionFormFactory;
 
     /**
      * @var ReferencedPersonHandlerFactory
@@ -86,19 +76,6 @@ class ReferencedPersonFactory implements IReferencedSetter {
      */
     protected $personProvider;
 
-    /**
-     * @var ServiceFlag
-     */
-    protected $serviceFlag;
-
-    /**
-     * @var FlagFactory
-     */
-    protected $flagFactory;
-    /**
-     * @var AddressFactory
-     */
-    protected $addressFactory;
     /**
      * @var PersonScheduleFactory
      */
@@ -112,37 +89,25 @@ class ReferencedPersonFactory implements IReferencedSetter {
 
     /**
      * AbstractReferencedPersonFactory constructor.
-     * @param AddressFactory $addressFactory
-     * @param FlagFactory $flagFactory
      * @param ServicePerson $servicePerson
      * @param PersonFactory $personFactory
      * @param ReferencedPersonHandlerFactory $referencedPersonHandlerFactory
      * @param PersonProvider $personProvider
-     * @param ServiceFlag $serviceFlag
-     * @param SingleReflectionFormFactory $singleReflectionFormFactory
      * @param PersonScheduleFactory $personScheduleFactory
      * @param \Nette\DI\Container $context
      */
     public function __construct(
-        AddressFactory $addressFactory,
-        FlagFactory $flagFactory,
         ServicePerson $servicePerson,
         PersonFactory $personFactory,
         ReferencedPersonHandlerFactory $referencedPersonHandlerFactory,
         PersonProvider $personProvider,
-        ServiceFlag $serviceFlag,
-        SingleReflectionFormFactory $singleReflectionFormFactory,
         PersonScheduleFactory $personScheduleFactory,
         \Nette\DI\Container $context
     ) {
-        $this->servicePerson = $servicePerson;
+       $this->servicePerson = $servicePerson;
         $this->personFactory = $personFactory;
         $this->referencedPersonHandlerFactory = $referencedPersonHandlerFactory;
         $this->personProvider = $personProvider;
-        $this->serviceFlag = $serviceFlag;
-        $this->singleReflectionFormFactory = $singleReflectionFormFactory;
-        $this->flagFactory = $flagFactory;
-        $this->addressFactory = $addressFactory;
         $this->personScheduleFactory = $personScheduleFactory;
         $this->context = $context;
     }
@@ -201,7 +166,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
                 $subContainer->setOption('label', $label);
             }
             foreach ($fields as $fieldName => $metadata) {
-                $control = $this->createField($sub, $fieldName, $acYear, $hiddenField, $metadata, $event);
+                $control = $container->createField($sub, $fieldName, $metadata);
                 $fullFieldName = "$sub.$fieldName";
                 if ($handler->isSecondaryKey($fullFieldName)) {
                     if ($fieldName != 'email') {
@@ -299,96 +264,6 @@ class ReferencedPersonFactory implements IReferencedSetter {
                         $component->setDisabled(); // could not store different value anyway
                     }
                 }
-            }
-        }
-    }
-
-    /**
-     * @param string $sub
-     * @param string $fieldName
-     * @param int $acYear
-     * @param HiddenField $hiddenField
-     * @param array $metadata
-     * @param ModelEvent|null $event
-     * @return IComponent|AddressContainer|BaseControl
-     * @throws AbstractColumnException
-     * @throws BadRequestException
-     * @throws BadTypeException
-     * @throws JsonException
-     * @throws NotImplementedException
-     * @throws OmittedControlException
-     */
-    public function createField(string $sub, string $fieldName, int $acYear, HiddenField $hiddenField, array $metadata, $event = null): IComponent {
-        if (in_array($sub, [
-            ReferencedPersonHandler::POST_CONTACT_DELIVERY,
-            ReferencedPersonHandler::POST_CONTACT_PERMANENT,
-        ])) {
-            if ($fieldName == 'address') {
-                $required = (bool)$metadata['required'] ?? false;
-                if ($required) {
-                    $options = AddressFactory::REQUIRED;
-                } else {
-                    $options = 0;
-                }
-                return $this->addressFactory->createAddress($options, $hiddenField);
-            } else {
-                throw new InvalidArgumentException("Only 'address' field is supported.");
-            }
-        } elseif ($sub == 'person_has_flag') {
-            return $this->flagFactory->createFlag($hiddenField, $metadata);
-        } else {
-            $control = null;
-            switch ($sub) {
-                case 'person_schedule':
-                    $control = $this->personScheduleFactory->createField($fieldName, $event);
-                    break;
-                case 'person':
-                case 'person_info':
-                    $control = $this->singleReflectionFormFactory->createField($sub, $fieldName);
-                    break;
-                case 'person_history':
-                    $control = $this->singleReflectionFormFactory->createField($sub, $fieldName, $acYear);
-                    break;
-                default:
-                    throw new InvalidArgumentException();
-
-            }
-            $this->appendMetadata($control, $hiddenField, $fieldName, $metadata);
-
-            return $control;
-        }
-    }
-
-    /**
-     * @param BaseControl $control
-     * @param HiddenField $hiddenField
-     * @param string $fieldName
-     * @param array $metadata
-     * @return void
-     */
-    protected function appendMetadata(BaseControl $control, HiddenField $hiddenField, string $fieldName, array $metadata) {
-        foreach ($metadata as $key => $value) {
-            switch ($key) {
-                case 'required':
-                    if ($value) {
-                        $conditioned = $control->addConditionOn($hiddenField, Form::FILLED);
-
-                        if ($fieldName == 'agreed') { // NOTE: this may need refactoring when more customization requirements occurre
-                            $conditioned->addRule(Form::FILLED, _('Bez souhlasu nelze bohužel pokračovat.'));
-                        } else {
-                            $conditioned->addRule(Form::FILLED, _('Pole %label je povinné.'));
-                        }
-                    }
-                    break;
-                case 'caption':
-                    if ($value) {
-                        $control->caption = $value;
-                    }
-                    break;
-                case 'description':
-                    if ($value) {
-                        $control->setOption('description', $value);
-                    }
             }
         }
     }
