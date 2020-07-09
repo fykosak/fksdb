@@ -118,11 +118,12 @@ class ReferencedPersonFactory {
      * @param string $sub
      * @param string $field
      * @param int $acYear
+     * @param null $event
      * @return bool
      * @throws JsonException
      */
-    final public function isFilled(ModelPerson $person, string $sub, string $field, int $acYear, $event = null): bool {
-        $value = $this->getPersonValue($person, $sub, $field, $acYear, ReferencedPersonContainer::TARGET_VALIDATION, $event);
+    final public static function isFilled(ModelPerson $person, string $sub, string $field, int $acYear, $event = null): bool {
+        $value = self::getPersonValue($person, $sub, $field, $acYear, ReferencedPersonContainer::TARGET_VALIDATION, $event);
         return !($value === null || $value === '');
     }
 
