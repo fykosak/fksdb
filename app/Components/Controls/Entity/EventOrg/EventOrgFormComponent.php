@@ -85,7 +85,13 @@ class EventOrgFormComponent extends AbstractEntityFormComponent implements IEdit
             $data['event_id'] = $this->event->event_id;
         }
         try {
-            $this->create ? $this->handleCreateSuccess($data) : $this->handleEditSuccess($data);
+            if ($this->create) {
+                $this->getORMService()->createNewModel($data);
+            } else {
+                $this->getORMService()->updateModel2($this->model, $data);
+            }
+            $this->getPresenter()->flashMessage($this->create ? _('Event org has been created') : _('Event org has been updated'), Message::LVL_SUCCESS);
+            $this->getPresenter()->redirect('list');
         } catch (ModelException $exception) {
             Debugger::log($exception);
             $this->flashMessage(_('Error'), Message::LVL_DANGER);
@@ -100,28 +106,6 @@ class EventOrgFormComponent extends AbstractEntityFormComponent implements IEdit
     public function setModel(AbstractModelSingle $model) {
         $this->model = $model;
         $this->getForm()->setDefaults([self::CONTAINER => $model->toArray()]);
-    }
-
-    /**
-     * @param array $data
-     * @return void
-     * @throws AbortException
-     */
-    protected function handleCreateSuccess(array $data) {
-        $this->getORMService()->createNewModel($data);
-        $this->getPresenter()->flashMessage(_('Event org has been created'), Message::LVL_SUCCESS);
-        $this->getPresenter()->redirect('list');
-    }
-
-    /**
-     * @param array $data
-     * @return void
-     * @throws AbortException
-     */
-    protected function handleEditSuccess(array $data) {
-        $this->getORMService()->updateModel2($this->model, $data);
-        $this->getPresenter()->flashMessage(_('Event org has been updated'), Message::LVL_SUCCESS);
-        $this->getPresenter()->redirect('list');
     }
 
     protected function getORMService(): ServiceEventOrg {
