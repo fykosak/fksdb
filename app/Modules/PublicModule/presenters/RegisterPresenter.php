@@ -32,6 +32,7 @@ use Persons\ExtendedPersonHandler;
 use Persons\ExtendedPersonHandlerFactory;
 use Persons\IExtendedPersonPresenter;
 use Persons\SelfResolver;
+
 /**
  * INPUT:
  *   contest (nullable)
@@ -311,7 +312,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
-        $component = $this->referencedPersonFactory->createReferencedPerson(
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson(
             $this->getFieldsDefinition(),
             $this->getSelectedAcademicYear(),
             ReferencedPersonFactory::SEARCH_NONE,
@@ -320,8 +321,8 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
             new SelfResolver($this->getUser())
         );
 
-        $container->addComponent($component->getReferencedId(), ExtendedPersonHandler::EL_PERSON);
-        $container->addComponent($component, ExtendedPersonHandler::CONT_PERSON);
+        $container->addComponent($referencedId, ExtendedPersonHandler::EL_PERSON);
+        $container->addComponent($referencedId->getReferencedContainer(), ExtendedPersonHandler::CONT_PERSON);
 
 
         /*

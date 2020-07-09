@@ -54,7 +54,7 @@ class EventsGrid extends BaseGrid {
         $this->serviceEvent = $serviceEvent;
     }
 
-    public function getData(): IDataSource {
+    protected function getData(): IDataSource {
         $events = $this->serviceEvent->getEvents($this->contest, $this->year);
         return new NDataSource($events);
     }

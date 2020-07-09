@@ -2,7 +2,7 @@
 
 namespace FKSDB\Events\Model\Holder;
 
-use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
@@ -464,9 +464,9 @@ class BaseHolder {
                 continue;
             }
             $component = $field->createFormComponent($machine, $container);
-            if ($component instanceof ReferencedContainer) {
-                $container->addComponent($component->getReferencedId(), $name);
-                $container->addComponent($component, $name . '_1');
+            if ($component instanceof ReferencedId) {
+                $container->addComponent($component, $name);
+                $container->addComponent($component->getReferencedContainer(), $name . '_1');
             } else {
                 $container->addComponent($component, $name);
             }

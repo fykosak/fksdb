@@ -33,7 +33,7 @@ class GroupsGrid extends BaseGrid {
         $this->event = $event;
     }
 
-    public function getModelClassName(): string {
+    protected function getModelClassName(): string {
         return ModelScheduleGroup::class;
     }
 

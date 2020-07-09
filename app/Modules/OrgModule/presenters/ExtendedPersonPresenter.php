@@ -124,7 +124,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
 
-        $component = $this->referencedPersonFactory->createReferencedPerson(
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson(
             $this->getFieldsDefinition(),
             $this->getAcYearFromModel() ?: $this->getSelectedAcademicYear(),
             ReferencedPersonFactory::SEARCH_ID,
@@ -132,11 +132,11 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
             new AclResolver($this->contestAuthorizator, $this->getSelectedContest()),
             new AclResolver($this->contestAuthorizator, $this->getSelectedContest())
         );
-        $component->getReferencedId()->addRule(Form::FILLED, _('Osobu je třeba zadat.'));
-        $component->setOption('label', _('Person'));
+        $referencedId->addRule(Form::FILLED, _('Osobu je třeba zadat.'));
+        $referencedId->getReferencedContainer()->setOption('label', _('Person'));
 
-        $container->addComponent($component->getReferencedId(), ExtendedPersonHandler::EL_PERSON);
-        $container->addComponent($component, ExtendedPersonHandler::CONT_PERSON);
+        $container->addComponent($referencedId, ExtendedPersonHandler::EL_PERSON);
+        $container->addComponent($referencedId->getReferencedContainer(), ExtendedPersonHandler::CONT_PERSON);
 
         $this->appendExtendedContainer($form);
 

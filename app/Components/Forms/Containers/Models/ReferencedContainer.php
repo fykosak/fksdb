@@ -74,9 +74,8 @@ class ReferencedContainer extends ContainerWithOptions {
 
     /**
      * ReferencedContainer constructor.
-     * @param ReferencedId $referencedId
      */
-    public function __construct(ReferencedId $referencedId) {
+    public function __construct() {
         parent::__construct();
         $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
             if (!$this->attachedJS) {
@@ -88,14 +87,20 @@ class ReferencedContainer extends ContainerWithOptions {
             $this->attachedJS = false;
             $collector->unregisterJSFile('js/referencedContainer.js');
         });
-        $this->referencedId = $referencedId;
         $this->createClearButton();
         $this->createCompactValue();
-        $this->referencedId->setReferencedContainer($this);
     }
 
     public function getReferencedId(): ReferencedId {
         return $this->referencedId;
+    }
+
+    /**
+     * @param ReferencedId $referencedId
+     * @return void
+     */
+    public function setReferencedId(ReferencedId $referencedId) {
+        $this->referencedId = $referencedId;
     }
 
     /**

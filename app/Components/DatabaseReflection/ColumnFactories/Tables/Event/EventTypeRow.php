@@ -58,7 +58,7 @@ class EventTypeRow extends AbstractColumnFactory {
      * @param AbstractModelSingle|ModelEvent $model
      * @return Html
      */
-    public function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
         return Html::el('span')->addText($model->getEventType()->name);
     }
 

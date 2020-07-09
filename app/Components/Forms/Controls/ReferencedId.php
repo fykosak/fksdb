@@ -13,7 +13,6 @@ use FKSDB\Utils\Promise;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
-use Tracy\Debugger;
 
 /**
  * Be careful when calling getValue as it executes SQL queries and thus
@@ -65,11 +64,14 @@ class ReferencedId extends HiddenField {
 
     /**
      * ReferencedId constructor.
+     * @param ReferencedContainer $container
      * @param IService $service
      * @param IReferencedHandler $handler
      * @param IReferencedSetter $referencedSetter
      */
-    public function __construct(IService $service, IReferencedHandler $handler, IReferencedSetter $referencedSetter) {
+    public function __construct(ReferencedContainer $container, IService $service, IReferencedHandler $handler, IReferencedSetter $referencedSetter) {
+        $this->referencedContainer = $container;
+        $container->setReferencedId($this);
         $this->service = $service;
         $this->handler = $handler;
         $this->referencedSetter = $referencedSetter;
@@ -86,14 +88,6 @@ class ReferencedId extends HiddenField {
 
     public function getReferencedContainer(): ReferencedContainer {
         return $this->referencedContainer;
-    }
-
-    /**
-     * @param ReferencedContainer $referencedContainer
-     * @return void
-     */
-    public function setReferencedContainer(ReferencedContainer $referencedContainer) {
-        $this->referencedContainer = $referencedContainer;
     }
 
     /**
@@ -154,33 +148,27 @@ class ReferencedId extends HiddenField {
      */
     public function setValue($pValue, bool $force = false) {
 
-        $isPromise = ($pValue === self::VALUE_PROMISE);
-        if (!($pValue instanceof IModel) && !$isPromise) {
-            $pValue = $this->service->findByPrimary($pValue);
-        } elseif ($isPromise) {
-            $pValue = $this->service->createNew();
-        } elseif ($pValue instanceof IModel) {
-            $this->model = $pValue;
-        }
-        if ($this->referencedContainer) {
-            if (!$pValue) {
-                $this->referencedContainer->setSearchButton(true);
-                $this->referencedContainer->setClearButton(false);
-            } else {
-                $this->referencedContainer->setSearchButton(false);
-                $this->referencedContainer->setClearButton(true);
-            }
-            $this->referencedSetter->setModel($this->referencedContainer, $pValue, $force ? IReferencedSetter::MODE_FORCE : IReferencedSetter::MODE_NORMAL);
+        if ($pValue instanceof IModel) {
+            $personModel = $this->model = $pValue;
+        } elseif ($pValue === self::VALUE_PROMISE) {
+            $personModel = $this->service->createNew();
+        } else {
+            $personModel = $this->service->findByPrimary($pValue);
         }
 
-        if ($isPromise) {
-            $value = self::VALUE_PROMISE;
-        } elseif ($pValue instanceof IModel) {
-            $value = $pValue->getPrimary();
+        if (!$personModel) {
+            $this->referencedContainer->setSearchButton(true);
+            $this->referencedContainer->setClearButton(false);
         } else {
-            $value = $pValue;
+            $this->referencedContainer->setSearchButton(false);
+            $this->referencedContainer->setClearButton(true);
         }
-        return parent::setValue($value);
+        $this->referencedSetter->setModel($this->referencedContainer, $personModel, $force ? IReferencedSetter::MODE_FORCE : IReferencedSetter::MODE_NORMAL);
+
+        if ($pValue instanceof IModel) {
+            $pValue = $personModel->getPrimary();
+        }
+        return parent::setValue($pValue);
     }
 
     /**

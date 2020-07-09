@@ -50,7 +50,7 @@ abstract class BasePresenter extends ContestPresenter {
     /**
      * @return string[]
      */
-    public function getNavRoots(): array {
+    protected function getNavRoots(): array {
         return ['Public.Dashboard.default'];
     }
 }

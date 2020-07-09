@@ -156,7 +156,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @param bool $allowClear
      * @param IModifiabilityResolver $modifiabilityResolver
      * @param IVisibilityResolver $visibilityResolver
-     * @return ReferencedContainer
+     * @return ReferencedId
      * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws JsonException
@@ -164,12 +164,12 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @throws OmittedControlException
      * @throws BadRequestException
      */
-    public function createReferencedPerson(array $fieldsDefinition, int $acYear, string $searchType, bool $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver) {
+    public function createReferencedPerson(array $fieldsDefinition, int $acYear, string $searchType, bool $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver): ReferencedId {
         $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $this->event ?? null);
 
-        $hiddenField = new ReferencedId($this->servicePerson, $handler, $this);
+        $container = new ReferencedContainer();
+        $referencedId = new ReferencedId($container, $this->servicePerson, $handler, $this);
 
-        $container = new ReferencedContainer($hiddenField);
         if ($searchType == self::SEARCH_NONE) {
             $container->setSearch();
         } else {
@@ -195,23 +195,23 @@ class ReferencedPersonFactory implements IReferencedSetter {
                 $subContainer->setOption('label', $label);
             }
             foreach ($fields as $fieldName => $metadata) {
-                $control = $this->createField($sub, $fieldName, $acYear, $hiddenField, $metadata);
+                $control = $this->createField($sub, $fieldName, $acYear, $referencedId, $metadata);
                 $fullFieldName = "$sub.$fieldName";
                 if ($handler->isSecondaryKey($fullFieldName)) {
                     if ($fieldName != 'email') {
                         throw new InvalidStateException("Should define uniqueness validator for field $sub.$fieldName.");
                     }
 
-                    $control->addCondition(function () use ($hiddenField) { // we use this workaround not to call getValue inside validation out of transaction
-                        $personId = $hiddenField->getValue(false);
+                    $control->addCondition(function () use ($referencedId) { // we use this workaround not to call getValue inside validation out of transaction
+                        $personId = $referencedId->getValue(false);
                         return $personId && $personId != ReferencedId::VALUE_PROMISE;
                     })
-                        ->addRule(function (BaseControl $control) use ($fullFieldName, $hiddenField, $handler) {
-                            $personId = $hiddenField->getValue(false);
+                        ->addRule(function (BaseControl $control) use ($fullFieldName, $referencedId, $handler) {
+                            $personId = $referencedId->getValue(false);
 
                             $foundPerson = $handler->findBySecondaryKey($fullFieldName, $control->getValue());
                             if ($foundPerson && $foundPerson->getPrimary() != $personId) {
-                                $hiddenField->setValue($foundPerson, IReferencedSetter::MODE_FORCE);
+                                $referencedId->setValue($foundPerson, IReferencedSetter::MODE_FORCE);
                                 return false;
                             }
                             return true;
@@ -222,9 +222,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
             }
             $container->addComponent($subContainer, $sub);
         }
-
-        return $container;
-
+        return $referencedId;
     }
 
 
