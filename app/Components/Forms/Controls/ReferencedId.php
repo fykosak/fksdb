@@ -2,14 +2,19 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
+use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
+use FKSDB\Components\Forms\Containers\SearchContainer\SearchContainer;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\Utils\Promise;
+use Nette\Application\UI\Control;
+use Nette\Application\UI\Presenter;
+use Nette\ComponentModel\IContainer;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
@@ -23,6 +28,8 @@ use Nette\Forms\Form;
 class ReferencedId extends HiddenField {
 
     const VALUE_PROMISE = '__promise';
+
+    const JSON_DATA = 'referencedContainer';
 
     /**
      * @var ReferencedContainer
@@ -61,14 +68,22 @@ class ReferencedId extends HiddenField {
 
     /** @var bool */
     private $attachedOnValidate = false;
+    /** @var SearchContainer */
+    private $searchContainer;
+    /** @var bool */
+    private $attachedSearch = false;
 
     /**
      * ReferencedId constructor.
+     * @param SearchContainer $searchContainer
      * @param IService $service
      * @param IReferencedHandler $handler
      * @param IReferencedSetter $referencedSetter
      */
-    public function __construct(IService $service, IReferencedHandler $handler, IReferencedSetter $referencedSetter) {
+    public function __construct(SearchContainer $searchContainer, IService $service, IReferencedHandler $handler, IReferencedSetter $referencedSetter) {
+        $this->searchContainer = $searchContainer;
+        $this->getSearchContainer()->setReferencedId($this);
+
         $this->service = $service;
         $this->handler = $handler;
         $this->referencedSetter = $referencedSetter;
@@ -81,10 +96,21 @@ class ReferencedId extends HiddenField {
                 $this->attachedOnValidate = true;
             }
         });
+        $this->monitor(IContainer::class, function (IContainer $container) {
+            if (!$this->attachedSearch) {
+                // $container->addComponent($this->getReferencedContainer(), $this->getName() . '_1');
+                $container->addComponent($this->getSearchContainer(), $this->getName() . '_2');
+                $this->attachedSearch = true;
+            }
+        });
     }
 
     public function getReferencedContainer(): ReferencedContainer {
         return $this->referencedContainer;
+    }
+
+    public function getSearchContainer(): SearchContainer {
+        return $this->searchContainer;
     }
 
     /**
@@ -163,10 +189,8 @@ class ReferencedId extends HiddenField {
         }
         if ($this->referencedContainer) {
             if (!$pValue) {
-                $this->referencedContainer->setSearchButton(true);
                 $this->referencedContainer->setClearButton(false);
             } else {
-                $this->referencedContainer->setSearchButton(false);
                 $this->referencedContainer->setClearButton(true);
             }
             $this->referencedSetter->setModel($this->referencedContainer, $pValue, $force ? IReferencedSetter::MODE_FORCE : IReferencedSetter::MODE_NORMAL);
@@ -179,6 +203,7 @@ class ReferencedId extends HiddenField {
         } else {
             $value = $pValue;
         }
+        $this->getSearchContainer()->setOption('visible', !$pValue);
         return parent::setValue($value);
     }
 
@@ -252,5 +277,23 @@ class ReferencedId extends HiddenField {
         $referencedId = $this->getValue();
         $this->setValue($referencedId);
         $this->setPromise($promise);
+    }
+
+    public function invalidateFormGroup() {
+        $form = $this->getForm();
+        /** @var Presenter $presenter */
+        $presenter = $form->lookup(Presenter::class);
+        if ($presenter->isAjax()) {
+            /** @var Control $control */
+            $control = $form->getParent();
+            $control->redrawControl(FormControl::SNIPPET_MAIN);
+            $control->getTemplate()->mainContainer = $this->parent;
+            $control->getTemplate()->level = 2;
+            $payload = $presenter->getPayload();
+            $payload->{self::JSON_DATA} = (object)[
+                'id' => $this->getHtmlId(),
+                'value' => $this->getValue(),
+            ];
+        }
     }
 }

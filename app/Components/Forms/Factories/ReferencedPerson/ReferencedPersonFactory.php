@@ -10,6 +10,7 @@ use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\Models\IReferencedSetter;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
+use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -106,6 +107,8 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @var ModelEvent
      */
     private $event;
+    /** @var \Nette\DI\Container */
+    private $context;
 
     /**
      * AbstractReferencedPersonFactory constructor.
@@ -128,7 +131,8 @@ class ReferencedPersonFactory implements IReferencedSetter {
         PersonProvider $personProvider,
         ServiceFlag $serviceFlag,
         SingleReflectionFormFactory $singleReflectionFormFactory,
-        PersonScheduleFactory $personScheduleFactory
+        PersonScheduleFactory $personScheduleFactory,
+        \Nette\DI\Container $context
     ) {
         $this->servicePerson = $servicePerson;
         $this->personFactory = $personFactory;
@@ -139,6 +143,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
         $this->flagFactory = $flagFactory;
         $this->addressFactory = $addressFactory;
         $this->personScheduleFactory = $personScheduleFactory;
+        $this->context = $context;
     }
 
     /**
@@ -167,14 +172,13 @@ class ReferencedPersonFactory implements IReferencedSetter {
     public function createReferencedPerson(array $fieldsDefinition, int $acYear, string $searchType, bool $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver) {
         $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $this->event ?? null);
 
-        $hiddenField = new ReferencedId($this->servicePerson, $handler, $this);
+        $hiddenField = new ReferencedId(
+            new PersonSearchContainer($this->context, $searchType),
+            $this->servicePerson,
+            $handler,
+            $this);
 
         $container = new ReferencedContainer($hiddenField);
-        if ($searchType == self::SEARCH_NONE) {
-            $container->setSearch();
-        } else {
-            $container->setSearch($this->createSearchControl($searchType), $this->createSearchCallback($searchType), $this->createTermToValuesCallback($searchType));
-        }
 
         $container->setAllowClear($allowClear);
         $container->setOption('acYear', $acYear);
@@ -240,7 +244,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
         $modifiable = $model ? $container->modifiabilityResolver->isModifiable($model) : true;
         $resolution = $model ? $container->modifiabilityResolver->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
         $visible = $model ? $container->visibilityResolver->isVisible($model) : true;
-        $submittedBySearch = $container->isSearchSubmitted();
+        $submittedBySearch = $container->getReferencedId()->getSearchContainer()->isSearchSubmitted();
         $force = ($mode === self::MODE_FORCE);
         if ($mode === self::MODE_ROLLBACK) {
             $model = null;
