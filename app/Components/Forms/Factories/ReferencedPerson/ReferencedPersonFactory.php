@@ -183,7 +183,6 @@ class ReferencedPersonFactory implements IReferencedSetter {
         /** @var ReferencedPersonContainer $container */
         $container = $hiddenField->getReferencedContainer();
 
-        $container->setAllowClear($allowClear);
         $container->setOption('acYear', $acYear);
         $container->modifiabilityResolver = $modifiabilityResolver;
         $container->visibilityResolver = $visibilityResolver;
@@ -244,7 +243,6 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @throws JsonException
      */
     public function setModel(ReferencedContainer $container, IModel $model = null, string $mode = ReferencedId::MODE_NORMAL, $event = null) {
-        $acYear = $container->getOption('acYear');
         $modifiable = $model ? $container->modifiabilityResolver->isModifiable($model) : true;
         $resolution = $model ? $container->modifiabilityResolver->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
         $visible = $model ? $container->visibilityResolver->isVisible($model) : true;
@@ -271,8 +269,8 @@ class ReferencedPersonFactory implements IReferencedSetter {
                 } else {
                     $options = self::TARGET_FORM;
                 }
-                $realValue = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options, $event); // not extrapolated
-                $value = $this->getPersonValue($model, $sub, $fieldName, $acYear, $options | self::EXTRAPOLATE, $event);
+                $realValue = $this->getPersonValue($model, $sub, $fieldName, $container->acYear, $options, $event); // not extrapolated
+                $value = $this->getPersonValue($model, $sub, $fieldName, $container->acYear, $options | self::EXTRAPOLATE, $event);
                 $controlModifiable = ($realValue !== null) ? $modifiable : true;
                 $controlVisible = $this->isWriteOnly($component) ? $visible : true;
 

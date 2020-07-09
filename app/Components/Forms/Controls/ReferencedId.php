@@ -55,6 +55,8 @@ class ReferencedId extends HiddenField {
      */
     private $handler;
 
+    /** @var SearchContainer */
+    private $searchContainer;
     /**
      * @var IReferencedSetter
      */
@@ -72,8 +74,6 @@ class ReferencedId extends HiddenField {
 
     /** @var bool */
     private $attachedOnValidate = false;
-    /** @var SearchContainer */
-    private $searchContainer;
     /** @var bool */
     private $attachedSearch = false;
 
@@ -212,7 +212,7 @@ class ReferencedId extends HiddenField {
 
     public function rollback() {
         if ($this->getModelCreated()) {
-            $this->referencedSetter->setModel($this->referencedContainer, null, ReferencedId::MODE_ROLLBACK);
+            $this->setModel(null, self::MODE_ROLLBACK);
             if (parent::getValue()) {
                 parent::setValue(self::VALUE_PROMISE);
             }

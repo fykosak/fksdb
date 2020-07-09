@@ -46,7 +46,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
     /** @var IVisibilityResolver */
     public $visibilityResolver;
     /** @var int */
-    private $acYear;
+    public $acYear;
     /** @var array */
     private $fieldsDefinition;
 
