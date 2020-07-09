@@ -4,11 +4,7 @@ namespace FKSDB\Tests\ModelTests\Person;
 
 $container = require '../../bootstrap.php';
 
-use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
@@ -18,10 +14,8 @@ use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;
-use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Nette\Utils\JsonException;
 use Persons\ExtendedPersonHandler;
 use Persons\ExtendedPersonHandlerFactory;
 use Persons\IExtendedPersonPresenter;
@@ -175,17 +169,6 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         Assert::notEqual(null, $address->region_id);
     }
 
-    /**
-     * @param array $fieldsDefinition
-     * @param int $acYear
-     * @return Form
-     * @throws AbstractColumnException
-     * @throws OmittedControlException
-     * @throws BadTypeException
-     * @throws NotImplementedException
-     * @throws BadRequestException
-     * @throws JsonException
-     */
     private function createForm(array $fieldsDefinition, int $acYear): Form {
         $form = new Form();
         $container = new ContainerWithOptions();
