@@ -3,34 +3,35 @@
 namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKSDB\Application\IJavaScriptCollector;
-use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use Nette\Application\UI\Control;
-use Nette\Application\UI\Presenter;
-use Nette\ComponentModel\Component;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\ORM\IModel;
+use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\InvalidStateException;
 use Nette\Utils\ArrayHash;
+use Nette\Utils\JsonException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class ReferencedContainer extends ContainerWithOptions {
+abstract class ReferencedContainer extends ContainerWithOptions {
+
+    const MODE_NORMAL = 'MODE_NORMAL';
+    const MODE_FORCE = 'MODE_FORCE';
+    const MODE_ROLLBACK = 'MODE_ROLLBACK';
 
     const ID_MASK = 'frm%s-%s';
     const CSS_AJAX = 'ajax';
-    const JSON_DATA = 'referencedContainer';
     const CONTROL_COMPACT = '_c_compact';
     const SUBMIT_CLEAR = '__clear';
-
-    /**
-     * @var Component[]
-     */
-    private $hiddenComponents = [];
 
     /**
      * @var ReferencedId
@@ -40,7 +41,7 @@ class ReferencedContainer extends ContainerWithOptions {
     /**
      * @var bool
      */
-    private $allowClear = true;
+    protected $allowClear = true;
     /**
      * @var bool
      */
@@ -50,6 +51,12 @@ class ReferencedContainer extends ContainerWithOptions {
      * ReferencedContainer constructor.
      * @param \Nette\DI\Container $container
      * @param bool $allowClear
+     * @throws AbstractColumnException
+     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws JsonException
+     * @throws NotImplementedException
+     * @throws OmittedControlException
      */
     public function __construct(\Nette\DI\Container $container, bool $allowClear) {
         parent::__construct($container);
@@ -65,7 +72,9 @@ class ReferencedContainer extends ContainerWithOptions {
         });
         $this->createClearButton();
         $this->createCompactValue();
+
         $this->setAllowClear($allowClear);
+        $this->configure();
     }
 
     public function getReferencedId(): ReferencedId {
@@ -129,58 +138,20 @@ class ReferencedContainer extends ContainerWithOptions {
         }
     }
 
-    /**
-     * Toggles button used for clearing the element.
-     *
-     * @param bool $value
-     */
-    public function setClearButton($value) {
-        if (!$this->getAllowClear()) {
-            $value = false;
-        }
-        if ($value) {
-            $component = $this->hiddenComponents[self::SUBMIT_CLEAR] ?? null;
-            if ($component) {
-                $this->showComponent(self::SUBMIT_CLEAR, $component);
-            }
-        } else {
-            $component = $this->getComponent(self::SUBMIT_CLEAR, false);
-            if ($component) {
-                $this->hideComponent(self::SUBMIT_CLEAR, $component);
-            }
-        }
-    }
-
     private function createClearButton() {
         $submit = $this->addSubmit(self::SUBMIT_CLEAR, 'X')
             ->setValidationScope(false);
         $submit->getControlPrototype()->class[] = self::CSS_AJAX;
         $submit->onClick[] = function () {
-            $this->referencedId->setValue(null);
-            $this->invalidateFormGroup();
+            if ($this->allowClear) {
+                $this->referencedId->setValue(null);
+                $this->referencedId->invalidateFormGroup();
+            }
         };
     }
 
     private function createCompactValue() {
         $this->addHidden(self::CONTROL_COMPACT);
-    }
-
-    private function invalidateFormGroup() {
-        $form = $this->getForm();
-        /** @var Presenter $presenter */
-        $presenter = $form->lookup(Presenter::class);
-        if ($presenter->isAjax()) {
-            /** @var Control $control */
-            $control = $form->getParent();
-            $control->redrawControl(FormControl::SNIPPET_MAIN);
-            $control->getTemplate()->mainContainer = $this;
-            $control->getTemplate()->level = 2; //TODO should depend on lookup path
-            $payload = $presenter->getPayload();
-            $payload->{self::JSON_DATA} = (object)[
-                'id' => $this->referencedId->getHtmlId(),
-                'value' => $this->referencedId->getValue(),
-            ];
-        }
     }
 
     /**
@@ -194,41 +165,20 @@ class ReferencedContainer extends ContainerWithOptions {
     }
 
     /**
-     * @param string $name
-     * @param ContainerWithOptions $component
+     * @return void
+     * @throws AbstractColumnException
+     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws JsonException
+     * @throws NotImplementedException
+     * @throws OmittedControlException
      */
-    private function hideComponent($name, $component) {
-        $component->setOption('visible', false);
-        if ($name) {
-            $this->hiddenComponents[$name] = $component;
-        }
-        if ($component instanceof BaseControl) {
-            //$component->setOption('wasDisabled', $component->isDisabled());
-            $component->setDisabled(true);
-        } elseif ($component instanceof Container) {
-            foreach ($component->getComponents() as $subComponent) {
-                $this->hideComponent(null, $subComponent);
-            }
-        }
-    }
+    abstract protected function configure();
 
     /**
-     * @param string $name
-     * @param ContainerWithOptions|IComponent $component
+     * @param IModel|null $model
+     * @param string $mode
+     * @return void
      */
-    private function showComponent($name, $component) {
-        $component->setOption('visible', true);
-        if ($name) {
-            unset($this->hiddenComponents[$name]);
-        }
-        if ($component instanceof BaseControl) {
-            //$component->setDisabled($component->getOption('wasDisabled', $component->isDisabled()));
-            $component->setDisabled(false);
-        } elseif ($component instanceof Container) {
-            foreach ($component->getComponents() as $subComponent) {
-                $this->showComponent(null, $subComponent);
-            }
-        }
-    }
-
+    abstract public function setModel(IModel $model = null, string $mode = self::MODE_NORMAL);
 }
