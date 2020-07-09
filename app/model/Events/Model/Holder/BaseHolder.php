@@ -3,6 +3,7 @@
 namespace FKSDB\Events\Model\Holder;
 
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
@@ -464,9 +465,9 @@ class BaseHolder {
                 continue;
             }
             $component = $field->createFormComponent($machine, $container);
-            if ($component instanceof ReferencedContainer) {
-                $container->addComponent($component->getReferencedId(), $name);
-                $container->addComponent($component, $name . '_1');
+            if ($component instanceof ReferencedId) {
+                $container->addComponent($component, $name);
+                $container->addComponent($component->getReferencedContainer(), $name . '_1');
             } else {
                 $container->addComponent($component, $name);
             }
@@ -477,7 +478,7 @@ class BaseHolder {
     /**
      * @return int|null  ID of a person associated with the application
      */
-    public    function getPersonId() {
+    public function getPersonId() {
         $personColumns = $this->getPersonIds();
         if (!$personColumns) {
             return null;
@@ -491,7 +492,7 @@ class BaseHolder {
     /**
      * @return string
      */
-    public    function __toString() {
+    public function __toString() {
         return $this->name;
     }
 
@@ -501,7 +502,7 @@ class BaseHolder {
     /**
      * @throws NeonSchemaException
      */
-    private    function cacheParameters() {
+    private function cacheParameters() {
         $parameters = isset($this->getEvent()->parameters) ? $this->getEvent()->parameters : '';
         $parameters = $parameters ? Neon::decode($parameters) : [];
         $this->parameters = NeonScheme::readSection($parameters, $this->getParamScheme());
@@ -512,7 +513,7 @@ class BaseHolder {
      * @param null $default
      * @return mixed
      */
-    public    function getParameter($name, $default = null) {
+    public function getParameter($name, $default = null) {
         try {
             return $this->parameters[$name] ?? $default;
         } catch (InvalidArgumentException $exception) {

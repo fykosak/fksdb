@@ -321,8 +321,8 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
             new SelfResolver($this->getUser())
         );
 
-        $container->addComponent($component->getReferencedId(), ExtendedPersonHandler::EL_PERSON);
-        $container->addComponent($component, ExtendedPersonHandler::CONT_PERSON);
+        $container->addComponent($component, ExtendedPersonHandler::EL_PERSON);
+        $container->addComponent($component->getReferencedContainer(), ExtendedPersonHandler::CONT_PERSON);
 
 
         /*

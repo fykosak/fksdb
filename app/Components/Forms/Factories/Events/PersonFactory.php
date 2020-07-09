@@ -4,7 +4,7 @@ namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\Components\DatabaseReflection\OmittedControlException;
-use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Events\EventsExtension;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\ExpressionEvaluator;
@@ -137,13 +137,13 @@ class PersonFactory extends AbstractFactory {
         $visibleResolver = new PersonContainerResolver($field, $this->visible, $this->selfResolver, $this->evaluator);
         $fieldsDefinition = $this->evaluateFieldsDefinition($field);
         $component = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition,  $event->getAcYear(), $searchType, $allowClear, $modifiableResolver, $visibleResolver,$event);
-        $component->setOption('label', $field->getLabel());
-        $component->setOption('description', $field->getDescription());
+        $component->getReferencedContainer()->setOption('label', $field->getLabel());
+        $component->getReferencedContainer()->setOption('description', $field->getDescription());
         return $component;
     }
 
     /**
-     * @param ReferencedContainer|IComponent $component
+     * @param ReferencedId|IComponent $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
@@ -158,26 +158,26 @@ class PersonFactory extends AbstractFactory {
             }
         }
 
-        $component->getReferencedId()->setDefaultValue($default);
+        $component->setDefaultValue($default);
     }
 
     /**
-     * @param ReferencedContainer|IComponent $component
+     * @param ReferencedId|IComponent $component
      * @param Field $field
      * @param BaseMachine $machine
      * @param Container $container
      * @return void
      */
     protected function setDisabled(IComponent $component, Field $field, BaseMachine $machine, Container $container) {
-        $component->getReferencedId()->setDisabled();
+        $component->setDisabled();
     }
 
     /**
-     * @param ReferencedContainer|IComponent $component
+     * @param ReferencedId|IComponent $component
      * @return Component|IControl
      */
     public function getMainControl(IComponent $component): IControl {
-        return $component->getReferencedId();
+        return $component;
     }
 
     /**

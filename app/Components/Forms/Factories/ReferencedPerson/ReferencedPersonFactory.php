@@ -155,7 +155,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @param IModifiabilityResolver $modifiabilityResolver
      * @param IVisibilityResolver $visibilityResolver
      * @param ModelEvent|null $event
-     * @return ReferencedContainer
+     * @return ReferencedId
      * @throws AbstractColumnException
      * @throws BadRequestException
      * @throws BadTypeException
@@ -163,7 +163,14 @@ class ReferencedPersonFactory implements IReferencedSetter {
      * @throws NotImplementedException
      * @throws OmittedControlException
      */
-    public function createReferencedPerson(array $fieldsDefinition, int $acYear, string $searchType, bool $allowClear, IModifiabilityResolver $modifiabilityResolver, IVisibilityResolver $visibilityResolver, $event = null) {
+    public function createReferencedPerson(
+        array $fieldsDefinition,
+        int $acYear,
+        string $searchType,
+        bool $allowClear,
+        IModifiabilityResolver $modifiabilityResolver,
+        IVisibilityResolver $visibilityResolver,
+        $event = null): ReferencedId {
         $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $event ?? null);
 
         $hiddenField = new ReferencedId(
@@ -223,7 +230,7 @@ class ReferencedPersonFactory implements IReferencedSetter {
             $container->addComponent($subContainer, $sub);
         }
 
-        return $container;
+        return $hiddenField;
 
     }
 
