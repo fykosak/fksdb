@@ -18,7 +18,7 @@ class PrimaryKeyColumnFactory extends DefaultColumnFactory {
         return (new StringPrinter())('#' . $model->getPrimary());
     }
 
-    public function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         throw new OmittedControlException();
     }
 }

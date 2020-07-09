@@ -15,7 +15,8 @@ use Nette\Utils\Json;
 use Nette\Utils\JsonException;
 
 /**
- * Class Routing
+ * Class RoutingEdit
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class RoutingEdit extends FyziklaniReactControl {
     /**
@@ -84,7 +85,7 @@ class RoutingEdit extends FyziklaniReactControl {
         $response = new ReactResponse();
         $response->setAct('update-teams');
         $response->setData(['updatedTeams' => $updatedTeams]);
-        $response->addMessage(new Message(_('Zmeny boli uložené'), Message::LVL_SUCCESS));
+        $response->addMessage(new Message(_('Routing has been saved'), Message::LVL_SUCCESS));
         $this->getPresenter()->sendResponse($response);
     }
 

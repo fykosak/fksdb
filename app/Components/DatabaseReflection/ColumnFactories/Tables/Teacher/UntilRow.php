@@ -25,17 +25,13 @@ class UntilRow extends AbstractColumnFactory {
         if ($model->until === null) {
             return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Still teaches'));
         }
-        return (new DatePrinter(_('__date_format')))($model->until);
+        return (new DatePrinter(_('__date')))($model->until);
     }
 
     public function getTitle(): string {
         return _('Teaches until');
     }
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     */
     public function createField(...$args): BaseControl {
         return new DateInput($this->getTitle());
     }

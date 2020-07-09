@@ -38,11 +38,11 @@ class Link extends AbstractLink {
         return _($this->title);
     }
 
-    public function getDestination(AbstractModelSingle $model): string {
+    protected function getDestination(AbstractModelSingle $model): string {
         return $this->destination;
     }
 
-    public function prepareParams(AbstractModelSingle $model): array {
+    protected function prepareParams(AbstractModelSingle $model): array {
         $urlParams = [];
         foreach ($this->params as $key => $accessKey) {
             $urlParams[$key] = $model->{$accessKey};

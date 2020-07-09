@@ -18,7 +18,7 @@ class TextColumnFactory extends DefaultColumnFactory {
         return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }
 
-    public function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         $control = new TextArea(_($this->getTitle()));
         $description = $this->getDescription();
         if ($description) {

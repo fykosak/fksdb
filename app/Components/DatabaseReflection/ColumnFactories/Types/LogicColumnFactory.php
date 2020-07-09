@@ -18,7 +18,7 @@ class LogicColumnFactory extends DefaultColumnFactory {
         return (new BinaryPrinter())($model->{$this->getModelAccessKey()});
     }
 
-    public function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         $control = new Checkbox(_($this->getTitle()));
 
         // if (!$this->metaData['nullable']) {

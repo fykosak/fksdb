@@ -19,7 +19,7 @@ class StringColumnFactory extends DefaultColumnFactory {
         return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }
 
-    public function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         $control = new TextInput(_($this->getTitle()));
         if ($this->getMetaData()['size']) {
             $control->addRule(Form::MAX_LENGTH, null, $this->getMetaData()['size']);

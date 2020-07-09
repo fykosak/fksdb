@@ -103,7 +103,6 @@ class ImportComponent extends BaseComponent {
     /**
      * @param Form $form
      * @throws AbortException
-     *
      * @throws JsonException
      * @throws NeonSchemaException
      */

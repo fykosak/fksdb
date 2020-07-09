@@ -174,8 +174,8 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
         try {
             $connection->beginTransaction();
             $this->logger->clear();
-            $person = $this->storePerson($this->create ? null : $this->model, $data);
-            $this->storePersonInfo($person, $data);
+            $person = $this->servicePerson->store($this->create ? null : $this->model, $data[self::PERSON_CONTAINER]);
+            $this->servicePersonInfo->store($person, $person->getInfo(), $data[self::PERSON_INFO_CONTAINER]);
             $this->storeAddresses($person, $data);
 
             $connection->commit();
@@ -192,19 +192,6 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
             Debugger::log($exception);
             $this->flashMessage(_('Error'), Message::LVL_DANGER);
         }
-    }
-
-    /**
-     * @param array $data
-     * @param ModelPerson|null $person
-     * @return ModelPerson
-     */
-    private function storePerson($person, array $data): ModelPerson {
-        return $this->servicePerson->store($person, $data[self::PERSON_CONTAINER]);
-    }
-
-    private function storePersonInfo(ModelPerson $person, array $data): ModelPersonInfo {
-        return $this->servicePersonInfo->store($person, $person->getInfo(), $data[self::PERSON_INFO_CONTAINER]);
     }
 
     public static function mapAddressContainerNameToType(string $containerName): string {

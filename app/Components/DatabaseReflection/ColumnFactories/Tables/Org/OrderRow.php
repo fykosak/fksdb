@@ -58,8 +58,8 @@ class OrderRow extends AbstractOrgRowFactory {
         $control = new SelectBox($this->getTitle());
         $control->setOption('description', $this->getDescription());
         $control->setItems(self::ORDER_MAPPING);
-        $control->setPrompt(_('Zvolit hodnost'));
-        $control->addRule(Form::FILLED, _('Vyberte hodnost.'));
+        $control->setPrompt(_('Select rank'));
+        $control->addRule(Form::FILLED, _('Please select rank.'));
         return $control;
     }
 }

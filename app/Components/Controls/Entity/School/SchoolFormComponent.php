@@ -86,7 +86,19 @@ class SchoolFormComponent extends AbstractEntityFormComponent implements IEditEn
         $connection = $this->serviceSchool->getConnection();
         try {
             $connection->beginTransaction();
-            $this->create ? $this->handleCreateSuccess($data) : $this->handleEditSuccess($data);
+            if ($this->create) {
+                $address = $this->model->getAddress();
+                /* Address */
+                $this->serviceAddress->updateModel2($address, $data[self::CONT_ADDRESS]);
+                /* School */
+                $this->serviceSchool->updateModel2($this->model, $data[self::CONT_SCHOOL]);
+            } else {
+                /* Address */
+                $address = $this->serviceAddress->createNewModel($data[self::CONT_ADDRESS]);
+                /* School */
+                $data['address_id'] = $address->address_id;
+                $this->serviceSchool->createNewModel($data[self::CONT_ADDRESS]);
+            }
             $connection->commit();
 
             $this->getPresenter()->flashMessage($this->create ? _('School has been created') : _('School has been updated'), BasePresenter::FLASH_SUCCESS);
@@ -109,29 +121,5 @@ class SchoolFormComponent extends AbstractEntityFormComponent implements IEditEn
             self::CONT_SCHOOL => $model->toArray(),
             self::CONT_ADDRESS => $model->getAddress() ? $model->getAddress()->toArray() : null,
         ]);
-    }
-
-    /**
-     * @param array $data
-     * @return void
-     */
-    private function handleCreateSuccess(array $data) {
-        /* Address */
-        $address = $this->serviceAddress->createNewModel($data[self::CONT_ADDRESS]);
-        /* School */
-        $data['address_id'] = $address->address_id;
-        $this->serviceSchool->createNewModel($data[self::CONT_ADDRESS]);
-    }
-
-    /**
-     * @param array $data
-     * @return void
-     */
-    private function handleEditSuccess(array $data) {
-        $address = $this->model->getAddress();
-        /* Address */
-        $this->serviceAddress->updateModel2($address, $data[self::CONT_ADDRESS]);
-        /* School */
-        $this->serviceSchool->updateModel2($this->model, $data[self::CONT_SCHOOL]);
     }
 }

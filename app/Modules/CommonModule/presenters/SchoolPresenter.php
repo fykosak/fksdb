@@ -97,7 +97,6 @@ class SchoolPresenter extends BasePresenter {
         return new ContestantsFromSchoolGrid($this->getEntity(), $this->getContext());
     }
 
-
     /**
      * @param IResource|string $resource
      * @param string $privilege

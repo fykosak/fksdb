@@ -25,7 +25,7 @@ class SinceRow extends AbstractColumnFactory {
         if ($model->since === null) {
             return Html::el('span')->addAttributes(['class' => 'badge badge-secondary'])->addText(_('undefined'));
         }
-        return (new DatePrinter(_('__date_format')))($model->since);
+        return (new DatePrinter(_('__date')))($model->since);
     }
 
     public function getTitle(): string {

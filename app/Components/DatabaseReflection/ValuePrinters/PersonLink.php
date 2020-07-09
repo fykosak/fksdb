@@ -32,7 +32,7 @@ class PersonLink extends AbstractValuePrinter {
      * @throws InvalidLinkException
      * @throws BadTypeException
      */
-    public function getHtml($person): Html {
+    protected function getHtml($person): Html {
         if (!$person instanceof ModelPerson) {
             throw new BadTypeException(ModelPerson::class, $person);
         }

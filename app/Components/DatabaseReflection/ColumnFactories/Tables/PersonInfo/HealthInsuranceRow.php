@@ -44,7 +44,7 @@ class HealthInsuranceRow extends AbstractColumnFactory {
      * @param AbstractModelSingle|ModelPersonInfo $model
      * @return Html
      */
-    public function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
         if (\array_key_exists($model->health_insurance, self::ID_MAPPING)) {
             return Html::el('span')->addText(self::ID_MAPPING[$model->health_insurance]);
         }
