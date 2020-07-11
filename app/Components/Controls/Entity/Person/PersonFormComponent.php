@@ -9,7 +9,6 @@ use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
 use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Config\GlobalParameters;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\Logging\FlashMessageDump;
@@ -17,7 +16,6 @@ use FKSDB\Logging\MemoryLogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Models\ModelPersonInfo;
 use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Services\ServiceAddress;
 use FKSDB\ORM\Services\ServicePerson;
@@ -51,10 +49,6 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
      * @var AddressFactory
      */
     protected $addressFactory;
-    /**
-     * @var GlobalParameters
-     */
-    protected $globalParameters;
     /**
      * @var ServicePerson
      */
@@ -93,7 +87,6 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
     }
 
     /**
-     * @param GlobalParameters $globalParameters
      * @param SingleReflectionFormFactory $singleReflectionFormFactory
      * @param ServicePerson $servicePerson
      * @param ServicePersonInfo $servicePersonInfo
@@ -103,7 +96,6 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
      * @return void
      */
     public function injectFactories(
-        GlobalParameters $globalParameters,
         SingleReflectionFormFactory $singleReflectionFormFactory,
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,
@@ -111,7 +103,6 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
         ServicePostContact $servicePostContact,
         ServiceAddress $serviceAddress
     ) {
-        $this->globalParameters = $globalParameters;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
@@ -128,7 +119,7 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
      * @throws OmittedControlException
      */
     protected function configureForm(Form $form) {
-        $fields = $this->globalParameters['common']['editPerson'];
+        $fields = $this->getContext()->getParameters()['common']['editPerson'];
         foreach ($fields as $table => $rows) {
             switch ($table) {
                 case self::PERSON_INFO_CONTAINER:

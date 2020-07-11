@@ -121,7 +121,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @throws InvalidLinkException
      */
     public function actionLogout() {
-        $subDomainAuth = $this->globalParameters['subdomain']['auth'];
+        $subDomainAuth = $this->getContext()->getParameters()['subdomain']['auth'];
         $subDomain = $this->getParameter('subdomain');
 
         if ($subDomain != $subDomainAuth) {
@@ -325,7 +325,7 @@ final class AuthenticationPresenter extends BasePresenter {
         if (in_array($this->flag, [self::FLAG_SSO_PROBE, self::FLAG_SSO_LOGIN])) {
             if ($login) {
                 $globalSessionId = $this->globalSession->getId();
-                $expiration = $this->globalParameters['authentication']['sso']['tokenExpiration'];
+                $expiration = $this->getContext()->getParameters()['authentication']['sso']['tokenExpiration'];
                 $until = DateTime::from($expiration);
                 $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_SSO, $until, $globalSessionId);
                 $url->appendQuery([
@@ -340,7 +340,7 @@ final class AuthenticationPresenter extends BasePresenter {
         }
 
         if ($url->getHost()) { // this would indicate absolute URL
-            if (in_array($url->getHost(), $this->globalParameters['authentication']['backlinkHosts'])) {
+            if (in_array($url->getHost(), $this->getContext()->getParameters()['authentication']['backlinkHosts'])) {
                 $this->redirectUrl((string)$url, 303);
             } else {
                 $this->flashMessage(sprintf(_('Nedovolený backlink %s.'), (string)$url), self::FLASH_ERROR);

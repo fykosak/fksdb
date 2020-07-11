@@ -34,7 +34,6 @@ class ExtendedPersonHandler {
     use SmartObject;
 
     const CONT_AGGR = 'aggr';
-    const CONT_PERSON = 'person';
     const CONT_MODEL = 'model';
     const EL_PERSON = 'person_id';
     const RESULT_OK_EXISTING_LOGIN = 1;

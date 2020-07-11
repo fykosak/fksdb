@@ -101,6 +101,6 @@ class DeduplicatePresenter extends BasePresenter {
     }
 
     protected function createPersonDuplicateFinder(): DuplicateFinder {
-        return new DuplicateFinder($this->servicePerson, $this->globalParameters);
+        return new DuplicateFinder($this->servicePerson, $this->getContext());
     }
 }

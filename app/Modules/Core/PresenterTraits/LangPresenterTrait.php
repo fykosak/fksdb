@@ -6,12 +6,14 @@ use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Localization\GettextTranslator;
 use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\ORM\Models\ModelLogin;
+use Nette\DI\Container;
 use Nette\Http\Request;
 use Nette\Security\User;
 
 /**
  * Trait LangPresenterTrait
  * @author Michal Červeňák <miso@fykos.cz>
+ * @method Container getContext()
  */
 trait LangPresenterTrait {
     /** @var string[] */
@@ -82,7 +84,7 @@ trait LangPresenterTrait {
                 $this->cacheLang = $this->getHttpRequest()->detectLanguage($supportedLanguages);
             }
             if (!$this->cacheLang) {
-                $this->cacheLang = $this->globalParameters['localization']['defaultLanguage'];
+                $this->cacheLang = $this->getContext()->getParameters()['localization']['defaultLanguage'];
             }
             // final check
             if (!in_array($this->cacheLang, $supportedLanguages)) {

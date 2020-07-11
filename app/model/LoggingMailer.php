@@ -1,7 +1,7 @@
 <?php
 
-use FKSDB\Config\GlobalParameters;
 use FKSDB\Utils\Utils;
+use Nette\DI\Container;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\SmartObject;
@@ -20,10 +20,6 @@ class LoggingMailer implements IMailer {
     private $mailer;
 
     /**
-     * @var GlobalParameters
-     */
-    private $parameters;
-    /**
      * @var string
      */
     private $logPath;
@@ -35,15 +31,17 @@ class LoggingMailer implements IMailer {
      * @var int
      */
     private $sentMessages = 0;
+    /** @var Container */
+    private $container;
 
     /**
      * LoggingMailer constructor.
      * @param IMailer $mailer
-     * @param GlobalParameters $parameters
+     * @param Container $container
      */
-    public function __construct(IMailer $mailer, GlobalParameters $parameters) {
+    public function __construct(IMailer $mailer,Container $container) {
         $this->mailer = $mailer;
-        $this->parameters = $parameters;
+        $this->container = $container;
     }
 
     public function getLogPath(): string {
@@ -78,7 +76,7 @@ class LoggingMailer implements IMailer {
      */
     public function send(Message $mail) {
         try {
-            if (!$this->parameters['email']['disabled'] ?? false) {// do not really send emails when debugging
+            if (!$this->container->getParameters()['email']['disabled'] ?? false) {// do not really send emails when debugging
                 $this->mailer->send($mail);
             }
             $this->logMessage($mail);

@@ -4,6 +4,7 @@ namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\Components\DatabaseReflection\OmittedControlException;
+use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Localization\UnsupportedLanguageException;
@@ -292,19 +293,14 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      */
     private function getFieldsDefinition() {
         $contestId = $this->getSelectedContest()->contest_id;
-        $contestName = $this->globalParameters['contestMapping'][$contestId];
-        return Helpers::evalExpressionArray($this->globalParameters[$contestName]['registerContestant'], $this->getContext());
+        $contestName = $this->getContext()->getParameters()['contestMapping'][$contestId];
+        return Helpers::evalExpressionArray($this->getContext()->getParameters()[$contestName]['registerContestant'], $this->getContext());
     }
 
     /**
      * @return FormControl
-     * @throws AbstractColumnException
      * @throws BadTypeException
-     * @throws JsonException
-     * @throws NotImplementedException
-     * @throws OmittedControlException
      * @throws UnsupportedLanguageException
-     * @throws BadRequestException
      */
     protected function createComponentContestantForm(): FormControl {
         $control = new FormControl();
@@ -312,18 +308,16 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
-        $component = $this->referencedPersonFactory->createReferencedPerson(
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson(
             $this->getFieldsDefinition(),
             $this->getSelectedAcademicYear(),
-            ReferencedPersonFactory::SEARCH_NONE,
+            PersonSearchContainer::SEARCH_NONE,
             false,
             new SelfResolver($this->getUser()),
             new SelfResolver($this->getUser())
         );
 
-        $container->addComponent($component->getReferencedId(), ExtendedPersonHandler::EL_PERSON);
-        $container->addComponent($component, ExtendedPersonHandler::CONT_PERSON);
-
+        $container->addComponent($referencedId, ExtendedPersonHandler::EL_PERSON);
 
         /*
          * CAPTCHA
