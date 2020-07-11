@@ -464,12 +464,8 @@ class BaseHolder {
                 continue;
             }
             $component = $field->createFormComponent($machine, $container);
-            if ($component instanceof ReferencedId) {
-                $container->addComponent($component, $name);
-                $container->addComponent($component->getReferencedContainer(), $name . '_1');
-            } else {
-                $container->addComponent($component, $name);
-            }
+            $container->addComponent($component, $name);
+
         }
         return $container;
     }

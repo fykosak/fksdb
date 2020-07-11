@@ -118,10 +118,10 @@ class PersonFactory extends AbstractFactory {
         $modifiableResolver = new PersonContainerResolver($field, $this->modifiable, $this->selfResolver, $this->evaluator);
         $visibleResolver = new PersonContainerResolver($field, $this->visible, $this->selfResolver, $this->evaluator);
         $fieldsDefinition = $this->evaluateFieldsDefinition($field);
-        $component = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $event->getAcYear(), $searchType, $allowClear, $modifiableResolver, $visibleResolver, $event);
-        $component->getReferencedContainer()->setOption('label', $field->getLabel());
-        $component->getReferencedContainer()->setOption('description', $field->getDescription());
-        return $component;
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $event->getAcYear(), $searchType, $allowClear, $modifiableResolver, $visibleResolver, $event);
+        $referencedId->getReferencedContainer()->setOption('label', $field->getLabel());
+        $referencedId->getReferencedContainer()->setOption('description', $field->getDescription());
+        return $referencedId;
     }
 
     /**

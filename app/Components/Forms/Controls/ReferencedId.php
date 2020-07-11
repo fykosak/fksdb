@@ -81,7 +81,7 @@ class ReferencedId extends HiddenField {
         });
         $this->monitor(IContainer::class, function (IContainer $container) {
             if (!$this->attachedSearch) {
-                // $container->addComponent($this->getReferencedContainer(), $this->getName() . '_1');
+                $container->addComponent($this->getReferencedContainer(), $this->getName() . '_1');
                 $container->addComponent($this->getSearchContainer(), $this->getName() . '_2');
                 $this->attachedSearch = true;
             }

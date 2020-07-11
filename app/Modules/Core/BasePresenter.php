@@ -15,7 +15,6 @@ use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
-use FKSDB\Config\GlobalParameters;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Logging\ILogger;
@@ -70,8 +69,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /** @var ServiceContest */
     private $serviceContest;
 
-    /** @var GlobalParameters */
-    protected $globalParameters;
 
     /** @var BreadcrumbsFactory */
     private $breadcrumbsFactory;
@@ -128,14 +125,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     public function injectServiceContest(ServiceContest $serviceContest) {
         $this->serviceContest = $serviceContest;
-    }
-
-    /**
-     * @param GlobalParameters $globalParameters
-     * @return void
-     */
-    public function injectGlobalParameters(GlobalParameters $globalParameters) {
-        $this->globalParameters = $globalParameters;
     }
 
     /**

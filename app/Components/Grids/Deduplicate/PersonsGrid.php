@@ -55,11 +55,11 @@ class PersonsGrid extends BaseGrid {
 
         /***** columns ****/
 
-        $this->addColumn('display_name_a', _('Osoba A'))->setRenderer(function (ModelPerson $row) {
+        $this->addColumn('display_name_a', _('Person A'))->setRenderer(function (ModelPerson $row) {
             return $this->renderPerson($row);
         })
             ->setSortable(false);
-        $this->addColumn('display_name_b', _('Osoba B'))->setRenderer(function (ModelPerson $row) {
+        $this->addColumn('display_name_b', _('Person B'))->setRenderer(function (ModelPerson $row) {
             return $this->renderPerson($this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]);
         })
             ->setSortable(false);

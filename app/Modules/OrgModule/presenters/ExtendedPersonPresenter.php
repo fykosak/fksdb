@@ -25,22 +25,14 @@ use Persons\IExtendedPersonPresenter;
 
 /**
  * Class ExtendedPersonPresenter
- * *
+ *
  */
 abstract class ExtendedPersonPresenter extends EntityPresenter implements IExtendedPersonPresenter {
-    /**
-     * @var bool
-     */
+    /** @var bool */
     protected $sendEmail = true;
-
-    /**
-     * @var ReferencedPersonFactory
-     */
+    /** @var ReferencedPersonFactory */
     private $referencedPersonFactory;
-
-    /**
-     * @var ExtendedPersonHandlerFactory
-     */
+    /** @var ExtendedPersonHandlerFactory */
     private $handlerFactory;
 
     /**
@@ -78,10 +70,10 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    protected function getFieldsDefinition() {
+    protected function getFieldsDefinition(): array {
         $contestId = $this->getSelectedContest()->contest_id;
-        $contestName = $this->globalParameters['contestMapping'][$contestId];
-        return Helpers::evalExpressionArray($this->globalParameters[$contestName][$this->fieldsDefinition], $this->getContext());
+        $contestName = $this->getContext()->getParameters()['contestMapping'][$contestId];
+        return Helpers::evalExpressionArray($this->getContext()->getParameters()[$contestName][$this->fieldsDefinition], $this->getContext());
     }
 
     /**
@@ -121,16 +113,15 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         $searchType = PersonSearchContainer::SEARCH_ID;
         $allowClear = $create;
         $modifiabilityResolver = $visibilityResolver = new AclResolver($this->contestAuthorizator, $this->getSelectedContest());
-        $component = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
-        $component->addRule(Form::FILLED, _('Osobu je třeba zadat.'));
-        $component->getReferencedContainer()->setOption('label', _('Osoba'));
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
+        $referencedId->addRule(Form::FILLED, _('Osobu je třeba zadat.'));
+        $referencedId->getReferencedContainer()->setOption('label', _('Person'));
 
-        $container->addComponent($component, ExtendedPersonHandler::EL_PERSON);
-        $container->addComponent($component->getReferencedContainer(), ExtendedPersonHandler::CONT_PERSON);
+        $container->addComponent($referencedId, ExtendedPersonHandler::EL_PERSON);
 
         $this->appendExtendedContainer($form);
 
-        $handler = $this->handlerFactory->create($this->getORMService(), $this->getSelectedContest(), $this->getSelectedYear(), $this->globalParameters['invitation']['defaultLang']);
+        $handler = $this->handlerFactory->create($this->getORMService(), $this->getSelectedContest(), $this->getSelectedYear(), $this->getContext()->getParameters()['invitation']['defaultLang']);
 
         $submit = $form->addSubmit('send', $create ? _('Create') : _('Save'));
 

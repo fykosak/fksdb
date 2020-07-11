@@ -293,19 +293,14 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      */
     private function getFieldsDefinition() {
         $contestId = $this->getSelectedContest()->contest_id;
-        $contestName = $this->globalParameters['contestMapping'][$contestId];
-        return Helpers::evalExpressionArray($this->globalParameters[$contestName]['registerContestant'], $this->getContext());
+        $contestName = $this->getContext()->getParameters()['contestMapping'][$contestId];
+        return Helpers::evalExpressionArray($this->getContext()->getParameters()[$contestName]['registerContestant'], $this->getContext());
     }
 
     /**
      * @return FormControl
-     * @throws AbstractColumnException
      * @throws BadTypeException
-     * @throws JsonException
-     * @throws NotImplementedException
-     * @throws OmittedControlException
      * @throws UnsupportedLanguageException
-     * @throws BadRequestException
      */
     protected function createComponentContestantForm(): FormControl {
         $control = new FormControl();
@@ -313,7 +308,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
-        $component = $this->referencedPersonFactory->createReferencedPerson(
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson(
             $this->getFieldsDefinition(),
             $this->getSelectedAcademicYear(),
             PersonSearchContainer::SEARCH_NONE,
@@ -322,9 +317,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
             new SelfResolver($this->getUser())
         );
 
-        $container->addComponent($component, ExtendedPersonHandler::EL_PERSON);
-        $container->addComponent($component->getReferencedContainer(), ExtendedPersonHandler::CONT_PERSON);
-
+        $container->addComponent($referencedId, ExtendedPersonHandler::EL_PERSON);
 
         /*
          * CAPTCHA

@@ -119,7 +119,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $form->setValues([
             ExtendedPersonHandler::CONT_AGGR => [
                 ExtendedPersonHandler::EL_PERSON => "__promise",
-                ExtendedPersonHandler::CONT_PERSON => [
+                ExtendedPersonHandler::EL_PERSON . '_1' => [
                     '_c_compact' => " ",
                     'person' => [
                         'other_name' => "Jana",
@@ -174,7 +174,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
 
-        $component = $this->referencedPersonFactory->createReferencedPerson(
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson(
             $fieldsDefinition,
             $acYear,
             PersonSearchContainer::SEARCH_NONE,
@@ -183,8 +183,8 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
             new TestResolver()
         );
 
-        $container->addComponent($component, ExtendedPersonHandler::EL_PERSON);
-        $container->addComponent($component->getReferencedContainer(), ExtendedPersonHandler::CONT_PERSON);
+        $container->addComponent($referencedId, ExtendedPersonHandler::EL_PERSON);
+        // $container->addComponent($component->getReferencedContainer(), ExtendedPersonHandler::CONT_PERSON);
 
         return $form;
     }

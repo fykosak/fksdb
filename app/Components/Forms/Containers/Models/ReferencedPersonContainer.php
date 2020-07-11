@@ -254,44 +254,41 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @throws BadRequestException
      */
     public function createField(string $sub, string $fieldName, array $metadata): IComponent {
-        if (in_array($sub, [
-            ReferencedPersonHandler::POST_CONTACT_DELIVERY,
-            ReferencedPersonHandler::POST_CONTACT_PERMANENT,
-        ])) {
-            if ($fieldName == 'address') {
-                $required = (bool)$metadata['required'] ?? false;
-                if ($required) {
-                    $options = AddressFactory::REQUIRED;
+        $control = null;
+        switch ($sub) {
+            case ReferencedPersonHandler::POST_CONTACT_DELIVERY:
+            case ReferencedPersonHandler::POST_CONTACT_PERMANENT:
+                if ($fieldName == 'address') {
+                    $required = (bool)$metadata['required'] ?? false;
+                    if ($required) {
+                        $options = AddressFactory::REQUIRED;
+                    } else {
+                        $options = 0;
+                    }
+                    return $this->addressFactory->createAddress($options, $this->getReferencedId());
                 } else {
-                    $options = 0;
+                    throw new InvalidArgumentException("Only 'address' field is supported.");
                 }
-                return $this->addressFactory->createAddress($options, $this->getReferencedId());
-            } else {
-                throw new InvalidArgumentException("Only 'address' field is supported.");
-            }
-        } elseif ($sub == 'person_has_flag') {
-            return $this->flagFactory->createFlag($this->getReferencedId(), $metadata);
-        } else {
-            $control = null;
-            switch ($sub) {
-                case 'person_schedule':
-                    $control = $this->personScheduleFactory->createField($fieldName, $this->event);
-                    break;
-                case 'person':
-                case 'person_info':
-                    $control = $this->singleReflectionFormFactory->createField($sub, $fieldName);
-                    break;
-                case 'person_history':
-                    $control = $this->singleReflectionFormFactory->createField($sub, $fieldName, $this->acYear);
-                    break;
-                default:
-                    throw new InvalidArgumentException();
+            case 'person_has_flag':
+                return $this->flagFactory->createFlag($this->getReferencedId(), $metadata);
+            case 'person_schedule':
+                $control = $this->personScheduleFactory->createField($fieldName, $this->event);
+                break;
+            case 'person':
+            case 'person_info':
+                $control = $this->singleReflectionFormFactory->createField($sub, $fieldName);
+                break;
+            case 'person_history':
+                $control = $this->singleReflectionFormFactory->createField($sub, $fieldName, $this->acYear);
+                break;
+            default:
+                throw new InvalidArgumentException();
 
-            }
-            $this->appendMetadata($control, $fieldName, $metadata);
-
-            return $control;
         }
+        $this->appendMetadata($control, $fieldName, $metadata);
+
+        return $control;
+
     }
 
     /**
