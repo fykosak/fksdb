@@ -18,14 +18,14 @@ class EventLink extends AbstractColumnFactory {
     /**
      * @var LinkGenerator
      */
-    private $presenterComponent;
+    private $linkGenerator;
 
     /**
      * PersonLinkRow constructor.
-     * @param LinkGenerator $presenterComponent
+     * @param LinkGenerator $linkGenerator
      */
-    public function __construct(LinkGenerator $presenterComponent) {
-        $this->presenterComponent = $presenterComponent;
+    public function __construct(LinkGenerator $linkGenerator) {
+        $this->linkGenerator = $linkGenerator;
     }
 
     public function getPermission(): FieldLevelPermission {
@@ -42,7 +42,7 @@ class EventLink extends AbstractColumnFactory {
      * @throws InvalidLinkException
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return Html::el('a')->addAttributes(['href' => $this->presenterComponent->link(
+        return Html::el('a')->addAttributes(['href' => $this->linkGenerator->link(
             'Event:Dashboard:default', ['eventId' => $model->event_id]
         )])->addText($model->name);
     }

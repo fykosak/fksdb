@@ -2,7 +2,6 @@
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Entity\ModelNotFoundException;

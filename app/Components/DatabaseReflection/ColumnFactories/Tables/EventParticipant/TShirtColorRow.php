@@ -29,8 +29,7 @@ class TShirtColorRow extends AbstractParticipantRow {
         $container = Html::el('span');
         $container->addHtml(Html::el('i')->addAttributes([
             'style' => 'background-color: ' . $value,
-
-            'class' => 't-shirt-color'
+            'class' => 't-shirt-color',
         ]));
         $container->addText($value);
         return $container;

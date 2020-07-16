@@ -372,7 +372,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @return bool|ModelPostContact|mixed|null
      * @throws JsonException
      */
-    protected function getPersonValue($person, string $sub, string $field, $options) {
+    protected function getPersonValue($person, string $sub, string $field, int $options) {
         return ReferencedPersonFactory::getPersonValue($person, $sub, $field, $this->acYear, $options, $this->event);
     }
 }

@@ -201,8 +201,8 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
                 $data['year'] = $this->year;
                 $model = $this->serviceEvent->createNewModel($data);
             } else {
+                $this->serviceEvent->updateModel2($this->model, $data);
                 $model = $this->model;
-                $this->serviceEvent->updateModel2($model, $data);
             }
             $this->updateTokens($model);
             $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), ILogger::SUCCESS);

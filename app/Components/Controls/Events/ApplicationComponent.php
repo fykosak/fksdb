@@ -161,7 +161,6 @@ class ApplicationComponent extends BaseComponent {
         $saveSubmit = null;
         if ($this->canEdit()) {
             $saveSubmit = $form->addSubmit('save', _('Save'));
-            $saveSubmit->setOption('row', 1);
             $saveSubmit->onClick[] = function (SubmitButton $button) {
                 $buttonForm = $button->getForm();
                 $this->handleSubmit($buttonForm);
@@ -196,7 +195,6 @@ class ApplicationComponent extends BaseComponent {
          * Create cancel button
          */
         $submit = $form->addSubmit('cancel', _('Cancel'));
-        $submit->setOption('row', 1);
         $submit->setValidationScope(false);
         $submit->getControlPrototype()->addAttributes(['class' => 'btn-warning']);
         $submit->onClick[] = function (SubmitButton $button) {

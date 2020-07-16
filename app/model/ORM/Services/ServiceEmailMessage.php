@@ -5,7 +5,6 @@ namespace FKSDB\ORM\Services;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyDBTrait;
-use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Database\Table\ActiveRow;
