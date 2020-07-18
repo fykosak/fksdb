@@ -82,22 +82,23 @@ class SchoolFormComponent extends AbstractEntityFormComponent implements IEditEn
      */
     protected function handleFormSuccess(Form $form) {
         $values = $form->getValues();
-        $data = FormUtils::emptyStrToNull($values, true);
+        $addressData = FormUtils::emptyStrToNull($values[self::CONT_ADDRESS], true);
+        $schoolData = FormUtils::emptyStrToNull($values[self::CONT_SCHOOL], true);
+
         $connection = $this->serviceSchool->getConnection();
         try {
             $connection->beginTransaction();
             if ($this->create) {
-                $address = $this->model->getAddress();
                 /* Address */
-                $this->serviceAddress->updateModel2($address, $data[self::CONT_ADDRESS]);
+                $address = $this->serviceAddress->createNewModel($addressData);
                 /* School */
-                $this->serviceSchool->updateModel2($this->model, $data[self::CONT_SCHOOL]);
+                $schoolData['address_id'] = $address->address_id;
+                $this->serviceSchool->createNewModel($schoolData);
             } else {
                 /* Address */
-                $address = $this->serviceAddress->createNewModel($data[self::CONT_ADDRESS]);
+                $this->serviceAddress->updateModel2($this->model->getAddress(), $addressData);
                 /* School */
-                $data['address_id'] = $address->address_id;
-                $this->serviceSchool->createNewModel($data[self::CONT_ADDRESS]);
+                $this->serviceSchool->updateModel2($this->model, $schoolData);
             }
             $connection->commit();
 

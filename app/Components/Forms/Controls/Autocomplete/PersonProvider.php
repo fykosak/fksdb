@@ -83,11 +83,7 @@ class PersonProvider implements IFilteredDataProvider {
         return $result;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return array
-     */
-    private function getItem(ModelPerson $person) {
+    private function getItem(ModelPerson $person): array {
         $place = null;
         $address = $person->getDeliveryAddress();
         if ($address) {

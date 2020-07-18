@@ -15,7 +15,7 @@ use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class ResultsTotalGrid
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ResultsTotalGrid extends BaseGrid {
 

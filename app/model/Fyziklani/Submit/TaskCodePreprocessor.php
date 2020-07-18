@@ -84,7 +84,7 @@ final class TaskCodePreprocessor {
         $teamId = self::extractTeamId($fullCode);
 
         if (!$this->serviceFyziklaniTeam->teamExist($teamId, $this->event)) {
-            throw new TaskCodeException(\sprintf(_('Tým %s neexistuje.'), $teamId));
+            throw new TaskCodeException(\sprintf(_('Team %s does not exists.'), $teamId));
         }
         return $this->serviceFyziklaniTeam->findByPrimary($teamId);
     }
@@ -96,11 +96,11 @@ final class TaskCodePreprocessor {
      */
     public function getTask(string $code): ModelFyziklaniTask {
         $fullCode = self::createFullCode($code);
-        /* správny label */
+        /* correct label */
         $taskLabel = self::extractTaskLabel($fullCode);
         $task = $this->serviceFyziklaniTask->findByLabel($taskLabel, $this->event);
         if (!$task) {
-            throw new TaskCodeException(\sprintf(_('Úloha %s neexistuje.'), $taskLabel));
+            throw new TaskCodeException(\sprintf(_('Task %s does not exists.'), $taskLabel));
         }
         return $task;
     }

@@ -2,11 +2,8 @@
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Components\DatabaseReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
@@ -23,16 +20,14 @@ use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\Modules\Core\ContestPresenter\IContestPresenter;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
-use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
-use Nette\Utils\JsonException;
 use Persons\ExtendedPersonHandler;
 use Persons\ExtendedPersonHandlerFactory;
 use Persons\IExtendedPersonPresenter;
 use Persons\SelfResolver;
+
 /**
  * INPUT:
  *   contest (nullable)
@@ -201,16 +196,19 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $contest = $this->getSelectedContest();
         $forward = $this->getYearCalculator()->getForwardShift($contest);
         if ($forward) {
-            $years = [];
-            $years[] = $this->getYearCalculator()->getCurrentYear($contest);
-            $years[] = $this->getYearCalculator()->getCurrentYear($contest) + $this->getYearCalculator()->getForwardShift($contest);
+            $years = [
+                $this->getYearCalculator()->getCurrentYear($contest),
+                $this->getYearCalculator()->getCurrentYear($contest) + $forward,
+            ];
+
             $this->template->years = $years;
         } else {
-            $this->redirect('this', ['year' => $this->getYearCalculator()->getCurrentYear($contest),]);
+            $this->redirect('email', ['year' => $this->getYearCalculator()->getCurrentYear($contest),]);
         }
     }
 
     /**
+     * @return void
      * @throws BadTypeException
      */
     public function renderContestant() {
@@ -228,7 +226,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
 
     /**
-     * @return ModelContest|ActiveRow|null
+     * @return ModelContest|null
      */
     public function getSelectedContest() {
         return $this->contestId ? $this->getServiceContest()->findByPrimary($this->contestId) : null;
@@ -287,11 +285,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $this->redirect('contestant', ['email' => $values['email'],]);
     }
 
-
-    /**
-     * @return array
-     */
-    private function getFieldsDefinition() {
+    private function getFieldsDefinition(): array {
         $contestId = $this->getSelectedContest()->contest_id;
         $contestName = $this->getContext()->getParameters()['contestMapping'][$contestId];
         return Helpers::evalExpressionArray($this->getContext()->getParameters()[$contestName]['registerContestant'], $this->getContext());

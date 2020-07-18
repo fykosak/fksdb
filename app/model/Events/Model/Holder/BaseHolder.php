@@ -2,7 +2,6 @@
 
 namespace FKSDB\Events\Model\Holder;
 
-use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;

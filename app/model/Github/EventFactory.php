@@ -19,24 +19,18 @@ class EventFactory {
     const HTTP_HEADER = 'X-GitHub-Event';
 
     /**
-     * @var string[]
-     */
-    private static $typeMap = [
-        'ping' => 'createPing',
-        'push' => 'createPush',
-    ];
-
-    /**
      * @var Repository[]
      */
     private $repositoryCache = [];
 
     public function createEvent(string $type, array $data): Event {
-        if (!array_key_exists($type, self::$typeMap)) {
-            throw new UnsupportedEventException('Unsupported event type.'); // is it XSS safe print the type?
+        switch ($type) {
+            case 'ping':
+                return $this->createPing($data);
+            case 'push':
+                return $this->createPush($data);
         }
-        $method = self::$typeMap[$type];
-        return $this->$method($data);
+        throw new UnsupportedEventException('Unsupported event type.'); // is it XSS safe print the type?
     }
 
     private function createPing(array $data): PingEvent {

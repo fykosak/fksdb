@@ -19,7 +19,7 @@ use SQL\SearchableDataSource;
 
 /**
  * Class AbstractApplicationGrid
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractApplicationGrid extends BaseGrid {
     /** @var ModelEvent */

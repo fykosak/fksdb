@@ -79,7 +79,7 @@ class RankingStrategy {
                 $this->serviceFyziklaniTeam->updateModel2($team, ['rank_category' => $index + 1]);
             }
             $log->addHtml(Html::el('li')
-                ->addText(_('Team') . $team->name . ':(' . $team->e_fyziklani_team_id . ')' . _('Pořadí') . ': ' . ($index + 1)));
+                ->addText(_('Team') . $team->name . ':(' . $team->e_fyziklani_team_id . ')' . _('Rank') . ': ' . ($index + 1)));
         }
         return $log;
     }
