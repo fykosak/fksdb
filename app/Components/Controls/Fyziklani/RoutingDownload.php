@@ -35,7 +35,7 @@ class RoutingDownload extends BaseComponent {
         parent::__construct($container);
         $this->event = $event;
         $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
-            if (!self::$JSAttached ) {
+            if (!self::$JSAttached) {
                 self::$JSAttached = true;
                 $collector->registerJSFile('js/routingPdf.js');
                 $collector->registerJSFile('https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.33/pdfmake.min.js');

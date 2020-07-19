@@ -192,6 +192,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
         $this->getReferencedId()->getHandler()->setResolution($resolution);
 
         $this->getComponent(ReferencedContainer::CONTROL_COMPACT)->setValue($model ? $model->getFullName() : null);
+
         foreach ($this->getComponents() as $sub => $subContainer) {
             if (!$subContainer instanceof \Nette\Forms\Container) {
                 continue;

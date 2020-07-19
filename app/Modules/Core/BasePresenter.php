@@ -371,9 +371,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @param string $destination
      * @param null $args
      * @return bool|mixed
-     *
-     *
-     *
      * @throws BadRequestException
      * @throws InvalidLinkException
      */

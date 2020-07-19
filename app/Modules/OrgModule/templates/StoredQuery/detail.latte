@@ -5,10 +5,10 @@
     <div class="btn-group">
         <a href="{plink :Org:Export:execute ,'id' => $model->getPrimary()}"
            class="btn btn-primary"
-           title="{_('Spustit dotaz')}">{_('Spustit')}</a>
+           title="{_'Execute query'}">{_'Execute'}</a>
         {if $presenter->authorized('edit', ['id' => $model->getPrimary()])}
             <a href="{plink edit,'id' => $model->getPrimary()}"
-               class="btn btn-secondary" title="{_('Upravit dotaz')}">{_('Upravit')}</a>
+               class="btn btn-secondary" title="{_'Edit query'}">{_'Edit'}</a>
         {/if}
     </div>
 

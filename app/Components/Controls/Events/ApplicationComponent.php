@@ -63,7 +63,7 @@ class ApplicationComponent extends BaseComponent {
     /**
      * @param string $template name of the standard template or whole path
      */
-    public function setTemplate($template) {
+    public function setTemplate(string $template) {
         if (stripos($template, '.latte') !== false) {
             $this->templateFile = $template;
         } else {
@@ -147,11 +147,10 @@ class ApplicationComponent extends BaseComponent {
          * Create containers
          */
         foreach ($this->holder->getBaseHolders() as $name => $baseHolder) {
-            $baseMachine = $this->getMachine()->getBaseMachine($name);
             if (!$baseHolder->isVisible()) {
                 continue;
             }
-            $container = $baseHolder->createFormContainer($baseMachine);
+            $container = $baseHolder->createFormContainer();
             $form->addComponent($container, $name);
         }
 

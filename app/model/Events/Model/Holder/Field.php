@@ -6,7 +6,6 @@ use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Factories\Events\IFieldFactory;
 use Nette\ComponentModel\IComponent;
-use Nette\Forms\Container;
 use Nette\Forms\IControl;
 
 /**
@@ -136,8 +135,16 @@ class Field {
     /*
      * Forms
      */
-    public function createFormComponent(BaseMachine $machine, Container $container): IComponent {
-        return $this->factory->create($this, $machine, $container);
+    public function createFormComponent(): IComponent {
+        return $this->factory->createComponent($this);
+    }
+
+    /**
+     * @param IComponent $component
+     * @return void
+     */
+    public function setFieldDefaultValue(IComponent $component) {
+        $this->factory->setFieldDefaultValue($component, $this);
     }
 
     public function getMainControl(IComponent $component): IControl {

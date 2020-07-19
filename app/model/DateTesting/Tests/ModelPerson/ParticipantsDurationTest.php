@@ -14,18 +14,25 @@ use FKSDB\DataTesting\TestLog;
  */
 class ParticipantsDurationTest extends PersonTest {
 
+    const CONTESTS = [
+        ModelContest::ID_FYKOS => ['thresholds' => [4, 6]],
+        ModelContest::ID_VYFUK => ['thresholds' => [4, 6]],
+    ];
+
+    /**
+     * ParticipantsDurationTest constructor.
+     */
+    public function __construct() {
+        parent::__construct('participants_duration', _('Participate events'));
+    }
+
     /**
      * @param ILogger $logger
      * @param ModelPerson $person
      * @return void
      */
     public function run(ILogger $logger, ModelPerson $person) {
-        $contestsDefs = [
-            ModelContest::ID_FYKOS => ['thresholds' => [4, 6]],
-            ModelContest::ID_VYFUK => ['thresholds' => [4, 6]]
-        ];
-
-        foreach ($contestsDefs as $contestId => $contestsDef) {
+        foreach (self::CONTESTS as $contestId => $contestDef) {
             $max = null;
             $min = null;
             foreach ($person->getEventParticipant() as $row) {
@@ -44,10 +51,9 @@ class ParticipantsDurationTest extends PersonTest {
             $logger->log(new TestLog(
                 $this->getTitle(),
                 \sprintf('Person participate %d years in the events of contestId %d', $delta, $contestId),
-                $this->evaluateThresholds($delta, $contestsDef['thresholds'])
+                $this->evaluateThresholds($delta, $contestDef['thresholds'])
             ));
         }
-
     }
 
     final private function evaluateThresholds(int $delta, array $thresholds): string {
@@ -58,13 +64,5 @@ class ParticipantsDurationTest extends PersonTest {
             return TestLog::LVL_WARNING;
         }
         return TestLog::LVL_DANGER;
-    }
-
-    public function getAction(): string {
-        return 'participants_duration';
-    }
-
-    public function getTitle(): string {
-        return _('Participate events');
     }
 }

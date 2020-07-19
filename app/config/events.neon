@@ -7,8 +7,6 @@ definition:
     event_type_id:
     eventYears:
         default: true
-    tableLayout:
-        default: participants
     formLayout:
         default: application
     paramScheme:
