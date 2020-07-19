@@ -1,0 +1,41 @@
+parameters:
+    events:
+        defaultDsef:
+            states:
+                - applied
+                - participated
+                - missed
+                - cancelled
+events:
+    dsefDefault:
+        event_type_id: 2
+        #eventYears: all
+        formLayout: dsef.form
+        paramScheme: []
+
+        baseMachines:
+            PARTICIPANT:
+                service: @event.ServiceMDsefParticipant
+
+                states:
+                    - participated
+                transitions: [] #not modifable
+                fields: [] #not modifable
+        #
+        #   MACHINE
+        #   explanation: machine consists of several instances of base machines
+        #
+        machine:
+            baseMachines:
+                participant:
+                    bmName: PARTICIPANT
+                    label: _('Participant')
+                    required: true # default false, it's conjuction with fields requirement
+                    primary: true # base machine states are propagated to the machine
+            formAdjustments:
+                - FKSDB\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                - @events.privacyPolicy
+                - @events.captcha
+
+            processings:
+                - @events.privacyPolicy

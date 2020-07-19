@@ -29,8 +29,10 @@ class AgreedRow extends AbstractColumnFactory {
         $control = new Checkbox($this->getTitle());
         $link = Html::el('a');
         $link->setText(_('Agreement'));
-        $link->addAttributes(['href' => _('http://fykos.cz/doc/souhlas.pdf'),
-                              'target' => '_blank']);
+        $link->addAttributes([
+            'href' => _('http://fykos.cz/doc/souhlas.pdf'),
+            'target' => '_blank',
+        ]);
         $control->setOption('description', $link);
         return $control;
     }

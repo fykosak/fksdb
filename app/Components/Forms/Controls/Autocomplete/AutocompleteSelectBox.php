@@ -39,7 +39,7 @@ class AutocompleteSelectBox extends TextBase {
     /**
      * @var bool
      */
-    private $multiSelect;
+    private $multiSelect = false;
 
     /**
      * @var string
@@ -102,17 +102,11 @@ class AutocompleteSelectBox extends TextBase {
         return $this->renderMethod;
     }
 
-    /**
-     * @return bool
-     */
-    public function isAjax() {
+    public function isAjax(): bool {
         return $this->ajax;
     }
 
-    /**
-     * @return bool
-     */
-    public function isMultiSelect() {
+    public function isMultiSelect(): bool {
         return $this->multiSelect;
     }
 

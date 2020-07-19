@@ -113,7 +113,7 @@ class SingleEventSource implements IHolderSource {
         $joinValues = array_keys($this->primaryModels);
 
         // load secondaries
-        /** @var IService[]|BaseHolder[] $group */
+        /** @var IService[]|BaseHolder[][] $group */
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
             /** @var TypedTableSelection $secondarySelection */
             $secondarySelection = $group['service']->getTable()->where($group['joinOn'], $joinValues);

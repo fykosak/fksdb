@@ -6,11 +6,11 @@ parameters:
                 -
                     value: 1
                     capacity: 66
-                    label: "Hostel Elf"
+                    label: _('Hostel Elf')
                 -
                     value: 2
                     capacity: 150
-                    label: "Hotel Duo"
+                    label: _('Hotel Duo')
 
             teacher:
                 person:
@@ -59,7 +59,6 @@ events:
     fyziklani12:
         event_type_id: 1
         eventYears: [12] # specify for which years this machine is valid, by default all years
-        tableLayout: fyziklani.grid
         formLayout: fyziklani.form
         paramScheme:
             notifyBcc:
@@ -71,10 +70,6 @@ events:
                 default: 2
             teamsPerSchool:
                 default: 2
-            gameSetup:
-                default:
-                    %events.fyziklaniGameSetup%
-
         baseMachines:
             #
             #   TEAM
@@ -84,14 +79,7 @@ events:
                 personIds: [teacher_id]
                 eventId: e_fyziklani_team.event_id
 
-                states:
-                    pending: _('Čeká na schválení')
-                    spare: _('Náhradník')
-                    approved: _('Potvrzen')
-                    participated: _('Účastnil se')
-                    cancelled: _('Zrušen')
-                    missed: _('Nepřijel')
-                    disqualified: _('Diskvalifikován')
+                states: %events.defaultFyziklani.teamStates%
 
                 transitions:
                     __init->pending:
@@ -169,11 +157,7 @@ events:
                 joinOn: e_fyziklani_team_id
                 personIds: [:e_fyziklani_participant.event_participant.person_id]
 
-                states:
-                    applied: _('Přihlášen')
-                    participated: _('Účastnil se')
-                    missed: _('Nepřijel')
-                    cancelled: _('Zrušen')
+                states: %events.defaultFyziklani.participantStates%
 
                 transitions:
                     __init->applied:
@@ -196,7 +180,7 @@ events:
 
                 fields:
                     person_id:
-                        label: _('Osoba')
+                        label: _('Person')
                         visible: true
                         modifiable: %events.fyziklani12.appCond%
                         determining: true

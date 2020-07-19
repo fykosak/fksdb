@@ -4,7 +4,6 @@ namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Events\EventsExtension;
-use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Events\Model\Holder\DataValidator;
 use FKSDB\Events\Model\Holder\Field;
@@ -15,7 +14,6 @@ use FKSDB\ORM\Services\ServicePerson;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container as DIContainer;
-use Nette\Forms\Container;
 use Nette\Forms\IControl;
 use Nette\Security\User;
 use Nette\Utils\JsonException;
@@ -109,7 +107,7 @@ class PersonFactory extends AbstractFactory {
         $this->container = $container;
     }
 
-    protected function createComponent(Field $field, BaseMachine $machine, Container $container): IComponent {
+    public function createComponent(Field $field): IComponent {
         $searchType = $this->evaluator->evaluate($this->searchType, $field);
         $allowClear = $this->evaluator->evaluate($this->allowClear, $field);
 
@@ -127,10 +125,8 @@ class PersonFactory extends AbstractFactory {
     /**
      * @param ReferencedId|IComponent $component
      * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
      */
-    protected function setDefaultValue(IComponent $component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDefaultValue(IComponent $component, Field $field) {
         $default = $field->getValue();
         if ($default == self::VALUE_LOGIN) {
             if ($this->user->isLoggedIn() && $this->user->getIdentity()->getPerson()) {
@@ -139,18 +135,14 @@ class PersonFactory extends AbstractFactory {
                 $default = null;
             }
         }
-
         $component->setDefaultValue($default);
     }
 
     /**
      * @param ReferencedId|IComponent $component
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
      * @return void
      */
-    protected function setDisabled(IComponent $component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDisabled(IComponent $component) {
         $component->setDisabled();
     }
 

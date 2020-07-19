@@ -2,7 +2,6 @@
 
 namespace FKSDB\Events\Model\Holder;
 
-use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
@@ -454,7 +453,7 @@ class BaseHolder {
         });
     }
 
-    public function createFormContainer(BaseMachine $machine): ContainerWithOptions {
+    public function createFormContainer(): ContainerWithOptions {
         $container = new ContainerWithOptions();
         $container->setOption('label', $this->getLabel());
         $container->setOption('description', $this->getDescription());
@@ -463,9 +462,9 @@ class BaseHolder {
             if (!$field->isVisible()) {
                 continue;
             }
-            $component = $field->createFormComponent($machine, $container);
+            $component = $field->createFormComponent();
             $container->addComponent($component, $name);
-
+            $field->setFieldDefaultValue($component);
         }
         return $container;
     }

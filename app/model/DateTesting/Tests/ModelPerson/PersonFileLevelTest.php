@@ -28,10 +28,12 @@ abstract class PersonFileLevelTest extends PersonTest {
      * PersonFileLevelTest constructor.
      * @param TableReflectionFactory $tableReflectionFactory
      * @param string $fieldName
+     * @throws BadTypeException
      */
     public function __construct(TableReflectionFactory $tableReflectionFactory, string $fieldName) {
         $this->fieldName = $fieldName;
         $this->tableReflectionFactory = $tableReflectionFactory;
+        parent::__construct(str_replace('.', '__', $fieldName), $this->getRowFactory()->getTitle());
     }
 
     /**
@@ -46,17 +48,5 @@ abstract class PersonFileLevelTest extends PersonTest {
             }
         }
         return $this->rowFactory;
-    }
-
-    /**
-     * @return string
-     * @throws BadTypeException
-     */
-    final public function getTitle(): string {
-        return $this->getRowFactory()->getTitle();
-    }
-
-    final public function getAction(): string {
-        return str_replace('.', '__', $this->fieldName);
     }
 }

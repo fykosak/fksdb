@@ -54,11 +54,10 @@ class BaseMachine {
 
     /**
      * @param string $state
-     * @param string $label
      * @return void
      */
-    public function addState(string $state, string $label) {
-        $this->states[$state] = $label;
+    public function addState(string $state) {
+        $this->states[] = $state;
     }
 
     /**

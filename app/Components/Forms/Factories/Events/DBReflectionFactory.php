@@ -11,7 +11,6 @@ use FKSDB\ORM\AbstractServiceSingle;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\Database\Connection;
-use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\TextArea;
@@ -51,7 +50,7 @@ class DBReflectionFactory extends AbstractFactory {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    protected function createComponent(Field $field, BaseMachine $machine, Container $container): IComponent {
+    public function createComponent(Field $field): IComponent {
         $element = null;
         try {
             $service = $field->getBaseHolder()->getService();
@@ -107,13 +106,11 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
     /**
-     * @param IComponent $component
+     * @param IComponent|BaseControl $component
      * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
      * @return void
      */
-    protected function setDefaultValue(IComponent $component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDefaultValue(IComponent $component, Field $field) {
 
         if ($field->getBaseHolder()->getModelState() == BaseMachine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
@@ -126,12 +123,9 @@ class DBReflectionFactory extends AbstractFactory {
 
     /**
      * @param IComponent|BaseControl $component
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
      * @return void
      */
-    protected function setDisabled(IComponent $component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDisabled(IComponent $component) {
         $component->setDisabled();
     }
 

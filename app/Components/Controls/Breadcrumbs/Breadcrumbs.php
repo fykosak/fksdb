@@ -226,11 +226,11 @@ class Breadcrumbs extends BaseComponent {
         if ($request instanceof AppRequest) {
             $parameters = $request->getParameters();
             $presenterName = $request->getPresenterName();
+            /** @var Presenter $presenterClassName */
             $presenterClassName = $this->presenterFactory->formatPresenterClass($presenterName);
             $action = $parameters[Presenter::ACTION_KEY];
             $methodName = ($presenterClassName)::publicFormatActionMethod($action);
             $identifyingParameters = [Presenter::ACTION_KEY];
-            /** @var \ReflectionClass $rc */
             $rc = ($presenterClassName)::getReflection();
             if ($rc->hasMethod($methodName)) {
                 $rm = $rc->getMethod($methodName);

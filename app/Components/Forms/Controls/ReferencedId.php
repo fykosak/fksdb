@@ -264,7 +264,6 @@ class ReferencedId extends HiddenField {
      * @return void
      */
     protected function setModel(IModel $model = null, string $mode = self::MODE_NORMAL) {
-        $container = $this->getReferencedContainer();
-        $container->setModel($model, $mode);
+        $this->getReferencedContainer()->setModel($model, $mode);
     }
 }

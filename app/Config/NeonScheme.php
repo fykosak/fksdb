@@ -24,7 +24,7 @@ class NeonScheme {
      * @return array
      * @throws NeonSchemaException
      */
-    public static function readSection($section, $sectionScheme) {
+    public static function readSection(array $section, array $sectionScheme): array {
         if (!is_array($section)) {
             throw new NeonSchemaException('Expected array got \'' . (string)$section . '\'.');
         }
@@ -70,5 +70,4 @@ class NeonScheme {
         }
         return $result;
     }
-
 }

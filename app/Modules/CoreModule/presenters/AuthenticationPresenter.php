@@ -3,6 +3,8 @@
 namespace FKSDB\Modules\CoreModule;
 
 use Authentication\SSO\GlobalSession;
+use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\BasePresenter;
 use Exception;
@@ -21,6 +23,7 @@ use Mail\SendFailedException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Forms\Controls\TextInput;
 use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\DateTime;
@@ -71,10 +74,6 @@ final class AuthenticationPresenter extends BasePresenter {
      * @var AccountManager
      */
     private $accountManager;
-    /**
-     * @var string
-     */
-    private $login;
 
     /**
      * @param ServiceAuthToken $serviceAuthToken
@@ -113,7 +112,7 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     public function titleRecover() {
-        $this->setPageTitle(new PageTitle(_('Obnova hesla')));
+        $this->setPageTitle(new PageTitle(_('Password recovery')));
     }
 
     /**
@@ -158,6 +157,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * @throws AbortException
+     * @throws BadTypeException
      */
     public function actionLogin() {
         if ($this->isLoggedIn()) {
@@ -181,8 +181,17 @@ final class AuthenticationPresenter extends BasePresenter {
                         break;
                 }
             }
-            $this->login = $this->getParameter('login');
-
+            /** @var FormControl $formControl */
+            $formControl = $this->getComponent('loginForm');
+            $login = $this->getParameter('login');
+            if ($login) {
+                $formControl->getForm()->setDefaults(['id' => $login]);
+                /** @var TextInput $input */
+                $input = $formControl->getForm()->getComponent('id');
+                /* $input->setDisabled()
+                     ->setOmitted(false)
+                     ->setDefaultValue($login);*/
+            }
         }
     }
 
@@ -193,10 +202,6 @@ final class AuthenticationPresenter extends BasePresenter {
         if ($this->isLoggedIn()) {
             $this->initialRedirect();
         }
-    }
-
-    public function renderLogin() {
-        $this->template->login = $this->login;
     }
 
     /**
@@ -218,21 +223,21 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     protected function createComponentLoginForm(): Form {
         $form = new Form($this, 'loginForm');
-        $form->addText('id', _('Přihlašovací jméno nebo email'))
+        $form->addText('id', _('Login or e-mail'))
             ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'))
             ->getControlPrototype()->addAttributes([
                 'class' => 'top form-control',
                 'autofocus' => true,
-                'placeholder' => _('Přihlašovací jméno nebo email'),
+                'placeholder' => _('Login or e-mail'),
                 'autocomplete' => 'username',
             ]);
-        $form->addPassword('password', _('Heslo'))
+        $form->addPassword('password', _('Password'))
             ->addRule(Form::FILLED, _('Zadejte heslo.'))->getControlPrototype()->addAttributes([
                 'class' => 'bottom mb-3 form-control',
-                'placeholder' => _('Heslo'),
+                'placeholder' => _('Password'),
                 'autocomplete' => 'current-password',
             ]);
-        $form->addSubmit('send', _('Přihlásit'));
+        $form->addSubmit('send', _('Log in'));
         $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
         $form->onSuccess[] = function (Form $form) {
             return $this->loginFormSubmitted($form);
@@ -265,9 +270,10 @@ final class AuthenticationPresenter extends BasePresenter {
      * @throws AbortException
      */
     private function loginFormSubmitted(Form $form) {
+        $values = $form->getValues();
         try {
             // TODO use form->getValues()
-            $this->user->login($form['id']->value, $form['password']->value);
+            $this->user->login($values['id'], $values['password']);
             /** @var ModelLogin $login */
             $login = $this->user->getIdentity();
             $this->loginBackLinkRedirect($login);

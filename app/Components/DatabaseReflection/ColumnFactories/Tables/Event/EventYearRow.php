@@ -35,6 +35,7 @@ class EventYearRow extends AbstractColumnFactory {
     public function getPermission(): FieldLevelPermission {
         return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
     }
+
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }
