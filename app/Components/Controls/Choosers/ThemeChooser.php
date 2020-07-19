@@ -14,13 +14,11 @@ use Nette\Http\SessionSection;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ThemeChooser extends Chooser {
-    /**
-     * @var array
-     */
+
+    /** @var array */
     private $availableThemes = ['light', 'dark'];
-    /**
-     * @var Session
-     */
+
+    /** @var Session */
     private $session;
 
     /**

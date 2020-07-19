@@ -28,24 +28,16 @@ use Nette\Utils\JsonException;
  */
 class ApplicationComponent extends BaseComponent {
 
-    /**
-     * @var ApplicationHandler
-     */
+    /** @var ApplicationHandler */
     private $handler;
 
-    /**
-     * @var Holder
-     */
+    /** @var Holder */
     private $holder;
 
-    /**
-     * @var callable ($primaryModelId, $eventId)
-     */
+    /** @var callable ($primaryModelId, $eventId) */
     private $redirectCallback;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $templateFile;
 
     /**

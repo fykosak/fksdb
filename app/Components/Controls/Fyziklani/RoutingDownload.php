@@ -13,17 +13,14 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class RoutingDownload extends BaseComponent {
-    /**
-     * @var bool
-     */
+
+    /** @var bool */
     private static $JSAttached = false;
-    /**
-     * @var ModelEvent
-     */
+
+    /** @var ModelEvent */
     private $event;
-    /**
-     * @var ServiceFyziklaniTeam
-     */
+
+    /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
 
     /**

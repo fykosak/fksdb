@@ -10,13 +10,11 @@ use Nette\Application\UI\InvalidLinkException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class SeriesChooser extends Chooser {
-    /**
-     * @var int
-     */
+
+    /** @var int */
     private $currentSeries;
-    /**
-     * @var int[]
-     */
+
+    /** @var int[] */
     private $allowedSeries;
 
     /**

@@ -20,22 +20,16 @@ use ReflectionMethod;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Navigation extends BaseComponent {
-    /**
-     * @var array[]
-     */
+    /** @var array[] */
     private $nodes = [];
-    /**
-     * @var array
-     */
+
+    /** @var array */
     private $nodeChildren = [];
 
-    /**
-     * @var PresenterBuilder
-     */
+    /** @var PresenterBuilder */
     private $presenterBuilder;
-    /**
-     * @var array
-     */
+
+    /** @var array */
     private $structure;
 
     /**

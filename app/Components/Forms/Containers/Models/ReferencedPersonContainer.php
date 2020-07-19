@@ -4,7 +4,6 @@ namespace FKSDB\Components\Forms\Containers\Models;
 
 use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\Components\DatabaseReflection\OmittedControlException;
-use FKSDB\Components\Forms\Containers\AddressContainer;
 use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\AddressFactory;
@@ -246,7 +245,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @param string $sub
      * @param string $fieldName
      * @param array $metadata
-     * @return IComponent|AddressContainer|BaseControl
+     * @return IComponent
      * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws JsonException

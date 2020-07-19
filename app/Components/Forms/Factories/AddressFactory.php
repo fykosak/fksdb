@@ -7,6 +7,7 @@ use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use FKSDB\ORM\Services\ServiceAddress;
 use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Application\UI\Form;
+use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\IControl;
 use Persons\ReferencedPersonHandler;
@@ -31,15 +32,19 @@ class AddressFactory {
      * @var ServiceRegion
      */
     private $serviceRegion;
+    /** @var Container */
+    private $container;
 
     /**
      * AddressFactory constructor.
+     * @param Container $container
      * @param ServiceAddress $serviceAddress
      * @param ServiceRegion $serviceRegion
      */
-    public function __construct(ServiceAddress $serviceAddress, ServiceRegion $serviceRegion) {
+    public function __construct(Container $container, ServiceAddress $serviceAddress, ServiceRegion $serviceRegion) {
         $this->serviceAddress = $serviceAddress;
         $this->serviceRegion = $serviceRegion;
+        $this->container = $container;
     }
 
     /**
@@ -48,13 +53,13 @@ class AddressFactory {
      * @return AddressContainer
      */
     public function createAddress($options = 0, IControl $conditioningField = null): AddressContainer {
-        $container = new AddressContainer();
+        $container = new AddressContainer($this->container);
         $this->buildAddress($container, $options, $conditioningField);
         return $container;
     }
 
     public function createAddressContainer(string $type): AddressContainer {
-        $container = new AddressContainer();
+        $container = new AddressContainer($this->container);
         $this->buildAddress($container, self::NOT_WRITEONLY); // TODO is not safe
         switch ($type) {
             case ReferencedPersonHandler::POST_CONTACT_DELIVERY:
@@ -76,8 +81,6 @@ class AddressFactory {
      * @param int $options
      */
     public function buildAddress(AddressContainer $container, int $options = 0, IControl $conditioningField = null) {
-        $container->setServiceRegion($this->serviceRegion);
-
         if ($options & self::SHOW_EXTENDED_ROWS) {
             $container->addText('first_row', _('První řádek'))
                 ->setOption('description', _('První volitelný řádek adresy (např. bytem u)'));

@@ -44,19 +44,13 @@ class Breadcrumbs extends BaseComponent {
     /** @var Session */
     private $session;
 
-    /**
-     * @var IRouter
-     */
+    /** @var IRouter */
     private $router;
 
-    /**
-     * @var HttpRequest
-     */
+    /** @var HttpRequest */
     private $httpRequest;
 
-    /**
-     * @var IPresenterFactory
-     */
+    /** @var IPresenterFactory */
     private $presenterFactory;
 
     /**

@@ -7,6 +7,7 @@ use FKSDB\ORM\Models\ModelAddress;
 use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Database\Table\ActiveRow;
+use Nette\DI\Container as DIContainer;
 use Nette\Forms\Container;
 use Nette\InvalidStateException;
 use Nette\Utils\ArrayHash;
@@ -16,17 +17,22 @@ use Nette\Utils\ArrayHash;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class AddressContainer extends ModelContainer {
+    /** @var ServiceRegion */
+    private $serviceRegion;
 
     /**
-     * @var ServiceRegion
+     * AddressContainer constructor.
+     * @param DIContainer $container
      */
-    private $serviceRegion;
+    public function __construct(DIContainer $container) {
+        parent::__construct($container);
+    }
 
     /**
      * @param ServiceRegion $serviceRegion
      * @return void
      */
-    public function setServiceRegion(ServiceRegion $serviceRegion) {
+    public function injectServiceRegion(ServiceRegion $serviceRegion) {
         $this->serviceRegion = $serviceRegion;
     }
 

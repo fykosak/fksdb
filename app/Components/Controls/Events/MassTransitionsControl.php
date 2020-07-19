@@ -18,12 +18,13 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class MassTransitionsControl extends BaseComponent {
-    /**
-     * @var ModelEvent
-     */
+
+    /** @var ModelEvent */
     private $event;
+
     /** @var EventDispatchFactory */
     private $eventDispatchFactory;
+
     /** @var ApplicationHandlerFactory */
     private $applicationHandlerFactory;
 
@@ -67,7 +68,7 @@ class MassTransitionsControl extends BaseComponent {
      * @throws NeonSchemaException
      */
     public function handleTransition(string $name) {
-        $source = new SingleEventSource($this->event, $this->getContext(),$this->eventDispatchFactory);
+        $source = new SingleEventSource($this->event, $this->getContext(), $this->eventDispatchFactory);
         $logger = new MemoryLogger();
         $total = 0;
         $errored = 0;

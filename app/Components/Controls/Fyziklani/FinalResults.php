@@ -15,13 +15,10 @@ use Nette\DI\Container;
  */
 class FinalResults extends BaseComponent {
 
-    /**
-     * @var ServiceFyziklaniTeam|null
-     */
+    /** @var ServiceFyziklaniTeam|null */
     private $serviceFyziklaniTeam;
-    /**
-     * @var ModelEvent
-     */
+
+    /** @var ModelEvent */
     private $event;
 
     /**
