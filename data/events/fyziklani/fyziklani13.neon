@@ -68,7 +68,6 @@ events:
     fyziklani13:
         event_type_id: 1
         eventYears: [13] # specify for which years this machine is valid, by default all years
-        tableLayout: fyziklani.grid
         formLayout: fyziklani/fyziklani13.form
         paramScheme:
             notifyBcc:
@@ -80,11 +79,6 @@ events:
                 default: 2
             teamsPerSchool:
                 default: 2
-            gameSetup:
-                default:
-                    %events.fyziklaniGameSetup%
-            schedule:
-                default: %events.fyziklani13.schedule% # aby sa k tomu dalo dokopať
 
         baseMachines:
             #
@@ -95,14 +89,7 @@ events:
                 personIds: [teacher_id]
                 eventId: e_fyziklani_team.event_id
 
-                states:
-                    pending: _('Čeká na schválení')
-                    spare: _('Náhradník')
-                    approved: _('Potvrzen')
-                    participated: _('Účastnil se')
-                    cancelled: _('Zrušen')
-                    missed: _('Nepřijel')
-                    disqualified: _('Diskvalifikován')
+                states: %events.defaultFyziklani.teamStates%
 
                 transitions:
                     __init->pending:
@@ -179,11 +166,7 @@ events:
                 joinOn: e_fyziklani_team_id
                 personIds: [:e_fyziklani_participant.event_participant.person_id]
 
-                states:
-                    applied: _('Přihlášen')
-                    participated: _('Účastnil se')
-                    missed: _('Nepřijel')
-                    cancelled: _('Zrušen')
+                states: %events.defaultFyziklani.participantStates%
 
                 transitions:
                     __init->applied:
@@ -204,7 +187,7 @@ events:
 
                 fields:
                     person_id:
-                        label: _('Osoba')
+                        label: _('Person')
                         visible: true
                         modifiable: %events.fyziklani13.appCond%
                         determining: true

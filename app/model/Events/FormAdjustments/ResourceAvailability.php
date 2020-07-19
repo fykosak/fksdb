@@ -117,7 +117,7 @@ class ResourceAvailability extends AbstractAdjustment {
         }
 
         $usage = 0;
-        /** @var IService[] $serviceData */
+        /** @var IService[]|BaseHolder[][] $serviceData */
         foreach ($services as $serviceData) {
             /**
              * @var BaseHolder $firstHolder

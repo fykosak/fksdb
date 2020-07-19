@@ -17,6 +17,7 @@ use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\TextInput;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -83,6 +84,10 @@ class SettingsPresenter extends AuthenticatedPresenter {
         $this->setPageTitle(new PageTitle(_('Settings'), 'fa fa-cogs'));
     }
 
+    /**
+     * @return void
+     * @throws BadTypeException
+     */
     public function renderDefault() {
         /**
          * @var ModelLogin $login
@@ -92,7 +97,9 @@ class SettingsPresenter extends AuthenticatedPresenter {
         $defaults = [
             self::CONT_LOGIN => $login->toArray(),
         ];
-        $this->getComponent('settingsForm')->getForm()->setDefaults($defaults);
+        /** @var FormControl $control */
+        $control = $this->getComponent('settingsForm');
+        $control->getForm()->setDefaults($defaults);
 
         if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN)) {
             $this->flashMessage(_('Nastavte si nové heslo.'), self::FLASH_WARNING);
@@ -131,9 +138,10 @@ class SettingsPresenter extends AuthenticatedPresenter {
         }
         $loginContainer = $this->loginFactory->createLogin($options, $group, $loginRule);
         $form->addComponent($loginContainer, self::CONT_LOGIN);
-
-        if ($loginContainer->getComponent('old_password', false)) {
-            $loginContainer->getComponent('old_password')
+        /** @var TextInput|null $oldPasswordControl */
+        $oldPasswordControl = $loginContainer->getComponent('old_password', false);
+        if ($oldPasswordControl) {
+            $oldPasswordControl
                 ->addCondition(Form::FILLED)
                 ->addRule(function (BaseControl $control) use ($login) {
                     $hash = PasswordAuthenticator::calculateHash($control->getValue(), $login);

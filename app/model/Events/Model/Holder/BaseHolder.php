@@ -453,7 +453,7 @@ class BaseHolder {
         });
     }
 
-    public function createFormContainer(BaseMachine $machine): ContainerWithOptions {
+    public function createFormContainer(): ContainerWithOptions {
         $container = new ContainerWithOptions();
         $container->setOption('label', $this->getLabel());
         $container->setOption('description', $this->getDescription());
@@ -462,9 +462,9 @@ class BaseHolder {
             if (!$field->isVisible()) {
                 continue;
             }
-            $component = $field->createFormComponent($machine, $container);
+            $component = $field->createFormComponent();
             $container->addComponent($component, $name);
-
+            $field->setFieldDefaultValue($component);
         }
         return $container;
     }

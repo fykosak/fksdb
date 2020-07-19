@@ -116,7 +116,6 @@ class EventsExtension extends CompilerExtension {
             $this->definitionsMap[$definitionName] = [
                 'eventTypes' => $eventTypeIds,
                 'years' => $definition['eventYears'],
-                'tableLayout' => $definition['tableLayout'],
                 'formLayout' => $definition['formLayout'],
             ];
             /*
@@ -344,17 +343,16 @@ class EventsExtension extends CompilerExtension {
           }*/
 
         $definition = NeonScheme::readSection($definition, $this->scheme['baseMachine']);
-        foreach ($definition['states'] as $state => $label) {
+        foreach ($definition['states'] as $state) {
             if (strlen($state) > self::STATE_SIZE) {
                 throw new MachineDefinitionException("State name '$state' is too long. Use " . self::STATE_SIZE . " characters at most.");
             }
-            $factory->addSetup('addState', [$state, $label]);
+            $factory->addSetup('addState', [$state]);
         }
-        $states = array_keys($definition['states']);
 
         foreach ($definition['transitions'] as $mask => $transitionRawDef) {
             $transitionDef = NeonScheme::readSection($transitionRawDef, $this->scheme['transition']);
-            $factory->addSetup('addTransition', [$this->createTransitionService($factoryName, $states, $mask, $transitionDef)]);
+            $factory->addSetup('addTransition', [$this->createTransitionService($factoryName, $definition['states'], $mask, $transitionDef)]);
         }
 
         return $factory;

@@ -28,7 +28,6 @@ use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\DateTime;
 use FKSDB\Utils\Utils;
-use Tracy\Debugger;
 
 /**
  * Class AuthenticationPresenter
