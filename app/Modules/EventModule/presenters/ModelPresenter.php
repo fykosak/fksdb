@@ -3,8 +3,8 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Events\GraphComponent;
+use FKSDB\Events\EventNotFoundException;
 use FKSDB\UI\PageTitle;
-use Nette\Application\BadRequestException;
 
 /**
  * Class ModelPresenter
@@ -14,7 +14,7 @@ class ModelPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function authorizedDefault() {
         $this->setAuthorized($this->isContestsOrgAuthorized('event.model', 'default'));
@@ -22,7 +22,7 @@ class ModelPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function titleDefault() {
         $this->setPageTitle(new PageTitle(_('Model of event'), 'fa fa-cubes'));
@@ -30,7 +30,7 @@ class ModelPresenter extends BasePresenter {
 
     /**
      * @return GraphComponent
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function createComponentGraphComponent(): GraphComponent {
         $machine = $this->getEventDispatchFactory()->getEventMachine($this->getEvent());

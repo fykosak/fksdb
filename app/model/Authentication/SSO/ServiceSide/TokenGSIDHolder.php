@@ -19,13 +19,9 @@ class TokenGSIDHolder implements IGSIDHolder {
     const URL_PARAM = 'at';
     const SESSION_KEY = '_sso';
 
-    /**
-     * @var Connection
-     */
+    /** @var Connection */
     private $connection;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $cachedGSID = false;
 
     /**
@@ -56,7 +52,7 @@ class TokenGSIDHolder implements IGSIDHolder {
     }
 
     /**
-     * @param $gsid
+     * @param mixed $gsid
      * @return mixed|void
      */
     public function setGSID($gsid) {
@@ -70,7 +66,7 @@ class TokenGSIDHolder implements IGSIDHolder {
     }
 
     /**
-     * @param $token
+     * @param string $token
      * @return null
      */
     private function getGSIDFromDB($token) {

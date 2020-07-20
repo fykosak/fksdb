@@ -20,17 +20,11 @@ class ScheduleField extends TextInput {
 
     use ReactComponentTrait;
 
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
-    /**
-     * @var string
-     */
+    /** @var string */
     private $type;
-    /**
-     * @var ServiceScheduleItem
-     */
+    /** @var ServiceScheduleItem */
     private $serviceScheduleItem;
 
     /**
@@ -38,9 +32,9 @@ class ScheduleField extends TextInput {
      * @param ModelEvent $event
      * @param string $type
      * @param ServiceScheduleItem $serviceScheduleItem
+     * @throws BadRequestException
      * @throws JsonException
      * @throws NotImplementedException
-     * @throws BadRequestException
      */
     public function __construct(ModelEvent $event, string $type, ServiceScheduleItem $serviceScheduleItem) {
         parent::__construct($this->getLabelByType($type));

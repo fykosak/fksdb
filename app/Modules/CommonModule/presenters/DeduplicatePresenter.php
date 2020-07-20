@@ -6,7 +6,6 @@ use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Table\ActiveRow;
 use Persons\Deduplication\DuplicateFinder;
@@ -19,14 +18,10 @@ use Persons\Deduplication\Merger;
  */
 class DeduplicatePresenter extends BasePresenter {
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     private $servicePerson;
 
-    /**
-     * @var Merger
-     */
+    /** @var Merger */
     private $merger;
 
     /**
@@ -62,7 +57,7 @@ class DeduplicatePresenter extends BasePresenter {
     /**
      * @throws ForbiddenRequestException
      * @throws AbortException
-     * @throws BadRequestException
+     *
      */
     public function handleBatchMerge() {
         if (!$this->getContestAuthorizator()->isAllowedForAnyContest('person', 'merge')) { //TODO generic authorizator
@@ -102,6 +97,6 @@ class DeduplicatePresenter extends BasePresenter {
     }
 
     protected function createPersonDuplicateFinder(): DuplicateFinder {
-        return new DuplicateFinder($this->servicePerson, $this->globalParameters);
+        return new DuplicateFinder($this->servicePerson, $this->getContext());
     }
 }

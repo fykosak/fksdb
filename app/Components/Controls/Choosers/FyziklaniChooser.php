@@ -16,14 +16,11 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class FyziklaniChooser extends Chooser {
-    /**
-     * @var ModelEvent
-     */
+
+    /** @var ModelEvent */
     private $event;
 
-    /**
-     * @var ServiceEvent
-     */
+    /** @var ServiceEvent */
     private $serviceEvent;
 
     /**
@@ -56,7 +53,7 @@ class FyziklaniChooser extends Chooser {
         return $item->event_id === $this->event->event_id;
     }
 
-    public function getTitle(): Title {
+    protected function getTitle(): Title {
         return new Title(_('Event'));
     }
 

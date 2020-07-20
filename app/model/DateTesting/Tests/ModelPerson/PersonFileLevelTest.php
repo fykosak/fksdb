@@ -11,27 +11,23 @@ use FKSDB\Exceptions\BadTypeException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class PersonFileLevelTest extends PersonTest {
-    /**
-     * @var ITestedColumnFactory
-     */
+    /** @var ITestedColumnFactory */
     private $rowFactory;
-    /**
-     * @var string
-     */
+    /** @var string */
     private $fieldName;
-    /**
-     * @var TableReflectionFactory
-     */
+    /** @var TableReflectionFactory */
     private $tableReflectionFactory;
 
     /**
      * PersonFileLevelTest constructor.
      * @param TableReflectionFactory $tableReflectionFactory
      * @param string $fieldName
+     * @throws BadTypeException
      */
     public function __construct(TableReflectionFactory $tableReflectionFactory, string $fieldName) {
         $this->fieldName = $fieldName;
         $this->tableReflectionFactory = $tableReflectionFactory;
+        parent::__construct(str_replace('.', '__', $fieldName), $this->getRowFactory()->getTitle());
     }
 
     /**
@@ -46,17 +42,5 @@ abstract class PersonFileLevelTest extends PersonTest {
             }
         }
         return $this->rowFactory;
-    }
-
-    /**
-     * @return string
-     * @throws BadTypeException
-     */
-    final public function getTitle(): string {
-        return $this->getRowFactory()->getTitle();
-    }
-
-    final public function getAction(): string {
-        return str_replace('.', '__', $this->fieldName);
     }
 }

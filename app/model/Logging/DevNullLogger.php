@@ -12,7 +12,7 @@ use FKSDB\Messages\Message;
 class DevNullLogger extends StackedLogger {
 
     /**
-     * @param $message
+     * @param Message $message
      * @return void
      */
     protected function doLog(Message $message) {

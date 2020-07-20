@@ -18,28 +18,20 @@ class BaseMachine {
     const EXECUTABLE = 0x1;
     const VISIBLE = 0x2;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $name;
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $states;
 
-    /**
-     * @var Transition[]
-     */
+    /** @var Transition[] */
     private $transitions = [];
 
-    /**
-     * @var Machine
-     */
+    /** @var Machine */
     private $machine;
 
     /**
      * BaseMachine constructor.
-     * @param $name
+     * @param string $name
      */
     public function __construct(string $name) {
         $this->name = $name;
@@ -54,11 +46,10 @@ class BaseMachine {
 
     /**
      * @param string $state
-     * @param string $label
      * @return void
      */
-    public function addState(string $state, string $label) {
-        $this->states[$state] = $label;
+    public function addState(string $state) {
+        $this->states[] = $state;
     }
 
     /**
@@ -98,11 +89,11 @@ class BaseMachine {
 
 
     /**
-     * @param $transitionMask
-     * @param $induced
+     * @param string $transitionMask
+     * @param array $induced
      * @return void
      */
-    public function addInducedTransition($transitionMask, $induced) {
+    public function addInducedTransition(string $transitionMask, array $induced) {
         foreach ($this->getMatchingTransitions($transitionMask) as $transition) {
             foreach ($induced as $machineName => $state) {
                 $targetMachine = $this->getMachine()->getBaseMachine($machineName);

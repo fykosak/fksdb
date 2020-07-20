@@ -6,6 +6,7 @@ use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Application\IStylesheetCollector;
 use FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs;
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory;
+use FKSDB\Components\Controls\Choosers\ThemeChooser;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Components\Controls\Navigation\Navigation;
 use FKSDB\Components\Controls\PresenterBuilder;
@@ -14,8 +15,8 @@ use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
-use FKSDB\Config\GlobalParameters;
 use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Logging\ILogger;
 use FKSDB\Modules\Core\PresenterTraits\CollectorPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\LangPresenterTrait;
@@ -68,8 +69,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /** @var ServiceContest */
     private $serviceContest;
 
-    /** @var GlobalParameters */
-    protected $globalParameters;
 
     /** @var BreadcrumbsFactory */
     private $breadcrumbsFactory;
@@ -80,28 +79,18 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /** @var PresenterBuilder */
     private $presenterBuilder;
 
-    /**
-     * @var PageTitle|null
-     */
+    /** @var PageTitle|null */
     private $pageTitle;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $authorized = true;
 
-    /**
-     * @var bool[]
-     */
+    /** @var bool[] */
     private $authorizedCache = [];
 
-    /**
-     * @var FullHttpRequest
-     */
+    /** @var FullHttpRequest */
     private $fullRequest;
-    /**
-     * @var PageStyleContainer
-     */
+    /** @var PageStyleContainer */
     private $pageStyleContainer;
 
     public function getYearCalculator(): YearCalculator {
@@ -126,14 +115,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     public function injectServiceContest(ServiceContest $serviceContest) {
         $this->serviceContest = $serviceContest;
-    }
-
-    /**
-     * @param GlobalParameters $globalParameters
-     * @return void
-     */
-    public function injectGlobalParameters(GlobalParameters $globalParameters) {
-        $this->globalParameters = $globalParameters;
     }
 
     /**
@@ -162,7 +143,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
     protected function startup() {
         parent::startup();
@@ -182,10 +163,11 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * IJSONProvider
      * ****************************** */
     /**
-     * @param $acName
-     * @param $acQ
-     * @throws BadRequestException
+     * @param mixed|string $acName
+     * @param mixed|string $acQ
+     * @return void
      * @throws AbortException
+     * @throws BadRequestException
      */
     public function handleAutocomplete($acName, $acQ) {
         if (!$this->isAjax()) {
@@ -274,9 +256,9 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
-     *
-     * @throws BadRequestException
+     * @throws BadTypeException
      * @throws ReflectionException
+     * @throws UnsupportedLanguageException
      */
     protected function beforeRender() {
         parent::beforeRender();
@@ -326,6 +308,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return new DetailComponent($this->getContext());
     }
 
+    protected function createComponentThemeChooser(): ThemeChooser {
+        return new ThemeChooser($this->getContext());
+    }
+
     /**
      * @param bool $need
      * @throws AbortException
@@ -334,9 +320,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     final public function backLinkRedirect($need = false) {
         $this->putIntoBreadcrumbs();
-        /**
-         * @var Breadcrumbs $component
-         */
+        /** @var Breadcrumbs $component */
         $component = $this->getComponent('breadcrumbs');
         $backLink = $component->getBackLinkUrl();
         if ($backLink) {
@@ -363,7 +347,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
-     * @param $element
+     * @param mixed $element
      * @throws ForbiddenRequestException
      */
     public function checkRequirements($element) {
@@ -372,7 +356,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
-     * @param $destination
+     * @param string $destination
      * @param null $args
      * @return bool|mixed
      * @throws BadRequestException

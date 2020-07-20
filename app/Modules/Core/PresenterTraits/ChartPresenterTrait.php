@@ -11,10 +11,10 @@ use Nette\Application\UI\Control;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 trait ChartPresenterTrait {
-    /**
-     * @var IChart
-     */
+    /** @var IChart */
     protected $selectedChart;
+    /** @var IChart[] */
+    private $chartComponents;
 
     public function titleChart() {
         $this->setPageTitle(new PageTitle($this->selectedChart->getTitle(), 'fa fa-pie-chart'));
@@ -36,19 +36,16 @@ trait ChartPresenterTrait {
      * @return IChart[]
      */
     protected function getCharts(): array {
-        static $chartComponents;
-        if (!$chartComponents) {
-            $chartComponents = $this->registerCharts();
-        }
-        return $chartComponents;
+        $this->chartComponents = $this->chartComponents ?? $this->registerCharts();
+        return $this->chartComponents;
     }
 
     protected function selectChart() {
-        foreach ($this->getCharts() as $action => $chart) {
-            if ($action === $this->getAction()) {
-                $this->selectedChart = $chart;
-                $this->setView('chart');
-            }
+        $charts = $this->getCharts();
+        $action = $this->getAction();
+        if (isset($charts[$action])) {
+            $this->selectedChart = $charts[$action];
+            $this->setView('chart');
         }
     }
 

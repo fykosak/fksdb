@@ -9,7 +9,6 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -20,7 +19,7 @@ use SQL\SearchableDataSource;
 
 /**
  * Class AbstractApplicationGrid
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractApplicationGrid extends BaseGrid {
     /** @var ModelEvent */
@@ -51,7 +50,7 @@ abstract class AbstractApplicationGrid extends BaseGrid {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function createComponentSearchForm(): FormControl {
         $query = $this->getSource()->select('count(*) AS count,status.*')->group('status');

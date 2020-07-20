@@ -24,29 +24,19 @@ abstract class AbstractProcessing implements IProcessing {
     const DELIMITER = '.';
     const WILDCART = '*';
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $valuesPathCache;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $formPathCache;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $states;
-    /**
-     * @var Holder
-     */
+    /** @var Holder */
     private $holder;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $values;
 
     /**
-     * @param $states
+     * @param array $states
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder
@@ -62,7 +52,7 @@ abstract class AbstractProcessing implements IProcessing {
     }
 
     /**
-     * @param $states
+     * @param array $states
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder
@@ -73,7 +63,7 @@ abstract class AbstractProcessing implements IProcessing {
     abstract protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null);
 
     /**
-     * @param $mask
+     * @param string $mask
      * @return bool
      */
     final protected function hasWildcart($mask) {
@@ -126,7 +116,7 @@ abstract class AbstractProcessing implements IProcessing {
      * When it returns false, correct value can be loaded from the model
      * (which is not updated yet).
      *
-     * @param $name
+     * @param string $name
      * @return bool
      */
     final protected function isBaseReallyEmpty($name) {

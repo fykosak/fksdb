@@ -3,6 +3,7 @@
 namespace Persons;
 
 use FKSDB\Components\Controls\Entity\Person\PersonForm;
+use FKSDB\Components\Controls\Entity\Person\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\IReferencedHandler;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
@@ -29,7 +30,6 @@ use Nette\Utils\ArrayHash;
 use Nette\Utils\JsonException;
 use FKSDB\ORM\ServicesMulti\ServiceMPersonHasFlag;
 use FKSDB\ORM\ServicesMulti\ServiceMPostContact;
-use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -180,9 +180,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 self::POST_CONTACT_DELIVERY => $person->getDeliveryAddress() ?: null,
                 self::POST_CONTACT_PERMANENT => $person->getPermanentAddress(true) ?: null,
             ];
-            /**
-             * @var IService[] $services
-             */
+            /** @var IService[] $services */
             $services = [];
 
             $originalModels = \array_keys(iterator_to_array($data));
@@ -234,7 +232,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                     if ($models[$t]) {
                         $this->serviceMPostContact->updateModel2($model, $datum);
                     } else {
-                        $this->serviceMPostContact->createNewModel(array_merge($datum, ['type' => PersonForm::mapAddressContainerNameToType($t)]));
+                        $this->serviceMPostContact->createNewModel(array_merge($datum, ['type' => PersonFormComponent::mapAddressContainerNameToType($t)]));
                     }
                     continue;
                 }
@@ -388,7 +386,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
     /**
      * @param ModelPerson $person
      * @param ArrayHash $data
-     * @param $models
+     * @param array $models
      * @throws ModelException
      */
     private function prepareFlagModels(ModelPerson $person, ArrayHash &$data, array &$models) {

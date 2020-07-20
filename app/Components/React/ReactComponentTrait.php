@@ -14,17 +14,11 @@ use Nette\Utils\JsonException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 trait ReactComponentTrait {
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $actions = [];
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private static $attachedJS = false;
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $reactId;
 
     /**
@@ -38,9 +32,8 @@ trait ReactComponentTrait {
 
     /**
      * @param mixed ...$args
-     * @throws JsonException
      * @throws BadRequestException
-     * Can be used only with BaseControl
+     * @throws JsonException Can be used only with BaseControl
      */
     protected function appendProperty(...$args) {
         if (!$this instanceof BaseControl) {

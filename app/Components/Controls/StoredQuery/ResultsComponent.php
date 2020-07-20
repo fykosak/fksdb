@@ -12,7 +12,6 @@ use FKSDB\Components\Grids\StoredQuery\ResultsGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotFoundException;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
@@ -34,19 +33,13 @@ class ResultsComponent extends BaseComponent {
      */
     public $parameters = [];
 
-    /**
-     * @var StoredQuery
-     */
+    /** @var StoredQuery */
     private $storedQuery;
 
-    /**
-     * @var ContestAuthorizator
-     */
+    /** @var ContestAuthorizator */
     private $contestAuthorizator;
 
-    /**
-     * @var StoredQueryFactory
-     */
+    /** @var StoredQueryFactory */
     private $storedQueryFormFactory;
 
     /**
@@ -55,14 +48,10 @@ class ResultsComponent extends BaseComponent {
      */
     private $exportFormatFactory;
 
-    /**
-     * @var null|bool|string
-     */
+    /** @var null|bool|string */
     private $error;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $showParametrizeForm = true;
 
     /**
@@ -106,7 +95,7 @@ class ResultsComponent extends BaseComponent {
     }
 
     /**
-     * @param $parameters
+     * @param array $parameters
      * @return void
      */
     public function updateParameters(array $parameters) {
@@ -122,7 +111,7 @@ class ResultsComponent extends BaseComponent {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function createComponentParametrizeForm(): FormControl {
         $control = new FormControl();

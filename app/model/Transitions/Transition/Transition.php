@@ -6,44 +6,29 @@ use FKSDB\Logging\ILogger;
 use FKSDB\Transitions\Statements\Statement;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
+ * Class Transition
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 final class Transition {
     const TYPE_SUCCESS = ILogger::SUCCESS;
     const TYPE_WARNING = ILogger::WARNING;
     const TYPE_DANGER = ILogger::ERROR;
     const TYPE_PRIMARY = ILogger::PRIMARY;
-    /**
-     * @var Callable
-     */
+    /** @var Callable */
     private $condition;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $type = self::TYPE_PRIMARY;
-    /**
-     * @var string
-     */
+    /** @var string */
     private $label;
-    /**
-     * @var callable[]
-     */
+    /** @var callable[] */
     public $beforeExecuteCallbacks = [];
-    /**
-     * @var callable[]
-     */
+    /** @var callable[] */
     public $afterExecuteCallbacks = [];
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $fromState;
-    /**
-     * @var string
-     */
+    /** @var string */
     private $toState;
 
     /**

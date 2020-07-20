@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
 use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
@@ -21,18 +22,14 @@ use Nette\Utils\DateTime;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ResultsAndStatistics extends FyziklaniReactControl {
-    /**
-     * @var ServiceFyziklaniTeam
-     */
+
+    /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
 
-    /**
-     * @var ServiceFyziklaniTask
-     */
+    /** @var ServiceFyziklaniTask */
     private $serviceFyziklaniTask;
-    /**
-     * @var ServiceFyziklaniSubmit
-     */
+
+    /** @var ServiceFyziklaniSubmit */
     private $serviceFyziklaniSubmit;
 
     /**
@@ -68,6 +65,7 @@ class ResultsAndStatistics extends FyziklaniReactControl {
      * @return void
      * @throws AbortException
      * @throws BadRequestException
+     * @throws BadTypeException
      * @throws NotSetGameParametersException
      */
     public function handleRefresh() {

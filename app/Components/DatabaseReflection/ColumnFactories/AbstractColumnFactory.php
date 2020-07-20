@@ -5,8 +5,8 @@ namespace FKSDB\Components\DatabaseReflection\ColumnFactories;
 use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
 use FKSDB\Components\DatabaseReflection\ReferencedFactory;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
-use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\SmartObject;
@@ -49,7 +49,7 @@ abstract class AbstractColumnFactory implements IColumnFactory {
      * @param AbstractModelSingle $model
      * @param int $userPermissionsLevel
      * @return Html
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     final public function renderValue(AbstractModelSingle $model, int $userPermissionsLevel): Html {
         if (!$this->hasReadPermissions($userPermissionsLevel)) {
@@ -65,7 +65,7 @@ abstract class AbstractColumnFactory implements IColumnFactory {
     /**
      * @param AbstractModelSingle $modelSingle
      * @return AbstractModelSingle|null
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function getModel(AbstractModelSingle $modelSingle) {
         return $this->referencedFactory->accessModel($modelSingle);

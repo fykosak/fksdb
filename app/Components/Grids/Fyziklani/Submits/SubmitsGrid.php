@@ -15,9 +15,7 @@ use NiftyGrid\DuplicateColumnException;
  */
 abstract class SubmitsGrid extends BaseGrid {
 
-    /**
-     * @var ServiceFyziklaniSubmit
-     */
+    /** @var ServiceFyziklaniSubmit */
     protected $serviceFyziklaniSubmit;
 
     /**

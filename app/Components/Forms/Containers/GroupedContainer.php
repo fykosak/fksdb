@@ -18,14 +18,12 @@ class GroupedContainer extends Container {
      * @var ControlGroup[]
      */
     private $groups = [];
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $prefix;
 
     /**
      * GroupedContainer constructor.
-     * @param $prefix
+     * @param string $prefix
      */
     public function __construct($prefix) {
         parent::__construct();

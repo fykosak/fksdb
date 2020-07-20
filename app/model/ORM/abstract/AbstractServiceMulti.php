@@ -16,14 +16,10 @@ use Nette\SmartObject;
 abstract class AbstractServiceMulti implements IService {
     use SmartObject;
 
-    /**
-     * @var AbstractServiceSingle
-     */
+    /** @var AbstractServiceSingle */
     protected $mainService;
 
-    /**
-     * @var AbstractServiceSingle
-     */
+    /** @var AbstractServiceSingle */
     protected $joinedService;
 
     /**
@@ -69,7 +65,7 @@ abstract class AbstractServiceMulti implements IService {
 
     /**
      * @param IModel|AbstractModelMulti $model
-     * @param $data
+     * @param iterable $data
      * @param bool $alive
      * @return void
      */

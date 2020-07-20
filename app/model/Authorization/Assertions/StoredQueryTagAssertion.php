@@ -5,6 +5,7 @@ namespace Authorization\Assertions;
 use FKSDB\StoredQuery\StoredQuery;
 use Nette\InvalidArgumentException;
 use Nette\Security\IResource;
+use Nette\Security\IRole;
 use Nette\Security\Permission;
 use Nette\SmartObject;
 
@@ -17,14 +18,12 @@ class StoredQueryTagAssertion {
 
     use SmartObject;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $tagNames;
 
     /**
      * StoredQueryTagAssertion constructor.
-     * @param $tagNames
+     * @param array|string $tagNames
      */
     public function __construct($tagNames) {
         if (!is_array($tagNames)) {
@@ -35,7 +34,7 @@ class StoredQueryTagAssertion {
 
     /**
      * @param Permission $acl
-     * @param $role
+     * @param IRole $role
      * @param IResource|string|null $resourceId
      * @param string|null $privilege
      * @return bool

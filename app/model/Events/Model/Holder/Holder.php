@@ -27,39 +27,25 @@ use Nette\Utils\ArrayHash;
  */
 class Holder {
 
-    /**
-     * @var IFormAdjustment[]
-     */
+    /** @var IFormAdjustment[] */
     private $formAdjustments = [];
 
-    /**
-     * @var IProcessing[]
-     */
+    /** @var IProcessing[] */
     private $processings = [];
 
-    /**
-     * @var BaseHolder[]
-     */
+    /** @var BaseHolder[] */
     private $baseHolders = [];
 
-    /**
-     * @var BaseHolder[]
-     */
+    /** @var BaseHolder[] */
     private $secondaryBaseHolders = [];
 
-    /**
-     * @var BaseHolder
-     */
+    /** @var BaseHolder */
     private $primaryHolder;
 
-    /**
-     * @var Connection
-     */
+    /** @var Connection */
     private $connection;
 
-    /**
-     * @var SecondaryModelStrategy
-     */
+    /** @var SecondaryModelStrategy */
     private $secondaryModelStrategy;
 
     /**
@@ -85,9 +71,9 @@ class Holder {
      * @return void
      */
     public function setPrimaryHolder(string $name) {
-        $primaryHolder = $this->primaryHolder = $this->getBaseHolder($name);
-        $this->secondaryBaseHolders = array_filter($this->baseHolders, function (BaseHolder $baseHolder) use ($primaryHolder) {
-            return $baseHolder !== $primaryHolder;
+        $this->primaryHolder = $this->getBaseHolder($name);
+        $this->secondaryBaseHolders = array_filter($this->baseHolders, function (BaseHolder $baseHolder) {
+            return $baseHolder !== $this->primaryHolder;
         });
     }
 
@@ -258,9 +244,7 @@ class Holder {
     /*
      * Joined data manipulation
      */
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $groupedHolders;
 
     /**

@@ -10,9 +10,7 @@ use FKSDB\ORM\Services\ServicePayment;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class PaymentGrid extends BaseGrid {
-    /**
-     * @var ServicePayment
-     */
+    /** @var ServicePayment */
     protected $servicePayment;
 
     /**

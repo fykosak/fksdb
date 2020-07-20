@@ -4,14 +4,16 @@ namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Localization\GettextTranslator;
+use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\ORM\Models\ModelLogin;
-use Nette\Application\BadRequestException;
+use Nette\DI\Container;
 use Nette\Http\Request;
 use Nette\Security\User;
 
 /**
  * Trait LangPresenterTrait
  * @author Michal Červeňák <miso@fykos.cz>
+ * @method Container getContext()
  */
 trait LangPresenterTrait {
     /** @var string[] */
@@ -39,7 +41,7 @@ trait LangPresenterTrait {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
     final protected function langTraitStartup() {
         $this->translator->setLang($this->getLang());
@@ -69,7 +71,7 @@ trait LangPresenterTrait {
      *
      * @return string ISO 639-1
      * Should be final
-     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
     public function getLang(): string {
         if (!$this->cacheLang) {
@@ -82,11 +84,11 @@ trait LangPresenterTrait {
                 $this->cacheLang = $this->getHttpRequest()->detectLanguage($supportedLanguages);
             }
             if (!$this->cacheLang) {
-                $this->cacheLang = $this->globalParameters['localization']['defaultLanguage'];
+                $this->cacheLang = $this->getContext()->getParameters()['localization']['defaultLanguage'];
             }
             // final check
             if (!in_array($this->cacheLang, $supportedLanguages)) {
-                throw new BadRequestException();
+                throw new UnsupportedLanguageException($this->cacheLang);
             }
         }
         return $this->cacheLang;

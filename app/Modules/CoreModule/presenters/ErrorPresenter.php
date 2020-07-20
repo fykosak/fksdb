@@ -7,7 +7,7 @@ use Exception;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Http\Response;
+use Nette\Http\IResponse;
 use Tracy\Debugger;
 
 /**
@@ -41,7 +41,7 @@ class ErrorPresenter extends BasePresenter {
         } elseif ($exception instanceof BadRequestException) {
             $code = $exception->getCode();
             // known exception or general 500
-            $this->setView(in_array($code, [Response::S403_FORBIDDEN, Response::S404_NOT_FOUND, Response::S405_METHOD_NOT_ALLOWED, Response::S410_GONE]) ? $code : '500');
+            $this->setView(in_array($code, [IResponse::S400_BAD_REQUEST, IResponse::S403_FORBIDDEN, IResponse::S404_NOT_FOUND, IResponse::S405_METHOD_NOT_ALLOWED, IResponse::S410_GONE]) ? $code : '500');
             // log to access.log
             Debugger::log("HTTP code $code: {$exception->getMessage()} in {$exception->getFile()}:{$exception->getLine()}", 'access');
         } else {

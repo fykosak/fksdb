@@ -18,7 +18,7 @@ class AESOPFormat extends XSLFormat {
     /**
      * AESOPFormat constructor.
      * @param StoredQuery $storedQuery
-     * @param $xslFile
+     * @param string $xslFile
      * @param IXMLNodeSerializer $xmlSerializer
      */
     public function __construct(StoredQuery $storedQuery, $xslFile, IXMLNodeSerializer $xmlSerializer) {

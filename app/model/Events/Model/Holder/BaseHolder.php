@@ -2,7 +2,6 @@
 
 namespace FKSDB\Events\Model\Holder;
 
-use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
@@ -27,69 +26,43 @@ class BaseHolder {
     const STATE_COLUMN = 'status';
     const EVENT_COLUMN = 'event_id';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $name;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $label;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $description;
 
-    /**
-     * @var IService
-     */
+    /** @var IService */
     private $service;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $joinOn;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $joinTo;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $personIds;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $eventId;
 
-    /**
-     * @var Holder
-     */
+    /** @var Holder */
     private $holder;
 
-    /**
-     * @var bool|callable
-     */
+    /** @var bool|callable */
     private $modifiable;
 
-    /**
-     * @var bool|callable
-     */
+    /** @var bool|callable */
     private $visible;
 
-    /**
-     * @var Field[]
-     */
+    /** @var Field[] */
     private $fields = [];
 
-    /**
-     * @var IModel
-     */
+    /** @var IModel */
     private $model;
 
     /**
@@ -99,34 +72,24 @@ class BaseHolder {
      */
     private $eventRelation;
 
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $paramScheme;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $parameters;
 
-    /**
-     * @var ExpressionEvaluator
-     */
+    /** @var ExpressionEvaluator */
     private $evaluator;
 
-    /**
-     * @var DataValidator
-     */
+    /** @var DataValidator */
     private $validator;
 
     /**
      * BaseHolder constructor.
-     * @param $name
+     * @param string $name
      */
     public function __construct(string $name) {
         $this->name = $name;
@@ -162,7 +125,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $modifiable
+     * @param bool|callable $modifiable
      * @return void
      */
     public function setModifiable($modifiable) {
@@ -170,7 +133,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $visible
+     * @param bool|callable $visible
      * @return void
      */
     public function setVisible($visible) {
@@ -217,7 +180,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $paramScheme
+     * @param mixed $paramScheme
      * @return void
      */
     public function setParamScheme($paramScheme) {
@@ -308,7 +271,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $values
+     * @param iterable $values
      * @param bool $alive
      */
     public function updateModel($values, $alive = true) {
@@ -399,7 +362,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $personIds
+     * @param array $personIds
      * @return void
      */
     public function setPersonIds($personIds) {
@@ -421,7 +384,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $eventId
+     * @param int $eventId
      * @return void
      */
     public function setEventId($eventId) {
@@ -436,7 +399,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $column
+     * @param string $column
      * @return bool|mixed|string
      */
     public static function getBareColumn($column) {
@@ -454,7 +417,7 @@ class BaseHolder {
         });
     }
 
-    public function createFormContainer(BaseMachine $machine): ContainerWithOptions {
+    public function createFormContainer(): ContainerWithOptions {
         $container = new ContainerWithOptions();
         $container->setOption('label', $this->getLabel());
         $container->setOption('description', $this->getDescription());
@@ -463,13 +426,9 @@ class BaseHolder {
             if (!$field->isVisible()) {
                 continue;
             }
-            $component = $field->createFormComponent($machine, $container);
-            if ($component instanceof ReferencedContainer) {
-                $container->addComponent($component->getReferencedId(), $name);
-                $container->addComponent($component, $name . '_1');
-            } else {
-                $container->addComponent($component, $name);
-            }
+            $component = $field->createFormComponent();
+            $container->addComponent($component, $name);
+            $field->setFieldDefaultValue($component);
         }
         return $container;
     }
@@ -477,8 +436,7 @@ class BaseHolder {
     /**
      * @return int|null  ID of a person associated with the application
      */
-    public
-    function getPersonId() {
+    public function getPersonId() {
         $personColumns = $this->getPersonIds();
         if (!$personColumns) {
             return null;
@@ -492,8 +450,7 @@ class BaseHolder {
     /**
      * @return string
      */
-    public
-    function __toString() {
+    public function __toString() {
         return $this->name;
     }
 
@@ -503,8 +460,7 @@ class BaseHolder {
     /**
      * @throws NeonSchemaException
      */
-    private
-    function cacheParameters() {
+    private function cacheParameters() {
         $parameters = isset($this->getEvent()->parameters) ? $this->getEvent()->parameters : '';
         $parameters = $parameters ? Neon::decode($parameters) : [];
         $this->parameters = NeonScheme::readSection($parameters, $this->getParamScheme());
@@ -515,8 +471,7 @@ class BaseHolder {
      * @param null $default
      * @return mixed
      */
-    public
-    function getParameter($name, $default = null) {
+    public function getParameter($name, $default = null) {
         try {
             return $this->parameters[$name] ?? $default;
         } catch (InvalidArgumentException $exception) {

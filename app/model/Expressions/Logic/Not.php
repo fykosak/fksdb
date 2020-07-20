@@ -11,14 +11,12 @@ use FKSDB\Expressions\EvaluatedExpression;
  */
 class Not extends EvaluatedExpression {
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $expression;
 
     /**
      * Not constructor.
-     * @param $expression
+     * @param callable|mixed $expression
      */
     public function __construct($expression) {
         $this->expression = $expression;

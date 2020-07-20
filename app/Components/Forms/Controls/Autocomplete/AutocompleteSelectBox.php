@@ -25,25 +25,17 @@ class AutocompleteSelectBox extends TextBase {
     const INTERNAL_DELIMITER = ',';
     const META_ELEMENT_SUFFIX = '__meta'; // must be same with constant in autocompleteSelect.js
 
-    /**
-     * @var IDataProvider
-     */
+    /** @var IDataProvider */
 
     private $dataProvider;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $ajax;
 
-    /**
-     * @var bool
-     */
-    private $multiSelect;
+    /** @var bool */
+    private $multiSelect = false;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $ajaxUrl;
 
     /**
@@ -53,20 +45,16 @@ class AutocompleteSelectBox extends TextBase {
      * @var string
      */
     private $renderMethod;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $attachedJSON = false;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $attachedJS = false;
 
     /**
      * AutocompleteSelectBox constructor.
-     * @param $ajax
-     * @param string $label
-     * @param string $renderMethod
+     * @param bool $ajax
+     * @param string|null $label
+     * @param string|null $renderMethod
      */
     public function __construct(bool $ajax, $label = null, $renderMethod = null) {
         parent::__construct($label);
@@ -102,17 +90,11 @@ class AutocompleteSelectBox extends TextBase {
         return $this->renderMethod;
     }
 
-    /**
-     * @return bool
-     */
-    public function isAjax() {
+    public function isAjax(): bool {
         return $this->ajax;
     }
 
-    /**
-     * @return bool
-     */
-    public function isMultiSelect() {
+    public function isMultiSelect(): bool {
         return $this->multiSelect;
     }
 
@@ -191,7 +173,7 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @return TextBase
      */
     public function setValue($value) {
@@ -215,7 +197,7 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @return BaseControl
      */
     public function setDefaultValue($value) {
@@ -233,11 +215,10 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     /**
-     * @param $multiSelect
+     * @param bool $multiSelect
      * @return void
      */
-    public function setMultiSelect($multiSelect) {
+    public function setMultiSelect(bool $multiSelect) {
         $this->multiSelect = $multiSelect;
     }
-
 }

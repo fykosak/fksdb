@@ -9,22 +9,20 @@ namespace Persons\Deduplication\MergeStrategy;
  */
 class ConstantStrategy implements IMergeStrategy {
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $constant;
 
     /**
      * ConstantStrategy constructor.
-     * @param $constant
+     * @param mixed $constant
      */
     public function __construct($constant) {
         $this->constant = $constant;
     }
 
     /**
-     * @param $trunk
-     * @param $merged
+     * @param mixed $trunk
+     * @param mixed $merged
      * @return mixed
      */
     public function mergeValues($trunk, $merged) {

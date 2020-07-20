@@ -7,7 +7,6 @@ use DOMDocument;
 use DOMElement;
 use FKSDB\StoredQuery\StoredQuery;
 use FKSDB\StoredQuery\StoredQueryFactory;
-use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\Results\Models\AbstractResultsModel;
@@ -30,44 +29,28 @@ use WebService\IXMLNodeSerializer;
  */
 class WebServiceModel {
 
-    /**
-     * @var array  contest name => contest_id
-     */
+    /** @var array  contest name => contest_id */
     private $inverseContestMap;
 
-    /**
-     * @var ServiceContest
-     */
+    /** @var ServiceContest */
     private $serviceContest;
 
-    /**
-     * @var ResultsModelFactory
-     */
+    /** @var ResultsModelFactory */
     private $resultsModelFactory;
 
-    /**
-     * @var StatsModelFactory
-     */
+    /** @var StatsModelFactory */
     private $statsModelFactory;
 
-    /**
-     * @var ModelLogin
-     */
+    /** @var ModelLogin */
     private $authenticatedLogin;
 
-    /**
-     * @var IAuthenticator
-     */
+    /** @var IAuthenticator */
     private $authenticator;
 
-    /**
-     * @var StoredQueryFactory
-     */
+    /** @var StoredQueryFactory */
     private $storedQueryFactory;
 
-    /**
-     * @var ContestAuthorizator
-     */
+    /** @var ContestAuthorizator */
     private $contestAuthorizator;
 
     /**
@@ -117,17 +100,16 @@ class WebServiceModel {
     }
 
     /**
-     * @param $args
+     * @param mixed $args
      * @return SoapVar
-     * @throws SoapFault
      * @throws BadRequestException
+     * @throws SoapFault
      */
     public function getResults($args): SoapVar {
         $this->checkAuthentication(__FUNCTION__);
         if (!isset($this->inverseContestMap[$args->contest])) {
             throw new SoapFault('Sender', 'Unknown contest.');
         }
-        /** @var ModelContest $contest */
         $contest = $this->serviceContest->findByPrimary($this->inverseContestMap[$args->contest]);
         $doc = new DOMDocument();
         $resultsNode = $doc->createElement('results');
@@ -214,7 +196,6 @@ class WebServiceModel {
         if (!isset($this->inverseContestMap[$args->contest])) {
             throw new SoapFault('Sender', 'Unknown contest.');
         }
-        /** @var ModelContest $contest */
         $contest = $this->serviceContest->findByPrimary($this->inverseContestMap[$args->contest]);
         $year = (string)$args->year;
 
@@ -261,8 +242,8 @@ class WebServiceModel {
     /**
      * @param stdClass $args
      * @return SoapVar
-     * @throws SoapFault
      * @throws BadRequestException
+     * @throws SoapFault
      */
     public function getExport($args): SoapVar {
         // parse arguments
@@ -314,7 +295,7 @@ class WebServiceModel {
     }
 
     /**
-     * @param $serviceName
+     * @param string $serviceName
      * @param null $arg
      * @throws SoapFault
      */
@@ -338,7 +319,7 @@ class WebServiceModel {
     }
 
     /**
-     * @param $msg
+     * @param string $msg
      * @return void
      */
     private function log($msg) {

@@ -6,7 +6,7 @@ use Throwable;
 
 /**
  * Class UnsupportedCurrencyException
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class UnsupportedCurrencyException extends \Exception {
     /**

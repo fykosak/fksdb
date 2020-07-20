@@ -18,30 +18,20 @@ use Nette\Forms\IControl;
  */
 class ResourceAvailability extends AbstractAdjustment {
 
-    /**
-     * @var array[] fields that specifies amount used (string masks)
-     */
+    /** @var array fields that specifies amount used (string masks) */
     private $fields;
 
-    /**
-     * @var string Name of event parameter that hold overall capacity.
-     */
+    /** @var string Name of event parameter that hold overall capacity. */
     private $paramCapacity;
-    /**
-     * @var array|string
-     */
+    /** @var array|string */
     private $includeStates;
-    /**
-     * @var array|string|string[]
-     */
+    /** @var array|string|string[] */
     private $excludeStates;
-    /**
-     * @var string
-     */
+    /** @var string */
     private $message;
 
     /**
-     * @param $fields
+     * @param array|string $fields
      * @return void
      */
     private function setFields($fields) {
@@ -86,9 +76,7 @@ class ResourceAvailability extends AbstractAdjustment {
         foreach ($groups as $group) {
             $holders = [];
             $field = null;
-            /**
-             * @var BaseHolder $baseHolder
-             */
+            /** @var BaseHolder $baseHolder */
             foreach ($group['holders'] as $baseHolder) {
                 $name = $baseHolder->getName();
                 foreach ($this->fields as $fieldMask) {
@@ -117,16 +105,12 @@ class ResourceAvailability extends AbstractAdjustment {
         }
 
         $usage = 0;
-        /** @var IService[] $serviceData */
+        /** @var IService[]|BaseHolder[][] $serviceData */
         foreach ($services as $serviceData) {
-            /**
-             * @var BaseHolder $firstHolder
-             */
+            /** @var BaseHolder $firstHolder */
             $firstHolder = reset($serviceData['holders']);
             $event = $firstHolder->getEvent();
-            /**
-             * @var GroupedSelection $table
-             */
+            /** @var GroupedSelection $table */
             $table = $serviceData['service']->getTable();
             $table->where($firstHolder->getEventId(), $event->getPrimary());
             if ($this->includeStates !== BaseMachine::STATE_ANY) {

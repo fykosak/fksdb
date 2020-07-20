@@ -13,8 +13,8 @@ abstract class EvaluatedExpression {
     use SmartObject;
 
     /**
-     * @param $evaluated
-     * @param $args
+     * @param mixed $evaluated
+     * @param mixed $args
      * @return mixed
      */
     final protected function evaluateArgument($evaluated, ...$args) {

@@ -29,13 +29,9 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
 
     const CONTROL_NAME = 'privacy';
 
-    /**
-     * @var ServicePersonInfo
-     */
+    /** @var ServicePersonInfo */
     private $servicePersonInfo;
-    /**
-     * @var SingleReflectionFormFactory
-     */
+    /** @var SingleReflectionFormFactory */
     private $singleReflectionFormFactory;
 
     /**
@@ -70,7 +66,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
     }
 
     /**
-     * @param $states
+     * @param array $states
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder

@@ -9,13 +9,13 @@ use FKSDB\Events\Model\ApplicationHandler;
 use FKSDB\Events\Model\ApplicationHandlerException;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\DI\Container;
-use \Nette\Forms\Form;
+use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 use Nette\Utils\JsonException;
@@ -28,24 +28,16 @@ use Nette\Utils\JsonException;
  */
 class ApplicationComponent extends BaseComponent {
 
-    /**
-     * @var ApplicationHandler
-     */
+    /** @var ApplicationHandler */
     private $handler;
 
-    /**
-     * @var Holder
-     */
+    /** @var Holder */
     private $holder;
 
-    /**
-     * @var callable ($primaryModelId, $eventId)
-     */
+    /** @var callable ($primaryModelId, $eventId) */
     private $redirectCallback;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $templateFile;
 
     /**
@@ -63,7 +55,7 @@ class ApplicationComponent extends BaseComponent {
     /**
      * @param string $template name of the standard template or whole path
      */
-    public function setTemplate($template) {
+    public function setTemplate(string $template) {
         if (stripos($template, '.latte') !== false) {
             $this->templateFile = $template;
         } else {
@@ -96,7 +88,7 @@ class ApplicationComponent extends BaseComponent {
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
      */
     public function render() {
         $this->renderForm();
@@ -104,7 +96,7 @@ class ApplicationComponent extends BaseComponent {
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
      */
     public function renderForm() {
         if (!$this->templateFile) {
@@ -122,7 +114,6 @@ class ApplicationComponent extends BaseComponent {
     /**
      * @param string $mode
      * @return void
-     * @throws BadRequestException
      */
     public function renderInline($mode) {
         $this->template->mode = $mode;
@@ -137,9 +128,10 @@ class ApplicationComponent extends BaseComponent {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
+     *
      */
-    protected function createComponentForm() {
+    protected function createComponentForm(): FormControl {
         $result = new FormControl();
         $form = $result->getForm();
 
@@ -147,11 +139,10 @@ class ApplicationComponent extends BaseComponent {
          * Create containers
          */
         foreach ($this->holder->getBaseHolders() as $name => $baseHolder) {
-            $baseMachine = $this->getMachine()->getBaseMachine($name);
             if (!$baseHolder->isVisible()) {
                 continue;
             }
-            $container = $baseHolder->createFormContainer($baseMachine);
+            $container = $baseHolder->createFormContainer();
             $form->addComponent($container, $name);
         }
 
@@ -161,7 +152,6 @@ class ApplicationComponent extends BaseComponent {
         $saveSubmit = null;
         if ($this->canEdit()) {
             $saveSubmit = $form->addSubmit('save', _('Save'));
-            $saveSubmit->setOption('row', 1);
             $saveSubmit->onClick[] = function (SubmitButton $button) {
                 $buttonForm = $button->getForm();
                 $this->handleSubmit($buttonForm);
@@ -196,7 +186,6 @@ class ApplicationComponent extends BaseComponent {
          * Create cancel button
          */
         $submit = $form->addSubmit('cancel', _('Cancel'));
-        $submit->setOption('row', 1);
         $submit->setValidationScope(false);
         $submit->getControlPrototype()->addAttributes(['class' => 'btn-warning']);
         $submit->onClick[] = function (SubmitButton $button) {
@@ -221,18 +210,17 @@ class ApplicationComponent extends BaseComponent {
      * @param Form $form
      * @param null $explicitTransitionName
      * @throws AbortException
+     *
      * @throws JsonException
-     * @throws BadRequestException
      */
     public function handleSubmit(Form $form, $explicitTransitionName = null) {
         $this->execute($form, $explicitTransitionName);
     }
 
     /**
-     * @param $transitionName
+     * @param string $transitionName
      * @throws AbortException
      * @throws JsonException
-     * @throws BadRequestException
      */
     public function handleTransition($transitionName) {
         $this->execute(null, $transitionName);
@@ -243,7 +231,6 @@ class ApplicationComponent extends BaseComponent {
      * @param null $explicitTransitionName
      * @throws AbortException
      * @throws JsonException
-     * @throws BadRequestException
      */
     private function execute(Form $form = null, $explicitTransitionName = null) {
         try {
@@ -261,7 +248,7 @@ class ApplicationComponent extends BaseComponent {
 
     /**
      * @return Machine
-     * @throws BadRequestException
+     *
      */
     private function getMachine() {
         return $this->handler->getMachine();

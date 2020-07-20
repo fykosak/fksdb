@@ -18,9 +18,7 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class TimelineControl extends ReactComponent {
-    /**
-     * @var YearCalculator
-     */
+    /** @var YearCalculator */
     private $yearCalculator;
 
     /**
@@ -127,7 +125,7 @@ class TimelineControl extends ReactComponent {
 
     /**
      * @param ModelPerson $person
-     * @param array $events
+     * @param ModelEvent[] $events
      * @param array $dates
      * @return \DateTimeInterface[]
      */
@@ -164,7 +162,7 @@ class TimelineControl extends ReactComponent {
     }
 
     /**
-     * @param mixed ...$args
+     * @param ModelPerson ...$args
      * @return string
      * @throws \Exception
      */

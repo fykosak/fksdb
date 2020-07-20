@@ -3,10 +3,11 @@
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Grids\ContestantsGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\UI\PageTitle;
-use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 
 /**
@@ -18,9 +19,7 @@ class ContestantPresenter extends ExtendedPersonPresenter {
     /** @var string */
     protected $fieldsDefinition = 'adminContestant';
 
-    /**
-     * @var ServiceContestant
-     */
+    /** @var ServiceContestant */
     private $serviceContestant;
 
     /**
@@ -45,7 +44,8 @@ class ContestantPresenter extends ExtendedPersonPresenter {
 
     /**
      * @return ContestantsGrid
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     protected function createComponentGrid(): ContestantsGrid {
         return new ContestantsGrid($this->getContext(), $this->getSelectedContest(), $this->getSelectedYear());

@@ -12,9 +12,7 @@ use Nette\InvalidArgumentException;
  */
 class CompareStrategy implements IMergeStrategy {
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $sign;
 
     /**
@@ -51,8 +49,8 @@ class CompareStrategy implements IMergeStrategy {
     }
 
     /**
-     * @param $trunk
-     * @param $merged
+     * @param mixed $trunk
+     * @param mixed $merged
      * @return int|string
      */
     private function compare($trunk, $merged) {

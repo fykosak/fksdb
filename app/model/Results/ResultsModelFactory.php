@@ -34,14 +34,10 @@ use WebService\IXMLNodeSerializer;
 class ResultsModelFactory implements IXMLNodeSerializer {
     use SmartObject;
 
-    /**
-     * @var Connection
-     */
+    /** @var Connection */
     private $connection;
 
-    /**
-     * @var ServiceTask
-     */
+    /** @var ServiceTask */
     private $serviceTask;
 
     /**
@@ -143,7 +139,7 @@ class ResultsModelFactory implements IXMLNodeSerializer {
     }
 
     /**
-     * @param $dataSource
+     * @param AbstractResultsModel $dataSource
      * @param DOMNode $node
      * @param DOMDocument $doc
      * @param int $format

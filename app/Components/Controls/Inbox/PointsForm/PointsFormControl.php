@@ -16,10 +16,10 @@ use Nette\DI\Container;
  * *
  */
 class PointsFormControl extends SeriesTableFormControl {
-    /**
-     * @var callable
-     */
+
+    /** @var callable */
     private $invalidCacheCallback;
+
     /** @var ServiceSubmit */
     private $serviceSubmit;
 

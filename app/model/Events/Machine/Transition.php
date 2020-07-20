@@ -53,18 +53,12 @@ class Transition {
     /** @var bool|callable */
     private $visible;
 
-    /**
-     * @var ExpressionEvaluator
-     */
+    /** @var ExpressionEvaluator */
     private $evaluator;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     public $onExecuted = [];
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $type;
 
     /**
@@ -136,7 +130,7 @@ class Transition {
     }
 
     /**
-     * @param $mask
+     * @param string $mask
      * @return void
      */
     public function setMask($mask) {
@@ -181,7 +175,7 @@ class Transition {
     }
 
     /**
-     * @param $condition
+     * @param callable|bool $condition
      * @return void
      */
     public function setCondition($condition) {
@@ -189,7 +183,7 @@ class Transition {
     }
 
     /**
-     * @param $visible
+     * @param callable|bool $visible
      * @return void
      */
     public function setVisible($visible) {
@@ -210,7 +204,7 @@ class Transition {
 
     /**
      * @param BaseMachine $targetMachine
-     * @param $targetState
+     * @param string $targetState
      * @return void
      */
     public function addInducedTransition(BaseMachine $targetMachine, $targetState) {

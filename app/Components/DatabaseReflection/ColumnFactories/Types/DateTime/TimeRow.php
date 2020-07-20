@@ -11,7 +11,7 @@ use Nette\Forms\Controls\BaseControl;
  */
 class TimeRow extends AbstractDateTimeColumnFactory {
 
-    public function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         return new TimeInput($this->getTitle());
     }
 

@@ -18,30 +18,22 @@ use XSLTProcessor;
 class XSLFormat implements IExportFormat {
     use SmartObject;
 
-    /**
-     * @var StoredQuery
-     */
+    /** @var StoredQuery */
     private $storedQuery;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $parameters = [];
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $xslFile;
 
-    /**
-     * @var IXMLNodeSerializer
-     */
+    /** @var IXMLNodeSerializer */
     private $xmlSerializer;
 
     /**
      * XSLFormat constructor.
      * @param StoredQuery $storedQuery
-     * @param $xslFile
+     * @param string $xslFile
      * @param IXMLNodeSerializer $xmlSerializer
      */
     public function __construct(StoredQuery $storedQuery, $xslFile, IXMLNodeSerializer $xmlSerializer) {

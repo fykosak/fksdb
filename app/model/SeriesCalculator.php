@@ -11,9 +11,7 @@ use Nette\Utils\DateTime;
  */
 class SeriesCalculator {
 
-    /**
-     * @var ServiceTask
-     */
+    /** @var ServiceTask */
     private $serviceTask;
 
     /**

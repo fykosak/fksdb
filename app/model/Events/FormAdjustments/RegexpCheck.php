@@ -15,24 +15,18 @@ use Nette\Utils\Strings;
  */
 class RegexpCheck extends AbstractAdjustment implements IFormAdjustment {
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $field;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $message;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $pattern;
 
     /**
      * RegexpCheck constructor.
-     * @param $field
-     * @param $message
-     * @param $pattern
+     * @param string $field
+     * @param string $message
+     * @param string $pattern
      */
     public function __construct($field, $message, $pattern) {
         $this->field = $field;

@@ -7,14 +7,14 @@ use Nette\Database\IConventions;
 
 /**
  * Interface IStateModel
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 interface IStateModel {
     /**
-     * @param $newState
+     * @param string $newState
      * @return void
      */
-    public function updateState($newState);
+    public function updateState(string $newState);
 
     /**
      * @return string|null

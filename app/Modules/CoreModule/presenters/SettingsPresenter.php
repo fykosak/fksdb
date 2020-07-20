@@ -2,6 +2,7 @@
 
 namespace FKSDB\Modules\CoreModule;
 
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use Authentication\PasswordAuthenticator;
 use FKSDB\Components\Controls\FormControl\FormControl;
@@ -14,9 +15,9 @@ use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\UI\PageTitle;
 use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\TextInput;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -27,24 +28,16 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
     const CONT_LOGIN = 'login';
 
-    /**
-     * @var LoginFactory
-     */
+    /** @var LoginFactory */
     private $loginFactory;
 
-    /**
-     * @var ServiceLogin
-     */
+    /** @var ServiceLogin */
     private $loginService;
 
-    /**
-     * @var UniqueEmailFactory
-     */
+    /** @var UniqueEmailFactory */
     private $uniqueEmailFactory;
 
-    /**
-     * @var UniqueLoginFactory
-     */
+    /** @var UniqueLoginFactory */
     private $uniqueLoginFactory;
 
     /**
@@ -83,16 +76,20 @@ class SettingsPresenter extends AuthenticatedPresenter {
         $this->setPageTitle(new PageTitle(_('Settings'), 'fa fa-cogs'));
     }
 
+    /**
+     * @return void
+     * @throws BadTypeException
+     */
     public function renderDefault() {
-        /**
-         * @var ModelLogin $login
-         */
+        /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
 
         $defaults = [
             self::CONT_LOGIN => $login->toArray(),
         ];
-        $this->getComponent('settingsForm')->getForm()->setDefaults($defaults);
+        /** @var FormControl $control */
+        $control = $this->getComponent('settingsForm');
+        $control->getForm()->setDefaults($defaults);
 
         if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN)) {
             $this->flashMessage(_('Nastavte si nové heslo.'), self::FLASH_WARNING);
@@ -105,14 +102,12 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function createComponentSettingsForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
-        /**
-         * @var ModelLogin $login
-         */
+        /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         $tokenAuthentication =
             $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
@@ -131,9 +126,10 @@ class SettingsPresenter extends AuthenticatedPresenter {
         }
         $loginContainer = $this->loginFactory->createLogin($options, $group, $loginRule);
         $form->addComponent($loginContainer, self::CONT_LOGIN);
-
-        if ($loginContainer->getComponent('old_password', false)) {
-            $loginContainer->getComponent('old_password')
+        /** @var TextInput|null $oldPasswordControl */
+        $oldPasswordControl = $loginContainer->getComponent('old_password', false);
+        if ($oldPasswordControl) {
+            $oldPasswordControl
                 ->addCondition(Form::FILLED)
                 ->addRule(function (BaseControl $control) use ($login) {
                     $hash = PasswordAuthenticator::calculateHash($control->getValue(), $login);
@@ -154,7 +150,6 @@ class SettingsPresenter extends AuthenticatedPresenter {
     /**
      * @param Form $form
      * @throws AbortException
-     * @internal
      */
     private function handleSettingsFormSuccess(Form $form) {
         $values = $form->getValues();

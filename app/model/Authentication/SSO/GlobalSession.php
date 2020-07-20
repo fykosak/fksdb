@@ -17,34 +17,24 @@ use Nette\InvalidStateException;
  */
 class GlobalSession implements IGlobalSession {
 
-    /**
-     * @var ServiceGlobalSession
-     */
+    /** @var ServiceGlobalSession */
     private $serviceGlobalSession;
 
-    /**
-     * @var IGSIDHolder
-     */
+    /** @var IGSIDHolder */
     private $gsidHolder;
 
-    /**
-     * @var ModelGlobalSession|null
-     */
+    /** @var ModelGlobalSession|null */
     private $globalSession;
 
-    /**
-     * @var string  expecting string like '+10 days'
-     */
+    /** @var string  expecting string like '+10 days' */
     private $expiration;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $started = false;
 
     /**
      * GlobalSession constructor.
-     * @param $expiration
+     * @param string $expiration
      * @param ServiceGlobalSession $serviceGlobalSession
      * @param IGSIDHolder $gsidHolder
      */

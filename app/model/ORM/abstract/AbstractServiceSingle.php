@@ -107,7 +107,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * Updates values in model from given data.
      *
      * @param IModel $model
-     * @param array $data
+     * @param iterable $data
      * @param bool $alive
      * @deprecated
      */
@@ -117,7 +117,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
         }
 
-        $data = $this->filterData($data);
+        $data = $this->filterData((array)$data);
         foreach ($data as $key => $value) {
             $model->{$key} = $value;
         }

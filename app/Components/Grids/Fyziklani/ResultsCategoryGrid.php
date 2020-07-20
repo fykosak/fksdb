@@ -19,17 +19,11 @@ use NiftyGrid\DuplicateColumnException;
  */
 class ResultsCategoryGrid extends BaseGrid {
 
-    /**
-     * @var ServiceFyziklaniTeam
-     */
+    /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
-    /**
-     * @var string
-     */
+    /** @var string */
     private $category;
 
     /**

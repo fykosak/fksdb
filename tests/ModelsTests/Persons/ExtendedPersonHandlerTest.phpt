@@ -4,6 +4,7 @@ namespace FKSDB\Tests\ModelTests\Person;
 
 $container = require '../../bootstrap.php';
 
+use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
@@ -118,7 +119,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $form->setValues([
             ExtendedPersonHandler::CONT_AGGR => [
                 ExtendedPersonHandler::EL_PERSON => "__promise",
-                ExtendedPersonHandler::CONT_PERSON => [
+                ExtendedPersonHandler::EL_PERSON . '_1' => [
                     '_c_compact' => " ",
                     'person' => [
                         'other_name' => "Jana",
@@ -173,13 +174,17 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
 
-        $searchType = ReferencedPersonFactory::SEARCH_NONE;
-        $allowClear = false;
-        $modifiabilityResolver = $visibilityResolver = new TestResolver();
-        $component = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson(
+            $fieldsDefinition,
+            $acYear,
+            PersonSearchContainer::SEARCH_NONE,
+            false,
+            new TestResolver(),
+            new TestResolver()
+        );
 
-        $container->addComponent($component->getReferencedId(), ExtendedPersonHandler::EL_PERSON);
-        $container->addComponent($component, ExtendedPersonHandler::CONT_PERSON);
+        $container->addComponent($referencedId, ExtendedPersonHandler::EL_PERSON);
+        // $container->addComponent($component->getReferencedContainer(), ExtendedPersonHandler::CONT_PERSON);
 
         return $form;
     }

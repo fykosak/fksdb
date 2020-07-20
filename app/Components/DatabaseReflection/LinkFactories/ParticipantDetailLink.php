@@ -20,7 +20,7 @@ class ParticipantDetailLink extends AbstractLink {
      * @param ModelEventParticipant|AbstractModelSingle $model
      * @return string
      */
-    public function getDestination(AbstractModelSingle $model): string {
+    protected function getDestination(AbstractModelSingle $model): string {
         if ($model->getEvent()->isTeamEvent()) {
             return ':Event:TeamApplication:detail';
         } else {
@@ -33,7 +33,7 @@ class ParticipantDetailLink extends AbstractLink {
      * @return array
      * @throws BadRequestException
      */
-    public function prepareParams(AbstractModelSingle $model): array {
+    protected function prepareParams(AbstractModelSingle $model): array {
         if ($model->getEvent()->isTeamEvent()) {
             return [
                 'eventId' => $model->event_id,

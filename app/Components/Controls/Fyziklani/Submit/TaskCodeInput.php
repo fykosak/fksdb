@@ -2,21 +2,21 @@
 
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Fyziklani\Submit\ClosedSubmittingException;
+use FKSDB\Fyziklani\Submit\HandlerFactory;
+use FKSDB\Logging\MemoryLogger;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
 use FKSDB\Messages\Message;
-use FKSDB\Fyziklani\ClosedSubmittingException;
 use FKSDB\Fyziklani\NotSetGameParametersException;
-use FKSDB\Fyziklani\SubmitHandler;
-use FKSDB\Fyziklani\TaskCodeException;
+use FKSDB\Fyziklani\Submit\TaskCodeException;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\React\ReactResponse;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Utils\Json;
@@ -31,8 +31,8 @@ class TaskCodeInput extends FyziklaniReactControl {
     private $serviceFyziklaniTeam;
     /** @var ServiceFyziklaniTask */
     private $serviceFyziklaniTask;
-    /** @var ServiceFyziklaniSubmit */
-    private $serviceFyziklaniSubmit;
+    /** @var HandlerFactory */
+    private $handlerFactory;
 
     /**
      * TaskCodeInput constructor.
@@ -47,15 +47,15 @@ class TaskCodeInput extends FyziklaniReactControl {
     }
 
     /**
+     * @param HandlerFactory $handlerFactory
      * @param ServiceFyziklaniTask $serviceFyziklaniTask
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
      * @return void
      */
-    public function injectPrimary(ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
+    public function injectPrimary(HandlerFactory $handlerFactory, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
+        $this->handlerFactory = $handlerFactory;
     }
 
     /**
@@ -84,16 +84,17 @@ class TaskCodeInput extends FyziklaniReactControl {
     /**
      * @return void
      * @throws AbortException
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     public function handleSave() {
         $request = $this->getReactRequest();
         $response = new ReactResponse();
         $response->setAct($request->act);
         try {
-            $handler = new SubmitHandler($this->getEvent(), $this->serviceFyziklaniTeam, $this->serviceFyziklaniTask, $this->serviceFyziklaniSubmit);
-            $log = $handler->preProcess($request->requestData['code'], +$request->requestData['points'], $this->getPresenter()->getUser());
-            $response->addMessage($log);
+            $handler = $this->handlerFactory->create($this->getEvent());
+            $logger = new MemoryLogger();
+            $handler->preProcess($logger, $request->requestData['code'], +$request->requestData['points']);
+            $response->setMessages($logger->getMessages());
         } catch (TaskCodeException $exception) {
             $response->addMessage(new Message($exception->getMessage(), BasePresenter::FLASH_ERROR));
         } catch (ClosedSubmittingException $exception) {

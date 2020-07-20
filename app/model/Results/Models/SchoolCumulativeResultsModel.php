@@ -18,9 +18,7 @@ use Nette\NotSupportedException;
  */
 class SchoolCumulativeResultsModel extends AbstractResultsModel {
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $series;
 
     /**
@@ -41,7 +39,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
      * @param ModelContest $contest
      * @param ServiceTask $serviceTask
      * @param Connection $connection
-     * @param $year
+     * @param int $year
      */
     public function __construct(CumulativeResultsModel $cumulativeResultsModel, ModelContest $contest, ServiceTask $serviceTask, Connection $connection, $year) {
         parent::__construct($contest, $serviceTask, $connection, $year, new EvaluationNullObject());
@@ -188,7 +186,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
     //TODO better have somehow in evaluation strategy
 
     /**
-     * @param $i
+     * @param int $i
      * @return mixed
      */
     private function weightVector($i) {
@@ -196,7 +194,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @param $schoolContestants
+     * @param array $schoolContestants
      * @param ModelCategory $category
      * @return array
      */

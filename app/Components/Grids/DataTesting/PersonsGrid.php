@@ -16,18 +16,14 @@ use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
-/***
+/**
  * Class PersonsGrid
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonsGrid extends BaseGrid {
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     private $servicePerson;
-    /**
-     * @var DataTestingFactory
-     */
+    /** @var DataTestingFactory */
     private $dataTestingFactory;
 
     /**
@@ -57,7 +53,7 @@ class PersonsGrid extends BaseGrid {
         $this->addColumns(['person.person_link']);
 
         foreach ($this->dataTestingFactory->getTests('person') as $test) {
-            $this->addColumn($test->getAction(), $test->getTitle())->setRenderer(function ($person) use ($test) {
+            $this->addColumn($test->getId(), $test->getTitle())->setRenderer(function ($person) use ($test) {
                 $logger = new MemoryLogger();
                 $test->run($logger, $person);
                 return self::createHtmlLog($logger->getMessages());

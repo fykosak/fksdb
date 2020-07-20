@@ -17,16 +17,16 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class SchoolCheckComponent extends BaseComponent {
-    /**
-     * @var ModelEvent
-     */
+
+    /** @var ModelEvent */
     private $event;
-    /**
-     * @var int
-     */
+
+    /** @var int */
     private $acYear;
+
     /** @var ServiceSchool */
     private $serviceSchool;
+
     /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
 

@@ -26,9 +26,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
         return DbNames::TAB_GLOBAL_SESSION;
     }
 
-    /**
-     * @var Request
-     */
+    /** @var Request */
     private $request;
 
     /**

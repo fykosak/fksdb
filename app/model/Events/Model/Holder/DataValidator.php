@@ -11,9 +11,7 @@ use Nette\SmartObject;
  */
 class DataValidator {
     use SmartObject;
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $validationErrors;
 
     /**

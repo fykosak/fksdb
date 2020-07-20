@@ -6,6 +6,7 @@ use FKSDB\Components\Control\AjaxUpload\AjaxUpload;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\GoneException;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
@@ -21,7 +22,7 @@ use FKSDB\Exceptions\ModelException;
 use FKSDB\Submits\SubmitHandlerFactory;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Tracy\Debugger;
 use FKSDB\ORM\Services\ServiceQuizQuestion;
@@ -88,7 +89,8 @@ class SubmitPresenter extends BasePresenter {
     public function injectQuizQuestionService(ServiceQuizQuestion $quizQuestionService) {
         $this->quizQuestionService = $quizQuestionService;
     }
-/** @var SubmitHandlerFactory */
+
+    /** @var SubmitHandlerFactory */
     private $submitHandlerFactory;
 
     /**
@@ -101,14 +103,16 @@ class SubmitPresenter extends BasePresenter {
 
     /* ******************* AUTH ************************/
     /**
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function authorizedDefault() {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest()));
     }
 
     /**
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function authorizedAjax() {
         $this->authorizedDefault();
@@ -124,7 +128,8 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
+     *
+     * @throws GoneException
      * @deprecated
      */
     public function actionDownload() {
@@ -132,16 +137,15 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function renderDefault() {
         $this->template->hasTasks = count($this->getAvailableTasks()) > 0;
         $this->template->canRegister = false;
         $this->template->hasForward = false;
         if (!$this->template->hasTasks) {
-            /**
-             * @var ModelPerson $person
-             */
+            /** @var ModelPerson $person */
             $person = $this->getUser()->getIdentity()->getPerson();
             $contestants = $person->getActiveContestants($this->getYearCalculator());
             $contestant = $contestants[$this->getSelectedContest()->contest_id];
@@ -154,9 +158,10 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
-    protected function createComponentUploadForm() {
+    protected function createComponentUploadForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
 
@@ -240,7 +245,8 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @return AjaxUpload
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     protected function createComponentAjaxUpload(): AjaxUpload {
         return new AjaxUpload($this->getContext(), $this->getAvailableTasks(), $this->getContestant());
@@ -248,7 +254,8 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @return SubmitsGrid
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     protected function createComponentSubmitsGrid(): SubmitsGrid {
         return new SubmitsGrid($this->getContext(), $this->getContestant());
@@ -258,7 +265,8 @@ class SubmitPresenter extends BasePresenter {
      * @param Form $form
      * @return void
      * @throws AbortException
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     private function handleUploadFormSuccess(Form $form) {
         $values = $form->getValues();
@@ -324,7 +332,8 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @return TypedTableSelection
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     private function getAvailableTasks(): TypedTableSelection {
         $tasks = $this->taskService->getTable();

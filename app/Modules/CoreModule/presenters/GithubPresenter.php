@@ -73,5 +73,4 @@ class GithubPresenter extends AuthenticatedPresenter {
         $response = new TextResponse("Thank you, Github.");
         $this->sendResponse($response);
     }
-
 }

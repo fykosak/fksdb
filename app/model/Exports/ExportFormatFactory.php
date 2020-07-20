@@ -5,8 +5,6 @@ namespace FKSDB\Exports;
 use FKSDB\Exports\Formats\CSVFormat;
 use FKSDB\Exports\Formats\AESOPFormat;
 use FKSDB\Config\Expressions\Helpers;
-use FKSDB\Config\GlobalParameters;
-use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Services\ServiceTask;
@@ -29,45 +27,28 @@ class ExportFormatFactory {
     const CSV_HEAD = 'csvh';
     const CSV_QUOTE_HEAD = 'csvqh';
 
-    /**
-     * @var GlobalParameters
-     */
-    private $globalParameters;
-
-    /**
-     * @var Container
-     */
+    /** @var Container */
     private $container;
 
-    /**
-     * @var StoredQueryFactory
-     */
+    /** @var StoredQueryFactory */
     private $storedQueryFactory;
 
-    /**
-     * @var ServiceEvent
-     */
+    /** @var ServiceEvent */
     private $serviceEvent;
 
-    /**
-     * @var ServiceContest
-     */
+    /** @var ServiceContest */
     private $serviceContest;
-    /**
-     * @var array
-     */
+    /** @var array */
     private $defaultFormats;
 
     /**
      * ExportFormatFactory constructor.
-     * @param GlobalParameters $globalParameters
      * @param Container $container
      * @param StoredQueryFactory $storedQueryFactory
      * @param ServiceEvent $serviceEvent
      * @param ServiceContest $serviceContest
      */
-    public function __construct(GlobalParameters $globalParameters, Container $container, StoredQueryFactory $storedQueryFactory, ServiceEvent $serviceEvent, ServiceContest $serviceContest) {
-        $this->globalParameters = $globalParameters;
+    public function __construct( Container $container, StoredQueryFactory $storedQueryFactory, ServiceEvent $serviceEvent, ServiceContest $serviceContest) {
         $this->container = $container;
         $this->storedQueryFactory = $storedQueryFactory;
         $this->serviceEvent = $serviceEvent;
@@ -109,25 +90,25 @@ class ExportFormatFactory {
         if (!$qid) {
             return $this->defaultFormats;
         } else {
-            $formats = $this->globalParameters['exports']['specialFormats'][$qid] ?? [];
+            $formats = $this->container->getParameters()['exports']['specialFormats'][$qid] ?? [];
             return $this->defaultFormats + Helpers::evalExpressionArray($formats, $this->container);
         }
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @param StoredQuery $storedQuery
      * @return AESOPFormat
      */
     private function createAesop($name, StoredQuery $storedQuery) {
-        $parameters = $this->globalParameters['exports']['formats'][$name];
+        $parameters = $this->container->getParameters()['exports']['formats'][$name];
         $queryParameters = $storedQuery->getParameters(true);
 
         $qid = $storedQuery->getQId();
 
         $xslFile = $parameters['template'];
-        $contestName = $this->globalParameters['contestMapping'][$queryParameters['contest']];
-        $maintainer = $parameters['maintainer'] ?? $this->globalParameters['exports']['maintainer'];
+        $contestName = $this->container->getParameters()['contestMapping'][$queryParameters['contest']];
+        $maintainer = $parameters['maintainer'] ?? $this->container->getParameters()['exports']['maintainer'];
         $category = $queryParameters['category'] ?? null;
         $eventId = sprintf($parameters[$qid]['idMask'], $contestName, $queryParameters['year'], $category);
 
@@ -139,7 +120,6 @@ class ExportFormatFactory {
         ]);
 
         if (array_key_exists('eventTypeId', $parameters[$qid])) {
-            /** @var ModelContest $contest */
             $contest = $this->serviceContest->findByPrimary($queryParameters['contest']);
             $event = $this->serviceEvent->getByEventTypeId($contest, $queryParameters['year'], $parameters[$qid]['eventTypeId']);
             $format->addParameters([

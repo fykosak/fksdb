@@ -36,36 +36,26 @@ class PipelineFactory {
      */
     private $defaultStudyYears;
 
-    /**
-     * @var ServiceTask
-     */
+    /** @var ServiceTask */
     private $serviceTask;
 
-    /**
-     * @var ServiceTaskContribution
-     */
+    /** @var ServiceTaskContribution */
     private $serviceTaskContribution;
 
-    /**
-     * @var ServiceTaskStudyYear
-     */
+    /** @var ServiceTaskStudyYear */
     private $serviceTaskStudyYear;
 
-    /**
-     * @var ServiceStudyYear
-     */
+    /** @var ServiceStudyYear */
     private $serviceStudyYear;
 
-    /**
-     * @var ServiceOrg
-     */
+    /** @var ServiceOrg */
     private $serviceOrg;
 
     /**
      * PipelineFactory constructor.
-     * @param $columnMappings
-     * @param $contributionMappings
-     * @param $defaultStudyYears
+     * @param array $columnMappings
+     * @param array $contributionMappings
+     * @param array $defaultStudyYears
      * @param ServiceTask $serviceTask
      * @param ServiceTaskContribution $serviceTaskContribution
      * @param ServiceTaskStudyYear $serviceTaskStudyYear

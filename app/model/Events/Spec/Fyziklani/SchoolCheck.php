@@ -17,14 +17,10 @@ use Nette\Forms\IControl;
  */
 abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment {
 
-    /**
-     * @var ServicePersonHistory
-     */
+    /** @var ServicePersonHistory */
     private $servicePersonHistory;
 
-    /**
-     * @var Holder
-     */
+    /** @var Holder */
     private $holder;
 
     /**
@@ -51,8 +47,8 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
     }
 
     /**
-     * @param $schoolControls
-     * @param $personControls
+     * @param IControl[] $schoolControls
+     * @param IControl[] $personControls
      * @return array
      */
     final protected function getSchools($schoolControls, $personControls) {
@@ -70,7 +66,6 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
             ->fetchPairs('person_id', 'school_id');
 
         $result = [];
-        /** @var IControl $control */
         foreach ($schoolControls as $key => $control) {
             if ($control->getValue()) {
                 $result[] = $control->getValue();

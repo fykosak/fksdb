@@ -18,14 +18,12 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
     const DELIMITER = '.';
     const WILDCART = '*';
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $rules;
 
     /**
      * PairwiseAdjustment constructor.
-     * @param $rules
+     * @param mixed $rules
      */
     public function __construct($rules) {
         $this->rules = $rules;

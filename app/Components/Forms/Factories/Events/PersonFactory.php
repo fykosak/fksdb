@@ -2,30 +2,22 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Components\DatabaseReflection\OmittedControlException;
-use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Events\EventsExtension;
-use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Events\Model\Holder\DataValidator;
 use FKSDB\Events\Model\Holder\Field;
 use FKSDB\Events\Model\PersonContainerResolver;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Services\ServicePerson;
-use Nette\Application\BadRequestException;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container as DIContainer;
-use Nette\Forms\Container;
 use Nette\Forms\IControl;
 use Nette\Security\User;
 use Nette\Utils\JsonException;
 use Persons\SelfResolver;
-use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -36,64 +28,42 @@ class PersonFactory extends AbstractFactory {
 
     const VALUE_LOGIN = 'fromLogin';
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $fieldsDefinition;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $searchType;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $allowClear;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $modifiable;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $visible;
 
-    /**
-     * @var ReferencedPersonFactory
-     */
+    /** @var ReferencedPersonFactory */
     private $referencedPersonFactory;
 
-    /**
-     * @var SelfResolver
-     */
+    /** @var SelfResolver */
     private $selfResolver;
 
-    /**
-     * @var ExpressionEvaluator
-     */
+    /** @var ExpressionEvaluator */
     private $evaluator;
 
-    /**
-     * @var User
-     */
+    /** @var User */
     private $user;
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     private $servicePerson;
 
-    /**
-     * @var DIContainer
-     */
+    /** @var DIContainer */
     private $container;
 
     /**
      * PersonFactory constructor.
-     * @param $fieldsDefinition
-     * @param $searchType
-     * @param $allowClear
-     * @param $modifiable
-     * @param $visible
+     * @param array $fieldsDefinition
+     * @param string $searchType
+     * @param bool $allowClear
+     * @param bool $modifiable
+     * @param bool $visible
      * @param ReferencedPersonFactory $referencedPersonFactory
      * @param SelfResolver $selfResolver
      * @param ExpressionEvaluator $evaluator
@@ -115,42 +85,26 @@ class PersonFactory extends AbstractFactory {
         $this->container = $container;
     }
 
-    /**
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return IComponent
-     * @throws JsonException
-     * @throws AbstractColumnException
-     * @throws OmittedControlException
-     * @throws BadTypeException
-     * @throws NotImplementedException
-     * @throws BadRequestException
-     */
-    protected function createComponent(Field $field, BaseMachine $machine, Container $container): IComponent {
+    public function createComponent(Field $field): IComponent {
         $searchType = $this->evaluator->evaluate($this->searchType, $field);
         $allowClear = $this->evaluator->evaluate($this->allowClear, $field);
 
         $event = $field->getBaseHolder()->getEvent();
-        $this->referencedPersonFactory->setEvent($event);
-        $acYear = $event->getAcYear();
 
         $modifiableResolver = new PersonContainerResolver($field, $this->modifiable, $this->selfResolver, $this->evaluator);
         $visibleResolver = new PersonContainerResolver($field, $this->visible, $this->selfResolver, $this->evaluator);
         $fieldsDefinition = $this->evaluateFieldsDefinition($field);
-        $component = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiableResolver, $visibleResolver);
-        $component->setOption('label', $field->getLabel());
-        $component->setOption('description', $field->getDescription());
-        return $component;
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $event->getAcYear(), $searchType, $allowClear, $modifiableResolver, $visibleResolver, $event);
+        $referencedId->getReferencedContainer()->setOption('label', $field->getLabel());
+        $referencedId->getReferencedContainer()->setOption('description', $field->getDescription());
+        return $referencedId;
     }
 
     /**
-     * @param ReferencedContainer|IComponent $component
+     * @param ReferencedId|IComponent $component
      * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
      */
-    protected function setDefaultValue(IComponent $component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDefaultValue(IComponent $component, Field $field) {
         $default = $field->getValue();
         if ($default == self::VALUE_LOGIN) {
             if ($this->user->isLoggedIn() && $this->user->getIdentity()->getPerson()) {
@@ -159,27 +113,23 @@ class PersonFactory extends AbstractFactory {
                 $default = null;
             }
         }
-
-        $component->getReferencedId()->setDefaultValue($default);
+        $component->setDefaultValue($default);
     }
 
     /**
-     * @param ReferencedContainer|IComponent $component
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
+     * @param ReferencedId|IComponent $component
      * @return void
      */
-    protected function setDisabled(IComponent $component, Field $field, BaseMachine $machine, Container $container) {
-        $component->getReferencedId()->setDisabled();
+    protected function setDisabled(IComponent $component) {
+        $component->setDisabled();
     }
 
     /**
-     * @param ReferencedContainer|IComponent $component
+     * @param ReferencedId|IComponent $component
      * @return Component|IControl
      */
     public function getMainControl(IComponent $component): IControl {
-        return $component->getReferencedId();
+        return $component;
     }
 
     /**
@@ -207,7 +157,7 @@ class PersonFactory extends AbstractFactory {
                 if (!is_array($metadata)) {
                     $metadata = ['required' => $metadata];
                 }
-                if ($metadata['required'] && !$this->referencedPersonFactory->isFilled($person, $subName, $fieldName, $acYear)) {
+                if ($metadata['required'] && !ReferencedPersonFactory::isFilled($person, $subName, $fieldName, $acYear)) {
                     $validator->addError(sprintf(_('%s: %s je povinná položka.'), $field->getBaseHolder()->getLabel(), $field->getLabel() . '.' . $subName . '.' . $fieldName)); //TODO better GUI name than DB identifier
                 }
             }

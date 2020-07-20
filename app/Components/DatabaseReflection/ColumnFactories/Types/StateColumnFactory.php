@@ -13,9 +13,7 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class StateColumnFactory extends DefaultColumnFactory {
-    /**
-     * @var array[]
-     */
+    /** @var array[] */
     protected $states = [];
 
     protected function createHtmlValue(AbstractModelSingle $model): Html {
@@ -42,7 +40,7 @@ class StateColumnFactory extends DefaultColumnFactory {
         return ['badge' => '', 'label' => ''];
     }
 
-    public function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         throw new OmittedControlException();
     }
 }

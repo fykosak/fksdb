@@ -10,21 +10,15 @@ use Nette\Http\Response;
 use Nette\OutOfRangeException;
 
 /**
- * Class Fyziklani13Generator
- * *
+ * Class DefaultGenerator
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DefaultGenerator extends AbstractSymbolGenerator {
-    /**
-     * @var int
-     */
+    /** @var int */
     private $variableSymbolStart;
-    /**
-     * @var int
-     */
+    /** @var int */
     private $variableSymbolEnd;
-    /**
-     * @var array
-     */
+    /** @var array */
     private $info;
 
     /**

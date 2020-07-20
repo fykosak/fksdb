@@ -9,14 +9,12 @@ namespace FKSDB\Components;
  */
 trait ClientDataTrait {
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $clientData = [];
 
     /**
      * @param string|int $key
-     * @param $value
+     * @param null|array|object|mixed $value
      */
     public function setClientData($key, $value) {
         if ($value === null) {

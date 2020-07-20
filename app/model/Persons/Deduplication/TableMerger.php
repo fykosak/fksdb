@@ -22,53 +22,35 @@ use Persons\Deduplication\MergeStrategy\IMergeStrategy;
  */
 class TableMerger {
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $table;
 
-    /**
-     * @var Merger
-     */
+    /** @var Merger */
     private $merger;
 
-    /**
-     * @var Connection
-     */
+    /** @var Connection */
     private $connection;
-    /**
-     * @var Context
-     */
+    /** @var Context */
     private $context;
 
-    /**
-     * @var ActiveRow
-     */
+    /** @var ActiveRow */
     private $trunkRow;
 
-    /**
-     * @var ActiveRow
-     */
+    /** @var ActiveRow */
     private $mergedRow;
 
-    /**
-     * @var IMergeStrategy[]
-     */
+    /** @var IMergeStrategy[] */
     private $columnMergeStrategies = [];
 
-    /**
-     * @var IMergeStrategy
-     */
+    /** @var IMergeStrategy */
     private $globalMergeStrategy;
 
-    /**
-     * @var ILogger
-     */
+    /** @var ILogger */
     private $logger;
 
     /**
      * TableMerger constructor.
-     * @param $table
+     * @param string $table
      * @param Merger $merger
      * @param Context $context
      * @param IMergeStrategy $globalMergeStrategy
@@ -98,7 +80,7 @@ class TableMerger {
     }
 
     /**
-     * @param $column
+     * @param string $column
      * @param IMergeStrategy|null $mergeStrategy
      */
     public function setColumnMergeStrategy($column, IMergeStrategy $mergeStrategy = null) {
@@ -235,11 +217,11 @@ class TableMerger {
     }
 
     /**
-     * @param $rows
-     * @param $parentColumn
+     * @param mixed $rows
+     * @param mixed $parentColumn
      * @return array
      */
-    private function groupBySecondaryKey($rows, $parentColumn) {
+    private function groupBySecondaryKey($rows, $parentColumn): array {
         $result = [];
         foreach ($rows as $row) {
             $key = $this->getSecondaryKeyValue($row, $parentColumn);
@@ -253,7 +235,7 @@ class TableMerger {
 
     /**
      * @param ActiveRow $row
-     * @param $parentColumn
+     * @param mixed $parentColumn
      * @return string
      */
     private function getSecondaryKeyValue(ActiveRow $row, $parentColumn) {
@@ -273,7 +255,7 @@ class TableMerger {
 
     /**
      * @param ActiveRow $row
-     * @param $changes
+     * @param iterable $changes
      * @return void
      */
     private function logUpdate(ActiveRow $row, $changes) {
@@ -308,13 +290,9 @@ class TableMerger {
      * DB reflection
      * ****************************** */
 
-    /**
-     * @var null
-     */
+    /** @var null */
     private $refTables = null;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private static $refreshReferencing = true;
 
     /**
@@ -336,9 +314,7 @@ class TableMerger {
         return $this->refTables;
     }
 
-    /**
-     * @var null
-     */
+    /** @var null */
     private $columns = null;
 
     /**
@@ -354,9 +330,7 @@ class TableMerger {
         return $this->columns;
     }
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $primaryKey;
 
     /**
@@ -370,17 +344,13 @@ class TableMerger {
         return $column == $this->primaryKey;
     }
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $referencedTables = [];
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private static $refreshReferenced = true;
 
     /**
-     * @param $column
+     * @param string $column
      * @return mixed
      */
     private function getReferencedTable($column) {
@@ -396,9 +366,7 @@ class TableMerger {
         return $this->referencedTables[$column];
     }
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $secondaryKey;
 
     /**
@@ -419,7 +387,7 @@ class TableMerger {
     }
 
     /**
-     * @param $secondaryKey
+     * @param string $secondaryKey
      * @return void
      */
     public function setSecondaryKey($secondaryKey) {

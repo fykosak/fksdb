@@ -8,9 +8,7 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 
 class LinkPrinterComponent extends BaseComponent {
-    /**
-     * @var TableReflectionFactory
-     */
+    /** @var TableReflectionFactory */
     private $tableReflectionFactory;
 
     /**

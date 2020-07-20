@@ -11,9 +11,7 @@ use FKSDB\Messages\Message;
  */
 abstract class StackedLogger implements ILogger {
 
-    /**
-     * @var ILogger
-     */
+    /** @var ILogger */
     private $child;
 
     /**

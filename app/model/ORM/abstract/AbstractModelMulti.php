@@ -14,30 +14,24 @@ use Nette\SmartObject;
 abstract class AbstractModelMulti implements IModel {
     use SmartObject;
 
-    /**
-     * @var AbstractModelSingle
-     */
+    /** @var AbstractModelSingle */
     protected $mainModel;
 
-    /**
-     * @var AbstractModelSingle
-     */
+    /** @var AbstractModelSingle */
     protected $joinedModel;
 
-    /**
-     * @var AbstractServiceMulti
-     */
+    /** @var AbstractServiceMulti */
     protected $service;
 
     /**
      * @note DO NOT use directly, use AbstractServiceMulti::composeModel or FKSDB\ORM\AbstractModelMulti::createFromExistingModels.
      *
-     * @param AbstractServiceMulti $service
+     * @param AbstractServiceMulti|null $service
      * @param AbstractModelSingle $mainModel
      * @param AbstractModelSingle $joinedModel
      */
     public function __construct($service, AbstractModelSingle $mainModel, AbstractModelSingle $joinedModel) {
-        if ($service == null) {
+        if (is_null($service)) {
             $this->joinedModel = $joinedModel;
             $this->mainModel = $mainModel;
         } else {
@@ -47,12 +41,7 @@ abstract class AbstractModelMulti implements IModel {
         }
     }
 
-    /**
-     * @param AbstractModelSingle $mainModel
-     * @param AbstractModelSingle $joinedModel
-     * @return AbstractModelMulti
-     */
-    public static function createFromExistingModels(AbstractModelSingle $mainModel, AbstractModelSingle $joinedModel) {
+    public static function createFromExistingModels(AbstractModelSingle $mainModel, AbstractModelSingle $joinedModel): self {
         return new static(null, $mainModel, $joinedModel);
     }
 
@@ -110,10 +99,11 @@ abstract class AbstractModelMulti implements IModel {
     }
 
     /**
-     * @param $name
+     * @param string|int $name
      * @return bool|mixed|ActiveRow|Selection|null
      */
     public function &__get($name) {
+        // $value = $this->getMainModel()->{$name} ?? $this->getJoinedModel()->{$name} ?? null;
         if ($this->getMainModel()->__isset($name)) {
             return $this->getMainModel()->__get($name);
         }
@@ -126,7 +116,7 @@ abstract class AbstractModelMulti implements IModel {
     }
 
     /**
-     * @param $name
+     * @param string|int $name
      * @return bool
      */
     public function __isset($name) {
@@ -135,7 +125,7 @@ abstract class AbstractModelMulti implements IModel {
 
     /**
      * @param string|int $name
-     * @param $value
+     * @param mixed $value
      */
     public function __set($name, $value) {
         throw new LogicException("Cannot update multiModel directly.");
@@ -152,7 +142,7 @@ abstract class AbstractModelMulti implements IModel {
      * @param bool $need
      * @return mixed
      */
-    public function getPrimary($need = TRUE) {
+    public function getPrimary($need = true) {
         return $this->getJoinedModel()->getPrimary($need);
     }
 
@@ -160,10 +150,14 @@ abstract class AbstractModelMulti implements IModel {
      * @param bool $need
      * @return string
      */
-    public function getSignature($need = TRUE) {
+    public function getSignature($need = true) {
         return implode('|', (array)$this->getPrimary($need));
     }
 
+    /**
+     * @return bool
+     * @deprecated
+     */
     public function isNew(): bool {
         return $this->getJoinedModel()->isNew();
     }

@@ -31,8 +31,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     /**
      * Returns first of the person's logins.
      * (so far, there's not support for multiple login in DB schema)
-     *
-     *
      * @return ModelLogin|null
      */
     public function getLogin() {
@@ -144,7 +142,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @param $fid
+     * @param int $fid
      * @return ModelMPersonHasFlag|null
      */
     public function getMPersonHasFlag($fid) {

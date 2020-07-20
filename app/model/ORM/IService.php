@@ -45,7 +45,7 @@ interface IService {
 
     /**
      * @param IModel $model
-     * @param $data
+     * @param iterable $data
      * @return mixed
      * @deprecated
      */

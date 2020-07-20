@@ -2,10 +2,11 @@
 
 namespace FKSDB\Modules\PublicModule;
 
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use News;
 
@@ -15,9 +16,7 @@ use News;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DashboardPresenter extends BasePresenter {
-    /**
-     * @var News
-     */
+    /** @var News */
     private $news;
 
     /**
@@ -51,11 +50,12 @@ class DashboardPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
+     * @throws UnsupportedLanguageException
      */
     public function renderDefault() {
-        foreach ($this->news->getNews($this->getSelectedContest(), $this->getLang())
-                 as $new) {
+        foreach ($this->news->getNews($this->getSelectedContest(), $this->getLang()) as $new) {
             $this->flashMessage($new);
         }
     }

@@ -2,20 +2,24 @@
 
 namespace FKSDB\Modules\FyziklaniModule;
 
+use FKSDB\Entity\ModelNotFoundException;
+use FKSDB\Events\EventNotFoundException;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Fyziklani\Submit\ClosedSubmittingException;
+use FKSDB\Fyziklani\Submit\HandlerFactory;
+use FKSDB\Logging\FlashMessageDump;
+use FKSDB\Logging\MemoryLogger;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use FKSDB\Components\Controls\Entity\Fyziklani\Submit\EditControl;
+use FKSDB\Components\Controls\Entity\Fyziklani\Submit\EditComponent;
 use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
 use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
 use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
-use FKSDB\Fyziklani\ClosedSubmittingException;
-use FKSDB\Fyziklani\PointsMismatchException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
+use Nette\Security\IResource;
 
 /**
  * Class SubmitPresenter
@@ -25,10 +29,22 @@ use Nette\Application\UI\Control;
 class SubmitPresenter extends BasePresenter {
     use EventEntityPresenterTrait;
 
+    /** @var HandlerFactory */
+    protected $handlerFactory;
+
+    /**
+     * @param HandlerFactory $handlerFactory
+     * @return void
+     */
+    public function injectHandlerFactory(HandlerFactory $handlerFactory) {
+        $this->handlerFactory = $handlerFactory;
+    }
+
     /* ***** Title methods *****/
     /**
      * @return void
-     * @throws BadRequestException
+     *
+     * @throws ForbiddenRequestException
      */
     public function titleCreate() {
         $this->setPageTitle(new PageTitle(_('Zadávání bodů'), 'fa fa-pencil-square-o'));
@@ -36,23 +52,28 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
+     * @throws ForbiddenRequestException
      */
     public function titleList() {
         $this->setPageTitle(new PageTitle(_('Submits'), 'fa fa-table'));
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
+     *
+     * @throws ForbiddenRequestException
      */
     public function titleEdit() {
         $this->setPageTitle(new PageTitle(_('Úprava bodování'), 'fa fa-pencil'));
     }
 
     /**
-     * @throws AbortException
-     * @throws BadRequestException
+     * @return void
+     * @throws BadTypeException
+     * @throws EventNotFoundException
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     public function titleDetail() {
         $this->setPageTitle(new PageTitle(sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id), 'fa fa-pencil'));
@@ -61,10 +82,10 @@ class SubmitPresenter extends BasePresenter {
     /* ***** Authorized methods *****/
 
     /**
-     * @param $resource
+     * @param IResource|string|null $resource
      * @param string $privilege
      * @return bool
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
         return $this->isEventOrContestOrgAuthorized($resource, $privilege);
@@ -73,25 +94,31 @@ class SubmitPresenter extends BasePresenter {
     /* ******** ACTION METHODS ********/
 
     /**
-     * @throws BadRequestException
+     * @return void
+     * @throws BadTypeException
+     * @throws ModelNotFoundException
      */
     public function actionEdit() {
         $this->traitActionEdit();
     }
 
     /**
-     * @throws AbortException
-     * @throws BadRequestException
+     * @return void
+     * @throws BadTypeException
+     * @throws EventNotFoundException
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     public function renderDetail() {
         $this->template->model = $this->getEntity();
     }
 
     /**
-     * @throws AbortException
-     * @throws BadRequestException
+     * @return void
+     * @throws BadTypeException
+     * @throws EventNotFoundException
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     public function renderEdit() {
         $this->template->model = $this->getEntity();
@@ -100,40 +127,42 @@ class SubmitPresenter extends BasePresenter {
     /* ****** COMPONENTS **********/
     /**
      * @return SubmitsGrid
-     * @throws BadRequestException
-     * @throws AbortException
+     * @throws EventNotFoundException
      */
     protected function createComponentGrid(): SubmitsGrid {
         return new AllSubmitsGrid($this->getEvent(), $this->getContext());
     }
 
     /**
-     * @return Control
-     * @throws AbortException
-     * @throws BadRequestException
+     * @return TaskCodeInput
+     * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): TaskCodeInput {
         return new TaskCodeInput($this->getContext(), $this->getEvent());
     }
 
     /**
-     * @return Control
-     * @throws AbortException
-     * @throws BadRequestException
+     * @return EditComponent
+     * @throws EventNotFoundException
      */
-    protected function createComponentEditForm(): Control {
-        return new EditControl($this->getContext(), $this->getEvent());
+    protected function createComponentEditForm(): EditComponent {
+        return new EditComponent($this->getContext(), $this->getEvent());
     }
 
     /**
+     * @return void
      * @throws AbortException
-     * @throws BadRequestException
+     * @throws BadTypeException
      * @throws ClosedSubmittingException
-     * @throws PointsMismatchException
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     public function handleCheck() {
-        $log = $this->getServiceFyziklaniSubmit()->checkSubmit($this->getEntity(), $this->getEntity()->points, $this->getUser());
-        $this->flashMessage($log->getMessage(), $log->getLevel());
+        $logger = new MemoryLogger();
+        $handler = $this->handlerFactory->create($this->getEvent());
+        $handler->checkSubmit($logger, $this->getEntity(), $this->getEntity()->points);
+        FlashMessageDump::dump($logger, $this);
         $this->redirect('this');
     }
 

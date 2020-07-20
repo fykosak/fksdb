@@ -8,15 +8,12 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\ORM\Services\ServicePerson;
 
 trait ReferencedPersonTrait {
-    /**
-     * @var PersonFactory
-     */
-    private $personFactory;
 
-    /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
+    /** @var PersonFactory */
+    protected $personFactory;
+
+    /** @var ServicePerson */
+    protected $servicePerson;
 
     protected function createPersonSelect(): AutocompleteSelectBox {
         return $this->personFactory->createPersonSelect(true, _('Person'), new PersonProvider($this->servicePerson));

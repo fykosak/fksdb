@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceEvent;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -21,17 +21,11 @@ use NiftyGrid\DuplicateGlobalButtonException;
  */
 class EventsGrid extends BaseGrid {
 
-    /**
-     * @var ServiceEvent
-     */
+    /** @var ServiceEvent */
     private $serviceEvent;
-    /**
-     * @var ModelContest
-     */
+    /** @var ModelContest */
     private $contest;
-    /**
-     * @var int
-     */
+    /** @var int */
     private $year;
 
     /**
@@ -54,18 +48,19 @@ class EventsGrid extends BaseGrid {
         $this->serviceEvent = $serviceEvent;
     }
 
-    public function getData(): IDataSource {
+    protected function getData(): IDataSource {
         $events = $this->serviceEvent->getEvents($this->contest, $this->year);
         return new NDataSource($events);
     }
 
     /**
      * @param Presenter $presenter
-     * @throws BadRequestException
+     *
+     * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
-     * @throws DuplicateButtonException
+     * @throws BadTypeException
      */
     protected function configure(Presenter $presenter) {
         parent::configure($presenter);

@@ -15,18 +15,14 @@ use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class ResultsTotalGrid
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ResultsTotalGrid extends BaseGrid {
 
-    /**
-     * @var ServiceFyziklaniTeam
-     */
+    /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
 
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
 
     /**

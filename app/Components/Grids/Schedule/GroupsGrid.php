@@ -18,9 +18,7 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class GroupsGrid extends BaseGrid {
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
 
     /**
@@ -33,7 +31,7 @@ class GroupsGrid extends BaseGrid {
         $this->event = $event;
     }
 
-    public function getModelClassName(): string {
+    protected function getModelClassName(): string {
         return ModelScheduleGroup::class;
     }
 

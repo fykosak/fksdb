@@ -10,9 +10,9 @@ use FKSDB\ORM\Models\ModelRole;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\YearCalculator;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Http\Session;
+use Nette\Http\SessionSection;
 use Nette\Security\IIdentity;
 
 /**
@@ -33,61 +33,40 @@ class ContestChooser extends BaseComponent {
     const DEFAULT_SMART_FIRST = 'smfirst';
     const DEFAULT_NULL = 'null';
 
-    /**
-     * @var mixed
-     */
+    /** @var string */
     private $contestsDefinition;
 
-    /**
-     * @var mixed
-     */
+    /** @var string */
     private $yearDefinition;
 
-    /**
-     * @var ModelContest[]
-     */
+    /** @var ModelContest[] */
     private $contests;
 
-    /**
-     * @var Session
-     */
+    /** @var Session */
     private $session;
 
-    /**
-     * @var YearCalculator
-     */
+    /** @var YearCalculator */
     private $yearCalculator;
 
-    /**
-     * @var ServiceContest
-     */
+    /** @var ServiceContest */
     private $serviceContest;
 
-    /**
-     * @var ModelContest
-     */
+    /** @var ModelContest */
     private $contest;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $year;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $valid;
+
     /** @var bool */
     private $initialized = false;
 
-    /**
-     * @var string DEFAULT_*
-     */
+    /** @var string DEFAULT_* */
     private $defaultContest = self::DEFAULT_SMART_FIRST;
 
-    /**
-     * @var int bitmask of what "sources" are used to infer selected contest
-     */
+    /** @var int bitmask of what "sources" are used to infer selected contest */
     private $contestSource = 0xffffffff;
 
     /**
@@ -103,7 +82,7 @@ class ContestChooser extends BaseComponent {
     }
 
     /**
-     * @param mixed $contestsDefinition role enum|CONTESTS_ALL|array of contests
+     * @param string|array role enum|CONTESTS_ALL|array of contests
      */
     public function setContests($contestsDefinition) {
         $this->contestsDefinition = $contestsDefinition;
@@ -111,7 +90,7 @@ class ContestChooser extends BaseComponent {
 
     /**
      *
-     * @param mixed $yearDefinition enum
+     * @param string|array $yearDefinition
      */
     public function setYears($yearDefinition) {
         $this->yearDefinition = $yearDefinition;
@@ -125,7 +104,7 @@ class ContestChooser extends BaseComponent {
     }
 
     /**
-     * @param $defaultContest
+     * @param mixed $defaultContest
      * @return void
      */
     public function setDefaultContest($defaultContest) {
@@ -140,7 +119,7 @@ class ContestChooser extends BaseComponent {
     }
 
     /**
-     * @param $contestSource
+     * @param mixed $contestSource
      * @return void
      */
     public function setContestSource($contestSource) {
@@ -284,7 +263,6 @@ class ContestChooser extends BaseComponent {
             }
             $this->contests = [];
             foreach ($contests as $id) {
-                /** @var ModelContest $contest */
                 $contest = $this->serviceContest->findByPrimary($id);
                 $years = $this->getYears($contest);
                 $this->contests[$id] = (object)[
@@ -334,7 +312,8 @@ class ContestChooser extends BaseComponent {
 
     /**
      * @param null $class
-     * @throws BadRequestException
+     * @return void
+     * @throws ForbiddenRequestException
      */
     public function render($class = null) {
         if (!$this->isValid()) {
@@ -350,7 +329,7 @@ class ContestChooser extends BaseComponent {
     }
 
     /**
-     * @param $contestId
+     * @param int $contestId
      * @throws AbortException
      */
     public function handleChange($contestId) {
@@ -375,8 +354,8 @@ class ContestChooser extends BaseComponent {
     }
 
     /**
-     * @param $contest
-     * @param $year
+     * @param int $contest
+     * @param int $year
      * @throws AbortException
      */
     public function handleChangeYear($contest, $year) {
@@ -387,8 +366,8 @@ class ContestChooser extends BaseComponent {
     }
 
     /**
-     * @param $session
-     * @param $contest
+     * @param Session|SessionSection $session TODO
+     * @param ModelContest|null $contest
      * @param null $override
      * @return int|mixed|null
      */

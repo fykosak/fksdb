@@ -14,12 +14,12 @@ use Nette\DI\Container;
  */
 class GraphComponent extends BaseComponent {
 
-    /**
-     * @var BaseMachine
-     */
+    /** @var BaseMachine */
     private $baseMachine;
+
     /** @var ExpressionPrinter */
     private $expressionPrinter;
+
     /** @var bool */
     private $attachedJS = false;
 
@@ -66,7 +66,7 @@ class GraphComponent extends BaseComponent {
      * @return string[]
      */
     private function getAllStates(): array {
-        return array_merge(array_keys($this->baseMachine->getStates()), [BaseMachine::STATE_INIT, BaseMachine::STATE_TERMINATED]);
+        return array_merge($this->baseMachine->getStates(), [BaseMachine::STATE_INIT, BaseMachine::STATE_TERMINATED]);
     }
 
     /**

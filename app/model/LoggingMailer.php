@@ -1,7 +1,7 @@
 <?php
 
-use FKSDB\Config\GlobalParameters;
 use FKSDB\Utils\Utils;
+use Nette\DI\Container;
 use Nette\Mail\IMailer;
 use Nette\Mail\Message;
 use Nette\SmartObject;
@@ -14,66 +14,50 @@ use Nette\SmartObject;
 class LoggingMailer implements IMailer {
     use SmartObject;
 
-    /**
-     * @var IMailer
-     */
+    /** @var IMailer */
     private $mailer;
 
-    /**
-     * @var GlobalParameters
-     */
-    private $parameters;
-    /**
-     * @var mixed
-     */
+    /** @var string */
     private $logPath;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $logging = true;
-    /**
-     * @var int
-     */
+    /** @var int */
     private $sentMessages = 0;
+    /** @var Container */
+    private $container;
 
     /**
      * LoggingMailer constructor.
      * @param IMailer $mailer
-     * @param GlobalParameters $parameters
+     * @param Container $container
      */
-    public function __construct(IMailer $mailer, GlobalParameters $parameters) {
+    public function __construct(IMailer $mailer,Container $container) {
         $this->mailer = $mailer;
-        $this->parameters = $parameters;
+        $this->container = $container;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getLogPath() {
+    public function getLogPath(): string {
         return $this->logPath;
     }
 
     /**
-     * @param $logPath
+     * @param string $logPath
      * @return void
      */
-    public function setLogPath($logPath) {
+    public function setLogPath(string $logPath) {
         $this->logPath = $logPath;
         @mkdir($this->logPath, 0770, true);
     }
 
-    /**
-     * @return bool
-     */
-    public function getLogging() {
+    public function getLogging(): bool {
         return $this->logging;
     }
 
     /**
-     * @param $logging
+     * @param bool $logging
      * @return void
      */
-    public function setLogging($logging) {
+    public function setLogging(bool $logging) {
         $this->logging = $logging;
     }
 
@@ -84,7 +68,7 @@ class LoggingMailer implements IMailer {
      */
     public function send(Message $mail) {
         try {
-            if (!$this->parameters['email']['disabled'] ?? false) {// do not really send emails when debugging
+            if (!$this->container->getParameters()['email']['disabled'] ?? false) {// do not really send emails when debugging
                 $this->mailer->send($mail);
             }
             $this->logMessage($mail);
@@ -94,10 +78,7 @@ class LoggingMailer implements IMailer {
         }
     }
 
-    /**
-     * @return int
-     */
-    public function getSentMessages() {
+    public function getSentMessages(): int {
         return $this->sentMessages;
     }
 

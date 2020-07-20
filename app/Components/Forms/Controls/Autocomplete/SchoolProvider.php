@@ -16,9 +16,7 @@ class SchoolProvider implements IFilteredDataProvider {
 
     const LIMIT = 50;
 
-    /**
-     * @var ServiceSchool
-     */
+    /** @var ServiceSchool */
     private $serviceSchool;
 
     /**
@@ -97,6 +95,7 @@ class SchoolProvider implements IFilteredDataProvider {
 
     /**
      * @param mixed $id
+     * @return void
      */
     public function setDefaultValue($id) {
         $this->defaultValue = $id;

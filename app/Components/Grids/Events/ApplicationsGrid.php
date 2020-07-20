@@ -13,7 +13,6 @@ use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
@@ -29,44 +28,28 @@ use Nette\Utils\Strings;
 class ApplicationsGrid extends BaseComponent {
 
     const NAME_PREFIX = 'application_';
-    /**
-     * @var IHolderSource
-     */
+    /** @var IHolderSource */
     private $source;
 
-    /**
-     * @var Holder[]
-     */
+    /** @var Holder[] */
     private $holders = [];
 
-    /**
-     * @var Machine[]
-     */
+    /** @var Machine[] */
     private $machines = [];
 
-    /**
-     * @var ModelEvent[]
-     */
+    /** @var ModelEvent[] */
     private $eventApplications = [];
 
-    /**
-     * @var ApplicationHandler[]
-     */
+    /** @var ApplicationHandler[] */
     private $handlers = [];
 
-    /**
-     * @var ApplicationHandlerFactory
-     */
+    /** @var ApplicationHandlerFactory */
     private $handlerFactory;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $templateFile;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $searchable = false;
     /** @var bool */
     private $attachedJS = false;
@@ -78,7 +61,7 @@ class ApplicationsGrid extends BaseComponent {
      * @param Container $container
      * @param IHolderSource $source
      * @param ApplicationHandlerFactory $handlerFactory
-     * @throws BadRequestException
+     *
      */
     public function __construct(Container $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory) {
         parent::__construct($container);
@@ -121,7 +104,7 @@ class ApplicationsGrid extends BaseComponent {
     }
 
     /**
-     * @param $searchable
+     * @param bool $searchable
      * @return void
      */
     public function setSearchable($searchable) {
@@ -130,7 +113,7 @@ class ApplicationsGrid extends BaseComponent {
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
      */
     private function processSource() {
         $this->eventApplications = [];
@@ -145,7 +128,7 @@ class ApplicationsGrid extends BaseComponent {
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @return ApplicationComponent|IComponent
      */
     protected function createComponent($name) {

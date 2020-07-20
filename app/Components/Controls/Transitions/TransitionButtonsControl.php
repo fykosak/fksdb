@@ -18,13 +18,9 @@ use Tracy\Debugger;
  */
 class TransitionButtonsControl extends BaseComponent {
 
-    /**
-     * @var Machine
-     */
+    /** @var Machine */
     private $machine;
-    /**
-     * @var IStateModel
-     */
+    /** @var IStateModel */
     private $model;
 
     /**
@@ -46,7 +42,7 @@ class TransitionButtonsControl extends BaseComponent {
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @throws AbortException
      */
     public function handleTransition($name) {

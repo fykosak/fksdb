@@ -19,7 +19,6 @@ services:
     - FKSDB\Components\Events\ExpressionPrinter
     downloader: FKSDB\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
     - Facebook({appId: %facebook.appId%, secret: %facebook.secret%})
-    globalParameters: FKSDB\Config\GlobalParameters
     yearCalculator: FKSDB\YearCalculator
     news: News
     seriesCalculator: FKSDB\SeriesCalculator
@@ -88,6 +87,7 @@ services:
     - FKSDB\Components\Forms\Factories\TableReflectionFactory
     - FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory
     - FKSDB\Components\DatabaseReflection\MetaDataFactory
+    - FKSDB\Fyziklani\Submit\HandlerFactory
 
 includes:
     - merger.neon

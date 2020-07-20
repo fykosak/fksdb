@@ -13,14 +13,10 @@ class Grant implements IRole {
 
     const CONTEST_ALL = -1;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $contestId;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $roleId;
 
     /**

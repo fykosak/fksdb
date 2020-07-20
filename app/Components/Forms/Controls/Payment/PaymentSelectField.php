@@ -19,21 +19,13 @@ class PaymentSelectField extends TextInput {
 
     use ReactComponentTrait;
 
-    /**
-     * @var ServicePersonSchedule
-     */
+    /** @var ServicePersonSchedule */
     private $servicePersonSchedule;
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
-    /**
-     * @var string
-     */
+    /** @var string */
     private $groupTypes;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $showAll;
 
     /**
@@ -42,8 +34,8 @@ class PaymentSelectField extends TextInput {
      * @param ModelEvent $event
      * @param array $groupTypes
      * @param bool $showAll
-     * @throws JsonException
      * @throws BadRequestException
+     * @throws JsonException
      */
     public function __construct(ServicePersonSchedule $servicePersonSchedule, ModelEvent $event, array $groupTypes, bool $showAll = true) {
         parent::__construct();

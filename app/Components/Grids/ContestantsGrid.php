@@ -20,17 +20,11 @@ use SQL\ViewDataSource;
  */
 class ContestantsGrid extends BaseGrid {
 
-    /**
-     * @var ServiceContestant
-     */
+    /** @var ServiceContestant */
     private $serviceContestant;
-    /**
-     * @var int
-     */
+    /** @var int */
     private $year;
-    /**
-     * @var ModelContest
-     */
+    /** @var ModelContest */
     private $contest;
 
     /**
@@ -72,15 +66,15 @@ class ContestantsGrid extends BaseGrid {
         $this->setDefaultOrder('name_lex ASC');
 
         $this->addColumn('name', _('Name'));
-        $this->addColumn('study_year', _('Ročník'));
-        $this->addColumn('school_name', _('Škola'));
+        $this->addColumn('study_year', _('Study year'));
+        $this->addColumn('school_name', _('School'));
 
 
         $this->addLinkButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'ct_id']);
         // $this->addLinkButton('Contestant:detail', 'detail', _('Detail'), false, ['id' => 'ct_id']);
 
         $this->addGlobalButton('add')
-            ->setLabel(_('Založit řešitele'))
+            ->setLabel(_('Create contestant'))
             ->setLink($this->getPresenter()->link('create'));
 
         $this->paginate = false;

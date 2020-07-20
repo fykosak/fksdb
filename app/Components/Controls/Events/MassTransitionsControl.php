@@ -11,7 +11,6 @@ use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 
 /**
@@ -19,12 +18,13 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class MassTransitionsControl extends BaseComponent {
-    /**
-     * @var ModelEvent
-     */
+
+    /** @var ModelEvent */
     private $event;
+
     /** @var EventDispatchFactory */
     private $eventDispatchFactory;
+
     /** @var ApplicationHandlerFactory */
     private $applicationHandlerFactory;
 
@@ -50,7 +50,7 @@ class MassTransitionsControl extends BaseComponent {
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
      */
     public function render() {
         /** @var  $machine */
@@ -63,12 +63,12 @@ class MassTransitionsControl extends BaseComponent {
     /**
      * @param string $name
      * @return void
-     * @throws NeonSchemaException
-     * @throws BadRequestException
      * @throws AbortException
+     *
+     * @throws NeonSchemaException
      */
     public function handleTransition(string $name) {
-        $source = new SingleEventSource($this->event, $this->getContext(),$this->eventDispatchFactory);
+        $source = new SingleEventSource($this->event, $this->getContext(), $this->eventDispatchFactory);
         $logger = new MemoryLogger();
         $total = 0;
         $errored = 0;

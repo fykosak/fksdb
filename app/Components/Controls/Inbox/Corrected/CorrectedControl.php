@@ -3,10 +3,10 @@
 namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\ILogger;
 use FKSDB\Submits\FileSystemStorage\CorrectedStorage;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 
 /**
@@ -14,17 +14,16 @@ use Nette\Application\UI\Form;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class CorrectedControl extends SeriesTableComponent {
-    /**
-     * @var CorrectedStorage
-     */
+
+    /** @var CorrectedStorage */
     private $correctedStorage;
 
     /**
      * @param CorrectedStorage $correctedStorage
      * @return void
      */
-    public function injectCorrectedStorage(CorrectedStorage$correctedStorage){
-        $this->correctedStorage=$correctedStorage;
+    public function injectCorrectedStorage(CorrectedStorage $correctedStorage) {
+        $this->correctedStorage = $correctedStorage;
     }
 
     public function render() {
@@ -35,7 +34,7 @@ class CorrectedControl extends SeriesTableComponent {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function createComponentForm(): FormControl {
         $control = new FormControl();

@@ -53,35 +53,23 @@ class StoredQuery implements IDataSource, IResource {
      */
     private $parameterDefaultValues = [];
 
-    /**
-     * @var int|null
-     */
+    /** @var int|null */
     private $count;
 
-    /**
-     * @var iterable|null
-     */
+    /** @var iterable|null */
     private $data;
 
-    /**
-     * @var int|null
-     */
+    /** @var int|null */
     private $limit;
 
-    /**
-     * @var int|null
-     */
+    /** @var int|null */
     private $offset;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $orders = [];
 
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $columnNames;
 
 
@@ -172,7 +160,7 @@ class StoredQuery implements IDataSource, IResource {
     }
 
     /**
-     * @param $parameters
+     * @param iterable $parameters
      * @return void
      */
     public function setParameters($parameters) {

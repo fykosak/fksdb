@@ -2,8 +2,7 @@
 
 namespace FKSDB\Authentication;
 
-use FKSDB\Exceptions\ModelException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
@@ -11,7 +10,6 @@ use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\ORM\Services\ServiceLogin;
 use Mail\MailTemplateFactory;
-use Nette\Application\BadRequestException;
 use Nette\Utils\DateTime;
 
 /**
@@ -26,17 +24,11 @@ class AccountManager {
 
     /** @var ServiceAuthToken */
     private $serviceAuthToken;
-    /**
-     * @var string
-     */
+    /** @var string */
     private $invitationExpiration = '+1 month';
-    /**
-     * @var string
-     */
+    /** @var string */
     private $recoveryExpiration = '+1 day';
-    /**
-     * @var mixed
-     */
+    /** @var string */
     private $emailFrom;
     /** @var ServiceEmailMessage */
     private $serviceEmailMessage;
@@ -50,10 +42,12 @@ class AccountManager {
      * @param ServiceAuthToken $serviceAuthToken
      * @param ServiceEmailMessage $serviceEmailMessage
      */
-    public function __construct(MailTemplateFactory $mailTemplateFactory,
-                                ServiceLogin $serviceLogin,
-                                ServiceAuthToken $serviceAuthToken,
-                                ServiceEmailMessage $serviceEmailMessage) {
+    public function __construct(
+        MailTemplateFactory $mailTemplateFactory,
+        ServiceLogin $serviceLogin,
+        ServiceAuthToken $serviceAuthToken,
+        ServiceEmailMessage $serviceEmailMessage
+    ) {
         $this->serviceLogin = $serviceLogin;
         $this->serviceAuthToken = $serviceAuthToken;
         $this->serviceEmailMessage = $serviceEmailMessage;
@@ -68,7 +62,7 @@ class AccountManager {
     }
 
     /**
-     * @param $invitationExpiration
+     * @param string $invitationExpiration
      * @return void
      */
     public function setInvitationExpiration($invitationExpiration) {
@@ -83,25 +77,22 @@ class AccountManager {
     }
 
     /**
-     * @param $recoveryExpiration
+     * @param string $recoveryExpiration
      * @return void
      */
     public function setRecoveryExpiration($recoveryExpiration) {
         $this->recoveryExpiration = $recoveryExpiration;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getEmailFrom() {
+    public function getEmailFrom(): string {
         return $this->emailFrom;
     }
 
     /**
-     * @param $emailFrom
+     * @param string $emailFrom
      * @return void
      */
-    public function setEmailFrom($emailFrom) {
+    public function setEmailFrom(string $emailFrom) {
         $this->emailFrom = $emailFrom;
     }
 
@@ -112,10 +103,9 @@ class AccountManager {
      * @param string $email
      * @param string $lang
      * @return ModelLogin
-     * @throws BadRequestException
-     * @throws ModelException
+     * @throws UnsupportedLanguageException
      */
-    public function createLoginWithInvitation(ModelPerson $person, string $email, string $lang) {
+    public function createLoginWithInvitation(ModelPerson $person, string $email, string $lang): ModelLogin {
         $login = $this->createLogin($person);
 
         $until = DateTime::from($this->getInvitationExpiration());
@@ -140,7 +130,7 @@ class AccountManager {
      * @param ModelLogin $login
      * @param string|null $lang
      * @return void
-     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
     public function sendRecovery(ModelLogin $login, string $lang = null) {
         $person = $login->getPerson();
@@ -184,13 +174,7 @@ class AccountManager {
         ])->delete();
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param string $login
-     * @param string $password
-     * @return AbstractModelSingle|ModelLogin
-     */
-    final public function createLogin(ModelPerson $person, string $login = null, string $password = null) {
+    final public function createLogin(ModelPerson $person, string $login = null, string $password = null): ModelLogin {
         /** @var ModelLogin $login */
         $login = $this->serviceLogin->createNewModel([
             'person_id' => $person->person_id,

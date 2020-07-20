@@ -8,7 +8,6 @@ use FKSDB\Events\UndeclaredEventException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 
 /**
@@ -23,9 +22,7 @@ use Nette\DI\Container;
  */
 class RelatedPersonSource extends AggregatedPersonSource implements IHolderSource {
 
-    /**
-     * @var ModelPerson
-     */
+    /** @var ModelPerson */
     private $person;
 
     /**
@@ -42,8 +39,8 @@ class RelatedPersonSource extends AggregatedPersonSource implements IHolderSourc
     /**
      * @param ModelEvent $event
      * @return SingleEventSource|null
+     *
      * @throws NeonSchemaException
-     * @throws BadRequestException
      */
     public function processEvent(ModelEvent $event) {
         $personId = $this->person->getPrimary();

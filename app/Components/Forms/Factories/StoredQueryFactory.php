@@ -21,9 +21,7 @@ use Nette\Forms\ControlGroup;
  */
 class StoredQueryFactory {
 
-    /**
-     * @var ServiceStoredQueryTagType
-     */
+    /** @var ServiceStoredQueryTagType */
     private $serviceStoredQueryTagType;
 
     /**
@@ -102,7 +100,7 @@ class StoredQueryFactory {
 
     /**
      * @param Container $container
-     * @param mixed $group
+     * @param ControlGroup $group
      * @internal
      */
     public function buildParameterMetadata(Container $container, ControlGroup $group) {

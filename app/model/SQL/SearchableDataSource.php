@@ -12,20 +12,15 @@ use NiftyGrid\DataSource\NDataSource;
  */
 class SearchableDataSource extends NDataSource {
 
-    /**
-     * @var callback(Selection $table, string $searchTerm)
-     */
+    /** @var callback(Selection $table, string $searchTerm) */
     private $filterCallback;
 
-    /**
-     * @return callable
-     */
-    public function getFilterCallback() {
+    public function getFilterCallback(): callable {
         return $this->filterCallback;
     }
 
     /**
-     * @param $filterCallback
+     * @param callable $filterCallback
      * @return void
      */
     public function setFilterCallback(callable $filterCallback) {
@@ -33,14 +28,10 @@ class SearchableDataSource extends NDataSource {
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @return void
      */
     public function applyFilter($value) {
-        call_user_func_array($this->filterCallback, [
-            $this->getData(),
-            $value
-        ]);
+        ($this->filterCallback)($this->getData(), $value);
     }
-
 }

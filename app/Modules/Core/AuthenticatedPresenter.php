@@ -11,7 +11,6 @@ use Exception;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use FKSDB\ORM\Models\ModelAuthToken;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Http\Response;
 use ReflectionClass;
@@ -35,28 +34,18 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     const AUTH_ALLOW_TOKEN = 0x4;
     const AUTH_ALLOW_GITHUB = 0x8;
 
-    /**
-     * @var TokenAuthenticator
-     */
+    /** @var TokenAuthenticator */
     private $tokenAuthenticator;
 
-    /**
-     * @var PasswordAuthenticator
-     */
+    /** @var PasswordAuthenticator */
     private $passwordAuthenticator;
 
-    /**
-     * @var GithubAuthenticator
-     */
+    /** @var GithubAuthenticator */
     private $githubAuthenticator;
-    /**
-     * @var EventAuthorizator
-     */
+    /** @var EventAuthorizator */
     private $eventAuthorizator;
 
-    /**
-     * @var ContestAuthorizator
-     */
+    /** @var ContestAuthorizator */
     protected $contestAuthorizator;
 
     /**
@@ -124,7 +113,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     * @param $element
+     * @param mixed $element
      * @throws ForbiddenRequestException
      */
     public function checkRequirements($element) {
@@ -141,7 +130,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     /**
      * @return void
      * @throws AbortException
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
      * @throws Exception
      */
@@ -295,7 +284,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
     private function tryGithub() {
         if (!$this->getHttpRequest()->getHeader('X-GitHub-Event')) {

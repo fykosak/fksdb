@@ -6,7 +6,6 @@ use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\SmartObject;
 
@@ -23,19 +22,13 @@ use Nette\SmartObject;
 abstract class AggregatedPersonSource implements IHolderSource {
     use SmartObject;
 
-    /**
-     * @var TypedTableSelection
-     */
+    /** @var TypedTableSelection */
     private $events;
 
-    /**
-     * @var Container
-     */
+    /** @var Container */
     protected $container;
 
-    /**
-     * @var Holder[]
-     */
+    /** @var Holder[] */
     private $holders = null;
 
     /**
@@ -50,8 +43,8 @@ abstract class AggregatedPersonSource implements IHolderSource {
 
     /**
      * @return void
+     *
      * @throws NeonSchemaException
-     * @throws BadRequestException
      */
     private function loadData() {
         $this->holders = [];
@@ -92,7 +85,8 @@ abstract class AggregatedPersonSource implements IHolderSource {
             'limit' => false,
             'count' => true,
         ];
-        $result = call_user_func_array([$this->events, $name], $args);
+        $result = $this->events->{$name}(...$args);
+        //$result = call_user_func_array([$this->events, $name], $args);
         $this->holders = null;
 
         if ($delegated[$name]) {
@@ -104,8 +98,9 @@ abstract class AggregatedPersonSource implements IHolderSource {
 
     /**
      * @return Holder[]
-     * @throws BadRequestException
+     *
      * @throws NeonSchemaException
+     *
      */
     public function getHolders(): array {
         if ($this->holders === null) {

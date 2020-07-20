@@ -14,20 +14,16 @@ use RuntimeException;
  */
 class SecondaryModelConflictException extends RuntimeException {
 
-    /**
-     * @var BaseHolder
-     */
+    /** @var BaseHolder */
     private $baseHolder;
 
-    /**
-     * @var IModel[]
-     */
+    /** @var IModel[] */
     private $conflicts;
 
     /**
      * SecondaryModelConflictException constructor.
      * @param BaseHolder $baseHolder
-     * @param $conflicts
+     * @param iterable $conflicts
      * @param null $code
      * @param null $previous
      */
@@ -39,7 +35,7 @@ class SecondaryModelConflictException extends RuntimeException {
 
     /**
      * @param IModel $model
-     * @param $conflicts
+     * @param iterable $conflicts
      * @return string
      */
     private function createMessage(IModel $model, $conflicts) {

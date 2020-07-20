@@ -23,19 +23,13 @@ use Nette\Forms\IControl;
  */
 class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
 
-    /**
-     * @var ServiceSchool
-     */
+    /** @var ServiceSchool */
     private $serviceSchool;
 
-    /**
-     * @var ServicePersonHistory
-     */
+    /** @var ServicePersonHistory */
     private $servicePersonHistory;
 
-    /**
-     * @var Holder
-     */
+    /** @var Holder */
     private $holder;
 
     /**
@@ -155,10 +149,10 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
     }
 
     /**
-     * @param $studyYear
+     * @param int|null $studyYear
      * @return bool
      */
-    private function isStudent($studyYear) {
+    private function isStudent($studyYear): bool {
         return ($studyYear === null) ? false : true;
     }
 }

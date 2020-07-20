@@ -2,6 +2,8 @@
 
 namespace FKSDB\ORM\Models\Fyziklani;
 
+use FKSDB\Fyziklani\Submit\AlreadyRevokedSubmitException;
+use FKSDB\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\IFyziklaniTaskReferencedModel;
@@ -57,8 +59,25 @@ class ModelFyziklaniSubmit extends AbstractModelSingle implements IFyziklaniTeam
         ];
     }
 
-    public function canRevoke(): bool {
-        return $this->canChange() && !is_null($this->points);
+    /**
+     * @param bool $throws
+     * @return bool
+     * @throws AlreadyRevokedSubmitException
+     * @throws ClosedSubmittingException
+     */
+    public function canRevoke(bool $throws = true): bool {
+        if (is_null($this->points)) {
+            if (!$throws) {
+                return false;
+            }
+            throw new AlreadyRevokedSubmitException();
+        } elseif ($this->getFyziklaniTeam()->hasOpenSubmitting()) {
+            if (!$throws) {
+                return false;
+            }
+            throw new ClosedSubmittingException($this->getFyziklaniTeam());
+        }
+        return true;
     }
 
     public function canChange(): bool {

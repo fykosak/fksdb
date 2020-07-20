@@ -13,9 +13,7 @@ use Nette\Application\UI\Presenter;
  */
 class PresenterBuilder {
 
-    /**
-     * @var IPresenterFactory
-     */
+    /** @var IPresenterFactory */
     private $presenterFactory;
     /** @var array */
     private $presenterCache = [];

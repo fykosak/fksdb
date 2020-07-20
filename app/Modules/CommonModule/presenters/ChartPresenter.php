@@ -21,7 +21,7 @@ class ChartPresenter extends BasePresenter {
         $this->setAuthorized($this->isAnyContestAuthorized('chart', 'chart'));
     }
 
-    public function startup() {
+    protected function startup() {
         parent::startup();
         $this->selectChart();
     }

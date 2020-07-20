@@ -89,7 +89,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
     /**
      *
-     * @param $tokenData
+     * @param string $tokenData
      * @param bool $strict
      * @return ModelAuthToken|null
      */
@@ -106,7 +106,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
     }
 
     /**
-     * @param $token
+     * @param string|ModelAuthToken $token
      * @return void
      */
     public function disposeToken($token) {
@@ -119,7 +119,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
     }
 
     /**
-     * @param $eventId
+     * @param int $eventId
      * @return array
      */
     public function findTokensByEventId($eventId) {

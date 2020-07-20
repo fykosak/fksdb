@@ -21,34 +21,22 @@ class Merger {
     const IDX_MERGED = 'merged';
     const IDX_RESOLUTION = 'resolution';
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $conflicts = [];
 
-    /**
-     * @var ActiveRow
-     */
+    /** @var ActiveRow */
     private $trunkRow;
 
-    /**
-     * @var ActiveRow
-     */
+    /** @var ActiveRow */
     private $mergedRow;
 
-    /**
-     * @var Context
-     */
+    /** @var Context */
     private $context;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $configuration;
 
-    /**
-     * @var ILogger
-     */
+    /** @var ILogger */
     private $logger;
 
     /**
@@ -59,7 +47,7 @@ class Merger {
 
     /**
      * Merger constructor.
-     * @param $configuration
+     * @param mixed $configuration
      * @param Context $context
      */
     public function __construct($configuration, Context $context) {
@@ -170,7 +158,7 @@ class Merger {
     }
 
     /**
-     * @param $table
+     * @param string $table
      * @return TableMerger
      */
     private function createTableMerger($table) {
@@ -269,8 +257,8 @@ class Merger {
     }
 
     /**
-     * @param $table
-     * @param $pairId
+     * @param string $table
+     * @param int $pairId
      * @return mixed
      */
     private function & getPairDataById($table, $pairId) {

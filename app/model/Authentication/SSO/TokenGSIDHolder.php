@@ -19,14 +19,10 @@ class TokenGSIDHolder implements IGSIDHolder {
     const SESSION_NS = 'sso';
     const GSID_KEY = 'gsid';
 
-    /**
-     * @var Session
-     */
+    /** @var Session */
     private $session;
 
-    /**
-     * @var ServiceAuthToken
-     */
+    /** @var ServiceAuthToken */
     private $serviceAuthToken;
 
     /**
@@ -71,8 +67,8 @@ class TokenGSIDHolder implements IGSIDHolder {
     }
 
     /**
-     * @param $gsid
-     * @return mixed|void
+     * @param mixed $gsid
+     * @return void
      */
     public function setGSID($gsid) {
         $section = $this->session->getSection(self::SESSION_NS);

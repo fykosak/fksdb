@@ -8,9 +8,7 @@ namespace FKSDB\Expressions;
  * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class VariadicExpression extends EvaluatedExpression {
-    /**
-     * @var callable[]|bool[]
-     */
+    /** @var callable[]|bool[] */
     protected $arguments;
 
     /**
@@ -30,7 +28,7 @@ abstract class VariadicExpression extends EvaluatedExpression {
     }
 
     /**
-     * @param $args
+     * @param mixed $args
      * @return mixed
      */
     abstract protected function evaluate(...$args);

@@ -20,14 +20,10 @@ use Nette\Utils\ArrayHash;
  */
 class FlagProcessing extends AbstractProcessing {
 
-    /**
-     * @var YearCalculator
-     */
+    /** @var YearCalculator */
     private $yearCalculator;
 
-    /**
-     * @var ServiceSchool
-     */
+    /** @var ServiceSchool */
     private $serviceSchool;
 
     /**
@@ -41,7 +37,7 @@ class FlagProcessing extends AbstractProcessing {
     }
 
     /**
-     * @param $states
+     * @param array $states
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder
@@ -103,10 +99,10 @@ class FlagProcessing extends AbstractProcessing {
     }
 
     /**
-     * @param $studyYear
+     * @param int|null $studyYear
      * @return bool
      */
-    private function isStudent($studyYear) {
+    private function isStudent($studyYear): bool {
         return ($studyYear === null) ? false : true;
     }
 }

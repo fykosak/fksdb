@@ -2,20 +2,21 @@
 
 namespace FKSDB\Components\Controls\Inbox;
 
+use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\Submits\SubmitHandlerFactory;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
 /**
  * Class SubmitsPreviewControl
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class SubmitsPreviewControl extends SeriesTableComponent {
-    /**
-     * @var SubmitHandlerFactory
-     */
+
+    /** @var SubmitHandlerFactory */
     private $submitDownloadFactory;
 
     /**
@@ -33,8 +34,11 @@ class SubmitsPreviewControl extends SeriesTableComponent {
 
     /**
      * @param int $id
+     * @return void
      * @throws AbortException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws NotFoundException
      */
     public function handleDownloadUploaded(int $id) {
         $logger = new MemoryLogger();
@@ -46,6 +50,8 @@ class SubmitsPreviewControl extends SeriesTableComponent {
      * @param int $id
      * @throws AbortException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws NotFoundException
      */
     public function handleDownloadCorrected(int $id) {
         $logger = new MemoryLogger();

@@ -6,7 +6,6 @@ use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Factories\Events\IFieldFactory;
 use Nette\ComponentModel\IComponent;
-use Nette\Forms\Container;
 use Nette\Forms\IControl;
 
 /**
@@ -27,15 +26,15 @@ class Field {
     /** @var string|null */
     private $label;
 
-    /** @return string */
+    /** @return string|null */
     public function getLabel() {
         return $this->label;
     }
 
     /**
      * Field constructor.
-     * @param $name
-     * @param $label
+     * @param string $name
+     * @param string|null $label
      */
     public function __construct(string $name, string $label = null) {
         $this->name = $name;
@@ -70,7 +69,7 @@ class Field {
     }
 
     /**
-     * @param $description
+     * @param string|null $description
      * @return void
      */
     public function setDescription($description) {
@@ -103,7 +102,7 @@ class Field {
     }
 
     /**
-     * @param $default
+     * @param mixed $default
      * @return void
      */
     public function setDefault($default) {
@@ -136,8 +135,16 @@ class Field {
     /*
      * Forms
      */
-    public function createFormComponent(BaseMachine $machine, Container $container): IComponent {
-        return $this->factory->create($this, $machine, $container);
+    public function createFormComponent(): IComponent {
+        return $this->factory->createComponent($this);
+    }
+
+    /**
+     * @param IComponent $component
+     * @return void
+     */
+    public function setFieldDefaultValue(IComponent $component) {
+        $this->factory->setFieldDefaultValue($component, $this);
     }
 
     public function getMainControl(IComponent $component): IControl {
@@ -178,7 +185,7 @@ class Field {
     }
 
     /**
-     * @param $visible
+     * @param callable|bool $visible
      * @return void
      */
     public function setVisible($visible) {

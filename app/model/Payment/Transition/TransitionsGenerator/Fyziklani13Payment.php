@@ -5,6 +5,7 @@ namespace FKSDB\Payment\Transition\Transitions;
 use Authorization\EventAuthorizator;
 use Closure;
 use Exception;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServiceEmailMessage;
@@ -17,7 +18,6 @@ use FKSDB\Transitions\Statements\Conditions\DateBetween;
 use FKSDB\Transitions\Statements\Conditions\ExplicitEventRole;
 use FKSDB\Transitions\Transition;
 use Mail\MailTemplateFactory;
-use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Tracy\Debugger;
 
@@ -27,25 +27,15 @@ use Tracy\Debugger;
  */
 class Fyziklani13Payment extends AbstractTransitionsGenerator {
 
-    /**
-     * @var Connection
-     */
+    /** @var Connection */
     private $connection;
-    /**
-     * @var ServicePayment
-     */
+    /** @var ServicePayment */
     private $servicePayment;
-    /**
-     * @var EventAuthorizator
-     */
+    /** @var EventAuthorizator */
     private $eventAuthorizator;
-    /**
-     * @var ServiceEmailMessage
-     */
+    /** @var ServiceEmailMessage */
     private $serviceEmailMessage;
-    /**
-     * @var MailTemplateFactory
-     */
+    /** @var MailTemplateFactory */
     private $mailTemplateFactory;
 
     /**
@@ -73,12 +63,12 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
     /**
      * @param Machine $machine
      * @return void
-     * @throws BadRequestException
+     * @throws BadTypeException
      * @throws Exception
      */
     public function createTransitions(Machine $machine) {
         if (!$machine instanceof PaymentMachine) {
-            throw new BadRequestException(\sprintf(_('Expected class %s, got %s'), PaymentMachine::class, \get_class($machine)));
+            throw new BadTypeException(PaymentMachine::class, $machine);
         }
         $machine->setExplicitCondition(new ExplicitEventRole($this->eventAuthorizator, 'org', $machine->getEvent(), ModelPayment::RESOURCE_ID));
         $this->addTransitionInitToNew($machine);

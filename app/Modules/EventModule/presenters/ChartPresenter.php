@@ -2,11 +2,11 @@
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Events\EventNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
 use FKSDB\Components\Controls\Chart\Event\ParticipantAcquaintanceChartControl;
 use FKSDB\Components\React\ReactComponent\Events\SingleApplicationsTimeProgress;
 use FKSDB\Components\React\ReactComponent\Events\TeamApplicationsTimeProgress;
-use Nette\Application\BadRequestException;
 
 /**
  * Class ChartPresenter
@@ -16,27 +16,27 @@ class ChartPresenter extends BasePresenter {
     use ChartPresenterTrait;
 
     /**
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function authorizedList() {
         $this->setAuthorized($this->isContestsOrgAuthorized($this->getModelResource(), 'list'));
     }
 
     /**
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function authorizedChart() {
         $this->setAuthorized($this->isContestsOrgAuthorized($this->getModelResource(), 'chart'));
     }
 
-    public function startup() {
+    protected function startup() {
         parent::startup();
         $this->selectChart();
     }
 
     /**
      * @return array
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function registerCharts(): array {
         return [

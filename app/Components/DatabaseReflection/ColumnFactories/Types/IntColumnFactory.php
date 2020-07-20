@@ -14,17 +14,11 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class IntColumnFactory extends DefaultColumnFactory {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $nullValue = 'notSet';
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $prefix = null;
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $suffix = null;
 
     protected function createHtmlValue(AbstractModelSingle $model): Html {

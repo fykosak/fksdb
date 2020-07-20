@@ -2,10 +2,11 @@
 
 namespace FKSDB\ORM\Models\Fyziklani;
 
-use FKSDB\Fyziklani\ClosedSubmittingException;
-use FKSDB\Fyziklani\NotCheckedSubmitsException;
+use FKSDB\Fyziklani\Closing\AlreadyClosedException;
+use FKSDB\Fyziklani\Closing\NotCheckedSubmitsException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\Events\ModelFyziklaniParticipant;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
@@ -88,25 +89,27 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
     }
 
     public function hasOpenSubmitting(): bool {
-        $points = $this->points;
-        return !is_numeric($points);
-    }
-
-    public function isReadyForClosing(): bool {
-        return $this->hasAllSubmitsChecked() && $this->hasOpenSubmitting();
+        return !is_numeric($this->points);
     }
 
     /**
+     * @param bool $throws
      * @return bool
-     * @throws ClosedSubmittingException
+     * @throws AlreadyClosedException
      * @throws NotCheckedSubmitsException
      */
-    public function canClose(): bool {
+    public function canClose(bool $throws = true): bool {
         if (!$this->hasOpenSubmitting()) {
-            throw new ClosedSubmittingException($this);
+            if (!$throws) {
+                return false;
+            }
+            throw new AlreadyClosedException($this);
         }
         if (!$this->hasAllSubmitsChecked()) {
-            throw new NotCheckedSubmitsException();
+            if (!$throws) {
+                return false;
+            }
+            throw new NotCheckedSubmitsException($this);
         }
         return true;
     }
@@ -128,6 +131,7 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
      */
     public function getPersons(): array {
         $persons = [];
+        /** @var ModelFyziklaniParticipant $pRow */
         foreach ($this->getParticipants() as $pRow) {
             $persons[] = ModelPerson::createFromActiveRow($pRow->event_participant->person);
         }

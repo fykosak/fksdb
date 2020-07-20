@@ -16,14 +16,10 @@ use Pipeline\Stage;
  */
 class DeadlineFromXML extends Stage {
 
-    /**
-     * @var SeriesData
-     */
+    /** @var SeriesData */
     private $data;
 
-    /**
-     * @var ServiceTask
-     */
+    /** @var ServiceTask */
     private $taskService;
 
     /**

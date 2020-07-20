@@ -86,7 +86,7 @@ class Helpers {
 
             $entity = self::$semanticMap[$expression->entity] ?? $expression->entity;
             if (function_exists($entity)) {
-                return call_user_func_array($entity, $arguments);
+                return $entity(...$arguments);
             } else {
                 $rc = ClassType::from($entity);
                 return $rc->newInstanceArgs(DIHelpers::autowireArguments($rc->getConstructor(), $arguments, $container));
@@ -102,7 +102,7 @@ class Helpers {
      * @return array|mixed
      */
     public static function evalExpressionArray($expressionArray, Container $container) {
-        if ($expressionArray instanceof Traversable || is_array($expressionArray)) {
+        if ($expressionArray instanceof Traversable || is_array($expressionArray)) { // TODO replace with is_iterable
             $result = [];
             foreach ($expressionArray as $key => $expression) {
                 $result[$key] = self::evalExpressionArray($expression, $container);
@@ -112,5 +112,4 @@ class Helpers {
             return self::evalExpression($expressionArray, $container);
         }
     }
-
 }

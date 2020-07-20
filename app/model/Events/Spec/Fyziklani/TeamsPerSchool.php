@@ -20,24 +20,16 @@ use Nette\Forms\IControl;
  */
 class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
 
-    /**
-     * @var Context
-     */
+    /** @var Context */
     private $context;
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $teamsPerSchool;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $teamsPerSchoolValue;
 
-    /**
-     * @var ExpressionEvaluator
-     */
+    /** @var ExpressionEvaluator */
     private $evaluator;
 
     /**
@@ -51,7 +43,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
     }
 
     /**
-     * @param $teamsPerSchool
+     * @param int $teamsPerSchool
      * @return void
      */
     public function setTeamsPerSchool($teamsPerSchool) {
@@ -60,7 +52,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
 
     /**
      * TeamsPerSchool constructor.
-     * @param $teamsPerSchool
+     * @param int $teamsPerSchool
      * @param ExpressionEvaluator $evaluator
      * @param Context $context
      * @param ServicePersonHistory $servicePersonHistory
@@ -102,15 +94,13 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         };
     }
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $cache;
 
     /**
-     * @param $first
+     * @param mixed|bool $first
      * @param IControl $control
-     * @param $schools
+     * @param iterable $schools
      * @return bool
      */
     private function checkMulti($first, $control, $schools) {

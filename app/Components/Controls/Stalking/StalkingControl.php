@@ -17,9 +17,7 @@ use FKSDB\ORM\Models\ModelPerson;
  */
 abstract class StalkingControl extends BaseComponent {
 
-    /**
-     * @var TableReflectionFactory
-     */
+    /** @var TableReflectionFactory */
     protected $tableReflectionFactory;
 
     /**

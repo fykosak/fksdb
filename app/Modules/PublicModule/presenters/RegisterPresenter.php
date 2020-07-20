@@ -2,7 +2,9 @@
 
 namespace FKSDB\Modules\PublicModule;
 
+use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
@@ -18,17 +20,13 @@ use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\Modules\Core\ContestPresenter\IContestPresenter;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
-use Nette\Database\Table\ActiveRow;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
-use Nette\Utils\JsonException;
 use Persons\ExtendedPersonHandler;
 use Persons\ExtendedPersonHandlerFactory;
 use Persons\IExtendedPersonPresenter;
 use Persons\SelfResolver;
-use Tracy\Debugger;
 
 /**
  * INPUT:
@@ -71,28 +69,18 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      */
     public $personId;
 
-    /**
-     * @var ModelPerson
-     */
+    /** @var ModelPerson */
     private $person;
 
-    /**
-     * @var ServiceContestant
-     */
+    /** @var ServiceContestant */
     private $serviceContestant;
 
-    /**
-     * @var ReferencedPersonFactory
-     */
+    /** @var ReferencedPersonFactory */
     private $referencedPersonFactory;
 
-    /**
-     * @var ExtendedPersonHandlerFactory
-     */
+    /** @var ExtendedPersonHandlerFactory */
     private $handlerFactory;
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     protected $servicePerson;
 
     /**
@@ -198,17 +186,20 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $contest = $this->getSelectedContest();
         $forward = $this->getYearCalculator()->getForwardShift($contest);
         if ($forward) {
-            $years = [];
-            $years[] = $this->getYearCalculator()->getCurrentYear($contest);
-            $years[] = $this->getYearCalculator()->getCurrentYear($contest) + $this->getYearCalculator()->getForwardShift($contest);
+            $years = [
+                $this->getYearCalculator()->getCurrentYear($contest),
+                $this->getYearCalculator()->getCurrentYear($contest) + $forward,
+            ];
+
             $this->template->years = $years;
         } else {
-            $this->redirect('this', ['year' => $this->getYearCalculator()->getCurrentYear($contest),]);
+            $this->redirect('email', ['year' => $this->getYearCalculator()->getCurrentYear($contest),]);
         }
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
+     * @throws BadTypeException
      */
     public function renderContestant() {
         $person = $this->getPerson();
@@ -225,7 +216,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
 
     /**
-     * @return ModelContest|ActiveRow|null
+     * @return ModelContest|null
      */
     public function getSelectedContest() {
         return $this->contestId ? $this->getServiceContest()->findByPrimary($this->contestId) : null;
@@ -262,7 +253,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function createComponentEmailForm(): FormControl {
         $control = new FormControl();
@@ -284,21 +275,16 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $this->redirect('contestant', ['email' => $values['email'],]);
     }
 
-
-    /**
-     * @return array
-     */
-    private function getFieldsDefinition() {
+    private function getFieldsDefinition(): array {
         $contestId = $this->getSelectedContest()->contest_id;
-        $contestName = $this->globalParameters['contestMapping'][$contestId];
-        return Helpers::evalExpressionArray($this->globalParameters[$contestName]['registerContestant'], $this->getContext());
+        $contestName = $this->getContext()->getParameters()['contestMapping'][$contestId];
+        return Helpers::evalExpressionArray($this->getContext()->getParameters()[$contestName]['registerContestant'], $this->getContext());
     }
 
     /**
      * @return FormControl
-     * @throws BadRequestException
      * @throws BadTypeException
-     * @throws JsonException
+     * @throws UnsupportedLanguageException
      */
     protected function createComponentContestantForm(): FormControl {
         $control = new FormControl();
@@ -306,18 +292,16 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
-        $component = $this->referencedPersonFactory->createReferencedPerson(
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson(
             $this->getFieldsDefinition(),
             $this->getSelectedAcademicYear(),
-            ReferencedPersonFactory::SEARCH_NONE,
+            PersonSearchContainer::SEARCH_NONE,
             false,
             new SelfResolver($this->getUser()),
             new SelfResolver($this->getUser())
         );
 
-        $container->addComponent($component->getReferencedId(), ExtendedPersonHandler::EL_PERSON);
-        $container->addComponent($component, ExtendedPersonHandler::CONT_PERSON);
-
+        $container->addComponent($referencedId, ExtendedPersonHandler::EL_PERSON);
 
         /*
          * CAPTCHA
@@ -376,7 +360,8 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws UnsupportedLanguageException
      * @throws \ReflectionException
      */
     protected function beforeRender() {

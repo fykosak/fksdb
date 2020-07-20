@@ -62,7 +62,7 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
     public function getFyziklaniGameSetup(): ModelFyziklaniGameSetup {
         $gameSetupRow = $this->related(DbNames::TAB_FYZIKLANI_GAME_SETUP, 'event_id')->fetch();
         if (!$gameSetupRow) {
-            throw new NotSetGameParametersException(_('Herné parametre niesu nastavené'));
+            throw new NotSetGameParametersException();
         }
         return ModelFyziklaniGameSetup::createFromActiveRow($gameSetupRow);
     }

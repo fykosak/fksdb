@@ -24,9 +24,7 @@ class CorrectedStorage implements ISubmitStorage {
      */
     const EXTENSION = '.pdf';
 
-    /**
-     * @var string  Absolute path to (existing) directory of the storage.
-     */
+    /** @var string  Absolute path to (existing) directory of the storage. */
     private $root;
 
     /**
@@ -43,22 +41,18 @@ class CorrectedStorage implements ISubmitStorage {
      */
     private $filenameMask;
 
-    /**
-     * @var array   contestId => contest name
-     */
+    /** @var array   contestId => contest name */
     private $contestMap;
 
-    /**
-     * @var array of IStorageProcessing
-     */
+    /** @var array of IStorageProcessing */
     private $processings = [];
 
     /**
      * FilesystemSubmitStorage constructor.
-     * @param $root
-     * @param $directoryMask
-     * @param $filenameMask
-     * @param $contestMap
+     * @param string $root
+     * @param string $directoryMask
+     * @param string $filenameMask
+     * @param array $contestMap
      */
     public function __construct($root, $directoryMask, $filenameMask, $contestMap) {
         $this->root = $root;

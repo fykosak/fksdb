@@ -1,6 +1,5 @@
 <?php
 
-use FKSDB\Config\GlobalParameters;
 use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use Nette\DI\Container;
@@ -14,11 +13,7 @@ const SAFE_LIMIT = 500;
  */
 $container = require './bootstrap.php';
 set_time_limit(60);
-/**
- * @var GlobalParameters $mailer
- */
-$globalParameters = $container->getByType(GlobalParameters::class);
-if (!$globalParameters['spamMailer'] || !$globalParameters['spamMailer']['enabled']) {
+if (!$container->getParameters()['spamMailer'] || !$container->getParameters()['spamMailer']['enabled']) {
     exit(0);
 }
 /**
@@ -31,7 +26,7 @@ $mailer = $container->getByType(IMailer::class);
  */
 $serviceEmailMessage = $container->getByType(ServiceEmailMessage::class);
 $argv = $_SERVER['argv'];
-$query = $serviceEmailMessage->getMessagesToSend($argv[1] ?: $globalParameters['spamMailer']['defaultLimit']);
+$query = $serviceEmailMessage->getMessagesToSend($argv[1] ?: $container->getParameters()['spamMailer']['defaultLimit']);
 $counter = 0;
 /**
  * @var ModelEmailMessage $model

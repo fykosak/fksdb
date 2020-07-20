@@ -3,8 +3,8 @@
 namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Exceptions;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
@@ -14,10 +14,8 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use FKSDB\UI\PageTitle;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
-use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
 /**
@@ -25,9 +23,7 @@ use Nette\Security\IResource;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 trait EntityPresenterTrait {
-    /**
-     * @var AbstractModelSingle|IModel
-     */
+    /** @var AbstractModelSingle|IModel */
     protected $model;
     /**
      * @var int
@@ -51,7 +47,7 @@ trait EntityPresenterTrait {
 
     /**
      * @return void
-     * @throws InvalidStateException
+     * @throws ModelNotFoundException
      */
     public function authorizedEdit() {
         $this->setAuthorized($this->traitIsAuthorized($this->getEntity(), 'edit'));
@@ -59,7 +55,7 @@ trait EntityPresenterTrait {
 
     /**
      * @return void
-     * @throws InvalidStateException
+     * @throws ModelNotFoundException
      */
     public function authorizedDelete() {
         $this->setAuthorized($this->traitIsAuthorized($this->getEntity(), 'delete'));
@@ -67,7 +63,7 @@ trait EntityPresenterTrait {
 
     /**
      * @return void
-     * @throws InvalidStateException
+     * @throws ModelNotFoundException
      */
     public function authorizedDetail() {
         $this->setAuthorized($this->traitIsAuthorized($this->getEntity(), 'detail'));
@@ -75,7 +71,6 @@ trait EntityPresenterTrait {
     /* ****************** TITLES ***************************** */
     /**
      * @return void
-     * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
     public function titleList() {
@@ -88,7 +83,6 @@ trait EntityPresenterTrait {
 
     /**
      * @return void
-     * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
     final public function titleCreate() {
@@ -101,7 +95,6 @@ trait EntityPresenterTrait {
 
     /**
      * @return void
-     * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
     public function titleEdit() {
@@ -110,7 +103,6 @@ trait EntityPresenterTrait {
 
     /**
      * @return void
-     * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
     public function titleDetail() {
@@ -119,7 +111,7 @@ trait EntityPresenterTrait {
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
      */
     public function titleDelete() {
@@ -127,8 +119,8 @@ trait EntityPresenterTrait {
     }
 
     /**
-     * @return AbstractModelSingle|IModel
-     * @throws InvalidStateException
+     * @return AbstractModelSingle
+     * @throws ModelNotFoundException
      */
     public function getEntity() {
         $id = $this->getParameter($this->getPrimaryParameterName());
@@ -140,13 +132,15 @@ trait EntityPresenterTrait {
             $this->model = $this->getORMService()->findByPrimary($id);
         }
         if (!$this->model) {
-            throw new InvalidStateException('Model neexistuje');
+            throw new ModelNotFoundException('Model does not exists');
         }
         return $this->model;
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
+     * @throws BadTypeException
+     * @throws ModelNotFoundException
      */
     protected function traitActionEdit() {
         $component = $this->getComponent('editForm');
@@ -157,7 +151,8 @@ trait EntityPresenterTrait {
     }
 
     /**
-     * @return array
+     * @return Message[]
+     * @throws ModelNotFoundException
      */
     public function traitHandleDelete() {
         $success = $this->getEntity()->delete();
@@ -168,15 +163,11 @@ trait EntityPresenterTrait {
     }
 
     /**
-     * @return FormControl
-     * @throws BadRequestException
      * @throws NotImplementedException
      */
     abstract protected function createComponentCreateForm(): Control;
 
     /**
-     * @return FormControl
-     * @throws BadRequestException
      * @throws NotImplementedException
      */
     abstract protected function createComponentEditForm(): Control;
@@ -222,7 +213,7 @@ trait EntityPresenterTrait {
     /**
      * @param PageTitle $pageTitle
      * @return void
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
      */
     abstract public function setPageTitle(PageTitle $pageTitle);

@@ -19,13 +19,9 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PhoneColumnFactory extends DefaultColumnFactory implements ITestedColumnFactory {
-    /**
-     * @var PhoneNumberFactory
-     */
+    /** @var PhoneNumberFactory */
     protected $phoneNumberFactory;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $isWriteOnly = true;
 
     /**
@@ -46,7 +42,7 @@ class PhoneColumnFactory extends DefaultColumnFactory implements ITestedColumnFa
         $this->isWriteOnly = $isWriteOnly;
     }
 
-    public function createFormControl(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         $control = null;
         if ($this->isWriteOnly) {
             $control = new WriteOnlyInput($this->getTitle());
@@ -84,7 +80,7 @@ class PhoneColumnFactory extends DefaultColumnFactory implements ITestedColumnFa
         }
     }
 
-    public function createHtmlValue(AbstractModelSingle $model): Html {
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
         $value = $model->{$this->getModelAccessKey()};
         if (\is_null($value)) {
             return NotSetBadge::getHtml();

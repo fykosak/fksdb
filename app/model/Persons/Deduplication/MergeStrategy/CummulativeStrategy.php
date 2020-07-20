@@ -9,9 +9,7 @@ namespace Persons\Deduplication\MergeStrategy;
  */
 class CummulativeStrategy implements IMergeStrategy {
 
-    /**
-     * @var mixed|null
-     */
+    /** @var mixed|null */
     private $precedence;
 
     /**
@@ -48,8 +46,8 @@ class CummulativeStrategy implements IMergeStrategy {
     }
 
     /**
-     * @param $trunk
-     * @param $merged
+     * @param mixed $trunk
+     * @param mixed $merged
      * @return bool
      */
     private function equals($trunk, $merged) {

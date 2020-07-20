@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\Stalking\StalkingControl;
 use FKSDB\Components\Controls\Stalking\StalkingService;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
-use Nette\Application\BadRequestException;
 use FKSDB\Exceptions\NotImplementedException;
 use Nette\InvalidStateException;
 
@@ -15,9 +14,7 @@ use Nette\InvalidStateException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class StalkingComponent extends StalkingControl {
-    /**
-     * @var StalkingService
-     */
+    /** @var StalkingService */
     private $stalkingService;
 
     /**
@@ -33,7 +30,6 @@ class StalkingComponent extends StalkingControl {
      * @param ModelPerson $person
      * @param int $userPermission
      * @return void
-     * @throws BadRequestException
      * @throws NotImplementedException
      */
     public function render(string $section, ModelPerson $person, int $userPermission) {

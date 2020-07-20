@@ -2,11 +2,11 @@
 
 namespace Persons\Deduplication;
 
-use FKSDB\Config\GlobalParameters;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPersonInfo;
 use FKSDB\ORM\Services\ServicePerson;
 use Nette\Database\Table\ActiveRow;
+use Nette\DI\Container;
 use Nette\Utils\Strings;
 
 /**
@@ -20,24 +20,20 @@ class DuplicateFinder {
     const IDX_SCORE = 'score';
     const DIFFERENT_PATTERN = 'not-same';
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     private $servicePerson;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $parameters;
 
     /**
      * DuplicateFinder constructor.
      * @param ServicePerson $servicePerson
-     * @param GlobalParameters $parameters
+     * @param Container $container
      */
-    public function __construct(ServicePerson $servicePerson, GlobalParameters $parameters) {
+    public function __construct(ServicePerson $servicePerson, Container $container) {
         $this->servicePerson = $servicePerson;
-        $this->parameters = $parameters['deduplication']['finder'];
+        $this->parameters = $container->getParameters()['deduplication']['finder'];
     }
 
     public function getPairs(): array {
@@ -138,8 +134,8 @@ class DuplicateFinder {
     }
 
     /**
-     * @param $a
-     * @param $b
+     * @param string $a
+     * @param string $b
      * @return float|int
      */
     private function stringScore($a, $b) {
@@ -147,8 +143,8 @@ class DuplicateFinder {
     }
 
     /**
-     * @param $a
-     * @param $b
+     * @param string $a
+     * @param string $b
      * @return float|int
      */
     private function relativeDistance($a, $b) {

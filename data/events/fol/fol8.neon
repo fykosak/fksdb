@@ -33,7 +33,6 @@ events:
     fol8:
         event_type_id: 9
         eventYears: [8,9] # specify for which years this machine is valid, by default all years
-        tableLayout: fyziklani.grid
         formLayout: fol.form
         paramScheme:
             notifyBcc:
@@ -53,11 +52,11 @@ events:
                 eventId: e_fyziklani_team.event_id
 
                 states:
-                    applied: _('Přihlášen')
-                    cancelled: _('Zrušen')
-                    participated: _('Účastnil se')
-                    missed: _('Nezúčastnil se')
-                    disqualified: _('Diskvalifikován')
+                    - applied
+                    - cancelled
+                    - participated
+                    - missed
+                    - disqualified
 
                 transitions:
                     __init->applied:
@@ -67,18 +66,18 @@ events:
                             - FKSDB\Events\Transitions\MailSender(team, *)
                     applied->participated:
                         condition: and(role('admin'),eventWas())
-                        label: Zúčastnil se
+                        label: _('Zúčastnil se')
                     applied->missed:
                         condition: and(role('admin'),eventWas())
-                        label: Nezúčastnil se
+                        label: _('Nezúčastnil se')
                         behaviorType: danger
                     applied->cancelled:
                         condition: role('admin')
-                        label: Zrušit tým
+                        label: _('Zrušit tým')
                         behaviorType: danger
                     cancelled->__terminated:
                         condition: role('admin')
-                        label: Smazat tým
+                        label: _('Smazat tým')
 
                 fields:
                     name:
@@ -115,9 +114,9 @@ events:
                 personIds: [:e_fyziklani_participant.event_participant.person_id]
 
                 states:
-                    applied: _('Přihlášen')
-                    participated: _('Účastnil se')
-                    missed: _('Nezúčastnil se')
+                    - applied
+                    - participated
+                    - missed
 
                 transitions:
                     __init->applied:
@@ -139,7 +138,7 @@ events:
 
                 fields:
                     person_id:
-                        label: _('Osoba')
+                        label: _('Person')
                         visible: true
                         modifiable: %events.fol8.modCond%
                         determining: true

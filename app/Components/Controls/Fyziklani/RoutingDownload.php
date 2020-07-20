@@ -5,7 +5,6 @@ namespace FKSDB\Components\Controls\Fyziklani;
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
 
@@ -14,22 +13,15 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class RoutingDownload extends BaseComponent {
-    /**
-     * @var bool
-     */
+
+    /** @var bool */
     private static $JSAttached = false;
-    /**
-     * @var ModelEvent
-     */
+
+    /** @var ModelEvent */
     private $event;
-    /**
-     * @var ServiceFyziklaniTeam
-     */
+
+    /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
-    /**
-     * @var ServiceFyziklaniRoom
-     */
-    private $serviceFyziklaniRoom;
 
     /**
      * RoutingDownload constructor.
@@ -40,7 +32,7 @@ class RoutingDownload extends BaseComponent {
         parent::__construct($container);
         $this->event = $event;
         $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
-            if (!self::$JSAttached ) {
+            if (!self::$JSAttached) {
                 self::$JSAttached = true;
                 $collector->registerJSFile('js/routingPdf.js');
                 $collector->registerJSFile('https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.33/pdfmake.min.js');
@@ -51,12 +43,10 @@ class RoutingDownload extends BaseComponent {
 
     /**
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param ServiceFyziklaniRoom $serviceFyziklaniRoom
      * @return void
      */
-    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniRoom $serviceFyziklaniRoom) {
+    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        $this->serviceFyziklaniRoom = $serviceFyziklaniRoom;
     }
 
     /**

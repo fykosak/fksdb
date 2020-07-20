@@ -13,21 +13,13 @@ class NumberPrinter extends AbstractValuePrinter {
     const NULL_VALUE_NOT_SET = 'notSet';
     const NULL_VALUE_INF = 'infinite';
     const NULL_VALUE_ZERO = 'zero';
-    /**
-     * @var string
-     */
+    /** @var string */
     private $nullValueMode;
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $prefix;
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $suffix;
-    /**
-     * @var int
-     */
+    /** @var int */
     private $decimal;
 
     /**

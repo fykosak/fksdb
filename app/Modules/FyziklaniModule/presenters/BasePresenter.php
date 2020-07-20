@@ -2,12 +2,12 @@
 
 namespace FKSDB\Modules\FyziklaniModule;
 
+use FKSDB\Events\EventNotFoundException;
 use FKSDB\Modules\EventModule\BasePresenter as EventBasePresenter;
 use FKSDB\Components\Controls\Choosers\FyziklaniChooser;
 use FKSDB\ORM\Models\ModelEventType;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use Nette\Application\BadRequestException;
 
 /**
  *
@@ -16,14 +16,10 @@ use Nette\Application\BadRequestException;
  */
 abstract class BasePresenter extends EventBasePresenter {
 
-    /**
-     * @var ServiceFyziklaniTeam
-     */
+    /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
 
-    /**
-     * @var ServiceFyziklaniSubmit
-     */
+    /** @var ServiceFyziklaniSubmit */
     private $serviceFyziklaniSubmit;
 
     /**
@@ -52,7 +48,7 @@ abstract class BasePresenter extends EventBasePresenter {
 
     /**
      * @return FyziklaniChooser
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function createComponentFyziklaniChooser(): FyziklaniChooser {
         return new FyziklaniChooser($this->getContext(), $this->getEvent());
@@ -60,7 +56,7 @@ abstract class BasePresenter extends EventBasePresenter {
 
     /**
      * @return bool
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function isEnabled(): bool {
         return $this->getEvent()->event_type_id === ModelEventType::FYZIKLANI;

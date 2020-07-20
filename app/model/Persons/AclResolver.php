@@ -16,14 +16,10 @@ use Nette\SmartObject;
 class AclResolver implements IVisibilityResolver, IModifiabilityResolver {
     use SmartObject;
 
-    /**
-     * @var ContestAuthorizator
-     */
+    /** @var ContestAuthorizator */
     private $contestAuthorizator;
 
-    /**
-     * @var ModelContest
-     */
+    /** @var ModelContest */
     private $contest;
 
 

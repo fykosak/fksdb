@@ -3,6 +3,7 @@
 namespace Persons;
 
 use FKSDB\Authentication\AccountManager;
+use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\ReferencedId;
@@ -17,7 +18,6 @@ use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\Utils\FormUtils;
 use Mail\SendFailedException;
 use FKSDB\Exceptions\ModelException;
-use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
@@ -34,51 +34,34 @@ class ExtendedPersonHandler {
     use SmartObject;
 
     const CONT_AGGR = 'aggr';
-    const CONT_PERSON = 'person';
     const CONT_MODEL = 'model';
     const EL_PERSON = 'person_id';
     const RESULT_OK_EXISTING_LOGIN = 1;
     const RESULT_OK_NEW_LOGIN = 2;
     const RESULT_ERROR = 0;
 
-    /**
-     * @var IService|AbstractServiceMulti|AbstractServiceSingle
-     */
+    /** @var IService|AbstractServiceMulti|AbstractServiceSingle */
     protected $service;
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     protected $servicePerson;
 
-    /**
-     * @var Connection
-     */
+    /** @var Connection */
     private $connection;
 
-    /**
-     * @var AccountManager
-     */
+    /** @var AccountManager */
     private $accountManager;
 
-    /**
-     * @var ModelContest
-     */
+    /** @var ModelContest */
     private $contest;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $year;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $invitationLang;
 
-    /**
-     * @var ModelPerson
-     */
+    /** @var ModelPerson */
     private $person;
 
     /**
@@ -140,7 +123,7 @@ class ExtendedPersonHandler {
      * @param IExtendedPersonPresenter $presenter
      * @param bool $sendEmail
      * @return int
-     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
     final public function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail): int {
 

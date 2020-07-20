@@ -13,19 +13,13 @@ use Nette\Utils\Strings;
  */
 class PDFStamper implements IStorageProcessing {
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $inputFile;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $outputFile;
 
-    /**
-     * @var int used font size in pt
-     */
+    /** @var int used font size in pt */
     private $fontSize;
 
     /**

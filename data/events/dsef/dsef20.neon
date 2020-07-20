@@ -24,7 +24,6 @@ events:
     dsef20:
         event_type_id: 2
         eventYears: [20]
-        tableLayout: event.grid
         formLayout: dsef.form
         paramScheme:
             notifyBcc:
@@ -39,13 +38,13 @@ events:
                 service: @event.ServiceMDsefParticipant
 
                 states:
-                    applied: Přihlášen
-                    applied.tsaf: "Přihlášen (TSAF)"
-                    applied.notsaf: "Přihlášen (zůstal z TSAFu)"
-                    spare.tsaf: "Náhradník pro TSAF"
-                    participated: Účastnil se
-                    missed: Nepřijel
-                    cancelled: Zrušen
+                    - applied
+                    - applied.tsaf
+                    - applied.notsaf
+                    - spare.tsaf
+                    - participated
+                    - missed
+                    - cancelled
 
                 transitions:
                     # to spare
@@ -55,7 +54,7 @@ events:
                     # to applied
                     __init->applied:
                         condition: %events.dsef20.appCond%
-                        label: Přihlásit účastníka
+                        label: _('Přihlásit účastníka')
                         onExecuted:
                             - FKSDB\Events\Transitions\MailSender(confirmation, .self)
                     __init|spare.tsaf->applied.tsaf:
@@ -72,45 +71,45 @@ events:
                     # to end-states
                     applied|applied.tsaf|applied.notsaf->participated:
                         condition: and(role('admin'),eventWas())
-                        label: Prezentovat
+                        label: _('Prezentovat')
                     applied|applied.tsaf|applied.notsaf->missed:
                         condition: and(role('admin'),eventWas())
-                        label: Nepřijel
+                        label: _('Nepřijel')
                         behaviorType: danger
                     # cancel and termination
                     applied|applied.notsaf->cancelled:
                         condition: role('admin')
-                        label: Zrušit přihlášku
+                        label: _('Zrušit přihlášku')
                         behaviorType: danger
                     cancelled->__terminated:
                         condition: role('admin')
-                        label: Smazat přihlášku
+                        label: _('Smazat přihlášku')
                     spare.tsaf->cancelled:
                         condition: role('admin')
                         visible: false
 
                 fields:
                     person_id:
-                        label: Osoba
+                        label: _('Person')
                         required: true
                         modifiable: %events.dsef20.appCond%
                         default: fromLogin
                         factory: RefPerson(%events.dsef20.person%, email, or(state('__init'),role('admin')), role('admin'), false)
                     e_dsef_group_id:
-                        label: Preferovaná skupina
+                        label: _('Preferovaná skupina')
                         required: true
                         modifiable: %events.dsef20.appCond%
                         factory: Chooser(Zvolit skupinu, FKSDB\Events\Spec\Dsef\GroupOptions())
                     accomodation:
-                        label: Ubytování
+                        label: _('Ubytování')
                         description: %events.dsef20.accomodation%
                         modifiable: %events.dsef20.appCond%
                     lunch_count:
-                        label:  Počet baget k obědu
+                        label: _('Počet baget k obědu')
                         modifiable: %events.dsef20.appCond%
                         description:  à 30 Kč
                     message:
-                        label: Vzkaz ostatním
+                        label: _('Vzkaz ostatním')
                         modifiable: true
 
 
@@ -122,7 +121,7 @@ events:
             baseMachines:
                 participant:
                     bmName: PARTICIPANT_DSEF
-                    label: Účastník
+                    label: _('Účastník')
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine
             formAdjustments:
