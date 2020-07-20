@@ -12,9 +12,7 @@ use NiftyGrid\DataSource\NDataSource;
  */
 class SearchableDataSource extends NDataSource {
 
-    /**
-     * @var callback(Selection $table, string $searchTerm)
-     */
+    /** @var callback(Selection $table, string $searchTerm) */
     private $filterCallback;
 
     public function getFilterCallback(): callable {

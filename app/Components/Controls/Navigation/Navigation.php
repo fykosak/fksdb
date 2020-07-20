@@ -52,9 +52,7 @@ class Navigation extends BaseComponent {
 
     public function isActive(array $node): bool {
         if (isset($node['linkPresenter'])) {
-            /**
-             * @var BasePresenter $presenter
-             */
+            /** @var BasePresenter $presenter */
             $presenter = $this->getPresenter();
             try {
                 $this->createLink($presenter, $node);

@@ -16,9 +16,7 @@ use Nette\Forms\Controls\BaseControl;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class SingleReflectionFormFactory {
-    /**
-     * @var TableReflectionFactory
-     */
+    /** @var TableReflectionFactory */
     protected $tableReflectionFactory;
 
     /**

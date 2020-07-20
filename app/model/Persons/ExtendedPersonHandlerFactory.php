@@ -15,19 +15,13 @@ use Nette\Database\Connection;
  */
 class ExtendedPersonHandlerFactory {
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     private $servicePerson;
 
-    /**
-     * @var Connection
-     */
+    /** @var Connection */
     private $connection;
 
-    /**
-     * @var AccountManager
-     */
+    /** @var AccountManager */
     private $accountManager;
 
     /**

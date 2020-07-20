@@ -11,17 +11,11 @@ use FKSDB\Exceptions\BadTypeException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class PersonFileLevelTest extends PersonTest {
-    /**
-     * @var ITestedColumnFactory
-     */
+    /** @var ITestedColumnFactory */
     private $rowFactory;
-    /**
-     * @var string
-     */
+    /** @var string */
     private $fieldName;
-    /**
-     * @var TableReflectionFactory
-     */
+    /** @var TableReflectionFactory */
     private $tableReflectionFactory;
 
     /**

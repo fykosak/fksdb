@@ -40,44 +40,28 @@ class ExtendedPersonHandler {
     const RESULT_OK_NEW_LOGIN = 2;
     const RESULT_ERROR = 0;
 
-    /**
-     * @var IService|AbstractServiceMulti|AbstractServiceSingle
-     */
+    /** @var IService|AbstractServiceMulti|AbstractServiceSingle */
     protected $service;
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     protected $servicePerson;
 
-    /**
-     * @var Connection
-     */
+    /** @var Connection */
     private $connection;
 
-    /**
-     * @var AccountManager
-     */
+    /** @var AccountManager */
     private $accountManager;
 
-    /**
-     * @var ModelContest
-     */
+    /** @var ModelContest */
     private $contest;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $year;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $invitationLang;
 
-    /**
-     * @var ModelPerson
-     */
+    /** @var ModelPerson */
     private $person;
 
     /**

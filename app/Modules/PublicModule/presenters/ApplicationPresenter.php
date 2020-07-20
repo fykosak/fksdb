@@ -44,44 +44,28 @@ class ApplicationPresenter extends BasePresenter {
 
     const PARAM_AFTER = 'a';
 
-    /**
-     * @var ModelEvent|null
-     */
+    /** @var ModelEvent|null */
     private $event;
 
-    /**
-     * @var IModel|ModelFyziklaniTeam|ModelEventParticipant
-     */
+    /** @var IModel|ModelFyziklaniTeam|ModelEventParticipant */
     private $eventApplication = false;
 
-    /**
-     * @var Holder
-     */
+    /** @var Holder */
     private $holder;
 
-    /**
-     * @var Machine
-     */
+    /** @var Machine */
     private $machine;
 
-    /**
-     * @var ServiceEvent
-     */
+    /** @var ServiceEvent */
     private $serviceEvent;
 
-    /**
-     * @var RelatedPersonAuthorizator
-     */
+    /** @var RelatedPersonAuthorizator */
     private $relatedPersonAuthorizator;
 
-    /**
-     * @var LayoutResolver
-     */
+    /** @var LayoutResolver */
     private $layoutResolver;
 
-    /**
-     * @var ApplicationHandlerFactory
-     */
+    /** @var ApplicationHandlerFactory */
     private $handlerFactory;
     /** @var EventDispatchFactory */
     private $eventDispatchFactory;
@@ -132,9 +116,7 @@ class ApplicationPresenter extends BasePresenter {
      * @throws GoneException
      */
     public function authorizedDefault($eventId, $id) {
-        /**
-         * @var ModelEvent $event
-         */
+        /** @var ModelEvent $event */
         $event = $this->getEvent();
         if ($this->contestAuthorizator->isAllowed('event.participant', 'edit', $event->getContest())
             || $this->contestAuthorizator->isAllowed('fyziklani.team', 'edit', $event->getContest())) {

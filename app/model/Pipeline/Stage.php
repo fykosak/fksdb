@@ -11,9 +11,7 @@ use FKSDB\Messages\Message;
  */
 abstract class Stage {
 
-    /**
-     * @var Pipeline
-     */
+    /** @var Pipeline */
     private $pipeline;
 
     /**

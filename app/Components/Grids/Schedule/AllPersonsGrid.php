@@ -18,13 +18,9 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class AllPersonsGrid extends BaseGrid {
-    /**
-     * @var ServicePersonSchedule
-     */
+    /** @var ServicePersonSchedule */
     private $servicePersonSchedule;
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
 
     /**

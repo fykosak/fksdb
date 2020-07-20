@@ -12,9 +12,7 @@ use Nette\SmartObject;
 abstract class StoredQueryPostProcessing {
     use SmartObject;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     protected $parameters;
 
     final public function resetParameters() {

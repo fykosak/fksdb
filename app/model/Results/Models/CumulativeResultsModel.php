@@ -12,9 +12,7 @@ use Nette\InvalidStateException;
  */
 class CumulativeResultsModel extends AbstractResultsModel {
 
-    /**
-     * @var array of int
-     */
+    /** @var array of int */
     protected $series;
 
     /**

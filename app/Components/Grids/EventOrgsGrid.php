@@ -18,13 +18,9 @@ use NiftyGrid\DuplicateColumnException;
  */
 class EventOrgsGrid extends BaseGrid {
 
-    /**
-     * @var ServiceEventOrg
-     */
+    /** @var ServiceEventOrg */
     private $serviceEventOrg;
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
 
     /**

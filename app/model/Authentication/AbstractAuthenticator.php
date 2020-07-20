@@ -21,9 +21,7 @@ abstract class AbstractAuthenticator /* implements IAuthenticator */
     /** @var ServiceLogin */
     protected $serviceLogin;
 
-    /**
-     * @var YearCalculator
-     */
+    /** @var YearCalculator */
     protected $yearCalculator;
 
     /**

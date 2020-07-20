@@ -20,9 +20,7 @@ class MachineExecutionException extends RuntimeException {
  */
 class TransitionConditionFailedException extends MachineExecutionException {
 
-    /**
-     * @var Transition
-     */
+    /** @var Transition */
     private $transition;
 
     /**
@@ -52,9 +50,7 @@ class TransitionConditionFailedException extends MachineExecutionException {
  */
 class TransitionUnsatisfiedTargetException extends MachineExecutionException {
 
-    /**
-     * @var iterable
-     */
+    /** @var iterable */
     private $validationResult;
 
     /**

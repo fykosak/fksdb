@@ -12,9 +12,7 @@ use FKSDB\ORM\AbstractModelSingle;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ValuePrinterComponent extends BaseComponent {
-    /**
-     * @var TableReflectionFactory
-     */
+    /** @var TableReflectionFactory */
     private $tableReflectionFactory;
 
     /**

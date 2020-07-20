@@ -43,9 +43,7 @@ class MailSender {
     const ADDR_ALL = '*';
     const BCC_PREFIX = '.';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $filename;
 
     /**
@@ -54,28 +52,18 @@ class MailSender {
      */
     private $addressees;
 
-    /**
-     * @var MailTemplateFactory
-     */
+    /** @var MailTemplateFactory */
     private $mailTemplateFactory;
 
-    /**
-     * @var AccountManager
-     */
+    /** @var AccountManager */
     private $accountManager;
 
-    /**
-     * @var ServiceAuthToken
-     */
+    /** @var ServiceAuthToken */
     private $serviceAuthToken;
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     private $servicePerson;
-    /**
-     * @var ServiceEmailMessage
-     */
+    /** @var ServiceEmailMessage */
     private $serviceEmailMessage;
 
     /**

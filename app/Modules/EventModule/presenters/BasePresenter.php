@@ -38,9 +38,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /** @var ServiceEvent */
     protected $serviceEvent;
-    /**
-     * @var EventDispatchFactory
-     */
+    /** @var EventDispatchFactory */
     private $eventDispatchFactory;
 
     /**

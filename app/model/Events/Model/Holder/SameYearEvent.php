@@ -13,14 +13,10 @@ use Nette\InvalidArgumentException;
  */
 class SameYearEvent implements IEventRelation {
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $eventTypeId;
 
-    /**
-     * @var ServiceEvent
-     */
+    /** @var ServiceEvent */
     private $serviceEvent;
 
     /**

@@ -28,9 +28,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @persistent
      */
     public $id;
-    /**
-     * @var IModel
-     */
+    /** @var IModel */
     private $model;
 
     /**

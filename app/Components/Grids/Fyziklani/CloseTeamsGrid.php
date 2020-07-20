@@ -21,13 +21,9 @@ use NiftyGrid\DuplicateColumnException;
  * @author Lukáš Timko
  */
 class CloseTeamsGrid extends BaseGrid {
-    /**
-     * @var ServiceFyziklaniTeam
-     */
+    /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
 
     /**

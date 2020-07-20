@@ -19,13 +19,9 @@ class TokenGSIDHolder implements IGSIDHolder {
     const URL_PARAM = 'at';
     const SESSION_KEY = '_sso';
 
-    /**
-     * @var Connection
-     */
+    /** @var Connection */
     private $connection;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $cachedGSID = false;
 
     /**

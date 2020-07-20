@@ -20,14 +20,10 @@ class ChooserFactory extends AbstractFactory {
     const FORMAT_VALUE_META = 'value-meta';
     const FORMAT_KEY_META = 'key-meta';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $prompt;
 
-    /**
-     * @var IOptionsProvider
-     */
+    /** @var IOptionsProvider */
     private $optionsProvider;
 
     /**

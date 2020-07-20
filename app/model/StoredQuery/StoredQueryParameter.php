@@ -15,9 +15,7 @@ class StoredQueryParameter {
     private $name;
     /** @var int */
     private $PDOType;
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $description;
 
     /**

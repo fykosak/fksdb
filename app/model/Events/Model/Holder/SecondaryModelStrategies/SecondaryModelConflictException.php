@@ -14,14 +14,10 @@ use RuntimeException;
  */
 class SecondaryModelConflictException extends RuntimeException {
 
-    /**
-     * @var BaseHolder
-     */
+    /** @var BaseHolder */
     private $baseHolder;
 
-    /**
-     * @var IModel[]
-     */
+    /** @var IModel[] */
     private $conflicts;
 
     /**

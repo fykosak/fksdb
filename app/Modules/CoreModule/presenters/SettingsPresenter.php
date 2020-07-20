@@ -28,24 +28,16 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
     const CONT_LOGIN = 'login';
 
-    /**
-     * @var LoginFactory
-     */
+    /** @var LoginFactory */
     private $loginFactory;
 
-    /**
-     * @var ServiceLogin
-     */
+    /** @var ServiceLogin */
     private $loginService;
 
-    /**
-     * @var UniqueEmailFactory
-     */
+    /** @var UniqueEmailFactory */
     private $uniqueEmailFactory;
 
-    /**
-     * @var UniqueLoginFactory
-     */
+    /** @var UniqueLoginFactory */
     private $uniqueLoginFactory;
 
     /**
@@ -89,9 +81,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
      * @throws BadTypeException
      */
     public function renderDefault() {
-        /**
-         * @var ModelLogin $login
-         */
+        /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
 
         $defaults = [
@@ -117,9 +107,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
     protected function createComponentSettingsForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
-        /**
-         * @var ModelLogin $login
-         */
+        /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         $tokenAuthentication =
             $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||

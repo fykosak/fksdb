@@ -13,24 +13,16 @@ use Nette\Database\Row;
  */
 class TaskStatsModel {
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $year;
 
-    /**
-     * @var ModelContest
-     */
+    /** @var ModelContest */
     protected $contest;
 
-    /**
-     * @var Connection
-     */
+    /** @var Connection */
     protected $connection;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $series;
 
     /**

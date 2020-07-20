@@ -14,17 +14,11 @@ use Nette\Utils\JsonException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 trait ReactComponentTrait {
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $actions = [];
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private static $attachedJS = false;
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $reactId;
 
     /**

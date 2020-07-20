@@ -17,19 +17,13 @@ use Nette\Forms\IControl;
  */
 class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $schoolsInTeam;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $schoolsInTeamValue;
 
-    /**
-     * @var ExpressionEvaluator
-     */
+    /** @var ExpressionEvaluator */
     private $evaluator;
 
     /**

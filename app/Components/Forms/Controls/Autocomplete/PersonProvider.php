@@ -17,14 +17,10 @@ class PersonProvider implements IFilteredDataProvider {
 
     const PLACE = 'place';
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     private $servicePerson;
 
-    /**
-     * @var TypedTableSelection
-     */
+    /** @var TypedTableSelection */
     private $searchTable;
 
     /**

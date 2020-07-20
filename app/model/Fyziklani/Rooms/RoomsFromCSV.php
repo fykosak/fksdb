@@ -17,19 +17,13 @@ use Pipeline\Stage;
  */
 class RoomsFromCSV extends Stage {
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $data;
 
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
 
-    /**
-     * @var ServiceFyziklaniTeam
-     */
+    /** @var ServiceFyziklaniTeam */
     private $serviceTeam;
 
     /**

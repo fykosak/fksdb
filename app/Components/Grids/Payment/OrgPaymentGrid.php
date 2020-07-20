@@ -18,9 +18,7 @@ use NiftyGrid\DuplicateGlobalButtonException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class OrgPaymentGrid extends PaymentGrid {
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
 
     /**

@@ -11,9 +11,7 @@ use FKSDB\UI\PageTitle;
 class DashboardPresenter extends BasePresenter {
 
     public function authorizedDefault() {
-        /**
-         * @var ModelLogin $login
-         */
+        /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         $access = $login ? $login->isOrg($this->getYearCalculator()) : false;
         $this->setAuthorized($access);

@@ -12,29 +12,19 @@ use Nette\DI\Container;
  */
 class Downloader {
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $httpUser;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $httpPassword;
 
-    /**
-     * @var string without scheme (only domain name/IP)
-     */
+    /** @var string without scheme (only domain name/IP) */
     private $host;
 
-    /**
-     * @var string path to directory for temporary data
-     */
+    /** @var string path to directory for temporary data */
     private $tmpDir;
 
-    /**
-     * @var array   contestId => contest name
-     */
+    /** @var array   contestId => contest name */
     private $contestMap;
 
     /** @var Container */

@@ -19,14 +19,10 @@ class TokenGSIDHolder implements IGSIDHolder {
     const SESSION_NS = 'sso';
     const GSID_KEY = 'gsid';
 
-    /**
-     * @var Session
-     */
+    /** @var Session */
     private $session;
 
-    /**
-     * @var ServiceAuthToken
-     */
+    /** @var ServiceAuthToken */
     private $serviceAuthToken;
 
     /**

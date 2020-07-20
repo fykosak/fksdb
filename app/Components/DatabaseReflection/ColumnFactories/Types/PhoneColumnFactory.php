@@ -19,13 +19,9 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PhoneColumnFactory extends DefaultColumnFactory implements ITestedColumnFactory {
-    /**
-     * @var PhoneNumberFactory
-     */
+    /** @var PhoneNumberFactory */
     protected $phoneNumberFactory;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $isWriteOnly = true;
 
     /**

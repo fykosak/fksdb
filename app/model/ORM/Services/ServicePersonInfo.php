@@ -14,6 +14,7 @@ use FKSDB\ORM\Models\ModelPersonInfo;
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelPersonInfo refresh(AbstractModelSingle $model)
+ * @method ModelPersonInfo findByPrimary($key)
  */
 class ServicePersonInfo extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;

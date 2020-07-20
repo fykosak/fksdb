@@ -9,13 +9,9 @@ use Nette\Database\Connection;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class MetaDataFactory {
-    /**
-     * @var array[]
-     */
+    /** @var array[] */
     private $metadata = [];
-    /**
-     * @var Connection
-     */
+    /** @var Connection */
     private $connection;
 
     /**

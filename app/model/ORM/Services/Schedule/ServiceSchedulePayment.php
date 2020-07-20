@@ -44,9 +44,7 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
         /* if (count($newScheduleIds) == 0) {
              throw new EmptyDataException(_('Nebola vybraná žiadá položka'));
          };*/
-        /**
-         * @var ModelSchedulePayment $row
-         */
+        /** @var ModelSchedulePayment $row */
         foreach ($oldRows as $row) {
             if (in_array($row->person_schedule_id, $newScheduleIds)) {
                 // do nothing

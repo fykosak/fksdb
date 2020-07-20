@@ -18,9 +18,7 @@ class StoredQueryTagAssertion {
 
     use SmartObject;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $tagNames;
 
     /**

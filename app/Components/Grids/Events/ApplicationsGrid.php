@@ -28,44 +28,28 @@ use Nette\Utils\Strings;
 class ApplicationsGrid extends BaseComponent {
 
     const NAME_PREFIX = 'application_';
-    /**
-     * @var IHolderSource
-     */
+    /** @var IHolderSource */
     private $source;
 
-    /**
-     * @var Holder[]
-     */
+    /** @var Holder[] */
     private $holders = [];
 
-    /**
-     * @var Machine[]
-     */
+    /** @var Machine[] */
     private $machines = [];
 
-    /**
-     * @var ModelEvent[]
-     */
+    /** @var ModelEvent[] */
     private $eventApplications = [];
 
-    /**
-     * @var ApplicationHandler[]
-     */
+    /** @var ApplicationHandler[] */
     private $handlers = [];
 
-    /**
-     * @var ApplicationHandlerFactory
-     */
+    /** @var ApplicationHandlerFactory */
     private $handlerFactory;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $templateFile;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $searchable = false;
     /** @var bool */
     private $attachedJS = false;

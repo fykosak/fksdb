@@ -21,34 +21,22 @@ class Merger {
     const IDX_MERGED = 'merged';
     const IDX_RESOLUTION = 'resolution';
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $conflicts = [];
 
-    /**
-     * @var ActiveRow
-     */
+    /** @var ActiveRow */
     private $trunkRow;
 
-    /**
-     * @var ActiveRow
-     */
+    /** @var ActiveRow */
     private $mergedRow;
 
-    /**
-     * @var Context
-     */
+    /** @var Context */
     private $context;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $configuration;
 
-    /**
-     * @var ILogger
-     */
+    /** @var ILogger */
     private $logger;
 
     /**

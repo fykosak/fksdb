@@ -54,9 +54,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /** @persistent */
     public $flag;
 
-    /**
-     * @var ServiceAuthToken
-     */
+    /** @var ServiceAuthToken */
     private $serviceAuthToken;
 
     /**
@@ -65,14 +63,10 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     private $globalSession;
 
-    /**
-     * @var PasswordAuthenticator
-     */
+    /** @var PasswordAuthenticator */
     private $passwordAuthenticator;
 
-    /**
-     * @var AccountManager
-     */
+    /** @var AccountManager */
     private $accountManager;
 
     /**
@@ -161,9 +155,7 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     public function actionLogin() {
         if ($this->isLoggedIn()) {
-            /**
-             * @var ModelLogin $login
-             */
+            /** @var ModelLogin $login */
             $login = $this->getUser()->getIdentity();
             $this->loginBackLinkRedirect($login);
             $this->initialRedirect();

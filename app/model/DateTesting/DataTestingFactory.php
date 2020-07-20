@@ -12,17 +12,11 @@ use FKSDB\ORM\Services\ServiceContest;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class DataTestingFactory {
-    /**
-     * @var PersonTest[][]
-     */
+    /** @var PersonTest[][] */
     private $tests = [];
-    /**
-     * @var ServiceContest
-     */
+    /** @var ServiceContest */
     private $serviceContest;
-    /**
-     * @var TableReflectionFactory
-     */
+    /** @var TableReflectionFactory */
     private $tableReflectionFactory;
 
     /**

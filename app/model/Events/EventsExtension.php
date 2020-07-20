@@ -77,9 +77,7 @@ class EventsExtension extends CompilerExtension {
      */
     private $definitionsMap = [];
 
-    /**
-     * @var array[baseMachineFullName] => expanded configuration
-     */
+    /** @var array[baseMachineFullName] => expanded configuration */
     private $baseMachineConfig = [];
     /** @var string */
     private $schemeFile;

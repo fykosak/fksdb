@@ -20,24 +20,16 @@ use Nette\Forms\IControl;
  */
 class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
 
-    /**
-     * @var Context
-     */
+    /** @var Context */
     private $context;
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $teamsPerSchool;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $teamsPerSchoolValue;
 
-    /**
-     * @var ExpressionEvaluator
-     */
+    /** @var ExpressionEvaluator */
     private $evaluator;
 
     /**
@@ -102,9 +94,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         };
     }
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $cache;
 
     /**

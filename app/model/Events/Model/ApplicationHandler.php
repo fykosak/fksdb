@@ -43,34 +43,22 @@ class ApplicationHandler {
     const STATE_TRANSITION = 'transition';
     const STATE_OVERWRITE = 'overwrite';
 
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
 
-    /**
-     * @var ILogger|MemoryLogger
-     */
+    /** @var ILogger|MemoryLogger */
     private $logger;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $errorMode = self::ERROR_ROLLBACK;
 
-    /**
-     * @var Connection
-     */
+    /** @var Connection */
     private $connection;
 
-    /**
-     * @var Container
-     */
+    /** @var Container */
     private $container;
 
-    /**
-     * @var Machine
-     */
+    /** @var Machine */
     private $machine;
     /** @var EventDispatchFactory */
     private $eventDispatchFactory;

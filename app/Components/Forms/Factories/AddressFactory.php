@@ -23,14 +23,10 @@ class AddressFactory {
     const REQUIRED = 0x2;
     const NOT_WRITEONLY = 0x4;
 
-    /**
-     * @var ServiceAddress
-     */
+    /** @var ServiceAddress */
     private $serviceAddress;
 
-    /**
-     * @var ServiceRegion
-     */
+    /** @var ServiceRegion */
     private $serviceRegion;
     /** @var Container */
     private $container;

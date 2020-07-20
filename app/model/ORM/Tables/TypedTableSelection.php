@@ -13,9 +13,7 @@ use Nette\Database\Table\Selection;
  */
 class TypedTableSelection extends Selection {
 
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $modelClassName;
 
     /**

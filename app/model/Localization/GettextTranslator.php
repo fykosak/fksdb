@@ -11,18 +11,12 @@ use Nette\Localization\ITranslator;
  */
 class GettextTranslator implements ITranslator {
 
-    /**
-     * @var array[lang] => locale
-     */
+    /** @var array[lang] => locale */
     private $locales;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $localeDir;
-    /**
-     * @var string
-     */
+    /** @var string */
     private $lang;
 
     /**

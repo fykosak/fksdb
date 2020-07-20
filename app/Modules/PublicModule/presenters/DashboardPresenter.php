@@ -16,9 +16,7 @@ use News;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DashboardPresenter extends BasePresenter {
-    /**
-     * @var News
-     */
+    /** @var News */
     private $news;
 
     /**

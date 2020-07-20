@@ -18,17 +18,11 @@ use PDOException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class Handler {
-    /**
-     * @var ServiceScheduleGroup
-     */
+    /** @var ServiceScheduleGroup */
     private $serviceScheduleGroup;
-    /**
-     * @var ServicePersonSchedule
-     */
+    /** @var ServicePersonSchedule */
     private $servicePersonSchedule;
-    /**
-     * @var ServiceScheduleItem
-     */
+    /** @var ServiceScheduleItem */
     private $serviceScheduleItem;
 
     /**

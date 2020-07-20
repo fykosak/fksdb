@@ -24,25 +24,15 @@ abstract class AbstractProcessing implements IProcessing {
     const DELIMITER = '.';
     const WILDCART = '*';
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $valuesPathCache;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $formPathCache;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $states;
-    /**
-     * @var Holder
-     */
+    /** @var Holder */
     private $holder;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $values;
 
     /**

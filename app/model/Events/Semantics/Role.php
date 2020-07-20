@@ -24,19 +24,13 @@ class Role extends EvaluatedExpression {
     const RELATED = 'related';
     const ADMIN = 'admin';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $role;
 
-    /**
-     * @var User
-     */
+    /** @var User */
     private $user;
 
-    /**
-     * @var ContestAuthorizator
-     */
+    /** @var ContestAuthorizator */
     private $contestAuthorizator;
 
     /**

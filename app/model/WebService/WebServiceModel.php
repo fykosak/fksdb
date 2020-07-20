@@ -29,44 +29,28 @@ use WebService\IXMLNodeSerializer;
  */
 class WebServiceModel {
 
-    /**
-     * @var array  contest name => contest_id
-     */
+    /** @var array  contest name => contest_id */
     private $inverseContestMap;
 
-    /**
-     * @var ServiceContest
-     */
+    /** @var ServiceContest */
     private $serviceContest;
 
-    /**
-     * @var ResultsModelFactory
-     */
+    /** @var ResultsModelFactory */
     private $resultsModelFactory;
 
-    /**
-     * @var StatsModelFactory
-     */
+    /** @var StatsModelFactory */
     private $statsModelFactory;
 
-    /**
-     * @var ModelLogin
-     */
+    /** @var ModelLogin */
     private $authenticatedLogin;
 
-    /**
-     * @var IAuthenticator
-     */
+    /** @var IAuthenticator */
     private $authenticator;
 
-    /**
-     * @var StoredQueryFactory
-     */
+    /** @var StoredQueryFactory */
     private $storedQueryFactory;
 
-    /**
-     * @var ContestAuthorizator
-     */
+    /** @var ContestAuthorizator */
     private $contestAuthorizator;
 
     /**

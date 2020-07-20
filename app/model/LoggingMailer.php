@@ -14,22 +14,14 @@ use Nette\SmartObject;
 class LoggingMailer implements IMailer {
     use SmartObject;
 
-    /**
-     * @var IMailer
-     */
+    /** @var IMailer */
     private $mailer;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $logPath;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $logging = true;
-    /**
-     * @var int
-     */
+    /** @var int */
     private $sentMessages = 0;
     /** @var Container */
     private $container;

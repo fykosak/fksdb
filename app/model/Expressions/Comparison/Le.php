@@ -11,13 +11,9 @@ use FKSDB\Expressions\EvaluatedExpression;
  */
 class Le extends EvaluatedExpression {
 
-    /**
-     * @var callable|mixed
-     */
+    /** @var callable|mixed */
     private $aValue;
-    /**
-     * @var callable|mixed
-     */
+    /** @var callable|mixed */
     private $bValue;
 
     /**

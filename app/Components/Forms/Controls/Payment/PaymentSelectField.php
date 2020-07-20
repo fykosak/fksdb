@@ -19,21 +19,13 @@ class PaymentSelectField extends TextInput {
 
     use ReactComponentTrait;
 
-    /**
-     * @var ServicePersonSchedule
-     */
+    /** @var ServicePersonSchedule */
     private $servicePersonSchedule;
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
-    /**
-     * @var string
-     */
+    /** @var string */
     private $groupTypes;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $showAll;
 
     /**

@@ -36,29 +36,19 @@ class PipelineFactory {
      */
     private $defaultStudyYears;
 
-    /**
-     * @var ServiceTask
-     */
+    /** @var ServiceTask */
     private $serviceTask;
 
-    /**
-     * @var ServiceTaskContribution
-     */
+    /** @var ServiceTaskContribution */
     private $serviceTaskContribution;
 
-    /**
-     * @var ServiceTaskStudyYear
-     */
+    /** @var ServiceTaskStudyYear */
     private $serviceTaskStudyYear;
 
-    /**
-     * @var ServiceStudyYear
-     */
+    /** @var ServiceStudyYear */
     private $serviceStudyYear;
 
-    /**
-     * @var ServiceOrg
-     */
+    /** @var ServiceOrg */
     private $serviceOrg;
 
     /**

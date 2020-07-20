@@ -13,9 +13,7 @@ use Pipeline\Pipeline;
  */
 class PipelineFactory {
 
-    /**
-     * @var ServiceFyziklaniTeam
-     */
+    /** @var ServiceFyziklaniTeam */
     private $serviceTeam;
 
     /**

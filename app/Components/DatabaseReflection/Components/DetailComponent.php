@@ -6,9 +6,7 @@ use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\ORM\AbstractModelSingle;
 
 class DetailComponent extends BaseComponent {
-    /**
-     * @var DetailFactory
-     */
+    /** @var DetailFactory */
     private $detailFactory;
 
     /**

@@ -23,9 +23,7 @@ use Nette\Security\IResource;
 class EventPresenter extends BasePresenter {
     use EntityPresenterTrait;
 
-    /**
-     * @var ServiceEvent
-     */
+    /** @var ServiceEvent */
     private $serviceEvent;
 
     /**

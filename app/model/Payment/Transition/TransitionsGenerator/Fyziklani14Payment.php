@@ -26,25 +26,15 @@ use Tracy\Debugger;
  * *
  */
 class Fyziklani14Payment extends AbstractTransitionsGenerator {
-    /**
-     * @var Connection
-     */
+    /** @var Connection */
     private $connection;
-    /**
-     * @var ServicePayment
-     */
+    /** @var ServicePayment */
     private $servicePayment;
-    /**
-     * @var EventAuthorizator
-     */
+    /** @var EventAuthorizator */
     private $eventAuthorizator;
-    /**
-     * @var ServiceEmailMessage
-     */
+    /** @var ServiceEmailMessage */
     private $serviceEmailMessage;
-    /**
-     * @var MailTemplateFactory
-     */
+    /** @var MailTemplateFactory */
     private $mailTemplateFactory;
 
     /**

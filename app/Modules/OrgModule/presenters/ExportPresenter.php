@@ -41,18 +41,12 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      */
     public $qid;
 
-    /**
-     * @var ServiceStoredQuery
-     */
+    /** @var ServiceStoredQuery */
     private $serviceStoredQuery;
 
-    /**
-     * @var StoredQueryFactory
-     */
+    /** @var StoredQueryFactory */
     private $storedQueryFactory;
-    /**
-     * @var StoredQuery
-     */
+    /** @var StoredQuery */
     private $storedQuery;
 
     /**

@@ -17,21 +17,13 @@ use Nette\Database\Context;
  * *
  */
 class PaymentMachine extends Machine {
-    /**
-     * @var PriceCalculator
-     */
+    /** @var PriceCalculator */
     private $priceCalculator;
-    /**
-     * @var AbstractSymbolGenerator
-     */
+    /** @var AbstractSymbolGenerator */
     private $symbolGenerator;
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
-    /**
-     * @var ServiceEvent
-     */
+    /** @var ServiceEvent */
     private $serviceEvent;
 
     /** @var string[] */

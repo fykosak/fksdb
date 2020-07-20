@@ -16,14 +16,10 @@ class TasksFromXML extends Stage {
 
     const XML_NAMESPACE = 'http://www.w3.org/XML/1998/namespace';
 
-    /**
-     * @var SeriesData
-     */
+    /** @var SeriesData */
     private $data;
 
-    /**
-     * @var array   xml element => task column
-     */
+    /** @var array   xml element => task column */
     private static $xmlToColumnMap = [
         'name[@xml:lang="cs"]' => 'name_cs',
         'name[@xml:lang="en"]' => 'name_en',
@@ -31,9 +27,7 @@ class TasksFromXML extends Stage {
         'label' => 'label',
     ];
 
-    /**
-     * @var ServiceTask
-     */
+    /** @var ServiceTask */
     private $taskService;
 
     /**

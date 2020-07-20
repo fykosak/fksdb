@@ -12,9 +12,7 @@ use FKSDB\ORM\AbstractModelSingle;
  */
 final class ReferencedFactory {
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $modelClassName;
     /**
      * @var array
