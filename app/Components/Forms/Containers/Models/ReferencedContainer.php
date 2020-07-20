@@ -17,6 +17,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\JsonException;
+use Nette\DI\Container as DIContainer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -39,10 +40,10 @@ abstract class ReferencedContainer extends ContainerWithOptions {
 
     /**
      * ReferencedContainer constructor.
-     * @param \Nette\DI\Container $container
+     * @param DIContainer $container
      * @param bool $allowClear
      */
-    public function __construct(\Nette\DI\Container $container, bool $allowClear) {
+    public function __construct(DIContainer $container, bool $allowClear) {
         parent::__construct($container);
         $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
             if (!$this->attachedJS) {

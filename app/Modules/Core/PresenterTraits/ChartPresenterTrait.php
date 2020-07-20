@@ -11,9 +11,7 @@ use Nette\Application\UI\Control;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 trait ChartPresenterTrait {
-    /**
-     * @var IChart
-     */
+    /** @var IChart */
     protected $selectedChart;
     /** @var IChart[] */
     private $chartComponents;

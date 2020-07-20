@@ -18,13 +18,9 @@ use SQL\ViewDataSource;
  */
 class ContestantsFromSchoolGrid extends BaseGrid {
 
-    /**
-     * @var ServiceContestant
-     */
+    /** @var ServiceContestant */
     private $serviceContestant;
-    /**
-     * @var ModelSchool
-     */
+    /** @var ModelSchool */
     private $school;
 
     /**

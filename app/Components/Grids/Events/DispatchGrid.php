@@ -19,13 +19,9 @@ use NiftyGrid\DuplicateColumnException;
  */
 class DispatchGrid extends BaseGrid {
 
-    /**
-     * @var ServiceEvent
-     */
+    /** @var ServiceEvent */
     private $serviceEvent;
-    /**
-     * @var ModelPerson
-     */
+    /** @var ModelPerson */
     private $person;
 
     /**

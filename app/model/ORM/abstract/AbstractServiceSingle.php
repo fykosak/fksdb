@@ -117,7 +117,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
         }
 
-        $data = $this->filterData($data);
+        $data = $this->filterData((array)$data);
         foreach ($data as $key => $value) {
             $model->{$key} = $value;
         }
@@ -245,7 +245,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     /**
      * Omits array elements whose keys aren't columns in the table.
      *
-     * @param iterable|null $data
+     * @param array|null $data
      * @return array|null
      */
     protected function filterData($data) {

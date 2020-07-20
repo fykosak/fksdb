@@ -79,28 +79,18 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /** @var PresenterBuilder */
     private $presenterBuilder;
 
-    /**
-     * @var PageTitle|null
-     */
+    /** @var PageTitle|null */
     private $pageTitle;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $authorized = true;
 
-    /**
-     * @var bool[]
-     */
+    /** @var bool[] */
     private $authorizedCache = [];
 
-    /**
-     * @var FullHttpRequest
-     */
+    /** @var FullHttpRequest */
     private $fullRequest;
-    /**
-     * @var PageStyleContainer
-     */
+    /** @var PageStyleContainer */
     private $pageStyleContainer;
 
     public function getYearCalculator(): YearCalculator {
@@ -330,9 +320,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     final public function backLinkRedirect($need = false) {
         $this->putIntoBreadcrumbs();
-        /**
-         * @var Breadcrumbs $component
-         */
+        /** @var Breadcrumbs $component */
         $component = $this->getComponent('breadcrumbs');
         $backLink = $component->getBackLinkUrl();
         if ($backLink) {
@@ -371,9 +359,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @param string $destination
      * @param null $args
      * @return bool|mixed
-     *
-     *
-     *
      * @throws BadRequestException
      * @throws InvalidLinkException
      */

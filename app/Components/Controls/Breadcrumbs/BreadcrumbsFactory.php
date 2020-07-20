@@ -11,13 +11,10 @@ use Nette\DI\Container;
  */
 class BreadcrumbsFactory {
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $expiration;
-    /**
-     * @var Container
-     */
+
+    /** @var Container */
     private $container;
 
     /**

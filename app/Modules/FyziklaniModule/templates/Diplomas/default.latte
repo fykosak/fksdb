@@ -1,7 +1,7 @@
 {block content}
     <div>
         {foreach $items as $category=>$stats}
-            <h2>{_('Category')} {$category}</h2>
+            <h2>{\sprintf(_('Category %s'), $category)}</h2>
             <div>
                 <span class="text-danger">opened: {$stats['opened']}</span>
                 <span class="text-success">closed: {$stats['closed']}</span>
@@ -14,7 +14,7 @@
                 <span class="btn btn-warnig disabled">{\sprintf(_('Category %s is not ready'), $category)}</span>
             {/if}
         {/foreach}
-        <h2>{_('Global')}</h2>
+        <h2>{_'Global'}</h2>
         {if $presenter->isReadyAllToCalculate(null)}
             <a class="btn btn-primary"
                href="{link calculate! category=>null}">{\sprintf(_('Calculate global results'), $category)}</a>

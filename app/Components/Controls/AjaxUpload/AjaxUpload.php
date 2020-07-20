@@ -33,19 +33,17 @@ class AjaxUpload extends ReactComponent {
 
     /** @var ServiceSubmit */
     private $serviceSubmit;
+
     /** @var UploadedStorage */
     private $uploadedStorage;
-    /**
-     * @var TypedTableSelection
-     */
+
+    /** @var TypedTableSelection */
     private $availableTasks;
-    /**
-     * @var ModelContestant
-     */
+
+    /**@var ModelContestant */
     private $contestant;
-    /**
-     * @var SubmitHandlerFactory
-     */
+
+    /**@var SubmitHandlerFactory */
     private $submitHandlerFactory;
 
     /**
@@ -90,9 +88,7 @@ class AjaxUpload extends ReactComponent {
      */
     public function getData(...$args): string {
         $data = [];
-        /**
-         * @var ModelTask $task
-         */
+        /** @var ModelTask $task */
         foreach ($this->availableTasks as $task) {
             $submit = $this->serviceSubmit->findByContestant($this->contestant->ct_id, $task->task_id);
             $data[$task->task_id] = ServiceSubmit::serializeSubmit($submit, $task, $this->getPresenter());

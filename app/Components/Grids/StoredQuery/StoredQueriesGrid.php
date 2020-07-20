@@ -21,9 +21,7 @@ class StoredQueriesGrid extends BaseGrid {
 
     const DESCRIPTION_TRUNC = 80;
 
-    /**
-     * @var ServiceStoredQuery
-     */
+    /** @var ServiceStoredQuery */
     private $serviceStoredQuery;
     /** @var array */
     private $activeTagIds;

@@ -13,9 +13,7 @@ class Parameter {
     use SmartObject;
     use WithEventTrait;
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $parameter;
 
     /**

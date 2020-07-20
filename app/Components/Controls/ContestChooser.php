@@ -33,61 +33,40 @@ class ContestChooser extends BaseComponent {
     const DEFAULT_SMART_FIRST = 'smfirst';
     const DEFAULT_NULL = 'null';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $contestsDefinition;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $yearDefinition;
 
-    /**
-     * @var ModelContest[]
-     */
+    /** @var ModelContest[] */
     private $contests;
 
-    /**
-     * @var Session
-     */
+    /** @var Session */
     private $session;
 
-    /**
-     * @var YearCalculator
-     */
+    /** @var YearCalculator */
     private $yearCalculator;
 
-    /**
-     * @var ServiceContest
-     */
+    /** @var ServiceContest */
     private $serviceContest;
 
-    /**
-     * @var ModelContest
-     */
+    /** @var ModelContest */
     private $contest;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $year;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $valid;
+
     /** @var bool */
     private $initialized = false;
 
-    /**
-     * @var string DEFAULT_*
-     */
+    /** @var string DEFAULT_* */
     private $defaultContest = self::DEFAULT_SMART_FIRST;
 
-    /**
-     * @var int bitmask of what "sources" are used to infer selected contest
-     */
+    /** @var int bitmask of what "sources" are used to infer selected contest */
     private $contestSource = 0xffffffff;
 
     /**

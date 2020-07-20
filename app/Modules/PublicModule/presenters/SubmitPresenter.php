@@ -145,9 +145,7 @@ class SubmitPresenter extends BasePresenter {
         $this->template->canRegister = false;
         $this->template->hasForward = false;
         if (!$this->template->hasTasks) {
-            /**
-             * @var ModelPerson $person
-             */
+            /** @var ModelPerson $person */
             $person = $this->getUser()->getIdentity()->getPerson();
             $contestants = $person->getActiveContestants($this->getYearCalculator());
             $contestant = $contestants[$this->getSelectedContest()->contest_id];

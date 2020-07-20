@@ -17,13 +17,9 @@ use Nette\Security\IUserStorage;
 use Nette\Utils\Html;
 
 class EventRole extends AbstractColumnFactory {
-    /**
-     * @var IUserStorage
-     */
+    /** @var IUserStorage */
     private $userStorage;
-    /**
-     * @var YearCalculator
-     */
+    /** @var YearCalculator */
     private $yearCalculator;
 
     /**

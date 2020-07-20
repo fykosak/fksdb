@@ -13,9 +13,7 @@ use FKSDB\ORM\IService;
  */
 class CarefulRewrite extends SecondaryModelStrategy {
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $safeKeys;
 
     /**

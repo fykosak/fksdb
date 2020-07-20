@@ -15,14 +15,10 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
 
     const DESCRIPTION = 'description';
 
-    /**
-     * @var ServiceStoredQueryTagType
-     */
+    /** @var ServiceStoredQueryTagType */
     private $serviceStoredQueryTagType;
 
-    /**
-     * @var TypedTableSelection
-     */
+    /** @var TypedTableSelection */
     private $searchTable;
 
     /**

@@ -41,37 +41,32 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
 
     const PERSON_CONTAINER = 'person';
     const PERSON_INFO_CONTAINER = 'person_info';
-    /**
-     * @var SingleReflectionFormFactory
-     */
+
+    /** @var SingleReflectionFormFactory */
     protected $singleReflectionFormFactory;
-    /**
-     * @var AddressFactory
-     */
+
+    /** @var AddressFactory */
     protected $addressFactory;
-    /**
-     * @var ServicePerson
-     */
+
+    /** @var ServicePerson */
     protected $servicePerson;
-    /**
-     * @var ServicePersonInfo
-     */
+
+    /** @var ServicePersonInfo */
     protected $servicePersonInfo;
-    /**
-     * @var ServiceMPostContact
-     */
+
+    /** @var ServiceMPostContact */
     private $servicePostContact;
+
     /** @var ServiceAddress */
     private $serviceAddress;
+
     /** @var MemoryLogger */
     private $logger;
-    /**
-     * @var FieldLevelPermission
-     */
+
+    /** @var FieldLevelPermission */
     private $userPermission;
-    /**
-     * @var ModelPerson
-     */
+
+    /** @var ModelPerson */
     private $model;
 
     /**

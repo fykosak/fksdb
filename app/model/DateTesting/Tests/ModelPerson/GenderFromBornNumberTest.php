@@ -12,13 +12,11 @@ use FKSDB\DataTesting\TestLog;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class GenderFromBornNumberTest extends PersonTest {
-
-    public function getTitle(): string {
-        return _('Gender from born number');
-    }
-
-    public function getAction(): string {
-        return 'gender_from_born_number';
+    /**
+     * GenderFromBornNumberTest constructor.
+     */
+    public function __construct() {
+        parent::__construct('gender_from_born_number', _('Gender from born number'));
     }
 
     /**

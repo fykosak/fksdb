@@ -19,14 +19,10 @@ use NiftyGrid\DuplicateColumnException;
  */
 class ResultsTotalGrid extends BaseGrid {
 
-    /**
-     * @var ServiceFyziklaniTeam
-     */
+    /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
 
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
 
     /**

@@ -15,17 +15,11 @@ use Nette\Utils\Strings;
  */
 class RegexpCheck extends AbstractAdjustment implements IFormAdjustment {
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $field;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $message;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $pattern;
 
     /**

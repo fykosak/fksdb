@@ -17,24 +17,16 @@ use Nette\SmartObject;
 class EventAuthorizator {
     use SmartObject;
 
-    /**
-     * @var IUserStorage
-     */
+    /** @var IUserStorage */
     private $user;
 
-    /**
-     * @var Permission
-     */
+    /** @var Permission */
     private $acl;
 
-    /**
-     * @var Context
-     */
+    /** @var Context */
     private $db;
 
-    /**
-     * @var ContestAuthorizator
-     */
+    /** @var ContestAuthorizator */
     private $contestAuthorizator;
 
     /**

@@ -12,13 +12,9 @@ use Nette\Utils\Html;
  * *
  */
 class PhoneNumberFactory {
-    /**
-     * @var ServiceRegion
-     */
+    /** @var ServiceRegion */
     private $serviceRegion;
-    /**
-     * @var TypedTableSelection
-     */
+    /** @var TypedTableSelection */
     private $table;
 
     /**
@@ -54,9 +50,7 @@ class PhoneNumberFactory {
      * @return ModelRegion|null
      */
     private function getRegion(string $number) {
-        /**
-         * @var ModelRegion $region
-         */
+        /** @var ModelRegion $region */
         foreach ($this->getAllRegions() as $region) {
             if ($region->matchPhone($number)) {
                 return $region;

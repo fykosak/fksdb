@@ -13,9 +13,7 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class StateColumnFactory extends DefaultColumnFactory {
-    /**
-     * @var array[]
-     */
+    /** @var array[] */
     protected $states = [];
 
     protected function createHtmlValue(AbstractModelSingle $model): Html {

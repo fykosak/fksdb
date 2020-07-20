@@ -41,29 +41,19 @@ abstract class AbstractResultsModel {
     const COL_ALIAS = 'alias';
     const DATA_PREFIX = 'd';
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $year;
 
-    /**
-     * @var ModelContest
-     */
+    /** @var ModelContest */
     protected $contest;
 
-    /**
-     * @var ServiceTask
-     */
+    /** @var ServiceTask */
     protected $serviceTask;
 
-    /**
-     * @var Connection
-     */
+    /** @var Connection */
     protected $connection;
 
-    /**
-     * @var EvaluationStrategy
-     */
+    /** @var EvaluationStrategy */
     protected $evaluationStrategy;
 
     /**

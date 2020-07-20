@@ -180,9 +180,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 self::POST_CONTACT_DELIVERY => $person->getDeliveryAddress() ?: null,
                 self::POST_CONTACT_PERMANENT => $person->getPermanentAddress(true) ?: null,
             ];
-            /**
-             * @var IService[] $services
-             */
+            /** @var IService[] $services */
             $services = [];
 
             $originalModels = \array_keys(iterator_to_array($data));

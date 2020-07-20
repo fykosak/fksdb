@@ -21,17 +21,11 @@ use NiftyGrid\DuplicateGlobalButtonException;
  */
 class EventsGrid extends BaseGrid {
 
-    /**
-     * @var ServiceEvent
-     */
+    /** @var ServiceEvent */
     private $serviceEvent;
-    /**
-     * @var ModelContest
-     */
+    /** @var ModelContest */
     private $contest;
-    /**
-     * @var int
-     */
+    /** @var int */
     private $year;
 
     /**

@@ -24,14 +24,13 @@ use Nette\Forms\Controls\RadioList;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class EditComponent extends AbstractEntityFormComponent implements IEditEntityForm {
-    /**
-     * @var ModelFyziklaniSubmit
-     */
+
+    /** @var ModelFyziklaniSubmit */
     private $submit;
-    /**
-     * @var ModelEvent
-     */
+
+    /** @var ModelEvent */
     private $event;
+
     /** @var HandlerFactory */
     private $handlerFactory;
 

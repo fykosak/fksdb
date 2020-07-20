@@ -27,19 +27,13 @@ use Nette\SmartObject;
 class SingleEventSource implements IHolderSource {
     use SmartObject;
 
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
 
-    /**
-     * @var Container
-     */
+    /** @var Container */
     private $container;
 
-    /**
-     * @var IModel[]
-     */
+    /** @var IModel[] */
     private $primaryModels = null;
 
     /**
@@ -48,14 +42,10 @@ class SingleEventSource implements IHolderSource {
      */
     private $secondaryModels = null;
 
-    /**
-     * @var TypedTableSelection
-     */
+    /** @var TypedTableSelection */
     private $primarySelection;
 
-    /**
-     * @var Holder
-     */
+    /** @var Holder */
     private $dummyHolder;
 
     /**
@@ -113,7 +103,7 @@ class SingleEventSource implements IHolderSource {
         $joinValues = array_keys($this->primaryModels);
 
         // load secondaries
-        /** @var IService[]|BaseHolder[] $group */
+        /** @var IService[]|BaseHolder[][] $group */
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
             /** @var TypedTableSelection $secondarySelection */
             $secondarySelection = $group['service']->getTable()->where($group['joinOn'], $joinValues);

@@ -13,9 +13,7 @@ use Nette\InvalidStateException;
  */
 class DetailResultsModel extends AbstractResultsModel {
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $series;
 
     /**

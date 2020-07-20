@@ -8,14 +8,11 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\ORM\Services\ServicePerson;
 
 trait ReferencedPersonTrait {
-    /**
-     * @var PersonFactory
-     */
+
+    /** @var PersonFactory */
     protected $personFactory;
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     protected $servicePerson;
 
     protected function createPersonSelect(): AutocompleteSelectBox {

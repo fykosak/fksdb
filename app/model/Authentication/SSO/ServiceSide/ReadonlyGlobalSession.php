@@ -16,19 +16,13 @@ class ReadonlyGlobalSession implements IGlobalSession {
 
     const TABLE = 'global_session';
 
-    /**
-     * @var Connection
-     */
+    /** @var Connection */
     private $connection;
 
-    /**
-     * @var IGSIDHolder
-     */
+    /** @var IGSIDHolder */
     private $gsidHolder;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $data = [];
 
     /**

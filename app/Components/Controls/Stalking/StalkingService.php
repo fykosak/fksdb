@@ -7,9 +7,7 @@ namespace FKSDB\Components\Controls\Stalking;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class StalkingService {
-    /**
-     * @var array[]
-     */
+    /** @var array[] */
     private $definition;
 
     /**

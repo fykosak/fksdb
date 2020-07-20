@@ -18,13 +18,9 @@ use SQL\SearchableDataSource;
  */
 class TaskGrid extends BaseGrid {
 
-    /**
-     * @var ServiceFyziklaniTask
-     */
+    /** @var ServiceFyziklaniTask */
     private $serviceFyziklaniTask;
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
 
     protected function getData(): IDataSource {

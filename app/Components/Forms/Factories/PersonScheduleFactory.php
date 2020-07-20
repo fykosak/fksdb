@@ -14,9 +14,7 @@ use Nette\Utils\JsonException;
  * *
  */
 class PersonScheduleFactory {
-    /**
-     * @var ServiceScheduleItem
-     */
+    /** @var ServiceScheduleItem */
     private $serviceScheduleItem;
 
     /**

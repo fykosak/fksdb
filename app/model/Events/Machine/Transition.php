@@ -53,18 +53,12 @@ class Transition {
     /** @var bool|callable */
     private $visible;
 
-    /**
-     * @var ExpressionEvaluator
-     */
+    /** @var ExpressionEvaluator */
     private $evaluator;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     public $onExecuted = [];
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $type;
 
     /**

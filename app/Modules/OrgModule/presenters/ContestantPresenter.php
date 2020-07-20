@@ -19,9 +19,7 @@ class ContestantPresenter extends ExtendedPersonPresenter {
     /** @var string */
     protected $fieldsDefinition = 'adminContestant';
 
-    /**
-     * @var ServiceContestant
-     */
+    /** @var ServiceContestant */
     private $serviceContestant;
 
     /**

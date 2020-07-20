@@ -13,13 +13,9 @@ class Price {
 
     const CURRENCY_EUR = 'eur';
     const CURRENCY_CZK = 'czk';
-    /**
-     * @var string
-     */
+    /** @var string */
     private $currency;
-    /**
-     * @var float
-     */
+    /** @var float */
     private $amount;
 
     /**

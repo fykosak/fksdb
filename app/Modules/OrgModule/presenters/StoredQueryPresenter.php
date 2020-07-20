@@ -26,9 +26,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
     use SeriesPresenterTrait;
     use EntityPresenterTrait;
 
-    /**
-     * @var ServiceStoredQuery
-     */
+    /** @var ServiceStoredQuery */
     private $serviceStoredQuery;
 
     /**

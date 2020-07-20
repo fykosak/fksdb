@@ -12,41 +12,23 @@ use Nette\Forms\Controls\BaseControl;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class DefaultColumnFactory extends AbstractColumnFactory {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $title;
-    /**
-     * @var string
-     */
+    /** @var string */
     private $tableName;
-    /**
-     * @var string
-     */
+    /** @var string */
     private $modelAccessKey;
-    /**
-     * @var string|null
-     */
+    /** @var string|null */
     private $description;
-    /**
-     * @var array
-     */
+    /** @var array */
     private $metaData;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $required = false;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $omitInputField = false;
-    /**
-     * @var FieldLevelPermission
-     */
+    /** @var FieldLevelPermission */
     private $permission;
-    /**
-     * @var MetaDataFactory
-     */
+    /** @var MetaDataFactory */
     private $metaDataFactory;
 
     /**

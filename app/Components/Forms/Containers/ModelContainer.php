@@ -36,5 +36,4 @@ class ModelContainer extends ContainerWithOptions {
             $component->setDisabled($value);
         }
     }
-
 }

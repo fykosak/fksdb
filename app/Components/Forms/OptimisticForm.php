@@ -16,14 +16,10 @@ class OptimisticForm extends Form {
 
     const FINGERPRINT = '__fp';
 
-    /**
-     * @var callable
-     */
+    /** @var callable */
     private $fingerprintCallback;
 
-    /**
-     * @var callable
-     */
+    /** @var callable */
     private $defaultsCallback;
 
     /**

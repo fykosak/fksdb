@@ -27,28 +27,18 @@ class ExportFormatFactory {
     const CSV_HEAD = 'csvh';
     const CSV_QUOTE_HEAD = 'csvqh';
 
-    /**
-     * @var Container
-     */
+    /** @var Container */
     private $container;
 
-    /**
-     * @var StoredQueryFactory
-     */
+    /** @var StoredQueryFactory */
     private $storedQueryFactory;
 
-    /**
-     * @var ServiceEvent
-     */
+    /** @var ServiceEvent */
     private $serviceEvent;
 
-    /**
-     * @var ServiceContest
-     */
+    /** @var ServiceContest */
     private $serviceContest;
-    /**
-     * @var array
-     */
+    /** @var array */
     private $defaultFormats;
 
     /**

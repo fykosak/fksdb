@@ -22,48 +22,30 @@ use Persons\Deduplication\MergeStrategy\IMergeStrategy;
  */
 class TableMerger {
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $table;
 
-    /**
-     * @var Merger
-     */
+    /** @var Merger */
     private $merger;
 
-    /**
-     * @var Connection
-     */
+    /** @var Connection */
     private $connection;
-    /**
-     * @var Context
-     */
+    /** @var Context */
     private $context;
 
-    /**
-     * @var ActiveRow
-     */
+    /** @var ActiveRow */
     private $trunkRow;
 
-    /**
-     * @var ActiveRow
-     */
+    /** @var ActiveRow */
     private $mergedRow;
 
-    /**
-     * @var IMergeStrategy[]
-     */
+    /** @var IMergeStrategy[] */
     private $columnMergeStrategies = [];
 
-    /**
-     * @var IMergeStrategy
-     */
+    /** @var IMergeStrategy */
     private $globalMergeStrategy;
 
-    /**
-     * @var ILogger
-     */
+    /** @var ILogger */
     private $logger;
 
     /**
@@ -308,13 +290,9 @@ class TableMerger {
      * DB reflection
      * ****************************** */
 
-    /**
-     * @var null
-     */
+    /** @var null */
     private $refTables = null;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private static $refreshReferencing = true;
 
     /**
@@ -336,9 +314,7 @@ class TableMerger {
         return $this->refTables;
     }
 
-    /**
-     * @var null
-     */
+    /** @var null */
     private $columns = null;
 
     /**
@@ -354,9 +330,7 @@ class TableMerger {
         return $this->columns;
     }
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $primaryKey;
 
     /**
@@ -370,13 +344,9 @@ class TableMerger {
         return $column == $this->primaryKey;
     }
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $referencedTables = [];
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private static $refreshReferenced = true;
 
     /**
@@ -396,9 +366,7 @@ class TableMerger {
         return $this->referencedTables[$column];
     }
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $secondaryKey;
 
     /**

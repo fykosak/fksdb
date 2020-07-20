@@ -2,11 +2,9 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
-use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\IControl;
@@ -22,14 +20,10 @@ class ChooserFactory extends AbstractFactory {
     const FORMAT_VALUE_META = 'value-meta';
     const FORMAT_KEY_META = 'key-meta';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $prompt;
 
-    /**
-     * @var IOptionsProvider
-     */
+    /** @var IOptionsProvider */
     private $optionsProvider;
 
     /**
@@ -44,11 +38,9 @@ class ChooserFactory extends AbstractFactory {
 
     /**
      * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
      * @return SelectBox
      */
-    protected function createComponent(Field $field, BaseMachine $machine, Container $container): IComponent {
+    public function createComponent(Field $field): IComponent {
 
         $component = new SelectBox($field->getLabel());
         $component->setOption('description', $field->getDescription());
@@ -73,22 +65,17 @@ class ChooserFactory extends AbstractFactory {
     /**
      * @param BaseControl|IComponent $component
      * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
      * @return void
      */
-    protected function setDefaultValue(IComponent $component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDefaultValue(IComponent $component, Field $field) {
         $component->setDefaultValue($field->getValue());
     }
 
     /**
      * @param BaseControl|IComponent $component
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
      * @return void
      */
-    protected function setDisabled(IComponent $component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDisabled(IComponent $component) {
         $component->setDisabled();
     }
 

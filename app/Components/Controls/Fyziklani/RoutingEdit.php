@@ -19,19 +19,14 @@ use Nette\Utils\JsonException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class RoutingEdit extends FyziklaniReactControl {
-    /**
-     * @var ServiceFyziklaniTeam
-     */
+
+    /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
 
-    /**
-     * @var ServiceFyziklaniRoom
-     */
+    /** @var ServiceFyziklaniRoom */
     private $serviceFyziklaniRoom;
 
-    /**
-     * @var ServiceFyziklaniTeamPosition
-     */
+    /** @var ServiceFyziklaniTeamPosition */
     private $serviceFyziklaniTeamPosition;
 
     /**

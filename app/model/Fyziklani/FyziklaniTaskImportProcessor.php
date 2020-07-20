@@ -19,13 +19,9 @@ use Tracy\Debugger;
  */
 class FyziklaniTaskImportProcessor {
 
-    /**
-     * @var ServiceFyziklaniTask
-     */
+    /** @var ServiceFyziklaniTask */
     private $serviceFyziklaniTask;
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
 
     /**

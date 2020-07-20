@@ -10,9 +10,7 @@ use FKSDB\Messages\Message;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class MemoryLogger extends StackedLogger {
-    /**
-     * @var Message[]
-     */
+    /** @var Message[] */
     private $messages = [];
 
     /**

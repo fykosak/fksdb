@@ -14,13 +14,11 @@ abstract class WebLoader extends Control {
     const FILENAME = 'file';
     const ATTRIBUTES = 'attr';
     const UNTAGGED = '__untagged';
-    /**
-     * @var string[]
-     */
+
+    /** @var string[] */
     private $files = [];
-    /**
-     * @var string[]
-     */
+
+    /**@var string[] */
     private $inlines = [];
 
     /**

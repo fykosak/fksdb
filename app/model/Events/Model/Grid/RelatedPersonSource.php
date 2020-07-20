@@ -22,9 +22,7 @@ use Nette\DI\Container;
  */
 class RelatedPersonSource extends AggregatedPersonSource implements IHolderSource {
 
-    /**
-     * @var ModelPerson
-     */
+    /** @var ModelPerson */
     private $person;
 
     /**

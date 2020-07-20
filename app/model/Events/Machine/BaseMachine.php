@@ -18,23 +18,15 @@ class BaseMachine {
     const EXECUTABLE = 0x1;
     const VISIBLE = 0x2;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $name;
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $states;
 
-    /**
-     * @var Transition[]
-     */
+    /** @var Transition[] */
     private $transitions = [];
 
-    /**
-     * @var Machine
-     */
+    /** @var Machine */
     private $machine;
 
     /**
@@ -54,11 +46,10 @@ class BaseMachine {
 
     /**
      * @param string $state
-     * @param string $label
      * @return void
      */
-    public function addState(string $state, string $label) {
-        $this->states[$state] = $label;
+    public function addState(string $state) {
+        $this->states[] = $state;
     }
 
     /**

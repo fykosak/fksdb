@@ -19,9 +19,7 @@ use Nette\Security\IResource;
 class SpamPresenter extends BasePresenter {
     use EntityPresenterTrait;
 
-    /**
-     * @var ServiceEmailMessage
-     */
+    /** @var ServiceEmailMessage */
     private $serviceEmailMessage;
 
     /**

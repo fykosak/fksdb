@@ -16,9 +16,7 @@ use Nette\Forms\Controls\BaseControl;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class SingleReflectionFormFactory {
-    /**
-     * @var TableReflectionFactory
-     */
+    /** @var TableReflectionFactory */
     protected $tableReflectionFactory;
 
     /**
@@ -55,16 +53,17 @@ class SingleReflectionFormFactory {
     /**
      * @param string $table
      * @param array $fields
+     * @param array $args
      * @return ModelContainer
      * @throws AbstractColumnException
-     * @throws OmittedControlException
      * @throws BadTypeException
+     * @throws OmittedControlException
      */
-    public function createContainer(string $table, array $fields): ModelContainer {
+    public function createContainer(string $table, array $fields, ...$args): ModelContainer {
         $container = new ModelContainer();
 
         foreach ($fields as $field) {
-            $control = $this->createField($table, $field);
+            $control = $this->createField($table, $field, ...$args);
             $container->addComponent($control, $field);
         }
         return $container;

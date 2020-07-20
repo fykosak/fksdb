@@ -10,13 +10,9 @@ use FKSDB\ORM\Models\ModelEvent;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ExplicitEventRole extends EventRole {
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
-    /**
-     * @var string
-     */
+    /** @var string */
     private $resource;
 
     /**

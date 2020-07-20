@@ -24,14 +24,10 @@ use Nette\Utils\ArrayHash;
  */
 class CategoryProcessing extends AbstractProcessing {
 
-    /**
-     * @var YearCalculator
-     */
+    /** @var YearCalculator */
     private $yearCalculator;
 
-    /**
-     * @var ServiceSchool
-     */
+    /** @var ServiceSchool */
     private $serviceSchool;
 
     /**

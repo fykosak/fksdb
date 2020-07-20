@@ -12,9 +12,7 @@ use RuntimeException;
  */
 class SendFailedException extends RuntimeException {
 
-    /**
-     * @var Message
-     */
+    /** @var Message */
     public $message;
 
     /**

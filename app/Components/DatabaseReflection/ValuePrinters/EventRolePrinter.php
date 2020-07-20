@@ -14,9 +14,7 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventRolePrinter {
-    /**
-     * @var YearCalculator
-     */
+    /** @var YearCalculator */
     private $yearCalculator;
 
     /**
@@ -61,9 +59,7 @@ class EventRolePrinter {
                     break;
                 case'participant':
                     $team = null;
-                    /**
-                     * @var ModelEventParticipant $participant
-                     */
+                    /** @var ModelEventParticipant $participant */
                     $participant = $role['participant'];
                     try {
                         $team = $participant->getFyziklaniTeam();

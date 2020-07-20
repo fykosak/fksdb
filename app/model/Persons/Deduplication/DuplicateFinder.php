@@ -20,19 +20,16 @@ class DuplicateFinder {
     const IDX_SCORE = 'score';
     const DIFFERENT_PATTERN = 'not-same';
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     private $servicePerson;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $parameters;
 
     /**
      * DuplicateFinder constructor.
      * @param ServicePerson $servicePerson
+     * @param Container $container
      */
     public function __construct(ServicePerson $servicePerson, Container $container) {
         $this->servicePerson = $servicePerson;

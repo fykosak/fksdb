@@ -26,27 +26,17 @@ class YearCalculator {
      */
     const FIRST_AC_MONTH = 9;
 
-    /**
-     * @var ServiceContestYear
-     */
+    /** @var ServiceContestYear */
     private $serviceContestYear;
 
-    /**
-     * @var ServiceContest
-     */
+    /** @var ServiceContest */
     private $serviceContest;
 
-    /**
-     * @var int[][]
-     */
+    /** @var int[][] */
     private $cache = [];
-    /**
-     * @var int[][]
-     */
+    /** @var int[][] */
     private $revCache = [];
-    /**
-     * @var int
-     */
+    /** @var int */
     private $acYear;
     /** @var Container */
     private $container;

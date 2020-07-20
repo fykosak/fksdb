@@ -16,12 +16,13 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class SubmitCheckComponent extends BaseComponent {
-    /**
-     * @var SeriesTable
-     */
+
+    /** @var SeriesTable */
     private $seriesTable;
+
     /** @var CorrectedStorage */
     private $correctedStorage;
+
     /** @var UploadedStorage */
     private $uploadedStorage;
 

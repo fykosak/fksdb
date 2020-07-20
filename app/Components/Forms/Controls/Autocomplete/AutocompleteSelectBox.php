@@ -25,25 +25,17 @@ class AutocompleteSelectBox extends TextBase {
     const INTERNAL_DELIMITER = ',';
     const META_ELEMENT_SUFFIX = '__meta'; // must be same with constant in autocompleteSelect.js
 
-    /**
-     * @var IDataProvider
-     */
+    /** @var IDataProvider */
 
     private $dataProvider;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $ajax;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $multiSelect = false;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $ajaxUrl;
 
     /**
@@ -53,13 +45,9 @@ class AutocompleteSelectBox extends TextBase {
      * @var string
      */
     private $renderMethod;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $attachedJSON = false;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $attachedJS = false;
 
     /**

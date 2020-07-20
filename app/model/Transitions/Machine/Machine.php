@@ -20,17 +20,11 @@ abstract class Machine {
     const STATE_INIT = '__init';
     const STATE_TERMINATED = '__terminated';
 
-    /**
-     * @var Transition[]
-     */
+    /** @var Transition[] */
     private $transitions = [];
-    /**
-     * @var Context
-     */
+    /** @var Context */
     protected $context;
-    /**
-     * @var IService
-     */
+    /** @var IService */
     private $service;
     /**
      * @var callable
@@ -216,9 +210,7 @@ abstract class Machine {
         if (!$this->canExecute($transition, null)) {
             throw new ForbiddenRequestException(_('Model sa nedá vytvoriť'));
         }
-        /**
-         * @var IStateModel|IModel|ActiveRow $model
-         */
+        /** @var IStateModel|IModel|ActiveRow $model */
         $model = $service->createNewModel($data);
         return $this->execute($transition, $model);
     }

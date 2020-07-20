@@ -36,24 +36,16 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      */
     public $all;
 
-    /**
-     * @var SQLResultsCache
-     */
+    /** @var SQLResultsCache */
     private $SQLResultsCache;
 
-    /**
-     * @var SeriesTable
-     */
+    /** @var SeriesTable */
     private $seriesTable;
 
-    /**
-     * @var ServiceTask
-     */
+    /** @var ServiceTask */
     private $serviceTask;
 
-    /**
-     * @var ServiceTaskContribution
-     */
+    /** @var ServiceTaskContribution */
     private $serviceTaskContribution;
 
     /**

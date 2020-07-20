@@ -16,9 +16,7 @@ class SchoolFactory {
 
     const SHOW_UNKNOWN_SCHOOL_HINT = 0x1;
 
-    /**
-     * @var SchoolProvider
-     */
+    /** @var SchoolProvider */
     private $schoolProvider;
 
     /**

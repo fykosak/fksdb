@@ -9,9 +9,7 @@ namespace Persons\Deduplication\MergeStrategy;
  */
 class ConstantStrategy implements IMergeStrategy {
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $constant;
 
     /**

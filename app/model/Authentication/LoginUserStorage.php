@@ -40,24 +40,16 @@ class LoginUserStorage extends UserStorage {
     /** @var YearCalculator */
     private $yearCalculator;
 
-    /**
-     * @var GlobalSession
-     */
+    /** @var GlobalSession */
     private $globalSession;
 
-    /**
-     * @var Application
-     */
+    /** @var Application */
     private $application;
 
-    /**
-     * @var IPresenter
-     */
+    /** @var IPresenter */
     private $presenter;
 
-    /**
-     * @var Request
-     */
+    /** @var Request */
     private $request;
 
     /**
@@ -135,9 +127,7 @@ class LoginUserStorage extends UserStorage {
              * probably is not needed anymore.
              */
             //parent::setAuthenticated(false);
-            /**
-             * @var AuthenticatedPresenter $presenter
-             */
+            /** @var AuthenticatedPresenter $presenter */
             $presenter = $this->getPresenter();
             $ssoData = $presenter->getParameter(self::PARAM_SSO);
 

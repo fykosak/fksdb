@@ -13,17 +13,14 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class RoutingDownload extends BaseComponent {
-    /**
-     * @var bool
-     */
+
+    /** @var bool */
     private static $JSAttached = false;
-    /**
-     * @var ModelEvent
-     */
+
+    /** @var ModelEvent */
     private $event;
-    /**
-     * @var ServiceFyziklaniTeam
-     */
+
+    /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
 
     /**
@@ -35,7 +32,7 @@ class RoutingDownload extends BaseComponent {
         parent::__construct($container);
         $this->event = $event;
         $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
-            if (!self::$JSAttached ) {
+            if (!self::$JSAttached) {
                 self::$JSAttached = true;
                 $collector->registerJSFile('js/routingPdf.js');
                 $collector->registerJSFile('https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.33/pdfmake.min.js');

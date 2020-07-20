@@ -2,7 +2,6 @@ events:
     setkani8podzim:
         event_type_id: [12]
         eventYears: [8] # specify for which years this machine is valid, by default all years
-        tableLayout: event.grid
         formLayout: setkani.form
         paramScheme:
             notifyBcc:
@@ -17,10 +16,10 @@ events:
                 service: @event.ServiceEventParticipant
 
                 states:
-                    applied: _('Přihlášen')
-                    participated: _('Účastnil se')
-                    missed: _('Nepřijel')
-                    cancelled: _('Zrušen')
+                    - applied
+                    - participated
+                    - missed
+                    - cancelled
 
                 transitions:
                     __init->applied:
@@ -45,7 +44,7 @@ events:
 
                 fields:
                     person_id:
-                        label: _('Osoba')
+                        label: _('Person')
                         required: true
                         modifiable: %events.setkani.appCond%
                         default: fromLogin

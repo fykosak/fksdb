@@ -20,9 +20,7 @@ use Nette\Security\IResource;
 class ScheduleGroupPresenter extends BasePresenter {
     use EventEntityPresenterTrait;
 
-    /**
-     * @var ServiceScheduleGroup
-     */
+    /** @var ServiceScheduleGroup */
     private $serviceScheduleGroup;
 
     /**

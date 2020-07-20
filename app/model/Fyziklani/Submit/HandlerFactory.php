@@ -14,17 +14,11 @@ use Nette\Security\User;
  */
 class HandlerFactory {
 
-    /**
-     * @var ServiceFyziklaniSubmit
-     */
+    /** @var ServiceFyziklaniSubmit */
     private $serviceFyziklaniSubmit;
-    /**
-     * @var ServiceFyziklaniTask
-     */
+    /** @var ServiceFyziklaniTask */
     private $serviceFyziklaniTask;
-    /**
-     * @var ServiceFyziklaniTeam
-     */
+    /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
     /** @var User */
     private $user;

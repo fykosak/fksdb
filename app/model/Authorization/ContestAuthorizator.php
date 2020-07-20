@@ -20,14 +20,10 @@ class ContestAuthorizator {
 
     use SmartObject;
 
-    /**
-     * @var User
-     */
+    /** @var User */
     private $user;
 
-    /**
-     * @var Permission
-     */
+    /** @var Permission */
     private $acl;
 
     /**
@@ -62,9 +58,7 @@ class ContestAuthorizator {
             $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
             return $this->getAcl()->isAllowed($role, $resource, $privilege);
         }
-        /**
-         * @var ModelLogin $login
-         */
+        /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         return $this->isAllowedForLogin($login, $resource, $privilege, $contest);
     }
@@ -79,9 +73,7 @@ class ContestAuthorizator {
             $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
             return $this->getAcl()->isAllowed($role, $resource, $privilege);
         }
-        /**
-         * @var ModelLogin $login
-         */
+        /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
 
         $roles = $login->getRoles();

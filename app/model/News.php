@@ -10,9 +10,7 @@ use Nette\SmartObject;
 class News {
     use SmartObject;
 
-    /**
-     * @var Container
-     */
+    /** @var Container */
     private $container;
 
     /**

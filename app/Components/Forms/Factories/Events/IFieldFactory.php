@@ -2,11 +2,9 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\Holder\DataValidator;
 use FKSDB\Events\Model\Holder\Field;
 use Nette\ComponentModel\IComponent;
-use Nette\Forms\Container;
 use Nette\Forms\IControl;
 
 /**
@@ -18,10 +16,8 @@ interface IFieldFactory {
 
     /**
      * @param Field $field field for which it's created
-     * @param BaseMachine $machine appropiate base machine
-     * @param Container $container whole container of the base holder
      */
-    public function create(Field $field, BaseMachine $machine, Container $container): IComponent;
+    public function createComponent(Field $field): IComponent;
 
     /**
      * For its own output, it must be able to find the control that may be used
@@ -41,4 +37,11 @@ interface IFieldFactory {
      * @return bool
      */
     public function validate(Field $field, DataValidator $validator);
+
+    /**
+     * @param IComponent $component
+     * @param Field $field
+     * @return void
+     */
+    public function setFieldDefaultValue(IComponent $component, Field $field);
 }

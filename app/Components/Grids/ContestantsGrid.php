@@ -20,17 +20,11 @@ use SQL\ViewDataSource;
  */
 class ContestantsGrid extends BaseGrid {
 
-    /**
-     * @var ServiceContestant
-     */
+    /** @var ServiceContestant */
     private $serviceContestant;
-    /**
-     * @var int
-     */
+    /** @var int */
     private $year;
-    /**
-     * @var ModelContest
-     */
+    /** @var ModelContest */
     private $contest;
 
     /**

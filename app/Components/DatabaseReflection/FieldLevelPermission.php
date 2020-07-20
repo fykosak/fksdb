@@ -11,13 +11,9 @@ class FieldLevelPermission {
     const ALLOW_BASIC = 16;
     const ALLOW_RESTRICT = 128;
     const ALLOW_FULL = 1024;
-    /**
-     * @var int
-     */
+    /** @var int */
     public $read;
-    /**
-     * @var int
-     */
+    /** @var int */
     public $write;
 
     /**

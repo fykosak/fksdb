@@ -24,9 +24,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
 
     use SeriesPresenterTrait;
 
-    /**
-     * @var SeriesTable
-     */
+    /** @var SeriesTable */
     private $seriesTable;
 
     /**

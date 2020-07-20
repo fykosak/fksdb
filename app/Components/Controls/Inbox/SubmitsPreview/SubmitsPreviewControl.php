@@ -15,9 +15,8 @@ use Nette\Application\ForbiddenRequestException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class SubmitsPreviewControl extends SeriesTableComponent {
-    /**
-     * @var SubmitHandlerFactory
-     */
+
+    /** @var SubmitHandlerFactory */
     private $submitDownloadFactory;
 
     /**

@@ -42,13 +42,9 @@ class PersonTestControl extends BaseComponent {
      * @persistent
      */
     public $levels = [];
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     private $servicePerson;
-    /**
-     * @var DataTestingFactory
-     */
+    /** @var DataTestingFactory */
     private $dataTestingFactory;
 
     /**

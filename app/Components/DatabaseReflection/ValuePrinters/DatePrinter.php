@@ -10,9 +10,7 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class DatePrinter extends AbstractValuePrinter {
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $format;
 
     /**

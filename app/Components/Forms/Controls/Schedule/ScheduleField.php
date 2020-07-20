@@ -20,17 +20,11 @@ class ScheduleField extends TextInput {
 
     use ReactComponentTrait;
 
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
-    /**
-     * @var string
-     */
+    /** @var string */
     private $type;
-    /**
-     * @var ServiceScheduleItem
-     */
+    /** @var ServiceScheduleItem */
     private $serviceScheduleItem;
 
     /**

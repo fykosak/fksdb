@@ -11,14 +11,10 @@ use Nette\InvalidArgumentException;
  */
 class Machine {
 
-    /**
-     * @var BaseMachine[]
-     */
+    /** @var BaseMachine[] */
     private $baseMachines = [];
 
-    /**
-     * @var BaseMachine
-     */
+    /** @var BaseMachine */
     private $primaryMachine;
 
     /**

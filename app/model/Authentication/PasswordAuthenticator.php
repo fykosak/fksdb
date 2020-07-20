@@ -15,9 +15,7 @@ use Nette\Security\IIdentity;
  */
 class PasswordAuthenticator extends AbstractAuthenticator implements IAuthenticator {
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     private $servicePerson;
 
     /**

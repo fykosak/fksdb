@@ -12,6 +12,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Services\ServicePerson;
+use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use Nette\Utils\JsonException;
@@ -27,36 +28,24 @@ use Persons\ReferencedPersonHandlerFactory;
 class ReferencedPersonFactory {
     use SmartObject;
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     protected $servicePerson;
 
-    /**
-     * @var PersonFactory
-     */
+    /** @var PersonFactory */
     protected $personFactory;
 
 
-    /**
-     * @var ReferencedPersonHandlerFactory
-     */
+    /** @var ReferencedPersonHandlerFactory */
     protected $referencedPersonHandlerFactory;
 
-    /**
-     * @var PersonProvider
-     */
+    /** @var PersonProvider */
     protected $personProvider;
 
-    /**
-     * @var PersonScheduleFactory
-     */
+    /** @var PersonScheduleFactory */
     private $personScheduleFactory;
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
-    /** @var \Nette\DI\Container */
+    /** @var Container */
     private $context;
 
     /**
@@ -66,7 +55,7 @@ class ReferencedPersonFactory {
      * @param ReferencedPersonHandlerFactory $referencedPersonHandlerFactory
      * @param PersonProvider $personProvider
      * @param PersonScheduleFactory $personScheduleFactory
-     * @param \Nette\DI\Container $context
+     * @param Container $context
      */
     public function __construct(
         ServicePerson $servicePerson,
@@ -74,7 +63,7 @@ class ReferencedPersonFactory {
         ReferencedPersonHandlerFactory $referencedPersonHandlerFactory,
         PersonProvider $personProvider,
         PersonScheduleFactory $personScheduleFactory,
-        \Nette\DI\Container $context
+        Container $context
     ) {
         $this->servicePerson = $servicePerson;
         $this->personFactory = $personFactory;

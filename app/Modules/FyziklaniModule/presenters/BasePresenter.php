@@ -16,14 +16,10 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
  */
 abstract class BasePresenter extends EventBasePresenter {
 
-    /**
-     * @var ServiceFyziklaniTeam
-     */
+    /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
 
-    /**
-     * @var ServiceFyziklaniSubmit
-     */
+    /** @var ServiceFyziklaniSubmit */
     private $serviceFyziklaniSubmit;
 
     /**

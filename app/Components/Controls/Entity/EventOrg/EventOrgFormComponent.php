@@ -28,18 +28,14 @@ class EventOrgFormComponent extends AbstractEntityFormComponent implements IEdit
     use ReferencedPersonTrait;
 
     const CONTAINER = 'event_org';
-    /**
-     * @var ServiceEventOrg
-     */
+
+    /** @var ServiceEventOrg */
     protected $serviceEventOrg;
-    /**
-     * @var ModelEvent
-     */
+
+    /** @var ModelEvent */
     protected $event;
 
-    /**
-     * @var ModelEventOrg
-     */
+    /** @var ModelEventOrg */
     private $model;
 
     /**

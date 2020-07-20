@@ -34,17 +34,11 @@ use SQL\SearchableDataSource;
  */
 class AllSubmitsGrid extends SubmitsGrid {
 
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
-    /**
-     * @var ServiceFyziklaniTeam
-     */
+    /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
-    /**
-     * @var ServiceFyziklaniTask
-     */
+    /** @var ServiceFyziklaniTask */
     private $serviceFyziklaniTask;
     /** @var HandlerFactory */
     private $handlerFactory;
@@ -152,9 +146,7 @@ class AllSubmitsGrid extends SubmitsGrid {
      * @throws AbortException
      */
     public function handleDelete($id) {
-        /**
-         * @var ModelFyziklaniSubmit $submit
-         */
+        /** @var ModelFyziklaniSubmit $submit */
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
         if (!$submit) {
             $this->flashMessage(_('Submit dos not exists.'), BasePresenter::FLASH_ERROR);

@@ -18,9 +18,7 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
     const DELIMITER = '.';
     const WILDCART = '*';
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $rules;
 
     /**
