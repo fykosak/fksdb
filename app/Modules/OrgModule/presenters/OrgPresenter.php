@@ -25,9 +25,7 @@ class OrgPresenter extends BasePresenter {
         getEntity as traitGetEntity;
     }
 
-    /**
-     * @var ServiceOrg
-     */
+    /** @var ServiceOrg */
     private $serviceOrg;
 
     /**

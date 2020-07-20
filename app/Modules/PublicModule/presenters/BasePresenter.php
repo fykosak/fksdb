@@ -17,9 +17,7 @@ use Nette\Application\ForbiddenRequestException;
  */
 abstract class BasePresenter extends ContestPresenter {
 
-    /**
-     * @var ModelContestant|null
-     */
+    /** @var ModelContestant|null */
     private $contestant;
 
     protected function createComponentContestChooser(): ContestChooser {

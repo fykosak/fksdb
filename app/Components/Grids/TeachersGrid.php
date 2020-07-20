@@ -18,9 +18,7 @@ use SQL\SearchableDataSource;
  */
 class TeachersGrid extends BaseGrid {
 
-    /**
-     * @var ServiceTeacher
-     */
+    /** @var ServiceTeacher */
     private $serviceTeacher;
 
     /**

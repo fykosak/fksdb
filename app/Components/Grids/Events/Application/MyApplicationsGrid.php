@@ -17,13 +17,9 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class MyApplicationsGrid extends BaseGrid {
-    /**
-     * @var ModelPerson
-     */
+    /** @var ModelPerson */
     private $person;
-    /**
-     * @var ModelContest
-     */
+    /** @var ModelContest */
     private $contest;
 
     /**

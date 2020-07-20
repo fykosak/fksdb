@@ -33,19 +33,13 @@ class ResultsComponent extends BaseComponent {
      */
     public $parameters = [];
 
-    /**
-     * @var StoredQuery
-     */
+    /** @var StoredQuery */
     private $storedQuery;
 
-    /**
-     * @var ContestAuthorizator
-     */
+    /** @var ContestAuthorizator */
     private $contestAuthorizator;
 
-    /**
-     * @var StoredQueryFactory
-     */
+    /** @var StoredQueryFactory */
     private $storedQueryFormFactory;
 
     /**
@@ -54,14 +48,10 @@ class ResultsComponent extends BaseComponent {
      */
     private $exportFormatFactory;
 
-    /**
-     * @var null|bool|string
-     */
+    /** @var null|bool|string */
     private $error;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $showParametrizeForm = true;
 
     /**

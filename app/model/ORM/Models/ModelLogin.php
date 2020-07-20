@@ -23,9 +23,7 @@ use Nette\Security\IIdentity;
  */
 class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonReferencedModel {
 
-    /**
-     * @var YearCalculator|null
-     */
+    /** @var YearCalculator|null */
     private $yearCalculator;
 
     /**
@@ -117,9 +115,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
         return $this->login_id;
     }
 
-    /**
-     * @var Grant[]   cache
-     */
+    /** @var Grant[]   cache */
     private $roles;
 
     /**

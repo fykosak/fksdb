@@ -22,19 +22,13 @@ use Nette\SmartObject;
 abstract class AggregatedPersonSource implements IHolderSource {
     use SmartObject;
 
-    /**
-     * @var TypedTableSelection
-     */
+    /** @var TypedTableSelection */
     private $events;
 
-    /**
-     * @var Container
-     */
+    /** @var Container */
     protected $container;
 
-    /**
-     * @var Holder[]
-     */
+    /** @var Holder[] */
     private $holders = null;
 
     /**

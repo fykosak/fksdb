@@ -17,9 +17,7 @@ use Nette\Application\AbortException;
  */
 class SeatingPresenter extends BasePresenter {
 
-    /**
-     * @var ServiceFyziklaniTeamPosition
-     */
+    /** @var ServiceFyziklaniTeamPosition */
     private $serviceFyziklaniTeamPosition;
 
     /**

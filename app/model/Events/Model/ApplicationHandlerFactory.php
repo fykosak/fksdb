@@ -15,14 +15,10 @@ use Nette\DI\Container;
  */
 class ApplicationHandlerFactory {
 
-    /**
-     * @var Connection
-     */
+    /** @var Connection */
     private $connection;
 
-    /**
-     * @var Container
-     */
+    /** @var Container */
     private $container;
     /** @var EventDispatchFactory */
     private $eventDispatchFactory;

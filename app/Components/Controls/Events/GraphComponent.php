@@ -14,12 +14,12 @@ use Nette\DI\Container;
  */
 class GraphComponent extends BaseComponent {
 
-    /**
-     * @var BaseMachine
-     */
+    /** @var BaseMachine */
     private $baseMachine;
+
     /** @var ExpressionPrinter */
     private $expressionPrinter;
+
     /** @var bool */
     private $attachedJS = false;
 

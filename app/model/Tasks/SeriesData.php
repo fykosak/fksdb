@@ -12,24 +12,16 @@ use FKSDB\ORM\Models\ModelTask;
  */
 class SeriesData {
 
-    /**
-     * @var ModelContest
-     */
+    /** @var ModelContest */
     private $contest;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $year;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $series;
 
-    /**
-     * @var \SimpleXMLElement
-     */
+    /** @var \SimpleXMLElement */
     private $data;
 
     /**

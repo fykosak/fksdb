@@ -16,14 +16,10 @@ use Nette\SmartObject;
 abstract class AbstractServiceMulti implements IService {
     use SmartObject;
 
-    /**
-     * @var AbstractServiceSingle
-     */
+    /** @var AbstractServiceSingle */
     protected $mainService;
 
-    /**
-     * @var AbstractServiceSingle
-     */
+    /** @var AbstractServiceSingle */
     protected $joinedService;
 
     /**

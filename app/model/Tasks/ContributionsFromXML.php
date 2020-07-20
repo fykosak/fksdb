@@ -17,27 +17,19 @@ use SimpleXMLElement;
  */
 class ContributionsFromXML extends Stage {
 
-    /**
-     * @var SeriesData
-     */
+    /** @var SeriesData */
     private $data;
 
-    /**
-     * @var array   contribution type => xml element
-     */
+    /** @var array   contribution type => xml element */
     private static $contributionFromXML = [
         'author' => 'authors/author',
         'solution' => 'solution-authors/solution-author',
     ];
 
-    /**
-     * @var ServiceTaskContribution
-     */
+    /** @var ServiceTaskContribution */
     private $taskContributionService;
 
-    /**
-     * @var ServiceOrg
-     */
+    /** @var ServiceOrg */
     private $serviceOrg;
 
     /**

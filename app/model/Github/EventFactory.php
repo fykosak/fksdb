@@ -18,9 +18,7 @@ class EventFactory {
 
     const HTTP_HEADER = 'X-GitHub-Event';
 
-    /**
-     * @var Repository[]
-     */
+    /** @var Repository[] */
     private $repositoryCache = [];
 
     public function createEvent(string $type, array $data): Event {

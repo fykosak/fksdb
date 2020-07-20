@@ -35,18 +35,12 @@ class ScheduleItemPresenter extends BasePresenter {
      * @persistent
      */
     public $groupId;
-    /**
-     * @var ModelScheduleGroup
-     */
+    /** @var ModelScheduleGroup */
     private $group;
-    /**
-     * @var ServiceScheduleItem
-     */
+    /** @var ServiceScheduleItem */
     private $serviceScheduleItem;
 
-    /**
-     * @var ServiceScheduleGroup
-     */
+    /** @var ServiceScheduleGroup */
     private $serviceScheduleGroup;
 
     /**

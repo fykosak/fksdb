@@ -38,34 +38,23 @@ use Tracy\Debugger;
  */
 class EventFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
     const CONT_EVENT = 'event';
-    /**
-     * @var ModelContest
-     */
+
+    /** @var ModelContest */
     protected $contest;
-    /**
-     * @var SingleReflectionFormFactory
-     */
+
+    /** @var SingleReflectionFormFactory */
     protected $singleReflectionFormFactory;
-    /**
-     * @var ServiceAuthToken
-     */
+
+    /** @var ServiceAuthToken */
     protected $serviceAuthToken;
-    /**
-     * @var ServiceEvent
-     */
+    /** @var ServiceEvent */
     protected $serviceEvent;
 
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     protected $model;
-    /**
-     * @var int
-     */
+    /** @var int */
     private $year;
-    /**
-     * @var EventDispatchFactory
-     */
+    /** @var EventDispatchFactory */
     private $eventDispatchFactory;
 
     /**
@@ -167,12 +156,7 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
         }, _('Parameters does not fulfill the Neon scheme'));
     }
 
-
-    /**
-     * @param Holder $holder
-     * @return Html
-     */
-    protected function createParamDescription(Holder $holder) {
+    protected function createParamDescription(Holder $holder): Html {
         $scheme = $holder->getPrimaryHolder()->getParamScheme();
         $result = Html::el('ul');
         foreach ($scheme as $key => $meta) {
@@ -219,11 +203,16 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
      * @throws BadTypeException
      */
     public function createEventContainer(): ModelContainer {
-        $container = new ModelContainer();
-        foreach (['event_type_id', 'event_year', 'name', 'begin', 'end', 'registration_begin', 'registration_end', 'report', 'parameters'] as $field) {
-            $control = $this->singleReflectionFormFactory->createField('event', $field, $this->contest);
-            $container->addComponent($control, $field);
-        }
-        return $container;
+        return $this->singleReflectionFormFactory->createContainer('event', [
+            'event_type_id',
+            'event_year',
+            'name',
+            'begin',
+            'end',
+            'registration_begin',
+            'registration_end',
+            'report',
+            'parameters',
+        ], $this->contest);
     }
 }

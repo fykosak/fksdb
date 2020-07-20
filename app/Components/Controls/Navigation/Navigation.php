@@ -20,22 +20,16 @@ use ReflectionMethod;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Navigation extends BaseComponent {
-    /**
-     * @var array[]
-     */
+    /** @var array[] */
     private $nodes = [];
-    /**
-     * @var array
-     */
+
+    /** @var array */
     private $nodeChildren = [];
 
-    /**
-     * @var PresenterBuilder
-     */
+    /** @var PresenterBuilder */
     private $presenterBuilder;
-    /**
-     * @var array
-     */
+
+    /** @var array */
     private $structure;
 
     /**
@@ -58,9 +52,7 @@ class Navigation extends BaseComponent {
 
     public function isActive(array $node): bool {
         if (isset($node['linkPresenter'])) {
-            /**
-             * @var BasePresenter $presenter
-             */
+            /** @var BasePresenter $presenter */
             $presenter = $this->getPresenter();
             try {
                 $this->createLink($presenter, $node);

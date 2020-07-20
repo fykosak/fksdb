@@ -28,34 +28,22 @@ use Persons\ReferencedPersonHandlerFactory;
 class ReferencedPersonFactory {
     use SmartObject;
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     protected $servicePerson;
 
-    /**
-     * @var PersonFactory
-     */
+    /** @var PersonFactory */
     protected $personFactory;
 
 
-    /**
-     * @var ReferencedPersonHandlerFactory
-     */
+    /** @var ReferencedPersonHandlerFactory */
     protected $referencedPersonHandlerFactory;
 
-    /**
-     * @var PersonProvider
-     */
+    /** @var PersonProvider */
     protected $personProvider;
 
-    /**
-     * @var PersonScheduleFactory
-     */
+    /** @var PersonScheduleFactory */
     private $personScheduleFactory;
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
     /** @var Container */
     private $context;

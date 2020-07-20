@@ -19,9 +19,7 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ItemsGrid extends BaseGrid {
-    /**
-     * @var ModelScheduleGroup
-     */
+    /** @var ModelScheduleGroup */
     private $group;
 
     /**

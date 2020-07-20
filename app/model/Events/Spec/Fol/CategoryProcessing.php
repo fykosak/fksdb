@@ -31,23 +31,15 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
     const ABROAD = 'F';
     const OPEN = 'O';
 
-    /**
-     * @var YearCalculator
-     */
+    /** @var YearCalculator */
     private $yearCalculator;
 
-    /**
-     * @var ServiceSchool
-     */
+    /** @var ServiceSchool */
     private $serviceSchool;
-    /**
-     * @var array
-     */
+    /** @var array */
     private $categoryNames;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $rulesVersion;
 
     /**

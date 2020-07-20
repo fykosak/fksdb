@@ -39,9 +39,7 @@ class SchoolFormComponent extends AbstractEntityFormComponent implements IEditEn
     /** @var AddressFactory */
     protected $addressFactory;
 
-    /**
-     * @var ModelSchool;
-     */
+    /** @var ModelSchool; */
     protected $model;
 
     /**

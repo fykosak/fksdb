@@ -20,14 +20,10 @@ class DuplicateFinder {
     const IDX_SCORE = 'score';
     const DIFFERENT_PATTERN = 'not-same';
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     private $servicePerson;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $parameters;
 
     /**

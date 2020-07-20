@@ -22,18 +22,14 @@ use Nette\Utils\DateTime;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ResultsAndStatistics extends FyziklaniReactControl {
-    /**
-     * @var ServiceFyziklaniTeam
-     */
+
+    /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
 
-    /**
-     * @var ServiceFyziklaniTask
-     */
+    /** @var ServiceFyziklaniTask */
     private $serviceFyziklaniTask;
-    /**
-     * @var ServiceFyziklaniSubmit
-     */
+
+    /** @var ServiceFyziklaniSubmit */
     private $serviceFyziklaniSubmit;
 
     /**

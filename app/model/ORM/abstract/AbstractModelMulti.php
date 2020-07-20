@@ -14,19 +14,13 @@ use Nette\SmartObject;
 abstract class AbstractModelMulti implements IModel {
     use SmartObject;
 
-    /**
-     * @var AbstractModelSingle
-     */
+    /** @var AbstractModelSingle */
     protected $mainModel;
 
-    /**
-     * @var AbstractModelSingle
-     */
+    /** @var AbstractModelSingle */
     protected $joinedModel;
 
-    /**
-     * @var AbstractServiceMulti
-     */
+    /** @var AbstractServiceMulti */
     protected $service;
 
     /**

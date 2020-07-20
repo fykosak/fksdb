@@ -38,9 +38,7 @@ class ModelPersonHistory extends AbstractModelSingle implements ISchoolReference
         return $result;
     }
 
-    /**
-     * @var string[][]
-     */
+    /** @var string[][] */
     private static $classProgress = [
         ['prima', 'sekunda', 'tercie', 'kvarta', 'kvinta', 'sexta', 'septima', 'oktáva'],
         ['I.', 'II.', 'III.', 'IV.', 'V.', 'VI.', 'VII.', 'VIII.'],

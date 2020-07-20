@@ -11,9 +11,7 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractDateTimeColumnFactory extends DefaultColumnFactory {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $format;
 
     /**

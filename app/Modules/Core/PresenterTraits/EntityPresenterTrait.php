@@ -23,9 +23,7 @@ use Nette\Security\IResource;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 trait EntityPresenterTrait {
-    /**
-     * @var AbstractModelSingle|IModel
-     */
+    /** @var AbstractModelSingle|IModel */
     protected $model;
     /**
      * @var int

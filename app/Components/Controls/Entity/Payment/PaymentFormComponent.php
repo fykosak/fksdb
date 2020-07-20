@@ -32,38 +32,29 @@ use Nette\Utils\JsonException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PaymentFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
-    /**
-     * @var PersonFactory
-     */
+
+    /** @var PersonFactory */
     private $personFactory;
-    /**
-     * @var PersonProvider
-     */
+
+    /** @var PersonProvider */
     private $personProvider;
-    /**
-     * @var ServicePersonSchedule
-     */
+
+    /** @var ServicePersonSchedule */
     private $servicePersonSchedule;
-    /**
-     * @var bool
-     */
+
+    /** @var bool */
     private $isOrg;
 
-    /**
-     * @var PaymentMachine
-     */
+    /** @var PaymentMachine */
     private $machine;
-    /**
-     * @var ModelPayment
-     */
+
+    /** @var ModelPayment */
     private $model;
-    /**
-     * @var ServicePayment
-     */
+
+    /** @var ServicePayment */
     private $servicePayment;
-    /**
-     * @var ServiceSchedulePayment
-     */
+
+    /** @var ServiceSchedulePayment */
     private $serviceSchedulePayment;
 
     /**
@@ -124,9 +115,7 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
      */
     public function render() {
         if ($this->create) {
-            /**
-             * @var ModelLogin $login
-             */
+            /** @var ModelLogin $login */
             $login = $this->getPresenter()->getUser()->getIdentity();
             $this->getForm()->setDefaults([
                 'person_id' => $login->getPerson()->person_id,

@@ -20,24 +20,16 @@ class StudyYearsFromXML extends Stage {
 
     const XML_ELEMENT_CHILD = 'study-year';
 
-    /**
-     * @var SeriesData
-     */
+    /** @var SeriesData */
     private $data;
 
-    /**
-     * @var array   contribution type => xml element
-     */
+    /** @var array   contribution type => xml element */
     private $defaultStudyYears;
 
-    /**
-     * @var ServiceTaskStudyYear
-     */
+    /** @var ServiceTaskStudyYear */
     private $serviceTaskStudyYear;
 
-    /**
-     * @var ServiceStudyYear
-     */
+    /** @var ServiceStudyYear */
     private $serviceStudyYear;
 
     /**

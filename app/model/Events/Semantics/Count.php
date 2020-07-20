@@ -14,9 +14,7 @@ class Count {
     use SmartObject;
     use WithEventTrait;
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $state;
 
     /**

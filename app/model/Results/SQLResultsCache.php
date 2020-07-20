@@ -16,14 +16,10 @@ use Nette\InvalidArgumentException;
  */
 class SQLResultsCache {
 
-    /**
-     * @var Connection
-     */
+    /** @var Connection */
     private $connection;
 
-    /**
-     * @var ServiceTask
-     */
+    /** @var ServiceTask */
     private $serviceTask;
 
     /**

@@ -16,19 +16,13 @@ class Authentication {
     const PARAM_GSID = 'gsid';
     const FLAG_SSO_LOGIN = 'sso';
 
-    /**
-     * @var IGlobalSession
-     */
+    /** @var IGlobalSession */
     private $globalSession;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $loginURL;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $logoutURL;
 
     /**

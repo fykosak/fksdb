@@ -18,9 +18,7 @@ use NiftyGrid\DuplicateColumnException;
  */
 class TeamSubmitsGrid extends SubmitsGrid {
 
-    /**
-     * @var ModelFyziklaniTeam
-     */
+    /** @var ModelFyziklaniTeam */
     private $team;
 
     /**

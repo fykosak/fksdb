@@ -13,14 +13,10 @@ use Nette\Database\Connection;
  */
 class StatsModelFactory {
 
-    /**
-     * @var Connection
-     */
+    /** @var Connection */
     private $connection;
 
-    /**
-     * @var ServiceTask
-     */
+    /** @var ServiceTask */
     private $serviceTask;
 
     /**

@@ -16,9 +16,7 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PaymentColumnFactory extends AbstractColumnFactory {
-    /**
-     * @var TableReflectionFactory
-     */
+    /** @var TableReflectionFactory */
     private $reflectionFactory;
 
     /**

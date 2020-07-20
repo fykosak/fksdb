@@ -29,14 +29,10 @@ class SubmitsGrid extends BaseGrid {
     /** @var ServiceSubmit */
     private $serviceSubmit;
 
-    /**
-     * @var ModelContestant
-     */
+    /** @var ModelContestant */
     private $contestant;
 
-    /**
-     * @var SubmitHandlerFactory
-     */
+    /** @var SubmitHandlerFactory */
     private $submitHandlerFactory;
 
     /**

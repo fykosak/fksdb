@@ -12,9 +12,7 @@ use FKSDB\DataTesting\DataTestingFactory;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class Validation extends AbstractStalkingComponent {
-    /**
-     * @var DataTestingFactory
-     */
+    /** @var DataTestingFactory */
     private $validationFactory;
 
     /**

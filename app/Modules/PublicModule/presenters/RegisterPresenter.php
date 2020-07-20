@@ -69,28 +69,18 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      */
     public $personId;
 
-    /**
-     * @var ModelPerson
-     */
+    /** @var ModelPerson */
     private $person;
 
-    /**
-     * @var ServiceContestant
-     */
+    /** @var ServiceContestant */
     private $serviceContestant;
 
-    /**
-     * @var ReferencedPersonFactory
-     */
+    /** @var ReferencedPersonFactory */
     private $referencedPersonFactory;
 
-    /**
-     * @var ExtendedPersonHandlerFactory
-     */
+    /** @var ExtendedPersonHandlerFactory */
     private $handlerFactory;
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     protected $servicePerson;
 
     /**

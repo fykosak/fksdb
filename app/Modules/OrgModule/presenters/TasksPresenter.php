@@ -31,19 +31,13 @@ class TasksPresenter extends BasePresenter {
     const SOURCE_ASTRID = 'astrid';
     const SOURCE_FILE = 'file';
 
-    /**
-     * @var SeriesCalculator
-     */
+    /** @var SeriesCalculator */
     private $seriesCalculator;
 
-    /**
-     * @var PipelineFactory
-     */
+    /** @var PipelineFactory */
     private $pipelineFactory;
 
-    /**
-     * @var Downloader
-     */
+    /** @var Downloader */
     private $downloader;
 
     /**

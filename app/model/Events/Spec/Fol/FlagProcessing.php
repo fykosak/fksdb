@@ -20,14 +20,10 @@ use Nette\Utils\ArrayHash;
  */
 class FlagProcessing extends AbstractProcessing {
 
-    /**
-     * @var YearCalculator
-     */
+    /** @var YearCalculator */
     private $yearCalculator;
 
-    /**
-     * @var ServiceSchool
-     */
+    /** @var ServiceSchool */
     private $serviceSchool;
 
     /**

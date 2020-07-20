@@ -21,13 +21,9 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonsGrid extends BaseGrid {
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     private $servicePerson;
-    /**
-     * @var DataTestingFactory
-     */
+    /** @var DataTestingFactory */
     private $dataTestingFactory;
 
     /**

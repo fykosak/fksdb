@@ -16,9 +16,7 @@ use Nette\SmartObject;
 final class TableReflectionFactory {
     use SmartObject;
 
-    /**
-     * @var Container
-     */
+    /** @var Container */
     private $container;
 
     /**

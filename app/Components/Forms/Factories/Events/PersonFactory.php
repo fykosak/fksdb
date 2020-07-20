@@ -28,55 +28,33 @@ class PersonFactory extends AbstractFactory {
 
     const VALUE_LOGIN = 'fromLogin';
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $fieldsDefinition;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $searchType;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $allowClear;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $modifiable;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $visible;
 
-    /**
-     * @var ReferencedPersonFactory
-     */
+    /** @var ReferencedPersonFactory */
     private $referencedPersonFactory;
 
-    /**
-     * @var SelfResolver
-     */
+    /** @var SelfResolver */
     private $selfResolver;
 
-    /**
-     * @var ExpressionEvaluator
-     */
+    /** @var ExpressionEvaluator */
     private $evaluator;
 
-    /**
-     * @var User
-     */
+    /** @var User */
     private $user;
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     private $servicePerson;
 
-    /**
-     * @var DIContainer
-     */
+    /** @var DIContainer */
     private $container;
 
     /**

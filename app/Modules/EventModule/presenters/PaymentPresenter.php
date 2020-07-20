@@ -27,14 +27,10 @@ use Nette\Security\IResource;
 class PaymentPresenter extends BasePresenter {
     use EventEntityPresenterTrait;
 
-    /**
-     * @var Machine
-     */
+    /** @var Machine */
     private $machine;
 
-    /**
-     * @var ServicePayment
-     */
+    /** @var ServicePayment */
     private $servicePayment;
 
     /**

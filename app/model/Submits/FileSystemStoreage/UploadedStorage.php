@@ -33,14 +33,10 @@ class UploadedStorage implements ISubmitStorage {
      */
     const FINAL_EXT = '.pdf';
 
-    /**
-     * @var null
-     */
+    /** @var null */
     private $todo = null;
 
-    /**
-     * @var string  Absolute path to (existing) directory of the storage.
-     */
+    /** @var string  Absolute path to (existing) directory of the storage. */
     private $root;
 
     /**
@@ -57,14 +53,10 @@ class UploadedStorage implements ISubmitStorage {
      */
     private $filenameMask;
 
-    /**
-     * @var array   contestId => contest name
-     */
+    /** @var array   contestId => contest name */
     private $contestMap;
 
-    /**
-     * @var IStorageProcessing[]
-     */
+    /** @var IStorageProcessing[] */
     private $processings = [];
 
     /**

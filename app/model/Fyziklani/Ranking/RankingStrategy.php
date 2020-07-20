@@ -22,13 +22,9 @@ class RankingStrategy {
      */
     protected $presenter;
 
-    /**
-     * @var ServiceFyziklaniTeam
-     */
+    /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
 
     /**

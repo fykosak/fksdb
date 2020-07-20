@@ -16,15 +16,16 @@ class StoredQueryTagCloud extends BaseComponent {
     const MODE_LIST = 'mode-list';
     const MODE_DETAIL = 'mode-detail';
 
-    /**
-     * @var ServiceStoredQueryTagType
-     */
+    /** @var ServiceStoredQueryTagType */
     private $serviceStoredQueryTagType;
 
     /** @var string */
     private $mode;
 
-    /** @persistent */
+    /**
+     * @persistent
+     * @var array
+     */
     public $activeTagIds = [];
 
     /**

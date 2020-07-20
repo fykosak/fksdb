@@ -23,9 +23,7 @@ class Captcha implements IFormAdjustment {
 
     const CONTROL_NAME = 'c_a_p_t_cha';
 
-    /**
-     * @var User
-     */
+    /** @var User */
     private $user;
 
     /**

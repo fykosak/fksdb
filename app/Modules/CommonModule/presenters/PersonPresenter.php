@@ -51,33 +51,21 @@ class PersonPresenter extends BasePresenter {
     use EntityPresenterTrait;
 
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     private $servicePerson;
 
-    /**
-     * @var ServicePersonInfo
-     */
+    /** @var ServicePersonInfo */
     private $servicePersonInfo;
 
-    /**
-     * @var Merger
-     */
+    /** @var Merger */
     private $personMerger;
-    /**
-     * @var ModelPerson
-     */
+    /** @var ModelPerson */
     private $trunkPerson;
 
-    /**
-     * @var ModelPerson
-     */
+    /** @var ModelPerson */
     private $mergedPerson;
 
-    /**
-     * @var PersonFactory
-     */
+    /** @var PersonFactory */
     private $personFactory;
 
 

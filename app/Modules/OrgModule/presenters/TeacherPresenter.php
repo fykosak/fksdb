@@ -21,9 +21,7 @@ use Nette\Security\IResource;
 class TeacherPresenter extends BasePresenter {
     use EntityPresenterTrait;
 
-    /**
-     * @var ServiceTeacher
-     */
+    /** @var ServiceTeacher */
     private $serviceTeacher;
 
     /**

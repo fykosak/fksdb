@@ -31,22 +31,16 @@ class TeacherFormComponent extends AbstractEntityFormComponent implements IEditE
 
     const CONTAINER = 'teacher';
 
-    /**
-     * @var SchoolFactory
-     */
+    /** @var SchoolFactory */
     protected $schoolFactory;
-    /**
-     * @var SingleReflectionFormFactory
-     */
+
+    /** @var SingleReflectionFormFactory */
     private $singleReflectionFormFactory;
-    /**
-     * @var ServiceTeacher
-     */
+
+    /** @var ServiceTeacher */
     protected $serviceTeacher;
 
-    /**
-     * @var ModelTeacher
-     */
+    /** @var ModelTeacher */
     private $model;
 
     /**

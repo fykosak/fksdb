@@ -18,14 +18,10 @@ use Persons\Deduplication\Merger;
  */
 class DeduplicatePresenter extends BasePresenter {
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     private $servicePerson;
 
-    /**
-     * @var Merger
-     */
+    /** @var Merger */
     private $merger;
 
     /**

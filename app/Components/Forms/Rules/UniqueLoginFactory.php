@@ -12,9 +12,7 @@ use FKSDB\ORM\Services\ServiceLogin;
  */
 class UniqueLoginFactory {
 
-    /**
-     * @var ServiceLogin
-     */
+    /** @var ServiceLogin */
     private $serviceLogin;
 
     /**

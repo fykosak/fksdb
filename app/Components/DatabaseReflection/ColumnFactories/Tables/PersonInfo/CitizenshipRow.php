@@ -18,9 +18,7 @@ use Nette\Utils\Html;
  */
 class CitizenshipRow extends AbstractColumnFactory {
 
-    /**
-     * @var ServiceRegion
-     */
+    /** @var ServiceRegion */
     private $serviceRegion;
 
     /**

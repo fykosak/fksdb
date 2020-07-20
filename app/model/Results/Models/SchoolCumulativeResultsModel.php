@@ -18,9 +18,7 @@ use Nette\NotSupportedException;
  */
 class SchoolCumulativeResultsModel extends AbstractResultsModel {
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $series;
 
     /**

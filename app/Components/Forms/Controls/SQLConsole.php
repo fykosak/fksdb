@@ -15,6 +15,10 @@ use Nette\Utils\Html;
 class SQLConsole extends TextArea {
 
     const CSS_CLASS = 'sqlConsole';
+    /** @var bool */
+    private $attachedJS = false;
+    /** @var bool */
+    private $attachedCSS = false;
 
     /**
      * SQLConsole constructor.
@@ -36,15 +40,6 @@ class SQLConsole extends TextArea {
             }
         });
     }
-
-    /**
-     * @var bool
-     */
-    private $attachedJS = false;
-    /**
-     * @var bool
-     */
-    private $attachedCSS = false;
 
     /**
      * @return Html

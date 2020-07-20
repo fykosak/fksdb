@@ -21,9 +21,7 @@ use Nette\Forms\ControlGroup;
  */
 class StoredQueryFactory {
 
-    /**
-     * @var ServiceStoredQueryTagType
-     */
+    /** @var ServiceStoredQueryTagType */
     private $serviceStoredQueryTagType;
 
     /**

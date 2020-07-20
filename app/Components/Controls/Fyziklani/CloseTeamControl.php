@@ -18,17 +18,13 @@ use Nette\DI\Container;
  */
 class CloseTeamControl extends BaseComponent {
 
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
-    /**
-     * @var ModelFyziklaniTeam
-     */
+
+    /** @var ModelFyziklaniTeam */
     private $team;
-    /**
-     * @var ServiceFyziklaniTask
-     */
+
+    /** @var ServiceFyziklaniTask */
     private $serviceFyziklaniTask;
 
     /**
@@ -58,8 +54,8 @@ class CloseTeamControl extends BaseComponent {
     }
 
     /**
-     * @throws AbortException
      * @return void
+     * @throws AbortException
      */
     public function handleClose() {
         $connection = $this->serviceFyziklaniTask->getConnection();
@@ -74,8 +70,8 @@ class CloseTeamControl extends BaseComponent {
     }
 
     /**
-     * @throws NotSetGameParametersException
      * @return void
+     * @throws NotSetGameParametersException
      */
     public function render() {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'CloseTeamControl.latte');

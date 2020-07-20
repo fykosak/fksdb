@@ -19,18 +19,14 @@ use Nette\Utils\JsonException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
-    /**
-     * @var ServiceEventParticipant
-     */
+
+    /** @var ServiceEventParticipant */
     private $serviceEventParticipant;
 
-    /**
-     * @var ModelEventType
-     */
+    /** @var ModelEventType */
     private $eventType;
-    /**
-     * @var ServiceEvent
-     */
+
+    /** @var ServiceEvent */
     private $serviceEvent;
 
     /**
@@ -63,9 +59,7 @@ class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
             'participants' => [],
             'events' => [],
         ];
-        /**
-         * @var ModelEvent $event
-         */
+        /** @var ModelEvent $event */
         foreach ($this->serviceEvent->getEventsByType($this->eventType) as $event) {
             $participants = [];
             $query = $this->serviceEventParticipant->findPossiblyAttending($event);

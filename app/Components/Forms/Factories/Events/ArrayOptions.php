@@ -14,9 +14,7 @@ class ArrayOptions implements IOptionsProvider {
 
     use SmartObject;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $options;
 
     /**

@@ -26,69 +26,43 @@ class BaseHolder {
     const STATE_COLUMN = 'status';
     const EVENT_COLUMN = 'event_id';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $name;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $label;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $description;
 
-    /**
-     * @var IService
-     */
+    /** @var IService */
     private $service;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $joinOn;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $joinTo;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $personIds;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $eventId;
 
-    /**
-     * @var Holder
-     */
+    /** @var Holder */
     private $holder;
 
-    /**
-     * @var bool|callable
-     */
+    /** @var bool|callable */
     private $modifiable;
 
-    /**
-     * @var bool|callable
-     */
+    /** @var bool|callable */
     private $visible;
 
-    /**
-     * @var Field[]
-     */
+    /** @var Field[] */
     private $fields = [];
 
-    /**
-     * @var IModel
-     */
+    /** @var IModel */
     private $model;
 
     /**
@@ -98,29 +72,19 @@ class BaseHolder {
      */
     private $eventRelation;
 
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $paramScheme;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $parameters;
 
-    /**
-     * @var ExpressionEvaluator
-     */
+    /** @var ExpressionEvaluator */
     private $evaluator;
 
-    /**
-     * @var DataValidator
-     */
+    /** @var DataValidator */
     private $validator;
 
     /**

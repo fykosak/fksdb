@@ -20,25 +20,19 @@ use Nette\Utils\Html;
  */
 trait WriteOnlyTrait {
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $writeOnly = true;
-    /**
-     * @var bool
-     */
+
+    /** @var bool */
     private $actuallyDisabled = false;
-    /**
-     * @var bool
-     */
+
+    /** @var bool */
     private $hasManualValue = false;
-    /**
-     * @var bool
-     */
+
+    /** @var bool */
     private $writeOnlyAttachedOnValidate = false;
-    /**
-     * @var bool
-     */
+
+    /** @var bool */
     private $writeOnlyAttachedJS = false;
 
     private function writeOnlyAppendMonitors() {

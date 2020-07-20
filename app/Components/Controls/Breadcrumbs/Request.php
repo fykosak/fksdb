@@ -13,28 +13,19 @@ use Nette\Application\Request as AppRequest;
  */
 class Request {
 
-    /**
-     * @var null|int
-     */
+    /** @var null|int */
     public $user;
 
-    /**
-     * @var AppRequest
-     */
+    /** @var AppRequest */
     public $request;
 
-    /**
-     * @var PageTitle
-     */
+    /** @var PageTitle */
     public $title;
-    /**
-     * @var string backling ID
-     */
+
+    /** @var string backling ID */
     public $parent;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $pathKey;
 
     /**

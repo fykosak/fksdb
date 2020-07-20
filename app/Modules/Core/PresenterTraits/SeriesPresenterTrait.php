@@ -21,9 +21,7 @@ trait SeriesPresenterTrait {
      */
     public $series;
 
-    /**
-     * @var SeriesCalculator
-     */
+    /** @var SeriesCalculator */
     protected $seriesCalculator;
 
     /**

@@ -19,14 +19,10 @@ class TokenAuthenticator extends AbstractAuthenticator {
     const PARAM_AUTH_TOKEN = 'at';
     const SESSION_NS = 'auth';
 
-    /**
-     * @var ServiceAuthToken
-     */
+    /** @var ServiceAuthToken */
     private $authTokenService;
 
-    /**
-     * @var Session
-     */
+    /** @var Session */
     private $session;
 
     /**

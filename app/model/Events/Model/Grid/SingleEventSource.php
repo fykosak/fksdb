@@ -27,19 +27,13 @@ use Nette\SmartObject;
 class SingleEventSource implements IHolderSource {
     use SmartObject;
 
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
 
-    /**
-     * @var Container
-     */
+    /** @var Container */
     private $container;
 
-    /**
-     * @var IModel[]
-     */
+    /** @var IModel[] */
     private $primaryModels = null;
 
     /**
@@ -48,14 +42,10 @@ class SingleEventSource implements IHolderSource {
      */
     private $secondaryModels = null;
 
-    /**
-     * @var TypedTableSelection
-     */
+    /** @var TypedTableSelection */
     private $primarySelection;
 
-    /**
-     * @var Holder
-     */
+    /** @var Holder */
     private $dummyHolder;
 
     /**
