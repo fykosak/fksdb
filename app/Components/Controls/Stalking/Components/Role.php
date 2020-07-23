@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
-use Authorization\Grant;
-use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
+use FKSDB\Authorization\Grant;
+use FKSDB\DBReflection\FieldLevelPermission;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelGrant;
 use FKSDB\ORM\Models\ModelPerson;

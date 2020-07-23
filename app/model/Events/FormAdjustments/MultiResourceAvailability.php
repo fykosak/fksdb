@@ -159,7 +159,6 @@ class MultiResourceAvailability extends AbstractAdjustment {
             }
         }
 
-
         foreach ($controls as $control) {
             $newItems = [];
             $items = $control->getItems();

@@ -24,7 +24,7 @@ use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use SoapFault;
 use Tracy\Debugger;
-use WebService\IXMLNodeSerializer;
+use FKSDB\WebService\IXMLNodeSerializer;
 
 /**
  * Description of FKSDB\Results\ResultsModelFactory

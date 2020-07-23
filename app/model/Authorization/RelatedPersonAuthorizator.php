@@ -1,6 +1,6 @@
 <?php
 
-namespace Authorization;
+namespace FKSDB\Authorization;
 
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\Holder\Holder;

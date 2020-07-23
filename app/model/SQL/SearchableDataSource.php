@@ -1,6 +1,6 @@
 <?php
 
-namespace SQL;
+namespace FKSDB\SQL;
 
 use NiftyGrid\DataSource\NDataSource;
 

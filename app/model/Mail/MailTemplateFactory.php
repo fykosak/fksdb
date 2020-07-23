@@ -1,6 +1,6 @@
 <?php
 
-namespace Mail;
+namespace FKSDB\Mail;
 
 use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\BasePresenter;

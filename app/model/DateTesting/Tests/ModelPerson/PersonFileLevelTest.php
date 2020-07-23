@@ -2,8 +2,8 @@
 
 namespace FKSDB\DataTesting\Tests\Person;
 
-use FKSDB\Components\DatabaseReflection\ColumnFactories\ITestedColumnFactory;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\DBReflection\ColumnFactories\ITestedColumnFactory;
+use FKSDB\DBReflection\DBReflectionFactory;
 use FKSDB\Exceptions\BadTypeException;
 
 /**
@@ -15,16 +15,16 @@ abstract class PersonFileLevelTest extends PersonTest {
     private $rowFactory;
     /** @var string */
     private $fieldName;
-    /** @var TableReflectionFactory */
+    /** @var DBReflectionFactory */
     private $tableReflectionFactory;
 
     /**
      * PersonFileLevelTest constructor.
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param DBReflectionFactory $tableReflectionFactory
      * @param string $fieldName
      * @throws BadTypeException
      */
-    public function __construct(TableReflectionFactory $tableReflectionFactory, string $fieldName) {
+    public function __construct(DBReflectionFactory $tableReflectionFactory, string $fieldName) {
         $this->fieldName = $fieldName;
         $this->tableReflectionFactory = $tableReflectionFactory;
         parent::__construct(str_replace('.', '__', $fieldName), $this->getRowFactory()->getTitle());

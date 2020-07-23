@@ -2,11 +2,11 @@
 
 namespace FKSDB\Modules\Core;
 
-use Authentication\GithubAuthenticator;
-use Authentication\PasswordAuthenticator;
-use Authentication\TokenAuthenticator;
-use Authorization\ContestAuthorizator;
-use Authorization\EventAuthorizator;
+use FKSDB\Authentication\GithubAuthenticator;
+use FKSDB\Authentication\PasswordAuthenticator;
+use FKSDB\Authentication\TokenAuthenticator;
+use FKSDB\Authorization\ContestAuthorizator;
+use FKSDB\Authorization\EventAuthorizator;
 use Exception;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use FKSDB\ORM\Models\ModelAuthToken;

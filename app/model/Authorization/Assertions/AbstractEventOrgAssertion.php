@@ -1,6 +1,6 @@
 <?php
 
-namespace Authorization\Assertions;
+namespace FKSDB\Authorization\Assertions;
 
 use FKSDB\StoredQuery\StoredQuery;
 use FKSDB\ORM\DbNames;

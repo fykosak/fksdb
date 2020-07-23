@@ -2,7 +2,7 @@
 
 namespace FKSDB\WebService;
 
-use Authorization\ContestAuthorizator;
+use FKSDB\Authorization\ContestAuthorizator;
 use DOMDocument;
 use DOMElement;
 use FKSDB\StoredQuery\StoredQuery;
@@ -21,7 +21,7 @@ use SoapFault;
 use SoapVar;
 use FKSDB\Stats\StatsModelFactory;
 use stdClass;
-use WebService\IXMLNodeSerializer;
+use FKSDB\WebService\IXMLNodeSerializer;
 
 /**
  * Web service provider for fksdb.wdsl
@@ -100,7 +100,7 @@ class WebServiceModel {
     }
 
     /**
-     * @param mixed $args
+     * @param stdClass $args
      * @return SoapVar
      * @throws BadRequestException
      * @throws SoapFault

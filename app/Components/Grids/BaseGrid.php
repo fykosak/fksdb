@@ -3,8 +3,8 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\DBReflection\FieldLevelPermission;
+use FKSDB\DBReflection\DBReflectionFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\AbstractModelSingle;
@@ -29,7 +29,7 @@ use NiftyGrid\Grid;
 use NiftyGrid\GridException;
 use NiftyGrid\GridPaginator;
 use PePa\CSVResponse;
-use SQL\SearchableDataSource;
+use FKSDB\SQL\SearchableDataSource;
 
 /**
  *
@@ -38,7 +38,7 @@ use SQL\SearchableDataSource;
 abstract class BaseGrid extends Grid {
     /** @persistent string */
     public $searchTerm;
-    /** @var TableReflectionFactory */
+    /** @var DBReflectionFactory */
     protected $tableReflectionFactory;
     /** @var Container */
     private $container;
@@ -54,10 +54,10 @@ abstract class BaseGrid extends Grid {
     }
 
     /**
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param DBReflectionFactory $tableReflectionFactory
      * @return void
      */
-    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
+    public function injectTableReflectionFactory(DBReflectionFactory $tableReflectionFactory) {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
@@ -218,7 +218,7 @@ abstract class BaseGrid extends Grid {
             if (!$model instanceof AbstractModelSingle) {
                 $model = $this->getModelClassName()::createFromActiveRow($model);
             }
-            return $factory->renderValue($model, $userPermission);
+            return $factory->render($model, $userPermission);
         })->setSortable(false);
     }
 
@@ -233,7 +233,7 @@ abstract class BaseGrid extends Grid {
         $factory = $this->tableReflectionFactory->loadColumnFactory($factoryName);
         return $this->addColumn(str_replace('.', '__', $factoryName), $factory->getTitle())->setRenderer(function ($row) use ($factory, $accessCallback) {
             $model = $accessCallback($row);
-            return $factory->renderValue($model, 1);
+            return $factory->render($model, 1);
         });
     }
 

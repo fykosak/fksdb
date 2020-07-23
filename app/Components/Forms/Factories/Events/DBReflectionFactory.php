@@ -5,7 +5,7 @@ namespace FKSDB\Components\Forms\Factories\Events;
 use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\Holder\Field;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\DBReflection\DBReflectionFactory as ReflectionFactory;
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\AbstractServiceSingle;
 use Nette\ComponentModel\Component;
@@ -31,15 +31,15 @@ class DBReflectionFactory extends AbstractFactory {
 
     /** @var array tableName => columnName[] */
     private $columns = [];
-    /** @var TableReflectionFactory */
+    /** @var ReflectionFactory */
     private $tableReflectionFactory;
 
     /**
      * DBReflectionFactory constructor.
      * @param Connection $connection
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param ReflectionFactory $tableReflectionFactory
      */
-    public function __construct(Connection $connection, TableReflectionFactory $tableReflectionFactory) {
+    public function __construct(Connection $connection, ReflectionFactory $tableReflectionFactory) {
         $this->connection = $connection;
         $this->tableReflectionFactory = $tableReflectionFactory;
     }

@@ -1,9 +1,9 @@
 <?php
 
-namespace Authorization;
+namespace FKSDB\Authorization;
 
-use Authorization\Assertions\QIDAssertion;
-use Authorization\Assertions\StoredQueryTagAssertion;
+use FKSDB\Authorization\Assertions\QIDAssertion;
+use FKSDB\Authorization\Assertions\StoredQueryTagAssertion;
 use FKSDB\Config\Expressions\Helpers;
 use Nette\DI\CompilerExtension;
 use Nette\Security\Permission;

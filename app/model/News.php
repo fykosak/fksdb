@@ -1,5 +1,7 @@
 <?php
 
+namespace FKSDB\News;
+
 use FKSDB\ORM\Models\ModelContest;
 use Nette\DI\Container;
 use Nette\SmartObject;

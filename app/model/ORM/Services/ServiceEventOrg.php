@@ -2,7 +2,7 @@
 
 namespace FKSDB\ORM\Services;
 
-use DuplicateOrgException;
+use FKSDB\ORM\Services\Exception\DuplicateOrgException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyDBTrait;

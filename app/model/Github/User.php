@@ -1,6 +1,6 @@
 <?php
 
-namespace Github;
+namespace FKSDB\Github;
 
 use Nette\SmartObject;
 

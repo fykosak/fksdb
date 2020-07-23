@@ -11,7 +11,7 @@ use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use Persons\Deduplication\DuplicateFinder;
+use FKSDB\Persons\Deduplication\DuplicateFinder;
 
 /**
  *

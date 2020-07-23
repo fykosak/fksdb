@@ -10,7 +10,7 @@ use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\IControl;
-use Persons\ReferencedPersonHandler;
+use FKSDB\Persons\ReferencedPersonHandler;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

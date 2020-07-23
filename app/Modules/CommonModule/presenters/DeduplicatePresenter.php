@@ -8,8 +8,8 @@ use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Table\ActiveRow;
-use Persons\Deduplication\DuplicateFinder;
-use Persons\Deduplication\Merger;
+use FKSDB\Persons\Deduplication\DuplicateFinder;
+use FKSDB\Persons\Deduplication\Merger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

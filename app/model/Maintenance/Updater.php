@@ -1,6 +1,6 @@
 <?php
 
-namespace Maintenance;
+namespace FKSDB\Maintenance;
 
 use Nette\DI\Container;
 use Nette\SmartObject;

@@ -6,9 +6,9 @@ use FKSDB\Components\Controls\Badges\ContestBadge;
 use FKSDB\Components\Controls\Badges\NoRecordsBadge;
 use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Components\DatabaseReflection\LinkPrinterComponent;
-use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\Components\Controls\DBReflection\LinkPrinterComponent;
+use FKSDB\Components\Controls\DBReflection\ValuePrinterComponent;
+use FKSDB\DBReflection\DBReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
 
 /**
@@ -17,14 +17,14 @@ use FKSDB\ORM\Models\ModelPerson;
  */
 abstract class StalkingControl extends BaseComponent {
 
-    /** @var TableReflectionFactory */
+    /** @var DBReflectionFactory */
     protected $tableReflectionFactory;
 
     /**
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param DBReflectionFactory $tableReflectionFactory
      * @return void
      */
-    public function injectPrimary(TableReflectionFactory $tableReflectionFactory) {
+    public function injectPrimary(DBReflectionFactory $tableReflectionFactory) {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 

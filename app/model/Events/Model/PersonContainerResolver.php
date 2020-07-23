@@ -5,10 +5,10 @@ namespace FKSDB\Events\Model;
 use FKSDB\Events\Model\Holder\Field;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\SmartObject;
-use Persons\IModifiabilityResolver;
-use Persons\IVisibilityResolver;
-use Persons\ReferencedPersonHandler;
-use Persons\SelfResolver;
+use FKSDB\Persons\IModifiabilityResolver;
+use FKSDB\Persons\IVisibilityResolver;
+use FKSDB\Persons\ReferencedPersonHandler;
+use FKSDB\Persons\SelfResolver;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

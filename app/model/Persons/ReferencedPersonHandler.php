@@ -1,8 +1,7 @@
 <?php
 
-namespace Persons;
+namespace FKSDB\Persons;
 
-use FKSDB\Components\Controls\Entity\Person\PersonForm;
 use FKSDB\Components\Controls\Entity\Person\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\IReferencedHandler;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;

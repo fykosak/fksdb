@@ -1,6 +1,6 @@
 <?php
 
-namespace Mail;
+namespace FKSDB\Mail;
 
 use Nette\Mail\Message;
 use RuntimeException;

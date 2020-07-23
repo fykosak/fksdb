@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons;
+namespace FKSDB\Persons;
 
 use FKSDB\Authentication\AccountManager;
 use FKSDB\Localization\UnsupportedLanguageException;
@@ -16,7 +16,7 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\Utils\FormUtils;
-use Mail\SendFailedException;
+use FKSDB\Mail\SendFailedException;
 use FKSDB\Exceptions\ModelException;
 use Nette\Database\Connection;
 use Nette\Forms\Form;

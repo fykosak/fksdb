@@ -1,12 +1,12 @@
 <?php
 
-namespace Authentication;
+namespace FKSDB\Authentication;
 
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\YearCalculator;
-use FullHttpRequest;
-use Github\Events\Event;
+use FKSDB\FullHttpRequest;
+use FKSDB\Github\Events\Event;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\Security\AuthenticationException;

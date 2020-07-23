@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\PublicModule;
 
-use Authorization\RelatedPersonAuthorizator;
+use FKSDB\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;

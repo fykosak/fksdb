@@ -1,6 +1,6 @@
 <?php
 
-namespace Authentication;
+namespace FKSDB\Authentication;
 
 use FKSDB\Authentication\AccountManager;
 use FKSDB\ORM\AbstractModelSingle;

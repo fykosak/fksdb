@@ -1,6 +1,6 @@
 <?php
 
-namespace Exports\Processings;
+namespace FKSDB\Exports\Processings;
 
 use FKSDB\StoredQuery\StoredQueryPostProcessing;
 use FKSDB\ORM\Services\ServiceTask;

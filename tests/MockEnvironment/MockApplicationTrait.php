@@ -2,10 +2,10 @@
 
 namespace MockEnvironment;
 
-use Authentication\LoginUserStorage;
+use FKSDB\Authentication\LoginUserStorage;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
-use Mail\MailTemplateFactory;
+use FKSDB\Mail\MailTemplateFactory;
 use Nette\Application\IPresenter;
 use Nette\Application\IPresenterFactory;
 use Nette\DI\Container;

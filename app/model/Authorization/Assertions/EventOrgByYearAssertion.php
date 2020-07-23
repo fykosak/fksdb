@@ -1,6 +1,6 @@
 <?php
 
-namespace Authorization\Assertions;
+namespace FKSDB\Authorization\Assertions;
 
 use Nette\Database\Context;
 use Nette\Security\IUserStorage;

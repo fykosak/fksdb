@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons;
+namespace FKSDB\Persons;
 
 use FKSDB\Components\Forms\Controls\Schedule\Handler;
 use FKSDB\ORM\Models\ModelEvent;

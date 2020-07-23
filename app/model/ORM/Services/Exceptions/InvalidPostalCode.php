@@ -1,5 +1,8 @@
 <?php
 
+namespace FKSDB\ORM\Services\Exception;
+use InvalidArgumentException;
+
 /**
  * Class InvalidPostalCode
  */
