@@ -4,6 +4,7 @@ namespace FKSDB\Tests\PresentersTests\EventModule;
 
 $container = require '../../bootstrap.php';
 
+use FKSDB\Components\Controls\Entity\Event\EventFormComponent;
 use FKSDB\Components\Controls\Entity\EventOrg\EventOrgFormComponent;
 use FKSDB\ORM\DbNames;
 use FKSDB\Tests\PresentersTests\EntityPresenterTestCase;
@@ -55,9 +56,11 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
     public function testCreate() {
         $init = $this->countEventOrgs();
         $response = $this->createFormRequest('create', [
-            'person_id__meta' => 'JS',
-            'person_id' => $this->personId,
-            'note' => 'note-c',
+            EventOrgFormComponent::CONTAINER => [
+                'person_id__meta' => 'JS',
+                'person_id' => $this->personId,
+                'note' => 'note-c',
+            ],
         ]);
         Assert::type(RedirectResponse::class, $response);
         $after = $this->countEventOrgs();
@@ -67,10 +70,12 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
     public function testModelErrorCreate() {
         $init = $this->countEventOrgs();
         $response = $this->createFormRequest('create', [
-            'person_id__meta' => 'JS',
-            'person_id' => null, // empty personId
-            'note' => '',
-        ]);
+                EventOrgFormComponent::CONTAINER => [
+                    'person_id__meta' => 'JS',
+                    'person_id' => null, // empty personId
+                    'note' => '',
+                ],]
+        );
         $html = $this->assertPageDisplay($response);
         Assert::contains('Error', $html);
         $after = $this->countEventOrgs();
@@ -80,8 +85,10 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
 
     public function testEdit() {
         $response = $this->createFormRequest('edit', [
-            'person_id__meta' => $this->eventOrgPersonId,
-            'note' => 'note-edited',
+            EventOrgFormComponent::CONTAINER => [
+                'person_id__meta' => $this->eventOrgPersonId,
+                'note' => 'note-edited',
+            ],
         ], [
             'id' => $this->eventOrgId,
         ]);
@@ -102,10 +109,6 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
 
     protected function getPresenterName(): string {
         return 'Event:EventOrg';
-    }
-
-    protected function getContainerName(): string {
-        return EventOrgFormComponent::CONTAINER;
     }
 
     protected function createPostRequest(string $action, array $params, array $postData = []): Request {

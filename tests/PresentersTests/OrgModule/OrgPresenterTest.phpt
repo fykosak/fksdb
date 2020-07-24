@@ -46,11 +46,13 @@ class OrgPresenterTest extends EntityPresenterTestCase {
     public function testCreate() {
         $init = $this->countOrgs();
         $response = $this->createFormRequest('create', [
-            'person_id__meta' => 'JS',
-            'person_id' => $this->personId,
-            'since' => 1,
-            'order' => 0,
-            'domain_alias' => 't',
+            OrgFormComponent::CONTAINER => [
+                'person_id__meta' => 'JS',
+                'person_id' => $this->personId,
+                'since' => 1,
+                'order' => 0,
+                'domain_alias' => 't',
+            ],
         ]);
         Assert::type(RedirectResponse::class, $response);
         $after = $this->countOrgs();
@@ -60,11 +62,13 @@ class OrgPresenterTest extends EntityPresenterTestCase {
     public function testOutRangeCreate() {
         $init = $this->countOrgs();
         $response = $this->createFormRequest('create', [
-            'person_id__meta' => 'JS',
-            'person_id' => $this->personId,
-            'since' => 2, // out of range
-            'order' => 0,
-            'domain_alias' => 't',
+            OrgFormComponent::CONTAINER => [
+                'person_id__meta' => 'JS',
+                'person_id' => $this->personId,
+                'since' => 2, // out of range
+                'order' => 0,
+                'domain_alias' => 't',
+            ],
         ]);
         $html = $this->assertPageDisplay($response);
         Assert::contains('has-error', $html);
@@ -75,11 +79,13 @@ class OrgPresenterTest extends EntityPresenterTestCase {
     public function testModelErrorCreate() {
         $init = $this->countOrgs();
         $response = $this->createFormRequest('create', [
-            'person_id__meta' => 'JS',
-            'person_id' => null, // empty personId
-            'since' => 1,
-            'order' => 0,
-            'domain_alias' => 't',
+            OrgFormComponent::CONTAINER => [
+                'person_id__meta' => 'JS',
+                'person_id' => null, // empty personId
+                'since' => 1,
+                'order' => 0,
+                'domain_alias' => 't',
+            ],
         ]);
         $html = $this->assertPageDisplay($response);
         Assert::contains('SQLSTATE[23000]:', $html);
@@ -90,10 +96,12 @@ class OrgPresenterTest extends EntityPresenterTestCase {
 
     public function testEdit() {
         $response = $this->createFormRequest('edit', [
-            'person_id__meta' => $this->orgPersonId,
-            'since' => 1,
-            'order' => 2,
-            'domain_alias' => 'b',
+            OrgFormComponent::CONTAINER => [
+                'person_id__meta' => $this->orgPersonId,
+                'since' => 1,
+                'order' => 2,
+                'domain_alias' => 'b',
+            ],
         ], [
             'id' => $this->orgId,
         ]);
@@ -115,10 +123,6 @@ class OrgPresenterTest extends EntityPresenterTestCase {
 
     protected function getPresenterName(): string {
         return 'Org:Org';
-    }
-
-    protected function getContainerName(): string {
-        return OrgFormComponent::CONTAINER;
     }
 
     protected function createPostRequest(string $action, array $params, array $postData = []): Request {
