@@ -10,7 +10,6 @@ use FKSDB\DBReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\ModelException;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContest;
@@ -21,7 +20,6 @@ use FKSDB\YearCalculator;
 use Nette\Application\AbortException;
 use Nette\Forms\Form;
 use Nette\DI\Container;
-use Tracy\Debugger;
 
 /**
  * Class OrgForm
@@ -92,18 +90,13 @@ class OrgFormComponent extends AbstractEntityFormComponent implements IEditEntit
         if (!isset($data['contest_id'])) {
             $data['contest_id'] = $this->contest->contest_id;
         }
-        try {
-            if ($this->create) {
-                $this->getORMService()->createNewModel($data);
-            } else {
-                $this->getORMService()->updateModel2($this->model, $data);
-            }
-            $this->getPresenter()->flashMessage($this->create ? _('Org has been created.') : _('Org has been updated.'), Message::LVL_SUCCESS);
-            $this->getPresenter()->redirect('list');
-        } catch (ModelException $exception) {
-            Debugger::log($exception);
-            $this->flashMessage(_('Error'), Message::LVL_DANGER);
+        if ($this->create) {
+            $this->getORMService()->createNewModel($data);
+        } else {
+            $this->getORMService()->updateModel2($this->model, $data);
         }
+        $this->getPresenter()->flashMessage($this->create ? _('Org has been created.') : _('Org has been updated.'), Message::LVL_SUCCESS);
+        $this->getPresenter()->redirect('list');
     }
 
     /**

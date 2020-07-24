@@ -4,6 +4,7 @@ namespace FKSDB\ModelTests\Tests;
 /** @var Container $container */
 $container = require '../bootstrap.php';
 
+use FKSDB\ORM\Services\Exception\InvalidPostalCode;
 use FKSDB\ORM\Services\ServiceAddress;
 use Nette\DI\Container;
 use Tester\Assert;
@@ -31,7 +32,7 @@ class ServiceAddressTest extends TestCase {
         if ($region === null) {
             Assert::exception(function () use ($postalCode) {
                 $this->fixture->inferRegion($postalCode);
-            }, 'InvalidPostalCode');
+            }, InvalidPostalCode::class);
         } else {
             $inferredRegion = $this->fixture->inferRegion($postalCode);
             Assert::equal($region, $inferredRegion);

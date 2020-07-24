@@ -64,10 +64,10 @@ class PersonTestControl extends BaseComponent {
     protected function createComponentForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
-        $form->addText('start_id', _('From person_id'))
+        $form->addText('start_id', sprintf(_('From %s'), 'person_id'))
             ->addRule(Form::INTEGER)
             ->setDefaultValue($this->startId);
-        $form->addText('end_id', _('To person_id'))
+        $form->addText('end_id', sprintf(_('To %s'), 'person_id'))
             ->addRule(Form::INTEGER)
             ->setDefaultValue($this->endId);
         $levelsContainer = new ContainerWithOptions();

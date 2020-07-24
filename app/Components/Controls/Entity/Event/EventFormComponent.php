@@ -47,13 +47,16 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
 
     /** @var ServiceAuthToken */
     protected $serviceAuthToken;
+
     /** @var ServiceEvent */
     protected $serviceEvent;
 
     /** @var ModelEvent */
     protected $model;
+
     /** @var int */
     private $year;
+
     /** @var EventDispatchFactory */
     private $eventDispatchFactory;
 
@@ -107,19 +110,13 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
      */
     protected function updateTokens(ModelEvent $event) {
         $connection = $this->serviceAuthToken->getConnection();
-        try {
-            $connection->beginTransaction();
-            // update also 'until' of authTokens in case that registration end has changed
-            $tokenData = ['until' => $event->registration_end ?: $event->end];
-            foreach ($this->serviceAuthToken->findTokensByEventId($event->event_id) as $token) {
-                $this->serviceAuthToken->updateModel2($token, $tokenData);
-            }
-            $connection->commit();
-        } catch (ModelException $exception) {
-            $connection->rollBack();
-            Debugger::log($exception, Debugger::ERROR);
-            $this->flashMessage(_('Chyba přidání akce.'), ILogger::ERROR);
+        $connection->beginTransaction();
+        // update also 'until' of authTokens in case that registration end has changed
+        $tokenData = ['until' => $event->registration_end ?: $event->end];
+        foreach ($this->serviceAuthToken->findTokensByEventId($event->event_id) as $token) {
+            $this->serviceAuthToken->updateModel2($token, $tokenData);
         }
+        $connection->commit();
     }
 
     /**
@@ -180,21 +177,16 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
     protected function handleFormSuccess(Form $form) {
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT], true);
-        try {
-            if ($this->create) {
-                $data['year'] = $this->year;
-                $model = $this->serviceEvent->createNewModel($data);
-            } else {
-                $this->serviceEvent->updateModel2($this->model, $data);
-                $model = $this->model;
-            }
-            $this->updateTokens($model);
-            $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), ILogger::SUCCESS);
-            $this->getPresenter()->redirect('list');
-        } catch (ModelException $exception) {
-            Debugger::log($exception);
-            $this->flashMessage(_('Error'), Message::LVL_DANGER);
+        if ($this->create) {
+            $data['year'] = $this->year;
+            $model = $this->serviceEvent->createNewModel($data);
+        } else {
+            $this->serviceEvent->updateModel2($this->model, $data);
+            $model = $this->model;
         }
+        $this->updateTokens($model);
+        $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), ILogger::SUCCESS);
+        $this->getPresenter()->redirect('list');
     }
 
     /**

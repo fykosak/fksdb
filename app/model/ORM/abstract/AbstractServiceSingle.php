@@ -137,9 +137,13 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @return bool
      */
     public function updateModel2(IModel $model, array $data): bool {
-        $this->checkType($model);
-        $data = $this->filterData($data);
-        return $model->update($data);
+        try {
+            $this->checkType($model);
+            $data = $this->filterData($data);
+            return $model->update($data);
+        } catch (PDOException $exception) {
+            throw new ModelException('Error when storing model.', null, $exception);
+        }
     }
 
     /**

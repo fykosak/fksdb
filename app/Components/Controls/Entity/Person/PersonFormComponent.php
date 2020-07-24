@@ -10,7 +10,6 @@ use FKSDB\DBReflection\OmittedControlException;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\ModelException;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\Messages\Message;
@@ -24,11 +23,9 @@ use FKSDB\ORM\Services\ServicePostContact;
 use FKSDB\ORM\ServicesMulti\ServiceMPostContact;
 use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
-use Nette\Database\UniqueConstraintViolationException;
 use Nette\Forms\Form;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
-use Tracy\Debugger;
 
 /**
  * Class AbstractPersonFormControl
@@ -157,27 +154,16 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
         $connection = $this->servicePerson->getConnection();
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values, true);
-        try {
-            $connection->beginTransaction();
-            $this->logger->clear();
-            $person = $this->servicePerson->store($this->create ? null : $this->model, $data[self::PERSON_CONTAINER]);
-            $this->servicePersonInfo->store($person, $person->getInfo(), $data[self::PERSON_INFO_CONTAINER]);
-            $this->storeAddresses($person, $data);
+        $connection->beginTransaction();
+        $this->logger->clear();
+        $person = $this->servicePerson->store($this->create ? null : $this->model, $data[self::PERSON_CONTAINER]);
+        $this->servicePersonInfo->store($person, $person->getInfo(), $data[self::PERSON_INFO_CONTAINER]);
+        $this->storeAddresses($person, $data);
 
-            $connection->commit();
-            $this->logger->log(new Message($this->create ? _('Person has been created') : _('Data has been updated'), Message::LVL_SUCCESS));
-            FlashMessageDump::dump($this->logger, $this->getPresenter(), true);
-            $this->getPresenter()->redirect('this');
-        } catch (ModelException $exception) {
-            $connection->rollBack();
-            $previous = $exception->getPrevious();
-            if ($previous && $previous instanceof UniqueConstraintViolationException) {
-                $this->flashMessage(sprintf(_('Person with same data already exists: "%s"'), $previous->errorInfo[2] ?? ''), Message::LVL_DANGER);
-                return;
-            }
-            Debugger::log($exception);
-            $this->flashMessage(_('Error'), Message::LVL_DANGER);
-        }
+        $connection->commit();
+        $this->logger->log(new Message($this->create ? _('Person has been created') : _('Data has been updated'), Message::LVL_SUCCESS));
+        FlashMessageDump::dump($this->logger, $this->getPresenter(), true);
+        $this->getPresenter()->redirect('this');
     }
 
     public static function mapAddressContainerNameToType(string $containerName): string {

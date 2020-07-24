@@ -43,4 +43,4 @@ foreach ($files as $file) {
     }
 }
 //var_dump(json_encode($map));
-//var_dump($map);
+var_dump($map);

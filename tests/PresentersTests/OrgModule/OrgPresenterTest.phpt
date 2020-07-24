@@ -82,7 +82,7 @@ class OrgPresenterTest extends EntityPresenterTestCase {
             'domain_alias' => 't',
         ]);
         $html = $this->assertPageDisplay($response);
-        Assert::contains('Error', $html);
+        Assert::contains('SQLSTATE[23000]:', $html);
         $after = $this->countOrgs();
         Assert::equal($init, $after);
     }
