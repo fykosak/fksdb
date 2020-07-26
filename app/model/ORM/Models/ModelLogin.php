@@ -2,8 +2,8 @@
 
 namespace FKSDB\ORM\Models;
 
-use Authentication\PasswordAuthenticator;
-use Authorization\Grant;
+use FKSDB\Authentication\PasswordAuthenticator;
+use FKSDB\Authorization\Grant;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\YearCalculator;

@@ -3,8 +3,8 @@
 namespace FKSDB\Tasks;
 
 use FKSDB\ORM\Services\ServiceTask;
-use Pipeline\PipelineException;
-use Pipeline\Stage;
+use FKSDB\Pipeline\PipelineException;
+use FKSDB\Pipeline\Stage;
 use SimpleXMLElement;
 
 /**

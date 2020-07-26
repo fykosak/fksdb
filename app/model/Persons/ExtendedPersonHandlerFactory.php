@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons;
+namespace FKSDB\Persons;
 
 use FKSDB\Authentication\AccountManager;
 use FKSDB\ORM\IService;

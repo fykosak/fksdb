@@ -10,7 +10,7 @@ use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use SQL\ViewDataSource;
+use FKSDB\SQL\ViewDataSource;
 
 /**
  *

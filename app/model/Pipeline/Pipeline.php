@@ -1,6 +1,6 @@
 <?php
 
-namespace Pipeline;
+namespace FKSDB\Pipeline;
 
 use FKSDB\Logging\ILogger;
 use FKSDB\Logging\MemoryLogger;

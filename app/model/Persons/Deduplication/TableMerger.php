@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons\Deduplication;
+namespace FKSDB\Persons\Deduplication;
 
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
@@ -9,8 +9,8 @@ use Nette\Database\Context;
 use Nette\Database\Conventions\AmbiguousReferenceKeyException;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
-use Persons\Deduplication\MergeStrategy\CannotMergeException;
-use Persons\Deduplication\MergeStrategy\IMergeStrategy;
+use FKSDB\Persons\Deduplication\MergeStrategy\CannotMergeException;
+use FKSDB\Persons\Deduplication\MergeStrategy\IMergeStrategy;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

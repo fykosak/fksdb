@@ -16,7 +16,7 @@ use Nette\Application\UI\Form;
 use Nette\DeprecatedException;
 use Nette\InvalidStateException;
 use Tracy\Debugger;
-use Pipeline\PipelineException;
+use FKSDB\Pipeline\PipelineException;
 use SimpleXMLElement;
 use FKSDB\Tasks\PipelineFactory;
 use FKSDB\Tasks\SeriesData;

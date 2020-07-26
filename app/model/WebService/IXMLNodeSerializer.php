@@ -1,6 +1,6 @@
 <?php
 
-namespace WebService;
+namespace FKSDB\WebService;
 
 use DOMDocument;
 use DOMNode;

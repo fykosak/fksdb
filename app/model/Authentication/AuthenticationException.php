@@ -1,6 +1,6 @@
 <?php
 
-namespace Authentication;
+namespace FKSDB\Authentication;
 
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;

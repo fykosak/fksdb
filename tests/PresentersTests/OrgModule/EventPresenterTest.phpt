@@ -48,12 +48,14 @@ class EventPresenterTest extends EntityPresenterTestCase {
     public function testCreate() {
         $init = $this->countEvents();
         $response = $this->createFormRequest('create', [
-            'event_type_id' => 2,
-            'year' => 1,
-            'event_year' => 1,
-            'begin' => (new \DateTime())->format('c'),
-            'end' => (new \DateTime())->format('c'),
-            'name' => 'Dummy Event',
+            EventFormComponent::CONT_EVENT => [
+                'event_type_id' => 2,
+                'year' => 1,
+                'event_year' => 1,
+                'begin' => (new \DateTime())->format('c'),
+                'end' => (new \DateTime())->format('c'),
+                'name' => 'Dummy Event',
+            ],
         ]);
         Assert::type(RedirectResponse::class, $response);
         $after = $this->countEvents();
@@ -63,28 +65,32 @@ class EventPresenterTest extends EntityPresenterTestCase {
     public function testCreateDuplicate() {
         $init = $this->countEvents();
         $response = $this->createFormRequest('create', [
-            'event_type_id' => 1,
-            'year' => 1,
-            'event_year' => 1,
-            'begin' => (new \DateTime())->format('c'),
-            'end' => (new \DateTime())->format('c'),
-            'name' => 'Dummy Event',
+            EventFormComponent::CONT_EVENT => [
+                'event_type_id' => 1,
+                'year' => 1,
+                'event_year' => 1,
+                'begin' => (new \DateTime())->format('c'),
+                'end' => (new \DateTime())->format('c'),
+                'name' => 'Dummy Event',
+            ],
         ]);
 
         $html = $this->assertPageDisplay($response);
-        Assert::contains('Error', $html);
+        Assert::contains('SQLSTATE[23000]:', $html);
         $after = $this->countEvents();
         Assert::equal($init, $after);
     }
 
     public function testEdit() {
         $response = $this->createFormRequest('edit', [
-            'event_type_id' => 1,
-            'year' => 1,
-            'event_year' => 1,
-            'begin' => (new \DateTime())->format('c'),
-            'end' => (new \DateTime())->format('c'),
-            'name' => 'Dummy Event edited',
+            EventFormComponent::CONT_EVENT => [
+                'event_type_id' => 1,
+                'year' => 1,
+                'event_year' => 1,
+                'begin' => (new \DateTime())->format('c'),
+                'end' => (new \DateTime())->format('c'),
+                'name' => 'Dummy Event edited',
+            ],
         ], [
             'id' => $this->eventId,
         ]);
@@ -120,10 +126,6 @@ class EventPresenterTest extends EntityPresenterTestCase {
 
     private function countEvents(): int {
         return $this->connection->query('SELECT * FROM event')->getRowCount();
-    }
-
-    protected function getContainerName(): string {
-        return EventFormComponent::CONT_EVENT;
     }
 }
 

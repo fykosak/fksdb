@@ -8,7 +8,7 @@ use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
-use News;
+use FKSDB\News\News;
 
 /**
  * Just proof of concept.

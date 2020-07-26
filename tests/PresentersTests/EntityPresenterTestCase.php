@@ -78,11 +78,9 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase {
         $request = $this->createPostRequest($action, $params, array_merge([
             '_do' => ($action === 'create') ? 'createForm-formControl-form-submit' : 'editForm-formControl-form-submit',
             '_submit' => 'save',
-        ], [$this->getContainerName() => $formData]));
+        ], $formData));
         return $this->fixture->run($request);
     }
 
     abstract protected function getPresenterName(): string;
-
-    abstract protected function getContainerName(): string;
 }

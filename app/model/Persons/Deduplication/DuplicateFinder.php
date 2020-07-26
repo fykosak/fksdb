@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons\Deduplication;
+namespace FKSDB\Persons\Deduplication;
 
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPersonInfo;

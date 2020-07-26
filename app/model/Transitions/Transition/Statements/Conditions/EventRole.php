@@ -2,7 +2,7 @@
 
 namespace FKSDB\Transitions\Statements\Conditions;
 
-use Authorization\EventAuthorizator;
+use FKSDB\Authorization\EventAuthorizator;
 use FKSDB\Transitions\Statements\Statement;
 
 /**

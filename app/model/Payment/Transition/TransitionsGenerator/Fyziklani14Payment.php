@@ -2,7 +2,7 @@
 
 namespace FKSDB\Payment\Transition\Transitions;
 
-use Authorization\EventAuthorizator;
+use FKSDB\Authorization\EventAuthorizator;
 use Closure;
 use Exception;
 use FKSDB\Exceptions\BadTypeException;
@@ -17,7 +17,7 @@ use FKSDB\Transitions\Machine;
 use FKSDB\Transitions\Statements\Conditions\DateBetween;
 use FKSDB\Transitions\Statements\Conditions\ExplicitEventRole;
 use FKSDB\Transitions\Transition;
-use Mail\MailTemplateFactory;
+use FKSDB\Mail\MailTemplateFactory;
 use Nette\Database\Connection;
 use Tracy\Debugger;
 

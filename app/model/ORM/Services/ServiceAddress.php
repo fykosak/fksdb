@@ -8,7 +8,7 @@ use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelAddress;
 use FKSDB\ORM\Models\ModelRegion;
-use InvalidPostalCode;
+use FKSDB\ORM\Services\Exception\InvalidPostalCode;
 use Tracy\Debugger;
 
 /**

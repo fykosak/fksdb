@@ -18,7 +18,7 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\ORM\Services\ServicePerson;
-use Mail\MailTemplateFactory;
+use FKSDB\Mail\MailTemplateFactory;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;

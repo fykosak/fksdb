@@ -2,7 +2,7 @@
 
 namespace FKSDB\Events\Model;
 
-use DuplicateApplicationException;
+use FKSDB\ORM\Services\Exception\DuplicateApplicationException;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Machine\Transition;

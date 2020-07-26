@@ -4,7 +4,7 @@ namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
-use Authentication\PasswordAuthenticator;
+use FKSDB\Authentication\PasswordAuthenticator;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\LoginFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;

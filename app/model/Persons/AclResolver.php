@@ -1,8 +1,8 @@
 <?php
 
-namespace Persons;
+namespace FKSDB\Persons;
 
-use Authorization\ContestAuthorizator;
+use FKSDB\Authorization\ContestAuthorizator;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Security\IResource;

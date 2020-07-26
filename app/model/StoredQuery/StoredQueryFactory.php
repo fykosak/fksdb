@@ -13,7 +13,7 @@ use Nette\Database\Connection;
 use Nette\Http\Response;
 use Nette\InvalidArgumentException;
 use FKSDB\Utils\Utils;
-use WebService\IXMLNodeSerializer;
+use FKSDB\WebService\IXMLNodeSerializer;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 
 /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons;
+namespace FKSDB\Persons;
 
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;

@@ -2,8 +2,8 @@
 
 namespace FKSDB\Events\Semantics;
 
-use Authorization\ContestAuthorizator;
-use Authorization\RelatedPersonAuthorizator;
+use FKSDB\Authorization\ContestAuthorizator;
+use FKSDB\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Expressions\EvaluatedExpression;
 use Nette\Security\User;
 use Nette\SmartObject;

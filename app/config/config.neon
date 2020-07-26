@@ -196,12 +196,12 @@ session:
    autoStart: true
 extensions:
     fksrouter: FKSDB\Config\Extensions\RouterExtension
-    acl: Authorization\ACLExtension
+    acl: FKSDB\Authorization\ACLExtension
     navigation: FKSDB\Config\Extensions\NavigationExtension
     events: FKSDB\Events\EventsExtension(%appDir%/../app/config/events.neon)
     stalking: FKSDB\Config\Extensions\StalkingExtension
-    payment: FKSDB\Config\Extensions\PaymentExtension
-    DBReflection: FKSDB\Config\Extensions\DBReflectionExtension
+    payment: FKSDB\Payment\PaymentExtension
+    DBReflection: FKSDB\DBReflection\DBReflectionExtension
 
 includes:
     - router.neon

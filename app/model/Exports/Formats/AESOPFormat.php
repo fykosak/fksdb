@@ -4,7 +4,7 @@ namespace FKSDB\Exports\Formats;
 
 use FKSDB\StoredQuery\StoredQuery;
 use Nette\Application\IResponse;
-use WebService\IXMLNodeSerializer;
+use FKSDB\WebService\IXMLNodeSerializer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

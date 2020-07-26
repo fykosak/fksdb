@@ -2,7 +2,7 @@
 
 namespace FKSDB\DataTesting;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\DBReflection\DBReflectionFactory;
 use FKSDB\DataTesting\Tests\Person\PersonTest;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Services\ServiceContest;
@@ -16,16 +16,16 @@ class DataTestingFactory {
     private $tests = [];
     /** @var ServiceContest */
     private $serviceContest;
-    /** @var TableReflectionFactory */
+    /** @var DBReflectionFactory */
     private $tableReflectionFactory;
 
     /**
      * DataTestingFactory constructor.
      * @param ServiceContest $serviceContest
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param DBReflectionFactory $tableReflectionFactory
      * @throws BadTypeException
      */
-    public function __construct(ServiceContest $serviceContest, TableReflectionFactory $tableReflectionFactory) {
+    public function __construct(ServiceContest $serviceContest, DBReflectionFactory $tableReflectionFactory) {
         $this->serviceContest = $serviceContest;
         $this->tableReflectionFactory = $tableReflectionFactory;
         $this->registersTests();

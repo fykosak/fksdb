@@ -1,8 +1,8 @@
 <?php
 
-namespace Authentication\SSO;
+namespace FKSDB\Authentication\SSO;
 
-use Authentication\TokenAuthenticator;
+use FKSDB\Authentication\TokenAuthenticator;
 use FKSDB\Authentication\SSO\IGSIDHolder;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Services\ServiceAuthToken;

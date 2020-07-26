@@ -66,7 +66,7 @@ abstract class AbstractProcessing implements IProcessing {
      * @param string $mask
      * @return bool
      */
-    final protected function hasWildcart($mask) {
+    final protected function hasWildCart($mask) {
         return strpos($mask, self::WILDCART) !== false;
     }
 

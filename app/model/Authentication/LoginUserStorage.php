@@ -1,9 +1,9 @@
 <?php
 
-namespace Authentication;
+namespace FKSDB\Authentication;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
-use Authentication\SSO\GlobalSession;
+use FKSDB\Authentication\SSO\GlobalSession;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;

@@ -16,12 +16,12 @@ use FKSDB\Tests\ModelTests\DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Persons\ExtendedPersonHandler;
-use Persons\ExtendedPersonHandlerFactory;
-use Persons\IExtendedPersonPresenter;
-use Persons\IModifiabilityResolver;
-use Persons\IVisibilityResolver;
-use Persons\ReferencedPersonHandler;
+use FKSDB\Persons\ExtendedPersonHandler;
+use FKSDB\Persons\ExtendedPersonHandlerFactory;
+use FKSDB\Persons\IExtendedPersonPresenter;
+use FKSDB\Persons\IModifiabilityResolver;
+use FKSDB\Persons\IVisibilityResolver;
+use FKSDB\Persons\ReferencedPersonHandler;
 use Tester\Assert;
 
 class ExtendedPersonHandlerTest extends DatabaseTestCase {

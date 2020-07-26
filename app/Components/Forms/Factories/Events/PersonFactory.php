@@ -17,7 +17,7 @@ use Nette\DI\Container as DIContainer;
 use Nette\Forms\IControl;
 use Nette\Security\User;
 use Nette\Utils\JsonException;
-use Persons\SelfResolver;
+use FKSDB\Persons\SelfResolver;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

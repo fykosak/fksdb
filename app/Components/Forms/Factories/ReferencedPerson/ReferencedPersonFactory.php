@@ -16,9 +16,9 @@ use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use Nette\Utils\JsonException;
-use Persons\IModifiabilityResolver;
-use Persons\IVisibilityResolver;
-use Persons\ReferencedPersonHandlerFactory;
+use FKSDB\Persons\IModifiabilityResolver;
+use FKSDB\Persons\IVisibilityResolver;
+use FKSDB\Persons\ReferencedPersonHandlerFactory;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

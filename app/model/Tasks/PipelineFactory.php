@@ -8,7 +8,7 @@ use FKSDB\ORM\Services\ServiceStudyYear;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\ORM\Services\ServiceTaskContribution;
 use FKSDB\ORM\Services\ServiceTaskStudyYear;
-use Pipeline\Pipeline;
+use FKSDB\Pipeline\Pipeline;
 
 /**
  * This is not real factory, it's only used as an internode for defining

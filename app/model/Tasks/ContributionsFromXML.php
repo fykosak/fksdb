@@ -6,7 +6,7 @@ use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Services\ServiceOrg;
 use FKSDB\ORM\Services\ServiceTaskContribution;
-use Pipeline\Stage;
+use FKSDB\Pipeline\Stage;
 use SimpleXMLElement;
 
 

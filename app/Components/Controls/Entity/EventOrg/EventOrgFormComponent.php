@@ -7,7 +7,6 @@ use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Controls\Entity\ReferencedPersonTrait;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\ModelException;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelEvent;
@@ -17,7 +16,6 @@ use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\Forms\Form;
 use Nette\DI\Container;
-use Tracy\Debugger;
 
 /**
  * Class EventOrgFormComponent
@@ -80,18 +78,13 @@ class EventOrgFormComponent extends AbstractEntityFormComponent implements IEdit
         if (!isset($data['event_id'])) {
             $data['event_id'] = $this->event->event_id;
         }
-        try {
-            if ($this->create) {
-                $this->getORMService()->createNewModel($data);
-            } else {
-                $this->getORMService()->updateModel2($this->model, $data);
-            }
-            $this->getPresenter()->flashMessage($this->create ? _('Event org has been created') : _('Event org has been updated'), Message::LVL_SUCCESS);
-            $this->getPresenter()->redirect('list');
-        } catch (ModelException $exception) {
-            Debugger::log($exception);
-            $this->flashMessage(_('Error'), Message::LVL_DANGER);
+        if ($this->create) {
+            $this->getORMService()->createNewModel($data);
+        } else {
+            $this->getORMService()->updateModel2($this->model, $data);
         }
+        $this->getPresenter()->flashMessage($this->create ? _('Event org has been created') : _('Event org has been updated'), Message::LVL_SUCCESS);
+        $this->getPresenter()->redirect('list');
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons\Deduplication;
+namespace FKSDB\Persons\Deduplication;
 
 use FKSDB\Logging\DevNullLogger;
 use FKSDB\Logging\ILogger;

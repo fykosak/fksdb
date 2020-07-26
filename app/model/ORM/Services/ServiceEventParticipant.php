@@ -2,7 +2,7 @@
 
 namespace FKSDB\ORM\Services;
 
-use DuplicateApplicationException;
+use FKSDB\ORM\Services\Exception\DuplicateApplicationException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;

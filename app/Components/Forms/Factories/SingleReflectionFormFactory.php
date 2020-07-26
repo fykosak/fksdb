@@ -2,12 +2,13 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Components\DatabaseReflection\ColumnFactories\IColumnFactory;
-use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
-use FKSDB\Components\DatabaseReflection\OmittedControlException;
+use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\DBReflection\ColumnFactories\IColumnFactory;
+use FKSDB\DBReflection\FieldLevelPermission;
+use FKSDB\DBReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Containers\ModelContainer;
+use FKSDB\DBReflection\DBReflectionFactory;
 use FKSDB\Exceptions\BadTypeException;
 use Nette\Forms\Controls\BaseControl;
 
@@ -16,14 +17,14 @@ use Nette\Forms\Controls\BaseControl;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class SingleReflectionFormFactory {
-    /** @var TableReflectionFactory */
+    /** @var DBReflectionFactory */
     protected $tableReflectionFactory;
 
     /**
      * PersonHistoryFactory constructor.
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param DBReflectionFactory $tableReflectionFactory
      */
-    public function __construct(TableReflectionFactory $tableReflectionFactory) {
+    public function __construct(DBReflectionFactory $tableReflectionFactory) {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 

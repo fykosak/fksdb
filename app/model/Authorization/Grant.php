@@ -1,6 +1,6 @@
 <?php
 
-namespace Authorization;
+namespace FKSDB\Authorization;
 
 use Nette\Security\IRole;
 

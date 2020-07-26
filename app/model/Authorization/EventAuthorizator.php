@@ -1,8 +1,8 @@
 <?php
 
-namespace Authorization;
+namespace FKSDB\Authorization;
 
-use Authorization\Assertions\EventOrgByIdAssertion;
+use FKSDB\Authorization\Assertions\EventOrgByIdAssertion;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Context;
 use Nette\Security\IResource;
