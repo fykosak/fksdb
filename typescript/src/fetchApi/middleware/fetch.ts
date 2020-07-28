@@ -13,8 +13,8 @@ import {
 } from './interfaces';
 import jqXHR = JQuery.jqXHR;
 
-export async function netteFetch<TFormData, TResponseData, T = any>(
-    data: Request<TFormData>,
+async function netteFetch2<TRequestData, TResponseData, T = any>(
+    data: TRequestData,
     success: (data: Response<TResponseData>) => void,
     error: (e: jqXHR<T>) => void,
     url: string = null,
@@ -64,17 +64,17 @@ export async function uploadFile<F, D, T>(
     });
 }
 
-export async function dispatchNetteFetch<TFormData, TResponseData, TStore, T = any>(
+export async function dispatchNetteFetch2<TFormData, TResponseData, TStore, T = any>(
+    url: string,
     accessKey: string,
     dispatch: Dispatch<Action<string>>,
-    data: Request<TFormData>,
-    success: (data: Response<TResponseData>) => void,
-    error: (e: jqXHR<T>) => void,
-    url: string = null,
+    data: TFormData,
+    success: (data: Response<TResponseData>) => void = () => null,
+    error: (e: jqXHR<T>) => void = () => null,
 ): Promise<Response<TResponseData>> {
 
     dispatch(submitStart(accessKey));
-    return netteFetch<TFormData, TResponseData, T>(data, (d: Response<TResponseData>) => {
+    return netteFetch2<TFormData, TResponseData, T>(data, (d: Response<TResponseData>) => {
             dispatch(submitSuccess<TResponseData>(d, accessKey));
             success(d);
         },

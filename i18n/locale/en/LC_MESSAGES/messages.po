@@ -788,8 +788,8 @@ msgstr ""
 
 #: i18n/../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:143
 #, fuzzy
-msgid "Submit dos not exists."
-msgstr "Payment doesn't exist"
+msgid "Submit does not exists."
+msgstr ""
 
 #: i18n/../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:184
 #: i18n/../app/Components/DatabaseReflection/Tables/EventParticipant/TeamRow.php:35

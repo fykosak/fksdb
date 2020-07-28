@@ -1,5 +1,6 @@
 import { UploadDataItem } from '@apps/ajaxUpload/middleware/uploadDataItem';
 import { NetteActions } from '@appsCollector';
+import { lang } from '@i18n/i18n';
 import Card from '@shared/components/card';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -22,26 +23,36 @@ class UploadContainer extends React.Component<OwnProps & StateProps, {}> {
 
     public render() {
 
-        const {submit, submit: {deadline, name, submitId}, submitting, actions} = this.props;
+        const {submit, accessKey} = this.props;
         const headline = (<>
-            <h4>{name}</h4>
-            <small className="text-muted">{deadline}</small>
+            <h4>{submit.name}</h4>
+            <small className="text-muted">{submit.deadline}</small>
         </>);
-        const {accessKey} = this.props;
+        const {} = this.props;
         return <div className="col-md-6 mb-3">
             <Card headline={headline} level={'info'}>
                 <MessageBox accessKey={accessKey}/>
-                {submitting ? (<div className="text-center">
-                        <span className="d-block">Loading</span>
-                        <span className="display-1 d-block"><i className="fa fa-spinner fa-spin "/></span>
-                    </div>) :
-                    (submitId ?
-                            (<File actions={actions} accessKey={accessKey} submit={submit}/>) :
-                            (<Form actions={actions} accessKey={accessKey} submit={submit}/>)
-                    )
-                }
+                {this.getInnerContainer()}
             </Card>
         </div>;
+    }
+
+    private getInnerContainer() {
+        const {submit, submitting, actions, accessKey} = this.props;
+        if (submit.disabled) {
+            return <p className="alert alert-info">{lang.getText('Táto úloha nieje pre tvoju kategoriu')}</p>;
+        }
+        if (submitting) {
+            return (<div className="text-center">
+                <span className="d-block">{lang.getText('Loading')}</span>
+                <span className="display-1 d-block"><i className="fa fa-spinner fa-spin "/></span>
+            </div>);
+        }
+        if (submit.submitId) {
+            return (<File actions={actions} accessKey={accessKey} submit={submit}/>);
+        } else {
+            return (<Form actions={actions} accessKey={accessKey} submit={submit}/>);
+        }
     }
 }
 

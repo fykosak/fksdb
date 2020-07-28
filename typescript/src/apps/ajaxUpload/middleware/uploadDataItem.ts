@@ -1,11 +1,7 @@
 export interface UploadDataItem {
-    taskId: number;
-    deadline: string | null;
-    submitId: number;
+    submitId: number | null;
     name: string;
-    href: string | null;
-}
-
-export interface UploadData {
-    [key: number]: UploadDataItem;
+    deadline: string | null;
+    taskId: number;
+    disabled: boolean;
 }

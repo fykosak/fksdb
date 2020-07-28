@@ -21,8 +21,10 @@ class ResultsCategoryGrid extends BaseGrid {
 
     /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
+
     /** @var ModelEvent */
     private $event;
+
     /** @var string */
     private $category;
 

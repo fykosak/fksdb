@@ -4,6 +4,7 @@ namespace FKSDB\Components\Control\AjaxUpload;
 
 use FKSDB\Components\React\ReactComponent;
 use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\ModelException;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\ILogger;
 use FKSDB\Logging\MemoryLogger;
@@ -14,6 +15,7 @@ use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\React\ReactResponse;
 use FKSDB\Submits\FileSystemStorage\UploadedStorage;
+use FKSDB\Submits\StorageException;
 use FKSDB\Submits\SubmitHandlerFactory;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -23,6 +25,7 @@ use Nette\DI\Container;
 use Nette\Http\FileUpload;
 use Nette\Http\Response;
 use FKSDB\Modules\PublicModule\SubmitPresenter;
+use Tracy\Debugger;
 
 /**
  * Class AjaxUpload
@@ -46,6 +49,9 @@ class AjaxUpload extends ReactComponent {
     /**@var SubmitHandlerFactory */
     private $submitHandlerFactory;
 
+    /** @var int */
+    private $academicYear;
+
     /**
      * @param ServiceSubmit $serviceSubmit
      * @param UploadedStorage $uploadedStorage
@@ -63,11 +69,13 @@ class AjaxUpload extends ReactComponent {
      * @param Container $container
      * @param TypedTableSelection $availableTasks
      * @param ModelContestant $contestant
+     * @param int $academicYear
      */
-    public function __construct(Container $container, TypedTableSelection $availableTasks, ModelContestant $contestant) {
+    public function __construct(Container $container, TypedTableSelection $availableTasks, ModelContestant $contestant, int $academicYear) {
         parent::__construct($container, 'public.ajax-upload');
         $this->availableTasks = $availableTasks;
         $this->contestant = $contestant;
+        $this->academicYear = $academicYear;
     }
 
     /**
@@ -80,26 +88,22 @@ class AjaxUpload extends ReactComponent {
         $this->addAction('download', $this->link('download!'));
         parent::configure();
     }
-
-    /**
-     * @param mixed ...$args
-     * @return string
-     * @throws InvalidLinkException
-     */
+    
     public function getData(...$args): string {
+        $studyYear = $this->submitHandlerFactory->getUserStudyYear($this->academicYear);
         $data = [];
         /** @var ModelTask $task */
         foreach ($this->availableTasks as $task) {
             $submit = $this->serviceSubmit->findByContestant($this->contestant->ct_id, $task->task_id);
-            $data[$task->task_id] = ServiceSubmit::serializeSubmit($submit, $task, $this->getPresenter());
+            $data[$task->task_id] = ServiceSubmit::serializeSubmit($submit, $task, $studyYear);
         }
         return json_encode($data);
     }
 
+
     /**
      * @return void
      * @throws AbortException
-     * @throws InvalidLinkException
      * @throws BadTypeException
      */
     public function handleUpload() {
@@ -133,7 +137,13 @@ class AjaxUpload extends ReactComponent {
             $this->serviceSubmit->getConnection()->commit();
             $response->addMessage(new Message(_('Upload successful'), ILogger::SUCCESS));
             $response->setAct('upload');
-            $response->setData($this->serviceSubmit->serializeSubmit($submit, $task, $this->getPresenter()));
+            $response->setData([
+                $task->task_id => $this->serviceSubmit->serializeSubmit(
+                    $submit,
+                    $task,
+                    $this->submitHandlerFactory->getUserStudyYear($this->academicYear)
+                ),
+            ]);
             $this->getPresenter()->sendResponse($response);
         }
     }
@@ -145,13 +155,24 @@ class AjaxUpload extends ReactComponent {
      * @throws BadTypeException
      */
     public function handleRevoke() {
-        $submitId = $this->getReactRequest()->requestData['submitId'];
+        $submitId = $this->getReactRequest()['requestData']['submitId'];
         $logger = new MemoryLogger();
-        $data = $this->submitHandlerFactory->handleRevoke($this->getPresenter(), $logger, $submitId);
         $response = new ReactResponse();
-        if ($data) {
+        try {
+            $data = $this->submitHandlerFactory->handleRevoke($this->getPresenter(), $logger, $submitId, $this->academicYear);
             $response->setData($data);
+        } catch (ForbiddenRequestException$exception) {
+            $logger->log(new Message($exception->getMessage(), Message::LVL_DANGER));
+        } catch (NotFoundException$exception) {
+            $logger->log(new Message($exception->getMessage(), Message::LVL_DANGER));
+        } catch (StorageException$exception) {
+            Debugger::log($exception);
+            $logger->log(new Message(_('Během mazání úlohy %s došlo k chybě.'), Message::LVL_DANGER));
+        } catch (ModelException $exception) {
+            Debugger::log($exception);
+            $logger->log(new Message(_('Během mazání úlohy %s došlo k chybě.'), Message::LVL_DANGER));
         }
+
         $response->setMessages($logger->getMessages());
         $this->getPresenter()->sendResponse($response);
     }
@@ -161,14 +182,22 @@ class AjaxUpload extends ReactComponent {
      * @throws AbortException
      * @throws BadRequestException
      * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     * @throws NotFoundException
      */
     public function handleDownload() {
-        $submitId = $this->getReactRequest()->requestData['submitId'];
+        $submitId = $this->getReactRequest()['requestData']['submitId'];
         $logger = new MemoryLogger();
-        $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $logger, $submitId);
-        die();
+        try {
+            $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $submitId);
+        } catch (ForbiddenRequestException$exception) {
+            $logger->log(new Message($exception->getMessage(), Message::LVL_DANGER));
+        } catch (NotFoundException$exception) {
+            $logger->log(new Message($exception->getMessage(), Message::LVL_DANGER));
+        } catch (StorageException$exception) {
+            $logger->log(new Message($exception->getMessage(), Message::LVL_DANGER));
+        }
+        $response = new ReactResponse();
+        $response->setMessages($logger->getMessages());
+        $this->getPresenter()->sendResponse($response);
     }
 
     /**

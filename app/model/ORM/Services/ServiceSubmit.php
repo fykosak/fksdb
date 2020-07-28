@@ -2,17 +2,23 @@
 
 namespace FKSDB\ORM\Services;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Application\UI\Component;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use Tracy\Debugger;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @method ModelSubmit findByPrimary($key)
+ * @method ModelSubmit createNewModel(array $data)
+ * @method ModelSubmit refresh(AbstractModelSingle $model)
  */
 class ServiceSubmit extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
@@ -60,18 +66,31 @@ class ServiceSubmit extends AbstractServiceSingle {
 
     /**
      * @param ModelSubmit|null $submit
-     * @param ModelTask $task
-     * @param Presenter $presenter
-     * @return array
-     * @throws InvalidLinkException
+     * @param array $data
+     * @return ModelSubmit
      */
-    public static function serializeSubmit($submit, ModelTask $task, Presenter $presenter): array {
+    public function store($submit, array $data): ModelSubmit {
+        if (is_null($submit)) {
+            return $this->createNewModel($data);
+        } else {
+            $this->updateModel2($submit, $data);
+            return $this->refresh($submit);
+        }
+    }
+
+    /**
+     * @param ModelSubmit|null $submit
+     * @param ModelTask $task
+     * @param int|null $studyYear
+     * @return array
+     */
+    public static function serializeSubmit($submit, ModelTask $task, $studyYear): array {
         return [
             'submitId' => $submit ? $submit->submit_id : null,
             'name' => $task->getFQName(),
-            'href' => $submit ? $presenter->link('download', ['id' => $submit->submit_id]) : null,
             'taskId' => $task->task_id,
-            'deadline' => sprintf(_('Termín %s'), $task->submit_deadline),
+            'deadline' => sprintf(_('Deadline %s'), $task->submit_deadline),
+            'disabled' => !in_array($studyYear, array_keys($task->getStudyYears())),
         ];
     }
 }

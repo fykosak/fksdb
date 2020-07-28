@@ -31,7 +31,8 @@ const mapStateToProps = (state: Store, ownProps: OwnProps): StateProps => {
     return {
         messages: [
             ...messages,
-            ...state.errorLogger.errors],
+            ...state.errorLogger.errors,
+        ],
     };
 };
 

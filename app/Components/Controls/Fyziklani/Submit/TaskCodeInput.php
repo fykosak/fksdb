@@ -89,7 +89,7 @@ class TaskCodeInput extends FyziklaniReactControl {
     public function handleSave() {
         $request = $this->getReactRequest();
         $response = new ReactResponse();
-        $response->setAct($request->act);
+        $response->setAct($request['act']);
         try {
             $handler = $this->handlerFactory->create($this->getEvent());
             $logger = new MemoryLogger();

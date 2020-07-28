@@ -2,12 +2,15 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Exceptions\ModelException;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
+use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
+use FKSDB\Submits\StorageException;
 use FKSDB\Submits\SubmitHandlerFactory;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -19,6 +22,7 @@ use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
+use Tracy\Debugger;
 
 /**
  *
@@ -35,14 +39,19 @@ class SubmitsGrid extends BaseGrid {
     /** @var SubmitHandlerFactory */
     private $submitHandlerFactory;
 
+    /** @var int */
+    private $academicYear;
+
     /**
      * SubmitsGrid constructor.
      * @param Container $container
      * @param ModelContestant $contestant
+     * @param int $academicYear
      */
-    public function __construct(Container $container, ModelContestant $contestant) {
+    public function __construct(Container $container, ModelContestant $contestant, int $academicYear) {
         parent::__construct($container);
         $this->contestant = $contestant;
+        $this->academicYear = $academicYear;
     }
 
     /**
@@ -117,7 +126,19 @@ class SubmitsGrid extends BaseGrid {
      */
     public function handleRevoke(int $id) {
         $logger = new MemoryLogger();
-        $this->submitHandlerFactory->handleRevoke($this->getPresenter(), $logger, $id);
+        try {
+            $this->submitHandlerFactory->handleRevoke($this->getPresenter(), $logger, $id, $this->academicYear);
+        } catch (ForbiddenRequestException$exception) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+        } catch (NotFoundException$exception) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+        } catch (StorageException$exception) {
+            Debugger::log($exception);
+            $this->flashMessage(_('Během mazání úlohy %s došlo k chybě.'), Message::LVL_DANGER);
+        } catch (ModelException $exception) {
+            Debugger::log($exception);
+            $this->flashMessage(_('Během mazání úlohy %s došlo k chybě.'), Message::LVL_DANGER);
+        }
         FlashMessageDump::dump($logger, $this);
     }
 
@@ -125,25 +146,33 @@ class SubmitsGrid extends BaseGrid {
      * @param int $id
      * @throws AbortException
      * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     * @throws NotFoundException
      */
     public function handleDownloadUploaded(int $id) {
-        $logger = new MemoryLogger();
-        $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $logger, $id);
-        FlashMessageDump::dump($logger, $this);
+        try {
+            $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $id);
+        } catch (ForbiddenRequestException$exception) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+        } catch (NotFoundException$exception) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+        } catch (StorageException$exception) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+        }
     }
 
     /**
      * @param int $id
      * @throws AbortException
      * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     * @throws NotFoundException
      */
     public function handleDownloadCorrected(int $id) {
-        $logger = new MemoryLogger();
-        $this->submitHandlerFactory->handleDownloadCorrected($this->getPresenter(), $logger, $id);
-        FlashMessageDump::dump($logger, $this);
+        try {
+            $this->submitHandlerFactory->handleDownloadCorrected($this->getPresenter(), $id);
+        } catch (ForbiddenRequestException$exception) {
+            $this->flashMessage(new Message($exception->getMessage(), Message::LVL_DANGER));
+        } catch (NotFoundException$exception) {
+            $this->flashMessage(new Message($exception->getMessage(), Message::LVL_DANGER));
+        } catch (StorageException $exception) {
+            $this->flashMessage(new Message($exception->getMessage(), Message::LVL_DANGER));
+        }
     }
 }

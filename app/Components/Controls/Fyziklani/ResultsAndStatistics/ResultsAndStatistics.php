@@ -80,7 +80,7 @@ class ResultsAndStatistics extends FyziklaniReactControl {
 
         $request = $this->getReactRequest();
 
-        $lastUpdated = $request->requestData ?: null;
+        $lastUpdated = $request['requestData'] ?: null;
         $response = new ReactResponse();
         $response->setAct('results-update');
         $gameSetup = $this->getEvent()->getFyziklaniGameSetup();

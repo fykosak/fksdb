@@ -1,26 +1,30 @@
 import { NetteActions } from '@appsCollector';
+import { lang } from '@i18n/i18n';
 import * as React from 'react';
-import {
-    UploadData,
-    UploadDataItem,
-} from '../middleware/uploadDataItem';
+import { UploadDataItem } from '../middleware/uploadDataItem';
 import ItemIndex from './item';
 
 interface Props {
-    data: UploadData;
+    data: {
+        [taskId: number]: UploadDataItem;
+    };
     actions: NetteActions;
 }
 
 export default class Index extends React.Component<Props, {}> {
 
     public render() {
+        const {data, actions} = this.props;
         const boxes = [];
-        for (const taskId in this.props.data) {
-            if (this.props.data.hasOwnProperty(taskId)) {
-                const data: UploadDataItem = this.props.data[taskId];
-                boxes.push(<ItemIndex actions={this.props.actions} key={taskId} data={data}/>);
+        for (const taskId in data) {
+            if (data.hasOwnProperty(taskId)) {
+                boxes.push(<ItemIndex actions={actions} key={taskId} data={data[taskId]}/>);
             }
         }
-        return <div className="row">{boxes}</div>;
+        if (boxes.length) {
+            return <div className="row">{boxes}</div>;
+        } else {
+            return <div className="alert alert-info">{lang.getText('No tasks available')}</div>;
+        }
     }
 }

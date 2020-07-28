@@ -1,4 +1,4 @@
-import { dispatchNetteFetch } from '@fetchApi/middleware/fetch';
+import { dispatchNetteFetch2 } from '@fetchApi/middleware/fetch';
 import {
     Request,
     Response,
@@ -29,7 +29,7 @@ export const fetchResults = (
     if (oldLastUpdated) {
         data.requestData = oldLastUpdated;
     }
-    return dispatchNetteFetch<string, ResponseData, State>(accessKey, dispatch, data, () => null, () => null, url);
+    return dispatchNetteFetch2<Request<string>, ResponseData, State>(url, accessKey, dispatch, data);
 };
 
 export const waitForFetch = (

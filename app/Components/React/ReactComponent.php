@@ -53,12 +53,12 @@ abstract class ReactComponent extends BaseComponent {
     }
 
     /**
-     * @return object
+     * @return array
      * @throws BadTypeException
      */
-    protected function getReactRequest() {
+    protected function getReactRequest(): array {
         $requestData = $this->getHttpRequest()->getPost('requestData');
         $act = $this->getHttpRequest()->getPost('act');
-        return (object)['requestData' => $requestData, 'act' => $act];
+        return ['requestData' => $requestData, 'act' => $act];
     }
 }

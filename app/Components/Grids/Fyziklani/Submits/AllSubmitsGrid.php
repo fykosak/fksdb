@@ -36,10 +36,13 @@ class AllSubmitsGrid extends SubmitsGrid {
 
     /** @var ModelEvent */
     private $event;
+
     /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
+
     /** @var ServiceFyziklaniTask */
     private $serviceFyziklaniTask;
+
     /** @var HandlerFactory */
     private $handlerFactory;
 

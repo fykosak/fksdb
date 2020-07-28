@@ -1,5 +1,5 @@
-import { dispatchNetteFetch } from '@fetchApi/middleware/fetch';
-import { Response } from '@fetchApi/middleware/interfaces';
+import { dispatchNetteFetch2 } from '@fetchApi/middleware/fetch';
+import { Request, Response } from '@fetchApi/middleware/interfaces';
 import {
     Action,
     Dispatch,
@@ -24,7 +24,7 @@ export const submitStart = (dispatch: Dispatch<Action<string>>, values: SubmitFo
             code: getFullCode(values.code),
         },
     };
-    return dispatchNetteFetch<SubmitFormRequest, void, SubmitStore>(ACCESS_KEY, dispatch, data, () => {
+    return dispatchNetteFetch2<Request<SubmitFormRequest>, void, SubmitStore>(url, ACCESS_KEY, dispatch, data, () => {
         dispatch(reset(FORM_NAME));
-    }, () => null, url);
+    });
 };

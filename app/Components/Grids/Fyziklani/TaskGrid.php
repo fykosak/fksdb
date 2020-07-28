@@ -20,6 +20,7 @@ class TaskGrid extends BaseGrid {
 
     /** @var ServiceFyziklaniTask */
     private $serviceFyziklaniTask;
+
     /** @var ModelEvent */
     private $event;
 

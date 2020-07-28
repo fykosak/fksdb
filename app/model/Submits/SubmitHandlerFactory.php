@@ -3,13 +3,13 @@
 namespace FKSDB\Submits;
 
 use FKSDB\Authorization\ContestAuthorizator;
-use FKSDB\Exceptions\ModelException;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelContestant;
+use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
@@ -22,18 +22,29 @@ use Nette\Application\Responses\FileResponse;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Http\FileUpload;
+use Nette\Security\IUserStorage;
 use Nette\Utils\DateTime;
-use Tracy\Debugger;
 
+/**
+ * Class SubmitHandlerFactory
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class SubmitHandlerFactory {
+
     /** @var CorrectedStorage */
     private $correctedStorage;
+
     /** @var UploadedStorage */
     private $uploadedStorage;
+
     /** @var ServiceSubmit */
     private $serviceSubmit;
+
     /** @var ContestAuthorizator */
     private $contestAuthorizator;
+
+    /** @var IUserStorage */
+    private $userStorage;
 
     /**
      * SubmitDownloadFactory constructor.
@@ -41,22 +52,24 @@ class SubmitHandlerFactory {
      * @param UploadedStorage $uploadedStorage
      * @param ServiceSubmit $serviceSubmit
      * @param ContestAuthorizator $contestAuthorizator
+     * @param IUserStorage $userStorage
      */
     public function __construct(
         CorrectedStorage $correctedStorage,
         UploadedStorage $uploadedStorage,
         ServiceSubmit $serviceSubmit,
-        ContestAuthorizator $contestAuthorizator
+        ContestAuthorizator $contestAuthorizator,
+        IUserStorage $userStorage
     ) {
         $this->correctedStorage = $correctedStorage;
         $this->uploadedStorage = $uploadedStorage;
         $this->serviceSubmit = $serviceSubmit;
         $this->contestAuthorizator = $contestAuthorizator;
+        $this->userStorage = $userStorage;
     }
 
     /**
      * @param Presenter $presenter
-     * @param ILogger $logger
      * @param int $id
      * @return void
      * @throws AbortException
@@ -64,16 +77,15 @@ class SubmitHandlerFactory {
      * @throws ForbiddenRequestException
      * @throws NotFoundException
      */
-    public function handleDownloadUploaded(Presenter $presenter, ILogger $logger, int $id) {
+    public function handleDownloadUploaded(Presenter $presenter, int $id) {
         $submit = $this->getSubmit($id, 'download.uploaded');
+
         $filename = $this->uploadedStorage->retrieveFile($submit);
-        if ($submit->source != ModelSubmit::SOURCE_UPLOAD) {
-            $logger->log(new Message(_('Lze stahovat jen uploadovaná řešení.'), Message::LVL_DANGER));
-            return;
+        if ($submit->source !== ModelSubmit::SOURCE_UPLOAD) {
+            throw new StorageException(_('Lze stahovat jen uploadovaná řešení.'));
         }
         if (!$filename) {
-            $logger->log(new Message(_('Poškozený soubor submitu'), Message::LVL_DANGER));
-            return;
+            throw new StorageException(_('Poškozený soubor submitu'));
         }
         $response = new FileResponse($filename, $submit->getTask()->getFQName() . '-uploaded.pdf', 'application/pdf');
         $presenter->sendResponse($response);
@@ -81,69 +93,49 @@ class SubmitHandlerFactory {
 
     /**
      * @param Presenter $presenter
-     * @param ILogger $logger
      * @param int $id
      * @return void
-     * @throws AbortException
-     * @throws BadRequestException
      * @throws ForbiddenRequestException
      * @throws NotFoundException
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws StorageException
      */
-    public function handleDownloadCorrected(Presenter $presenter, ILogger $logger, int $id) {
+    public function handleDownloadCorrected(Presenter $presenter, int $id) {
         $submit = $this->getSubmit($id, 'download.corrected');
         if (!$submit->corrected) {
-            $logger->log(new Message(_('Opravené riešenie nieje nahrané'), Message::LVL_WARNING));
-            return;
+            throw new StorageException(_('Opravené riešenie nieje nahrané'));
         }
         $filename = $this->correctedStorage->retrieveFile($submit);
         if (!$filename) {
-            $logger->log(new Message(_('Poškozený soubor submitu'), Message::LVL_DANGER));
-            return;
+            throw new StorageException(_('Poškozený soubor submitu'));
         }
         $response = new FileResponse($filename, $submit->getTask()->getFQName() . '-corrected.pdf', 'application/pdf');
         $presenter->sendResponse($response);
     }
 
-
     /**
      * @param Presenter $presenter
      * @param ILogger $logger
      * @param int $submitId
-     * @return array|null
+     * @param int $academicYear
+     * @return array
+     * @throws ForbiddenRequestException
      * @throws InvalidLinkException
+     * @throws NotFoundException
+     * @throws StorageException
      */
-    public function handleRevoke(Presenter $presenter, ILogger $logger, int $submitId) {
-        /** @var ModelSubmit $submit */
-        $submit = $this->serviceSubmit->findByPrimary($submitId);
-        if (!$submit) {
-            $logger->log(new Message(_('Neexistující submit.'), Message::LVL_DANGER));
-            return null;
-        }
-        $contest = $submit->getContestant()->getContest();
-        if (!$this->contestAuthorizator->isAllowed($submit, 'revoke', $contest)) {
-            $logger->log(new Message(_('Nedostatečné oprávnění.'), Message::LVL_DANGER));
-            return null;
-        }
-        if (!$submit->canRevoke()) {
-            $logger->log(new Message(_('Nelze zrušit submit.'), Message::LVL_DANGER));
-            return null;
-        }
-        try {
-            $this->uploadedStorage->deleteFile($submit);
-            $this->serviceSubmit->dispose($submit);
-            $data = ServiceSubmit::serializeSubmit(null, $submit->getTask(), $presenter);
-            $logger->log(new Message(\sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()), ILogger::WARNING));
-            return $data;
+    public function handleRevoke(Presenter $presenter, ILogger $logger, int $submitId, int $academicYear): array {
+        $submit = $this->getSubmit($submitId, 'revoke');
 
-        } catch (StorageException $exception) {
-            Debugger::log($exception);
-            $logger->log(new Message(_('Během mazání úlohy %s došlo k chybě.'), Message::LVL_DANGER));
-            return null;
-        } catch (ModelException $exception) {
-            Debugger::log($exception);
-            $logger->log(new Message(_('Během mazání úlohy %s došlo k chybě.'), Message::LVL_DANGER));
-            return null;
+        if (!$submit->canRevoke()) {
+            throw new StorageException(_('Nelze zrušit submit.'));
         }
+        $this->uploadedStorage->deleteFile($submit);
+        $this->serviceSubmit->dispose($submit);
+        $data = ServiceSubmit::serializeSubmit(null, $submit->getTask(), $this->getUserStudyYear($academicYear));
+        $logger->log(new Message(\sprintf(_('Odevzdání úlohy %s zrušeno.'), $submit->getTask()->getFQName()), ILogger::WARNING));
+        return $data;
     }
 
     /**
@@ -154,22 +146,26 @@ class SubmitHandlerFactory {
      */
     public function handleSave(FileUpload $file, ModelTask $task, ModelContestant $contestant) {
         $submit = $this->serviceSubmit->findByContestant($contestant->ct_id, $task->task_id);
-        if (is_null($submit)) {
-            $submit = $this->serviceSubmit->createNewModel([
-                'task_id' => $task->task_id,
-                'ct_id' => $contestant->ct_id,
-                'submitted_on' => new DateTime(),
-                'source' => ModelSubmit::SOURCE_UPLOAD,
-            ]);
-        } else {
-            $this->serviceSubmit->updateModel2($submit, [
-                'submitted_on' => new DateTime(),
-                'source' => ModelSubmit::SOURCE_UPLOAD,
-            ]);
-        }
+        $submit = $this->serviceSubmit->store($submit, [
+            'task_id' => $task->task_id,
+            'ct_id' => $contestant->ct_id,
+            'submitted_on' => new DateTime(),
+            'source' => ModelSubmit::SOURCE_UPLOAD,
+        ]);
         // store file
         $this->uploadedStorage->storeFile($file->getTemporaryFile(), $submit);
         return $submit;
+    }
+
+    /**
+     * @param int $academicYear
+     * @return int|null
+     */
+    public function getUserStudyYear(int $academicYear) {
+        /** @var ModelLogin $login */
+        $login = $this->userStorage->getIdentity();
+        $personHistory = $login->getPerson()->getHistory($academicYear);
+        return ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
     }
 
     /**
@@ -180,14 +176,12 @@ class SubmitHandlerFactory {
      * @throws NotFoundException
      */
     private function getSubmit(int $id, string $privilege): ModelSubmit {
-        /** @var ModelSubmit $submit */
         $submit = $this->serviceSubmit->findByPrimary($id);
-
         if (!$submit) {
-            throw new NotFoundException('Neexistující submit.');
+            throw new NotFoundException(_('Submit does not exists.'));
         }
         if (!$this->contestAuthorizator->isAllowed($submit, $privilege, $submit->getContestant()->getContest())) {
-            throw new ForbiddenRequestException('Nedostatečné oprávnění.');
+            throw new ForbiddenRequestException(_('Access denied'));
         }
         return $submit;
     }

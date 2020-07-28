@@ -5,6 +5,8 @@ namespace FKSDB\Results;
 use DOMDocument;
 use DOMNode;
 use Exception;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\Results\EvaluationStrategies\EvaluationFykos2001;
@@ -145,11 +147,11 @@ class ResultsModelFactory implements IXMLNodeSerializer {
      * @param int $format
      * @return void
      * @throws SoapFault
-     * @throws InvalidArgumentException
+     * @throws BadTypeException
      */
     public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $format) {
         if (!$dataSource instanceof AbstractResultsModel) {
-            throw new InvalidArgumentException('Expected FKSDB\Results\IResultsModel, got ' . get_class($dataSource) . '.');
+            throw new BadTypeException(AbstractModelSingle::class, $dataSource);
         }
 
         if ($format !== self::EXPORT_FORMAT_1) {

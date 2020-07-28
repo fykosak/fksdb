@@ -1,18 +1,13 @@
+import { UploadDataItem } from '@apps/ajaxUpload/middleware/uploadDataItem';
 import { ACTION_SUBMIT_SUCCESS } from '@fetchApi/actions/submit';
 import { ActionSubmitSuccess } from '@fetchApi/middleware/interfaces';
 
-export interface State {
-    deadline: string | null;
-    href: string;
-    name: string;
-    submitId: number | null;
-    taskId: number;
-}
+export type State = UploadDataItem;
 
 const submitSuccess = (state: State, action: ActionSubmitSuccess<any>): State => {
     return {
         ...state,
-        ...action.data.responseData,
+        ...action.data.responseData[state.taskId],
     };
 };
 

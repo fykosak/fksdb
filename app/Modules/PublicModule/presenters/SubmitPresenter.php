@@ -165,7 +165,7 @@ class SubmitPresenter extends BasePresenter {
         $control = new FormControl();
         $form = $control->getForm();
 
-        $prevDeadline = null;
+
         $taskIds = [];
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
@@ -174,12 +174,12 @@ class SubmitPresenter extends BasePresenter {
         if ($studyYear === null) {
             $this->flashMessage(_('Řešitel nemá vyplněn ročník, nebudou dostupné všechny úlohy.'));
         }
+        $prevDeadline = null;
         /** @var ModelTask $task */
         foreach ($this->getAvailableTasks() as $task) {
-            $questions = $this->quizQuestionService->getTable();
-            $questions->where('task_id', $task->task_id);
+            $questions = $this->quizQuestionService->getTable()->where('task_id', $task->task_id);
 
-            if ($task->submit_deadline != $prevDeadline) {
+            if ($task->submit_deadline !== $prevDeadline) {
                 $form->addGroup(sprintf(_('Termín %s'), $task->submit_deadline));
             }
             $submit = $this->submitService->findByContestant($this->getContestant()->ct_id, $task->task_id);
@@ -249,7 +249,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     protected function createComponentAjaxUpload(): AjaxUpload {
-        return new AjaxUpload($this->getContext(), $this->getAvailableTasks(), $this->getContestant());
+        return new AjaxUpload($this->getContext(), $this->getAvailableTasks(), $this->getContestant(), $this->getSelectedAcademicYear());
     }
 
     /**
@@ -258,7 +258,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     protected function createComponentSubmitsGrid(): SubmitsGrid {
-        return new SubmitsGrid($this->getContext(), $this->getContestant());
+        return new SubmitsGrid($this->getContext(), $this->getContestant(), $this->getSelectedAcademicYear());
     }
 
     /**

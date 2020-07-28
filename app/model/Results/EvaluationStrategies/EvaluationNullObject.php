@@ -40,10 +40,10 @@ class EvaluationNullObject extends EvaluationStrategy {
     }
 
     /**
-     * @return string|void
+     * @return string
      * @throws NotImplementedException
      */
-    public function getSumColumn() {
+    public function getSumColumn(): string {
         throw new NotImplementedException();
     }
 
