@@ -1,12 +1,12 @@
-import { UploadDataItem } from '@apps/ajaxUpload/middleware/uploadDataItem';
+import { Submit } from '@apps/ajaxSubmit/middleware/';
 import { ACTION_FETCH_SUCCESS, ActionFetchSuccess } from '@fetchApi/actions/fetch';
 import { Response2 } from '@fetchApi/middleware/interfaces';
 
 export interface State {
-    submit: UploadDataItem;
+    submit: Submit;
 }
 
-const fetchSuccess = (state: State, action: ActionFetchSuccess<Response2<UploadDataItem>>): State => {
+const fetchSuccess = (state: State, action: ActionFetchSuccess<Response2<Submit>>): State => {
     return {
         submit: {...action.data.data},
     };

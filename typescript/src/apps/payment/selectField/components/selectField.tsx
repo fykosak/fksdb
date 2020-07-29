@@ -1,22 +1,27 @@
-import StoreCreator from '@shared/components/storeCreator';
 import InputConnector from '@inputConnector/compoenents/';
+import StoreCreator from '@shared/components/storeCreator';
 import * as React from 'react';
 import { PaymentScheduleItem } from '../interfaces';
 import { app } from '../reducer/';
 import Container from './container';
 
 interface OwnProps {
-    items: PaymentScheduleItem[];
-    input: HTMLInputElement;
+    data: PaymentScheduleItem[];
+    input: Element;
 }
 
 export default class SelectField extends React.Component<OwnProps, {}> {
 
     public render() {
+        const {input, data} = this.props;
+        if (!(input instanceof HTMLInputElement)) {
+            return false;
+        }
+        input.style.display = 'none';
         return <StoreCreator app={app}>
             <>
-                <InputConnector input={this.props.input}/>
-                <Container items={this.props.items}/>
+                <InputConnector input={input}/>
+                <Container items={data}/>
             </>
         </StoreCreator>;
     }

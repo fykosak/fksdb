@@ -1,10 +1,11 @@
-import { UploadDataItem } from '@apps/ajaxUpload/middleware/uploadDataItem';
+import Loading from '@apps/ajaxSubmit/components/states/loading';
+import { Submit } from '@apps/ajaxSubmit/middleware/';
 import { lang } from '@i18n/i18n';
 import Card from '@shared/components/card';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Store } from '../../reducers';
-import MessageBox from '../messageBox';
+import { Store } from '../reducers';
+import MessageBox from './messageBox';
 import File from './states/file';
 import Form from './states/form';
 
@@ -14,7 +15,7 @@ interface OwnProps {
 
 interface StateProps {
     submitting: boolean;
-    submit: UploadDataItem;
+    submit: Submit;
 }
 
 class UploadContainer extends React.Component<OwnProps & StateProps, {}> {
@@ -36,13 +37,10 @@ class UploadContainer extends React.Component<OwnProps & StateProps, {}> {
     private getInnerContainer() {
         const {submit, submitting, accessKey} = this.props;
         if (submit.disabled) {
-            return <p className="alert alert-info">{lang.getText('Táto úloha nieje pre tvoju kategoriu')}</p>;
+            return <p className="alert alert-info">{lang.getText('Task is not for your category.')}</p>;
         }
         if (submitting) {
-            return (<div className="text-center">
-                <span className="d-block">{lang.getText('Loading')}</span>
-                <span className="display-1 d-block"><i className="fa fa-spinner fa-spin "/></span>
-            </div>);
+            return (<Loading/>);
         }
         if (submit.submitId) {
             return (<File accessKey={accessKey} submit={submit}/>);

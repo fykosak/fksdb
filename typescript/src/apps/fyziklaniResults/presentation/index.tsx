@@ -1,16 +1,17 @@
 import { NetteActions } from '@appsCollector/netteActions';
 import ActionsStoreCreator from '@fetchApi/components/actionsStoreCreator';
 import * as React from 'react';
-import Downloader from '../../downloader/components';
-import LoadingSwitch from '../../shared/components/loadingSwitch';
-import ResultsShower from '../../shared/components/resultsShower';
-import { app } from '../reducers';
-import App from './app';
-import PositionSwitcher from './positionSwitcher';
-import Settings from './settings';
+import Downloader from '../downloader/components';
+import LoadingSwitch from '../shared/components/loadingSwitch';
+import ResultsShower from '../shared/components/resultsShower';
+import App from './components/app';
+import PositionSwitcher from './components/positionSwitcher';
+import Settings from './components/settings';
+import { app } from './reducers';
 
 interface OwnProps {
     actions: NetteActions;
+    data: any;
 }
 
 export default class Index extends React.Component<OwnProps, {}> {

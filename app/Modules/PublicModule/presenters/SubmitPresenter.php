@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Components\Control\AjaxUpload\AjaxUpload;
+use FKSDB\Components\Control\AjaxSubmit\AjaxSubmit;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
@@ -134,7 +134,7 @@ class SubmitPresenter extends BasePresenter {
     protected function startup() {
         /** @var ModelTask $task */
         foreach ($this->getAvailableTasks() as $task) {
-            $this->addComponent(new AjaxUpload($this->getContext(), $task, $this->getContestant(), $this->getSelectedAcademicYear()), 'task_' . $task->task_id);
+            $this->addComponent(new AjaxSubmit($this->getContext(), $task, $this->getContestant(), $this->getSelectedAcademicYear()), 'task_' . $task->task_id);
         }
         parent::startup();
     }

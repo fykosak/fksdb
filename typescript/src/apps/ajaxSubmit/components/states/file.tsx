@@ -1,6 +1,7 @@
-import { UploadDataItem } from '@apps/ajaxUpload/middleware/uploadDataItem';
-import { Store } from '@apps/ajaxUpload/reducers';
+import { Submit } from '@apps/ajaxSubmit/middleware/';
+import { Store } from '@apps/ajaxSubmit/reducers';
 import { NetteActions } from '@appsCollector/netteActions';
+import { dispatchFetch } from '@fetchApi/middleware/netteFetch';
 import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -8,10 +9,9 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { handleSubmit } from '../../../actions/uploadData';
 
 interface OwnProps {
-    submit: UploadDataItem;
+    submit: Submit;
     accessKey: string;
 }
 
@@ -46,7 +46,7 @@ class File extends React.Component<OwnProps & DispatchProps & StateProps, {}> {
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: OwnProps): DispatchProps => {
     const {accessKey} = ownProps;
     return {
-        onDeleteFile: (url: string) => handleSubmit(dispatch, accessKey, url),
+        onDeleteFile: (url: string) => dispatchFetch<Submit, Store>(url, accessKey, dispatch, JSON.stringify({})),
     };
 };
 const mapStateToProps = (state: Store, ownProps: OwnProps): StateProps => {

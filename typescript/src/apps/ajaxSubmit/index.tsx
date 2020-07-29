@@ -1,12 +1,12 @@
-import UploadContainer from '@apps/ajaxUpload/components/item/container';
+import UploadContainer from '@apps/ajaxSubmit/components/container';
 import { NetteActions } from '@appsCollector/netteActions';
 import ActionsStoreCreator from '@fetchApi/components/actionsStoreCreator';
 import * as React from 'react';
-import { UploadDataItem } from '../../middleware/uploadDataItem';
-import { app } from '../../reducers';
+import { Submit } from './middleware';
+import { app } from './reducers';
 
 interface IProps {
-    data: UploadDataItem;
+    data: Submit;
     actions: NetteActions;
 }
 
@@ -27,6 +27,5 @@ export default class Index extends React.Component<IProps, {}> {
             }}>
             <UploadContainer accessKey={accessKey}/>
         </ActionsStoreCreator>;
-
     }
 }

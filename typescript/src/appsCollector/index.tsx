@@ -1,3 +1,5 @@
+import { mapRegister } from '@appsCollector/mapRegister';
+import * as React from 'react';
 import { NetteActions } from './netteActions';
 
 export type App = (element: Element, reactId: string, rawData: string, actions: NetteActions) => boolean;
@@ -33,28 +35,3 @@ class AppsCollector {
 }
 
 export const appsCollector = new AppsCollector();
-
-export type mapRegisterCallback = (element: Element, reactId: string, data: string, actions: NetteActions) => void;
-
-class MapRegister {
-    private apps: {
-        [key: string]: mapRegisterCallback;
-    } = {};
-
-    public register(reactId: string, callback: mapRegisterCallback): void {
-        if (this.apps.hasOwnProperty(reactId)) {
-            throw new Error('App with "' + reactId + '" is already registred.');
-        }
-        this.apps[reactId] = callback;
-    }
-
-    public render(element, reactId, rawData, actions): boolean {
-        if (this.apps.hasOwnProperty(reactId)) {
-            this.apps[reactId](element, reactId, rawData, actions);
-            return true;
-        }
-        return false;
-    }
-}
-
-export const mapRegister = new MapRegister();

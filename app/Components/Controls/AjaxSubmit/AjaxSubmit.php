@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Control\AjaxUpload;
+namespace FKSDB\Components\Control\AjaxSubmit;
 
 use FKSDB\Components\React\AjaxComponent;
 use FKSDB\Exceptions\BadTypeException;
@@ -31,7 +31,7 @@ use Tracy\Debugger;
  * @author Michal Červeňák <miso@fykos.cz>
  * @property-read SubmitPresenter $presenter
  */
-class AjaxUpload extends AjaxComponent {
+class AjaxSubmit extends AjaxComponent {
 
     /** @var ServiceSubmit */
     private $serviceSubmit;
@@ -62,7 +62,7 @@ class AjaxUpload extends AjaxComponent {
      * @param int $academicYear
      */
     public function __construct(Container $container, ModelTask $task, ModelContestant $contestant, int $academicYear) {
-        parent::__construct($container, 'public.ajax-upload');
+        parent::__construct($container, 'public.ajax-submit');
         $this->task = $task;
         $this->contestant = $contestant;
         $this->academicYear = $academicYear;

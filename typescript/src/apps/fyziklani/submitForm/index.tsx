@@ -4,9 +4,9 @@ import * as React from 'react';
 import {
     Task,
     Team,
-} from '../../helpers/interfaces/';
-import { app } from '../reducers/';
-import Container from './container';
+} from '../helpers/interfaces';
+import Container from './components/container';
+import { app } from './reducers';
 
 interface OwnProps {
     tasks: Task[];
@@ -15,7 +15,7 @@ interface OwnProps {
     availablePoints: number[];
 }
 
-export default class TaskCode extends React.Component<OwnProps, {}> {
+export default class Index extends React.Component<OwnProps, {}> {
     public render() {
         const {tasks, teams, actions, availablePoints} = this.props;
         return <StoreCreator app={app}>

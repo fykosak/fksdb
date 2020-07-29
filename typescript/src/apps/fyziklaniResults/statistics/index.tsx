@@ -2,13 +2,14 @@ import { NetteActions } from '@appsCollector/netteActions';
 import ActionsStoreCreator from '@fetchApi/components/actionsStoreCreator';
 import Powered from '@shared/powered';
 import * as React from 'react';
-import Downloader from '../../downloader/components';
-import { app } from '../reducers';
-import App from './app';
+import Downloader from '../downloader/components';
+import App from './components/app';
+import { app } from './reducers';
 
 interface OwnProps {
     mode: 'correlation' | 'team' | 'task';
     actions: NetteActions;
+    data: any;
 }
 
 export default class StatisticApp extends React.Component<OwnProps, {}> {

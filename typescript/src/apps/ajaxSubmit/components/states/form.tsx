@@ -5,7 +5,7 @@ import {
     dragEnd,
     dragStart,
     dropItem,
-} from '../../../actions';
+} from '../../actions';
 
 import { NetteActions } from '@appsCollector/netteActions';
 import { dispatchFetch } from '@fetchApi/middleware/netteFetch';
@@ -13,12 +13,11 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { handleFileUpload } from '../../../middleware/upload';
-import { UploadDataItem } from '../../../middleware/uploadDataItem';
-import { Store } from '../../../reducers';
+import { handleFileUpload, Submit } from '../../middleware/';
+import { Store } from '../../reducers';
 
 interface OwnProps {
-    submit: UploadDataItem;
+    submit: Submit;
     accessKey: string;
 }
 
