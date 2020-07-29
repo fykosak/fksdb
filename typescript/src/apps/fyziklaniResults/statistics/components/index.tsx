@@ -19,13 +19,24 @@ interface OwnProps {
 
 export default class StatisticApp extends React.Component<OwnProps, {}> {
     public render() {
-        const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
         const accessKey = '@@fyziklani-results';
-        const {mode, actions} = this.props;
+        const state = {
+            fetchApi: {
+                [accessKey]: {
+                    actions: this.props.actions,
+                    error: null,
+                    messages: [],
+                    submitting: false,
+                },
+            },
+        };
+        const store = config.dev ? createStore(app, state, applyMiddleware(logger)) : createStore(app, state);
+
+        const {mode} = this.props;
         return (
             <Provider store={store}>
                 <div className={'fyziklani-statistics'}>
-                    <Downloader accessKey={accessKey} actions={actions}/>
+                    <Downloader accessKey={accessKey}/>
                     <App mode={mode}/>
                 </div>
                 <Powered/>

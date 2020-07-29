@@ -1,7 +1,6 @@
 import { lang } from '@i18n/i18n';
 import { scaleLinear } from 'd3-scale';
 import * as React from 'react';
-import { findDOMNode } from 'react-dom';
 import { connect } from 'react-redux';
 import {
     Action,
@@ -41,8 +40,8 @@ class GlobalCorrelation extends React.Component<StateProps & DispatchProps, {}> 
     private table;
 
     public componentDidMount() {
-        const table: any = $(findDOMNode(this.table));
-      //  table.tablesorter();
+        // const table: any = $(findDOMNode(this.table));
+        // table.tablesorter();
     }
 
     public render() {

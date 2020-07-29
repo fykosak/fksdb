@@ -48,11 +48,10 @@ class PaymentSelectField extends TextInput {
     }
 
     /**
-     * @param mixed ...$args
      * @return string
      * @throws NotImplementedException
      */
-    public function getData(...$args): string {
+    public function getData(): string {
         $query = $this->servicePersonSchedule->getTable()->where('schedule_item.schedule_group.event_id', $this->event->event_id);
         if (count($this->groupTypes)) {
             $query->where('schedule_item.schedule_group.schedule_group_type IN', $this->groupTypes);

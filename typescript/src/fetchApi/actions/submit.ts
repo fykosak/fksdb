@@ -1,35 +1,35 @@
 import {
-    ActionSubmit,
-    ActionSubmitFail,
-    ActionSubmitSuccess,
-    Response,
+    ActionFetch,
+    ActionFetchFail,
+    ActionFetchSuccess,
+    Response2,
 } from '../middleware/interfaces';
 import jqXHR = JQuery.jqXHR;
 
-export const ACTION_SUBMIT_SUCCESS = 'ACTION_SUBMIT_SUCCESS';
+export const ACTION_FETCH_SUCCESS = 'ACTION_FETCH_SUCCESS';
 
-export function submitSuccess<D>(data: Response<D>, accessKey: string): ActionSubmitSuccess<D> {
+export function fetchSuccess<Data>(data: Response2<Data>, accessKey: string): ActionFetchSuccess<Response2<Data>> {
     return {
         accessKey,
         data,
-        type: ACTION_SUBMIT_SUCCESS,
+        type: ACTION_FETCH_SUCCESS,
     };
 }
 
-export const ACTION_SUBMIT_FAIL = 'ACTION_SUBMIT_FAIL';
+export const ACTION_FETCH_FAIL = 'ACTION_FETCH_FAIL';
 
-export function submitFail<T= any>(error: jqXHR<T>, accessKey: string): ActionSubmitFail<T> {
+export function fetchFail<T = any>(error: jqXHR<T>, accessKey: string): ActionFetchFail<T> {
     return {
         accessKey,
         error,
-        type: ACTION_SUBMIT_FAIL,
+        type: ACTION_FETCH_FAIL,
     };
 }
 
-export const ACTION_SUBMIT_START = 'ACTION_SUBMIT_START';
-export const submitStart = (accessKey: string): ActionSubmit => {
+export const ACTION_FETCH_START = 'ACTION_FETCH_START';
+export const fetchStart = (accessKey: string): ActionFetch => {
     return {
         accessKey,
-        type: ACTION_SUBMIT_START,
+        type: ACTION_FETCH_START,
     };
 };

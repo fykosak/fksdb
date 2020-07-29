@@ -44,7 +44,7 @@ class ServiceSubmit extends AbstractServiceSingle {
     public function findByContestant(int $ctId, int $taskId) {
         $key = $ctId . ':' . $taskId;
 
-        if (!array_key_exists($key, $this->submitCache)) {
+        if (!isset($this->submitCache[$key]) || is_null($this->submitCache[$key])) {
             $result = $this->getTable()->where([
                 'ct_id' => $ctId,
                 'task_id' => $taskId,

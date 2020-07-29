@@ -127,6 +127,14 @@ class SubmitPresenter extends BasePresenter {
         return $this->titleDefault();
     }
 
+    protected function startup() {
+        /** @var ModelTask $task */
+        foreach ($this->getAvailableTasks() as $task) {
+            $this->addComponent(new AjaxUpload($this->getContext(), $task, $this->getContestant(), $this->getSelectedAcademicYear()), 'task_' . $task->task_id);
+        }
+        parent::startup();
+    }
+
     /**
      *
      * @throws GoneException
@@ -154,6 +162,14 @@ class SubmitPresenter extends BasePresenter {
 
             $this->template->hasForward = ($this->getSelectedYear() == $this->getYearCalculator()->getCurrentYear($this->getSelectedContest())) && ($this->getYearCalculator()->getForwardShift($this->getSelectedContest()) > 0);
         }
+    }
+
+    /**
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
+     */
+    public function renderAjax() {
+        $this->template->availableTasks = $this->getAvailableTasks();
     }
 
     /**
@@ -243,14 +259,6 @@ class SubmitPresenter extends BasePresenter {
         return $control;
     }
 
-    /**
-     * @return AjaxUpload
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
-    protected function createComponentAjaxUpload(): AjaxUpload {
-        return new AjaxUpload($this->getContext(), $this->getAvailableTasks(), $this->getContestant(), $this->getSelectedAcademicYear());
-    }
 
     /**
      * @return SubmitsGrid
@@ -318,13 +326,11 @@ class SubmitPresenter extends BasePresenter {
         } catch (ModelException $exception) {
             $this->uploadedSubmitStorage->rollback();
             $this->submitService->getConnection()->rollBack();
-
             Debugger::log($exception);
             $this->flashMessage(_('Došlo k chybě při ukládání úloh.'), self::FLASH_ERROR);
         } catch (ProcessingException $exception) {
             $this->uploadedSubmitStorage->rollback();
             $this->submitService->getConnection()->rollBack();
-
             Debugger::log($exception);
             $this->flashMessage(_('Došlo k chybě při ukládání úloh.'), self::FLASH_ERROR);
         }

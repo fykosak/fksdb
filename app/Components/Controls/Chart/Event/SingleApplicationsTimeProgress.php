@@ -50,11 +50,10 @@ class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
     }
 
     /**
-     * @param mixed ...$args
      * @return string
      * @throws JsonException
      */
-    public function getData(...$args): string {
+    protected function getData(): string {
         $data = [
             'participants' => [],
             'events' => [],

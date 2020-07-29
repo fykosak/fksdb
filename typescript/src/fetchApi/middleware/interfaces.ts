@@ -1,5 +1,6 @@
-import { Action } from 'redux';
 import jqXHR = JQuery.jqXHR;
+import { NetteActions } from '@appsCollector';
+import { Action } from 'redux';
 
 export interface Message {
     level: string;
@@ -11,20 +12,26 @@ export interface Request<F> {
     act: string;
 }
 
-export interface Response<D> {
-    act: string;
+export interface RawResponse {
+    actions: string;
+    data: string;
     messages: Message[];
-    responseData: D;
 }
 
-export interface ActionSubmit extends Action {
+export interface Response2<D> {
+    actions: NetteActions;
+    data: D;
+    messages: Message[];
+}
+
+export interface ActionFetch extends Action {
     accessKey: string;
 }
 
-export interface ActionSubmitFail<T = any> extends ActionSubmit {
+export interface ActionFetchFail<T = any> extends ActionFetch {
     error: jqXHR<T>;
 }
 
-export interface ActionSubmitSuccess<D> extends ActionSubmit {
-    data: Response<D>;
+export interface ActionFetchSuccess<D> extends ActionFetch {
+    data: D;
 }

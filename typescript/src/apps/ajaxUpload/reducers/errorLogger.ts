@@ -1,4 +1,4 @@
-import { ACTION_SUBMIT_START } from '@fetchApi/actions/submit';
+import { ACTION_FETCH_START } from '@fetchApi/actions/submit';
 import { Message } from '@fetchApi/middleware/interfaces';
 import { ACTION_ADD_ERROR } from '../actions';
 
@@ -27,7 +27,7 @@ export const errorLogger = (state: State = initState, action): State => {
     switch (action.type) {
         case ACTION_ADD_ERROR:
             return addError(state, action);
-        case ACTION_SUBMIT_START:
+        case ACTION_FETCH_START:
             return clearErrors(state);
         default:
             return state;

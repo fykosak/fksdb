@@ -170,7 +170,7 @@ class DetailTimeline extends AbstractChart<Props, {}> {
 }
 
 export const person = () => {
-    mapRegister.register('person.detail.timeline', (element, reactId, rawData, actions) => {
+    mapRegister.register('person.detail.timeline', (element, reactId, rawData) => {
         const c = document.createElement('div');
         element.appendChild(c);
         const data = JSON.parse(rawData);

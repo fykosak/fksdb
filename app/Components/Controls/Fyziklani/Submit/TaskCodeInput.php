@@ -2,13 +2,13 @@
 
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
+use FKSDB\Components\React\AjaxComponent;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Fyziklani\Submit\HandlerFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Application\IJavaScriptCollector;
-use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
 use FKSDB\Messages\Message;
 use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\Fyziklani\Submit\TaskCodeException;
@@ -26,13 +26,19 @@ use Nette\Utils\JsonException;
  * Class TaskCodeInput
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class TaskCodeInput extends FyziklaniReactControl {
+class TaskCodeInput extends AjaxComponent {
+
     /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
+
     /** @var ServiceFyziklaniTask */
     private $serviceFyziklaniTask;
+
     /** @var HandlerFactory */
     private $handlerFactory;
+
+    /** @var ModelEvent */
+    private $event;
 
     /**
      * TaskCodeInput constructor.
@@ -40,10 +46,15 @@ class TaskCodeInput extends FyziklaniReactControl {
      * @param ModelEvent $event
      */
     public function __construct(Container $container, ModelEvent $event) {
-        parent::__construct($container, $event, 'fyziklani.submit-form');
+        parent::__construct($container, 'fyziklani.submit-form');
+        $this->event = $event;
         $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
             $collector->registerJSFile('https://dmla.github.io/jsqrcode/src/qr_packed.js');
         });
+    }
+
+    final protected function getEvent(): ModelEvent {
+        return $this->event;
     }
 
     /**
@@ -64,7 +75,7 @@ class TaskCodeInput extends FyziklaniReactControl {
      * @throws JsonException
      * @throws NotSetGameParametersException
      */
-    public function getData(...$args): string {
+    protected function getData(...$args): string {
         return Json::encode([
             'availablePoints' => $this->getEvent()->getFyziklaniGameSetup()->getAvailablePoints(),
             'tasks' => $this->serviceFyziklaniTask->getTasksAsArray($this->getEvent()),
@@ -73,12 +84,13 @@ class TaskCodeInput extends FyziklaniReactControl {
     }
 
     /**
-     * @return void
+     * @return array
      * @throws InvalidLinkException
      */
-    protected function configure() {
-        $this->addAction('save', $this->link('save!'));
-        parent::configure();
+    protected function getActions(): array {
+        return [
+            'save' => $this->link('save!'),
+        ];
     }
 
     /**
@@ -87,7 +99,7 @@ class TaskCodeInput extends FyziklaniReactControl {
      * @throws BadTypeException
      */
     public function handleSave() {
-        $request = $this->getReactRequest();
+        $request = $this->getHttpRequest();
         $response = new ReactResponse();
         $response->setAct($request['act']);
         try {

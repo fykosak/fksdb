@@ -1,4 +1,4 @@
-import { Response } from '@fetchApi/middleware/interfaces';
+import { Response2 } from '@fetchApi/middleware/interfaces';
 import * as React from 'react';
 import {
     Form,
@@ -21,7 +21,7 @@ export interface OwnProps {
     teams: Team[];
     availablePoints: number[];
 
-    onSubmit?(values: SubmitFormRequest): Promise<Response<void>>;
+    onSubmit?(values: SubmitFormRequest): Promise<Response2<void>>;
 }
 
 // { code: string }

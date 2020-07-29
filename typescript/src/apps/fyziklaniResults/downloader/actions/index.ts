@@ -1,8 +1,5 @@
-import { dispatchNetteFetch2 } from '@fetchApi/middleware/fetch';
-import {
-    Request,
-    Response,
-} from '@fetchApi/middleware/interfaces';
+import { Response2 } from '@fetchApi/middleware/interfaces';
+import { dispatchFetch } from '@fetchApi/middleware/netteFetch';
 import { State as FetchApiState } from '@fetchApi/reducers/submit';
 import {
     Action,
@@ -17,29 +14,20 @@ interface State {
 }
 
 export const fetchResults = (
+    url: string,
     accessKey: string,
     dispatch: Dispatch<Action<string>>,
-    oldLastUpdated: string = null,
-    url: string,
-): Promise<Response<ResponseData>> => {
-    const data: Request<string> = {
-        act: '@@fyziklani/results',
-        requestData: null,
-    };
-    if (oldLastUpdated) {
-        data.requestData = oldLastUpdated;
-    }
-    return dispatchNetteFetch2<Request<string>, ResponseData, State>(url, accessKey, dispatch, data);
+): Promise<Response2<ResponseData>> => {
+    return dispatchFetch<{}, ResponseData, State>(url, accessKey, dispatch, JSON.stringify({}));
 };
 
 export const waitForFetch = (
     accessKey: string,
     dispatch: Dispatch<Action<string>>,
     delay: number,
-    lastUpdated: string = null,
     url: string,
 ): any => {
     return setTimeout(() => {
-        return fetchResults(accessKey, dispatch, lastUpdated, url);
+        return fetchResults(url, accessKey, dispatch);
     }, delay);
 };

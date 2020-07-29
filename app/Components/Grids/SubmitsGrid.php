@@ -122,12 +122,12 @@ class SubmitsGrid extends BaseGrid {
 
     /**
      * @param int $id
-     * @throws InvalidLinkException
+     * @return void
      */
     public function handleRevoke(int $id) {
         $logger = new MemoryLogger();
         try {
-            $this->submitHandlerFactory->handleRevoke($this->getPresenter(), $logger, $id, $this->academicYear);
+            $this->submitHandlerFactory->handleRevoke($logger, $id, $this->academicYear);
         } catch (ForbiddenRequestException$exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
         } catch (NotFoundException$exception) {

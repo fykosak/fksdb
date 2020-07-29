@@ -1,4 +1,4 @@
-import { Submits } from '../../../../fyziklani/helpers/interfaces';
+import { Submits } from '@apps/fyziklani/helpers/interfaces';
 import { PreprocessedSubmit } from './correlation';
 
 export interface SubmitsForTeams {

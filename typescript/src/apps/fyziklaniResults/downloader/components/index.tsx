@@ -19,33 +19,34 @@ interface StateProps {
     lastUpdated: string;
     refreshDelay: number;
     isRefreshing: boolean;
+    actions: NetteActions;
 }
 
 interface DispatchProps {
-    onWaitForFetch(lastUpdated: string, delay: number): void;
+    onWaitForFetch(delay: number, url: string): void;
 
-    onFetch(): void;
+    onFetch(url: string): void;
 }
 
 interface OwnProps {
     accessKey: string;
-    actions: NetteActions;
 }
 
 class Downloader extends React.Component<DispatchProps & StateProps & OwnProps, {}> {
 
     public componentDidMount() {
-        const {onFetch} = this.props;
-        onFetch();
+        const {onFetch, actions} = this.props;
+        onFetch(actions.getAction('refresh'));
     }
 
     public componentWillReceiveProps(nextProps: DispatchProps & StateProps & OwnProps) {
         const {lastUpdated: oldLastUpdated} = this.props;
         if (oldLastUpdated !== nextProps.lastUpdated) {
 
-            const {onWaitForFetch, refreshDelay, lastUpdated} = nextProps;
+            const {onWaitForFetch, refreshDelay} = nextProps;
             if (refreshDelay) {
-                onWaitForFetch(lastUpdated, refreshDelay);
+                const url = this.props.actions.getAction('refresh');
+                onWaitForFetch(refreshDelay, url);
             }
         }
     }
@@ -59,7 +60,8 @@ class Downloader extends React.Component<DispatchProps & StateProps & OwnProps, 
                     className={isRefreshing ? 'text-success fa fa-check' : 'text-danger fa fa-exclamation-triangle'}/>
                 {isSubmitting && (<i className="fa fa-spinner fa-spin"/>)}
                 {!isRefreshing && (<button className="btn btn-primary btn-sm" onClick={() => {
-                    return onFetch();
+                    const url = this.props.actions.getAction('refresh');
+                    return onFetch(url);
                 }}>{lang.getText('Fetch')}</button>)}
             </div>
         );
@@ -69,6 +71,7 @@ class Downloader extends React.Component<DispatchProps & StateProps & OwnProps, 
 const mapStateToProps = (state: FyziklaniResultsCoreStore, ownProps: OwnProps): StateProps => {
     const {accessKey} = ownProps;
     return {
+        actions: state.fetchApi[accessKey].actions,
         error: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].error : null,
         isRefreshing: state.downloader.isRefreshing,
         isSubmitting: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].submitting : false,
@@ -76,18 +79,12 @@ const mapStateToProps = (state: FyziklaniResultsCoreStore, ownProps: OwnProps): 
         refreshDelay: state.downloader.refreshDelay,
     };
 };
-/**
- * @throws Error
- */
+
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: OwnProps): DispatchProps => {
-    const {accessKey, actions} = ownProps;
-    if (!actions.getAction('refresh')) {
-        throw new Error('You need refresh URL');
-    }
-    const url = actions.getAction('refresh');
+    const {accessKey} = ownProps;
     return {
-        onFetch: () => fetchResults(accessKey, dispatch, null, url),
-        onWaitForFetch: (lastUpdated: string, delay: number): void => waitForFetch(accessKey, dispatch, delay, lastUpdated, url),
+        onFetch: (url: string) => fetchResults(url, accessKey, dispatch),
+        onWaitForFetch: (delay: number, url: string): void => waitForFetch(accessKey, dispatch, delay, url),
     };
 };
 

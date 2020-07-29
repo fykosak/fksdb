@@ -1,5 +1,5 @@
-import { ACTION_SUBMIT_SUCCESS } from '@fetchApi/actions/submit';
-import { ActionSubmitSuccess } from '@fetchApi/middleware/interfaces';
+import { ACTION_FETCH_SUCCESS } from '@fetchApi/actions/submit';
+import { ActionFetchSuccess, Response2 } from '@fetchApi/middleware/interfaces';
 import { ResponseData } from '../../downloader/interfaces';
 import {
     ACTION_SET_HARD_VISIBLE,
@@ -19,8 +19,8 @@ const setHardVisible = (state: State, action: ActionSetHardVisible): State => {
     };
 };
 
-const setStatuses = (state: State, action: ActionSubmitSuccess<ResponseData>): State => {
-    const {isOrg} = action.data.responseData;
+const fetchSuccess = (state: State, action: ActionFetchSuccess<Response2<ResponseData>>): State => {
+    const {isOrg} = action.data.data;
     return {
         ...state,
         isOrg,
@@ -32,8 +32,8 @@ export const fyziklaniOptions = (state: State = {}, action): State => {
     switch (action.type) {
         case ACTION_SET_HARD_VISIBLE:
             return setHardVisible(state, action);
-        case ACTION_SUBMIT_SUCCESS:
-            return setStatuses(state, action);
+        case ACTION_FETCH_SUCCESS:
+            return fetchSuccess(state, action);
         default:
             return state;
     }

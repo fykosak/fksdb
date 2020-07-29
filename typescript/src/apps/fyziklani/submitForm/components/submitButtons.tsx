@@ -1,4 +1,4 @@
-import { Response } from '@fetchApi/middleware/interfaces';
+import { Response2 } from '@fetchApi/middleware/interfaces';
 import * as React from 'react';
 import { SubmitHandler } from 'redux-form';
 import { SubmitFormRequest } from '../actions';
@@ -7,9 +7,9 @@ interface OwnProps {
     valid: boolean;
     submitting: boolean;
     availablePoints: number[];
-    handleSubmit: SubmitHandler<{ code: string }, any, string>;
+    handleSubmit: SubmitHandler<{ code: string }, any>;
 
-    onSubmit?(values: SubmitFormRequest): Promise<Response<void>>;
+    onSubmit?(values: SubmitFormRequest): Promise<Response2<void>>;
 }
 
 export default class TaskInput extends React.Component<OwnProps, {}> {

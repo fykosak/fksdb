@@ -1,13 +1,13 @@
+import {
+    Event,
+} from '@apps/fyziklani/helpers/interfaces';
 import { lang } from '@i18n/i18n';
 import ChartContainer from '@shared/components/chartContainer';
+import LineChart from '@shared/components/lineChart';
 import { LineChartData } from '@shared/components/lineChart/interfaces';
 import { scaleLinear, scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import * as React from 'react';
-import {
-    Event,
-} from '../../../fyziklani/helpers/interfaces';
-import LineChart from '@shared/components/lineChart';
 
 export interface Data {
     events: {

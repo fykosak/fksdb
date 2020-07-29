@@ -1,5 +1,5 @@
-import { submitFail, submitStart, submitSuccess } from '@fetchApi/actions/submit';
-import { Request, Response } from '@fetchApi/middleware/interfaces';
+import { fetchFail, fetchStart, fetchSuccess } from '@fetchApi/actions/submit';
+import { Request, Response2 } from '@fetchApi/middleware/interfaces';
 import {
     Action,
     Dispatch,
@@ -13,23 +13,23 @@ export async function dispatchNetteFetch<TFormData, TResponseData, TStore, T = a
     accessKey: string,
     dispatch: Dispatch<Action<string>>,
     data: Request<TFormData>,
-    success: (data: Response<TResponseData>) => void,
+    success: (data: Response2<TResponseData>) => void,
     error: (e: jqXHR<T>) => void,
     url: string = null,
-): Promise<Response<TResponseData>> {
+): Promise<Response2<TResponseData>> {
 
-    dispatch(submitStart(accessKey));
-    return netteFetch<TFormData, TResponseData, T>(data, (d: Response<TResponseData>) => {
-            dispatch(submitSuccess<TResponseData>(d, accessKey));
+    dispatch(fetchStart(accessKey));
+    return netteFetch<TFormData, TResponseData, T>(data, (d: Response2<TResponseData>) => {
+            dispatch(fetchSuccess<TResponseData>(d, accessKey));
             success(d);
         },
         (e: jqXHR<T>) => {
-            dispatch(submitFail<T>(e, accessKey));
+            dispatch(fetchFail<T>(e, accessKey));
             error(e);
         }, url);
 }
 
-export const saveTeams = (accessKey: string, dispatch: Dispatch<Action>, teams: Team[]): Promise<Response<ResponseData>> => {
+export const saveTeams = (accessKey: string, dispatch: Dispatch<Action>, teams: Team[]): Promise<Response2<ResponseData>> => {
     const data = {act: 'routing-save', requestData: teams};
     return dispatchNetteFetch<Team[], ResponseData, RoutingStore>
     (accessKey, dispatch, data, () => null, () => {
@@ -49,12 +49,12 @@ const removeUpdatesTeams = (): Action => {
 
 export async function netteFetch<TFormData, TResponseData, T = any>(
     data: Request<TFormData>,
-    success: (data: Response<TResponseData>) => void,
+    success: (data: Response2<TResponseData>) => void,
     error: (e: jqXHR<T>) => void,
     url: string = null,
-): Promise<Response<TResponseData>> {
+): Promise<Response2<TResponseData>> {
     const netteJQuery: any = $;
-    return new Promise((resolve: (d: Response<TResponseData>) => void, reject) => {
+    return new Promise((resolve: (d: Response2<TResponseData>) => void, reject) => {
         netteJQuery.nette.ajax({
             data,
             error: (e: jqXHR<T>) => {
@@ -62,7 +62,7 @@ export async function netteFetch<TFormData, TResponseData, T = any>(
                 reject(e);
             },
             method: 'POST',
-            success: (d: Response<TResponseData>) => {
+            success: (d: Response2<TResponseData>) => {
                 success(d);
                 resolve(d);
             },

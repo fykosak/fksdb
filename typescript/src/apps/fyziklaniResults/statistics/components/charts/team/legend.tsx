@@ -18,7 +18,7 @@ class Legend extends React.Component<StateProps, {}> {
         const availablePoints = [1, 2, 3, 5];
         const {onActivePoints} = this.props;
         const legend = availablePoints.map((points: number) => {
-            let pointsLabel = '';
+            let pointsLabel;
             switch (points) {
                 case 1:
                     pointsLabel = lang.getText('bod');

@@ -19,20 +19,27 @@ interface IProps {
 export default class Index extends React.Component<IProps, {}> {
 
     public render() {
-        const store = config.dev ?
-            createStore(app, {
-                uploadData: {
-                    ...this.props.data,
-                },
-            }, applyMiddleware(logger)) :
-            createStore(app, {
-                uploadData: {
-                    ...this.props.data,
-                },
-            });
         const accessKey = '@@submit-api/' + this.props.data.taskId;
+        const state = {
+            fetchApi: {
+                [accessKey]: {
+                    actions: this.props.actions,
+                    error: null,
+                    messages: [],
+                    submitting: false,
+                },
+            },
+            uploadData: {
+                actions: this.props.actions,
+                submit: this.props.data,
+            },
+        };
+        const store = config.dev ?
+            createStore(app, state, applyMiddleware(logger)) :
+            createStore(app, state);
+
         return <Provider store={store}>
-            <UploadContainer actions={this.props.actions} accessKey={accessKey}/>
+            <UploadContainer accessKey={accessKey}/>
         </Provider>;
     }
 }

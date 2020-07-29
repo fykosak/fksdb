@@ -1,4 +1,3 @@
-import { dispatchUploadFile } from '@fetchApi/middleware/fetch';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -9,6 +8,7 @@ import {
 } from '../../../actions';
 
 import { NetteActions } from '@appsCollector';
+import { dispatchFetch } from '@fetchApi/middleware/netteFetch';
 import {
     Action,
     Dispatch,
@@ -18,7 +18,6 @@ import { UploadDataItem } from '../../../middleware/uploadDataItem';
 import { Store } from '../../../reducers';
 
 interface OwnProps {
-    actions: NetteActions;
     submit: UploadDataItem;
     accessKey: string;
 }
@@ -27,7 +26,7 @@ interface DispatchProps {
 
     onDropItem(item: any): void;
 
-    onFileUpload(data: FormData): void;
+    onFileUpload(data: FormData, url: string): void;
 
     onDragStart(): void;
 
@@ -38,65 +37,78 @@ interface DispatchProps {
 
 interface StateProps {
     dragged: boolean;
+    actions: NetteActions;
 }
 
 class Form extends React.Component<OwnProps & StateProps & DispatchProps, {}> {
 
     public render() {
-        const {onDropItem, onDragEnd, onDragStart, onFileUpload, onAddError} = this.props;
-        const handleDragEnd = (event) => {
-            event.preventDefault();
-            onDragEnd();
-        };
-        const handleDragStart = (event) => {
-            event.preventDefault();
-            onDragStart();
-        };
-
-        const onUploadFile = (event) => {
-            event.preventDefault();
-            const data: FileList = event.dataTransfer.files;
-            onDropItem(data);
-
-            const formData = handleFileUpload(data, this.props.submit.taskId, onAddError);
-            if (formData) {
-                onFileUpload(formData);
-            }
-        };
-
-        const onFileInputChanged = (event) => {
-            event.preventDefault();
-            const data: FileList = event.target.files;
-            const formData = handleFileUpload(data, this.props.submit.taskId, onAddError);
-            if (formData) {
-                onFileUpload(formData);
-            }
-        };
-
         const {dragged} = this.props;
 
         return <div className={'drop-input' + (dragged ? ' dragged' : '')}
-                    onDrop={onUploadFile}
-                    onDragOver={handleDragStart}
-                    onDragEnter={handleDragStart}
-                    onDragLeave={handleDragEnd}
-                    onDragEnd={handleDragEnd}
+                    onDrop={(event) => {
+                        this.onUploadFile(event);
+                    }}
+                    onDragOver={(event) => {
+                        this.handleDragStart(event);
+                    }}
+                    onDragEnter={(event) => {
+                        this.handleDragStart(event);
+                    }}
+                    onDragLeave={(event) => {
+                        this.handleDragEnd(event);
+                    }}
+                    onDragEnd={(event) => {
+                        this.handleDragEnd(event);
+                    }}
         >
             <div className="drop-input-inner">
                 <div className="text-center">
                     <span className="display-1 d-block"><i className="fa fa-download"/></span>
                     <span className="d-block">
                         <span>Drag file here</span>.</span>
-                    <input type={'file'} onChange={onFileInputChanged} accept="application/pdf"/>
+                    <input type={'file'} onChange={(event) => {
+                        this.onFileInputChanged(event);
+                    }} accept="application/pdf"/>
                 </div>
             </div>
         </div>;
     }
 
+    private handleDragEnd(event: React.DragEvent<HTMLDivElement>): void {
+        event.preventDefault();
+        this.props.onDragEnd();
+    }
+
+    private handleDragStart(event: React.DragEvent<HTMLDivElement>): void {
+        event.preventDefault();
+        this.props.onDragStart();
+    }
+
+    private onUploadFile(event: React.DragEvent<HTMLDivElement>): void {
+        event.preventDefault();
+        const data: FileList = event.dataTransfer.files;
+        this.props.onDropItem(data);
+        this.handleFile(data);
+    }
+
+    private onFileInputChanged(event: React.ChangeEvent<HTMLInputElement>): void {
+        event.preventDefault();
+        this.handleFile(event.target.files);
+    }
+
+    private handleFile(fileList: FileList): void {
+        const formData = handleFileUpload(fileList, this.props.submit.taskId, this.props.onAddError);
+        if (formData) {
+            this.props.onFileUpload(formData, this.props.actions.getAction('upload'));
+        }
+    }
 }
 
-const mapStateToProps = (state: Store): StateProps => {
+const mapStateToProps = (state: Store, ownProps: OwnProps): StateProps => {
+    const {accessKey} = ownProps;
     return {
+        actions: state.fetchApi[accessKey].actions,
         dragged: state.dragNDrop.dragged,
     };
 };
@@ -106,8 +118,7 @@ const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: OwnPro
         onDragEnd: () => dispatch(dragEnd()),
         onDragStart: () => dispatch(dragStart()),
         onDropItem: (item) => dispatch(dropItem<any>(item)),
-        onFileUpload: (values) => dispatchUploadFile(ownProps.accessKey, dispatch, values, () => null, () => null,
-            ownProps.actions.getAction('upload')),
+        onFileUpload: (values, url: string) => dispatchFetch(url, ownProps.accessKey, dispatch, values),
     };
 };
 

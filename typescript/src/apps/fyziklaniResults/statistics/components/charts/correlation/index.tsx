@@ -1,3 +1,4 @@
+import { Team } from '@apps/fyziklani/helpers/interfaces';
 import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -5,7 +6,6 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { Team } from '../../../../../fyziklani/helpers/interfaces';
 import {
     setFirstTeamId,
     setSecondTeamId,

@@ -2,6 +2,12 @@
     <a href="{plink ':Public:Submit:default' }">{_('Prejdi na starý systém uploadu úloh')}</a>
     <h2>{_'Odevzdat řešení'}</h2>
 
-    {control ajaxUpload}
+    <div class="row">
+        {foreach $availableTasks as $task}
+            <div class="col-6">
+                {control 'task_'.$task->task_id}
+            </div>
+        {/foreach}
+    </div>
 
 {/block}

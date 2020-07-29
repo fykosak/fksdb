@@ -19,7 +19,6 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\Responses\FileResponse;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Http\FileUpload;
 use Nette\Security\IUserStorage;
@@ -115,17 +114,15 @@ class SubmitHandlerFactory {
     }
 
     /**
-     * @param Presenter $presenter
      * @param ILogger $logger
      * @param int $submitId
      * @param int $academicYear
      * @return array
      * @throws ForbiddenRequestException
-     * @throws InvalidLinkException
      * @throws NotFoundException
      * @throws StorageException
      */
-    public function handleRevoke(Presenter $presenter, ILogger $logger, int $submitId, int $academicYear): array {
+    public function handleRevoke(ILogger $logger, int $submitId, int $academicYear): array {
         $submit = $this->getSubmit($submitId, 'revoke');
 
         if (!$submit->canRevoke()) {
@@ -133,7 +130,7 @@ class SubmitHandlerFactory {
         }
         $this->uploadedStorage->deleteFile($submit);
         $this->serviceSubmit->dispose($submit);
-        $data = ServiceSubmit::serializeSubmit(null, $submit->getTask(), $this->getUserStudyYear($academicYear));
+        $data = [$submit->getTask()->task_id => ServiceSubmit::serializeSubmit(null, $submit->getTask(), $this->getUserStudyYear($academicYear))];
         $logger->log(new Message(\sprintf(_('Odevzdání úlohy %s zrušeno.'), $submit->getTask()->getFQName()), ILogger::WARNING));
         return $data;
     }

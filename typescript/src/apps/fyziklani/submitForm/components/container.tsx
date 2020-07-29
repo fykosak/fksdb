@@ -1,5 +1,5 @@
 import { NetteActions } from '@appsCollector';
-import { Response } from '@fetchApi/middleware/interfaces';
+import { Response2 } from '@fetchApi/middleware/interfaces';
 import Powered from '@shared/powered';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -25,7 +25,7 @@ interface OwnProps {
 }
 
 interface DispatchProps {
-    onSubmit(values: SubmitFormRequest): Promise<Response<void>>;
+    onSubmit(values: SubmitFormRequest): Promise<Response2<void>>;
 }
 
 class TaskCode extends React.Component<OwnProps & DispatchProps, {}> {

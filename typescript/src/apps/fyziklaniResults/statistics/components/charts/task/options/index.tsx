@@ -1,3 +1,4 @@
+import { Task } from '@apps/fyziklani/helpers/interfaces';
 import { lang } from '@i18n/i18n';
 import TimeDisplay from '@shared/components/displays/time';
 import * as React from 'react';
@@ -6,7 +7,6 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { Task } from '../../../../../../fyziklani/helpers/interfaces';
 import {
     setAggregationTime,
     setFromDate,

@@ -1,5 +1,5 @@
-import { ACTION_SUBMIT_SUCCESS } from '@fetchApi/actions/submit';
-import { ActionSubmitSuccess } from '@fetchApi/middleware/interfaces';
+import { ACTION_FETCH_SUCCESS } from '@fetchApi/actions/submit';
+import { ActionFetchSuccess, Response2 } from '@fetchApi/middleware/interfaces';
 import { ResponseData } from '../../downloader/interfaces';
 
 export interface State {
@@ -11,8 +11,8 @@ export interface State {
     visible?: boolean;
 }
 
-const updateTimes = (state: State, action: ActionSubmitSuccess<ResponseData>): State => {
-    const {times, gameEnd, gameStart, times: {toEnd, toStart}} = action.data.responseData;
+const fetchSuccess = (state: State, action: ActionFetchSuccess<Response2<ResponseData>>): State => {
+    const {times, gameEnd, gameStart, times: {toEnd, toStart}} = action.data.data;
     return {
         ...state,
         ...times,
@@ -26,8 +26,8 @@ const updateTimes = (state: State, action: ActionSubmitSuccess<ResponseData>): S
 
 export const fyziklaniTimer = (state: State = {}, action): State => {
     switch (action.type) {
-        case ACTION_SUBMIT_SUCCESS:
-            return updateTimes(state, action);
+        case ACTION_FETCH_SUCCESS:
+            return fetchSuccess(state, action);
         default:
             return state;
     }

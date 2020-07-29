@@ -1,5 +1,4 @@
 import { UploadDataItem } from '@apps/ajaxUpload/middleware/uploadDataItem';
-import { NetteActions } from '@appsCollector';
 import { lang } from '@i18n/i18n';
 import Card from '@shared/components/card';
 import * as React from 'react';
@@ -11,7 +10,6 @@ import Form from './states/form';
 
 interface OwnProps {
     accessKey: string;
-    actions: NetteActions;
 }
 
 interface StateProps {
@@ -29,16 +27,14 @@ class UploadContainer extends React.Component<OwnProps & StateProps, {}> {
             <small className="text-muted">{submit.deadline}</small>
         </>);
         const {} = this.props;
-        return <div className="col-md-6 mb-3">
-            <Card headline={headline} level={'info'}>
-                <MessageBox accessKey={accessKey}/>
-                {this.getInnerContainer()}
-            </Card>
-        </div>;
+        return <Card headline={headline} level={'info'}>
+            <MessageBox accessKey={accessKey}/>
+            {this.getInnerContainer()}
+        </Card>;
     }
 
     private getInnerContainer() {
-        const {submit, submitting, actions, accessKey} = this.props;
+        const {submit, submitting, accessKey} = this.props;
         if (submit.disabled) {
             return <p className="alert alert-info">{lang.getText('Táto úloha nieje pre tvoju kategoriu')}</p>;
         }
@@ -49,9 +45,9 @@ class UploadContainer extends React.Component<OwnProps & StateProps, {}> {
             </div>);
         }
         if (submit.submitId) {
-            return (<File actions={actions} accessKey={accessKey} submit={submit}/>);
+            return (<File accessKey={accessKey} submit={submit}/>);
         } else {
-            return (<Form actions={actions} accessKey={accessKey} submit={submit}/>);
+            return (<Form accessKey={accessKey} submit={submit}/>);
         }
     }
 }
@@ -60,7 +56,7 @@ const mapStateToProps = (state: Store, ownProps: OwnProps): StateProps => {
     const {accessKey} = ownProps;
     return {
         submit: {
-            ...state.uploadData,
+            ...state.uploadData.submit,
         },
         submitting: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].submitting : false,
     };

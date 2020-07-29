@@ -21,12 +21,23 @@ interface OwnProps {
 export default class Index extends React.Component<OwnProps, {}> {
     public render() {
         const {actions} = this.props;
-        const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
         const accessKey = '@@fyziklani-results';
+        const state = {
+            fetchApi: {
+                [accessKey]: {
+                    actions,
+                    error: null,
+                    messages: [],
+                    submitting: false,
+                },
+            },
+        };
+        const store = config.dev ? createStore(app, state, applyMiddleware(logger)) : createStore(app, state);
+
         return (
             <Provider store={store}>
                 <div className={'fyziklani-results'}>
-                    <Downloader accessKey={accessKey} actions={actions}/>
+                    <Downloader accessKey={accessKey}/>
                     <LoadingSwitch>
                         <>
                             <FilterSelect/>

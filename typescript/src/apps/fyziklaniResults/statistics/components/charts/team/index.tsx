@@ -1,3 +1,4 @@
+import { Team } from '@apps/fyziklani/helpers/interfaces';
 import { lang } from '@i18n/i18n';
 import ChartContainer from '@shared/components/chartContainer';
 import * as React from 'react';
@@ -6,7 +7,6 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { Team } from '../../../../../fyziklani/helpers/interfaces';
 import { setFirstTeamId } from '../../../actions';
 import { Store as StatisticsStore } from '../../../reducers';
 import Legend from './legend';

@@ -4,7 +4,7 @@ import * as ReactDOM from 'react-dom';
 import SelectField from './components/selectField';
 
 export const payment = () => {
-    mapRegister.register('payment.schedule-select', (element, reactId, rawData, actions) => {
+    mapRegister.register('payment.schedule-select', (element, reactId, rawData) => {
 
         const items = JSON.parse(rawData);
         const container = document.createElement('div');

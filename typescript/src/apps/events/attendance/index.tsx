@@ -76,7 +76,7 @@ class Main extends React.Component<{}, { processing: boolean; messages: string[]
 }
 
 export const attendance = () => {
-    mapRegister.register('attendance.qr-code', (element, reactId, rawData, actions) => {
+    mapRegister.register('attendance.qr-code', (element) => {
         const c = document.createElement('div');
         element.appendChild(c);
         ReactDOM.render(<Main/>, c);

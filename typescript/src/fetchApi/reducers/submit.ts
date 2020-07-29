@@ -1,26 +1,28 @@
+import jqXHR = JQuery.jqXHR;
+import { NetteActions } from '@appsCollector';
 import {
-    ACTION_SUBMIT_FAIL,
-    ACTION_SUBMIT_START,
-    ACTION_SUBMIT_SUCCESS,
+    ACTION_FETCH_FAIL,
+    ACTION_FETCH_START,
+    ACTION_FETCH_SUCCESS,
 } from '../actions/submit';
 import {
-    ActionSubmit,
-    ActionSubmitFail,
-    ActionSubmitSuccess,
+    ActionFetch,
+    ActionFetchFail,
+    ActionFetchSuccess,
     Message,
-    Response,
+    Response2,
 } from '../middleware/interfaces';
-import jqXHR = JQuery.jqXHR;
 
 export interface State<T = any> {
     [accessKey: string]: {
         submitting?: boolean;
         error?: jqXHR<T>;
         messages?: Message[];
+        actions?: NetteActions;
     };
 }
 
-const submitStart = (state: State, action: ActionSubmit): State => {
+const fetchStart = (state: State, action: ActionFetch): State => {
     const {accessKey} = action;
     return {
         ...state,
@@ -32,7 +34,7 @@ const submitStart = (state: State, action: ActionSubmit): State => {
         },
     };
 };
-const submitFail = (state: State, action: ActionSubmitFail): State => {
+const fetchFail = (state: State, action: ActionFetchFail): State => {
     const {accessKey} = action;
     return {
         ...state,
@@ -48,14 +50,14 @@ const submitFail = (state: State, action: ActionSubmitFail): State => {
     };
 };
 
-function submitSuccess<D = any>(state: State, action: ActionSubmitSuccess<D>): State {
-    const data: Response<D> = action.data;
+function fetchSuccess<D = any>(state: State, action: ActionFetchSuccess<Response2<D>>): State {
     const {accessKey} = action;
     return {
         ...state,
         [accessKey]: {
             ...state[accessKey],
-            messages: data.messages,
+            actions: action.data.actions,
+            messages: action.data.messages,
             submitting: false,
         },
     };
@@ -65,12 +67,12 @@ const initState: State = {};
 
 export function submit<D = any>(state: State = initState, action: any): State {
     switch (action.type) {
-        case ACTION_SUBMIT_START:
-            return submitStart(state, action);
-        case ACTION_SUBMIT_FAIL:
-            return submitFail(state, action);
-        case ACTION_SUBMIT_SUCCESS:
-            return submitSuccess<D>(state, action);
+        case ACTION_FETCH_START:
+            return fetchStart(state, action);
+        case ACTION_FETCH_FAIL:
+            return fetchFail(state, action);
+        case ACTION_FETCH_SUCCESS:
+            return fetchSuccess<D>(state, action);
         default:
             return state;
     }

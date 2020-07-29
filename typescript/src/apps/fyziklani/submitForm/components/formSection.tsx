@@ -1,7 +1,8 @@
 import {
     Message,
-    Response,
+    Response2,
 } from '@fetchApi/middleware/interfaces';
+import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -21,7 +22,6 @@ import CodeInput from './input';
 import Scan from './scan';
 import SubmitButtons from './submitButtons';
 import ValueDisplay from './valueDisplay';
-import { lang } from '@i18n/i18n';
 
 export interface OwnProps {
     accessKey: string;
@@ -30,9 +30,9 @@ export interface OwnProps {
     valid: boolean;
     submitting: boolean;
     availablePoints: number[];
-    handleSubmit: SubmitHandler<{ code: string }, any, string>;
+    handleSubmit: SubmitHandler<{ code: string }, any>;
 
-    onSubmit(values: SubmitFormRequest): Promise<Response<void>>;
+    onSubmit(values: SubmitFormRequest): Promise<Response2<void>>;
 }
 
 interface StateProps {

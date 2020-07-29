@@ -1,4 +1,5 @@
 import { UploadDataItem } from '@apps/ajaxUpload/middleware/uploadDataItem';
+import { Store } from '@apps/ajaxUpload/reducers';
 import { NetteActions } from '@appsCollector';
 import { lang } from '@i18n/i18n';
 import * as React from 'react';
@@ -11,30 +12,29 @@ import { handleSubmit } from '../../../actions/uploadData';
 
 interface OwnProps {
     submit: UploadDataItem;
-    actions: NetteActions;
     accessKey: string;
 }
 
 interface DispatchProps {
-    onDeleteFile(): void;
-
-    onDownloadFile(): void;
+    onDeleteFile(url: string): void;
 }
 
-class File extends React.Component<OwnProps & DispatchProps, {}> {
+interface StateProps {
+    actions: NetteActions;
+}
+
+class File extends React.Component<OwnProps & DispatchProps & StateProps, {}> {
 
     public render() {
         return <div className="uploaded-file">
             <button aria-hidden="true" className="pull-right btn btn-warning" title={lang.getText('Revoke')}
                     onClick={() => {
                         if (window.confirm(lang.getText('Remove submit?'))) {
-                            this.props.onDeleteFile();
+                            this.props.onDeleteFile(this.props.actions.getAction('revoke'));
                         }
                     }}>&times;</button>
             <div className="text-center p-2">
-                <a onClick={() => {
-                    this.props.onDownloadFile();
-                }} href="#">
+                <a href={this.props.actions.getAction('download')}>
                     <span className="display-1 w-100"><i className="fa fa-file-pdf-o"/></span>
                     <span className="d-block">{this.props.submit.name}</span>
                 </a>
@@ -44,11 +44,15 @@ class File extends React.Component<OwnProps & DispatchProps, {}> {
 }
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: OwnProps): DispatchProps => {
-    const {accessKey, submit: {submitId}} = ownProps;
+    const {accessKey} = ownProps;
     return {
-        onDeleteFile: () => handleSubmit(dispatch, accessKey, submitId, ownProps.actions.getAction('revoke')),
-        onDownloadFile: () => handleSubmit(dispatch, accessKey, submitId, ownProps.actions.getAction('download')),
+        onDeleteFile: (url: string) => handleSubmit(dispatch, accessKey, url),
     };
 };
-
-export default connect(null, mapDispatchToProps)(File);
+const mapStateToProps = (state: Store, ownProps: OwnProps): StateProps => {
+    const {accessKey} = ownProps;
+    return {
+        actions: state.fetchApi[accessKey].actions,
+    };
+};
+export default connect(mapStateToProps, mapDispatchToProps)(File);

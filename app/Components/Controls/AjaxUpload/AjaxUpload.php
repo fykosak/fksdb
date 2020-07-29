@@ -2,18 +2,17 @@
 
 namespace FKSDB\Components\Control\AjaxUpload;
 
-use FKSDB\Components\React\ReactComponent;
+use FKSDB\Components\React\AjaxComponent;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\ILogger;
-use FKSDB\Logging\MemoryLogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelContestant;
+use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use FKSDB\React\ReactResponse;
 use FKSDB\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Submits\StorageException;
 use FKSDB\Submits\SubmitHandlerFactory;
@@ -28,11 +27,11 @@ use FKSDB\Modules\PublicModule\SubmitPresenter;
 use Tracy\Debugger;
 
 /**
- * Class AjaxUpload
+ * Class TaskUpload
  * @author Michal Červeňák <miso@fykos.cz>
  * @property-read SubmitPresenter $presenter
  */
-class AjaxUpload extends ReactComponent {
+class AjaxUpload extends AjaxComponent {
 
     /** @var ServiceSubmit */
     private $serviceSubmit;
@@ -41,7 +40,7 @@ class AjaxUpload extends ReactComponent {
     private $uploadedStorage;
 
     /** @var TypedTableSelection */
-    private $availableTasks;
+    private $task;
 
     /**@var ModelContestant */
     private $contestant;
@@ -51,6 +50,23 @@ class AjaxUpload extends ReactComponent {
 
     /** @var int */
     private $academicYear;
+
+    /** @var ModelSubmit|null */
+    private $submit;
+
+    /**
+     * TaskUpload constructor.
+     * @param Container $container
+     * @param ModelTask $task
+     * @param ModelContestant $contestant
+     * @param int $academicYear
+     */
+    public function __construct(Container $container, ModelTask $task, ModelContestant $contestant, int $academicYear) {
+        parent::__construct($container, 'public.ajax-upload');
+        $this->task = $task;
+        $this->contestant = $contestant;
+        $this->academicYear = $academicYear;
+    }
 
     /**
      * @param ServiceSubmit $serviceSubmit
@@ -65,41 +81,41 @@ class AjaxUpload extends ReactComponent {
     }
 
     /**
-     * AjaxUpload constructor.
-     * @param Container $container
-     * @param TypedTableSelection $availableTasks
-     * @param ModelContestant $contestant
-     * @param int $academicYear
+     * @return ModelSubmit|null
      */
-    public function __construct(Container $container, TypedTableSelection $availableTasks, ModelContestant $contestant, int $academicYear) {
-        parent::__construct($container, 'public.ajax-upload');
-        $this->availableTasks = $availableTasks;
-        $this->contestant = $contestant;
-        $this->academicYear = $academicYear;
+    private function getSubmit() {
+        if (!isset($this->submit) || is_null($this->submit)) {
+            $this->submit = $this->serviceSubmit->findByContestant($this->contestant->ct_id, $this->task->task_id);
+        }
+        return $this->submit;
     }
 
     /**
-     * @return void
+     * @return array
      * @throws InvalidLinkException
      */
-    protected function configure() {
-        $this->addAction('revoke', $this->link('revoke!'));
-        $this->addAction('upload', $this->link('upload!'));
-        $this->addAction('download', $this->link('download!'));
-        parent::configure();
-    }
-    
-    public function getData(...$args): string {
-        $studyYear = $this->submitHandlerFactory->getUserStudyYear($this->academicYear);
-        $data = [];
-        /** @var ModelTask $task */
-        foreach ($this->availableTasks as $task) {
-            $submit = $this->serviceSubmit->findByContestant($this->contestant->ct_id, $task->task_id);
-            $data[$task->task_id] = ServiceSubmit::serializeSubmit($submit, $task, $studyYear);
+    protected function getActions(): array {
+        $submit = $this->getSubmit();
+        if ($submit) {
+            return [
+                'revoke' => $this->link('revoke!', ['submitId' => $submit->submit_id]),
+                'download' => $this->link('download!', ['submitId' => $submit->submit_id]),
+            ];
+        } else {
+            return [
+                'upload' => $this->link('upload!'),
+            ];
         }
-        return json_encode($data);
     }
 
+    /**
+     * @return mixed|null
+     */
+    protected function getData() {
+        $studyYear = $this->submitHandlerFactory->getUserStudyYear($this->academicYear);
+        $submit = $this->serviceSubmit->findByContestant($this->contestant->ct_id, $this->task->task_id);
+        return ServiceSubmit::serializeSubmit($submit, $this->task, $studyYear);
+    }
 
     /**
      * @return void
@@ -107,110 +123,71 @@ class AjaxUpload extends ReactComponent {
      * @throws BadTypeException
      */
     public function handleUpload() {
-        $response = new ReactResponse();
-
         $files = $this->getHttpRequest()->getFiles();
+        /** @var FileUpload $fileContainer */
         foreach ($files as $name => $fileContainer) {
             $this->serviceSubmit->getConnection()->beginTransaction();
             $this->uploadedStorage->beginTransaction();
             if (!preg_match('/task([0-9]+)/', $name, $matches)) {
-                $response->addMessage(new Message(_('Task not found'), ILogger::WARNING));
+                $this->getLogger()->log(new Message(_('Task not found'), ILogger::WARNING));
                 continue;
             }
-            $task = $this->isAvailableSubmit($matches[1]);
-            if (!$task) {
-
-                $response->setCode(Response::S403_FORBIDDEN);
-                $response->addMessage(new Message(_('Upload not allowed'), ILogger::ERROR));
-                $this->getPresenter()->sendResponse($response);
+            if (!$this->task->task_id === +$matches[1]) {
+                $this->getLogger()->log(new Message(_('Upload not allowed'), ILogger::ERROR));
+                $this->sendAjaxResponse(Response::S403_FORBIDDEN);
             }
-            /** @var FileUpload $file */
-            $file = $fileContainer;
-            if (!$file->isOk()) {
-                $response->setCode(Response::S500_INTERNAL_SERVER_ERROR);
-                $response->addMessage(new Message(_('File is not Ok'), ILogger::ERROR));
-                $this->getPresenter()->sendResponse($response);
+
+            if (!$fileContainer->isOk()) {
+                $this->getLogger()->log(new Message(_('File is not Ok'), ILogger::ERROR));
+                $this->sendAjaxResponse(Response::S500_INTERNAL_SERVER_ERROR);
             }
             // store submit
-            $submit = $this->submitHandlerFactory->handleSave($file, $task, $this->contestant);
+            $this->submitHandlerFactory->handleSave($fileContainer, $this->task, $this->contestant);
             $this->uploadedStorage->commit();
             $this->serviceSubmit->getConnection()->commit();
-            $response->addMessage(new Message(_('Upload successful'), ILogger::SUCCESS));
-            $response->setAct('upload');
-            $response->setData([
-                $task->task_id => $this->serviceSubmit->serializeSubmit(
-                    $submit,
-                    $task,
-                    $this->submitHandlerFactory->getUserStudyYear($this->academicYear)
-                ),
-            ]);
-            $this->getPresenter()->sendResponse($response);
+            $this->getLogger()->log(new Message(_('Upload successful'), ILogger::SUCCESS));
+            $this->sendAjaxResponse();
         }
     }
 
     /**
+     * @param int $submitId
      * @return void
      * @throws AbortException
-     * @throws InvalidLinkException
-     * @throws BadTypeException
      */
-    public function handleRevoke() {
-        $submitId = $this->getReactRequest()['requestData']['submitId'];
-        $logger = new MemoryLogger();
-        $response = new ReactResponse();
+    public function handleRevoke(int $submitId) {
         try {
-            $data = $this->submitHandlerFactory->handleRevoke($this->getPresenter(), $logger, $submitId, $this->academicYear);
-            $response->setData($data);
+            $this->submitHandlerFactory->handleRevoke($this->getLogger(), $submitId, $this->academicYear);
         } catch (ForbiddenRequestException$exception) {
-            $logger->log(new Message($exception->getMessage(), Message::LVL_DANGER));
+            $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));
         } catch (NotFoundException$exception) {
-            $logger->log(new Message($exception->getMessage(), Message::LVL_DANGER));
+            $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));
         } catch (StorageException$exception) {
             Debugger::log($exception);
-            $logger->log(new Message(_('Během mazání úlohy %s došlo k chybě.'), Message::LVL_DANGER));
+            $this->getLogger()->log(new Message(_('Během mazání úlohy %s došlo k chybě.'), Message::LVL_DANGER));
         } catch (ModelException $exception) {
             Debugger::log($exception);
-            $logger->log(new Message(_('Během mazání úlohy %s došlo k chybě.'), Message::LVL_DANGER));
+            $this->getLogger()->log(new Message(_('Během mazání úlohy %s došlo k chybě.'), Message::LVL_DANGER));
         }
-
-        $response->setMessages($logger->getMessages());
-        $this->getPresenter()->sendResponse($response);
+        $this->sendAjaxResponse();
     }
 
     /**
+     * @param int $submitId
      * @return void
      * @throws AbortException
      * @throws BadRequestException
-     * @throws BadTypeException
      */
-    public function handleDownload() {
-        $submitId = $this->getReactRequest()['requestData']['submitId'];
-        $logger = new MemoryLogger();
+    public function handleDownload(int $submitId) {
         try {
             $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $submitId);
         } catch (ForbiddenRequestException$exception) {
-            $logger->log(new Message($exception->getMessage(), Message::LVL_DANGER));
+            $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));
         } catch (NotFoundException$exception) {
-            $logger->log(new Message($exception->getMessage(), Message::LVL_DANGER));
+            $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));
         } catch (StorageException$exception) {
-            $logger->log(new Message($exception->getMessage(), Message::LVL_DANGER));
+            $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));
         }
-        $response = new ReactResponse();
-        $response->setMessages($logger->getMessages());
-        $this->getPresenter()->sendResponse($response);
-    }
-
-    /**
-     * @param int $taskId
-     * @return ModelTask|null
-     */
-    private function isAvailableSubmit($taskId) {
-        /** @var ModelTask $task */
-        foreach ($this->availableTasks as $task) {
-            if ($task->task_id == $taskId) {
-                return $task;
-            }
-        }
-        return null;
+        $this->sendAjaxResponse();
     }
 }

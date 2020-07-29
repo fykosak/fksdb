@@ -1,8 +1,7 @@
 import {
-    ACTION_SUBMIT_FAIL,
-    ACTION_SUBMIT_SUCCESS,
+    ACTION_FETCH_FAIL, ACTION_FETCH_SUCCESS,
 } from '@fetchApi/actions/submit';
-import { ActionSubmitSuccess } from '@fetchApi/middleware/interfaces';
+import { ActionFetchSuccess, Response2 } from '@fetchApi/middleware/interfaces';
 import { ResponseData } from '../interfaces';
 
 export interface State {
@@ -11,8 +10,8 @@ export interface State {
     isRefreshing?: boolean;
 }
 
-const updateOptions = (state: State, action: ActionSubmitSuccess<ResponseData>): State => {
-    const {lastUpdated, refreshDelay} = action.data.responseData;
+const fetchSuccess = (state: State, action: ActionFetchSuccess<Response2<ResponseData>>): State => {
+    const {lastUpdated, refreshDelay} = action.data.data;
     return {
         ...state,
         isRefreshing: true,
@@ -29,9 +28,9 @@ const fetchFail = (state: State): State => {
 
 export const fyziklaniDownloader = (state: State = {lastUpdated: null}, action): State => {
     switch (action.type) {
-        case ACTION_SUBMIT_SUCCESS:
-            return updateOptions(state, action);
-        case ACTION_SUBMIT_FAIL:
+        case ACTION_FETCH_SUCCESS:
+            return fetchSuccess(state, action);
+        case ACTION_FETCH_FAIL:
             return fetchFail(state);
         default:
             return state;

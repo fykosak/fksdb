@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
+use FKSDB\Components\React\AjaxComponent;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom;
@@ -18,7 +19,7 @@ use Nette\Utils\JsonException;
  * Class RoutingEdit
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class RoutingEdit extends FyziklaniReactControl {
+class RoutingEdit extends AjaxComponent {
 
     /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
