@@ -6,5 +6,5 @@ import {
 import { Store } from '../reducers';
 
 export const handleSubmit = (dispatch: Dispatch<Action<string>>, accessKey: string, link: string) => {
-    return dispatchFetch<{}, any, Store>(link, accessKey, dispatch, JSON.stringify({}));
+    return dispatchFetch<any, Store>(link, accessKey, dispatch, JSON.stringify({}));
 };

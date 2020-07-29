@@ -1,12 +1,6 @@
-import { NetteActions } from '@appsCollector';
-import { config } from '@config';
+import { NetteActions } from '@appsCollector/netteActions';
+import StoreCreator from '@shared/components/storeCreator';
 import * as React from 'react';
-import { Provider } from 'react-redux';
-import {
-    applyMiddleware,
-    createStore,
-} from 'redux';
-import logger from 'redux-logger';
 import {
     Task,
     Team,
@@ -24,12 +18,8 @@ interface OwnProps {
 export default class TaskCode extends React.Component<OwnProps, {}> {
     public render() {
         const {tasks, teams, actions, availablePoints} = this.props;
-        const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
-
-        return (
-            <Provider store={store}>
-                <Container tasks={tasks} teams={teams} actions={actions} availablePoints={availablePoints}/>
-            </Provider>
-        );
+        return <StoreCreator app={app}>
+            <Container tasks={tasks} teams={teams} actions={actions} availablePoints={availablePoints}/>
+        </StoreCreator>;
     }
 }

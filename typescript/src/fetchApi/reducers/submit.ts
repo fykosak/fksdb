@@ -1,14 +1,13 @@
-import jqXHR = JQuery.jqXHR;
-import { NetteActions } from '@appsCollector';
+import { NetteActions } from '@appsCollector/netteActions';
 import {
     ACTION_FETCH_FAIL,
     ACTION_FETCH_START,
     ACTION_FETCH_SUCCESS,
-} from '../actions/submit';
-import {
-    ActionFetch,
     ActionFetchFail,
+    ActionFetchStart,
     ActionFetchSuccess,
+} from '../actions/fetch';
+import {
     Message,
     Response2,
 } from '../middleware/interfaces';
@@ -16,13 +15,13 @@ import {
 export interface State<T = any> {
     [accessKey: string]: {
         submitting?: boolean;
-        error?: jqXHR<T>;
+        error?: Error | any;
         messages?: Message[];
         actions?: NetteActions;
     };
 }
 
-const fetchStart = (state: State, action: ActionFetch): State => {
+const fetchStart = (state: State, action: ActionFetchStart): State => {
     const {accessKey} = action;
     return {
         ...state,

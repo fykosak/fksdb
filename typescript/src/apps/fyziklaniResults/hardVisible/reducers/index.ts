@@ -1,5 +1,8 @@
-import { ACTION_FETCH_SUCCESS } from '@fetchApi/actions/submit';
-import { ActionFetchSuccess, Response2 } from '@fetchApi/middleware/interfaces';
+import {
+    ACTION_FETCH_SUCCESS,
+    ActionFetchSuccess,
+} from '@fetchApi/actions/fetch';
+import { Response2 } from '@fetchApi/middleware/interfaces';
 import { ResponseData } from '../../downloader/interfaces';
 import {
     ACTION_SET_HARD_VISIBLE,

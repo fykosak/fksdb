@@ -1,4 +1,4 @@
-import { NetteActions } from '@appsCollector';
+import { NetteActions } from '@appsCollector/netteActions';
 import { Response2 } from '@fetchApi/middleware/interfaces';
 import Powered from '@shared/powered';
 import * as React from 'react';

@@ -1,10 +1,10 @@
-import {
-    ActionFetch,
-    ActionFetchFail,
-    ActionFetchSuccess,
-    Response2,
-} from '../middleware/interfaces';
-import jqXHR = JQuery.jqXHR;
+import { Action } from 'redux';
+import { Response2 } from '../middleware/interfaces';
+
+export interface ActionFetchSuccess<D> extends Action<string> {
+    data: D;
+    accessKey: string;
+}
 
 export const ACTION_FETCH_SUCCESS = 'ACTION_FETCH_SUCCESS';
 
@@ -16,18 +16,27 @@ export function fetchSuccess<Data>(data: Response2<Data>, accessKey: string): Ac
     };
 }
 
+export interface ActionFetchFail extends Action<string> {
+    error: Error | any;
+    accessKey: string;
+}
+
 export const ACTION_FETCH_FAIL = 'ACTION_FETCH_FAIL';
 
-export function fetchFail<T = any>(error: jqXHR<T>, accessKey: string): ActionFetchFail<T> {
+export const fetchFail = (error: Error | any, accessKey: string): ActionFetchFail => {
     return {
         accessKey,
         error,
         type: ACTION_FETCH_FAIL,
     };
+};
+
+export interface ActionFetchStart extends Action<string> {
+    accessKey: string;
 }
 
 export const ACTION_FETCH_START = 'ACTION_FETCH_START';
-export const fetchStart = (accessKey: string): ActionFetch => {
+export const fetchStart = (accessKey: string): ActionFetchStart => {
     return {
         accessKey,
         type: ACTION_FETCH_START,

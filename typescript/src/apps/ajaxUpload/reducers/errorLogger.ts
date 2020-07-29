@@ -1,4 +1,4 @@
-import { ACTION_FETCH_START } from '@fetchApi/actions/submit';
+import { ACTION_FETCH_START } from '@fetchApi/actions/fetch';
 import { Message } from '@fetchApi/middleware/interfaces';
 import { ACTION_ADD_ERROR } from '../actions';
 

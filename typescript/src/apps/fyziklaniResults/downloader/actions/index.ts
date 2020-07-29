@@ -18,7 +18,7 @@ export const fetchResults = (
     accessKey: string,
     dispatch: Dispatch<Action<string>>,
 ): Promise<Response2<ResponseData>> => {
-    return dispatchFetch<{}, ResponseData, State>(url, accessKey, dispatch, JSON.stringify({}));
+    return dispatchFetch<ResponseData, State>(url, accessKey, dispatch, JSON.stringify({}));
 };
 
 export const waitForFetch = (

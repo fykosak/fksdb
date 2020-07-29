@@ -1,12 +1,6 @@
-import { config } from '@config';
+import StoreCreator from '@shared/components/storeCreator';
 import InputConnector from '@inputConnector/compoenents/';
 import * as React from 'react';
-import { Provider } from 'react-redux';
-import {
-    applyMiddleware,
-    createStore,
-} from 'redux';
-import logger from 'redux-logger';
 import { PaymentScheduleItem } from '../interfaces';
 import { app } from '../reducer/';
 import Container from './container';
@@ -19,14 +13,11 @@ interface OwnProps {
 export default class SelectField extends React.Component<OwnProps, {}> {
 
     public render() {
-        const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
-        return (
-            <Provider store={store}>
-                <>
-                    <InputConnector input={this.props.input}/>
-                    <Container items={this.props.items}/>
-                </>
-            </Provider>
-        );
+        return <StoreCreator app={app}>
+            <>
+                <InputConnector input={this.props.input}/>
+                <Container items={this.props.items}/>
+            </>
+        </StoreCreator>;
     }
 }

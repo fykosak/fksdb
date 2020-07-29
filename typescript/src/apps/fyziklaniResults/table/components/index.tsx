@@ -1,12 +1,6 @@
-import { NetteActions } from '@appsCollector';
-import { config } from '@config';
+import { NetteActions } from '@appsCollector/netteActions';
+import ActionsStoreCreator from '@fetchApi/components/actionsStoreCreator';
 import * as React from 'react';
-import { Provider } from 'react-redux';
-import {
-    applyMiddleware,
-    createStore,
-} from 'redux';
-import logger from 'redux-logger';
 import Downloader from '../../downloader/components';
 import LoadingSwitch from '../../shared/components/loadingSwitch';
 import ResultsShower from '../../shared/components/resultsShower';
@@ -20,22 +14,10 @@ interface OwnProps {
 
 export default class Index extends React.Component<OwnProps, {}> {
     public render() {
-        const {actions} = this.props;
         const accessKey = '@@fyziklani-results';
-        const state = {
-            fetchApi: {
-                [accessKey]: {
-                    actions,
-                    error: null,
-                    messages: [],
-                    submitting: false,
-                },
-            },
-        };
-        const store = config.dev ? createStore(app, state, applyMiddleware(logger)) : createStore(app, state);
 
         return (
-            <Provider store={store}>
+            <ActionsStoreCreator actionsMap={{[accessKey]: this.props.actions}} app={app}>
                 <div className={'fyziklani-results'}>
                     <Downloader accessKey={accessKey}/>
                     <LoadingSwitch>
@@ -47,7 +29,7 @@ export default class Index extends React.Component<OwnProps, {}> {
                         </>
                     </LoadingSwitch>
                 </div>
-            </Provider>
+            </ActionsStoreCreator>
         );
     }
 }

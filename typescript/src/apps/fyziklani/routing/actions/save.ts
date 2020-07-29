@@ -1,4 +1,4 @@
-import { fetchFail, fetchStart, fetchSuccess } from '@fetchApi/actions/submit';
+import { fetchFail, fetchStart, fetchSuccess } from '@fetchApi/actions/fetch';
 import { Request, Response2 } from '@fetchApi/middleware/interfaces';
 import {
     Action,
@@ -7,24 +7,23 @@ import {
 import { Team } from '../../helpers/interfaces';
 import { ResponseData } from '../middleware/interfaces';
 import { Store as RoutingStore } from '../reducers/';
-import jqXHR = JQuery.jqXHR;
 
-export async function dispatchNetteFetch<TFormData, TResponseData, TStore, T = any>(
+export async function dispatchNetteFetch<TFormData, TResponseData, TStore>(
     accessKey: string,
     dispatch: Dispatch<Action<string>>,
     data: Request<TFormData>,
     success: (data: Response2<TResponseData>) => void,
-    error: (e: jqXHR<T>) => void,
+    error: (e: Error | any) => void,
     url: string = null,
 ): Promise<Response2<TResponseData>> {
 
     dispatch(fetchStart(accessKey));
-    return netteFetch<TFormData, TResponseData, T>(data, (d: Response2<TResponseData>) => {
+    return netteFetch<TFormData, TResponseData>(data, (d: Response2<TResponseData>) => {
             dispatch(fetchSuccess<TResponseData>(d, accessKey));
             success(d);
         },
-        (e: jqXHR<T>) => {
-            dispatch(fetchFail<T>(e, accessKey));
+        (e: Error | any) => {
+            dispatch(fetchFail(e, accessKey));
             error(e);
         }, url);
 }
@@ -47,17 +46,17 @@ const removeUpdatesTeams = (): Action => {
     };
 };
 
-export async function netteFetch<TFormData, TResponseData, T = any>(
+export async function netteFetch<TFormData, TResponseData>(
     data: Request<TFormData>,
     success: (data: Response2<TResponseData>) => void,
-    error: (e: jqXHR<T>) => void,
+    error: (e: Error | any) => void,
     url: string = null,
 ): Promise<Response2<TResponseData>> {
     const netteJQuery: any = $;
     return new Promise((resolve: (d: Response2<TResponseData>) => void, reject) => {
         netteJQuery.nette.ajax({
             data,
-            error: (e: jqXHR<T>) => {
+            error: (e: Error | any) => {
                 error(e);
                 reject(e);
             },

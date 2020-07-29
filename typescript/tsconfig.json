@@ -22,8 +22,8 @@
       "@i18n/*": [
         "./src/i18n/*"
       ],
-      "@appsCollector": [
-        "./src/appsCollector/"
+      "@appsCollector/*": [
+        "./src/appsCollector/*"
       ],
       "@inputConnector/*": [
         "./src/inputConnector/*"

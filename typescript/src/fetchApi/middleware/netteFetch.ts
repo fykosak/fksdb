@@ -1,7 +1,6 @@
-import { NetteActions } from '@appsCollector';
-import { fetchFail, fetchStart, fetchSuccess } from '@fetchApi/actions/submit';
-import { RawResponse,  Response2 } from '@fetchApi/middleware/interfaces';
-import jqXHR = JQuery.jqXHR;
+import { NetteActions } from '@appsCollector/netteActions';
+import { fetchFail, fetchStart, fetchSuccess } from '@fetchApi/actions/fetch';
+import { RawResponse, Response2 } from '@fetchApi/middleware/interfaces';
 import { Action, Dispatch } from 'redux';
 
 export function parseResponse<Data>(rawResponse: RawResponse): Response2<Data> {
@@ -12,13 +11,13 @@ export function parseResponse<Data>(rawResponse: RawResponse): Response2<Data> {
     };
 }
 
-export async function dispatchFetch<ResponseData, TStore, T = any>(
+export async function dispatchFetch<ResponseData, TStore>(
     url: string,
     accessKey: string,
     dispatch: Dispatch<Action<string>>,
     data: FormData | string,
     success: (data: Response2<ResponseData>) => void = () => null,
-    error: (e: jqXHR<T>) => void = () => null,
+    error: (e: Error | any) => void = () => null,
 ): Promise<any> {
     dispatch(fetchStart(accessKey));
     return fetch(url, {
@@ -30,8 +29,8 @@ export async function dispatchFetch<ResponseData, TStore, T = any>(
             const parsedResponse = parseResponse<ResponseData>(d);
             dispatch(fetchSuccess<ResponseData>(parsedResponse, accessKey));
             success(parsedResponse);
-        }).catch((e: jqXHR<T>) => {
-            dispatch(fetchFail<T>(e, accessKey));
+        }).catch((e: Error | any) => {
+            dispatch(fetchFail(e, accessKey));
             error(e);
         });
 }

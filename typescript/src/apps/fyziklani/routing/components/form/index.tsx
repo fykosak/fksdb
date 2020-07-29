@@ -7,12 +7,11 @@ import {
 import { Team } from '../../../helpers/interfaces/';
 import { saveTeams } from '../../actions/save';
 import { Store as RoutingStore } from '../../reducers/';
-import jqXHR = JQuery.jqXHR;
 
 interface StateProps {
     teams: Team[];
     saving: boolean;
-    error: jqXHR<any>;
+    error: Error | any;
 }
 
 interface DispatchProps {

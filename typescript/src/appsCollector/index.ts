@@ -1,18 +1,4 @@
-export interface NetteActionsData {
-    [name: string]: string;
-}
-
-export class NetteActions {
-    private readonly data: NetteActionsData;
-
-    constructor(data: NetteActionsData) {
-        this.data = data;
-    }
-
-    public getAction(key: string): string {
-        return this.data[key];
-    }
-}
+import { NetteActions } from './netteActions';
 
 export type App = (element: Element, reactId: string, rawData: string, actions: NetteActions) => boolean;
 

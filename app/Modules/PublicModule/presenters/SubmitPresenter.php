@@ -123,6 +123,10 @@ class SubmitPresenter extends BasePresenter {
         $this->setPageTitle(new PageTitle(_('Odevzdat řešení'), 'fa fa-cloud-upload'));
     }
 
+    public function titleList() {
+        $this->setPageTitle(new PageTitle(_('Odevzdaná řešení'), 'fa fa-cloud-upload'));
+    }
+
     public function titleAjax() {
         return $this->titleDefault();
     }

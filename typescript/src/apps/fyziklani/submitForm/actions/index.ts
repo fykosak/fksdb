@@ -1,4 +1,4 @@
-import { fetchFail, fetchStart, fetchSuccess } from '@fetchApi/actions/submit';
+import { fetchFail, fetchStart, fetchSuccess } from '@fetchApi/actions/fetch';
 import { Request, Response2 } from '@fetchApi/middleware/interfaces';
 import {
     Action,
@@ -8,7 +8,6 @@ import { reset } from 'redux-form';
 import { FORM_NAME } from '../components/formContainer';
 import { getFullCode } from '../middleware/form';
 import { Store as SubmitStore } from '../reducers';
-import jqXHR = JQuery.jqXHR;
 
 export interface SubmitFormRequest {
     code: string;
@@ -30,37 +29,37 @@ export const submitStart = (dispatch: Dispatch<Action<string>>, values: SubmitFo
     });
 };
 
-async function dispatchNetteFetch2<TFormData, TResponseData, TStore, T = any>(
+async function dispatchNetteFetch2<TFormData, TResponseData, TStore>(
     url: string,
     accessKey: string,
     dispatch: Dispatch<Action<string>>,
     data: TFormData,
     success: (data: Response2<TResponseData>) => void = () => null,
-    error: (e: jqXHR<T>) => void = () => null,
+    error: (e: Error | any) => void = () => null,
 ): Promise<Response2<TResponseData>> {
 
     dispatch(fetchStart(accessKey));
-    return netteFetch2<TFormData, TResponseData, T>(data, (d: Response2<TResponseData>) => {
+    return netteFetch2<TFormData, TResponseData>(data, (d: Response2<TResponseData>) => {
             dispatch(fetchSuccess<TResponseData>(d, accessKey));
             success(d);
         },
-        (e: jqXHR<T>) => {
-            dispatch(fetchFail<T>(e, accessKey));
+        (e: Error | any) => {
+            dispatch(fetchFail(e, accessKey));
             error(e);
         }, url);
 }
 
-async function netteFetch2<TRequestData, TResponseData, T = any>(
+async function netteFetch2<TRequestData, TResponseData>(
     data: TRequestData,
     success: (data: Response2<TResponseData>) => void,
-    error: (e: jqXHR<T>) => void,
+    error: (e: Error | any) => void,
     url: string = null,
 ): Promise<Response2<TResponseData>> {
     const netteJQuery: any = $;
     return new Promise((resolve: (d: Response2<TResponseData>) => void, reject) => {
         netteJQuery.nette.ajax({
             data,
-            error: (e: jqXHR<T>) => {
+            error: (e: Error | any) => {
                 error(e);
                 reject(e);
             },
