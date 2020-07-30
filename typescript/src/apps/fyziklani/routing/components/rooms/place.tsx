@@ -7,7 +7,7 @@ import {
 import {
     Place,
     Team,
-} from '../../../helpers/interfaces/';
+} from '../../../helpers/interfaces';
 import { dropItem } from '../../actions/dragndrop';
 import { DragNDropData } from '../../middleware/interfaces';
 import { Store as RoutingStore } from '../../reducers/';

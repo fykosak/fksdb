@@ -51,9 +51,6 @@ class AjaxSubmit extends AjaxComponent {
     /** @var int */
     private $academicYear;
 
-    /** @var ModelSubmit|null */
-    private $submit;
-
     /**
      * TaskUpload constructor.
      * @param Container $container
@@ -81,13 +78,16 @@ class AjaxSubmit extends AjaxComponent {
     }
 
     /**
+     * @param bool $throw
      * @return ModelSubmit|null
+     * @throws NotFoundException
      */
-    private function getSubmit() {
-        if (!isset($this->submit) || is_null($this->submit)) {
-            $this->submit = $this->serviceSubmit->findByContestant($this->contestant->ct_id, $this->task->task_id);
+    private function getSubmit(bool $throw = false) {
+        $submit = $this->serviceSubmit->findByContestant($this->contestant->ct_id, $this->task->task_id, false);
+        if ($throw && is_null($submit)) {
+            throw new NotFoundException(_('Submit not found'));
         }
-        return $this->submit;
+        return $submit;
     }
 
     /**
@@ -95,26 +95,30 @@ class AjaxSubmit extends AjaxComponent {
      * @throws InvalidLinkException
      */
     protected function getActions(): array {
-        $submit = $this->getSubmit();
-        if ($submit) {
-            return [
-                'revoke' => $this->link('revoke!', ['submitId' => $submit->submit_id]),
-                'download' => $this->link('download!', ['submitId' => $submit->submit_id]),
-            ];
-        } else {
-            return [
-                'upload' => $this->link('upload!'),
-            ];
-        }
+        /* if ($this->getSubmit()) {
+             return [
+                 'revoke' => $this->link('revoke!'),
+                 'download' => $this->link('download!'),
+             ];
+         } else {
+             return [
+                 'upload' => $this->link('upload!'),
+             ];
+         }*/
+        return [
+            'revoke' => $this->link('revoke!'),
+            'download' => $this->link('download!'),
+            'upload' => $this->link('upload!'),
+        ];
     }
 
     /**
-     * @return mixed|null
+     * @return mixed
+     * @throws NotFoundException
      */
     protected function getData() {
         $studyYear = $this->submitHandlerFactory->getUserStudyYear($this->academicYear);
-        $submit = $this->serviceSubmit->findByContestant($this->contestant->ct_id, $this->task->task_id);
-        return ServiceSubmit::serializeSubmit($submit, $this->task, $studyYear);
+        return ServiceSubmit::serializeSubmit($this->getSubmit(), $this->task, $studyYear);
     }
 
     /**
@@ -128,13 +132,8 @@ class AjaxSubmit extends AjaxComponent {
         foreach ($files as $name => $fileContainer) {
             $this->serviceSubmit->getConnection()->beginTransaction();
             $this->uploadedStorage->beginTransaction();
-            if (!preg_match('/task([0-9]+)/', $name, $matches)) {
-                $this->getLogger()->log(new Message(_('Task not found'), ILogger::WARNING));
+            if ($name !== 'submit') {
                 continue;
-            }
-            if (!$this->task->task_id === +$matches[1]) {
-                $this->getLogger()->log(new Message(_('Upload not allowed'), ILogger::ERROR));
-                $this->sendAjaxResponse(Response::S403_FORBIDDEN);
             }
 
             if (!$fileContainer->isOk()) {
@@ -151,39 +150,37 @@ class AjaxSubmit extends AjaxComponent {
     }
 
     /**
-     * @param int $submitId
      * @return void
      * @throws AbortException
      */
-    public function handleRevoke(int $submitId) {
+    public function handleRevoke() {
         try {
-            $this->submitHandlerFactory->handleRevoke($this->getLogger(), $submitId, $this->academicYear);
+            $this->submitHandlerFactory->handleRevokeSubmit($this->getLogger(), $this->getSubmit(true), $this->academicYear);
         } catch (ForbiddenRequestException$exception) {
             $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));
-        } catch (NotFoundException$exception) {
+        } catch (NotFoundException $exception) {
             $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));
         } catch (StorageException$exception) {
             Debugger::log($exception);
-            $this->getLogger()->log(new Message(_('Během mazání úlohy %s došlo k chybě.'), Message::LVL_DANGER));
+            $this->getLogger()->log(new Message(_('Během mazání úlohy došlo k chybě.'), Message::LVL_DANGER));
         } catch (ModelException $exception) {
             Debugger::log($exception);
-            $this->getLogger()->log(new Message(_('Během mazání úlohy %s došlo k chybě.'), Message::LVL_DANGER));
+            $this->getLogger()->log(new Message(_('Během mazání úlohy došlo k chybě.'), Message::LVL_DANGER));
         }
         $this->sendAjaxResponse();
     }
 
     /**
-     * @param int $submitId
      * @return void
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function handleDownload(int $submitId) {
+    public function handleDownload() {
         try {
-            $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $submitId);
+            $this->submitHandlerFactory->handleDownloadUploadedSubmit($this->getPresenter(), $this->getSubmit(true));
         } catch (ForbiddenRequestException$exception) {
             $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));
-        } catch (NotFoundException$exception) {
+        } catch (NotFoundException $exception) {
             $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));
         } catch (StorageException$exception) {
             $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));

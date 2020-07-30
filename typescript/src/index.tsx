@@ -1,15 +1,15 @@
 import AjaxSubmit from '@apps/ajaxSubmit';
+import ApplicationsTimeProgressChart from '@apps/chart/applicationsTimeProgress';
 import ParticipantAcquaintance from '@apps/chart/participantAcquaintance';
+import PersonTimeline from '@apps/chart/personTimeLine';
 import TotalPersons from '@apps/chart/totalPersons';
 import Attendance from '@apps/events/attendance';
-import ApplicationsTimeProgressChart from '@apps/events/charts/applicationsTimeProgress';
 import { eventSchedule } from '@apps/events/schedule';
-import TaskCodeApp from '@apps/fyziklani/submitForm';
+import TaskCodeApp from '@apps/fyziklani/submitForm/components';
 import FyziklaniResultsPresentation from '@apps/fyziklaniResults/presentation';
 import FyziklaniResultsStatistics from '@apps/fyziklaniResults/statistics';
 import FyziklaniResultsTable from '@apps/fyziklaniResults/table';
 import PaymentSelectField from '@apps/payment/selectField/components/selectField';
-import PersonTimeline from '@apps/person';
 import { appsCollector } from '@appsCollector/index';
 import { mapRegister } from '@appsCollector/mapRegister';
 import * as React from 'react';
@@ -23,6 +23,7 @@ mapRegister.registerActionsComponent('fyziklani.statistics.team', FyziklaniResul
 mapRegister.registerActionsComponent('fyziklani.statistics.task', FyziklaniResultsStatistics, {mode: 'task'});
 mapRegister.registerActionsComponent('fyziklani.statistics.correlation', FyziklaniResultsStatistics, {mode: 'correlation'});
 mapRegister.registerActionsComponent('fyziklani.results.presentation', FyziklaniResultsPresentation);
+mapRegister.registerActionsComponent('fyziklani.submit-form', TaskCodeApp);
 
 // tslint:disable-next-line:max-line-length
 mapRegister.registerDataComponent('events.applications-time-progress.participants', ApplicationsTimeProgressChart, {accessKey: 'participants'});
@@ -37,13 +38,6 @@ mapRegister.register('payment.schedule-select', (element, reactId, rawData) => {
     const container = document.createElement('div');
     element.parentElement.appendChild(container);
     ReactDOM.render(<PaymentSelectField data={JSON.parse(rawData)} input={element}/>, container);
-});
-mapRegister.register('fyziklani.submit-form', (element, reactId, rawData, actions) => {
-    const c = document.createElement('div');
-    const {tasks, teams, availablePoints} = JSON.parse(rawData);
-    element.appendChild(c);
-    ReactDOM.render(<TaskCodeApp tasks={tasks} teams={teams} actions={actions}
-                                 availablePoints={availablePoints}/>, c);
 });
 
 appsCollector.run();

@@ -39,12 +39,12 @@ class ServiceSubmit extends AbstractServiceSingle {
      *
      * @param int $ctId
      * @param int $taskId
+     * @param bool $useCache
      * @return ModelSubmit|null
      */
-    public function findByContestant(int $ctId, int $taskId) {
+    public function findByContestant(int $ctId, int $taskId, bool $useCache = true) {
         $key = $ctId . ':' . $taskId;
-
-        if (!isset($this->submitCache[$key]) || is_null($this->submitCache[$key])) {
+        if (!isset($this->submitCache[$key]) || is_null($this->submitCache[$key]) || !$useCache) {
             $result = $this->getTable()->where([
                 'ct_id' => $ctId,
                 'task_id' => $taskId,

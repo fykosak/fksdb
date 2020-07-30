@@ -1,5 +1,5 @@
-import { Message } from '@fetchApi/middleware/interfaces';
-import { State as SubmitState } from '@fetchApi/reducers/submit';
+import { Message } from '@fetchApi/interfaces';
+import { State as SubmitState } from '@fetchApi/reducers';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { State as ErrorLoggerState } from '../reducers/errorLogger';

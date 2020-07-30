@@ -4,7 +4,7 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import HardVisibleSwitch from '../../../../hardVisible/compoents/hardVisibleSwitch';
+import HardVisibleSwitch from '../../../../hardVisible/component';
 import { setFilter } from '../../../actions/tableFilter';
 import { Filter } from '../../../middleware/filters/filter';
 import { createFilters } from '../../../middleware/filters/filters';

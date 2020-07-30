@@ -1,11 +1,11 @@
-import { ACTION_FETCH_SUCCESS, ActionFetchSuccess } from '@fetchApi/actions/fetch';
-import { Response2 } from '@fetchApi/middleware/interfaces';
+import { ACTION_FETCH_SUCCESS, ActionFetchSuccess } from '@fetchApi/actions';
+import { Response2 } from '@fetchApi/interfaces';
 import {
     Submits,
     Task,
     Team,
-} from '../../../fyziklani/helpers/interfaces';
-import { ResponseData } from '../../downloader/interfaces';
+} from '@apps/fyziklani/helpers/interfaces';
+import { ResponseData } from '../../downloader/inferfaces';
 
 export interface State {
     submits?: Submits;

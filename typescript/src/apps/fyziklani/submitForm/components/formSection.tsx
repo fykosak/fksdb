@@ -1,7 +1,7 @@
 import {
     Message,
     Response2,
-} from '@fetchApi/middleware/interfaces';
+} from '@fetchApi/interfaces';
 import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -13,15 +13,15 @@ import {
 import {
     Task,
     Team,
-} from '../../helpers/interfaces/';
+} from '../../helpers/interfaces';
 import { SubmitFormRequest } from '../actions';
-import { Store as SubmitStore } from '../reducers/';
-import CodeInputError from './errorBlock';
-import { FORM_NAME } from './formContainer';
-import CodeInput from './input';
-import Scan from './scan';
-import SubmitButtons from './submitButtons';
-import ValueDisplay from './valueDisplay';
+import { Store as SubmitStore } from '../reducers';
+import { FORM_NAME } from './container';
+import ScanInput from './inputs/scan';
+import SubmitButtons from './inputs/submitButtons';
+import TextInput from './inputs/text';
+import ErrorBlock from './outputs/errorBlock';
+import ValueDisplay from './outputs/valueDisplay';
 
 export interface OwnProps {
     accessKey: string;
@@ -54,14 +54,14 @@ class FormSection extends React.Component<OwnProps & StateProps, {}> {
                     <div className="col-lg-6 col-md-12 mb-3">
                         <h3 className={'fyziklani-headline-color'}>{lang.getText('Code')}</h3>
                         <div className="form-group">
-                            <Field name="code" component={CodeInput}/>
+                            <Field name="code" component={TextInput}/>
                         </div>
                         <div className="form-group">
-                            <Field name="code" component={CodeInputError}/>
+                            <Field name="code" component={ErrorBlock}/>
                         </div>
                     </div>
                     <div className="col-lg-6 col-md-12 mb-3">
-                        <Field name="code" component={Scan}/>
+                        <Field name="code" component={ScanInput}/>
                     </div>
 
                     <div className="col-12">

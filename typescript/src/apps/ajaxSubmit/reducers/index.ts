@@ -10,8 +10,8 @@ import {
 
 import {
     State as FetchApiState,
-    submit,
-} from '@fetchApi/reducers/submit';
+    fetchApi,
+} from '@fetchApi/reducers';
 import {
     errorLogger,
     State as ErrorLoggerState,
@@ -20,7 +20,7 @@ import {
 export const app = combineReducers({
     dragNDrop,
     errorLogger,
-    fetchApi: submit,
+    fetchApi,
     uploadData,
 });
 

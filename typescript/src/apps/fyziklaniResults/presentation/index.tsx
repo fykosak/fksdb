@@ -1,7 +1,7 @@
 import { NetteActions } from '@appsCollector/netteActions';
-import ActionsStoreCreator from '@fetchApi/components/actionsStoreCreator';
+import ActionsStoreCreator from '@fetchApi/actionsStoreCreator';
 import * as React from 'react';
-import Downloader from '../downloader/components';
+import Downloader from '../downloader/component';
 import LoadingSwitch from '../shared/components/loadingSwitch';
 import ResultsShower from '../shared/components/resultsShower';
 import App from './components/app';

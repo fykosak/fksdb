@@ -1,6 +1,6 @@
 import UploadContainer from '@apps/ajaxSubmit/components/container';
 import { NetteActions } from '@appsCollector/netteActions';
-import ActionsStoreCreator from '@fetchApi/components/actionsStoreCreator';
+import ActionsStoreCreator from '@fetchApi/actionsStoreCreator';
 import * as React from 'react';
 import { Submit } from './middleware';
 import { app } from './reducers';

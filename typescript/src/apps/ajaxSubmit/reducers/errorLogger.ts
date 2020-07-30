@@ -1,5 +1,5 @@
-import { ACTION_FETCH_START } from '@fetchApi/actions/fetch';
-import { Message } from '@fetchApi/middleware/interfaces';
+import { ACTION_FETCH_START } from '@fetchApi/actions';
+import { Message } from '@fetchApi/interfaces';
 import { ACTION_ADD_ERROR } from '../actions';
 
 export interface State {

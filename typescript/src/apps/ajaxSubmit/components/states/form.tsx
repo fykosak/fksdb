@@ -8,7 +8,7 @@ import {
 } from '../../actions';
 
 import { NetteActions } from '@appsCollector/netteActions';
-import { dispatchFetch } from '@fetchApi/middleware/netteFetch';
+import { dispatchFetch } from '@fetchApi/netteFetch';
 import {
     Action,
     Dispatch,
@@ -97,7 +97,7 @@ class Form extends React.Component<OwnProps & StateProps & DispatchProps, {}> {
     }
 
     private handleFile(fileList: FileList): void {
-        const formData = handleFileUpload(fileList, this.props.submit.taskId, this.props.onAddError);
+        const formData = handleFileUpload(fileList, this.props.onAddError);
         if (formData) {
             this.props.onFileUpload(formData, this.props.actions.getAction('upload'));
         }

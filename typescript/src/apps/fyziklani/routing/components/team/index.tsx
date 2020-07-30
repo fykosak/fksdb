@@ -4,7 +4,7 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { Team } from '../../../helpers/interfaces/';
+import { Team } from '../../../helpers/interfaces';
 import {
     dragEnd,
     dragStart,

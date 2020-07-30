@@ -12,7 +12,7 @@ const allowedTypes = [
     'application/pdf',
 ];
 
-export const handleFileUpload = (data: FileList, taskId: number, setError: (error) => void): FormData => {
+export const handleFileUpload = (data: FileList, setError: (error) => void): FormData => {
 
     if (data.length > 1) {
         console.log('max 1 file');
@@ -24,10 +24,10 @@ export const handleFileUpload = (data: FileList, taskId: number, setError: (erro
             const file: File = data[0];
             const formData = new FormData();
             if (allowedTypes.indexOf(file.type) !== -1) {
-                formData.append('task' + taskId, file);
+                formData.append('submit', file);
                 return formData;
             } else {
-                setError({text: lang.getText('Nepodporovaný formát'), level: 'danger'});
+                setError({text: lang.getText('Unsupported format'), level: 'danger'});
             }
         }
     }

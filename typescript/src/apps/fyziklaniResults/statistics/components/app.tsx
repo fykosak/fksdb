@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import HardVisibleSwitch from '../../hardVisible/compoents/hardVisibleSwitch';
+import HardVisibleSwitch from '../../hardVisible/component';
 import Loading from '../../shared/components/loading';
 import ResultsShower from '../../shared/components/resultsShower';
 import { Store as StatisticsStore } from '../reducers';

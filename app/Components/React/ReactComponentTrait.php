@@ -77,7 +77,6 @@ trait ReactComponentTrait {
         return null;
     }
 
-
     /**
      * @return string[]
      */

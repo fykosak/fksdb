@@ -8,7 +8,7 @@ import {
 import {
     calculate,
     Item,
-} from '../../results/middleware/results/calculateData';
+} from '../../results/calculateData';
 import { FyziklaniResultsPresentationStore } from '../reducers';
 import Headline from './headline';
 import Row from './row';

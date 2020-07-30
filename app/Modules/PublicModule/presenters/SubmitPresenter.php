@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Components\Control\AjaxSubmit\AjaxSubmit;
+use FKSDB\Components\Control\AjaxSubmit\SubmitContainer;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
@@ -38,6 +38,21 @@ class SubmitPresenter extends BasePresenter {
     /** @var ServiceSubmit */
     private $submitService;
 
+    /** @var ServiceSubmitQuizQuestion */
+    private $submitQuizQuestionService;
+
+    /** @var UploadedStorage */
+    private $uploadedSubmitStorage;
+
+    /** @var ServiceTask */
+    private $taskService;
+
+    /** @var ServiceQuizQuestion */
+    private $quizQuestionService;
+
+    /** @var SubmitHandlerFactory */
+    private $submitHandlerFactory;
+
     /**
      * @param ServiceSubmit $submitService
      * @return void
@@ -45,9 +60,6 @@ class SubmitPresenter extends BasePresenter {
     public function injectSubmitService(ServiceSubmit $submitService) {
         $this->submitService = $submitService;
     }
-
-    /** @var ServiceSubmitQuizQuestion */
-    private $submitQuizQuestionService;
 
     /**
      * @param ServiceSubmitQuizQuestion $submitQuizQuestionService
@@ -57,9 +69,6 @@ class SubmitPresenter extends BasePresenter {
         $this->submitQuizQuestionService = $submitQuizQuestionService;
     }
 
-    /** @var UploadedStorage */
-    private $uploadedSubmitStorage;
-
     /**
      * @param UploadedStorage $filesystemUploadedSubmitStorage
      * @return void
@@ -67,9 +76,6 @@ class SubmitPresenter extends BasePresenter {
     public function injectSubmitUploadedStorage(UploadedStorage $filesystemUploadedSubmitStorage) {
         $this->uploadedSubmitStorage = $filesystemUploadedSubmitStorage;
     }
-
-    /** @var ServiceTask */
-    private $taskService;
 
     /**
      * @param ServiceTask $taskService
@@ -79,9 +85,6 @@ class SubmitPresenter extends BasePresenter {
         $this->taskService = $taskService;
     }
 
-    /** @var ServiceQuizQuestion */
-    private $quizQuestionService;
-
     /**
      * @param ServiceQuizQuestion $quizQuestionService
      * @return void
@@ -89,9 +92,6 @@ class SubmitPresenter extends BasePresenter {
     public function injectQuizQuestionService(ServiceQuizQuestion $quizQuestionService) {
         $this->quizQuestionService = $quizQuestionService;
     }
-
-    /** @var SubmitHandlerFactory */
-    private $submitHandlerFactory;
 
     /**
      * @param SubmitHandlerFactory $submitHandlerFactory
@@ -129,14 +129,6 @@ class SubmitPresenter extends BasePresenter {
 
     public function titleAjax() {
         return $this->titleDefault();
-    }
-
-    protected function startup() {
-        /** @var ModelTask $task */
-        foreach ($this->getAvailableTasks() as $task) {
-            $this->addComponent(new AjaxSubmit($this->getContext(), $task, $this->getContestant(), $this->getSelectedAcademicYear()), 'task_' . $task->task_id);
-        }
-        parent::startup();
     }
 
     /**
@@ -271,6 +263,15 @@ class SubmitPresenter extends BasePresenter {
      */
     protected function createComponentSubmitsGrid(): SubmitsGrid {
         return new SubmitsGrid($this->getContext(), $this->getContestant(), $this->getSelectedAcademicYear());
+    }
+
+    /**
+     * @return SubmitContainer
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
+     */
+    protected function createComponentSubmitContainer(): SubmitContainer {
+        return new SubmitContainer($this->getContext(), $this->getContestant(), $this->getSelectedContest(), $this->getSelectedAcademicYear(), $this->getSelectedYear());
     }
 
     /**

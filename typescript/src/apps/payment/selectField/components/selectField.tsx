@@ -1,4 +1,4 @@
-import InputConnector from '@inputConnector/compoenents/';
+import InputConnector from '@inputConnector/netteInputConnector';
 import StoreCreator from '@shared/components/storeCreator';
 import * as React from 'react';
 import { PaymentScheduleItem } from '../interfaces';

@@ -1,5 +1,5 @@
-import { ACTION_FETCH_SUCCESS, ActionFetchSuccess } from '@fetchApi/actions/fetch';
-import { Response2 } from '@fetchApi/middleware/interfaces';
+import { ACTION_FETCH_SUCCESS, ActionFetchSuccess } from '@fetchApi/actions';
+import { Response2 } from '@fetchApi/interfaces';
 import { Team } from '../../helpers/interfaces';
 import {
     ACTION_DROP_ITEM,

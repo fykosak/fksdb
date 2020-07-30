@@ -78,7 +78,30 @@ class SubmitHandlerFactory {
      */
     public function handleDownloadUploaded(Presenter $presenter, int $id) {
         $submit = $this->getSubmit($id, 'download.uploaded');
+        $this->downloadUploadedSubmit($presenter, $submit);
+    }
 
+    /**
+     * @param Presenter $presenter
+     * @param ModelSubmit $submit
+     * @return void
+     * @throws AbortException
+     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     */
+    public function handleDownloadUploadedSubmit(Presenter $presenter, ModelSubmit $submit) {
+        $this->checkPrivilege($submit, 'download.uploaded');
+        $this->downloadUploadedSubmit($presenter, $submit);
+    }
+
+    /**
+     * @param Presenter $presenter
+     * @param ModelSubmit $submit
+     * @return void
+     * @throws AbortException
+     * @throws BadRequestException
+     */
+    private function downloadUploadedSubmit(Presenter $presenter, ModelSubmit $submit) {
         $filename = $this->uploadedStorage->retrieveFile($submit);
         if ($submit->source !== ModelSubmit::SOURCE_UPLOAD) {
             throw new StorageException(_('Lze stahovat jen uploadovaná řešení.'));
@@ -124,7 +147,22 @@ class SubmitHandlerFactory {
      */
     public function handleRevoke(ILogger $logger, int $submitId, int $academicYear): array {
         $submit = $this->getSubmit($submitId, 'revoke');
+        return $this->revoke($logger, $submit, $academicYear);
+    }
 
+    /**
+     * @param ILogger $logger
+     * @param ModelSubmit $submit
+     * @param int $academicYear
+     * @return array
+     * @throws ForbiddenRequestException
+     */
+    public function handleRevokeSubmit(ILogger $logger, ModelSubmit $submit, int $academicYear): array {
+        $this->checkPrivilege($submit, 'revoke');
+        return $this->revoke($logger, $submit, $academicYear);
+    }
+
+    private function revoke(ILogger $logger, ModelSubmit $submit, int $academicYear): array {
         if (!$submit->canRevoke()) {
             throw new StorageException(_('Nelze zrušit submit.'));
         }
@@ -177,9 +215,19 @@ class SubmitHandlerFactory {
         if (!$submit) {
             throw new NotFoundException(_('Submit does not exists.'));
         }
+        $this->checkPrivilege($submit, $privilege);
+        return $submit;
+    }
+
+    /**
+     * @param ModelSubmit $submit
+     * @param string $privilege
+     * @return void
+     * @throws ForbiddenRequestException
+     */
+    private function checkPrivilege(ModelSubmit $submit, string $privilege) {
         if (!$this->contestAuthorizator->isAllowed($submit, $privilege, $submit->getContestant()->getContest())) {
             throw new ForbiddenRequestException(_('Access denied'));
         }
-        return $submit;
     }
 }

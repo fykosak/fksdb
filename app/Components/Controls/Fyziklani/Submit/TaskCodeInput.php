@@ -6,7 +6,6 @@ use FKSDB\Components\React\AjaxComponent;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Fyziklani\Submit\HandlerFactory;
-use FKSDB\Logging\MemoryLogger;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Messages\Message;
@@ -15,12 +14,9 @@ use FKSDB\Fyziklani\Submit\TaskCodeException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\React\ReactResponse;
 use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
-use Nette\Utils\Json;
-use Nette\Utils\JsonException;
 
 /**
  * Class TaskCodeInput
@@ -71,16 +67,15 @@ class TaskCodeInput extends AjaxComponent {
 
     /**
      * @param mixed ...$args
-     * @return string
-     * @throws JsonException
+     * @return array
      * @throws NotSetGameParametersException
      */
-    protected function getData(...$args): string {
-        return Json::encode([
+    protected function getData(...$args): array {
+        return [
             'availablePoints' => $this->getEvent()->getFyziklaniGameSetup()->getAvailablePoints(),
             'tasks' => $this->serviceFyziklaniTask->getTasksAsArray($this->getEvent()),
             'teams' => $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent()),
-        ]);
+        ];
     }
 
     /**
@@ -95,24 +90,19 @@ class TaskCodeInput extends AjaxComponent {
 
     /**
      * @return void
-     * @throws AbortException
      * @throws BadTypeException
+     * @throws AbortException
      */
     public function handleSave() {
-        $request = $this->getHttpRequest();
-        $response = new ReactResponse();
-        $response->setAct($request['act']);
+        $data = (array)json_decode($this->getHttpRequest()->getRawBody());
         try {
             $handler = $this->handlerFactory->create($this->getEvent());
-            $logger = new MemoryLogger();
-            $handler->preProcess($logger, $request->requestData['code'], +$request->requestData['points']);
-            $response->setMessages($logger->getMessages());
+            $handler->preProcess($this->getLogger(), $data['code'], +$data['points']);
         } catch (TaskCodeException $exception) {
-            $response->addMessage(new Message($exception->getMessage(), BasePresenter::FLASH_ERROR));
+            $this->getLogger()->log(new Message($exception->getMessage(), BasePresenter::FLASH_ERROR));
         } catch (ClosedSubmittingException $exception) {
-            $response->addMessage(new Message($exception->getMessage(), BasePresenter::FLASH_ERROR));
+            $this->getLogger()->log(new Message($exception->getMessage(), BasePresenter::FLASH_ERROR));
         }
-        $this->getPresenter()->sendResponse($response);
-
+        $this->sendAjaxResponse();
     }
 }

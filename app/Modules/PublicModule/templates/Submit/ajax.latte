@@ -2,11 +2,5 @@
     <a class="btn btn-secondary" href="{plink default }">{_'Prejdi na starý systém uploadu úloh'}</a>
     <a class="btn btn-info" href="{plink list}">{_'Odevzdaná řešení'}</a>
     <hr/>
-    <div class="row mb-3">
-        {foreach $availableTasks as $task}
-            <div class="col-xl-4 col-md-6 col-sm-12 my-3">
-                {control 'task_'.$task->task_id}
-            </div>
-        {/foreach}
-    </div>
+    {control submitContainer}
 {/block}
