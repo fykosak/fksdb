@@ -1,5 +1,5 @@
 import { Action } from 'redux';
-import { InputConnectorItems } from './reducers';
+import { InputConnectorItems } from './reducer';
 
 export const ACTION_SET_INITIAL_DATA = '@@input-connector/ACTION_SET_INITIAL_DATA';
 

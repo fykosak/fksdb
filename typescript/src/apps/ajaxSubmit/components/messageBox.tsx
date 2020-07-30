@@ -1,5 +1,5 @@
 import { Message } from '@fetchApi/interfaces';
-import { State as SubmitState } from '@fetchApi/reducers';
+import { FetchApiState } from '@fetchApi/reducer';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { State as ErrorLoggerState } from '../reducers/errorLogger';
@@ -22,7 +22,7 @@ class MessageBox extends React.Component<StateProps & OwnProps, {}> {
 }
 
 interface Store {
-    fetchApi: SubmitState;
+    fetchApi: FetchApiState;
     errorLogger: ErrorLoggerState;
 }
 

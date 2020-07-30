@@ -2,8 +2,8 @@ import { lang } from '@i18n/i18n';
 import InputConnector from '@inputConnector/netteInputConnector';
 import StoreCreator from '@shared/components/storeCreator';
 import * as React from 'react';
-import { ScheduleGroupDef } from '../middleware/interfaces';
-import { app } from '../reducer/';
+import { ScheduleGroupDef } from '../interfaces';
+import { app } from '../reducer';
 import Container from './container';
 
 interface OwnProps {

@@ -1,18 +1,13 @@
-import * as React from 'react';
-import { connect } from 'react-redux';
-import {
-    addError,
-    dragEnd,
-    dragStart,
-    dropItem,
-} from '../../actions';
-
 import { NetteActions } from '@appsCollector/netteActions';
 import { dispatchFetch } from '@fetchApi/netteFetch';
+import { dragEnd, dragStart, dropItem } from '@shared/dragndrop';
+import * as React from 'react';
+import { connect } from 'react-redux';
 import {
     Action,
     Dispatch,
 } from 'redux';
+import { addError } from '../../actions';
 import { handleFileUpload, Submit } from '../../middleware/';
 import { Store } from '../../reducers';
 

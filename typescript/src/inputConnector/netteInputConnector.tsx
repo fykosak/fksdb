@@ -8,7 +8,7 @@ import {
 import {
     InputConnectorItems,
     Store,
-} from './reducers';
+} from './reducer';
 
 export interface OwnProps {
     input: HTMLInputElement;

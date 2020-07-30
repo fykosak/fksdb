@@ -5,7 +5,7 @@ import {
     Submit,
     Submits,
     Team,
-} from '../../../../../../fyziklani/helpers/interfaces';
+} from '@apps/fyziklani/helpers/interfaces';
 import { getColorByPoints } from '../../../../middleware/charts/colors';
 import { getPieData } from '../../../../middleware/charts/pie';
 import { Store as StatisticsStore } from '../../../../reducers';

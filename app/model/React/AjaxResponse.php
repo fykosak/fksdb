@@ -2,7 +2,6 @@
 
 namespace FKSDB\React;
 
-use FKSDB\Messages\Message;
 use Nette;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;

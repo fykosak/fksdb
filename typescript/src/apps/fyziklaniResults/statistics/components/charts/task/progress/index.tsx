@@ -8,7 +8,7 @@ import {
     Submit,
     Submits,
     Task,
-} from '../../../../../../fyziklani/helpers/interfaces';
+} from '@apps/fyziklani/helpers/interfaces';
 import { setTaskId } from '../../../../actions';
 import { getColorByPoints } from '../../../../middleware/charts/colors';
 import { Store as StatisticsStore } from '../../../../reducers';

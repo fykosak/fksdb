@@ -8,10 +8,10 @@ import {
     Place,
     Team,
 } from '../../../helpers/interfaces';
-import { dropItem } from '../../actions/dragndrop';
 import { DragNDropData } from '../../middleware/interfaces';
 import { Store as RoutingStore } from '../../reducers/';
 import TeamComponent from '../team/';
+import { dropItem } from '@shared/dragndrop';
 
 interface StateProps {
     teams: Team[];

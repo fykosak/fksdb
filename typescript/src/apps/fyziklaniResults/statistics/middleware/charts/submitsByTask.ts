@@ -1,4 +1,4 @@
-import { Submit, Submits } from '../../../../fyziklani/helpers/interfaces';
+import { Submit, Submits } from '@apps/fyziklani/helpers/interfaces';
 
 export interface SubmitsByTask {
     [time: number]: {

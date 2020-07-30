@@ -33,7 +33,6 @@ class ScheduleField extends TextInput {
      * @param string $type
      * @param ServiceScheduleItem $serviceScheduleItem
      * @throws BadRequestException
-     * @throws JsonException
      * @throws NotImplementedException
      */
     public function __construct(ModelEvent $event, string $type, ServiceScheduleItem $serviceScheduleItem) {

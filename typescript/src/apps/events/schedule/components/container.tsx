@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ScheduleGroupDef } from '../middleware/interfaces';
+import { ScheduleGroupDef } from '../interfaces';
 import Group from './group';
 import { Params } from './index';
 

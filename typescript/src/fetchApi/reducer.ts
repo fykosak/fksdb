@@ -12,7 +12,7 @@ import {
     Response2,
 } from './interfaces';
 
-export interface State<T = any> {
+export interface FetchApiState<T = any> {
     [accessKey: string]: {
         submitting?: boolean;
         error?: Error | any;
@@ -21,7 +21,7 @@ export interface State<T = any> {
     };
 }
 
-const fetchStart = (state: State, action: ActionFetchStart): State => {
+const fetchStart = (state: FetchApiState, action: ActionFetchStart): FetchApiState => {
     const {accessKey} = action;
     return {
         ...state,
@@ -33,7 +33,7 @@ const fetchStart = (state: State, action: ActionFetchStart): State => {
         },
     };
 };
-const fetchFail = (state: State, action: ActionFetchFail): State => {
+const fetchFail = (state: FetchApiState, action: ActionFetchFail): FetchApiState => {
     const {accessKey} = action;
     return {
         ...state,
@@ -49,7 +49,7 @@ const fetchFail = (state: State, action: ActionFetchFail): State => {
     };
 };
 
-function fetchSuccess<D = any>(state: State, action: ActionFetchSuccess<Response2<D>>): State {
+function fetchSuccess<D = any>(state: FetchApiState, action: ActionFetchSuccess<Response2<D>>): FetchApiState {
     const {accessKey} = action;
     return {
         ...state,
@@ -62,9 +62,9 @@ function fetchSuccess<D = any>(state: State, action: ActionFetchSuccess<Response
     };
 }
 
-const initState: State = {};
+const initState: FetchApiState = {};
 
-export function fetchApi<D = any>(state: State = initState, action: any): State {
+export function fetchApi<D = any>(state: FetchApiState = initState, action: any): FetchApiState {
     switch (action.type) {
         case ACTION_FETCH_START:
             return fetchStart(state, action);

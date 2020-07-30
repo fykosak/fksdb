@@ -6,7 +6,7 @@ import {
     Dispatch,
 } from 'redux';
 import { setHardVisible } from './actions';
-import { State as OptionsState } from './reducers';
+import { State as OptionsState } from './reducer';
 
 interface StateProps {
     hardVisible: boolean;

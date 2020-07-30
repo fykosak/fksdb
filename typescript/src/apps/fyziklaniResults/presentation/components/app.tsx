@@ -4,7 +4,7 @@ import {
     Submits,
     Task,
     Team,
-} from '../../../fyziklani/helpers/interfaces';
+} from '@apps/fyziklani/helpers/interfaces';
 import {
     calculate,
     Item,

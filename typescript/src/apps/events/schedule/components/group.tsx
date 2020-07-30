@@ -1,7 +1,7 @@
 import { lang } from '@i18n/i18n';
 import TimeDisplay from '@shared/components/displays/time';
 import * as React from 'react';
-import { ScheduleGroupDef } from '../middleware/interfaces';
+import { ScheduleGroupDef } from '../interfaces';
 import { Params } from './index';
 import ScheduleItem from './item';
 

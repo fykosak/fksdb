@@ -2,7 +2,7 @@ import InputConnector from '@inputConnector/netteInputConnector';
 import StoreCreator from '@shared/components/storeCreator';
 import * as React from 'react';
 import { PaymentScheduleItem } from '../interfaces';
-import { app } from '../reducer/';
+import { app } from '../reducer';
 import Container from './container';
 
 interface OwnProps {

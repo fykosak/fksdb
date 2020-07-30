@@ -1,7 +1,7 @@
 import {
-    State as FetchApiState,
     fetchApi,
-} from '@fetchApi/reducers';
+    FetchApiState,
+} from '@fetchApi/reducer';
 import { combineReducers } from 'redux';
 import { DragNDropData } from '../middleware/interfaces';
 import {

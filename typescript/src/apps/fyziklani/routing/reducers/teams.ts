@@ -2,11 +2,6 @@ import { ACTION_FETCH_SUCCESS, ActionFetchSuccess } from '@fetchApi/actions';
 import { Response2 } from '@fetchApi/interfaces';
 import { Team } from '../../helpers/interfaces';
 import {
-    ACTION_DROP_ITEM,
-    ActionDropItem,
-} from '../actions/dragndrop';
-import { ACTION_REMOVE_UPDATED_TEAMS } from '../actions/save';
-import {
     ACTION_ADD_TEAMS,
     ACTION_REMOVE_PLACE,
     ActionAddTeams,
@@ -16,6 +11,7 @@ import {
     DragNDropData,
     ResponseData,
 } from '../middleware/interfaces';
+import { ACTION_DROP_ITEM, ActionDropItem } from '@shared/dragndrop';
 
 export interface State {
     availableTeams: Team[];
@@ -68,13 +64,6 @@ const removePlace = (state: State, action: ActionRemoveTeamPlace): State => {
     };
 };
 
-const removeUpdatedTeams = (state: State): State => {
-    return {
-        ...state,
-        updatedTeams: [],
-    };
-};
-
 const fetchSuccess = (state: State, action: ActionFetchSuccess<Response2<ResponseData>>): State => {
     return {
         ...state,
@@ -96,8 +85,6 @@ export const teams = (state: State = initialState, action): State => {
             return removePlace(state, action);
         case ACTION_FETCH_SUCCESS:
             return fetchSuccess(state, action);
-        case ACTION_REMOVE_UPDATED_TEAMS:
-            return removeUpdatedTeams(state);
         default:
             return state;
     }

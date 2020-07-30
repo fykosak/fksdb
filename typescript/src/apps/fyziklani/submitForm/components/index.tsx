@@ -5,7 +5,7 @@ import {
     Task,
     Team,
 } from '../../helpers/interfaces';
-import { app } from '../reducers';
+import { app } from '../reducer';
 import Container from './container';
 
 interface OwnProps {

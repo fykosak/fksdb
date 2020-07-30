@@ -9,9 +9,9 @@ import {
 } from './uploadData';
 
 import {
-    State as FetchApiState,
     fetchApi,
-} from '@fetchApi/reducers';
+    FetchApiState,
+} from '@fetchApi/reducer';
 import {
     errorLogger,
     State as ErrorLoggerState,

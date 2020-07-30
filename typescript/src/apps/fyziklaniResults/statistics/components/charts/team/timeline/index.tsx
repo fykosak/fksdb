@@ -14,7 +14,7 @@ import {
     Submit,
     Submits,
     Task,
-} from '../../../../../../fyziklani/helpers/interfaces';
+} from '@apps/fyziklani/helpers/interfaces';
 import { getColorByPoints } from '../../../../middleware/charts/colors';
 import { Store } from '../../../../reducers';
 

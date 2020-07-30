@@ -1,4 +1,4 @@
-import { ScheduleItemDef } from '../../events/schedule/middleware/interfaces';
+import { ScheduleItemDef } from '../../events/schedule/interfaces';
 
 export interface PaymentScheduleItem {
     label: string;

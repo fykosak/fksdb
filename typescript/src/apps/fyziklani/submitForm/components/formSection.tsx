@@ -15,7 +15,7 @@ import {
     Team,
 } from '../../helpers/interfaces';
 import { SubmitFormRequest } from '../actions';
-import { Store as SubmitStore } from '../reducers';
+import { Store as SubmitStore } from '../reducer';
 import { FORM_NAME } from './container';
 import ScanInput from './inputs/scan';
 import SubmitButtons from './inputs/submitButtons';

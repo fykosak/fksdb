@@ -6,7 +6,7 @@ export interface ActionFetchSuccess<D> extends Action<string> {
     accessKey: string;
 }
 
-export const ACTION_FETCH_SUCCESS = 'ACTION_FETCH_SUCCESS';
+export const ACTION_FETCH_SUCCESS = '@@fetch-api/ACTION_FETCH_SUCCESS';
 
 export function fetchSuccess<Data>(data: Response2<Data>, accessKey: string): ActionFetchSuccess<Response2<Data>> {
     return {
@@ -21,7 +21,7 @@ export interface ActionFetchFail extends Action<string> {
     accessKey: string;
 }
 
-export const ACTION_FETCH_FAIL = 'ACTION_FETCH_FAIL';
+export const ACTION_FETCH_FAIL = '@@fetch-api/ACTION_FETCH_FAIL';
 
 export const fetchFail = (error: Error | any, accessKey: string): ActionFetchFail => {
     return {
@@ -35,7 +35,7 @@ export interface ActionFetchStart extends Action<string> {
     accessKey: string;
 }
 
-export const ACTION_FETCH_START = 'ACTION_FETCH_START';
+export const ACTION_FETCH_START = '@@fetch-api/ACTION_FETCH_START';
 export const fetchStart = (accessKey: string): ActionFetchStart => {
     return {
         accessKey,

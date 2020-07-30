@@ -2,8 +2,6 @@
 
 namespace FKSDB\Authentication\SSO;
 
-use FKSDB\Authentication\SSO\IGlobalSession;
-use FKSDB\Authentication\SSO\IGSIDHolder;
 use FKSDB\ORM\Models\ModelGlobalSession;
 use FKSDB\ORM\Services\ServiceGlobalSession;
 use Nette\Utils\DateTime;

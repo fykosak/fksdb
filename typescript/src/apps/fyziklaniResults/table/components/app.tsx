@@ -1,12 +1,12 @@
-import { lang } from '@i18n/i18n';
-import * as React from 'react';
-import { findDOMNode } from 'react-dom';
-import { connect } from 'react-redux';
 import {
     Submits,
     Task,
     Team,
-} from '../../../fyziklani/helpers/interfaces';
+} from '@apps/fyziklani/helpers/interfaces';
+import { lang } from '@i18n/i18n';
+import * as React from 'react';
+import { findDOMNode } from 'react-dom';
+import { connect } from 'react-redux';
 import { Filter } from '../middleware/filters/filter';
 import { FyziklaniResultsTableStore } from '../reducers';
 import Row from './row';
