@@ -40,10 +40,10 @@ class ServiceSubmitQuizQuestion extends AbstractServiceSingle {
     /**
      * @param ModelQuizQuestion $question
      * @param ModelContestant $contestant
-     * @param string $answer
+     * @param string|null $answer
      * @return void
      */
-    public function saveSubmittedQuestion(ModelQuizQuestion $question, ModelContestant $contestant, string $answer) {
+    public function saveSubmittedQuestion(ModelQuizQuestion $question, ModelContestant $contestant, $answer) {
         $submit = $this->findByContestant($contestant->ct_id, $question->question_id);
         if ($submit) {
             $this->updateModel2($submit, [
