@@ -18,14 +18,19 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class SubmitContainer extends BaseComponent {
+
     /** @var ModelContestant */
     private $contestant;
+
     /** @var ModelContest */
     private $contest;
+
     /** @var int */
     private $acYear;
+
     /** @var int */
     private $year;
+
     /** @var ServiceTask */
     private $serviceTask;
 

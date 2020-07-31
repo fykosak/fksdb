@@ -12,14 +12,14 @@ use FKSDB\ORM\Models\ModelPerson;
  * Class Role
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class Role extends AbstractStalkingComponent {
+class Role extends StalkingControl {
     /**
      * @param ModelPerson $person
      * @param int $userPermissions
      * @return void
      */
     public function render(ModelPerson $person, int $userPermissions) {
-        $this->beforeRender($person,_('Roles'), $userPermissions,FieldLevelPermission::ALLOW_RESTRICT);
+        $this->beforeRender($person, _('Roles'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
         $template = $this->template;
         $login = $person->getLogin();
         $roles = [];
@@ -30,7 +30,7 @@ class Role extends AbstractStalkingComponent {
             }
         }
         $this->template->roles = $roles;
-        $template->setFile(__DIR__ . '/Role.latte');
+        $template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.role.latte');
         $template->render();
     }
 }

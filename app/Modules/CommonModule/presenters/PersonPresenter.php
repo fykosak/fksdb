@@ -288,8 +288,12 @@ class PersonPresenter extends BasePresenter {
         return new Stalking\Validation($this->getContext());
     }
 
+    /**
+     * @return Stalking\Timeline\TimelineControl
+     * @throws ModelNotFoundException
+     */
     protected function createComponentTimeline(): Stalking\Timeline\TimelineControl {
-        return new Stalking\Timeline\TimelineControl($this->getContext());
+        return new Stalking\Timeline\TimelineControl($this->getContext(), $this->getEntity());
     }
 
     /**

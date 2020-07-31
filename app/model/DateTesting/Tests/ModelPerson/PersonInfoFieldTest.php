@@ -23,6 +23,7 @@ class PersonInfoFieldTest extends PersonFileLevelTest {
         $info = $person->getInfo();
         if (!$info) {
             $logger->log(new TestLog($this->getTitle(), 'Person info is not set', TestLog::LVL_INFO));
+            return;
         }
         $this->getRowFactory()->runTest($logger, $info);
     }

@@ -39,7 +39,7 @@ abstract class StalkingControl extends BaseComponent {
         $this->template->gender = $person->gender;
         $this->template->headline = $headline;
         if ($userPermissions < $minimalPermissions) {
-            $this->template->setFile(__DIR__ . '/layout.permissionDenied.latte');
+            $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.permissionDenied.latte');
             $this->template->render();
         }
     }
@@ -59,6 +59,7 @@ abstract class StalkingControl extends BaseComponent {
     protected function createComponentValuePrinter(): ValuePrinterComponent {
         return new ValuePrinterComponent($this->getContext());
     }
+
     protected function createComponentLinkPrinter(): LinkPrinterComponent {
         return new LinkPrinterComponent($this->getContext());
     }

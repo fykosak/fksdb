@@ -45,8 +45,6 @@ $(function() {
                 }
             }
 
-
-
             var select = null, focus = null, source = null;
             var cache = {}; //TODO move in better scope
             var labelCache = {};

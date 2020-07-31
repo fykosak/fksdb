@@ -9,7 +9,7 @@ use FKSDB\ORM\Models\ModelPerson;
  * Class Flag
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class Flag extends AbstractStalkingComponent {
+class Flag extends StalkingControl {
     /**
      * @param ModelPerson $person
      * @param int $userPermissions
@@ -17,8 +17,8 @@ class Flag extends AbstractStalkingComponent {
      */
     public function render(ModelPerson $person, int $userPermissions) {
         $this->beforeRender($person, _('Flags'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
-        $this->template->flags = $person->getMPersonHasFlags();
-        $this->template->setFile(__DIR__ . '/Flag.latte');
+        $this->template->flags = $person->getFlags();
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.flag.latte');
         $this->template->render();
     }
 }

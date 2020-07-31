@@ -11,7 +11,7 @@ use FKSDB\DataTesting\DataTestingFactory;
  * Class Validation
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class Validation extends AbstractStalkingComponent {
+class Validation extends StalkingControl {
     /** @var DataTestingFactory */
     private $validationFactory;
 
@@ -36,7 +36,7 @@ class Validation extends AbstractStalkingComponent {
         }
 
         $this->template->logs = $logger->getMessages();
-        $this->template->setFile(__DIR__ . '/Validation.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.validation.latte');
         $this->template->render();
     }
 }

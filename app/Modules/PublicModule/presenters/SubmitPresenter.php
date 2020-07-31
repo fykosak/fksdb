@@ -284,6 +284,8 @@ class SubmitPresenter extends BasePresenter {
     private function handleUploadFormSuccess(Form $form) {
         $values = $form->getValues();
 
+        Debugger::log(\sprintf('Contestant %d upload %s', $this->getContestant()->ct_id, $values['tasks']), 'old-submit');
+
         $taskIds = explode(',', $values['tasks']);
         $validIds = $this->getAvailableTasks()->fetchPairs('task_id', 'task_id');
 
