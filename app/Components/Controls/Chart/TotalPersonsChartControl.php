@@ -36,11 +36,9 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
     }
 
     /**
-     * @param mixed ...$args
-     * @return string
-     * @throws JsonException
+     * @return array|mixed|null
      */
-    public function getData(...$args): string {
+    public function getData() {
         $query = $this->servicePerson->getTable()->order('created');
         $data = [];
         /** @var ModelPerson $person */
@@ -51,7 +49,7 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
                 'personId' => $person->person_id,
             ];
         }
-        return Json::encode($data);
+        return $data;
     }
 
     public function getTitle(): string {

@@ -50,10 +50,9 @@ class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
     }
 
     /**
-     * @return string
-     * @throws JsonException
+     * @return array[]|mixed|null
      */
-    protected function getData(): string {
+    protected function getData() {
         $data = [
             'participants' => [],
             'events' => [],
@@ -72,7 +71,7 @@ class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
             $data['participants'][$event->event_id] = $participants;
             $data['events'][$event->event_id] = $event->__toArray();
         }
-        return Json::encode($data);
+        return $data;
     }
 
     public function getTitle(): string {

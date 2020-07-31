@@ -81,7 +81,7 @@ class MapRegister {
             ReactDOM.render(React.createElement(component, {actions, data, ...params}), element);
             return true;
         }
-        if (this.actionsComponents.hasOwnProperty(reactId)) {
+        if (this.dataComponents.hasOwnProperty(reactId)) {
             const {component, params} = this.dataComponents[reactId];
             ReactDOM.render(React.createElement(component, {data, ...params}), element);
             return true;

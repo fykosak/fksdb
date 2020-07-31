@@ -31,11 +31,9 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
     }
 
     /**
-     * @param mixed ...$args
-     * @return string
-     * @throws JsonException
+     * @return array|mixed|null
      */
-    public function getData(...$args): string {
+    public function getData() {
         $data = [];
         foreach ($this->event->getParticipants()->where('status', ['participated', 'applied']) as $row) {
 
@@ -56,7 +54,7 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
             ];
             $data[] = $datum;
         }
-        return Json::encode($data);
+        return $data;
     }
 
     public function getTitle(): string {

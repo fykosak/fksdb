@@ -132,7 +132,7 @@ class TimelineControl extends ReactComponent {
      * @param array $dates
      * @return \DateTimeInterface[]
      */
-    private function calculateFirstAndLast( array $events, array $dates): array {
+    private function calculateFirstAndLast(array $events, array $dates): array {
         $first = $this->person->created;
         $last = new \DateTime();
         foreach ($events as $event) {
@@ -165,15 +165,15 @@ class TimelineControl extends ReactComponent {
     }
 
     /**
-     * @return string
+     * @return mixed
      * @throws \Exception
      */
-    public function getData(): string {
+    public function getData() {
         list($events, $calculatedEvents) = $this->calculateEvents();
         list($dates, $longTimeEvents) = $this->calculateData();
         list($first, $last) = $this->calculateFirstAndLast($events, $dates);
 
-        $data = [
+        return [
             'scale' => [
                 'max' => $last->format('c'),
                 'min' => $first->format('c'),
@@ -181,6 +181,5 @@ class TimelineControl extends ReactComponent {
             'events' => $calculatedEvents,
             'states' => $longTimeEvents,
         ];
-        return json_encode($data);
     }
 }

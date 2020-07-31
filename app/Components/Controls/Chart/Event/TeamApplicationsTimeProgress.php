@@ -49,11 +49,9 @@ class TeamApplicationsTimeProgress extends ReactComponent implements IChart {
     }
 
     /**
-     * @param mixed ...$args
-     * @return string
-     * @throws JsonException
+     * @return array[]|mixed|null
      */
-    protected function getData(...$args): string {
+    protected function getData() {
         $data = [
             'teams' => [],
             'events' => [],
@@ -63,7 +61,7 @@ class TeamApplicationsTimeProgress extends ReactComponent implements IChart {
             $data['teams'][$event->event_id] = $this->serviceFyziklaniTeam->getTeamsAsArray($event);
             $data['events'][$event->event_id] = $event->__toArray();
         }
-        return Json::encode($data);
+        return $data;
     }
 
     public function getTitle(): string {
