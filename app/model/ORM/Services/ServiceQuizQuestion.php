@@ -7,6 +7,8 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\ModelQuizQuestion;
 use FKSDB\ORM\Models\ModelTask;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Miroslav Jarý <mira.jary@gmail.com>
@@ -14,12 +16,13 @@ use FKSDB\ORM\Models\ModelTask;
 class ServiceQuizQuestion extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    public function getModelClassName(): string {
-        return ModelQuizQuestion::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_QUIZ;
+    /**
+     * ServiceQuizQuestion constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
+     */
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_QUIZ, ModelQuizQuestion::class);
     }
 
     /**

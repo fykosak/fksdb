@@ -165,7 +165,7 @@ class AutocompleteSelectBox extends TextBase {
             $wasSent = false;
         }
         if ($wasSent && !Arrays::get($this->getForm()->getHttpData(), $metaPath, null)) {
-            $this->addError(sprintf(_('Políčko %s potřebuje povolený Javascript.'), $this->caption));
+            $this->addError(sprintf(_('Field %s requires JavaScript enabled.'), $this->caption));
             $this->setValue(null);
         } else {
             parent::loadHttpData();

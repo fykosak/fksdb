@@ -154,7 +154,7 @@ class ApplicationHandler {
             if ($transition->isCreating()) {
                 $this->logger->log(new Message(sprintf(_('Přihláška "%s" vytvořena.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS));
             } elseif ($transition->isTerminating()) {
-                $this->logger->log(new Message(_('Přihláška smazána.'), ILogger::SUCCESS));
+                $this->logger->log(new Message(_('Application deleted.'), ILogger::SUCCESS));
             } elseif (isset($transition)) {
                 $this->logger->log(new Message(sprintf(_('Stav přihlášky "%s" změněn.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::INFO));
             }
@@ -242,12 +242,12 @@ class ApplicationHandler {
                 $this->logger->log(new Message(sprintf(_('Přihláška "%s" vytvořena.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS));
             } elseif (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()) {
                 //$this->logger->log(sprintf(_("Přihláška '%s' smazána."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
-                $this->logger->log(new Message(_('Přihláška smazána.'), ILogger::SUCCESS));
+                $this->logger->log(new Message(_('Application deleted.'), ILogger::SUCCESS));
             } elseif (isset($transitions[$explicitMachineName])) {
                 $this->logger->log(new Message(sprintf(_('Stav přihlášky "%s" změněn.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::INFO));
             }
             if ($data && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())) {
-                $this->logger->log(new Message(sprintf(_('Přihláška "%s" uložena.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS));
+                $this->logger->log(new Message(sprintf(_('Application "%s" saved.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS));
             }
         } catch (ModelDataConflictException $exception) {
             $container = $exception->getReferencedId()->getReferencedContainer();
@@ -319,7 +319,7 @@ class ApplicationHandler {
                 if ($transition) {
                     $transitions[$name] = $transition;
                 } elseif (!($state == BaseMachine::STATE_INIT && $newState == BaseMachine::STATE_TERMINATED)) {
-                    $msg = _('Ze stavu "%s" automatu "%s" neexistuje přechod do stavu "%s".');
+                    $msg = _('There is not a transition from state "%s" of machine "%s" to state "%s".');
                     throw new MachineExecutionException(sprintf($msg, $this->machine->getBaseMachine($name)->getStateName($state), $holder->getBaseHolder($name)->getLabel(), $this->machine->getBaseMachine($name)->getStateName($newState)));
                 }
             }
@@ -384,6 +384,6 @@ class ApplicationHandler {
      * @throws ApplicationHandlerException
      */
     private function reRaise(Exception $e) {
-        throw new ApplicationHandlerException(_('Chyba při ukládání přihlášky.'), null, $e);
+        throw new ApplicationHandlerException(_('Error while saving the application.'), null, $e);
     }
 }

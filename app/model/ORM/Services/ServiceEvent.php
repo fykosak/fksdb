@@ -9,6 +9,8 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventType;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -18,12 +20,13 @@ class ServiceEvent extends AbstractServiceSingle {
 
     use DeprecatedLazyDBTrait;
 
-    public function getModelClassName(): string {
-        return ModelEvent::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_EVENT;
+    /**
+     * ServiceEvent constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
+     */
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_EVENT, ModelEvent::class);
     }
 
     public function getEvents(ModelContest $contest, int $year): TypedTableSelection {

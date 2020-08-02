@@ -11,9 +11,6 @@ use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
-use Nette\Utils\Json;
-use Nette\Utils\JsonException;
-
 /**
  * Class SingleApplicationsTimeProgress
  * @author Michal Červeňák <miso@fykos.cz>

@@ -324,7 +324,7 @@ class ContestChooser extends BaseComponent {
         $this->template->currentYear = $this->getYear();
         $this->template->class = ($class !== null) ? $class : "nav navbar-nav navbar-right";
 
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ContestChooser.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.contest.latte');
         $this->template->render();
     }
 

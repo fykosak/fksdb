@@ -10,18 +10,20 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceEventParticipant extends AbstractServiceSingle {
-
-    public function getModelClassName(): string {
-        return ModelEventParticipant::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_EVENT_PARTICIPANT;
+    /**
+     * ServiceEventParticipant constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
+     */
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_EVENT_PARTICIPANT, ModelEventParticipant::class);
     }
 
     /**

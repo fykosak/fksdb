@@ -1,7 +1,8 @@
 <?php
 
-namespace FKSDB\Components\Controls;
+namespace FKSDB\Components\Controls\StoredQuery;
 
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTag;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
@@ -50,7 +51,7 @@ class StoredQueryTagCloud extends BaseComponent {
      */
     public function render(string $mode) {
         $this->template->mode = $mode;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'StoredQueryTagCloud.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.cloud.latte');
         $this->template->render();
     }
 

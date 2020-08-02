@@ -5,7 +5,7 @@ namespace FKSDB\Components\Controls\Entity\StoredQuery;
 use FKSDB\StoredQuery\StoredQueryFactory;
 use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
-use FKSDB\Components\Controls\ResultsComponent;
+use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\ModelException;

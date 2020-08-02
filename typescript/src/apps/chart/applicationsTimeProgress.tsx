@@ -27,7 +27,7 @@ export interface Data {
 
 interface OwnProps {
     data: Data;
-    accessKey: string;
+    accessKey: 'participants' | 'teams';
 }
 
 export default class ApplicationsTimeProgress extends React.Component<OwnProps, {}> {

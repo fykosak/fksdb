@@ -10,8 +10,6 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
-use Nette\Utils\Json;
-use Nette\Utils\JsonException;
 
 /**
  * Class TeamApplicationsTimeProgress

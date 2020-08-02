@@ -53,23 +53,23 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
         $this->serviceSchool = $serviceSchool;
 
         if (!in_array($rulesVersion, [1, 2])) {
-            throw new InvalidArgumentException(_("Neplatná hodnota \$rulesVersion."));
+            throw new InvalidArgumentException(_('Not valid $rulesVersion.'));
         }
         $this->rulesVersion = $rulesVersion;
 
         if ($this->rulesVersion == 1) {
             $this->categoryNames = [
-                self::HIGH_SCHOOL_A => _('Středoškoláci A'),
-                self::HIGH_SCHOOL_B => _('Středoškoláci B'),
-                self::HIGH_SCHOOL_C => _('Středoškoláci C'),
-                self::ABROAD => _('Zahraniční SŠ'),
+                self::HIGH_SCHOOL_A => sprintf(_('High school students %s'), 'A'),
+                self::HIGH_SCHOOL_B => sprintf(_('High school students %s'), 'B'),
+                self::HIGH_SCHOOL_C => sprintf(_('High school students %s'), 'C'),
+                self::ABROAD => _('High school outside of CR/SR'),
                 self::OPEN => _('Open'),
             ];
         } elseif ($this->rulesVersion == 2) {
             $this->categoryNames = [
-                self::HIGH_SCHOOL_A => _('Středoškoláci A'),
-                self::HIGH_SCHOOL_B => _('Středoškoláci B'),
-                self::HIGH_SCHOOL_C => _('Středoškoláci C'),
+                self::HIGH_SCHOOL_A => sprintf(_('High school students %s'), 'A'),
+                self::HIGH_SCHOOL_B => sprintf(_('High school students %s'), 'B'),
+                self::HIGH_SCHOOL_C => sprintf(_('High school students %s'), 'C'),
                 self::OPEN => _('Open'),
             ];
         }
@@ -140,7 +140,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
 
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
         if ($original != $result) {
-            $logger->log(new Message(sprintf(_('Tým zařazen do kategorie %s.'), $this->categoryNames[$result]), ILogger::INFO));
+            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), $this->categoryNames[$result]), ILogger::INFO));
         }
     }
 

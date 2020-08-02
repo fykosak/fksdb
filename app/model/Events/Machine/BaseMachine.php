@@ -109,9 +109,9 @@ class BaseMachine {
     public function getStateName(string $state): string {
         switch ($state) {
             case self::STATE_INIT:
-                return _('vznikající');
+                return _('initial');
             case self::STATE_TERMINATED:
-                return _('zaniklý');
+                return _('terminated');
             default:
                 return _($state);
         }

@@ -67,7 +67,7 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $personControls = $this->getControl('p*.person_id');
 
-        $msgMixture = sprintf(_('V týmu můžou být soutežící nejvýše z %d škol.'), $this->getSchoolsInTeam());
+        $msgMixture = sprintf(_('Only %d different schools can be represented in the team.'), $this->getSchoolsInTeam());
         foreach ($schoolControls as $control) {
             $control->addRule(function (IControl $control) use ($schoolControls, $personControls, $form, $msgMixture) {
                 $schools = $this->getSchools($schoolControls, $personControls);

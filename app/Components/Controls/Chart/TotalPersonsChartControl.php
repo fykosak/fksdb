@@ -7,8 +7,6 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
-use Nette\Utils\Json;
-use Nette\Utils\JsonException;
 
 /**
  * Class TotalPersonsChartControl

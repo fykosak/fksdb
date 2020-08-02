@@ -24,14 +24,25 @@ use Tracy\Debugger;
  * @author Michal Červeňak <miso@fykos.cz>
  */
 abstract class AbstractServiceSingle extends Selection implements IService {
+
+    /** @var string */
+    private $modelClassName;
+
+    /** @var string */
+    private $tableName;
+
     /**
      * AbstractServiceSingle constructor.
      * @param Context $connection
      * @param IConventions $conventions
      * FKSDB\ORM\AbstractServiceSingle constructor.
+     * @param string $tableName
+     * @param string $modelClassName
      */
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, $this->getTableName());
+    public function __construct(Context $connection, IConventions $conventions, string $tableName, string $modelClassName) {
+        $this->tableName = $tableName;
+        $this->modelClassName = $modelClassName;
+        parent::__construct($connection, $conventions, $tableName);
     }
 
     /**
@@ -276,5 +287,11 @@ abstract class AbstractServiceSingle extends Selection implements IService {
         return $this->columns;
     }
 
-    abstract protected function getTableName(): string;
+    final protected function getTableName(): string {
+        return $this->tableName;
+    }
+
+    final public function getModelClassName(): string {
+        return $this->modelClassName;
+    }
 }

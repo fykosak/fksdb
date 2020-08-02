@@ -96,7 +96,7 @@ class ImportHandler {
             } catch (ApplicationHandlerException $exception) {
                 $hasError = true;
                 if ($errorMode == ApplicationHandler::ERROR_ROLLBACK) {
-                    throw new ImportHandlerException(_('Import se nepovedl.'), null, $exception);
+                    throw new ImportHandlerException(_('Import failed.'), null, $exception);
                 }
             }
         }
@@ -137,7 +137,7 @@ class ImportHandler {
             }
         }
         if (!$fieldExists) {
-            throw new ImportHandlerException(_('CSV soubor neobsahuje platnou hlavičku.'));
+            throw new ImportHandlerException(_('CSV does not contain correct heading.'));
         }
         return $values;
     }

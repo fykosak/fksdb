@@ -1,8 +1,9 @@
 <?php
 
-namespace FKSDB\Components\Controls;
+namespace FKSDB\Components\Controls\StoredQuery;
 
 use FKSDB\Authorization\ContestAuthorizator;
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Exports\ExportFormatFactory;
 use FKSDB\StoredQuery\StoredQuery;
 use FKSDB\StoredQuery\StoredQueryFactory as StoredQueryFactorySQL;
@@ -166,7 +167,7 @@ class ResultsComponent extends BaseComponent {
         $this->template->hasStoredQuery = $this->hasStoredQuery();
         $this->template->storedQuery = $this->storedQuery ?? null;
         $this->template->formats = $this->storedQuery ? $this->exportFormatFactory->getFormats($this->storedQuery) : [];
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'results.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.results.latte');
         $this->template->render();
     }
 

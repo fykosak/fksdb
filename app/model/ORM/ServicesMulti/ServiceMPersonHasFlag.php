@@ -20,7 +20,7 @@ class ServiceMPersonHasFlag extends AbstractServiceMulti {
      * @param ServicePersonHasFlag $joinedService
      */
     public function __construct(ServiceFlag $mainService, ServicePersonHasFlag $joinedService) {
-        parent::__construct($mainService, $joinedService);
+        parent::__construct($mainService, $joinedService, 'flag_id', ModelMPersonHasFlag::class);
     }
 
     /**
@@ -37,13 +37,5 @@ class ServiceMPersonHasFlag extends AbstractServiceMulti {
         $joinedModel = $this->getJoinedService()->createNew($data);
 
         return new ModelMPersonHasFlag($this, $mainModel, $joinedModel);
-    }
-
-    public function getJoiningColumn(): string {
-        return 'flag_id';
-    }
-
-    public function getModelClassName(): string {
-        return ModelMPersonHasFlag::class;
     }
 }

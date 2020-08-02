@@ -22,7 +22,7 @@ class Request {
     /** @var PageTitle */
     public $title;
 
-    /** @var string backling ID */
+    /** @var string backLing ID */
     public $parent;
 
     /** @var string */

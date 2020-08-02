@@ -26,7 +26,6 @@ $(document).ready(function () {
             $('#spinner').hide();
         }
     });
-    $.nette.init();
     $("form[data-submit-on='enter']").enterSubmitForm();
     document.querySelectorAll('.btn-danger').forEach((el) => {
         el.addEventListener('click', () => {

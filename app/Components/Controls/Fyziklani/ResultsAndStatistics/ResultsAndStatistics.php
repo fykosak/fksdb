@@ -33,6 +33,7 @@ class ResultsAndStatistics extends AjaxComponent {
 
     /** @var ModelEvent */
     private $event;
+    
     /** @var string|null */
     private $lastUpdated = null;
 

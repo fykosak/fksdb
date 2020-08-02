@@ -41,7 +41,7 @@ class LanguageChooser extends Chooser {
         $this->beforeRender();
         $this->template->modifiable = $this->modifiable;
         $this->template->currentLanguageName = LangPresenterTrait::$languageNames[$this->language] ?: null;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'LanguageChooser.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.language.latte');
         $this->template->render();
     }
 

@@ -40,7 +40,7 @@ class PasswordProcessing extends AbstractProcessing {
         }
 
         if ($original !== null && $original != $result) {
-            $logger->log(new Message(_('Nastaveno nové herní heslo.'), ILogger::INFO));
+            $logger->log(new Message(_('Set new game password.'), ILogger::INFO));
         }
     }
 

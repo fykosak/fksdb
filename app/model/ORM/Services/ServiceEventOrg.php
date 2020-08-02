@@ -11,6 +11,8 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * Class ServiceEventOrg
@@ -19,12 +21,13 @@ use FKSDB\ORM\Tables\TypedTableSelection;
 class ServiceEventOrg extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    public function getModelClassName(): string {
-        return ModelEventOrg::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_EVENT_ORG;
+    /**
+     * ServiceEventOrg constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
+     */
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_EVENT_ORG, ModelEventOrg::class);
     }
 
     /*/**

@@ -4,7 +4,7 @@ namespace FKSDB\Components\Grids\StoredQuery;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\StoredQuery\StoredQuery;
-use FKSDB\Components\Controls\ResultsComponent;
+use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;

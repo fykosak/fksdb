@@ -18,14 +18,6 @@ class ServiceMGrant extends AbstractServiceMulti {
      * @param ServiceGrant $joinedService
      */
     public function __construct(ServiceRole $mainService, ServiceGrant $joinedService) {
-        parent::__construct($mainService, $joinedService);
-    }
-
-    public function getJoiningColumn(): string {
-        return 'role_id';
-    }
-
-    public function getModelClassName(): string {
-        return ModelMGrant::class;
+        parent::__construct($mainService, $joinedService, 'role_id', ModelMGrant::class);
     }
 }

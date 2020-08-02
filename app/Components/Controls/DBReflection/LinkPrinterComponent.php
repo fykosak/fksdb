@@ -33,7 +33,7 @@ class LinkPrinterComponent extends BaseComponent {
         $factory = $this->tableReflectionFactory->loadLinkFactory($linkId);
         $this->template->title = $factory->getText();
         $this->template->link = $factory->create($this->getPresenter(), $model);
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.link.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR);
         $this->template->render();
     }
 }

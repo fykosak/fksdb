@@ -14,8 +14,10 @@ use Nette\Localization\ITranslator;
  * @property Template $template
  */
 abstract class BaseComponent extends Control {
+
     /** @var Container */
     private $context;
+
     /** @var ITranslator */
     private $translator;
 
@@ -33,7 +35,7 @@ abstract class BaseComponent extends Control {
      * @param ITranslator $translator
      * @return void
      */
-    public function injectTranslator(ITranslator $translator) {
+    final public function injectTranslator(ITranslator $translator) {
         $this->translator = $translator;
     }
 

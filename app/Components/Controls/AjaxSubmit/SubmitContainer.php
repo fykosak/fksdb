@@ -79,13 +79,11 @@ class SubmitContainer extends BaseComponent {
     }
 
     private function getAvailableTasks(): TypedTableSelection {
-        $tasks = $this->serviceTask->getTable();
-        $tasks->where('contest_id = ? AND year = ?', $this->contest->contest_id, $this->year);
-        $tasks->where('submit_start IS NULL OR submit_start < NOW()');
-        $tasks->where('submit_deadline IS NULL OR submit_deadline >= NOW()');
-        $tasks->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
-
-        return $tasks;
+        return $this->serviceTask->getTable()
+            ->where('contest_id = ? AND year = ?', $this->contest->contest_id, $this->year)
+            ->where('submit_start IS NULL OR submit_start < NOW()')
+            ->where('submit_deadline IS NULL OR submit_deadline >= NOW()')
+            ->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
     }
 
     /**

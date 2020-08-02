@@ -9,20 +9,23 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelPersonHasFlag;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 use Nette\Utils\ArrayHash;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
  */
 class ServicePersonHasFlag extends AbstractServiceSingle {
-
-    public function getModelClassName(): string {
-        return ModelPersonHasFlag::class;
+    /**
+     * ServicePersonHasFlag constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
+     */
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_PERSON_HAS_FLAG, ModelPersonHasFlag::class);
     }
 
-    protected function getTableName(): string {
-        return DbNames::TAB_PERSON_HAS_FLAG;
-    }
 
     /**
      * @param null $data

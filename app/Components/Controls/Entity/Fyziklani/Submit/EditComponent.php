@@ -81,7 +81,7 @@ class EditComponent extends AbstractEntityFormComponent implements IEditEntityFo
      * @throws NotSetGameParametersException
      */
     private function createPointsField(): RadioList {
-        $field = new RadioList(_('Počet bodů'));
+        $field = new RadioList(_('Number of points'));
         $items = [];
         foreach ($this->event->getFyziklaniGameSetup()->getAvailablePoints() as $points) {
             $items[$points] = $points;

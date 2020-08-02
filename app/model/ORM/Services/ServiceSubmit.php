@@ -9,6 +9,8 @@ use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -22,14 +24,14 @@ class ServiceSubmit extends AbstractServiceSingle {
     /** @var array */
     private $submitCache = [];
 
-    public function getModelClassName(): string {
-        return ModelSubmit::class;
+    /**
+     * ServiceSubmit constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
+     */
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_SUBMIT, ModelSubmit::class);
     }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_SUBMIT;
-    }
-
     /**
      * Syntactic sugar.
      *

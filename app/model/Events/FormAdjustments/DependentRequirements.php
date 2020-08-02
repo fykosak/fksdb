@@ -19,7 +19,7 @@ class DependentRequirements extends PairwiseAdjustment {
      * @return void
      */
     protected function processPair(IControl $target, IControl $prerequisite) {
-        $target->getRules()->addConditionOn($prerequisite, Form::FILLED)->addRule(Form::FILLED, _('Pole %label je třeba vyplnit.'));
+        $target->getRules()->addConditionOn($prerequisite, Form::FILLED)->addRule(Form::FILLED, _('Field %label is required.'));
     }
 
 }

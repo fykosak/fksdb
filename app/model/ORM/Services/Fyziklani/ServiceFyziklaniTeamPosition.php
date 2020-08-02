@@ -7,6 +7,8 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * Class ServiceFyziklaniTeamPosition
@@ -15,12 +17,13 @@ use FKSDB\ORM\Tables\TypedTableSelection;
 class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    public function getModelClassName(): string {
-        return ModelFyziklaniTeamPosition::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_FYZIKLANI_TEAM_POSITION;
+    /**
+     * ServiceFyziklaniTeamPosition constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
+     */
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_FYZIKLANI_TEAM_POSITION, ModelFyziklaniTeamPosition::class);
     }
 
     /**

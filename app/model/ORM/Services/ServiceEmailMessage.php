@@ -7,6 +7,8 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -17,16 +19,17 @@ use Nette\Database\Table\ActiveRow;
 class ServiceEmailMessage extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
+    /**
+     * ServiceEmailMessage constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
+     */
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_EMAIL_MESSAGE, ModelEmailMessage::class);
+    }
+
     public function getMessagesToSend(int $limit): TypedTableSelection {
         return $this->getTable()->where('state', ModelEmailMessage::STATE_WAITING)->limit($limit);
-    }
-
-    public function getModelClassName(): string {
-        return ModelEmailMessage::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_EMAIL_MESSAGE;
     }
 
     /**

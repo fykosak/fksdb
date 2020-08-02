@@ -120,11 +120,11 @@ class SubmitPresenter extends BasePresenter {
 
     /* ********************** TITLE **********************/
     public function titleDefault() {
-        $this->setPageTitle(new PageTitle(_('Odevzdat řešení'), 'fa fa-cloud-upload'));
+        $this->setPageTitle(new PageTitle(_('Submit a solution'), 'fa fa-cloud-upload'));
     }
 
     public function titleList() {
-        $this->setPageTitle(new PageTitle(_('Odevzdaná řešení'), 'fa fa-cloud-upload'));
+        $this->setPageTitle(new PageTitle(_('Submitted solutions'), 'fa fa-cloud-upload'));
     }
 
     public function titleAjax() {
@@ -177,14 +177,13 @@ class SubmitPresenter extends BasePresenter {
         $control = new FormControl();
         $form = $control->getForm();
 
-
         $taskIds = [];
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         $personHistory = $login->getPerson()->getHistory($this->getSelectedAcademicYear());
         $studyYear = ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
         if ($studyYear === null) {
-            $this->flashMessage(_('Řešitel nemá vyplněn ročník, nebudou dostupné všechny úlohy.'));
+            $this->flashMessage(_('Contestant is missing study year. Not all tasks are thus available.'));
         }
         $prevDeadline = null;
         /** @var ModelTask $task */
@@ -192,7 +191,7 @@ class SubmitPresenter extends BasePresenter {
             $questions = $this->quizQuestionService->getTable()->where('task_id', $task->task_id);
 
             if ($task->submit_deadline !== $prevDeadline) {
-                $form->addGroup(sprintf(_('Termín %s'), $task->submit_deadline));
+                $form->addGroup(sprintf(_('Deadline %s'), $task->submit_deadline));
             }
             $submit = $this->submitService->findByContestant($this->getContestant()->ct_id, $task->task_id);
             if ($submit && $submit->source == ModelSubmit::SOURCE_POST) {
@@ -205,15 +204,15 @@ class SubmitPresenter extends BasePresenter {
                 $upload = $container->addUpload('file', $task->getFQName());
                 $conditionedUpload = $upload
                     ->addCondition(Form::FILLED)
-                    ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze PDF soubory.'), 'application/pdf'); //TODO verify this check at production server
+                    ->addRule(Form::MIME_TYPE, _('Only PDF files are accepted.'), 'application/pdf'); //TODO verify this check at production server
 
                 if (!in_array($studyYear, array_keys($task->getStudyYears()))) {
-                    $upload->setOption('description', _('Úloha není určena pro Tvou kategorii.'));
+                    $upload->setOption('description', _('Task is not for your category.'));
                     $upload->setDisabled();
                 }
 
                 if ($submit && $this->uploadedSubmitStorage->fileExists($submit)) {
-                    $overwrite = $container->addCheckbox('overwrite', _('Přepsat odeslané řešení.'));
+                    $overwrite = $container->addCheckbox('overwrite', _('Overwrite submitted solutions.'));
                     $conditionedUpload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(~Form::FILLED, _('Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.'));
                 }
             } else {
@@ -244,7 +243,7 @@ class SubmitPresenter extends BasePresenter {
             $form->addHidden('tasks', implode(',', $taskIds));
 
             $form->setCurrentGroup();
-            $form->addSubmit('upload', _('Odeslat'));
+            $form->addSubmit('upload', _('Submit'));
             $form->onSuccess[] = function (Form $form) {
                 $this->handleUploadFormSuccess($form);
             };
@@ -300,7 +299,7 @@ class SubmitPresenter extends BasePresenter {
                 $task = $this->taskService->findByPrimary($taskId);
 
                 if (!isset($validIds[$taskId])) {
-                    $this->flashMessage(sprintf(_('Úlohu %s již není možno odevzdávat.'), $task->label), self::FLASH_ERROR);
+                    $this->flashMessage(sprintf(_('Task %s cannot be submitted anymore.'), $task->label), self::FLASH_ERROR);
                     continue;
                 }
 
@@ -324,7 +323,7 @@ class SubmitPresenter extends BasePresenter {
 
                 $this->submitHandlerFactory->handleSave($taskValues['file'], $task, $this->getContestant());
 
-                $this->flashMessage(sprintf(_('Úloha %s odevzdána.'), $task->label), self::FLASH_SUCCESS);
+                $this->flashMessage(sprintf(_('Task %s submitted.'), $task->label), self::FLASH_SUCCESS);
             }
 
             $this->uploadedSubmitStorage->commit();
@@ -334,12 +333,12 @@ class SubmitPresenter extends BasePresenter {
             $this->uploadedSubmitStorage->rollback();
             $this->submitService->getConnection()->rollBack();
             Debugger::log($exception);
-            $this->flashMessage(_('Došlo k chybě při ukládání úloh.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Task storing error.'), self::FLASH_ERROR);
         } catch (ProcessingException $exception) {
             $this->uploadedSubmitStorage->rollback();
             $this->submitService->getConnection()->rollBack();
             Debugger::log($exception);
-            $this->flashMessage(_('Došlo k chybě při ukládání úloh.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Task storing error.'), self::FLASH_ERROR);
         }
     }
 

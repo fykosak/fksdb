@@ -70,8 +70,8 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
         $personControls = $this->getControl('p*.person_id');
         $spamControls = $this->getControl('p*.person_id.person_has_flag.spam_mff');
 
-        $msgForeign = _('Zasílání informačních materiálů je dostupné pouze českým a slovenským studentům.');
-        $msgOld = _('Zasílání informačních materiálů je dostupné pouze SŠ studentům.');
+        $msgForeign = _('This option is only available to Czech and Slovak students.');
+        $msgOld = _('This option is only available to secondary school students.');
         /**
          * @var  $i
          * @var BaseControl $control

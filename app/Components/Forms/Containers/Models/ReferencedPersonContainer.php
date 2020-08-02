@@ -133,12 +133,12 @@ class ReferencedPersonContainer extends ReferencedContainer {
             $subContainer = new ContainerWithOptions();
             if ($sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
                 $subContainer->setOption('showGroup', true);
-                $subContainer->setOption('label', _('Doručovací adresa'));
+                $subContainer->setOption('label', _('Deliver address'));
             } elseif ($sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
                 $subContainer->setOption('showGroup', true);
-                $label = _('Trvalá adresa');
+                $label = _('Permanent address');
                 if (isset($this[ReferencedPersonHandler::POST_CONTACT_DELIVERY])) {
-                    $label .= ' ' . _('(je-li odlišná od doručovací)');
+                    $label .= ' ' . _('(when different from delivery address)');
                 }
                 $subContainer->setOption('label', $label);
             }
@@ -163,7 +163,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
                                 return false;
                             }
                             return true;
-                        }, _('S e-mailem %value byla nalezena (formálně) jiná (ale pravděpodobně duplicitní) osoba, a tak ve formuláři nahradila původní.'));
+                        }, _('There is (formally) different person with email %value. Probably it is a duplicate so it substituted original data in the form.'));
                 }
 
                 $subContainer->addComponent($control, $fieldName);
@@ -305,9 +305,9 @@ class ReferencedPersonContainer extends ReferencedContainer {
                         $conditioned = $control->addConditionOn($this->getReferencedId(), Form::FILLED);
 
                         if ($fieldName == 'agreed') { // NOTE: this may need refactoring when more customization requirements occurre
-                            $conditioned->addRule(Form::FILLED, _('Bez souhlasu nelze bohužel pokračovat.'));
+                            $conditioned->addRule(Form::FILLED, _('Confirmation is necessary to proceed.'));
                         } else {
-                            $conditioned->addRule(Form::FILLED, _('Pole %label je povinné.'));
+                            $conditioned->addRule(Form::FILLED, _('Field %label is required.'));
                         }
                     }
                     break;
