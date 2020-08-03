@@ -8,7 +8,6 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\YearCalculator;
-use FKSDB\ORM\ModelsMulti\ModelMPersonHasFlag;
 use FKSDB\ORM\ModelsMulti\ModelMPostContact;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
@@ -121,39 +120,25 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @return ModelMPersonHasFlag[]|null
-     * TODO wtf array|null? -- mišo 2020-05-22
+     * @return ModelPersonHasFlag[]
      */
-    public function getMPersonHasFlags() {
+    public function getPersonHasFlags(): array {
         $personFlags = $this->getFlags();
-
-        if (!$personFlags || count($personFlags) == 0) {
-            return null;
-        }
-
         $result = [];
         foreach ($personFlags as $row) {
-            $flag = $row->ref(DbNames::TAB_FLAG, 'flag_id');
-            $result[] = ModelMPersonHasFlag::createFromExistingModels(
-                ModelFlag::createFromActiveRow($flag), ModelPersonHasFlag::createFromActiveRow($row)
-            );
+            $result[] = ModelPersonHasFlag::createFromActiveRow($row);
         }
         return $result;
     }
 
     /**
      * @param int $fid
-     * @return ModelMPersonHasFlag|null
+     * @return ModelPersonHasFlag|null
      */
-    public function getMPersonHasFlag($fid) {
-        $flags = $this->getMPersonHasFlags();
-
-        if (!$flags || count($flags) == 0) {
-            return null;
-        }
-
+    public function getPersonHasFlag($fid) {
+        $flags = $this->getPersonHasFlags();
         foreach ($flags as $flag) {
-            if ($flag->getFlag()->fid == $fid) {
+            if ($flag->getFlag()->fid === $fid) {
                 return $flag;
             }
         }

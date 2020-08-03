@@ -78,6 +78,7 @@ abstract class AbstractServiceMulti implements IService {
      * @param iterable $data
      * @param bool $alive
      * @return void
+     * @deprecated
      */
     public function updateModel(IModel $model, $data, $alive = true) {
         $this->checkType($model);
@@ -111,6 +112,7 @@ abstract class AbstractServiceMulti implements IService {
      * Use this method to store a model!
      *
      * @param IModel|AbstractModelMulti $model
+     * @deprecated
      */
     public function save(IModel &$model) {
         $this->checkType($model);
@@ -138,11 +140,11 @@ abstract class AbstractServiceMulti implements IService {
         //TODO here should be deletion of mainModel as well, consider parametrizing this
     }
 
-    public function getMainService(): AbstractServiceSingle {
+    final public function getMainService(): AbstractServiceSingle {
         return $this->mainService;
     }
 
-    public function getJoinedService(): AbstractServiceSingle {
+    final public function getJoinedService(): AbstractServiceSingle {
         return $this->joinedService;
     }
 

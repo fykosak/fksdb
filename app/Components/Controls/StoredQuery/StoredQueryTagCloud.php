@@ -67,7 +67,7 @@ class StoredQueryTagCloud extends BaseComponent {
      * @return void
      */
     public function renderDetail(ModelStoredQuery $query) {
-        $this->template->tags = $query->getMStoredQueryTags();
+        $this->template->tags = $query->getStoredQueryTagTypes();
         $this->render(self::MODE_DETAIL);
     }
 

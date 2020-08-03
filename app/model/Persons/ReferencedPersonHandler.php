@@ -7,16 +7,14 @@ use FKSDB\Components\Forms\Controls\IReferencedHandler;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\AbstractServiceMulti;
-use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\Handler;
 use FKSDB\ORM\IModel;
-use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\ORM\Services\ServicePersonHasFlag;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServicePersonInfo;
 use FKSDB\Submits\StorageException;
@@ -27,7 +25,6 @@ use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
 use Nette\Utils\JsonException;
-use FKSDB\ORM\ServicesMulti\ServiceMPersonHasFlag;
 use FKSDB\ORM\ServicesMulti\ServiceMPostContact;
 
 /**
@@ -53,8 +50,8 @@ class ReferencedPersonHandler implements IReferencedHandler {
     /** @var ServiceMPostContact */
     private $serviceMPostContact;
 
-    /** @var ServiceMPersonHasFlag */
-    private $serviceMPersonHasFlag;
+    /** @var ServicePersonHasFlag */
+    private $servicePersonHasFlag;
 
     /** @var int */
     private $acYear;
@@ -74,7 +71,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param ServicePersonInfo $servicePersonInfo
      * @param ServicePersonHistory $servicePersonHistory
      * @param ServiceMPostContact $serviceMPostContact
-     * @param ServiceMPersonHasFlag $serviceMPersonHasFlag
+     * @param ServicePersonHasFlag $servicePersonHasFlag
      * @param Handler $eventScheduleHandler
      * @param int $acYear
      * @param string $resolution
@@ -84,7 +81,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
         ServicePersonInfo $servicePersonInfo,
         ServicePersonHistory $servicePersonHistory,
         ServiceMPostContact $serviceMPostContact,
-        ServiceMPersonHasFlag $serviceMPersonHasFlag,
+        ServicePersonHasFlag $servicePersonHasFlag,
         Handler $eventScheduleHandler,
         int $acYear,
         $resolution
@@ -93,7 +90,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
         $this->servicePersonInfo = $servicePersonInfo;
         $this->servicePersonHistory = $servicePersonHistory;
         $this->serviceMPostContact = $serviceMPostContact;
-        $this->serviceMPersonHasFlag = $serviceMPersonHasFlag;
+        $this->servicePersonHasFlag = $servicePersonHasFlag;
         $this->acYear = $acYear;
         $this->resolution = $resolution;
         $this->eventScheduleHandler = $eventScheduleHandler;
@@ -179,12 +176,8 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 self::POST_CONTACT_DELIVERY => $person->getDeliveryAddress() ?: null,
                 self::POST_CONTACT_PERMANENT => $person->getPermanentAddress(true) ?: null,
             ];
-            /** @var IService[] $services */
-            $services = [];
-
             $originalModels = \array_keys(iterator_to_array($data));
 
-            $this->prepareFlagServices($data, $services);
             $this->prepareFlagModels($person, $data, $models);
 
             $this->preparePostContactModels($models);
@@ -212,36 +205,37 @@ class ReferencedPersonHandler implements IReferencedHandler {
                     }
                     continue;
                 }
-
-                if ($t === 'person') {
-                    $model = $this->storePerson($model, (array)$data);
-                    continue;
-                } elseif ($t === 'person_info') {
-                    $this->servicePersonInfo->store($person, $model, (array)$data['person_info']);
-                    continue;
-                } elseif ($t === 'person_history') {
-                    $this->servicePersonHistory->store($person, $model, (array)$data['person_history'], $this->acYear);
-                    continue;
-                } elseif ($t === 'person_schedule' && isset($data[$t])) {
-                    $this->eventScheduleHandler->prepareAndUpdate($data[$t], $models['person'], $this->event);
-                    continue;
-                } elseif ($t === self::POST_CONTACT_PERMANENT || $t === self::POST_CONTACT_DELIVERY) {
-                    $datum = (array)$data[$t];
-                    $datum['person_id'] = $person->person_id;
-                    if ($models[$t]) {
-                        $this->serviceMPostContact->updateModel2($model, $datum);
-                    } else {
-                        $this->serviceMPostContact->createNewModel(array_merge($datum, ['type' => PersonFormComponent::mapAddressContainerNameToType($t)]));
-                    }
-                    continue;
-                }
-
-                $data[$t]['person_id'] = $models['person']->person_id; // this works even for person itself
-                if ($services[$t] instanceof AbstractServiceSingle) {
-                    $services[$t]->updateModel2($model, (array)$data[$t]);
-                } else {
-                    $services[$t]->updateModel($model, $data[$t]);
-                    $services[$t]->save($model);
+                switch ($t) {
+                    case 'person':
+                        $this->storePerson($model, (array)$data);
+                        continue 2;
+                    case 'person_info':
+                        $this->servicePersonInfo->store($person, $model, (array)$data['person_info']);
+                        continue 2;
+                    case 'person_history':
+                        $this->servicePersonHistory->store($person, $model, (array)$data['person_history'], $this->acYear);
+                        continue 2;
+                    case 'person_schedule':
+                        $this->eventScheduleHandler->prepareAndUpdate($data[$t], $models['person'], $this->event);
+                        continue 2;
+                    case self::POST_CONTACT_PERMANENT:
+                    case self::POST_CONTACT_DELIVERY:
+                        $this->storePostContact($person, $models[$t], (array)$data[$t], $t);
+                        continue 2;
+                    case 'person_has_flag':
+                        foreach ($data[$t] as $flagId => $flagValue) {
+                            $flagData = [
+                                'value' => $flagValue,
+                                'fid' => $flagId,
+                            ];
+                            if ($models[$t][$flagId]) {
+                                $this->servicePersonHasFlag->updateModel2($models[$t][$flagId], (array)$flagData);
+                            } else {
+                                $flagData['person_id'] = $person->person_id;
+                                $this->servicePersonHasFlag->createNewModel((array)$flagData);
+                            }
+                        }
+                        continue 2;
                 }
             }
 
@@ -266,13 +260,13 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @return void
      */
     private function storePostContact(ModelPerson $person, $model, array $data, string $type) {
-        if (!$model) {
+        if ($model) {
+            $this->serviceMPostContact->updateModel2($model, $data);
+        } else {
             $this->serviceMPostContact->createNewModel(array_merge((array)$data, [
                 'person_id' => $person->person_id,
-                'type' => $type === self::POST_CONTACT_DELIVERY ? ModelPostContact::TYPE_DELIVERY : ModelPostContact::TYPE_PERMANENT,
+                'type' => PersonFormComponent::mapAddressContainerNameToType($type),
             ]));
-        } else {
-            $this->serviceMPostContact->updateModel2($model, $data);
         }
     }
 
@@ -280,20 +274,23 @@ class ReferencedPersonHandler implements IReferencedHandler {
     private $outerTransaction = false;
 
     /**
-     * @param mixed $model
+     * @param mixed $models
      * @param ArrayHash $values
      * @return array
      */
-    private function getConflicts($model, ArrayHash $values): array {
+    private function getConflicts($models, ArrayHash $values): array {
         $conflicts = [];
         foreach ($values as $key => $value) {
-            if (isset($model[$key])) {
-                if ($model[$key] instanceof IModel) {
-                    $subConflicts = $this->getModelConflicts($model[$key], (array)$value);
+            if ($key === 'person_has_flag') {
+                continue;
+            }
+            if (isset($models[$key])) {
+                if ($models[$key] instanceof IModel) {
+                    $subConflicts = $this->getModelConflicts($models[$key], (array)$value);
                     if (count($subConflicts)) {
                         $conflicts[$key] = $subConflicts;
                     }
-                } elseif (!is_null($model[$key]) && $model[$key] != $value) {
+                } elseif (!is_null($models[$key]) && $models[$key] != $value) {
                     $conflicts[$key] = $value;
                 }
             }
@@ -321,7 +318,6 @@ class ReferencedPersonHandler implements IReferencedHandler {
         return $this->servicePerson->store($person, (array)$data['person']);
     }
 
-
     /**
      * @param ArrayHash $data
      * @param ArrayHash|array $conflicts
@@ -338,7 +334,6 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 }
             }
         }
-
         return $result;
     }
 
@@ -352,7 +347,6 @@ class ReferencedPersonHandler implements IReferencedHandler {
             unset($data['address_id']);
             unset($data['type']);
             $models[self::POST_CONTACT_PERMANENT] = $this->serviceMPostContact->createNewModel(array_merge($data, ['type' => ModelPostContact::TYPE_PERMANENT]));
-            //     $this->serviceMPostContact->updateModel($models[self::POST_CONTACT_PERMANENT], $data);
         }
     }
 
@@ -392,31 +386,13 @@ class ReferencedPersonHandler implements IReferencedHandler {
         if (!isset($data['person_has_flag'])) {
             return;
         }
-
+        $models['person_has_flag'] = [];
         foreach ($data['person_has_flag'] as $fid => $value) {
             if ($value === null) {
+                unset($data['person_has_flag'][$fid]);
                 continue;
             }
-
-            $models[$fid] = ($flag = $person->getMPersonHasFlag($fid)) ?: $this->serviceMPersonHasFlag->createNew(['fid' => $fid]);
-
-            $data[$fid] = new ArrayHash();
-            $data[$fid]['value'] = $value;
-        }
-        unset($data['person_has_flag']);
-    }
-
-    /**
-     * @param ArrayHash $data
-     * @param IService[]|AbstractServiceSingle[]|AbstractServiceMulti[] $services
-     */
-    private function prepareFlagServices(ArrayHash $data, array &$services) {
-        if (!isset($data['person_has_flag'])) {
-            return;
-        }
-
-        foreach ($data['person_has_flag'] as $fid => $value) {
-            $services[$fid] = $this->serviceMPersonHasFlag;
+            $models['person_has_flag'][$fid] = $person->getPersonHasFlag($fid) ?: null;
         }
     }
 

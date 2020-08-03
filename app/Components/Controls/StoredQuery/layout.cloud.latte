@@ -2,11 +2,11 @@
 {block content}
     <p class="stored-query-tags">
         {var $isListMode = ($mode == $control::MODE_LIST)}
-        {foreach $tags as $tag}
-            {var $active = ($isListMode && array_key_exists($tag->tag_type_id, $activeTagIds))?'active':''}
-            <a n:tag-if="$isListMode" href="{link onClick! $nextActiveTagIds[$tag->tag_type_id]}">
-                <span class="label badge stored-query-tag stored-query-tag-{$tag->color} {$active}"
-                      title="{$tag->description}">{$tag->name}</span>
+        {foreach $tags as $tagType}
+            {var $active = ($isListMode && array_key_exists($tagType->tag_type_id, $activeTagIds))?'active':''}
+            <a n:tag-if="$isListMode" href="{link onClick! $nextActiveTagIds[$tagType->tag_type_id]}">
+                <span class="label badge stored-query-tag stored-query-tag-{$tagType->color} {$active}"
+                      title="{$tagType->description}">{$tagType->name}</span>
             </a>
         {/foreach}
     </p>

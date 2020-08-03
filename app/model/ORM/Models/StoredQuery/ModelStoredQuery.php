@@ -4,7 +4,6 @@ namespace FKSDB\ORM\Models\StoredQuery;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\ModelsMulti\ModelMStoredQueryTag;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
 
@@ -38,22 +37,13 @@ class ModelStoredQuery extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @return ModelMStoredQueryTag[]
+     * @return ModelStoredQueryTagType[]
      */
-    public function getMStoredQueryTags(): array {
+    public function getStoredQueryTagTypes(): array {
         $tags = $this->getTags();
-
-        if (!$tags || count($tags) == 0) {
-            return [];
-        }
         $result = [];
-        /** @var ModelStoredQueryTag $tag */
         foreach ($tags as $tag) {
-            $tag->tag_type_id; // stupid touch
-            $tagType = $tag->ref(DbNames::TAB_STORED_QUERY_TAG_TYPE, 'tag_type_id');
-            $result[] = ModelMStoredQueryTag::createFromExistingModels(
-                ModelStoredQueryTagType::createFromActiveRow($tagType), ModelStoredQueryTag::createFromActiveRow($tag)
-            );
+            $result[] = ModelStoredQueryTag::createFromActiveRow($tag)->getTagType();
         }
         return $result;
     }
