@@ -5,8 +5,8 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { setActivePoints } from '../../../actions';
-import { getColorByPoints } from '../../../middleware/charts/colors';
+import { setActivePoints } from '../../actions';
+import { getColorByPoints } from '../../middleware/charts/colors';
 
 interface StateProps {
     onActivePoints: (points: number) => void;

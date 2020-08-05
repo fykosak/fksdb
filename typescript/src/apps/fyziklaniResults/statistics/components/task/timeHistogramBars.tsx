@@ -15,9 +15,9 @@ import {
 import { select } from 'd3-selection';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getColorByPoints } from '../../../../middleware/charts/colors';
-import { submitsByTask } from '../../../../middleware/charts/submitsByTask';
-import { Store as StatisticsStore } from '../../../../reducers';
+import { getColorByPoints } from '../../middleware/charts/colors';
+import { submitsByTask } from '../../middleware/charts/submitsByTask';
+import { Store as StatisticsStore } from '../../reducers';
 
 interface StateProps {
     submits: Submits;
@@ -32,7 +32,7 @@ interface OwnProps {
     availablePoints: number[];
 }
 
-class TimeHistogram extends AbstractChart<StateProps & OwnProps, {}> {
+class TimeHistogramBars extends AbstractChart<StateProps & OwnProps, {}> {
 
     private xAxis: SVGGElement;
     private yAxis: SVGGElement;
@@ -128,4 +128,4 @@ const mapStateToProps = (state: StatisticsStore): StateProps => {
     };
 };
 
-export default connect(mapStateToProps, null)(TimeHistogram);
+export default connect(mapStateToProps, null)(TimeHistogramBars);

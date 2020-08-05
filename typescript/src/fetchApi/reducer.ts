@@ -18,6 +18,7 @@ export interface FetchApiState<T = any> {
         error?: Error | any;
         messages?: Message[];
         actions?: NetteActions;
+        initialLoaded: boolean;
     };
 }
 

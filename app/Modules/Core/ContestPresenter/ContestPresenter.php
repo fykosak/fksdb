@@ -94,7 +94,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
         }
         if (isset($contest) && $contest) {
             $this->getPageStyleContainer()->styleId = $contest->getContestSymbol();
-            $this->getPageStyleContainer()->navBarClassName = 'navbar-dark bg-' . $contest->getContestSymbol();
+            $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-' . $contest->getContestSymbol());
         }
         parent::beforeRender();
     }

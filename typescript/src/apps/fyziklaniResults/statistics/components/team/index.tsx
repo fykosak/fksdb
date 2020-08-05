@@ -7,11 +7,11 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { setFirstTeamId } from '../../../actions';
-import { Store as StatisticsStore } from '../../../reducers';
+import { setFirstTeamId } from '../../actions';
+import { Store as StatisticsStore } from '../../reducers';
 import Legend from './legend';
 import PointsInTime from './lineChart';
-import PointsPie from './pie';
+import PointsPie from './pieChart';
 import TimeLine from './timeline';
 
 interface StateProps {

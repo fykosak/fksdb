@@ -358,7 +358,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     protected function beforeRender() {
         $this->getPageStyleContainer()->styleId = 'login';
-        $this->getPageStyleContainer()->mainContainerClassName = '';
+        $this->getPageStyleContainer()->mainContainerClassNames = [];
         parent::beforeRender();
     }
 }

@@ -1,13 +1,14 @@
+import CorrelationStats from '@apps/fyziklaniResults/statistics/components/correlation';
+import TasksStats from '@apps/fyziklaniResults/statistics/components/task';
+import TeamStats from '@apps/fyziklaniResults/statistics/components/team';
+import Timer from '@apps/fyziklaniResults/timer/timer';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import HardVisibleSwitch from '../../hardVisible/component';
-import Loading from '../../shared/components/loading';
 import ResultsShower from '../../shared/components/resultsShower';
 import { Store as StatisticsStore } from '../reducers';
-import ChartsContainer from './charts';
 
 interface StateProps {
-    isReady: boolean;
     isOrg: boolean;
 }
 
@@ -17,22 +18,34 @@ interface OwnProps {
 
 class App extends React.Component<StateProps & OwnProps, {}> {
     public render() {
-        const {isReady, mode, isOrg} = this.props;
-        if (!isReady) {
-            return <Loading/>;
+        const {mode, isOrg} = this.props;
+        let content = null;
+        switch (mode) {
+            case 'team':
+            default:
+                content = (<TeamStats/>);
+                break;
+            case 'task':
+                content = (<TasksStats/>);
+                break;
+            case 'correlation':
+                content = (<CorrelationStats/>);
         }
         return <>
             {isOrg && <HardVisibleSwitch/>}
             <ResultsShower>
-                <ChartsContainer mode={mode}/>
-            </ResultsShower></>;
+                <div className="container">
+                    {content}
+                    <Timer mode={'small'}/>
+                </div>
+            </ResultsShower>
+        </>;
     }
 }
 
 const mapStateToProps = (state: StatisticsStore): StateProps => {
     return {
         isOrg: state.options.isOrg,
-        isReady: state.options.isReady,
     };
 };
 

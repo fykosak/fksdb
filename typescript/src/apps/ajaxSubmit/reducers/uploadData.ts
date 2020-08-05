@@ -3,7 +3,7 @@ import { ACTION_FETCH_SUCCESS, ActionFetchSuccess } from '@fetchApi/actions';
 import { Response2 } from '@fetchApi/interfaces';
 
 export interface State {
-    submit: Submit;
+    submit?: Submit;
 }
 
 const fetchSuccess = (state: State, action: ActionFetchSuccess<Response2<Submit>>): State => {
@@ -12,7 +12,7 @@ const fetchSuccess = (state: State, action: ActionFetchSuccess<Response2<Submit>
     };
 };
 
-export const uploadData = (state: State = null, action): State => {
+export const uploadData = (state: State = {}, action): State => {
     switch (action.type) {
         case ACTION_FETCH_SUCCESS:
             return fetchSuccess(state, action);

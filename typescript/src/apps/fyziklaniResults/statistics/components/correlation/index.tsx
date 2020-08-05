@@ -9,9 +9,9 @@ import {
 import {
     setFirstTeamId,
     setSecondTeamId,
-} from '../../../actions';
-import { Store as StatisticsStore } from '../../../reducers';
-import GlobalCorrelation from './globalCorrelation/chart';
+} from '../../actions';
+import { Store as StatisticsStore } from '../../reducers';
+import GlobalCorrelation from './globalCorrelation';
 
 interface StateProps {
     teams: Team[];
@@ -72,11 +72,11 @@ class CorrelationStats extends React.Component<StateProps & DispatchProps, {}> {
         );
 
         return (
-            <div>
+            <>
                 {headline}
                 {teamSelect}
                 {(firstTeamId && secondTeamId) ? /*<Table/>*/null : <GlobalCorrelation/>}
-            </div>
+            </>
         );
     }
 }

@@ -18,7 +18,7 @@
 <body data-bg="{rand(1,4)}" data-contest="{$pageStyleContainer->styleId}"
       data-style-id="{$pageStyleContainer->styleId}">
 {block nav}
-    <nav n:class="'fixed-top navbar navbar-expand-md ',$pageStyleContainer->navBarClassName"
+    <nav n:class="'fixed-top navbar navbar-expand-md ',$pageStyleContainer->getNavBarClassName()"
             role="navigation">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -66,7 +66,7 @@
     </nav>
 {/block}
 {block main}
-    <main class="{$pageStyleContainer->mainContainerClassName}">
+    <main class="{$pageStyleContainer->getMainContainerClassName()}">
         {block breadcrumbs}
             {control breadcrumbs}
         {/block}

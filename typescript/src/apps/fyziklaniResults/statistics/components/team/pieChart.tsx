@@ -6,9 +6,9 @@ import {
     Submits,
     Team,
 } from '@apps/fyziklani/helpers/interfaces';
-import { getColorByPoints } from '../../../../middleware/charts/colors';
-import { getPieData } from '../../../../middleware/charts/pie';
-import { Store as StatisticsStore } from '../../../../reducers';
+import { getColorByPoints } from '../../middleware/charts/colors';
+import { getPieData } from '../../middleware/charts/pie';
+import { Store as StatisticsStore } from '../../reducers';
 
 interface StateProps {
     teams: Team[];

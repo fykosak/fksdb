@@ -13,7 +13,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     protected function beforeRender() {
         $this->getPageStyleContainer()->styleId = 'theme-light common';
-        $this->getPageStyleContainer()->navBarClassName = 'bg-dark navbar-dark';
+        $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
         parent::beforeRender();
     }
 

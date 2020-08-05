@@ -195,7 +195,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
             }
             // It's like this: $this->resolution == self::RESOLUTION_OVERWRITE) {
             //    $data = $conflicts;
-            foreach ($models as $t => & $model) {
+            foreach ($models as $t => $model) {
                 if (!isset($data[$t])) {
                     if (\in_array($t, $originalModels) && \in_array($t, [self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT])) {
                         // delete only post contacts, other "children" could be left all-nulls

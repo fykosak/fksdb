@@ -217,7 +217,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     protected function beforeRender() {
-        $this->getPageStyleContainer()->mainContainerClassName = str_replace('container ', 'container-fluid ', $this->getPageStyleContainer()->mainContainerClassName) . ' px-3';
+        $this->getPageStyleContainer()->setWidePage();
         parent::beforeRender();
     }
 

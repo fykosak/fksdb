@@ -367,7 +367,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     protected function beforeRender() {
         $contest = $this->getSelectedContest();
         if ($contest) {
-            $this->getPageStyleContainer()->navBarClassName = 'bg-dark navbar-dark';
+            $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
             $this->getPageStyleContainer()->styleId = $contest->getContestSymbol();
         }
         parent::beforeRender();

@@ -27,16 +27,12 @@ interface DispatchProps {
 
 interface OwnProps {
     accessKey: string;
+    data: ResponseData;
 }
 
 class Downloader extends React.Component<DispatchProps & StateProps & OwnProps, {}> {
 
-    public componentDidMount() {
-        const {onFetch, actions} = this.props;
-        onFetch(actions.getAction('refresh'));
-    }
-
-    public componentWillReceiveProps(nextProps: DispatchProps & StateProps & OwnProps) {
+    public componentDidUpdate(nextProps: DispatchProps & StateProps & OwnProps) {
         const {lastUpdated: oldLastUpdated} = this.props;
         if (oldLastUpdated !== nextProps.lastUpdated) {
 
@@ -68,7 +64,7 @@ class Downloader extends React.Component<DispatchProps & StateProps & OwnProps, 
 const mapStateToProps = (state: FyziklaniResultsCoreStore, ownProps: OwnProps): StateProps => {
     const {accessKey} = ownProps;
     return {
-        actions: state.fetchApi[accessKey].actions,
+        actions: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].actions : null,
         error: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].error : null,
         isRefreshing: state.downloader.isRefreshing,
         isSubmitting: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].submitting : false,
@@ -80,7 +76,7 @@ const mapStateToProps = (state: FyziklaniResultsCoreStore, ownProps: OwnProps): 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: OwnProps): DispatchProps => {
     const {accessKey} = ownProps;
     return {
-        onFetch: (url: string) => dispatchFetch<ResponseData>(url, accessKey, dispatch, null),
+        onFetch: (url) => dispatchFetch<ResponseData>(url, accessKey, dispatch, null),
         onWaitForFetch: (delay: number, url: string): number => setTimeout(() => {
             return dispatchFetch<ResponseData>(url, accessKey, dispatch, null);
         }, delay),

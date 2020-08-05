@@ -11,8 +11,8 @@ import {
     Submits,
     Team,
 } from '@apps/fyziklani/helpers/interfaces';
-import { getColorByPoints } from '../../../../middleware/charts/colors';
-import { Store as StatisticsStore } from '../../../../reducers';
+import { getColorByPoints } from '../../middleware/charts/colors';
+import { Store as StatisticsStore } from '../../reducers';
 
 interface StateProps {
     submits: Submits;

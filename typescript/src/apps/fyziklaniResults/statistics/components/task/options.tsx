@@ -12,8 +12,8 @@ import {
     setFromDate,
     setTaskId,
     setToDate,
-} from '../../../../actions';
-import { Store as StatisticsStore } from '../../../../reducers';
+} from '../../actions';
+import { Store as StatisticsStore } from '../../reducers';
 
 interface StateProps {
     aggregationTime: number;

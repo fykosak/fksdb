@@ -8,9 +8,9 @@ import {
 import { curveMonotoneX } from 'd3-shape';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getColorByPoints } from '../../../../middleware/charts/colors';
-import { submitsByTask } from '../../../../middleware/charts/submitsByTask';
-import { Store as StatisticsStore } from '../../../../reducers';
+import { getColorByPoints } from '../../middleware/charts/colors';
+import { submitsByTask } from '../../middleware/charts/submitsByTask';
+import { Store as StatisticsStore } from '../../reducers';
 
 interface StateProps {
     submits: Submits;

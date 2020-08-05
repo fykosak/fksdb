@@ -1,3 +1,8 @@
+import {
+    Submits,
+    Task,
+    Team,
+} from '@apps/fyziklani/helpers/interfaces';
 import { lang } from '@i18n/i18n';
 import { scaleLinear } from 'd3-scale';
 import * as React from 'react';
@@ -7,20 +12,15 @@ import {
     Dispatch,
 } from 'redux';
 import {
-    Submits,
-    Task,
-    Team,
-} from '@apps/fyziklani/helpers/interfaces';
-import {
     setFirstTeamId,
     setSecondTeamId,
-} from '../../../../actions';
+} from '../../actions';
 import {
     calculateCorrelation,
     getTimeLabel,
-} from '../../../../middleware/charts/correlation';
-import { calculateSubmitsForTeams } from '../../../../middleware/charts/submitsForTeams';
-import { Store as StatisticsStore } from '../../../../reducers';
+} from '../../middleware/charts/correlation';
+import { calculateSubmitsForTeams } from '../../middleware/charts/submitsForTeams';
+import { Store as StatisticsStore } from '../../reducers';
 
 interface StateProps {
     submits: Submits;
@@ -37,12 +37,6 @@ interface DispatchProps {
 }
 
 class GlobalCorrelation extends React.Component<StateProps & DispatchProps, {}> {
-    private table;
-
-    public componentDidMount() {
-        // const table: any = $(findDOMNode(this.table));
-        // table.tablesorter();
-    }
 
     public render() {
 
@@ -77,11 +71,7 @@ class GlobalCorrelation extends React.Component<StateProps & DispatchProps, {}> 
 
             });
         });
-        return <table className={'table table-striped tablesorter table-sm'}
-                      ref={(table) => {
-                          this.table = table;
-                      }}
-        >
+        return <table className={'table table-striped tablesorter table-sm'}>
             <thead>
             <tr>
                 <th>{lang.getText('First team')}</th>

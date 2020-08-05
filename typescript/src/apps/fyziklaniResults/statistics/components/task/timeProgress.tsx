@@ -9,9 +9,9 @@ import {
     Submits,
     Task,
 } from '@apps/fyziklani/helpers/interfaces';
-import { setTaskId } from '../../../../actions';
-import { getColorByPoints } from '../../../../middleware/charts/colors';
-import { Store as StatisticsStore } from '../../../../reducers';
+import { setTaskId } from '../../actions';
+import { getColorByPoints } from '../../middleware/charts/colors';
+import { Store as StatisticsStore } from '../../reducers';
 
 interface StateProps {
     tasks: Task[];
@@ -38,7 +38,7 @@ interface OwnProps {
     availablePoints: number[];
 }
 
-class TaskStats extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
+class TimeProgress extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
     public render() {
         const {submits, tasks, onChangeTask, availablePoints} = this.props;
         const tasksSubmits: Stats = {};
@@ -119,4 +119,4 @@ const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps =
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(TaskStats);
+export default connect(mapStateToProps, mapDispatchToProps)(TimeProgress);

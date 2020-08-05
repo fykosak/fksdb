@@ -1,3 +1,8 @@
+import {
+    Submit,
+    Submits,
+    Task, Team,
+} from '@apps/fyziklani/helpers/interfaces';
 import LineChart from '@shared/components/lineChart';
 import { LineChartData } from '@shared/components/lineChart/interfaces';
 import {
@@ -6,13 +11,8 @@ import {
 import { curveLinear } from 'd3-shape';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-    Submit,
-    Submits,
-    Task, Team,
-} from '@apps/fyziklani/helpers/interfaces';
-import { getColorByPoints } from '../../../../middleware/charts/colors';
-import { Store as StatisticsStore } from '../../../../reducers';
+import { getColorByPoints } from '../../middleware/charts/colors';
+import { Store as StatisticsStore } from '../../reducers';
 
 interface StateProps {
     submits: Submits;

@@ -10,7 +10,6 @@ import {
 } from './actions';
 
 export interface State {
-    isReady?: boolean;
     hardVisible?: boolean;
     isOrg?: boolean;
 }
@@ -27,7 +26,6 @@ const fetchSuccess = (state: State, action: ActionFetchSuccess<Response2<Respons
     return {
         ...state,
         isOrg,
-        isReady: true,
     };
 };
 

@@ -15,8 +15,8 @@ import {
     Submits,
     Task,
 } from '@apps/fyziklani/helpers/interfaces';
-import { getColorByPoints } from '../../../../middleware/charts/colors';
-import { Store } from '../../../../reducers';
+import { getColorByPoints } from '../../middleware/charts/colors';
+import { Store } from '../../reducers';
 
 interface StateProps {
     activePoints: number;

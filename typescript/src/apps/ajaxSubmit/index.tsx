@@ -15,16 +15,15 @@ export default class Index extends React.Component<IProps, {}> {
     public render() {
         const accessKey = '@@submit-api/' + this.props.data.taskId;
         return <ActionsStoreCreator
-            actionsMap={{
-                [accessKey]: this.props.actions,
+            storeMap={{
+                [accessKey]: {
+                    actions: this.props.actions,
+                    data: this.props.data,
+                    messages: [],
+                },
             }}
             app={app}
-            preloadState={{
-                uploadData: {
-                    actions: this.props.actions,
-                    submit: this.props.data,
-                },
-            }}>
+        >
             <UploadContainer accessKey={accessKey}/>
         </ActionsStoreCreator>;
     }

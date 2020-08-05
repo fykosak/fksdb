@@ -1,18 +1,18 @@
-import { lang } from '@i18n/i18n';
-import * as React from 'react';
-import { connect } from 'react-redux';
 import {
     Submit,
     Submits,
     Task,
     Team,
 } from '@apps/fyziklani/helpers/interfaces';
+import { lang } from '@i18n/i18n';
+import * as React from 'react';
+import { connect } from 'react-redux';
 import {
     getTimeLabel,
-} from '../../../../middleware/charts/correlation';
-import { getAverageNStandardDeviation } from '../../../../middleware/charts/stdDev';
-import { calculateSubmitsForTeams } from '../../../../middleware/charts/submitsForTeams';
-import { Store as StatisticsStore } from '../../../../reducers';
+} from '../../middleware/charts/correlation';
+import { getAverageNStandardDeviation } from '../../middleware/charts/stdDev';
+import { calculateSubmitsForTeams } from '../../middleware/charts/submitsForTeams';
+import { Store as StatisticsStore } from '../../reducers';
 
 interface StateProps {
     submits: Submits;

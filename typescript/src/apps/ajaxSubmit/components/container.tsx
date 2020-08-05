@@ -56,7 +56,7 @@ const mapStateToProps = (state: Store, ownProps: OwnProps): StateProps => {
         submit: {
             ...state.uploadData.submit,
         },
-        submitting: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].submitting : false,
+        submitting: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].submitting : true,
     };
 };
 

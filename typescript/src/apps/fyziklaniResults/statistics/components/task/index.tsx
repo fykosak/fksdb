@@ -2,12 +2,12 @@ import { lang } from '@i18n/i18n';
 import ChartContainer from '@shared/components/chartContainer';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Store as StatisticsStore } from '../../../reducers';
+import { Store as StatisticsStore } from '../../reducers';
 import Options from './options';
-import Progress from './progress';
-import TimeHistogram from './timeHistogram';
+import TimeHistogram from './timeHistogramBars';
 import TimeHistogramLines from './timeHistogramLines';
 import Timeline from './timeline';
+import Progress from './timeProgress';
 
 interface StateProps {
     taskId: number;
