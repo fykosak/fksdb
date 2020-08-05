@@ -1,4 +1,4 @@
 export const config = {
-    dev: true,
+    dev: false,
     filterDelay: 10000,
 };
