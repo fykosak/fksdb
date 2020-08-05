@@ -14,7 +14,8 @@ navigation:
             icon: 'fa fa-external-link'
         Public.Submit.default:
             visible: true
-
+        Public.Submit.ajax:
+            visible: true
     structure:
         Org.Dashboard.default:
             - Core.Dispatch.default
@@ -43,7 +44,7 @@ navigation:
             - Common.Validation.list
         Public.Dashboard.default:
             - Core.Dispatch.Default
-            - Public.Submit.default
+            - Public.Submit.ajax
             - Public.Application.list
             - fykos
             - vyfuk

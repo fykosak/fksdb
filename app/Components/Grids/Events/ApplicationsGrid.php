@@ -49,10 +49,6 @@ class ApplicationsGrid extends BaseComponent {
     /** @var string */
     private $templateFile;
 
-    /** @var bool */
-    private $searchable = false;
-    /** @var bool */
-    private $attachedJS = false;
     /** @var EventDispatchFactory */
     private $eventDispatchFactory;
 
@@ -65,12 +61,6 @@ class ApplicationsGrid extends BaseComponent {
      */
     public function __construct(Container $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory) {
         parent::__construct($container);
-        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
-            if (!$this->attachedJS) {
-                $this->attachedJS = true;
-                $collector->registerJSFile('js/searchTable.js');
-            }
-        });
         $this->source = $source;
         $this->handlerFactory = $handlerFactory;
         $this->processSource();
@@ -94,21 +84,6 @@ class ApplicationsGrid extends BaseComponent {
      */
     public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory) {
         $this->eventDispatchFactory = $eventDispatchFactory;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSearchable() {
-        return $this->searchable;
-    }
-
-    /**
-     * @param bool $searchable
-     * @return void
-     */
-    public function setSearchable($searchable) {
-        $this->searchable = $searchable;
     }
 
     /**

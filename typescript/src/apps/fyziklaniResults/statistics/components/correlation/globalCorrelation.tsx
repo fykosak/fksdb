@@ -71,7 +71,7 @@ class GlobalCorrelation extends React.Component<StateProps & DispatchProps, {}> 
 
             });
         });
-        return <table className={'table table-striped tablesorter table-sm'}>
+        return <table className={'table table-striped table-sm'}>
             <thead>
             <tr>
                 <th>{lang.getText('First team')}</th>

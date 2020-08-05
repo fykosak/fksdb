@@ -38,7 +38,7 @@ class App extends React.Component<StateProps, {}> {
         return (
             <div className="mb-3">
                 <h1>{filter ? filter.getHeadline() : lang.getText('Results of Fyziklani')}</h1>
-                <table className="tablesorter table-striped table-hover table table-sm bg-white">
+                <table className="table-striped table-hover table table-sm bg-white">
                     <thead>
                     <tr>
                         <th/>
