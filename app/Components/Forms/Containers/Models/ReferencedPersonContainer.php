@@ -120,7 +120,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @throws NotImplementedException
      * @throws OmittedControlException
      */
-    protected function configure() {
+    protected function configure(): void {
         foreach ($this->fieldsDefinition as $sub => $fields) {
             $subContainer = new ContainerWithOptions();
             if ($sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
@@ -170,7 +170,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @return void
      * @throws JsonException
      */
-    public function setModel(IModel $model = null, string $mode = ReferencedId::MODE_NORMAL) {
+    public function setModel(IModel $model = null, string $mode = ReferencedId::MODE_NORMAL): void {
 
         $modifiable = $model ? $this->modifiabilityResolver->isModifiable($model) : true;
         $resolution = $model ? $this->modifiabilityResolver->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
@@ -283,13 +283,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
 
     }
 
-    /**
-     * @param BaseControl $control
-     * @param string $fieldName
-     * @param array $metadata
-     * @return void
-     */
-    protected function appendMetadata(BaseControl $control, string $fieldName, array $metadata) {
+    protected function appendMetadata(BaseControl $control, string $fieldName, array $metadata): void {
         foreach ($metadata as $key => $value) {
             switch ($key) {
                 case 'required':
@@ -316,12 +310,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
         }
     }
 
-    /**
-     * @param IComponent $component
-     * @param bool $value
-     * @return void
-     */
-    protected function setWriteOnly(IComponent $component, bool $value) {
+    protected function setWriteOnly(IComponent $component, bool $value): void {
         if ($component instanceof IWriteOnly) {
             $component->setWriteOnly($value);
         } elseif ($component instanceof IContainer) {

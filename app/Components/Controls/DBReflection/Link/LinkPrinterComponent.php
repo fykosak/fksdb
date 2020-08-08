@@ -25,7 +25,7 @@ class LinkPrinterComponent extends BaseComponent {
      * @return void
      * @throws BadTypeException
      */
-    public function render(string $linkId, AbstractModelSingle $model) {
+    public function render(string $linkId, AbstractModelSingle $model): void {
         $factory = $this->tableReflectionFactory->loadLinkFactory($linkId);
         $this->template->title = $factory->getText();
         $this->template->link = $factory->create($this->getPresenter(), $model);

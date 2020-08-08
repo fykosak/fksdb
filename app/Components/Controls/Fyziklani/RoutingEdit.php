@@ -20,26 +20,17 @@ use Nette\Utils\JsonException;
  */
 class RoutingEdit extends FyziklaniReactControl {
 
-    /** @var ServiceFyziklaniTeam */
-    private $serviceFyziklaniTeam;
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    /** @var ServiceFyziklaniRoom */
-    private $serviceFyziklaniRoom;
+    private ServiceFyziklaniRoom $serviceFyziklaniRoom;
 
-    /** @var ServiceFyziklaniTeamPosition */
-    private $serviceFyziklaniTeamPosition;
+    private ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition;
 
-    /**
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
-     * @param ServiceFyziklaniRoom $serviceFyziklaniRoom
-     * @return void
-     */
     public function injectPrimary(
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
         ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
         ServiceFyziklaniRoom $serviceFyziklaniRoom
-    ) {
+    ): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
         $this->serviceFyziklaniRoom = $serviceFyziklaniRoom;

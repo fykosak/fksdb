@@ -27,7 +27,7 @@ class StalkingComponent extends StalkingControl {
      * @return void
      * @throws NotImplementedException
      */
-    public function render(string $section, ModelPerson $person, int $userPermission) {
+    public function render(string $section, ModelPerson $person, int $userPermission): void {
         $definition = $this->stalkingService->getSection($section);
         $this->beforeRender($person, _($definition['label']), $userPermission, $definition['minimalPermission']);
         $this->template->userPermission = $userPermission;
@@ -49,7 +49,7 @@ class StalkingComponent extends StalkingControl {
      * @return void
      * @throws NotImplementedException
      */
-    private function renderSingle(array $definition, ModelPerson $person) {
+    private function renderSingle(array $definition, ModelPerson $person): void {
 
         $model = null;
         switch ($definition['table']) {
@@ -77,7 +77,7 @@ class StalkingComponent extends StalkingControl {
      * @param ModelPerson $person
      * @return void
      */
-    private function renderMulti(array $definition, ModelPerson $person) {
+    private function renderMulti(array $definition, ModelPerson $person): void {
         $models = [];
         $query = $person->related($definition['table']);
         foreach ($query as $datum) {

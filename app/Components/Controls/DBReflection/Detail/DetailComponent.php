@@ -22,12 +22,7 @@ class DetailComponent extends BaseComponent {
         return new ValuePrinterComponent($this->getContext());
     }
 
-    /**
-     * @param string $section
-     * @param AbstractModelSingle $model
-     * @return void
-     */
-    public function render(string $section, AbstractModelSingle $model) {
+    public function render(string $section, AbstractModelSingle $model): void {
         $this->template->data = $this->detailFactory->getSection($section);
         $this->template->model = $model;
         $this->template->setFile(__DIR__ . '/layout.latte');

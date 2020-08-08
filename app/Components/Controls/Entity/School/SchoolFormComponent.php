@@ -52,7 +52,7 @@ class SchoolFormComponent extends AbstractEntityFormComponent implements IEditEn
      * @param Form $form
      * @return void
      */
-    protected function configureForm(Form $form) {
+    protected function configureForm(Form $form): void {
         $schoolContainer = $this->schoolFactory->createContainer();
         $form->addComponent($schoolContainer, self::CONT_SCHOOL);
 
@@ -65,7 +65,7 @@ class SchoolFormComponent extends AbstractEntityFormComponent implements IEditEn
      * @return void
      * @throws AbortException
      */
-    protected function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
         $addressData = FormUtils::emptyStrToNull($values[self::CONT_ADDRESS], true);
         $schoolData = FormUtils::emptyStrToNull($values[self::CONT_SCHOOL], true);
@@ -95,7 +95,7 @@ class SchoolFormComponent extends AbstractEntityFormComponent implements IEditEn
      * @return void
      * @throws BadTypeException
      */
-    public function setModel(AbstractModelSingle $model) {
+    public function setModel(AbstractModelSingle $model): void {
         $this->model = $model;
         $this->getForm()->setDefaults([
             self::CONT_SCHOOL => $model->toArray(),

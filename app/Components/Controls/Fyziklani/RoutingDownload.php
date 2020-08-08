@@ -43,10 +43,7 @@ class RoutingDownload extends BaseComponent {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
-    /**
-     * @return void
-     */
-    public function render() {
+    public function render(): void {
         $rooms = [];// $this->serviceFyziklaniRoom->getRoomsByIds($this->event->getParameter(null, 'rooms'));
 
         $this->template->rooms = $rooms;

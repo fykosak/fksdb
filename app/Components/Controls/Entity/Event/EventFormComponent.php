@@ -88,16 +88,12 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    protected function configureForm(Form $form) {
+    protected function configureForm(Form $form): void {
         $eventContainer = $this->createEventContainer();
         $form->addComponent($eventContainer, self::CONT_EVENT);
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return void
-     */
-    protected function updateTokens(ModelEvent $event) {
+    protected function updateTokens(ModelEvent $event): void {
         $connection = $this->serviceAuthToken->getConnection();
         $connection->beginTransaction();
         // update also 'until' of authTokens in case that registration end has changed
@@ -114,7 +110,7 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
      * @throws BadTypeException
      * @throws NeonSchemaException
      */
-    public function setModel(AbstractModelSingle $model) {
+    public function setModel(AbstractModelSingle $model): void {
         $this->model = $model;
         $this->getForm()->setDefaults([
             self::CONT_EVENT => $model->toArray(),
@@ -163,7 +159,7 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
      * @return void
      * @throws AbortException
      */
-    protected function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT], true);
         if ($this->create) {

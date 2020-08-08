@@ -92,7 +92,7 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    protected function configureForm(Form $form) {
+    protected function configureForm(Form $form): void {
         $fields = $this->getContext()->getParameters()['common']['editPerson'];
         foreach ($fields as $table => $rows) {
             switch ($table) {
@@ -117,7 +117,7 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
      * @return void
      * @throws BadTypeException
      */
-    public function setModel(AbstractModelSingle $model) {
+    public function setModel(AbstractModelSingle $model): void {
         $this->model = $model;
         $this->getForm()->setDefaults([
             self::PERSON_CONTAINER => $model->toArray(),
@@ -132,7 +132,7 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
      * @return void
      * @throws AbortException
      */
-    protected function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form): void {
         $connection = $this->servicePerson->getConnection();
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values, true);
@@ -159,12 +159,7 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
         }
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param array $data
-     * @return void
-     */
-    private function storeAddresses(ModelPerson $person, array $data) {
+    private function storeAddresses(ModelPerson $person, array $data): void {
         foreach ([self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT] as $type) {
             $datum = FormUtils::removeEmptyValues($data[$type]);
             $shortType = self::mapAddressContainerNameToType($type);

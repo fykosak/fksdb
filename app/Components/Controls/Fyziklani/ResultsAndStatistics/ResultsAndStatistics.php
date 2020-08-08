@@ -47,7 +47,7 @@ class ResultsAndStatistics extends FyziklaniReactControl {
      * @return void
      * @throws InvalidLinkException
      */
-    protected function configure() {
+    protected function configure(): void {
         $this->addAction('refresh', $this->link('refresh!'));
         parent::configure();
     }
@@ -59,7 +59,7 @@ class ResultsAndStatistics extends FyziklaniReactControl {
      * @throws BadTypeException
      * @throws NotSetGameParametersException
      */
-    public function handleRefresh() {
+    public function handleRefresh(): void {
         $presenter = $this->getPresenter();
         if (!$presenter->isAjax()) {
             throw new BadRequestException('', Response::S405_METHOD_NOT_ALLOWED);

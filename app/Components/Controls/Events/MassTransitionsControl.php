@@ -41,11 +41,7 @@ class MassTransitionsControl extends BaseComponent {
         $this->applicationHandlerFactory = $applicationHandlerFactory;
     }
 
-    /**
-     * @return void
-     *
-     */
-    public function render() {
+    public function render(): void {
         /** @var  $machine */
         $machine = $this->eventDispatchFactory->getEventMachine($this->event);
         $this->template->transitions = $machine->getPrimaryMachine()->getTransitions();

@@ -19,11 +19,7 @@ interface IReferencedHandler {
 
     public function getResolution(): string;
 
-    /**
-     * @param string $resolution
-     * @return void
-     */
-    public function setResolution(string $resolution);
+    public function setResolution(string $resolution): void;
 
     /**
      * @param IModel $model

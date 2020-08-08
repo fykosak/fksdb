@@ -23,14 +23,7 @@ abstract class StalkingControl extends BaseComponent {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param string $headline
-     * @param int $userPermissions
-     * @param int $minimalPermissions
-     * @return void
-     */
-    public function beforeRender(ModelPerson $person, string $headline, int $userPermissions, int $minimalPermissions) {
+    public function beforeRender(ModelPerson $person, string $headline, int $userPermissions, int $minimalPermissions): void {
         $this->template->gender = $person->gender;
         $this->template->headline = $headline;
         if ($userPermissions < $minimalPermissions) {

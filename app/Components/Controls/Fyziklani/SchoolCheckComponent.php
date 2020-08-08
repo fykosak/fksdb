@@ -43,11 +43,7 @@ class SchoolCheckComponent extends BaseComponent {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
-    /**
-     * @param ModelFyziklaniTeam $currentTeam
-     * @return void
-     */
-    public function render(ModelFyziklaniTeam $currentTeam) {
+    public function render(ModelFyziklaniTeam $currentTeam): void {
         $schools = [];
         $query = $this->serviceSchool->getConnection()->queryArgs(
             'select GROUP_CONCAT(DISTINCT e_fyziklani_team_id) as `teams`, school_id

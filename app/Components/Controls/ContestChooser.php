@@ -98,7 +98,7 @@ class ContestChooser extends BaseComponent {
      * @param mixed $defaultContest
      * @return void
      */
-    public function setDefaultContest($defaultContest) {
+    public function setDefaultContest($defaultContest): void {
         $this->defaultContest = $defaultContest;
     }
 

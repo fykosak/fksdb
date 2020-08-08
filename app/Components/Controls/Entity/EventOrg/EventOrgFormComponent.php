@@ -50,11 +50,7 @@ class EventOrgFormComponent extends AbstractEntityFormComponent implements IEdit
         $this->serviceEventOrg = $serviceEventOrg;
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     */
-    protected function configureForm(Form $form) {
+    protected function configureForm(Form $form): void {
         $container = new ModelContainer();
         $personInput = $this->createPersonSelect();
         $personInput->setDisabled(!$this->create);
@@ -68,7 +64,7 @@ class EventOrgFormComponent extends AbstractEntityFormComponent implements IEdit
      * @return void
      * @throws AbortException
      */
-    protected function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form): void {
         $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
         if (!isset($data['event_id'])) {
             $data['event_id'] = $this->event->event_id;
@@ -87,7 +83,7 @@ class EventOrgFormComponent extends AbstractEntityFormComponent implements IEdit
      * @return void
      * @throws BadTypeException
      */
-    public function setModel(AbstractModelSingle $model) {
+    public function setModel(AbstractModelSingle $model): void {
         $this->model = $model;
         $this->getForm()->setDefaults([self::CONTAINER => $model->toArray()]);
     }

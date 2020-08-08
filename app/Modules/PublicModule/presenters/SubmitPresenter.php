@@ -66,7 +66,7 @@ class SubmitPresenter extends BasePresenter {
     }
 
     private SubmitHandlerFactory $submitHandlerFactory;
-    
+
     public function injectSubmitHandlerFactory(SubmitHandlerFactory $submitHandlerFactory): void {
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
@@ -238,7 +238,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    private function handleUploadFormSuccess(Form $form) {
+    private function handleUploadFormSuccess(Form $form): void {
         $values = $form->getValues();
 
         $taskIds = explode(',', $values['tasks']);

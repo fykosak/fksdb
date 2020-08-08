@@ -133,10 +133,7 @@ class PersonTestControl extends BaseComponent {
         return $logs;
     }
 
-    /**
-     * @return void
-     */
-    public function render() {
+    public function render(): void {
         $this->template->logs = $this->calculateProblems();
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();

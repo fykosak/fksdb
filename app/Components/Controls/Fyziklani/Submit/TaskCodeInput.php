@@ -70,7 +70,7 @@ class TaskCodeInput extends FyziklaniReactControl {
      * @return void
      * @throws InvalidLinkException
      */
-    protected function configure() {
+    protected function configure(): void {
         $this->addAction('save', $this->link('save!'));
         parent::configure();
     }
@@ -80,7 +80,7 @@ class TaskCodeInput extends FyziklaniReactControl {
      * @throws AbortException
      * @throws BadTypeException
      */
-    public function handleSave() {
+    public function handleSave(): void {
         $request = $this->getReactRequest();
         $response = new ReactResponse();
         $response->setAct($request->act);

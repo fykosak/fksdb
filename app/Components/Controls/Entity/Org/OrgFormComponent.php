@@ -65,7 +65,7 @@ class OrgFormComponent extends AbstractEntityFormComponent implements IEditEntit
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    protected function configureForm(Form $form) {
+    protected function configureForm(Form $form): void {
         $container = $this->createOrgContainer();
         $personInput = $this->createPersonSelect();
         if (!$this->create) {
@@ -80,7 +80,7 @@ class OrgFormComponent extends AbstractEntityFormComponent implements IEditEntit
      * @return void
      * @throws AbortException
      */
-    protected function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form): void {
         $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
         if (!isset($data['contest_id'])) {
             $data['contest_id'] = $this->contest->contest_id;
@@ -99,7 +99,7 @@ class OrgFormComponent extends AbstractEntityFormComponent implements IEditEntit
      * @return void
      * @throws BadTypeException
      */
-    public function setModel(AbstractModelSingle $model) {
+    public function setModel(AbstractModelSingle $model): void {
         $this->model = $model;
         $this->getForm()->setDefaults([self::CONTAINER => $model->toArray()]);
     }

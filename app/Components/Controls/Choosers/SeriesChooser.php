@@ -17,12 +17,7 @@ class SeriesChooser extends Chooser {
     /** @var int[] */
     private $allowedSeries;
 
-    /**
-     * @param int $currentSeries
-     * @param array $allowedSeries
-     * @return void
-     */
-    public function setSeries(int $currentSeries, array $allowedSeries) {
+    public function setSeries(int $currentSeries, array $allowedSeries): void {
         $this->currentSeries = $currentSeries;
         $this->allowedSeries = $allowedSeries;
     }

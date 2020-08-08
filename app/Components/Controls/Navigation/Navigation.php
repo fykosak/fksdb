@@ -137,20 +137,11 @@ class Navigation extends BaseComponent {
         return null;
     }
 
-    /**
-     * @param array $structure
-     * @return void
-     */
-    public function setStructure(array $structure) {
+    public function setStructure(array $structure): void {
         $this->structure = $structure;
     }
 
-    /**
-     * @param string $nodeId
-     * @param array $arguments
-     * @return void
-     */
-    public function createNode(string $nodeId, array $arguments) {
+    public function createNode(string $nodeId, array $arguments): void {
         $this->nodes[$nodeId] = $arguments;
     }
 
@@ -159,36 +150,24 @@ class Navigation extends BaseComponent {
      * @param string|int $idParent
      * @return void
      */
-    public function addParent($idChild, $idParent) {
+    public function addParent($idChild, $idParent): void {
         if (!isset($this->nodeChildren)) {
             $this->nodeChildren[$idParent] = [];
         }
         $this->nodeChildren[$idParent][] = $idChild;
     }
 
-    /**
-     * @param string $root
-     * @return void
-     */
-    public function renderNavbar(string $root) {
+    public function renderNavbar(string $root): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.navbar.latte');
         $this->renderFromRoot([$root => $this->structure[$root]]);
     }
 
-    /**
-     * @param string $root
-     * @return void
-     */
-    public function render(string $root) {
+    public function render(string $root): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.latte');
         $this->renderFromRoot($this->structure[$root]);
     }
 
-    /**
-     * @param array $nodes
-     * @return void
-     */
-    private function renderFromRoot(array $nodes) {
+    private function renderFromRoot(array $nodes): void {
         $this->template->nodes = $nodes;
         $this->template->render();
     }

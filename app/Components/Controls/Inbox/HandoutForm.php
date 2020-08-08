@@ -114,7 +114,7 @@ class HandoutForm extends BaseComponent {
      * @return void
      * @throws BadTypeException
      */
-    public function setDefaults() {
+    public function setDefaults(): void {
         $taskIds = [];
         /** @var ModelTask $task */
         foreach ($this->seriesTable->getTasks() as $task) {

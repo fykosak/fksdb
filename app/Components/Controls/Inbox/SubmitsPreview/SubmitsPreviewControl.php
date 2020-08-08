@@ -35,7 +35,7 @@ class SubmitsPreviewControl extends SeriesTableComponent {
      * @throws ForbiddenRequestException
      * @throws NotFoundException
      */
-    public function handleDownloadUploaded(int $id) {
+    public function handleDownloadUploaded(int $id): void {
         $logger = new MemoryLogger();
         $this->submitDownloadFactory->handleDownloadUploaded($this->getPresenter(), $logger, $id);
         FlashMessageDump::dump($logger, $this);

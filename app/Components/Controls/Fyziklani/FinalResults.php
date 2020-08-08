@@ -64,10 +64,7 @@ class FinalResults extends BaseComponent {
         return new ResultsTotalGrid($this->event, $this->getContext());
     }
 
-    /**
-     * @return void
-     */
-    public function render() {
+    public function render(): void {
         $this->template->that = $this;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'FinalResults.latte');
         $this->template->render();
