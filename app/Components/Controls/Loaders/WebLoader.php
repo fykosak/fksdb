@@ -14,18 +14,17 @@ abstract class WebLoader extends Control {
     const FILENAME = 'file';
     const ATTRIBUTES = 'attr';
     const UNTAGGED = '__untagged';
-    /**
-     * @var string[]
-     */
+
+    /** @var string[] */
     private $files = [];
-    /**
-     * @var string[]
-     */
+
+    /**@var string[] */
     private $inlines = [];
 
     /**
-     * @param $file
+     * @param string $file
      * @param array $attributes
+     * @return void
      */
     public function addFile(string $file, array $attributes = []) {
         $hash = $file . join(':', $attributes);
@@ -33,40 +32,44 @@ abstract class WebLoader extends Control {
             self::FILENAME => $file,
             self::ATTRIBUTES => $attributes,
         ];
-        $this->invalidateControl();
+        $this->redrawControl();
     }
 
     /**
-     * @param $file
+     * @param string $file
      * @param array $attributes
+     * @return void
      */
     public function removeFile(string $file, array $attributes = []) {
         $hash = $file . join(':', $attributes);
         unset($this->files[$hash]);
-        $this->invalidateControl();
+        $this->redrawControl();
     }
 
     /**
-     * @param $inline
+     * @param string $inline
      * @param string $tag
+     * @return void
      */
     public function addInline(string $inline, string $tag = self::UNTAGGED) {
         $this->inlines[$tag] = $inline;
-        $this->invalidateControl();
+        $this->redrawControl();
     }
 
     /**
-     * @param $tag
+     * @param string $tag
+     * @return void
      */
     public function removeInline(string $tag) {
         if ($tag != self::UNTAGGED) {
             unset($this->inlines[$tag]);
         }
-        $this->invalidateControl();
+        $this->redrawControl();
     }
 
     /**
      * @param mixed ...$args
+     * @return void
      */
     public function render(...$args) {
         $files = [];
@@ -99,31 +102,17 @@ abstract class WebLoader extends Control {
         $template->render();
     }
 
-    /**
-     * @param $file
-     * @return bool
-     */
     public static function isRelative(string $file): bool {
         return !preg_match('@https?://|/@Ai', $file);
     }
 
-    /**
-     * @return string
-     */
     abstract protected function getTemplateFilePrefix(): string;
 
-    /**
-     * @return array
-     */
     protected function getFiles(): array {
         return $this->files;
     }
 
-    /**
-     * @return array
-     */
     protected function getInLines(): array {
         return $this->inlines;
     }
-
 }

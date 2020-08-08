@@ -14,10 +14,10 @@ use Nette\Application\BadRequestException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class SeatingControl extends BaseComponent {
-    /**
-     * @var ServiceFyziklaniTeamPosition
-     */
+
+    /** @var ServiceFyziklaniTeamPosition */
     private $serviceFyziklaniTeamPosition;
+
     /** @var EventDispatchFactory */
     private $eventDispatchFactory;
 
@@ -85,7 +85,7 @@ class SeatingControl extends BaseComponent {
      */
     private function getRooms(ModelEvent $event): array {
         try {
-            return $this->eventDispatchFactory->getDummyHolder($event)->getParameter('rooms');
+            return $this->eventDispatchFactory->getDummyHolder($event)->getParameter('rooms') ?: [];
         } catch (BadRequestException $exception) {
             return [];
         }

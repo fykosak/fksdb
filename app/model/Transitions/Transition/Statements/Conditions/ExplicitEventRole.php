@@ -2,21 +2,17 @@
 
 namespace FKSDB\Transitions\Statements\Conditions;
 
-use Authorization\EventAuthorizator;
+use FKSDB\Authorization\EventAuthorizator;
 use FKSDB\ORM\Models\ModelEvent;
 
 /**
  * Class ExplicitEventRole
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ExplicitEventRole extends EventRole {
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
-    /**
-     * @var string
-     */
+    /** @var string */
     private $resource;
 
     /**

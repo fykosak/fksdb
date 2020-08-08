@@ -4,13 +4,15 @@ namespace FKSDB\ORM\Services\Schedule;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 
 /**
  * Class ServicePersonSchedule
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ServicePersonSchedule extends AbstractServiceSingle {
+    use DeprecatedLazyDBTrait;
 
     public function getModelClassName(): string {
         return ModelPersonSchedule::class;

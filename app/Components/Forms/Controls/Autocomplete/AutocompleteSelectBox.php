@@ -19,31 +19,23 @@ use Nette\Utils\Html;
  */
 class AutocompleteSelectBox extends TextBase {
 
-    const SELECTOR_CLASS = 'autocompleteSelect';
+    const SELECTOR_CLASS = 'autocomplete-select';
     const PARAM_SEARCH = 'acQ';
     const PARAM_NAME = 'acName';
     const INTERNAL_DELIMITER = ',';
     const META_ELEMENT_SUFFIX = '__meta'; // must be same with constant in autocompleteSelect.js
 
-    /**
-     * @var IDataProvider
-     */
+    /** @var IDataProvider */
 
     private $dataProvider;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $ajax;
 
-    /**
-     * @var bool
-     */
-    private $multiSelect;
+    /** @var bool */
+    private $multiSelect = false;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $ajaxUrl;
 
     /**
@@ -53,48 +45,38 @@ class AutocompleteSelectBox extends TextBase {
      * @var string
      */
     private $renderMethod;
-
-    /**
-     * AutocompleteSelectBox constructor.
-     * @param $ajax
-     * @param null $label
-     * @param null $renderMethod
-     */
-    public function __construct($ajax, $label = null, $renderMethod = null) {
-        parent::__construct($label);
-
-        $this->monitor(IAutocompleteJSONProvider::class);
-        $this->monitor(IJavaScriptCollector::class);
-        $this->ajax = $ajax;
-        $this->renderMethod = $renderMethod;
-    }
-
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $attachedJSON = false;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $attachedJS = false;
 
     /**
-     * @param $obj
+     * AutocompleteSelectBox constructor.
+     * @param bool $ajax
+     * @param string|null $label
+     * @param string|null $renderMethod
      */
-    protected function attached($obj) {
-        parent::attached($obj);
-        if (!$this->attachedJSON && $obj instanceof IAutocompleteJSONProvider) {
-            $this->attachedJSON = true;
-            $name = $this->lookupPath(IAutocompleteJSONProvider::class);
+    public function __construct(bool $ajax, $label = null, $renderMethod = null) {
+        parent::__construct($label);
 
-            $this->ajaxUrl = $obj->link('autocomplete!', [
-                self::PARAM_NAME => $name,
-            ]);
-        }
-        if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
-            $this->attachedJS = true;
-            $obj->registerJSFile('js/autocompleteSelect.js');
-        }
+        $this->monitor(IAutocompleteJSONProvider::class, function (IAutocompleteJSONProvider $provider) {
+            if (!$this->attachedJSON) {
+                $this->attachedJSON = true;
+                $name = $this->lookupPath(IAutocompleteJSONProvider::class);
+                $this->ajaxUrl = $provider->link('autocomplete!', [
+                    self::PARAM_NAME => $name,
+                ]);
+            }
+        });
+        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
+            if (!$this->attachedJS) {
+                $this->attachedJS = true;
+                $collector->registerJSFile('js/autocompleteSelect.js');
+            }
+        });
+
+        $this->ajax = $ajax;
+        $this->renderMethod = $renderMethod;
     }
 
     public function getDataProvider(): IDataProvider {
@@ -108,17 +90,11 @@ class AutocompleteSelectBox extends TextBase {
         return $this->renderMethod;
     }
 
-    /**
-     * @return bool
-     */
-    public function isAjax() {
+    public function isAjax(): bool {
         return $this->ajax;
     }
 
-    /**
-     * @return bool
-     */
-    public function isMultiSelect() {
+    public function isMultiSelect(): bool {
         return $this->multiSelect;
     }
 
@@ -144,10 +120,9 @@ class AutocompleteSelectBox extends TextBase {
             'data-ac-ajax' => (int)$this->isAjax(),
             'data-ac-multiselect' => (int)$this->isMultiSelect(),
             'data-ac-ajax-url' => $this->ajaxUrl,
-            'data-ac-render-method' => $this->renderMethod,
+            'data-ac-render-method' => $this->getRenderMethod(),
+            'class' => self::SELECTOR_CLASS . ' form-control',
         ]);
-
-        $control->addClass(self::SELECTOR_CLASS);
 
         $defaultValue = $this->getValue();
         if ($defaultValue) {
@@ -198,8 +173,8 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     /**
-     * @param $value
-     * @return TextBase|void
+     * @param mixed $value
+     * @return TextBase
      */
     public function setValue($value) {
         if ($this->isMultiSelect()) {
@@ -218,10 +193,11 @@ class AutocompleteSelectBox extends TextBase {
         if ($this->dataProvider) {
             $this->dataProvider->setDefaultValue($this->value);
         }
+        return $this;
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @return BaseControl
      */
     public function setDefaultValue($value) {
@@ -239,11 +215,10 @@ class AutocompleteSelectBox extends TextBase {
     }
 
     /**
-     * @param $multiSelect
+     * @param bool $multiSelect
      * @return void
      */
-    public function setMultiSelect($multiSelect) {
+    public function setMultiSelect(bool $multiSelect) {
         $this->multiSelect = $multiSelect;
     }
-
 }

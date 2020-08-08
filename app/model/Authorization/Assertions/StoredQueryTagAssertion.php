@@ -1,9 +1,11 @@
 <?php
 
-namespace Authorization\Assertions;
+namespace FKSDB\Authorization\Assertions;
 
-use Exports\StoredQuery;
+use FKSDB\StoredQuery\StoredQuery;
 use Nette\InvalidArgumentException;
+use Nette\Security\IResource;
+use Nette\Security\IRole;
 use Nette\Security\Permission;
 use Nette\SmartObject;
 
@@ -16,14 +18,12 @@ class StoredQueryTagAssertion {
 
     use SmartObject;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $tagNames;
 
     /**
      * StoredQueryTagAssertion constructor.
-     * @param $tagNames
+     * @param array|string $tagNames
      */
     public function __construct($tagNames) {
         if (!is_array($tagNames)) {
@@ -34,12 +34,12 @@ class StoredQueryTagAssertion {
 
     /**
      * @param Permission $acl
-     * @param $role
-     * @param $resourceId
-     * @param $privilege
+     * @param IRole $role
+     * @param IResource|string|null $resourceId
+     * @param string|null $privilege
      * @return bool
      */
-    public function __invoke(Permission $acl, $role, $resourceId, $privilege) {
+    public function __invoke(Permission $acl, $role, $resourceId, $privilege): bool {
         $storedQuery = $acl->getQueriedResource();
         if (!$storedQuery instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');

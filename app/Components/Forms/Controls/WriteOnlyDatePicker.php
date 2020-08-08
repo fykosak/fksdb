@@ -35,8 +35,8 @@ class WriteOnlyDatePicker extends DateInput implements IWriteOnly {
     }
 
     /**
-     * @param $value
-     * @return static|void
+     * @param mixed $value
+     * @return static
      */
     public function setValue($value) {
         if ($value == self::VALUE_ORIGINAL) {
@@ -44,19 +44,11 @@ class WriteOnlyDatePicker extends DateInput implements IWriteOnly {
         } else {
             parent::setValue($value);
         }
+        return $this;
     }
 
     public function loadHttpData() {
         parent::loadHttpData();
         $this->writeOnlyLoadHttpData();
     }
-
-    /**
-     * @param $obj
-     */
-    protected function attached($obj) {
-        parent::attached($obj);
-        $this->writeOnlyAttached($obj);
-    }
-
 }

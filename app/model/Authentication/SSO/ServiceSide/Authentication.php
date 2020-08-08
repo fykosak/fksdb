@@ -16,26 +16,20 @@ class Authentication {
     const PARAM_GSID = 'gsid';
     const FLAG_SSO_LOGIN = 'sso';
 
-    /**
-     * @var IGlobalSession
-     */
+    /** @var IGlobalSession */
     private $globalSession;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $loginURL;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $logoutURL;
 
     /**
      * Authentication constructor.
      * @param IGlobalSession $globalSession
-     * @param $loginURL
-     * @param $logoutURL
+     * @param string $loginURL
+     * @param string $logoutURL
      */
     public function __construct(IGlobalSession $globalSession, $loginURL, $logoutURL) {
         $this->globalSession = $globalSession;
@@ -102,8 +96,8 @@ class Authentication {
     }
 
     /**
-     * @param $url
-     * @param $params
+     * @param string $url
+     * @param mixed $params
      * @return string
      */
     private function setHttpParams($url, $params) {

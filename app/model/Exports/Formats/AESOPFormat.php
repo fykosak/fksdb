@@ -1,10 +1,10 @@
 <?php
 
-namespace Exports\Formats;
+namespace FKSDB\Exports\Formats;
 
-use Exports\StoredQuery;
+use FKSDB\StoredQuery\StoredQuery;
 use Nette\Application\IResponse;
-use WebService\IXMLNodeSerializer;
+use FKSDB\WebService\IXMLNodeSerializer;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -18,7 +18,7 @@ class AESOPFormat extends XSLFormat {
     /**
      * AESOPFormat constructor.
      * @param StoredQuery $storedQuery
-     * @param $xslFile
+     * @param string $xslFile
      * @param IXMLNodeSerializer $xmlSerializer
      */
     public function __construct(StoredQuery $storedQuery, $xslFile, IXMLNodeSerializer $xmlSerializer) {

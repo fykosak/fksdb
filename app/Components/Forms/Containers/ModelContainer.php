@@ -16,7 +16,7 @@ use Nette\Forms\Controls\BaseControl;
 class ModelContainer extends ContainerWithOptions {
 
     /**
-     * @param $values
+     * @param mixed|iterable $values
      * @param bool $erase
      * @return Container|void
      */
@@ -36,5 +36,4 @@ class ModelContainer extends ContainerWithOptions {
             $component->setDisabled($value);
         }
     }
-
 }

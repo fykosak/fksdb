@@ -1,0 +1,163 @@
+<?php
+
+namespace FKSDB\Modules\EventModule;
+
+use FKSDB\Config\NeonSchemaException;
+use FKSDB\Entity\ModelNotFoundException;
+use FKSDB\Events\EventNotFoundException;
+use FKSDB\Events\Model\ApplicationHandlerFactory;
+use FKSDB\Events\Model\Grid\SingleEventSource;
+use FKSDB\Components\Events\ApplicationComponent;
+use FKSDB\Components\Events\MassTransitionsControl;
+use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
+use FKSDB\Components\Grids\Schedule\PersonGrid;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Logging\MemoryLogger;
+use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
+use FKSDB\ORM\Services\ServiceEventParticipant;
+use FKSDB\UI\PageTitle;
+use Nette\Application\AbortException;
+use Nette\Application\ForbiddenRequestException;
+use Nette\Application\UI\Control;
+use Nette\InvalidStateException;
+use Nette\Security\IResource;
+
+/**
+ * Class AbstractApplicationPresenter
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
+abstract class AbstractApplicationPresenter extends BasePresenter {
+    use EventEntityPresenterTrait;
+
+    /** @var ApplicationHandlerFactory */
+    protected $applicationHandlerFactory;
+
+    /** @var ServiceEventParticipant */
+    protected $serviceEventParticipant;
+
+    /**
+     * @param ApplicationHandlerFactory $applicationHandlerFactory
+     * @return void
+     */
+    public function injectHandlerFactory(ApplicationHandlerFactory $applicationHandlerFactory) {
+        $this->applicationHandlerFactory = $applicationHandlerFactory;
+    }
+
+    /**
+     * @param ServiceEventParticipant $serviceEventParticipant
+     * @return void
+     */
+    public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant) {
+        $this->serviceEventParticipant = $serviceEventParticipant;
+    }
+
+    /**
+     * @throws EventNotFoundException
+     */
+    final public function titleList() {
+        $this->setPageTitle(new PageTitle(_('List of applications'), 'fa fa-users'));
+    }
+
+    /**
+     * @return void
+     * @throws BadTypeException
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws \Throwable
+     */
+    final public function titleDetail() {
+        $this->setPageTitle(new PageTitle(sprintf(_('Application detail "%s"'), $this->getEntity()->__toString()), 'fa fa-user'));
+    }
+
+    /**
+     * @return void
+     * @throws EventNotFoundException
+     */
+    final public function titleTransitions() {
+        $this->setPageTitle(new PageTitle(_('Group transitions'), 'fa fa-user'));
+    }
+
+    /**
+     * @param IResource|string|null $resource
+     * @param string $privilege
+     * @return bool
+     * @throws EventNotFoundException
+     */
+    protected function traitIsAuthorized($resource, string $privilege): bool {
+        return $this->isContestsOrgAuthorized($resource, $privilege);
+    }
+
+    /**
+     * @return void
+     * @throws EventNotFoundException
+     */
+    public function renderDetail() {
+        $this->template->event = $this->getEvent();
+        $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
+    }
+
+    /**
+     * @return void
+     * @throws EventNotFoundException
+     */
+    public function renderList() {
+        $this->template->event = $this->getEvent();
+    }
+
+    protected function createComponentPersonScheduleGrid(): PersonGrid {
+        return new PersonGrid($this->getContext());
+    }
+
+    /**
+     * @return ApplicationComponent
+     *
+     * @throws BadTypeException
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws NeonSchemaException
+     *
+     */
+    protected function createComponentApplicationComponent(): ApplicationComponent {
+        $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->getEventDispatchFactory());
+        foreach ($source->getHolders() as $key => $holder) {
+            if ($key === $this->getEntity()->getPrimary()) {
+                return new ApplicationComponent($this->getContext(), $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);
+            }
+        }
+        throw new InvalidStateException();
+    }
+
+    /**
+     * @return MassTransitionsControl
+     * @throws EventNotFoundException
+     */
+    final protected function createComponentMassTransitions(): MassTransitionsControl {
+        return new MassTransitionsControl($this->getContext(), $this->getEvent());
+    }
+
+    /**
+     * @return AbstractApplicationGrid
+     * @throws AbortException
+     *
+     */
+    abstract protected function createComponentGrid(): AbstractApplicationGrid;
+
+    /**
+     * @return Control
+     * @throws NotImplementedException
+     */
+    protected function createComponentCreateForm(): Control {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * @return Control
+     * @throws NotImplementedException
+     */
+    protected function createComponentEditForm(): Control {
+        throw new NotImplementedException();
+    }
+}

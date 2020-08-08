@@ -2,9 +2,10 @@
 
 namespace FKSDB\Payment\Transition\Transitions;
 
-use Authorization\EventAuthorizator;
+use FKSDB\Authorization\EventAuthorizator;
 use Closure;
 use Exception;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServiceEmailMessage;
@@ -16,36 +17,25 @@ use FKSDB\Transitions\Machine;
 use FKSDB\Transitions\Statements\Conditions\DateBetween;
 use FKSDB\Transitions\Statements\Conditions\ExplicitEventRole;
 use FKSDB\Transitions\Transition;
-use Mail\MailTemplateFactory;
-use Nette\Application\BadRequestException;
+use FKSDB\Mail\MailTemplateFactory;
 use Nette\Database\Connection;
 use Tracy\Debugger;
 
 /**
  * Class Fyziklani13Payment
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Fyziklani13Payment extends AbstractTransitionsGenerator {
 
-    /**
-     * @var Connection
-     */
+    /** @var Connection */
     private $connection;
-    /**
-     * @var ServicePayment
-     */
+    /** @var ServicePayment */
     private $servicePayment;
-    /**
-     * @var EventAuthorizator
-     */
+    /** @var EventAuthorizator */
     private $eventAuthorizator;
-    /**
-     * @var ServiceEmailMessage
-     */
+    /** @var ServiceEmailMessage */
     private $serviceEmailMessage;
-    /**
-     * @var MailTemplateFactory
-     */
+    /** @var MailTemplateFactory */
     private $mailTemplateFactory;
 
     /**
@@ -72,12 +62,13 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
 
     /**
      * @param Machine $machine
-     * @throws BadRequestException
+     * @return void
+     * @throws BadTypeException
      * @throws Exception
      */
-    public function createTransitions(Machine &$machine) {
+    public function createTransitions(Machine $machine) {
         if (!$machine instanceof PaymentMachine) {
-            throw new BadRequestException(\sprintf(_('Expected class %s, got %s'), PaymentMachine::class, \get_class($machine)));
+            throw new BadTypeException(PaymentMachine::class, $machine);
         }
         $machine->setExplicitCondition(new ExplicitEventRole($this->eventAuthorizator, 'org', $machine->getEvent(), ModelPayment::RESOURCE_ID));
         $this->addTransitionInitToNew($machine);
@@ -91,7 +82,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      * @param PaymentMachine $machine
      * @throws Exception
      */
-    private function addTransitionInitToNew(PaymentMachine &$machine) {
+    private function addTransitionInitToNew(PaymentMachine $machine) {
         $transition = new Transition(Machine::STATE_INIT, ModelPayment::STATE_NEW, _('Create'));
         $transition->setCondition($this->getDatesCondition());
         $machine->addTransition($transition);
@@ -99,9 +90,10 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
 
     /**
      * @param PaymentMachine $machine
+     * @return void
      * @throws Exception
      */
-    private function addTransitionNewToWaiting(PaymentMachine &$machine) {
+    private function addTransitionNewToWaiting(PaymentMachine $machine) {
         $transition = new Transition(ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING, _('Confirm payment'));
 
         $transition->setType(Transition::TYPE_SUCCESS);
@@ -139,7 +131,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      * @param PaymentMachine $machine
      * @return void
      */
-    private function addTransitionAllToCanceled(PaymentMachine &$machine) {
+    private function addTransitionAllToCanceled(PaymentMachine $machine) {
         foreach ([ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING] as $state) {
 
             $transition = new Transition($state, ModelPayment::STATE_CANCELED, _('Cancel payment'));
@@ -159,7 +151,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      * @param PaymentMachine $machine
      * @return void
      */
-    private function addTransitionWaitingToReceived(PaymentMachine &$machine) {
+    private function addTransitionWaitingToReceived(PaymentMachine $machine) {
         $transition = new Transition(ModelPayment::STATE_WAITING, ModelPayment::STATE_RECEIVED, _('Paid'));
         $transition->beforeExecuteCallbacks[] = function (ModelPayment $modelPayment) {
             foreach ($modelPayment->getRelatedPersonSchedule() as $personSchedule) {

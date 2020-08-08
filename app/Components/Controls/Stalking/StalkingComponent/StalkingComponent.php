@@ -4,41 +4,38 @@ namespace FKSDB\Components\Controls\Stalking\StalkingComponent;
 
 use FKSDB\Components\Controls\Stalking\StalkingControl;
 use FKSDB\Components\Controls\Stalking\StalkingService;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
-use Nette\Application\BadRequestException;
-use Nette\DI\Container;
 use FKSDB\Exceptions\NotImplementedException;
 use Nette\InvalidStateException;
 
+/**
+ * Class StalkingComponent
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class StalkingComponent extends StalkingControl {
-    /**
-     * @var StalkingService
-     */
+    /** @var StalkingService */
     private $stalkingService;
 
     /**
-     * StalkingComponent constructor.
-     * @param Container $container
+     * @param StalkingService $stalkingService
+     * @return void
      */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->stalkingService = $container->getByType(StalkingService::class);
+    public function injectStalkingService(StalkingService $stalkingService) {
+        $this->stalkingService = $stalkingService;
     }
 
     /**
      * @param string $section
      * @param ModelPerson $person
-     * @param int $userPermissions
+     * @param int $userPermission
      * @return void
-     * @throws BadRequestException
      * @throws NotImplementedException
      */
-    public function render(string $section, ModelPerson $person, int $userPermissions) {
+    public function render(string $section, ModelPerson $person, int $userPermission) {
         $definition = $this->stalkingService->getSection($section);
-        $this->beforeRender($person, $userPermissions);
-        $this->template->headline = _($definition['label']);
-        $this->template->minimalPermissions = $definition['minimalPermission'];
-
+        $this->beforeRender($person, _($definition['label']), $userPermission, $definition['minimalPermission']);
+        $this->template->userPermission = $userPermission;
         switch ($definition['layout']) {
             case 'single':
                 $this->renderSingle($definition, $person);
@@ -81,7 +78,7 @@ class StalkingComponent extends StalkingControl {
     }
 
     /**
-     * @param array $definition
+     * @param mixed[]|AbstractModelSingle[] $definition
      * @param ModelPerson $person
      * @return void
      */
@@ -91,9 +88,7 @@ class StalkingComponent extends StalkingControl {
         foreach ($query as $datum) {
             $models[] = ($definition['model'])::createFromActiveRow($datum);
         }
-        $this->template->links = array_map(function ($link) {
-            return $this->tableReflectionFactory->loadLinkFactory($link);
-        }, $definition['links']);
+        $this->template->links = $definition['links'];
         $this->template->rows = $definition['rows'];
         $this->template->models = $models;
         $this->template->itemHeadline = $definition['itemHeadline'];

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
-use BasePresenter;
+use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
@@ -12,18 +12,19 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 
+/**
+ * Class CloseTeamControl
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class CloseTeamControl extends BaseComponent {
-    /**
-     * @var ModelEvent
-     */
+
+    /** @var ModelEvent */
     private $event;
-    /**
-     * @var ModelFyziklaniTeam
-     */
+
+    /** @var ModelFyziklaniTeam */
     private $team;
-    /**
-     * @var ServiceFyziklaniTask
-     */
+
+    /** @var ServiceFyziklaniTask */
     private $serviceFyziklaniTask;
 
     /**
@@ -53,8 +54,8 @@ class CloseTeamControl extends BaseComponent {
     }
 
     /**
-     * @throws AbortException
      * @return void
+     * @throws AbortException
      */
     public function handleClose() {
         $connection = $this->serviceFyziklaniTask->getConnection();
@@ -69,8 +70,8 @@ class CloseTeamControl extends BaseComponent {
     }
 
     /**
-     * @throws NotSetGameParametersException
      * @return void
+     * @throws NotSetGameParametersException
      */
     public function render() {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'CloseTeamControl.latte');

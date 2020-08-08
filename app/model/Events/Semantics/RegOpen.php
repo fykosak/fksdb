@@ -2,7 +2,7 @@
 
 namespace FKSDB\Events\Semantics;
 
-use FKSDB\Expressions\EvaluatedExpression;;
+use FKSDB\Expressions\EvaluatedExpression;
 use Nette\SmartObject;
 
 /**

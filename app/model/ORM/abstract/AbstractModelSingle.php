@@ -10,7 +10,7 @@ use Nette\Database\Table\Selection;
  */
 abstract class AbstractModelSingle extends ActiveRow implements IModel {
     /** @var array */
-    private $tmpData = [];
+    private $tmpData;
 
     /**
      * AbstractModelSingle constructor.
@@ -45,10 +45,6 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
         $this->stored = !$value;
     }
 
-    /**
-     * @param ActiveRow $row
-     * @return static
-     */
     public static function createFromActiveRow(ActiveRow $row): self {
         if ($row instanceof static) {
             return $row;
@@ -61,15 +57,15 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
     }
 
     /**
-     * @param $key
-     * @param $value
+     * @param string|int $key
+     * @param mixed $value
      */
     public function __set($key, $value) {
         $this->tmpData[$key] = $value;
     }
 
     /**
-     * @param $key
+     * @param int|string $key
      * @return bool|mixed|ActiveRow|Selection|null
      */
     public function &__get($key) {
@@ -80,7 +76,7 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
     }
 
     /**
-     * @param $key
+     * @param string|int $key
      * @return bool
      */
     public function __isset($key): bool {
@@ -95,7 +91,7 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
     }
 
     /**
-     * @param $key
+     * @param string|int $key
      */
     public function __unset($key) {
         unset($this->tmpData[$key]);

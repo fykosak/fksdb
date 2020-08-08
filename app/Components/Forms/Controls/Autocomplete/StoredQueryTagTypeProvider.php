@@ -15,14 +15,10 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
 
     const DESCRIPTION = 'description';
 
-    /**
-     * @var ServiceStoredQueryTagType
-     */
+    /** @var ServiceStoredQueryTagType */
     private $serviceStoredQueryTagType;
 
-    /**
-     * @var TypedTableSelection
-     */
+    /** @var TypedTableSelection */
     private $searchTable;
 
     /**
@@ -40,7 +36,7 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
      * @param string $search
      * @return array
      */
-    public function getFilteredItems($search) {
+    public function getFilteredItems(string $search): array {
         $search = trim($search);
         $search = str_replace(' ', '', $search);
         $this->searchTable
@@ -48,11 +44,7 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
         return $this->getItems();
     }
 
-    /**
-     * @param int $id
-     * @return string
-     */
-    public function getItemLabel($id): string {
+    public function getItemLabel(int $id): string {
         /** @var ModelStoredQueryTagType $tagType */
         $tagType = $this->serviceStoredQueryTagType->findByPrimary($id);
         return $tagType->name;
@@ -78,10 +70,10 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
     }
 
     /**
-     * @param $id
+     * @param mixed $id
+     * @return void
      */
     public function setDefaultValue($id) {
         /* intentionally blank */
     }
-
 }

@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Tables\TypedTableSelection;
@@ -14,9 +15,9 @@ use Nette\Application\UI\Presenter;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceSubmit extends AbstractServiceSingle {
-    /**
-     * @var array
-     */
+    use DeprecatedLazyDBTrait;
+
+    /** @var array */
     private $submitCache = [];
 
     public function getModelClassName(): string {
@@ -64,7 +65,7 @@ class ServiceSubmit extends AbstractServiceSingle {
      * @return array
      * @throws InvalidLinkException
      */
-    public function serializeSubmit($submit, ModelTask $task, Presenter $presenter): array {
+    public static function serializeSubmit($submit, ModelTask $task, Presenter $presenter): array {
         return [
             'submitId' => $submit ? $submit->submit_id : null,
             'name' => $task->getFQName(),

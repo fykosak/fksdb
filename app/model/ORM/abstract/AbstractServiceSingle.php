@@ -12,14 +12,13 @@ use Nette\Database\Table\Selection;
 use Nette\InvalidStateException;
 use PDOException;
 use Tracy\Debugger;
-use Traversable;
 
 /**
  * Service class to high-level manipulation with ORM objects.
- * Use singleton descedants implemetations.
+ * Use singleton descendant implementations.
  *
  * @note Because of compatibility with PHP 5.2 (no LSB), part of the code has to be
- *       duplicated in all descedant classes.
+ *       duplicated in all descendant classes.
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @author Michal Červeňak <miso@fykos.cz>
@@ -36,11 +35,11 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     }
 
     /**
-     * @param Traversable|array|null $data
+     * @param array $data
      * @return AbstractModelSingle
      * @throws ModelException
      */
-    public function createNewModel($data = null): AbstractModelSingle {
+    public function createNewModel(array $data): IModel {
         $modelClassName = $this->getModelClassName();
         $data = $this->filterData($data);
         try {
@@ -62,7 +61,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     /**
      * Use this method to create new models!
      *
-     * @param Traversable $data
+     * @param iterable $data
      * @return AbstractModelSingle
      * @throws ModelException
      * @deprecated use createNewModel
@@ -108,7 +107,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * Updates values in model from given data.
      *
      * @param IModel $model
-     * @param array $data
+     * @param iterable $data
      * @param bool $alive
      * @deprecated
      */
@@ -118,7 +117,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
         }
 
-        $data = $this->filterData($data);
+        $data = $this->filterData((array)$data);
         foreach ($data as $key => $value) {
             $model->{$key} = $value;
         }
@@ -128,19 +127,23 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @param AbstractModelSingle|IModel $model
      * @return AbstractModelSingle|null
      */
-    public function refresh(AbstractModelSingle $model) {
+    public function refresh(AbstractModelSingle $model): AbstractModelSingle {
         return $this->findByPrimary($model->getPrimary(true));
     }
 
     /**
      * @param AbstractModelSingle|IModel $model
-     * @param Traversable|array $data
+     * @param array $data
      * @return bool
      */
-    public function updateModel2(AbstractModelSingle $model, $data = null): bool {
-        $this->checkType($model);
-        $data = $this->filterData($data);
-        return $model->update($data);
+    public function updateModel2(IModel $model, array $data): bool {
+        try {
+            $this->checkType($model);
+            $data = $this->filterData($data);
+            return $model->update($data);
+        } catch (PDOException $exception) {
+            throw new ModelException('Error when storing model.', null, $exception);
+        }
     }
 
     /**
@@ -246,7 +249,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     /**
      * Omits array elements whose keys aren't columns in the table.
      *
-     * @param array|Traversable|null $data
+     * @param array|null $data
      * @return array|null
      */
     protected function filterData($data) {

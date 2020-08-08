@@ -1,6 +1,6 @@
 <?php
 
-namespace Authorization;
+namespace FKSDB\Authorization;
 
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelLogin;
@@ -20,14 +20,10 @@ class ContestAuthorizator {
 
     use SmartObject;
 
-    /**
-     * @var User
-     */
+    /** @var User */
     private $user;
 
-    /**
-     * @var Permission
-     */
+    /** @var Permission */
     private $acl;
 
     /**
@@ -40,17 +36,11 @@ class ContestAuthorizator {
         $this->acl = $acl;
     }
 
-    /**
-     * @return User
-     */
-    public function getUser() {
+    public function getUser(): User {
         return $this->user;
     }
 
-    /**
-     * @return Permission
-     */
-    protected function getAcl() {
+    protected function getAcl(): Permission {
         return $this->acl;
     }
 
@@ -63,14 +53,12 @@ class ContestAuthorizator {
      * @param int|ModelContest $contest queried contest
      * @return bool
      */
-    public function isAllowed($resource, string $privilege = null, $contest): bool {
+    public function isAllowed($resource, $privilege, $contest): bool {
         if (!$this->getUser()->isLoggedIn()) {
             $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
             return $this->getAcl()->isAllowed($role, $resource, $privilege);
         }
-        /**
-         * @var ModelLogin $login
-         */
+        /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         return $this->isAllowedForLogin($login, $resource, $privilege, $contest);
     }
@@ -85,9 +73,7 @@ class ContestAuthorizator {
             $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
             return $this->getAcl()->isAllowed($role, $resource, $privilege);
         }
-        /**
-         * @var ModelLogin $login
-         */
+        /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
 
         $roles = $login->getRoles();
@@ -108,7 +94,7 @@ class ContestAuthorizator {
      * @param ModelContest|int $contest
      * @return bool
      */
-    final public function isAllowedForLogin(ModelLogin $login, $resource, string $privilege = null, $contest): bool {
+    final public function isAllowedForLogin(ModelLogin $login, $resource, $privilege, $contest): bool {
         $contestId = ($contest instanceof ActiveRow) ? $contest->contest_id : $contest;
         $roles = $login->getRoles();
 

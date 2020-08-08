@@ -14,14 +14,12 @@ class Count {
     use SmartObject;
     use WithEventTrait;
 
-    /**
-     * @var
-     */
+    /** @var mixed */
     private $state;
 
     /**
      * Count constructor.
-     * @param $state
+     * @param string $state
      */
     public function __construct($state) {
         $this->state = $state;

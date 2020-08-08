@@ -5,8 +5,7 @@ namespace FKSDB\Events\Model\Holder;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Factories\Events\IFieldFactory;
-use Nette\ComponentModel\Component;
-use Nette\Forms\Container;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\IControl;
 
 /**
@@ -19,7 +18,6 @@ class Field {
     /** @var string */
     private $name;
 
-    /** @return string */
     public function getName(): string {
         return $this->name;
     }
@@ -28,15 +26,15 @@ class Field {
     /** @var string|null */
     private $label;
 
-    /** @return string */
+    /** @return string|null */
     public function getLabel() {
         return $this->label;
     }
 
     /**
      * Field constructor.
-     * @param $name
-     * @param $label
+     * @param string $name
+     * @param string|null $label
      */
     public function __construct(string $name, string $label = null) {
         $this->name = $name;
@@ -50,12 +48,14 @@ class Field {
     /** @var BaseHolder */
     private $baseHolder;
 
-    /** @return BaseHolder */
     public function getBaseHolder(): BaseHolder {
         return $this->baseHolder;
     }
 
-    /** @param BaseHolder $baseHolder */
+    /**
+     * @param BaseHolder $baseHolder
+     * @return void
+     */
     public function setBaseHolder(BaseHolder $baseHolder) {
         $this->baseHolder = $baseHolder;
     }
@@ -68,7 +68,10 @@ class Field {
         return $this->description;
     }
 
-    /** @param $description */
+    /**
+     * @param string|null $description
+     * @return void
+     */
     public function setDescription($description) {
         $this->description = $description;
     }
@@ -77,12 +80,14 @@ class Field {
     /** @var bool */
     private $determining;
 
-    /** @return bool */
     public function isDetermining(): bool {
         return $this->determining;
     }
 
-    /** @param bool $determining */
+    /**
+     * @param bool $determining
+     * @return void
+     */
     public function setDetermining(bool $determining) {
         $this->determining = $determining;
     }
@@ -96,7 +101,10 @@ class Field {
         return $this->default;
     }
 
-    /** @param $default */
+    /**
+     * @param mixed $default
+     * @return void
+     */
     public function setDefault($default) {
         $this->default = $default;
     }
@@ -104,7 +112,10 @@ class Field {
     /** @var ExpressionEvaluator */
     private $evaluator;
 
-    /** @param ExpressionEvaluator $evaluator */
+    /**
+     * @param ExpressionEvaluator $evaluator
+     * @return void
+     */
     public function setEvaluator(ExpressionEvaluator $evaluator) {
         $this->evaluator = $evaluator;
     }
@@ -115,6 +126,7 @@ class Field {
 
     /**
      * @param IFieldFactory $factory
+     * @return void
      */
     public function setFactory(IFieldFactory $factory) {
         $this->factory = $factory;
@@ -123,21 +135,19 @@ class Field {
     /*
      * Forms
      */
-
-    /**
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return mixed
-     */
-    public function createFormComponent(BaseMachine $machine, Container $container) {
-        return $this->factory->create($this, $machine, $container);
+    public function createFormComponent(): IComponent {
+        return $this->factory->createComponent($this);
     }
 
     /**
-     * @param Component $component
-     * @return IControl
+     * @param IComponent $component
+     * @return void
      */
-    public function getMainControl(Component $component) {
+    public function setFieldDefaultValue(IComponent $component) {
+        $this->factory->setFieldDefaultValue($component, $this);
+    }
+
+    public function getMainControl(IComponent $component): IControl {
         return $this->factory->getMainControl($component);
     }
 
@@ -146,7 +156,6 @@ class Field {
     /** @var bool|callable */
     private $required;
 
-    /** @return bool */
     public function isRequired(): bool {
         return $this->evaluator->evaluate($this->required, $this);
     }
@@ -159,7 +168,6 @@ class Field {
     /** @var bool|callable */
     private $modifiable;
 
-    /** @return bool */
     public function isModifiable(): bool {
         return $this->getBaseHolder()->isModifiable() && $this->evaluator->evaluate($this->modifiable, $this);
     }
@@ -172,12 +180,14 @@ class Field {
     /** @var bool|callable */
     private $visible;
 
-    /** @return bool */
     public function isVisible(): bool {
         return $this->evaluator->evaluate($this->visible, $this);
     }
 
-    /** @param $visible */
+    /**
+     * @param callable|bool $visible
+     * @return void
+     */
     public function setVisible($visible) {
         $this->visible = $visible;
     }

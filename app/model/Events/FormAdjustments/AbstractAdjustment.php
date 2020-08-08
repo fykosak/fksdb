@@ -43,11 +43,7 @@ abstract class AbstractAdjustment implements IFormAdjustment {
      */
     abstract protected function _adjust(Form $form, Machine $machine, Holder $holder);
 
-    /**
-     * @param $mask
-     * @return bool
-     */
-    final protected function hasWildcart($mask) {
+    final protected function hasWildCart(string $mask): bool {
         return strpos($mask, self::WILDCART) !== false;
     }
 
@@ -56,11 +52,11 @@ abstract class AbstractAdjustment implements IFormAdjustment {
      * @param string $mask
      * @return IControl[]
      */
-    final protected function getControl($mask) {
+    final protected function getControl(string $mask): array {
         $keys = array_keys($this->pathCache);
         $pMask = str_replace(self::WILDCART, '__WC__', $mask);
-        $pMask = preg_quote($pMask);
-        $pMask = str_replace('__WC__', '(.+)', $pMask);
+
+        $pMask = str_replace('__WC__', '(.+)', preg_quote($pMask));
         $pattern = "/^$pMask\$/";
         $result = [];
         foreach ($keys as $key) {

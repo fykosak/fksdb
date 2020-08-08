@@ -1,6 +1,6 @@
 <?php
 
-namespace Pipeline;
+namespace FKSDB\Pipeline;
 
 use FKSDB\Logging\ILogger;
 use FKSDB\Logging\MemoryLogger;
@@ -17,24 +17,16 @@ use Nette\InvalidStateException;
  */
 class Pipeline {
 
-    /**
-     * @var Stage[]
-     */
+    /** @var Stage[] */
     private $stages = [];
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $input;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $fixedStages = false;
 
-    /**
-     * @var ILogger
-     */
+    /** @var ILogger */
     private $logger = null;
 
     /**

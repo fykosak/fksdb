@@ -4,7 +4,7 @@ namespace FKSDB\Transitions\Statements;
 
 /**
  * Class Statement
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class Statement {
     /**

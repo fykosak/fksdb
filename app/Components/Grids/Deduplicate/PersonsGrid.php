@@ -2,16 +2,16 @@
 
 namespace FKSDB\Components\Grids\Deduplicate;
 
-use FKSDB\Components\DatabaseReflection\ValuePrinters\PersonLink;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use Nette\Utils\Html;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use Persons\Deduplication\DuplicateFinder;
+use FKSDB\Persons\Deduplication\DuplicateFinder;
 
 /**
  *
@@ -19,14 +19,10 @@ use Persons\Deduplication\DuplicateFinder;
  */
 class PersonsGrid extends BaseGrid {
 
-    /**
-     * @var TypedTableSelection
-     */
+    /** @var TypedTableSelection */
     private $trunkPersons;
 
-    /**
-     * @var ModelPerson[] trunkId => ModelPerson
-     */
+    /** @var ModelPerson[] trunkId => ModelPerson */
     private $pairs;
 
     /**
@@ -41,32 +37,30 @@ class PersonsGrid extends BaseGrid {
         $this->pairs = $pairs;
     }
 
+    protected function getData(): IDataSource {
+        return new NDataSource($this->trunkPersons);
+    }
+
     /**
-     * @param \AuthenticatedPresenter $presenter
+     * @param Presenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
-
-        /***** data ****/
-
-        $dataSource = new NDataSource($this->trunkPersons);
-        $this->setDataSource($dataSource);
 
         /***** columns ****/
 
-        $this->addColumn('display_name_a', _('Osoba A'))->setRenderer(function (ModelPerson $row) {
+        $this->addColumn('display_name_a', _('Person A'))->setRenderer(function (ModelPerson $row) {
             return $this->renderPerson($row);
         })
             ->setSortable(false);
-        $pairs = &$this->pairs;
-        $this->addColumn('display_name_b', _('Osoba B'))->setRenderer(function (ModelPerson $row) use ($pairs) {
-            return $this->renderPerson($pairs[$row->person_id][DuplicateFinder::IDX_PERSON]);
+        $this->addColumn('display_name_b', _('Person B'))->setRenderer(function (ModelPerson $row) {
+            return $this->renderPerson($this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]);
         })
             ->setSortable(false);
-        $this->addColumn('score', _('Podobnost'))->setRenderer(function (ModelPerson $row) use ($pairs) {
-            return sprintf("%0.2f", $pairs[$row->person_id][DuplicateFinder::IDX_SCORE]);
+        $this->addColumn('score', _('Podobnost'))->setRenderer(function (ModelPerson $row) {
+            return sprintf("%0.2f", $this->pairs[$row->person_id][DuplicateFinder::IDX_SCORE]);
         })
             ->setSortable(false);
 
@@ -75,44 +69,44 @@ class PersonsGrid extends BaseGrid {
         $this->addButton("mergeAB", _('Sloučit A<-B'))
             ->setText(_('Sloučit A<-B'))
             ->setClass("btn btn-sm btn-primary")
-            ->setLink(function (ModelPerson $row) use ($presenter, $pairs) {
+            ->setLink(function (ModelPerson $row) use ($presenter) {
                 return $presenter->link("Person:merge", [
                     'trunkId' => $row->person_id,
-                    'mergedId' => $pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
+                    'mergedId' => $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                 ]);
             })
-            ->setShow(function (ModelPerson $row) use ($presenter, $pairs) {
+            ->setShow(function (ModelPerson $row) use ($presenter) {
                 return $presenter->authorized("Person:merge", [
                     'trunkId' => $row->person_id,
-                    'mergedId' => $pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
+                    'mergedId' => $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                 ]);
             });
         $this->addButton("mergeBA", _('Sloučit B<-A'))
             ->setText(_('Sloučit B<-A'))
-            ->setLink(function (ModelPerson $row) use ($presenter, $pairs) {
+            ->setLink(function (ModelPerson $row) use ($presenter) {
                 return $presenter->link("Person:merge", [
-                    'trunkId' => $pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
+                    'trunkId' => $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                     'mergedId' => $row->person_id,
                 ]);
             })
-            ->setShow(function (ModelPerson $row) use ($presenter, $pairs) {
+            ->setShow(function (ModelPerson $row) use ($presenter) {
                 return $presenter->authorized("Person:merge", [
-                    'trunkId' => $pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
+                    'trunkId' => $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                     'mergedId' => $row->person_id,
                 ]);
             });
         $this->addButton("dontMerge", _('Nejde o duplicitu'))
             ->setText(_('Nejde o duplicitu'))
             ->setClass("btn btn-sm btn-primary")
-            ->setLink(function (ModelPerson $row) use ($presenter, $pairs) {
+            ->setLink(function (ModelPerson $row) use ($presenter) {
                 return $presenter->link("Person:dontMerge", [
-                    'trunkId' => $pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
+                    'trunkId' => $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                     'mergedId' => $row->person_id,
                 ]);
             })
-            ->setShow(function (ModelPerson $row) use ($presenter, $pairs) {
+            ->setShow(function (ModelPerson $row) use ($presenter) {
                 return $presenter->authorized("Person:dontMerge", [
-                    'trunkId' => $pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
+                    'trunkId' => $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                     'mergedId' => $row->person_id,
                 ]);
             });
@@ -120,9 +114,10 @@ class PersonsGrid extends BaseGrid {
 
     /**
      * @param ModelPerson $person
-     * @return Html
+     * @return string
      */
     private function renderPerson(ModelPerson $person) {
-        return (new PersonLink($this->getPresenter()))($person);
+        return $person->getFullName();
+        // return (new PersonLink($this->getPresenter()))($person);
     }
 }

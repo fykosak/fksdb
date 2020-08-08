@@ -31,8 +31,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     /**
      * Returns first of the person's logins.
      * (so far, there's not support for multiple login in DB schema)
-     *
-     *
+     * @return ModelLogin|null
      */
     public function getLogin() {
         $logins = $this->related(DbNames::TAB_LOGIN, 'person_id');
@@ -69,7 +68,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @param bool $extrapolated
      * @return ModelPersonHistory|null
      */
-    public function getHistory($acYear, $extrapolated = false) {
+    public function getHistory(int $acYear, bool $extrapolated = false) {
         $history = $this->related(DbNames::TAB_PERSON_HISTORY, 'person_id')
             ->where('ac_year', $acYear)->fetch();
         if ($history) {
@@ -143,7 +142,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @param $fid
+     * @param int $fid
      * @return ModelMPersonHasFlag|null
      */
     public function getMPersonHasFlag($fid) {
@@ -166,10 +165,10 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @param null $type
-     * @return array
+     * @param string|null $type
+     * @return ModelMPostContact[]
      */
-    public function getMPostContacts($type = null) {
+    public function getMPostContacts(string $type = null): array {
         $postContacts = $this->getPostContacts();
         if ($postContacts && $type !== null) {
             $postContacts->where(['type' => $type]);
@@ -192,7 +191,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     /**
      * Main delivery address of the contestant.
      *
-     * @return ModelPostContact|null
+     * @return ModelMPostContact|null
      */
     public function getDeliveryAddress() {
         $dAddresses = $this->getMPostContacts(ModelPostContact::TYPE_DELIVERY);
@@ -205,7 +204,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
 
     /**
      * @param bool $noFallback
-     * @return ModelPostContact|null
+     * @return ModelMPostContact|null
      */
     public function getPermanentAddress($noFallback = false) {
         $pAddresses = $this->getMPostContacts(ModelPostContact::TYPE_PERMANENT);
@@ -216,6 +215,31 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Main delivery address of the contestant.
+     *
+     * @return ModelAddress|null
+     */
+    public function getDeliveryAddress2() {
+        return $this->getAddress2(ModelPostContact::TYPE_DELIVERY);
+    }
+
+    /**
+     * @return ModelAddress|null
+     */
+    public function getPermanentAddress2() {
+        return $this->getAddress2(ModelPostContact::TYPE_PERMANENT);
+    }
+
+    /**
+     * @param string $type
+     * @return ModelAddress|null
+     */
+    public function getAddress2(string $type) {
+        $postContact = $this->getPostContacts()->where(['type' => $type])->fetch();
+        return $postContact ? ModelPostContact::createFromActiveRow($postContact)->getAddress() : null;
     }
 
     public function getEventParticipant(): GroupedSelection {
@@ -284,6 +308,13 @@ class ModelPerson extends AbstractModelSingle implements IResource {
             }
         }
         return $result;
+    }
+
+    public function getActiveOrgsAsQuery(YearCalculator $yearCalculator, ModelContest $contest): GroupedSelection {
+        $year = $yearCalculator->getCurrentYear($contest);
+        return $this->related(DbNames::TAB_ORG, 'person_id')
+            ->where('contest_id', $contest->contest_id)
+            ->where('since<=?', $year)->where('until IS NULL OR until >=?', $year);
     }
 
     /**
@@ -389,10 +420,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $this->related(DbNames::TAB_PAYMENT, 'person_id');
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return GroupedSelection
-     */
     public function getPaymentsForEvent(ModelEvent $event): GroupedSelection {
         return $this->getPayments()->where('event_id', $event->event_id);
     }

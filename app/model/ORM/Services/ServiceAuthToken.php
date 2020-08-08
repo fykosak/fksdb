@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Services;
 
+use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelAuthToken;
@@ -33,7 +34,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
      * @param bool $refresh
      * @param DateTime $since
      * @return ModelAuthToken
-     * @throws \Exception
+     * @throws ModelException
      */
     public function createToken(ModelLogin $login, $type, \DateTimeInterface $until = null, $data = null, $refresh = false, DateTime $since = null) {
         if ($since === null) {
@@ -88,7 +89,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
     /**
      *
-     * @param $tokenData
+     * @param string $tokenData
      * @param bool $strict
      * @return ModelAuthToken|null
      */
@@ -105,8 +106,8 @@ class ServiceAuthToken extends AbstractServiceSingle {
     }
 
     /**
-     *
-     * @param $token
+     * @param string|ModelAuthToken $token
+     * @return void
      */
     public function disposeToken($token) {
         if (!$token instanceof ModelAuthToken) {
@@ -118,7 +119,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
     }
 
     /**
-     * @param $eventId
+     * @param int $eventId
      * @return array
      */
     public function findTokensByEventId($eventId) {

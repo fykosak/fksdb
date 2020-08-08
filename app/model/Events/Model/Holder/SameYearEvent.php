@@ -13,19 +13,15 @@ use Nette\InvalidArgumentException;
  */
 class SameYearEvent implements IEventRelation {
 
-    /**
-     * @var
-     */
+    /** @var mixed */
     private $eventTypeId;
 
-    /**
-     * @var ServiceEvent
-     */
+    /** @var ServiceEvent */
     private $serviceEvent;
 
     /**
      * SameYearEvent constructor.
-     * @param $eventTypeId
+     * @param string|int $eventTypeId
      * @param ServiceEvent $serviceEvent
      */
     public function __construct($eventTypeId, ServiceEvent $serviceEvent) {

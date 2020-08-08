@@ -15,7 +15,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Neon\Neon;
-use Nette\Utils\Arrays;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -27,69 +26,43 @@ class BaseHolder {
     const STATE_COLUMN = 'status';
     const EVENT_COLUMN = 'event_id';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $name;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $label;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $description;
 
-    /**
-     * @var IService
-     */
+    /** @var IService */
     private $service;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $joinOn;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $joinTo;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $personIds;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $eventId;
 
-    /**
-     * @var Holder
-     */
+    /** @var Holder */
     private $holder;
 
-    /**
-     * @var bool|callable
-     */
+    /** @var bool|callable */
     private $modifiable;
 
-    /**
-     * @var bool|callable
-     */
+    /** @var bool|callable */
     private $visible;
 
-    /**
-     * @var Field[]
-     */
+    /** @var Field[] */
     private $fields = [];
 
-    /**
-     * @var IModel
-     */
+    /** @var IModel */
     private $model;
 
     /**
@@ -99,34 +72,24 @@ class BaseHolder {
      */
     private $eventRelation;
 
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $paramScheme;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $parameters;
 
-    /**
-     * @var ExpressionEvaluator
-     */
+    /** @var ExpressionEvaluator */
     private $evaluator;
 
-    /**
-     * @var DataValidator
-     */
+    /** @var DataValidator */
     private $validator;
 
     /**
      * BaseHolder constructor.
-     * @param $name
+     * @param string $name
      */
     public function __construct(string $name) {
         $this->name = $name;
@@ -162,14 +125,16 @@ class BaseHolder {
     }
 
     /**
-     * @param $modifiable
+     * @param bool|callable $modifiable
+     * @return void
      */
     public function setModifiable($modifiable) {
         $this->modifiable = $modifiable;
     }
 
     /**
-     * @param $visible
+     * @param bool|callable $visible
+     * @return void
      */
     public function setVisible($visible) {
         $this->visible = $visible;
@@ -215,7 +180,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $paramScheme
+     * @param mixed $paramScheme
      * @return void
      */
     public function setParamScheme($paramScheme) {
@@ -257,12 +222,9 @@ class BaseHolder {
         return $this->getEvaluator()->evaluate($this->modifiable, $this);
     }
 
-    /**
-     * @return IModel
-     */
-    public function &getModel() {
+    public function &getModel(): IModel {
         if (!$this->model) {
-            $this->model = $this->getService()->createNew();
+            $this->model = $this->getService()->createNew(); // TODO!!!
         }
         return $this->model;
     }
@@ -309,7 +271,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $values
+     * @param iterable $values
      * @param bool $alive
      */
     public function updateModel($values, $alive = true) {
@@ -400,7 +362,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $personIds
+     * @param array $personIds
      * @return void
      */
     public function setPersonIds($personIds) {
@@ -422,7 +384,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $eventId
+     * @param int $eventId
      * @return void
      */
     public function setEventId($eventId) {
@@ -437,7 +399,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $column
+     * @param string $column
      * @return bool|mixed|string
      */
     public static function getBareColumn($column) {
@@ -455,7 +417,7 @@ class BaseHolder {
         });
     }
 
-    public function createFormContainer(BaseMachine $machine): ContainerWithOptions {
+    public function createFormContainer(): ContainerWithOptions {
         $container = new ContainerWithOptions();
         $container->setOption('label', $this->getLabel());
         $container->setOption('description', $this->getDescription());
@@ -464,18 +426,10 @@ class BaseHolder {
             if (!$field->isVisible()) {
                 continue;
             }
-            $components = $field->createFormComponent($machine, $container);
-            if (!is_array($components)) {
-                $components = [$components];
-            }
-            $i = 0;
-            foreach ($components as $component) {
-                $componentName = ($i == 0) ? $name : "{$name}_{$i}";
-                $container->addComponent($component, $componentName);
-                ++$i;
-            }
+            $component = $field->createFormComponent();
+            $container->addComponent($component, $name);
+            $field->setFieldDefaultValue($component);
         }
-
         return $container;
     }
 
@@ -519,7 +473,7 @@ class BaseHolder {
      */
     public function getParameter($name, $default = null) {
         try {
-            return Arrays::get($this->parameters, $name, $default);
+            return $this->parameters[$name] ?? $default;
         } catch (InvalidArgumentException $exception) {
             throw new InvalidArgumentException("No parameter '$name' for event " . $this->getEvent() . ".", null, $exception);
         }

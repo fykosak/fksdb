@@ -1,9 +1,10 @@
 <?php
 
 namespace FKSDB\UI;
+
 /**
  * Class PageStyleContainer
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PageStyleContainer {
     /** @var string */
@@ -12,4 +13,16 @@ class PageStyleContainer {
     public $navBarClassName;
     /** @var string */
     public $mainContainerClassName;
+
+    /**
+     * PageStyleContainer constructor.
+     * @param string|null $styleId
+     * @param string $navBarClassName
+     * @param string $mainContainerClassName
+     */
+    public function __construct(string $styleId = null, string $navBarClassName = 'bg-light navbar-light', string $mainContainerClassName = 'container bg-white-container') {
+        $this->styleId = $styleId;
+        $this->navBarClassName = $navBarClassName;
+        $this->mainContainerClassName = $mainContainerClassName;
+    }
 }

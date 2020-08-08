@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons\Deduplication;
+namespace FKSDB\Persons\Deduplication;
 
 use FKSDB\Logging\DevNullLogger;
 use FKSDB\Logging\ILogger;
@@ -21,34 +21,22 @@ class Merger {
     const IDX_MERGED = 'merged';
     const IDX_RESOLUTION = 'resolution';
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $conflicts = [];
 
-    /**
-     * @var ActiveRow
-     */
+    /** @var ActiveRow */
     private $trunkRow;
 
-    /**
-     * @var ActiveRow
-     */
+    /** @var ActiveRow */
     private $mergedRow;
 
-    /**
-     * @var Context
-     */
+    /** @var Context */
     private $context;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $configuration;
 
-    /**
-     * @var ILogger
-     */
+    /** @var ILogger */
     private $logger;
 
     /**
@@ -59,7 +47,7 @@ class Merger {
 
     /**
      * Merger constructor.
-     * @param $configuration
+     * @param mixed $configuration
      * @param Context $context
      */
     public function __construct($configuration, Context $context) {
@@ -77,6 +65,7 @@ class Merger {
 
     /**
      * @param ILogger $logger
+     * @return void
      */
     public function setLogger(ILogger $logger) {
         $this->logger = $logger;
@@ -85,6 +74,7 @@ class Merger {
     /**
      * @param ActiveRow $trunkRow
      * @param ActiveRow $mergedRow
+     * @return void
      */
     public function setMergedPair(ActiveRow $trunkRow, ActiveRow $mergedRow) {
         $this->trunkRow = $trunkRow;
@@ -124,7 +114,7 @@ class Merger {
     public function merge($commit = null) {
         // This workaround fixes inproper caching of referenced tables.
         $this->context->getConnection()->getCache()->clean([Cache::ALL => true]);
-        $this->context->getConnection()->getDatabaseReflection()->setConnection($this->context->getConnection());
+        $this->context->getConnection()->getDatabaseReflection()->setConnection($this->context->getConnection()); // TODO
 
         $table = $this->trunkRow->getTable()->getName();
         $tableMerger = $this->getMerger($table);
@@ -168,7 +158,7 @@ class Merger {
     }
 
     /**
-     * @param $table
+     * @param string $table
      * @return TableMerger
      */
     private function createTableMerger($table) {
@@ -267,8 +257,8 @@ class Merger {
     }
 
     /**
-     * @param $table
-     * @param $pairId
+     * @param string $table
+     * @param int $pairId
      * @return mixed
      */
     private function & getPairDataById($table, $pairId) {

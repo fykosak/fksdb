@@ -16,14 +16,11 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class FyziklaniChooser extends Chooser {
-    /**
-     * @var ModelEvent
-     */
+
+    /** @var ModelEvent */
     private $event;
 
-    /**
-     * @var ServiceEvent
-     */
+    /** @var ServiceEvent */
     private $serviceEvent;
 
     /**
@@ -33,8 +30,15 @@ class FyziklaniChooser extends Chooser {
      */
     public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container);
-        $this->serviceEvent = $container->getByType(ServiceEvent::class);
         $this->event = $event;
+    }
+
+    /**.
+     * @param ServiceEvent $serviceEvent
+     * @return void
+     */
+    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+        $this->serviceEvent = $serviceEvent;
     }
 
     protected function getItems(): TypedTableSelection {
@@ -49,7 +53,7 @@ class FyziklaniChooser extends Chooser {
         return $item->event_id === $this->event->event_id;
     }
 
-    public function getTitle(): Title {
+    protected function getTitle(): Title {
         return new Title(_('Event'));
     }
 

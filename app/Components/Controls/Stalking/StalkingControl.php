@@ -6,53 +6,60 @@ use FKSDB\Components\Controls\Badges\ContestBadge;
 use FKSDB\Components\Controls\Badges\NoRecordsBadge;
 use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\Components\Controls\DBReflection\LinkPrinterComponent;
+use FKSDB\Components\Controls\DBReflection\ValuePrinterComponent;
+use FKSDB\DBReflection\DBReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
 
+/**
+ * Class StalkingControl
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 abstract class StalkingControl extends BaseComponent {
 
-    const PERMISSION_FULL = 1024;
-    const PERMISSION_RESTRICT = 128;
-    const PERMISSION_BASIC = 16;
-    const PERMISSION_USE_FIELD_LEVEL = 2048;
-
-    /**
-     * @var TableReflectionFactory
-     */
+    /** @var DBReflectionFactory */
     protected $tableReflectionFactory;
 
     /**
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param DBReflectionFactory $tableReflectionFactory
      * @return void
      */
-    public function injectPrimary(TableReflectionFactory $tableReflectionFactory) {
+    public function injectPrimary(DBReflectionFactory $tableReflectionFactory) {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
     /**
      * @param ModelPerson $person
+     * @param string $headline
      * @param int $userPermissions
+     * @param int $minimalPermissions
      * @return void
      */
-    public function beforeRender(ModelPerson $person, int $userPermissions) {
-        $this->template->userPermissions = $userPermissions;
+    public function beforeRender(ModelPerson $person, string $headline, int $userPermissions, int $minimalPermissions) {
         $this->template->gender = $person->gender;
+        $this->template->headline = $headline;
+        if ($userPermissions < $minimalPermissions) {
+            $this->template->setFile(__DIR__ . '/layout.permissionDenied.latte');
+            $this->template->render();
+        }
     }
 
-    public function createComponentContestBadge(): ContestBadge {
+    protected function createComponentContestBadge(): ContestBadge {
         return new ContestBadge($this->getContext());
     }
 
-    public function createComponentPermissionDenied(): PermissionDeniedBadge {
+    protected function createComponentPermissionDenied(): PermissionDeniedBadge {
         return new PermissionDeniedBadge($this->getContext());
     }
 
-    public function createComponentNoRecords(): NoRecordsBadge {
+    protected function createComponentNoRecords(): NoRecordsBadge {
         return new NoRecordsBadge($this->getContext());
     }
 
-    public function createComponentValuePrinter(): ValuePrinterComponent {
+    protected function createComponentValuePrinter(): ValuePrinterComponent {
         return new ValuePrinterComponent($this->getContext());
+    }
+    protected function createComponentLinkPrinter(): LinkPrinterComponent {
+        return new LinkPrinterComponent($this->getContext());
     }
 }

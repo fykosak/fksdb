@@ -2,20 +2,22 @@
 
 namespace FKSDB\ORM\Services;
 
-use DuplicateOrgException;
+use FKSDB\ORM\Services\Exception\DuplicateOrgException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\Tables\TypedTableSelection;
 
-
 /**
- * Class FKSDB\ORM\Services\ServiceEventOrg
+ * Class ServiceEventOrg
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ServiceEventOrg extends AbstractServiceSingle {
+    use DeprecatedLazyDBTrait;
 
     public function getModelClassName(): string {
         return ModelEventOrg::class;
@@ -25,17 +27,32 @@ class ServiceEventOrg extends AbstractServiceSingle {
         return DbNames::TAB_EVENT_ORG;
     }
 
-    /**
+    /*/**
      * @param IModel|ModelEventOrg $model
      * @return void
      * @deprecated
      */
-    public function save(IModel &$model) {
+    /*public function save(IModel &$model) {
         try {
             parent::save($model);
         } catch (ModelException $exception) {
             if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
                 throw new DuplicateOrgException($model->getPerson(), $exception);
+            }
+            throw $exception;
+        }
+    }*/
+
+    /**
+     * @param array $data
+     * @return ModelEventOrg
+     */
+    public function createNewModel(array $data): IModel {
+        try {
+            return parent::createNewModel($data);
+        } catch (ModelException $exception) {
+            if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
+                throw new DuplicateOrgException(null, $exception);
             }
             throw $exception;
         }

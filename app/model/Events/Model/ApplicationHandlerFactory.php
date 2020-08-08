@@ -2,6 +2,7 @@
 
 namespace FKSDB\Events\Model;
 
+use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Connection;
@@ -14,24 +15,24 @@ use Nette\DI\Container;
  */
 class ApplicationHandlerFactory {
 
-    /**
-     * @var Connection
-     */
+    /** @var Connection */
     private $connection;
 
-    /**
-     * @var Container
-     */
+    /** @var Container */
     private $container;
+    /** @var EventDispatchFactory */
+    private $eventDispatchFactory;
 
     /**
      * ApplicationHandlerFactory constructor.
      * @param Connection $connection
      * @param Container $container
+     * @param EventDispatchFactory $eventDispatchFactory
      */
-    public function __construct(Connection $connection, Container $container) {
+    public function __construct(Connection $connection, Container $container, EventDispatchFactory $eventDispatchFactory) {
         $this->connection = $connection;
         $this->container = $container;
+        $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
     /**
@@ -40,7 +41,7 @@ class ApplicationHandlerFactory {
      * @return ApplicationHandler
      */
     public function create(ModelEvent $event, ILogger $logger) {
-        return new ApplicationHandler($event, $logger, $this->connection, $this->container);
+        return new ApplicationHandler($event, $logger, $this->connection, $this->container, $this->eventDispatchFactory);
     }
 
 }

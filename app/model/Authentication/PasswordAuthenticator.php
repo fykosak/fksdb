@@ -1,6 +1,6 @@
 <?php
 
-namespace Authentication;
+namespace FKSDB\Authentication;
 
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
@@ -15,9 +15,7 @@ use Nette\Security\IIdentity;
  */
 class PasswordAuthenticator extends AbstractAuthenticator implements IAuthenticator {
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     private $servicePerson;
 
     /**

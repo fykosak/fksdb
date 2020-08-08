@@ -7,8 +7,10 @@ use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use FKSDB\ORM\Services\ServiceAddress;
 use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Application\UI\Form;
+use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\IControl;
+use FKSDB\Persons\ReferencedPersonHandler;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -21,24 +23,24 @@ class AddressFactory {
     const REQUIRED = 0x2;
     const NOT_WRITEONLY = 0x4;
 
-    /**
-     * @var ServiceAddress
-     */
+    /** @var ServiceAddress */
     private $serviceAddress;
 
-    /**
-     * @var ServiceRegion
-     */
+    /** @var ServiceRegion */
     private $serviceRegion;
+    /** @var Container */
+    private $container;
 
     /**
      * AddressFactory constructor.
+     * @param Container $container
      * @param ServiceAddress $serviceAddress
      * @param ServiceRegion $serviceRegion
      */
-    public function __construct(ServiceAddress $serviceAddress, ServiceRegion $serviceRegion) {
+    public function __construct(Container $container, ServiceAddress $serviceAddress, ServiceRegion $serviceRegion) {
         $this->serviceAddress = $serviceAddress;
         $this->serviceRegion = $serviceRegion;
+        $this->container = $container;
     }
 
     /**
@@ -46,9 +48,23 @@ class AddressFactory {
      * @param IControl|null $conditioningField
      * @return AddressContainer
      */
-    public function createAddress($options = 0, IControl $conditioningField = null) {
-        $container = new AddressContainer();
+    public function createAddress($options = 0, IControl $conditioningField = null): AddressContainer {
+        $container = new AddressContainer($this->container);
         $this->buildAddress($container, $options, $conditioningField);
+        return $container;
+    }
+
+    public function createAddressContainer(string $type): AddressContainer {
+        $container = new AddressContainer($this->container);
+        $this->buildAddress($container, self::NOT_WRITEONLY); // TODO is not safe
+        switch ($type) {
+            case ReferencedPersonHandler::POST_CONTACT_DELIVERY:
+                $container->setOption('label', _('Delivery address'));
+                break;
+            case ReferencedPersonHandler::POST_CONTACT_PERMANENT:
+                $container->setOption('label', _('Permanent address') . _('(when different from delivery address)'));
+                break;
+        }
         return $container;
     }
 
@@ -60,10 +76,7 @@ class AddressFactory {
      * @param IControl $conditioningField
      * @param int $options
      */
-    public function buildAddress(AddressContainer $container, $options = 0, IControl $conditioningField = null) {
-        $container->setServiceRegion($this->serviceRegion);
-
-
+    public function buildAddress(AddressContainer $container, int $options = 0, IControl $conditioningField = null) {
         if ($options & self::SHOW_EXTENDED_ROWS) {
             $container->addText('first_row', _('První řádek'))
                 ->setOption('description', _('První volitelný řádek adresy (např. bytem u)'));
@@ -109,10 +122,8 @@ class AddressFactory {
         $target->addConditionOn($country, Form::FILLED)->addRule(Form::FILLED, _('Při vyplněném státu musí mít adresa vyplněno i místo.'));
 
         /* Country + postal code validation */
-        $addressService = $this->serviceAddress;
-        $regionService = $this->serviceRegion;
-        $validPostalCode = function (BaseControl $control) use ($addressService) {
-            return $addressService->tryInferRegion($control->getValue());
+        $validPostalCode = function (BaseControl $control) {
+            return $this->serviceAddress->tryInferRegion($control->getValue());
         };
 
         if ($options & self::REQUIRED) {
@@ -127,14 +138,14 @@ class AddressFactory {
 
         if ($options & self::REQUIRED) {
             $conditioned = $conditioningField ? $country->addConditionOn($conditioningField, Form::FILLED) : $country;
-            $conditioned->addConditionOn($postalCode, function (BaseControl $control) use ($addressService) {
-                return !$addressService->tryInferRegion($control->getValue());
+            $conditioned->addConditionOn($postalCode, function (BaseControl $control) {
+                return !$this->serviceAddress->tryInferRegion($control->getValue());
             })->addRule(Form::FILLED, _('Stát musí být vyplněn.'));
         }
         $country->addCondition(Form::FILLED)
-            ->addConditionOn($postalCode, $validPostalCode)->addRule(function (BaseControl $control) use ($regionService, $addressService, $postalCode) {
-                $regionId = $addressService->inferRegion($postalCode->getValue());
-                $region = $regionService->findByPrimary($regionId);
+            ->addConditionOn($postalCode, $validPostalCode)->addRule(function (BaseControl $control) use ($postalCode) {
+                $regionId = $this->serviceAddress->inferRegion($postalCode->getValue());
+                $region = $this->serviceRegion->findByPrimary($regionId);
                 return $region->country_iso == $control->getValue();
             }, _('Zvolený stát neodpovídá zadanému PSČ.'));
     }

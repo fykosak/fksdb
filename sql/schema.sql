@@ -746,7 +746,7 @@ CREATE TABLE IF NOT EXISTS `e_fyziklani_team` (
   `teacher_accomodation` TINYINT(1)  NOT NULL DEFAULT 0,
   `teacher_present`      TINYINT(1)  NOT NULL DEFAULT 0,
   `teacher_schedule`     TEXT        NULL     DEFAULT NULL
-  COMMENT 'serializovaný program',
+      COMMENT 'serializovaný program',
   `category`             CHAR(1)     NOT NULL,
   `created`              TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `phone`                VARCHAR(30) NULL     DEFAULT NULL,
@@ -755,8 +755,8 @@ CREATE TABLE IF NOT EXISTS `e_fyziklani_team` (
   `points`               INT(11)     NULL     DEFAULT NULL,
   `rank_category`        INT(11)     NULL     DEFAULT NULL,
   `rank_total`           INT(11)     NULL     DEFAULT NULL,
-  `room`                 VARCHAR(3)  NULL     DEFAULT NULL
-  COMMENT '@DEPRECATED',
+  `room`                 VARCHAR(3)  NULL     DEFAULT NULL COMMENT '@DEPRECATED',
+  `force_a`              TINYINT(1)  NULL     DEFAULT NULL,
   `game_lang`            VARCHAR(2)  NULL     DEFAULT NULL
   COMMENT 'Game lang',
   PRIMARY KEY (`e_fyziklani_team_id`),
@@ -1163,11 +1163,10 @@ CREATE TABLE IF NOT EXISTS `stored_query_tag` (
 -- Table `event_org`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `event_org` (
-  `e_org_id`  INT(11)  NOT NULL,
+  `e_org_id`  INT(11)  NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `note`      TEXT(32) NULL DEFAULT NULL,
   `event_id`  INT(11)  NOT NULL,
   `person_id` INT(11)  NOT NULL,
-  PRIMARY KEY (`e_org_id`),
   INDEX `event_id_idx` (`event_id` ASC),
   INDEX `fk_event_org_1_idx` (`person_id` ASC),
   UNIQUE INDEX `uq_event_id_person_id` (`event_id` ASC, `person_id` ASC),

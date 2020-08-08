@@ -45,7 +45,6 @@ events:
     setkani9jaro:
         event_type_id: [11]
         eventYears: [9] # specify for which years this machine is valid, by default all years
-        tableLayout: event.grid
         formLayout: setkani.form
         paramScheme:
             notifyBcc:
@@ -57,13 +56,13 @@ events:
 
         baseMachines:
             PARTICIPANT:
-                service: @event.ServiceMVikendParticipant
+                service: @event.ServiceEventParticipant
 
                 states:
-                    applied: _('Přihlášen')
-                    participated: _('Účastnil se')
-                    missed: _('Nepřijel')
-                    cancelled: _('Zrušen')
+                    - applied
+                    - participated
+                    - missed
+                    - cancelled
 
                 transitions:
                     __init->applied:
@@ -88,7 +87,7 @@ events:
 
                 fields:
                     person_id:
-                        label: _('Osoba')
+                        label: _('Person')
                         required: true
                         modifiable: %events.setkani.appCond%
                         default: fromLogin
@@ -111,19 +110,19 @@ events:
                        required: true
                        factory: Chooser("Zvol místo",Options(%events.setkani9jaro.arrival.destination%))
                     arrival_ticket:
-                        label: "Mám zájem o společnou jízdenku cestou na setkání"
+                        label: _('Mám zájem o společnou jízdenku cestou na setkání')
                     departure_destination:
                        label: _('Místo, na které chci cestovat')
                        required: true
                        factory: Chooser("Zvol místo",Options(%events.setkani9jaro.departure.destination%))
                     departure_ticket:
-                          label: "Mám zájem o společnou jízdenku ze setkání"
+                          label: _('Mám zájem o společnou jízdenku ze setkání')
                     tshirt_size:
-                        label: "Jaké tričko nosíš?"
+                        label: _('Jaké tričko nosíš?')
                         required: true
                         factory: Chooser("Zvol velikost", Options(%events.setkani.tshirt.size%))
                     tshirt_color:
-                        label: "Jakou barvu trička bys chtěl?"
+                        label: _('Jakou barvu trička bys chtěl?')
                         required: false
                         factory: Chooser("Zvol barvu", Options(%events.setkani.tshirt.color%))
 

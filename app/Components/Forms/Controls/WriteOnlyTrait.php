@@ -20,33 +20,48 @@ use Nette\Utils\Html;
  */
 trait WriteOnlyTrait {
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $writeOnly = true;
-    /**
-     * @var bool
-     */
+
+    /** @var bool */
     private $actuallyDisabled = false;
-    /**
-     * @var bool
-     */
+
+    /** @var bool */
     private $hasManualValue = false;
 
+    /** @var bool */
+    private $writeOnlyAttachedOnValidate = false;
+
+    /** @var bool */
+    private $writeOnlyAttachedJS = false;
+
     private function writeOnlyAppendMonitors() {
-        $this->monitor(Form::class);
-        $this->monitor(IJavaScriptCollector::class);
+        $this->monitor(Form::class, function (Form $form) {
+            if (!$this->writeOnlyAttachedOnValidate) {
+                $form->onValidate = $form->onValidate ?: [];
+                array_unshift($form->onValidate, function (Form $form) {
+                    if ($this->writeOnly && $this->getValue() == self::VALUE_ORIGINAL) {
+                        $this->writeOnlyDisable();
+                    }
+                });
+                $this->writeOnlyAttachedOnValidate = true;
+            }
+        });
+        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
+            if (!$this->writeOnlyAttachedJS) {
+                $this->writeOnlyAttachedJS = true;
+                $collector->registerJSFile('js/writeOnlyInput.js');
+            }
+        });
     }
 
-    /**
-     * @return bool
-     */
     public function getWriteOnly(): bool {
         return $this->writeOnly;
     }
 
     /**
      * @param bool $writeOnly
+     * @return void
      */
     public function setWriteOnly(bool $writeOnly = true) {
         $this->writeOnly = $writeOnly;
@@ -86,33 +101,5 @@ trait WriteOnlyTrait {
         $this->setDisabled();
     }
 
-    /**
-     * @var bool
-     */
-    private $writeOnlyAttachedOnValidate = false;
-    /**
-     * @var bool
-     */
-    private $writeOnlyAttachedJS = false;
-
-    /**
-     * @param $obj
-     */
-    protected function writeOnlyAttached($obj) {
-        if (!$this->writeOnlyAttachedOnValidate && $obj instanceof Form) {
-            $that = $this;
-            $obj->onValidate = $obj->onValidate ?: [];
-            array_unshift($obj->onValidate, function (Form $form) use ($that) {
-                if ($that->writeOnly && $that->getValue() == self::VALUE_ORIGINAL) {
-                    $that->writeOnlyDisable();
-                }
-            });
-            $this->writeOnlyAttachedOnValidate = true;
-        }
-        if (!$this->writeOnlyAttachedJS && $obj instanceof IJavaScriptCollector) {
-            $this->writeOnlyAttachedJS = true;
-            $obj->registerJSFile('js/writeOnlyInput.js');
-        }
-    }
 
 }

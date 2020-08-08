@@ -20,8 +20,8 @@ class ModelDataConflictException extends RuntimeException {
 
     /**
      * ModelDataConflictException constructor.
-     * @param $conflicts
-     * @param null $previous
+     * @param iterable $conflicts
+     * @param \Throwable|null $previous
      */
     public function __construct($conflicts, $previous = null) {
         parent::__construct(null, Response::S409_CONFLICT, $previous);
@@ -44,9 +44,9 @@ class ModelDataConflictException extends RuntimeException {
 
     /**
      * @param ReferencedId $referencedId
+     * @return void
      */
     public function setReferencedId(ReferencedId $referencedId) {
         $this->referencedId = $referencedId;
     }
-
 }

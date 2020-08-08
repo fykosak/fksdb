@@ -2,43 +2,38 @@
 
 namespace FKSDB\DataTesting;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\DBReflection\DBReflectionFactory;
 use FKSDB\DataTesting\Tests\Person\PersonTest;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Services\ServiceContest;
-use Nette\Application\BadRequestException;
 
 /**
  * Class DataTestingFactory
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DataTestingFactory {
-    /**
-     * @var PersonTest[][]
-     */
+    /** @var PersonTest[][] */
     private $tests = [];
-    /**
-     * @var ServiceContest
-     */
+    /** @var ServiceContest */
     private $serviceContest;
-    /**
-     * @var TableReflectionFactory
-     */
+    /** @var DBReflectionFactory */
     private $tableReflectionFactory;
 
     /**
      * DataTestingFactory constructor.
      * @param ServiceContest $serviceContest
-     * @param TableReflectionFactory $tableReflectionFactory
-     * @throws BadRequestException
+     * @param DBReflectionFactory $tableReflectionFactory
+     * @throws BadTypeException
      */
-    public function __construct(ServiceContest $serviceContest, TableReflectionFactory $tableReflectionFactory) {
+    public function __construct(ServiceContest $serviceContest, DBReflectionFactory $tableReflectionFactory) {
         $this->serviceContest = $serviceContest;
         $this->tableReflectionFactory = $tableReflectionFactory;
         $this->registersTests();
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
+     * @throws BadTypeException
      */
     private function registersTests() {
         $tests = [
@@ -46,7 +41,7 @@ class DataTestingFactory {
             new Tests\Person\ParticipantsDurationTest(),
             new Tests\Person\EventCoveringTest(),
         ];
-        foreach (['phone', 'phone_parent_d', 'phone_parent_m'] as $fieldName) {
+        foreach (['person_info.phone', 'person_info.phone_parent_d', 'person_info.phone_parent_m'] as $fieldName) {
             $tests[] = new Tests\Person\PersonInfoFieldTest($this->tableReflectionFactory, $fieldName);
         }
         $this->tests['person'] = $tests;

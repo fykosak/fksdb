@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Controls\Transitions;
 
 use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Machine;
 use FKSDB\Transitions\UnavailableTransitionsException;
@@ -11,14 +12,15 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Tracy\Debugger;
 
+/**
+ * Class TransitionButtonsControl
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class TransitionButtonsControl extends BaseComponent {
-    /**
-     * @var Machine
-     */
+
+    /** @var Machine */
     private $machine;
-    /**
-     * @var IStateModel
-     */
+    /** @var IStateModel */
     private $model;
 
     /**
@@ -40,21 +42,21 @@ class TransitionButtonsControl extends BaseComponent {
     }
 
     /**
-     * @param $name
+     * @param string $name
      * @throws AbortException
      */
     public function handleTransition($name) {
         try {
             $this->machine->executeTransition($name, $this->model);
         } catch (ForbiddenRequestException $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             return;
         } catch (UnavailableTransitionsException $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             return;
         } catch (\Exception $exception) {
             Debugger::log($exception);
-            $this->getPresenter()->flashMessage(_('Nastala chyba'), \BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage(_('Nastala chyba'), BasePresenter::FLASH_ERROR);
         }
         $this->redirect('this');
     }

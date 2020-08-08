@@ -7,19 +7,15 @@ use LogicException;
 
 /**
  * Class Price
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Price {
 
     const CURRENCY_EUR = 'eur';
     const CURRENCY_CZK = 'czk';
-    /**
-     * @var string
-     */
+    /** @var string */
     private $currency;
-    /**
-     * @var float
-     */
+    /** @var float */
     private $amount;
 
     /**
@@ -67,11 +63,11 @@ class Price {
     }
 
     /**
-     * @param $currency
+     * @param string $currency
      * @return string
      * @throws UnsupportedCurrencyException
      */
-    public static function getLabel($currency): string {
+    public static function getLabel(string $currency): string {
         switch ($currency) {
             case self::CURRENCY_EUR:
                 return '€';

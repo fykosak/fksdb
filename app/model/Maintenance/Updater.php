@@ -1,8 +1,8 @@
 <?php
 
-namespace Maintenance;
+namespace FKSDB\Maintenance;
 
-use FKSDB\Config\GlobalParameters;
+use Nette\DI\Container;
 use Nette\SmartObject;
 use Tracy\Debugger;
 
@@ -14,22 +14,23 @@ use Tracy\Debugger;
 class Updater {
     use SmartObject;
 
-    /** @var GlobalParameters */
-    private $globalParameters;
+    /** @var Container */
+    private $container;
 
     /**
      * Updater constructor.
-     * @param GlobalParameters $globalParameters
+     * @param Container $container
      */
-    public function __construct(GlobalParameters $globalParameters) {
-        $this->globalParameters = $globalParameters;
+    public function __construct( Container $container) {
+        $this->container = $container;
     }
 
     /**
-     * @param $requestedBranch
+     * @param string $requestedBranch
+     * @return void
      */
     public function installBranch($requestedBranch) {
-        $deployment = $this->globalParameters['updater']['deployment'];
+        $deployment = $this->container->getParameters()['updater']['deployment'];
         foreach ($deployment as $path => $branch) {
             if ($branch != $requestedBranch) {
                 continue;
@@ -39,12 +40,12 @@ class Updater {
     }
 
     /**
-     * @param $path
-     * @param $branch
+     * @param mixed $path
+     * @param mixed $branch
      */
     private function install($path, $branch) {
-        $user = $this->globalParameters['updater']['installUser'];
-        $script = $this->globalParameters['updater']['installScript'];
+        $user = $this->container->getParameters()['updater']['installUser'];
+        $script = $this->container->getParameters()['updater']['installScript'];
         $cmd = "sudo -u {$user} {$script} $path $branch >/dev/null 2>/dev/null &";
         Debugger::log("Running: $cmd");
         shell_exec($cmd);

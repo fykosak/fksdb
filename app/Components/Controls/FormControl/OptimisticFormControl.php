@@ -25,7 +25,6 @@ class OptimisticFormControl extends FormControl {
     public function __construct(callable $fingerprintCallback, callable $defaultsCallback) {
         $this->fingerprintCallback = $fingerprintCallback;
         $this->defaultsCallback = $defaultsCallback;
-
         parent::__construct();
     }
 

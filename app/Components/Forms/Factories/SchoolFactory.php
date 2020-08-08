@@ -16,9 +16,7 @@ class SchoolFactory {
 
     const SHOW_UNKNOWN_SCHOOL_HINT = 0x1;
 
-    /**
-     * @var SchoolProvider
-     */
+    /** @var SchoolProvider */
     private $schoolProvider;
 
     /**
@@ -29,26 +27,23 @@ class SchoolFactory {
         $this->schoolProvider = $schoolProvider;
     }
 
-    /**
-     * @return ModelContainer
-     */
-    public function createSchool(): ModelContainer {
+    public function createContainer(): ModelContainer {
         $container = new ModelContainer();
-        $container->addText('name_full', _('Plný název'))
+        $container->addText('name_full', _('Full name'))
             ->addRule(Form::MAX_LENGTH, null, 255)
             ->setOption('description', _('Úplný nezkrácený název školy.'));
 
-        $container->addText('name', _('Název'))
+        $container->addText('name', _('Name'))
             ->addRule(Form::MAX_LENGTH, null, 255)
-            ->addRule(Form::FILLED, _('Název je povinný.'))
+            ->addRule(Form::FILLED, _('Name is required.'))
             ->setOption('description', _('Název na obálku.'));
 
-        $container->addText('name_abbrev', _('Zkrácený název'))
+        $container->addText('name_abbrev', _('Abbreviated name'))
             ->addRule(Form::MAX_LENGTH, _('Délka zkráceného názvu je omezena na %d znaků.'), 32)
             ->addRule(Form::FILLED, _('Zkrácený název je povinný.'))
             ->setOption('description', _('Název krátký do výsledkovky.'));
 
-        $container->addText('email', _('Kontaktní e-mail'))
+        $container->addText('email', _('Contact e-mail'))
             ->addCondition(Form::FILLED)
             ->addRule(Form::EMAIL);
 
@@ -61,9 +56,7 @@ class SchoolFactory {
         $container->addCheckbox('active', _('Aktivní záznam'))
             ->setDefaultValue(true);
 
-        $container->addText('note', _('Poznámka'));
-
-        //$container->addHidden('school_id');
+        $container->addText('note', _('Note'));
 
         return $container;
     }
@@ -73,7 +66,7 @@ class SchoolFactory {
      * @return AutocompleteSelectBox
      */
     public function createSchoolSelect($options = 0): AutocompleteSelectBox {
-        $schoolElement = new AutocompleteSelectBox(true, _('Škola'));
+        $schoolElement = new AutocompleteSelectBox(true, _('School'));
         $schoolElement->setDataProvider($this->schoolProvider);
         if ($options & self::SHOW_UNKNOWN_SCHOOL_HINT) {
             $schoolElement->setOption('description', sprintf(_('Pokud nelze školu nalézt, napište na %s.'), 'schola.novum () fykos.cz'));

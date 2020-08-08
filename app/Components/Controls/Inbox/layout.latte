@@ -17,7 +17,7 @@
         {var $counter = 0}
         {foreach $seriesTable->getContestants() as $contestant}
             {if $displayAll || isset($table[$contestant->ct_id])}
-                {var $counter++}
+                {? $counter++}
                 <tr>
                     <th scope="row">{$contestant->getPerson()->getFullName()}</th>
                     {foreach $seriesTable->getTasks() as $task}

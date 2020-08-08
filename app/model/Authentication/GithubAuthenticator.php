@@ -1,13 +1,13 @@
 <?php
 
-namespace Authentication;
+namespace FKSDB\Authentication;
 
-use FKSDB\Config\GlobalParameters;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\YearCalculator;
-use FullHttpRequest;
-use Github\Events\Event;
+use FKSDB\FullHttpRequest;
+use FKSDB\Github\Events\Event;
+use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\Security\AuthenticationException;
 
@@ -22,20 +22,18 @@ class GithubAuthenticator extends AbstractAuthenticator {
     const SESSION_NS = 'auth';
     const HTTP_AUTH_HEADER = 'X-Hub-Signature';
 
-    /**
-     * @var GlobalParameters
-     */
-    private $globalParameters;
+    /** @var Container  */
+    private $container;
 
     /**
      * GithubAuthenticator constructor.
-     * @param GlobalParameters $globalParameters
      * @param ServiceLogin $serviceLogin
      * @param YearCalculator $yearCalculator
+     * @param Container $container
      */
-    public function __construct(GlobalParameters $globalParameters, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
+    public function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator, Container $container) {
         parent::__construct($serviceLogin, $yearCalculator);
-        $this->globalParameters = $globalParameters;
+        $this->container=$container;
     }
 
     /**
@@ -46,8 +44,8 @@ class GithubAuthenticator extends AbstractAuthenticator {
      * @throws NoLoginException
      */
     public function authenticate(FullHttpRequest $request) {
-        $loginName = $this->globalParameters['github']['login'];
-        $secret = $this->globalParameters['github']['secret'];
+        $loginName = $this->container->getParameters()['github']['login'];
+        $secret = $this->container->getParameters()['github']['secret'];
 
         if (!$request->getRequest()->getHeader(Event::HTTP_HEADER)) {
             throw new InvalidArgumentException(_('Očekávána hlavička X-Github-Event'));

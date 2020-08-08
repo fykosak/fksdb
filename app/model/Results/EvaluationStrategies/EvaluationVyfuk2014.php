@@ -26,10 +26,6 @@ class EvaluationVyfuk2014 extends EvaluationStrategy {
         ];
     }
 
-    /**
-     * @param ModelCategory $category
-     * @return array
-     */
     public function categoryToStudyYears(ModelCategory $category): array {
         switch ($category->id) {
             case ModelCategory::CAT_ES_6:

@@ -15,9 +15,7 @@ class BrojureResultsModel extends AbstractResultsModel {
 
     const COL_SERIES_PREFIX = 's';
 
-    /**
-     * @var array of int
-     */
+    /** @var array of int */
     protected $series;
 
     /**
@@ -112,7 +110,7 @@ class BrojureResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @param $listedSeries
+     * @param array $listedSeries
      * @return void
      */
     public function setListedSeries($listedSeries) {

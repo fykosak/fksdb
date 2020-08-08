@@ -15,7 +15,6 @@ use FKSDB\ORM\Models\ModelPersonHistory;
 use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\YearCalculator;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\Utils\ArrayHash;
@@ -32,23 +31,15 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
     const ABROAD = 'F';
     const OPEN = 'O';
 
-    /**
-     * @var YearCalculator
-     */
+    /** @var YearCalculator */
     private $yearCalculator;
 
-    /**
-     * @var ServiceSchool
-     */
+    /** @var ServiceSchool */
     private $serviceSchool;
-    /**
-     * @var array
-     */
+    /** @var array */
     private $categoryNames;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $rulesVersion;
 
     /**
@@ -85,7 +76,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
     }
 
     /**
-     * @param $states
+     * @param array $states
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder
@@ -108,20 +99,23 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
             if ($name == 'team') {
                 continue;
             }
-            /** @var BaseControl[] $formControls */
-            $formControls = [
-                'school_id' => $this->getControl("$name.person_id.person_history.school_id"),
-                'study_year' => $this->getControl("$name.person_id.person_history.study_year"),
-            ];
-            $formControls['school_id'] = reset($formControls['school_id']);
-            $formControls['study_year'] = reset($formControls['study_year']);
+            $schoolControls = $this->getControl("$name.person_id.person_history.school_id");
+            $schoolControl = reset($schoolControls);
+            $studyYearControls = $this->getControl("$name.person_id.person_history.study_year");
+            $studyYearControl = reset($studyYearControls);
 
-            $formValues = [
-                'school_id' => ($formControls['school_id'] ? $formControls['school_id']->getValue() : null),
-                'study_year' => ($formControls['study_year'] ? $formControls['study_year']->getValue() : null),
-            ];
+            $schoolValue = null;
+            if ($schoolControl) {
+                $schoolControl->loadHttpData();
+                $schoolValue = $schoolControl->getValue();
+            }
+            $studyYearValue = null;
+            if ($studyYearControl) {
+                $studyYearControl->loadHttpData();
+                $studyYearValue = $studyYearControl->getValue();
+            }
 
-            if (!$formValues['school_id']) {
+            if (!$schoolValue) {
                 if ($this->isBaseReallyEmpty($name)) {
                     continue;
                 }
@@ -134,7 +128,10 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
                     'study_year' => $history->study_year,
                 ];
             } else {
-                $participantData = $formValues;
+                $participantData = [
+                    'school_id' => $schoolValue,
+                    'study_year' => $studyYearValue,
+                ];
             }
             $participants[] = $participantData;
         }
@@ -153,7 +150,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
      *   ČR - A - (3,4]
      *   ČR - B - (2,3] - max. 2 ze 4. ročníku
      *   ČR - C - [0,2] - nikdo ze 4. ročníku, max. 2 z 3 ročníku
-     * @param $competitors
+     * @param iterable $competitors
      * @return string
      */
     private function getCategory($competitors) {
@@ -204,12 +201,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
         }
     }
 
-    /**
-     * @param Field $field
-     * @return array
-     */
-    public function getOptions(Field $field) {
+    public function getOptions(Field $field): array {
         return $this->categoryNames;
     }
-
 }

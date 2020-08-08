@@ -11,13 +11,12 @@ use Nette\SmartObject;
  */
 class DataValidator {
     use SmartObject;
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $validationErrors;
 
     /**
      * @param BaseHolder $baseHolder
+     * @return void
      */
     public function validate(BaseHolder $baseHolder) {
         // validate
@@ -34,6 +33,7 @@ class DataValidator {
 
     /**
      * @param BaseHolder $baseHolder
+     * @return void
      */
     private function validateFields(BaseHolder $baseHolder) {
         foreach ($baseHolder->getFields() as $field) {

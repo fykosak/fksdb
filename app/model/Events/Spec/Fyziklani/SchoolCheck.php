@@ -8,6 +8,7 @@ use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\IControl;
 
 /**
  * More user friendly Due to author's laziness there's no class doc (or it's self explaining).
@@ -16,14 +17,10 @@ use Nette\Forms\Controls\BaseControl;
  */
 abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment {
 
-    /**
-     * @var ServicePersonHistory
-     */
+    /** @var ServicePersonHistory */
     private $servicePersonHistory;
 
-    /**
-     * @var Holder
-     */
+    /** @var Holder */
     private $holder;
 
     /**
@@ -43,14 +40,15 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
 
     /**
      * @param Holder $holder
+     * @return void
      */
     public function setHolder(Holder $holder) {
         $this->holder = $holder;
     }
 
     /**
-     * @param $schoolControls
-     * @param $personControls
+     * @param IControl[] $schoolControls
+     * @param IControl[] $personControls
      * @return array
      */
     final protected function getSchools($schoolControls, $personControls) {

@@ -1,8 +1,6 @@
 <?php
 
-namespace Github\Events;
-
-
+namespace FKSDB\Github\Events;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

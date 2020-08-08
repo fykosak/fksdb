@@ -11,32 +11,27 @@ use Nette\InvalidArgumentException;
  */
 class Machine {
 
-    /**
-     * @var BaseMachine[]
-     */
+    /** @var BaseMachine[] */
     private $baseMachines = [];
 
-    /**
-     * @var BaseMachine
-     */
+    /** @var BaseMachine */
     private $primaryMachine;
 
     /**
-     * @param $name
+     * @param string $name
+     * @return void
      */
-    public function setPrimaryMachine($name) {
+    public function setPrimaryMachine(string $name) {
         $this->primaryMachine = $this->getBaseMachine($name);
     }
 
-    /**
-     * @return BaseMachine
-     */
-    public function getPrimaryMachine() {
+    public function getPrimaryMachine(): BaseMachine {
         return $this->primaryMachine;
     }
 
     /**
      * @param BaseMachine $baseMachine
+     * @return void
      */
     public function addBaseMachine(BaseMachine $baseMachine) {
         $name = $baseMachine->getName();
@@ -45,10 +40,6 @@ class Machine {
         $baseMachine->setMachine($this);
     }
 
-    /**
-     * @param $name
-     * @return BaseMachine
-     */
     public function getBaseMachine(string $name): BaseMachine {
         if (!array_key_exists($name, $this->baseMachines)) {
             throw new InvalidArgumentException("Unknown base machine '$name'.");

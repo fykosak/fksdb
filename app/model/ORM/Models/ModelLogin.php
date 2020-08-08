@@ -2,8 +2,8 @@
 
 namespace FKSDB\ORM\Models;
 
-use Authentication\PasswordAuthenticator;
-use Authorization\Grant;
+use FKSDB\Authentication\PasswordAuthenticator;
+use FKSDB\Authorization\Grant;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\YearCalculator;
@@ -23,9 +23,7 @@ use Nette\Security\IIdentity;
  */
 class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonReferencedModel {
 
-    /**
-     * @var YearCalculator|null
-     */
+    /** @var YearCalculator|null */
     private $yearCalculator;
 
     /**
@@ -42,6 +40,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
 
     /**
      * @param YearCalculator $yearCalculator
+     * @return void
      */
     public function injectYearCalculator(YearCalculator $yearCalculator) {
         $this->yearCalculator = $yearCalculator;
@@ -116,9 +115,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
         return $this->login_id;
     }
 
-    /**
-     * @var Grant[]   cache
-     */
+    /** @var Grant[]   cache */
     private $roles;
 
     /**

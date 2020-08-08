@@ -2,7 +2,7 @@
 
 namespace FKSDB\Events\Spec\Sous;
 
-use FKSDB\ORM\ModelsMulti\Events\ModelMSousParticipant;
+use FKSDB\ORM\Models\ModelEventParticipant;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -26,9 +26,6 @@ class Heuristics /*extends StoredQueryPostProcessing */{ /* uncomment to use */
     const RULE4MW = '4WM';
     const RULE4FW = '4WF';
 
-    /**
-     * @return string
-     */
     public function getDescription(): string {
         return 'Z výsledkovky vybere zvance a náhradníky na soustředění (http://wiki.fykos.cz/fykos:soustredeni:zasady:heuristikazvani).
             Hierarchický kód určuje pravidlo a případně podpravidlo, dle nějž je osoba zvaná/náhradníkovaná.';
@@ -36,7 +33,7 @@ class Heuristics /*extends StoredQueryPostProcessing */{ /* uncomment to use */
 
     /**
      * @param \PDOStatement $data
-     * @return \Traversable|array|\ArrayIterator
+     * @return iterable
      */
     public function processData(\PDOStatement $data) {
 
@@ -190,9 +187,9 @@ class Heuristics /*extends StoredQueryPostProcessing */{ /* uncomment to use */
          */
         foreach ($result as $row) {
             if ($row['invited']) {
-                $row['status'] = ModelMSousParticipant::STATE_AUTO_INVITED;
+                $row['status'] = ModelEventParticipant::STATE_AUTO_INVITED;
             } elseif ($row['spare']) {
-                $row['status'] = ModelMSousParticipant::STATE_AUTO_SPARE;
+                $row['status'] = ModelEventParticipant::STATE_AUTO_SPARE;
             }
         }
 

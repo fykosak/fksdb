@@ -5,14 +5,14 @@
             <h3 class="card-header">
                 {control valuePrinter:onlyValue $itemHeadline, $model}
                 <div class="btn-group float-right" role="group" aria-label="Basic example" class="">
-                    {foreach $links as $linkFactory}
-                        {($linkFactory)($model)}
+                    {foreach $links as $link}
+                        {control linkPrinter $link, $model}
                     {/foreach}
                 </div>
             </h3>
             <ul class="list-group list-group-flush">
                 {foreach $rows as $field}
-                    {control valuePrinter:listItem $field, $model}
+                    {control valuePrinter:listItem $field, $model,$userPermission}
                 {/foreach}
             </ul>
         {/foreach}

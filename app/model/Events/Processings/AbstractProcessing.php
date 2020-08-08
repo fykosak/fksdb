@@ -24,29 +24,19 @@ abstract class AbstractProcessing implements IProcessing {
     const DELIMITER = '.';
     const WILDCART = '*';
 
-    /**
-     * @var
-     */
+    /** @var mixed */
     private $valuesPathCache;
-    /**
-     * @var
-     */
+    /** @var mixed */
     private $formPathCache;
-    /**
-     * @var
-     */
+    /** @var mixed */
     private $states;
-    /**
-     * @var Holder
-     */
+    /** @var Holder */
     private $holder;
-    /**
-     * @var
-     */
+    /** @var mixed */
     private $values;
 
     /**
-     * @param $states
+     * @param array $states
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder
@@ -62,7 +52,7 @@ abstract class AbstractProcessing implements IProcessing {
     }
 
     /**
-     * @param $states
+     * @param array $states
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder
@@ -73,10 +63,10 @@ abstract class AbstractProcessing implements IProcessing {
     abstract protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null);
 
     /**
-     * @param $mask
+     * @param string $mask
      * @return bool
      */
-    final protected function hasWildcart($mask) {
+    final protected function hasWildCart($mask) {
         return strpos($mask, self::WILDCART) !== false;
     }
 
@@ -126,13 +116,13 @@ abstract class AbstractProcessing implements IProcessing {
      * When it returns false, correct value can be loaded from the model
      * (which is not updated yet).
      *
-     * @param $name
+     * @param string $name
      * @return bool
      */
     final protected function isBaseReallyEmpty($name) {
         $baseHolder = $this->holder->getBaseHolder($name);
         if ($baseHolder->getModelState() == BaseMachine::STATE_INIT) {
-            return true; // it was empty since begining
+            return true; // it was empty since beginning
         }
         if (isset($this->states[$name]) && $this->states[$name] == BaseMachine::STATE_TERMINATED) {
             return true; // it has been deleted by user

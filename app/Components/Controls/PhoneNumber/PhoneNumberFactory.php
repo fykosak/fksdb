@@ -2,11 +2,9 @@
 
 namespace FKSDB\Components\Controls\PhoneNumber;
 
-use Closure;
 use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Services\ServiceRegion;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
 /**
@@ -14,13 +12,9 @@ use Nette\Utils\Html;
  * *
  */
 class PhoneNumberFactory {
-    /**
-     * @var ServiceRegion
-     */
+    /** @var ServiceRegion */
     private $serviceRegion;
-    /**
-     * @var TypedTableSelection
-     */
+    /** @var TypedTableSelection */
     private $table;
 
     /**
@@ -56,9 +50,7 @@ class PhoneNumberFactory {
      * @return ModelRegion|null
      */
     private function getRegion(string $number) {
-        /**
-         * @var ModelRegion $region
-         */
+        /** @var ModelRegion $region */
         foreach ($this->getAllRegions() as $region) {
             if ($region->matchPhone($number)) {
                 return $region;
@@ -69,12 +61,5 @@ class PhoneNumberFactory {
 
     public function isValid(string $number): bool {
         return !!$this->getRegion($number);
-    }
-
-    public function getFormValidationCallback(): Closure {
-        return function (BaseControl $control): bool {
-            $value = $control->getValue();
-            return $this->isValid($value);
-        };
     }
 }

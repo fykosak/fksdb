@@ -4,9 +4,12 @@ namespace FKSDB\ORM\Models\Schedule;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\IPaymentReferencedModel;
 use FKSDB\ORM\Models\IPersonReferencedModel;
 use FKSDB\ORM\Models\IScheduleGroupReferencedModel;
+use FKSDB\ORM\Models\IScheduleItemReferencedModel;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\Transitions\IStateModel;
@@ -25,7 +28,13 @@ use FKSDB\Exceptions\NotImplementedException;
  * @property-read string state
  * @property-read int person_schedule_id
  */
-class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IPersonReferencedModel, IScheduleGroupReferencedModel, IPaymentReferencedModel {
+class ModelPersonSchedule extends AbstractModelSingle implements
+    IStateModel,
+    IPersonReferencedModel,
+    IScheduleGroupReferencedModel,
+    IPaymentReferencedModel,
+    IEventReferencedModel,
+    IScheduleItemReferencedModel {
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);
@@ -37,6 +46,10 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
 
     public function getScheduleGroup(): ModelScheduleGroup {
         return $this->getScheduleItem()->getScheduleGroup();
+    }
+
+    public function getEvent(): ModelEvent {
+        return $this->getScheduleGroup()->getEvent();
     }
 
     /**
@@ -72,8 +85,8 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
                 return sprintf(_('Accommodation for %s from %s to %s in %s'),
                     $this->getPerson()->getFullName(),
-                    $group->start->format(_('__date_format')),
-                    $group->end->format(_('__date_format')),
+                    $group->start->format(_('__date')),
+                    $group->end->format(_('__date')),
                     $item->name_cs);
             case ModelScheduleGroup::TYPE_WEEKEND:
                 return $item->getLabel();
@@ -83,10 +96,10 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
     }
 
     /**
-     * @param $newState
+     * @param string|null $newState
      * @return void
      */
-    public function updateState($newState) {
+    public function updateState(string $newState) {
         $this->update(['state' => $newState]);
     }
 

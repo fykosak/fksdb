@@ -1,8 +1,8 @@
 <?php
 
-namespace Authorization\Assertions;
+namespace FKSDB\Authorization\Assertions;
 
-use Authorization\Grant;
+use FKSDB\Authorization\Grant;
 use FKSDB\ORM\Models\IContestReferencedModel;
 use FKSDB\ORM\Models\IPersonReferencedModel;
 use FKSDB\ORM\Models\ModelContestant;
@@ -20,9 +20,7 @@ use Nette\Security\Permission;
  */
 class OwnerAssertion {
 
-    /**
-     * @var IUserStorage
-     */
+    /** @var IUserStorage */
     private $user;
 
     /**
@@ -42,7 +40,7 @@ class OwnerAssertion {
      * @return bool
      * @throws InvalidStateException
      */
-    public function isSubmitUploader(Permission $acl, $role, $resourceId, $privilege) {
+    public function isSubmitUploader(Permission $acl, $role, $resourceId, $privilege): bool {
 
         if (!$this->user->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
@@ -67,7 +65,7 @@ class OwnerAssertion {
      * @return bool
      * @throws InvalidStateException
      */
-    public function isOwnContestant(Permission $acl, $role, $resourceId, $privilege) {
+    public function isOwnContestant(Permission $acl, $role, $resourceId, $privilege): bool {
         if (!$this->user->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
@@ -89,7 +87,7 @@ class OwnerAssertion {
      * @return bool
      * @throws InvalidStateException
      */
-    public function existsOwnContestant(Permission $acl, $role, $resourceId, $privilege) {
+    public function existsOwnContestant(Permission $acl, $role, $resourceId, $privilege): bool {
         if (!$this->user->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }

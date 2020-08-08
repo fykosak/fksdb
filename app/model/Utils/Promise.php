@@ -12,22 +12,17 @@ use Nette\SmartObject;
  */
 class Promise {
     use SmartObject;
-    /**
-     * @var callable
-     */
+
+    /** @var callable */
     private $callback;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $called = false;
-    /**
-     * @var
-     */
+    /** @var mixed */
     private $value;
 
     /**
      * Promise constructor.
-     * @param $callback
+     * @param callable $callback
      */
     public function __construct(callable $callback) {
         $this->callback = $callback;

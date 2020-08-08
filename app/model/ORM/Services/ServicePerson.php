@@ -9,7 +9,8 @@ use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @method ModelPerson findByPrimary($key)
+ * @method ModelPerson|null findByPrimary($key)
+ * @method ModelPerson createNewModel(array $data)
  */
 class ServicePerson extends AbstractServiceSingle {
 
@@ -47,4 +48,17 @@ class ServicePerson extends AbstractServiceSingle {
         parent::save($model);
     }
 
+    /**
+     * @param ModelPerson|null $person
+     * @param array $data
+     * @return ModelPerson
+     */
+    public function store($person, array $data): ModelPerson {
+        if ($person) {
+            $this->updateModel2($person, $data);
+            return $person;
+        } else {
+            return $this->createNewModel($data);
+        }
+    }
 }

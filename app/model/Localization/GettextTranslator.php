@@ -11,24 +11,18 @@ use Nette\Localization\ITranslator;
  */
 class GettextTranslator implements ITranslator {
 
-    /**
-     * @var array[lang] => locale
-     */
-    private $locales = [];
+    /** @var array[lang] => locale */
+    private $locales;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $localeDir;
-    /**
-     * @var string
-     */
+    /** @var string */
     private $lang;
 
     /**
      * GettextTranslator constructor.
      * @param array $locales
-     * @param $localeDir
+     * @param string $localeDir
      */
     public function __construct(array $locales, string $localeDir) {
         $this->locales = $locales;
@@ -68,7 +62,7 @@ class GettextTranslator implements ITranslator {
     }
 
     /**
-     * @param $message
+     * @param string $message
      * @param null $count
      * @return string
      */
@@ -84,9 +78,9 @@ class GettextTranslator implements ITranslator {
     }
 
     /**
-     * @param $object
-     * @param $field
-     * @param $lang
+     * @param object $object
+     * @param string $field
+     * @param string $lang
      * @return mixed
      */
     public static function i18nHelper($object, $field, $lang) {

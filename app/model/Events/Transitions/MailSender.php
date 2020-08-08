@@ -8,7 +8,7 @@ use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Machine\Transition;
 use FKSDB\Events\Model\Holder\BaseHolder;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelEmailMessage;
@@ -18,10 +18,10 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\ORM\Services\ServicePerson;
-use Mail\MailTemplateFactory;
+use FKSDB\Mail\MailTemplateFactory;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
-use PublicModule\ApplicationPresenter;
+use FKSDB\Modules\PublicModule\ApplicationPresenter;
 
 /**
  * Sends email with given template name (in standard template directory)
@@ -43,9 +43,7 @@ class MailSender {
     const ADDR_ALL = '*';
     const BCC_PREFIX = '.';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $filename;
 
     /**
@@ -54,33 +52,23 @@ class MailSender {
      */
     private $addressees;
 
-    /**
-     * @var MailTemplateFactory
-     */
+    /** @var MailTemplateFactory */
     private $mailTemplateFactory;
 
-    /**
-     * @var AccountManager
-     */
+    /** @var AccountManager */
     private $accountManager;
 
-    /**
-     * @var ServiceAuthToken
-     */
+    /** @var ServiceAuthToken */
     private $serviceAuthToken;
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     private $servicePerson;
-    /**
-     * @var ServiceEmailMessage
-     */
+    /** @var ServiceEmailMessage */
     private $serviceEmailMessage;
 
     /**
      * MailSender constructor.
-     * @param $filename
+     * @param string $filename
      * @param array|string $addresees
      * @param MailTemplateFactory $mailTemplateFactory
      * @param AccountManager $accountManager
@@ -88,13 +76,15 @@ class MailSender {
      * @param ServicePerson $servicePerson
      * @param ServiceEmailMessage $serviceEmailMessage
      */
-    public function __construct($filename,
-                                $addresees,
-                                MailTemplateFactory $mailTemplateFactory,
-                                AccountManager $accountManager,
-                                ServiceAuthToken $serviceAuthToken,
-                                ServicePerson $servicePerson,
-                                ServiceEmailMessage $serviceEmailMessage) {
+    public function __construct(
+        $filename,
+        $addresees,
+        MailTemplateFactory $mailTemplateFactory,
+        AccountManager $accountManager,
+        ServiceAuthToken $serviceAuthToken,
+        ServicePerson $servicePerson,
+        ServiceEmailMessage $serviceEmailMessage
+    ) {
         $this->filename = $filename;
         $this->addressees = $addresees;
         $this->mailTemplateFactory = $mailTemplateFactory;
@@ -108,7 +98,7 @@ class MailSender {
      * @param Transition $transition
      * @param Holder $holder
      * @return void
-     * @throws \Exception
+     * @throws UnsupportedLanguageException
      */
     public function __invoke(Transition $transition, Holder $holder) {
         $this->send($transition, $holder);
@@ -118,7 +108,7 @@ class MailSender {
      * @param Transition $transition
      * @param Holder $holder
      * @return void
-     * @throws \Exception
+     * @throws UnsupportedLanguageException
      */
     private function send(Transition $transition, Holder $holder) {
         $personIds = $this->resolveAdressees($transition, $holder);
@@ -147,8 +137,8 @@ class MailSender {
      * @param ModelLogin $login
      * @param BaseMachine $baseMachine
      * @param BaseHolder $baseHolder
-     * @return ModelEmailMessage|AbstractModelSingle
-     * @throws \Exception
+     * @return ModelEmailMessage
+     * @throws UnsupportedLanguageException
      */
     private function createMessage(string $filename, ModelLogin $login, BaseMachine $baseMachine, BaseHolder $baseHolder): ModelEmailMessage {
         $machine = $baseMachine->getMachine();
@@ -172,6 +162,14 @@ class MailSender {
             'machine' => $machine,
             'baseMachine' => $baseMachine,
             'baseHolder' => $baseHolder,
+            'linkArgs' => [
+                '//:Public:Application:',
+                [
+                    'eventId' => $event->event_id,
+                    'contestId' => $event->getEventType()->contest_id,
+                    'at' => $token->token,
+                ],
+            ],
         ];
         $template = $this->mailTemplateFactory->createWithParameters($filename, null, $templateParams);
 
@@ -189,13 +187,6 @@ class MailSender {
 
     }
 
-    /**
-     * @param ModelLogin $login
-     * @param ModelEvent $event
-     * @param IModel $application
-     * @return ModelAuthToken
-     * @throws \Exception
-     */
     private function createToken(ModelLogin $login, ModelEvent $event, IModel $application): ModelAuthToken {
         $until = $this->getUntil($event);
         $data = ApplicationPresenter::encodeParameters($event->getPrimary(), $application->getPrimary());
@@ -227,18 +218,10 @@ class MailSender {
         return $event->registration_end ?: $event->end;
     }
 
-    /**
-     * @return bool
-     */
     private function hasBcc(): bool {
         return !is_array($this->addressees) && substr($this->addressees, 0, strlen(self::BCC_PREFIX)) == self::BCC_PREFIX;
     }
 
-    /**
-     * @param Transition $transition
-     * @param Holder $holder
-     * @return array
-     */
     private function resolveAdressees(Transition $transition, Holder $holder): array {
         if (is_array($this->addressees)) {
             $names = $this->addressees;

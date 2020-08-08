@@ -16,29 +16,26 @@ use Nette\Utils\JsonException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ParticipantAcquaintanceChartControl extends ReactComponent implements IChart {
-    /**
-     * @var int
-     */
+
+    /** @var int */
     private $event;
+
     /**
      * ParticipantAcquaintanceChartControl constructor.
      * @param Container $context
      * @param ModelEvent $event
      */
     public function __construct(Container $context, ModelEvent $event) {
-        parent::__construct($context);
+        parent::__construct($context, 'chart.participant-acquaintance');
         $this->event = $event;
     }
 
-    public function getAction(): string {
-        return 'participantAcquaintance';
-    }
-
     /**
+     * @param mixed ...$args
      * @return string
      * @throws JsonException
      */
-    public function getData(): string {
+    public function getData(...$args): string {
         $data = [];
         foreach ($this->event->getParticipants()->where('status', ['participated', 'applied']) as $row) {
 
@@ -60,10 +57,6 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
             $data[] = $datum;
         }
         return Json::encode($data);
-    }
-
-    protected function getReactId(): string {
-        return 'chart.participant-acquaintance';
     }
 
     public function getTitle(): string {

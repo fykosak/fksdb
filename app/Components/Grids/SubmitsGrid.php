@@ -2,19 +2,20 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Control\AjaxUpload\SubmitDownloadTrait;
-use FKSDB\Components\Control\AjaxUpload\SubmitRevokeTrait;
+use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
-use FKSDB\Submits\FileSystemStorage\CorrectedStorage;
-use FKSDB\Submits\FileSystemStorage\UploadedStorage;
+use FKSDB\Submits\SubmitHandlerFactory;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -24,20 +25,15 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class SubmitsGrid extends BaseGrid {
-    use SubmitRevokeTrait;
-    use SubmitDownloadTrait;
 
     /** @var ServiceSubmit */
     private $serviceSubmit;
-    /** @var CorrectedStorage */
-    private $correctedStorage;
-    /** @var UploadedStorage */
-    private $uploadedStorage;
 
-    /**
-     * @var ModelContestant
-     */
+    /** @var ModelContestant */
     private $contestant;
+
+    /** @var SubmitHandlerFactory */
+    private $submitHandlerFactory;
 
     /**
      * SubmitsGrid constructor.
@@ -51,37 +47,35 @@ class SubmitsGrid extends BaseGrid {
 
     /**
      * @param ServiceSubmit $serviceSubmit
-     * @param CorrectedStorage $correctedStorage
-     * @param UploadedStorage $uploadedStorage
+     * @param SubmitHandlerFactory $submitHandlerFactory
      * @return void
      */
-    public function injectPrimary(ServiceSubmit $serviceSubmit, CorrectedStorage $correctedStorage, UploadedStorage $uploadedStorage) {
+    public function injectPrimary(ServiceSubmit $serviceSubmit, SubmitHandlerFactory $submitHandlerFactory) {
         $this->serviceSubmit = $serviceSubmit;
-        $this->correctedStorage = $correctedStorage;
-        $this->uploadedStorage = $uploadedStorage;
+        $this->submitHandlerFactory = $submitHandlerFactory;
+    }
+
+    protected function getData(): IDataSource {
+        $submits = $this->serviceSubmit->getSubmits();
+        $submits->where('ct_id = ?', $this->contestant->ct_id); //TODO year + contest?
+        return new NDataSource($submits);
     }
 
     /**
-     * @param $presenter
+     * @param Presenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
-        //
-        // data
-        //
-        $submits = $this->serviceSubmit->getSubmits();
-        $submits->where('ct_id = ?', $this->contestant->ct_id); //TODO year + contest?
 
-        $this->setDataSource(new NDataSource($submits));
         $this->setDefaultOrder('series DESC, tasknr ASC');
 
         //
         // columns
         //
         $this->addColumn('task', _('Task'))
-            ->setRenderer(function (ModelSubmit $row) use ($presenter) {
+            ->setRenderer(function (ModelSubmit $row) {
                 return $row->getTask()->getFQName();
             });
         $this->addColumn('submitted_on', _('Čas odevzdání'));
@@ -94,7 +88,7 @@ class SubmitsGrid extends BaseGrid {
             ->setClass('btn btn-sm btn-warning')
             ->setText(_('Cancel'))
             ->setShow(function (ModelSubmit $row) {
-                return $this->canRevoke($row);
+                return $row->canRevoke();
             })
             ->setLink(function (ModelSubmit $row) {
                 return $this->link('revoke!', $row->submit_id);
@@ -118,12 +112,12 @@ class SubmitsGrid extends BaseGrid {
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @throws InvalidLinkException
      */
     public function handleRevoke(int $id) {
         $logger = new MemoryLogger();
-        $this->traitHandleRevoke($logger, $id);
+        $this->submitHandlerFactory->handleRevoke($this->getPresenter(), $logger, $id);
         FlashMessageDump::dump($logger, $this);
     }
 
@@ -131,10 +125,12 @@ class SubmitsGrid extends BaseGrid {
      * @param int $id
      * @throws AbortException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws NotFoundException
      */
     public function handleDownloadUploaded(int $id) {
         $logger = new MemoryLogger();
-        $this->traitHandleDownloadUploaded($logger, $id);
+        $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $logger, $id);
         FlashMessageDump::dump($logger, $this);
     }
 
@@ -142,22 +138,12 @@ class SubmitsGrid extends BaseGrid {
      * @param int $id
      * @throws AbortException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws NotFoundException
      */
     public function handleDownloadCorrected(int $id) {
         $logger = new MemoryLogger();
-        $this->traitHandleDownloadCorrected($logger, $id);
+        $this->submitHandlerFactory->handleDownloadCorrected($this->getPresenter(), $logger, $id);
         FlashMessageDump::dump($logger, $this);
-    }
-
-    protected function getCorrectedStorage(): CorrectedStorage {
-        return $this->correctedStorage;
-    }
-
-    protected function getUploadedStorage(): UploadedStorage {
-        return $this->uploadedStorage;
-    }
-
-    protected function getServiceSubmit(): ServiceSubmit {
-        return $this->serviceSubmit;
     }
 }

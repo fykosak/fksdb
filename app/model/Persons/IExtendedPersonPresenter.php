@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons;
+namespace FKSDB\Persons;
 
 use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\AbstractModelSingle;
@@ -29,18 +29,12 @@ interface IExtendedPersonPresenter {
      */
     public function messageEdit(): string;
 
-    /**
-     * @return string
-     */
     public function messageError(): string;
 
-    /**
-     * @return string
-     */
     public function messageExists(): string;
 
     /**
-     * @param $message
+     * @param string $message
      * @param string $type
      * @return void
      */

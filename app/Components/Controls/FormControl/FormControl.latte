@@ -4,8 +4,8 @@
 {define errors}
     {if $form instanceof Nette\Forms\Form}
         {var $fieldErrors = []}
-        {foreach $form->getControls() as $control}
-            {foreach $control->getErrors() as $error}
+        {foreach $form->getControls() as $cont}
+            {foreach $cont->getErrors() as $error}
                 {var $fieldErrors[$error] = 1}
             {/foreach}
         {/foreach}
@@ -25,40 +25,38 @@
 {/define}
 
 {define plain}
-    <div n:class="form-group, $field->hasErrors() ? has-error, $field->isRequired() ? required" id="{$field->getHtmlId()}-pair">
+    <div n:class="form-group, $field->hasErrors() ? has-error, $field->isRequired() ? required"
+            id="{$field->getHtmlId()}-pair">
         {label $field/}
-        <div>
             {? $field->getControlPrototype()->addClass($field->getControlPrototype()->type!='file'?'form-control':'form-control-file')}
             {input $field}
             {include #metadata field => $field}
-        </div>
     </div>
 {/define}
 
 {define checkbox}
     <div n:class="form-group, $field->hasErrors() ? has-error" id="{$field->getHtmlId()}-pair">
-        <div>
-            <div class="checkbox">
-                {label $field}
-                    {input $field} {$field->getLabel()->setName(null)}
-                {/label}
-            </div>
-            {include #metadata field => $field}
+        <div class="form-check">
+            {? $field->getControlPrototype()->addAttributes(['class'=>'form-check-input'])}
+            {$field->getControlPart()}
+            {? $field->getLabelPrototype()->addAttributes(['class'=>'form-check-label'])}
+            {$field->getLabelPart()}
         </div>
+        {include #metadata field => $field}
     </div>
 {/define}
 
 {define radiolist}
     <div n:class="form-group, $field->hasErrors() ? has-error" id="{$field->getHtmlId()}-pair">
         {label $field /}
-        <div>
-            {foreach $field->getItems() as $key => $item}
-                <div class="form-check">
-                    <label>{$field->getControl($key)}</label>
-                </div>
-            {/foreach}
-            {include #metadata field => $field}
-        </div>
+        {foreach $field->getItems() as $key => $item}
+            {dump $field->getControlPart($key)}
+            <div class="form-check">
+                {$field->getControlPart($key)->addAttributes(['class'=>'form-check-input'])}
+                {$field->getLabelPart($key)->addAttributes(['class'=>'form-check-label'])}
+            </div>
+        {/foreach}
+        {include #metadata field => $field}
     </div>
 {/define}
 

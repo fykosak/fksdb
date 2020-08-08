@@ -13,7 +13,6 @@ use Nette\DI\Container;
 use Nette\DI\Helpers as DIHelpers;
 use Nette\DI\Statement;
 use Nette\Reflection\ClassType;
-use Nette\Utils\Arrays;
 use Traversable;
 
 /**
@@ -35,6 +34,7 @@ class Helpers {
 
     /**
      * @param array $semanticMap
+     * @return void
      */
     public static function registerSemantic(array $semanticMap) {
         self::$semanticMap += $semanticMap;
@@ -52,7 +52,7 @@ class Helpers {
             foreach ($expression->arguments as $attribute) {
                 $arguments[] = self::statementFromExpression($attribute);
             }
-            $class = Arrays::get(self::$semanticMap, $expression->entity, $expression->entity);
+            $class = self::$semanticMap[$expression->entity] ?? $expression->entity;
             if (function_exists($class)) { // workaround for Nette interpretation of entities
                 $class = ['', $class];
             }
@@ -84,9 +84,9 @@ class Helpers {
                 $arguments[] = self::evalExpression($attribute, $container);
             }
 
-            $entity = Arrays::get(self::$semanticMap, $expression->entity, $expression->entity);
+            $entity = self::$semanticMap[$expression->entity] ?? $expression->entity;
             if (function_exists($entity)) {
-                return call_user_func_array($entity, $arguments);
+                return $entity(...$arguments);
             } else {
                 $rc = ClassType::from($entity);
                 return $rc->newInstanceArgs(DIHelpers::autowireArguments($rc->getConstructor(), $arguments, $container));
@@ -97,12 +97,12 @@ class Helpers {
     }
 
     /**
-     * @param $expressionArray
+     * @param iterable $expressionArray
      * @param Container $container
      * @return array|mixed
      */
     public static function evalExpressionArray($expressionArray, Container $container) {
-        if ($expressionArray instanceof Traversable || is_array($expressionArray)) {
+        if ($expressionArray instanceof Traversable || is_array($expressionArray)) { // TODO replace with is_iterable
             $result = [];
             foreach ($expressionArray as $key => $expression) {
                 $result[$key] = self::evalExpressionArray($expression, $container);
@@ -112,5 +112,4 @@ class Helpers {
             return self::evalExpression($expressionArray, $container);
         }
     }
-
 }

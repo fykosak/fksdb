@@ -20,7 +20,7 @@ trait WithEventTrait {
      * @throws \InvalidArgumentException
      */
     protected function getEvent($obj): ModelEvent {
-        return ($holder = $this->getHolder($obj)) ? $holder->getPrimaryHolder()->getEvent() : null;
+        return $this->getHolder($obj)->getPrimaryHolder()->getEvent();
     }
 
     /**

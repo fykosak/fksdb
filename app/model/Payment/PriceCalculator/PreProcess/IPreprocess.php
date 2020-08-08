@@ -6,8 +6,8 @@ use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\Price;
 
 /**
- * Class AbstractPreProcess
- * *
+ * Interface IPreprocess
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 interface IPreprocess {
 

@@ -33,14 +33,10 @@ class UploadedStorage implements ISubmitStorage {
      */
     const FINAL_EXT = '.pdf';
 
-    /**
-     * @var null
-     */
+    /** @var null */
     private $todo = null;
 
-    /**
-     * @var string  Absolute path to (existing) directory of the storage.
-     */
+    /** @var string  Absolute path to (existing) directory of the storage. */
     private $root;
 
     /**
@@ -57,22 +53,18 @@ class UploadedStorage implements ISubmitStorage {
      */
     private $filenameMask;
 
-    /**
-     * @var array   contestId => contest name
-     */
+    /** @var array   contestId => contest name */
     private $contestMap;
 
-    /**
-     * @var IStorageProcessing[]
-     */
+    /** @var IStorageProcessing[] */
     private $processings = [];
 
     /**
      * FilesystemSubmitStorage constructor.
-     * @param $root
-     * @param $directoryMask
-     * @param $filenameMask
-     * @param $contestMap
+     * @param string $root
+     * @param string $directoryMask
+     * @param string $filenameMask
+     * @param array $contestMap
      */
     public function __construct($root, $directoryMask, $filenameMask, $contestMap) {
         $this->root = $root;
@@ -113,7 +105,7 @@ class UploadedStorage implements ISubmitStorage {
                 $filename = $todo['file'];
 
                 $dest = $this->root . DIRECTORY_SEPARATOR . $this->createDirname($submit) . DIRECTORY_SEPARATOR . $this->createFilename($submit);
-                @mkdir(dirname($dest), 0777, TRUE); // @ - dir may already exist
+                @mkdir(dirname($dest), 0777, true); // @ - dir may already exist
 
                 if (count($this->processings) > 0) {
                     $original = $dest . self::ORIGINAL_EXT;
@@ -207,7 +199,7 @@ class UploadedStorage implements ISubmitStorage {
      * @param ModelSubmit $submit
      * @return bool
      */
-    public function fileExists(ModelSubmit $submit) {
+    public function fileExists(ModelSubmit $submit): bool {
         return (bool)$this->retrieveFile($submit);
     }
 
@@ -248,16 +240,12 @@ class UploadedStorage implements ISubmitStorage {
      * @param ModelSubmit $submit
      * @return string  directory part of the path relative to root, w/out trailing slash
      */
-    private function createDirname(ModelSubmit $submit) {
+    private function createDirname(ModelSubmit $submit): string {
         $task = $submit->getTask();
         return sprintf($this->directoryMask, $task->getContest()->getContestSymbol(), $task->year, $task->series, $task->webalizeLabel());
     }
 
-    /**
-     * @param ModelSubmit $submit
-     * @return string
-     */
-    private function createFilename(ModelSubmit $submit) {
+    private function createFilename(ModelSubmit $submit): string {
         $task = $submit->getTask();
 
         $contestantName = $submit->getContestant()->getPerson()->getFullName();

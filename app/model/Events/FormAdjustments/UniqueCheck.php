@@ -18,21 +18,17 @@ use Nette\Forms\IControl;
  */
 class UniqueCheck extends AbstractAdjustment {
 
-    /**
-     * @var
-     */
+    /** @var string */
     private $field;
-    /**
-     * @var
-     */
+    /** @var string */
     private $message;
 
     /**
      * UniqueCheck constructor.
-     * @param $field
-     * @param $message
+     * @param string $field
+     * @param string $message
      */
-    public function __construct($field, $message) {
+    public function __construct(string $field, string $message) {
         $this->field = $field;
         $this->message = $message;
     }
@@ -50,12 +46,11 @@ class UniqueCheck extends AbstractAdjustment {
         }
 
         foreach ($controls as $name => $control) {
-            $field = $this->field;
             $name = $holder->hasBaseHolder($name) ? $name : substr($this->field, 0, strpos($this->field, self::DELIMITER));
             $baseHolder = $holder->getBaseHolder($name);
-            $control->addRule(function (IControl $control) use ($baseHolder, $field) {
+            $control->addRule(function (IControl $control) use ($baseHolder) {
                 $table = $baseHolder->getService()->getTable();
-                $column = BaseHolder::getBareColumn($field);
+                $column = BaseHolder::getBareColumn($this->field);
                 if ($control instanceof ReferencedId) {
                     /* We don't want to fullfil potential promise
                      * as it would be out of transaction here.

@@ -7,11 +7,11 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\DataTesting\DataTestingFactory;
 use FKSDB\DataTesting\Tests\Person\PersonTest;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
-use FKSDB\DataTesting\TestsLogger;
 use FKSDB\DataTesting\TestLog;
-use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
 
 /**
@@ -42,13 +42,9 @@ class PersonTestControl extends BaseComponent {
      * @persistent
      */
     public $levels = [];
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     private $servicePerson;
-    /**
-     * @var DataTestingFactory
-     */
+    /** @var DataTestingFactory */
     private $dataTestingFactory;
 
     /**
@@ -63,15 +59,15 @@ class PersonTestControl extends BaseComponent {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
-    public function createComponentForm() {
+    protected function createComponentForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
-        $form->addText('start_id', _('From person_id'))
+        $form->addText('start_id', sprintf(_('From %s'), 'person_id'))
             ->addRule(Form::INTEGER)
             ->setDefaultValue($this->startId);
-        $form->addText('end_id', _('To person_id'))
+        $form->addText('end_id', sprintf(_('To %s'), 'person_id'))
             ->addRule(Form::INTEGER)
             ->setDefaultValue($this->endId);
         $levelsContainer = new ContainerWithOptions();
@@ -99,20 +95,20 @@ class PersonTestControl extends BaseComponent {
         $form->onSuccess[] = function (Form $form) {
             $values = $form->getValues();
             $this->levels = [];
-            foreach ($values->levels as $level => $value) {
+            foreach ($values['levels'] as $level => $value) {
                 if ($value) {
                     $this->levels[] = $level;
                 }
             }
 
             $this->tests = [];
-            foreach ($values->tests as $testId => $value) {
+            foreach ($values['tests'] as $testId => $value) {
                 if ($value) {
-                    $this->tests[] = $this->availableTests[$testId];
+                    $this->tests[] = $this->dataTestingFactory->getTests('person')[$testId];
                 }
             }
-            $this->startId = $values->start_id;
-            $this->endId = $values->end_id;
+            $this->startId = $values['start_id'];
+            $this->endId = $values['end_id'];
 
         };
         return $control;
@@ -127,11 +123,11 @@ class PersonTestControl extends BaseComponent {
         /** @var ModelPerson $model */
         foreach ($query as $model) {
 
-            $logger = new TestsLogger();
+            $logger = new MemoryLogger();
             foreach ($this->tests as $test) {
                 $test->run($logger, $model);
             }
-            $personLog = \array_filter($logger->getLogs(), function (TestLog $simpleLog) {
+            $personLog = \array_filter($logger->getMessages(), function (TestLog $simpleLog) {
                 return \in_array($simpleLog->getLevel(), $this->levels);
             });
             if (\count($personLog)) {
@@ -149,14 +145,5 @@ class PersonTestControl extends BaseComponent {
         $this->template->logs = $this->calculateProblems();
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
-    }
-
-    /**
-     * @param $page
-     * @return void
-     */
-    public function handleChangePage($page) {
-        $this->page = $page;
-        $this->invalidateControl();
     }
 }

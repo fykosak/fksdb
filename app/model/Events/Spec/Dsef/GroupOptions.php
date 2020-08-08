@@ -17,27 +17,17 @@ use FKSDB\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 class GroupOptions implements IOptionsProvider {
     use SmartObject;
 
-    /**
-     * @var ServiceMDsefParticipant
-     */
+    /** @var ServiceMDsefParticipant */
     private $serviceMParticipant;
 
-    /**
-     * @var ServiceDsefGroup
-     */
+    /** @var ServiceDsefGroup */
     private $serviceDsefGroup;
-    /**
-     * @var array|string
-     */
+    /** @var array|string */
     private $includeStates;
-    /**
-     * @var array|string|string[]
-     */
+    /** @var array|string|string[] */
     private $excludeStates;
 
-    /**
-     * @var array  eventId => groups cache
-     */
+    /** @var array  eventId => groups cache */
     private $groups = [];
 
     /**
@@ -56,7 +46,7 @@ class GroupOptions implements IOptionsProvider {
     }
 
     /**
-     * @param $groups
+     * @param iterable $groups
      * @return array
      */
     private function transformGroups($groups) {
@@ -64,14 +54,14 @@ class GroupOptions implements IOptionsProvider {
         foreach ($groups as $name => $capacity) {
             $result[] = [
                 'label' => $name,
-                'capacity' => $capacity
+                'capacity' => $capacity,
             ];
         }
         return $result;
     }
 
     /**
-     * @param $eventId
+     * @param int $eventId
      * @return mixed
      */
     private function getGroups($eventId) {
@@ -84,11 +74,7 @@ class GroupOptions implements IOptionsProvider {
         return $this->groups[$eventId];
     }
 
-    /**
-     * @param Field $field
-     * @return array
-     */
-    public function getOptions(Field $field) {
+    public function getOptions(Field $field): array {
         $baseHolder = $field->getBaseHolder();
         $event = $baseHolder->getEvent();
         $application = $baseHolder->getModel();

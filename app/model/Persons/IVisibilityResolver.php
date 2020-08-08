@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons;
+namespace FKSDB\Persons;
 
 use FKSDB\ORM\Models\ModelPerson;
 
@@ -11,9 +11,5 @@ use FKSDB\ORM\Models\ModelPerson;
  */
 interface IVisibilityResolver {
 
-    /**
-     * @param ModelPerson $person
-     * @return bool
-     */
     public function isVisible(ModelPerson $person): bool;
 }

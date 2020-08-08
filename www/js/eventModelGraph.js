@@ -1,32 +1,32 @@
-function initRenderer(r, node) {
-    const ellipse = r.ellipse(0, 0, 8, 8).attr({
-        fill: '#000',
-        stroke: '#000',
-        "stroke-width": 0
-    });
-    /* set DOM node ID */
-    ellipse.node.id = node.label || node.id;
-    return r.set().push(ellipse);
-}
+$(() => {
+    const initRenderer = (r, node) => {
+        const ellipse = r.ellipse(0, 0, 8, 8).attr({
+            fill: '#000',
+            stroke: '#000',
+            "stroke-width": 0
+        });
+        /* set DOM node ID */
+        ellipse.node.id = node.label || node.id;
+        return r.set().push(ellipse);
+    };
 
-function terminatedRenderer(r, node) {
-    const inner = r.ellipse(0, 0, 5, 5).attr({
-        fill: '#000',
-        stroke: '#000',
-        "stroke-width": 0
-    });
+    const terminatedRenderer = (r, node) => {
+        const inner = r.ellipse(0, 0, 5, 5).attr({
+            fill: '#000',
+            stroke: '#000',
+            "stroke-width": 0
+        });
 
-    const outer = r.ellipse(0, 0, 10, 10).attr({
-        fill: null,
-        stroke: '#000',
-        "stroke-width": 2
-    });
-    /* set DOM node ID */
-    inner.node.id = node.label || node.id;
-    return r.set().push(inner).push(outer);
-}
+        const outer = r.ellipse(0, 0, 10, 10).attr({
+            fill: null,
+            stroke: '#000',
+            "stroke-width": 2
+        });
+        /* set DOM node ID */
+        inner.node.id = node.label || node.id;
+        return r.set().push(inner).push(outer);
+    };
 
-$(function () {
     const componentId = 'graph-graphComponent';
     const component = document.getElementById(componentId);
     if (component) {
@@ -69,6 +69,4 @@ $(function () {
         var renderer = new Graph.Renderer.Raphael(component, graph, $(component).width(), 600);
         renderer.draw();
     }
-
 });
-

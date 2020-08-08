@@ -1,10 +1,10 @@
 <?php
 
-namespace Authentication;
+namespace FKSDB\Authentication;
 
-use AuthenticatedPresenter;
-use Authentication\SSO\GlobalSession;
-use AuthenticationPresenter;
+use FKSDB\Modules\Core\AuthenticatedPresenter;
+use FKSDB\Authentication\SSO\GlobalSession;
+use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\YearCalculator;
@@ -40,24 +40,16 @@ class LoginUserStorage extends UserStorage {
     /** @var YearCalculator */
     private $yearCalculator;
 
-    /**
-     * @var GlobalSession
-     */
+    /** @var GlobalSession */
     private $globalSession;
 
-    /**
-     * @var Application
-     */
+    /** @var Application */
     private $application;
 
-    /**
-     * @var IPresenter
-     */
+    /** @var IPresenter */
     private $presenter;
 
-    /**
-     * @var Request
-     */
+    /** @var Request */
     private $request;
 
     /**
@@ -99,7 +91,7 @@ class LoginUserStorage extends UserStorage {
     }
 
     /**
-     * @param $state
+     * @param mixed $state
      * @return UserStorage|void
      */
     public function setAuthenticated($state) {
@@ -135,9 +127,7 @@ class LoginUserStorage extends UserStorage {
              * probably is not needed anymore.
              */
             //parent::setAuthenticated(false);
-            /**
-             * @var AuthenticatedPresenter $presenter
-             */
+            /** @var AuthenticatedPresenter $presenter */
             $presenter = $this->getPresenter();
             $ssoData = $presenter->getParameter(self::PARAM_SSO);
 
@@ -155,7 +145,7 @@ class LoginUserStorage extends UserStorage {
                         AuthenticationPresenter::PARAM_REASON => AuthenticationPresenter::REASON_AUTH,
                     ];
 
-                    $presenter->redirect(':Authentication:login', $params);
+                    $presenter->redirect(':Core:Authentication:login', $params);
                 }
             }
             return false;

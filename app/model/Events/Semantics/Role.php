@@ -2,8 +2,8 @@
 
 namespace FKSDB\Events\Semantics;
 
-use Authorization\ContestAuthorizator;
-use Authorization\RelatedPersonAuthorizator;
+use FKSDB\Authorization\ContestAuthorizator;
+use FKSDB\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Expressions\EvaluatedExpression;
 use Nette\Security\User;
 use Nette\SmartObject;
@@ -24,19 +24,13 @@ class Role extends EvaluatedExpression {
     const RELATED = 'related';
     const ADMIN = 'admin';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $role;
 
-    /**
-     * @var User
-     */
+    /** @var User */
     private $user;
 
-    /**
-     * @var ContestAuthorizator
-     */
+    /** @var ContestAuthorizator */
     private $contestAuthorizator;
 
     /**
@@ -47,7 +41,7 @@ class Role extends EvaluatedExpression {
 
     /**
      * Role constructor.
-     * @param $role
+     * @param int|null $role
      * @param User $user
      * @param ContestAuthorizator $contestAuthorizator
      * @param RelatedPersonAuthorizator $relatedAuthorizator

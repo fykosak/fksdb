@@ -2,16 +2,15 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEventOrg;
-use Nette\Application\BadRequestException;
-use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
 
 /**
  * Class EventOrgsGrid
@@ -19,13 +18,9 @@ use NiftyGrid\DuplicateGlobalButtonException;
  */
 class EventOrgsGrid extends BaseGrid {
 
-    /**
-     * @var ServiceEventOrg
-     */
+    /** @var ServiceEventOrg */
     private $serviceEventOrg;
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
 
     /**
@@ -36,52 +31,34 @@ class EventOrgsGrid extends BaseGrid {
     public function __construct(ModelEvent $event, Container $container) {
         parent::__construct($container);
         $this->event = $event;
-        $this->serviceEventOrg = $container->getByType(ServiceEventOrg::class);
     }
 
     /**
-     * @param \AuthenticatedPresenter $presenter
-     * @throws BadRequestException
-     * @throws InvalidLinkException
+     * @param ServiceEventOrg $serviceEventOrg
+     * @return void
+     */
+    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
+        $this->serviceEventOrg = $serviceEventOrg;
+    }
+
+    protected function getData(): IDataSource {
+        $orgs = $this->serviceEventOrg->findByEvent($this->event);
+        return new NDataSource($orgs);
+    }
+
+    /**
+     * @param Presenter $presenter
+     * @return void
+     * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws DuplicateGlobalButtonException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter) {
         parent::configure($presenter);
-
-        $orgs = $this->serviceEventOrg->findByEvent($this->event);
-
-        $dataSource = new NDataSource($orgs);
-        $this->setDataSource($dataSource);
-        $this->addColumns(['referenced.person_name']);
-        $this->addColumn('note', _('Note'));
-        $this->addButton('edit', _('Edit'))->setText(_('Edit'))
-            ->setLink(function (ModelEventOrg $model) {
-                return $this->getPresenter()->link(':Org:EventOrg:edit', [
-                    'id' => $model->e_org_id,
-                    'contestId' => $model->getEvent()->getEventType()->contest_id,
-                    'year' => $model->getEvent()->year,
-                    'eventId' => $model->getEvent()->event_id,
-                ]);
-            });
-
-        $this->addButton('delete')->setText(_('Delete'))
-            ->setLink(function (ModelEventOrg $model) {
-                return $this->getPresenter()->link('delete', $model->getPrimary());
-            });
-
-        if ($this->getPresenter()->authorized('create')) {
-            $this->addGlobalButton('create')
-                ->setLabel(_('Add organiser'))
-                ->setLink($this->getPresenter()->link(':Org:EventOrg:create'));
-        }
-    }
-
-    /**
-     * @return string
-     */
-    protected function getModelClassName(): string {
-        return ModelEventOrg::class;
+        $this->addColumns(['person.full_name', 'event_org.note']);
+        $this->addLink('event_org.edit');
+      //  $this->addLinkButton('edit', 'edit', _('Edit'), false, ['id' => 'e_org_id']);
+        // $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'e_org_id']);
+        //  $this->addLinkButton('delete','delete',_('Delete'),false,['id' => 'e_org_id']);
     }
 }

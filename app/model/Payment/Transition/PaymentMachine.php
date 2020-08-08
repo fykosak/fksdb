@@ -17,22 +17,17 @@ use Nette\Database\Context;
  * *
  */
 class PaymentMachine extends Machine {
-    /**
-     * @var PriceCalculator
-     */
+    /** @var PriceCalculator */
     private $priceCalculator;
-    /**
-     * @var AbstractSymbolGenerator
-     */
+    /** @var AbstractSymbolGenerator */
     private $symbolGenerator;
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
-    /**
-     * @var ServiceEvent
-     */
+    /** @var ServiceEvent */
     private $serviceEvent;
+
+    /** @var string[] */
+    private $scheduleGroupTypes;
 
     /**
      * PaymentMachine constructor.
@@ -59,6 +54,18 @@ class PaymentMachine extends Machine {
      */
     public function setEventId(int $eventId) {
         $this->event = $this->serviceEvent->findByPrimary($eventId);
+    }
+
+    /**
+     * @param array $types
+     * @return void
+     */
+    public function setScheduleGroupTypes(array $types) {
+        $this->scheduleGroupTypes = $types;
+    }
+
+    public function getScheduleGroupTypes(): array {
+        return $this->scheduleGroupTypes;
     }
 
     /**

@@ -6,7 +6,7 @@ use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Services\ServiceStudyYear;
 use FKSDB\ORM\Services\ServiceTaskStudyYear;
-use Pipeline\Stage;
+use FKSDB\Pipeline\Stage;
 use SimpleXMLElement;
 
 /**
@@ -20,29 +20,21 @@ class StudyYearsFromXML extends Stage {
 
     const XML_ELEMENT_CHILD = 'study-year';
 
-    /**
-     * @var SeriesData
-     */
+    /** @var SeriesData */
     private $data;
 
-    /**
-     * @var array   contribution type => xml element
-     */
+    /** @var array   contribution type => xml element */
     private $defaultStudyYears;
 
-    /**
-     * @var ServiceTaskStudyYear
-     */
+    /** @var ServiceTaskStudyYear */
     private $serviceTaskStudyYear;
 
-    /**
-     * @var ServiceStudyYear
-     */
+    /** @var ServiceStudyYear */
     private $serviceStudyYear;
 
     /**
      * StudyYearsFromXML2 constructor.
-     * @param $defaultStudyYears
+     * @param iterable $defaultStudyYears
      * @param ServiceTaskStudyYear $serviceTaskStudyYear
      * @param ServiceStudyYear $serviceStudyYear
      */
@@ -128,9 +120,6 @@ class StudyYearsFromXML extends Stage {
                 'study_year' => $studyYear,
             ]);
         }
-
-
         $this->serviceTaskStudyYear->getConnection()->commit();
     }
-
 }

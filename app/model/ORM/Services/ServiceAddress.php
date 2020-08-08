@@ -2,20 +2,20 @@
 
 namespace FKSDB\ORM\Services;
 
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelAddress;
 use FKSDB\ORM\Models\ModelRegion;
-use InvalidPostalCode;
-use Nette\InvalidArgumentException;
+use FKSDB\ORM\Services\Exception\InvalidPostalCode;
 use Tracy\Debugger;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceAddress extends AbstractServiceSingle {
+    use DeprecatedLazyDBTrait;
 
     const PATTERN = '/[0-9]{5}/';
 
@@ -28,31 +28,21 @@ class ServiceAddress extends AbstractServiceSingle {
     }
 
     /**
-     * @param array|iterable|\ArrayAccess $data
+     * @param array $data
      * @return ModelAddress
      */
-    public function createNewModel($data = null): AbstractModelSingle {
-        if (!isset($data['region_id'])) {
+    public function createNewModel(array $data): IModel {
+        if (!isset($data['region_id']) || is_null($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }
         return parent::createNewModel($data);
     }
 
-    /**
-     * @param IModel $model
-     * @return void
-     * @deprecated
-     */
-    public function save(IModel &$model) {
-        $modelClassName = $this->getModelClassName();
-        if (!$model instanceof $modelClassName) {
-            throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
+    public function updateModel2(IModel $model, array $data): bool {
+        if (!isset($data['region_id']) || is_null($data['region_id'])) {
+            $data['region_id'] = $this->inferRegion($data['postal_code']);
         }
-        /** @var ModelAddress $model */
-        if (is_null($model->region_id)) {
-            $model->region_id = $this->inferRegion($model->postal_code);
-        }
-        parent::save($model);
+        return parent::updateModel2($model, $data);
     }
 
     /**

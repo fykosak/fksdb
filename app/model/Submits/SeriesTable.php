@@ -22,34 +22,22 @@ class SeriesTable {
     const FORM_SUBMIT = 'submit';
     const FORM_CONTESTANT = 'contestant';
 
-    /**
-     * @var ServiceContestant
-     */
+    /** @var ServiceContestant */
     private $serviceContestant;
 
-    /**
-     * @var ServiceTask
-     */
+    /** @var ServiceTask */
     private $serviceTask;
 
-    /**
-     * @var ServiceSubmit
-     */
+    /** @var ServiceSubmit */
     private $serviceSubmit;
 
-    /**
-     * @var ModelContest
-     */
+    /** @var ModelContest */
     private $contest;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $year;
 
-    /**
-     * @var int
-     */
+    /** @var int */
     private $series;
 
     /**
@@ -183,9 +171,7 @@ class SeriesTable {
         $fingerprint = '';
         foreach ($this->getSubmitsTable() as $submits) {
             foreach ($submits as $submit) {
-                /**
-                 * @var ModelSubmit $submit
-                 */
+                /** @var ModelSubmit $submit */
                 $fingerprint .= $submit->getFingerprint();
             }
         }

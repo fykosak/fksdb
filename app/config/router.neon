@@ -64,6 +64,7 @@ fksrouter:
         # Central authentication domain (+ logout must be enabled at each domain too)
         -
             mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%<action logout>'
+            module: Core
             presenter: Authentication
             subdomain: %subdomain.db%
             tld: %domain.tld%
@@ -71,6 +72,7 @@ fksrouter:
 
         -
             mask: '//%subdomain.auth%.%domain.cz%%path%<action login|logout|fb-login|recover>'
+            module: Core
             presenter: Authentication
             subdomain: %subdomain.auth%
             tld: %domain.tld%
@@ -96,6 +98,7 @@ fksrouter:
 
         -
             mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%'
+            module: Core
             subdomain: %subdomain.db%
             presenter: Dispatch
             tld: %domain.tld%
@@ -106,6 +109,7 @@ fksrouter:
         -
             mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/]<presenter %rootPresenters%>/<action=default>[/<id>]'
             subdomain: %subdomain.db%
+            module: Core
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
             flags: SECURED
@@ -135,15 +139,7 @@ fksrouter:
             flags: SECURED
 
         -
-            mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%f[<eventId [0-9]+>]/s/q[/<id>]'
-            subdomain: %subdomain.db%
-            presenter: Submit
-            action: qrEntry
-            tld: %domain.tld%
-            module: Fyziklani
-            flags: SECURED
-        -
-            mask:  '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/][series<series [0-9]+>/]<module %modules%>/<presenter>/<action=default>[/<id>]'
+            mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/][series<series [0-9]+>/]<module %modules%>/<presenter>/<action=default>[/<id>]'
             presenter: Dashboard
             subdomain: %subdomain.db%
             tld: %domain.tld%

@@ -7,7 +7,7 @@ use Nette\Http\Response;
 
 /**
  * Class NotFoundException
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class NotFoundException extends BadRequestException {
     /**
@@ -15,7 +15,7 @@ class NotFoundException extends BadRequestException {
      * @param string $message
      * @param \Exception|NULL $previous
      */
-    public function __construct($message = '', \Exception $previous = NULL) {
-        parent::__construct($message ?: 'Page no found', Response::S404_NOT_FOUND, $previous);
+    public function __construct($message = '', \Exception $previous = null) {
+        parent::__construct($message ?: 'Resource no found', Response::S404_NOT_FOUND, $previous);
     }
 }

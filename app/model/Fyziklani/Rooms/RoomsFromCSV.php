@@ -7,8 +7,8 @@ use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\Utils\CSVParser;
-use Pipeline\PipelineException;
-use Pipeline\Stage;
+use FKSDB\Pipeline\PipelineException;
+use FKSDB\Pipeline\Stage;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -17,19 +17,13 @@ use Pipeline\Stage;
  */
 class RoomsFromCSV extends Stage {
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $data;
 
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
 
-    /**
-     * @var ServiceFyziklaniTeam
-     */
+    /** @var ServiceFyziklaniTeam */
     private $serviceTeam;
 
     /**

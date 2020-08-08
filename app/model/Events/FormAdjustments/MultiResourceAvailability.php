@@ -11,6 +11,7 @@ use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\AbstractServiceSingle;
 use Nette\Database\Context;
 use Nette\Forms\Form;
+use Nette\Forms\IControl;
 use Nette\Utils\Html;
 
 /**
@@ -20,34 +21,22 @@ use Nette\Utils\Html;
  */
 class MultiResourceAvailability extends AbstractAdjustment {
 
-    /**
-     * @var array fields that specifies amount used (string masks)
-     */
+    /** @var array fields that specifies amount used (string masks) */
     private $fields;
 
-    /**
-     * @var string Name of event parameter that hold overall capacity.
-     */
+    /** @var string Name of event parameter that hold overall capacity. */
     private $paramCapacity;
-    /**
-     * @var array|string
-     */
+    /** @var array|string */
     private $includeStates;
-    /**
-     * @var array|string|string[]
-     */
+    /** @var array|string|string[] */
     private $excludeStates;
-    /**
-     * @var string
-     */
+    /** @var string */
     private $message;
-    /**
-     * @var Context
-     */
+    /** @var Context */
     private $database;
 
     /**
-     * @param $fields
+     * @param array|string $fields
      * @return void
      */
     private function setFields($fields) {
@@ -170,7 +159,6 @@ class MultiResourceAvailability extends AbstractAdjustment {
             }
         }
 
-
         foreach ($controls as $control) {
             $newItems = [];
             $items = $control->getItems();
@@ -187,6 +175,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
 
         $form->onValidate[] = function (Form $form) use ($capacities, $usage, $controls) {
             $controlsUsages = [];
+            /** @var IControl $control */
             foreach ($controls as $control) {
                 $k = $control->getValue();
                 /** kontrola ak je k null nieje zaujem o ubytovanie*/

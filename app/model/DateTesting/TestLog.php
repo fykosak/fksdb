@@ -8,16 +8,12 @@ use Nette\Utils\Html;
 
 /**
  * Class TestLog
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TestLog extends Message {
-    /**
-     * @var Html
-     */
+    /** @var Html|null */
     public $detail;
-    /**
-     * @var string
-     */
+    /** @var string */
     public $testName;
 
     /**
@@ -55,7 +51,7 @@ class TestLog extends Message {
             case self::LVL_SUCCESS:
                 return 'fa fa-check';
             default:
-                throw new NotImplementedException(\sprintf('%s is not supported', $this->getLevel()));
+                throw new NotImplementedException(\sprintf('Level "%s" is not supported', $this->getLevel()));
         }
     }
 

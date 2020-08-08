@@ -1,5 +1,8 @@
 <?php
 
+namespace FKSDB\ORM\Services\Exception;
+use InvalidArgumentException;
+
 /**
  * Class InvalidPostalCode
  */
@@ -7,7 +10,7 @@ class InvalidPostalCode extends InvalidArgumentException {
 
     /**
      * InvalidPostalCode constructor.
-     * @param $postalCode
+     * @param string $postalCode
      * @param null $code
      * @param null $previous
      */

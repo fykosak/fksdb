@@ -15,7 +15,7 @@ use Nette\Application\UI\Form;
  */
 abstract class SeriesTableFormControl extends SeriesTableComponent {
 
-    public function createComponentForm(): OptimisticForm {
+    protected function createComponentForm(): OptimisticForm {
         $form = new OptimisticForm(
             function () {
                 return $this->getSeriesTable()->getFingerprint();

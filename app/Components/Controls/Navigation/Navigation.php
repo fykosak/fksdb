@@ -5,6 +5,7 @@ namespace FKSDB\Components\Controls\Navigation;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\PresenterBuilder;
 use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -19,22 +20,16 @@ use ReflectionMethod;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Navigation extends BaseComponent {
-    /**
-     * @var array
-     */
+    /** @var array[] */
     private $nodes = [];
-    /**
-     * @var array
-     */
+
+    /** @var array */
     private $nodeChildren = [];
 
-    /**
-     * @var PresenterBuilder
-     */
+    /** @var PresenterBuilder */
     private $presenterBuilder;
-    /**
-     * @var array
-     */
+
+    /** @var array */
     private $structure;
 
     /**
@@ -48,22 +43,16 @@ class Navigation extends BaseComponent {
     }
 
     /**
-     * @param $nodeId
-     * @return int|string
+     * @param string|int $nodeId
+     * @return array
      */
-    public function getNode($nodeId) {
+    public function getNode(string $nodeId) {
         return $this->nodes[$nodeId];
     }
 
-    /**
-     * @param mixed $node
-     * @return bool
-     */
-    public function isActive(\stdClass $node): bool {
-        if (isset($node->linkPresenter)) {
-            /**
-             * @var \BasePresenter $presenter
-             */
+    public function isActive(array $node): bool {
+        if (isset($node['linkPresenter'])) {
+            /** @var BasePresenter $presenter */
             $presenter = $this->getPresenter();
             try {
                 $this->createLink($presenter, $node);
@@ -79,10 +68,10 @@ class Navigation extends BaseComponent {
             return true;
         }
 // try children
-        if (!isset($this->nodeChildren[$node->nodeId])) {
+        if (!isset($this->nodeChildren[$node['nodeId']])) {
             return false;
         }
-        foreach ($this->nodeChildren[$node->nodeId] as $childId) {
+        foreach ($this->nodeChildren[$node['nodeId']] as $childId) {
             if ($this->isActive($this->nodes[$childId])) {
                 return true;
             }
@@ -91,17 +80,18 @@ class Navigation extends BaseComponent {
     }
 
     /**
-     * @param \stdClass $node
+     * @param array $node
      * @return bool
-     * @throws BadRequestException
+     * @throws BadTypeException
      * @throws \ReflectionException
+     * @throws BadRequestException
      */
-    public function isVisible(\stdClass $node): bool {
-        if (isset($node->visible)) {
-            return $node->visible;
+    public function isVisible(array $node): bool {
+        if (isset($node['visible'])) {
+            return $node['visible'];
         }
 
-        if (isset($node->linkPresenter)) {
+        if (isset($node['linkPresenter'])) {
             return $this->isAllowed($this->getPresenter(), $node);
         }
 
@@ -109,16 +99,19 @@ class Navigation extends BaseComponent {
     }
 
     /**
-     * @param $node
+     * @param array $node
      * @return PageTitle
+     *
+     *
      * @throws BadRequestException
+     * @throws BadTypeException
      */
-    public function getTitle(\stdClass $node): PageTitle {
-        if (isset($node->title)) {
-            return new PageTitle($node->title, $node->icon);
+    public function getTitle(array $node): PageTitle {
+        if (isset($node['title'])) {
+            return new PageTitle($node['title'], $node['icon']);
         }
-        if (isset($node->linkPresenter)) {
-            $presenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
+        if (isset($node['linkPresenter'])) {
+            $presenter = $this->preparePresenter($node['linkPresenter'], $node['linkAction'], $node['linkParams']);
             $presenter->setView($presenter->getView()); // to force update the title
 
             return $presenter->getTitle();
@@ -127,44 +120,43 @@ class Navigation extends BaseComponent {
     }
 
     /**
-     * @param \stdClass $node
+     * @param array $node
      * @return null|string
-     * @throws BadRequestException
+     * @throws BadTypeException
      * @throws InvalidLinkException
      * @throws \ReflectionException
+     * @throws BadRequestException
      */
-    public function getLink(\stdClass $node) {
-        if (isset($node->link)) {
-            return $node->link;
+    public function getLink(array $node) {
+        if (isset($node['link'])) {
+            return $node['link'];
         }
-        if (isset($node->linkPresenter)) {
-            $presenter = $this->getPresenter();
-            return $this->createLink($presenter, $node);
+        if (isset($node['linkPresenter'])) {
+            return $this->createLink($this->getPresenter(), $node);
         }
         return null;
     }
 
     /**
-     * @param $structure
+     * @param array $structure
      * @return void
      */
-    public function setStructure($structure) {
+    public function setStructure(array $structure) {
         $this->structure = $structure;
     }
 
     /**
-     * @param $nodeId
-     * @param $arguments
+     * @param string $nodeId
+     * @param array $arguments
      * @return void
      */
-    public function createNode($nodeId, $arguments) {
-        $node = (object)$arguments;
-        $this->nodes[$nodeId] = $node;
+    public function createNode(string $nodeId, array $arguments) {
+        $this->nodes[$nodeId] = $arguments;
     }
 
     /**
-     * @param $idChild
-     * @param $idParent
+     * @param string|int $idChild
+     * @param string|int $idParent
      * @return void
      */
     public function addParent($idChild, $idParent) {
@@ -203,36 +195,38 @@ class Navigation extends BaseComponent {
 
     /**
      * @param Presenter $presenter
-     * @param \stdClass $node
+     * @param array $node
      * @return string
      * @throws BadRequestException
+     * @throws BadTypeException
      * @throws InvalidLinkException
      * @throws \ReflectionException
      */
-    private function createLink(Presenter $presenter, \stdClass $node): string {
-        $linkedPresenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
-        $linkParams = $this->actionParams($linkedPresenter, $node->linkAction, $node->linkParams);
+    private function createLink(Presenter $presenter, array $node): string {
+        $linkedPresenter = $this->preparePresenter($node['linkPresenter'], $node['linkAction'], $node['linkParams']);
+        $linkParams = $this->actionParams($linkedPresenter, $node['linkAction'], $node['linkParams']);
 
-        return $presenter->link(':' . $node->linkPresenter . ':' . $node->linkAction, $linkParams);
+        return $presenter->link(':' . $node['linkPresenter'] . ':' . $node['linkAction'], $linkParams);
     }
 
     /**
      * @param Presenter $presenter
-     * @param \stdClass $node
+     * @param array $node
      * @return bool
      * @throws BadRequestException
+     * @throws BadTypeException
      * @throws \ReflectionException
      */
-    private function isAllowed(Presenter $presenter, \stdClass $node): bool {
-        $allowedPresenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
-        $allowedParams = $this->actionParams($allowedPresenter, $node->linkAction, $node->linkParams);
-        return $presenter->authorized(':' . $node->linkPresenter . ':' . $node->linkAction, $allowedParams);
+    private function isAllowed(Presenter $presenter, array $node): bool {
+        $allowedPresenter = $this->preparePresenter($node['linkPresenter'], $node['linkAction'], $node['linkParams']);
+        $allowedParams = $this->actionParams($allowedPresenter, $node['linkAction'], $node['linkParams']);
+        return $presenter->authorized(':' . $node['linkPresenter'] . ':' . $node['linkAction'], $allowedParams);
     }
 
     /**
      * @param Presenter $presenter
-     * @param $actionParams
-     * @param $params
+     * @param string $actionParams
+     * @param array $params
      * @return array
      * @throws \ReflectionException
      */
@@ -254,13 +248,16 @@ class Navigation extends BaseComponent {
     /**
      * @param string $presenterName
      * @param string $action
-     * @param $providedParams
+     * @param string $providedParams
      * @return Presenter|INavigablePresenter
+     *
+     *
      * @throws BadRequestException
+     * @throws BadTypeException
      */
     public function preparePresenter(string $presenterName, string $action, $providedParams): Presenter {
         $ownPresenter = $this->getPresenter();
-        $presenter = $this->presenterBuilder->preparePresenter($presenterName, $action, $providedParams, $ownPresenter->getParameter());
+        $presenter = $this->presenterBuilder->preparePresenter($presenterName, $action, $providedParams, $ownPresenter->getParameters());
         if (!$presenter instanceof INavigablePresenter) {
             throw new BadTypeException(INavigablePresenter::class, $presenter);
         }

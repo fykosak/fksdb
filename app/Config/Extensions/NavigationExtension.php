@@ -13,9 +13,7 @@ use Nette\DI\ServiceDefinition;
  */
 class NavigationExtension extends CompilerExtension {
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $createdNodes = [];
 
     public function loadConfiguration() {
@@ -42,8 +40,8 @@ class NavigationExtension extends CompilerExtension {
     }
 
     /**
-     * @param $navbar
-     * @param $nodeId
+     * @param ServiceDefinition $navbar
+     * @param int|string $nodeId
      * @param array $arguments
      */
     private function createNode(ServiceDefinition $navbar, $nodeId, $arguments = []) {
@@ -56,8 +54,8 @@ class NavigationExtension extends CompilerExtension {
     }
 
     /**
-     * @param $structure
-     * @param $navbar
+     * @param iterable $structure
+     * @param ServiceDefinition $navbar
      * @param null $parent
      */
     private function createFromStructure($structure, ServiceDefinition $navbar, $parent = null) {
@@ -83,8 +81,9 @@ class NavigationExtension extends CompilerExtension {
     }
 
     /**
-     * @param $nodeId
-     * @param $arguments
+     * @param int|string $nodeId
+     * @param array $arguments
+     * @return void
      */
     private function parseIdAsLink($nodeId, &$arguments) {
         $fullQualityAction = str_replace('.', ':', $nodeId);

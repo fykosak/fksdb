@@ -7,17 +7,19 @@ use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateColumnException;
+use FKSDB\SQL\SearchableDataSource;
 
 /**
  * Class AbstractApplicationGrid
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractApplicationGrid extends BaseGrid {
     /** @var ModelEvent */
@@ -37,11 +39,18 @@ abstract class AbstractApplicationGrid extends BaseGrid {
         $this->holder = $holder;
     }
 
+    protected function getData(): IDataSource {
+        $participants = $this->getSource();
+        $source = new SearchableDataSource($participants);
+        $source->setFilterCallback($this->getFilterCallBack());
+        return $source;
+    }
+
     abstract protected function getSource(): Selection;
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function createComponentSearchForm(): FormControl {
         $query = $this->getSource()->select('count(*) AS count,status.*')->group('status');
@@ -97,7 +106,9 @@ abstract class AbstractApplicationGrid extends BaseGrid {
 
     /**
      * @param array $fields
+     * @return void
      * @throws DuplicateColumnException
+     * @throws BadTypeException
      */
     protected function addColumns(array $fields) {
         $holderFields = $this->holder->getPrimaryHolder()->getFields();

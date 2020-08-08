@@ -2,15 +2,16 @@
 
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
-use BasePresenter;
-use Exception;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Fyziklani\Submit\ClosedSubmittingException;
+use FKSDB\Fyziklani\Submit\HandlerFactory;
+use FKSDB\Logging\MemoryLogger;
+use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
 use FKSDB\Messages\Message;
-use FKSDB\Fyziklani\ClosedSubmittingException;
 use FKSDB\Fyziklani\NotSetGameParametersException;
-use FKSDB\Fyziklani\SubmitHandler;
-use FKSDB\Fyziklani\TaskCodeException;
+use FKSDB\Fyziklani\Submit\TaskCodeException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
@@ -26,15 +27,12 @@ use Nette\Utils\JsonException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class TaskCodeInput extends FyziklaniReactControl {
-    /**
-     * @var ServiceFyziklaniTeam
-     */
+    /** @var ServiceFyziklaniTeam */
     private $serviceFyziklaniTeam;
-
-    /**
-     * @var ServiceFyziklaniTask
-     */
+    /** @var ServiceFyziklaniTask */
     private $serviceFyziklaniTask;
+    /** @var HandlerFactory */
+    private $handlerFactory;
 
     /**
      * TaskCodeInput constructor.
@@ -42,42 +40,36 @@ class TaskCodeInput extends FyziklaniReactControl {
      * @param ModelEvent $event
      */
     public function __construct(Container $container, ModelEvent $event) {
-        parent::__construct($container, $event);
-        $this->monitor(IJavaScriptCollector::class);
+        parent::__construct($container, $event, 'fyziklani.submit-form');
+        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
+            $collector->registerJSFile('https://dmla.github.io/jsqrcode/src/qr_packed.js');
+        });
     }
 
     /**
+     * @param HandlerFactory $handlerFactory
      * @param ServiceFyziklaniTask $serviceFyziklaniTask
      * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      * @return void
      */
-    public function injectPrimary(ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    public function injectPrimary(HandlerFactory $handlerFactory, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->handlerFactory = $handlerFactory;
     }
 
     /**
+     * @param mixed ...$args
      * @return string
      * @throws JsonException
      * @throws NotSetGameParametersException
      */
-    public function getData(): string {
+    public function getData(...$args): string {
         return Json::encode([
             'availablePoints' => $this->getEvent()->getFyziklaniGameSetup()->getAvailablePoints(),
             'tasks' => $this->serviceFyziklaniTask->getTasksAsArray($this->getEvent()),
             'teams' => $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent()),
         ]);
-    }
-
-    /**
-     * @param $obj
-     * @return void
-     */
-    protected function attached($obj) {
-        if ($obj instanceof IJavaScriptCollector) {
-            $obj->registerJSFile('https://dmla.github.io/jsqrcode/src/qr_packed.js');
-        }
-        parent::attached($obj);
     }
 
     /**
@@ -91,17 +83,18 @@ class TaskCodeInput extends FyziklaniReactControl {
 
     /**
      * @return void
-     * @throws Exception
      * @throws AbortException
+     * @throws BadTypeException
      */
     public function handleSave() {
         $request = $this->getReactRequest();
         $response = new ReactResponse();
         $response->setAct($request->act);
         try {
-            $handler = new SubmitHandler($this->getContext(), $this->getEvent());
-            $log = $handler->preProcess($request->requestData['code'], +$request->requestData['points'], $this->getPresenter()->getUser());
-            $response->addMessage($log);
+            $handler = $this->handlerFactory->create($this->getEvent());
+            $logger = new MemoryLogger();
+            $handler->preProcess($logger, $request->requestData['code'], +$request->requestData['points']);
+            $response->setMessages($logger->getMessages());
         } catch (TaskCodeException $exception) {
             $response->addMessage(new Message($exception->getMessage(), BasePresenter::FLASH_ERROR));
         } catch (ClosedSubmittingException $exception) {
@@ -109,9 +102,5 @@ class TaskCodeInput extends FyziklaniReactControl {
         }
         $this->getPresenter()->sendResponse($response);
 
-    }
-
-    protected function getReactId(): string {
-        return 'fyziklani.submit-form';
     }
 }

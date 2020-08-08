@@ -3,26 +3,32 @@
 namespace FKSDB\DataTesting\Tests\Person;
 
 use FKSDB\DataTesting\TestLog;
+use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\DataTesting\TestsLogger;
 
 /**
  * Class EventCoveringTest
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventCoveringTest extends PersonTest {
+    /**
+     * EventCoveringTest constructor.
+     */
+    public function __construct() {
+        parent::__construct('organization_participation_same_year', _('Organization and participation at same year'));
+    }
 
     /**
-     * @param TestsLogger $logger
+     * @param ILogger $logger
      * @param ModelPerson $person
      * @return void
      */
-    public function run(TestsLogger $logger, ModelPerson $person) {
+    public function run(ILogger $logger, ModelPerson $person) {
         $contestantYears = [
             ModelContest::ID_FYKOS => [],
             ModelContest::ID_VYFUK => [],
@@ -54,13 +60,13 @@ class EventCoveringTest extends PersonTest {
     }
 
     /**
-     * @param TestsLogger $logger
+     * @param ILogger $logger
      * @param int[][] $data
      * @param array $orgs
      * @param string $type
      * @param ModelPerson $person
      */
-    private function check(TestsLogger $logger, array $data, array $orgs, string $type, ModelPerson $person) {
+    private function check(ILogger $logger, array $data, array $orgs, string $type, ModelPerson $person) {
         foreach ($data as $contestId => $contestYears) {
             foreach ($contestYears as $year) {
                 if (\in_array($year, $orgs[$contestId])) {
@@ -106,13 +112,5 @@ class EventCoveringTest extends PersonTest {
             }
         }
         return $eventOrgYears;
-    }
-
-    public function getTitle(): string {
-        return _('Organization and participation at same year');
-    }
-
-    public function getAction(): string {
-        return 'organization_participation_same_year';
     }
 }

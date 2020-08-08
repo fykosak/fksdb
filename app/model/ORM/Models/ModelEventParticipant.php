@@ -42,6 +42,9 @@ use Nette\Security\IResource;
 class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel, IPaymentModel, IPersonReferencedModel, IResource {
     const RESOURCE_ID = 'event.participant';
 
+    const STATE_AUTO_INVITED = 'auto.invited';
+    const STATE_AUTO_SPARE = 'auto.spare';
+
     /**
      * @return ModelPerson|null
      */
@@ -78,7 +81,7 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
     public function getFyziklaniTeam(): ModelFyziklaniTeam {
         $row = $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'event_participant_id')->select('e_fyziklani_team.*')->fetch();
         if (!$row) {
-            throw new BadRequestException('Event is not fyziklani');
+            throw new BadRequestException('Event is not fyziklani!');
         }
         return ModelFyziklaniTeam::createFromActiveRow($row);
     }

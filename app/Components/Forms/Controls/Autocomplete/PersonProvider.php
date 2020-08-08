@@ -17,14 +17,10 @@ class PersonProvider implements IFilteredDataProvider {
 
     const PLACE = 'place';
 
-    /**
-     * @var ServicePerson
-     */
+    /** @var ServicePerson */
     private $servicePerson;
 
-    /**
-     * @var TypedTableSelection
-     */
+    /** @var TypedTableSelection */
     private $searchTable;
 
     /**
@@ -44,7 +40,7 @@ class PersonProvider implements IFilteredDataProvider {
     public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator) {
         $this->searchTable = $this->servicePerson->getTable()
             ->where([
-                ':org.contest_id' => $contest->contest_id
+                ':org.contest_id' => $contest->contest_id,
             ])
             ->where(':org.since <= ?', $yearCalculator->getCurrentYear($contest))
             ->where(':org.until IS NULL OR :org.until <= ?', $yearCalculator->getCurrentYear($contest));
@@ -57,7 +53,7 @@ class PersonProvider implements IFilteredDataProvider {
      * @param string $search
      * @return array
      */
-    public function getFilteredItems($search) {
+    public function getFilteredItems(string $search): array {
         $search = trim($search);
         $search = str_replace(' ', '', $search);
         $this->searchTable
@@ -65,11 +61,7 @@ class PersonProvider implements IFilteredDataProvider {
         return $this->getItems();
     }
 
-    /**
-     * @param int $id
-     * @return string
-     */
-    public function getItemLabel($id): string {
+    public function getItemLabel(int $id): string {
         $person = $this->servicePerson->findByPrimary($id);
         return $person->getFullName();
     }
@@ -87,11 +79,7 @@ class PersonProvider implements IFilteredDataProvider {
         return $result;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return array
-     */
-    private function getItem(ModelPerson $person) {
+    private function getItem(ModelPerson $person): array {
         $place = null;
         $address = $person->getDeliveryAddress();
         if ($address) {
@@ -105,7 +93,7 @@ class PersonProvider implements IFilteredDataProvider {
     }
 
     /**
-     * @param $id
+     * @param mixed $id
      */
     public function setDefaultValue($id) {
         /* intentionally blank */

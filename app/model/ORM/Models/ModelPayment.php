@@ -89,9 +89,9 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     }
 
     /**
-     * @param $newState
+     * @param string|null $newState
      */
-    public function updateState($newState) {
+    public function updateState(string $newState) {
         $this->update(['state' => $newState]);
     }
 

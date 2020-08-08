@@ -1,7 +1,9 @@
 <?php
 
-use Exports\IExportFormat;
-use Exports\StoredQuery;
+namespace FKSDB\Exports\Formats;
+
+use FKSDB\Exports\IExportFormat;
+use FKSDB\StoredQuery\StoredQuery;
 use Nette\Application\IResponse;
 use Nette\SmartObject;
 use PePa\CSVResponse;
@@ -45,7 +47,7 @@ class CSVFormat implements IExportFormat {
      */
     public function getResponse(): IResponse {
         $data = $this->storedQuery->getData();
-        $name = isset($this->storedQuery->getQueryPattern()->name) ? $this->storedQuery->getQueryPattern()->name : 'adhoc';
+        $name = $this->storedQuery->getName();
         $name .= '.csv';
         $response = new CSVResponse($data, $name);
         $response->setAddHeading($this->header);

@@ -6,7 +6,7 @@ use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Services\ServiceTask;
 use Nette\Utils\DateTime;
-use Pipeline\Stage;
+use FKSDB\Pipeline\Stage;
 
 
 /**
@@ -16,14 +16,10 @@ use Pipeline\Stage;
  */
 class DeadlineFromXML extends Stage {
 
-    /**
-     * @var SeriesData
-     */
+    /** @var SeriesData */
     private $data;
 
-    /**
-     * @var ServiceTask
-     */
+    /** @var ServiceTask */
     private $taskService;
 
     /**

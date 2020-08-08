@@ -1,9 +1,9 @@
 <?php
 
-namespace Github\Events;
+namespace FKSDB\Github\Events;
 
-use Github\Repository;
-use Github\User;
+use FKSDB\Github\Repository;
+use FKSDB\Github\User;
 use Nette\SmartObject;
 
 /**

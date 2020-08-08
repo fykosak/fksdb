@@ -7,7 +7,7 @@ use Nette\SmartObject;
 
 /**
  * Class Message
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Message {
     use SmartObject;
@@ -16,14 +16,10 @@ class Message {
     const LVL_SUCCESS = ILogger::SUCCESS;
     const LVL_WARNING = ILogger::WARNING;
     const LVL_INFO = ILogger::INFO;
-    /**
-     * @var string
-     */
+    /** @var string */
     private $message;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $level;
 
     /**

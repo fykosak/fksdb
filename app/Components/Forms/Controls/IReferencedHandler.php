@@ -38,10 +38,6 @@ interface IReferencedHandler {
      */
     public function createFromValues(ArrayHash $values);
 
-    /**
-     * @param string $field
-     * @return bool
-     */
     public function isSecondaryKey(string $field): bool;
 
     /**

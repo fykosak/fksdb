@@ -6,11 +6,11 @@ use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\Breadcrumbs\Request as NaviRequest;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Exceptions\BadTypeException;
+use Nette\Application\IPresenterFactory;
 use Nette\Application\IRouter;
-use Nette\Application\PresenterFactory;
 use Nette\Application\Request as AppRequest;
 use Nette\Application\UI\Presenter;
-use Nette\Application\UI\PresenterComponentReflection;
+use Nette\Application\UI\ComponentReflection;
 use Nette\DI\Container;
 use Tracy\Debugger;
 use Nette\Http\Request as HttpRequest;
@@ -18,7 +18,7 @@ use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Random;
-use Utils;
+use FKSDB\Utils\Utils;
 
 /**
  * Monitors user's traversal through the web and build the tree,
@@ -44,19 +44,13 @@ class Breadcrumbs extends BaseComponent {
     /** @var Session */
     private $session;
 
-    /**
-     * @var IRouter
-     */
+    /** @var IRouter */
     private $router;
 
-    /**
-     * @var HttpRequest
-     */
+    /** @var HttpRequest */
     private $httpRequest;
 
-    /**
-     * @var PresenterFactory
-     */
+    /** @var IPresenterFactory */
     private $presenterFactory;
 
     /**
@@ -68,7 +62,7 @@ class Breadcrumbs extends BaseComponent {
 
     /**
      * Breadcrumbs constructor.
-     * @param $expiration
+     * @param string $expiration
      * @param Container $container
      */
     public function __construct($expiration, Container $container) {
@@ -83,10 +77,10 @@ class Breadcrumbs extends BaseComponent {
      * @param Session $session
      * @param IRouter $router
      * @param HttpRequest $httpRequest
-     * @param PresenterFactory $presenterFactory
+     * @param IPresenterFactory $presenterFactory
      * @return void
      */
-    public function injectPrimary(Session $session, IRouter $router, HttpRequest $httpRequest, PresenterFactory $presenterFactory) {
+    public function injectPrimary(Session $session, IRouter $router, HttpRequest $httpRequest, IPresenterFactory $presenterFactory) {
         $this->session = $session;
         $this->router = $router;
         $this->httpRequest = $httpRequest;
@@ -226,23 +220,23 @@ class Breadcrumbs extends BaseComponent {
         if ($request instanceof AppRequest) {
             $parameters = $request->getParameters();
             $presenterName = $request->getPresenterName();
+            /** @var Presenter $presenterClassName */
             $presenterClassName = $this->presenterFactory->formatPresenterClass($presenterName);
             $action = $parameters[Presenter::ACTION_KEY];
-            $methodName = call_user_func("$presenterClassName::publicFormatActionMethod", $action);
+            $methodName = ($presenterClassName)::publicFormatActionMethod($action);
             $identifyingParameters = [Presenter::ACTION_KEY];
-            /** @var \ReflectionClass $rc */
-            $rc = call_user_func("$presenterClassName::getReflection");
+            $rc = ($presenterClassName)::getReflection();
             if ($rc->hasMethod($methodName)) {
                 $rm = $rc->getMethod($methodName);
                 foreach ($rm->getParameters() as $param) {
                     $identifyingParameters[] = $param->name;
                 }
             }
-            $reflection = new PresenterComponentReflection($presenterClassName);
+            $reflection = new ComponentReflection($presenterClassName);
             $identifyingParameters += array_keys($reflection->getPersistentParams());
 
             $filteredParameters = [];
-            $backLinkParameter = call_user_func("$presenterClassName::getBackLinkParamName");
+            $backLinkParameter = ($presenterClassName)::getBackLinkParamName();
             foreach ($identifyingParameters as $param) {
                 if ($param == $backLinkParameter) {
                     continue; // this parameter can be persistent but never is identifying!
@@ -274,7 +268,7 @@ class Breadcrumbs extends BaseComponent {
      * ********************** */
 
     /**
-     * @param $backLink
+     * @param string $backLink
      * @throws \ReflectionException
      * @throws BadTypeException
      */
@@ -302,12 +296,12 @@ class Breadcrumbs extends BaseComponent {
     /**
      * @param INavigablePresenter|Presenter $presenter
      * @param AppRequest $request
-     * @param $backLink
+     * @param string $backLink
      * @return Request
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    protected function createNaviRequest(Presenter $presenter, AppRequest $request, $backLink) {
+    protected function createNaviRequest(Presenter $presenter, AppRequest $request, $backLink): NaviRequest {
         $pathKey = $this->getPathKey($request);
         if (!$presenter instanceof INavigablePresenter) {
             throw new BadTypeException(INavigablePresenter::class, $presenter);
@@ -323,7 +317,7 @@ class Breadcrumbs extends BaseComponent {
     }
 
     /**
-     * @param $requestKey
+     * @param string $requestKey
      * @return string
      */
     private function getBackLinkId($requestKey) {

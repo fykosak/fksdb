@@ -2,28 +2,30 @@
 
 namespace FKSDB\Components\Controls\Inbox;
 
-use FKSDB\Components\Control\AjaxUpload\SubmitDownloadTrait;
+use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\Services\ServiceSubmit;
-use FKSDB\Submits\FileSystemStorage\CorrectedStorage;
-use FKSDB\Submits\FileSystemStorage\UploadedStorage;
+use FKSDB\Submits\SubmitHandlerFactory;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
 /**
- * Class SubmitsTableControl
- * *
+ * Class SubmitsPreviewControl
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class SubmitsPreviewControl extends SeriesTableComponent {
-    use SubmitDownloadTrait;
 
-    /** @var UploadedStorage */
-    private $uploadedStorage;
-    /** @var CorrectedStorage */
-    private $correctedStorage;
-    /** @var ServiceSubmit $serviceSubmit */
-    private $serviceSubmit;
+    /** @var SubmitHandlerFactory */
+    private $submitDownloadFactory;
+
+    /**
+     * @param SubmitHandlerFactory $submitDownloadFactory
+     * @return void
+     */
+    public function injectSubmitDownloadFactory(SubmitHandlerFactory $submitDownloadFactory) {
+        $this->submitDownloadFactory = $submitDownloadFactory;
+    }
 
     public function render() {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
@@ -31,25 +33,16 @@ class SubmitsPreviewControl extends SeriesTableComponent {
     }
 
     /**
-     * @param UploadedStorage $uploadedStorage
-     * @param CorrectedStorage $correctedStorage
-     * @param ServiceSubmit $serviceSubmit
-     * @return void
-     */
-    public function injectPrimary(UploadedStorage $uploadedStorage, CorrectedStorage $correctedStorage, ServiceSubmit $serviceSubmit) {
-        $this->uploadedStorage = $uploadedStorage;
-        $this->correctedStorage = $correctedStorage;
-        $this->serviceSubmit = $serviceSubmit;
-    }
-
-    /**
      * @param int $id
+     * @return void
      * @throws AbortException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws NotFoundException
      */
     public function handleDownloadUploaded(int $id) {
         $logger = new MemoryLogger();
-        $this->traitHandleDownloadUploaded($logger, $id);
+        $this->submitDownloadFactory->handleDownloadUploaded($this->getPresenter(), $logger, $id);
         FlashMessageDump::dump($logger, $this);
     }
 
@@ -57,22 +50,12 @@ class SubmitsPreviewControl extends SeriesTableComponent {
      * @param int $id
      * @throws AbortException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws NotFoundException
      */
     public function handleDownloadCorrected(int $id) {
         $logger = new MemoryLogger();
-        $this->traitHandleDownloadCorrected($logger, $id);
+        $this->submitDownloadFactory->handleDownloadCorrected($this->getPresenter(), $logger, $id);
         FlashMessageDump::dump($logger, $this);
-    }
-
-    protected function getCorrectedStorage(): CorrectedStorage {
-        return $this->correctedStorage;
-    }
-
-    protected function getUploadedStorage(): UploadedStorage {
-        return $this->uploadedStorage;
-    }
-
-    protected function getServiceSubmit(): ServiceSubmit {
-        return $this->serviceSubmit;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Authentication;
+namespace FKSDB\Authentication;
 
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
@@ -19,14 +19,10 @@ class TokenAuthenticator extends AbstractAuthenticator {
     const PARAM_AUTH_TOKEN = 'at';
     const SESSION_NS = 'auth';
 
-    /**
-     * @var ServiceAuthToken
-     */
+    /** @var ServiceAuthToken */
     private $authTokenService;
 
-    /**
-     * @var Session
-     */
+    /** @var Session */
     private $session;
 
     /**
@@ -91,7 +87,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @return array
+     * @return mixed
      */
     public function getTokenData() {
         if (!$this->isAuthenticatedByToken()) {
@@ -111,6 +107,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
 
     /**
      * @param ModelAuthToken $token
+     * @return void
      */
     private function storeAuthToken(ModelAuthToken $token) {
         $section = $this->session->getSection(self::SESSION_NS);
