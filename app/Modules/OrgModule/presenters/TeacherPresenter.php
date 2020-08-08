@@ -21,14 +21,9 @@ use Nette\Security\IResource;
 class TeacherPresenter extends BasePresenter {
     use EntityPresenterTrait;
 
-    /** @var ServiceTeacher */
-    private $serviceTeacher;
+    private ServiceTeacher $serviceTeacher;
 
-    /**
-     * @param ServiceTeacher $serviceTeacher
-     * @return void
-     */
-    public function injectServiceTeacher(ServiceTeacher $serviceTeacher) {
+    public function injectServiceTeacher(ServiceTeacher $serviceTeacher): void {
         $this->serviceTeacher = $serviceTeacher;
     }
 

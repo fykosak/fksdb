@@ -20,19 +20,13 @@ use Nette\Security\IResource;
  * @method ModelOrg traitGetEntity()
  */
 class OrgPresenter extends BasePresenter {
-
     use EntityPresenterTrait {
         getEntity as traitGetEntity;
     }
 
-    /** @var ServiceOrg */
-    private $serviceOrg;
+    private ServiceOrg $serviceOrg;
 
-    /**
-     * @param ServiceOrg $serviceOrg
-     * @return void
-     */
-    public function injectServiceOrg(ServiceOrg $serviceOrg) {
+    public function injectServiceOrg(ServiceOrg $serviceOrg): void {
         $this->serviceOrg = $serviceOrg;
     }
 

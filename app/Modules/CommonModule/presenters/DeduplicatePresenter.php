@@ -18,25 +18,15 @@ use FKSDB\Persons\Deduplication\Merger;
  */
 class DeduplicatePresenter extends BasePresenter {
 
-    /** @var ServicePerson */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
-    /** @var Merger */
-    private $merger;
+    private Merger $merger;
 
-    /**
-     * @param ServicePerson $servicePerson
-     * @return void
-     */
-    public function injectServicePerson(ServicePerson $servicePerson) {
+    public function injectServicePerson(ServicePerson $servicePerson): void {
         $this->servicePerson = $servicePerson;
     }
 
-    /**
-     * @param Merger $merger
-     * @return void
-     */
-    public function injectMerger(Merger $merger) {
+    public function injectMerger(Merger $merger): void {
         $this->merger = $merger;
     }
 

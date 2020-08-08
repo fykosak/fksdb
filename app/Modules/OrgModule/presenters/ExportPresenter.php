@@ -41,32 +41,22 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      */
     public $qid;
 
-    /** @var ServiceStoredQuery */
-    private $serviceStoredQuery;
+    private ServiceStoredQuery $serviceStoredQuery;
 
-    /** @var StoredQueryFactory */
-    private $storedQueryFactory;
+    private StoredQueryFactory $storedQueryFactory;
     /** @var StoredQuery */
     private $storedQuery;
 
-    /**
-     * @param ServiceStoredQuery $serviceStoredQuery
-     * @return void
-     */
-    public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery) {
+    public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery): void {
         $this->serviceStoredQuery = $serviceStoredQuery;
     }
 
-    /**
-     * @param StoredQueryFactory $storedQueryFactory
-     * @return void
-     */
-    public function injectStoredQueryFactory(StoredQueryFactory $storedQueryFactory) {
+    public function injectStoredQueryFactory(StoredQueryFactory $storedQueryFactory): void {
         $this->storedQueryFactory = $storedQueryFactory;
     }
 
     protected function startup() {
-       switch ($this->getAction()) {
+        switch ($this->getAction()) {
             case 'edit':
                 $this->redirect(':Org:StoredQuery:edit', $this->getParameters());
             case 'compose':

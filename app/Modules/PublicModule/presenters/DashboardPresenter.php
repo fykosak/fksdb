@@ -16,14 +16,10 @@ use FKSDB\News\News;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DashboardPresenter extends BasePresenter {
-    /** @var News */
-    private $news;
 
-    /**
-     * @param News $news
-     * @return void
-     */
-    public function injectNews(News $news) {
+    private News $news;
+
+    public function injectNews(News $news): void {
         $this->news = $news;
     }
 

@@ -30,24 +30,16 @@ use FKSDB\Persons\IExtendedPersonPresenter;
 abstract class ExtendedPersonPresenter extends EntityPresenter implements IExtendedPersonPresenter {
     /** @var bool */
     protected $sendEmail = true;
-    /** @var ReferencedPersonFactory */
-    private $referencedPersonFactory;
-    /** @var ExtendedPersonHandlerFactory */
-    private $handlerFactory;
 
-    /**
-     * @param ReferencedPersonFactory $referencedPersonFactory
-     * @return void
-     */
-    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
+    private ReferencedPersonFactory $referencedPersonFactory;
+
+    private ExtendedPersonHandlerFactory $handlerFactory;
+
+    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory): void {
         $this->referencedPersonFactory = $referencedPersonFactory;
     }
 
-    /**
-     * @param ExtendedPersonHandlerFactory $handlerFactory
-     * @return void
-     */
-    public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory) {
+    public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
     }
 

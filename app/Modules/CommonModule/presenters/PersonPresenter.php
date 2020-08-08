@@ -50,57 +50,37 @@ use Tracy\Debugger;
 class PersonPresenter extends BasePresenter {
     use EntityPresenterTrait;
 
+    private ServicePerson $servicePerson;
 
-    /** @var ServicePerson */
-    private $servicePerson;
+    private ServicePersonInfo $servicePersonInfo;
 
-    /** @var ServicePersonInfo */
-    private $servicePersonInfo;
+    private Merger $personMerger;
 
-    /** @var Merger */
-    private $personMerger;
     /** @var ModelPerson */
     private $trunkPerson;
 
     /** @var ModelPerson */
     private $mergedPerson;
 
-    /** @var PersonFactory */
-    private $personFactory;
+    private PersonFactory $personFactory;
 
 
     /** @var FieldLevelPermission */
     private $userPermissions;
 
-    /**
-     * @param ServicePerson $servicePerson
-     * @return void
-     */
-    public function injectServicePerson(ServicePerson $servicePerson) {
+    public function injectServicePerson(ServicePerson $servicePerson): void {
         $this->servicePerson = $servicePerson;
     }
 
-    /**
-     * @param ServicePersonInfo $servicePersonInfo
-     * @return void
-     */
-    public function injectServicePersonInfo(ServicePersonInfo $servicePersonInfo) {
+    public function injectServicePersonInfo(ServicePersonInfo $servicePersonInfo): void {
         $this->servicePersonInfo = $servicePersonInfo;
     }
 
-    /**
-     * @param Merger $personMerger
-     * @return void
-     */
-    public function injectPersonMerger(Merger $personMerger) {
+    public function injectPersonMerger(Merger $personMerger): void {
         $this->personMerger = $personMerger;
     }
 
-    /**
-     * @param PersonFactory $personFactory
-     * @return void
-     */
-    public function injectPersonFactory(PersonFactory $personFactory) {
+    public function injectPersonFactory(PersonFactory $personFactory): void {
         $this->personFactory = $personFactory;
     }
 
