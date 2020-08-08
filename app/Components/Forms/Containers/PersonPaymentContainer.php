@@ -45,6 +45,10 @@ class PersonPaymentContainer extends ContainerWithOptions {
         });
     }
 
+    /**
+     * @param ServicePersonSchedule $servicePersonSchedule
+     * @return void
+     */
     public function injectServicePersonSchedule(ServicePersonSchedule $servicePersonSchedule) {
         $this->servicePersonSchedule = $servicePersonSchedule;
     }

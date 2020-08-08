@@ -162,7 +162,7 @@ class PersonPresenter extends BasePresenter {
     }
 
     public function authorizedEdit() {
-        $this->setAuthorized($this->isAnyContestAuthorized('person', 'edit'));
+        $this->setAuthorized($this->isAnyContestAuthorized($this->getEntity(), 'edit'));
     }
 
     /**
