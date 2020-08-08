@@ -182,7 +182,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    protected function setPageTitle(PageTitle $pageTitle) {
+    protected function setPageTitle(PageTitle $pageTitle): void {
         $pageTitle->subTitle = $pageTitle->subTitle ?: $this->getEvent()->__toString();
         parent::setPageTitle($pageTitle);
     }

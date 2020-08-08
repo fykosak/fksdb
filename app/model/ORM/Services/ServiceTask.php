@@ -20,16 +20,7 @@ class ServiceTask extends AbstractServiceSingle {
         return DbNames::TAB_TASK;
     }
 
-    /**
-     * Syntactic sugar.
-     *
-     * @param ModelContest $contest
-     * @param int $year
-     * @param int $series
-     * @param int $tasknr
-     * @return ModelTask|null
-     */
-    public function findBySeries(ModelContest $contest, int $year, int $series, int $tasknr) {
+    public function findBySeries(ModelContest $contest, int $year, int $series, int $tasknr): ?ModelTask {
         /** @var ModelTask $result */
         $result = $this->getTable()->where([
             'contest_id' => $contest->contest_id,

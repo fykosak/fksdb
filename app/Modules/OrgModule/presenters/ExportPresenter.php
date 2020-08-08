@@ -66,7 +66,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     protected function startup() {
-       switch ($this->getAction()) {
+        switch ($this->getAction()) {
             case 'edit':
                 $this->redirect(':Org:StoredQuery:edit', $this->getParameters());
             case 'compose':
@@ -87,7 +87,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function authorizedExecute() {
+    public function authorizedExecute(): void {
         $this->contestAuthorizator->isAllowed($this->getStoredQuery(), 'execute', $this->getSelectedContest());
     }
 
@@ -98,7 +98,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleExecute() {
+    public function titleExecute(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('%s'), $this->getStoredQuery()->getName()), 'fa fa-play-circle-o'));
     }
 
@@ -109,7 +109,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
-    public function actionExecute() {
+    public function actionExecute(): void {
         $storedQuery = $this->getStoredQuery();
         if ($storedQuery && $this->getParameter('qid')) {
             $parameters = [];
@@ -126,7 +126,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
-    public function renderExecute() {
+    public function renderExecute(): void {
         $this->template->model = $this->getStoredQuery()->getQueryPattern();
     }
 
@@ -164,10 +164,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         return $this->storedQuery;
     }
 
-    /**
-     * @return ModelStoredQuery|null
-     */
-    public function getQueryByQId() {
+    public function getQueryByQId(): ?ModelStoredQuery {
         $qid = $this->getParameter('qid');
         if ($qid) {
             return $this->serviceStoredQuery->findByQid($qid);
@@ -208,7 +205,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      * @throws BadTypeException
      */
-    protected function setPageTitle(PageTitle $pageTitle) {
+    protected function setPageTitle(PageTitle $pageTitle): void {
         $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
         parent::setPageTitle($pageTitle);
     }

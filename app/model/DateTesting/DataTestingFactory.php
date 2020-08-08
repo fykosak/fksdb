@@ -35,7 +35,7 @@ class DataTestingFactory {
      * @return void
      * @throws BadTypeException
      */
-    private function registersTests() {
+    private function registersTests(): void {
         $tests = [
             new Tests\Person\GenderFromBornNumberTest(),
             new Tests\Person\ParticipantsDurationTest(),

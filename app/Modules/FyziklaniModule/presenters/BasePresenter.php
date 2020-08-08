@@ -63,7 +63,6 @@ abstract class BasePresenter extends EventBasePresenter {
     }
 
     /**
-     * @noinspection PhpMissingParentCallCommonInspection
      * @return string[]
      */
     protected function getNavRoots(): array {

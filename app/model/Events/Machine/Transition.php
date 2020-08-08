@@ -135,7 +135,7 @@ class Transition {
      */
     public function setMask($mask) {
         $this->mask = $mask;
-        list($this->source, $this->target) = self::parseMask($mask);
+        [$this->source, $this->target] = self::parseMask($mask);
         $this->setName($mask);
     }
 
@@ -235,12 +235,7 @@ class Transition {
         return $result;
     }
 
-    /**
-     *
-     * @param Holder $holder
-     * @return null|Transition
-     */
-    private function getBlockingTransition(Holder $holder) {
+    private function getBlockingTransition(Holder $holder): ?Transition {
         foreach ($this->getInducedTransitions($holder) as $inducedTransition) {
             if ($inducedTransition->getBlockingTransition($holder)) {
                 return $inducedTransition;
@@ -387,7 +382,7 @@ class Transition {
         if (count($parts) != 2) {
             return false;
         }
-        list($sources, $target) = $parts;
+        [$sources, $target] = $parts;
 
         $sources = explode('|', $sources);
 

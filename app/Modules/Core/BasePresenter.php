@@ -229,11 +229,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->pageTitle ?? new PageTitle();
     }
 
-    /**
-     * @param PageTitle $pageTitle
-     * @return void
-     */
-    protected function setPageTitle(PageTitle $pageTitle) {
+    protected function setPageTitle(PageTitle $pageTitle): void {
         $this->pageTitle = $pageTitle;
     }
 
@@ -289,7 +285,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @throws ReflectionException
      * @throws BadTypeException
      */
-    protected function putIntoBreadcrumbs() {
+    protected function putIntoBreadcrumbs(): void {
         /** @var Breadcrumbs $component */
         $component = $this->getComponent('breadcrumbs');
         $component->setBackLink($this->getRequest());
@@ -338,11 +334,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->authorized;
     }
 
-    /**
-     * @param bool $access
-     * @return void
-     */
-    public function setAuthorized(bool $access) {
+    public function setAuthorized(bool $access): void {
         $this->authorized = $access;
     }
 

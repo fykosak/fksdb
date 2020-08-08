@@ -93,7 +93,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @param int $key
      * @return AbstractModelSingle|null
      */
-    public function findByPrimary($key) {
+    public function findByPrimary($key): ?AbstractModelSingle {
         /** @var AbstractModelSingle|null $result */
         $result = $this->getTable()->get($key);
         if ($result !== false) {

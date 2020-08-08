@@ -96,18 +96,11 @@ class ReferencedId extends HiddenField {
         return $this->searchContainer;
     }
 
-    /**
-     * @return Promise|null
-     */
-    protected function getPromise() {
+    protected function getPromise(): ?Promise {
         return $this->promise;
     }
 
-    /**
-     * @param Promise $promise
-     * @return void
-     */
-    private function setPromise(Promise $promise) {
+    private function setPromise(Promise $promise): void {
         $this->promise = $promise;
     }
 

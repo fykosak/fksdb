@@ -15,7 +15,7 @@ class DashboardPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(\sprintf(_('Event %s'), $this->getEvent()->name), 'fa fa-dashboard'));
     }
 
@@ -23,7 +23,7 @@ class DashboardPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function authorizedDefault() {
+    public function authorizedDefault(): void {
         $this->setAuthorized($this->isEventOrContestOrgAuthorized('event.dashboard', 'default'));
     }
 
@@ -31,7 +31,7 @@ class DashboardPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function renderDefault() {
+    public function renderDefault(): void {
         $this->template->event = $this->getEvent();
         $this->template->webUrl = $this->getWebUrl();
     }
@@ -40,7 +40,7 @@ class DashboardPresenter extends BasePresenter {
      * @return string
      * @throws EventNotFoundException
      */
-    private function getWebUrl() {
+    private function getWebUrl(): string {
         switch ($this->getEvent()->event_type_id) {
             case 1:
                 // FOF

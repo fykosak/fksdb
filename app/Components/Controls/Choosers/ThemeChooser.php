@@ -33,10 +33,7 @@ class ThemeChooser extends Chooser {
         return $this->session->getSection(self::class);
     }
 
-    /**
-     * @return string|null
-     */
-    public function getSelectedTheme() {
+    public function getSelectedTheme(): ?string {
         $session = $this->getSession();
         return $session->theme ?: null;
     }

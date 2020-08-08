@@ -101,11 +101,11 @@ final class AuthenticationPresenter extends BasePresenter {
         $this->accountManager = $accountManager;
     }
 
-    public function titleLogin() {
+    public function titleLogin(): void {
         $this->setPageTitle(new PageTitle(_('Login')));
     }
 
-    public function titleRecover() {
+    public function titleRecover(): void {
         $this->setPageTitle(new PageTitle(_('Password recovery')));
     }
 
@@ -113,7 +113,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws InvalidLinkException
      */
-    public function actionLogout() {
+    public function actionLogout(): void {
         $subDomainAuth = $this->getContext()->getParameters()['subdomain']['auth'];
         $subDomain = $this->getParameter('subdomain');
 
@@ -153,7 +153,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadTypeException
      */
-    public function actionLogin() {
+    public function actionLogin(): void {
         if ($this->isLoggedIn()) {
             /** @var ModelLogin $login */
             $login = $this->getUser()->getIdentity();
@@ -349,7 +349,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @throws AbortException
      */
-    private function initialRedirect() {
+    private function initialRedirect(): void {
         if ($this->backlink) {
             $this->restoreRequest($this->backlink);
         }

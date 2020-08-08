@@ -13,14 +13,14 @@ use FKSDB\UI\PageTitle;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class GameSetupPresenter extends BasePresenter {
-    /** @var ModelFyziklaniGameSetup */
-    private $gameSetup;
+
+    private ModelFyziklaniGameSetup $gameSetup;
 
     /**
      * @return void
      * @throws EventNotFoundException
      */
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Fyziklani game setup'), 'fa fa-cogs'));
     }
 
@@ -30,7 +30,7 @@ class GameSetupPresenter extends BasePresenter {
      * @throws NotFoundException
      * @throws NotSetGameParametersException
      */
-    public function renderDefault() {
+    public function renderDefault(): void {
         $this->template->gameSetup = $this->getGameSetup();
     }
 
@@ -38,7 +38,7 @@ class GameSetupPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function authorizedDefault() {
+    public function authorizedDefault(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.gameSetup', 'default'));
     }
 

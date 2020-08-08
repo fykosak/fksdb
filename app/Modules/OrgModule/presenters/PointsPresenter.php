@@ -168,8 +168,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      * @return void
      * @throws AbortException
      * @throws BadRequestException
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
+     * : void     * @throws ForbiddenRequestException
      */
     public function handleRecalculateAll() {
         try {
@@ -228,7 +227,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      * @throws BadTypeException
      */
-    protected function setPageTitle(PageTitle $pageTitle) {
+    protected function setPageTitle(PageTitle $pageTitle): void {
         $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
         parent::setPageTitle($pageTitle);
     }

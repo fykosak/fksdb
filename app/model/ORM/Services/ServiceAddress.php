@@ -51,7 +51,7 @@ class ServiceAddress extends AbstractServiceSingle {
      * @return int
      * @throws InvalidPostalCode
      */
-    public function inferRegion($postalCode) {
+    public function inferRegion($postalCode): int {
         if (!$postalCode) {
             throw new InvalidPostalCode($postalCode);
         }

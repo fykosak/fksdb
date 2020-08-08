@@ -35,7 +35,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function authorizedCreate() {
+    public function authorizedCreate(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModelResource(), 'create', $this->getSelectedContest()));
     }
 
@@ -43,7 +43,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function authorizedEdit() {
+    public function authorizedEdit(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModel(), 'edit', $this->getSelectedContest()));
     }
 
@@ -51,7 +51,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function authorizedList() {
+    public function authorizedList(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModelResource(), 'list', $this->getSelectedContest()));
     }
 
@@ -60,7 +60,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function authorizedDelete($id) {
+    public function authorizedDelete($id): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModel(), 'delete', $this->getSelectedContest()));
     }
 
@@ -68,7 +68,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @param int $id
      * @throws BadTypeException
      */
-    public function renderEdit($id) {
+    public function renderEdit($id): void {
         /** @var FormControl $component */
         $component = $this->getComponent(self::COMP_EDIT_FORM);
         $form = $component->getForm();
@@ -78,7 +78,7 @@ abstract class EntityPresenter extends BasePresenter {
     /**
      * @throws BadTypeException
      */
-    public function renderCreate() {
+    public function renderCreate(): void {
         /** @var FormControl $component */
         $component = $this->getComponent(self::COMP_CREATE_FORM);
         $form = $component->getForm();
@@ -95,6 +95,7 @@ abstract class EntityPresenter extends BasePresenter {
         }
         return $this->model;
     }
+
     /**
      * @param IModel|null $model
      * @param Form $form

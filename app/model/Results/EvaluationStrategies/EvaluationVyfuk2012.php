@@ -14,9 +14,6 @@ use Nette\Database\Table\ActiveRow;
  */
 class EvaluationVyfuk2012 extends EvaluationStrategy {
 
-    /**
-     * @return array|null
-     */
     public function getCategories(): array {
         return [
             new ModelCategory(ModelCategory::CAT_ES_6),

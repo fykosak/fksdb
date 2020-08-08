@@ -141,7 +141,7 @@ abstract class AbstractServiceMulti implements IService {
      * @param int $key ID of the joined models
      * @return AbstractModelMulti|null
      */
-    public function findByPrimary($key) {
+    public function findByPrimary($key): ?AbstractModelMulti {
         $joinedModel = $this->getJoinedService()->findByPrimary($key);
         if (!$joinedModel) {
             return null;

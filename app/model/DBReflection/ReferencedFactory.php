@@ -12,14 +12,13 @@ use FKSDB\ORM\AbstractModelSingle;
  */
 final class ReferencedFactory {
 
-    /** @var string */
-    private $modelClassName;
+    private string $modelClassName;
     /**
      * @var array
      * modelClassName => string FQN of class/interface that can be access via 'method'-field
      * method => method name, that return Model of $this->modelClassName
      */
-    private $referencedAccess;
+    private ?array $referencedAccess;
 
     /**
      * ReferencedFactory constructor.
@@ -37,7 +36,7 @@ final class ReferencedFactory {
      * @throws CannotAccessModelException
      * @throws BadTypeException
      */
-    public function accessModel(AbstractModelSingle $model) {
+    public function accessModel(AbstractModelSingle $model): ?AbstractModelSingle {
         // model is already instance of desired model
         if ($model instanceof $this->modelClassName) {
             return $model;
@@ -61,7 +60,7 @@ final class ReferencedFactory {
      * @throws CannotAccessModelException
      * @throws BadTypeException
      */
-    private function accessReferencedModel(AbstractModelSingle $model) {
+    private function accessReferencedModel(AbstractModelSingle $model): ?AbstractModelSingle {
         if ($model instanceof $this->referencedAccess['modelClassName']) {
             $referencedModel = $model->{$this->referencedAccess['method']}();
             if ($referencedModel) {

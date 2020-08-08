@@ -46,7 +46,7 @@ class PaymentPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function titleCreate() {
+    public function titleCreate(): void {
         $this->setPageTitle(new PageTitle(_('New payment'), 'fa fa-credit-card'));
     }
 
@@ -56,7 +56,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleEdit() {
+    public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(\sprintf(_('Edit payment #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card'));
     }
 
@@ -66,7 +66,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleDetail() {
+    public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(\sprintf(_('Payment detail #%s'), $this->getEntity()->getPaymentId()), 'fa fa-credit-card'));
     }
 
@@ -74,7 +74,7 @@ class PaymentPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function titleList() {
+    public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('List of payments'), 'fa fa-credit-card'));
     }
 
@@ -102,7 +102,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function actionEdit() {
+    public function actionEdit(): void {
         if (!$this->isContestsOrgAuthorized($this->getEntity(), 'edit')) {
             $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()), \FKSDB\Modules\Core\BasePresenter::FLASH_ERROR);
             $this->redirect(':Core:MyPayments:');
@@ -116,7 +116,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws EventNotFoundException
      */
-    public function actionCreate() {
+    public function actionCreate(): void {
         if (\count($this->getMachine()->getAvailableTransitions(null)) === 0) {
             $this->flashMessage(_('Payment is not allowed in this time!'));
             if (!$this->isOrg()) {
@@ -132,7 +132,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function renderEdit() {
+    public function renderEdit(): void {
         $this->template->model = $this->getEntity();
     }
 
@@ -142,7 +142,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function renderDetail() {
+    public function renderDetail(): void {
         $payment = $this->getEntity();
         $this->template->items = $this->getMachine()->getPriceCalculator()->getGridItems($payment);
         $this->template->model = $payment;

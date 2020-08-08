@@ -45,10 +45,8 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
     const STATE_AUTO_INVITED = 'auto.invited';
     const STATE_AUTO_SPARE = 'auto.spare';
 
-    /**
-     * @return ModelPerson|null
-     */
-    public function getPerson() {
+    /* TODO !!!*/
+    public function getPerson(): ?ModelPerson {
         if (!$this->person) {
             return null;
         }

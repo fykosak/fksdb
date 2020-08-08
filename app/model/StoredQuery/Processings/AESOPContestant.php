@@ -31,10 +31,10 @@ class AESOPContestant extends StoredQueryPostProcessing {
 
     /**
      * @param \PDOStatement $data
-     * @return mixed
+     * @return array
      * @throws BadRequestException
      */
-    public function processData(\PDOStatement $data) {
+    public function processData(\PDOStatement $data): array {
         $filtered = $this->filterCategory($data);
         //$formated = $this->formatDate($ranked); //implemented in SQL
         return $this->calculateRank($filtered);
@@ -153,7 +153,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
      * @return EvaluationStrategy
      * @throws BadRequestException
      */
-    private function getEvaluationStrategy() {
+    private function getEvaluationStrategy(): EvaluationStrategy {
         return ResultsModelFactory::findEvaluationStrategy($this->parameters['contest'], $this->parameters['year']);
     }
 
@@ -162,7 +162,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
      * @return ModelCategory|null
      * @throws BadRequestException
      */
-    private function getCategory() {
+    private function getCategory(): ?ModelCategory {
         $evaluationStrategy = $this->getEvaluationStrategy();
         foreach ($evaluationStrategy->getCategories() as $category) {
             if ($category->id == $this->parameters['category']) {

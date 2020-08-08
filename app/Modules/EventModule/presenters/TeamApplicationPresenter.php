@@ -48,7 +48,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
      * @throws ModelNotFoundException
      * @throws BadTypeException
      */
-    public function renderDetail() {
+    public function renderDetail(): void {
         parent::renderDetail();
         $this->template->acYear = $this->getAcYear();
         try {

@@ -7,5 +7,5 @@ namespace FKSDB\ORM\Models;
  * *
  */
 interface IEventReferencedModel {
-    public function getEvent(): ModelEvent;
+    public function getEvent(): ?ModelEvent;
 }

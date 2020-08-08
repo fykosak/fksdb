@@ -29,11 +29,9 @@ class StoredQueryFactory implements IXMLNodeSerializer {
     const PARAM_SERIES = 'series';
     const PARAM_AC_YEAR = 'ac_year';
 
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
-    /** @var ServiceStoredQuery */
-    private $serviceStoredQuery;
+    private ServiceStoredQuery $serviceStoredQuery;
 
     /**
      * StoredQueryFactory constructor.

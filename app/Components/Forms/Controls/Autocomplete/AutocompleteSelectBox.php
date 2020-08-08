@@ -83,10 +83,7 @@ class AutocompleteSelectBox extends TextBase {
         return $this->dataProvider;
     }
 
-    /**
-     * @return null|string
-     */
-    public function getRenderMethod() {
+    public function getRenderMethod(): ?string {
         return $this->renderMethod;
     }
 
@@ -98,11 +95,7 @@ class AutocompleteSelectBox extends TextBase {
         return $this->multiSelect;
     }
 
-    /**
-     * @param IDataProvider $dataProvider
-     * @return void
-     */
-    public function setDataProvider(IDataProvider $dataProvider) {
+    public function setDataProvider(IDataProvider $dataProvider): void {
         if ($this->ajax && !($dataProvider instanceof IFilteredDataProvider)) {
             throw new InvalidArgumentException('Data provider for AJAX must be instance of IFilteredDataProvider.');
         }

@@ -27,11 +27,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
         return DbNames::TAB_PERSON_INFO;
     }
 
-    /**
-     * @param array $data
-     * @return ModelPersonInfo
-     */
-    public function createNewModel(array $data): IModel {
+    public function createNewModel(array $data): ModelPersonInfo {
         if (isset($data['agreed']) && $data['agreed'] == '1') {
             $data['agreed'] = new DateTime();
         }

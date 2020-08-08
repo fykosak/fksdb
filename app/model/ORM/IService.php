@@ -21,9 +21,9 @@ interface IService {
 
     /**
      * @param int $key
-     * @return AbstractModelSingle|AbstractModelMulti|IModel|null
+     * @return IModel|null
      */
-    public function findByPrimary($key);
+    public function findByPrimary($key): ?IModel;
 
     /**
      * @param IModel $model

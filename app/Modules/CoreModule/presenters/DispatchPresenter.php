@@ -14,17 +14,17 @@ use Nette\Application\UI\InvalidLinkException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class DispatchPresenter extends AuthenticatedPresenter {
-    /** @var array */
-    private $contestsProperty;
 
-    public function titleDefault() {
+    private array $contestsProperty;
+
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Rozcestník'), 'fa fa-home'));
     }
 
     /**
      * @throws InvalidLinkException
      */
-    public function renderDefault() {
+    public function renderDefault(): void {
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         $person = $login->getPerson();

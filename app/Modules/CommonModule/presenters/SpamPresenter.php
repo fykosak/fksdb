@@ -35,7 +35,7 @@ class SpamPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws ForbiddenRequestException
      */
-    public function titleDetail() {
+    public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Detail of email #%s'), $this->getEntity()->getPrimary()), 'fa fa-envelope'));
     }
 
@@ -43,7 +43,7 @@ class SpamPresenter extends BasePresenter {
         return new PageTitle(_('List of emails'), 'fa fa-envelope');
     }
 
-    public function authorizedDetail() {
+    public function authorizedDetail(): void {
         $authorized = true;
         foreach ($this->getServiceContest()->getTable() as $contest) {
             $authorized = $authorized && $this->contestAuthorizator->isAllowed($this->getORMService()->getModelClassName()::RESOURCE_ID, 'detail', $contest);
@@ -55,7 +55,7 @@ class SpamPresenter extends BasePresenter {
      * @return void
      * @throws ModelNotFoundException
      */
-    public function renderDetail() {
+    public function renderDetail(): void {
         $this->template->model = $this->getEntity();
     }
 

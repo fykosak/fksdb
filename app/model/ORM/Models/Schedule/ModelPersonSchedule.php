@@ -52,10 +52,7 @@ class ModelPersonSchedule extends AbstractModelSingle implements
         return $this->getScheduleGroup()->getEvent();
     }
 
-    /**
-     * @return ModelPayment|null
-     */
-    public function getPayment() {
+    public function getPayment(): ?ModelPayment {
         $data = $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'person_schedule_id')->select('payment.*')->fetch();
         if (!$data) {
             return null;

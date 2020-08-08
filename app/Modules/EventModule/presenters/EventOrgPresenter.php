@@ -14,7 +14,6 @@ use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 
 /**
@@ -51,7 +50,7 @@ class EventOrgPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws BadTypeException
      */
-    public function titleEdit() {
+    public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-users'));
     }
 
@@ -68,9 +67,9 @@ class EventOrgPresenter extends BasePresenter {
     /**
      * @throws AbortException
      */
-    public function actionDelete() {
+    public function actionDelete(): void {
         try {
-            list($message) = $this->traitHandleDelete();
+            [$message] = $this->traitHandleDelete();
             $this->flashMessage($message->getMessage(), $message->getLevel());
             $this->redirect('list');
         } catch (BadRequestException $exception) {
@@ -84,7 +83,7 @@ class EventOrgPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws BadTypeException
      */
-    public function actionEdit() {
+    public function actionEdit(): void {
         $this->traitActionEdit();
     }
 
@@ -101,18 +100,18 @@ class EventOrgPresenter extends BasePresenter {
     }
 
     /**
-     * @return Control
+     * @return EventOrgFormComponent
      * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): EventOrgFormComponent {
         return new EventOrgFormComponent($this->getContext(), $this->getEvent(), true);
     }
 
     /**
-     * @return Control
+     * @return EventOrgFormComponent
      * @throws EventNotFoundException
      */
-    protected function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): EventOrgFormComponent {
         return new EventOrgFormComponent($this->getContext(), $this->getEvent(), false);
     }
 

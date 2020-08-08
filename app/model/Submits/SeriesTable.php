@@ -62,11 +62,7 @@ class SeriesTable {
         return $this->contest;
     }
 
-    /**
-     * @param ModelContest $contest
-     * @return void
-     */
-    public function setContest(ModelContest $contest) {
+    public function setContest(ModelContest $contest): void {
         $this->contest = $contest;
     }
 
@@ -74,11 +70,7 @@ class SeriesTable {
         return $this->year;
     }
 
-    /**
-     * @param int $year
-     * @return void
-     */
-    public function setYear(int $year) {
+    public function setYear(int $year): void {
         $this->year = $year;
     }
 
@@ -86,25 +78,18 @@ class SeriesTable {
         return $this->series;
     }
 
-    /**
-     * @param int $series
-     * @return void
-     */
-    public function setSeries(int $series) {
+    public function setSeries(int $series): void {
         $this->series = $series;
     }
 
-    /**
-     * @return array|null
-     */
-    public function getTaskFilter() {
+    public function getTaskFilter(): ?array {
         return $this->taskFilter;
     }
 
     /**
      * @param array|null $taskFilter
      */
-    public function setTaskFilter($taskFilter) {
+    public function setTaskFilter($taskFilter): void {
         $this->taskFilter = $taskFilter;
     }
 
@@ -163,7 +148,7 @@ class SeriesTable {
             }
         }
         return [
-            self::FORM_CONTESTANT => $result
+            self::FORM_CONTESTANT => $result,
         ];
     }
 

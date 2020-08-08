@@ -43,11 +43,7 @@ class ServiceEventOrg extends AbstractServiceSingle {
         }
     }*/
 
-    /**
-     * @param array $data
-     * @return ModelEventOrg
-     */
-    public function createNewModel(array $data): IModel {
+    public function createNewModel(array $data): ModelEventOrg {
         try {
             return parent::createNewModel($data);
         } catch (ModelException $exception) {

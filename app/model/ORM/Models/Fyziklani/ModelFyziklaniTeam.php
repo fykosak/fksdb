@@ -40,10 +40,7 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
         return $this->name;
     }
 
-    /**
-     * @return ModelPerson|NULL
-     */
-    public function getTeacher() {
+    public function getTeacher(): ?ModelPerson {
         $row = $this->ref(DbNames::TAB_PERSON, 'teacher_id');
         if ($row) {
             return ModelPerson::createFromActiveRow($row);

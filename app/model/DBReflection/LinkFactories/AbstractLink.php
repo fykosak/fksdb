@@ -15,8 +15,7 @@ use Nette\Application\UI\Presenter;
  */
 abstract class AbstractLink implements ILinkFactory {
 
-    /** @var ReferencedFactory */
-    protected $referencedFactory;
+    protected ReferencedFactory $referencedFactory;
 
     /**
      * @param ReferencedFactory $factory
@@ -44,7 +43,7 @@ abstract class AbstractLink implements ILinkFactory {
      * @throws CannotAccessModelException
      * @throws BadTypeException
      */
-    protected function getModel(AbstractModelSingle $modelSingle) {
+    protected function getModel(AbstractModelSingle $modelSingle): ?AbstractModelSingle {
         return $this->referencedFactory->accessModel($modelSingle);
     }
 

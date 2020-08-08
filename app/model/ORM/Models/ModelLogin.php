@@ -46,10 +46,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
         $this->yearCalculator = $yearCalculator;
     }
 
-    /**
-     * @return ModelPerson|null
-     */
-    public function getPerson() {
+    public function getPerson(): ?ModelPerson {
         if ($this->person) {
             return ModelPerson::createFromActiveRow($this->person);
         }
@@ -116,13 +113,13 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
     }
 
     /** @var Grant[]   cache */
-    private $roles;
+    private array $roles;
 
     /**
      * @return array|Grant[]|null
      */
-    public function getRoles() {
-        if ($this->roles === null) {
+    public function getRoles(): array {
+        if (!isset($this->roles) || is_null($this->roles)) {
             $this->roles = [];
             $this->roles[] = new Grant(Grant::CONTEST_ALL, ModelRole::REGISTERED);
 

@@ -143,10 +143,7 @@ class Breadcrumbs extends BaseComponent {
      * Path traversal
      * ********************** */
 
-    /**
-     * @return NULL|string
-     */
-    public function getBackLinkUrl() {
+    public function getBackLinkUrl(): ?string {
         $presenter = $this->getPresenter();
         $request = $presenter->getRequest();
 

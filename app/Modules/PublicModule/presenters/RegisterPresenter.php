@@ -214,18 +214,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         }
     }
 
-
-    /**
-     * @return ModelContest|null
-     */
-    public function getSelectedContest() {
+    public function getSelectedContest(): ?ModelContest {
         return $this->contestId ? $this->getServiceContest()->findByPrimary($this->contestId) : null;
     }
 
-    /**
-     * @return int
-     */
-    public function getSelectedYear() {
+    public function getSelectedYear(): ?int {
         return $this->year;
     }
 
@@ -236,10 +229,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return $this->getYearCalculator()->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 
-    /**
-     * @return ModelPerson|null
-     */
-    private function getPerson() {
+    private function getPerson(): ?ModelPerson {
         if (!$this->person) {
 
             if ($this->user->isLoggedIn()) {

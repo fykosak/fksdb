@@ -110,7 +110,7 @@ class PersonPresenter extends BasePresenter {
      *
      * @throws ForbiddenRequestException
      */
-    public function titleSearch() {
+    public function titleSearch(): void {
         $this->setPageTitle(new PageTitle(_('Find person'), 'fa fa-search'));
     }
 
@@ -120,7 +120,7 @@ class PersonPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleDetail() {
+    public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Detail of person %s'), $this->getEntity()->getFullName()), 'fa fa-eye'));
     }
 
@@ -130,7 +130,7 @@ class PersonPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleEdit() {
+    public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()), 'fa fa-user'));
     }
 
@@ -143,7 +143,7 @@ class PersonPresenter extends BasePresenter {
      *
      * @throws ForbiddenRequestException
      */
-    public function titleMerge() {
+    public function titleMerge(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Sloučení osob %s (%d) a %s (%d)'), $this->trunkPerson->getFullName(), $this->trunkPerson->person_id, $this->mergedPerson->getFullName(), $this->mergedPerson->person_id)));
     }
 
@@ -152,16 +152,16 @@ class PersonPresenter extends BasePresenter {
      *
      * @throws ForbiddenRequestException
      */
-    public function titlePizza() {
+    public function titlePizza(): void {
         $this->setPageTitle(new PageTitle(_('Pizza'), 'fa fa-cutlery'));
     }
 
     /* *********** AUTH ***************/
-    public function authorizedSearch() {
+    public function authorizedSearch(): void {
         $this->setAuthorized($this->isAnyContestAuthorized('person', 'stalk.search'));
     }
 
-    public function authorizedEdit() {
+    public function authorizedEdit(): void {
         $this->setAuthorized($this->isAnyContestAuthorized('person', 'edit'));
     }
 
@@ -172,7 +172,7 @@ class PersonPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws ModelNotFoundException
      */
-    public function authorizedDetail() {
+    public function authorizedDetail(): void {
         $full = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.full');
         $restrict = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.restrict');
         $basic = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.basic');
@@ -185,7 +185,7 @@ class PersonPresenter extends BasePresenter {
      * @param int $mergedId
      * @throws NotFoundException
      */
-    public function authorizedMerge($trunkId, $mergedId) {
+    public function authorizedMerge($trunkId, $mergedId): void {
         $this->trunkPerson = $this->servicePerson->findByPrimary($trunkId);
         $this->mergedPerson = $this->servicePerson->findByPrimary($mergedId);
         if (!$this->trunkPerson || !$this->mergedPerson) {
@@ -201,7 +201,7 @@ class PersonPresenter extends BasePresenter {
      * @param int $mergedId
      * @throws NotFoundException
      */
-    public function authorizedDontMerge($trunkId, $mergedId) {
+    public function authorizedDontMerge($trunkId, $mergedId): void {
         $this->authorizedMerge($trunkId, $mergedId);
     }
 
@@ -211,7 +211,7 @@ class PersonPresenter extends BasePresenter {
      * @param int $mergedId
      * @return void
      */
-    public function actionMerge($trunkId, $mergedId) {
+    public function actionMerge($trunkId, $mergedId): void {
         $this->personMerger->setMergedPair($this->trunkPerson, $this->mergedPerson);
         $this->updateMergeForm($this->getComponent('mergeForm')->getForm());
     }
@@ -221,7 +221,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws ModelNotFoundException
      */
-    public function actionEdit() {
+    public function actionEdit(): void {
         $this->traitActionEdit();
     }
 
@@ -233,7 +233,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws ReflectionException
      */
-    public function actionDontMerge($trunkId, $mergedId) {
+    public function actionDontMerge($trunkId, $mergedId): void {
         $mergedPI = $this->servicePersonInfo->findByPrimary($mergedId);
         $mergedData = ['duplicates' => trim($mergedPI->duplicates . ",not-same($trunkId)", ',')];
         $this->servicePersonInfo->updateModel2($mergedPI, $mergedData);
@@ -250,7 +250,7 @@ class PersonPresenter extends BasePresenter {
      * @return void
      * @throws ModelNotFoundException
      */
-    public function renderDetail() {
+    public function renderDetail(): void {
         $person = $this->getEntity();
         $this->template->userPermissions = $this->getUserPermissions();
         $this->template->person = $person;
@@ -462,7 +462,7 @@ class PersonPresenter extends BasePresenter {
      * @throws ReflectionException
      * @throws BadTypeException
      */
-    private function handleMergeFormSuccess(Form $form) {
+    private function handleMergeFormSuccess(Form $form): void {
         if ($form['cancel']->isSubmittedBy()) {
             $this->setMergeConflicts(null); // flush the session
             $this->backLinkRedirect(true);
@@ -495,7 +495,7 @@ class PersonPresenter extends BasePresenter {
      * @param iterable $conflicts
      * @return void
      */
-    private function setMergeConflicts($conflicts) {
+    private function setMergeConflicts($conflicts): void {
         $section = $this->session->getSection('conflicts');
         if ($conflicts === null) {
             $section->remove();
