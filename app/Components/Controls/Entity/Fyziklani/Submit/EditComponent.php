@@ -31,8 +31,7 @@ class EditComponent extends AbstractEntityFormComponent implements IEditEntityFo
     /** @var ModelEvent */
     private $event;
 
-    /** @var HandlerFactory */
-    private $handlerFactory;
+    private HandlerFactory $handlerFactory;
 
     /**
      * EditControl constructor.
@@ -53,11 +52,7 @@ class EditComponent extends AbstractEntityFormComponent implements IEditEntityFo
         $form->addComponent($this->createPointsField(), 'points');
     }
 
-    /**
-     * @param HandlerFactory $handlerFactory
-     * @return void
-     */
-    public function injectHandlerFactory(HandlerFactory $handlerFactory) {
+    public function injectHandlerFactory(HandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
     }
 

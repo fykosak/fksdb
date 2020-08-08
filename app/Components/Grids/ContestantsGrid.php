@@ -20,12 +20,11 @@ use FKSDB\SQL\ViewDataSource;
  */
 class ContestantsGrid extends BaseGrid {
 
-    /** @var ServiceContestant */
-    private $serviceContestant;
-    /** @var int */
-    private $year;
-    /** @var ModelContest */
-    private $contest;
+    private ServiceContestant $serviceContestant;
+
+    private int $year;
+
+    private ModelContest $contest;
 
     /**
      * ContestantsGrid constructor.
@@ -39,11 +38,7 @@ class ContestantsGrid extends BaseGrid {
         $this->year = $year;
     }
 
-    /**
-     * @param ServiceContestant $serviceContestant
-     * @return void
-     */
-    public function injectServiceContestant(ServiceContestant $serviceContestant) {
+    public function injectServiceContestant(ServiceContestant $serviceContestant): void {
         $this->serviceContestant = $serviceContestant;
     }
 

@@ -42,24 +42,24 @@ class ReferencedPersonContainer extends ReferencedContainer {
     const EXTRAPOLATE = 0x4;
     const HAS_DELIVERY = 0x8;
 
-    /** @var IModifiabilityResolver */
-    public $modifiabilityResolver;
-    /** @var IVisibilityResolver */
-    public $visibilityResolver;
-    /** @var int */
-    public $acYear;
-    /** @var array */
-    private $fieldsDefinition;
-    /** @var ServicePerson */
-    protected $servicePerson;
-    /** @var SingleReflectionFormFactory */
-    protected $singleReflectionFormFactory;
-    /**@var FlagFactory */
-    protected $flagFactory;
-    /** @var AddressFactory */
-    protected $addressFactory;
-    /** @var PersonScheduleFactory */
-    private $personScheduleFactory;
+
+    public IModifiabilityResolver $modifiabilityResolver;
+
+    public IVisibilityResolver $visibilityResolver;
+
+    public int $acYear;
+
+    private array $fieldsDefinition;
+
+    protected ServicePerson $servicePerson;
+
+    protected SingleReflectionFormFactory $singleReflectionFormFactory;
+
+    protected FlagFactory $flagFactory;
+
+    protected AddressFactory $addressFactory;
+
+    private PersonScheduleFactory $personScheduleFactory;
     /** @var ModelEvent */
     protected $event;
     /** @var bool */
@@ -97,21 +97,13 @@ class ReferencedPersonContainer extends ReferencedContainer {
         });
     }
 
-    /**
-     * AbstractReferencedPersonFactory constructor.
-     * @param AddressFactory $addressFactory
-     * @param FlagFactory $flagFactory
-     * @param ServicePerson $servicePerson
-     * @param SingleReflectionFormFactory $singleReflectionFormFactory
-     * @param PersonScheduleFactory $personScheduleFactory
-     */
     public function injectPrimary(
         AddressFactory $addressFactory,
         FlagFactory $flagFactory,
         ServicePerson $servicePerson,
         SingleReflectionFormFactory $singleReflectionFormFactory,
         PersonScheduleFactory $personScheduleFactory
-    ) {
+    ): void {
         $this->servicePerson = $servicePerson;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->flagFactory = $flagFactory;

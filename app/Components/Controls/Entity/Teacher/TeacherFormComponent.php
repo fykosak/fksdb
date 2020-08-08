@@ -29,25 +29,16 @@ class TeacherFormComponent extends AbstractEntityFormComponent implements IEditE
 
     const CONTAINER = 'teacher';
 
-    /** @var SchoolFactory */
-    protected $schoolFactory;
+    protected SchoolFactory $schoolFactory;
 
-    /** @var SingleReflectionFormFactory */
-    private $singleReflectionFormFactory;
+    private SingleReflectionFormFactory $singleReflectionFormFactory;
 
-    /** @var ServiceTeacher */
-    protected $serviceTeacher;
+    protected ServiceTeacher $serviceTeacher;
 
     /** @var ModelTeacher */
     private $model;
 
-    /**
-     * @param SingleReflectionFormFactory $singleReflectionFormFactory
-     * @param SchoolFactory $schoolFactory
-     * @param ServiceTeacher $serviceTeacher
-     * @return void
-     */
-    public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, SchoolFactory $schoolFactory, ServiceTeacher $serviceTeacher) {
+    public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, SchoolFactory $schoolFactory, ServiceTeacher $serviceTeacher): void {
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->schoolFactory = $schoolFactory;
         $this->serviceTeacher = $serviceTeacher;

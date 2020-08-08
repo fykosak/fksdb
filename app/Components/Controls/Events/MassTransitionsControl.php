@@ -22,11 +22,9 @@ class MassTransitionsControl extends BaseComponent {
     /** @var ModelEvent */
     private $event;
 
-    /** @var EventDispatchFactory */
-    private $eventDispatchFactory;
+    private EventDispatchFactory $eventDispatchFactory;
 
-    /** @var ApplicationHandlerFactory */
-    private $applicationHandlerFactory;
+    private ApplicationHandlerFactory $applicationHandlerFactory;
 
     /**
      * MassTransitionsControl constructor.
@@ -38,12 +36,7 @@ class MassTransitionsControl extends BaseComponent {
         $this->event = $event;
     }
 
-    /**
-     * @param EventDispatchFactory $eventDispatchFactory
-     * @param ApplicationHandlerFactory $applicationHandlerFactory
-     * @return void
-     */
-    public function injectPrimary(EventDispatchFactory $eventDispatchFactory, ApplicationHandlerFactory $applicationHandlerFactory) {
+    public function injectPrimary(EventDispatchFactory $eventDispatchFactory, ApplicationHandlerFactory $applicationHandlerFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
         $this->applicationHandlerFactory = $applicationHandlerFactory;
     }

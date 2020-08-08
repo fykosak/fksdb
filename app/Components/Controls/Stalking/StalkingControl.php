@@ -17,14 +17,9 @@ use FKSDB\ORM\Models\ModelPerson;
  */
 abstract class StalkingControl extends BaseComponent {
 
-    /** @var DBReflectionFactory */
-    protected $tableReflectionFactory;
+    protected DBReflectionFactory $tableReflectionFactory;
 
-    /**
-     * @param DBReflectionFactory $tableReflectionFactory
-     * @return void
-     */
-    public function injectPrimary(DBReflectionFactory $tableReflectionFactory) {
+    public function injectPrimary(DBReflectionFactory $tableReflectionFactory): void {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
@@ -59,6 +54,7 @@ abstract class StalkingControl extends BaseComponent {
     protected function createComponentValuePrinter(): ValuePrinterComponent {
         return new ValuePrinterComponent($this->getContext());
     }
+
     protected function createComponentLinkPrinter(): LinkPrinterComponent {
         return new LinkPrinterComponent($this->getContext());
     }

@@ -36,16 +36,15 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
     const CONT_PARAMS_META = 'paramsMeta';
     const CONT_META = 'meta';
 
-    /** @var StoredQueryFormFactory */
-    private $storedQueryFormFactory;
-    /** @var ServiceStoredQuery */
-    private $serviceStoredQuery;
-    /** @var ServiceStoredQueryTag */
-    private $serviceStoredQueryTag;
-    /** @var ServiceStoredQueryParameter */
-    private $serviceStoredQueryParameter;
-    /** @var StoredQueryFactory */
-    private $storedQueryFactory;
+    private StoredQueryFormFactory $storedQueryFormFactory;
+
+    private ServiceStoredQuery $serviceStoredQuery;
+
+    private ServiceStoredQueryTag $serviceStoredQueryTag;
+
+    private ServiceStoredQueryParameter $serviceStoredQueryParameter;
+
+    private StoredQueryFactory $storedQueryFactory;
 
     /** @var ModelStoredQuery */
     private $model;
@@ -64,21 +63,13 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
         }
     }
 
-    /**
-     * @param StoredQueryFormFactory $storedQueryFormFactory
-     * @param ServiceStoredQuery $serviceStoredQuery
-     * @param ServiceStoredQueryTag $serviceStoredQueryTag
-     * @param ServiceStoredQueryParameter $serviceStoredQueryParameter
-     * @param StoredQueryFactory $storedQueryFactory
-     * @return void
-     */
     public function injectPrimary(
         StoredQueryFormFactory $storedQueryFormFactory,
         ServiceStoredQuery $serviceStoredQuery,
         ServiceStoredQueryTag $serviceStoredQueryTag,
         ServiceStoredQueryParameter $serviceStoredQueryParameter,
         StoredQueryFactory $storedQueryFactory
-    ) {
+    ): void {
         $this->storedQueryFormFactory = $storedQueryFormFactory;
         $this->serviceStoredQuery = $serviceStoredQuery;
         $this->serviceStoredQueryTag = $serviceStoredQueryTag;

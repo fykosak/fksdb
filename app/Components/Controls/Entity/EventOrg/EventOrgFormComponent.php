@@ -27,8 +27,7 @@ class EventOrgFormComponent extends AbstractEntityFormComponent implements IEdit
 
     const CONTAINER = 'event_org';
 
-    /** @var ServiceEventOrg */
-    protected $serviceEventOrg;
+    protected ServiceEventOrg $serviceEventOrg;
 
     /** @var ModelEvent */
     protected $event;
@@ -47,11 +46,7 @@ class EventOrgFormComponent extends AbstractEntityFormComponent implements IEdit
         $this->event = $event;
     }
 
-    /**
-     * @param ServiceEventOrg $serviceEventOrg
-     * @return void
-     */
-    public function injectPrimary(ServiceEventOrg $serviceEventOrg) {
+    public function injectPrimary(ServiceEventOrg $serviceEventOrg): void {
         $this->serviceEventOrg = $serviceEventOrg;
     }
 

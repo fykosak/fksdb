@@ -34,14 +34,13 @@ use FKSDB\SQL\SearchableDataSource;
  */
 class AllSubmitsGrid extends SubmitsGrid {
 
-    /** @var ModelEvent */
-    private $event;
-    /** @var ServiceFyziklaniTeam */
-    private $serviceFyziklaniTeam;
-    /** @var ServiceFyziklaniTask */
-    private $serviceFyziklaniTask;
-    /** @var HandlerFactory */
-    private $handlerFactory;
+    private ModelEvent $event;
+
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
+
+    private HandlerFactory $handlerFactory;
 
     /**
      * FyziklaniSubmitsGrid constructor.
@@ -53,13 +52,7 @@ class AllSubmitsGrid extends SubmitsGrid {
         $this->event = $event;
     }
 
-    /**
-     * @param HandlerFactory $handlerFactory
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @return void
-     */
-    public function injectPrimary(HandlerFactory $handlerFactory, ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask) {
+    public function injectPrimary(HandlerFactory $handlerFactory, ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->handlerFactory = $handlerFactory;

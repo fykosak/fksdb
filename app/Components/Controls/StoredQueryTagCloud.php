@@ -16,8 +16,7 @@ class StoredQueryTagCloud extends BaseComponent {
     const MODE_LIST = 'mode-list';
     const MODE_DETAIL = 'mode-detail';
 
-    /** @var ServiceStoredQueryTagType */
-    private $serviceStoredQueryTagType;
+    private ServiceStoredQueryTagType $serviceStoredQueryTagType;
 
     /** @var string */
     private $mode;
@@ -28,11 +27,7 @@ class StoredQueryTagCloud extends BaseComponent {
      */
     public $activeTagIds = [];
 
-    /**
-     * @param ServiceStoredQueryTagType $serviceStoredQueryTagType
-     * @return void
-     */
-    public function injectPrimary(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
+    public function injectPrimary(ServiceStoredQueryTagType $serviceStoredQueryTagType): void {
         $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
     }
 

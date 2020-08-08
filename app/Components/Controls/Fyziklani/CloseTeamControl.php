@@ -18,14 +18,12 @@ use Nette\DI\Container;
  */
 class CloseTeamControl extends BaseComponent {
 
-    /** @var ModelEvent */
-    private $event;
+    private ModelEvent $event;
 
     /** @var ModelFyziklaniTeam */
     private $team;
 
-    /** @var ServiceFyziklaniTask */
-    private $serviceFyziklaniTask;
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
 
     /**
      * CloseTeamControl constructor.
@@ -37,11 +35,7 @@ class CloseTeamControl extends BaseComponent {
         $this->event = $event;
     }
 
-    /**
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @return void
-     */
-    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask) {
+    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask): void {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 

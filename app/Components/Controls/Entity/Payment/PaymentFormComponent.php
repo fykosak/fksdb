@@ -33,29 +33,22 @@ use Nette\Utils\JsonException;
  */
 class PaymentFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
 
-    /** @var PersonFactory */
-    private $personFactory;
+    private PersonFactory $personFactory;
 
-    /** @var PersonProvider */
-    private $personProvider;
+    private PersonProvider $personProvider;
 
-    /** @var ServicePersonSchedule */
-    private $servicePersonSchedule;
+    private ServicePersonSchedule $servicePersonSchedule;
 
-    /** @var bool */
-    private $isOrg;
+    private bool $isOrg;
 
-    /** @var PaymentMachine */
-    private $machine;
+    private PaymentMachine $machine;
 
     /** @var ModelPayment */
     private $model;
 
-    /** @var ServicePayment */
-    private $servicePayment;
+    private ServicePayment $servicePayment;
 
-    /** @var ServiceSchedulePayment */
-    private $serviceSchedulePayment;
+    private ServiceSchedulePayment $serviceSchedulePayment;
 
     /**
      * SelectForm constructor.
@@ -75,21 +68,13 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
         $this->isOrg = $isOrg;
     }
 
-    /**
-     * @param ServicePayment $servicePayment
-     * @param PersonFactory $personFactory
-     * @param PersonProvider $personProvider
-     * @param ServicePersonSchedule $servicePersonSchedule
-     * @param ServiceSchedulePayment $serviceSchedulePayment
-     * @return void
-     */
     public function injectPrimary(
         ServicePayment $servicePayment,
         PersonFactory $personFactory,
         PersonProvider $personProvider,
         ServicePersonSchedule $servicePersonSchedule,
         ServiceSchedulePayment $serviceSchedulePayment
-    ) {
+    ): void {
         $this->servicePayment = $servicePayment;
         $this->personFactory = $personFactory;
         $this->personProvider = $personProvider;

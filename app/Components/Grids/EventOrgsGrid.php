@@ -17,11 +17,10 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventOrgsGrid extends BaseGrid {
+    
+    private ServiceEventOrg $serviceEventOrg;
 
-    /** @var ServiceEventOrg */
-    private $serviceEventOrg;
-    /** @var ModelEvent */
-    private $event;
+    private ModelEvent $event;
 
     /**
      * EventOrgsGrid constructor.
@@ -33,11 +32,7 @@ class EventOrgsGrid extends BaseGrid {
         $this->event = $event;
     }
 
-    /**
-     * @param ServiceEventOrg $serviceEventOrg
-     * @return void
-     */
-    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
+    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg): void {
         $this->serviceEventOrg = $serviceEventOrg;
     }
 
@@ -57,7 +52,7 @@ class EventOrgsGrid extends BaseGrid {
         parent::configure($presenter);
         $this->addColumns(['person.full_name', 'event_org.note']);
         $this->addLink('event_org.edit');
-      //  $this->addLinkButton('edit', 'edit', _('Edit'), false, ['id' => 'e_org_id']);
+        //  $this->addLinkButton('edit', 'edit', _('Edit'), false, ['id' => 'e_org_id']);
         // $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'e_org_id']);
         //  $this->addLinkButton('delete','delete',_('Delete'),false,['id' => 'e_org_id']);
     }

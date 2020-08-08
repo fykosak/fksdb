@@ -18,17 +18,13 @@ use Nette\DI\Container;
  */
 class SchoolCheckComponent extends BaseComponent {
 
-    /** @var ModelEvent */
-    private $event;
+    private ModelEvent $event;
 
-    /** @var int */
-    private $acYear;
+    private int $acYear;
 
-    /** @var ServiceSchool */
-    private $serviceSchool;
+    private ServiceSchool $serviceSchool;
 
-    /** @var ServiceFyziklaniTeam */
-    private $serviceFyziklaniTeam;
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
     /**
      * SchoolCheckControl constructor.
@@ -42,12 +38,7 @@ class SchoolCheckComponent extends BaseComponent {
         $this->acYear = $acYear;
     }
 
-    /**
-     * @param ServiceSchool $serviceSchool
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @return void
-     */
-    public function injectPrimary(ServiceSchool $serviceSchool, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    public function injectPrimary(ServiceSchool $serviceSchool, ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceSchool = $serviceSchool;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }

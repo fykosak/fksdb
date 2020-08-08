@@ -13,14 +13,10 @@ use FKSDB\ORM\AbstractModelSingle;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ValuePrinterComponent extends BaseComponent {
-    /** @var DBReflectionFactory */
-    private $tableReflectionFactory;
 
-    /**
-     * @param DBReflectionFactory $tableReflectionFactory
-     * @return void
-     */
-    public function injectTableReflectionFactory(DBReflectionFactory $tableReflectionFactory) {
+    private DBReflectionFactory $tableReflectionFactory;
+
+    public function injectTableReflectionFactory(DBReflectionFactory $tableReflectionFactory): void {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 

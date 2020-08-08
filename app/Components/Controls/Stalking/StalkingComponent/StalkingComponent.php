@@ -14,14 +14,9 @@ use Nette\InvalidStateException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class StalkingComponent extends StalkingControl {
-    /** @var StalkingService */
-    private $stalkingService;
+    private StalkingService $stalkingService;
 
-    /**
-     * @param StalkingService $stalkingService
-     * @return void
-     */
-    public function injectStalkingService(StalkingService $stalkingService) {
+    public function injectStalkingService(StalkingService $stalkingService): void {
         $this->stalkingService = $stalkingService;
     }
 

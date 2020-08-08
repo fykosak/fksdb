@@ -25,34 +25,23 @@ class SchoolFormComponent extends AbstractEntityFormComponent implements IEditEn
     const CONT_ADDRESS = 'address';
     const CONT_SCHOOL = 'school';
 
-    /** @var ServiceAddress */
-    protected $serviceAddress;
+    protected ServiceAddress $serviceAddress;
 
-    /** @var ServiceSchool */
-    protected $serviceSchool;
+    protected ServiceSchool $serviceSchool;
 
-    /** @var SchoolFactory */
-    protected $schoolFactory;
+    protected SchoolFactory $schoolFactory;
 
-    /** @var AddressFactory */
-    protected $addressFactory;
+    protected AddressFactory $addressFactory;
 
     /** @var ModelSchool; */
     protected $model;
 
-    /**
-     * @param AddressFactory $addressFactory
-     * @param SchoolFactory $schoolFactory
-     * @param ServiceAddress $serviceAddress
-     * @param ServiceSchool $serviceSchool
-     * @return void
-     */
     public function injectPrimary(
         AddressFactory $addressFactory,
         SchoolFactory $schoolFactory,
         ServiceAddress $serviceAddress,
         ServiceSchool $serviceSchool
-    ) {
+    ): void {
         $this->addressFactory = $addressFactory;
         $this->schoolFactory = $schoolFactory;
         $this->serviceAddress = $serviceAddress;

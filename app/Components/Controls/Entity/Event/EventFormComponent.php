@@ -42,14 +42,11 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
     /** @var ModelContest */
     protected $contest;
 
-    /** @var SingleReflectionFormFactory */
-    protected $singleReflectionFormFactory;
+    protected SingleReflectionFormFactory $singleReflectionFormFactory;
 
-    /** @var ServiceAuthToken */
-    protected $serviceAuthToken;
+    protected ServiceAuthToken $serviceAuthToken;
 
-    /** @var ServiceEvent */
-    protected $serviceEvent;
+    protected ServiceEvent $serviceEvent;
 
     /** @var ModelEvent */
     protected $model;
@@ -57,8 +54,7 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
     /** @var int */
     private $year;
 
-    /** @var EventDispatchFactory */
-    private $eventDispatchFactory;
+    private EventDispatchFactory $eventDispatchFactory;
 
     /**
      * AbstractForm constructor.
@@ -73,19 +69,12 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
         $this->year = $year;
     }
 
-    /**
-     * @param SingleReflectionFormFactory $singleReflectionFormFactory
-     * @param ServiceAuthToken $serviceAuthToken
-     * @param ServiceEvent $serviceEvent
-     * @param EventDispatchFactory $eventDispatchFactory
-     * @return void
-     */
     public function injectPrimary(
         SingleReflectionFormFactory $singleReflectionFormFactory,
         ServiceAuthToken $serviceAuthToken,
         ServiceEvent $serviceEvent,
         EventDispatchFactory $eventDispatchFactory
-    ) {
+    ): void {
         $this->serviceAuthToken = $serviceAuthToken;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->serviceEvent = $serviceEvent;

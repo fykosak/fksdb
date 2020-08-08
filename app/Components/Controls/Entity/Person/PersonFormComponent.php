@@ -20,7 +20,6 @@ use FKSDB\ORM\Services\ServiceAddress;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonInfo;
 use FKSDB\ORM\Services\ServicePostContact;
-use FKSDB\ORM\ServicesMulti\ServiceMPostContact;
 use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\Forms\Form;
@@ -39,29 +38,21 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
     const PERSON_CONTAINER = 'person';
     const PERSON_INFO_CONTAINER = 'person_info';
 
-    /** @var SingleReflectionFormFactory */
-    protected $singleReflectionFormFactory;
+    protected SingleReflectionFormFactory $singleReflectionFormFactory;
 
-    /** @var AddressFactory */
-    protected $addressFactory;
+    protected AddressFactory $addressFactory;
 
-    /** @var ServicePerson */
-    protected $servicePerson;
+    protected ServicePerson $servicePerson;
 
-    /** @var ServicePersonInfo */
-    protected $servicePersonInfo;
+    protected ServicePersonInfo $servicePersonInfo;
 
-    /** @var ServiceMPostContact */
-    private $servicePostContact;
+    private ServicePostContact $servicePostContact;
 
-    /** @var ServiceAddress */
-    private $serviceAddress;
+    private ServiceAddress $serviceAddress;
 
-    /** @var MemoryLogger */
-    private $logger;
+    private MemoryLogger $logger;
 
-    /** @var FieldLevelPermission */
-    private $userPermission;
+    private FieldLevelPermission $userPermission;
 
     /** @var ModelPerson */
     private $model;
@@ -78,15 +69,6 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
         $this->logger = new MemoryLogger();
     }
 
-    /**
-     * @param SingleReflectionFormFactory $singleReflectionFormFactory
-     * @param ServicePerson $servicePerson
-     * @param ServicePersonInfo $servicePersonInfo
-     * @param AddressFactory $addressFactory
-     * @param ServicePostContact $servicePostContact
-     * @param ServiceAddress $serviceAddress
-     * @return void
-     */
     public function injectFactories(
         SingleReflectionFormFactory $singleReflectionFormFactory,
         ServicePerson $servicePerson,
@@ -94,7 +76,7 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
         AddressFactory $addressFactory,
         ServicePostContact $servicePostContact,
         ServiceAddress $serviceAddress
-    ) {
+    ): void {
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;

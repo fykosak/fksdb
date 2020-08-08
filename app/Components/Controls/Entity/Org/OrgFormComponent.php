@@ -29,16 +29,17 @@ class OrgFormComponent extends AbstractEntityFormComponent implements IEditEntit
     use ReferencedPersonTrait;
 
     const CONTAINER = 'org';
-    /** @var ServiceOrg */
-    protected $serviceOrg;
-    /** @var ModelContest */
-    protected $contest;
+
+    protected ServiceOrg $serviceOrg;
+
+    protected ModelContest $contest;
+
     /** @var ModelOrg */
     private $model;
-    /** @var SingleReflectionFormFactory */
-    private $singleReflectionFormFactory;
-    /** @var YearCalculator */
-    private $yearCalculator;
+
+    private SingleReflectionFormFactory $singleReflectionFormFactory;
+
+    private YearCalculator $yearCalculator;
 
     /**
      * AbstractForm constructor.
@@ -51,13 +52,7 @@ class OrgFormComponent extends AbstractEntityFormComponent implements IEditEntit
         $this->contest = $contest;
     }
 
-    /**
-     * @param SingleReflectionFormFactory $singleReflectionFormFactory
-     * @param ServiceOrg $serviceOrg
-     * @param YearCalculator $yearCalculator
-     * @return void
-     */
-    public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, ServiceOrg $serviceOrg, YearCalculator $yearCalculator) {
+    public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, ServiceOrg $serviceOrg, YearCalculator $yearCalculator): void {
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->serviceOrg = $serviceOrg;
         $this->yearCalculator = $yearCalculator;

@@ -15,18 +15,11 @@ use Nette\Application\BadRequestException;
  */
 class SeatingControl extends BaseComponent {
 
-    /** @var ServiceFyziklaniTeamPosition */
-    private $serviceFyziklaniTeamPosition;
+    private ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition;
 
-    /** @var EventDispatchFactory */
-    private $eventDispatchFactory;
+    private EventDispatchFactory $eventDispatchFactory;
 
-    /**
-     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
-     * @param EventDispatchFactory $eventDispatchFactory
-     * @return void
-     */
-    public function injectServicePrimary(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, EventDispatchFactory $eventDispatchFactory) {
+    public function injectServicePrimary(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, EventDispatchFactory $eventDispatchFactory): void {
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
         $this->eventDispatchFactory = $eventDispatchFactory;
     }

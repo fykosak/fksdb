@@ -36,17 +36,11 @@ class ResultsComponent extends BaseComponent {
     /** @var StoredQuery */
     private $storedQuery;
 
-    /** @var ContestAuthorizator */
-    private $contestAuthorizator;
+    private ContestAuthorizator $contestAuthorizator;
 
-    /** @var StoredQueryFactory */
-    private $storedQueryFormFactory;
+    private StoredQueryFactory $storedQueryFormFactory;
 
-    /**
-     *
-     * @var ExportFormatFactory
-     */
-    private $exportFormatFactory;
+    private ExportFormatFactory $exportFormatFactory;
 
     /** @var null|bool|string */
     private $error;
@@ -54,13 +48,7 @@ class ResultsComponent extends BaseComponent {
     /** @var bool */
     private $showParametrizeForm = true;
 
-    /**
-     * @param ContestAuthorizator $contestAuthorizator
-     * @param StoredQueryFactory $storedQueryFormFactory
-     * @param ExportFormatFactory $exportFormatFactory
-     * @return void
-     */
-    public function injectPrimary(ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory) {
+    public function injectPrimary(ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory): void {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->storedQueryFormFactory = $storedQueryFormFactory;
         $this->exportFormatFactory = $exportFormatFactory;

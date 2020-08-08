@@ -11,14 +11,10 @@ use FKSDB\ORM\AbstractModelSingle;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class DetailComponent extends BaseComponent {
-    /** @var DetailFactory */
-    private $detailFactory;
 
-    /**
-     * @param DetailFactory $detailFactory
-     * @return void
-     */
-    public function injectDetailFactory(DetailFactory $detailFactory) {
+    private DetailFactory $detailFactory;
+
+    public function injectDetailFactory(DetailFactory $detailFactory): void {
         $this->detailFactory = $detailFactory;
     }
 
