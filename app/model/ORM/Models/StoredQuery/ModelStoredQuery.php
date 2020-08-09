@@ -20,7 +20,7 @@ use Nette\Security\IResource;
  */
 class ModelStoredQuery extends AbstractModelSingle implements IResource {
 
-    const RESOURCE_ID = 'storedQuery';
+    public const RESOURCE_ID = 'storedQuery';
 
     /**
      * @return ModelStoredQueryParameter[]

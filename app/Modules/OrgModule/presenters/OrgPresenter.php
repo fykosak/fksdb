@@ -37,7 +37,7 @@ class OrgPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws BadTypeException
      */
-    public function titleEdit() {
+    public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Úprava organizátora %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-pencil'));
     }
 
@@ -48,7 +48,7 @@ class OrgPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws BadTypeException
      */
-    public function titleDetail() {
+    public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Org %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-user'));
     }
 
@@ -65,7 +65,7 @@ class OrgPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws BadTypeException
      */
-    public function actionEdit() {
+    public function actionEdit(): void {
         $this->traitActionEdit();
     }
 
@@ -91,7 +91,7 @@ class OrgPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws BadTypeException
      */
-    public function renderDetail() {
+    public function renderDetail(): void {
         $this->template->model = $this->getEntity();
     }
 

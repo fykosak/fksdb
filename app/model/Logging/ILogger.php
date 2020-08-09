@@ -20,9 +20,5 @@ interface ILogger {
     const PRIMARY = 'primary';
     const DEBUG = 40;
 
-    /**
-     * @param Message $message
-     * @return void
-     */
-    public function log(Message $message);
+    public function log(Message $message): void;
 }

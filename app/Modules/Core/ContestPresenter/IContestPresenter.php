@@ -15,11 +15,9 @@ use FKSDB\ORM\Models\ModelContest;
  */
 interface IContestPresenter {
 
-    /** @return ModelContest */
-    public function getSelectedContest();
+    public function getSelectedContest(): ?ModelContest;
 
-    /** @return int */
-    public function getSelectedYear();
+    public function getSelectedYear(): ?int;
 
     public function getSelectedAcademicYear(): int;
 

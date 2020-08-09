@@ -104,7 +104,7 @@ class DBReflectionFactory extends AbstractFactory {
      * @param Field $field
      * @return void
      */
-    protected function setDefaultValue(IComponent $component, Field $field) {
+    protected function setDefaultValue(IComponent $component, Field $field): void {
 
         if ($field->getBaseHolder()->getModelState() == BaseMachine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
@@ -119,7 +119,7 @@ class DBReflectionFactory extends AbstractFactory {
      * @param IComponent|BaseControl $component
      * @return void
      */
-    protected function setDisabled(IComponent $component) {
+    protected function setDisabled(IComponent $component): void {
         $component->setDisabled();
     }
 

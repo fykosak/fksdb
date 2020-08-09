@@ -35,7 +35,7 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
      * @throws NotImplementedException
      * @throws EmptyDataException
      */
-    public function store(array $data, ModelPayment $payment) {
+    public function store(array $data, ModelPayment $payment): void {
         if (!$this->getConnection()->getPdo()->inTransaction()) {
             throw new StorageException(_('Not in transaction!'));
         }

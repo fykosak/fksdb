@@ -46,7 +46,7 @@ trait SeriesPresenterTrait {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    protected function seriesTraitStartup() {
+    protected function seriesTraitStartup(): void {
         if (+$this->series !== $this->getSelectedSeries()) {
             $this->redirect('this', ['series' => $this->getSelectedSeries()]);
         }
@@ -89,7 +89,7 @@ trait SeriesPresenterTrait {
      */
     abstract protected function getContext();
 
-    abstract public function getSelectedContest(): ModelContest;
+    abstract public function getSelectedContest(): ?ModelContest;
 
     abstract public function getSelectedYear(): int;
 }

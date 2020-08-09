@@ -38,5 +38,4 @@ class Promise {
         }
         return $this->value;
     }
-
 }

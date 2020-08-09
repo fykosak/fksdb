@@ -14,11 +14,11 @@ use Nette\Utils\Html;
  */
 class SQLConsole extends TextArea {
 
-    const CSS_CLASS = 'sqlConsole';
-    /** @var bool */
-    private $attachedJS = false;
-    /** @var bool */
-    private $attachedCSS = false;
+    protected const CSS_CLASS = 'sqlConsole';
+
+    private bool $attachedJS = false;
+
+    private bool $attachedCSS = false;
 
     /**
      * SQLConsole constructor.

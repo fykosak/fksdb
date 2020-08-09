@@ -11,10 +11,8 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ScheduleContainer extends ContainerWithOptions {
-    /**
-     * @var bool
-     */
-    private $isAttached = false;
+
+    private bool $isAttached = false;
 
     /**
      * ScheduleContainer constructor.
@@ -30,10 +28,6 @@ class ScheduleContainer extends ContainerWithOptions {
         });
     }
 
-    /**
-     * @return void
-     */
-    protected function configure() {
-
+    protected function configure(): void {
     }
 }

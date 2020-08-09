@@ -24,8 +24,7 @@ class ServiceStoredQuery extends AbstractServiceSingle {
         return DbNames::TAB_STORED_QUERY;
     }
 
-    /** @var ServiceStoredQueryTag */
-    private $serviceStoredQueryTag;
+    private ServiceStoredQueryTag $serviceStoredQueryTag;
 
     /**
      * FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery constructor.
@@ -38,13 +37,7 @@ class ServiceStoredQuery extends AbstractServiceSingle {
         $this->serviceStoredQueryTag = $serviceStoredQueryTag;
     }
 
-    /**
-     * Syntactic sugar.
-     *
-     * @param string $qid
-     * @return ModelStoredQuery|null
-     */
-    public function findByQid(string $qid) {
+    public function findByQid(string $qid): ?ModelStoredQuery {
         if (!$qid) {
             return null;
         }
@@ -57,7 +50,7 @@ class ServiceStoredQuery extends AbstractServiceSingle {
      * @param int|array|null $tagTypeId
      * @return TypedTableSelection
      */
-    public function findByTagType($tagTypeId) {
+    public function findByTagType($tagTypeId): ?TypedTableSelection {
         if (!$tagTypeId) {
             return null;
         }

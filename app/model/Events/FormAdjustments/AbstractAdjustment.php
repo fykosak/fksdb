@@ -24,24 +24,12 @@ abstract class AbstractAdjustment implements IFormAdjustment {
     /** @var array */
     private $pathCache;
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return void
-     */
-    final public function adjust(Form $form, Machine $machine, Holder $holder) {
+    final public function adjust(Form $form, Machine $machine, Holder $holder): void {
         $this->setForm($form);
         $this->_adjust($form, $machine, $holder);
     }
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return void
-     */
-    abstract protected function _adjust(Form $form, Machine $machine, Holder $holder);
+    abstract protected function _adjust(Form $form, Machine $machine, Holder $holder): void;
 
     final protected function hasWildCart(string $mask): bool {
         return strpos($mask, self::WILDCART) !== false;
@@ -75,7 +63,7 @@ abstract class AbstractAdjustment implements IFormAdjustment {
     /**
      * @param Form $form
      */
-    private function setForm($form) {
+    private function setForm($form): void {
         $this->pathCache = [];
         /** @var Control $control */
         // TODO not type safe

@@ -25,7 +25,7 @@ class ServiceMTsafParticipant extends AbstractServiceMulti {
     /**
      * @param IModel|AbstractModelMulti $model
      */
-    public function dispose(IModel $model) {
+    public function dispose(IModel $model): void {
         parent::dispose($model);
         $this->getMainService()->dispose($model->getMainModel());
     }

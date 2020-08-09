@@ -12,16 +12,16 @@ use Nette\DI\Container;
 use Tracy\Debugger;
 
 class PersonPaymentContainer extends ContainerWithOptions {
-    /** @var bool */
-    private $isAttached = false;
-    /** @var ServicePersonSchedule */
-    private $servicePersonSchedule;
-    /** @var ModelEvent */
-    private $event;
-    /** @var string */
-    private $groupTypes;
-    /** @var bool */
-    private $showAll;
+
+    private bool $isAttached = false;
+
+    private ServicePersonSchedule $servicePersonSchedule;
+
+    private ModelEvent $event;
+
+    private array $groupTypes;
+
+    private bool $showAll;
 
     /**
      * ScheduleContainer constructor.
@@ -36,7 +36,6 @@ class PersonPaymentContainer extends ContainerWithOptions {
         $this->groupTypes = $groupTypes;
         $this->showAll = $showAll;
 
-
         $this->monitor(IContainer::class, function () {
             if (!$this->isAttached) {
                 $this->configure();
@@ -45,11 +44,7 @@ class PersonPaymentContainer extends ContainerWithOptions {
         });
     }
 
-    /**
-     * @param ServicePersonSchedule $servicePersonSchedule
-     * @return void
-     */
-    public function injectServicePersonSchedule(ServicePersonSchedule $servicePersonSchedule) {
+    public function injectServicePersonSchedule(ServicePersonSchedule $servicePersonSchedule): void {
         $this->servicePersonSchedule = $servicePersonSchedule;
     }
 
@@ -57,7 +52,7 @@ class PersonPaymentContainer extends ContainerWithOptions {
      * @return void
      * @throws NotImplementedException
      */
-    protected function configure() {
+    protected function configure(): void {
         $query = $this->servicePersonSchedule->getTable()
             ->where('schedule_item.schedule_group.event_id', $this->event->event_id);
         if (count($this->groupTypes)) {

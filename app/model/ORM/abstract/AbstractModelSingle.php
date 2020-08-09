@@ -9,8 +9,8 @@ use Nette\Database\Table\Selection;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class AbstractModelSingle extends ActiveRow implements IModel {
-    /** @var array */
-    private $tmpData;
+
+    private array $tmpData;
 
     /**
      * AbstractModelSingle constructor.
@@ -21,7 +21,6 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
         parent::__construct($data, $table);
         $this->tmpData = $data;
     }
-
 
     /**
      * @var bool

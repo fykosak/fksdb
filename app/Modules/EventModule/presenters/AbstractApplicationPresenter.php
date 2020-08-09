@@ -45,7 +45,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     /**
      * @throws EventNotFoundException
      */
-    final public function titleList() {
+    final public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('List of applications'), 'fa fa-users'));
     }
 
@@ -57,7 +57,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws \Throwable
      */
-    final public function titleDetail() {
+    final public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Application detail "%s"'), $this->getEntity()->__toString()), 'fa fa-user'));
     }
 
@@ -65,7 +65,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    final public function titleTransitions() {
+    final public function titleTransitions(): void {
         $this->setPageTitle(new PageTitle(_('Group transitions'), 'fa fa-user'));
     }
 
@@ -83,7 +83,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function renderDetail() {
+    public function renderDetail(): void {
         $this->template->event = $this->getEvent();
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
     }
@@ -92,7 +92,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function renderList() {
+    public function renderList(): void {
         $this->template->event = $this->getEvent();
     }
 

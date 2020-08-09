@@ -2,7 +2,6 @@
 
 namespace FKSDB\Modules\CoreModule;
 
-use FKSDB\Authentication\SSO\GlobalSession;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Localization\UnsupportedLanguageException;
@@ -90,7 +89,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws InvalidLinkException
      */
-    public function actionLogout() {
+    public function actionLogout(): void {
         $subDomainAuth = $this->getContext()->getParameters()['subdomain']['auth'];
         $subDomain = $this->getParameter('subdomain');
 
@@ -130,7 +129,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadTypeException
      */
-    public function actionLogin() {
+    public function actionLogin(): void {
         if ($this->isLoggedIn()) {
             /** @var ModelLogin $login */
             $login = $this->getUser()->getIdentity();
@@ -326,7 +325,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @throws AbortException
      */
-    private function initialRedirect() {
+    private function initialRedirect(): void {
         if ($this->backlink) {
             $this->restoreRequest($this->backlink);
         }

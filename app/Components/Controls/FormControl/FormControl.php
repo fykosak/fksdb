@@ -32,7 +32,7 @@ class FormControl extends Control {
         return $component;
     }
 
-    public function render() {
+    public function render(): void {
         if (!isset($this->template->mainContainer)) {
             $this->template->mainContainer = $this->getComponent('form');
         }

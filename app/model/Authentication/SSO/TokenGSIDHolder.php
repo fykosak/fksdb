@@ -3,7 +3,6 @@
 namespace FKSDB\Authentication\SSO;
 
 use FKSDB\Authentication\TokenAuthenticator;
-use FKSDB\Authentication\SSO\IGSIDHolder;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use Nette\Http\Request;

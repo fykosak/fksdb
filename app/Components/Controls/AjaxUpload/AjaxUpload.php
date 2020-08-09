@@ -93,7 +93,7 @@ class AjaxUpload extends ReactComponent {
      * @throws InvalidLinkException
      * @throws BadTypeException
      */
-    public function handleUpload() {
+    public function handleUpload(): void {
         $response = new ReactResponse();
 
         $files = $this->getHttpRequest()->getFiles();
@@ -135,7 +135,7 @@ class AjaxUpload extends ReactComponent {
      * @throws InvalidLinkException
      * @throws BadTypeException
      */
-    public function handleRevoke() {
+    public function handleRevoke(): void {
         $submitId = $this->getReactRequest()->requestData['submitId'];
         $logger = new MemoryLogger();
         $data = $this->submitHandlerFactory->handleRevoke($this->getPresenter(), $logger, $submitId);
@@ -155,7 +155,7 @@ class AjaxUpload extends ReactComponent {
      * @throws ForbiddenRequestException
      * @throws NotFoundException
      */
-    public function handleDownload() {
+    public function handleDownload(): void {
         $submitId = $this->getReactRequest()->requestData['submitId'];
         $logger = new MemoryLogger();
         $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $logger, $submitId);

@@ -27,11 +27,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
         return DbNames::TAB_PERSON_INFO;
     }
 
-    /**
-     * @param array $data
-     * @return ModelPersonInfo
-     */
-    public function createNewModel(array $data): IModel {
+    public function createNewModel(array $data): ModelPersonInfo {
         if (isset($data['agreed']) && $data['agreed'] == '1') {
             $data['agreed'] = new DateTime();
         }
@@ -54,13 +50,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
         return parent::updateModel2($model, $data);
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param ModelPersonInfo|null $info
-     * @param array $data
-     * @return ModelPersonInfo
-     */
-    public function store(ModelPerson $person, $info, array $data): ModelPersonInfo {
+    public function store(ModelPerson $person, ?ModelPersonInfo $info, array $data): ModelPersonInfo {
         if ($info) {
             $this->updateModel2($info, $data);
             return $this->refresh($info);

@@ -26,11 +26,9 @@ class YearCalculator {
      */
     const FIRST_AC_MONTH = 9;
 
-    /** @var ServiceContestYear */
-    private $serviceContestYear;
+    private ServiceContestYear $serviceContestYear;
 
-    /** @var ServiceContest */
-    private $serviceContest;
+    private ServiceContest $serviceContest;
 
     /** @var int[][] */
     private $cache = [];
@@ -38,8 +36,8 @@ class YearCalculator {
     private $revCache = [];
     /** @var int */
     private $acYear;
-    /** @var Container */
-    private $container;
+
+    private Container $container;
 
     /**
      * FKSDB\YearCalculator constructor.
@@ -61,7 +59,7 @@ class YearCalculator {
      * @return int
      * @throws InvalidArgumentException
      */
-    public function getAcademicYear(ActiveRow $contest, $year): int {
+    public function getAcademicYear(ActiveRow $contest, ?int $year): int {
         if (!isset($this->cache[$contest->contest_id]) || !isset($this->cache[$contest->contest_id][$year])) {
             throw new InvalidArgumentException("No academic year defined for {$contest->contest_id}:$year.");
         }
@@ -142,7 +140,7 @@ class YearCalculator {
         }
     }
 
-    private function preloadCache() {
+    private function preloadCache(): void {
         /** @var ModelContestYear $model */
         foreach ($this->serviceContestYear->getTable()->order('year') as $model) {
             if (!isset($this->cache[$model->contest_id])) {

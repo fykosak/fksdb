@@ -52,7 +52,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
         $this->uniqueLoginFactory = $uniqueLoginFactory;
     }
 
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Settings'), 'fa fa-cogs'));
     }
 
@@ -60,7 +60,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
      * @return void
      * @throws BadTypeException
      */
-    public function renderDefault() {
+    public function renderDefault(): void {
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
 
@@ -131,7 +131,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
      * @param Form $form
      * @throws AbortException
      */
-    private function handleSettingsFormSuccess(Form $form) {
+    private function handleSettingsFormSuccess(Form $form): void {
         $values = $form->getValues();
         $tokenAuthentication =
             $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||

@@ -29,10 +29,7 @@ class GettextTranslator implements ITranslator {
         $this->localeDir = $localeDir;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getLang() {
+    public function getLang(): ?string {
         return $this->lang;
     }
 
@@ -40,7 +37,7 @@ class GettextTranslator implements ITranslator {
      *
      * @param string $lang ISO 639-1
      */
-    public function setLang(string $lang) {
+    public function setLang(string $lang): void {
         if (!isset($this->locales[$lang])) {
             throw new InvalidArgumentException("Language $lang not supported");
         }
@@ -66,7 +63,7 @@ class GettextTranslator implements ITranslator {
      * @param null $count
      * @return string
      */
-    public function translate($message, $count = NULL) {
+    public function translate($message, $count = null) {
         if ($message === "" || $message === null) {
             return "";
         }

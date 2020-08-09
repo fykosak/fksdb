@@ -30,17 +30,11 @@ class DeduplicatePresenter extends BasePresenter {
         $this->merger = $merger;
     }
 
-    /**
-     * @return void
-     */
-    public function authorizedPerson() {
+    public function authorizedPerson(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowedForAnyContest('person', 'list'));
     }
 
-    /**
-     * @return void
-     */
-    public function titlePerson() {
+    public function titlePerson(): void {
         $this->setPageTitle(new PageTitle(_('Duplicitní osoby'), 'fa fa-exchange'));
     }
 

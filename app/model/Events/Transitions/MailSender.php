@@ -52,19 +52,15 @@ class MailSender {
      */
     private $addressees;
 
-    /** @var MailTemplateFactory */
-    private $mailTemplateFactory;
+    private MailTemplateFactory $mailTemplateFactory;
 
-    /** @var AccountManager */
-    private $accountManager;
+    private AccountManager $accountManager;
 
-    /** @var ServiceAuthToken */
-    private $serviceAuthToken;
+    private ServiceAuthToken $serviceAuthToken;
 
-    /** @var ServicePerson */
-    private $servicePerson;
-    /** @var ServiceEmailMessage */
-    private $serviceEmailMessage;
+    private ServicePerson $servicePerson;
+
+    private ServiceEmailMessage $serviceEmailMessage;
 
     /**
      * MailSender constructor.
@@ -110,7 +106,7 @@ class MailSender {
      * @return void
      * @throws UnsupportedLanguageException
      */
-    private function send(Transition $transition, Holder $holder) {
+    private function send(Transition $transition, Holder $holder): void {
         $personIds = $this->resolveAdressees($transition, $holder);
         $persons = $this->servicePerson->getTable()
             ->where('person.person_id', $personIds)

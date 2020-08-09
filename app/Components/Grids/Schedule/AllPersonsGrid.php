@@ -50,7 +50,7 @@ class AllPersonsGrid extends BaseGrid {
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->paginate = false;

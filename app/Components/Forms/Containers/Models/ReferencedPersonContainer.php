@@ -42,7 +42,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
     const EXTRAPOLATE = 0x4;
     const HAS_DELIVERY = 0x8;
 
-
     public IModifiabilityResolver $modifiabilityResolver;
 
     public IVisibilityResolver $visibilityResolver;
@@ -60,10 +59,10 @@ class ReferencedPersonContainer extends ReferencedContainer {
     protected AddressFactory $addressFactory;
 
     private PersonScheduleFactory $personScheduleFactory;
-    /** @var ModelEvent */
-    protected $event;
-    /** @var bool */
-    private $configured = false;
+
+    protected ?ModelEvent $event;
+
+    private bool $configured = false;
 
     /**
      * ReferencedPersonContainer constructor.
@@ -81,7 +80,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
         IVisibilityResolver $visibilityResolver,
         int $acYear,
         array $fieldsDefinition,
-        $event,
+        ?ModelEvent $event,
         bool $allowClear
     ) {
         parent::__construct($container, $allowClear);

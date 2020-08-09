@@ -76,7 +76,7 @@ class HandoutForm extends BaseComponent {
      * @param Form $form
      * @throws AbortException
      */
-    public function handleFormSuccess(Form $form) {
+    public function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
 
         $connection = $this->serviceTaskContribution->getConnection();
@@ -105,7 +105,7 @@ class HandoutForm extends BaseComponent {
         $this->getPresenter()->redirect('this');
     }
 
-    public function render() {
+    public function render(): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'HandoutForm.latte');
         $this->template->render();
     }

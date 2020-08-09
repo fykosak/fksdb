@@ -10,14 +10,14 @@ use FKSDB\UI\PageTitle;
  */
 class DashboardPresenter extends BasePresenter {
 
-    public function authorizedDefault() {
+    public function authorizedDefault(): void {
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         $access = $login ? $login->isOrg($this->getYearCalculator()) : false;
         $this->setAuthorized($access);
     }
 
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Organizátorský pultík'), 'fa fa-dashboard'));
     }
 }

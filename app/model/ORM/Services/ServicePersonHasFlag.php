@@ -38,7 +38,7 @@ class ServicePersonHasFlag extends AbstractServiceSingle {
         return parent::createNew($data);
     }
 
-    public function createNewModel(array $data): IModel {
+    public function createNewModel(array $data): AbstractModelSingle {
         $data['modified'] = new DateTime();
         return parent::createNewModel($data);
     }

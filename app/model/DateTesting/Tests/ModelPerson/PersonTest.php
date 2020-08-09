@@ -10,10 +10,10 @@ use FKSDB\ORM\Models\ModelPerson;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class PersonTest {
-    /** @var string */
-    private $id;
-    /** @var string */
-    private $title;
+
+    private string $id;
+
+    private string $title;
 
     /**
      * PersonTest constructor.
@@ -25,12 +25,7 @@ abstract class PersonTest {
         $this->title = $title;
     }
 
-    /**
-     * @param ILogger $logger
-     * @param ModelPerson $person
-     * @return void
-     */
-    abstract public function run(ILogger $logger, ModelPerson $person);
+    abstract public function run(ILogger $logger, ModelPerson $person): void;
 
     public function getTitle(): string {
         return $this->title;

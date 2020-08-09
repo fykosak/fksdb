@@ -31,12 +31,11 @@ abstract class ReferencedContainer extends ContainerWithOptions {
     const CONTROL_COMPACT = '_c_compact';
     const SUBMIT_CLEAR = '__clear';
 
-    /** @var ReferencedId */
-    private $referencedId;
-    /** @var bool */
-    protected $allowClear = true;
-    /** @var bool */
-    private $attachedJS = false;
+    private ReferencedId $referencedId;
+
+    protected bool $allowClear = true;
+
+    private bool $attachedJS = false;
 
     /**
      * ReferencedContainer constructor.
@@ -70,11 +69,7 @@ abstract class ReferencedContainer extends ContainerWithOptions {
         $this->referencedId = $referencedId;
     }
 
-    /**
-     * @param bool $value
-     * @return void
-     */
-    public function setDisabled(bool $value = true) {
+    public function setDisabled(bool $value = true): void {
         /** @var BaseControl $control */
         foreach ($this->getControls() as $control) {
             $control->setDisabled($value);
@@ -88,11 +83,7 @@ abstract class ReferencedContainer extends ContainerWithOptions {
         $control->setOption('visible', $allowClear);
     }
 
-    /**
-     * @param IComponent $child
-     * @return void
-     */
-    protected function validateChildComponent(IComponent $child) {
+    protected function validateChildComponent(IComponent $child): void {
         if (!$child instanceof BaseControl && !$child instanceof ContainerWithOptions) {
             throw new InvalidStateException(__CLASS__ . ' can contain only components with get/set option funcionality, ' . get_class($child) . ' given.');
         }
@@ -102,7 +93,7 @@ abstract class ReferencedContainer extends ContainerWithOptions {
      * @param array|ArrayHash $conflicts
      * @param null $container
      */
-    public function setConflicts($conflicts, $container = null) {
+    public function setConflicts($conflicts, $container = null): void {
         $container = $container ?: $this;
         foreach ($conflicts as $key => $value) {
             $component = $container->getComponent($key, false);
@@ -114,7 +105,7 @@ abstract class ReferencedContainer extends ContainerWithOptions {
         }
     }
 
-    private function createClearButton() {
+    private function createClearButton(): void {
         $submit = $this->addSubmit(self::SUBMIT_CLEAR, 'X')
             ->setValidationScope(false);
         $submit->getControlPrototype()->class[] = self::CSS_AJAX;
@@ -126,14 +117,14 @@ abstract class ReferencedContainer extends ContainerWithOptions {
         };
     }
 
-    private function createCompactValue() {
+    private function createCompactValue(): void {
         $this->addHidden(self::CONTROL_COMPACT);
     }
 
     /**
      * @note Must be called after a form is attached.
      */
-    private function updateHtmlData() {
+    private function updateHtmlData(): void {
         $this->setOption('id', sprintf(self::ID_MASK, $this->getForm()->getName(), $this->lookupPath('Nette\Forms\Form')));
         $referencedId = $this->referencedId->getHtmlId();
         $this->setOption('data-referenced-id', $referencedId);

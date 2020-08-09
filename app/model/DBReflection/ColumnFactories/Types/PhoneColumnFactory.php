@@ -62,12 +62,7 @@ class PhoneColumnFactory extends DefaultColumnFactory implements ITestedColumnFa
         return $control;
     }
 
-    /**
-     * @param ILogger $logger
-     * @param AbstractModelSingle $model
-     * @return void
-     */
-    final public function runTest(ILogger $logger, AbstractModelSingle $model) {
+    final public function runTest(ILogger $logger, AbstractModelSingle $model): void {
 
         $value = $model->{$this->getModelAccessKey()};
         if (\is_null($value)) {

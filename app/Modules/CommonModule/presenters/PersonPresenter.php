@@ -132,7 +132,7 @@ class PersonPresenter extends BasePresenter {
      *
      * @throws ForbiddenRequestException
      */
-    public function titlePizza() {
+    public function titlePizza(): void {
         $this->setPageTitle(new PageTitle(_('Pizza'), 'fa fa-cutlery'));
     }
 
@@ -210,7 +210,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws ReflectionException
      */
-    public function actionDontMerge($trunkId, $mergedId) {
+    public function actionDontMerge($trunkId, $mergedId): void {
         $mergedPI = $this->servicePersonInfo->findByPrimary($mergedId);
         $mergedData = ['duplicates' => trim($mergedPI->duplicates . ",not-same($trunkId)", ',')];
         $this->servicePersonInfo->updateModel2($mergedPI, $mergedData);
@@ -227,7 +227,7 @@ class PersonPresenter extends BasePresenter {
      * @return void
      * @throws ModelNotFoundException
      */
-    public function renderDetail() {
+    public function renderDetail(): void {
         $person = $this->getEntity();
         $this->template->userPermissions = $this->getUserPermissions();
         $this->template->person = $person;
@@ -439,7 +439,7 @@ class PersonPresenter extends BasePresenter {
      * @throws ReflectionException
      * @throws BadTypeException
      */
-    private function handleMergeFormSuccess(Form $form) {
+    private function handleMergeFormSuccess(Form $form): void {
         if ($form['cancel']->isSubmittedBy()) {
             $this->setMergeConflicts(null); // flush the session
             $this->backLinkRedirect(true);
@@ -472,7 +472,7 @@ class PersonPresenter extends BasePresenter {
      * @param iterable $conflicts
      * @return void
      */
-    private function setMergeConflicts($conflicts) {
+    private function setMergeConflicts($conflicts): void {
         $section = $this->session->getSection('conflicts');
         if ($conflicts === null) {
             $section->remove();

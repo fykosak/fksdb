@@ -53,11 +53,11 @@ class TasksPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function authorizedImport() {
+    public function authorizedImport(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'insert', $this->getSelectedContest()));
     }
 
-    public function titleImport() {
+    public function titleImport(): void {
         $this->setPageTitle(new PageTitle(_('Import úloh'), 'fa fa-upload'));
     }
 
@@ -104,7 +104,7 @@ class TasksPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    private function validSubmitSeriesForm(Form $seriesForm) {
+    private function validSubmitSeriesForm(Form $seriesForm): void {
         $values = $seriesForm->getValues();
         $series = $values['series'];
         $file = null;

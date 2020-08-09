@@ -83,7 +83,7 @@ class ContestChooser extends BaseComponent {
      *
      * @param string|array $yearDefinition
      */
-    public function setYears($yearDefinition) {
+    public function setYears($yearDefinition): void {
         $this->yearDefinition = $yearDefinition;
     }
 
@@ -113,7 +113,7 @@ class ContestChooser extends BaseComponent {
      * @param mixed $contestSource
      * @return void
      */
-    public function setContestSource($contestSource) {
+    public function setContestSource($contestSource): void {
         $this->contestSource = $contestSource;
     }
 
@@ -126,7 +126,7 @@ class ContestChooser extends BaseComponent {
      * Redirect to corrrect address according to the resolved values.
      * @throws AbortException
      */
-    public function syncRedirect() {
+    public function syncRedirect(): void {
         $this->init();
 
         $presenter = $this->getPresenter();
@@ -306,7 +306,7 @@ class ContestChooser extends BaseComponent {
      * @return void
      * @throws ForbiddenRequestException
      */
-    public function render($class = null) {
+    public function render($class = null): void {
         if (!$this->isValid()) {
             throw new ForbiddenRequestException('No contests available.');
         }
@@ -323,7 +323,7 @@ class ContestChooser extends BaseComponent {
      * @param int $contestId
      * @throws AbortException
      */
-    public function handleChange($contestId) {
+    public function handleChange($contestId): void {
         $presenter = $this->getPresenter();
         $backupYear = null;
         if (isset($presenter->year)) {
@@ -349,7 +349,7 @@ class ContestChooser extends BaseComponent {
      * @param int $year
      * @throws AbortException
      */
-    public function handleChangeYear($contest, $year) {
+    public function handleChangeYear($contest, $year): void {
         $presenter = $this->getPresenter();
         $presenter->redirect('this', [
             'contestId' => $contest, //WHY? contestId should be persistent

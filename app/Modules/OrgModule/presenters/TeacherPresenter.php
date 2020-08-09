@@ -33,7 +33,7 @@ class TeacherPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleEdit() {
+    public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Edit teacher %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-pencil'));
     }
 
@@ -50,7 +50,7 @@ class TeacherPresenter extends BasePresenter {
      *
      * @throws ForbiddenRequestException
      */
-    public function titleDetail() {
+    public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(_('Teacher detail'), 'fa fa-graduation-cap'));
     }
 
@@ -58,7 +58,7 @@ class TeacherPresenter extends BasePresenter {
      * @return void
      * @throws ModelNotFoundException
      */
-    public function renderDetail() {
+    public function renderDetail(): void {
         $this->template->model = $this->getEntity();
     }
 
@@ -67,7 +67,7 @@ class TeacherPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws BadTypeException
      */
-    public function actionEdit() {
+    public function actionEdit(): void {
         $this->traitActionEdit();
     }
 

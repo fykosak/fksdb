@@ -163,7 +163,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      *
      * @return bool
      */
-    public function requiresLogin() {
+    public function requiresLogin(): bool {
         return true;
     }
 
@@ -178,14 +178,14 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     /**
      * @return string
      */
-    protected function getHttpRealm() {
+    protected function getHttpRealm(): ?string {
         return null;
     }
 
     /**
      * @throws ForbiddenRequestException
      */
-    protected function unauthorizedAccess() {
+    protected function unauthorizedAccess(): void {
         throw new ForbiddenRequestException();
     }
 

@@ -13,9 +13,7 @@ use FKSDB\Config\NeonScheme;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\ModelException;
 use FKSDB\Logging\ILogger;
-use FKSDB\Messages\Message;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
@@ -30,29 +28,25 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
 use Nette\Neon\Neon;
 use Nette\Utils\Html;
-use Tracy\Debugger;
 
 /**
  * Class AbstractForm
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
-    const CONT_EVENT = 'event';
+    public const CONT_EVENT = 'event';
 
-    /** @var ModelContest */
-    protected $contest;
+    protected ModelContest $contest;
 
     protected SingleReflectionFormFactory $singleReflectionFormFactory;
 
     protected ServiceAuthToken $serviceAuthToken;
 
     protected ServiceEvent $serviceEvent;
-
     /** @var ModelEvent */
     protected $model;
 
-    /** @var int */
-    private $year;
+    private int $year;
 
     private EventDispatchFactory $eventDispatchFactory;
 

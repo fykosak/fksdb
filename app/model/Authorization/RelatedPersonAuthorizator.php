@@ -16,8 +16,7 @@ class RelatedPersonAuthorizator {
 
     use SmartObject;
 
-    /** @var IUserStorage */
-    private $user;
+    private IUserStorage $user;
 
     /**
      * RelatedPersonAuthorizator constructor.

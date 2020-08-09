@@ -57,7 +57,7 @@ class EventsGrid extends BaseGrid {
      * @throws InvalidLinkException
      * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->setDefaultOrder('event.begin ASC');
 

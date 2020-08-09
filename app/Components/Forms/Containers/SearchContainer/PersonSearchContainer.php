@@ -17,9 +17,9 @@ use Nette\InvalidArgumentException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonSearchContainer extends SearchContainer {
-    const SEARCH_EMAIL = 'email';
-    const SEARCH_ID = 'id';
-    const SEARCH_NONE = 'none';
+    public const SEARCH_EMAIL = 'email';
+    public const SEARCH_ID = 'id';
+    public const SEARCH_NONE = 'none';
 
     protected PersonFactory $personFactory;
 
@@ -45,10 +45,8 @@ class PersonSearchContainer extends SearchContainer {
         $this->personProvider = $provider;
     }
 
-    /**
-     * @return BaseControl|null
-     */
-    protected function createSearchControl() {
+
+    protected function createSearchControl(): ?BaseControl {
         switch ($this->searchType) {
             case self::SEARCH_EMAIL:
                 $control = new TextInput(_('E-mail'));

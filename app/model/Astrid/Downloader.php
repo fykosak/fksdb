@@ -12,23 +12,20 @@ use Nette\DI\Container;
  */
 class Downloader {
 
-    /** @var string */
-    private $httpUser;
+    private string $httpUser;
 
-    /** @var string */
-    private $httpPassword;
+    private string $httpPassword;
 
-    /** @var string without scheme (only domain name/IP) */
-    private $host;
+    /* without scheme (only domain name/IP) */
+    private string $host;
 
-    /** @var string path to directory for temporary data */
-    private $tmpDir;
+    /* path to directory for temporary data */
+    private string $tmpDir;
 
-    /** @var array   contestId => contest name */
-    private $contestMap;
+    /* contestId => contest name */
+    private array $contestMap;
 
-    /** @var Container */
-    private $container;
+    private Container $container;
 
     /**
      * Downloader constructor.
@@ -48,12 +45,6 @@ class Downloader {
         $this->container = $container;
     }
 
-    /**
-     * @param ModelContest $contest
-     * @param int $year
-     * @param int $series
-     * @return string filename of downloaded XML file
-     */
     public function downloadSeriesTasks(ModelContest $contest, int $year, int $series): string {
         $mask = $this->container->getParameters()['tasks']['paths'];
         $contestName = isset($this->contestMap[$contest->contest_id]) ? $this->contestMap[$contest->contest_id] : $contest->contest_id;

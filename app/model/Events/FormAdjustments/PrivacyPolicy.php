@@ -27,12 +27,11 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
 
     use SmartObject;
 
-    const CONTROL_NAME = 'privacy';
+    protected const CONTROL_NAME = 'privacy';
 
-    /** @var ServicePersonInfo */
-    private $servicePersonInfo;
-    /** @var SingleReflectionFormFactory */
-    private $singleReflectionFormFactory;
+    private ServicePersonInfo $servicePersonInfo;
+
+    private SingleReflectionFormFactory $singleReflectionFormFactory;
 
     /**
      * PrivacyPolicy constructor.
@@ -53,7 +52,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
      * @throws OmittedControlException
      * @throws BadTypeException
      */
-    public function adjust(Form $form, Machine $machine, Holder $holder) {
+    public function adjust(Form $form, Machine $machine, Holder $holder): void {
         if ($holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT) {
             return;
         }

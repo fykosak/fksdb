@@ -19,14 +19,14 @@ use Nette\Localization\ITranslator;
  */
 class MailTemplateFactory {
 
-    /** @var string without trailing slash */
-    private $templateDir;
+    /* without trailing slash */
+    private string $templateDir;
     /** @var Application */
     private $application;
-    /** @var ITranslator */
-    private $translator;
-    /** @var IRequest */
-    private $request;
+
+    private ITranslator $translator;
+
+    private IRequest $request;
 
     /**
      * MailTemplateFactory constructor.

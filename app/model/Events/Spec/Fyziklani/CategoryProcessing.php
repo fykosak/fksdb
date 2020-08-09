@@ -24,11 +24,9 @@ use Nette\Utils\ArrayHash;
  */
 class CategoryProcessing extends AbstractProcessing {
 
-    /** @var YearCalculator */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
-    /** @var ServiceSchool */
-    private $serviceSchool;
+    private ServiceSchool $serviceSchool;
 
     /**
      * CategoryProcessing constructor.
@@ -49,7 +47,7 @@ class CategoryProcessing extends AbstractProcessing {
      * @param Form|null $form
      * @return void
      */
-    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
+    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null): void {
 
         if (!isset($values['team'])) {
             return;

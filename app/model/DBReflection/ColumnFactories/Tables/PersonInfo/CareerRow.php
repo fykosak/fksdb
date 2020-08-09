@@ -21,10 +21,7 @@ class CareerRow extends AbstractColumnFactory {
         return _('Co právě dělá');
     }
 
-    /**
-     * @return null|string
-     */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return _('Zobrazeno v seznamu organizátorů');
     }
 

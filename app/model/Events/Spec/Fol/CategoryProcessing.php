@@ -31,11 +31,9 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
     const ABROAD = 'F';
     const OPEN = 'O';
 
-    /** @var YearCalculator */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
-    /** @var ServiceSchool */
-    private $serviceSchool;
+    private ServiceSchool $serviceSchool;
     /** @var array */
     private $categoryNames;
 
@@ -84,7 +82,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
      * @param Form|null $form
      * @return void
      */
-    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
+    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null): void {
         if (!isset($values['team'])) {
             return;
         }

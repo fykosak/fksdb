@@ -127,7 +127,7 @@ class Navigation extends BaseComponent {
      * @throws \ReflectionException
      * @throws BadRequestException
      */
-    public function getLink(array $node) {
+    public function getLink(array $node): ?string {
         if (isset($node['link'])) {
             return $node['link'];
         }

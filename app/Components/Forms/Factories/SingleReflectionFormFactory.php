@@ -17,8 +17,8 @@ use Nette\Forms\Controls\BaseControl;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class SingleReflectionFormFactory {
-    /** @var DBReflectionFactory */
-    protected $tableReflectionFactory;
+
+    protected DBReflectionFactory $tableReflectionFactory;
 
     /**
      * PersonHistoryFactory constructor.
@@ -101,12 +101,7 @@ class SingleReflectionFormFactory {
         return $container;
     }
 
-    /**
-     * @param BaseControl $control
-     * @param array $metadata
-     * @return void
-     */
-    protected function appendMetadata(BaseControl $control, array $metadata) {
+    protected function appendMetadata(BaseControl $control, array $metadata): void {
         foreach ($metadata as $key => $value) {
             switch ($key) {
                 case 'required':

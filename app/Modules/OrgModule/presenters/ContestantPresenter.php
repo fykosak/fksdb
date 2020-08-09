@@ -25,15 +25,15 @@ class ContestantPresenter extends ExtendedPersonPresenter {
         $this->serviceContestant = $serviceContestant;
     }
 
-    public function titleEdit() {
+    public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Úprava řešitele %s'), $this->getModel()->getPerson()->getFullName()), 'fa fa-user'));
     }
 
-    public function titleCreate() {
+    public function titleCreate(): void {
         $this->setPageTitle(new PageTitle(_('Založit řešitele'), 'fa fa-user-plus'));
     }
 
-    public function titleList() {
+    public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('Řešitelé'), 'fa fa-users'));
     }
 
@@ -46,26 +46,15 @@ class ContestantPresenter extends ExtendedPersonPresenter {
         return new ContestantsGrid($this->getContext(), $this->getSelectedContest(), $this->getSelectedYear());
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     */
-    protected function appendExtendedContainer(Form $form) {
+    protected function appendExtendedContainer(Form $form): void {
         // no container for contestant
     }
 
-    /**
-     * @return ServiceContestant
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServiceContestant {
         return $this->serviceContestant;
     }
 
-    /**
-     * @return null
-     * TODO refactoring
-     */
-    protected function getAcYearFromModel() {
+    protected function getAcYearFromModel(): ?int {
         $model = $this->getModel();
         if (!$model) {
             return null;

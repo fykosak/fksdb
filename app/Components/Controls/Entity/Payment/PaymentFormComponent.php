@@ -158,10 +158,6 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
         $this->getPresenter()->redirect('detail', ['id' => $model->payment_id]);
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     */
     protected function configureForm(Form $form): void {
         if ($this->isOrg) {
             $form->addComponent($this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider), 'person_id');

@@ -37,18 +37,11 @@ class BaseMachine {
         $this->name = $name;
     }
 
-    /**
-     * @return string
-     */
-    public function getName() {
+    public function getName(): string {
         return $this->name;
     }
 
-    /**
-     * @param string $state
-     * @return void
-     */
-    public function addState(string $state) {
+    public function addState(string $state): void {
         $this->states[] = $state;
     }
 
@@ -66,19 +59,11 @@ class BaseMachine {
         return $this->machine;
     }
 
-    /**
-     * @param Machine $machine
-     * @return void
-     */
-    public function setMachine(Machine $machine) {
+    public function setMachine(Machine $machine): void {
         $this->machine = $machine;
     }
 
-    /**
-     * @param Transition $transition
-     * @return void
-     */
-    public function addTransition(Transition $transition) {
+    public function addTransition(Transition $transition): void {
         $transition->setBaseMachine($this);
         $this->transitions[$transition->getName()] = $transition;
     }
@@ -87,13 +72,7 @@ class BaseMachine {
         return $this->transitions[$name];
     }
 
-
-    /**
-     * @param string $transitionMask
-     * @param array $induced
-     * @return void
-     */
-    public function addInducedTransition(string $transitionMask, array $induced) {
+    public function addInducedTransition(string $transitionMask, array $induced): void {
         foreach ($this->getMatchingTransitions($transitionMask) as $transition) {
             foreach ($induced as $machineName => $state) {
                 $targetMachine = $this->getMachine()->getBaseMachine($machineName);

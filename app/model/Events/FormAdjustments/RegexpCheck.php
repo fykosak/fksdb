@@ -34,18 +34,11 @@ class RegexpCheck extends AbstractAdjustment implements IFormAdjustment {
         $this->pattern = $pattern;
     }
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return void
-     */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder) {
+    protected function _adjust(Form $form, Machine $machine, Holder $holder): void {
         $controls = $this->getControl($this->field);
         if (!$controls) {
             return;
         }
-
         foreach ($controls as $control) {
             $control->addRule(function (IControl $control) {
                 return (bool)Strings::match($control->getValue(), $this->pattern);

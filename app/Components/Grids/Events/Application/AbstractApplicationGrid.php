@@ -22,10 +22,10 @@ use FKSDB\SQL\SearchableDataSource;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractApplicationGrid extends BaseGrid {
-    /** @var ModelEvent */
-    protected $event;
-    /** @var Holder */
-    private $holder;
+
+    protected ModelEvent $event;
+
+    private Holder $holder;
 
     /**
      * AbstractApplicationGrid constructor.
@@ -110,7 +110,7 @@ abstract class AbstractApplicationGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws BadTypeException
      */
-    protected function addColumns(array $fields) {
+    protected function addColumns(array $fields): void {
         $holderFields = $this->holder->getPrimaryHolder()->getFields();
         foreach ($holderFields as $name => $def) {
             if (\in_array($name, $this->getHoldersColumns())) {

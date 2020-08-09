@@ -112,7 +112,7 @@ class Breadcrumbs extends BaseComponent {
      * Rendering
      * ********************** */
 
-    public function render() {
+    public function render(): void {
         $request = $this->getPresenter()->getRequest();
 
         $path = [];
@@ -132,10 +132,7 @@ class Breadcrumbs extends BaseComponent {
      * Path traversal
      * ********************** */
 
-    /**
-     * @return NULL|string
-     */
-    public function getBackLinkUrl() {
+    public function getBackLinkUrl(): ?string {
         $presenter = $this->getPresenter();
         $request = $presenter->getRequest();
 

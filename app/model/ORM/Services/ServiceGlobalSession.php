@@ -26,8 +26,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
         return DbNames::TAB_GLOBAL_SESSION;
     }
 
-    /** @var Request */
-    private $request;
+    private Request $request;
 
     /**
      * FKSDB\ORM\Services\ServiceGlobalSession constructor.

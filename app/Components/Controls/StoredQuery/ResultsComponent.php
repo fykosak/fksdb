@@ -69,12 +69,8 @@ class ResultsComponent extends BaseComponent {
     public function setParameters(array $parameters): void {
         $this->parameters = $parameters;
     }
-
-    /**
-     * @param array $parameters
-     * @return void
-     */
-    public function updateParameters(array $parameters) {
+    
+    public function updateParameters(array $parameters): void {
         if (!$this->parameters) {
             $this->parameters = [];
         }

@@ -156,7 +156,7 @@ class LoginUserStorage extends UserStorage {
      * @param IIdentity|NULL $identity
      * @return UserStorage
      */
-    public function setIdentity(IIdentity $identity = NULL) {
+    public function setIdentity(IIdentity $identity = null) {
         $this->identity = $identity;
         if ($identity instanceof ModelLogin) {
             $identity = new Identity($identity->getID());
@@ -164,10 +164,7 @@ class LoginUserStorage extends UserStorage {
         return parent::setIdentity($identity);
     }
 
-    /**
-     * @return ModelLogin|NULL
-     */
-    public function getIdentity() {
+    public function getIdentity(): ?ModelLogin {
         $local = parent::getIdentity();
         $global = isset($this->globalSession[GlobalSession::UID]) ? $this->globalSession[GlobalSession::UID] : null;
         /*
@@ -176,7 +173,7 @@ class LoginUserStorage extends UserStorage {
          * int isAuthenticated method. Thus we can omit this case here.
          */
         if (!$local || !$global) {
-            return NULL;
+            return null;
         }
 
         // Find login

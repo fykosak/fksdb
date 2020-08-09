@@ -26,10 +26,7 @@ class SeriesChooser extends Chooser {
         return new Title(sprintf(_('Series %d'), $this->currentSeries));
     }
 
-    /**
-     * @return int[]
-     */
-    protected function getItems() {
+    protected function getItems(): array {
         return $this->allowedSeries;
     }
 

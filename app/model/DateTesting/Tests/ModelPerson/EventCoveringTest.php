@@ -23,12 +23,7 @@ class EventCoveringTest extends PersonTest {
         parent::__construct('organization_participation_same_year', _('Organization and participation at same year'));
     }
 
-    /**
-     * @param ILogger $logger
-     * @param ModelPerson $person
-     * @return void
-     */
-    public function run(ILogger $logger, ModelPerson $person) {
+    public function run(ILogger $logger, ModelPerson $person): void {
         $contestantYears = [
             ModelContest::ID_FYKOS => [],
             ModelContest::ID_VYFUK => [],

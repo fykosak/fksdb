@@ -17,8 +17,7 @@ use Nette\DI\Container;
  */
 class FyziklaniChooser extends Chooser {
 
-    /** @var ModelEvent */
-    private $event;
+    private ModelEvent $event;
 
     private ServiceEvent $serviceEvent;
 

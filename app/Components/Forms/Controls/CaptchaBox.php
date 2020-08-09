@@ -27,5 +27,4 @@ class CaptchaBox extends SelectBox {
 
         $this->setDefaultValue(self::VALUE_YES);
     }
-
 }

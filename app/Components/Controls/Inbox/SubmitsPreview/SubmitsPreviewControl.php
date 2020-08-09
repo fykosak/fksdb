@@ -22,7 +22,7 @@ class SubmitsPreviewControl extends SeriesTableComponent {
         $this->submitDownloadFactory = $submitDownloadFactory;
     }
 
-    public function render() {
+    public function render(): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
     }
@@ -48,7 +48,7 @@ class SubmitsPreviewControl extends SeriesTableComponent {
      * @throws ForbiddenRequestException
      * @throws NotFoundException
      */
-    public function handleDownloadCorrected(int $id) {
+    public function handleDownloadCorrected(int $id): void {
         $logger = new MemoryLogger();
         $this->submitDownloadFactory->handleDownloadCorrected($this->getPresenter(), $logger, $id);
         FlashMessageDump::dump($logger, $this);

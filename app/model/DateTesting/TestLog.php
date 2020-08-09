@@ -11,10 +11,10 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class TestLog extends Message {
-    /** @var Html|null */
-    public $detail;
-    /** @var string */
-    public $testName;
+
+    public ?Html $detail;
+
+    public string $testName;
 
     /**
      * TestLog constructor.

@@ -17,8 +17,7 @@ use Nette\Application\UI\Presenter;
 class ServiceSubmit extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    /** @var array */
-    private $submitCache = [];
+    private array $submitCache = [];
 
     public function getModelClassName(): string {
         return ModelSubmit::class;
@@ -35,7 +34,7 @@ class ServiceSubmit extends AbstractServiceSingle {
      * @param int $taskId
      * @return ModelSubmit|null
      */
-    public function findByContestant(int $ctId, int $taskId) {
+    public function findByContestant(int $ctId, int $taskId): ?ModelSubmit {
         $key = $ctId . ':' . $taskId;
 
         if (!array_key_exists($key, $this->submitCache)) {
