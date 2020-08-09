@@ -143,7 +143,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function handleAutocomplete($acName, $acQ) {
+    public function handleAutocomplete($acName, $acQ): void {
         if (!$this->isAjax()) {
             throw new BadRequestException('Can be called only by AJAX.');
         }
