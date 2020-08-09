@@ -28,7 +28,7 @@
     <div n:class="form-group, $field->hasErrors() ? has-error, $field->isRequired() ? required"
             id="{$field->getHtmlId()}-pair">
         {label $field/}
-            {? $field->getControlPrototype()->addClass($field->getControlPrototype()->type!='file'?'form-control':'form-control-file')}
+            {do $field->getControlPrototype()->addClass($field->getControlPrototype()->type!='file'?'form-control':'form-control-file')}
             {input $field}
             {include #metadata field => $field}
     </div>
@@ -37,9 +37,9 @@
 {define checkbox}
     <div n:class="form-group, $field->hasErrors() ? has-error" id="{$field->getHtmlId()}-pair">
         <div class="form-check">
-            {? $field->getControlPrototype()->addAttributes(['class'=>'form-check-input'])}
+            {do $field->getControlPrototype()->addAttributes(['class'=>'form-check-input'])}
             {$field->getControlPart()}
-            {? $field->getLabelPrototype()->addAttributes(['class'=>'form-check-label'])}
+            {do $field->getLabelPrototype()->addAttributes(['class'=>'form-check-label'])}
             {$field->getLabelPart()}
         </div>
         {include #metadata field => $field}
@@ -61,9 +61,9 @@
 {/define}
 
 {define button}
-    {? $field->getControlPrototype()->addClass('btn')}
+    {do $field->getControlPrototype()->addClass('btn')}
     {if !Nette\Utils\Arrays::grep(array_keys($field->getControlPrototype()->getClass()), '/btn-/')}
-        {? $field->getControlPrototype()->addClass('btn-primary')}
+        {do $field->getControlPrototype()->addClass('btn-primary')}
     {/if}
     {input $field}
 {/define}
@@ -71,10 +71,10 @@
 {define buttonArray}
     {var $buttonRows = []}
     {foreach $buttons as $button}
-        {? if(!isset($buttonRows[$button->getOption('row')])) $buttonRows[$button->getOption('row')] = []}
+        {do if(!isset($buttonRows[$button->getOption('row')])) $buttonRows[$button->getOption('row')] = []}
         {var $buttonRows[$button->getOption('row')][] = $button}
     {/foreach}
-    {? ksort($buttonRows)}
+    {do ksort($buttonRows)}
     {foreach $buttonRows as $row}
         <div n:if="$row">
             <div class="btn-group col-12">

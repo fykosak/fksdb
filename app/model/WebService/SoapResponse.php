@@ -23,12 +23,7 @@ class SoapResponse implements \Nette\Application\IResponse {
         $this->soapServer = $server;
     }
 
-    /**
-     * @param IRequest $httpRequest
-     * @param IResponse $httpResponse
-     * @return void
-     */
-    public function send(IRequest $httpRequest, IResponse $httpResponse) {
+    public function send(IRequest $httpRequest, IResponse $httpResponse): void {
         try {
             $this->soapServer->handle();
         } catch (\Exception $e) {

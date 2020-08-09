@@ -216,7 +216,7 @@ class PersonPresenter extends BasePresenter implements IExtendedPersonPresenter 
         return '';
     }
 
-    public function flashMessage($message, $type = 'info') {
+    public function flashMessage($message, string $type = 'info'): \stdClass {
 
     }
 

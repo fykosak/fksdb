@@ -127,12 +127,16 @@ class Breadcrumbs extends BaseComponent {
         $request = $this->getPresenter()->getRequest();
 
         $path = [];
-        foreach ($this->getTraversePath($request) as $naviRequest) {
-            $url = $this->router->constructUrl($naviRequest->request, $this->httpRequest->getUrl());
-            $path[] = (object)[
-                'url' => $url,
-                'title' => $naviRequest->title,
-            ];
+        try {
+            foreach ($this->getTraversePath($request) as $naviRequest) {
+                $url = $this->router->constructUrl((array)$naviRequest->request, $this->httpRequest->getUrl());
+                $path[] = [
+                    'url' => $url,
+                    'title' => $naviRequest->title,
+                ];
+            }
+        } catch (\TypeError $exception) {
+
         }
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Breadcrumbs.latte');
         $this->template->path = $path;
@@ -164,7 +168,7 @@ class Breadcrumbs extends BaseComponent {
                 $params[Presenter::FLASH_KEY] = $presenter->getParameter(Presenter::FLASH_KEY);
                 $appRequest->setParameters($params);
             }
-            return $this->router->constructUrl($appRequest, $this->httpRequest->getUrl());
+            return $this->router->constructUrl((array)$appRequest, $this->httpRequest->getUrl());
         } else {
             return null;
         }
@@ -204,7 +208,9 @@ class Breadcrumbs extends BaseComponent {
             // get parent from the traversal tree (backLinkId -> request)
             $backLinkId = $naviRequest->parent;
             $requestKey = isset($backLinkMap[$backLinkId]) ? $backLinkMap[$backLinkId] : null; // assumes null key is not in backIds
-            $naviRequest = isset($requests[$requestKey]) ? $requests[$requestKey] : null; // assumes null key is not in requests
+            $naviRequest = $requestKey && isset($requests[$requestKey]) ? $requests[$requestKey] : null; // assumes null key is not in requests
+
+
         } while ($naviRequest && (!$maxLen || (count($path) < $maxLen)));
 
         return array_reverse($path);

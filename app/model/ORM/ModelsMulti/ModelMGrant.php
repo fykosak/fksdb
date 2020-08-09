@@ -13,14 +13,11 @@ use Nette\Security\IRole;
  */
 class ModelMGrant extends AbstractModelMulti implements IRole {
 
-    /**
-     * @return string
-     */
-    public function getRoleId() {
+    public function getRoleId(): string {
         return $this->getMainModel()->name;
     }
 
-    public function getContest():ModelContest {
+    public function getContest(): ModelContest {
         return ModelContest::createFromActiveRow($this->getJoinedModel()->ref(DbNames::TAB_CONTEST, 'contest_id'));
     }
 

@@ -38,8 +38,8 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
      * @throws NoLoginException
      * @throws UnknownLoginException
      */
-    public function authenticate(array $credentials) {
-        list($id, $password) = $credentials;
+    public function authenticate(array $credentials): IIdentity {
+        [$id, $password] = $credentials;
 
         $login = $this->findLogin($id);
 

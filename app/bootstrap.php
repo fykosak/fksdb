@@ -24,12 +24,12 @@ $configurator->createRobotLoader()
     ->register();
 
 // Create Dependency Injection container from config.neon file
-$configurator->addConfig(CONFIG_DIR . '/config.neon', Configurator::NONE);
-$configurator->addConfig(CONFIG_DIR . '/config.local.neon', Configurator::NONE);
+$configurator->addConfig(CONFIG_DIR . '/config.neon');
+$configurator->addConfig(CONFIG_DIR . '/config.local.neon');
 
 // Load all .neon files in events data directory
 foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/../data/events') as $filename => $file) {
-    $configurator->addConfig($filename, Configurator::NONE);
+    $configurator->addConfig($filename);
 }
 
 $container = $configurator->createContainer();
@@ -38,5 +38,5 @@ $container = $configurator->createContainer();
 Replicator::register();
 
 // Configure and run the application!
-$container->application->run();
+$container->getByType(Nette\Application\Application::class)->run();
 

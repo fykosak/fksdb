@@ -66,7 +66,7 @@ trait ChartPresenterTrait {
      * @param bool $fullyQualified
      * @return string
      */
-    abstract public function getAction($fullyQualified = false);
+    abstract public function getAction(bool $fullyQualified = false);
 
     /**
      * @param string $id

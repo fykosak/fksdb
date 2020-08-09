@@ -127,10 +127,7 @@ class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupRef
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function getResourceId() {
+    public function getResourceId(): string {
         return self::RESOURCE_ID;
     }
 }

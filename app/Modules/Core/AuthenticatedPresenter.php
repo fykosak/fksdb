@@ -115,8 +115,9 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     /**
      * @param mixed $element
      * @throws ForbiddenRequestException
+     * @throws \Nette\Application\BadRequestException
      */
-    public function checkRequirements($element) {
+    public function checkRequirements($element): void {
         parent::checkRequirements($element);
         if ($element instanceof ReflectionClass) {
             $this->setAuthorized($this->isAuthorized() && $this->getUser()->isLoggedIn());
@@ -246,6 +247,8 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @return void
+     * @throws \Nette\Application\BadRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     private function tryHttpAuth() {
         if (!isset($_SERVER['PHP_AUTH_USER'])) {
@@ -285,6 +288,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @throws ForbiddenRequestException
+     * @throws \Nette\Application\BadRequestException
      */
     private function tryGithub() {
         if (!$this->getHttpRequest()->getHeader('X-GitHub-Event')) {

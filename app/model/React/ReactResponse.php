@@ -77,10 +77,10 @@ final class ReactResponse implements Nette\Application\IResponse {
      * @param IResponse $httpResponse
      * @throws JsonException
      */
-    public function send(IRequest $httpRequest, IResponse $httpResponse) {
+    public function send(IRequest $httpRequest, IResponse $httpResponse): void {
         $httpResponse->setCode($this->code);
         $httpResponse->setContentType($this->getContentType());
-        $httpResponse->setExpiration(FALSE);
+        $httpResponse->setExpiration(false);
         $response = [
             'messages' => array_map(function (Message $value) {
                 return $value->__toArray();

@@ -104,7 +104,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
         $form->setCurrentGroup();
 
         $submit = $form->addSubmit('execute', _('Execute'))
-            ->setValidationScope(false);
+            ->setValidationScope(null);
         $submit->getControlPrototype()->addAttributes(['class' => 'btn-success']);
         $submit->onClick[] = function (SubmitButton $button) {
             $this->handleComposeExecute($button->getForm());

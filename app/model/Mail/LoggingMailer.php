@@ -69,7 +69,7 @@ class LoggingMailer implements IMailer {
      * @return void
      * @throws Exception
      */
-    public function send(Message $mail) {
+    public function send(Message $mail): void {
         try {
             if (!$this->container->getParameters()['email']['disabled'] ?? false) {// do not really send emails when debugging
                 $this->mailer->send($mail);

@@ -40,12 +40,7 @@ class PlainTextResponse implements IResponse {
         $this->name = $name;
     }
 
-    /**
-     * @param IRequest $httpRequest
-     * @param \Nette\Http\IResponse $httpResponse
-     * @return void
-     */
-    public function send(IRequest $httpRequest, \Nette\Http\IResponse $httpResponse) {
+    public function send(IRequest $httpRequest, \Nette\Http\IResponse $httpResponse): void {
         $httpResponse->setContentType('text/plain', 'utf-8');
 
         if ($this->name) {

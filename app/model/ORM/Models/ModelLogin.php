@@ -121,7 +121,7 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
     /**
      * @return array|Grant[]|null
      */
-    public function getRoles() {
+    public function getRoles(): array {
         if ($this->roles === null) {
             $this->roles = [];
             $this->roles[] = new Grant(Grant::CONTEST_ALL, ModelRole::REGISTERED);

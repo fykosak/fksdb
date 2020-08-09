@@ -32,14 +32,14 @@ class EventFactory {
     }
 
     private function createPing(array $data): PingEvent {
-        $event = new FKSDB\Github\Events\PingEvent();
+        $event = new PingEvent();
         $this->fillBase($event, $data);
         self::fillHelper(['zen', 'hook_id'], $event, $data);
         return $event;
     }
 
     private function createPush(array $data): PushEvent {
-        $event = new FKSDB\Github\Events\PushEvent();
+        $event = new PushEvent();
         $this->fillBase($event, $data);
         self::fillHelper(['before', 'after', 'ref'], $event, $data);
         return $event;

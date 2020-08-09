@@ -2,8 +2,6 @@
 
 namespace FKSDB\Authentication\SSO;
 
-use FKSDB\Authentication\SSO\IGlobalSession;
-use FKSDB\Authentication\SSO\IGSIDHolder;
 use FKSDB\ORM\Models\ModelGlobalSession;
 use FKSDB\ORM\Services\ServiceGlobalSession;
 use Nette\Utils\DateTime;
@@ -46,6 +44,8 @@ class GlobalSession implements IGlobalSession {
 
     /**
      * @param null $sessionId
+     * @throws \Exception
+     * @throws \Exception
      */
     public function start($sessionId = null) {
         $sessionId = $sessionId ?: $this->gsidHolder->getGSID();
@@ -131,6 +131,8 @@ class GlobalSession implements IGlobalSession {
      * @param mixed $offset
      * @param mixed $value
      * @return void
+     * @throws \Exception
+     * @throws \Exception
      */
     public function offsetSet($offset, $value) {
         if (!$this->started) {

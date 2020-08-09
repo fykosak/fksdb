@@ -96,11 +96,7 @@ abstract class ReferencedContainer extends ContainerWithOptions {
         $control->setOption('visible', $allowClear);
     }
 
-    /**
-     * @param IComponent $child
-     * @return void
-     */
-    protected function validateChildComponent(IComponent $child) {
+    protected function validateChildComponent(IComponent $child): void {
         if (!$child instanceof BaseControl && !$child instanceof ContainerWithOptions) {
             throw new InvalidStateException(__CLASS__ . ' can contain only components with get/set option funcionality, ' . get_class($child) . ' given.');
         }
@@ -124,7 +120,7 @@ abstract class ReferencedContainer extends ContainerWithOptions {
 
     private function createClearButton() {
         $submit = $this->addSubmit(self::SUBMIT_CLEAR, 'X')
-            ->setValidationScope(false);
+            ->setValidationScope(null);
         $submit->getControlPrototype()->class[] = self::CSS_AJAX;
         $submit->onClick[] = function () {
             if ($this->allowClear) {

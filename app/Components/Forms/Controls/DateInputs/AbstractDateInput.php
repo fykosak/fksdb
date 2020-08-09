@@ -18,15 +18,12 @@ abstract class AbstractDateInput extends TextInput {
      * @param null $label
      * @param null $maxLength
      */
-    public function __construct($label = NULL, $maxLength = NULL) {
+    public function __construct($label = null, $maxLength = null) {
         parent::__construct($label, $maxLength);
         $this->setType($this->getType());
     }
 
-    /**
-     * @return Html
-     */
-    public function getControl() {
+    public function getControl(): Html {
         $control = parent::getControl();
         if ($this->value) {
             $control->value = $this->value->format($this->getFormat());
@@ -37,6 +34,8 @@ abstract class AbstractDateInput extends TextInput {
     /**
      * @param string|DateTime $value
      * @return static
+     * @throws \Exception
+     * @throws \Exception
      */
     public function setValue($value) {
         if ($value) {

@@ -198,11 +198,11 @@ trait EntityPresenterTrait {
     abstract protected function traitIsAuthorized($resource, string $privilege): bool;
 
     /**
-     * @param null $name
+     * @param string $name
      * @param null $default
      * @return mixed
      */
-    abstract public function getParameter($name, $default = null);
+    abstract public function getParameter(string $name, $default = null);
 
     /**
      * @param bool $access

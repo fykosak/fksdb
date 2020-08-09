@@ -4,7 +4,6 @@ namespace FKSDB\Tests\PresentersTests\EventModule;
 
 $container = require '../../bootstrap.php';
 
-use FKSDB\Components\Controls\Entity\Event\EventFormComponent;
 use FKSDB\Components\Controls\Entity\EventOrg\EventOrgFormComponent;
 use FKSDB\ORM\DbNames;
 use FKSDB\Tests\PresentersTests\EntityPresenterTestCase;

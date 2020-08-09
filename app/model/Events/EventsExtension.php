@@ -27,8 +27,8 @@ use Nette\DI\Config\Helpers as ConfigHelpers;
 use Nette\DI\Config\Loader;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Container;
-use Nette\DI\ServiceDefinition;
-use Nette\DI\Statement;
+use Nette\DI\Definitions\ServiceDefinition;
+use Nette\DI\Definitions\Statement;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Strings;
 

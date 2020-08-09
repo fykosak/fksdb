@@ -82,7 +82,7 @@ class MockSeriesPresenter implements ISeriesPresenter {
      * @param string $type
      * @return void
      */
-    public function flashMessage($message, $type = 'info') {
+    public function flashMessage($message, $type = 'info'): void {
     }
 }
 

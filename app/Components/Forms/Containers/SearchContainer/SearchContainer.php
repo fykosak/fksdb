@@ -43,7 +43,7 @@ abstract class SearchContainer extends ContainerWithOptions {
 
     protected function createSearchButton() {
         $submit = $this->addSubmit(self::SUBMIT_SEARCH, _('Find'));
-        $submit->setValidationScope(false);
+        $submit->setValidationScope(null);
 
         $submit->getControlPrototype()->class[] = self::CSS_AJAX;
 

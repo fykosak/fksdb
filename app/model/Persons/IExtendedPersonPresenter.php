@@ -32,11 +32,4 @@ interface IExtendedPersonPresenter {
     public function messageError(): string;
 
     public function messageExists(): string;
-
-    /**
-     * @param string $message
-     * @param string $type
-     * @return void
-     */
-    public function flashMessage($message, $type = 'info');
 }
