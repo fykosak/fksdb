@@ -15,9 +15,6 @@ use Nette\Database\Table\ActiveRow;
  */
 class EvaluationFykos2011 extends EvaluationStrategy {
 
-    /**
-     * @return array|null
-     */
     public function getCategories(): array {
         return [
             new ModelCategory(ModelCategory::CAT_HS_1),
@@ -27,10 +24,6 @@ class EvaluationFykos2011 extends EvaluationStrategy {
         ];
     }
 
-    /**
-     * @param ModelCategory $category
-     * @return array|int
-     */
     public function categoryToStudyYears(ModelCategory $category): array {
         switch ($category->id) {
             case ModelCategory::CAT_HS_1:

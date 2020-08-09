@@ -6,7 +6,6 @@ use FKSDB\ORM\Services\Exception\DuplicateOrgException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyDBTrait;
-use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\Exceptions\ModelException;
@@ -46,11 +45,7 @@ class ServiceEventOrg extends AbstractServiceSingle {
         }
     }*/
 
-    /**
-     * @param array $data
-     * @return ModelEventOrg
-     */
-    public function createNewModel(array $data): IModel {
+    public function createNewModel(array $data): ModelEventOrg {
         try {
             return parent::createNewModel($data);
         } catch (ModelException $exception) {

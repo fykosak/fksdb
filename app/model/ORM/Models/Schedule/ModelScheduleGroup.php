@@ -24,15 +24,15 @@ use Nette\Security\IResource;
  */
 class ModelScheduleGroup extends AbstractModelSingle implements IEventReferencedModel, IResource {
 
-    const RESOURCE_ID = 'event.scheduleGroup';
+    public const RESOURCE_ID = 'event.scheduleGroup';
 
-    const TYPE_ACCOMMODATION = 'accommodation';
-    const TYPE_VISA = 'visa';
-    const TYPE_ACCOMMODATION_GENDER = 'accommodation_gender';
-    const TYPE_ACCOMMODATION_TEACHER = 'accommodation_teacher';
-    const TYPE_TEACHER_PRESENT = 'teacher_present';
-    const TYPE_WEEKEND = 'weekend';
-    const TYPE_WEEKEND_INFO = 'weekend_info';
+    public const TYPE_ACCOMMODATION = 'accommodation';
+    public const TYPE_VISA = 'visa';
+    public const TYPE_ACCOMMODATION_GENDER = 'accommodation_gender';
+    public const TYPE_ACCOMMODATION_TEACHER = 'accommodation_teacher';
+    public const TYPE_TEACHER_PRESENT = 'teacher_present';
+    public const TYPE_WEEKEND = 'weekend';
+    public const TYPE_WEEKEND_INFO = 'weekend_info';
 
     public function getItems(): GroupedSelection {
         return $this->related(DbNames::TAB_SCHEDULE_ITEM);

@@ -50,7 +50,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @return AbstractModelSingle
      * @throws ModelException
      */
-    public function createNewModel(array $data): IModel {
+    public function createNewModel(array $data): AbstractModelSingle {
         $modelClassName = $this->getModelClassName();
         $data = $this->filterData($data);
         try {
@@ -104,7 +104,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @param int $key
      * @return AbstractModelSingle|null
      */
-    public function findByPrimary($key) {
+    public function findByPrimary($key): ?AbstractModelSingle {
         /** @var AbstractModelSingle|null $result */
         $result = $this->getTable()->get($key);
         if ($result !== false) {
@@ -200,7 +200,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @throws InvalidArgumentException
      * @throws InvalidStateException
      */
-    public function dispose(IModel $model) {
+    public function dispose(IModel $model): void {
         $this->checkType($model);
         if (!$model->isNew() && $model->delete() === false) {
             $code = $this->context->getConnection()->getPdo()->errorCode();

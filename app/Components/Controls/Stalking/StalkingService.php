@@ -10,11 +10,7 @@ class StalkingService {
     /** @var array[] */
     private $definition;
 
-    /**
-     * @param array $definition
-     * @return void
-     */
-    public function setSections(array $definition) {
+    public function setSections(array $definition): void {
         $this->definition = $definition;
     }
 

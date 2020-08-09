@@ -50,7 +50,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function getSelectedContest(): ModelContest {
+    public function getSelectedContest(): ?ModelContest {
         $contestChooser = $this->getComponent('contestChooser');
         if (!$contestChooser instanceof ContestChooser) {
             throw new BadTypeException(ContestChooser::class, $contestChooser);
@@ -99,11 +99,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
         parent::beforeRender();
     }
 
-    /**
-     * @param PageTitle $pageTitle
-     * @return void
-     */
-    protected function setPageTitle(PageTitle $pageTitle) {
+    protected function setPageTitle(PageTitle $pageTitle): void {
         $pageTitle->subTitle = sprintf(_('%d. ročník'), $this->year) . ' ' . $pageTitle->subTitle;
         parent::setPageTitle($pageTitle);
     }

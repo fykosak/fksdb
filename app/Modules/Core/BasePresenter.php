@@ -64,21 +64,15 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     public $bc;
 
-    /** @var YearCalculator */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
-    /** @var ServiceContest */
-    private $serviceContest;
+    private ServiceContest $serviceContest;
 
+    private BreadcrumbsFactory $breadcrumbsFactory;
 
-    /** @var BreadcrumbsFactory */
-    private $breadcrumbsFactory;
+    private Navigation $navigationControl;
 
-    /** @var Navigation */
-    private $navigationControl;
-
-    /** @var PresenterBuilder */
-    private $presenterBuilder;
+    private PresenterBuilder $presenterBuilder;
 
     /** @var PageTitle|null */
     private $pageTitle;
@@ -98,11 +92,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->yearCalculator;
     }
 
-    /**
-     * @param YearCalculator $yearCalculator
-     * @return void
-     */
-    public function injectYearCalculator(YearCalculator $yearCalculator) {
+    public function injectYearCalculator(YearCalculator $yearCalculator): void {
         $this->yearCalculator = $yearCalculator;
     }
 
@@ -110,35 +100,19 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->serviceContest;
     }
 
-    /**
-     * @param ServiceContest $serviceContest
-     * @return void
-     */
-    public function injectServiceContest(ServiceContest $serviceContest) {
+    public function injectServiceContest(ServiceContest $serviceContest): void {
         $this->serviceContest = $serviceContest;
     }
 
-    /**
-     * @param BreadcrumbsFactory $breadcrumbsFactory
-     * @return void
-     */
-    public function injectBreadcrumbsFactory(BreadcrumbsFactory $breadcrumbsFactory) {
+    public function injectBreadcrumbsFactory(BreadcrumbsFactory $breadcrumbsFactory): void {
         $this->breadcrumbsFactory = $breadcrumbsFactory;
     }
 
-    /**
-     * @param Navigation $navigationControl
-     * @return void
-     */
-    public function injectNavigationControl(Navigation $navigationControl) {
+    public function injectNavigationControl(Navigation $navigationControl): void {
         $this->navigationControl = $navigationControl;
     }
 
-    /**
-     * @param PresenterBuilder $presenterBuilder
-     * @return void
-     */
-    public function injectPresenterBuilder(PresenterBuilder $presenterBuilder) {
+    public function injectPresenterBuilder(PresenterBuilder $presenterBuilder): void {
         $this->presenterBuilder = $presenterBuilder;
     }
 
@@ -169,7 +143,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @return void
      * @throws AbortException
      */
-    public function handleAutocomplete($acName, $acQ) {
+    public function handleAutocomplete($acName, $acQ): void {
         if (!$this->isAjax()) {
             ['acQ' => $acQ] = (array)json_decode($this->getHttpRequest()->getRawBody());
         }
@@ -229,11 +203,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->pageTitle ?? new PageTitle();
     }
 
-    /**
-     * @param PageTitle $pageTitle
-     * @return void
-     */
-    protected function setPageTitle(PageTitle $pageTitle) {
+    protected function setPageTitle(PageTitle $pageTitle): void {
         $this->pageTitle = $pageTitle;
     }
 
@@ -289,7 +259,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @throws ReflectionException
      * @throws BadTypeException
      */
-    protected function putIntoBreadcrumbs() {
+    protected function putIntoBreadcrumbs(): void {
         /** @var Breadcrumbs $component */
         $component = $this->getComponent('breadcrumbs');
         $component->setBackLink($this->getRequest());
@@ -338,11 +308,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->authorized;
     }
 
-    /**
-     * @param bool $access
-     * @return void
-     */
-    public function setAuthorized(bool $access) {
+    public function setAuthorized(bool $access): void {
         $this->authorized = $access;
     }
 

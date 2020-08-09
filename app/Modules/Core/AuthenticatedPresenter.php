@@ -34,72 +34,43 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     const AUTH_ALLOW_TOKEN = 0x4;
     const AUTH_ALLOW_GITHUB = 0x8;
 
-    /** @var TokenAuthenticator */
-    private $tokenAuthenticator;
+    private TokenAuthenticator $tokenAuthenticator;
 
-    /** @var PasswordAuthenticator */
-    private $passwordAuthenticator;
+    private PasswordAuthenticator $passwordAuthenticator;
 
-    /** @var GithubAuthenticator */
-    private $githubAuthenticator;
-    /** @var EventAuthorizator */
-    private $eventAuthorizator;
+    private GithubAuthenticator $githubAuthenticator;
 
-    /** @var ContestAuthorizator */
-    protected $contestAuthorizator;
+    private EventAuthorizator $eventAuthorizator;
 
-    /**
-     * @param TokenAuthenticator $tokenAuthenticator
-     * @return void
-     */
-    public function injectTokenAuthenticator(TokenAuthenticator $tokenAuthenticator) {
+    protected ContestAuthorizator $contestAuthorizator;
+
+    public function injectAuthenticators(
+        TokenAuthenticator $tokenAuthenticator,
+        PasswordAuthenticator $passwordAuthenticator,
+        GithubAuthenticator $githubAuthenticator
+    ): void {
         $this->tokenAuthenticator = $tokenAuthenticator;
-    }
-
-    /**
-     * @param PasswordAuthenticator $passwordAuthenticator
-     * @return void
-     */
-    public function injectPasswordAuthenticator(PasswordAuthenticator $passwordAuthenticator) {
         $this->passwordAuthenticator = $passwordAuthenticator;
-    }
-
-    /**
-     * @param GithubAuthenticator $githubAuthenticator
-     * @return void
-     */
-    public function injectGithubAuthenticator(GithubAuthenticator $githubAuthenticator) {
         $this->githubAuthenticator = $githubAuthenticator;
     }
 
-    /**
-     * @param ContestAuthorizator $contestAuthorizator
-     * @return void
-     */
-    public function injectContestAuthorizator(ContestAuthorizator $contestAuthorizator) {
+    public function injectAuthorizators(
+        ContestAuthorizator $contestAuthorizator,
+        EventAuthorizator $eventAuthorizator
+    ): void {
         $this->contestAuthorizator = $contestAuthorizator;
+        $this->eventAuthorizator = $eventAuthorizator;
     }
 
     public function getContestAuthorizator(): ContestAuthorizator {
         return $this->contestAuthorizator;
     }
 
-    /**
-     * @param EventAuthorizator $eventAuthorizator
-     * @return void
-     */
-    public function injectEventAuthorizator(EventAuthorizator $eventAuthorizator) {
-        $this->eventAuthorizator = $eventAuthorizator;
-    }
-
     public function getEventAuthorizator(): EventAuthorizator {
         return $this->eventAuthorizator;
     }
 
-    /**
-     * @return TokenAuthenticator
-     */
-    public function getTokenAuthenticator() {
+    public function getTokenAuthenticator(): TokenAuthenticator {
         return $this->tokenAuthenticator;
     }
 
@@ -192,7 +163,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      *
      * @return bool
      */
-    public function requiresLogin() {
+    public function requiresLogin(): bool {
         return true;
     }
 
@@ -207,14 +178,14 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     /**
      * @return string
      */
-    protected function getHttpRealm() {
+    protected function getHttpRealm(): ?string {
         return null;
     }
 
     /**
      * @throws ForbiddenRequestException
      */
-    protected function unauthorizedAccess() {
+    protected function unauthorizedAccess(): void {
         throw new ForbiddenRequestException();
     }
 

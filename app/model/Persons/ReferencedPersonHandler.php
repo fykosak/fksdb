@@ -100,11 +100,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
         return $this->resolution;
     }
 
-    /**
-     * @param string $resolution
-     * @return void
-     */
-    public function setResolution(string $resolution) {
+    public function setResolution(string $resolution): void {
         $this->resolution = $resolution;
     }
 
@@ -133,7 +129,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @throws JsonException
      * @throws NotImplementedException
      */
-    public function update(IModel $model, ArrayHash $values) {
+    public function update(IModel $model, ArrayHash $values): void {
         /** @var ModelPerson $model */
         $this->store($model, $values);
     }
@@ -429,7 +425,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param mixed $key
      * @return ModelPerson|null|IModel
      */
-    public function findBySecondaryKey(string $field, string $key) {
+    public function findBySecondaryKey(string $field, string $key): ?ModelPerson {
         if (!$this->isSecondaryKey($field)) {
             throw new InvalidArgumentException("'$field' is not a secondary key.");
         }

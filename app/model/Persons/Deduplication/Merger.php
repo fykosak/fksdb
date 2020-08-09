@@ -30,14 +30,12 @@ class Merger {
     /** @var ActiveRow */
     private $mergedRow;
 
-    /** @var Context */
-    private $context;
+    private Context $context;
 
     /** @var array */
     private $configuration;
 
-    /** @var ILogger */
-    private $logger;
+    private DevNullLogger $logger;
 
     /**
      *

@@ -14,8 +14,7 @@ use Nette\DI\Container;
  */
 class TotalPersonsChartControl extends ReactComponent implements IChart {
 
-    /** @var ServicePerson */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
     /**
      * TotalPersonsChartControl constructor.
@@ -25,11 +24,7 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
         parent::__construct($container, 'chart.total-person');
     }
 
-    /**
-     * @param ServicePerson $servicePerson
-     * @return void
-     */
-    public function injectServicePerson(ServicePerson $servicePerson) {
+    public function injectServicePerson(ServicePerson $servicePerson): void {
         $this->servicePerson = $servicePerson;
     }
 
@@ -58,10 +53,7 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return _('Graf zobrazuje vývoj počtu osôb vo FKSDB a priradené person_id v daný čas.');
     }
 }

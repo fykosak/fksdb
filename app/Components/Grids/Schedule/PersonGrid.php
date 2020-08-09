@@ -35,7 +35,7 @@ class PersonGrid extends BaseGrid {
      * @throws \InvalidArgumentException
      * @throws GridException
      */
-    public function render(ModelPerson $person = null, ModelEvent $event = null) {
+    public function render(ModelPerson $person = null, ModelEvent $event = null): void {
         if (!$event || !$person) {
             throw new \InvalidArgumentException();
         }
@@ -49,7 +49,7 @@ class PersonGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
 

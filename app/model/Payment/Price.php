@@ -32,7 +32,7 @@ class Price {
      * @param Price $price
      * @throws LogicException
      */
-    public function add(Price $price) {
+    public function add(Price $price): void {
         if ($this->currency !== $price->getCurrency()) {
             throw new LogicException('Currencies are not a same');
         }
@@ -47,11 +47,7 @@ class Price {
         return $this->amount;
     }
 
-    /**
-     * @param float $amount
-     * @return void
-     */
-    public function addAmount(float $amount) {
+    public function addAmount(float $amount): void {
         $this->amount += $amount;
     }
 

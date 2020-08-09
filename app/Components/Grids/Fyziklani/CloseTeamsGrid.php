@@ -22,11 +22,9 @@ use NiftyGrid\DuplicateColumnException;
  */
 class CloseTeamsGrid extends BaseGrid {
 
-    /** @var ServiceFyziklaniTeam */
-    private $serviceFyziklaniTeam;
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    /** @var ModelEvent */
-    private $event;
+    private ModelEvent $event;
 
     /**
      * FyziklaniTeamsGrid constructor.
@@ -38,11 +36,7 @@ class CloseTeamsGrid extends BaseGrid {
         $this->event = $event;
     }
 
-    /**
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @return void
-     */
-    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
@@ -58,7 +52,7 @@ class CloseTeamsGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->paginate = false;

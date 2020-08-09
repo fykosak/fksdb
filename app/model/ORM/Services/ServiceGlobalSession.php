@@ -18,8 +18,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
 
     const SESSION_ID_LENGTH = 32;
 
-    /** @var Request */
-    private $request;
+    private Request $request;
 
     /**
      * FKSDB\ORM\Services\ServiceGlobalSession constructor.

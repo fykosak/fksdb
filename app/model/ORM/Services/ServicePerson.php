@@ -31,7 +31,7 @@ class ServicePerson extends AbstractServiceSingle {
      * @param string $email
      * @return ModelPerson|null
      */
-    public function findByEmail($email) {
+    public function findByEmail($email): ?ModelPerson {
         if (!$email) {
             return null;
         }
@@ -51,12 +51,7 @@ class ServicePerson extends AbstractServiceSingle {
         parent::save($model);
     }
 
-    /**
-     * @param ModelPerson|null $person
-     * @param array $data
-     * @return ModelPerson
-     */
-    public function store($person, array $data): ModelPerson {
+    public function store(?ModelPerson $person, array $data): ModelPerson {
         if ($person) {
             $this->updateModel2($person, $data);
             return $person;

@@ -19,7 +19,7 @@ class PersonInfoFieldTest extends PersonFileLevelTest {
      * @return void
      * @throws BadTypeException
      */
-    final public function run(ILogger $logger, ModelPerson $person) {
+    final public function run(ILogger $logger, ModelPerson $person): void {
         $info = $person->getInfo();
         if (!$info) {
             $logger->log(new TestLog($this->getTitle(), 'Person info is not set', TestLog::LVL_INFO));

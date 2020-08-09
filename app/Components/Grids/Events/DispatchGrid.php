@@ -19,10 +19,9 @@ use NiftyGrid\DuplicateColumnException;
  */
 class DispatchGrid extends BaseGrid {
 
-    /** @var ServiceEvent */
-    private $serviceEvent;
-    /** @var ModelPerson */
-    private $person;
+    private ServiceEvent $serviceEvent;
+
+    private ModelPerson $person;
 
     /**
      * DispatchGrid constructor.
@@ -34,11 +33,7 @@ class DispatchGrid extends BaseGrid {
         $this->person = $person;
     }
 
-    /**
-     * @param ServiceEvent $serviceEvent
-     * @return void
-     */
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 
@@ -54,7 +49,7 @@ class DispatchGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->addColumns(['event.event_id', 'event.name', 'contest.contest', 'event.year', 'event.role']);
         $this->addLinkButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);

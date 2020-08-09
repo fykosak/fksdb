@@ -26,13 +26,7 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
         parent::__construct($connection, $conventions, DbNames::TAB_FYZIKLANI_TASK, ModelFyziklaniTask::class);
     }
 
-    /**
-     * Syntactic sugar.
-     * @param string $label
-     * @param ModelEvent $event
-     * @return ModelFyziklaniTask|null
-     */
-    public function findByLabel(string $label, ModelEvent $event) {
+    public function findByLabel(string $label, ModelEvent $event): ?ModelFyziklaniTask {
         /** @var ModelFyziklaniTask $result */
         $result = $this->getTable()->where([
             'label' => $label,

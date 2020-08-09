@@ -36,47 +36,27 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      */
     public $all;
 
-    /** @var SQLResultsCache */
-    private $SQLResultsCache;
+    private SQLResultsCache $SQLResultsCache;
 
-    /** @var SeriesTable */
-    private $seriesTable;
+    private SeriesTable $seriesTable;
 
-    /** @var ServiceTask */
-    private $serviceTask;
+    private ServiceTask $serviceTask;
 
-    /** @var ServiceTaskContribution */
-    private $serviceTaskContribution;
+    private ServiceTaskContribution $serviceTaskContribution;
 
-    /**
-     * @param SQLResultsCache $SQLResultsCache
-     * @return void
-     */
-    public function injectSQLResultsCache(SQLResultsCache $SQLResultsCache) {
+    public function injectSQLResultsCache(SQLResultsCache $SQLResultsCache): void {
         $this->SQLResultsCache = $SQLResultsCache;
     }
 
-    /**
-     * @param SeriesTable $seriesTable
-     * @return void
-     */
-    public function injectSeriesTable(SeriesTable $seriesTable) {
+    public function injectSeriesTable(SeriesTable $seriesTable): void {
         $this->seriesTable = $seriesTable;
     }
 
-    /**
-     * @param ServiceTask $serviceTask
-     * @return void
-     */
-    public function injectServiceTask(ServiceTask $serviceTask) {
+    public function injectServiceTask(ServiceTask $serviceTask): void {
         $this->serviceTask = $serviceTask;
     }
 
-    /**
-     * @param ServiceTaskContribution $serviceTaskContribution
-     * @return void
-     */
-    public function injectServiceTaskContribution(ServiceTaskContribution $serviceTaskContribution) {
+    public function injectServiceTaskContribution(ServiceTaskContribution $serviceTaskContribution): void {
         $this->serviceTaskContribution = $serviceTaskContribution;
     }
 
@@ -93,7 +73,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      * @throws BadTypeException
      */
-    public function titleEntry() {
+    public function titleEntry(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Zadávání bodů %d. série'), $this->getSelectedSeries()), 'fa fa-trophy'));
     }
 
@@ -102,7 +82,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function titlePreview() {
+    public function titlePreview(): void {
         $this->setPageTitle(new PageTitle(_('Points'), 'fa fa-inbox'));
     }
 
@@ -111,7 +91,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      * @throws BadTypeException
      */
-    public function authorizedEntry() {
+    public function authorizedEntry(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'edit', $this->getSelectedContest()));
     }
 
@@ -120,21 +100,15 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      * @throws BadTypeException
      */
-    public function authorizedPreview() {
+    public function authorizedPreview(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'points', $this->getSelectedContest()));
     }
 
-    /**
-     * @return void
-     */
-    public function actionEntry() {
+    public function actionEntry(): void {
         $this->seriesTable->setTaskFilter($this->all ? null : $this->getGradedTasks());
     }
 
-    /**
-     * @return void
-     */
-    public function renderEntry() {
+    public function renderEntry(): void {
         $this->template->showAll = (bool)$this->all;
     }
 
@@ -152,7 +126,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      * @return void
      * @throws AbortException
      */
-    public function handleInvalidate() {
+    public function handleInvalidate(): void {
         try {
             $this->SQLResultsCache->invalidate($this->getSelectedContest(), $this->getSelectedYear());
             $this->flashMessage(_('Body invalidovány.'), self::FLASH_INFO);
@@ -168,10 +142,9 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      * @return void
      * @throws AbortException
      * @throws BadRequestException
-     * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function handleRecalculateAll() {
+    public function handleRecalculateAll(): void {
         try {
             $contest = $this->getSelectedContest();
 
@@ -228,7 +201,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      * @throws BadTypeException
      */
-    protected function setPageTitle(PageTitle $pageTitle) {
+    protected function setPageTitle(PageTitle $pageTitle): void {
         $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
         parent::setPageTitle($pageTitle);
     }

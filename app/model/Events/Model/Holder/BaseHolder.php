@@ -116,11 +116,7 @@ class BaseHolder {
         return $this->holder;
     }
 
-    /**
-     * @param Holder $holder
-     * @return void
-     */
-    public function setHolder(Holder $holder) {
+    public function setHolder(Holder $holder): void {
         $this->holder = $holder;
     }
 
@@ -128,7 +124,7 @@ class BaseHolder {
      * @param bool|callable $modifiable
      * @return void
      */
-    public function setModifiable($modifiable) {
+    public function setModifiable($modifiable): void {
         $this->modifiable = $modifiable;
     }
 
@@ -136,14 +132,14 @@ class BaseHolder {
      * @param bool|callable $visible
      * @return void
      */
-    public function setVisible($visible) {
+    public function setVisible($visible): void {
         $this->visible = $visible;
     }
 
     /**
      * @param IEventRelation|null $eventRelation
      */
-    public function setEventRelation(IEventRelation $eventRelation = null) {
+    public function setEventRelation(IEventRelation $eventRelation = null): void {
         $this->eventRelation = $eventRelation;
     }
 
@@ -155,7 +151,7 @@ class BaseHolder {
      * @param ModelEvent $event
      * @throws NeonSchemaException
      */
-    private function setEvent(ModelEvent $event) {
+    private function setEvent(ModelEvent $event): void {
         $this->event = $event;
         $this->cacheParameters();
     }
@@ -164,7 +160,7 @@ class BaseHolder {
      * @param ModelEvent $event
      * @throws NeonSchemaException
      */
-    public function inferEvent(ModelEvent $event) {
+    public function inferEvent(ModelEvent $event): void {
         if ($this->eventRelation instanceof IEventRelation) {
             $this->setEvent($this->eventRelation->getEvent($event));
         } else {
@@ -183,7 +179,7 @@ class BaseHolder {
      * @param mixed $paramScheme
      * @return void
      */
-    public function setParamScheme($paramScheme) {
+    public function setParamScheme($paramScheme): void {
         $this->paramScheme = $paramScheme;
     }
 
@@ -194,11 +190,7 @@ class BaseHolder {
         return $this->evaluator;
     }
 
-    /**
-     * @param ExpressionEvaluator $evaluator
-     * @return void
-     */
-    public function setEvaluator(ExpressionEvaluator $evaluator) {
+    public function setEvaluator(ExpressionEvaluator $evaluator): void {
         $this->evaluator = $evaluator;
     }
 
@@ -206,11 +198,7 @@ class BaseHolder {
         return $this->validator;
     }
 
-    /**
-     * @param DataValidator $validator
-     * @return void
-     */
-    public function setValidator(DataValidator $validator) {
+    public function setValidator(DataValidator $validator): void {
         $this->validator = $validator;
     }
 
@@ -232,7 +220,7 @@ class BaseHolder {
     /**
      * @param int|IModel $model
      */
-    public function setModel($model) {
+    public function setModel($model): void {
         if ($model instanceof IModel) {
             $this->model = $model;
         } elseif ($model) {
@@ -242,10 +230,7 @@ class BaseHolder {
         }
     }
 
-    /**
-     * @return void
-     */
-    public function saveModel() {
+    public function saveModel(): void {
         if ($this->getModelState() == BaseMachine::STATE_TERMINATED) {
             $this->service->dispose($this->getModel());
         } elseif ($this->getModelState() != BaseMachine::STATE_INIT) {
@@ -262,11 +247,7 @@ class BaseHolder {
         }
     }
 
-    /**
-     * @param string $state
-     * @return void
-     */
-    public function setModelState(string $state) {
+    public function setModelState(string $state): void {
         $this->getService()->updateModel($this->getModel(), [self::STATE_COLUMN => $state]);
     }
 
@@ -274,7 +255,7 @@ class BaseHolder {
      * @param iterable $values
      * @param bool $alive
      */
-    public function updateModel($values, $alive = true) {
+    public function updateModel($values, $alive = true): void {
         $values[self::EVENT_COLUMN] = $this->getEvent()->getPrimary();
         $this->getService()->updateModel($this->getModel(), $values, $alive);
     }
@@ -290,11 +271,7 @@ class BaseHolder {
         return $this->service;
     }
 
-    /**
-     * @param IService $service
-     * @return void
-     */
-    public function setService(IService $service) {
+    public function setService(IService $service): void {
         $this->service = $service;
     }
 
@@ -308,7 +285,7 @@ class BaseHolder {
     /**
      * @param string $label
      */
-    public function setLabel($label) {
+    public function setLabel($label): void {
         $this->label = $label;
     }
 
@@ -322,7 +299,7 @@ class BaseHolder {
     /**
      * @param string $description
      */
-    public function setDescription($description) {
+    public function setDescription($description): void {
         $this->description = $description;
     }
 
@@ -336,7 +313,7 @@ class BaseHolder {
     /**
      * @param string $joinOn
      */
-    public function setJoinOn($joinOn) {
+    public function setJoinOn($joinOn): void {
         $this->joinOn = $joinOn;
     }
 
@@ -350,7 +327,7 @@ class BaseHolder {
     /**
      * @param string $joinTo
      */
-    public function setJoinTo($joinTo) {
+    public function setJoinTo($joinTo): void {
         $this->joinTo = $joinTo;
     }
 
@@ -365,7 +342,7 @@ class BaseHolder {
      * @param array $personIds
      * @return void
      */
-    public function setPersonIds($personIds) {
+    public function setPersonIds($personIds): void {
         if (!$this->getService()) {
             throw new InvalidStateException('Call serService prior setting person IDs.');
         }
@@ -387,7 +364,7 @@ class BaseHolder {
      * @param int $eventId
      * @return void
      */
-    public function setEventId($eventId) {
+    public function setEventId($eventId): void {
         $this->eventId = $this->resolveColumnJoins($eventId);
     }
 

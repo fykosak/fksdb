@@ -22,17 +22,13 @@ use Nette\Utils\DateTime;
  */
 class ResultsAndStatistics extends AjaxComponent {
 
-    /** @var ServiceFyziklaniTeam */
-    private $serviceFyziklaniTeam;
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    /** @var ServiceFyziklaniTask */
-    private $serviceFyziklaniTask;
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
 
-    /** @var ServiceFyziklaniSubmit */
-    private $serviceFyziklaniSubmit;
+    private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
 
-    /** @var ModelEvent */
-    private $event;
+    private ModelEvent $event;
 
     /** @var string|null */
     private $lastUpdated = null;
@@ -52,17 +48,11 @@ class ResultsAndStatistics extends AjaxComponent {
         return $this->event;
     }
 
-    /**
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @return void
-     */
     public function injectPrimary(
         ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
         ServiceFyziklaniTask $serviceFyziklaniTask,
         ServiceFyziklaniTeam $serviceFyziklaniTeam
-    ) {
+    ): void {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
@@ -73,52 +63,9 @@ class ResultsAndStatistics extends AjaxComponent {
      * @return void
      * @throws AbortException
      */
-    public function handleRefresh(string $lastUpdated) {
+    public function handleRefresh(string $lastUpdated): void {
         $this->lastUpdated = $lastUpdated;
         $this->sendAjaxResponse();
-    }
-
-    /**
-     * @return mixed|array
-     * @throws BadTypeException
-     * @throws NotSetGameParametersException
-     */
-    protected function getData() {
-        $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
-
-        $presenter = $this->getPresenter();
-        if (!$presenter instanceof BasePresenter) {
-            throw new ArgumentOutOfRangeException();
-        }
-        $isOrg = $presenter->getEventAuthorizator()->isContestOrgAllowed('fyziklani.results', 'presentation', $this->getEvent());
-
-        $result = [
-            'availablePoints' => $gameSetup->getAvailablePoints(),
-            'basePath' => $this->getHttpRequest()->getUrl()->getBasePath(),
-            'gameStart' => $gameSetup->game_start->format('c'),
-            'gameEnd' => $gameSetup->game_end->format('c'),
-            'times' => [
-                'toStart' => strtotime($gameSetup->game_start) - time(),
-                'toEnd' => strtotime($gameSetup->game_end) - time(),
-                'visible' => $this->isResultsVisible(),
-            ],
-            'lastUpdated' => (new DateTime())->format('c'),
-            'isOrg' => $isOrg,
-            'refreshDelay' => $gameSetup->refresh_delay,
-            'tasksOnBoard' => $gameSetup->tasks_on_board,
-            'submits' => [],
-        ];
-
-        if ($isOrg || $this->isResultsVisible()) {
-            $result['submits'] = $this->serviceFyziklaniSubmit->getSubmitsAsArray($this->getEvent(), $this->lastUpdated);
-        }
-        // probably need refresh before competition started
-        //if (!$this->lastUpdated) {
-        $result['teams'] = $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent());
-        $result['tasks'] = $this->serviceFyziklaniTask->getTasksAsArray($this->getEvent());
-        $result['categories'] = ['A', 'B', 'C'];
-        //  }
-        return $result;
     }
 
     /**

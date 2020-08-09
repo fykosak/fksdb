@@ -72,77 +72,58 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     /** @var ModelPerson */
     private $person;
 
-    /** @var ServiceContestant */
-    private $serviceContestant;
+    private ServiceContestant $serviceContestant;
 
-    /** @var ReferencedPersonFactory */
-    private $referencedPersonFactory;
+    private ReferencedPersonFactory $referencedPersonFactory;
 
-    /** @var ExtendedPersonHandlerFactory */
-    private $handlerFactory;
-    /** @var ServicePerson */
-    protected $servicePerson;
+    private ExtendedPersonHandlerFactory $handlerFactory;
 
-    /**
-     * @param ServiceContestant $serviceContestant
-     * @return void
-     */
-    public function injectServiceContestant(ServiceContestant $serviceContestant) {
+    protected ServicePerson $servicePerson;
+
+    public function injectServiceContestant(ServiceContestant $serviceContestant): void {
         $this->serviceContestant = $serviceContestant;
     }
 
-    /**
-     * @param ServicePerson $servicePerson
-     * @return void
-     */
-    public function injectServicePerson(ServicePerson $servicePerson) {
+    public function injectServicePerson(ServicePerson $servicePerson): void {
         $this->servicePerson = $servicePerson;
     }
 
-    /**
-     * @param ReferencedPersonFactory $referencedPersonFactory
-     * @return void
-     */
-    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
+    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory): void {
         $this->referencedPersonFactory = $referencedPersonFactory;
     }
 
-    /**
-     * @param ExtendedPersonHandlerFactory $handlerFactory
-     * @return void
-     */
-    public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory) {
+    public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
     }
 
     /* ********************* TITLE ***************** */
-    public function titleContest() {
+    public function titleContest(): void {
         $this->setPageTitle(new PageTitle(_('Select contest')));
     }
 
-    public function titleYear() {
+    public function titleYear(): void {
         $this->setPageTitle(new PageTitle(_('Select year'), '', $this->getSelectedContest()->name));
     }
 
-    public function titleEmail() {
+    public function titleEmail(): void {
         $this->setPageTitle(new PageTitle(_('Zadejte e-mail'), 'fa fa-envelope', $this->getSelectedContest()->name));
     }
 
-    public function titleContestant() {
+    public function titleContestant(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('%s – registrace řešitele (%s. ročník)'), $this->getSelectedContest()->name, $this->getSelectedYear())));
     }
     /* ********************* ACTIONS ***************** */
     /**
      * @throws AbortException
      */
-    public function actionDefault() {
+    public function actionDefault(): void {
         $this->redirect('contest');
     }
 
     /**
      * @throws AbortException
      */
-    public function actionContestant() {
+    public function actionContestant(): void {
 
         if ($this->user->isLoggedIn()) {
             $person = $this->getPerson();
@@ -174,7 +155,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         }
     }
 
-    public function renderContest() {
+    public function renderContest(): void {
         $this->template->contests = $this->getServiceContest()->getTable();
     }
 
@@ -182,7 +163,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @return void
      * @throws AbortException
      */
-    public function renderYear() {
+    public function renderYear(): void {
         $contest = $this->getSelectedContest();
         $forward = $this->getYearCalculator()->getForwardShift($contest);
         if ($forward) {
@@ -201,7 +182,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @return void
      * @throws BadTypeException
      */
-    public function renderContestant() {
+    public function renderContestant(): void {
         $person = $this->getPerson();
         /** @var FormControl $contestantForm */
         $contestantForm = $this->getComponent('contestantForm');
@@ -214,18 +195,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         }
     }
 
-
-    /**
-     * @return ModelContest|null
-     */
-    public function getSelectedContest() {
+    public function getSelectedContest(): ?ModelContest {
         return $this->contestId ? $this->getServiceContest()->findByPrimary($this->contestId) : null;
     }
 
-    /**
-     * @return int
-     */
-    public function getSelectedYear() {
+    public function getSelectedYear(): ?int {
         return $this->year;
     }
 
@@ -236,10 +210,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return $this->getYearCalculator()->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 
-    /**
-     * @return ModelPerson|null
-     */
-    private function getPerson() {
+    private function getPerson(): ?ModelPerson {
         if (!$this->person) {
 
             if ($this->user->isLoggedIn()) {
@@ -270,7 +241,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @param Form $form
      * @throws AbortException
      */
-    private function emailFormSucceeded(Form $form) {
+    private function emailFormSucceeded(Form $form): void {
         $values = $form->getValues();
         $this->redirect('contestant', ['email' => $values['email'],]);
     }

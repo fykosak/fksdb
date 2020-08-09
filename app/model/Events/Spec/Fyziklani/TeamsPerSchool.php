@@ -20,8 +20,7 @@ use Nette\Forms\IControl;
  */
 class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
 
-    /** @var Context */
-    private $context;
+    private Context $context;
 
     /** @var mixed */
     private $teamsPerSchool;
@@ -29,26 +28,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
     /** @var int */
     private $teamsPerSchoolValue;
 
-    /** @var ExpressionEvaluator */
-    private $evaluator;
-
-    /**
-     * @return int|mixed
-     */
-    public function getTeamsPerSchool() {
-        if ($this->teamsPerSchoolValue === null) {
-            $this->teamsPerSchoolValue = $this->evaluator->evaluate($this->teamsPerSchool, $this->getHolder());
-        }
-        return $this->teamsPerSchoolValue;
-    }
-
-    /**
-     * @param int $teamsPerSchool
-     * @return void
-     */
-    public function setTeamsPerSchool($teamsPerSchool) {
-        $this->teamsPerSchool = $teamsPerSchool;
-    }
+    private ExpressionEvaluator $evaluator;
 
     /**
      * TeamsPerSchool constructor.
@@ -65,12 +45,24 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
     }
 
     /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
+     * @return int|mixed
+     */
+    public function getTeamsPerSchool() {
+        if ($this->teamsPerSchoolValue === null) {
+            $this->teamsPerSchoolValue = $this->evaluator->evaluate($this->teamsPerSchool, $this->getHolder());
+        }
+        return $this->teamsPerSchoolValue;
+    }
+
+    /**
+     * @param int $teamsPerSchool
      * @return void
      */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder) {
+    public function setTeamsPerSchool($teamsPerSchool): void {
+        $this->teamsPerSchool = $teamsPerSchool;
+    }
+
+    protected function _adjust(Form $form, Machine $machine, Holder $holder): void {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $personControls = $this->getControl('p*.person_id');

@@ -16,18 +16,13 @@ use Nette\Application\ForbiddenRequestException;
  */
 class SubmitsPreviewControl extends SeriesTableComponent {
 
-    /** @var SubmitHandlerFactory */
-    private $submitDownloadFactory;
+    private SubmitHandlerFactory $submitDownloadFactory;
 
-    /**
-     * @param SubmitHandlerFactory $submitDownloadFactory
-     * @return void
-     */
-    public function injectSubmitDownloadFactory(SubmitHandlerFactory $submitDownloadFactory) {
+    public function injectSubmitDownloadFactory(SubmitHandlerFactory $submitDownloadFactory): void {
         $this->submitDownloadFactory = $submitDownloadFactory;
     }
 
-    public function render() {
+    public function render(): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
     }
@@ -38,7 +33,7 @@ class SubmitsPreviewControl extends SeriesTableComponent {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function handleDownloadUploaded(int $id) {
+    public function handleDownloadUploaded(int $id): void {
         try {
             $this->submitDownloadFactory->handleDownloadUploaded($this->getPresenter(), $id);
         } catch (ForbiddenRequestException$exception) {
@@ -55,7 +50,7 @@ class SubmitsPreviewControl extends SeriesTableComponent {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function handleDownloadCorrected(int $id) {
+    public function handleDownloadCorrected(int $id): void {
         try {
             $this->submitDownloadFactory->handleDownloadCorrected($this->getPresenter(), $id);
         } catch (ForbiddenRequestException$exception) {

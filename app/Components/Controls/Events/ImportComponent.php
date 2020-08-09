@@ -86,10 +86,7 @@ class ImportComponent extends BaseComponent {
         return $control;
     }
 
-    /**
-     * @return void
-     */
-    public function render() {
+    public function render(): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ImportComponent.latte');
         $this->template->render();
     }
@@ -100,7 +97,7 @@ class ImportComponent extends BaseComponent {
      * @throws JsonException
      * @throws NeonSchemaException
      */
-    private function handleFormImport(Form $form) {
+    private function handleFormImport(Form $form): void {
         $values = $form->getValues();
         try {
             // process form values

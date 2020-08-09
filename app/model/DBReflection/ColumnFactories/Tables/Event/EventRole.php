@@ -59,11 +59,7 @@ class EventRole extends AbstractColumnFactory {
         return (new EventRolePrinter($this->yearCalculator))($person, $event);
     }
 
-    /**
-     * @param AbstractModelSingle $model
-     * @return AbstractModelSingle|null
-     */
-    protected function resolveModel(AbstractModelSingle $model) {
+    protected function resolveModel(AbstractModelSingle $model): ?AbstractModelSingle {
         return $model; // need to be original model because of referenced access
     }
 

@@ -109,10 +109,7 @@ abstract class DefaultColumnFactory extends AbstractColumnFactory {
         return _($this->title);
     }
 
-    /**
-     * @return string|null
-     */
-    final public function getDescription() {
+    final public function getDescription(): ?string {
         return $this->description ? _($this->description) : null;
     }
 

@@ -20,28 +20,26 @@ class ContestAuthorizator {
 
     use SmartObject;
 
-    /** @var User */
-    private $user;
+    private User $user;
 
-    /** @var Permission */
-    private $acl;
+    private Permission $permission;
 
     /**
      * ContestAuthorizator constructor.
      * @param User $identity
-     * @param Permission $acl
+     * @param Permission $permission
      */
-    public function __construct(User $identity, Permission $acl) {
+    public function __construct(User $identity, Permission $permission) {
         $this->user = $identity;
-        $this->acl = $acl;
+        $this->permission = $permission;
     }
 
     public function getUser(): User {
         return $this->user;
     }
 
-    protected function getAcl(): Permission {
-        return $this->acl;
+    protected function getPermission(): Permission {
+        return $this->permission;
     }
 
     /**
@@ -56,7 +54,7 @@ class ContestAuthorizator {
     public function isAllowed($resource, $privilege, $contest): bool {
         if (!$this->getUser()->isLoggedIn()) {
             $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
-            return $this->getAcl()->isAllowed($role, $resource, $privilege);
+            return $this->getPermission()->isAllowed($role, $resource, $privilege);
         }
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
@@ -71,7 +69,7 @@ class ContestAuthorizator {
     final public function isAllowedForAnyContest($resource, string $privilege = null): bool {
         if (!$this->getUser()->isLoggedIn()) {
             $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
-            return $this->getAcl()->isAllowed($role, $resource, $privilege);
+            return $this->getPermission()->isAllowed($role, $resource, $privilege);
         }
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
@@ -79,7 +77,7 @@ class ContestAuthorizator {
         $roles = $login->getRoles();
 
         foreach ($roles as $role) {
-            if ($this->acl->isAllowed($role, $resource, $privilege)) {
+            if ($this->getPermission()->isAllowed($role, $resource, $privilege)) {
                 return true;
             }
         }
@@ -102,7 +100,7 @@ class ContestAuthorizator {
             if (($role->getContestId() !== Grant::CONTEST_ALL) && ($role->getContestId() != $contestId)) {
                 continue;
             }
-            if ($this->acl->isAllowed($role, $resource, $privilege)) {
+            if ($this->getPermission()->isAllowed($role, $resource, $privilege)) {
                 return true;
             }
         }

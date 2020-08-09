@@ -41,17 +41,13 @@ class Breadcrumbs extends BaseComponent {
     const BACKID_LEN = 4;
     const BACKID_DOMAIN = '0-9a-zA-Z';
 
-    /** @var Session */
-    private $session;
+    private Session $session;
 
-    /** @var IRouter */
-    private $router;
+    private IRouter $router;
 
-    /** @var HttpRequest */
-    private $httpRequest;
+    private HttpRequest $httpRequest;
 
-    /** @var IPresenterFactory */
-    private $presenterFactory;
+    private IPresenterFactory $presenterFactory;
 
     /**
      * Prevents multiple storing the current request.
@@ -73,14 +69,7 @@ class Breadcrumbs extends BaseComponent {
         $this->getReverseBackLinkMap()->setExpiration($expiration);
     }
 
-    /**
-     * @param Session $session
-     * @param IRouter $router
-     * @param HttpRequest $httpRequest
-     * @param IPresenterFactory $presenterFactory
-     * @return void
-     */
-    public function injectPrimary(Session $session, IRouter $router, HttpRequest $httpRequest, IPresenterFactory $presenterFactory) {
+    public function injectPrimary(Session $session, IRouter $router, HttpRequest $httpRequest, IPresenterFactory $presenterFactory): void {
         $this->session = $session;
         $this->router = $router;
         $this->httpRequest = $httpRequest;
@@ -123,7 +112,7 @@ class Breadcrumbs extends BaseComponent {
      * Rendering
      * ********************** */
 
-    public function render() {
+    public function render(): void {
         $request = $this->getPresenter()->getRequest();
 
         $path = [];
@@ -143,10 +132,7 @@ class Breadcrumbs extends BaseComponent {
      * Path traversal
      * ********************** */
 
-    /**
-     * @return NULL|string
-     */
-    public function getBackLinkUrl() {
+    public function getBackLinkUrl(): ?string {
         $presenter = $this->getPresenter();
         $request = $presenter->getRequest();
 

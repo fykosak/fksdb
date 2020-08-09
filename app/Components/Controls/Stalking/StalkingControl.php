@@ -17,25 +17,13 @@ use FKSDB\ORM\Models\ModelPerson;
  */
 abstract class StalkingControl extends BaseComponent {
 
-    /** @var DBReflectionFactory */
-    protected $tableReflectionFactory;
+    protected DBReflectionFactory $tableReflectionFactory;
 
-    /**
-     * @param DBReflectionFactory $tableReflectionFactory
-     * @return void
-     */
-    public function injectPrimary(DBReflectionFactory $tableReflectionFactory) {
+    public function injectPrimary(DBReflectionFactory $tableReflectionFactory): void {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param string $headline
-     * @param int $userPermissions
-     * @param int $minimalPermissions
-     * @return void
-     */
-    public function beforeRender(ModelPerson $person, string $headline, int $userPermissions, int $minimalPermissions) {
+    public function beforeRender(ModelPerson $person, string $headline, int $userPermissions, int $minimalPermissions): void {
         $this->template->gender = $person->gender;
         $this->template->headline = $headline;
         if ($userPermissions < $minimalPermissions) {

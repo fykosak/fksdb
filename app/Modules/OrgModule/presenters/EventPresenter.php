@@ -23,14 +23,9 @@ use Nette\Security\IResource;
 class EventPresenter extends BasePresenter {
     use EntityPresenterTrait;
 
-    /** @var ServiceEvent */
-    private $serviceEvent;
+    private ServiceEvent $serviceEvent;
 
-    /**
-     * @param ServiceEvent $serviceEvent
-     * @return void
-     */
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 
@@ -48,14 +43,14 @@ class EventPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleEdit() {
+    public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Edit event %s'), $this->getEntity()->name), 'fa fa-pencil'));
     }
 
     /**
      * @throws NotImplementedException
      */
-    public function actionDelete() {
+    public function actionDelete(): void {
         throw new NotImplementedException();
     }
 
@@ -64,7 +59,7 @@ class EventPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws BadTypeException
      */
-    public function actionEdit() {
+    public function actionEdit(): void {
         $this->traitActionEdit();
     }
 

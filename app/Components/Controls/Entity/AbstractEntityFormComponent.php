@@ -20,8 +20,7 @@ use Tracy\Debugger;
  */
 abstract class AbstractEntityFormComponent extends BaseComponent {
 
-    /** @var bool */
-    protected $create;
+    protected bool $create;
 
     /**
      * AbstractEntityFormControl constructor.
@@ -68,7 +67,7 @@ abstract class AbstractEntityFormComponent extends BaseComponent {
      * @return void
      * @throws AbortException
      */
-    private function handleSuccess(SubmitButton $button) {
+    private function handleSuccess(SubmitButton $button): void {
         try {
             $this->handleFormSuccess($button->getForm());
         } catch (ModelException $exception) {
@@ -96,20 +95,13 @@ abstract class AbstractEntityFormComponent extends BaseComponent {
      * @throws AbortException
      * @throws ModelException
      */
-    abstract protected function handleFormSuccess(Form $form);
+    abstract protected function handleFormSuccess(Form $form): void;
 
-    /**
-     * @return void
-     */
-    public function render() {
+    public function render(): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . '@layout.latte');
         $this->template->render();
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     */
-    protected function configureForm(Form $form) {
+    protected function configureForm(Form $form): void {
     }
 }

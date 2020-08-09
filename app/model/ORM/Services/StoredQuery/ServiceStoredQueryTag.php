@@ -26,7 +26,7 @@ class ServiceStoredQueryTag extends AbstractServiceSingle {
      * @param int|null $tagTypeId
      * @return TypedTableSelection|null
      */
-    public function findByTagTypeId($tagTypeId) {
+    public function findByTagTypeId($tagTypeId): ?TypedTableSelection {
         if (!$tagTypeId) {
             return null;
         }

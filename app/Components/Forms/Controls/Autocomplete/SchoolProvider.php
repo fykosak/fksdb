@@ -16,8 +16,7 @@ class SchoolProvider implements IFilteredDataProvider {
 
     const LIMIT = 50;
 
-    /** @var ServiceSchool */
-    private $serviceSchool;
+    private ServiceSchool $serviceSchool;
 
     /**
      * School with school_id equal to defaultValue is suggested even when it's not

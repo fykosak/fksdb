@@ -12,14 +12,10 @@ use FKSDB\ORM\AbstractModelSingle;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class LinkPrinterComponent extends BaseComponent {
-    /** @var DBReflectionFactory */
-    private $tableReflectionFactory;
 
-    /**
-     * @param DBReflectionFactory $tableReflectionFactory
-     * @return void
-     */
-    public function injectTableReflectionFactory(DBReflectionFactory $tableReflectionFactory) {
+    private DBReflectionFactory $tableReflectionFactory;
+
+    public function injectTableReflectionFactory(DBReflectionFactory $tableReflectionFactory): void {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
@@ -29,7 +25,7 @@ class LinkPrinterComponent extends BaseComponent {
      * @return void
      * @throws BadTypeException
      */
-    public function render(string $linkId, AbstractModelSingle $model) {
+    public function render(string $linkId, AbstractModelSingle $model): void {
         $factory = $this->tableReflectionFactory->loadLinkFactory($linkId);
         $this->template->title = $factory->getText();
         $this->template->link = $factory->create($this->getPresenter(), $model);

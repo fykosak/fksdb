@@ -25,13 +25,7 @@ class ServiceSubmitQuizQuestion extends AbstractServiceSingle {
         parent::__construct($connection, $conventions, DbNames::TAB_SUBMIT_QUIZ, ModelSubmitQuizQuestion::class);
     }
 
-    /**
-     *
-     * @param int $ctId
-     * @param int $questionId
-     * @return ModelSubmitQuizQuestion|null
-     */
-    public function findByContestant(int $ctId, int $questionId) {
+    public function findByContestant(int $ctId, int $questionId): ?ModelSubmitQuizQuestion {
         /** @var ModelSubmitQuizQuestion $result */
         $result = $this->getTable()->where([
             'ct_id' => $ctId,
@@ -46,7 +40,7 @@ class ServiceSubmitQuizQuestion extends AbstractServiceSingle {
      * @param string|null $answer
      * @return void
      */
-    public function saveSubmittedQuestion(ModelQuizQuestion $question, ModelContestant $contestant, $answer) {
+    public function saveSubmittedQuestion(ModelQuizQuestion $question, ModelContestant $contestant, $answer): void {
         $submit = $this->findByContestant($contestant->ct_id, $question->question_id);
         if ($submit) {
             $this->updateModel2($submit, [

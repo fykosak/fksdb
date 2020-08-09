@@ -36,16 +36,11 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     public $eventId;
 
-    /** @var ServiceEvent */
-    protected $serviceEvent;
-    /** @var EventDispatchFactory */
-    private $eventDispatchFactory;
+    protected ServiceEvent $serviceEvent;
 
-    /**
-     * @param ServiceEvent $serviceEvent
-     * @return void
-     */
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+    private EventDispatchFactory $eventDispatchFactory;
+
+    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 
@@ -53,11 +48,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->serviceEvent;
     }
 
-    /**
-     * @param EventDispatchFactory $eventDispatchFactory
-     * @return void
-     */
-    public function injectEventDispatch(EventDispatchFactory $eventDispatchFactory) {
+    public function injectEventDispatch(EventDispatchFactory $eventDispatchFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
@@ -182,7 +173,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    protected function setPageTitle(PageTitle $pageTitle) {
+    protected function setPageTitle(PageTitle $pageTitle): void {
         $pageTitle->subTitle = $pageTitle->subTitle ?: $this->getEvent()->__toString();
         parent::setPageTitle($pageTitle);
     }

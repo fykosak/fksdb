@@ -28,8 +28,8 @@ use Nette\Utils\Strings;
 class ApplicationsGrid extends BaseComponent {
 
     const NAME_PREFIX = 'application_';
-    /** @var IHolderSource */
-    private $source;
+
+    private IHolderSource $source;
 
     /** @var Holder[] */
     private $holders = [];
@@ -43,14 +43,12 @@ class ApplicationsGrid extends BaseComponent {
     /** @var ApplicationHandler[] */
     private $handlers = [];
 
-    /** @var ApplicationHandlerFactory */
-    private $handlerFactory;
+    private ApplicationHandlerFactory $handlerFactory;
 
     /** @var string */
     private $templateFile;
 
-    /** @var EventDispatchFactory */
-    private $eventDispatchFactory;
+    private EventDispatchFactory $eventDispatchFactory;
 
     /**
      * ApplicationsGrid constructor.
@@ -78,11 +76,7 @@ class ApplicationsGrid extends BaseComponent {
         }
     }
 
-    /**
-     * @param EventDispatchFactory $eventDispatchFactory
-     * @return void
-     */
-    public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory) {
+    public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 

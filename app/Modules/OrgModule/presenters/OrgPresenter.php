@@ -20,19 +20,13 @@ use Nette\Security\IResource;
  * @method ModelOrg traitGetEntity()
  */
 class OrgPresenter extends BasePresenter {
-
     use EntityPresenterTrait {
         getEntity as traitGetEntity;
     }
 
-    /** @var ServiceOrg */
-    private $serviceOrg;
+    private ServiceOrg $serviceOrg;
 
-    /**
-     * @param ServiceOrg $serviceOrg
-     * @return void
-     */
-    public function injectServiceOrg(ServiceOrg $serviceOrg) {
+    public function injectServiceOrg(ServiceOrg $serviceOrg): void {
         $this->serviceOrg = $serviceOrg;
     }
 
@@ -43,7 +37,7 @@ class OrgPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws BadTypeException
      */
-    public function titleEdit() {
+    public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Úprava organizátora %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-pencil'));
     }
 
@@ -54,7 +48,7 @@ class OrgPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws BadTypeException
      */
-    public function titleDetail() {
+    public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Org %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-user'));
     }
 
@@ -71,7 +65,7 @@ class OrgPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws BadTypeException
      */
-    public function actionEdit() {
+    public function actionEdit(): void {
         $this->traitActionEdit();
     }
 
@@ -97,7 +91,7 @@ class OrgPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws BadTypeException
      */
-    public function renderDetail() {
+    public function renderDetail(): void {
         $this->template->model = $this->getEntity();
     }
 

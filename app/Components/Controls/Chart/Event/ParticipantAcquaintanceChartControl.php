@@ -63,10 +63,7 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return null;
     }
 }

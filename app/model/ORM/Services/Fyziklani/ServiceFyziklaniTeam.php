@@ -62,5 +62,4 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
         $query->where('points', null);
         return $query->count() == 0;
     }
-
 }

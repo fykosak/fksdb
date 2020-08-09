@@ -26,32 +26,31 @@ use Nette\Forms\Form;
  */
 class ReferencedId extends HiddenField {
 
-    const MODE_NORMAL = 'MODE_NORMAL';
-    const MODE_FORCE = 'MODE_FORCE';
-    const MODE_ROLLBACK = 'MODE_ROLLBACK';
+    public const MODE_NORMAL = 'MODE_NORMAL';
+    public const MODE_FORCE = 'MODE_FORCE';
+    public const MODE_ROLLBACK = 'MODE_ROLLBACK';
 
-    const VALUE_PROMISE = '__promise';
+    public const VALUE_PROMISE = '__promise';
 
-    const JSON_DATA = 'referencedContainer';
+    private const JSON_DATA = 'referencedContainer';
 
-    /** @var ReferencedContainer */
-    private $referencedContainer;
-    /** @var Promise */
-    private $promise;
-    /** @var IService */
-    private $service;
-    /** @var IReferencedHandler */
-    private $handler;
-    /** @var SearchContainer */
-    private $searchContainer;
-    /** @var bool */
-    private $modelCreated;
+    private ReferencedContainer $referencedContainer;
+
+    private SearchContainer $searchContainer;
+
+    private IService $service;
+
+    private IReferencedHandler $handler;
+
+    private ?Promise $promise = null;
+
+    private bool $modelCreated = false;
     /** @var IModel */
     private $model;
-    /** @var bool */
-    private $attachedOnValidate = false;
-    /** @var bool */
-    private $attachedSearch = false;
+
+    private bool $attachedOnValidate = false;
+
+    private bool $attachedSearch = false;
 
     /**
      * ReferencedId constructor.
@@ -96,18 +95,11 @@ class ReferencedId extends HiddenField {
         return $this->searchContainer;
     }
 
-    /**
-     * @return Promise|null
-     */
-    protected function getPromise() {
+    protected function getPromise(): ?Promise {
         return $this->promise;
     }
 
-    /**
-     * @param Promise $promise
-     * @return void
-     */
-    private function setPromise(Promise $promise) {
+    private function setPromise(Promise $promise): void {
         $this->promise = $promise;
     }
 
@@ -119,18 +111,11 @@ class ReferencedId extends HiddenField {
         return $this->handler;
     }
 
-    /**
-     * @return bool
-     */
-    public function getModelCreated() {
+    public function getModelCreated(): bool {
         return $this->modelCreated;
     }
 
-    /**
-     * @param mixed $modelCreated
-     * @return void
-     */
-    public function setModelCreated($modelCreated) {
+    public function setModelCreated(bool $modelCreated): void {
         $this->modelCreated = $modelCreated;
     }
 
@@ -144,7 +129,7 @@ class ReferencedId extends HiddenField {
     /**
      * @param string|int|IModel|AbstractModelSingle|ModelPerson $pValue
      * @param bool $force
-     * @return HiddenField
+     * @return static
      */
     public function setValue($pValue, bool $force = false) {
 
@@ -185,7 +170,7 @@ class ReferencedId extends HiddenField {
         return $value ?: null;
     }
 
-    public function rollback() {
+    public function rollback(): void {
         if ($this->getModelCreated()) {
             $this->setModel(null, self::MODE_ROLLBACK);
             if (parent::getValue()) {
@@ -202,10 +187,7 @@ class ReferencedId extends HiddenField {
         $this->getReferencedContainer()->setDisabled($value);
     }
 
-    /**
-     * @return void
-     */
-    private function createPromise() {
+    private function createPromise(): void {
 
         $values = $this->getReferencedContainer()->getValues();
         $referencedId = $this->getValue();
@@ -240,7 +222,7 @@ class ReferencedId extends HiddenField {
         $this->setPromise($promise);
     }
 
-    public function invalidateFormGroup() {
+    public function invalidateFormGroup(): void {
         $form = $this->getForm();
         /** @var Presenter $presenter */
         $presenter = $form->lookup(Presenter::class);
@@ -258,12 +240,7 @@ class ReferencedId extends HiddenField {
         }
     }
 
-    /**
-     * @param IModel|null $model
-     * @param string $mode
-     * @return void
-     */
-    protected function setModel(IModel $model = null, string $mode = self::MODE_NORMAL) {
+    protected function setModel(?IModel $model, string $mode = self::MODE_NORMAL): void {
         $this->getReferencedContainer()->setModel($model, $mode);
     }
 }

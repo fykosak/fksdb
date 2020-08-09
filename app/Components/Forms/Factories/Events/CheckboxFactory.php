@@ -31,7 +31,7 @@ class CheckboxFactory extends AbstractFactory {
      * @param Field $field
      * @return void
      */
-    protected function setDefaultValue(IComponent $component, Field $field) {
+    protected function setDefaultValue(IComponent $component, Field $field): void {
         $component->setDefaultValue($field->getValue());
     }
 
@@ -39,7 +39,7 @@ class CheckboxFactory extends AbstractFactory {
      * @param BaseControl|IComponent $component
      * @return void
      */
-    protected function setDisabled(IComponent $component) {
+    protected function setDisabled(IComponent $component): void {
         $component->setDisabled();
     }
 

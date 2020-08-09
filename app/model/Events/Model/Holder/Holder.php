@@ -66,11 +66,7 @@ class Holder {
         return $this->connection;
     }
 
-    /**
-     * @param string $name
-     * @return void
-     */
-    public function setPrimaryHolder(string $name) {
+    public function setPrimaryHolder(string $name): void {
         $this->primaryHolder = $this->getBaseHolder($name);
         $this->secondaryBaseHolders = array_filter($this->baseHolders, function (BaseHolder $baseHolder) {
             return $baseHolder !== $this->primaryHolder;
@@ -81,29 +77,17 @@ class Holder {
         return $this->primaryHolder;
     }
 
-    /**
-     * @param BaseHolder $baseHolder
-     * @return void
-     */
-    public function addBaseHolder(BaseHolder $baseHolder) {
+    public function addBaseHolder(BaseHolder $baseHolder): void {
         $baseHolder->setHolder($this);
         $name = $baseHolder->getName();
         $this->baseHolders[$name] = $baseHolder;
     }
 
-    /**
-     * @param IFormAdjustment $formAdjusment
-     * @return void
-     */
-    public function addFormAdjustment(IFormAdjustment $formAdjusment) {
+    public function addFormAdjustment(IFormAdjustment $formAdjusment): void {
         $this->formAdjustments[] = $formAdjusment;
     }
 
-    /**
-     * @param IProcessing $processing
-     * @return void
-     */
-    public function addProcessing(IProcessing $processing) {
+    public function addProcessing(IProcessing $processing): void {
         $this->processings[] = $processing;
     }
 
@@ -133,11 +117,7 @@ class Holder {
         return $this->secondaryModelStrategy;
     }
 
-    /**
-     * @param SecondaryModelStrategy $secondaryModelStrategy
-     * @return void
-     */
-    public function setSecondaryModelStrategy(SecondaryModelStrategy $secondaryModelStrategy) {
+    public function setSecondaryModelStrategy(SecondaryModelStrategy $secondaryModelStrategy): void {
         $this->secondaryModelStrategy = $secondaryModelStrategy;
     }
 
@@ -157,7 +137,7 @@ class Holder {
      * @param IModel|null $primaryModel
      * @param array|null $secondaryModels
      */
-    public function setModel(IModel $primaryModel = null, array $secondaryModels = null) {
+    public function setModel(IModel $primaryModel = null, array $secondaryModels = null): void {
         foreach ($this->getGroupedSecondaryHolders() as $key => $group) {
             if ($secondaryModels) {
                 $this->secondaryModelStrategy->setSecondaryModels($group['holders'], $secondaryModels[$key]);
@@ -168,7 +148,7 @@ class Holder {
         $this->primaryHolder->setModel($primaryModel);
     }
 
-    public function saveModels() {
+    public function saveModels(): void {
         /*
          * When deleting, first delete children, then parent.
          */

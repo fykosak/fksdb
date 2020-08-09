@@ -37,10 +37,7 @@ class StudyYearRow extends AbstractColumnFactory {
         return new FieldLevelPermission(self::PERMISSION_ALLOW_BASIC, self::PERMISSION_ALLOW_BASIC);
     }
 
-    /**
-     * @return string|null
-     */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return _('Kvůli zařazení do kategorie.');
     }
 
@@ -50,7 +47,7 @@ class StudyYearRow extends AbstractColumnFactory {
      * @throws InvalidArgumentException
      */
     public function createField(...$args): BaseControl {
-        list($acYear) = $args;
+        [$acYear] = $args;
         if (\is_null($acYear)) {
             throw new \InvalidArgumentException();
         }

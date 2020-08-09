@@ -21,11 +21,11 @@ class ErrorPresenter extends BasePresenter {
         parent::beforeRender();
     }
 
-    protected function putIntoBreadcrumbs() {
+    protected function putIntoBreadcrumbs(): void {
         /* empty */
     }
 
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Error')));
     }
 
@@ -34,7 +34,7 @@ class ErrorPresenter extends BasePresenter {
      * @return void
      * @throws AbortException
      */
-    public function renderDefault($exception) {
+    public function renderDefault($exception): void {
         if ($this->isAjax()) { // AJAX request? Just note this error in payload.
             $this->payload->error = true;
             $this->terminate();

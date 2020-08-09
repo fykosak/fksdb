@@ -42,14 +42,11 @@ class ContestChooser extends BaseComponent {
     /** @var ModelContest[] */
     private $contests;
 
-    /** @var Session */
-    private $session;
+    private Session $session;
 
-    /** @var YearCalculator */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
-    /** @var ServiceContest */
-    private $serviceContest;
+    private ServiceContest $serviceContest;
 
     /** @var ModelContest */
     private $contest;
@@ -69,13 +66,7 @@ class ContestChooser extends BaseComponent {
     /** @var int bitmask of what "sources" are used to infer selected contest */
     private $contestSource = 0xffffffff;
 
-    /**
-     * @param Session $session
-     * @param YearCalculator $yearCalculator
-     * @param ServiceContest $serviceContest
-     * @return void
-     */
-    public function injectPrimary(Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest) {
+    public function injectPrimary(Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest): void {
         $this->session = $session;
         $this->yearCalculator = $yearCalculator;
         $this->serviceContest = $serviceContest;
@@ -92,7 +83,7 @@ class ContestChooser extends BaseComponent {
      *
      * @param string|array $yearDefinition
      */
-    public function setYears($yearDefinition) {
+    public function setYears($yearDefinition): void {
         $this->yearDefinition = $yearDefinition;
     }
 
@@ -107,7 +98,7 @@ class ContestChooser extends BaseComponent {
      * @param mixed $defaultContest
      * @return void
      */
-    public function setDefaultContest($defaultContest) {
+    public function setDefaultContest($defaultContest): void {
         $this->defaultContest = $defaultContest;
     }
 
@@ -122,7 +113,7 @@ class ContestChooser extends BaseComponent {
      * @param mixed $contestSource
      * @return void
      */
-    public function setContestSource($contestSource) {
+    public function setContestSource($contestSource): void {
         $this->contestSource = $contestSource;
     }
 
@@ -135,7 +126,7 @@ class ContestChooser extends BaseComponent {
      * Redirect to corrrect address according to the resolved values.
      * @throws AbortException
      */
-    public function syncRedirect() {
+    public function syncRedirect(): void {
         $this->init();
 
         $presenter = $this->getPresenter();
@@ -315,7 +306,7 @@ class ContestChooser extends BaseComponent {
      * @return void
      * @throws ForbiddenRequestException
      */
-    public function render($class = null) {
+    public function render($class = null): void {
         if (!$this->isValid()) {
             throw new ForbiddenRequestException('No contests available.');
         }
@@ -332,7 +323,7 @@ class ContestChooser extends BaseComponent {
      * @param int $contestId
      * @throws AbortException
      */
-    public function handleChange($contestId) {
+    public function handleChange($contestId): void {
         $presenter = $this->getPresenter();
         $backupYear = null;
         if (isset($presenter->year)) {
@@ -358,7 +349,7 @@ class ContestChooser extends BaseComponent {
      * @param int $year
      * @throws AbortException
      */
-    public function handleChangeYear($contest, $year) {
+    public function handleChangeYear($contest, $year): void {
         $presenter = $this->getPresenter();
         $presenter->redirect('this', [
             'contestId' => $contest, //WHY? contestId should be persistent

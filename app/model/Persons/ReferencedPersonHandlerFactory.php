@@ -19,22 +19,17 @@ use FKSDB\ORM\ServicesMulti\ServiceMPostContact;
 class ReferencedPersonHandlerFactory {
     use SmartObject;
 
-    /** @var ServicePerson */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
-    /** @var ServicePersonInfo */
-    private $servicePersonInfo;
+    private ServicePersonInfo $servicePersonInfo;
 
-    /** @var ServicePersonHistory */
-    private $servicePersonHistory;
+    private ServicePersonHistory $servicePersonHistory;
 
-    /** @var ServiceMPostContact */
-    private $serviceMPostContact;
+    private ServiceMPostContact $serviceMPostContact;
 
-    /** @var ServicePersonHasFlag */
-    private $servicePersonHasFlag;
-    /** @var Handler */
-    private $eventScheduleHandler;
+    private ServicePersonHasFlag $serviceMPersonHasFlag;
+
+    private Handler $eventScheduleHandler;
 
     /**
      * ReferencedPersonHandlerFactory constructor.

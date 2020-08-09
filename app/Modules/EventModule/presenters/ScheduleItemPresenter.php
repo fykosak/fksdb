@@ -37,25 +37,16 @@ class ScheduleItemPresenter extends BasePresenter {
     public $groupId;
     /** @var ModelScheduleGroup */
     private $group;
-    /** @var ServiceScheduleItem */
-    private $serviceScheduleItem;
 
-    /** @var ServiceScheduleGroup */
-    private $serviceScheduleGroup;
+    private ServiceScheduleItem $serviceScheduleItem;
 
-    /**
-     * @param ServiceScheduleItem $serviceScheduleItem
-     * @return void
-     */
-    public function injectServiceScheduleItem(ServiceScheduleItem $serviceScheduleItem) {
+    private ServiceScheduleGroup $serviceScheduleGroup;
+
+    public function injectServiceScheduleItem(ServiceScheduleItem $serviceScheduleItem): void {
         $this->serviceScheduleItem = $serviceScheduleItem;
     }
 
-    /**
-     * @param ServiceScheduleGroup $serviceScheduleGroup
-     * @return void
-     */
-    public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup) {
+    public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup): void {
         $this->serviceScheduleGroup = $serviceScheduleGroup;
     }
 
@@ -82,14 +73,14 @@ class ScheduleItemPresenter extends BasePresenter {
      * @throws EventNotFoundException
      * @throws BadTypeException
      */
-    public function actionDetail() {
+    public function actionDetail(): void {
         $this->getEntity();
     }
 
     /**
      * @throws InvalidStateException
      */
-    public function renderList() {
+    public function renderList(): void {
         $this->template->group = $this->getGroup();
     }
 
@@ -100,7 +91,7 @@ class ScheduleItemPresenter extends BasePresenter {
      * @throws EventNotFoundException
      * @throws BadTypeException
      */
-    public function renderDetail() {
+    public function renderDetail(): void {
         $this->template->group = $this->getGroup();
         $this->template->model = $this->getEntity();
     }
@@ -186,7 +177,7 @@ class ScheduleItemPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    protected function setPageTitle(PageTitle $pageTitle) {
+    protected function setPageTitle(PageTitle $pageTitle): void {
         $pageTitle->subTitle .= ' ->' . sprintf('"%s/%s"', $this->getGroup()->name_cs, $this->getGroup()->name_en);
         parent::setPageTitle($pageTitle);
     }

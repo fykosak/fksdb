@@ -37,17 +37,11 @@ class ResultsComponent extends BaseComponent {
     /** @var StoredQuery */
     private $storedQuery;
 
-    /** @var ContestAuthorizator */
-    private $contestAuthorizator;
+    private ContestAuthorizator $contestAuthorizator;
 
-    /** @var StoredQueryFactory */
-    private $storedQueryFormFactory;
+    private StoredQueryFactory $storedQueryFormFactory;
 
-    /**
-     *
-     * @var ExportFormatFactory
-     */
-    private $exportFormatFactory;
+    private ExportFormatFactory $exportFormatFactory;
 
     /** @var null|bool|string */
     private $error;
@@ -55,31 +49,17 @@ class ResultsComponent extends BaseComponent {
     /** @var bool */
     private $showParametrizeForm = true;
 
-    /**
-     * @param ContestAuthorizator $contestAuthorizator
-     * @param StoredQueryFactory $storedQueryFormFactory
-     * @param ExportFormatFactory $exportFormatFactory
-     * @return void
-     */
-    public function injectPrimary(ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory) {
+    public function injectPrimary(ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory): void {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->storedQueryFormFactory = $storedQueryFormFactory;
         $this->exportFormatFactory = $exportFormatFactory;
     }
 
-    /**
-     * @param bool $showParametersForm
-     * @return void
-     */
-    public function setShowParametrizeForm(bool $showParametersForm) {
+    public function setShowParametrizeForm(bool $showParametersForm): void {
         $this->showParametrizeForm = $showParametersForm;
     }
 
-    /**
-     * @param StoredQuery $query
-     * @return void
-     */
-    public function setStoredQuery(StoredQuery $query) {
+    public function setStoredQuery(StoredQuery $query): void {
         $this->storedQuery = $query;
     }
 
@@ -87,19 +67,11 @@ class ResultsComponent extends BaseComponent {
         return isset($this->storedQuery) && !is_null($this->storedQuery);
     }
 
-    /**
-     * @param array $parameters
-     * @return void
-     */
-    public function setParameters(array $parameters) {
+    public function setParameters(array $parameters): void {
         $this->parameters = $parameters;
     }
-
-    /**
-     * @param array $parameters
-     * @return void
-     */
-    public function updateParameters(array $parameters) {
+    
+    public function updateParameters(array $parameters): void {
         if (!$this->parameters) {
             $this->parameters = [];
         }
@@ -151,7 +123,7 @@ class ResultsComponent extends BaseComponent {
      * @return void
      * @throws BadTypeException
      */
-    public function render() {
+    public function render(): void {
         if ($this->parameters) {
             $this->storedQuery->setParameters($this->parameters);
             $defaults = [];
@@ -178,7 +150,7 @@ class ResultsComponent extends BaseComponent {
      * @throws ForbiddenRequestException
      * @throws NotFoundException
      */
-    public function handleFormat(string $format) {
+    public function handleFormat(string $format): void {
         if ($this->parameters) {
             $this->storedQuery->setParameters($this->parameters);
         }

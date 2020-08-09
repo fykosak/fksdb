@@ -31,7 +31,7 @@ class ServiceQuizQuestion extends AbstractServiceSingle {
      * @param int $questionNr
      * @return ModelQuizQuestion|NULL
      */
-    public function findByTask(ModelTask $task, int $questionNr) {
+    public function findByTask(ModelTask $task, int $questionNr): ?ModelQuizQuestion {
         $result = $this->getTable()->where([
             'task_id' => $task->task_id,
             'question_nr' => $questionNr,

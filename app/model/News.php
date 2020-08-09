@@ -12,8 +12,7 @@ use Nette\SmartObject;
 class News {
     use SmartObject;
 
-    /** @var Container */
-    private $container;
+    private Container $container;
 
     /**
      * News constructor.

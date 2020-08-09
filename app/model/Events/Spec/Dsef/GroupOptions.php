@@ -17,11 +17,9 @@ use FKSDB\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 class GroupOptions implements IOptionsProvider {
     use SmartObject;
 
-    /** @var ServiceMDsefParticipant */
-    private $serviceMParticipant;
+    private ServiceMDsefParticipant $serviceMParticipant;
 
-    /** @var ServiceDsefGroup */
-    private $serviceDsefGroup;
+    private ServiceDsefGroup $serviceDsefGroup;
     /** @var array|string */
     private $includeStates;
     /** @var array|string|string[] */

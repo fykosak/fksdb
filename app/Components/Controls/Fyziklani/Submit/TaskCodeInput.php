@@ -24,17 +24,13 @@ use Nette\DI\Container;
  */
 class TaskCodeInput extends AjaxComponent {
 
-    /** @var ServiceFyziklaniTeam */
-    private $serviceFyziklaniTeam;
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    /** @var ServiceFyziklaniTask */
-    private $serviceFyziklaniTask;
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
 
-    /** @var HandlerFactory */
-    private $handlerFactory;
+    private HandlerFactory $handlerFactory;
 
-    /** @var ModelEvent */
-    private $event;
+    private ModelEvent $event;
 
     /**
      * TaskCodeInput constructor.
@@ -49,17 +45,7 @@ class TaskCodeInput extends AjaxComponent {
         });
     }
 
-    final protected function getEvent(): ModelEvent {
-        return $this->event;
-    }
-
-    /**
-     * @param HandlerFactory $handlerFactory
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @return void
-     */
-    public function injectPrimary(HandlerFactory $handlerFactory, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    public function injectPrimary(HandlerFactory $handlerFactory, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->handlerFactory = $handlerFactory;
@@ -72,9 +58,9 @@ class TaskCodeInput extends AjaxComponent {
      */
     protected function getData(...$args): array {
         return [
-            'availablePoints' => $this->getEvent()->getFyziklaniGameSetup()->getAvailablePoints(),
-            'tasks' => $this->serviceFyziklaniTask->getTasksAsArray($this->getEvent()),
-            'teams' => $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent()),
+            'availablePoints' => $this->event->getFyziklaniGameSetup()->getAvailablePoints(),
+            'tasks' => $this->serviceFyziklaniTask->getTasksAsArray($this->event),
+            'teams' => $this->serviceFyziklaniTeam->getTeamsAsArray($this->event),
         ];
     }
 
@@ -96,7 +82,7 @@ class TaskCodeInput extends AjaxComponent {
     public function handleSave() {
         $data = (array)json_decode($this->getHttpRequest()->getRawBody());
         try {
-            $handler = $this->handlerFactory->create($this->getEvent());
+            $handler = $this->handlerFactory->create($this->event);
             $handler->preProcess($this->getLogger(), $data['code'], +$data['points']);
         } catch (TaskCodeException $exception) {
             $this->getLogger()->log(new Message($exception->getMessage(), BasePresenter::FLASH_ERROR));

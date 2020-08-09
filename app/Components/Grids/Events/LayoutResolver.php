@@ -17,11 +17,9 @@ class LayoutResolver {
 
     const TEMPLATE_EXT = '.latte';
 
-    /** @var array */
-    private $definitions;
+    private array $definitions;
 
-    /** @var string */
-    private $templateDir;
+    private string $templateDir;
 
     /**
      * LayoutResolver constructor.

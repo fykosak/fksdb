@@ -14,14 +14,13 @@ use Nette\Security\User;
  */
 class HandlerFactory {
 
-    /** @var ServiceFyziklaniSubmit */
-    private $serviceFyziklaniSubmit;
-    /** @var ServiceFyziklaniTask */
-    private $serviceFyziklaniTask;
-    /** @var ServiceFyziklaniTeam */
-    private $serviceFyziklaniTeam;
-    /** @var User */
-    private $user;
+    private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
+
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
+
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+
+    private User $user;
 
     /**
      * TaskCodeHandler constructor.

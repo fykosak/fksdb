@@ -41,32 +41,22 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      */
     public $qid;
 
-    /** @var ServiceStoredQuery */
-    private $serviceStoredQuery;
+    private ServiceStoredQuery $serviceStoredQuery;
 
-    /** @var StoredQueryFactory */
-    private $storedQueryFactory;
+    private StoredQueryFactory $storedQueryFactory;
     /** @var StoredQuery */
     private $storedQuery;
 
-    /**
-     * @param ServiceStoredQuery $serviceStoredQuery
-     * @return void
-     */
-    public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery) {
+    public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery): void {
         $this->serviceStoredQuery = $serviceStoredQuery;
     }
 
-    /**
-     * @param StoredQueryFactory $storedQueryFactory
-     * @return void
-     */
-    public function injectStoredQueryFactory(StoredQueryFactory $storedQueryFactory) {
+    public function injectStoredQueryFactory(StoredQueryFactory $storedQueryFactory): void {
         $this->storedQueryFactory = $storedQueryFactory;
     }
 
     protected function startup() {
-       switch ($this->getAction()) {
+        switch ($this->getAction()) {
             case 'edit':
                 $this->redirect(':Org:StoredQuery:edit', $this->getParameters());
             case 'compose':
@@ -87,7 +77,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function authorizedExecute() {
+    public function authorizedExecute(): void {
         $this->contestAuthorizator->isAllowed($this->getStoredQuery(), 'execute', $this->getSelectedContest());
     }
 
@@ -98,7 +88,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleExecute() {
+    public function titleExecute(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('%s'), $this->getStoredQuery()->getName()), 'fa fa-play-circle-o'));
     }
 
@@ -109,7 +99,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
-    public function actionExecute() {
+    public function actionExecute(): void {
         $storedQuery = $this->getStoredQuery();
         if ($storedQuery && $this->getParameter('qid')) {
             $parameters = [];
@@ -126,7 +116,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
-    public function renderExecute() {
+    public function renderExecute(): void {
         $this->template->model = $this->getStoredQuery()->getQueryPattern();
     }
 
@@ -144,7 +134,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     /**
      * @return string
      */
-    protected function getHttpRealm() {
+    protected function getHttpRealm(): ?string {
         return 'FKSDB-export';
     }
 
@@ -164,10 +154,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         return $this->storedQuery;
     }
 
-    /**
-     * @return ModelStoredQuery|null
-     */
-    public function getQueryByQId() {
+    public function getQueryByQId(): ?ModelStoredQuery {
         $qid = $this->getParameter('qid');
         if ($qid) {
             return $this->serviceStoredQuery->findByQid($qid);
@@ -208,7 +195,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      * @throws BadTypeException
      */
-    protected function setPageTitle(PageTitle $pageTitle) {
+    protected function setPageTitle(PageTitle $pageTitle): void {
         $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
         parent::setPageTitle($pageTitle);
     }

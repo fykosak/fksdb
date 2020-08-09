@@ -12,8 +12,7 @@ use Nette\InvalidArgumentException;
  */
 class CompareStrategy implements IMergeStrategy {
 
-    /** @var int */
-    private $sign;
+    private int $sign;
 
     /**
      *

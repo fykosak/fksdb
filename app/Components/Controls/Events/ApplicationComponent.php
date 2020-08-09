@@ -55,7 +55,7 @@ class ApplicationComponent extends BaseComponent {
     /**
      * @param string $template name of the standard template or whole path
      */
-    public function setTemplate(string $template) {
+    public function setTemplate(string $template): void {
         if (stripos($template, '.latte') !== false) {
             $this->templateFile = $template;
         } else {
@@ -70,11 +70,7 @@ class ApplicationComponent extends BaseComponent {
         return $this->redirectCallback;
     }
 
-    /**
-     * @param callable $redirectCallback
-     * @return void
-     */
-    public function setRedirectCallback(callable $redirectCallback) {
+    public function setRedirectCallback(callable $redirectCallback): void {
         $this->redirectCallback = $redirectCallback;
     }
 
@@ -86,19 +82,11 @@ class ApplicationComponent extends BaseComponent {
         return $this->getPresenter()->getContestAuthorizator()->isAllowed($event, 'application', $event->getContest());
     }
 
-    /**
-     * @return void
-     *
-     */
-    public function render() {
+    public function render(): void {
         $this->renderForm();
     }
 
-    /**
-     * @return void
-     *
-     */
-    public function renderForm() {
+    public function renderForm(): void {
         if (!$this->templateFile) {
             throw new InvalidStateException('Must set template for the application form.');
         }
@@ -115,7 +103,7 @@ class ApplicationComponent extends BaseComponent {
      * @param string $mode
      * @return void
      */
-    public function renderInline($mode) {
+    public function renderInline($mode): void {
         $this->template->mode = $mode;
         $this->template->holder = $this->holder;
         $this->template->primaryModel = $this->holder->getPrimaryHolder()->getModel();
@@ -213,7 +201,7 @@ class ApplicationComponent extends BaseComponent {
      *
      * @throws JsonException
      */
-    public function handleSubmit(Form $form, $explicitTransitionName = null) {
+    public function handleSubmit(Form $form, $explicitTransitionName = null): void {
         $this->execute($form, $explicitTransitionName);
     }
 
@@ -222,7 +210,7 @@ class ApplicationComponent extends BaseComponent {
      * @throws AbortException
      * @throws JsonException
      */
-    public function handleTransition($transitionName) {
+    public function handleTransition($transitionName): void {
         $this->execute(null, $transitionName);
     }
 

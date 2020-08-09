@@ -17,25 +17,15 @@ use Nette\Application\Responses\TextResponse;
  */
 class GithubPresenter extends AuthenticatedPresenter {
 
-    /** @var Updater */
-    private $updater;
+    private Updater $updater;
 
-    /** @var EventFactory */
-    private $eventFactory;
+    private EventFactory $eventFactory;
 
-    /**
-     * @param EventFactory $eventFactory
-     * @return void
-     */
-    public function injectEventFactory(EventFactory $eventFactory) {
+    public function injectEventFactory(EventFactory $eventFactory): void {
         $this->eventFactory = $eventFactory;
     }
 
-    /**
-     * @param Updater $updater
-     * @return void
-     */
-    public function injectUpdater(Updater $updater) {
+    public function injectUpdater(Updater $updater): void {
         $this->updater = $updater;
     }
 
@@ -46,7 +36,7 @@ class GithubPresenter extends AuthenticatedPresenter {
         return AuthenticatedPresenter::AUTH_ALLOW_GITHUB;
     }
 
-    public function authorizedApi() {
+    public function authorizedApi(): void {
         /* Already authenticated user has ultimate access to this presenter. */
         $this->setAuthorized(true);
     }
@@ -69,7 +59,7 @@ class GithubPresenter extends AuthenticatedPresenter {
     /**
      * @throws AbortException
      */
-    public function renderApi() {
+    public function renderApi(): void {
         $response = new TextResponse("Thank you, Github.");
         $this->sendResponse($response);
     }

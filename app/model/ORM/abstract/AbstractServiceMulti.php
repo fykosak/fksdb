@@ -134,7 +134,7 @@ abstract class AbstractServiceMulti implements IService {
      * @throws InvalidArgumentException
      * @throws InvalidStateException
      */
-    public function dispose(IModel $model) {
+    public function dispose(IModel $model): void {
         $this->checkType($model);
         $this->getJoinedService()->dispose($model->getJoinedModel());
         //TODO here should be deletion of mainModel as well, consider parametrizing this
@@ -153,7 +153,7 @@ abstract class AbstractServiceMulti implements IService {
      * @param int $key ID of the joined models
      * @return AbstractModelMulti|null
      */
-    public function findByPrimary($key) {
+    public function findByPrimary($key): ?AbstractModelMulti {
         $joinedModel = $this->getJoinedService()->findByPrimary($key);
         if (!$joinedModel) {
             return null;

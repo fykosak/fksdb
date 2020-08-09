@@ -15,14 +15,9 @@ use Nette\Application\UI\Form;
  */
 class CorrectedControl extends SeriesTableComponent {
 
-    /** @var CorrectedStorage */
-    private $correctedStorage;
+    private CorrectedStorage $correctedStorage;
 
-    /**
-     * @param CorrectedStorage $correctedStorage
-     * @return void
-     */
-    public function injectCorrectedStorage(CorrectedStorage $correctedStorage) {
+    public function injectCorrectedStorage(CorrectedStorage $correctedStorage): void {
         $this->correctedStorage = $correctedStorage;
     }
 
@@ -51,7 +46,7 @@ class CorrectedControl extends SeriesTableComponent {
      * @param Form $form
      * @throws AbortException
      */
-    private function handleSuccess(Form $form) {
+    private function handleSuccess(Form $form): void {
         $values = $form->getValues();
         $ids = [];
         foreach (\explode(',', $values['submits']) as $value) {

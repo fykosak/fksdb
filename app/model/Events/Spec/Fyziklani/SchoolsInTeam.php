@@ -23,8 +23,19 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
     /** @var int */
     private $schoolsInTeamValue;
 
-    /** @var ExpressionEvaluator */
-    private $evaluator;
+    private ExpressionEvaluator $evaluator;
+
+    /**
+     * SchoolsInTeam constructor.
+     * @param int $schoolsInTeam
+     * @param ExpressionEvaluator $evaluator
+     * @param ServicePersonHistory $servicePersonHistory
+     */
+    public function __construct($schoolsInTeam, ExpressionEvaluator $evaluator, ServicePersonHistory $servicePersonHistory) {
+        parent::__construct($servicePersonHistory);
+        $this->evaluator = $evaluator;
+        $this->setSchoolsInTeam($schoolsInTeam);
+    }
 
     /**
      * @return int|mixed
@@ -44,25 +55,7 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
         $this->schoolsInTeam = $schoolsInTeam;
     }
 
-    /**
-     * SchoolsInTeam constructor.
-     * @param int $schoolsInTeam
-     * @param ExpressionEvaluator $evaluator
-     * @param ServicePersonHistory $servicePersonHistory
-     */
-    public function __construct($schoolsInTeam, ExpressionEvaluator $evaluator, ServicePersonHistory $servicePersonHistory) {
-        parent::__construct($servicePersonHistory);
-        $this->evaluator = $evaluator;
-        $this->setSchoolsInTeam($schoolsInTeam);
-    }
-
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return void
-     */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder) {
+    protected function _adjust(Form $form, Machine $machine, Holder $holder): void {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $personControls = $this->getControl('p*.person_id');

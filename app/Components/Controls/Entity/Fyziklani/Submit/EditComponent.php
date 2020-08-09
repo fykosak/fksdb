@@ -31,8 +31,7 @@ class EditComponent extends AbstractEntityFormComponent implements IEditEntityFo
     /** @var ModelEvent */
     private $event;
 
-    /** @var HandlerFactory */
-    private $handlerFactory;
+    private HandlerFactory $handlerFactory;
 
     /**
      * EditControl constructor.
@@ -49,15 +48,11 @@ class EditComponent extends AbstractEntityFormComponent implements IEditEntityFo
      * @return void
      * @throws NotSetGameParametersException
      */
-    protected function configureForm(Form $form) {
+    protected function configureForm(Form $form): void {
         $form->addComponent($this->createPointsField(), 'points');
     }
 
-    /**
-     * @param HandlerFactory $handlerFactory
-     * @return void
-     */
-    public function injectHandlerFactory(HandlerFactory $handlerFactory) {
+    public function injectHandlerFactory(HandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
     }
 
@@ -66,7 +61,7 @@ class EditComponent extends AbstractEntityFormComponent implements IEditEntityFo
      * @return void
      * @throws BadTypeException
      */
-    public function setModel(AbstractModelSingle $submit) {
+    public function setModel(AbstractModelSingle $submit): void {
         $this->submit = $submit;
         $this->getForm()->setDefaults([
             'team_id' => $this->submit->e_fyziklani_team_id,
@@ -95,7 +90,7 @@ class EditComponent extends AbstractEntityFormComponent implements IEditEntityFo
      * @param Form $form
      * @throws AbortException
      */
-    protected function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
         try {
             $logger = new MemoryLogger();

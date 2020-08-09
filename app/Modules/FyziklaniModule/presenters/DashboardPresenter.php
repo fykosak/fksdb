@@ -14,7 +14,7 @@ class DashboardPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Fyziklani game app'), 'fa fa-dashboard'));
     }
 
@@ -22,7 +22,7 @@ class DashboardPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function authorizedDefault() {
+    public function authorizedDefault(): void {
         $this->setAuthorized($this->isEventOrContestOrgAuthorized('fyziklani.dashboard', 'default'));
     }
 }

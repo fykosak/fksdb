@@ -41,11 +41,7 @@ class ServiceEventParticipant extends AbstractServiceSingle {
         }
     }
 
-    /**
-     * @param array $data
-     * @return ModelEventParticipant
-     */
-    public function createNewModel(array $data): IModel {
+    public function createNewModel(array $data): ModelEventParticipant {
         try {
             return parent::createNewModel($data);
         } catch (ModelException $exception) {
@@ -63,7 +59,7 @@ class ServiceEventParticipant extends AbstractServiceSingle {
      * @return void
      * @deprecated
      */
-    public function updateModel(IModel $model, $data, $alive = true) {
+    public function updateModel(IModel $model, $data, $alive = true): void {
         parent::updateModel($model, $data, $alive);
         if (!$alive && !$model->isNew()) {
             $person = $model->getPerson();

@@ -29,14 +29,11 @@ use Tracy\Debugger;
  */
 class SubmitsGrid extends BaseGrid {
 
-    /** @var ServiceSubmit */
-    private $serviceSubmit;
+    private ServiceSubmit $serviceSubmit;
 
-    /** @var ModelContestant */
-    private $contestant;
+    private ModelContestant $contestant;
 
-    /** @var SubmitHandlerFactory */
-    private $submitHandlerFactory;
+    private SubmitHandlerFactory $submitHandlerFactory;
 
     /** @var int */
     private $academicYear;
@@ -53,12 +50,7 @@ class SubmitsGrid extends BaseGrid {
         $this->academicYear = $academicYear;
     }
 
-    /**
-     * @param ServiceSubmit $serviceSubmit
-     * @param SubmitHandlerFactory $submitHandlerFactory
-     * @return void
-     */
-    public function injectPrimary(ServiceSubmit $serviceSubmit, SubmitHandlerFactory $submitHandlerFactory) {
+    public function injectPrimary(ServiceSubmit $serviceSubmit, SubmitHandlerFactory $submitHandlerFactory): void {
         $this->serviceSubmit = $serviceSubmit;
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
@@ -74,7 +66,7 @@ class SubmitsGrid extends BaseGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->setDefaultOrder('series DESC, tasknr ASC');

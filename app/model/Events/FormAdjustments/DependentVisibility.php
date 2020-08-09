@@ -17,8 +17,7 @@ class DependentVisibility extends PairwiseAdjustment {
      * @param IControl $prerequisite
      * @return void
      */
-    protected function processPair(IControl $target, IControl $prerequisite) {
+    protected function processPair(IControl $target, IControl $prerequisite): void {
         $target->getRules()->addConditionOn($prerequisite, Form::FILLED)->toggle($target->getHtmlId() . '-pair');
     }
-
 }

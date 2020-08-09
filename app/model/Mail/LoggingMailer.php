@@ -17,8 +17,7 @@ use Nette\SmartObject;
 class LoggingMailer implements IMailer {
     use SmartObject;
 
-    /** @var IMailer */
-    private $mailer;
+    private IMailer $mailer;
 
     /** @var string */
     private $logPath;
@@ -26,8 +25,8 @@ class LoggingMailer implements IMailer {
     private $logging = true;
     /** @var int */
     private $sentMessages = 0;
-    /** @var Container */
-    private $container;
+
+    private Container $container;
 
     /**
      * LoggingMailer constructor.
@@ -43,11 +42,7 @@ class LoggingMailer implements IMailer {
         return $this->logPath;
     }
 
-    /**
-     * @param string $logPath
-     * @return void
-     */
-    public function setLogPath(string $logPath) {
+    public function setLogPath(string $logPath): void {
         $this->logPath = $logPath;
         @mkdir($this->logPath, 0770, true);
     }
@@ -56,11 +51,7 @@ class LoggingMailer implements IMailer {
         return $this->logging;
     }
 
-    /**
-     * @param bool $logging
-     * @return void
-     */
-    public function setLogging(bool $logging) {
+    public function setLogging(bool $logging): void {
         $this->logging = $logging;
     }
 
@@ -69,7 +60,7 @@ class LoggingMailer implements IMailer {
      * @return void
      * @throws Exception
      */
-    public function send(Message $mail) {
+    public function send(Message $mail): void {
         try {
             if (!$this->container->getParameters()['email']['disabled'] ?? false) {// do not really send emails when debugging
                 $this->mailer->send($mail);
@@ -89,7 +80,7 @@ class LoggingMailer implements IMailer {
      * @param Message $mail
      * @param Exception|null $e
      */
-    private function logMessage(Message $mail, Exception $e = null) {
+    private function logMessage(Message $mail, Exception $e = null): void {
         if (!$this->logging) {
             return;
         }

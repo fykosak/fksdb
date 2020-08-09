@@ -47,10 +47,7 @@ class StoredQueryParameter {
         return $this->PDOType;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return $this->description;
     }
 

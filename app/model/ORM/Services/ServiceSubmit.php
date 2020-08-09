@@ -21,8 +21,7 @@ use Nette\Database\IConventions;
 class ServiceSubmit extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    /** @var array */
-    private $submitCache = [];
+    private array $submitCache = [];
 
     /**
      * ServiceSubmit constructor.
@@ -40,7 +39,7 @@ class ServiceSubmit extends AbstractServiceSingle {
      * @param bool $useCache
      * @return ModelSubmit|null
      */
-    public function findByContestant(int $ctId, int $taskId, bool $useCache = true) {
+    public function findByContestant(int $ctId, int $taskId, bool $useCache = true): ?ModelSubmit {
         $key = $ctId . ':' . $taskId;
         if (!isset($this->submitCache[$key]) || is_null($this->submitCache[$key]) || !$useCache) {
             $result = $this->getTable()->where([

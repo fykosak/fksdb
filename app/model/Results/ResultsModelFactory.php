@@ -36,11 +36,9 @@ use FKSDB\WebService\IXMLNodeSerializer;
 class ResultsModelFactory implements IXMLNodeSerializer {
     use SmartObject;
 
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
-    /** @var ServiceTask */
-    private $serviceTask;
+    private ServiceTask $serviceTask;
 
     /**
      * FKSDB\Results\ResultsModelFactory constructor.
@@ -149,7 +147,7 @@ class ResultsModelFactory implements IXMLNodeSerializer {
      * @throws SoapFault
      * @throws BadTypeException
      */
-    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $format) {
+    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $format): void {
         if (!$dataSource instanceof AbstractResultsModel) {
             throw new BadTypeException(AbstractModelSingle::class, $dataSource);
         }

@@ -21,18 +21,11 @@ use NiftyGrid\DuplicateColumnException;
  */
 class PersonsGrid extends BaseGrid {
 
-    /** @var ServicePerson */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
-    /** @var DataTestingFactory */
-    private $dataTestingFactory;
+    private DataTestingFactory $dataTestingFactory;
 
-    /**
-     * @param ServicePerson $servicePerson
-     * @param DataTestingFactory $dataTestingFactory
-     * @return void
-     */
-    public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory) {
+    public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory): void {
         $this->servicePerson = $servicePerson;
         $this->dataTestingFactory = $dataTestingFactory;
     }
@@ -48,7 +41,7 @@ class PersonsGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->addColumns(['person.person_link']);

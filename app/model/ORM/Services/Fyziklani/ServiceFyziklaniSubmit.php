@@ -29,12 +29,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
         parent::__construct($connection, $conventions, DbNames::TAB_FYZIKLANI_SUBMIT, ModelFyziklaniSubmit::class);
     }
 
-    /**
-     * @param ModelFyziklaniTask $task
-     * @param ModelFyziklaniTeam $team
-     * @return ModelFyziklaniSubmit|null
-     */
-    public function findByTaskAndTeam(ModelFyziklaniTask $task, ModelFyziklaniTeam $team) {
+    public function findByTaskAndTeam(ModelFyziklaniTask $task, ModelFyziklaniTeam $team): ?ModelFyziklaniSubmit {
         /** @var ModelFyziklaniSubmit $row */
         $row = $this->getTable()->where([
             'fyziklani_task_id' => $task->fyziklani_task_id,

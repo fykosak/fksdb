@@ -17,14 +17,11 @@ use Nette\DI\Container;
  */
 class SubmitCheckComponent extends BaseComponent {
 
-    /** @var SeriesTable */
-    private $seriesTable;
+    private SeriesTable $seriesTable;
 
-    /** @var CorrectedStorage */
-    private $correctedStorage;
+    private CorrectedStorage $correctedStorage;
 
-    /** @var UploadedStorage */
-    private $uploadedStorage;
+    private UploadedStorage $uploadedStorage;
 
     /**
      * CheckSubmitsControl constructor.
@@ -36,17 +33,12 @@ class SubmitCheckComponent extends BaseComponent {
         $this->seriesTable = $seriesTable;
     }
 
-    /**
-     * @param UploadedStorage $uploadedStorage
-     * @param CorrectedStorage $correctedStorage
-     * @return void
-     */
-    public function injectPrimary(UploadedStorage $uploadedStorage, CorrectedStorage $correctedStorage) {
+    public function injectPrimary(UploadedStorage $uploadedStorage, CorrectedStorage $correctedStorage): void {
         $this->uploadedStorage = $uploadedStorage;
         $this->correctedStorage = $correctedStorage;
     }
 
-    public function render() {
+    public function render(): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
     }
@@ -54,7 +46,7 @@ class SubmitCheckComponent extends BaseComponent {
     /**
      * @throws AbortException
      */
-    public function handleCheck() {
+    public function handleCheck(): void {
         /** @var ModelSubmit $submit */
         $errors = 0;
         foreach ($this->seriesTable->getSubmits() as $submit) {

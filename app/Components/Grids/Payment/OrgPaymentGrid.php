@@ -18,8 +18,8 @@ use NiftyGrid\DuplicateGlobalButtonException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class OrgPaymentGrid extends PaymentGrid {
-    /** @var ModelEvent */
-    private $event;
+
+    private ModelEvent $event;
 
     /**
      * OrgPaymentGrid constructor.
@@ -45,7 +45,7 @@ class OrgPaymentGrid extends PaymentGrid {
      * @throws InvalidLinkException
      * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->addColumns([

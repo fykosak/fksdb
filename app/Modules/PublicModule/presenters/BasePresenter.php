@@ -17,8 +17,7 @@ use Nette\Application\ForbiddenRequestException;
  */
 abstract class BasePresenter extends ContestPresenter {
 
-    /** @var ModelContestant|null */
-    private $contestant;
+    private ?ModelContestant $contestant;
 
     protected function createComponentContestChooser(): ContestChooser {
         $control = new ContestChooser($this->getContext());
@@ -31,7 +30,7 @@ abstract class BasePresenter extends ContestPresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function getContestant() {
+    public function getContestant(): ?ModelContestant {
         if (!isset($this->contestant) || is_null($this->contestant)) {
             /** @var ModelPerson $person */
             $person = $this->user->getIdentity()->getPerson();

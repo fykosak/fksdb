@@ -17,8 +17,8 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonsGrid extends BaseGrid {
-    /** @var ModelScheduleItem */
-    private $item;
+
+    private ModelScheduleItem $item;
 
     /**
      * PersonsGrid constructor.
@@ -40,7 +40,7 @@ class PersonsGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
 

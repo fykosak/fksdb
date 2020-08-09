@@ -2,7 +2,6 @@
 
 namespace FKSDB\Modules\CoreModule;
 
-use FKSDB\Authentication\SSO\GlobalSession;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Localization\UnsupportedLanguageException;
@@ -54,58 +53,35 @@ final class AuthenticationPresenter extends BasePresenter {
     /** @persistent */
     public $flag;
 
-    /** @var ServiceAuthToken */
-    private $serviceAuthToken;
+    private ServiceAuthToken $serviceAuthToken;
 
-    /**
-     * todo check if type is persistent
-     * @var GlobalSession
-     */
-    private $globalSession;
+    private IGlobalSession $globalSession;
 
-    /** @var PasswordAuthenticator */
-    private $passwordAuthenticator;
+    private PasswordAuthenticator $passwordAuthenticator;
 
-    /** @var AccountManager */
-    private $accountManager;
+    private AccountManager $accountManager;
 
-    /**
-     * @param ServiceAuthToken $serviceAuthToken
-     * @return void
-     */
-    public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken) {
+    public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken): void {
         $this->serviceAuthToken = $serviceAuthToken;
     }
 
-    /**
-     * @param IGlobalSession $globalSession
-     * @return void
-     */
-    public function injectGlobalSession(IGlobalSession $globalSession) {
+    public function injectGlobalSession(IGlobalSession $globalSession): void {
         $this->globalSession = $globalSession;
     }
 
-    /**
-     * @param PasswordAuthenticator $passwordAuthenticator
-     * @return void
-     */
-    public function injectPasswordAuthenticator(PasswordAuthenticator $passwordAuthenticator) {
+    public function injectPasswordAuthenticator(PasswordAuthenticator $passwordAuthenticator): void {
         $this->passwordAuthenticator = $passwordAuthenticator;
     }
 
-    /**
-     * @param AccountManager $accountManager
-     * @return void
-     */
-    public function injectAccountManager(AccountManager $accountManager) {
+    public function injectAccountManager(AccountManager $accountManager): void {
         $this->accountManager = $accountManager;
     }
 
-    public function titleLogin() {
+    public function titleLogin(): void {
         $this->setPageTitle(new PageTitle(_('Login')));
     }
 
-    public function titleRecover() {
+    public function titleRecover(): void {
         $this->setPageTitle(new PageTitle(_('Password recovery')));
     }
 
@@ -113,7 +89,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws InvalidLinkException
      */
-    public function actionLogout() {
+    public function actionLogout(): void {
         $subDomainAuth = $this->getContext()->getParameters()['subdomain']['auth'];
         $subDomain = $this->getParameter('subdomain');
 
@@ -153,7 +129,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadTypeException
      */
-    public function actionLogin() {
+    public function actionLogin(): void {
         if ($this->isLoggedIn()) {
             /** @var ModelLogin $login */
             $login = $this->getUser()->getIdentity();
@@ -349,7 +325,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @throws AbortException
      */
-    private function initialRedirect() {
+    private function initialRedirect(): void {
         if ($this->backlink) {
             $this->restoreRequest($this->backlink);
         }

@@ -30,20 +30,15 @@ use Nette\Utils\DateTime;
  */
 class SubmitHandlerFactory {
 
-    /** @var CorrectedStorage */
-    private $correctedStorage;
+    private CorrectedStorage $correctedStorage;
 
-    /** @var UploadedStorage */
-    private $uploadedStorage;
+    private UploadedStorage $uploadedStorage;
 
-    /** @var ServiceSubmit */
-    private $serviceSubmit;
+    private ServiceSubmit $serviceSubmit;
 
-    /** @var ContestAuthorizator */
-    private $contestAuthorizator;
+    private ContestAuthorizator $contestAuthorizator;
 
-    /** @var IUserStorage */
-    private $userStorage;
+    private IUserStorage $userStorage;
 
     /**
      * SubmitDownloadFactory constructor.
@@ -76,7 +71,7 @@ class SubmitHandlerFactory {
      * @throws ForbiddenRequestException
      * @throws NotFoundException
      */
-    public function handleDownloadUploaded(Presenter $presenter, int $id) {
+    public function handleDownloadUploaded(Presenter $presenter, int $id): void {
         $submit = $this->getSubmit($id, 'download.uploaded');
         $this->downloadUploadedSubmit($presenter, $submit);
     }
@@ -89,7 +84,7 @@ class SubmitHandlerFactory {
      * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function handleDownloadUploadedSubmit(Presenter $presenter, ModelSubmit $submit) {
+    public function handleDownloadUploadedSubmit(Presenter $presenter, ModelSubmit $submit): void {
         $this->checkPrivilege($submit, 'download.uploaded');
         $this->downloadUploadedSubmit($presenter, $submit);
     }
@@ -101,7 +96,7 @@ class SubmitHandlerFactory {
      * @throws AbortException
      * @throws BadRequestException
      */
-    private function downloadUploadedSubmit(Presenter $presenter, ModelSubmit $submit) {
+    private function downloadUploadedSubmit(Presenter $presenter, ModelSubmit $submit): void {
         $filename = $this->uploadedStorage->retrieveFile($submit);
         if ($submit->source !== ModelSubmit::SOURCE_UPLOAD) {
             throw new StorageException(_('Lze stahovat jen uploadovaná řešení.'));
@@ -123,7 +118,7 @@ class SubmitHandlerFactory {
      * @throws BadRequestException
      * @throws StorageException
      */
-    public function handleDownloadCorrected(Presenter $presenter, int $id) {
+    public function handleDownloadCorrected(Presenter $presenter, int $id): void {
         $submit = $this->getSubmit($id, 'download.corrected');
         if (!$submit->corrected) {
             throw new StorageException(_('Opravené riešenie nieje nahrané'));
@@ -179,7 +174,7 @@ class SubmitHandlerFactory {
      * @param ModelContestant $contestant
      * @return AbstractModelSingle|IModel|ModelSubmit
      */
-    public function handleSave(FileUpload $file, ModelTask $task, ModelContestant $contestant) {
+    public function handleSave(FileUpload $file, ModelTask $task, ModelContestant $contestant): ModelSubmit {
         $submit = $this->serviceSubmit->findByContestant($contestant->ct_id, $task->task_id);
         $submit = $this->serviceSubmit->store($submit, [
             'task_id' => $task->task_id,

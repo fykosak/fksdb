@@ -30,32 +30,22 @@ use Nette\Security\IResource;
 abstract class AbstractApplicationPresenter extends BasePresenter {
     use EventEntityPresenterTrait;
 
-    /** @var ApplicationHandlerFactory */
-    protected $applicationHandlerFactory;
+    protected ApplicationHandlerFactory $applicationHandlerFactory;
 
-    /** @var ServiceEventParticipant */
-    protected $serviceEventParticipant;
+    protected ServiceEventParticipant $serviceEventParticipant;
 
-    /**
-     * @param ApplicationHandlerFactory $applicationHandlerFactory
-     * @return void
-     */
-    public function injectHandlerFactory(ApplicationHandlerFactory $applicationHandlerFactory) {
+    public function injectHandlerFactory(ApplicationHandlerFactory $applicationHandlerFactory): void {
         $this->applicationHandlerFactory = $applicationHandlerFactory;
     }
 
-    /**
-     * @param ServiceEventParticipant $serviceEventParticipant
-     * @return void
-     */
-    public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant) {
+    public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant): void {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
     /**
      * @throws EventNotFoundException
      */
-    final public function titleList() {
+    final public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('List of applications'), 'fa fa-users'));
     }
 
@@ -67,7 +57,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws \Throwable
      */
-    final public function titleDetail() {
+    final public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Application detail "%s"'), $this->getEntity()->__toString()), 'fa fa-user'));
     }
 
@@ -75,7 +65,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    final public function titleTransitions() {
+    final public function titleTransitions(): void {
         $this->setPageTitle(new PageTitle(_('Group transitions'), 'fa fa-user'));
     }
 
@@ -93,7 +83,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function renderDetail() {
+    public function renderDetail(): void {
         $this->template->event = $this->getEvent();
         $this->template->hasSchedule = ($this->getEvent()->getScheduleGroups()->count() !== 0);
     }
@@ -102,7 +92,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function renderList() {
+    public function renderList(): void {
         $this->template->event = $this->getEvent();
     }
 
