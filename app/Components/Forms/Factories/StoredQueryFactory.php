@@ -21,8 +21,7 @@ use Nette\Forms\ControlGroup;
  */
 class StoredQueryFactory {
 
-    /** @var ServiceStoredQueryTagType */
-    private $serviceStoredQueryTagType;
+    private ServiceStoredQueryTagType $serviceStoredQueryTagType;
 
     /**
      * StoredQueryFactory constructor.
@@ -103,7 +102,7 @@ class StoredQueryFactory {
      * @param ControlGroup $group
      * @internal
      */
-    public function buildParameterMetadata(Container $container, ControlGroup $group) {
+    public function buildParameterMetadata(Container $container, ControlGroup $group): void {
         $container->setCurrentGroup($group);
 
         $container->addText('name', _('Název'))

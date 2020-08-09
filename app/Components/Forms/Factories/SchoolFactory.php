@@ -16,8 +16,7 @@ class SchoolFactory {
 
     const SHOW_UNKNOWN_SCHOOL_HINT = 0x1;
 
-    /** @var SchoolProvider */
-    private $schoolProvider;
+    private SchoolProvider $schoolProvider;
 
     /**
      * SchoolFactory constructor.
@@ -61,18 +60,12 @@ class SchoolFactory {
         return $container;
     }
 
-    /**
-     * @param int $options
-     * @return AutocompleteSelectBox
-     */
-    public function createSchoolSelect($options = 0): AutocompleteSelectBox {
+    public function createSchoolSelect(int $options = 0): AutocompleteSelectBox {
         $schoolElement = new AutocompleteSelectBox(true, _('School'));
         $schoolElement->setDataProvider($this->schoolProvider);
         if ($options & self::SHOW_UNKNOWN_SCHOOL_HINT) {
             $schoolElement->setOption('description', sprintf(_('Pokud nelze školu nalézt, napište na %s.'), 'schola.novum () fykos.cz'));
         }
-
         return $schoolElement;
     }
-
 }

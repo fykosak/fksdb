@@ -29,8 +29,7 @@ class AutocompleteSelectBox extends TextBase {
 
     private $dataProvider;
 
-    /** @var bool */
-    private $ajax;
+    private bool $ajax;
 
     /** @var bool */
     private $multiSelect = false;
@@ -44,7 +43,7 @@ class AutocompleteSelectBox extends TextBase {
      * @see http://api.jqueryui.com/autocomplete/#method-_renderItem
      * @var string
      */
-    private $renderMethod;
+    private ?string $renderMethod;
     /** @var bool */
     private $attachedJSON = false;
     /** @var bool */
@@ -56,7 +55,7 @@ class AutocompleteSelectBox extends TextBase {
      * @param string|null $label
      * @param string|null $renderMethod
      */
-    public function __construct(bool $ajax, $label = null, $renderMethod = null) {
+    public function __construct(bool $ajax, ?string $label = null, ?string $renderMethod = null) {
         parent::__construct($label);
 
         $this->monitor(IAutocompleteJSONProvider::class, function (IAutocompleteJSONProvider $provider) {

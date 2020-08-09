@@ -28,25 +28,17 @@ use FKSDB\Persons\ReferencedPersonHandlerFactory;
 class ReferencedPersonFactory {
     use SmartObject;
 
-    /** @var ServicePerson */
-    protected $servicePerson;
+    protected ServicePerson $servicePerson;
 
-    /** @var PersonFactory */
-    protected $personFactory;
+    protected PersonFactory $personFactory;
 
+    protected ReferencedPersonHandlerFactory $referencedPersonHandlerFactory;
 
-    /** @var ReferencedPersonHandlerFactory */
-    protected $referencedPersonHandlerFactory;
+    protected PersonProvider $personProvider;
 
-    /** @var PersonProvider */
-    protected $personProvider;
+    private PersonScheduleFactory $personScheduleFactory;
 
-    /** @var PersonScheduleFactory */
-    private $personScheduleFactory;
-    /** @var ModelEvent */
-    private $event;
-    /** @var Container */
-    private $context;
+    private Container $context;
 
     /**
      * AbstractReferencedPersonFactory constructor.

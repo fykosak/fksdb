@@ -13,10 +13,10 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventDispatchFactory {
-    /** @var array */
-    private $definitions = [];
-    /** @var Container */
-    private $container;
+
+    private array $definitions = [];
+
+    private Container $container;
 
     /**
      * EventDispatchFactory constructor.

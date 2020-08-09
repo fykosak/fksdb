@@ -34,24 +34,25 @@ class ReferencedId extends HiddenField {
 
     const JSON_DATA = 'referencedContainer';
 
-    /** @var ReferencedContainer */
-    private $referencedContainer;
+    private ReferencedContainer $referencedContainer;
+
+    private SearchContainer $searchContainer;
+
+    private IService $service;
+
+    private IReferencedHandler $handler;
+
     /** @var Promise */
     private $promise;
-    /** @var IService */
-    private $service;
-    /** @var IReferencedHandler */
-    private $handler;
-    /** @var SearchContainer */
-    private $searchContainer;
+
     /** @var bool */
     private $modelCreated;
     /** @var IModel */
     private $model;
-    /** @var bool */
-    private $attachedOnValidate = false;
-    /** @var bool */
-    private $attachedSearch = false;
+
+    private bool $attachedOnValidate = false;
+
+    private bool $attachedSearch = false;
 
     /**
      * ReferencedId constructor.
@@ -112,18 +113,12 @@ class ReferencedId extends HiddenField {
         return $this->handler;
     }
 
-    /**
-     * @return bool
-     */
-    public function getModelCreated() {
+
+    public function getModelCreated(): bool {
         return $this->modelCreated;
     }
 
-    /**
-     * @param mixed $modelCreated
-     * @return void
-     */
-    public function setModelCreated($modelCreated): void {
+    public function setModelCreated(bool $modelCreated): void {
         $this->modelCreated = $modelCreated;
     }
 
@@ -137,7 +132,7 @@ class ReferencedId extends HiddenField {
     /**
      * @param string|int|IModel|AbstractModelSingle|ModelPerson $pValue
      * @param bool $force
-     * @return HiddenField
+     * @return static
      */
     public function setValue($pValue, bool $force = false) {
 
@@ -253,7 +248,7 @@ class ReferencedId extends HiddenField {
      * @param string $mode
      * @return void
      */
-    protected function setModel(IModel $model = null, string $mode = self::MODE_NORMAL) {
+    protected function setModel(IModel $model = null, string $mode = self::MODE_NORMAL): void {
         $this->getReferencedContainer()->setModel($model, $mode);
     }
 }

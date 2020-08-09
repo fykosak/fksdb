@@ -17,17 +17,13 @@ use Nette\SmartObject;
 class EventAuthorizator {
     use SmartObject;
 
-    /** @var IUserStorage */
-    private $user;
+    private IUserStorage $userStorage;
 
-    /** @var Permission */
-    private $acl;
+    private Permission $permission;
 
-    /** @var Context */
-    private $db;
+    private Context $context;
 
-    /** @var ContestAuthorizator */
-    private $contestAuthorizator;
+    private ContestAuthorizator $contestAuthorizator;
 
     /**
      * EventAuthorizator constructor.
@@ -38,17 +34,17 @@ class EventAuthorizator {
      */
     public function __construct(IUserStorage $identity, Permission $acl, ContestAuthorizator $contestAuthorizator, Context $db) {
         $this->contestAuthorizator = $contestAuthorizator;
-        $this->user = $identity;
-        $this->acl = $acl;
-        $this->db = $db;
+        $this->userStorage = $identity;
+        $this->permission = $acl;
+        $this->context = $db;
     }
 
     public function getUser(): IUserStorage {
-        return $this->user;
+        return $this->userStorage;
     }
 
-    protected function getAcl(): Permission {
-        return $this->acl;
+    protected function getPermission(): Permission {
+        return $this->permission;
     }
 
     /**
@@ -111,6 +107,6 @@ class EventAuthorizator {
      * @return bool
      */
     private function isEventOrg($resource, $privilege, ModelEvent $event): bool {
-        return (new EventOrgByIdAssertion($this->getUser(), $this->db))($this->getAcl(), null, $resource, $privilege, $event->event_id);
+        return (new EventOrgByIdAssertion($this->getUser(), $this->context))($this->getPermission(), null, $resource, $privilege, $event->event_id);
     }
 }

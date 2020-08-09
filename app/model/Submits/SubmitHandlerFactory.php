@@ -26,14 +26,14 @@ use Nette\Utils\DateTime;
 use Tracy\Debugger;
 
 class SubmitHandlerFactory {
-    /** @var CorrectedStorage */
-    private $correctedStorage;
-    /** @var UploadedStorage */
-    private $uploadedStorage;
-    /** @var ServiceSubmit */
-    private $serviceSubmit;
-    /** @var ContestAuthorizator */
-    private $contestAuthorizator;
+
+    private CorrectedStorage $correctedStorage;
+
+    private UploadedStorage $uploadedStorage;
+
+    private ServiceSubmit $serviceSubmit;
+
+    private ContestAuthorizator $contestAuthorizator;
 
     /**
      * SubmitDownloadFactory constructor.
@@ -64,7 +64,7 @@ class SubmitHandlerFactory {
      * @throws ForbiddenRequestException
      * @throws NotFoundException
      */
-    public function handleDownloadUploaded(Presenter $presenter, ILogger $logger, int $id) {
+    public function handleDownloadUploaded(Presenter $presenter, ILogger $logger, int $id): void {
         $submit = $this->getSubmit($id, 'download.uploaded');
         $filename = $this->uploadedStorage->retrieveFile($submit);
         if ($submit->source != ModelSubmit::SOURCE_UPLOAD) {
@@ -89,7 +89,7 @@ class SubmitHandlerFactory {
      * @throws ForbiddenRequestException
      * @throws NotFoundException
      */
-    public function handleDownloadCorrected(Presenter $presenter, ILogger $logger, int $id) {
+    public function handleDownloadCorrected(Presenter $presenter, ILogger $logger, int $id): void {
         $submit = $this->getSubmit($id, 'download.corrected');
         if (!$submit->corrected) {
             $logger->log(new Message(_('Opravené riešenie nieje nahrané'), Message::LVL_WARNING));
@@ -112,7 +112,7 @@ class SubmitHandlerFactory {
      * @return array|null
      * @throws InvalidLinkException
      */
-    public function handleRevoke(Presenter $presenter, ILogger $logger, int $submitId) {
+    public function handleRevoke(Presenter $presenter, ILogger $logger, int $submitId): ?array {
         /** @var ModelSubmit $submit */
         $submit = $this->serviceSubmit->findByPrimary($submitId);
         if (!$submit) {
@@ -152,7 +152,7 @@ class SubmitHandlerFactory {
      * @param ModelContestant $contestant
      * @return AbstractModelSingle|IModel|ModelSubmit
      */
-    public function handleSave(FileUpload $file, ModelTask $task, ModelContestant $contestant) {
+    public function handleSave(FileUpload $file, ModelTask $task, ModelContestant $contestant): ModelSubmit {
         $submit = $this->serviceSubmit->findByContestant($contestant->ct_id, $task->task_id);
         if (is_null($submit)) {
             $submit = $this->serviceSubmit->createNewModel([

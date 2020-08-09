@@ -12,8 +12,8 @@ use Nette\DI\Container;
 use Tracy\Debugger;
 
 class PersonPaymentContainer extends ContainerWithOptions {
-    /** @var bool */
-    private $isAttached = false;
+
+    private bool $isAttached = false;
 
     private ServicePersonSchedule $servicePersonSchedule;
 
@@ -35,7 +35,6 @@ class PersonPaymentContainer extends ContainerWithOptions {
         $this->event = $event;
         $this->groupTypes = $groupTypes;
         $this->showAll = $showAll;
-
 
         $this->monitor(IContainer::class, function () {
             if (!$this->isAttached) {

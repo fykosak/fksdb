@@ -8,8 +8,6 @@ use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\AbstractServiceMulti;
-use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelContest;
@@ -40,26 +38,19 @@ class ExtendedPersonHandler {
     const RESULT_OK_NEW_LOGIN = 2;
     const RESULT_ERROR = 0;
 
-    /** @var IService|AbstractServiceMulti|AbstractServiceSingle */
-    protected $service;
+    protected IService $service;
 
-    /** @var ServicePerson */
-    protected $servicePerson;
+    protected ServicePerson $servicePerson;
 
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
-    /** @var AccountManager */
-    private $accountManager;
+    private AccountManager $accountManager;
 
-    /** @var ModelContest */
-    private $contest;
+    private ModelContest $contest;
 
-    /** @var int */
-    private $year;
+    private int $year;
 
-    /** @var string */
-    private $invitationLang;
+    private string $invitationLang;
 
     /** @var ModelPerson */
     private $person;
@@ -185,7 +176,7 @@ class ExtendedPersonHandler {
      * @param iterable $values
      * @param IExtendedPersonPresenter $presenter
      */
-    protected function storeExtendedModel(ModelPerson $person, $values, IExtendedPersonPresenter $presenter) {
+    protected function storeExtendedModel(ModelPerson $person, $values, IExtendedPersonPresenter $presenter): void {
         if ($this->contest === null || $this->year === null) {
             throw new InvalidStateException('Must set contest and year before storing contestant.');
         }

@@ -19,8 +19,7 @@ class DeadlineFromXML extends Stage {
     /** @var SeriesData */
     private $data;
 
-    /** @var ServiceTask */
-    private $taskService;
+    private ServiceTask $taskService;
 
     /**
      * DeadlineFromXML2 constructor.

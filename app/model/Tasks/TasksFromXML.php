@@ -27,8 +27,7 @@ class TasksFromXML extends Stage {
         'label' => 'label',
     ];
 
-    /** @var ServiceTask */
-    private $taskService;
+    private ServiceTask $taskService;
 
     /**
      * TasksFromXML2 constructor.

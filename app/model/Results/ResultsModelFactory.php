@@ -34,11 +34,9 @@ use FKSDB\WebService\IXMLNodeSerializer;
 class ResultsModelFactory implements IXMLNodeSerializer {
     use SmartObject;
 
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
-    /** @var ServiceTask */
-    private $serviceTask;
+    private ServiceTask $serviceTask;
 
     /**
      * FKSDB\Results\ResultsModelFactory constructor.

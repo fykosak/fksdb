@@ -18,13 +18,11 @@ use Nette\SmartObject;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Captcha implements IFormAdjustment {
-
     use SmartObject;
 
-    const CONTROL_NAME = 'c_a_p_t_cha';
+    protected const CONTROL_NAME = 'c_a_p_t_cha';
 
-    /** @var User */
-    private $user;
+    private User $user;
 
     /**
      * Captcha constructor.
@@ -34,17 +32,10 @@ class Captcha implements IFormAdjustment {
         $this->user = $user;
     }
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return void
-     */
-    public function adjust(Form $form, Machine $machine, Holder $holder) {
+    public function adjust(Form $form, Machine $machine, Holder $holder): void {
         if ($holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT || $this->user->isLoggedIn()) {
             return;
         }
-
         $control = new CaptchaBox();
 
         $firstSubmit = FormUtils::findFirstSubmit($form);

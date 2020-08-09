@@ -22,7 +22,7 @@ class FormUtils {
      * @todo Move to general utils.
      */
     public static function emptyStrToNull($values, bool $asArray = false) {
-        if ($values instanceof Traversable || is_array($values)) {
+        if (is_iterable($values)) {
             $result = $asArray ? [] : new ArrayHash();
             foreach ($values as $key => $value) {
                 $result[$key] = self::emptyStrToNull($value, $asArray);

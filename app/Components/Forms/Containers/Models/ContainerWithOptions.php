@@ -10,14 +10,14 @@ use Nette\DI\Container as DIContainer;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ContainerWithOptions extends Container {
-    /** @var array user options */
-    private $options = [];
+
+    private array $options = [];
 
     /**
      * ContainerWithOptions constructor.
      * @param DIContainer|null $container
      */
-    public function __construct(DIContainer $container = null) {
+    public function __construct(?DIContainer $container = null) {
         if ($container) {
             $container->callInjects($this);
         }
@@ -33,7 +33,7 @@ class ContainerWithOptions extends Container {
      * @param mixed value
      * @return static
      */
-    public function setOption(string $key, $value): void {
+    public function setOption(string $key, $value): self {
         if ($value === null) {
             unset($this->options[$key]);
         } else {

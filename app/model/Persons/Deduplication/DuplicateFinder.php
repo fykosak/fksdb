@@ -20,8 +20,7 @@ class DuplicateFinder {
     const IDX_SCORE = 'score';
     const DIFFERENT_PATTERN = 'not-same';
 
-    /** @var ServicePerson */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
     /** @var array */
     private $parameters;
@@ -70,11 +69,7 @@ class DuplicateFinder {
         return $pairs;
     }
 
-    /**
-     * @param ModelPerson $row
-     * @return string
-     */
-    private function getBucketKey(ModelPerson $row) {
+    private function getBucketKey(ModelPerson $row): string {
         $fam = Strings::webalize($row->family_name);
         return substr($fam, 0, 3) . substr($fam, -1);
         //return $row->gender . mb_substr($row->family_name, 0, 2);

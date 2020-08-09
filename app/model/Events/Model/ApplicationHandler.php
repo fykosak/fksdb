@@ -43,25 +43,21 @@ class ApplicationHandler {
     const STATE_TRANSITION = 'transition';
     const STATE_OVERWRITE = 'overwrite';
 
-    /** @var ModelEvent */
-    private $event;
+    private ModelEvent $event;
 
-    /** @var ILogger|MemoryLogger */
-    private $logger;
+    private ILogger $logger;
 
     /** @var string */
     private $errorMode = self::ERROR_ROLLBACK;
 
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
-    /** @var Container */
-    private $container;
+    private Container $container;
 
     /** @var Machine */
     private $machine;
-    /** @var EventDispatchFactory */
-    private $eventDispatchFactory;
+
+    private EventDispatchFactory $eventDispatchFactory;
 
     /**
      * ApplicationHandler constructor.
@@ -115,7 +111,7 @@ class ApplicationHandler {
      * @param iterable $data
      * @throws JsonException
      */
-    final public function store(Holder $holder, $data) {
+    final public function store(Holder $holder, iterable $data): void {
         $this->_storeAndExecute($holder, $data, null, self::STATE_OVERWRITE);
     }
 
@@ -199,7 +195,7 @@ class ApplicationHandler {
      * @param bool|mixed $execute
      * @throws JsonException
      */
-    private function _storeAndExecute(Holder $holder, $data, $explicitTransitionName, $execute) {
+    private function _storeAndExecute(Holder $holder, $data, $explicitTransitionName, $execute): void {
         $this->initializeMachine();
 
         try {
@@ -327,10 +323,7 @@ class ApplicationHandler {
         return $transitions;
     }
 
-    /**
-     * @return void
-     */
-    private function initializeMachine() {
+    private function initializeMachine(): void {
         if (!$this->machine) {
             $this->machine = $this->eventDispatchFactory->getEventMachine($this->event);
         }
@@ -340,7 +333,7 @@ class ApplicationHandler {
      * @param iterable $data
      * @return void
      */
-    private function formRollback($data) {
+    private function formRollback($data): void {
         if ($data instanceof Form) {
             /** @var ReferencedId $referencedId */
             foreach ($data->getComponents(true, ReferencedId::class) as $referencedId) {
@@ -350,19 +343,13 @@ class ApplicationHandler {
         $this->rollback();
     }
 
-    /**
-     * @return void
-     */
-    public function beginTransaction() {
+    public function beginTransaction(): void {
         if (!$this->connection->getPdo()->inTransaction()) {
             $this->connection->beginTransaction();
         }
     }
 
-    /**
-     * @return void
-     */
-    private function rollback() {
+    private function rollback(): void {
         if ($this->errorMode == self::ERROR_ROLLBACK) {
             $this->connection->rollBack();
         }
@@ -372,7 +359,7 @@ class ApplicationHandler {
      * @param bool $final
      * @return void
      */
-    public function commit($final = false) {
+    public function commit($final = false): void {
         if ($this->connection->getPdo()->inTransaction() && ($this->errorMode == self::ERROR_ROLLBACK || $final)) {
             $this->connection->commit();
         }
@@ -383,7 +370,7 @@ class ApplicationHandler {
      * @return void
      * @throws ApplicationHandlerException
      */
-    private function reRaise(Exception $e) {
+    private function reRaise(Exception $e): void {
         throw new ApplicationHandlerException(_('Chyba při ukládání přihlášky.'), null, $e);
     }
 }
