@@ -35,6 +35,7 @@ use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
 use ReflectionException;
 use FKSDB\Utils\Utils;
+use Tracy\Debugger;
 
 /**
  * Base presenter for all application presenters.
@@ -167,11 +168,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @param mixed|string $acQ
      * @return void
      * @throws AbortException
-     * @throws BadRequestException
      */
     public function handleAutocomplete($acName, $acQ) {
         if (!$this->isAjax()) {
-            throw new BadRequestException('Can be called only by AJAX.');
+            ['acQ' => $acQ] = (array)json_decode($this->getHttpRequest()->getRawBody());
         }
         $component = $this->getComponent($acName);
         if (!($component instanceof AutocompleteSelectBox)) {

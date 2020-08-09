@@ -58,8 +58,12 @@ $(() => {
                 style = '#ccc';
                 labelStyle.stroke = '#ccc';
             }
-            graph.addEdge(edge.source, edge.target, {directed: true, label, 'label-style': labelStyle, stroke: style});
-
+            graph.addEdge(edge.source, edge.target, {
+                directed: true,
+                label, 'label-style':
+                labelStyle,
+                stroke: style,
+            });
         });
 
         const layouter = new Graph.Layout.Spring(graph);

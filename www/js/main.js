@@ -4,8 +4,8 @@ $(document).ready(function () {
             this.update();
         },
         update: function () {
-            var elForm = $(this.element);
-            var elSubmit = elForm.find("input[data-submit-on='this']");
+            const elForm = $(this.element);
+            const elSubmit = elForm.find("input[data-submit-on='this']");
             elForm.find("input").not(":data(submit-on-handled)")
                 .data('submit-on-handled', true)
                 .keypress(function (e) {

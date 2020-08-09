@@ -25,7 +25,6 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
-use Nette\Utils\JsonException;
 
 /**
  * Class SelectForm
@@ -180,8 +179,6 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
     /**
      * @param Form $form
      * @return void
-     * @throws BadRequestException
-     * @throws JsonException
      * @throws BadRequestException
      */
     protected function configureForm(Form $form) {

@@ -13,11 +13,11 @@ $(function () {
                 return split(term).pop();
             }
 
-            var multiselect = this.element.data('ac-multiselect');
-            var defaultValue = this.element.val();
-            var defaultText = this.element.data('ac-default-value');
+            const multiSelect = this.element.data('ac-multiselect');
+            const defaultValue = this.element.val();
+            const defaultText = this.element.data('ac-default-value');
 
-            var el = $('<input type="text"/>');
+            const el = $('<input type="text"/>');
             el.attr('class', this.element.attr('class'));
             el.attr('disabled', this.element.attr('disabled'));
             this.element.replaceWith(el);
@@ -26,9 +26,9 @@ $(function () {
             this.element.data('uiElement', el);
 
             // element to detect enabled JavaScript
-            var metaEl = $('<input type="hidden" value="JS" />');
+            const metaEl = $('<input type="hidden" value="JS" />');
             // this should work both for array and scalar names
-            var metaName = this.element.attr('name').replace(/(\[?)([^\[\]]+)(\]?)$/g, '$1$2' + this.options.metaSuffix + '$3');
+            const metaName = this.element.attr('name').replace(/(\[?)([^\[\]]+)(\]?)$/g, '$1$2' + this.options.metaSuffix + '$3');
             metaEl.attr('name', metaName);
             metaEl.insertAfter(el);
 
@@ -41,9 +41,9 @@ $(function () {
                 }
             }
 
-            var cache = {}; //TODO move in better scope
-            var labelCache = {};
-            var termFunction = (arg) => {
+            let cache = {}; //TODO move in better scope
+            let labelCache = {};
+            let termFunction = (arg) => {
                 return arg;
             };
             // ensures default value is always suggested (needed for AJAX)
@@ -66,11 +66,11 @@ $(function () {
                 }
                 return data;
             }
-            if (multiselect) {
+            if (multiSelect) {
                 termFunction = extractLast;
             }
 
-            var options = {};
+            let options = {};
 
             if (this.element.data('ac-ajax')) {
                 options.source = (request, response) => {
@@ -79,16 +79,27 @@ $(function () {
                         response(cache[term]);
                         return;
                     }
-                    $.getJSON(this.element.data('ac-ajax-url'), {acQ: term}, (data, status, xhr) => {
-                        data = conservationFunction(data);
+                    fetch(this.element.data('ac-ajax-url'), {
+                            body: JSON.stringify({acQ: term}),
+                            method: 'POST',
+                        }
+                    ).then((response) => {
+                        return response.json();
+                    }).then((jsonData) => {
+                        const data = conservationFunction(jsonData);
                         cache[term] = data;
                         response(data);
                     });
+                    /* $.getJSON(this.element.data('ac-ajax-url'), {acQ: term}, (data, status, xhr) => {
+                         data = conservationFunction(data);
+                         cache[term] = data;
+                         response(data);
+                     });*/
                 };
                 options.minLength = 3;
             } else {
                 var items = this.element.data('ac-items');
-                options.source =  (request, response)=> {
+                options.source = (request, response) => {
                     var s = termFunction(request.term);
                     response($.ui.autocomplete.filter(
                         items, s));
@@ -97,7 +108,7 @@ $(function () {
             }
 
 
-            if (multiselect) {
+            if (multiSelect) {
                 options.select = (event, ui) => {
                     labelCache[ui.item.value] = ui.item.label;
                     if (this.element.val()) {
@@ -127,11 +138,11 @@ $(function () {
                 };
             }
 
-            var acEl = el.autocomplete(options);
+            const acEl = el.autocomplete(options);
 
             const renderMethod = this.element.data('ac-render-method');
             if (renderMethod) {
-                acEl.data('ui-autocomplete')._renderItem = (ul, item) => {
+                acEl.data('ui-autocomplete')._renderItem = () => {
                     return eval(renderMethod);
                 };
             }
