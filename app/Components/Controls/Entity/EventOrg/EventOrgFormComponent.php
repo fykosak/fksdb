@@ -29,9 +29,7 @@ class EventOrgFormComponent extends AbstractEntityFormComponent implements IEdit
 
     protected ServiceEventOrg $serviceEventOrg;
 
-    /** @var ModelEvent */
-    protected $event;
-
+    protected ModelEvent $event;
     /** @var ModelEventOrg */
     private $model;
 

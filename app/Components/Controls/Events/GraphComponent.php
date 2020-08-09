@@ -45,7 +45,7 @@ class GraphComponent extends BaseComponent {
         $this->expressionPrinter = $expressionPrinter;
     }
 
-    public function render() {
+    public function render(): void {
         $this->template->nodes = json_encode($this->prepareNodes());
         $this->template->edges = json_encode($this->prepareTransitions());
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'GraphComponent.latte');

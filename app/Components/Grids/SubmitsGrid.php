@@ -58,7 +58,7 @@ class SubmitsGrid extends BaseGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->setDefaultOrder('series DESC, tasknr ASC');

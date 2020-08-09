@@ -49,7 +49,7 @@ class DispatchGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->addColumns(['event.event_id', 'event.name', 'contest.contest', 'event.year', 'event.role']);
         $this->addLinkButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);

@@ -16,7 +16,6 @@ use Nette\Utils\JsonException;
  */
 class TotalPersonsChartControl extends ReactComponent implements IChart {
 
-    /** @var ServicePerson */
     private ServicePerson $servicePerson;
 
     /**

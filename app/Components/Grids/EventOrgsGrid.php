@@ -17,7 +17,7 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventOrgsGrid extends BaseGrid {
-    
+
     private ServiceEventOrg $serviceEventOrg;
 
     private ModelEvent $event;
@@ -48,7 +48,7 @@ class EventOrgsGrid extends BaseGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->addColumns(['person.full_name', 'event_org.note']);
         $this->addLink('event_org.edit');

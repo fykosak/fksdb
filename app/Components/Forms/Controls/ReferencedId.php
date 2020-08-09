@@ -123,7 +123,7 @@ class ReferencedId extends HiddenField {
      * @param mixed $modelCreated
      * @return void
      */
-    public function setModelCreated($modelCreated) {
+    public function setModelCreated($modelCreated): void {
         $this->modelCreated = $modelCreated;
     }
 
@@ -178,7 +178,7 @@ class ReferencedId extends HiddenField {
         return $value ?: null;
     }
 
-    public function rollback() {
+    public function rollback(): void {
         if ($this->getModelCreated()) {
             $this->setModel(null, self::MODE_ROLLBACK);
             if (parent::getValue()) {
@@ -230,7 +230,7 @@ class ReferencedId extends HiddenField {
         $this->setPromise($promise);
     }
 
-    public function invalidateFormGroup() {
+    public function invalidateFormGroup(): void {
         $form = $this->getForm();
         /** @var Presenter $presenter */
         $presenter = $form->lookup(Presenter::class);

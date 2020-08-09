@@ -33,7 +33,7 @@ class ContainerWithOptions extends Container {
      * @param mixed value
      * @return static
      */
-    public function setOption(string $key, $value) {
+    public function setOption(string $key, $value): void {
         if ($value === null) {
             unset($this->options[$key]);
         } else {

@@ -30,10 +30,7 @@ class ScheduleContainer extends ContainerWithOptions {
         });
     }
 
-    /**
-     * @return void
-     */
-    protected function configure() {
+    protected function configure(): void {
 
     }
 }

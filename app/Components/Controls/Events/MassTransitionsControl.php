@@ -56,7 +56,7 @@ class MassTransitionsControl extends BaseComponent {
      *
      * @throws NeonSchemaException
      */
-    public function handleTransition(string $name) {
+    public function handleTransition(string $name): void {
         $source = new SingleEventSource($this->event, $this->getContext(), $this->eventDispatchFactory);
         $logger = new MemoryLogger();
         $total = 0;

@@ -15,8 +15,7 @@ use Nette\Http\SessionSection;
  */
 class ThemeChooser extends Chooser {
 
-    /** @var array */
-    private $availableThemes = ['light', 'dark'];
+    private const AVAILABLE_THEMES = ['light', 'dark'];
 
     private Session $session;
 
@@ -37,7 +36,7 @@ class ThemeChooser extends Chooser {
      * @param string $theme
      * @throws AbortException
      */
-    public function handleChange(string $theme) {
+    public function handleChange(string $theme): void {
         $session = $this->getSession();
         $session->theme = $theme;
         $this->redirect('this');
@@ -47,11 +46,8 @@ class ThemeChooser extends Chooser {
         return new Title(_('Theme'));
     }
 
-    /**
-     * @return array|iterable|string[]
-     */
-    protected function getItems() {
-        return $this->availableThemes;
+    protected function getItems(): array {
+        return self::AVAILABLE_THEMES;
     }
 
     /**

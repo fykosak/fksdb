@@ -48,10 +48,6 @@ class SchoolFormComponent extends AbstractEntityFormComponent implements IEditEn
         $this->serviceSchool = $serviceSchool;
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     */
     protected function configureForm(Form $form): void {
         $schoolContainer = $this->schoolFactory->createContainer();
         $form->addComponent($schoolContainer, self::CONT_SCHOOL);

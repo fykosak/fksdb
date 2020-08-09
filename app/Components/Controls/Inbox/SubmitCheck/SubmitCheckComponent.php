@@ -38,7 +38,7 @@ class SubmitCheckComponent extends BaseComponent {
         $this->correctedStorage = $correctedStorage;
     }
 
-    public function render() {
+    public function render(): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
     }
@@ -46,7 +46,7 @@ class SubmitCheckComponent extends BaseComponent {
     /**
      * @throws AbortException
      */
-    public function handleCheck() {
+    public function handleCheck(): void {
         /** @var ModelSubmit $submit */
         $errors = 0;
         foreach ($this->seriesTable->getSubmits() as $submit) {

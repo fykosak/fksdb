@@ -70,11 +70,7 @@ abstract class ReferencedContainer extends ContainerWithOptions {
         $this->referencedId = $referencedId;
     }
 
-    /**
-     * @param bool $value
-     * @return void
-     */
-    public function setDisabled(bool $value = true) {
+    public function setDisabled(bool $value = true): void {
         /** @var BaseControl $control */
         foreach ($this->getControls() as $control) {
             $control->setDisabled($value);
@@ -102,7 +98,7 @@ abstract class ReferencedContainer extends ContainerWithOptions {
      * @param array|ArrayHash $conflicts
      * @param null $container
      */
-    public function setConflicts($conflicts, $container = null) {
+    public function setConflicts($conflicts, $container = null): void {
         $container = $container ?: $this;
         foreach ($conflicts as $key => $value) {
             $component = $container->getComponent($key, false);

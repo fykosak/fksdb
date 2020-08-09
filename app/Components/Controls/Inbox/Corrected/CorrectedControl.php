@@ -46,7 +46,7 @@ class CorrectedControl extends SeriesTableComponent {
      * @param Form $form
      * @throws AbortException
      */
-    private function handleSuccess(Form $form) {
+    private function handleSuccess(Form $form): void {
         $values = $form->getValues();
         $ids = [];
         foreach (\explode(',', $values['submits']) as $value) {

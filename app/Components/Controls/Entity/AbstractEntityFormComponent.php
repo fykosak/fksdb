@@ -20,8 +20,7 @@ use Tracy\Debugger;
  */
 abstract class AbstractEntityFormComponent extends BaseComponent {
 
-    /** @var bool */
-    protected $create;
+    protected bool $create;
 
     /**
      * AbstractEntityFormControl constructor.

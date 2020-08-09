@@ -50,7 +50,7 @@ class ContestantsFromSchoolGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->addColumns(['person.full_name', 'contestant_base.year', /*'person_history.study_year',*/ 'contest.contest']);
 

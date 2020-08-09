@@ -45,7 +45,7 @@ class LanguageChooser extends Chooser {
      * @return array|iterable
      * @throws BadTypeException
      */
-    protected function getItems() {
+    protected function getItems(): array {
         if (!count($this->supportedLanguages)) {
             $presenter = $this->getPresenter();
             if (!$presenter instanceof BasePresenter) {

@@ -52,7 +52,7 @@ class TaskGrid extends BaseGrid {
      * @param Presenter $presenter
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->addColumn('fyziklani_task_id', _('Task Id'));
         $this->addColumn('label', _('#'));

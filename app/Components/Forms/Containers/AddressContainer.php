@@ -37,7 +37,7 @@ class AddressContainer extends ModelContainer {
      *
      * @param iterable $value
      */
-    public function setValue($value) {
+    public function setValue($value): void {
         $this->setValues($value === null ? [] : $value);
     }
 
@@ -46,7 +46,7 @@ class AddressContainer extends ModelContainer {
      *
      * @param iterable $value
      */
-    public function setDefaultValue($value) {
+    public function setDefaultValue($value): void {
         $this->setDefaults($value === null ? [] : $value);
     }
 
@@ -55,7 +55,7 @@ class AddressContainer extends ModelContainer {
      * @param bool $erase
      * @return Container|void
      */
-    public function setValues($values, $erase = false) {
+    public function setValues($values, $erase = false): void {
         if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) { //assert its from address table
             if ($values instanceof AbstractModelMulti) {
                 $address = $values->getMainModel();

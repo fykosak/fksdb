@@ -103,7 +103,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
      * @return void
      * @throws AbortException
      */
-    private function handleEditSuccess(Form $form) {
+    private function handleEditSuccess(Form $form): void {
         $this->handleSave($form);
         $this->getPresenter()->flashMessage(_('Query has been edited'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');

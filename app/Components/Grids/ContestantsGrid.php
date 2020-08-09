@@ -55,7 +55,7 @@ class ContestantsGrid extends BaseGrid {
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->setDefaultOrder('name_lex ASC');

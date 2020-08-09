@@ -39,20 +39,17 @@ use Tracy\Debugger;
 class EventFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
     const CONT_EVENT = 'event';
 
-    /** @var ModelContest */
-    protected $contest;
+    protected ModelContest $contest;
 
     protected SingleReflectionFormFactory $singleReflectionFormFactory;
 
     protected ServiceAuthToken $serviceAuthToken;
 
     protected ServiceEvent $serviceEvent;
-
     /** @var ModelEvent */
     protected $model;
 
-    /** @var int */
-    private $year;
+    private int $year;
 
     private EventDispatchFactory $eventDispatchFactory;
 

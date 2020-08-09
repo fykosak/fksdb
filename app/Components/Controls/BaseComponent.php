@@ -42,10 +42,7 @@ abstract class BaseComponent extends Control {
         return $template;
     }
 
-    /**
-     * @return Container
-     */
-    final protected function getContext() {
+    final protected function getContext(): Container {
         return $this->context;
     }
 }

@@ -20,8 +20,7 @@ use PDOException;
  */
 class ResultsGrid extends BaseGrid {
 
-    /** @var StoredQuery */
-    private $storedQuery;
+    private StoredQuery $storedQuery;
 
     /**
      * StoredQueryGrid constructor.
@@ -43,7 +42,7 @@ class ResultsGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
         try {
