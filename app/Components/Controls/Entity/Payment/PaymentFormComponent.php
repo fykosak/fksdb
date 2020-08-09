@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Controls\Entity;
 
+use FKSDB\Components\Forms\Containers\PersonPaymentContainer;
 use FKSDB\Components\Forms\Controls\Payment\CurrencyField;
-use FKSDB\Components\Forms\Controls\Payment\PaymentSelectField;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
@@ -12,7 +12,6 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPayment;
-use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServiceSchedulePayment;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Handler\DuplicatePaymentException;
@@ -20,12 +19,10 @@ use FKSDB\Payment\Handler\EmptyDataException;
 use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\UnavailableTransitionsException;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
-use Nette\Utils\JsonException;
 
 /**
  * Class SelectForm
@@ -36,8 +33,6 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
     private PersonFactory $personFactory;
 
     private PersonProvider $personProvider;
-
-    private ServicePersonSchedule $servicePersonSchedule;
 
     private bool $isOrg;
 
@@ -72,13 +67,11 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
         ServicePayment $servicePayment,
         PersonFactory $personFactory,
         PersonProvider $personProvider,
-        ServicePersonSchedule $servicePersonSchedule,
         ServiceSchedulePayment $serviceSchedulePayment
     ): void {
         $this->servicePayment = $servicePayment;
         $this->personFactory = $personFactory;
         $this->personProvider = $personProvider;
-        $this->servicePersonSchedule = $servicePersonSchedule;
         $this->serviceSchedulePayment = $serviceSchedulePayment;
     }
 
@@ -109,13 +102,15 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
         parent::render();
     }
 
-    private function serializeScheduleValue(): string {
+    private function serializeScheduleValue(): array {
         $query = $this->model->getRelatedPersonSchedule();
         $items = [];
         foreach ($query as $row) {
-            $items[$row->person_schedule_id] = true;
+            $key = 'person' . $row->person_id;
+            $items[$key] = $items[$key] ?? [];
+            $items[$key][$row->person_schedule_id] = true;
         }
-        return \json_encode($items);
+        return $items;
     }
 
     /**
@@ -146,7 +141,8 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
         $connection->beginTransaction();
 
         try {
-            $this->serviceSchedulePayment->prepareAndUpdate($values['payment_accommodation'], $model);
+            $this->serviceSchedulePayment->store((array)$values['payment_accommodation'], $model);
+            //$this->serviceSchedulePayment->prepareAndUpdate($values['payment_accommodation'], $model);
         } catch (DuplicatePaymentException $exception) {
             $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             $connection->rollBack();
@@ -165,9 +161,6 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
     /**
      * @param Form $form
      * @return void
-     * @throws BadRequestException
-     * @throws JsonException
-     * @throws BadRequestException
      */
     protected function configureForm(Form $form): void {
         if ($this->isOrg) {
@@ -178,7 +171,7 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
         $currencyField = new CurrencyField();
         $currencyField->setRequired(_('Please select currency'));
         $form->addComponent($currencyField, 'currency');
-        $form->addComponent(new PaymentSelectField($this->servicePersonSchedule, $this->machine->getEvent(), $this->machine->getScheduleGroupTypes(), !$this->create), 'payment_accommodation');
+        $form->addComponent(new PersonPaymentContainer($this->getContext(), $this->machine->getEvent(), $this->machine->getScheduleGroupTypes(), !$this->create), 'payment_accommodation');
     }
 
     protected function appendSubmitButton(Form $form): SubmitButton {
