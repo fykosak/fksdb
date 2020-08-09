@@ -103,11 +103,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
         return $this->resolution;
     }
 
-    /**
-     * @param string $resolution
-     * @return void
-     */
-    public function setResolution(string $resolution) {
+    public function setResolution(string $resolution): void {
         $this->resolution = $resolution;
     }
 

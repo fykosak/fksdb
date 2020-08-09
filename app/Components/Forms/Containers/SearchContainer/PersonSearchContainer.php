@@ -21,14 +21,13 @@ class PersonSearchContainer extends SearchContainer {
     const SEARCH_ID = 'id';
     const SEARCH_NONE = 'none';
 
-    /** @var PersonFactory */
-    protected $personFactory;
-    /** @var string */
-    private $searchType;
-    /** @var PersonProvider */
-    protected $personProvider;
-    /** @var ServicePerson */
-    protected $servicePerson;
+    protected PersonFactory $personFactory;
+
+    private string $searchType;
+
+    protected PersonProvider $personProvider;
+
+    protected ServicePerson $servicePerson;
 
     /**
      * SearchContainer constructor.
@@ -40,13 +39,7 @@ class PersonSearchContainer extends SearchContainer {
         $this->searchType = $searchType;
     }
 
-    /**
-     * @param PersonFactory $personFactory
-     * @param ServicePerson $servicePerson
-     * @param PersonProvider $provider
-     * @return void
-     */
-    public function injectPrimary(PersonFactory $personFactory, ServicePerson $servicePerson, PersonProvider $provider) {
+    public function injectPrimary(PersonFactory $personFactory, ServicePerson $servicePerson, PersonProvider $provider): void {
         $this->personFactory = $personFactory;
         $this->servicePerson = $servicePerson;
         $this->personProvider = $provider;

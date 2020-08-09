@@ -42,11 +42,7 @@ class ModelDataConflictException extends RuntimeException {
         return $this->referencedId;
     }
 
-    /**
-     * @param ReferencedId $referencedId
-     * @return void
-     */
-    public function setReferencedId(ReferencedId $referencedId) {
+    public function setReferencedId(ReferencedId $referencedId): void {
         $this->referencedId = $referencedId;
     }
 }

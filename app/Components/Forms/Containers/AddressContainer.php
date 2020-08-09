@@ -17,8 +17,8 @@ use Nette\Utils\ArrayHash;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class AddressContainer extends ModelContainer {
-    /** @var ServiceRegion */
-    private $serviceRegion;
+
+    private ServiceRegion $serviceRegion;
 
     /**
      * AddressContainer constructor.
@@ -28,11 +28,7 @@ class AddressContainer extends ModelContainer {
         parent::__construct($container);
     }
 
-    /**
-     * @param ServiceRegion $serviceRegion
-     * @return void
-     */
-    public function injectServiceRegion(ServiceRegion $serviceRegion) {
+    public function injectServiceRegion(ServiceRegion $serviceRegion): void {
         $this->serviceRegion = $serviceRegion;
     }
 

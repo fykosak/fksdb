@@ -26,14 +26,11 @@ use NiftyGrid\DuplicateColumnException;
  */
 class SubmitsGrid extends BaseGrid {
 
-    /** @var ServiceSubmit */
-    private $serviceSubmit;
+    private ServiceSubmit $serviceSubmit;
 
-    /** @var ModelContestant */
-    private $contestant;
+    private ModelContestant $contestant;
 
-    /** @var SubmitHandlerFactory */
-    private $submitHandlerFactory;
+    private SubmitHandlerFactory $submitHandlerFactory;
 
     /**
      * SubmitsGrid constructor.
@@ -45,12 +42,7 @@ class SubmitsGrid extends BaseGrid {
         $this->contestant = $contestant;
     }
 
-    /**
-     * @param ServiceSubmit $serviceSubmit
-     * @param SubmitHandlerFactory $submitHandlerFactory
-     * @return void
-     */
-    public function injectPrimary(ServiceSubmit $serviceSubmit, SubmitHandlerFactory $submitHandlerFactory) {
+    public function injectPrimary(ServiceSubmit $serviceSubmit, SubmitHandlerFactory $submitHandlerFactory): void {
         $this->serviceSubmit = $serviceSubmit;
         $this->submitHandlerFactory = $submitHandlerFactory;
     }

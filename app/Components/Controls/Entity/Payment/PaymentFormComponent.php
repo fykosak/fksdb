@@ -30,26 +30,20 @@ use Nette\Forms\Form;
  */
 class PaymentFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
 
-    /** @var PersonFactory */
-    private $personFactory;
+    private PersonFactory $personFactory;
 
-    /** @var PersonProvider */
-    private $personProvider;
+    private PersonProvider $personProvider;
 
-    /** @var bool */
-    private $isOrg;
+    private bool $isOrg;
 
-    /** @var PaymentMachine */
-    private $machine;
+    private PaymentMachine $machine;
 
     /** @var ModelPayment */
     private $model;
 
-    /** @var ServicePayment */
-    private $servicePayment;
+    private ServicePayment $servicePayment;
 
-    /** @var ServiceSchedulePayment */
-    private $serviceSchedulePayment;
+    private ServiceSchedulePayment $serviceSchedulePayment;
 
     /**
      * SelectForm constructor.
@@ -69,19 +63,12 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
         $this->isOrg = $isOrg;
     }
 
-    /**
-     * @param ServicePayment $servicePayment
-     * @param PersonFactory $personFactory
-     * @param PersonProvider $personProvider
-     * @param ServiceSchedulePayment $serviceSchedulePayment
-     * @return void
-     */
     public function injectPrimary(
         ServicePayment $servicePayment,
         PersonFactory $personFactory,
         PersonProvider $personProvider,
         ServiceSchedulePayment $serviceSchedulePayment
-    ) {
+    ): void {
         $this->servicePayment = $servicePayment;
         $this->personFactory = $personFactory;
         $this->personProvider = $personProvider;
@@ -93,7 +80,7 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
      * @return void
      * @throws BadTypeException
      */
-    public function setModel(AbstractModelSingle $modelPayment) {
+    public function setModel(AbstractModelSingle $modelPayment): void {
         $this->model = $modelPayment;
         $values = $this->model->toArray();
         $values['payment_accommodation'] = $this->serializeScheduleValue();
@@ -104,7 +91,7 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
      * @return void
      * @throws BadTypeException
      */
-    public function render() {
+    public function render(): void {
         if ($this->create) {
             /** @var ModelLogin $login */
             $login = $this->getPresenter()->getUser()->getIdentity();
@@ -134,7 +121,7 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
      * @throws NotImplementedException
      * @throws UnavailableTransitionsException
      */
-    protected function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
         $data = [
             'currency' => $values['currency'],
@@ -175,7 +162,7 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
      * @param Form $form
      * @return void
      */
-    protected function configureForm(Form $form) {
+    protected function configureForm(Form $form): void {
         if ($this->isOrg) {
             $form->addComponent($this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider), 'person_id');
         } else {

@@ -42,14 +42,11 @@ class ContestChooser extends BaseComponent {
     /** @var ModelContest[] */
     private $contests;
 
-    /** @var Session */
-    private $session;
+    private Session $session;
 
-    /** @var YearCalculator */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
-    /** @var ServiceContest */
-    private $serviceContest;
+    private ServiceContest $serviceContest;
 
     /** @var ModelContest */
     private $contest;
@@ -69,13 +66,7 @@ class ContestChooser extends BaseComponent {
     /** @var int bitmask of what "sources" are used to infer selected contest */
     private $contestSource = 0xffffffff;
 
-    /**
-     * @param Session $session
-     * @param YearCalculator $yearCalculator
-     * @param ServiceContest $serviceContest
-     * @return void
-     */
-    public function injectPrimary(Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest) {
+    public function injectPrimary(Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest): void {
         $this->session = $session;
         $this->yearCalculator = $yearCalculator;
         $this->serviceContest = $serviceContest;
@@ -107,7 +98,7 @@ class ContestChooser extends BaseComponent {
      * @param mixed $defaultContest
      * @return void
      */
-    public function setDefaultContest($defaultContest) {
+    public function setDefaultContest($defaultContest): void {
         $this->defaultContest = $defaultContest;
     }
 

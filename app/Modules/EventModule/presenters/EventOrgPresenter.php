@@ -25,14 +25,9 @@ use Nette\Security\IResource;
 class EventOrgPresenter extends BasePresenter {
     use EventEntityPresenterTrait;
 
-    /** @var ServiceEventOrg */
-    private $serviceEventOrg;
+    private ServiceEventOrg $serviceEventOrg;
 
-    /**
-     * @param ServiceEventOrg $serviceEventOrg
-     * @return void
-     */
-    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
+    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg): void {
         $this->serviceEventOrg = $serviceEventOrg;
     }
 
@@ -70,7 +65,7 @@ class EventOrgPresenter extends BasePresenter {
      */
     public function actionDelete() {
         try {
-            list($message) = $this->traitHandleDelete();
+            [$message] = $this->traitHandleDelete();
             $this->flashMessage($message->getMessage(), $message->getLevel());
             $this->redirect('list');
         } catch (BadRequestException $exception) {

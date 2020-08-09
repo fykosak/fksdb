@@ -29,16 +29,17 @@ class OrgFormComponent extends AbstractEntityFormComponent implements IEditEntit
     use ReferencedPersonTrait;
 
     const CONTAINER = 'org';
-    /** @var ServiceOrg */
-    protected $serviceOrg;
-    /** @var ModelContest */
-    protected $contest;
+
+    protected ServiceOrg $serviceOrg;
+
+    protected ModelContest $contest;
+
     /** @var ModelOrg */
     private $model;
-    /** @var SingleReflectionFormFactory */
-    private $singleReflectionFormFactory;
-    /** @var YearCalculator */
-    private $yearCalculator;
+
+    private SingleReflectionFormFactory $singleReflectionFormFactory;
+
+    private YearCalculator $yearCalculator;
 
     /**
      * AbstractForm constructor.
@@ -51,13 +52,7 @@ class OrgFormComponent extends AbstractEntityFormComponent implements IEditEntit
         $this->contest = $contest;
     }
 
-    /**
-     * @param SingleReflectionFormFactory $singleReflectionFormFactory
-     * @param ServiceOrg $serviceOrg
-     * @param YearCalculator $yearCalculator
-     * @return void
-     */
-    public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, ServiceOrg $serviceOrg, YearCalculator $yearCalculator) {
+    public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, ServiceOrg $serviceOrg, YearCalculator $yearCalculator): void {
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->serviceOrg = $serviceOrg;
         $this->yearCalculator = $yearCalculator;
@@ -70,7 +65,7 @@ class OrgFormComponent extends AbstractEntityFormComponent implements IEditEntit
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    protected function configureForm(Form $form) {
+    protected function configureForm(Form $form): void {
         $container = $this->createOrgContainer();
         $personInput = $this->createPersonSelect();
         if (!$this->create) {
@@ -85,7 +80,7 @@ class OrgFormComponent extends AbstractEntityFormComponent implements IEditEntit
      * @return void
      * @throws AbortException
      */
-    protected function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form): void {
         $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
         if (!isset($data['contest_id'])) {
             $data['contest_id'] = $this->contest->contest_id;
@@ -104,7 +99,7 @@ class OrgFormComponent extends AbstractEntityFormComponent implements IEditEntit
      * @return void
      * @throws BadTypeException
      */
-    public function setModel(AbstractModelSingle $model) {
+    public function setModel(AbstractModelSingle $model): void {
         $this->model = $model;
         $this->getForm()->setDefaults([self::CONTAINER => $model->toArray()]);
     }

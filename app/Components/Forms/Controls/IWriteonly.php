@@ -12,11 +12,7 @@ interface IWriteOnly {
 
     const VALUE_ORIGINAL = '__original';
 
-    /**
-     * @param bool $value
-     * @return void
-     */
-    public function setWriteOnly(bool $value = true);
+    public function setWriteOnly(bool $value = true): void;
 
     public function getWriteOnly(): bool;
 }

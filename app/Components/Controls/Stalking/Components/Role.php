@@ -13,13 +13,9 @@ use FKSDB\ORM\Models\ModelPerson;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class Role extends AbstractStalkingComponent {
-    /**
-     * @param ModelPerson $person
-     * @param int $userPermissions
-     * @return void
-     */
-    public function render(ModelPerson $person, int $userPermissions) {
-        $this->beforeRender($person,_('Roles'), $userPermissions,FieldLevelPermission::ALLOW_RESTRICT);
+
+    public function render(ModelPerson $person, int $userPermissions): void {
+        $this->beforeRender($person, _('Roles'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
         $template = $this->template;
         $login = $person->getLogin();
         $roles = [];

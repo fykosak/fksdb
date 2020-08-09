@@ -19,14 +19,12 @@ use Nette\Utils\JsonException;
  */
 class TeamApplicationsTimeProgress extends ReactComponent implements IChart {
 
-    /** @var ServiceFyziklaniTeam */
-    private $serviceFyziklaniTeam;
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
     /** @var ModelEventType */
     private $eventType;
 
-    /** @var ServiceEvent */
-    private $serviceEvent;
+    private ServiceEvent $serviceEvent;
 
     /**
      * TeamApplicationsTimeProgress constructor.
@@ -38,12 +36,7 @@ class TeamApplicationsTimeProgress extends ReactComponent implements IChart {
         $this->eventType = $event->getEventType();
     }
 
-    /**
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param ServiceEvent $serviceEvent
-     * @return void
-     */
-    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceEvent $serviceEvent) {
+    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceEvent $serviceEvent): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->serviceEvent = $serviceEvent;
     }

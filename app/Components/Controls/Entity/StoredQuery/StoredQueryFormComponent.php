@@ -36,16 +36,15 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
     const CONT_PARAMS_META = 'paramsMeta';
     const CONT_META = 'meta';
 
-    /** @var StoredQueryFormFactory */
-    private $storedQueryFormFactory;
-    /** @var ServiceStoredQuery */
-    private $serviceStoredQuery;
-    /** @var ServiceStoredQueryTag */
-    private $serviceStoredQueryTag;
-    /** @var ServiceStoredQueryParameter */
-    private $serviceStoredQueryParameter;
-    /** @var StoredQueryFactory */
-    private $storedQueryFactory;
+    private StoredQueryFormFactory $storedQueryFormFactory;
+
+    private ServiceStoredQuery $serviceStoredQuery;
+
+    private ServiceStoredQueryTag $serviceStoredQueryTag;
+
+    private ServiceStoredQueryParameter $serviceStoredQueryParameter;
+
+    private StoredQueryFactory $storedQueryFactory;
 
     /** @var ModelStoredQuery */
     private $model;
@@ -55,7 +54,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
      * @return void
      * @throws AbortException
      */
-    protected function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form): void {
         try {
             $this->create ? $this->handleCreateSuccess($form) : $this->handleEditSuccess($form);
         } catch (ModelException $exception) {
@@ -64,21 +63,13 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
         }
     }
 
-    /**
-     * @param StoredQueryFormFactory $storedQueryFormFactory
-     * @param ServiceStoredQuery $serviceStoredQuery
-     * @param ServiceStoredQueryTag $serviceStoredQueryTag
-     * @param ServiceStoredQueryParameter $serviceStoredQueryParameter
-     * @param StoredQueryFactory $storedQueryFactory
-     * @return void
-     */
     public function injectPrimary(
         StoredQueryFormFactory $storedQueryFormFactory,
         ServiceStoredQuery $serviceStoredQuery,
         ServiceStoredQueryTag $serviceStoredQueryTag,
         ServiceStoredQueryParameter $serviceStoredQueryParameter,
         StoredQueryFactory $storedQueryFactory
-    ) {
+    ): void {
         $this->storedQueryFormFactory = $storedQueryFormFactory;
         $this->serviceStoredQuery = $serviceStoredQuery;
         $this->serviceStoredQueryTag = $serviceStoredQueryTag;
@@ -86,11 +77,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
         $this->storedQueryFactory = $storedQueryFactory;
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     */
-    protected function configureForm(Form $form) {
+    protected function configureForm(Form $form): void {
         $group = $form->addGroup(_('SQL'));
         $console = $this->storedQueryFormFactory->createConsole($group);
         $form->addComponent($console, self::CONT_CONSOLE);
@@ -127,17 +114,13 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
      * @return void
      * @throws AbortException
      */
-    private function handleCreateSuccess(Form $form) {
+    private function handleCreateSuccess(Form $form): void {
         $this->handleSave($form);
         $this->getPresenter()->flashMessage(_('Query has been created'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     */
-    private function handleSave(Form $form) {
+    private function handleSave(Form $form): void {
         $values = FormUtils::emptyStrToNull($form->getValues(), true);
         $connection = $this->serviceStoredQuery->getConnection();
         $connection->beginTransaction();
@@ -158,12 +141,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
         $connection->commit();
     }
 
-    /**
-     * @param array $tags
-     * @param int $queryId
-     * @return void
-     */
-    private function saveTags(array $tags, int $queryId) {
+    private function saveTags(array $tags, int $queryId): void {
         $this->serviceStoredQueryTag->getTable()->where([
             'query_id' => $queryId,
         ])->delete();
@@ -176,12 +154,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
         }
     }
 
-    /**
-     * @param array $parameters
-     * @param int $queryId
-     * @return void
-     */
-    private function saveParameters(array $parameters, int $queryId) {
+    private function saveParameters(array $parameters, int $queryId): void {
         $this->serviceStoredQueryParameter->getTable()
             ->where(['query_id' => $queryId])->delete();
 
@@ -198,7 +171,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
      * @return void
      * @throws BadTypeException
      */
-    public function setModel(AbstractModelSingle $model) {
+    public function setModel(AbstractModelSingle $model): void {
         $this->model = $model;
 
         $values = [];
@@ -228,7 +201,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
      * @return void
      * @throws BadRequestException
      */
-    private function handleComposeExecute(Form $form) {
+    private function handleComposeExecute(Form $form): void {
         $data = $form->getValues(true);
         $parameters = [];
         foreach ($data[self::CONT_PARAMS_META] as $paramMetaData) {
@@ -248,10 +221,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
         $control->setStoredQuery($query);
     }
 
-    /**
-     * @return void
-     */
-    public function render() {
+    public function render(): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'StoredQueryFormComponent.latte');
         $this->template->render();
     }

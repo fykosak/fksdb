@@ -19,10 +19,9 @@ use NiftyGrid\DuplicateColumnException;
  */
 class DispatchGrid extends BaseGrid {
 
-    /** @var ServiceEvent */
-    private $serviceEvent;
-    /** @var ModelPerson */
-    private $person;
+    private ServiceEvent $serviceEvent;
+
+    private ModelPerson $person;
 
     /**
      * DispatchGrid constructor.
@@ -34,11 +33,7 @@ class DispatchGrid extends BaseGrid {
         $this->person = $person;
     }
 
-    /**
-     * @param ServiceEvent $serviceEvent
-     * @return void
-     */
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 

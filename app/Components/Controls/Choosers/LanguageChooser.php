@@ -24,20 +24,12 @@ class LanguageChooser extends Chooser {
     /** @var bool */
     private $modifiable;
 
-    /**
-     * @param string $lang
-     * @param bool $modifiable
-     * @return void
-     */
-    public function setLang(string $lang, bool $modifiable) {
+    public function setLang(string $lang, bool $modifiable): void {
         $this->language = $lang;
         $this->modifiable = $modifiable;
     }
 
-    /**
-     * @return void
-     */
-    public function render() {
+    public function render(): void {
         $this->beforeRender();
         $this->template->modifiable = $this->modifiable;
         $this->template->currentLanguageName = LangPresenterTrait::$languageNames[$this->language] ?: null;

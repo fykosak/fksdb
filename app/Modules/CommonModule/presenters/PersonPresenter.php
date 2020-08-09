@@ -50,57 +50,37 @@ use Tracy\Debugger;
 class PersonPresenter extends BasePresenter {
     use EntityPresenterTrait;
 
+    private ServicePerson $servicePerson;
 
-    /** @var ServicePerson */
-    private $servicePerson;
+    private ServicePersonInfo $servicePersonInfo;
 
-    /** @var ServicePersonInfo */
-    private $servicePersonInfo;
+    private Merger $personMerger;
 
-    /** @var Merger */
-    private $personMerger;
     /** @var ModelPerson */
     private $trunkPerson;
 
     /** @var ModelPerson */
     private $mergedPerson;
 
-    /** @var PersonFactory */
-    private $personFactory;
+    private PersonFactory $personFactory;
 
 
     /** @var FieldLevelPermission */
     private $userPermissions;
 
-    /**
-     * @param ServicePerson $servicePerson
-     * @return void
-     */
-    public function injectServicePerson(ServicePerson $servicePerson) {
+    public function injectServicePerson(ServicePerson $servicePerson): void {
         $this->servicePerson = $servicePerson;
     }
 
-    /**
-     * @param ServicePersonInfo $servicePersonInfo
-     * @return void
-     */
-    public function injectServicePersonInfo(ServicePersonInfo $servicePersonInfo) {
+    public function injectServicePersonInfo(ServicePersonInfo $servicePersonInfo): void {
         $this->servicePersonInfo = $servicePersonInfo;
     }
 
-    /**
-     * @param Merger $personMerger
-     * @return void
-     */
-    public function injectPersonMerger(Merger $personMerger) {
+    public function injectPersonMerger(Merger $personMerger): void {
         $this->personMerger = $personMerger;
     }
 
-    /**
-     * @param PersonFactory $personFactory
-     * @return void
-     */
-    public function injectPersonFactory(PersonFactory $personFactory) {
+    public function injectPersonFactory(PersonFactory $personFactory): void {
         $this->personFactory = $personFactory;
     }
 
@@ -110,7 +90,7 @@ class PersonPresenter extends BasePresenter {
      *
      * @throws ForbiddenRequestException
      */
-    public function titleSearch() {
+    public function titleSearch(): void {
         $this->setPageTitle(new PageTitle(_('Find person'), 'fa fa-search'));
     }
 
@@ -120,7 +100,7 @@ class PersonPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleDetail() {
+    public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Detail of person %s'), $this->getEntity()->getFullName()), 'fa fa-eye'));
     }
 
@@ -130,7 +110,7 @@ class PersonPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleEdit() {
+    public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Edit person "%s"'), $this->getEntity()->getFullName()), 'fa fa-user'));
     }
 
@@ -143,7 +123,7 @@ class PersonPresenter extends BasePresenter {
      *
      * @throws ForbiddenRequestException
      */
-    public function titleMerge() {
+    public function titleMerge(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Sloučení osob %s (%d) a %s (%d)'), $this->trunkPerson->getFullName(), $this->trunkPerson->person_id, $this->mergedPerson->getFullName(), $this->mergedPerson->person_id)));
     }
 
@@ -157,22 +137,19 @@ class PersonPresenter extends BasePresenter {
     }
 
     /* *********** AUTH ***************/
-    public function authorizedSearch() {
+    public function authorizedSearch(): void {
         $this->setAuthorized($this->isAnyContestAuthorized('person', 'stalk.search'));
     }
 
-    public function authorizedEdit() {
+    public function authorizedEdit(): void {
         $this->setAuthorized($this->isAnyContestAuthorized($this->getEntity(), 'edit'));
     }
 
     /**
      * @return void
      * @throws ModelNotFoundException
-     * @throws ModelNotFoundException
-     * @throws ModelNotFoundException
-     * @throws ModelNotFoundException
      */
-    public function authorizedDetail() {
+    public function authorizedDetail(): void {
         $full = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.full');
         $restrict = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.restrict');
         $basic = $this->isAnyContestAuthorized($this->getEntity(), 'stalk.basic');
@@ -185,7 +162,7 @@ class PersonPresenter extends BasePresenter {
      * @param int $mergedId
      * @throws NotFoundException
      */
-    public function authorizedMerge($trunkId, $mergedId) {
+    public function authorizedMerge($trunkId, $mergedId): void {
         $this->trunkPerson = $this->servicePerson->findByPrimary($trunkId);
         $this->mergedPerson = $this->servicePerson->findByPrimary($mergedId);
         if (!$this->trunkPerson || !$this->mergedPerson) {
@@ -201,7 +178,7 @@ class PersonPresenter extends BasePresenter {
      * @param int $mergedId
      * @throws NotFoundException
      */
-    public function authorizedDontMerge($trunkId, $mergedId) {
+    public function authorizedDontMerge($trunkId, $mergedId): void {
         $this->authorizedMerge($trunkId, $mergedId);
     }
 
@@ -211,7 +188,7 @@ class PersonPresenter extends BasePresenter {
      * @param int $mergedId
      * @return void
      */
-    public function actionMerge($trunkId, $mergedId) {
+    public function actionMerge($trunkId, $mergedId): void {
         $this->personMerger->setMergedPair($this->trunkPerson, $this->mergedPerson);
         $this->updateMergeForm($this->getComponent('mergeForm')->getForm());
     }
@@ -221,7 +198,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws ModelNotFoundException
      */
-    public function actionEdit() {
+    public function actionEdit(): void {
         $this->traitActionEdit();
     }
 

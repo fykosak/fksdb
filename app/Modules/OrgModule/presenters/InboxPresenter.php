@@ -21,17 +21,11 @@ use Nette\Security\Permission;
  * *
  */
 class InboxPresenter extends BasePresenter implements ISeriesPresenter {
-
     use SeriesPresenterTrait;
 
-    /** @var SeriesTable */
-    private $seriesTable;
+    private SeriesTable $seriesTable;
 
-    /**
-     * @param SeriesTable $seriesTable
-     * @return void
-     */
-    public function injectSeriesTable(SeriesTable $seriesTable) {
+    public function injectSeriesTable(SeriesTable $seriesTable): void {
         $this->seriesTable = $seriesTable;
     }
 

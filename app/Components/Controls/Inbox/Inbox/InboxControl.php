@@ -18,8 +18,8 @@ use Nette\DI\Container;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class InboxControl extends SeriesTableFormControl {
-    /** @var ServiceSubmit */
-    private $serviceSubmit;
+
+    private ServiceSubmit $serviceSubmit;
 
     /**
      * InboxControl constructor.
@@ -30,11 +30,7 @@ class InboxControl extends SeriesTableFormControl {
         parent::__construct($context, $seriesTable, true);
     }
 
-    /**
-     * @param ServiceSubmit $serviceSubmit
-     * @return void
-     */
-    public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
+    public function injectServiceSubmit(ServiceSubmit $serviceSubmit): void {
         $this->serviceSubmit = $serviceSubmit;
     }
 

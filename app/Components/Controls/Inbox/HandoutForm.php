@@ -20,16 +20,16 @@ use Nette\DI\Container;
 
 class HandoutForm extends BaseComponent {
     const TASK_PREFIX = 'task';
-    /** @var ServicePerson */
-    private $servicePerson;
-    /** @var YearCalculator */
-    private $yearCalculator;
-    /** @var SeriesTable */
-    private $seriesTable;
-    /** @var ServiceTaskContribution */
-    private $serviceTaskContribution;
-    /** @var PersonFactory */
-    private $personFactory;
+
+    private ServicePerson $servicePerson;
+
+    private YearCalculator $yearCalculator;
+
+    private SeriesTable $seriesTable;
+
+    private ServiceTaskContribution $serviceTaskContribution;
+
+    private PersonFactory $personFactory;
 
     /**
      * HandoutForm constructor.
@@ -41,14 +41,7 @@ class HandoutForm extends BaseComponent {
         $this->seriesTable = $seriesTable;
     }
 
-    /**
-     * @param PersonFactory $personFactory
-     * @param ServicePerson $servicePerson
-     * @param YearCalculator $yearCalculator
-     * @param ServiceTaskContribution $serviceTaskContribution
-     * @return void
-     */
-    public function injectPrimary(PersonFactory $personFactory, ServicePerson $servicePerson, YearCalculator $yearCalculator, ServiceTaskContribution $serviceTaskContribution) {
+    public function injectPrimary(PersonFactory $personFactory, ServicePerson $servicePerson, YearCalculator $yearCalculator, ServiceTaskContribution $serviceTaskContribution): void {
         $this->personFactory = $personFactory;
         $this->servicePerson = $servicePerson;
         $this->yearCalculator = $yearCalculator;
@@ -121,7 +114,7 @@ class HandoutForm extends BaseComponent {
      * @return void
      * @throws BadTypeException
      */
-    public function setDefaults() {
+    public function setDefaults(): void {
         $taskIds = [];
         /** @var ModelTask $task */
         foreach ($this->seriesTable->getTasks() as $task) {
