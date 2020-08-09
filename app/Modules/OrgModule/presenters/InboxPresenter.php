@@ -37,7 +37,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function authorizedDefault() {
+    public function authorizedDefault(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
@@ -46,7 +46,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function authorizedInbox() {
+    public function authorizedInbox(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
@@ -55,7 +55,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function authorizedList() {
+    public function authorizedList(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'list', $this->getSelectedContest()));
     }
 
@@ -64,7 +64,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function authorizedHandout() {
+    public function authorizedHandout(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest()));
     }
 
@@ -73,7 +73,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function authorizedCorrected() {
+    public function authorizedCorrected(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'corrected', $this->getSelectedContest()));
     }
 
@@ -83,7 +83,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function titleInbox() {
+    public function titleInbox(): void {
         $this->setPageTitle(new PageTitle(_('Inbox'), 'fa fa-envelope-open'));
     }
 
@@ -92,7 +92,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Inbox dashboard'), 'fa fa-envelope-open'));
     }
 
@@ -101,7 +101,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function titleHandout() {
+    public function titleHandout(): void {
         $this->setPageTitle(new PageTitle(_('Rozdělení úloh opravovatelům'), 'fa fa-inbox'));
     }
 
@@ -110,7 +110,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function titleList() {
+    public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('List of submits'), 'fa fa-cloud-download'));
     }
 
@@ -119,7 +119,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function titleCorrected() {
+    public function titleCorrected(): void {
         $this->setPageTitle(new PageTitle(_('Corrected'), 'fa fa-inbox'));
     }
 
@@ -141,7 +141,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @return void
      * @throws BadTypeException
      */
-    public function actionHandout() {
+    public function actionHandout(): void {
         /** @var HandoutForm $control */
         $control = $this->getComponent('handoutForm');
         $control->setDefaults();

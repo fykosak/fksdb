@@ -41,11 +41,11 @@ class TasksFromXML extends Stage {
     /**
      * @param mixed $data
      */
-    public function setInput($data) {
+    public function setInput($data): void {
         $this->data = $data;
     }
 
-    public function process() {
+    public function process(): void {
         $xml = $this->data->getData();
         $sImported = (string)$xml->number;
         $sSet = $this->data->getSeries();
@@ -78,7 +78,7 @@ class TasksFromXML extends Stage {
         // update fields
         $data = [];
         foreach (self::$xmlToColumnMap as $xmlElement => $column) {
-            $value = NULL;
+            $value = null;
 
             // Argh, I was not able not make ->xpath() working so emulate it.
             $matches = [];

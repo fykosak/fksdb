@@ -12,8 +12,7 @@ use Tracy\Debugger;
  */
 class SoapResponse implements \Nette\Application\IResponse {
 
-    /** @var \SoapServer */
-    private $soapServer;
+    private \SoapServer $soapServer;
 
     /**
      * SoapResponse constructor.
@@ -23,12 +22,7 @@ class SoapResponse implements \Nette\Application\IResponse {
         $this->soapServer = $server;
     }
 
-    /**
-     * @param IRequest $httpRequest
-     * @param IResponse $httpResponse
-     * @return void
-     */
-    public function send(IRequest $httpRequest, IResponse $httpResponse) {
+    public function send(IRequest $httpRequest, IResponse $httpResponse): void {
         try {
             $this->soapServer->handle();
         } catch (\Exception $e) {

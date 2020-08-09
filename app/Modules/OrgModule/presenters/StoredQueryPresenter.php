@@ -38,7 +38,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleEdit() {
+    public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Edit query %s'), $this->getEntity()->name), 'fa fa-pencil'));
     }
 
@@ -51,7 +51,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function titleList() {
+    public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('Exports'), 'fa fa-database'));
     }
 
@@ -61,7 +61,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleDetail() {
+    public function titleDetail(): void {
         $title = sprintf(_('Detail of the query "%s"'), $this->getEntity()->name);
         $qid = $this->getEntity()->qid;
         if ($qid) {
@@ -86,7 +86,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ModelNotFoundException
      * @throws BadTypeException
      */
-    public function actionEdit() {
+    public function actionEdit(): void {
         $this->traitActionEdit();
     }
 
@@ -94,7 +94,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
      * @return void
      * @throws ModelNotFoundException
      */
-    public function renderDetail() {
+    public function renderDetail(): void {
         $this->template->model = $this->getEntity();
     }
 

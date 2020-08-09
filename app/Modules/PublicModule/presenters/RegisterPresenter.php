@@ -97,33 +97,33 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     /* ********************* TITLE ***************** */
-    public function titleContest() {
+    public function titleContest(): void {
         $this->setPageTitle(new PageTitle(_('Select contest')));
     }
 
-    public function titleYear() {
+    public function titleYear(): void {
         $this->setPageTitle(new PageTitle(_('Select year'), '', $this->getSelectedContest()->name));
     }
 
-    public function titleEmail() {
+    public function titleEmail(): void {
         $this->setPageTitle(new PageTitle(_('Zadejte e-mail'), 'fa fa-envelope', $this->getSelectedContest()->name));
     }
 
-    public function titleContestant() {
+    public function titleContestant(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('%s – registrace řešitele (%s. ročník)'), $this->getSelectedContest()->name, $this->getSelectedYear())));
     }
     /* ********************* ACTIONS ***************** */
     /**
      * @throws AbortException
      */
-    public function actionDefault() {
+    public function actionDefault(): void {
         $this->redirect('contest');
     }
 
     /**
      * @throws AbortException
      */
-    public function actionContestant() {
+    public function actionContestant(): void {
 
         if ($this->user->isLoggedIn()) {
             $person = $this->getPerson();
@@ -155,7 +155,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         }
     }
 
-    public function renderContest() {
+    public function renderContest(): void {
         $this->template->contests = $this->getServiceContest()->getTable();
     }
 
@@ -163,7 +163,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @return void
      * @throws AbortException
      */
-    public function renderYear() {
+    public function renderYear(): void {
         $contest = $this->getSelectedContest();
         $forward = $this->getYearCalculator()->getForwardShift($contest);
         if ($forward) {
@@ -182,7 +182,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @return void
      * @throws BadTypeException
      */
-    public function renderContestant() {
+    public function renderContestant(): void {
         $person = $this->getPerson();
         /** @var FormControl $contestantForm */
         $contestantForm = $this->getComponent('contestantForm');
@@ -241,7 +241,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @param Form $form
      * @throws AbortException
      */
-    private function emailFormSucceeded(Form $form) {
+    private function emailFormSucceeded(Form $form): void {
         $values = $form->getValues();
         $this->redirect('contestant', ['email' => $values['email'],]);
     }

@@ -26,11 +26,9 @@ class YearCalculator {
      */
     const FIRST_AC_MONTH = 9;
 
-    /** @var ServiceContestYear */
-    private $serviceContestYear;
+    private ServiceContestYear $serviceContestYear;
 
-    /** @var ServiceContest */
-    private $serviceContest;
+    private ServiceContest $serviceContest;
 
     /** @var int[][] */
     private $cache = [];
@@ -38,8 +36,8 @@ class YearCalculator {
     private $revCache = [];
     /** @var int */
     private $acYear;
-    /** @var Container */
-    private $container;
+
+    private Container $container;
 
     /**
      * FKSDB\YearCalculator constructor.
@@ -142,7 +140,7 @@ class YearCalculator {
         }
     }
 
-    private function preloadCache() {
+    private function preloadCache(): void {
         /** @var ModelContestYear $model */
         foreach ($this->serviceContestYear->getTable()->order('year') as $model) {
             if (!isset($this->cache[$model->contest_id])) {

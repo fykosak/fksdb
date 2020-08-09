@@ -134,7 +134,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     /**
      * @return string
      */
-    protected function getHttpRealm() {
+    protected function getHttpRealm(): ?string {
         return 'FKSDB-export';
     }
 

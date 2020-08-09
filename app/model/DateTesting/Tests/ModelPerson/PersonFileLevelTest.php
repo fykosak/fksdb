@@ -11,12 +11,12 @@ use FKSDB\Exceptions\BadTypeException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class PersonFileLevelTest extends PersonTest {
-    /** @var ITestedColumnFactory */
-    private $rowFactory;
-    /** @var string */
-    private $fieldName;
-    /** @var DBReflectionFactory */
-    private $tableReflectionFactory;
+
+    private ITestedColumnFactory $rowFactory;
+
+    private string $fieldName;
+
+    private DBReflectionFactory $tableReflectionFactory;
 
     /**
      * PersonFileLevelTest constructor.
@@ -35,11 +35,12 @@ abstract class PersonFileLevelTest extends PersonTest {
      * @throws BadTypeException
      */
     final protected function getRowFactory(): ITestedColumnFactory {
-        if (!$this->rowFactory) {
-            $this->rowFactory = $this->tableReflectionFactory->loadColumnFactory($this->fieldName);
-            if (!$this->rowFactory instanceof ITestedColumnFactory) {
+        if (!isset($this->rowFactory) || is_null($this->rowFactory)) {
+            $rowFactory = $this->tableReflectionFactory->loadColumnFactory($this->fieldName);
+            if (!$rowFactory instanceof ITestedColumnFactory) {
                 throw new BadTypeException(ITestedColumnFactory::class, $this->rowFactory);
             }
+            $this->rowFactory = $rowFactory;
         }
         return $this->rowFactory;
     }

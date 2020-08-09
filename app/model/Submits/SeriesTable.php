@@ -22,14 +22,11 @@ class SeriesTable {
     const FORM_SUBMIT = 'submit';
     const FORM_CONTESTANT = 'contestant';
 
-    /** @var ServiceContestant */
-    private $serviceContestant;
+    private ServiceContestant $serviceContestant;
 
-    /** @var ServiceTask */
-    private $serviceTask;
+    private ServiceTask $serviceTask;
 
-    /** @var ServiceSubmit */
-    private $serviceSubmit;
+    private ServiceSubmit $serviceSubmit;
 
     /** @var ModelContest */
     private $contest;

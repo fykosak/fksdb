@@ -52,11 +52,7 @@ class Field {
         return $this->baseHolder;
     }
 
-    /**
-     * @param BaseHolder $baseHolder
-     * @return void
-     */
-    public function setBaseHolder(BaseHolder $baseHolder) {
+    public function setBaseHolder(BaseHolder $baseHolder): void {
         $this->baseHolder = $baseHolder;
     }
     /* ** DESCRIPTION ** */
@@ -72,7 +68,7 @@ class Field {
      * @param string|null $description
      * @return void
      */
-    public function setDescription($description) {
+    public function setDescription($description): void {
         $this->description = $description;
     }
 
@@ -84,11 +80,7 @@ class Field {
         return $this->determining;
     }
 
-    /**
-     * @param bool $determining
-     * @return void
-     */
-    public function setDetermining(bool $determining) {
+    public function setDetermining(bool $determining): void {
         $this->determining = $determining;
     }
 
@@ -105,18 +97,14 @@ class Field {
      * @param mixed $default
      * @return void
      */
-    public function setDefault($default) {
+    public function setDefault($default): void {
         $this->default = $default;
     }
     /* ** EVALUATOR ** */
     /** @var ExpressionEvaluator */
     private $evaluator;
 
-    /**
-     * @param ExpressionEvaluator $evaluator
-     * @return void
-     */
-    public function setEvaluator(ExpressionEvaluator $evaluator) {
+    public function setEvaluator(ExpressionEvaluator $evaluator): void {
         $this->evaluator = $evaluator;
     }
     /* ** FACTORY ** */
@@ -124,11 +112,7 @@ class Field {
     /** @var IFieldFactory */
     private $factory;
 
-    /**
-     * @param IFieldFactory $factory
-     * @return void
-     */
-    public function setFactory(IFieldFactory $factory) {
+    public function setFactory(IFieldFactory $factory): void {
         $this->factory = $factory;
     }
 
@@ -139,11 +123,7 @@ class Field {
         return $this->factory->createComponent($this);
     }
 
-    /**
-     * @param IComponent $component
-     * @return void
-     */
-    public function setFieldDefaultValue(IComponent $component) {
+    public function setFieldDefaultValue(IComponent $component): void {
         $this->factory->setFieldDefaultValue($component, $this);
     }
 
@@ -161,7 +141,7 @@ class Field {
     }
 
     /** @param bool|callable $required */
-    public function setRequired($required) {
+    public function setRequired($required): void {
         $this->required = $required;
     }
     /* ** MODIFIABLE ** */
@@ -173,7 +153,7 @@ class Field {
     }
 
     /** @param bool|callable $modifiable */
-    public function setModifiable($modifiable) {
+    public function setModifiable($modifiable): void {
         $this->modifiable = $modifiable;
     }
     /* ** VISIBLE ** */
@@ -188,7 +168,7 @@ class Field {
      * @param callable|bool $visible
      * @return void
      */
-    public function setVisible($visible) {
+    public function setVisible($visible): void {
         $this->visible = $visible;
     }
 

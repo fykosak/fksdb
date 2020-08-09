@@ -91,7 +91,7 @@ class ApplicationPresenter extends BasePresenter {
      * @param int $id
      * @throws GoneException
      */
-    public function authorizedDefault($eventId, $id) {
+    public function authorizedDefault($eventId, $id): void {
         /** @var ModelEvent $event */
         $event = $this->getEvent();
         if ($this->contestAuthorizator->isAllowed('event.participant', 'edit', $event->getContest())
@@ -104,14 +104,14 @@ class ApplicationPresenter extends BasePresenter {
         }
     }
 
-    public function authorizedList() {
+    public function authorizedList(): void {
         $this->setAuthorized($this->getUser()->isLoggedIn() && $this->getUser()->getIdentity()->getPerson());
     }
 
     /**
      * @throws \Throwable
      */
-    public function titleDefault() {
+    public function titleDefault(): void {
         if ($this->getEventApplication()) {
             $this->setPageTitle(new PageTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fa fa-calendar-check-o'));
         } else {
@@ -123,7 +123,7 @@ class ApplicationPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function titleList() {
+    public function titleList(): void {
         $contest = $this->getSelectedContest();
         if ($contest) {
             $this->setPageTitle(new PageTitle(\sprintf(_('Moje přihlášky (%s)'), $contest->name), 'fa fa-calendar'));
@@ -137,7 +137,7 @@ class ApplicationPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws NeonSchemaException
      */
-    protected function unauthorizedAccess() {
+    protected function unauthorizedAccess(): void {
         if ($this->getAction() == 'default') {
             $this->initializeMachine();
             if ($this->getHolder()->getPrimaryHolder()->getModelState() == BaseMachine::STATE_INIT) {
@@ -148,10 +148,7 @@ class ApplicationPresenter extends BasePresenter {
         parent::unauthorizedAccess();
     }
 
-    /**
-     * @return bool
-     */
-    public function requiresLogin() {
+    public function requiresLogin(): bool {
         return $this->getAction() != 'default';
     }
 
@@ -166,7 +163,7 @@ class ApplicationPresenter extends BasePresenter {
      * @throws NeonSchemaException
      * @throws NotFoundException
      */
-    public function actionDefault($eventId, $id) {
+    public function actionDefault($eventId, $id): void {
         if (!$this->getEvent()) {
             throw new NotFoundException(_('Neexistující akce.'));
         }
@@ -217,7 +214,7 @@ class ApplicationPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function actionList() {
+    public function actionList(): void {
         if (!$this->getSelectedContest()) {
             $this->setView('contestChooser');
         }
@@ -227,7 +224,7 @@ class ApplicationPresenter extends BasePresenter {
      * @return void
      * @throws NeonSchemaException
      */
-    private function initializeMachine() {
+    private function initializeMachine(): void {
         $this->getHolder()->setModel($this->getEventApplication());
     }
 
@@ -255,7 +252,7 @@ class ApplicationPresenter extends BasePresenter {
      * @throws NeonSchemaException
      * @throws NotImplementedException
      */
-    protected function createComponentApplication() {
+    protected function createComponentApplication(): ApplicationComponent {
         $logger = new MemoryLogger();
         $handler = $this->handlerFactory->create($this->getEvent(), $logger);
         $component = new ApplicationComponent($this->getContext(), $handler, $this->getHolder());
@@ -277,7 +274,7 @@ class ApplicationPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    protected function createComponentApplicationsGrid() {
+    protected function createComponentApplicationsGrid(): ApplicationsGrid {
         $person = $this->getUser()->getIdentity()->getPerson();
         $events = $this->serviceEvent->getTable();
         $events->where('event_type.contest_id', $this->getSelectedContest()->contest_id);
@@ -297,7 +294,7 @@ class ApplicationPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    protected function createComponentNewApplicationsGrid() {
+    protected function createComponentNewApplicationsGrid(): ApplicationsGrid {
         $events = $this->serviceEvent->getTable();
         $events->where('event_type.contest_id', $this->getSelectedContest()->contest_id)
             ->where('registration_begin <= NOW()')
@@ -310,10 +307,7 @@ class ApplicationPresenter extends BasePresenter {
         return $grid;
     }
 
-    /**
-     * @return ModelEvent|null
-     */
-    private function getEvent() {
+    private function getEvent(): ?ModelEvent {
         if (!$this->event) {
             $eventId = null;
             if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
@@ -363,18 +357,14 @@ class ApplicationPresenter extends BasePresenter {
      * @return Holder
      * @throws NeonSchemaException
      */
-    private function getHolder() {
+    private function getHolder(): Holder {
         if (!$this->holder) {
             $this->holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
         }
         return $this->holder;
     }
 
-    /**
-     * @return Machine
-     *
-     */
-    private function getMachine() {
+    private function getMachine(): Machine {
         if (!$this->machine) {
             $this->machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
         }
@@ -386,7 +376,7 @@ class ApplicationPresenter extends BasePresenter {
      * @param int $id
      * @return string
      */
-    public static function encodeParameters($eventId, $id) {
+    public static function encodeParameters($eventId, $id): string {
         return "$eventId:$id";
     }
 
@@ -394,7 +384,7 @@ class ApplicationPresenter extends BasePresenter {
      * @param string $data
      * @return array
      */
-    public static function decodeParameters($data) {
+    public static function decodeParameters($data): array {
         $parts = explode(':', $data);
         if (count($parts) != 2) {
             throw new InvalidArgumentException("Cannot decode '$data'.");

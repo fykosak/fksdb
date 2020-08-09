@@ -14,14 +14,13 @@ use Tracy\Debugger;
 class Updater {
     use SmartObject;
 
-    /** @var Container */
-    private $container;
+    private Container $container;
 
     /**
      * Updater constructor.
      * @param Container $container
      */
-    public function __construct( Container $container) {
+    public function __construct(Container $container) {
         $this->container = $container;
     }
 
@@ -29,7 +28,7 @@ class Updater {
      * @param string $requestedBranch
      * @return void
      */
-    public function installBranch($requestedBranch) {
+    public function installBranch($requestedBranch): void {
         $deployment = $this->container->getParameters()['updater']['deployment'];
         foreach ($deployment as $path => $branch) {
             if ($branch != $requestedBranch) {

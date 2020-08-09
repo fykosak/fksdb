@@ -104,11 +104,7 @@ class Transition {
         return $this->type;
     }
 
-    /**
-     * @param string $name
-     * @return void
-     */
-    private function setName(string $name) {
+    private function setName(string $name): void {
         // it's used for component naming
         $name = str_replace('*', '_any_', $name);
         $name = str_replace('|', '_or_', $name);
@@ -133,7 +129,7 @@ class Transition {
      * @param string $mask
      * @return void
      */
-    public function setMask($mask) {
+    public function setMask($mask): void {
         $this->mask = $mask;
         [$this->source, $this->target] = self::parseMask($mask);
         $this->setName($mask);
@@ -146,11 +142,7 @@ class Transition {
         return $this->baseMachine;
     }
 
-    /**
-     * @param BaseMachine $baseMachine
-     * @return void
-     */
-    public function setBaseMachine(BaseMachine $baseMachine) {
+    public function setBaseMachine(BaseMachine $baseMachine): void {
         $this->baseMachine = $baseMachine;
     }
 
@@ -178,7 +170,7 @@ class Transition {
      * @param callable|bool $condition
      * @return void
      */
-    public function setCondition($condition) {
+    public function setCondition($condition): void {
         $this->condition = $condition;
     }
 
@@ -186,7 +178,7 @@ class Transition {
      * @param callable|bool $visible
      * @return void
      */
-    public function setVisible($visible) {
+    public function setVisible($visible): void {
         $this->visible = $visible;
     }
 
@@ -194,11 +186,7 @@ class Transition {
         return $this->evaluator;
     }
 
-    /**
-     * @param ExpressionEvaluator $evaluator
-     * @return void
-     */
-    public function setEvaluator(ExpressionEvaluator $evaluator) {
+    public function setEvaluator(ExpressionEvaluator $evaluator): void {
         $this->evaluator = $evaluator;
     }
 
@@ -207,7 +195,7 @@ class Transition {
      * @param string $targetState
      * @return void
      */
-    public function addInducedTransition(BaseMachine $targetMachine, $targetState) {
+    public function addInducedTransition(BaseMachine $targetMachine, $targetState): void {
         if ($targetMachine === $this->getBaseMachine()) {
             throw new InvalidArgumentException("Cannot induce transition in the same machine.");
         }
@@ -340,7 +328,7 @@ class Transition {
      * @note Assumes the condition is fullfilled.
      * @param BaseHolder $holder
      */
-    private function changeState(BaseHolder $holder) {
+    private function changeState(BaseHolder $holder): void {
         $holder->setModelState($this->getTarget());
     }
 

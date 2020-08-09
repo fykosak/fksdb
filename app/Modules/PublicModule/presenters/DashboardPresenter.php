@@ -27,7 +27,7 @@ class DashboardPresenter extends BasePresenter {
      * @throws AbortException
      * @throws ForbiddenRequestException
      */
-    protected function unauthorizedAccess() {
+    protected function unauthorizedAccess(): void {
         if ($this->getParam(AuthenticationPresenter::PARAM_DISPATCH)) {
             parent::unauthorizedAccess();
         } else {
@@ -35,13 +35,13 @@ class DashboardPresenter extends BasePresenter {
         }
     }
 
-    public function authorizedDefault() {
+    public function authorizedDefault(): void {
         $login = $this->getUser()->getIdentity();
         $access = (bool)$login;
         $this->setAuthorized($access);
     }
 
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Dashboard'), 'fa fa-dashboard'));
     }
 
@@ -50,10 +50,9 @@ class DashboardPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws UnsupportedLanguageException
      */
-    public function renderDefault() {
+    public function renderDefault(): void {
         foreach ($this->news->getNews($this->getSelectedContest(), $this->getLang()) as $new) {
             $this->flashMessage($new);
         }
     }
-
 }

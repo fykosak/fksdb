@@ -24,12 +24,11 @@ class Handler {
 
     const LOG_FORMAT = 'Submit %d was %s by %s';
 
-    /** @var ServiceFyziklaniSubmit */
-    private $serviceFyziklaniSubmit;
-    /** @var User */
-    private $user;
-    /** @var TaskCodePreprocessor */
-    private $taskCodePreprocessor;
+    private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
+
+    private User $user;
+
+    private TaskCodePreprocessor $taskCodePreprocessor;
 
     /**
      * TaskCodeHandler constructor.
@@ -60,7 +59,7 @@ class Handler {
      * @throws TaskCodeException
      * @throws ClosedSubmittingException
      */
-    public function preProcess(ILogger $logger, string $code, int $points) {
+    public function preProcess(ILogger $logger, string $code, int $points): void {
         $this->checkTaskCode($code);
         $this->savePoints($logger, $code, $points);
     }
@@ -74,7 +73,7 @@ class Handler {
      * @throws TaskCodeException
      * @throws ClosedSubmittingException
      */
-    private function savePoints(ILogger $logger, string $code, int $points) {
+    private function savePoints(ILogger $logger, string $code, int $points): void {
         $task = $this->taskCodePreprocessor->getTask($code);
         $team = $this->taskCodePreprocessor->getTeam($code);
 
@@ -99,7 +98,7 @@ class Handler {
      * @throws TaskCodeException
      * @throws ClosedSubmittingException
      */
-    private function checkTaskCode(string $code) {
+    private function checkTaskCode(string $code): void {
         $fullCode = $this->taskCodePreprocessor->createFullCode($code);
         /* skontroluje pratnosť kontrolu */
         if (!$this->taskCodePreprocessor->checkControlNumber($fullCode)) {
@@ -120,7 +119,7 @@ class Handler {
      * @return void
      * @throws ClosedSubmittingException
      */
-    public function changePoints(ILogger $logger, ModelFyziklaniSubmit $submit, int $points) {
+    public function changePoints(ILogger $logger, ModelFyziklaniSubmit $submit, int $points): void {
         if (!$submit->canChange()) {
             throw new ClosedSubmittingException($submit->getFyziklaniTeam());
         }
@@ -149,7 +148,7 @@ class Handler {
      * @throws AlreadyRevokedSubmitException
      * @throws ClosedSubmittingException
      */
-    public function revokeSubmit(ILogger $logger, ModelFyziklaniSubmit $submit) {
+    public function revokeSubmit(ILogger $logger, ModelFyziklaniSubmit $submit): void {
         if ($submit->canRevoke(true)) {
             $this->serviceFyziklaniSubmit->updateModel2($submit, [
                 'points' => null,
@@ -173,7 +172,7 @@ class Handler {
      * @throws PointsMismatchException
      * @throws ClosedSubmittingException
      */
-    public function checkSubmit(ILogger $logger, ModelFyziklaniSubmit $submit, int $points) {
+    public function checkSubmit(ILogger $logger, ModelFyziklaniSubmit $submit, int $points): void {
         if (!$submit->canChange()) {
             throw new ClosedSubmittingException($submit->getFyziklaniTeam());
         }
@@ -198,14 +197,7 @@ class Handler {
             $submit->getFyziklaniTask()->name), ILogger::SUCCESS));
     }
 
-    /**
-     * @param ILogger $logger
-     * @param ModelFyziklaniTask $task
-     * @param ModelFyziklaniTeam $team
-     * @param int $points
-     * @return void
-     */
-    public function createSubmit(ILogger $logger, ModelFyziklaniTask $task, ModelFyziklaniTeam $team, int $points) {
+    public function createSubmit(ILogger $logger, ModelFyziklaniTask $task, ModelFyziklaniTeam $team, int $points): void {
         $submit = $this->serviceFyziklaniSubmit->createNewModel([
             'points' => $points,
             'fyziklani_task_id' => $task->fyziklani_task_id,
@@ -226,12 +218,7 @@ class Handler {
             $task->name), ILogger::SUCCESS));
     }
 
-    /**
-     * @param ModelFyziklaniSubmit $submit
-     * @param string $action
-     * @param string|null $appendLog
-     */
-    private function logEvent(ModelFyziklaniSubmit $submit, string $action, string $appendLog = null) {
+    private function logEvent(ModelFyziklaniSubmit $submit, string $action, string $appendLog = null): void {
         Debugger::log(\sprintf(self::LOG_FORMAT . $appendLog, $submit->getPrimary(), $action, $this->user->getIdentity()->getId()), self::DEBUGGER_LOG_PRIORITY);
     }
 }

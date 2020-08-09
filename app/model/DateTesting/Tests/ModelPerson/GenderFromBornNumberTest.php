@@ -19,12 +19,7 @@ class GenderFromBornNumberTest extends PersonTest {
         parent::__construct('gender_from_born_number', _('Gender from born number'));
     }
 
-    /**
-     * @param ILogger $logger
-     * @param ModelPerson $person
-     * @return void
-     */
-    public function run(ILogger $logger, ModelPerson $person) {
+    public function run(ILogger $logger, ModelPerson $person): void {
         $info = $person->getInfo();
 
         if (!$info) {

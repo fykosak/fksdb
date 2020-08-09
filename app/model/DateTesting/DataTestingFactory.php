@@ -14,10 +14,10 @@ use FKSDB\ORM\Services\ServiceContest;
 class DataTestingFactory {
     /** @var PersonTest[][] */
     private $tests = [];
-    /** @var ServiceContest */
-    private $serviceContest;
-    /** @var DBReflectionFactory */
-    private $tableReflectionFactory;
+
+    private ServiceContest $serviceContest;
+
+    private DBReflectionFactory $tableReflectionFactory;
 
     /**
      * DataTestingFactory constructor.

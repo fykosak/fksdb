@@ -27,8 +27,7 @@ class ImportHandler {
 
     const KEY_NAME = 'person_id';
 
-    /** @var Container */
-    private $container;
+    private Container $container;
 
     /** @var SingleEventSource */
     private $source;
