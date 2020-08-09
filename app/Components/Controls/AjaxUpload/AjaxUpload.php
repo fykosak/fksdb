@@ -31,11 +31,9 @@ use FKSDB\Modules\PublicModule\SubmitPresenter;
  */
 class AjaxUpload extends ReactComponent {
 
-    /** @var ServiceSubmit */
-    private $serviceSubmit;
+    private ServiceSubmit $serviceSubmit;
 
-    /** @var UploadedStorage */
-    private $uploadedStorage;
+    private UploadedStorage $uploadedStorage;
 
     /** @var TypedTableSelection */
     private $availableTasks;
@@ -43,16 +41,9 @@ class AjaxUpload extends ReactComponent {
     /**@var ModelContestant */
     private $contestant;
 
-    /**@var SubmitHandlerFactory */
-    private $submitHandlerFactory;
+    private SubmitHandlerFactory $submitHandlerFactory;
 
-    /**
-     * @param ServiceSubmit $serviceSubmit
-     * @param UploadedStorage $uploadedStorage
-     * @param SubmitHandlerFactory $submitHandlerFactory
-     * @return void
-     */
-    public function injectPrimary(ServiceSubmit $serviceSubmit, UploadedStorage $uploadedStorage, SubmitHandlerFactory $submitHandlerFactory) {
+    public function injectPrimary(ServiceSubmit $serviceSubmit, UploadedStorage $uploadedStorage, SubmitHandlerFactory $submitHandlerFactory): void {
         $this->serviceSubmit = $serviceSubmit;
         $this->uploadedStorage = $uploadedStorage;
         $this->submitHandlerFactory = $submitHandlerFactory;

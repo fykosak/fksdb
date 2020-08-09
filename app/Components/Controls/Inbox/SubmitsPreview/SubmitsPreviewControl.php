@@ -16,14 +16,9 @@ use Nette\Application\ForbiddenRequestException;
  */
 class SubmitsPreviewControl extends SeriesTableComponent {
 
-    /** @var SubmitHandlerFactory */
-    private $submitDownloadFactory;
+    private SubmitHandlerFactory $submitDownloadFactory;
 
-    /**
-     * @param SubmitHandlerFactory $submitDownloadFactory
-     * @return void
-     */
-    public function injectSubmitDownloadFactory(SubmitHandlerFactory $submitDownloadFactory) {
+    public function injectSubmitDownloadFactory(SubmitHandlerFactory $submitDownloadFactory): void {
         $this->submitDownloadFactory = $submitDownloadFactory;
     }
 
@@ -40,7 +35,7 @@ class SubmitsPreviewControl extends SeriesTableComponent {
      * @throws ForbiddenRequestException
      * @throws NotFoundException
      */
-    public function handleDownloadUploaded(int $id) {
+    public function handleDownloadUploaded(int $id): void {
         $logger = new MemoryLogger();
         $this->submitDownloadFactory->handleDownloadUploaded($this->getPresenter(), $logger, $id);
         FlashMessageDump::dump($logger, $this);

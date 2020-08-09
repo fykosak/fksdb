@@ -16,8 +16,7 @@ class StoredQueryTagCloud extends BaseComponent {
     const MODE_LIST = 'mode-list';
     const MODE_DETAIL = 'mode-detail';
 
-    /** @var ServiceStoredQueryTagType */
-    private $serviceStoredQueryTagType;
+    private ServiceStoredQueryTagType $serviceStoredQueryTagType;
 
     /** @var string */
     private $mode;
@@ -28,44 +27,28 @@ class StoredQueryTagCloud extends BaseComponent {
      */
     public $activeTagIds = [];
 
-    /**
-     * @param ServiceStoredQueryTagType $serviceStoredQueryTagType
-     * @return void
-     */
-    public function injectPrimary(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
+    public function injectPrimary(ServiceStoredQueryTagType $serviceStoredQueryTagType): void {
         $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
     }
 
-    /**
-     * @param array $activeTagIds
-     * @return void
-     */
-    public function handleOnClick(array $activeTagIds) {
+    public function handleOnClick(array $activeTagIds): void {
         $this->activeTagIds = $activeTagIds;
     }
 
-    /**
-     * @param string $mode
-     * @return void
-     */
-    public function render(string $mode) {
+    public function render(string $mode): void {
         $this->template->mode = $mode;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'StoredQueryTagCloud.latte');
         $this->template->render();
     }
 
-    public function renderList() {
+    public function renderList(): void {
         $this->template->tags = $this->serviceStoredQueryTagType->getTable();
         $this->template->activeTagIds = $this->activeTagIds;
         $this->template->nextActiveTagIds = $this->createNextActiveTagIds();
         $this->render(self::MODE_LIST);
     }
 
-    /**
-     * @param ModelStoredQuery $query
-     * @return void
-     */
-    public function renderDetail(ModelStoredQuery $query) {
+    public function renderDetail(ModelStoredQuery $query): void {
         $this->template->tags = $query->getMStoredQueryTags();
         $this->render(self::MODE_DETAIL);
     }

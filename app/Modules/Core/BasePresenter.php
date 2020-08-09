@@ -63,21 +63,15 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     public $bc;
 
-    /** @var YearCalculator */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
-    /** @var ServiceContest */
-    private $serviceContest;
+    private ServiceContest $serviceContest;
 
+    private BreadcrumbsFactory $breadcrumbsFactory;
 
-    /** @var BreadcrumbsFactory */
-    private $breadcrumbsFactory;
+    private Navigation $navigationControl;
 
-    /** @var Navigation */
-    private $navigationControl;
-
-    /** @var PresenterBuilder */
-    private $presenterBuilder;
+    private PresenterBuilder $presenterBuilder;
 
     /** @var PageTitle|null */
     private $pageTitle;
@@ -97,11 +91,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->yearCalculator;
     }
 
-    /**
-     * @param YearCalculator $yearCalculator
-     * @return void
-     */
-    public function injectYearCalculator(YearCalculator $yearCalculator) {
+    public function injectYearCalculator(YearCalculator $yearCalculator): void {
         $this->yearCalculator = $yearCalculator;
     }
 
@@ -109,35 +99,19 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->serviceContest;
     }
 
-    /**
-     * @param ServiceContest $serviceContest
-     * @return void
-     */
-    public function injectServiceContest(ServiceContest $serviceContest) {
+    public function injectServiceContest(ServiceContest $serviceContest): void {
         $this->serviceContest = $serviceContest;
     }
 
-    /**
-     * @param BreadcrumbsFactory $breadcrumbsFactory
-     * @return void
-     */
-    public function injectBreadcrumbsFactory(BreadcrumbsFactory $breadcrumbsFactory) {
+    public function injectBreadcrumbsFactory(BreadcrumbsFactory $breadcrumbsFactory): void {
         $this->breadcrumbsFactory = $breadcrumbsFactory;
     }
 
-    /**
-     * @param Navigation $navigationControl
-     * @return void
-     */
-    public function injectNavigationControl(Navigation $navigationControl) {
+    public function injectNavigationControl(Navigation $navigationControl): void {
         $this->navigationControl = $navigationControl;
     }
 
-    /**
-     * @param PresenterBuilder $presenterBuilder
-     * @return void
-     */
-    public function injectPresenterBuilder(PresenterBuilder $presenterBuilder) {
+    public function injectPresenterBuilder(PresenterBuilder $presenterBuilder): void {
         $this->presenterBuilder = $presenterBuilder;
     }
 
@@ -169,7 +143,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function handleAutocomplete($acName, $acQ) {
+    public function handleAutocomplete($acName, $acQ): void {
         if (!$this->isAjax()) {
             throw new BadRequestException('Can be called only by AJAX.');
         }

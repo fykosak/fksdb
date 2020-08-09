@@ -19,14 +19,9 @@ class ContestantPresenter extends ExtendedPersonPresenter {
     /** @var string */
     protected $fieldsDefinition = 'adminContestant';
 
-    /** @var ServiceContestant */
-    private $serviceContestant;
-
-    /**
-     * @param ServiceContestant $serviceContestant
-     * @return void
-     */
-    public function injectServiceContestant(ServiceContestant $serviceContestant) {
+    private ServiceContestant $serviceContestant;
+    
+    public function injectServiceContestant(ServiceContestant $serviceContestant): void {
         $this->serviceContestant = $serviceContestant;
     }
 

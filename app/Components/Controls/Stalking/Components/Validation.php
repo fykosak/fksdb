@@ -12,23 +12,14 @@ use FKSDB\DataTesting\DataTestingFactory;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class Validation extends AbstractStalkingComponent {
-    /** @var DataTestingFactory */
-    private $validationFactory;
 
-    /**
-     * @param DataTestingFactory $factory
-     * @return void
-     */
-    public function injectDataTestingFactory(DataTestingFactory $factory) {
+    private DataTestingFactory $validationFactory;
+
+    public function injectDataTestingFactory(DataTestingFactory $factory): void {
         $this->validationFactory = $factory;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param int $userPermissions
-     * @return void
-     */
-    public function render(ModelPerson $person, int $userPermissions) {
+    public function render(ModelPerson $person, int $userPermissions): void {
         $this->beforeRender($person, _('Validation'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
         $logger = new MemoryLogger();
         foreach ($this->validationFactory->getTests('person') as $test) {

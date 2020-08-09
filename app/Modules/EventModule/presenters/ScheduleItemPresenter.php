@@ -37,25 +37,16 @@ class ScheduleItemPresenter extends BasePresenter {
     public $groupId;
     /** @var ModelScheduleGroup */
     private $group;
-    /** @var ServiceScheduleItem */
-    private $serviceScheduleItem;
 
-    /** @var ServiceScheduleGroup */
-    private $serviceScheduleGroup;
+    private ServiceScheduleItem $serviceScheduleItem;
 
-    /**
-     * @param ServiceScheduleItem $serviceScheduleItem
-     * @return void
-     */
-    public function injectServiceScheduleItem(ServiceScheduleItem $serviceScheduleItem) {
+    private ServiceScheduleGroup $serviceScheduleGroup;
+
+    public function injectServiceScheduleItem(ServiceScheduleItem $serviceScheduleItem): void {
         $this->serviceScheduleItem = $serviceScheduleItem;
     }
 
-    /**
-     * @param ServiceScheduleGroup $serviceScheduleGroup
-     * @return void
-     */
-    public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup) {
+    public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup): void {
         $this->serviceScheduleGroup = $serviceScheduleGroup;
     }
 

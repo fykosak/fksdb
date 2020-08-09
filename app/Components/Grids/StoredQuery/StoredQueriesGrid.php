@@ -21,10 +21,9 @@ class StoredQueriesGrid extends BaseGrid {
 
     const DESCRIPTION_TRUNC = 80;
 
-    /** @var ServiceStoredQuery */
-    private $serviceStoredQuery;
-    /** @var array */
-    private $activeTagIds;
+    private ServiceStoredQuery $serviceStoredQuery;
+
+    private array $activeTagIds;
 
     /**
      * StoredQueries2Grid constructor.
@@ -36,11 +35,7 @@ class StoredQueriesGrid extends BaseGrid {
         $this->activeTagIds = $activeTagIds;
     }
 
-    /**
-     * @param ServiceStoredQuery $serviceStoredQuery
-     * @return void
-     */
-    public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery) {
+    public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery): void {
         $this->serviceStoredQuery = $serviceStoredQuery;
     }
 

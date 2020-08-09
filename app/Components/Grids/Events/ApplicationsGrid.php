@@ -53,8 +53,8 @@ class ApplicationsGrid extends BaseComponent {
     private $searchable = false;
     /** @var bool */
     private $attachedJS = false;
-    /** @var EventDispatchFactory */
-    private $eventDispatchFactory;
+
+    private EventDispatchFactory $eventDispatchFactory;
 
     /**
      * ApplicationsGrid constructor.
@@ -88,11 +88,7 @@ class ApplicationsGrid extends BaseComponent {
         }
     }
 
-    /**
-     * @param EventDispatchFactory $eventDispatchFactory
-     * @return void
-     */
-    public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory) {
+    public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
