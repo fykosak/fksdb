@@ -5,7 +5,6 @@ namespace FKSDB\Utils;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
-use Traversable;
 
 /**
  *

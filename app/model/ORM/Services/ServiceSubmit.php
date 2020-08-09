@@ -17,8 +17,7 @@ use Nette\Application\UI\Presenter;
 class ServiceSubmit extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    /** @var array */
-    private $submitCache = [];
+    private array $submitCache = [];
 
     public function getModelClassName(): string {
         return ModelSubmit::class;

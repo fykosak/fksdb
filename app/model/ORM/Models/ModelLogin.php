@@ -23,8 +23,7 @@ use Nette\Security\IIdentity;
  */
 class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonReferencedModel {
 
-    /** @var YearCalculator|null */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
     /**
      * @return YearCalculator
@@ -32,17 +31,13 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
      * @internal
      */
     private function getYearCalculator(): YearCalculator {
-        if (!$this->yearCalculator) {
+        if (!isset($this->yearCalculator)) {
             throw new InvalidStateException('To obtain current roles, you have to inject FKSDB\YearCalculator to this Login instance.');
         }
         return $this->yearCalculator;
     }
 
-    /**
-     * @param YearCalculator $yearCalculator
-     * @return void
-     */
-    public function injectYearCalculator(YearCalculator $yearCalculator) {
+    public function injectYearCalculator(YearCalculator $yearCalculator): void {
         $this->yearCalculator = $yearCalculator;
     }
 
@@ -139,8 +134,6 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
                 }
             }
         }
-
         return $this->roles;
     }
-
 }

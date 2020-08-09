@@ -32,16 +32,9 @@ interface IService {
      */
     public function save(IModel &$model);
 
-    /**
-     * @param IModel $model
-     * @return void
-     */
-    public function dispose(IModel $model);
+    public function dispose(IModel $model): void;
 
-    /**
-     * @return Selection
-     */
-    public function getTable();
+    public function getTable(): Selection;
 
     /**
      * @param IModel $model

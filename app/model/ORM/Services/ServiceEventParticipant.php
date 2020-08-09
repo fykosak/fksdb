@@ -57,7 +57,7 @@ class ServiceEventParticipant extends AbstractServiceSingle {
      * @return void
      * @deprecated
      */
-    public function updateModel(IModel $model, $data, $alive = true) {
+    public function updateModel(IModel $model, $data, $alive = true): void {
         parent::updateModel($model, $data, $alive);
         if (!$alive && !$model->isNew()) {
             $person = $model->getPerson();

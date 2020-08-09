@@ -47,7 +47,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @param ModelContestant|IModel|null $model
      * @param Form|IControl[][] $form
      */
-    protected function setDefaults(IModel $model = null, Form $form) {
+    protected function setDefaults(?IModel $model, Form $form): void {
         if (!$model) {
             return;
         }

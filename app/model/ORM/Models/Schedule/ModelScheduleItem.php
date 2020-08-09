@@ -30,7 +30,7 @@ use Nette\Security\IResource;
  * @property-read string description_en
  */
 class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupReferencedModel, IEventReferencedModel, IResource {
-    const RESOURCE_ID = 'event.scheduleItem';
+    public const RESOURCE_ID = 'event.scheduleItem';
 
     public function getScheduleGroup(): ModelScheduleGroup {
         return ModelScheduleGroup::createFromActiveRow($this->schedule_group);
@@ -60,10 +60,8 @@ class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupRef
         return $this->related(DbNames::TAB_PERSON_SCHEDULE);
     }
     /* ****** CAPACITY CALCULATION *******/
-    /**
-     * @return int|null
-     */
-    public function getCapacity() {
+
+    public function getCapacity(): ?int {
         return $this->capacity;
     }
 

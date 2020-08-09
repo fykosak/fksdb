@@ -4,7 +4,6 @@ namespace FKSDB\Persons\Deduplication;
 
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
-use Nette\Database\Connection;
 use Nette\Database\Context;
 use Nette\Database\Conventions\AmbiguousReferenceKeyException;
 use Nette\Database\Table\ActiveRow;

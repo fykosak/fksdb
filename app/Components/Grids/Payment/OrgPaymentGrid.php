@@ -4,7 +4,6 @@ namespace FKSDB\Components\Grids\Payment;
 
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelLogin;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;

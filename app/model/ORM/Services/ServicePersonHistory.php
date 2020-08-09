@@ -23,14 +23,7 @@ class ServicePersonHistory extends AbstractServiceSingle {
         return DbNames::TAB_PERSON_HISTORY;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param ModelPersonHistory|null $history
-     * @param array $data
-     * @param int $acYear
-     * @return ModelPersonHistory
-     */
-    public function store(ModelPerson $person, $history, array $data, int $acYear): ModelPersonHistory {
+    public function store(ModelPerson $person, ?ModelPersonHistory $history, array $data, int $acYear): ModelPersonHistory {
         if ($history) {
             $this->updateModel2($history, $data);
             return $this->refresh($history);

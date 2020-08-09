@@ -26,7 +26,7 @@ use Nette\Utils\JsonException;
  * @property-read \DateTimeInterface created
  */
 class ModelPerson extends AbstractModelSingle implements IResource {
-    const RESOURCE_ID = 'person';
+    public const RESOURCE_ID = 'person';
 
     /**
      * Returns first of the person's logins.
@@ -93,11 +93,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $related;
     }
 
-    /**
-     * @param int|null $contestId
-     * @return GroupedSelection
-     */
-    public function getOrgs($contestId = null): GroupedSelection {
+    public function getOrgs(?int $contestId = null): GroupedSelection {
         $related = $this->related(DbNames::TAB_ORG, 'person_id');
         if ($contestId) {
             $related->where('contest_id', $contestId);
@@ -191,11 +187,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         }
     }
 
-    /**
-     * @param bool $noFallback
-     * @return ModelMPostContact|null
-     */
-    public function getPermanentAddress($noFallback = false): ?ModelMPostContact {
+    public function getPermanentAddress(bool $noFallback = false): ?ModelMPostContact {
         $pAddresses = $this->getMPostContacts(ModelPostContact::TYPE_PERMANENT);
         if (count($pAddresses)) {
             return reset($pAddresses);
@@ -228,11 +220,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $this->related(DbNames::TAB_E_FYZIKLANI_TEAM, 'teacher_id');
     }
 
-    /**
-     * @param int|null $eventId
-     * @return bool
-     */
-    public function isEventParticipant($eventId = null): bool {
+    public function isEventParticipant(?int $eventId = null): bool {
         $tmp = $this->getEventParticipant();
         if ($eventId) {
             $tmp->where('event_id = ?', $eventId);
@@ -463,5 +451,4 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         }
         return $roles;
     }
-
 }

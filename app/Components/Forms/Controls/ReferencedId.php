@@ -26,13 +26,13 @@ use Nette\Forms\Form;
  */
 class ReferencedId extends HiddenField {
 
-    const MODE_NORMAL = 'MODE_NORMAL';
-    const MODE_FORCE = 'MODE_FORCE';
-    const MODE_ROLLBACK = 'MODE_ROLLBACK';
+    public const MODE_NORMAL = 'MODE_NORMAL';
+    public const MODE_FORCE = 'MODE_FORCE';
+    public const MODE_ROLLBACK = 'MODE_ROLLBACK';
 
-    const VALUE_PROMISE = '__promise';
+    public const VALUE_PROMISE = '__promise';
 
-    const JSON_DATA = 'referencedContainer';
+    private const JSON_DATA = 'referencedContainer';
 
     private ReferencedContainer $referencedContainer;
 
@@ -42,11 +42,9 @@ class ReferencedId extends HiddenField {
 
     private IReferencedHandler $handler;
 
-    /** @var Promise */
-    private $promise;
+    private ?Promise $promise = null;
 
-    /** @var bool */
-    private $modelCreated;
+    private bool $modelCreated = false;
     /** @var IModel */
     private $model;
 
@@ -112,7 +110,6 @@ class ReferencedId extends HiddenField {
     public function getHandler(): IReferencedHandler {
         return $this->handler;
     }
-
 
     public function getModelCreated(): bool {
         return $this->modelCreated;
@@ -243,12 +240,7 @@ class ReferencedId extends HiddenField {
         }
     }
 
-    /**
-     * @param IModel|null $model
-     * @param string $mode
-     * @return void
-     */
-    protected function setModel(IModel $model = null, string $mode = self::MODE_NORMAL): void {
+    protected function setModel(?IModel $model, string $mode = self::MODE_NORMAL): void {
         $this->getReferencedContainer()->setModel($model, $mode);
     }
 }

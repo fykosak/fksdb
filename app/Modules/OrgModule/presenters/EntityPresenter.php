@@ -96,12 +96,7 @@ abstract class EntityPresenter extends BasePresenter {
         return $this->model;
     }
 
-    /**
-     * @param IModel|null $model
-     * @param Form $form
-     * @return void
-     */
-    protected function setDefaults(IModel $model = null, Form $form) {
+    protected function setDefaults(?IModel $model, Form $form): void {
         if (!$model) {
             return;
         }
