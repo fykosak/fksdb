@@ -21,8 +21,8 @@ class MailTemplateFactory {
 
     /* without trailing slash */
     private string $templateDir;
-
-    private Application $application;
+    /** @var Application */
+    private $application;
 
     private ITranslator $translator;
 
