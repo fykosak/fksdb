@@ -12,8 +12,6 @@ use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
-use FKSDB\ORM\Tables\TypedTableSelection;
-use FKSDB\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Submits\StorageException;
 use FKSDB\Submits\SubmitHandlerFactory;
 use Nette\Application\AbortException;
@@ -33,23 +31,15 @@ use Tracy\Debugger;
  */
 class AjaxSubmit extends AjaxComponent {
 
-    /** @var ServiceSubmit */
-    private $serviceSubmit;
+    private ServiceSubmit $serviceSubmit;
 
-    /** @var UploadedStorage */
-    private $uploadedStorage;
+    private ModelTask $task;
 
-    /** @var TypedTableSelection */
-    private $task;
+    private ModelContestant $contestant;
 
-    /**@var ModelContestant */
-    private $contestant;
+    private SubmitHandlerFactory $submitHandlerFactory;
 
-    /**@var SubmitHandlerFactory */
-    private $submitHandlerFactory;
-
-    /** @var int */
-    private $academicYear;
+    private int $academicYear;
 
     /**
      * TaskUpload constructor.
@@ -65,15 +55,8 @@ class AjaxSubmit extends AjaxComponent {
         $this->academicYear = $academicYear;
     }
 
-    /**
-     * @param ServiceSubmit $serviceSubmit
-     * @param UploadedStorage $uploadedStorage
-     * @param SubmitHandlerFactory $submitHandlerFactory
-     * @return void
-     */
-    public function injectPrimary(ServiceSubmit $serviceSubmit, UploadedStorage $uploadedStorage, SubmitHandlerFactory $submitHandlerFactory) {
+    public function injectPrimary(ServiceSubmit $serviceSubmit, SubmitHandlerFactory $submitHandlerFactory): void {
         $this->serviceSubmit = $serviceSubmit;
-        $this->uploadedStorage = $uploadedStorage;
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
@@ -82,7 +65,7 @@ class AjaxSubmit extends AjaxComponent {
      * @return ModelSubmit|null
      * @throws NotFoundException
      */
-    private function getSubmit(bool $throw = false) {
+    private function getSubmit(bool $throw = false): ?ModelSubmit {
         $submit = $this->serviceSubmit->findByContestant($this->contestant->ct_id, $this->task->task_id, false);
         if ($throw && is_null($submit)) {
             throw new NotFoundException(_('Submit not found'));
@@ -126,12 +109,12 @@ class AjaxSubmit extends AjaxComponent {
      * @throws AbortException
      * @throws BadTypeException
      */
-    public function handleUpload() {
+    public function handleUpload(): void {
         $files = $this->getHttpRequest()->getFiles();
         /** @var FileUpload $fileContainer */
         foreach ($files as $name => $fileContainer) {
             $this->serviceSubmit->getConnection()->beginTransaction();
-            $this->uploadedStorage->beginTransaction();
+            $this->submitHandlerFactory->getUploadedStorage()->beginTransaction();
             if ($name !== 'submit') {
                 continue;
             }
@@ -142,7 +125,7 @@ class AjaxSubmit extends AjaxComponent {
             }
             // store submit
             $this->submitHandlerFactory->handleSave($fileContainer, $this->task, $this->contestant);
-            $this->uploadedStorage->commit();
+            $this->submitHandlerFactory->getUploadedStorage()->commit();
             $this->serviceSubmit->getConnection()->commit();
             $this->getLogger()->log(new Message(_('Upload successful'), ILogger::SUCCESS));
             $this->sendAjaxResponse();
@@ -153,7 +136,7 @@ class AjaxSubmit extends AjaxComponent {
      * @return void
      * @throws AbortException
      */
-    public function handleRevoke() {
+    public function handleRevoke(): void {
         try {
             $this->submitHandlerFactory->handleRevokeSubmit($this->getLogger(), $this->getSubmit(true), $this->academicYear);
         } catch (ForbiddenRequestException$exception) {
@@ -175,7 +158,7 @@ class AjaxSubmit extends AjaxComponent {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function handleDownload() {
+    public function handleDownload(): void {
         try {
             $this->submitHandlerFactory->handleDownloadUploadedSubmit($this->getPresenter(), $this->getSubmit(true));
         } catch (ForbiddenRequestException$exception) {

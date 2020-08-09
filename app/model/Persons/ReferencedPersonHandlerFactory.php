@@ -27,7 +27,7 @@ class ReferencedPersonHandlerFactory {
 
     private ServiceMPostContact $serviceMPostContact;
 
-    private ServicePersonHasFlag $serviceMPersonHasFlag;
+    private ServicePersonHasFlag $servicePersonHasFlag;
 
     private Handler $eventScheduleHandler;
 

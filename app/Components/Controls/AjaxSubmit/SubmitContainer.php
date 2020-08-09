@@ -19,20 +19,15 @@ use Nette\DI\Container;
  */
 class SubmitContainer extends BaseComponent {
 
-    /** @var ModelContestant */
-    private $contestant;
+    private ModelContestant $contestant;
 
-    /** @var ModelContest */
-    private $contest;
+    private ModelContest $contest;
 
-    /** @var int */
-    private $acYear;
+    private int $acYear;
 
-    /** @var int */
-    private $year;
+    private int $year;
 
-    /** @var ServiceTask */
-    private $serviceTask;
+    private ServiceTask $serviceTask;
 
     /**
      * SubmitContainer constructor.
@@ -70,11 +65,7 @@ class SubmitContainer extends BaseComponent {
         return $component;
     }
 
-    /**
-     * @param ServiceTask $serviceTask
-     * @return void
-     */
-    public function injectPrimary(ServiceTask $serviceTask) {
+    public function injectPrimary(ServiceTask $serviceTask): void {
         $this->serviceTask = $serviceTask;
     }
 
@@ -86,10 +77,7 @@ class SubmitContainer extends BaseComponent {
             ->order('ISNULL(submit_deadline) ASC, submit_deadline ASC');
     }
 
-    /**
-     * @return void
-     */
-    public function render() {
+    public function render(): void {
         $this->template->availableTasks = $this->getAvailableTasks();
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.container.latte');
         $this->template->render();

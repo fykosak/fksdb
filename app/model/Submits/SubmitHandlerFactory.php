@@ -62,6 +62,10 @@ class SubmitHandlerFactory {
         $this->userStorage = $userStorage;
     }
 
+    public function getUploadedStorage(): UploadedStorage {
+        return $this->uploadedStorage;
+    }
+
     /**
      * @param Presenter $presenter
      * @param int $id
@@ -187,11 +191,7 @@ class SubmitHandlerFactory {
         return $submit;
     }
 
-    /**
-     * @param int $academicYear
-     * @return int|null
-     */
-    public function getUserStudyYear(int $academicYear) {
+    public function getUserStudyYear(int $academicYear): ?int {
         /** @var ModelLogin $login */
         $login = $this->userStorage->getIdentity();
         $personHistory = $login->getPerson()->getHistory($academicYear);
@@ -220,7 +220,7 @@ class SubmitHandlerFactory {
      * @return void
      * @throws ForbiddenRequestException
      */
-    private function checkPrivilege(ModelSubmit $submit, string $privilege) {
+    private function checkPrivilege(ModelSubmit $submit, string $privilege): void {
         if (!$this->contestAuthorizator->isAllowed($submit, $privilege, $submit->getContestant()->getContest())) {
             throw new ForbiddenRequestException(_('Access denied'));
         }

@@ -9,7 +9,6 @@ import TaskCodeApp from '@apps/fyziklani/submitForm/components';
 import FyziklaniResultsPresentation from '@apps/fyziklaniResults/presentation';
 import FyziklaniResultsStatistics from '@apps/fyziklaniResults/statistics';
 import FyziklaniResultsTable from '@apps/fyziklaniResults/table';
-import PaymentSelectField from '@apps/payment/selectField/components/selectField';
 import { appsCollector } from '@appsCollector/index';
 import { mapRegister } from '@appsCollector/mapRegister';
 import * as React from 'react';
@@ -33,11 +32,5 @@ mapRegister.registerDataComponent('person.detail.timeline', PersonTimeline);
 mapRegister.registerDataComponent('chart.participant-acquaintance', ParticipantAcquaintance);
 
 mapRegister.registerComponent('attendance.qr-code', Attendance);
-
-mapRegister.register('payment.schedule-select', (element, reactId, rawData) => {
-    const container = document.createElement('div');
-    element.parentElement.appendChild(container);
-    ReactDOM.render(<PaymentSelectField data={JSON.parse(rawData)} input={element}/>, container);
-});
 
 appsCollector.run();
