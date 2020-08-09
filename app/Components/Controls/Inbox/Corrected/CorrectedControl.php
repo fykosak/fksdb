@@ -15,14 +15,9 @@ use Nette\Application\UI\Form;
  */
 class CorrectedControl extends SeriesTableComponent {
 
-    /** @var CorrectedStorage */
-    private $correctedStorage;
+    private CorrectedStorage $correctedStorage;
 
-    /**
-     * @param CorrectedStorage $correctedStorage
-     * @return void
-     */
-    public function injectCorrectedStorage(CorrectedStorage $correctedStorage) {
+    public function injectCorrectedStorage(CorrectedStorage $correctedStorage): void {
         $this->correctedStorage = $correctedStorage;
     }
 

@@ -72,46 +72,27 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     /** @var ModelPerson */
     private $person;
 
-    /** @var ServiceContestant */
-    private $serviceContestant;
+    private ServiceContestant $serviceContestant;
 
-    /** @var ReferencedPersonFactory */
-    private $referencedPersonFactory;
+    private ReferencedPersonFactory $referencedPersonFactory;
 
-    /** @var ExtendedPersonHandlerFactory */
-    private $handlerFactory;
-    /** @var ServicePerson */
-    protected $servicePerson;
+    private ExtendedPersonHandlerFactory $handlerFactory;
 
-    /**
-     * @param ServiceContestant $serviceContestant
-     * @return void
-     */
-    public function injectServiceContestant(ServiceContestant $serviceContestant) {
+    protected ServicePerson $servicePerson;
+
+    public function injectServiceContestant(ServiceContestant $serviceContestant): void {
         $this->serviceContestant = $serviceContestant;
     }
 
-    /**
-     * @param ServicePerson $servicePerson
-     * @return void
-     */
-    public function injectServicePerson(ServicePerson $servicePerson) {
+    public function injectServicePerson(ServicePerson $servicePerson): void {
         $this->servicePerson = $servicePerson;
     }
 
-    /**
-     * @param ReferencedPersonFactory $referencedPersonFactory
-     * @return void
-     */
-    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
+    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory): void {
         $this->referencedPersonFactory = $referencedPersonFactory;
     }
 
-    /**
-     * @param ExtendedPersonHandlerFactory $handlerFactory
-     * @return void
-     */
-    public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory) {
+    public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
     }
 

@@ -66,11 +66,7 @@ abstract class ReferencedContainer extends ContainerWithOptions {
         return $this->referencedId;
     }
 
-    /**
-     * @param ReferencedId $referencedId
-     * @return void
-     */
-    public function setReferencedId(ReferencedId $referencedId) {
+    public function setReferencedId(ReferencedId $referencedId): void {
         $this->referencedId = $referencedId;
     }
 
@@ -85,11 +81,7 @@ abstract class ReferencedContainer extends ContainerWithOptions {
         }
     }
 
-    /**
-     * @param bool $allowClear
-     * @return void
-     */
-    protected function setAllowClear(bool $allowClear) {
+    protected function setAllowClear(bool $allowClear): void {
         $this->allowClear = $allowClear;
         /** @var SubmitButton $control */
         $control = $this->getComponent(self::SUBMIT_CLEAR);
@@ -157,12 +149,12 @@ abstract class ReferencedContainer extends ContainerWithOptions {
      * @throws NotImplementedException
      * @throws OmittedControlException
      */
-    abstract protected function configure();
+    abstract protected function configure(): void;
 
     /**
      * @param IModel|null $model
      * @param string $mode
      * @return void
      */
-    abstract public function setModel(IModel $model = null, string $mode = ReferencedId::MODE_NORMAL);
+    abstract public function setModel(IModel $model = null, string $mode = ReferencedId::MODE_NORMAL): void;
 }

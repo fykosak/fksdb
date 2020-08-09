@@ -13,14 +13,10 @@ use FKSDB\WebService\SoapResponse;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class WebServicePresenter extends BasePresenter {
-    /** @var \SoapServer */
-    private $server;
 
-    /**
-     * @param \SoapServer $server
-     * @return void
-     */
-    public function injectSoapServer(\SoapServer $server) {
+    private \SoapServer $server;
+
+    public function injectSoapServer(\SoapServer $server): void {
         $this->server = $server;
     }
 

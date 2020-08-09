@@ -19,8 +19,7 @@ trait LangPresenterTrait {
     /** @var string[] */
     public static $languageNames = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
 
-    /** @var GettextTranslator */
-    private $translator;
+    private GettextTranslator $translator;
 
     /**
      * @persistent
@@ -31,11 +30,7 @@ trait LangPresenterTrait {
     /** @var string cache */
     private $cacheLang;
 
-    /**
-     * @param GettextTranslator $translator
-     * @return void
-     */
-    final public function injectTranslator(GettextTranslator $translator) {
+    final public function injectTranslator(GettextTranslator $translator): void {
         $this->translator = $translator;
     }
 
@@ -43,7 +38,7 @@ trait LangPresenterTrait {
      * @return void
      * @throws UnsupportedLanguageException
      */
-    final protected function langTraitStartup() {
+    final protected function langTraitStartup(): void {
         $this->translator->setLang($this->getLang());
         /** @var LanguageChooser $languageChooser */
         $languageChooser = $this->getComponent('languageChooser');

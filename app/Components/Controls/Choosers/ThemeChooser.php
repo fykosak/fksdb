@@ -18,14 +18,9 @@ class ThemeChooser extends Chooser {
     /** @var array */
     private $availableThemes = ['light', 'dark'];
 
-    /** @var Session */
-    private $session;
+    private Session $session;
 
-    /**
-     * @param Session $session
-     * @return void
-     */
-    public function injectSession(Session $session) {
+    public function injectSession(Session $session): void {
         $this->session = $session;
     }
 

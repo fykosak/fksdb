@@ -18,10 +18,9 @@ use FKSDB\SQL\ViewDataSource;
  */
 class ContestantsFromSchoolGrid extends BaseGrid {
 
-    /** @var ServiceContestant */
-    private $serviceContestant;
-    /** @var ModelSchool */
-    private $school;
+    private ServiceContestant $serviceContestant;
+
+    private ModelSchool $school;
 
     /**
      * ContestantsGrid constructor.
@@ -33,11 +32,7 @@ class ContestantsFromSchoolGrid extends BaseGrid {
         $this->school = $school;
     }
 
-    /**
-     * @param ServiceContestant $serviceContestant
-     * @return void
-     */
-    public function injectServiceContestant(ServiceContestant $serviceContestant) {
+    public function injectServiceContestant(ServiceContestant $serviceContestant): void {
         $this->serviceContestant = $serviceContestant;
     }
 

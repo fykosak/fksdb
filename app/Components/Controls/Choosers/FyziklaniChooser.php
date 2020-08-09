@@ -20,8 +20,7 @@ class FyziklaniChooser extends Chooser {
     /** @var ModelEvent */
     private $event;
 
-    /** @var ServiceEvent */
-    private $serviceEvent;
+    private ServiceEvent $serviceEvent;
 
     /**
      * FyziklaniChooser constructor.
@@ -33,11 +32,7 @@ class FyziklaniChooser extends Chooser {
         $this->event = $event;
     }
 
-    /**.
-     * @param ServiceEvent $serviceEvent
-     * @return void
-     */
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 

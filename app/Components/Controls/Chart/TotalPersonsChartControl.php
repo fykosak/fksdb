@@ -17,7 +17,7 @@ use Nette\Utils\JsonException;
 class TotalPersonsChartControl extends ReactComponent implements IChart {
 
     /** @var ServicePerson */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
     /**
      * TotalPersonsChartControl constructor.
@@ -27,11 +27,7 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
         parent::__construct($container, 'chart.total-person');
     }
 
-    /**
-     * @param ServicePerson $servicePerson
-     * @return void
-     */
-    public function injectServicePerson(ServicePerson $servicePerson) {
+    public function injectServicePerson(ServicePerson $servicePerson): void {
         $this->servicePerson = $servicePerson;
     }
 

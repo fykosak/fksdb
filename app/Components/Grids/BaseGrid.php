@@ -38,10 +38,10 @@ use FKSDB\SQL\SearchableDataSource;
 abstract class BaseGrid extends Grid {
     /** @persistent string */
     public $searchTerm;
-    /** @var DBReflectionFactory */
-    protected $tableReflectionFactory;
-    /** @var Container */
-    private $container;
+
+    protected DBReflectionFactory $tableReflectionFactory;
+
+    private Container $container;
 
     /**
      * BaseGrid constructor.
@@ -53,11 +53,7 @@ abstract class BaseGrid extends Grid {
         $container->callInjects($this);
     }
 
-    /**
-     * @param DBReflectionFactory $tableReflectionFactory
-     * @return void
-     */
-    public function injectTableReflectionFactory(DBReflectionFactory $tableReflectionFactory) {
+    public function injectTableReflectionFactory(DBReflectionFactory $tableReflectionFactory): void {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 

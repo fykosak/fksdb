@@ -195,10 +195,7 @@ class ReferencedId extends HiddenField {
         $this->getReferencedContainer()->setDisabled($value);
     }
 
-    /**
-     * @return void
-     */
-    private function createPromise() {
+    private function createPromise(): void {
 
         $values = $this->getReferencedContainer()->getValues();
         $referencedId = $this->getValue();

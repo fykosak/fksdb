@@ -17,14 +17,9 @@ use Nette\Application\AbortException;
  */
 class SeatingPresenter extends BasePresenter {
 
-    /** @var ServiceFyziklaniTeamPosition */
-    private $serviceFyziklaniTeamPosition;
+    private ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition;
 
-    /**
-     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
-     * @return void
-     */
-    public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition) {
+    public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition): void {
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
     }
 

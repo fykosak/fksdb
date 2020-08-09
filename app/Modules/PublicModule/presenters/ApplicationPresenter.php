@@ -56,57 +56,33 @@ class ApplicationPresenter extends BasePresenter {
     /** @var Machine */
     private $machine;
 
-    /** @var ServiceEvent */
-    private $serviceEvent;
+    private ServiceEvent $serviceEvent;
 
-    /** @var RelatedPersonAuthorizator */
-    private $relatedPersonAuthorizator;
+    private RelatedPersonAuthorizator $relatedPersonAuthorizator;
 
-    /** @var LayoutResolver */
-    private $layoutResolver;
+    private LayoutResolver $layoutResolver;
 
-    /** @var ApplicationHandlerFactory */
-    private $handlerFactory;
-    /** @var EventDispatchFactory */
-    private $eventDispatchFactory;
+    private ApplicationHandlerFactory $handlerFactory;
 
-    /**
-     * @param ServiceEvent $serviceEvent
-     * @return void
-     */
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+    private EventDispatchFactory $eventDispatchFactory;
+
+    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 
-    /**
-     * @param RelatedPersonAuthorizator $relatedPersonAuthorizator
-     * @return void
-     */
-    public function injectRelatedPersonAuthorizator(RelatedPersonAuthorizator $relatedPersonAuthorizator) {
+    public function injectRelatedPersonAuthorizator(RelatedPersonAuthorizator $relatedPersonAuthorizator): void {
         $this->relatedPersonAuthorizator = $relatedPersonAuthorizator;
     }
 
-    /**
-     * @param LayoutResolver $layoutResolver
-     * @return void
-     */
-    public function injectLayoutResolver(LayoutResolver $layoutResolver) {
+    public function injectLayoutResolver(LayoutResolver $layoutResolver): void {
         $this->layoutResolver = $layoutResolver;
     }
 
-    /**
-     * @param ApplicationHandlerFactory $handlerFactory
-     * @return void
-     */
-    public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory) {
+    public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
     }
 
-    /**
-     * @param EventDispatchFactory $eventDispatchFactory
-     * @return void
-     */
-    public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory) {
+    public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 

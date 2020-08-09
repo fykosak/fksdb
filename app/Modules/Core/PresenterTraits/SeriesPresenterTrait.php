@@ -21,14 +21,9 @@ trait SeriesPresenterTrait {
      */
     public $series;
 
-    /** @var SeriesCalculator */
-    protected $seriesCalculator;
+    protected SeriesCalculator $seriesCalculator;
 
-    /**
-     * @param SeriesCalculator $seriesCalculator
-     * @return void
-     */
-    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator) {
+    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator): void {
         $this->seriesCalculator = $seriesCalculator;
     }
 

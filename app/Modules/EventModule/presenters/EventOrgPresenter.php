@@ -24,14 +24,9 @@ use Nette\Security\IResource;
 class EventOrgPresenter extends BasePresenter {
     use EventEntityPresenterTrait;
 
-    /** @var ServiceEventOrg */
-    private $serviceEventOrg;
+    private ServiceEventOrg $serviceEventOrg;
 
-    /**
-     * @param ServiceEventOrg $serviceEventOrg
-     * @return void
-     */
-    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
+    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg): void {
         $this->serviceEventOrg = $serviceEventOrg;
     }
 

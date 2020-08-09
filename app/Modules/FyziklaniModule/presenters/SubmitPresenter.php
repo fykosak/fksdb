@@ -29,14 +29,9 @@ use Nette\Security\IResource;
 class SubmitPresenter extends BasePresenter {
     use EventEntityPresenterTrait;
 
-    /** @var HandlerFactory */
-    protected $handlerFactory;
+    protected HandlerFactory $handlerFactory;
 
-    /**
-     * @param HandlerFactory $handlerFactory
-     * @return void
-     */
-    public function injectHandlerFactory(HandlerFactory $handlerFactory) {
+    public function injectHandlerFactory(HandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
     }
 

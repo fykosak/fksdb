@@ -20,14 +20,9 @@ use Nette\Security\IResource;
 class ScheduleGroupPresenter extends BasePresenter {
     use EventEntityPresenterTrait;
 
-    /** @var ServiceScheduleGroup */
-    private $serviceScheduleGroup;
+    private ServiceScheduleGroup $serviceScheduleGroup;
 
-    /**
-     * @param ServiceScheduleGroup $serviceScheduleGroup
-     * @return void
-     */
-    public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup) {
+    public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup): void {
         $this->serviceScheduleGroup = $serviceScheduleGroup;
     }
 

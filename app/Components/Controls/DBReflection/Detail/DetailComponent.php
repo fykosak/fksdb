@@ -11,14 +11,10 @@ use FKSDB\ORM\AbstractModelSingle;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class DetailComponent extends BaseComponent {
-    /** @var DetailFactory */
-    private $detailFactory;
 
-    /**
-     * @param DetailFactory $detailFactory
-     * @return void
-     */
-    public function injectDetailFactory(DetailFactory $detailFactory) {
+    private DetailFactory $detailFactory;
+
+    public function injectDetailFactory(DetailFactory $detailFactory): void {
         $this->detailFactory = $detailFactory;
     }
 
@@ -26,12 +22,7 @@ class DetailComponent extends BaseComponent {
         return new ValuePrinterComponent($this->getContext());
     }
 
-    /**
-     * @param string $section
-     * @param AbstractModelSingle $model
-     * @return void
-     */
-    public function render(string $section, AbstractModelSingle $model) {
+    public function render(string $section, AbstractModelSingle $model): void {
         $this->template->data = $this->detailFactory->getSection($section);
         $this->template->model = $model;
         $this->template->setFile(__DIR__ . '/layout.latte');

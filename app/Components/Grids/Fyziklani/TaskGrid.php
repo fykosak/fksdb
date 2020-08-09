@@ -18,22 +18,9 @@ use FKSDB\SQL\SearchableDataSource;
  */
 class TaskGrid extends BaseGrid {
 
-    /** @var ServiceFyziklaniTask */
-    private $serviceFyziklaniTask;
-    /** @var ModelEvent */
-    private $event;
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
 
-    protected function getData(): IDataSource {
-        $submits = $this->serviceFyziklaniTask->findAll($this->event);
-        $dataSource = new SearchableDataSource($submits);
-        $dataSource->setFilterCallback(function (Selection $table, $value) {
-            $tokens = preg_split('/\s+/', $value);
-            foreach ($tokens as $token) {
-                $table->where('name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task_id LIKE CONCAT(\'%\', ? , \'%\')', $token, $token);
-            }
-        });
-        return $dataSource;
-    }
+    private ModelEvent $event;
 
     /**
      * FyziklaniTaskGrid constructor.
@@ -45,12 +32,20 @@ class TaskGrid extends BaseGrid {
         $this->event = $event;
     }
 
-    /**
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @return void
-     */
-    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask) {
+    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask): void {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+    }
+
+    protected function getData(): IDataSource {
+        $submits = $this->serviceFyziklaniTask->findAll($this->event);
+        $dataSource = new SearchableDataSource($submits);
+        $dataSource->setFilterCallback(function (Selection $table, $value) {
+            $tokens = preg_split('/\s+/', $value);
+            foreach ($tokens as $token) {
+                $table->where('name LIKE CONCAT(\'%\', ? , \'%\') OR fyziklani_task_id LIKE CONCAT(\'%\', ? , \'%\')', $token, $token);
+            }
+        });
+        return $dataSource;
     }
 
     /**

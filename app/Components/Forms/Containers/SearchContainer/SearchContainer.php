@@ -22,11 +22,7 @@ abstract class SearchContainer extends ContainerWithOptions {
     /** @var ReferencedId */
     protected $referencedId;
 
-    /**
-     * @param ReferencedId $referencedId
-     * @return void
-     */
-    public function setReferencedId(ReferencedId $referencedId) {
+    public function setReferencedId(ReferencedId $referencedId): void {
         $this->referencedId = $referencedId;
         $control = $this->createSearchControl();
         if ($control) {

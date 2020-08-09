@@ -42,24 +42,24 @@ class ReferencedPersonContainer extends ReferencedContainer {
     const EXTRAPOLATE = 0x4;
     const HAS_DELIVERY = 0x8;
 
-    /** @var IModifiabilityResolver */
-    public $modifiabilityResolver;
-    /** @var IVisibilityResolver */
-    public $visibilityResolver;
-    /** @var int */
-    public $acYear;
-    /** @var array */
-    private $fieldsDefinition;
-    /** @var ServicePerson */
-    protected $servicePerson;
-    /** @var SingleReflectionFormFactory */
-    protected $singleReflectionFormFactory;
-    /**@var FlagFactory */
-    protected $flagFactory;
-    /** @var AddressFactory */
-    protected $addressFactory;
-    /** @var PersonScheduleFactory */
-    private $personScheduleFactory;
+
+    public IModifiabilityResolver $modifiabilityResolver;
+
+    public IVisibilityResolver $visibilityResolver;
+
+    public int $acYear;
+
+    private array $fieldsDefinition;
+
+    protected ServicePerson $servicePerson;
+
+    protected SingleReflectionFormFactory $singleReflectionFormFactory;
+
+    protected FlagFactory $flagFactory;
+
+    protected AddressFactory $addressFactory;
+
+    private PersonScheduleFactory $personScheduleFactory;
     /** @var ModelEvent */
     protected $event;
     /** @var bool */
@@ -97,21 +97,13 @@ class ReferencedPersonContainer extends ReferencedContainer {
         });
     }
 
-    /**
-     * AbstractReferencedPersonFactory constructor.
-     * @param AddressFactory $addressFactory
-     * @param FlagFactory $flagFactory
-     * @param ServicePerson $servicePerson
-     * @param SingleReflectionFormFactory $singleReflectionFormFactory
-     * @param PersonScheduleFactory $personScheduleFactory
-     */
     public function injectPrimary(
         AddressFactory $addressFactory,
         FlagFactory $flagFactory,
         ServicePerson $servicePerson,
         SingleReflectionFormFactory $singleReflectionFormFactory,
         PersonScheduleFactory $personScheduleFactory
-    ) {
+    ): void {
         $this->servicePerson = $servicePerson;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->flagFactory = $flagFactory;
@@ -128,7 +120,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @throws NotImplementedException
      * @throws OmittedControlException
      */
-    protected function configure() {
+    protected function configure(): void {
         foreach ($this->fieldsDefinition as $sub => $fields) {
             $subContainer = new ContainerWithOptions();
             if ($sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
@@ -178,7 +170,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @return void
      * @throws JsonException
      */
-    public function setModel(IModel $model = null, string $mode = ReferencedId::MODE_NORMAL) {
+    public function setModel(IModel $model = null, string $mode = ReferencedId::MODE_NORMAL): void {
 
         $modifiable = $model ? $this->modifiabilityResolver->isModifiable($model) : true;
         $resolution = $model ? $this->modifiabilityResolver->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
@@ -291,13 +283,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
 
     }
 
-    /**
-     * @param BaseControl $control
-     * @param string $fieldName
-     * @param array $metadata
-     * @return void
-     */
-    protected function appendMetadata(BaseControl $control, string $fieldName, array $metadata) {
+    protected function appendMetadata(BaseControl $control, string $fieldName, array $metadata): void {
         foreach ($metadata as $key => $value) {
             switch ($key) {
                 case 'required':
@@ -324,12 +310,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
         }
     }
 
-    /**
-     * @param IComponent $component
-     * @param bool $value
-     * @return void
-     */
-    protected function setWriteOnly(IComponent $component, bool $value) {
+    protected function setWriteOnly(IComponent $component, bool $value): void {
         if ($component instanceof IWriteOnly) {
             $component->setWriteOnly($value);
         } elseif ($component instanceof IContainer) {

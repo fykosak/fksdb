@@ -70,11 +70,7 @@ class ApplicationComponent extends BaseComponent {
         return $this->redirectCallback;
     }
 
-    /**
-     * @param callable $redirectCallback
-     * @return void
-     */
-    public function setRedirectCallback(callable $redirectCallback) {
+    public function setRedirectCallback(callable $redirectCallback): void {
         $this->redirectCallback = $redirectCallback;
     }
 
@@ -86,19 +82,11 @@ class ApplicationComponent extends BaseComponent {
         return $this->getPresenter()->getContestAuthorizator()->isAllowed($event, 'application', $event->getContest());
     }
 
-    /**
-     * @return void
-     *
-     */
-    public function render() {
+    public function render(): void {
         $this->renderForm();
     }
 
-    /**
-     * @return void
-     *
-     */
-    public function renderForm() {
+    public function renderForm(): void {
         if (!$this->templateFile) {
             throw new InvalidStateException('Must set template for the application form.');
         }

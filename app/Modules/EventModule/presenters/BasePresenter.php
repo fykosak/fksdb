@@ -36,16 +36,11 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     public $eventId;
 
-    /** @var ServiceEvent */
-    protected $serviceEvent;
-    /** @var EventDispatchFactory */
-    private $eventDispatchFactory;
+    protected ServiceEvent $serviceEvent;
 
-    /**
-     * @param ServiceEvent $serviceEvent
-     * @return void
-     */
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+    private EventDispatchFactory $eventDispatchFactory;
+
+    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 
@@ -53,11 +48,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         return $this->serviceEvent;
     }
 
-    /**
-     * @param EventDispatchFactory $eventDispatchFactory
-     * @return void
-     */
-    public function injectEventDispatch(EventDispatchFactory $eventDispatchFactory) {
+    public function injectEventDispatch(EventDispatchFactory $eventDispatchFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 

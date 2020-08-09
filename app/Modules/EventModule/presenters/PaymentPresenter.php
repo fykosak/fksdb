@@ -30,14 +30,9 @@ class PaymentPresenter extends BasePresenter {
     /** @var Machine */
     private $machine;
 
-    /** @var ServicePayment */
-    private $servicePayment;
+    private ServicePayment $servicePayment;
 
-    /**
-     * @param ServicePayment $servicePayment
-     * @return void
-     */
-    public function injectServicePayment(ServicePayment $servicePayment) {
+    public function injectServicePayment(ServicePayment $servicePayment): void {
         $this->servicePayment = $servicePayment;
     }
 
