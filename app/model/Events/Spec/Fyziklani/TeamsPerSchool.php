@@ -20,8 +20,7 @@ use Nette\Forms\IControl;
  */
 class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
 
-    /** @var Context */
-    private $context;
+    private Context $context;
 
     /** @var mixed */
     private $teamsPerSchool;
@@ -29,8 +28,21 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
     /** @var int */
     private $teamsPerSchoolValue;
 
-    /** @var ExpressionEvaluator */
-    private $evaluator;
+    private ExpressionEvaluator $evaluator;
+
+    /**
+     * TeamsPerSchool constructor.
+     * @param int $teamsPerSchool
+     * @param ExpressionEvaluator $evaluator
+     * @param Context $context
+     * @param ServicePersonHistory $servicePersonHistory
+     */
+    public function __construct($teamsPerSchool, ExpressionEvaluator $evaluator, Context $context, ServicePersonHistory $servicePersonHistory) {
+        parent::__construct($servicePersonHistory);
+        $this->context = $context;
+        $this->evaluator = $evaluator;
+        $this->setTeamsPerSchool($teamsPerSchool);
+    }
 
     /**
      * @return int|mixed
@@ -50,19 +62,6 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         $this->teamsPerSchool = $teamsPerSchool;
     }
 
-    /**
-     * TeamsPerSchool constructor.
-     * @param int $teamsPerSchool
-     * @param ExpressionEvaluator $evaluator
-     * @param Context $context
-     * @param ServicePersonHistory $servicePersonHistory
-     */
-    public function __construct($teamsPerSchool, ExpressionEvaluator $evaluator, Context $context, ServicePersonHistory $servicePersonHistory) {
-        parent::__construct($servicePersonHistory);
-        $this->context = $context;
-        $this->evaluator = $evaluator;
-        $this->setTeamsPerSchool($teamsPerSchool);
-    }
 
     /**
      * @param Form $form
@@ -70,7 +69,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
      * @param Holder $holder
      * @return void
      */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder) {
+    protected function _adjust(Form $form, Machine $machine, Holder $holder): void {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $personControls = $this->getControl('p*.person_id');
@@ -87,7 +86,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         $form->onValidate[] = function (Form $form) use ($schoolControls, $personControls, $msgMulti) {
             if ($form->isValid()) { // it means that all schools may have been disabled
                 $schools = $this->getSchools($schoolControls, $personControls);
-                if (!$this->checkMulti(true, NULL, $schools)) {
+                if (!$this->checkMulti(true, null, $schools)) {
                     $form->addError($msgMulti);
                 }
             }
