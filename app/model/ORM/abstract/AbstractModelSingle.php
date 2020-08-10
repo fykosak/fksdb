@@ -99,6 +99,6 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
 
     public function toArray(): array {
         $data = parent::toArray();
-        return array_merge($data, $this->tmpData);
+        return [...$data, ...$this->tmpData];
     }
 }

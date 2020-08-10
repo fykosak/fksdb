@@ -322,7 +322,10 @@ class ReferencedPersonHandler implements IReferencedHandler {
             unset($data['post_contact_id']);
             unset($data['address_id']);
             unset($data['type']);
-            $models[self::POST_CONTACT_PERMANENT] = $this->serviceMPostContact->createNewModel(array_merge($data, ['type' => ModelPostContact::TYPE_PERMANENT]));
+            $models[self::POST_CONTACT_PERMANENT] = $this->serviceMPostContact->createNewModel([
+                ...$data,
+                'type' => ModelPostContact::TYPE_PERMANENT,
+            ]);
         }
     }
 

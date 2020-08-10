@@ -128,9 +128,10 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
             'person_id' => $values['person_id'],
         ];
         if ($this->create) {
-            $model = $this->machine->createNewModel(array_merge($data, [
+            $model = $this->machine->createNewModel([
+                ...$data,
                 'event_id' => $this->machine->getEvent()->event_id,
-            ]), $this->servicePayment);
+            ], $this->servicePayment);
 
         } else {
             $model = $this->model;

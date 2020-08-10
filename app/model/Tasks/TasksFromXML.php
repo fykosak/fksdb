@@ -112,12 +112,13 @@ class TasksFromXML extends Stage {
         $task = $this->taskService->findBySeries($contest, $year, $series, $tasknr);
 
         if ($task == null) {
-            $task = $this->taskService->createNewModel(array_merge($data, [
+            $task = $this->taskService->createNewModel([
+                ...$data,
                 'contest_id' => $contest->contest_id,
                 'year' => $year,
                 'series' => $series,
                 'tasknr' => $tasknr,
-            ]));
+            ]);
         } else {
             $this->taskService->updateModel2($task, $data);
         }
