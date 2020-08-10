@@ -12,33 +12,25 @@ use RuntimeException;
  */
 class ModelDataConflictException extends RuntimeException {
 
-    /** @var ArrayHash */
-    private $conflicts;
+    private iterable $conflicts;
 
-    /** @var ReferencedId */
-    private $referencedId;
+    private ReferencedId $referencedId;
 
     /**
      * ModelDataConflictException constructor.
      * @param iterable $conflicts
      * @param \Throwable|null $previous
      */
-    public function __construct($conflicts, $previous = null) {
+    public function __construct(iterable $conflicts, $previous = null) {
         parent::__construct(null, Response::S409_CONFLICT, $previous);
         $this->conflicts = $conflicts;
     }
 
-    /**
-     * @return ArrayHash
-     */
-    public function getConflicts() {
+    public function getConflicts(): iterable {
         return $this->conflicts;
     }
 
-    /**
-     * @return ReferencedId
-     */
-    public function getReferencedId() {
+    public function getReferencedId(): ReferencedId {
         return $this->referencedId;
     }
 

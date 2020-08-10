@@ -99,9 +99,6 @@ class ApplicationHandler {
         return $this->machine;
     }
 
-    /**
-     * @return MemoryLogger
-     */
     public function getLogger(): ILogger {
         return $this->logger;
     }

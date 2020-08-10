@@ -11,7 +11,7 @@ use FKSDB\StoredQuery\StoredQuery;
 use FKSDB\StoredQuery\StoredQueryFactory;
 use FKSDB\Components\Controls\ContestChooser;
 use FKSDB\Components\Controls\ResultsComponent;
-use FKSDB\Components\Controls\StoredQueryTagCloud;
+use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\{EntityPresenterTrait, SeriesPresenterTrait};
