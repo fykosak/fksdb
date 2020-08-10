@@ -106,7 +106,7 @@ class HandoutForm extends BaseComponent {
     }
 
     public function render(): void {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'HandoutForm.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.handout.latte');
         $this->template->render();
     }
 

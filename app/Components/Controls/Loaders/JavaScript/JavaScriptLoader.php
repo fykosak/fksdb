@@ -10,8 +10,4 @@ use FKSDB\Components\Controls\Loaders\WebLoader;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class JavaScriptLoader extends WebLoader {
-
-    protected function getTemplateFilePrefix(): string {
-        return __DIR__ . DIRECTORY_SEPARATOR . 'JavaScript';
-    }
 }

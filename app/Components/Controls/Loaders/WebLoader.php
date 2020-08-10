@@ -65,14 +65,14 @@ abstract class WebLoader extends Control {
         }
 
         $template = $this->createTemplate();
-        $template->setFile($this->getTemplateFilePrefix() . '.files.latte');
+        $template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.files.latte');
         $template->files = array_merge($files, $this->getFiles());
         $template->render();
     }
 
     public function renderInline(): void {
         $template = $this->createTemplate();
-        $template->setFile($this->getTemplateFilePrefix() . '.inlines.latte');
+        $template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.inlines.latte');
         $template->inlines = $this->getInLines();
         $template->render();
     }
@@ -80,8 +80,6 @@ abstract class WebLoader extends Control {
     public static function isRelative(string $file): bool {
         return !preg_match('@https?://|/@Ai', $file);
     }
-
-    abstract protected function getTemplateFilePrefix(): string;
 
     protected function getFiles(): array {
         return $this->files;
