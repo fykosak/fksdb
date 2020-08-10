@@ -28,8 +28,7 @@ class EditComponent extends AbstractEntityFormComponent implements IEditEntityFo
     /** @var ModelFyziklaniSubmit */
     private $submit;
 
-    /** @var ModelEvent */
-    private $event;
+    private ModelEvent $event;
 
     private HandlerFactory $handlerFactory;
 

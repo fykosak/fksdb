@@ -19,8 +19,7 @@ use Nette\DI\Container;
  */
 class MassTransitionsControl extends BaseComponent {
 
-    /** @var ModelEvent */
-    private $event;
+    private ModelEvent $event;
 
     private EventDispatchFactory $eventDispatchFactory;
 

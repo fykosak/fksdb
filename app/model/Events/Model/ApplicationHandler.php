@@ -18,7 +18,6 @@ use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\ILogger;
-use FKSDB\Logging\MemoryLogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\Transitions\UnavailableTransitionException;
@@ -99,9 +98,6 @@ class ApplicationHandler {
         return $this->machine;
     }
 
-    /**
-     * @return MemoryLogger
-     */
     public function getLogger(): ILogger {
         return $this->logger;
     }

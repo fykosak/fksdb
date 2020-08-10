@@ -26,13 +26,12 @@ use Nette\InvalidArgumentException;
  */
 class DBReflectionFactory extends AbstractFactory {
 
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
     /** @var array tableName => columnName[] */
     private $columns = [];
-    /** @var ReflectionFactory */
-    private $tableReflectionFactory;
+
+    private ReflectionFactory $tableReflectionFactory;
 
     /**
      * DBReflectionFactory constructor.

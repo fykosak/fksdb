@@ -142,16 +142,14 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
         }
     }
 
-    /**
+    /*
      *   Open (staří odkudkoliv - pokazí to i jeden člen týmu)
      *   Zahraniční
      *   ČR - A - (3,4]
      *   ČR - B - (2,3] - max. 2 ze 4. ročníku
      *   ČR - C - [0,2] - nikdo ze 4. ročníku, max. 2 z 3 ročníku
-     * @param iterable $competitors
-     * @return string
      */
-    private function getCategory($competitors) {
+    private function getCategory(iterable $competitors): string {
         // init stats
         $olds = 0;
         $year = [0, 0, 0, 0, 0]; //0 - ZŠ, 1..4 - SŠ
