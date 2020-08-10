@@ -23,8 +23,7 @@ class ChooserFactory extends AbstractFactory {
     /** @var string */
     private $prompt;
 
-    /** @var IOptionsProvider */
-    private $optionsProvider;
+    private IOptionsProvider $optionsProvider;
 
     /**
      * ChooserFactory constructor.

@@ -68,7 +68,7 @@ class NavigationExtension extends CompilerExtension {
                     }
                 }
                 $this->createFromStructure($children, $navbar, $nodeId);
-            } elseif (!is_array($children)) {
+            } else {
                 $nodeId = $children;
                 if (!isset($this->createdNodes[$nodeId])) {
                     $this->createNode($navbar, $nodeId);

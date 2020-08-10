@@ -21,7 +21,7 @@ class CorrectedControl extends SeriesTableComponent {
         $this->correctedStorage = $correctedStorage;
     }
 
-    public function render() {
+    public function render(): void {
         $this->template->correctedSubmitStorage = $this->correctedStorage;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();

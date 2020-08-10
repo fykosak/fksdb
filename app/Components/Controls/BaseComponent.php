@@ -14,8 +14,8 @@ use Nette\Localization\ITranslator;
  * @property Template $template
  */
 abstract class BaseComponent extends Control {
-    /** @var Container */
-    private $context;
+
+    private Container $context;
 
     private ITranslator $translator;
 

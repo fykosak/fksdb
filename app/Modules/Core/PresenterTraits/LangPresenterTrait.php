@@ -16,8 +16,8 @@ use Nette\Security\User;
  * @method Container getContext()
  */
 trait LangPresenterTrait {
-    /** @var string[] */
-    public static $languageNames = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
+
+    public static array $languageNames = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
 
     private GettextTranslator $translator;
 
@@ -28,7 +28,7 @@ trait LangPresenterTrait {
     public $lang;
 
     /** @var string cache */
-    private $cacheLang;
+    private string $cacheLang;
 
     final public function injectTranslator(GettextTranslator $translator): void {
         $this->translator = $translator;
@@ -49,10 +49,7 @@ trait LangPresenterTrait {
         return new LanguageChooser($this->getContext());
     }
 
-    /**
-     * @return string|null
-     */
-    final private function getUserPreferredLang() {
+    final private function getUserPreferredLang(): ?string {
         /**@var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         if ($login && $login->getPerson()) {
@@ -69,22 +66,23 @@ trait LangPresenterTrait {
      * @throws UnsupportedLanguageException
      */
     public function getLang(): string {
-        if (!$this->cacheLang) {
-            $this->cacheLang = $this->getUserPreferredLang();
-            if (!$this->cacheLang) {
-                $this->cacheLang = $this->lang;
+        if (!isset($this->cacheLang)) {
+            $candidate = $this->getUserPreferredLang();
+            if (!$candidate) {
+                $candidate = $this->lang;
             }
             $supportedLanguages = $this->translator->getSupportedLanguages();
-            if (!$this->cacheLang || !in_array($this->cacheLang, $supportedLanguages)) {
-                $this->cacheLang = $this->getHttpRequest()->detectLanguage($supportedLanguages);
+            if (!$candidate || !in_array($candidate, $supportedLanguages)) {
+                $candidate = $this->getHttpRequest()->detectLanguage($supportedLanguages);
             }
-            if (!$this->cacheLang) {
-                $this->cacheLang = $this->getContext()->getParameters()['localization']['defaultLanguage'];
+            if (!$candidate) {
+                $candidate = $this->getContext()->getParameters()['localization']['defaultLanguage'];
             }
             // final check
-            if (!in_array($this->cacheLang, $supportedLanguages)) {
-                throw new UnsupportedLanguageException($this->cacheLang);
+            if (!in_array($candidate, $supportedLanguages)) {
+                throw new UnsupportedLanguageException($candidate);
             }
+            $this->cacheLang = $candidate;
         }
         return $this->cacheLang;
     }

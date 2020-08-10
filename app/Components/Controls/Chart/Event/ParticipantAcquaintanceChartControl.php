@@ -16,9 +16,8 @@ use Nette\Utils\JsonException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ParticipantAcquaintanceChartControl extends ReactComponent implements IChart {
-
-    /** @var int */
-    private $event;
+    
+    private ModelEvent $event;
 
     /**
      * ParticipantAcquaintanceChartControl constructor.

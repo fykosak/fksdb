@@ -16,8 +16,7 @@ class Authentication {
     const PARAM_GSID = 'gsid';
     const FLAG_SSO_LOGIN = 'sso';
 
-    /** @var IGlobalSession */
-    private $globalSession;
+    private IGlobalSession $globalSession;
 
     /** @var string */
     private $loginURL;

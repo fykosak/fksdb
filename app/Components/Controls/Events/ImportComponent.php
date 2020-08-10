@@ -27,14 +27,11 @@ use Tracy\Debugger;
  */
 class ImportComponent extends BaseComponent {
 
-    /** @var Machine */
-    private $machine;
+    private Machine $machine;
 
-    /** @var SingleEventSource */
-    private $source;
+    private SingleEventSource $source;
 
-    /** @var ApplicationHandler */
-    private $handler;
+    private ApplicationHandler $handler;
 
     /**
      * ImportComponent constructor.

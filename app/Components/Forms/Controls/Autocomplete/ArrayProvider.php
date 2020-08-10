@@ -9,8 +9,7 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
  */
 class ArrayProvider implements IFilteredDataProvider {
 
-    /** @var array */
-    private $data;
+    private array $data;
     /** @var array */
     private $labelById;
 

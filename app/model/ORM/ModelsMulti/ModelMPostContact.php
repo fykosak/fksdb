@@ -3,8 +3,6 @@
 namespace FKSDB\ORM\ModelsMulti;
 
 use FKSDB\ORM\AbstractModelMulti;
-use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelAddress;
 use FKSDB\ORM\Models\ModelPostContact;
 

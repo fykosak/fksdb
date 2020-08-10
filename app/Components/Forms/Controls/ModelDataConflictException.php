@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Forms\Controls;
 
 use Nette\Http\Response;
-use Nette\Utils\ArrayHash;
 use RuntimeException;
 
 /**

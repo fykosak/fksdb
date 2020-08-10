@@ -13,7 +13,7 @@ use FKSDB\ORM\Services\ServiceContest;
  */
 class DataTestingFactory {
     /** @var PersonTest[][] */
-    private $tests = [];
+    private array $tests = [];
 
     private ServiceContest $serviceContest;
 
@@ -52,9 +52,6 @@ class DataTestingFactory {
      * @return PersonTest[]
      */
     public function getTests(string $section): array {
-        if (isset($this->tests[$section])) {
-            return $this->tests[$section];
-        }
-        return [];
+        return $this->tests[$section] ?? [];
     }
 }

@@ -13,7 +13,6 @@ use Nette\DI\Container;
 use Nette\DI\Helpers as DIHelpers;
 use Nette\DI\Statement;
 use Nette\Reflection\ClassType;
-use Traversable;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
