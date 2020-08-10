@@ -59,7 +59,7 @@ class GraphComponent extends BaseComponent {
      * @return string[]
      */
     private function getAllStates(): array {
-        return [...$this->baseMachine->getStates(), BaseMachine::STATE_INIT, BaseMachine::STATE_TERMINATED];
+        return array_merge($this->baseMachine->getStates(), [BaseMachine::STATE_INIT, BaseMachine::STATE_TERMINATED]);
     }
 
     /**

@@ -375,7 +375,7 @@ class Transition {
         $sources = explode('|', $sources);
 
         foreach ($sources as $source) {
-            if (!in_array($source, [...$states, BaseMachine::STATE_ANY, BaseMachine::STATE_INIT])) {
+            if (!in_array($source, array_merge($states, [BaseMachine::STATE_ANY, BaseMachine::STATE_INIT]))) {
                 return false;
             }
         }
