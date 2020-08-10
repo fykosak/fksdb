@@ -18,14 +18,6 @@ class ServiceGlobalSession extends AbstractServiceSingle {
 
     const SESSION_ID_LENGTH = 32;
 
-    public function getModelClassName(): string {
-        return ModelGlobalSession::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_GLOBAL_SESSION;
-    }
-
     private Request $request;
 
     /**
@@ -35,7 +27,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
      * @param IConventions $conventions
      */
     public function __construct(Request $request, Context $context, IConventions $conventions) {
-        parent::__construct($context, $conventions);
+        parent::__construct($context, $conventions, DbNames::TAB_GLOBAL_SESSION, ModelGlobalSession::class);
         $this->request = $request;
     }
 

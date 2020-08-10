@@ -6,6 +6,8 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelPerson;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -14,12 +16,13 @@ use FKSDB\ORM\Models\ModelPerson;
  */
 class ServicePerson extends AbstractServiceSingle {
 
-    public function getModelClassName(): string {
-        return ModelPerson::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_PERSON;
+    /**
+     * ServicePerson constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
+     */
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_PERSON, ModelPerson::class);
     }
 
     /**

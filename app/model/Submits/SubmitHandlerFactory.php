@@ -3,6 +3,7 @@
 namespace FKSDB\Submits;
 
 use FKSDB\Authorization\ContestAuthorizator;
+use FKSDB\Components\Control\AjaxUpload\AjaxUpload;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\ILogger;
@@ -113,7 +114,6 @@ class SubmitHandlerFactory {
      * @throws InvalidLinkException
      */
     public function handleRevoke(Presenter $presenter, ILogger $logger, int $submitId): ?array {
-        /** @var ModelSubmit $submit */
         $submit = $this->serviceSubmit->findByPrimary($submitId);
         if (!$submit) {
             $logger->log(new Message(_('Neexistující submit.'), Message::LVL_DANGER));
@@ -131,7 +131,7 @@ class SubmitHandlerFactory {
         try {
             $this->uploadedStorage->deleteFile($submit);
             $this->serviceSubmit->dispose($submit);
-            $data = ServiceSubmit::serializeSubmit(null, $submit->getTask(), $presenter);
+            $data = AjaxUpload::serializeSubmit(null, $submit->getTask(), $presenter);
             $logger->log(new Message(\sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()), ILogger::WARNING));
             return $data;
 
@@ -180,7 +180,6 @@ class SubmitHandlerFactory {
      * @throws NotFoundException
      */
     private function getSubmit(int $id, string $privilege): ModelSubmit {
-        /** @var ModelSubmit $submit */
         $submit = $this->serviceSubmit->findByPrimary($id);
 
         if (!$submit) {

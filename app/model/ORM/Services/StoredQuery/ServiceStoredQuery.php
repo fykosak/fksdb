@@ -16,14 +16,6 @@ use Nette\Database\IConventions;
 class ServiceStoredQuery extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    public function getModelClassName(): string {
-        return ModelStoredQuery::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_STORED_QUERY;
-    }
-
     private ServiceStoredQueryTag $serviceStoredQueryTag;
 
     /**
@@ -33,7 +25,7 @@ class ServiceStoredQuery extends AbstractServiceSingle {
      * @param IConventions $conventions
      */
     public function __construct(Context $context, ServiceStoredQueryTag $serviceStoredQueryTag, IConventions $conventions) {
-        parent::__construct($context, $conventions);
+        parent::__construct($context, $conventions, DbNames::TAB_STORED_QUERY, ModelStoredQuery::class);
         $this->serviceStoredQueryTag = $serviceStoredQueryTag;
     }
 

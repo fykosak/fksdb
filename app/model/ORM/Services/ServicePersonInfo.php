@@ -10,6 +10,8 @@ use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPersonInfo;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -19,12 +21,13 @@ use FKSDB\ORM\Models\ModelPersonInfo;
 class ServicePersonInfo extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    public function getModelClassName(): string {
-        return ModelPersonInfo::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_PERSON_INFO;
+    /**
+     * ServicePersonInfo constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
+     */
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_PERSON_INFO, ModelPersonInfo::class);
     }
 
     public function createNewModel(array $data): ModelPersonInfo {

@@ -7,6 +7,8 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
 
@@ -17,12 +19,13 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
     const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
-    public function getModelClassName(): string {
-        return ModelAuthToken::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_AUTH_TOKEN;
+    /**
+     * ServiceAddress constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
+     */
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_AUTH_TOKEN, ModelAuthToken::class);
     }
 
     /**

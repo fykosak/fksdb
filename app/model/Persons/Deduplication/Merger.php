@@ -35,7 +35,7 @@ class Merger {
     /** @var array */
     private $configuration;
 
-    private DevNullLogger $logger;
+    private ILogger $logger;
 
     /**
      *

@@ -22,14 +22,24 @@ abstract class AbstractServiceMulti implements IService {
     /** @var AbstractServiceSingle */
     protected $joinedService;
 
+    /** @var string */
+    private $joiningColumn;
+
+    /** @var string */
+    private $modelClassName;
+
     /**
      * AbstractServiceMulti constructor.
      * @param AbstractServiceSingle $mainService
      * @param AbstractServiceSingle $joinedService
+     * @param string $joiningColumn
+     * @param string $modelClassName
      */
-    public function __construct(AbstractServiceSingle $mainService, AbstractServiceSingle $joinedService) {
+    public function __construct(AbstractServiceSingle $mainService, AbstractServiceSingle $joinedService, string $joiningColumn, string $modelClassName) {
         $this->mainService = $mainService;
         $this->joinedService = $joinedService;
+        $this->modelClassName = $modelClassName;
+        $this->joiningColumn = $joiningColumn;
     }
 
     /**
@@ -68,6 +78,7 @@ abstract class AbstractServiceMulti implements IService {
      * @param iterable $data
      * @param bool $alive
      * @return void
+     * @deprecated
      */
     public function updateModel(IModel $model, $data, $alive = true) {
         $this->checkType($model);
@@ -101,6 +112,7 @@ abstract class AbstractServiceMulti implements IService {
      * Use this method to store a model!
      *
      * @param IModel|AbstractModelMulti $model
+     * @deprecated
      */
     public function save(IModel &$model) {
         $this->checkType($model);
@@ -128,11 +140,11 @@ abstract class AbstractServiceMulti implements IService {
         //TODO here should be deletion of mainModel as well, consider parametrizing this
     }
 
-    public function getMainService(): AbstractServiceSingle {
+    final public function getMainService(): AbstractServiceSingle {
         return $this->mainService;
     }
 
-    public function getJoinedService(): AbstractServiceSingle {
+    final public function getJoinedService(): AbstractServiceSingle {
         return $this->joinedService;
     }
 
@@ -165,5 +177,11 @@ abstract class AbstractServiceMulti implements IService {
         return $selection;
     }
 
-    abstract public function getJoiningColumn(): string;
+    final public function getJoiningColumn(): string {
+        return $this->joiningColumn;
+    }
+
+    final public function getModelClassName(): string {
+        return $this->modelClassName;
+    }
 }

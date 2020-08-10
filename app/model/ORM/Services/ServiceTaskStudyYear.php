@@ -6,6 +6,8 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\ModelTaskStudyYear;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -13,11 +15,12 @@ use FKSDB\ORM\Models\ModelTaskStudyYear;
 class ServiceTaskStudyYear extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    public function getModelClassName(): string {
-        return ModelTaskStudyYear::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_TASK_STUDY_YEAR;
+    /**
+     * ServiceTaskStudyYear constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
+     */
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_TASK_STUDY_YEAR, ModelTaskStudyYear::class);
     }
 }

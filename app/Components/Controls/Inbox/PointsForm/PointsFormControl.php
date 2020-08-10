@@ -49,7 +49,6 @@ class PointsFormControl extends SeriesTableFormControl {
                 // secure check for rewrite submitId.
                 throw new ForbiddenRequestException();
             }
-            /** @var ModelSubmit $submit */
             $submit = $this->serviceSubmit->findByPrimary($submitId);
             if ($points !== "" && $points !== $submit->raw_points) {
                 $this->serviceSubmit->updateModel2($submit, ['raw_points' => +$points]);
