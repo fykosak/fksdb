@@ -20,7 +20,7 @@ use Tracy\Debugger;
 class ServiceAddress extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    const PATTERN = '/[0-9]{5}/';
+    private const PATTERN = '/[0-9]{5}/';
 
     /**
      * ServiceAddress constructor.
