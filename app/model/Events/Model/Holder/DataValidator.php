@@ -1,6 +1,6 @@
 <?php
 
-namespace Events\Model\Holder;
+namespace FKSDB\Events\Model\Holder;
 
 use Nette\SmartObject;
 
@@ -11,26 +11,21 @@ use Nette\SmartObject;
  */
 class DataValidator {
     use SmartObject;
-
+    /** @var string[] */
     private $validationErrors;
-    private $stateStack = [];
 
     /**
      * @param BaseHolder $baseHolder
-     * @param $state
+     * @return void
      */
-    public function validate(BaseHolder $baseHolder, $state) {
-        $this->pushState($baseHolder, $state);
-
+    public function validate(BaseHolder $baseHolder) {
         // validate
         $this->validationErrors = [];
         $this->validateFields($baseHolder);
-
-        $this->popState($baseHolder);
     }
 
     /**
-     * @return bool
+     * @return bool|string[]
      */
     public function getValidationResult() {
         return count($this->validationErrors) ? $this->validationErrors : true;
@@ -38,6 +33,7 @@ class DataValidator {
 
     /**
      * @param BaseHolder $baseHolder
+     * @return void
      */
     private function validateFields(BaseHolder $baseHolder) {
         foreach ($baseHolder->getFields() as $field) {
@@ -46,31 +42,9 @@ class DataValidator {
     }
 
     /**
-     * @param $error
+     * @param string $error
      */
     public function addError($error) {
         $this->validationErrors[] = $error;
     }
-
-    /**
-     * @param BaseHolder $baseHolder
-     * @param $state
-     */
-    private function pushState(BaseHolder $baseHolder, $state) {
-        $baseMachine = $baseHolder->getHolder()->getMachine()->getBaseMachine($baseHolder->getName());
-
-        $this->stateStack[] = $baseMachine->getState();
-        $baseMachine->setState($state);
-    }
-
-    /**
-     * @param BaseHolder $baseHolder
-     */
-    private function popState(BaseHolder $baseHolder) {
-        $baseMachine = $baseHolder->getHolder()->getMachine()->getBaseMachine($baseHolder->getName());
-
-        $state = array_pop($this->stateStack);
-        $baseMachine->setState($state);
-    }
-
 }

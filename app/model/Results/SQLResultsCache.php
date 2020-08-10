@@ -5,8 +5,9 @@ namespace FKSDB\Results;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceTask;
-use Nette;
+use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
+use Nette\InvalidArgumentException;
 
 /**
  * Fill caclulated points into database.
@@ -15,22 +16,16 @@ use Nette\Database\Connection;
  */
 class SQLResultsCache {
 
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
-    /**
-     * @var ServiceTask
-     */
-    private $serviceTask;
+    private ServiceTask $serviceTask;
 
     /**
      * FKSDB\Results\SQLResultsCache constructor.
      * @param Connection $connection
      * @param ServiceTask $serviceTask
      */
-    function __construct(Connection $connection, ServiceTask $serviceTask) {
+    public function __construct(Connection $connection, ServiceTask $serviceTask) {
         $this->connection = $connection;
         $this->serviceTask = $serviceTask;
     }
@@ -40,7 +35,7 @@ class SQLResultsCache {
      * @param ModelContest $contest
      * @param int $year
      */
-    public function invalidate(ModelContest $contest = null, $year = null) {
+    public function invalidate(ModelContest $contest = null, $year = null): void {
         $data = [
             'calc_points' => null,
         ];
@@ -58,19 +53,19 @@ class SQLResultsCache {
             SET ?
             WHERE (' . implode(') and (', $conditions) . ')';
 
-        $this->connection->exec($sql, $data);
+        $this->connection->query($sql, $data);
     }
 
     /**
      *
      * @param ModelContest $contest
      * @param int $year
-     * @throws Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
-    public function recalculate(ModelContest $contest, $year) {
+    public function recalculate(ModelContest $contest, $year): void {
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($contest, $year);
         if ($evaluationStrategy === null) {
-            throw new Nette\InvalidArgumentException('Undefined evaluation strategy for ' . $contest->name . '@' . $year);
+            throw new InvalidArgumentException('Undefined evaluation strategy for ' . $contest->name . '@' . $year);
         }
 
         $tasks = $this->serviceTask->getTable()
@@ -81,8 +76,8 @@ class SQLResultsCache {
 
 
         $this->connection->beginTransaction();
-        foreach ($tasks as $row) {
-            $task = ModelTask::createFromActiveRow($row);
+        /** @var ModelTask $task */
+        foreach ($tasks as $task) {
             $conditions = [];
             $conditions[] = 't.contest_id = ' . $contest->contest_id;
             $conditions[] = 't.year = ' . (int)$year;
@@ -97,11 +92,9 @@ class SQLResultsCache {
             )
             WHERE (' . implode(') and (', $conditions) . ')';
 
-            $this->connection->exec($sql);
+            $this->connection->query($sql);
         }
         $this->connection->commit();
     }
 
 }
-
-

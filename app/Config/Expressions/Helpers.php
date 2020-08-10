@@ -4,17 +4,15 @@ namespace FKSDB\Config\Expressions;
 
 use FKSDB\Expressions\Comparison\Le;
 use FKSDB\Expressions\Comparison\Leq;
-use FKSDB\Expressions\Logic\And_;
+use FKSDB\Expressions\Logic\LogicAnd;
 use FKSDB\Expressions\Logic\Not;
-use FKSDB\Expressions\Logic\Or_;
+use FKSDB\Expressions\Logic\LogicOr;
 use FKSDB\Expressions\Predicates\After;
 use FKSDB\Expressions\Predicates\Before;
 use Nette\DI\Container;
 use Nette\DI\Helpers as DIHelpers;
 use Nette\DI\Statement;
 use Nette\Reflection\ClassType;
-use Nette\Utils\Arrays;
-use stdClass;
 use Traversable;
 
 /**
@@ -23,10 +21,10 @@ use Traversable;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Helpers {
-
+    /** @var string[] */
     private static $semanticMap = [
-        'and' => And_::class,
-        'or' => Or_::class,
+        'and' => LogicAnd::class,
+        'or' => LogicOr::class,
         'neg' => Not::class,
         'after' => After::class,
         'before' => Before::class,
@@ -35,36 +33,38 @@ class Helpers {
     ];
 
     /**
-     * @param $semanticMap
+     * @param array $semanticMap
+     * @return void
      */
-    public static function registerSemantic($semanticMap) {
+    public static function registerSemantic(array $semanticMap) {
         self::$semanticMap += $semanticMap;
     }
 
     /**
      * Transforms into dynamic expression tree built from FKSDB\Expressions\*.
      *
-     * @param stdClass $expression
-     * @return mixed|Statement
+     * @param Statement|mixed $expression
+     * @return array|Statement|mixed
      */
     public static function statementFromExpression($expression) {
-        if (!$expression instanceof stdClass) {
+        if ($expression instanceof Statement) {
+            $arguments = [];
+            foreach ($expression->arguments as $attribute) {
+                $arguments[] = self::statementFromExpression($attribute);
+            }
+            $class = self::$semanticMap[$expression->entity] ?? $expression->entity;
+            if (function_exists($class)) { // workaround for Nette interpretation of entities
+                $class = ['', $class];
+            }
+            return new Statement($class, $arguments);
+        } elseif (is_array($expression)) {
+            return array_map(function ($subExpresion) {
+                return self::statementFromExpression($subExpresion);
+            }, $expression);
+
+        } else {
             return $expression;
         }
-
-        $arguments = [];
-        foreach ($expression->attributes as $attribute) {
-            if ($attribute === '...') {
-                continue;
-            }
-            $arguments[] = self::statementFromExpression($attribute);
-        }
-
-        $class = Arrays::get(self::$semanticMap, $expression->value, $expression->value);
-        if (function_exists($class)) { // workaround for Nette interpretation of entities
-            $class = ['', $class];
-        }
-        return new Statement($class, $arguments);
     }
 
     /**
@@ -75,34 +75,34 @@ class Helpers {
      * @return mixed
      */
     public static function evalExpression($expression, Container $container) {
-        if (!$expression instanceof stdClass) {
-            return $expression;
-        }
-
-        $arguments = [];
-        foreach ($expression->attributes as $attribute) {
-            if ($attribute === '...') {
-                continue;
+        if ($expression instanceof Statement) {
+            $arguments = [];
+            foreach ($expression->arguments as $attribute) {
+                if ($attribute === '...') {
+                    continue;
+                }
+                $arguments[] = self::evalExpression($attribute, $container);
             }
-            $arguments[] = self::evalExpression($attribute, $container);
-        }
 
-        $entity = Arrays::get(self::$semanticMap, $expression->value, $expression->value);
-        if (function_exists($entity)) {
-            return call_user_func_array($entity, $arguments);
+            $entity = self::$semanticMap[$expression->entity] ?? $expression->entity;
+            if (function_exists($entity)) {
+                return $entity(...$arguments);
+            } else {
+                $rc = ClassType::from($entity);
+                return $rc->newInstanceArgs(DIHelpers::autowireArguments($rc->getConstructor(), $arguments, $container));
+            }
         } else {
-            $rc = ClassType::from($entity);
-            return $rc->newInstanceArgs(DIHelpers::autowireArguments($rc->getConstructor(), $arguments, $container));
+            return $expression;
         }
     }
 
     /**
-     * @param $expressionArray
+     * @param iterable $expressionArray
      * @param Container $container
      * @return array|mixed
      */
     public static function evalExpressionArray($expressionArray, Container $container) {
-        if ($expressionArray instanceof Traversable || is_array($expressionArray)) {
+        if ($expressionArray instanceof Traversable || is_array($expressionArray)) { // TODO replace with is_iterable
             $result = [];
             foreach ($expressionArray as $key => $expression) {
                 $result[$key] = self::evalExpressionArray($expression, $container);
@@ -112,5 +112,4 @@ class Helpers {
             return self::evalExpression($expressionArray, $container);
         }
     }
-
 }

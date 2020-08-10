@@ -1,88 +1,112 @@
 <?php
 
-namespace Authorization;
+namespace FKSDB\Authorization;
 
-use Authorization\Assertions\EventOrgByIdAssertion;
-use Nette\Database\Connection;
+use FKSDB\Authorization\Assertions\EventOrgByIdAssertion;
+use FKSDB\ORM\Models\ModelEvent;
+use Nette\Database\Context;
+use Nette\Security\IResource;
 use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
 use Nette\SmartObject;
 
 /**
  * Class EventAuthorizator
- * @package Authorization
+ * *
  */
 class EventAuthorizator {
     use SmartObject;
-    /**
-     * @var IUserStorage
-     */
-    private $user;
 
-    /**
-     * @var Permission
-     */
-    private $acl;
+    private IUserStorage $userStorage;
 
-    /**
-     * @var Connection
-     */
-    private $db;
+    private Permission $permission;
 
-    /**
-     * @var ContestAuthorizator
-     */
-    private $contestAuthorizator;
+    private Context $context;
+
+    private ContestAuthorizator $contestAuthorizator;
 
     /**
      * EventAuthorizator constructor.
      * @param IUserStorage $identity
      * @param Permission $acl
      * @param ContestAuthorizator $contestAuthorizator
-     * @param Connection $db
+     * @param Context $db
      */
-    function __construct(IUserStorage $identity, Permission $acl, ContestAuthorizator $contestAuthorizator, Connection $db) {
+    public function __construct(IUserStorage $identity, Permission $acl, ContestAuthorizator $contestAuthorizator, Context $db) {
         $this->contestAuthorizator = $contestAuthorizator;
-        $this->user = $identity;
-        $this->acl = $acl;
-        $this->db = $db;
+        $this->userStorage = $identity;
+        $this->permission = $acl;
+        $this->context = $db;
     }
 
-    /**
-     * @return IUserStorage
-     */
     public function getUser(): IUserStorage {
-        return $this->user;
+        return $this->userStorage;
+    }
+
+    protected function getPermission(): Permission {
+        return $this->permission;
     }
 
     /**
-     * @return Permission
+     * @param IResource|string|null $resource
+     * @param string|null $privilege
+     * @param ModelEvent $event
+     * @return bool
+     * @deprecated
      */
-    protected function getAcl() {
-        return $this->acl;
+    public function isAllowed($resource, $privilege, ModelEvent $event): bool {
+        return $this->contestAuthorizator->isAllowed($resource, $privilege, $event->getContest());
     }
 
     /**
-     * @param $resource
-     * @param $privilege
-     * @param $event
+     * @param IResource|string $resource
+     * @param string|null $privilege
+     * @param ModelEvent $event
      * @return bool
      */
-    public function isAllowed($resource, $privilege, $event) {
+    public function isContestOrgAllowed($resource, $privilege, ModelEvent $event): bool {
+        return $this->contestAuthorizator->isAllowed($resource, $privilege, $event->getContest());
+    }
+
+    /**
+     * @param IResource|string|null $resource
+     * @param string|null $privilege
+     * @param ModelEvent $event
+     * @return bool
+     */
+    public function isEventOrContestOrgAllowed($resource, $privilege, ModelEvent $event): bool {
         if (!$this->getUser()->isAuthenticated()) {
             return false;
         }
-        return $this->isAllowedForLogin($resource, $privilege, $event) || $this->contestAuthorizator->isAllowed($resource, $privilege, $event->event_type->contest_id);
+        if ($this->isContestOrgAllowed($resource, $privilege, $event)) {
+            return true;
+        }
+        return $this->isEventOrg($resource, $privilege, $event);
     }
 
     /**
-     * @param $resource
-     * @param $privilege
-     * @param $event
+     * @param IResource|string|null $resource
+     * @param string|null $privilege
+     * @param ModelEvent $event
      * @return bool
      */
-    public function isAllowedForLogin($resource, $privilege, $event) {
-        $eventOrgByIdAssertion = new EventOrgByIdAssertion($event->event_type->event_type_id, $this->getUser(), $this->db);
-        return $eventOrgByIdAssertion($this->acl, null, $resource, $privilege, $event->event_id);
+    public function isEventAndContestOrgAllowed($resource, $privilege, ModelEvent $event): bool {
+        if (!$this->getUser()->isAuthenticated()) {
+            return false;
+        }
+        if (!$this->isEventOrg($resource, $privilege, $event)) {
+            return false;
+        }
+        return $this->contestAuthorizator->isAllowed($resource, $privilege, $event->getContest());
+    }
+
+    /**
+     * @param IResource|string $resource
+     * @param string|null $privilege
+     * @param ModelEvent $event
+     * @return bool
+     */
+    private function isEventOrg($resource, $privilege, ModelEvent $event): bool {
+        return (new EventOrgByIdAssertion($this->getUser(), $this->context))($this->getPermission(), null, $resource, $privilege, $event->event_id);
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace WebService;
+namespace FKSDB\WebService;
 
 use DOMDocument;
 use DOMNode;
@@ -16,11 +16,11 @@ interface IXMLNodeSerializer {
     const EXPORT_FORMAT_2 = 2;
 
     /**
-     * @param $dataSource
+     * @param mixed $dataSource
      * @param DOMNode $node
      * @param DOMDocument $doc
-     * @param $formatVersion
-     * @return mixed
+     * @param int $formatVersion
+     * @return void
      */
-    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, $formatVersion);
+    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $formatVersion): void;
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons\Deduplication\MergeStrategy;
+namespace FKSDB\Persons\Deduplication\MergeStrategy;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -9,19 +9,20 @@ namespace Persons\Deduplication\MergeStrategy;
  */
 class ConstantStrategy implements IMergeStrategy {
 
+    /** @var mixed */
     private $constant;
 
     /**
      * ConstantStrategy constructor.
-     * @param $constant
+     * @param mixed $constant
      */
-    function __construct($constant) {
+    public function __construct($constant) {
         $this->constant = $constant;
     }
 
     /**
-     * @param $trunk
-     * @param $merged
+     * @param mixed $trunk
+     * @param mixed $merged
      * @return mixed
      */
     public function mergeValues($trunk, $merged) {

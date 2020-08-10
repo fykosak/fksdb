@@ -4,24 +4,23 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\ModelGrant;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceGrant extends AbstractServiceSingle {
-    /**
-     * @return string
-     */
-    public function getModelClassName(): string {
-        return ModelGrant::class;
-    }
+    use DeprecatedLazyDBTrait;
 
     /**
-     * @return string
+     * ServiceGrant constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
      */
-    protected function getTableName(): string {
-        return DbNames::TAB_GRANT;
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_GRANT, ModelGrant::class);
     }
 }
-

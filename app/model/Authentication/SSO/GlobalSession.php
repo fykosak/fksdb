@@ -1,9 +1,8 @@
 <?php
 
-namespace Authentication\SSO;
+namespace FKSDB\Authentication\SSO;
 
-use FKSDB\Authentication\SSO\IGlobalSession;
-use FKSDB\Authentication\SSO\IGSIDHolder;
+use FKSDB\ORM\Models\ModelGlobalSession;
 use FKSDB\ORM\Services\ServiceGlobalSession;
 use Nette\Utils\DateTime;
 use Nette\InvalidArgumentException;
@@ -16,38 +15,28 @@ use Nette\InvalidStateException;
  */
 class GlobalSession implements IGlobalSession {
 
-    /**
-     * @var \FKSDB\ORM\Services\ServiceGlobalSession
-     */
+    /** @var ServiceGlobalSession */
     private $serviceGlobalSession;
 
-    /**
-     * @var IGSIDHolder
-     */
+    /** @var IGSIDHolder */
     private $gsidHolder;
 
-    /**
-     * @var \FKSDB\ORM\Models\ModelGlobalSession|null
-     */
+    /** @var ModelGlobalSession|null */
     private $globalSession;
 
-    /**
-     * @var string  expecting string like '+10 days'
-     */
+    /** @var string  expecting string like '+10 days' */
     private $expiration;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $started = false;
 
     /**
      * GlobalSession constructor.
-     * @param $expiration
-     * @param \FKSDB\ORM\Services\ServiceGlobalSession $serviceGlobalSession
+     * @param string $expiration
+     * @param ServiceGlobalSession $serviceGlobalSession
      * @param IGSIDHolder $gsidHolder
      */
-    function __construct($expiration, ServiceGlobalSession $serviceGlobalSession, IGSIDHolder $gsidHolder) {
+    public function __construct($expiration, ServiceGlobalSession $serviceGlobalSession, IGSIDHolder $gsidHolder) {
         $this->expiration = $expiration;
         $this->serviceGlobalSession = $serviceGlobalSession;
         $this->gsidHolder = $gsidHolder;
@@ -139,7 +128,7 @@ class GlobalSession implements IGlobalSession {
     /**
      * @param mixed $offset
      * @param mixed $value
-     * @throws \Exception
+     * @return void
      */
     public function offsetSet($offset, $value) {
         if (!$this->started) {
@@ -157,13 +146,18 @@ class GlobalSession implements IGlobalSession {
         }
 
         if ($value != $this->globalSession->login_id) {
+            // $this->globalSession->update(['login_id' => $value]);
+            // $this->serviceGlobalSession->updateModel2($this->globalSession, ['login_id' => $value]);
+            //  $this->globalSession = $this->serviceGlobalSession->refresh($this->globalSession);
+            //TODO
             $this->globalSession->login_id = $value;
             $this->serviceGlobalSession->save($this->globalSession);
         }
     }
 
     /**
-     * @param $offset
+     * @param mixed $offset
+     * @return void
      */
     public function offsetUnset($offset) {
         if (!$this->started) {

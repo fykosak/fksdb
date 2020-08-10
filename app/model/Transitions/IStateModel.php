@@ -2,24 +2,24 @@
 
 namespace FKSDB\Transitions;
 
+use Nette\Database\Context;
+use Nette\Database\IConventions;
+
 /**
  * Interface IStateModel
- * @package FKSDB\Transitions
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 interface IStateModel {
     /**
-     * @param $newState
-     * @return mixed
+     * @param string $newState
+     * @return void
      */
-    public function updateState($newState);
+    public function updateState(string $newState);
 
     /**
      * @return string|null
      */
     public function getState();
 
-    /**
-     * @return IStateModel
-     */
-    public function refresh(): self;
+    public function refresh(Context $connection, IConventions $conventions): self;
 }

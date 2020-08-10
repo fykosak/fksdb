@@ -24,7 +24,7 @@ use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use SoapFault;
 use Tracy\Debugger;
-use WebService\IXMLNodeSerializer;
+use FKSDB\WebService\IXMLNodeSerializer;
 
 /**
  * Description of FKSDB\Results\ResultsModelFactory
@@ -33,15 +33,10 @@ use WebService\IXMLNodeSerializer;
  */
 class ResultsModelFactory implements IXMLNodeSerializer {
     use SmartObject;
-    /**
-     * @var Connection
-     */
-    private $connection;
 
-    /**
-     * @var ServiceTask
-     */
-    private $serviceTask;
+    private Connection $connection;
+
+    private ServiceTask $serviceTask;
 
     /**
      * FKSDB\Results\ResultsModelFactory constructor.
@@ -129,10 +124,10 @@ class ResultsModelFactory implements IXMLNodeSerializer {
             } else {
                 return new EvaluationFykos2001();
             }
-        } else if ($contestId == ModelContest::ID_VYFUK) {
+        } elseif ($contestId == ModelContest::ID_VYFUK) {
             if ($year >= 4) {
                 return new EvaluationVyfuk2014();
-            } else if ($year >= 2) {
+            } elseif ($year >= 2) {
                 return new EvaluationVyfuk2012();
             } else {
                 return new EvaluationVyfuk2011();
@@ -142,15 +137,15 @@ class ResultsModelFactory implements IXMLNodeSerializer {
     }
 
     /**
-     * @param $dataSource
+     * @param AbstractResultsModel $dataSource
      * @param DOMNode $node
      * @param DOMDocument $doc
-     * @param $format
-     * @return mixed|void
+     * @param int $format
+     * @return void
      * @throws SoapFault
      * @throws InvalidArgumentException
      */
-    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, $format) {
+    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $format): void {
         if (!$dataSource instanceof AbstractResultsModel) {
             throw new InvalidArgumentException('Expected FKSDB\Results\IResultsModel, got ' . get_class($dataSource) . '.');
         }
@@ -209,7 +204,4 @@ class ResultsModelFactory implements IXMLNodeSerializer {
             throw new SoapFault('Receiver', 'Internal error.');
         }
     }
-
 }
-
-

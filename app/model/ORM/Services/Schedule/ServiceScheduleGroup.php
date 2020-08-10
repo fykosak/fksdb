@@ -1,28 +1,27 @@
 <?php
 
-
 namespace FKSDB\ORM\Services\Schedule;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * Class ServiceScheduleGroup
- * @package FKSDB\ORM\Services\Schedule
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ServiceScheduleGroup extends AbstractServiceSingle {
-    /**
-     * @return string
-     */
-    public function getModelClassName(): string {
-        return ModelScheduleGroup::class;
-    }
+    use DeprecatedLazyDBTrait;
 
     /**
-     * @return string
+     * ServiceScheduleGroup constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
      */
-    protected function getTableName(): string {
-        return DbNames::TAB_SCHEDULE_GROUP;
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_SCHEDULE_GROUP, ModelScheduleGroup::class);
     }
 }

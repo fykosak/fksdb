@@ -4,10 +4,11 @@ namespace FKSDB\Results\Models;
 
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceTask;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Results\EvaluationStrategies\EvaluationStrategy;
 use FKSDB\Results\ModelCategory;
 use Nette\Database\Connection;
-use Nette\Database\Table\Selection;
+use Nette\Database\Row;
 use Nette\InvalidStateException;
 
 /**
@@ -27,7 +28,7 @@ abstract class AbstractResultsModel {
     const LABEL_SUM = 'sum';
     const ALIAS_SUM = 'sum';
     const LABEL_PERCETAGE = 'percent';
-    const ALIAS_PERCENTAGE = 'percent';    
+    const ALIAS_PERCENTAGE = 'percent';
     const LABEL_TOTAL_PERCENTAGE = 'total-percent';
     const ALIAS_TOTAL_PERCENTAGE = 'total-percent';
 
@@ -40,40 +41,25 @@ abstract class AbstractResultsModel {
     const COL_ALIAS = 'alias';
     const DATA_PREFIX = 'd';
 
-    /**
-     * @var int
-     */
-    protected $year;
+    protected int $year;
 
-    /**
-     * @var ModelContest
-     */
-    protected $contest;
+    protected ModelContest $contest;
 
-    /**
-     * @var ServiceTask
-     */
-    protected $serviceTask;
+    protected ServiceTask $serviceTask;
 
-    /**
-     * @var Connection
-     */
-    protected $connection;
+    protected Connection $connection;
 
-    /**
-     * @var EvaluationStrategy
-     */
-    protected $evaluationStrategy;
+    protected EvaluationStrategy $evaluationStrategy;
 
     /**
      * FKSDB\Results\Models\AbstractResultsModel constructor.
      * @param ModelContest $contest
      * @param ServiceTask $serviceTask
      * @param Connection $connection
-     * @param $year
+     * @param int $year
      * @param EvaluationStrategy $evaluationStrategy
      */
-    function __construct(ModelContest $contest, ServiceTask $serviceTask, Connection $connection, $year, EvaluationStrategy $evaluationStrategy) {
+    public function __construct(ModelContest $contest, ServiceTask $serviceTask, Connection $connection, int $year, EvaluationStrategy $evaluationStrategy) {
         $this->contest = $contest;
         $this->serviceTask = $serviceTask;
         $this->connection = $connection;
@@ -83,9 +69,9 @@ abstract class AbstractResultsModel {
 
     /**
      * @param ModelCategory $category
-     * @return array of Nette\Database\Row
+     * @return Row[]
      */
-    public function getData(ModelCategory $category) {
+    public function getData(ModelCategory $category): array {
         $sql = $this->composeQuery($category);
 
         $stmt = $this->connection->query($sql);
@@ -118,28 +104,24 @@ abstract class AbstractResultsModel {
         ];
     }
 
-    /**
-     * @param ModelCategory $category
-     * @return mixed
-     */
-    abstract protected function composeQuery(ModelCategory $category);
+    abstract protected function composeQuery(ModelCategory $category): string;
 
     /**
      * @note Work only with numeric types.
      * @param mixed $conditions
      * @return string
      */
-    protected function conditionsToWhere($conditions) {
+    protected function conditionsToWhere($conditions): string {
         $where = [];
         foreach ($conditions as $col => $value) {
             if (is_array($value)) {
                 $set = [];
                 $hasNull = false;
-                foreach ($value as $subvalue) {
-                    if ($subvalue === null) {
+                foreach ($value as $subValue) {
+                    if ($subValue === null) {
                         $hasNull = true;
                     } else {
-                        $set[] = $subvalue;
+                        $set[] = $subValue;
                     }
                 }
                 $inClause = "$col IN (" . implode(',', $set) . ")";
@@ -148,7 +130,7 @@ abstract class AbstractResultsModel {
                 } else {
                     $where[] = $inClause;
                 }
-            } else if ($value === null) {
+            } elseif ($value === null) {
                 $where[] = "$col IS NULL";
             } else {
                 $where[] = "$col = $value";
@@ -157,11 +139,7 @@ abstract class AbstractResultsModel {
         return "(" . implode(') and (', $where) . ")";
     }
 
-    /**
-     * @param $series
-     * @return Selection
-     */
-    protected function getTasks($series) {
+    protected function getTasks(int $series): TypedTableSelection {
         return $this->serviceTask->getTable()
             ->select('task_id, label, points,series')
             ->where([
@@ -172,25 +150,27 @@ abstract class AbstractResultsModel {
             ->order('tasknr');
     }
 
-    abstract public function getCategories();
+    /**
+     * @return ModelCategory[]
+     */
+    abstract public function getCategories(): array;
 
     /**
      * Single series number or array of them.
-     * @param mixed $series
+     * @param int[]|int $series
+     * TODO int[] OR int
      */
     abstract public function setSeries($series);
 
     /**
-     * @return mixed (see setSeries)
+     * @return int[]|int (see setSeries)
      */
     abstract public function getSeries();
 
     /**
      * @param ModelCategory $category
+     * @return array
      * @throws InvalidStateException
      */
-    abstract public function getDataColumns(ModelCategory $category);
-
+    abstract public function getDataColumns(ModelCategory $category): array;
 }
-
-

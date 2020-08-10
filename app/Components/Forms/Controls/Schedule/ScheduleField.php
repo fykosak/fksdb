@@ -2,63 +2,53 @@
 
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
-use Exception;
-use FKSDB\Components\React\ReactField;
+use FKSDB\Components\React\ReactComponentTrait;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
+use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\TextInput;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use Nette\Utils\JsonException;
 
 /**
  * Class ScheduleField
- * @package FKSDB\Components\Forms\Controls\Schedule
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ScheduleField extends TextInput {
 
-    use ReactField;
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /**
-     * @var string
-     */
-    private $type;
-    /**
-     * @var ServiceScheduleItem
-     */
-    private $serviceScheduleItem;
+    use ReactComponentTrait;
+
+    private ModelEvent $event;
+
+    private string $type;
+
+    private ServiceScheduleItem $serviceScheduleItem;
 
     /**
      * ScheduleField constructor.
      * @param ModelEvent $event
      * @param string $type
      * @param ServiceScheduleItem $serviceScheduleItem
+     * @throws BadRequestException
      * @throws JsonException
+     * @throws NotImplementedException
      */
     public function __construct(ModelEvent $event, string $type, ServiceScheduleItem $serviceScheduleItem) {
         parent::__construct($this->getLabelByType($type));
         $this->event = $event;
         $this->type = $type;
         $this->serviceScheduleItem = $serviceScheduleItem;
+        $this->registerReact('event.schedule.' . $type);
         $this->appendProperty();
-        $this->registerMonitor();
-    }
 
-    /**
-     * @param $obj
-     */
-    public function attached($obj) {
-        parent::attached($obj);
-        $this->attachedReact($obj);
     }
 
     /**
      * @param string $type
      * @return string
+     * @throws NotImplementedException
      */
     private function getLabelByType(string $type): string {
         switch ($type) {
@@ -79,18 +69,7 @@ class ScheduleField extends TextInput {
         }
     }
 
-    /**
-     * @return string
-     */
-    protected function getReactId(): string {
-       return 'event.schedule.'.$this->type;
-    }
-
-    /**
-     * @return string
-     * @throws Exception
-     */
-    public function getData(): string {
+    public function getData(...$args): string {
         $groups = $this->event->getScheduleGroups()->where('schedule_group_type', $this->type);
         $groupList = [];
         foreach ($groups as $row) {
@@ -101,9 +80,6 @@ class ScheduleField extends TextInput {
         return json_encode(['groups' => $groupList, 'options' => $options]);
     }
 
-    /**
-     * @return array
-     */
     private function getRenderOptions(): array {
         $params = [
             'display' => [
@@ -131,16 +107,12 @@ class ScheduleField extends TextInput {
         return $params;
     }
 
-    /**
-     * @param ModelScheduleGroup $group
-     * @return array
-     */
     private function serializeGroup(ModelScheduleGroup $group): array {
         $groupArray = $group->__toArray();
         $itemList = [];
         $items = $this->serviceScheduleItem->getTable()->where('schedule_group_id', $group->schedule_group_id);
-        foreach ($items as $itemRow) {
-            $item = ModelScheduleItem::createFromActiveRow($itemRow);
+        /** @var ModelScheduleItem $item */
+        foreach ($items as $item) {
             $itemList[] = $item->__toArray();
         }
 

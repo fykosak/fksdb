@@ -7,7 +7,9 @@ use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\Results\EvaluationStrategies\EvaluationNullObject;
 use FKSDB\Results\ModelCategory;
 use Nette\Database\Connection;
+use Nette\Database\Row;
 use Nette\InvalidStateException;
+use Nette\NotSupportedException;
 
 /**
  * Cumulative results of schools' contest.
@@ -16,9 +18,7 @@ use Nette\InvalidStateException;
  */
 class SchoolCumulativeResultsModel extends AbstractResultsModel {
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $series;
 
     /**
@@ -27,11 +27,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
      */
     private $dataColumns = [];
 
-    /**
-     *
-     * @var CumulativeResultsModel
-     */
-    private $cumulativeResultsModel;
+    private CumulativeResultsModel $cumulativeResultsModel;
 
     /**
      * FKSDB\Results\Models\SchoolCumulativeResultsModel constructor.
@@ -39,7 +35,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
      * @param ModelContest $contest
      * @param ServiceTask $serviceTask
      * @param Connection $connection
-     * @param $year
+     * @param int $year
      */
     public function __construct(CumulativeResultsModel $cumulativeResultsModel, ModelContest $contest, ServiceTask $serviceTask, Connection $connection, $year) {
         parent::__construct($contest, $serviceTask, $connection, $year, new EvaluationNullObject());
@@ -52,7 +48,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
      * @param ModelCategory $category
      * @return array
      */
-    public function getDataColumns(ModelCategory $category) {
+    public function getDataColumns(ModelCategory $category): array {
         if ($this->series === null) {
             throw new InvalidStateException('Series not specified.');
         }
@@ -108,28 +104,24 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @return array
+     * @return ModelCategory[]
      */
-    public function getCategories() {
+    public function getCategories(): array {
         //return $this->evaluationStrategy->getCategories();
         return [
             new ModelCategory(ModelCategory::CAT_ALL)
         ];
     }
 
-    /**
-     * @param ModelCategory $category
-     * @return mixed|void
-     */
-    protected function composeQuery(ModelCategory $category) {
-        throw new \Nette\NotSupportedException;
+    protected function composeQuery(ModelCategory $category): string {
+        throw new NotSupportedException();
     }
 
     /**
      * @param ModelCategory $category
-     * @return array of Nette\Database\Row
+     * @return Row[]
      */
-    public function getData(ModelCategory $category) {
+    public function getData(ModelCategory $category): array {
         $categories = [];
         if ($category->id == ModelCategory::CAT_ALL) {
             $categories = $this->cumulativeResultsModel->getCategories();
@@ -190,7 +182,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
     //TODO better have somehow in evaluation strategy
 
     /**
-     * @param $i
+     * @param int $i
      * @return mixed
      */
     private function weightVector($i) {
@@ -198,7 +190,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @param $schoolContestants
+     * @param array $schoolContestants
      * @param ModelCategory $category
      * @return array
      */

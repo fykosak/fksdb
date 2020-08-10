@@ -1,6 +1,9 @@
 <?php
 
+namespace FKSDB;
+
 use Nette\Http\Request;
+use Nette\SmartObject;
 
 /**
  * Unfortunately Nette Http\Request doesn't make raw HTTP data accessible.
@@ -10,7 +13,7 @@ use Nette\Http\Request;
  */
 class FullHttpRequest {
 
-    use \Nette\SmartObject;
+    use SmartObject;
 
     /** @var Request */
     private $request;
@@ -21,25 +24,21 @@ class FullHttpRequest {
     /**
      * FullHttpRequest constructor.
      * @param Request $request
-     * @param $payload
+     * @param mixed $payload
      */
-    function __construct(Request $request, $payload) {
+    public function __construct(Request $request, $payload) {
         $this->request = $request;
         $this->payload = $payload;
     }
 
-    /**
-     * @return Request
-     */
-    function getRequest() {
+    public function getRequest(): Request {
         return $this->request;
     }
 
     /**
      * @return string
      */
-    function getPayload() {
+    public function getPayload() {
         return $this->payload;
     }
-
 }

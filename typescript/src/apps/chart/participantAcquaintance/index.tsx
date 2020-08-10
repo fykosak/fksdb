@@ -58,23 +58,18 @@ export default class Index extends React.Component<OwnProps, State> {
             .outerRadius(this.outerRadius);
 
         return <>{groups.map((datum, index) => {
-            let className = 'active';
-            if (this.state.activeId !== null) {
-                className = 'inactive';
-            }
-            if (datum.index === this.state.activeId) {
+            let className = 'inactive';
+            if (this.state.activeId !== null && datum.index === this.state.activeId) {
                 className = 'active';
             }
 
             return <path
                 className={'arc ' + className}
                 d={arcGenerator(datum)}
+                cursor={'pointer'}
                 fill={this.getPerson(index).person.gender === 'M' ? 'blue' : 'deeppink'}
-                onMouseEnter={() => {
-                    this.setState({activeId: index});
-                }}
-                onMouseLeave={() => {
-                    this.setState({activeId: null});
+                onClick={() => {
+                    this.setState({activeId: this.state.activeId === index ? null : index});
                 }}/>;
         })
         }</>;
@@ -87,6 +82,7 @@ export default class Index extends React.Component<OwnProps, State> {
             const angle = ((datum.startAngle + datum.endAngle) / 2);
             const isOther = angle < Math.PI;
             let count = null;
+            const isActive = activeId !== null && activeId === datum.index;
             if (activeId !== null) {
                 if (activeId !== datum.index) {
                     count = matrix[datum.index][activeId];
@@ -100,6 +96,7 @@ export default class Index extends React.Component<OwnProps, State> {
                     transform={'rotate(' + ((isOther ? (angle - Math.PI / 2) : angle + Math.PI / 2) * 180 / Math.PI) + ')'}
                     textAnchor={isOther ? 'start' : 'end'}
                     alignmentBaseline="central"
+                    fontWeight={isActive ? 'bold' : ''}
                 >{this.getPerson(index).person.name}
                     {count !== null ? (' (' + count + ')') : null}</text>
             </g>;
@@ -137,11 +134,16 @@ export default class Index extends React.Component<OwnProps, State> {
 
     private calculateData(): number[][] {
         const {data} = this.props;
+        const {activeId} = this.state;
         const matrix = [];
         data.forEach((personA, indexA) => {
             matrix[indexA] = [];
             data.forEach((personB, indexB) => {
                 if (personB.person === personA.person) {
+                    matrix[indexA][indexB] = 0;
+                    return;
+                }
+                if (activeId !== null && (indexA !== activeId && indexB !== activeId)) {
                     matrix[indexA][indexB] = 0;
                     return;
                 }

@@ -13,9 +13,7 @@ use Nette\Database\Table\ActiveRow;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class EvaluationVyfuk2011 extends EvaluationStrategy {
-    /**
-     * @return array|null
-     */
+
     public function getCategories(): array {
         return [
             new ModelCategory(ModelCategory::CAT_ES_6),
@@ -45,18 +43,11 @@ class EvaluationVyfuk2011 extends EvaluationStrategy {
         }
     }
 
-    /**
-     * @param ActiveRow|ModelTask $task
-     * @return string
-     */
-    public function getPointsColumn(ActiveRow $task) {
+    public function getPointsColumn(ActiveRow $task): string {
         return "s.raw_points";
     }
 
-    /**
-     * @return string
-     */
-    public function getSumColumn() {
+    public function getSumColumn(): string {
         return "s.raw_points";
     }
 
@@ -65,14 +56,10 @@ class EvaluationVyfuk2011 extends EvaluationStrategy {
      * @param ModelCategory $category
      * @return int
      */
-    public function getTaskPoints(ActiveRow $task, ModelCategory $category) {
+    public function getTaskPoints(ActiveRow $task, ModelCategory $category): int {
         return $task->points;
     }
 
-    /**
-     * @param ModelCategory $category
-     * @return int|string
-     */
     public function getTaskPointsColumn(ModelCategory $category): string {
         return 'IF(s.raw_points IS NOT NULL, t.points, NULL)';
     }

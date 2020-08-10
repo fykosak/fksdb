@@ -1,5 +1,5 @@
 $(function() {
-    $.widget("fks.autocompleteSelect", $.ui.autocomplete, {
+    $.widget("fks.autocomplete-select", $.ui.autocomplete, {
 // default options
         options: {
             metaSuffix: '__meta'
@@ -64,7 +64,7 @@ $(function() {
                        found = true;
 		       break;
 		   }
-	       } 
+	       }
 	       if (!found) {
                    data.push({
                        label: defaultText,
@@ -146,6 +146,6 @@ $(function() {
         }
     });
 
-    $('input[data-ac]').autocompleteSelect();
+    $('input[data-ac]')['autocomplete-select']();
 
 });

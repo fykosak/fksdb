@@ -1,9 +1,9 @@
 <?php
 
-namespace Events\Processings;
+namespace FKSDB\Events\Processings;
 
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Logging\ILogger;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
@@ -16,7 +16,7 @@ use Nette\Utils\ArrayHash;
 interface IProcessing {
 
     /**
-     * @param $states
+     * @param array $states
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder
@@ -25,4 +25,3 @@ interface IProcessing {
      */
     public function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null);
 }
-

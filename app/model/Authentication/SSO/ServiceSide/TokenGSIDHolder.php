@@ -3,7 +3,7 @@
 namespace FKSDB\Authentication\SSO\ServiceSide;
 
 use FKSDB\Authentication\SSO\IGSIDHolder;
-use PDO;
+use Nette\Database\Connection;
 
 /**
  * Reads and stores GSID from "real" session (expects its started).
@@ -19,17 +19,16 @@ class TokenGSIDHolder implements IGSIDHolder {
     const URL_PARAM = 'at';
     const SESSION_KEY = '_sso';
 
-    /**
-     * @var PDO
-     */
+    /** @var Connection */
     private $connection;
+    /** @var bool */
     private $cachedGSID = false;
 
     /**
      * TokenGSIDHolder constructor.
-     * @param PDO $connection
+     * @param Connection $connection
      */
-    function __construct(PDO $connection) {
+    public function __construct(Connection $connection) {
         $this->connection = $connection;
     }
 
@@ -53,7 +52,8 @@ class TokenGSIDHolder implements IGSIDHolder {
     }
 
     /**
-     * @param $gsid
+     * @param mixed $gsid
+     * @return mixed|void
      */
     public function setGSID($gsid) {
         if ($gsid) {
@@ -66,7 +66,7 @@ class TokenGSIDHolder implements IGSIDHolder {
     }
 
     /**
-     * @param $token
+     * @param string $token
      * @return null
      */
     private function getGSIDFromDB($token) {
@@ -75,8 +75,9 @@ class TokenGSIDHolder implements IGSIDHolder {
             and since <= now()
             and (until is null or until >= now())';
 
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute(array($token));
+        $stmt = $this->connection->getPdo()->prepare($sql);
+
+        $stmt->execute([$token]);
 
         $row = $stmt->fetch();
         if (!$row) {

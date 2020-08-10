@@ -4,18 +4,23 @@ namespace FKSDB\ORM\Models\Schedule;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\IPaymentReferencedModel;
 use FKSDB\ORM\Models\IPersonReferencedModel;
 use FKSDB\ORM\Models\IScheduleGroupReferencedModel;
+use FKSDB\ORM\Models\IScheduleItemReferencedModel;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\Transitions\IStateModel;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 use Nette\Database\Table\ActiveRow;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class ModelPersonSchedule
- * @package FKSDB\ORM\Models\Schedule
+ * *
  * @property-read ActiveRow person
  * @property-read ActiveRow schedule_item
  * @property-read int person_id
@@ -23,32 +28,31 @@ use FKSDB\NotImplementedException;
  * @property-read string state
  * @property-read int person_schedule_id
  */
-class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IPersonReferencedModel, IScheduleGroupReferencedModel, IPaymentReferencedModel {
-    /**
-     * @return ModelPerson
-     */
+class ModelPersonSchedule extends AbstractModelSingle implements
+    IStateModel,
+    IPersonReferencedModel,
+    IScheduleGroupReferencedModel,
+    IPaymentReferencedModel,
+    IEventReferencedModel,
+    IScheduleItemReferencedModel {
+
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);
     }
 
-    /**
-     * @return ModelScheduleItem
-     */
     public function getScheduleItem(): ModelScheduleItem {
         return ModelScheduleItem::createFromActiveRow($this->schedule_item);
     }
 
-    /**
-     * @return ModelScheduleGroup
-     */
     public function getScheduleGroup(): ModelScheduleGroup {
         return $this->getScheduleItem()->getScheduleGroup();
     }
 
-    /**
-     * @return ModelPayment|null
-     */
-    public function getPayment() {
+    public function getEvent(): ModelEvent {
+        return $this->getScheduleGroup()->getEvent();
+    }
+
+    public function getPayment(): ?ModelPayment {
         $data = $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'person_schedule_id')->select('payment.*')->fetch();
         if (!$data) {
             return null;
@@ -56,9 +60,6 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
         return ModelPayment::createFromActiveRow($data);
     }
 
-    /**
-     * @return bool
-     */
     public function hasActivePayment(): bool {
         $payment = $this->getPayment();
         if (!$payment) {
@@ -72,6 +73,7 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
 
     /**
      * @return string
+     * @throws NotImplementedException
      */
     public function getLabel(): string {
         $item = $this->getScheduleItem();
@@ -80,8 +82,8 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
                 return sprintf(_('Accommodation for %s from %s to %s in %s'),
                     $this->getPerson()->getFullName(),
-                    $group->start->format(_('__date_format')),
-                    $group->end->format(_('__date_format')),
+                    $group->start->format(_('__date')),
+                    $group->end->format(_('__date')),
                     $item->name_cs);
             case ModelScheduleGroup::TYPE_WEEKEND:
                 return $item->getLabel();
@@ -90,26 +92,21 @@ class ModelPersonSchedule extends AbstractModelSingle implements IStateModel, IP
         }
     }
 
-    /**
-     * @param $newState
-     * @return void
-     */
-    public function updateState($newState) {
+    public function updateState(?string $newState): void {
         $this->update(['state' => $newState]);
     }
 
-    /**
-     * @return null|string
-     */
-    public function getState() {
+    public function getState(): ?string {
         return $this->state;
     }
 
     /**
+     * @param Context $connection
+     * @param IConventions $conventions
      * @return IStateModel
      * @throws NotImplementedException
      */
-    public function refresh(): IStateModel {
+    public function refresh(Context $connection, IConventions $conventions): IStateModel {
         throw new NotImplementedException();
     }
 }

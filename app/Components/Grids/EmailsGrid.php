@@ -2,65 +2,49 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
-use FKSDB\ORM\Models\ModelEmailMessage;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Services\ServiceEmailMessage;
+use Nette\Application\UI\Presenter;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use SQL\SearchableDataSource;
 
 /**
  * Class EmailsGrid
- * @package FKSDB\Components\Grids
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EmailsGrid extends BaseGrid {
 
-    /**
-     * @var ServiceEmailMessage
-     */
-    private $serviceEmailMessage;
+    private ServiceEmailMessage $serviceEmailMessage;
 
-    /**
-     * EmailsGrid constructor.
-     * @param ServiceEmailMessage $serviceEmailMessage
-     * @param TableReflectionFactory $tableReflectionFactory
-     */
-    function __construct(ServiceEmailMessage $serviceEmailMessage, TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct($tableReflectionFactory);
+    public function injectServiceEmailMessage(ServiceEmailMessage $serviceEmailMessage): void {
         $this->serviceEmailMessage = $serviceEmailMessage;
     }
 
-    /**
-     * @param $presenter
-     * @throws DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateButtonException
-     */
-    protected function configure($presenter) {
-        parent::configure($presenter);
-        $emails = $this->serviceEmailMessage->getTable();
-        $source = new NDataSource($emails);
-        //  $source = new SearchableDataSource($emails);
-        $this->setDataSource($source);
+    protected function getData(): IDataSource {
+        $emails = $this->serviceEmailMessage->getTable()->order('created DESC');
+        //->where('state!=? OR created > ?', [ModelEmailMessage::STATE_SENT, (new \DateTime())->modify('-1 month')]);
+        return new NDataSource($emails);
+    }
 
+    /**
+     * @param Presenter $presenter
+     * @return void
+     * @throws BadTypeException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     */
+    protected function configure(Presenter $presenter): void {
+        parent::configure($presenter);
 
         $this->addColumns([
             'email_message.email_message_id',
             'email_message.recipient',
-         //   'email_message.sender',
-          //  'email_message.reply_to',
             'email_message.subject',
-           // 'email_message.carbon_copy',
-          //  'email_message.blind_carbon_copy',
             'email_message.state',
         ]);
-        $this->addLinkButton($presenter, ':Common:Spam:detail', 'detail', _('Detail'), false, ['id' => 'email_message_id']);
-        $this->paginate = false;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getModelClassName(): string {
-        return ModelEmailMessage::class;
+        $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'email_message_id']);
+        $this->paginate = true;
     }
 }

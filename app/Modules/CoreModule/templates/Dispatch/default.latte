@@ -1,0 +1,49 @@
+{block #content}
+    <h2>{_'Contestant'}</h2>
+    <p>
+        <a href="{plink :Public:Register:contest}" class="btn btn-primary">{_'Register'}</a>
+    </p>
+    <nav class="d-md-flex justify-content-md-around flex-wrap">
+        {foreach $contestants as $contestId=> $contestant}
+            <a href="{$contestant['link']}"
+                    {var $className = 'navigation-item-'.$contestsProperty[$contestId]['symbol'].' mb-3 d-block navigation-item p-2'}
+               class="{$className}">
+                <div class="icon d-sm-inline-block d-md-block mx-2">
+                    <img n:attr="src => '/images/contests/'.$contestsProperty[$contestId]['symbol'].'.svg'"
+                            alt=""/>
+                </div>
+                <span class="text d-xs-inline-block d-md-block">{$contestant['title']}</span>
+            </a>
+        {/foreach}
+        <a href="{plink :Event:Dispatch:default}"
+                {var $className = 'navigation-item-fykos mb-3 d-block navigation-item p-2'}
+           class="{$className}">
+            <div class="icon d-sm-inline-block d-md-block mx-2">
+                <img n:attr="src => '/images/contests/event.gif'" alt="" class="w-100"/>
+            </div>
+            <span class="text d-xs-inline-block d-md-block">{_'Events'}</span>
+        </a>
+    </nav>
+    <hr/>
+    {if count($orgs)}
+        <h2>{_'Organiser'}</h2>
+        <nav class="d-md-flex justify-content-md-around flex-wrap">
+            {foreach $orgs as $contestId=> $org}
+                <a href="{$org['link']}"
+                        {var $className = 'navigation-item-'.$contestsProperty[$contestId]['symbol'].' mb-3 d-block navigation-item p-2'}
+                   class="{$className}">
+                    <div class="icon d-sm-inline-block d-md-block mx-2">
+                        <img n:attr="src => '/images/contests/'.$contestsProperty[$contestId]['symbol'].'.svg'"
+                                alt=""/>
+                    </div>
+                    <span class="text d-xs-inline-block d-md-block">{$org['title']}</span>
+                </a>
+            {/foreach}
+        </nav>
+        <hr/>
+
+        {*<h2>{_'Common activities'}</h2>*}
+        {*control navigation 'Common.Dashboard.default'*}
+    {/if}
+
+{/block}

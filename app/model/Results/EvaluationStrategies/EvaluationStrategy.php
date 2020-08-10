@@ -61,5 +61,3 @@ abstract class EvaluationStrategy {
      */
     abstract public function getTaskPoints(ActiveRow $task, ModelCategory $category);
 }
-
-

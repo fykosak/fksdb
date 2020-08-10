@@ -10,8 +10,11 @@ use PDO;
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read string type
- * @property-read integer default_integer
+ * @property-read int default_integer
  * @property-read string default_string
+ * @property-read int query_id
+ * @property-read string name
+ * @property-read string description
  */
 class ModelStoredQueryParameter extends AbstractModelSingle {
 
@@ -36,7 +39,7 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @throws InvalidStateException
      */
     public function setDefaultValue($value) {
@@ -54,19 +57,44 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
     }
 
     /**
+     * @param string $type
+     * @param mixed $value
+     * @return array
+     */
+    public static function setInferDefaultValue(string $type, $value): array {
+        $data = [];
+        switch ($type) {
+            case self::TYPE_INT:
+            case self::TYPE_BOOL:
+                $data['default_integer'] = (int)$value;
+                break;
+            case self::TYPE_STRING:
+                $data['default_string'] = $value;
+                break;
+            default:
+                throw new InvalidStateException("Unsupported parameter type '{$type}'.");
+        }
+        return $data;
+    }
+
+    /**
      * @return int
      * @throws InvalidStateException
      */
-    public function getPDOType() {
-        switch ($this->type) {
+    public function getPDOType(): int {
+        return static::staticGetPDOType($this->type);
+    }
+
+    public static function staticGetPDOType(string $type): int {
+        switch ($type) {
             case self::TYPE_INT:
-            case self::TYPE_BOOL:
                 return PDO::PARAM_INT;
+            case self::TYPE_BOOL:
+                return PDO::PARAM_BOOL;
             case self::TYPE_STRING:
                 return PDO::PARAM_STR;
             default:
-                throw new InvalidStateException("Unsupported parameter type '{$this->type}'.");
+                throw new InvalidStateException("Unsupported parameter type '{$type}'.");
         }
     }
-
 }

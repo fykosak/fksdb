@@ -1,9 +1,9 @@
 <?php
 
-namespace Events\Model\Grid;
+namespace FKSDB\Events\Model\Grid;
 
-use ArrayIterator;
-use Events\Model\Holder\Holder;
+use FKSDB\Config\NeonSchemaException;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\DI\Container;
@@ -21,20 +21,14 @@ use Nette\SmartObject;
  */
 abstract class AggregatedPersonSource implements IHolderSource {
     use SmartObject;
-    /**
-     * @var \FKSDB\ORM\Tables\TypedTableSelection
-     */
+
+    /** @var TypedTableSelection */
     private $events;
 
-    /**
-     * @var Container
-     */
+    /** @var Container */
     protected $container;
 
-    /**
-     *
-     * @var Holder[]
-     */
+    /** @var Holder[] */
     private $holders = null;
 
     /**
@@ -42,23 +36,28 @@ abstract class AggregatedPersonSource implements IHolderSource {
      * @param TypedTableSelection $events
      * @param Container $container
      */
-    function __construct(TypedTableSelection $events, Container $container) {
+    public function __construct(TypedTableSelection $events, Container $container) {
         $this->events = $events;
         $this->container = $container;
     }
 
+    /**
+     * @return void
+     *
+     * @throws NeonSchemaException
+     */
     private function loadData() {
         $this->holders = [];
-        foreach ($this->events as $eventKey => $row) {
-            $event = ModelEvent::createFromActiveRow($row);
+        /** @var ModelEvent $event */
+        foreach ($this->events as $eventKey => $event) {
             $result = $this->processEvent($event);
 
             if ($result instanceof SingleEventSource) {
-                foreach ($result as $holderKey => $holder) {
+                foreach ($result->getHolders() as $holderKey => $holder) {
                     $key = $eventKey . '_' . $holderKey;
                     $this->holders[$key] = $holder;
                 }
-            } else if ($result instanceof Holder) {
+            } elseif ($result instanceof Holder) {
                 $key = $eventKey . '_';
                 $this->holders[$key] = $result;
             }
@@ -66,10 +65,10 @@ abstract class AggregatedPersonSource implements IHolderSource {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
+     * @param ModelEvent $event
      * @return mixed
      */
-    abstract function processEvent(ModelEvent $event);
+    abstract public function processEvent(ModelEvent $event);
 
     /**
      * Method propagates selected calls to internal primary models selection.
@@ -86,7 +85,8 @@ abstract class AggregatedPersonSource implements IHolderSource {
             'limit' => false,
             'count' => true,
         ];
-        $result = call_user_func_array([$this->events, $name], $args);
+        $result = $this->events->{$name}(...$args);
+        //$result = call_user_func_array([$this->events, $name], $args);
         $this->holders = null;
 
         if ($delegated[$name]) {
@@ -97,13 +97,16 @@ abstract class AggregatedPersonSource implements IHolderSource {
     }
 
     /**
-     * @return ArrayIterator|\Traversable
+     * @return Holder[]
+     *
+     * @throws NeonSchemaException
+     *
      */
-    public final function getIterator() {
+    public function getHolders(): array {
         if ($this->holders === null) {
             $this->loadData();
         }
-        return new ArrayIterator($this->holders);
+        return $this->holders;
     }
 
 }

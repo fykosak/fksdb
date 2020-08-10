@@ -28,8 +28,12 @@ $(document).ready(function () {
     });
     $.nette.init();
     $("form[data-submit-on='enter']").enterSubmitForm();
-    $('.btn-danger').confirm({
-        text: 'O RLY?',
+    document.querySelectorAll('.btn-danger').forEach((el) => {
+        el.addEventListener('click', () => {
+            if (window.confirm('O RLY?')) {
+                el.trigger('click');
+            }
+        })
     });
     // TODO form buttons aren't checked
 

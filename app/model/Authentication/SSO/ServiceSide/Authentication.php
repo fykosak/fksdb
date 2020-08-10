@@ -16,28 +16,22 @@ class Authentication {
     const PARAM_GSID = 'gsid';
     const FLAG_SSO_LOGIN = 'sso';
 
-    /**
-     * @var IGlobalSession
-     */
+    /** @var IGlobalSession */
     private $globalSession;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $loginURL;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $logoutURL;
 
     /**
      * Authentication constructor.
      * @param IGlobalSession $globalSession
-     * @param $loginURL
-     * @param $logoutURL
+     * @param string $loginURL
+     * @param string $logoutURL
      */
-    function __construct(IGlobalSession $globalSession, $loginURL, $logoutURL) {
+    public function __construct(IGlobalSession $globalSession, $loginURL, $logoutURL) {
         $this->globalSession = $globalSession;
         $this->loginURL = $loginURL;
         $this->logoutURL = $logoutURL;
@@ -61,12 +55,12 @@ class Authentication {
      * @param null $backlink
      */
     public function login($backlink = null) {
-        $backlink = $backlink ? : $this->getDefaultBacklink();
+        $backlink = $backlink ?: $this->getDefaultBacklink();
 
-        $data = array(
+        $data = [
             self::PARAM_BACKLINK => $backlink,
             self::PARAM_FLAG => self::FLAG_SSO_LOGIN,
-        );
+        ];
 
         $redirectURL = $this->setHttpParams($this->loginURL, $data);
 
@@ -79,13 +73,13 @@ class Authentication {
      * @param null $backlink
      */
     public function logout($backlink = null) {
-        $backlink = $backlink ? : $this->getDefaultBacklink();
+        $backlink = $backlink ?: $this->getDefaultBacklink();
 
-        $data = array(
+        $data = [
             self::PARAM_BACKLINK => $backlink,
             self::PARAM_FLAG => self::FLAG_SSO_LOGIN,
             self::PARAM_GSID => $this->globalSession->getId(),
-        );
+        ];
 
         $redirectURL = $this->setHttpParams($this->logoutURL, $data);
 
@@ -102,8 +96,8 @@ class Authentication {
     }
 
     /**
-     * @param $url
-     * @param $params
+     * @param string $url
+     * @param mixed $params
      * @return string
      */
     private function setHttpParams($url, $params) {

@@ -4,51 +4,46 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\Database\Table\ActiveRow;
-use Nette\Database\Table\Selection;
+use FKSDB\ORM\Models\ModelEventType;
+use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @method ModelEvent createNewModel(array $data)
  */
 class ServiceEvent extends AbstractServiceSingle {
-    /**
-     * @return string
-     */
-    public function getModelClassName(): string {
-        return ModelEvent::class;
-    }
+
+    use DeprecatedLazyDBTrait;
 
     /**
-     * @return string
+     * ServiceEvent constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
      */
-    protected function getTableName(): string {
-        return DbNames::TAB_EVENT;
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_EVENT, ModelEvent::class);
     }
 
-    /**
-     * @param ModelContest $contest
-     * @param $year
-     * @return Selection
-     */
-    public function getEvents(ModelContest $contest, int $year): Selection {
-        $result = $this->getTable()
+    public function getEvents(ModelContest $contest, int $year): TypedTableSelection {
+        return $this->getTable()
             ->select(DbNames::TAB_EVENT . '.*')
-            ->select(DbNames::TAB_EVENT_TYPE . '.name AS `type_name`');
-        $result->where(DbNames::TAB_EVENT_TYPE . '.contest_id', $contest->contest_id)
+            ->select(DbNames::TAB_EVENT_TYPE . '.name AS `type_name`')
+            ->where(DbNames::TAB_EVENT_TYPE . '.contest_id', $contest->contest_id)
             ->where(DbNames::TAB_EVENT . '.year', $year);
-        return $result;
     }
 
-    /**
-     * @param ModelContest $contest
-     * @param int $year
-     * @param int $eventTypeId
-     * @return ActiveRow
-     */
-    public function getByEventTypeId(ModelContest $contest, int $year, int $eventTypeId): ActiveRow {
-        return $this->getEvents($contest, $year)->where(DbNames::TAB_EVENT . '.event_type_id', $eventTypeId)->fetch();
+    public function getByEventTypeId(ModelContest $contest, int $year, int $eventTypeId): ?ModelEvent {
+        /** @var ModelEvent $event */
+        $event = $this->getEvents($contest, $year)->where(DbNames::TAB_EVENT . '.event_type_id', $eventTypeId)->fetch();
+        return $event ?: null;
     }
 
+    public function getEventsByType(ModelEventType $eventType): TypedTableSelection {
+        return $this->getTable()->where('event_type_id', $eventType->event_type_id);
+    }
 }

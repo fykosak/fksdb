@@ -1,4 +1,6 @@
+import { getAreaPath, getLinePath } from '@apps/fyziklaniResults/statistics/middleware/charts/lines';
 import AbstractChart from '@shared/components/chart';
+import { LineChartData } from '@shared/components/lineChart/interfaces';
 import {
     axisBottom,
     axisLeft,
@@ -9,28 +11,9 @@ import {
 } from 'd3-scale';
 import { select } from 'd3-selection';
 import {
-    curveBasis, CurveFactory, curveMonotoneX,
+    curveBasis, curveMonotoneX,
 } from 'd3-shape';
 import * as React from 'react';
-import { getAreaPath, getLinePath, PointData } from '../../apps/fyziklaniResults/statistics/middleware/charts/lines';
-
-export type LineChartData = Array<{
-    name: string;
-    color: string;
-    display: {
-        points?: boolean;
-        lines?: boolean;
-        area?: boolean;
-    };
-    curveFactory?: CurveFactory;
-    points: Array<ExtendedPointData<Date | number>>;
-}>;
-
-export interface ExtendedPointData<T> extends PointData<T> {
-    active?: boolean;
-    color?: string;
-    label?: string;
-}
 
 interface OwnProps<> {
     data: LineChartData;

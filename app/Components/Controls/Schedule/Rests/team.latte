@@ -1,0 +1,6 @@
+{block content}
+    <h2>{_'Rests'}</h2>
+    {foreach $persons as $person}
+        {control singleRestControl $person,$event}
+    {/foreach}
+{/block}

@@ -2,50 +2,50 @@
 
 namespace FKSDB\ORM\Services;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\ModelSubmit;
-use Nette\Database\Table\Selection;
+use FKSDB\ORM\Models\ModelTask;
+use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @method ModelSubmit findByPrimary($key)
+ * @method ModelSubmit createNewModel(array $data)
+ * @method ModelSubmit refresh(AbstractModelSingle $model)
  */
 class ServiceSubmit extends AbstractServiceSingle {
-    /**
-     * @var array
-     */
-    private $submitCache = [];
+    use DeprecatedLazyDBTrait;
+
+    private array $submitCache = [];
 
     /**
-     * @return string
+     * ServiceSubmit constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
      */
-    public function getModelClassName(): string {
-        return ModelSubmit::class;
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_SUBMIT, ModelSubmit::class);
     }
-
-    /**
-     * @return string
-     */
-    protected function getTableName(): string {
-        return DbNames::TAB_SUBMIT;
-    }
-
     /**
      * Syntactic sugar.
      *
      * @param int $ctId
      * @param int $taskId
-     * @return \FKSDB\ORM\Models\ModelSubmit|null
+     * @param bool $useCache
+     * @return ModelSubmit|null
      */
-    public function findByContestant($ctId, $taskId) {
+    public function findByContestant(int $ctId, int $taskId, bool $useCache = true): ?ModelSubmit {
         $key = $ctId . ':' . $taskId;
-
-        if (!array_key_exists($key, $this->submitCache)) {
+        if (!isset($this->submitCache[$key]) || is_null($this->submitCache[$key]) || !$useCache) {
             $result = $this->getTable()->where([
                 'ct_id' => $ctId,
                 'task_id' => $taskId,
             ])->fetch();
-
             if ($result !== false) {
                 $this->submitCache[$key] = $result;
             } else {
@@ -55,15 +55,39 @@ class ServiceSubmit extends AbstractServiceSingle {
         return $this->submitCache[$key];
     }
 
-    /**
-     *
-     * @return Selection
-     */
-    public function getSubmits() {
-        $submits = $this->getTable()
+    public function getSubmits(): TypedTableSelection {
+        return $this->getTable()
             ->select(DbNames::TAB_SUBMIT . '.*')
             ->select(DbNames::TAB_TASK . '.*');
-        return $submits;
     }
 
+    /**
+     * @param ModelSubmit|null $submit
+     * @param array $data
+     * @return ModelSubmit
+     */
+    public function store($submit, array $data): ModelSubmit {
+        if (is_null($submit)) {
+            return $this->createNewModel($data);
+        } else {
+            $this->updateModel2($submit, $data);
+            return $this->refresh($submit);
+        }
+    }
+
+    /**
+     * @param ModelSubmit|null $submit
+     * @param ModelTask $task
+     * @param int|null $studyYear
+     * @return array
+     */
+    public static function serializeSubmit($submit, ModelTask $task, $studyYear): array {
+        return [
+            'submitId' => $submit ? $submit->submit_id : null,
+            'name' => $task->getFQName(),
+            'taskId' => $task->task_id,
+            'deadline' => sprintf(_('Deadline %s'), $task->submit_deadline),
+            'disabled' => !in_array($studyYear, array_keys($task->getStudyYears())),
+        ];
+    }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Events\Model;
+namespace FKSDB\Events\Model;
 
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
@@ -14,15 +14,16 @@ class ExpressionEvaluator {
     use SmartObject;
 
     /**
-     * @param $condition
-     * @param $context
+     * @param mixed $condition
+     * @param mixed $context
      * @return mixed
      */
     public function evaluate($condition, $context) {
         if (is_scalar($condition)) {
             return $condition;
-        } else if (is_callable($condition)) {
-            return call_user_func($condition, $context);
+        } elseif (is_callable($condition)) {
+            return $condition($context);
+           // return call_user_func($condition, $context);
         } else {
             throw new InvalidArgumentException("Cannot evaluate condition $condition.");
         }

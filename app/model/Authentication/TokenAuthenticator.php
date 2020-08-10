@@ -1,8 +1,9 @@
 <?php
 
-namespace Authentication;
+namespace FKSDB\Authentication;
 
 use FKSDB\ORM\Models\ModelAuthToken;
+use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\YearCalculator;
@@ -18,14 +19,10 @@ class TokenAuthenticator extends AbstractAuthenticator {
     const PARAM_AUTH_TOKEN = 'at';
     const SESSION_NS = 'auth';
 
-    /**
-     * @var ServiceAuthToken
-     */
+    /** @var ServiceAuthToken */
     private $authTokenService;
 
-    /**
-     * @var Session
-     */
+    /** @var Session */
     private $session;
 
     /**
@@ -35,7 +32,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
      * @param ServiceLogin $serviceLogin
      * @param YearCalculator $yearCalculator
      */
-    function __construct(ServiceAuthToken $authTokenService, Session $session, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
+    public function __construct(ServiceAuthToken $authTokenService, Session $session, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->authTokenService = $authTokenService;
         $this->session = $session;
@@ -43,7 +40,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
 
     /**
      * @param string $tokenData
-     * @return \FKSDB\ORM\Models\ModelLogin
+     * @return ModelLogin
      * @throws AuthenticationException
      */
     public function authenticate($tokenData) {
@@ -78,7 +75,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @param string $tokenType  require specific token type
+     * @param string $tokenType require specific token type
      * @return bool true iff user has been authenticated by the authentication token
      */
     public function isAuthenticatedByToken($tokenType = null) {
@@ -90,7 +87,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @return array
+     * @return mixed
      */
     public function getTokenData() {
         if (!$this->isAuthenticatedByToken()) {
@@ -109,7 +106,8 @@ class TokenAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelAuthToken $token
+     * @param ModelAuthToken $token
+     * @return void
      */
     private function storeAuthToken(ModelAuthToken $token) {
         $section = $this->session->getSection(self::SESSION_NS);

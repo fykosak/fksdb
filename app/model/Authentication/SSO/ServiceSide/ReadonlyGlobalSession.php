@@ -5,11 +5,10 @@ namespace FKSDB\Authentication\SSO\ServiceSide;
 use FKSDB\Authentication\SSO\IGlobalSession;
 use FKSDB\Authentication\SSO\IGSIDHolder;
 use LogicException;
-use PDO;
+use Nette\Database\Connection;
 
 /**
  * Read-only global session implementation (i.e. cannot allocate new GSID).
- *
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
@@ -17,27 +16,21 @@ class ReadonlyGlobalSession implements IGlobalSession {
 
     const TABLE = 'global_session';
 
-    /**
-     * @var PDO
-     */
+    /** @var Connection */
     private $connection;
 
-    /**
-     * @var IGSIDHolder
-     */
+    /** @var IGSIDHolder */
     private $gsidHolder;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $data = [];
 
     /**
      * ReadonlyGlobalSession constructor.
-     * @param PDO $connection
+     * @param Connection $connection
      * @param IGSIDHolder $gsidHolder
      */
-    function __construct(PDO $connection, IGSIDHolder $gsidHolder) {
+    public function __construct(Connection $connection, IGSIDHolder $gsidHolder) {
         $this->connection = $connection;
         $this->gsidHolder = $gsidHolder;
     }
@@ -60,8 +53,8 @@ class ReadonlyGlobalSession implements IGlobalSession {
             and since <= now()
             and until >= now()';
 
-        $stmt = $this->connection->prepare($sql);
-        $stmt->execute(array($gsid));
+        $stmt = $this->connection->getPdo()->prepare($sql);
+        $stmt->execute([$gsid]);
 
         $row = $stmt->fetch();
 

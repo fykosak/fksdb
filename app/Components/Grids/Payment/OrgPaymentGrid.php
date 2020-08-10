@@ -2,57 +2,59 @@
 
 namespace FKSDB\Components\Grids\Payment;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
-use FKSDB\ORM\DbNames;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\ServicePayment;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
+use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 
 /**
- *
- * @author Mišo <miso@fykos.cz>
+ * Class OrgPaymentGrid
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class OrgPaymentGrid extends PaymentGrid {
-    /**
-     * @var ModelEvent
-     */
-    private $event;
+
+    private ModelEvent $event;
 
     /**
      * OrgPaymentGrid constructor.
-     * @param ServicePayment $servicePayment
      * @param ModelEvent $event
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param Container $container
      */
-    public function __construct(ServicePayment $servicePayment, ModelEvent $event, TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct($servicePayment, $tableReflectionFactory);
+    public function __construct(ModelEvent $event, Container $container) {
+        parent::__construct($container);
         $this->event = $event;
     }
 
+    protected function getData(): IDataSource {
+        $schools = $this->servicePayment->getTable()->where('event_id', $this->event->event_id);
+        return new NDataSource($schools);
+    }
+
     /**
-     * @param $presenter
+     * @param Presenter $presenter
+     * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws \Nette\Application\UI\InvalidLinkException
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     * @throws DuplicateGlobalButtonException
+     * @throws InvalidLinkException
+     * @throws BadTypeException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
-        $schools = $this->servicePayment->getTable()->where('event_id', $this->event->event_id);
-
-        $dataSource = new NDataSource($schools);
-        $this->setDataSource($dataSource);
-
         $this->addColumns([
-            DbNames::TAB_PAYMENT . '.id',
-            'referenced.person_name',
-            // 'referenced.event_name',
-            DbNames::TAB_PAYMENT . '.price',
-            DbNames::TAB_PAYMENT . '.state',
-            DbNames::TAB_PAYMENT . '.variable_symbol',
+            'payment.payment_uid',
+            'person.full_name',
+            'event.event',
+            'payment.price',
+            'payment.state',
+            'payment.variable_symbol',
         ]);
         $this->addLink('payment.detail', false);
         $this->paginate = false;

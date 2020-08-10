@@ -4,7 +4,7 @@ namespace FKSDB\Payment\Handler;
 
 /**
  * Class DuplicatePaymentException
- * @package FKSDB\Payment\Handler
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DuplicatePaymentException extends \Exception {
 

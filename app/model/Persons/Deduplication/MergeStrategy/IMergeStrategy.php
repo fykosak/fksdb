@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons\Deduplication\MergeStrategy;
+namespace FKSDB\Persons\Deduplication\MergeStrategy;
 
 use Nette\InvalidArgumentException;
 
@@ -22,7 +22,7 @@ interface IMergeStrategy {
 
 /**
  * Class CannotMergeException
- * @package Persons\Deduplication\MergeStrategy
+ * *
  */
 class CannotMergeException extends InvalidArgumentException {
 

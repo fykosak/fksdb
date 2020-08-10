@@ -3,96 +3,71 @@
 namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
 use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
-use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\React\ReactResponse;
-use FyziklaniModule\BasePresenter;
+use FKSDB\Modules\FyziklaniModule\BasePresenter;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\ArgumentOutOfRangeException;
-use Nette\DI\Container;
+use Nette\Http\Response;
 use Nette\Utils\DateTime;
 
 /**
  * Class ResultsAndStatistics
- * @package FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ResultsAndStatistics extends FyziklaniReactControl {
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
 
-    /**
-     * @var ServiceFyziklaniTask
-     */
-    private $serviceFyziklaniTask;
-    /**
-     * @var ServiceFyziklaniSubmit
-     */
-    private $serviceFyziklaniSubmit;
-    /**
-     * @var string
-     */
-    private $reactId;
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    /**
-     * ResultsAndStatistics constructor.
-     * @param string $reactId
-     * @param Container $container
-     * @param ModelEvent $event
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
-     */
-    public function __construct(string $reactId, Container $container, ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniSubmit $serviceFyziklaniSubmit) {
-        $this->reactId = $reactId;
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
+
+    private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
+
+    public function injectPrimary(
+        ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
+        ServiceFyziklaniTask $serviceFyziklaniTask,
+        ServiceFyziklaniTeam $serviceFyziklaniTeam
+    ): void {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-        parent::__construct($container, $event);
     }
 
-    /**
-     * @return string
-     */
-    protected function getReactId(): string {
-        return $this->reactId;
-    }
-
-    /**
-     * @return string
-     */
-    public final function getData(): string {
+    final public function getData(...$args): string {
         return '';
     }
 
     /**
+     * @return void
      * @throws InvalidLinkException
      */
-    protected function configure() {
+    protected function configure(): void {
         $this->addAction('refresh', $this->link('refresh!'));
         parent::configure();
     }
 
     /**
+     * @return void
      * @throws AbortException
-     * @throws ForbiddenRequestException
      * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws NotSetGameParametersException
      */
-    public function handleRefresh() {
+    public function handleRefresh(): void {
         $presenter = $this->getPresenter();
         if (!$presenter->isAjax()) {
-            throw new ForbiddenRequestException();
+            throw new BadRequestException('', Response::S405_METHOD_NOT_ALLOWED);
         }
         if (!$presenter instanceof BasePresenter) {
             throw new ArgumentOutOfRangeException();
         }
-        $isOrg = $presenter->getEventAuthorizator()->isAllowed('fyziklani.results', 'presentation', $this->getEvent());
+        $isOrg = $presenter->getEventAuthorizator()->isContestOrgAllowed('fyziklani.results', 'presentation', $this->getEvent());
 
         $request = $this->getReactRequest();
 
@@ -133,6 +108,7 @@ class ResultsAndStatistics extends FyziklaniReactControl {
 
     /**
      * @return bool
+     * @throws NotSetGameParametersException
      */
     private function isResultsVisible(): bool {
         return $this->getEvent()->getFyziklaniGameSetup()->isResultsVisible();

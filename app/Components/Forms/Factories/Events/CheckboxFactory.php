@@ -1,71 +1,53 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: miso
- * Date: 12.11.2016
- * Time: 14:03
- */
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use Events\Machine\BaseMachine;
-use Events\Model\Holder\Field;
+use FKSDB\Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
-use Nette\Forms\Container;
+use Nette\ComponentModel\IComponent;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
-
+use Nette\Forms\IControl;
 
 /**
  * Class CheckboxFactory
- * @package FKSDB\Components\Forms\Factories\Events
+ * *
  */
 class CheckboxFactory extends AbstractFactory {
-    public function __construct() {
-    }
 
     /**
      * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return mixed|Checkbox
+     * @return Checkbox
      */
-    protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
-
+    public function createComponent(Field $field): IComponent {
         $component = new Checkbox($field->getLabel());
         $component->setOption('description', $field->getDescription());
-
         return $component;
     }
 
 
     /**
-     * @param $component
+     * @param BaseControl|IComponent $component
      * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return mixed|void
+     * @return void
      */
-    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDefaultValue(IComponent $component, Field $field): void {
         $component->setDefaultValue($field->getValue());
     }
 
     /**
-     * @param $component
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return mixed|void
+     * @param BaseControl|IComponent $component
+     * @return void
      */
-    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDisabled(IComponent $component): void {
         $component->setDisabled();
     }
 
     /**
-     * @param Component $component
-     * @return Component|\Nette\Forms\IControl
+     * @param Component|IComponent $component
+     * @return Component|IControl
      */
-    public function getMainControl(Component $component) {
+    public function getMainControl(IComponent $component): IControl {
         return $component;
     }
-
 }

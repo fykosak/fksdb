@@ -2,60 +2,58 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
-use FKSDB\ORM\DbNames;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
-use FyziklaniModule\BasePresenter;
+use Nette\Application\UI\Presenter;
+use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class TeamSubmitsGrid
- * @package FKSDB\Components\Grids\Fyziklani
+ * @author Michal Červeňák <miso@fykos.cz>
+ * @author Lukáš Timko
  */
 class TeamSubmitsGrid extends SubmitsGrid {
 
-    /**
-     * @var ModelFyziklaniTeam
-     */
-    private $team;
+    private ModelFyziklaniTeam $team;
 
     /**
      * FyziklaniSubmitsGrid constructor.
      * @param ModelFyziklaniTeam $team
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param Container $container
      */
-    public function __construct(ModelFyziklaniTeam $team, ServiceFyziklaniSubmit $serviceFyziklaniSubmit, TableReflectionFactory $tableReflectionFactory) {
+    public function __construct(ModelFyziklaniTeam $team, Container $container) {
         $this->team = $team;
-        parent::__construct($serviceFyziklaniSubmit, $tableReflectionFactory);
+        parent::__construct($container);
+    }
+
+    protected function getData(): IDataSource {
+        $submits = $this->team->getAllSubmits()
+            ->order('fyziklani_submit.created');
+        return new NDataSource($submits);
     }
 
     /**
-     * @param BasePresenter $presenter
-     * @throws DuplicateColumnException
+     * @param Presenter $presenter
+     * @return void
+     * @throws BadTypeException
      * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
         $this->addColumnTask();
 
         $this->addColumns([
-            DbNames::TAB_FYZIKLANI_SUBMIT . '.points',
-            DbNames::TAB_FYZIKLANI_SUBMIT . '.created',
-            DbNames::TAB_FYZIKLANI_SUBMIT . '.state',
+            'fyziklani_submit.points',
+            'fyziklani_submit.created',
+            'fyziklani_submit.state',
         ]);
-        $this->addLinkButton($presenter, ':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
-        $this->addLinkButton($presenter, ':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
-
-        $submits = $this->team->getAllSubmits()
-            ->order('fyziklani_submit.created');
-
-        $dataSource = new NDataSource($submits);
-
-        $this->setDataSource($dataSource);
+        $this->addLinkButton(':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
+        $this->addLinkButton(':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
     }
 }

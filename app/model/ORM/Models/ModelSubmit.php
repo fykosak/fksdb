@@ -2,7 +2,6 @@
 
 namespace FKSDB\ORM\Models;
 
-use DateTime;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use Nette\Security\IResource;
@@ -10,52 +9,37 @@ use Nette\Security\IResource;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-read DateTime submitted_on
- * @property-read integer submit_id
+ * @property-read \DateTimeInterface submitted_on
+ * @property-read int submit_id
  * @property-read string source
  * @property-read string note
- * @property-read integer raw_points
+ * @property-read int raw_points
  * @property-read int points
  * @property-read int ct_id
  * @property-read int task_id
+ * @property-read bool corrected
  */
-class ModelSubmit extends AbstractModelSingle implements IResource {
+class ModelSubmit extends AbstractModelSingle implements IResource, ITaskReferencedModel {
 
-    const SOURCE_UPLOAD = 'upload';
-    const SOURCE_POST = 'post';
+    public const SOURCE_UPLOAD = 'upload';
+    public const SOURCE_POST = 'post';
 
-    /**
-     * @return bool
-     */
     public function isEmpty(): bool {
         return !($this->submitted_on || $this->note);
     }
 
-    /**
-     * @return ModelTask
-     */
     public function getTask(): ModelTask {
-        $data = $this->ref(DbNames::TAB_TASK, 'task_id');
-        return ModelTask::createFromActiveRow($data);
+        return ModelTask::createFromActiveRow($this->ref(DbNames::TAB_TASK, 'task_id'));
     }
 
-    /**
-     * @return ModelContestant
-     */
     public function getContestant(): ModelContestant {
         return ModelContestant::createFromActiveRow($this->ref(DbNames::TAB_CONTESTANT_BASE, 'ct_id'));
     }
 
-    /**
-     * @return string
-     */
     public function getResourceId(): string {
         return 'submit';
     }
 
-    /**
-     * @return string
-     */
     public function getFingerprint(): string {
         return md5(implode(':', [
             $this->submit_id,
@@ -66,4 +50,13 @@ class ModelSubmit extends AbstractModelSingle implements IResource {
         ]));
     }
 
+    public function canRevoke(): bool {
+        if ($this->source != self::SOURCE_UPLOAD) {
+            return false;
+        }
+        $now = time();
+        $start = $this->getTask()->submit_start ? $this->getTask()->submit_start->getTimestamp() : 0;
+        $deadline = $this->getTask()->submit_deadline ? $this->getTask()->submit_deadline->getTimestamp() : ($now + 1);
+        return ($now <= $deadline) && ($now >= $start);
+    }
 }

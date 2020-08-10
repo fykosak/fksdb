@@ -7,27 +7,23 @@ use LogicException;
 
 /**
  * Class Price
- * @package FKSDB\Payment\PriceCalculator
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Price {
 
     const CURRENCY_EUR = 'eur';
     const CURRENCY_CZK = 'czk';
-    /**
-     * @var string
-     */
+    /** @var string */
     private $currency;
-    /**
-     * @var float
-     */
-    private $amount = 0;
+    /** @var float */
+    private $amount;
 
     /**
      * Price constructor.
-     * @param float|null $amount
-     * @param string|null $currency
+     * @param float $amount
+     * @param string $currency
      */
-    public function __construct(float $amount = null, string $currency = null) {
+    public function __construct(float $amount, string $currency) {
         $this->amount = $amount;
         $this->currency = $currency;
     }
@@ -36,54 +32,38 @@ class Price {
      * @param Price $price
      * @throws LogicException
      */
-    public function add(Price $price) {
+    public function add(Price $price): void {
         if ($this->currency !== $price->getCurrency()) {
             throw new LogicException('Currencies are not a same');
         }
         $this->amount += $price->getAmount();
     }
 
-    /**
-     * @param string $currency
-     */
-    public function setCurrency(string $currency) {
-        $this->currency = $currency;
-    }
-
-    /**
-     * @return string
-     */
     public function getCurrency(): string {
         return $this->currency;
     }
 
-    /**
-     * @return float
-     */
     public function getAmount(): float {
         return $this->amount;
     }
 
-    /**
-     * @param float $amount
-     */
-    public function addAmount(float $amount) {
+    public function addAmount(float $amount): void {
         $this->amount += $amount;
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public static function getAllCurrencies(): array {
         return [self::CURRENCY_CZK, self::CURRENCY_EUR];
     }
 
     /**
-     * @param $currency
+     * @param string $currency
      * @return string
      * @throws UnsupportedCurrencyException
      */
-    public static function getLabel($currency): string {
+    public static function getLabel(string $currency): string {
         switch ($currency) {
             case self::CURRENCY_EUR:
                 return '€';

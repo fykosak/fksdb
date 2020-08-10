@@ -15,7 +15,7 @@ use Nette\Database\Table\ActiveRow;
 class EvaluationFykos2001 extends EvaluationStrategy {
 
     /**
-     * @return array
+     * @return ModelCategory[]
      */
     public function getCategories(): array {
         return [
@@ -28,7 +28,7 @@ class EvaluationFykos2001 extends EvaluationStrategy {
 
     /**
      * @param ModelCategory $category
-     * @return array|int
+     * @return int[]
      */
     public function categoryToStudyYears(ModelCategory $category): array {
         switch ($category->id) {
@@ -46,19 +46,12 @@ class EvaluationFykos2001 extends EvaluationStrategy {
         }
     }
 
-    /**
-     * @param ActiveRow $task
-     * @return string
-     */
     public function getPointsColumn(ActiveRow $task): string {
-        return "s.raw_points";
+        return 's.raw_points';
     }
 
-    /**
-     * @return string
-     */
     public function getSumColumn(): string {
-        return "s.raw_points";
+        return 's.raw_points';
     }
 
     /**

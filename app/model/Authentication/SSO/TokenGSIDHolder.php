@@ -1,9 +1,8 @@
 <?php
 
-namespace Authentication\SSO;
+namespace FKSDB\Authentication\SSO;
 
-use Authentication\TokenAuthenticator;
-use FKSDB\Authentication\SSO\IGSIDHolder;
+use FKSDB\Authentication\TokenAuthenticator;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use Nette\Http\Request;
@@ -19,14 +18,10 @@ class TokenGSIDHolder implements IGSIDHolder {
     const SESSION_NS = 'sso';
     const GSID_KEY = 'gsid';
 
-    /**
-     * @var Session
-     */
+    /** @var Session */
     private $session;
 
-    /**
-     * @var \FKSDB\ORM\Services\ServiceAuthToken
-     */
+    /** @var ServiceAuthToken */
     private $serviceAuthToken;
 
     /**
@@ -41,7 +36,7 @@ class TokenGSIDHolder implements IGSIDHolder {
      * @param ServiceAuthToken $serviceAuthToken
      * @param Request $request
      */
-    function __construct(Session $session, ServiceAuthToken $serviceAuthToken, Request $request) {
+    public function __construct(Session $session, ServiceAuthToken $serviceAuthToken, Request $request) {
         $this->session = $session;
         $this->serviceAuthToken = $serviceAuthToken;
         $this->request = $request;
@@ -71,7 +66,8 @@ class TokenGSIDHolder implements IGSIDHolder {
     }
 
     /**
-     * @param $gsid
+     * @param mixed $gsid
+     * @return void
      */
     public function setGSID($gsid) {
         $section = $this->session->getSection(self::SESSION_NS);

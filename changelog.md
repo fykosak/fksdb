@@ -10,6 +10,14 @@
     * implements RFC822 email list
     * add parameters max-length of email list
   * change type of all email_message fields
+### 2020-03-03
+#### enable GUIs for events
+  * new method of eventPresenter isEnabledForEvent($event):bool
+    * enable GUIs for single events
+  * Payments, Applications (single+team), applications, fyziklani,...
+  * Remove Application progress presenter
+    * progress charts are moved to list view of application presenter
+  * Change source of application time progress charts
 ----
 ### 2020-02-29
 #### Email_messages

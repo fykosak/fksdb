@@ -1,12 +1,12 @@
 <?php
 
-namespace Github;
+namespace FKSDB\Github;
 
 use Nette\SmartObject;
 
 /**
  * Class User
- * @package Github
+ * @author Michal Koutný <michal@fykos.cz>
  */
 class User {
     use SmartObject;

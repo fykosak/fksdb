@@ -1,12 +1,13 @@
 <?php
 
-namespace Exports\Formats;
+namespace FKSDB\Exports\Formats;
 
 use DOMDocument;
-use Exports\IExportFormat;
-use Exports\StoredQuery;
+use FKSDB\Exports\IExportFormat;
+use FKSDB\StoredQuery\StoredQuery;
+use Nette\Application\IResponse;
 use Nette\SmartObject;
-use WebService\IXMLNodeSerializer;
+use FKSDB\WebService\IXMLNodeSerializer;
 use XSLTProcessor;
 
 /**
@@ -16,63 +17,55 @@ use XSLTProcessor;
  */
 class XSLFormat implements IExportFormat {
     use SmartObject;
-    /**
-     * @var StoredQuery
-     */
+
+    /** @var StoredQuery */
     private $storedQuery;
 
-    /**
-     * @var array
-     */
-    private $parameters;
+    /** @var array */
+    private $parameters = [];
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $xslFile;
 
-    /**
-     * @var IXMLNodeSerializer
-     */
+    /** @var IXMLNodeSerializer */
     private $xmlSerializer;
 
     /**
      * XSLFormat constructor.
      * @param StoredQuery $storedQuery
-     * @param $xslFile
+     * @param string $xslFile
      * @param IXMLNodeSerializer $xmlSerializer
      */
-    function __construct(StoredQuery $storedQuery, $xslFile, IXMLNodeSerializer $xmlSerializer) {
+    public function __construct(StoredQuery $storedQuery, $xslFile, IXMLNodeSerializer $xmlSerializer) {
         $this->storedQuery = $storedQuery;
         $this->xslFile = $xslFile;
         $this->xmlSerializer = $xmlSerializer;
     }
 
-    /**
-     * @return array
-     */
-    public function getParameters() {
+    public function getParameters(): array {
         return $this->parameters;
     }
 
     /**
-     * @param $parameters
+     * @param array $parameters
+     * @return void
      */
-    public function setParameters($parameters) {
+    public function setParameters(array $parameters) {
         $this->parameters = $parameters;
     }
 
     /**
-     * @param $parameters
+     * @param array $parameters
+     * @return void
      */
-    public function addParameters($parameters) {
+    public function addParameters(array $parameters) {
         $this->parameters = array_merge($this->parameters, $parameters);
     }
 
     /**
-     * @return PlainTextResponse|\Nette\Application\IResponse
+     * @return PlainTextResponse
      */
-    public function getResponse() {
+    public function getResponse(): IResponse {
         // Prepare XSLT processor
         $xsl = new DOMDocument();
         $xsl->load($this->xslFile);
@@ -91,8 +84,6 @@ class XSLFormat implements IExportFormat {
         $this->xmlSerializer->fillNode($this->storedQuery, $export, $doc, IXMLNodeSerializer::EXPORT_FORMAT_1);
 
         // Prepare response
-        $response = new PlainTextResponse($proc->transformToXml($doc));
-        return $response;
+        return new PlainTextResponse($proc->transformToXml($doc));
     }
-
 }

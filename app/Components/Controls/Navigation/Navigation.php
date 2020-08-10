@@ -2,10 +2,15 @@
 
 namespace FKSDB\Components\Controls\Navigation;
 
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\PresenterBuilder;
-use Nette\Application\UI\Control;
-use Nette\InvalidArgumentException;
-use Nette\Templating\FileTemplate;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Modules\Core\BasePresenter;
+use FKSDB\UI\PageTitle;
+use Nette\Application\BadRequestException;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
+use Nette\DI\Container;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -14,43 +19,40 @@ use ReflectionMethod;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Navigation extends Control {
-
+class Navigation extends BaseComponent {
+    /** @var array[] */
     private $nodes = [];
+
+    /** @var array */
     private $nodeChildren = [];
 
-    /**
-     * @var PresenterBuilder
-     */
+    /** @var PresenterBuilder */
     private $presenterBuilder;
+
+    /** @var array */
     private $structure;
 
     /**
      * Navigation constructor.
      * @param PresenterBuilder $presenterBuilder
+     * @param Container $container
      */
-    function __construct(PresenterBuilder $presenterBuilder) {
-        parent::__construct();
+    public function __construct(PresenterBuilder $presenterBuilder, Container $container) {
+        parent::__construct($container);
         $this->presenterBuilder = $presenterBuilder;
     }
 
     /**
-     * @param $nodeId
-     * @return mixed
+     * @param string|int $nodeId
+     * @return array
      */
-    public function getNode($nodeId) {
+    public function getNode(string $nodeId) {
         return $this->nodes[$nodeId];
     }
 
-    /**
-     * @param $node
-     * @return bool
-     */
-    public function isActive($node) {
-        if (isset($node->linkPresenter)) {
-            /**
-             * @var \BasePresenter $presenter
-             */
+    public function isActive(array $node): bool {
+        if (isset($node['linkPresenter'])) {
+            /** @var BasePresenter $presenter */
             $presenter = $this->getPresenter();
             try {
                 $this->createLink($presenter, $node);
@@ -66,10 +68,10 @@ class Navigation extends Control {
             return true;
         }
 // try children
-        if (!isset($this->nodeChildren[$node->nodeId])) {
+        if (!isset($this->nodeChildren[$node['nodeId']])) {
             return false;
         }
-        foreach ($this->nodeChildren[$node->nodeId] as $childId) {
+        foreach ($this->nodeChildren[$node['nodeId']] as $childId) {
             if ($this->isActive($this->nodes[$childId])) {
                 return true;
             }
@@ -78,225 +80,136 @@ class Navigation extends Control {
     }
 
     /**
-     * @param \stdClass $node
-     * @return bool|mixed
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @param array $node
+     * @return bool
+     * @throws BadTypeException
      * @throws \ReflectionException
+     * @throws BadRequestException
      */
-    public function isVisible(\stdClass $node) {
-        if (isset($node->visible)) {
-            return $node->visible;
+    public function isVisible(array $node): bool {
+        if (isset($node['visible'])) {
+            return $node['visible'];
         }
 
-        if (isset($node->linkPresenter)) {
-            /**
-             * @var \BasePresenter $presenter
-             */
-            $presenter = $this->getPresenter();
-            return $this->isAllowed($presenter, $node);
+        if (isset($node['linkPresenter'])) {
+            return $this->isAllowed($this->getPresenter(), $node);
         }
 
         return true;
     }
 
     /**
-     * @param $node
-     * @return null|string
-     * @throws \Nette\Application\BadRequestException
+     * @param array $node
+     * @return PageTitle
+     *
+     *
+     * @throws BadRequestException
+     * @throws BadTypeException
      */
-    public function getTitle($node) {
-        if (isset($node->title)) {
-            return $node->title;
+    public function getTitle(array $node): PageTitle {
+        if (isset($node['title'])) {
+            return new PageTitle($node['title'], $node['icon']);
         }
-        if (isset($node->linkPresenter)) {
-            /**
-             * @var \BasePresenter $presenter
-             */
-            $presenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
+        if (isset($node['linkPresenter'])) {
+            $presenter = $this->preparePresenter($node['linkPresenter'], $node['linkAction'], $node['linkParams']);
             $presenter->setView($presenter->getView()); // to force update the title
 
             return $presenter->getTitle();
         }
-        return null;
+        return new PageTitle('');
     }
 
     /**
-     * @param $node
+     * @param array $node
      * @return null|string
-     * @throws \Nette\Application\BadRequestException
-     */
-    public function getSubTitle($node) {
-        if (isset($node->title)) {
-            return $node->title;
-        }
-        if (isset($node->linkPresenter)) {
-            /**
-             * @var \BasePresenter $presenter
-             */
-            $presenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
-            $presenter->setView($presenter->getView()); // to force update the title
-
-            return $presenter->getSubtitle();
-        }
-        return null;
-    }
-
-    /**
-     * @param $node
-     * @return null|string
-     * @throws \Nette\Application\BadRequestException
-     */
-    public function getIcon($node) {
-        if (isset($node->icon)) {
-            return $node->icon;
-        }
-        if (isset($node->linkPresenter)) {
-            /**
-             * @var \BasePresenter $presenter
-             */
-            $presenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
-            $presenter->setView($presenter->getView()); // to force update the title
-
-            return $presenter->getIcon();
-        }
-        return null;
-    }
-
-
-    /**
-     * @param \stdClass $node
-     * @return null|string
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws BadTypeException
+     * @throws InvalidLinkException
      * @throws \ReflectionException
+     * @throws BadRequestException
      */
-    public function getLink(\stdClass $node) {
-        if (isset($node->link)) {
-            return $node->link;
+    public function getLink(array $node): ?string {
+        if (isset($node['link'])) {
+            return $node['link'];
         }
-        if (isset($node->linkPresenter)) {
-            /**
-             * @var \BasePresenter $presenter
-             */
-            $presenter = $this->getPresenter();
-            return $this->createLink($presenter, $node);
+        if (isset($node['linkPresenter'])) {
+            return $this->createLink($this->getPresenter(), $node);
         }
         return null;
     }
 
-    /**
-     * @param $structure
-     */
-    public function setStructure($structure) {
+    public function setStructure(array $structure): void {
         $this->structure = $structure;
     }
 
-    /**
-     * @param $nodeId
-     * @param $arguments
-     */
-    public function createNode($nodeId, $arguments) {
-        $node = (object)$arguments;
-        $this->nodes[$nodeId] = $node;
+    public function createNode(string $nodeId, array $arguments): void {
+        $this->nodes[$nodeId] = $arguments;
     }
 
     /**
-     * @param $idChild
-     * @param $idParent
+     * @param string|int $idChild
+     * @param string|int $idParent
+     * @return void
      */
-    public function addParent($idChild, $idParent) {
+    public function addParent($idChild, $idParent): void {
         if (!isset($this->nodeChildren)) {
             $this->nodeChildren[$idParent] = [];
         }
         $this->nodeChildren[$idParent][] = $idChild;
     }
 
-    /**
-     * @param null $root
-     */
-    public function renderNavbar($root = null) {
-        /**
-         * @var FileTemplate $template
-         */
-        $template = $this->getTemplate();
-        $template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.navbar.latte');
-        $this->renderFromRoot($template, $root, true);
+    public function renderNavbar(string $root): void {
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.navbar.latte');
+        $this->renderFromRoot([$root => $this->structure[$root]]);
+    }
+
+    public function render(string $root): void {
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.latte');
+        $this->renderFromRoot($this->structure[$root]);
+    }
+
+    private function renderFromRoot(array $nodes): void {
+        $this->template->nodes = $nodes;
+        $this->template->render();
     }
 
     /**
-     * @param null $root
-     */
-    public function render($root = null) {
-        /**
-         * @var FileTemplate $template
-         */
-        $template = $this->getTemplate();
-        $template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.latte');
-        $this->renderFromRoot($template, $root, false);
-    }
-
-    /**
-     * @param FileTemplate $template
-     * @param $root
-     * @param bool $isNavbar
-     */
-    private function renderFromRoot(FileTemplate $template, $root, $isNavbar = false) {
-        if (!is_null($root)) {
-            if ($root) {
-                $template->nodes = $isNavbar ? [$root => $this->structure[$root]] : $this->structure[$root];
-            } else {
-                $template->nodes = [];
-            }
-        } else {
-            $template->nodes = $this->structure;
-        }
-        $template->render();
-    }
-
-    /**
-     * @param \BasePresenter $presenter
-     * @param \stdClass $node
+     * @param Presenter $presenter
+     * @param array $node
      * @return string
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws InvalidLinkException
      * @throws \ReflectionException
      */
-    private function createLink(\BasePresenter $presenter, \stdClass $node) {
-        /**
-         * @var \BasePresenter $linkedPresenter
-         */
-        $linkedPresenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
-        $linkParams = $this->actionParams($linkedPresenter, $node->linkAction, $node->linkParams);
+    private function createLink(Presenter $presenter, array $node): string {
+        $linkedPresenter = $this->preparePresenter($node['linkPresenter'], $node['linkAction'], $node['linkParams']);
+        $linkParams = $this->actionParams($linkedPresenter, $node['linkAction'], $node['linkParams']);
 
-        return $presenter->link(':' . $node->linkPresenter . ':' . $node->linkAction, $linkParams);
+        return $presenter->link(':' . $node['linkPresenter'] . ':' . $node['linkAction'], $linkParams);
     }
 
     /**
-     * @param \BasePresenter $presenter
-     * @param \stdClass $node
-     * @return mixed
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Application\UI\InvalidLinkException
+     * @param Presenter $presenter
+     * @param array $node
+     * @return bool
+     * @throws BadRequestException
+     * @throws BadTypeException
      * @throws \ReflectionException
      */
-    private function isAllowed(\BasePresenter $presenter, \stdClass $node) {
-        /**
-         * @var \BasePresenter $allowedPresenter
-         */
-        $allowedPresenter = $this->preparePresenter($node->linkPresenter, $node->linkAction, $node->linkParams);
-        $allowedParams = $this->actionParams($allowedPresenter, $node->linkAction, $node->linkParams);
-        return $presenter->authorized(':' . $node->linkPresenter . ':' . $node->linkAction, $allowedParams);
+    private function isAllowed(Presenter $presenter, array $node): bool {
+        $allowedPresenter = $this->preparePresenter($node['linkPresenter'], $node['linkAction'], $node['linkParams']);
+        $allowedParams = $this->actionParams($allowedPresenter, $node['linkAction'], $node['linkParams']);
+        return $presenter->authorized(':' . $node['linkPresenter'] . ':' . $node['linkAction'], $allowedParams);
     }
 
     /**
-     * @param \BasePresenter $presenter
-     * @param $actionParams
-     * @param $params
+     * @param Presenter $presenter
+     * @param string $actionParams
+     * @param array $params
      * @return array
      * @throws \ReflectionException
      */
-    private function actionParams(\BasePresenter $presenter, $actionParams, $params) {
+    private function actionParams(Presenter $presenter, $actionParams, $params): array {
         $method = $presenter->publicFormatActionMethod($actionParams);
 
         $actionParams = [];
@@ -312,20 +225,21 @@ class Navigation extends Control {
     }
 
     /**
-     * @param $presenterName
-     * @param $action
-     * @param $providedParams
-     * @return \Nette\Application\UI\Presenter
-     * @throws \Nette\Application\BadRequestException
+     * @param string $presenterName
+     * @param string $action
+     * @param string $providedParams
+     * @return Presenter|INavigablePresenter
+     *
+     *
+     * @throws BadRequestException
+     * @throws BadTypeException
      */
-    public function preparePresenter($presenterName, $action, $providedParams) {
+    public function preparePresenter(string $presenterName, string $action, $providedParams): Presenter {
         $ownPresenter = $this->getPresenter();
-        $presenter = $this->presenterBuilder->preparePresenter($presenterName, $action, $providedParams, $ownPresenter->getParameter());
+        $presenter = $this->presenterBuilder->preparePresenter($presenterName, $action, $providedParams, $ownPresenter->getParameters());
         if (!$presenter instanceof INavigablePresenter) {
-            $class = get_class($presenter);
-            throw new InvalidArgumentException("Presenter must be instance of INavigablePresenter, $class given.");
+            throw new BadTypeException(INavigablePresenter::class, $presenter);
         }
         return $presenter;
     }
-
 }

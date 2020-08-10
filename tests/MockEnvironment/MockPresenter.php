@@ -2,15 +2,19 @@
 
 namespace MockEnvironment;
 
-use BasePresenter;
+use FKSDB\Modules\Core\BasePresenter;
 
 class MockPresenter extends BasePresenter {
-
-    public function link($destination, $args = array()) {
+    /**
+     * @param $destination
+     * @param array $args
+     * @return string
+     */
+    public function link($destination, $args = []) {
         return '';
     }
 
-    public function getLang() {
+    public function getLang(): string {
         return 'cs';
     }
 }

@@ -1,0 +1,35 @@
+{layout '../layout.latte'}
+{define #submit-row}
+    {if $submit}
+        <td>
+            {if $submit->source === FKSDB\ORM\Models\ModelSubmit::SOURCE_POST}
+                <i class="text-warning fa fa-envelope" title="#{$submit->submit_id}"></i>
+            {else}
+                <a class="text-success"
+                   title="{_'Download'}"
+                   href="{link downloadUploaded! $submit->submit_id}">
+                    <i class="fa fa-file"></i>
+                </a>
+            {/if}
+
+            {if $submit->corrected }
+                <a class="text-success"
+                   title="{_'Download'}"
+                   href="{link downloadCorrected! $submit->submit_id}"><i
+                            class="fa fa-file-text"></i>
+                </a>
+            {else}
+                <i class="text-danger fa fa-file-text"></i>
+
+            {/if}
+            {if is_null($submit->raw_points) }
+                <i class="text-danger fa fa-bar-chart"></i>
+            {else}
+                <i class="text-success fa fa-bar-chart"
+                   title="{$submit->calc_points.' ('.$submit->raw_points.') / '.$submit->getTask()->points}"></i>
+            {/if}
+        </td>
+    {else}
+        <td></td>
+    {/if}
+{/define}

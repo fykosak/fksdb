@@ -3,48 +3,54 @@
 namespace FKSDB\Components\Grids\Events\Application;
 
 use Closure;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\Application\BadRequestException;
 use Nette\Database\Table\Selection;
+use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateColumnException;
-use function count;
-use function in_array;
-use function str_replace;
+use FKSDB\SQL\SearchableDataSource;
 
 /**
  * Class AbstractApplicationGrid
- * @package FKSDB\Components\Grids\Events\Application
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractApplicationGrid extends BaseGrid {
-    /**
-     * @var ModelEvent
-     */
-    protected $event;
+
+    protected ModelEvent $event;
+
+    private Holder $holder;
 
     /**
      * AbstractApplicationGrid constructor.
      * @param ModelEvent $event
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param Holder $holder
+     * @param Container $container
      */
-    public function __construct(ModelEvent $event, TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct($tableReflectionFactory);
+    public function __construct(ModelEvent $event, Holder $holder, Container $container) {
+        parent::__construct($container);
         $this->event = $event;
+        $this->holder = $holder;
     }
 
-    /**
-     * @return Selection
-     */
+    protected function getData(): IDataSource {
+        $participants = $this->getSource();
+        $source = new SearchableDataSource($participants);
+        $source->setFilterCallback($this->getFilterCallBack());
+        return $source;
+    }
+
     abstract protected function getSource(): Selection;
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function createComponentSearchForm(): FormControl {
         $query = $this->getSource()->select('count(*) AS count,status.*')->group('status');
@@ -68,7 +74,7 @@ abstract class AbstractApplicationGrid extends BaseGrid {
                 ->addText(': ')
                 ->addHtml(Html::el('i')->addText(_($state['description'])))
                 ->addText(' (' . $state['count'] . ')');
-            $stateContainer->addCheckbox(str_replace('.', '__', $state['state']), $label);
+            $stateContainer->addCheckbox(\str_replace('.', '__', $state['state']), $label);
         }
         $form->addComponent($stateContainer, 'status');
         $form->addSubmit('submit', _('Apply filter'));
@@ -82,46 +88,37 @@ abstract class AbstractApplicationGrid extends BaseGrid {
         return $control;
     }
 
-    /**
-     * @return Closure
-     */
     public function getFilterCallBack(): Closure {
         return function (Selection $table, $value) {
             $states = [];
             foreach ($value->status as $state => $value) {
                 if ($value) {
-                    $states[] = str_replace('__', '.', $state);
+                    $states[] = \str_replace('__', '.', $state);
                 }
             }
-            if (count($states)) {
+            if (\count($states)) {
                 $table->where('status IN ?', $states);
             }
         };
     }
 
-    /**
-     * @return array
-     */
     abstract protected function getHoldersColumns(): array;
 
     /**
      * @param array $fields
+     * @return void
      * @throws DuplicateColumnException
+     * @throws BadTypeException
      */
-    protected function addColumns(array $fields) {
-        parent::addColumns($fields);
-
-        $holderFields = $this->event->getHolder()->getPrimaryHolder()->getFields();
-
+    protected function addColumns(array $fields): void {
+        $holderFields = $this->holder->getPrimaryHolder()->getFields();
         foreach ($holderFields as $name => $def) {
-            if (in_array($name, $this->getHoldersColumns())) {
-                $this->addReflectionColumn($this->getTableName(), $name, $this->getModelClassName());
+            if (\in_array($name, $this->getHoldersColumns())) {
+                $fields[] = $this->getTableName() . '.' . $name;
             }
         }
+        parent::addColumns($fields);
     }
 
-    /**
-     * @return string
-     */
     abstract protected function getTableName(): string;
 }

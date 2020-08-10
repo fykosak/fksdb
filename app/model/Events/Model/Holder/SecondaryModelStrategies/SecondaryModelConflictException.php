@@ -1,48 +1,46 @@
 <?php
 
 
-namespace Events\Model\Holder\SecondaryModelStrategies;
+namespace FKSDB\Events\Model\Holder\SecondaryModelStrategies;
 
-use Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\ORM\IModel;
+use Nette\Database\Table\ActiveRow;
 use RuntimeException;
 
 /**
  * Class SecondaryModelConflictException
- * @package Events\Model\Holder\SecondaryModelStrategies
+ * *
  */
 class SecondaryModelConflictException extends RuntimeException {
 
-    /**
-     * @var BaseHolder
-     */
+    /** @var BaseHolder */
     private $baseHolder;
 
-    /**
-     * @var \FKSDB\ORM\IModel[]
-     */
+    /** @var IModel[] */
     private $conflicts;
 
     /**
      * SecondaryModelConflictException constructor.
      * @param BaseHolder $baseHolder
-     * @param $conflicts
+     * @param iterable $conflicts
      * @param null $code
      * @param null $previous
      */
-    function __construct(BaseHolder $baseHolder, $conflicts, $code = null, $previous = null) {
+    public function __construct(BaseHolder $baseHolder, $conflicts, $code = null, $previous = null) {
         parent::__construct($this->createMessage($baseHolder->getModel(), $conflicts), $code, $previous);
         $this->baseHolder = $baseHolder;
         $this->conflicts = $conflicts;
     }
 
     /**
-     * @param \FKSDB\ORM\IModel $model
-     * @param $conflicts
+     * @param IModel $model
+     * @param iterable $conflicts
      * @return string
      */
     private function createMessage(IModel $model, $conflicts) {
         $ids = null;
+        /** @var ActiveRow $conflict */
         foreach ($conflicts as $conflict) {
             $ids = $conflict->getPrimary();
         }

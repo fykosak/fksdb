@@ -1,9 +1,9 @@
 <?php
 
-namespace Authorization;
+namespace FKSDB\Authorization;
 
-use Events\Machine\BaseMachine;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\Holder\Holder;
 use Nette\Security\IUserStorage;
 use Nette\SmartObject;
 
@@ -15,22 +15,17 @@ use Nette\SmartObject;
 class RelatedPersonAuthorizator {
 
     use SmartObject;
-    /**
-     * @var IUserStorage
-     */
-    private $user;
+
+    private IUserStorage $user;
 
     /**
      * RelatedPersonAuthorizator constructor.
      * @param IUserStorage $user
      */
-    function __construct(IUserStorage $user) {
+    public function __construct(IUserStorage $user) {
         $this->user = $user;
     }
 
-    /**
-     * @return IUserStorage
-     */
     public function getUser(): IUserStorage {
         return $this->user;
     }
@@ -40,9 +35,9 @@ class RelatedPersonAuthorizator {
      * of the queried contest.
      *
      * @param Holder $holder
-     * @return boolean
+     * @return bool
      */
-    public function isRelatedPerson(Holder $holder) {
+    public function isRelatedPerson(Holder $holder): bool {
         // everyone is related
         if ($holder->getPrimaryHolder()->getModelState() == BaseMachine::STATE_INIT) {
             return true;
@@ -58,7 +53,7 @@ class RelatedPersonAuthorizator {
             return false;
         }
 
-        foreach ($holder as $baseHolder) {
+        foreach ($holder->getBaseHolders() as $baseHolder) {
             if ($baseHolder->getPersonId() == $person->person_id) {
                 return true;
             }
@@ -66,5 +61,4 @@ class RelatedPersonAuthorizator {
 
         return false;
     }
-
 }

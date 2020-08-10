@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids\Events;
 
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\SmartObject;
 
@@ -16,22 +17,16 @@ class LayoutResolver {
 
     const TEMPLATE_EXT = '.latte';
 
-    /**
-     * @var array
-     */
-    private $definitions;
+    private array $definitions;
 
-    /**
-     * @var string
-     */
-    private $templateDir;
+    private string $templateDir;
 
     /**
      * LayoutResolver constructor.
-     * @param $templateDir
-     * @param $definitions
+     * @param string $templateDir
+     * @param array $definitions
      */
-    function __construct($templateDir, $definitions) {
+    public function __construct(string $templateDir, array $definitions) {
         $this->templateDir = $templateDir;
         $this->definitions = $definitions;
     }
@@ -39,25 +34,19 @@ class LayoutResolver {
     /**
      * @param ModelEvent $event
      * @return string
+     * @throws NotImplementedException
      */
-    public function getTableLayout(ModelEvent $event) {
-        return $this->getTemplate($event, 'tableLayout');
-    }
-
-    /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @return string
-     */
-    public function getFormLayout(ModelEvent $event) {
+    public function getFormLayout(ModelEvent $event): string {
         return $this->getTemplate($event, 'formLayout');
     }
 
     /**
      * @param ModelEvent $event
-     * @param $type
+     * @param string $type
      * @return string
+     * @throws NotImplementedException
      */
-    private function getTemplate(ModelEvent $event, $type) {
+    private function getTemplate(ModelEvent $event, string $type): string {
         $eventTypeId = $event->event_type_id;
         $eventYear = $event->event_year;
         $result = null;
@@ -72,6 +61,7 @@ class LayoutResolver {
         if ($result) {
             return $this->templateDir . DIRECTORY_SEPARATOR . $result . self::TEMPLATE_EXT;
         }
+        throw new NotImplementedException();
     }
 
 }

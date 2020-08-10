@@ -5,50 +5,44 @@ namespace FKSDB\Components\Forms\Controls;
 use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Application\IStylesheetCollector;
 use Nette\Forms\Controls\TextArea;
+use Nette\Utils\Html;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
- *
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SQLConsole extends TextArea {
 
-    const CSS_CLASS = 'sqlConsole';
+    protected const CSS_CLASS = 'sqlConsole';
+
+    private bool $attachedJS = false;
+
+    private bool $attachedCSS = false;
 
     /**
      * SQLConsole constructor.
      * @param null $label
-     * @param null $cols
-     * @param null $rows
      */
-    public function __construct($label = NULL, $cols = NULL, $rows = NULL) {
-        parent::__construct($label, $cols, $rows);
-        $this->monitor(IJavaScriptCollector::class);
-        $this->monitor(IStylesheetCollector::class);
-    }
-
-    private $attachedJS = false;
-    private $attachedCSS = false;
-
-    /**
-     * @param $component
-     */
-    protected function attached($component) {
-        parent::attached($component);
-        if (!$this->attachedJS && $component instanceof IJavaScriptCollector) {
-            $this->attachedJS = true;
-            $component->registerJSFile('js/codemirror.min.js');
-            $component->registerJSFile('js/sqlconsole.js');
-        }
-        if (!$this->attachedCSS && $component instanceof IStylesheetCollector) {
-            $this->attachedCSS = true;
-            $component->registerStylesheetFile('css/codemirror.css', ['screen', 'projection', 'tv']);
-        }
+    public function __construct($label = null) {
+        parent::__construct($label);
+        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
+            if (!$this->attachedJS) {
+                $this->attachedJS = true;
+                $collector->registerJSFile('js/codemirror.min.js');
+                $collector->registerJSFile('js/sqlconsole.js');
+            }
+        });
+        $this->monitor(IStylesheetCollector::class, function (IStylesheetCollector $collector) {
+            if (!$this->attachedCSS) {
+                $this->attachedCSS = true;
+                $collector->registerStylesheetFile('css/codemirror.css', ['screen', 'projection', 'tv']);
+            }
+        });
     }
 
     /**
-     * @return \Nette\Utils\Html
+     * @return Html
      */
     public function getControl() {
         $control = parent::getControl();

@@ -1,7 +1,0 @@
-{block content}
-    {control editControl}
-    <hr/>
-    {if !$model->isChecked() && $model->getFyziklaniTeam()->hasOpenSubmitting()}
-        <a href="{link check!}" class="btn btn-success">{_('Check submit')}</a>
-    {/if}
-{/block}

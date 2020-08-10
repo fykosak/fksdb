@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls\Breadcrumbs;
 
+use FKSDB\UI\PageTitle;
 use Nette\Application\Request as AppRequest;
 
 /**
@@ -12,44 +13,32 @@ use Nette\Application\Request as AppRequest;
  */
 class Request {
 
-    /**
-     * @var null|int
-     */
+    /** @var null|int */
     public $user;
 
-    /**
-     * @var AppRequest
-     */
-    public $request;
+    public AppRequest $request;
 
-    /**
-     * @var string
-     */
-    public $title;
-    /*
-     * @var string backling ID
-     */
+    public PageTitle $title;
+
+    /** @var string backling ID */
     public $parent;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     public $pathKey;
 
     /**
      * Request constructor.
-     * @param $user
+     * @param int|null $user
      * @param AppRequest $request
-     * @param $title
-     * @param $parent
-     * @param $pathKey
+     * @param PageTitle $title
+     * @param string $parent
+     * @param string $pathKey
      */
-    function __construct($user, AppRequest $request, $title, $parent, $pathKey) {
+    public function __construct($user, AppRequest $request, PageTitle $title, $parent, $pathKey) {
         $this->user = $user;
         $this->request = $request;
         $this->title = $title;
         $this->parent = $parent;
         $this->pathKey = $pathKey;
     }
-
 }

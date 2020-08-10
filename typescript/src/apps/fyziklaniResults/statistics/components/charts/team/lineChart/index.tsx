@@ -1,4 +1,5 @@
-import LineChart, { LineChartData } from '@shared/components/lineChart';
+import LineChart from '@shared/components/lineChart';
+import { LineChartData } from '@shared/components/lineChart/interfaces';
 import {
     scaleLinear, scaleTime,
 } from 'd3-scale';

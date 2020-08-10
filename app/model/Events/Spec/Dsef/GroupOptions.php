@@ -1,14 +1,14 @@
 <?php
 
-namespace Events\Spec\Dsef;
+namespace FKSDB\Events\Spec\Dsef;
 
-use Events\Machine\BaseMachine;
-use Events\Model\Holder\Field;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\Holder\Field;
 use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Services\Events\ServiceDsefGroup;
 use Nette\SmartObject;
-use ORM\ServicesMulti\Events\ServiceMDsefParticipant;
+use FKSDB\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 
 /**
  *
@@ -16,32 +16,27 @@ use ORM\ServicesMulti\Events\ServiceMDsefParticipant;
  */
 class GroupOptions implements IOptionsProvider {
     use SmartObject;
-    /**
-     * @var ServiceMDsefParticipant
-     */
-    private $serviceMParticipant;
 
-    /**
-     * @var \FKSDB\ORM\Services\Events\ServiceDsefGroup
-     */
-    private $serviceDsefGroup;
+    private ServiceMDsefParticipant $serviceMParticipant;
+
+    private ServiceDsefGroup $serviceDsefGroup;
+    /** @var array|string */
     private $includeStates;
+    /** @var array|string|string[] */
     private $excludeStates;
 
-    /**
-     * @var array  eventId => groups cache
-     */
+    /** @var array  eventId => groups cache */
     private $groups = [];
 
     /**
      * @note In NEON instatiate as GroupOptions(..., ['state1'],['state1', 'state2']).
      *
      * @param ServiceMDsefParticipant $serviceMParticipant
-     * @param \FKSDB\ORM\Services\Events\ServiceDsefGroup $serviceDsefGroup
+     * @param ServiceDsefGroup $serviceDsefGroup
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    function __construct(ServiceMDsefParticipant $serviceMParticipant, ServiceDsefGroup $serviceDsefGroup, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
+    public function __construct(ServiceMDsefParticipant $serviceMParticipant, ServiceDsefGroup $serviceDsefGroup, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
         $this->includeStates = $includeStates;
         $this->excludeStates = $excludeStates;
         $this->serviceMParticipant = $serviceMParticipant;
@@ -49,7 +44,7 @@ class GroupOptions implements IOptionsProvider {
     }
 
     /**
-     * @param $groups
+     * @param iterable $groups
      * @return array
      */
     private function transformGroups($groups) {
@@ -57,14 +52,14 @@ class GroupOptions implements IOptionsProvider {
         foreach ($groups as $name => $capacity) {
             $result[] = [
                 'label' => $name,
-                'capacity' => $capacity
+                'capacity' => $capacity,
             ];
         }
         return $result;
     }
 
     /**
-     * @param $eventId
+     * @param int $eventId
      * @return mixed
      */
     private function getGroups($eventId) {
@@ -77,18 +72,13 @@ class GroupOptions implements IOptionsProvider {
         return $this->groups[$eventId];
     }
 
-    /**
-     * @param Field $field
-     * @return array
-     */
-    public function getOptions(Field $field) {
+    public function getOptions(Field $field): array {
         $baseHolder = $field->getBaseHolder();
         $event = $baseHolder->getEvent();
         $application = $baseHolder->getModel();
         $groups = $this->getGroups($event->getPrimary());
 
-        $selection = $this->serviceMParticipant->getTable()
-            ->getConnection()->table(DbNames::TAB_E_DSEF_PARTICIPANT)
+        $selection = $this->serviceMParticipant->getMainService()->getContext()->table(DbNames::TAB_E_DSEF_PARTICIPANT)
             ->select('e_dsef_group_id, count(event_participant.event_participant_id) AS occupied')
             ->group('e_dsef_group_id')
             ->where('event_id', $event->event_id)

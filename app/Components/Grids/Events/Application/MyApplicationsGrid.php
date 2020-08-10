@@ -2,48 +2,45 @@
 
 namespace FKSDB\Components\Grids\Events\Application;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\DbNames;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\UI\Presenter;
-use Nette\Database\Table\ActiveRow;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class MyApplicationsGrid
- * @package FKSDB\Components\Grids\Events\Application
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class MyApplicationsGrid extends BaseGrid {
-    /**
-     * @var ModelPerson
-     */
-    private $person;
-    /**
-     * @var ModelContest
-     */
-    private $contest;
+
+    private ModelPerson $person;
+
+    private ModelContest $contest;
 
     /**
      * MyApplicationsGrid constructor.
      * @param ModelContest $contest
      * @param ModelPerson $person
-     * @param TableReflectionFactory|null $tableReflectionFactory
+     * @param Container $container
      */
-    public function __construct(ModelContest $contest, ModelPerson $person, TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct($tableReflectionFactory);
+    public function __construct(ModelContest $contest, ModelPerson $person, Container $container) {
+        parent::__construct($container);
         $this->person = $person;
         $this->contest = $contest;
     }
 
     /**
      * @param Presenter $presenter
+     * @return void
      * @throws DuplicateColumnException
+     * @throws BadTypeException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->paginate = false;
@@ -52,13 +49,17 @@ class MyApplicationsGrid extends BaseGrid {
         //$source->select('event_participant.*,event.*');
         $source = new NDataSource($source);
         $this->setDataSource($source);
-        $eventCallBack = function (ActiveRow $row) {
-            return ModelEventParticipant::createFromActiveRow($row)->getEvent();
-        };
-        $this->addJoinedColumn(DbNames::TAB_EVENT, 'name', $eventCallBack);
-        $this->addJoinedColumn(DbNames::TAB_EVENT, 'year', $eventCallBack);
-        $this->addJoinedColumn(DbNames::TAB_EVENT, 'event_year', $eventCallBack);
-        $this->addReflectionColumn(DbNames::TAB_EVENT_PARTICIPANT, 'status', ModelEventParticipant::class);
+        /*   $eventCallBack = function (ActiveRow $row) {
+               return ModelEventParticipant::createFromActiveRow($row)->getEvent();
+           };*/
 
+        //     $this->addJoinedColumn(DbNames::TAB_EVENT, 'name', $eventCallBack);
+        //   $this->addJoinedColumn(DbNames::TAB_EVENT, 'year', $eventCallBack);
+        //   $this->addJoinedColumn(DbNames::TAB_EVENT, 'event_year', $eventCallBack);
+        $this->addColumns(['event_participant.status']);
+    }
+
+    protected function getModelClassName(): string {
+        return ModelEventParticipant::class;
     }
 }

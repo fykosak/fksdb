@@ -2,110 +2,80 @@
 
 namespace FKSDB\Components\Events;
 
-use Events\Machine\Machine;
-use Events\Model\ApplicationHandler;
-use Events\Model\ApplicationHandlerFactory;
-use Events\Model\Grid\IHolderSource;
-use Events\Model\Holder\Holder;
+use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\ApplicationHandler;
+use FKSDB\Events\Model\ApplicationHandlerFactory;
+use FKSDB\Events\Model\Grid\IHolderSource;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Application\IJavaScriptCollector;
-use FKSDB\Logging\FlashMessageDump;
+use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\MemoryLogger;
-use Nette\Application\UI\Control;
+use FKSDB\Modules\Core\BasePresenter;
+use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\Presenter;
+use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\Utils\Strings;
-
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @method BasePresenter getPresenter($need = true)
  */
-class ApplicationsGrid extends Control {
+class ApplicationsGrid extends BaseComponent {
 
     const NAME_PREFIX = 'application_';
-
-    /**
-     *
-     * @var Container
-     */
-    private $container;
-
-    /**
-     * @var IHolderSource
-     */
+    /** @var IHolderSource */
     private $source;
 
-    /**
-     * @var Holder[]
-     */
+    /** @var Holder[] */
     private $holders = [];
 
-    /**
-     * @var Machine[]
-     */
+    /** @var Machine[] */
     private $machines = [];
 
-    /**
-     * @var \FKSDB\ORM\Models\ModelEvent[]
-     */
+    /** @var ModelEvent[] */
     private $eventApplications = [];
 
-    /**
-     * @var ApplicationHandler[]
-     */
+    /** @var ApplicationHandler[] */
     private $handlers = [];
 
-    /**
-     * @var ApplicationHandlerFactory
-     */
+    /** @var ApplicationHandlerFactory */
     private $handlerFactory;
 
-    /**
-     * @var FlashMessageDump
-     */
-    private $flashDump;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     private $templateFile;
 
-    /**
-     * @var boolean
-     */
+    /** @var bool */
     private $searchable = false;
+    /** @var bool */
+    private $attachedJS = false;
+
+    private EventDispatchFactory $eventDispatchFactory;
 
     /**
      * ApplicationsGrid constructor.
      * @param Container $container
      * @param IHolderSource $source
      * @param ApplicationHandlerFactory $handlerFactory
-     * @param FlashMessageDump $flashDump
+     *
      */
-    function __construct(Container $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory, FlashMessageDump $flashDump) {
-        parent::__construct();
-        $this->monitor(IJavaScriptCollector::class);
-        $this->container = $container;
+    public function __construct(Container $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory) {
+        parent::__construct($container);
+        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
+            if (!$this->attachedJS) {
+                $this->attachedJS = true;
+                $collector->registerJSFile('js/searchTable.js');
+            }
+        });
         $this->source = $source;
         $this->handlerFactory = $handlerFactory;
-        $this->flashDump = $flashDump;
         $this->processSource();
     }
 
-    private $attachedJS = false;
-
-    /**
-     * @param $obj
-     */
-    protected function attached($obj) {
-        parent::attached($obj);
-        if (!$this->attachedJS && $obj instanceof IJavaScriptCollector) {
-            $this->attachedJS = true;
-            $obj->registerJSFile('js/searchTable.js');
-        }
-    }
 
     /**
      * @param string $template name of the standard template or whole path
@@ -118,6 +88,10 @@ class ApplicationsGrid extends Control {
         }
     }
 
+    public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory): void {
+        $this->eventDispatchFactory = $eventDispatchFactory;
+    }
+
     /**
      * @return bool
      */
@@ -126,25 +100,32 @@ class ApplicationsGrid extends Control {
     }
 
     /**
-     * @param $searchable
+     * @param bool $searchable
+     * @return void
      */
     public function setSearchable($searchable) {
         $this->searchable = $searchable;
     }
 
+    /**
+     * @return void
+     *
+     */
     private function processSource() {
         $this->eventApplications = [];
-        foreach ($this->source as $key => $holder) {
-            $this->eventApplications[$key] = $holder->getEvent();
+
+        foreach ($this->source->getHolders() as $key => $holder) {
+            $event = $holder->getPrimaryHolder()->getEvent();
+            $this->eventApplications[$key] = $event;
             $this->holders[$key] = $holder;
-            $this->machines[$key] = $this->container->createEventMachine($holder->getEvent());
-            $this->handlers[$key] = $this->handlerFactory->create($holder->getEvent(), new MemoryLogger()); //TODO it's a bit weird to create new logger for each handler
+            $this->machines[$key] = $this->eventDispatchFactory->getEventMachine($event);
+            $this->handlers[$key] = $this->handlerFactory->create($event, new MemoryLogger()); //TODO it's a bit weird to create new logger for each handler
         }
     }
 
     /**
-     * @param $name
-     * @return ApplicationComponent|\Nette\ComponentModel\IComponent
+     * @param string $name
+     * @return ApplicationComponent|IComponent
      */
     protected function createComponent($name) {
 
@@ -155,18 +136,7 @@ class ApplicationsGrid extends Control {
         if (!$key) {
             parent::createComponent($name);
         }
-        $component = new ApplicationComponent($this->handlers[$key], $this->holders[$key], $this->flashDump);
-        return $component;
-    }
-
-    /**
-     * @param null $class
-     * @return \Nette\Templating\ITemplate
-     */
-    protected function createTemplate($class = NULL) {
-        $template = parent::createTemplate($class);
-        $template->setTranslator($this->presenter->getTranslator());
-        return $template;
+        return new ApplicationComponent($this->getContext(), $this->handlers[$key], $this->holders[$key]);
     }
 
     public function render() {

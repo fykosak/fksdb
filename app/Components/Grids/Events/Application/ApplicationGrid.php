@@ -2,53 +2,54 @@
 
 namespace FKSDB\Components\Grids\Events\Application;
 
-use Exception;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelEventParticipant;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use Nette\Database\Table\GroupedSelection;
 use Nette\Database\Table\Selection;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use SQL\SearchableDataSource;
+use NiftyGrid\DuplicateGlobalButtonException;
 
 /**
- * Class ParticipantGrid
- * @package FKSDB\Components\Grids\Events
+ * Class ApplicationGrid
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ApplicationGrid extends AbstractApplicationGrid {
 
     /**
      * @param Presenter $presenter
-     * @throws DuplicateColumnException
+     * @return void
      * @throws DuplicateButtonException
-     * @throws Exception
+     * @throws DuplicateColumnException
+     * @throws BadTypeException
+     * @throws InvalidLinkException
+     * @throws DuplicateGlobalButtonException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
-        $participants = $this->getSource();
+
         $this->paginate = false;
 
-        $source = new SearchableDataSource($participants);
-        $source->setFilterCallback($this->getFilterCallBack());
-        $this->setDataSource($source);
-
         $this->addColumns([
-            'referenced.person_name',
-            DbNames::TAB_EVENT_PARTICIPANT . '.status',
+            'person.full_name',
+            'event_participant.status',
         ]);
-        $this->addLinkButton($presenter, 'detail', 'detail', _('Detail'), false, ['id' => 'event_participant_id']);
+        $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'event_participant_id']);
         $this->addCSVDownloadButton();
     }
 
     /**
-     * @return Selection
+     * @return GroupedSelection
      */
     protected function getSource(): Selection {
         return $this->event->getParticipants();
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     protected function getHoldersColumns(): array {
         return [
@@ -69,16 +70,10 @@ class ApplicationGrid extends AbstractApplicationGrid {
         ];
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelEventParticipant::class;
     }
 
-    /**
-     * @return string
-     */
     protected function getTableName(): string {
         return DbNames::TAB_EVENT_PARTICIPANT;
     }

@@ -1,83 +1,42 @@
 <?php
 
-namespace Events\Model\Holder;
+namespace FKSDB\Events\Model\Holder;
 
-use Events\Machine\BaseMachine;
-use Events\Model\ExpressionEvaluator;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Factories\Events\IFieldFactory;
-use Nette\ComponentModel\Component;
-use Nette\Forms\Container;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\IControl;
-use Nette\FreezableObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Field extends FreezableObject {
-
-    /**
-     * @var BaseHolder
-     */
-    private $baseHolder;
-
-    /**
-     * @var string
-     */
+class Field {
+    /* ** NAME ** */
+    /** @var string */
     private $name;
 
-    /**
-     * @var string
-     */
+    public function getName(): string {
+        return $this->name;
+    }
+    /* ** LABEL ** */
+
+    /** @var string|null */
     private $label;
 
-    /**
-     * @var string
-     */
-    private $description;
-
-    /**
-     * @var boolean
-     */
-    private $determining;
-
-    /**
-     * @var boolean|callable
-     */
-    private $required;
-
-    /**
-     * @var boolean|callable
-     */
-    private $modifiable;
-
-    /**
-     * @var mixed
-     */
-    private $default;
-
-    /**
-     * @var ExpressionEvaluator
-     */
-    private $evaluator;
-
-    /**
-     * @var boolean|callable
-     */
-    private $visible;
-
-    /**
-     * @var IFieldFactory
-     */
-    private $factory;
+    /** @return string|null */
+    public function getLabel() {
+        return $this->label;
+    }
 
     /**
      * Field constructor.
-     * @param $name
-     * @param $label
+     * @param string $name
+     * @param string|null $label
      */
-    function __construct($name, $label) {
+    public function __construct(string $name, string $label = null) {
         $this->name = $name;
         $this->label = $label;
     }
@@ -85,171 +44,132 @@ class Field extends FreezableObject {
     /*
      * Accessors
      */
+    /* ** BASE HOLDER ** */
+    /** @var BaseHolder */
+    private $baseHolder;
 
-    /**
-     * @return BaseHolder
-     */
-    public function getBaseHolder() {
+    public function getBaseHolder(): BaseHolder {
         return $this->baseHolder;
     }
 
-    /**
-     * @param BaseHolder $baseHolder
-     */
-    public function setBaseHolder(BaseHolder $baseHolder) {
-        $this->updating();
+    public function setBaseHolder(BaseHolder $baseHolder): void {
         $this->baseHolder = $baseHolder;
     }
+    /* ** DESCRIPTION ** */
+    /** @var string */
+    private $description;
 
-    /**
-     * @return string
-     */
-    public function getName() {
-        return $this->name;
-    }
-
-    /**
-     * @return string
-     */
-    public function getLabel() {
-        return $this->label;
-    }
-
-    /**
-     * @return string
-     */
+    /** @return string */
     public function getDescription() {
         return $this->description;
     }
 
     /**
-     * @param $description
+     * @param string|null $description
+     * @return void
      */
-    public function setDescription($description) {
-        $this->updating();
+    public function setDescription($description): void {
         $this->description = $description;
     }
 
-    /**
-     * @return bool
-     */
-    public function isDetermining() {
+    /* ** DETERMINING ** */
+    /** @var bool */
+    private $determining;
+
+    public function isDetermining(): bool {
         return $this->determining;
     }
 
-    /**
-     * @param $determining
-     */
-    public function setDetermining($determining) {
-        $this->updating();
+    public function setDetermining(bool $determining): void {
         $this->determining = $determining;
     }
 
-    /**
-     * @param $required
-     */
-    public function setRequired($required) {
-        $this->updating();
-        $this->required = $required;
-    }
+    /* ** DEFAULT ** */
+    /** @var mixed */
+    private $default;
 
-    /**
-     * @param $modifiable
-     */
-    public function setModifiable($modifiable) {
-        $this->updating();
-        $this->modifiable = $modifiable;
-    }
-
-    /**
-     * @param $visible
-     */
-    public function setVisible($visible) {
-        $this->updating();
-        $this->visible = $visible;
-    }
-
-    /**
-     * @return mixed
-     */
+    /** @return mixed */
     public function getDefault() {
         return $this->default;
     }
 
     /**
-     * @param $default
+     * @param mixed $default
+     * @return void
      */
-    public function setDefault($default) {
-        $this->updating();
+    public function setDefault($default): void {
         $this->default = $default;
     }
+    /* ** EVALUATOR ** */
+    /** @var ExpressionEvaluator */
+    private $evaluator;
 
-    /**
-     * @return ExpressionEvaluator
-     */
-    public function getEvaluator() {
-        return $this->evaluator;
-    }
-
-    /**
-     * @param ExpressionEvaluator $evaluator
-     */
-    public function setEvaluator(ExpressionEvaluator $evaluator) {
+    public function setEvaluator(ExpressionEvaluator $evaluator): void {
         $this->evaluator = $evaluator;
     }
+    /* ** FACTORY ** */
 
-    /**
-     * @param IFieldFactory $factory
-     */
-    public function setFactory(IFieldFactory $factory) {
-        $this->updating();
+    /** @var IFieldFactory */
+    private $factory;
+
+    public function setFactory(IFieldFactory $factory): void {
         $this->factory = $factory;
     }
 
     /*
      * Forms
      */
-
-    /**
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return mixed
-     */
-    public function createFormComponent(BaseMachine $machine, Container $container) {
-        return $this->factory->create($this, $machine, $container);
+    public function createFormComponent(): IComponent {
+        return $this->factory->createComponent($this);
     }
 
-    /**
-     * @param Component $component
-     * @return IControl
-     */
-    public function getMainControl(Component $component) {
+    public function setFieldDefaultValue(IComponent $component): void {
+        $this->factory->setFieldDefaultValue($component, $this);
+    }
+
+    public function getMainControl(IComponent $component): IControl {
         return $this->factory->getMainControl($component);
     }
 
-    /*
-     * "Runtime" operations
-     */
+    /* ********* "Runtime" operations *********     */
+    /* ** REQUIRED ** */
+    /** @var bool|callable */
+    private $required;
 
-    /**
-     * @return mixed
-     */
-    public function isVisible() {
+    public function isRequired(): bool {
+        return $this->evaluator->evaluate($this->required, $this);
+    }
+
+    /** @param bool|callable $required */
+    public function setRequired($required): void {
+        $this->required = $required;
+    }
+    /* ** MODIFIABLE ** */
+    /** @var bool|callable */
+    private $modifiable;
+
+    public function isModifiable(): bool {
+        return $this->getBaseHolder()->isModifiable() && $this->evaluator->evaluate($this->modifiable, $this);
+    }
+
+    /** @param bool|callable $modifiable */
+    public function setModifiable($modifiable): void {
+        $this->modifiable = $modifiable;
+    }
+    /* ** VISIBLE ** */
+    /** @var bool|callable */
+    private $visible;
+
+    public function isVisible(): bool {
         return $this->evaluator->evaluate($this->visible, $this);
     }
 
     /**
-     * @return mixed
+     * @param callable|bool $visible
+     * @return void
      */
-    public function isRequired() {
-        return $this->evaluator->evaluate($this->required, $this);
-    }
-
-    /**
-     * @return bool
-     */
-    public function isModifiable() {
-        return $this->getBaseHolder()->isModifiable() && $this->evaluator->evaluate($this->modifiable, $this);
+    public function setVisible($visible): void {
+        $this->visible = $visible;
     }
 
     /**
@@ -265,15 +185,13 @@ class Field extends FreezableObject {
      */
     public function getValue() {
         $model = $this->getBaseHolder()->getModel();
-        if (!isset($model[$this->name])) {
-            if ($this->getBaseHolder()->getModelState() == BaseMachine::STATE_INIT) {
-                return $this->getDefault();
-            } else {
-                return null;
-            }
-        } else {
+        if (isset($model[$this->name])) {
             return $model[$this->name];
         }
+        if ($this->getBaseHolder()->getModelState() == BaseMachine::STATE_INIT) {
+            return $this->getDefault();
+        }
+        return null;
     }
 
     /**

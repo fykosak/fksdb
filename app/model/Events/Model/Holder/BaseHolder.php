@@ -1,17 +1,17 @@
 <?php
 
-namespace Events\Model\Holder;
+namespace FKSDB\Events\Model\Holder;
 
-use Events\Machine\BaseMachine;
-use Events\Model\ExpressionEvaluator;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\FreezableObject;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Neon\Neon;
@@ -21,74 +21,48 @@ use Nette\Neon\Neon;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class BaseHolder extends FreezableObject {
+class BaseHolder {
 
     const STATE_COLUMN = 'status';
     const EVENT_COLUMN = 'event_id';
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $name;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $label;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $description;
 
-    /**
-     * @var IService
-     */
+    /** @var IService */
     private $service;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $joinOn;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $joinTo;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $personIds;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $eventId;
 
-    /**
-     * @var Holder
-     */
+    /** @var Holder */
     private $holder;
 
-    /**
-     * @var boolean|callable
-     */
+    /** @var bool|callable */
     private $modifiable;
 
-    /**
-     * @var boolean|callable
-     */
+    /** @var bool|callable */
     private $visible;
 
-    /**
-     * @var Field[]
-     */
+    /** @var Field[] */
     private $fields = [];
 
-    /**
-     * @var \FKSDB\ORM\IModel
-     */
+    /** @var IModel */
     private $model;
 
     /**
@@ -98,47 +72,35 @@ class BaseHolder extends FreezableObject {
      */
     private $eventRelation;
 
-    /**
-     * @var ModelEvent
-     */
+    /** @var ModelEvent */
     private $event;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $paramScheme;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $parameters;
 
-    /**
-     * @var ExpressionEvaluator
-     */
+    /** @var ExpressionEvaluator */
     private $evaluator;
 
-    /**
-     * @var DataValidator
-     */
+    /** @var DataValidator */
     private $validator;
 
     /**
      * BaseHolder constructor.
-     * @param $name
+     * @param string $name
      */
-    function __construct($name) {
+    public function __construct(string $name) {
         $this->name = $name;
     }
 
     /**
      * @param Field $field
+     * @return void
      */
     public function addField(Field $field) {
-        $this->updating();
         $field->setBaseHolder($this);
-        $field->freeze();
-
         $name = $field->getName();
         $this->fields[$name] = $field;
     }
@@ -146,70 +108,59 @@ class BaseHolder extends FreezableObject {
     /**
      * @return Field[]
      */
-    public function getFields() {
+    public function getFields(): array {
         return $this->fields;
     }
 
-    /**
-     * @return Holder
-     */
-    public function getHolder() {
+    public function getHolder(): Holder {
         return $this->holder;
     }
 
-    /**
-     * @param Holder $holder
-     */
-    public function setHolder(Holder $holder) {
-        $this->updating();
+    public function setHolder(Holder $holder): void {
         $this->holder = $holder;
     }
 
     /**
-     * @param $modifiable
+     * @param bool|callable $modifiable
+     * @return void
      */
-    public function setModifiable($modifiable) {
-        $this->updating();
+    public function setModifiable($modifiable): void {
         $this->modifiable = $modifiable;
     }
 
     /**
-     * @param $visible
+     * @param bool|callable $visible
+     * @return void
      */
-    public function setVisible($visible) {
-        $this->updating();
+    public function setVisible($visible): void {
         $this->visible = $visible;
     }
 
     /**
      * @param IEventRelation|null $eventRelation
      */
-    public function setEventRelation(IEventRelation $eventRelation = null) {
+    public function setEventRelation(IEventRelation $eventRelation = null): void {
         $this->eventRelation = $eventRelation;
     }
 
-    /**
-     * @return ModelEvent
-     */
-    public function getEvent() {
+    public function getEvent(): ModelEvent {
         return $this->event;
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @param ModelEvent $event
+     * @throws NeonSchemaException
      */
-    private function setEvent(ModelEvent $event) {
-        $this->updating();
+    private function setEvent(ModelEvent $event): void {
         $this->event = $event;
         $this->cacheParameters();
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @param ModelEvent $event
+     * @throws NeonSchemaException
      */
-    public function inferEvent(ModelEvent $event) {
+    public function inferEvent(ModelEvent $event): void {
         if ($this->eventRelation instanceof IEventRelation) {
             $this->setEvent($this->eventRelation->getEvent($event));
         } else {
@@ -225,10 +176,10 @@ class BaseHolder extends FreezableObject {
     }
 
     /**
-     * @param $paramScheme
+     * @param mixed $paramScheme
+     * @return void
      */
-    public function setParamScheme($paramScheme) {
-        $this->updating();
+    public function setParamScheme($paramScheme): void {
         $this->paramScheme = $paramScheme;
     }
 
@@ -239,48 +190,29 @@ class BaseHolder extends FreezableObject {
         return $this->evaluator;
     }
 
-    /**
-     * @param ExpressionEvaluator $evaluator
-     */
-    public function setEvaluator(ExpressionEvaluator $evaluator) {
+    public function setEvaluator(ExpressionEvaluator $evaluator): void {
         $this->evaluator = $evaluator;
     }
 
-    /**
-     * @return DataValidator
-     */
-    public function getValidator() {
+    public function getValidator(): DataValidator {
         return $this->validator;
     }
 
-    /**
-     * @param DataValidator $validator
-     */
-    public function setValidator(DataValidator $validator) {
-        $this->updating();
+    public function setValidator(DataValidator $validator): void {
         $this->validator = $validator;
     }
 
-    /**
-     * @return mixed
-     */
-    public function isVisible() {
-        return $this->evaluator->evaluate($this->visible, $this);
+    public function isVisible(): bool {
+        return $this->getEvaluator()->evaluate($this->visible, $this);
     }
 
-    /**
-     * @return mixed
-     */
-    public function isModifiable() {
-        return $this->evaluator->evaluate($this->modifiable, $this);
+    public function isModifiable(): bool {
+        return $this->getEvaluator()->evaluate($this->modifiable, $this);
     }
 
-    /**
-     * @return \FKSDB\ORM\IModel
-     */
-    public function & getModel() {
+    public function &getModel(): IModel {
         if (!$this->model) {
-            $this->model = $this->getService()->createNew();
+            $this->model = $this->getService()->createNew(); // TODO!!!
         }
         return $this->model;
     }
@@ -288,28 +220,25 @@ class BaseHolder extends FreezableObject {
     /**
      * @param int|IModel $model
      */
-    public function setModel($model) {
+    public function setModel($model): void {
         if ($model instanceof IModel) {
             $this->model = $model;
-        } else if ($model) {
+        } elseif ($model) {
             $this->model = $this->service->findByPrimary($model);
         } else {
             $this->model = null;
         }
     }
 
-    public function saveModel() {
+    public function saveModel(): void {
         if ($this->getModelState() == BaseMachine::STATE_TERMINATED) {
             $this->service->dispose($this->getModel());
-        } else if ($this->getModelState() != BaseMachine::STATE_INIT) {
+        } elseif ($this->getModelState() != BaseMachine::STATE_INIT) {
             $this->service->save($this->getModel());
         }
     }
 
-    /**
-     * @return string
-     */
-    public function getModelState() {
+    public function getModelState(): string {
         $model = $this->getModel();
         if ($model->isNew() && !$model[self::STATE_COLUMN]) {
             return BaseMachine::STATE_INIT;
@@ -318,41 +247,31 @@ class BaseHolder extends FreezableObject {
         }
     }
 
-    /**
-     * @param $state
-     */
-    public function setModelState($state) {
+    public function setModelState(string $state): void {
         $this->getService()->updateModel($this->getModel(), [self::STATE_COLUMN => $state]);
     }
 
     /**
-     * @param $values
+     * @param iterable $values
      * @param bool $alive
      */
-    public function updateModel($values, $alive = true) {
+    public function updateModel($values, $alive = true): void {
         $values[self::EVENT_COLUMN] = $this->getEvent()->getPrimary();
         $this->getService()->updateModel($this->getModel(), $values, $alive);
     }
 
-    /**
-     * @return string
-     */
-    public function getName() {
+    public function getName(): string {
         return $this->name;
     }
 
     /**
      * @return IService|AbstractServiceSingle|AbstractServiceMulti
      */
-    public function getService() {
+    public function getService(): IService {
         return $this->service;
     }
 
-    /**
-     * @param \FKSDB\ORM\IService $service
-     */
-    public function setService(IService $service) {
-        $this->updating();
+    public function setService(IService $service): void {
         $this->service = $service;
     }
 
@@ -364,10 +283,9 @@ class BaseHolder extends FreezableObject {
     }
 
     /**
-     * @param $label
+     * @param string $label
      */
-    public function setLabel($label) {
-        $this->updating();
+    public function setLabel($label): void {
         $this->label = $label;
     }
 
@@ -379,10 +297,9 @@ class BaseHolder extends FreezableObject {
     }
 
     /**
-     * @param $description
+     * @param string $description
      */
-    public function setDescription($description) {
-        $this->updating();
+    public function setDescription($description): void {
         $this->description = $description;
     }
 
@@ -394,10 +311,9 @@ class BaseHolder extends FreezableObject {
     }
 
     /**
-     * @param $joinOn
+     * @param string $joinOn
      */
-    public function setJoinOn($joinOn) {
-        $this->updating();
+    public function setJoinOn($joinOn): void {
         $this->joinOn = $joinOn;
     }
 
@@ -409,10 +325,9 @@ class BaseHolder extends FreezableObject {
     }
 
     /**
-     * @param $joinTo
+     * @param string $joinTo
      */
-    public function setJoinTo($joinTo) {
-        $this->updating();
+    public function setJoinTo($joinTo): void {
         $this->joinTo = $joinTo;
     }
 
@@ -424,10 +339,10 @@ class BaseHolder extends FreezableObject {
     }
 
     /**
-     * @param $personIds
+     * @param array $personIds
+     * @return void
      */
-    public function setPersonIds($personIds) {
-        $this->updating();
+    public function setPersonIds($personIds): void {
         if (!$this->getService()) {
             throw new InvalidStateException('Call serService prior setting person IDs.');
         }
@@ -446,17 +361,14 @@ class BaseHolder extends FreezableObject {
     }
 
     /**
-     * @param $eventId
+     * @param int $eventId
+     * @return void
      */
-    public function setEventId($eventId) {
+    public function setEventId($eventId): void {
         $this->eventId = $this->resolveColumnJoins($eventId);
     }
 
-    /**
-     * @param $column
-     * @return string
-     */
-    private function resolveColumnJoins($column) {
+    private function resolveColumnJoins(string $column): string {
         if (strpos($column, '.') === false && strpos($column, ':') === false) {
             $column = $this->getService()->getTable()->getName() . '.' . $column;
         }
@@ -464,7 +376,7 @@ class BaseHolder extends FreezableObject {
     }
 
     /**
-     * @param $column
+     * @param string $column
      * @return bool|mixed|string
      */
     public static function getBareColumn($column) {
@@ -476,17 +388,13 @@ class BaseHolder extends FreezableObject {
     /**
      * @return Field[]
      */
-    public function getDeterminingFields() {
+    public function getDeterminingFields(): array {
         return array_filter($this->fields, function (Field $field) {
             return $field->isDetermining();
         });
     }
 
-    /**
-     * @param BaseMachine $machine
-     * @return ContainerWithOptions
-     */
-    public function createFormContainer(BaseMachine $machine) {
+    public function createFormContainer(): ContainerWithOptions {
         $container = new ContainerWithOptions();
         $container->setOption('label', $this->getLabel());
         $container->setOption('description', $this->getDescription());
@@ -495,18 +403,10 @@ class BaseHolder extends FreezableObject {
             if (!$field->isVisible()) {
                 continue;
             }
-            $components = $field->createFormComponent($machine, $container);
-            if (!is_array($components)) {
-                $components = [$components];
-            }
-            $i = 0;
-            foreach ($components as $component) {
-                $componentName = ($i == 0) ? $name : "{$name}_{$i}";
-                $container->addComponent($component, $componentName);
-                ++$i;
-            }
+            $component = $field->createFormComponent();
+            $container->addComponent($component, $name);
+            $field->setFieldDefaultValue($component);
         }
-
         return $container;
     }
 
@@ -535,7 +435,7 @@ class BaseHolder extends FreezableObject {
      * Parameter handling
      */
     /**
-     * @throws \FKSDB\Config\NeonSchemaException
+     * @throws NeonSchemaException
      */
     private function cacheParameters() {
         $parameters = isset($this->getEvent()->parameters) ? $this->getEvent()->parameters : '';
@@ -544,16 +444,13 @@ class BaseHolder extends FreezableObject {
     }
 
     /**
-     * @param $name
+     * @param string|int|int[]|string[] $name
      * @param null $default
      * @return mixed
      */
     public function getParameter($name, $default = null) {
-        $args = func_get_args();
-        array_unshift($args, $this->parameters);
         try {
-            $result = call_user_func_array('Nette\Utils\Arrays::get', $args);
-            return $result;
+            return $this->parameters[$name] ?? $default;
         } catch (InvalidArgumentException $exception) {
             throw new InvalidArgumentException("No parameter '$name' for event " . $this->getEvent() . ".", null, $exception);
         }

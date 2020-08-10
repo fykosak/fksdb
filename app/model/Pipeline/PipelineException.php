@@ -1,10 +1,10 @@
 <?php
 
-namespace Pipeline;
+namespace FKSDB\Pipeline;
 
 /**
  * Class PipelineException
- * @package Pipeline
+ * *
  */
 class PipelineException extends \RuntimeException {
 

@@ -14,9 +14,6 @@ use Nette\InvalidArgumentException;
  */
 class EvaluationVyfuk2014 extends EvaluationStrategy {
 
-    /**
-     * @return array|null
-     */
     public function getCategories(): array {
         return [
             new ModelCategory(ModelCategory::CAT_ES_6),
@@ -26,10 +23,6 @@ class EvaluationVyfuk2014 extends EvaluationStrategy {
         ];
     }
 
-    /**
-     * @param ModelCategory $category
-     * @return array
-     */
     public function categoryToStudyYears(ModelCategory $category): array {
         switch ($category->id) {
             case ModelCategory::CAT_ES_6:
@@ -58,9 +51,6 @@ class EvaluationVyfuk2014 extends EvaluationStrategy {
         }
     }
 
-    /**
-     * @return string
-     */
     public function getSumColumn(): string {
         return "IF (t.series < 7, IF (t.label IN ('1'), IF ( ct.study_year NOT IN (6, 7), null, s.raw_points), s.raw_points), s.raw_points)";
     }
@@ -85,10 +75,6 @@ class EvaluationVyfuk2014 extends EvaluationStrategy {
         }
     }
 
-    /**
-     * @param ModelCategory $category
-     * @return string
-     */
     public function getTaskPointsColumn(ModelCategory $category): string {
         switch ($category->id) {
             case ModelCategory::CAT_ES_6:
@@ -99,5 +85,4 @@ class EvaluationVyfuk2014 extends EvaluationStrategy {
                 return "IF (s.raw_points IS NOT NULL, IF (t.series < 7, IF (t.label IN ('1'), NULL, t.points), NULL), NULL)";
         }
     }
-
 }

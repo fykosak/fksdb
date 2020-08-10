@@ -5,24 +5,19 @@ namespace FKSDB\ORM\Services\Events;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Events\ModelTsafParticipant;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceTsafParticipant extends AbstractServiceSingle {
-
     /**
-     * @return string
+     * ServiceTsafParticipant constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
      */
-    public function getModelClassName(): string {
-        return ModelTsafParticipant::class;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getTableName(): string {
-        return DbNames::TAB_E_TSAF_PARTICIPANT;
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_E_TSAF_PARTICIPANT, ModelTsafParticipant::class);
     }
 }
-

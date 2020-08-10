@@ -2,52 +2,51 @@
 
 namespace FKSDB\ORM\Services;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelAddress;
 use FKSDB\ORM\Models\ModelRegion;
-use InvalidPostalCode;
+use FKSDB\ORM\Services\Exception\InvalidPostalCode;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 use Tracy\Debugger;
-use Nette\InvalidArgumentException;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceAddress extends AbstractServiceSingle {
+    use DeprecatedLazyDBTrait;
 
-    const PATTERN = '/[0-9]{5}/';
+    private const PATTERN = '/[0-9]{5}/';
 
     /**
-     * @return string
+     * ServiceAddress constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
      */
-    public function getModelClassName(): string {
-        return ModelAddress::class;
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_ADDRESS, ModelAddress::class);
     }
 
     /**
-     * @return string
+     * @param array $data
+     * @return ModelAddress
      */
-    protected function getTableName(): string {
-        return DbNames::TAB_ADDRESS;
+    public function createNewModel(array $data): AbstractModelSingle {
+        if (!isset($data['region_id']) || is_null($data['region_id'])) {
+            $data['region_id'] = $this->inferRegion($data['postal_code']);
+        }
+        return parent::createNewModel($data);
     }
 
-    /**
-     * @param \FKSDB\ORM\IModel $model
-     * @return mixed|void
-     */
-    public function save(IModel &$model) {
-        $modelClassName = $this->getModelClassName();
-        if (!$model instanceof $modelClassName) {
-            throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
+    public function updateModel2(IModel $model, array $data): bool {
+        if (!isset($data['region_id']) || is_null($data['region_id'])) {
+            $data['region_id'] = $this->inferRegion($data['postal_code']);
         }
-        /**
-         * @var \FKSDB\ORM\Models\ModelAddress $model
-         */
-        if (!isset($model->region_id)) {
-            $model->region_id = $this->inferRegion($model->postal_code);
-        }
-        parent::save($model);
+        return parent::updateModel2($model, $data);
     }
 
     /**
@@ -56,7 +55,7 @@ class ServiceAddress extends AbstractServiceSingle {
      * @return int
      * @throws InvalidPostalCode
      */
-    public function inferRegion($postalCode) {
+    public function inferRegion($postalCode): int {
         if (!$postalCode) {
             throw new InvalidPostalCode($postalCode);
         }
@@ -64,7 +63,7 @@ class ServiceAddress extends AbstractServiceSingle {
         if (!preg_match(self::PATTERN, $postalCode)) {
             throw new InvalidPostalCode($postalCode);
         }
-        $row = $this->getTable()->getConnection()->table(DbNames::TAB_PSC_REGION)->where('psc = ?', $postalCode)->fetch();
+        $row = $this->getContext()->table(DbNames::TAB_PSC_REGION)->where('psc = ?', $postalCode)->fetch();
         if ($row) {
             return $row->region_id;
         } else {
@@ -76,7 +75,7 @@ class ServiceAddress extends AbstractServiceSingle {
 
             if (in_array($firstChar, ['1', '2', '3', '4', '5', '6', '7'])) {
                 return ModelRegion::CZECH_REPUBLIC;
-            } else if (in_array($firstChar, ['8', '9', '0'])) {
+            } elseif (in_array($firstChar, ['8', '9', '0'])) {
                 return ModelRegion::SLOVAKIA;
             } else {
                 throw new InvalidPostalCode($postalCode);
@@ -87,7 +86,7 @@ class ServiceAddress extends AbstractServiceSingle {
     /**
      *
      * @param string $postalCode
-     * @return boolean
+     * @return bool
      */
     public function tryInferRegion($postalCode): bool {
         try {
@@ -97,5 +96,4 @@ class ServiceAddress extends AbstractServiceSingle {
             return false;
         }
     }
-
 }

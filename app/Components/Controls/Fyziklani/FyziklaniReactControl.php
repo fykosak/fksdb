@@ -8,28 +8,25 @@ use Nette\DI\Container;
 
 /**
  * Class FyziklaniReactControl
- * @package FKSDB\Components\Controls\Fyziklani
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class FyziklaniReactControl extends ReactComponent {
-    /**
-     * @var ModelEvent
-     */
+
+    /** @var ModelEvent */
     private $event;
 
     /**
      * FyziklaniReactControl constructor.
      * @param Container $container
      * @param ModelEvent $event
+     * @param string $reactId
      */
-    public function __construct(Container $container, ModelEvent $event) {
-        parent::__construct($container);
+    public function __construct(Container $container, ModelEvent $event, string $reactId) {
+        parent::__construct($container, $reactId);
         $this->event = $event;
     }
 
-    /**
-     * @return ModelEvent
-     */
-    protected final function getEvent() {
+    final protected function getEvent(): ModelEvent {
         return $this->event;
     }
 }

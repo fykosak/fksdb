@@ -393,8 +393,14 @@ CREATE TABLE IF NOT EXISTS `org` (
   `order`        TINYINT(4)   NOT NULL
   COMMENT 'pořadí pro řazení ve výpisech',
   `contribution` TEXT         NULL     DEFAULT NULL,
+  `tex_signature`          VARCHAR(32)  NULL DEFAULT NULL
+      COMMENT 'zkratka používaná v TeXových vzorácích',
+  `domain_alias`           VARCHAR(32)  NULL DEFAULT NULL
+      COMMENT 'alias v doméně fykos.cz',
   PRIMARY KEY (`org_id`),
   UNIQUE INDEX `contest_id` (`contest_id` ASC, `person_id` ASC),
+  UNIQUE INDEX `domain_alias_UNIQUE` (`contest_id` ASC, `domain_alias` ASC),
+  UNIQUE INDEX `tex_signature_UNIQUE` (`contest_id` ASC, `tex_signature` ASC),
   INDEX `person_id` (`person_id` ASC),
   CONSTRAINT `org_ibfk_1`
   FOREIGN KEY (`person_id`)
@@ -458,6 +464,8 @@ CREATE TABLE IF NOT EXISTS `grant` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `person_info` (
   `person_id`              INT(11)      NOT NULL,
+  `preferred_lang`         ENUM('cs','en') NULL DEFAULT NULL
+  COMMENT 'Prefer language code by ISO 639-1',
   `born`                   DATE         NULL DEFAULT NULL
   COMMENT 'datum narození',
   `id_number`              VARCHAR(32)  NULL DEFAULT NULL
@@ -480,7 +488,7 @@ CREATE TABLE IF NOT EXISTS `person_info` (
   COMMENT 'název města narození osoby',
   `citizenship`            CHAR(2)      NULL DEFAULT NULL
   COMMENT 'Státní příslušnost',
-  `health_insurance`       VARCHAR(64)  NULL DEFAULT NULL
+  `health_insurance`       INT(11)  NULL DEFAULT NULL
   COMMENT 'Zdravotní pojišťovna',
   `employer`               VARCHAR(255) NULL DEFAULT NULL
   COMMENT 'Zaměstnavatel',
@@ -491,10 +499,6 @@ CREATE TABLE IF NOT EXISTS `person_info` (
   `email`                  VARCHAR(255) NULL DEFAULT NULL,
   `origin`                 TEXT         NULL DEFAULT NULL
   COMMENT 'Odkud se o nás dozvěděl.',
-  `tex_signature`          VARCHAR(32)  NULL DEFAULT NULL
-  COMMENT 'zkratka používaná v TeXových vzorácích',
-  `domain_alias`           VARCHAR(32)  NULL DEFAULT NULL
-  COMMENT 'alias v doméně fykos.cz',
   `career`                 TEXT         NULL DEFAULT NULL
   COMMENT 'co studuje/kde pracuje',
   `homepage`               VARCHAR(255) NULL DEFAULT NULL
@@ -511,13 +515,12 @@ CREATE TABLE IF NOT EXISTS `person_info` (
   COMMENT 'email rodič otec',
   `email_parent_m`         VARCHAR(255)  NULL DEFAULT NULL
   COMMENT 'email rodič mama',
+  `pizza`                  VARCHAR(255) NULL DEFAULT NULL COMMENT 'pizza',
   PRIMARY KEY (`person_id`),
   UNIQUE INDEX `email_UNIQUE` (`email` ASC),
   UNIQUE INDEX `uk_login_UNIQUE` (`uk_login` ASC),
   UNIQUE INDEX `born_id_UNIQUE` (`born_id` ASC),
   UNIQUE INDEX `fb_id_UNIQUE` (`fb_id` ASC),
-  UNIQUE INDEX `domain_alias_UNIQUE` (`domain_alias` ASC),
-  UNIQUE INDEX `tex_signature_UNIQUE` (`tex_signature` ASC),
   UNIQUE INDEX `linkedin_id_UNIQUE` (`linkedin_id` ASC),
   CONSTRAINT `person_info_ibfk_1`
   FOREIGN KEY (`person_id`)
@@ -669,6 +672,8 @@ CREATE TABLE IF NOT EXISTS `submit` (
   COMMENT 'Pred prepoctem',
   `calc_points`  DECIMAL(4, 2)           NULL     DEFAULT NULL
   COMMENT 'Cache spoctenych bodu.',
+  `corrected`       TINYINT(1)   NULL DEFAULT 0
+  COMMENT 'Má uloha nahrané riešnie?',
   PRIMARY KEY (`submit_id`),
   UNIQUE INDEX `cons_uniq` (`ct_id` ASC, `task_id` ASC),
   INDEX `task_id` (`task_id` ASC),
@@ -741,7 +746,7 @@ CREATE TABLE IF NOT EXISTS `e_fyziklani_team` (
   `teacher_accomodation` TINYINT(1)  NOT NULL DEFAULT 0,
   `teacher_present`      TINYINT(1)  NOT NULL DEFAULT 0,
   `teacher_schedule`     TEXT        NULL     DEFAULT NULL
-  COMMENT 'serializovaný program',
+      COMMENT 'serializovaný program',
   `category`             CHAR(1)     NOT NULL,
   `created`              TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `phone`                VARCHAR(30) NULL     DEFAULT NULL,
@@ -750,8 +755,8 @@ CREATE TABLE IF NOT EXISTS `e_fyziklani_team` (
   `points`               INT(11)     NULL     DEFAULT NULL,
   `rank_category`        INT(11)     NULL     DEFAULT NULL,
   `rank_total`           INT(11)     NULL     DEFAULT NULL,
-  `room`                 VARCHAR(3)  NULL     DEFAULT NULL
-  COMMENT '@DEPRECATED',
+  `room`                 VARCHAR(3)  NULL     DEFAULT NULL COMMENT '@DEPRECATED',
+  `force_a`              TINYINT(1)  NULL     DEFAULT NULL,
   `game_lang`            VARCHAR(2)  NULL     DEFAULT NULL
   COMMENT 'Game lang',
   PRIMARY KEY (`e_fyziklani_team_id`),
@@ -1158,11 +1163,10 @@ CREATE TABLE IF NOT EXISTS `stored_query_tag` (
 -- Table `event_org`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `event_org` (
-  `e_org_id`  INT(11)  NOT NULL,
+  `e_org_id`  INT(11)  NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `note`      TEXT(32) NULL DEFAULT NULL,
   `event_id`  INT(11)  NOT NULL,
   `person_id` INT(11)  NOT NULL,
-  PRIMARY KEY (`e_org_id`),
   INDEX `event_id_idx` (`event_id` ASC),
   INDEX `fk_event_org_1_idx` (`person_id` ASC),
   UNIQUE INDEX `uq_event_id_person_id` (`event_id` ASC, `person_id` ASC),
@@ -1357,7 +1361,7 @@ CREATE TABLE IF NOT EXISTS `fyziklani_game_setup` (
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `schedule_group` (
     `schedule_group_id`   INT(11)      NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `schedule_group_type` VARCHAR(64)  NOT NULL,
+    `schedule_group_type` ENUM ('accommodation','weekend','visa','accommodation_gender','accommodation_teacher','teacher_present','weekend_info') NOT NULL,
     `name_cs`             VARCHAR(256) NULL DEFAULT NULL,
     `name_en`             VARCHAR(256) NULL DEFAULT NULL,
     `event_id`            INT(11)      NOT NULL,
@@ -1455,6 +1459,47 @@ CREATE TABLE IF NOT EXISTS `email_message`
     `sent`             DATETIME     NULL DEFAULT NULL
 )
     ENGINE = 'InnoDB';
+-- -----------------------------------------------------
+-- Table `quiz`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `quiz` (
+	`question_id`   INT(11)     NOT NULL  AUTO_INCREMENT,
+	`task_id`       INT(11)     NOT NULL,
+	`question_nr`   TINYINT(4)  NULL      DEFAULT NULL
+	COMMENT 'Cislo otazky',
+	`points`        TINYINT(4)  NULL      DEFAULT NULL
+	COMMENT 'Pocet bodu',
+	`answer`        VARCHAR(1)  NULL      DEFAULT NULL
+	COMMENT 'Spravna odpoved',
+	PRIMARY KEY (`question_id`),
+	INDEX `quiz_task_ui` (`task_id` ASC),
+	CONSTRAINT `quiz_ibfk_1`
+	FOREIGN KEY (`task_id`)
+	REFERENCES `task` (`task_id`)
+)
+	ENGINE = InnoDB;
+-- -----------------------------------------------------
+-- Table `submit_quiz`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `submit_quiz` (
+	`submit_question_id`  INT(11)    NOT NULL AUTO_INCREMENT,
+	`ct_id`               INT(11)    NOT NULL
+	COMMENT 'Resitel',
+	`question_id`         INT(11)    NOT NULL
+	COMMENT 'Otazka',
+	`submitted_on`        DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`answer`              VARCHAR(1) NULL,
+	PRIMARY KEY (`submit_question_id`),
+	UNIQUE INDEX `submit_qstn` (`ct_id` ASC, `question_id` ASC),
+	INDEX `question_id` (`question_id` ASC),
+	CONSTRAINT `submit_qstn_ibfk_1`
+	FOREIGN KEY (`ct_id`)
+	REFERENCES `contestant_base` (`ct_id`),
+	CONSTRAINT `submit_qstn_ibfk_2`
+	FOREIGN KEY (`question_id`)
+	REFERENCES `quiz` (`question_id`)
+)
+	ENGINE = InnoDB;
 
 SET SQL_MODE = @OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;

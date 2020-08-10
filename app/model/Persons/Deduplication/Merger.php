@@ -1,11 +1,11 @@
 <?php
 
-namespace Persons\Deduplication;
+namespace FKSDB\Persons\Deduplication;
 
 use FKSDB\Logging\DevNullLogger;
 use FKSDB\Logging\ILogger;
 use Nette\Caching\Cache;
-use Nette\Database\Connection;
+use Nette\Database\Context;
 use Nette\Database\Table\ActiveRow;
 use Nette\MemberAccessException;
 
@@ -21,32 +21,21 @@ class Merger {
     const IDX_MERGED = 'merged';
     const IDX_RESOLUTION = 'resolution';
 
+    /** @var array */
     private $conflicts = [];
 
-    /**
-     * @var ActiveRow
-     */
+    /** @var ActiveRow */
     private $trunkRow;
 
-    /**
-     * @var ActiveRow
-     */
+    /** @var ActiveRow */
     private $mergedRow;
 
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Context $context;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $configuration;
 
-    /**
-     * @var ILogger
-     */
-    private $logger;
+    private ILogger $logger;
 
     /**
      *
@@ -56,12 +45,12 @@ class Merger {
 
     /**
      * Merger constructor.
-     * @param $configuration
-     * @param Connection $connection
+     * @param mixed $configuration
+     * @param Context $context
      */
-    function __construct($configuration, Connection $connection) {
+    public function __construct($configuration, Context $context) {
         $this->configuration = $configuration;
-        $this->connection = $connection;
+        $this->context = $context;
         $this->logger = new DevNullLogger();
     }
 
@@ -74,6 +63,7 @@ class Merger {
 
     /**
      * @param ILogger $logger
+     * @return void
      */
     public function setLogger(ILogger $logger) {
         $this->logger = $logger;
@@ -82,6 +72,7 @@ class Merger {
     /**
      * @param ActiveRow $trunkRow
      * @param ActiveRow $mergedRow
+     * @return void
      */
     public function setMergedPair(ActiveRow $trunkRow, ActiveRow $mergedRow) {
         $this->trunkRow = $trunkRow;
@@ -103,7 +94,7 @@ class Merger {
     public function setConflictResolution($rawValues) {
         foreach ($rawValues as $table => $pairs) {
             foreach ($pairs as $pairId => $values) {
-                $data = & $this->getPairDataById($table, $pairId);
+                $data = &$this->getPairDataById($table, $pairId);
                 foreach ($values as $column => $value) {
                     if (!isset($data[self::IDX_RESOLUTION])) {
                         $data[self::IDX_RESOLUTION] = [];
@@ -116,36 +107,36 @@ class Merger {
 
     /**
      * @param bool $commit
-     * @return boolean
+     * @return bool
      */
     public function merge($commit = null) {
         // This workaround fixes inproper caching of referenced tables.
-        $this->connection->getCache()->clean([Cache::ALL => true]);
-        $this->connection->getDatabaseReflection()->setConnection($this->connection);
+        $this->context->getConnection()->getCache()->clean([Cache::ALL => true]);
+        $this->context->getConnection()->getDatabaseReflection()->setConnection($this->context->getConnection()); // TODO
 
         $table = $this->trunkRow->getTable()->getName();
         $tableMerger = $this->getMerger($table);
         $commit = ($commit === null) ? $this->configuration['commit'] : $commit;
 
 
-        $this->connection->beginTransaction();
+        $this->context->getConnection()->beginTransaction();
 
         $tableMerger->setMergedPair($this->trunkRow, $this->mergedRow);
         $this->resetConflicts();
         try {
             $tableMerger->merge();
         } catch (MemberAccessException $exception) { // this is workaround for non-working Nette database cache
-            $this->connection->rollBack();
+            $this->context->getConnection()->rollBack();
             return false;
         }
         if ($this->hasConflicts()) {
-            $this->connection->rollBack();
+            $this->context->getConnection()->rollBack();
             return false;
         } else {
             if ($commit) {
-                $this->connection->commit();
+                $this->context->getConnection()->commit();
             } else {
-                $this->connection->rollBack();
+                $this->context->getConnection()->rollBack();
             }
             return true;
         }
@@ -153,9 +144,9 @@ class Merger {
 
     /**
      *
-     * @internal Friend of Merger class.
      * @param string $table
      * @return TableMerger
+     * @internal Friend of Merger class.
      */
     public function getMerger($table) {
         if (!isset($this->tableMergers[$table])) {
@@ -165,11 +156,11 @@ class Merger {
     }
 
     /**
-     * @param $table
+     * @param string $table
      * @return TableMerger
      */
     private function createTableMerger($table) {
-        $tableMerger = new TableMerger($table, $this, $this->connection, $this->configuration['defaultStrategy'], $this->getLogger());
+        $tableMerger = new TableMerger($table, $this, $this->context, $this->configuration['defaultStrategy'], $this->getLogger());
         if (isset($this->configuration['secondaryKeys'][$table])) {
             $tableMerger->setSecondaryKey($this->configuration['secondaryKeys'][$table]);
         }
@@ -207,23 +198,23 @@ class Merger {
     }
 
     /**
-     * @internal Friend of Merger class.
      * @param ActiveRow $trunkRow
      * @param ActiveRow $mergedRow
      * @param mixed $column
+     * @internal Friend of Merger class.
      */
     public function addConflict(ActiveRow $trunkRow, ActiveRow $mergedRow, $column) {
-        $data = & $this->getPairData($trunkRow, $mergedRow);
+        $data = &$this->getPairData($trunkRow, $mergedRow);
         $data[self::IDX_TRUNK][$column] = $trunkRow[$column];
         $data[self::IDX_MERGED][$column] = $mergedRow[$column];
     }
 
     /**
-     * @internal Friend of Merger class.
      * @param ActiveRow $trunkRow
      * @param ActiveRow $mergedRow
      * @param mixed $column
      * @return bool
+     * @internal Friend of Merger class.
      */
     public function hasResolution(ActiveRow $trunkRow, ActiveRow $mergedRow, $column) {
         $data = $this->getPairData($trunkRow, $mergedRow);
@@ -231,11 +222,11 @@ class Merger {
     }
 
     /**
-     * @internal Friend of Merger class.
      * @param ActiveRow $trunkRow
      * @param ActiveRow $mergedRow
      * @param mixed $column
      * @return mixed
+     * @internal Friend of Merger class.
      */
     public function getResolution(ActiveRow $trunkRow, ActiveRow $mergedRow, $column) {
         $data = $this->getPairData($trunkRow, $mergedRow);
@@ -264,8 +255,8 @@ class Merger {
     }
 
     /**
-     * @param $table
-     * @param $pairId
+     * @param string $table
+     * @param int $pairId
      * @return mixed
      */
     private function & getPairDataById($table, $pairId) {

@@ -1,31 +1,19 @@
 <?php
 
-
 namespace FKSDB\Components\Controls\Stalking;
+
+use FKSDB\DBReflection\FieldLevelPermission;
+use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * Class Schedule
- * @package FKSDB\Components\Controls\Stalking
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class Schedule extends AbstractStalkingComponent {
-    public function render() {
-        $this->beforeRender();
-        $this->template->schedule = $this->modelPerson->getSchedule();
-        $this->template->setFile(__DIR__ . '/Schedule.latte');
+class Schedule extends StalkingControl {
+    public function render(ModelPerson $person, int $userPermissions): void {
+        $this->beforeRender($person, _('Schedule during events'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
+        $this->template->schedule = $person->getSchedule();
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.schedule.latte');
         $this->template->render();
-    }
-
-    /**
-     * @return array
-     */
-    protected function getAllowedPermissions(): array {
-        return [AbstractStalkingComponent::PERMISSION_FULL, AbstractStalkingComponent::PERMISSION_RESTRICT];
-    }
-
-    /**
-     * @return string
-     */
-    protected function getHeadline(): string {
-        return _('Schedule during events');
     }
 }

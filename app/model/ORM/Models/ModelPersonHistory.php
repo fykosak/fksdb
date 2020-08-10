@@ -8,37 +8,28 @@ use FKSDB\ORM\DbNames;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-read integer ac_year
- * @property-read integer school_id
+ * @property-read int ac_year
+ * @property-read int school_id
  * @property-read string class
- * @property-read integer study_year
+ * @property-read int study_year
  */
-class ModelPersonHistory extends AbstractModelSingle {
-    /**
-     * @return ModelPerson
-     */
+class ModelPersonHistory extends AbstractModelSingle implements ISchoolReferencedModel {
+
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
     }
 
-    /**
-     * @return ModelSchool
-     */
     public function getSchool(): ModelSchool {
         return ModelSchool::createFromActiveRow($this->ref(DbNames::TAB_SCHOOL, 'school_id'));
     }
 
-    /**
-     * @param int $acYear
-     * @return ModelPersonHistory
-     */
     public function extrapolate(int $acYear): ModelPersonHistory {
         $diff = $acYear - $this->ac_year;
         $data = [
             'ac_year' => $acYear,
             'school_id' => $this->school_id,
             'class' => $this->extrapolateClass($this->class, $diff),
-            'study_year' => $this->extrapolateStudyYear($this->study_year, $diff)
+            'study_year' => $this->extrapolateStudyYear($this->study_year, $diff),
         ];
         $result = new self([], $this->getTable());
         foreach ($data as $key => $value) {
@@ -47,19 +38,17 @@ class ModelPersonHistory extends AbstractModelSingle {
         return $result;
     }
 
-    /**
-     * @var string[][]
-     */
-    private static $classProgress = [
+    /** @var string[][] */
+    private static array $classProgress = [
         ['prima', 'sekunda', 'tercie', 'kvarta', 'kvinta', 'sexta', 'septima', 'oktáva'],
         ['I.', 'II.', 'III.', 'IV.', 'V.', 'VI.', 'VII.', 'VIII.'],
         ['1.', '2.', '3.', '4.', '5.', '6.', '7.', '8.'],
     ];
 
     /**
-     * @param $class
-     * @param $diff
-     * @return null|string|string[]
+     * @param string|null $class
+     * @param int $diff
+     * @return string|string[]|null
      */
     private function extrapolateClass(string $class = null, int $diff = 0) {
         if (!$class) {
@@ -81,11 +70,11 @@ class ModelPersonHistory extends AbstractModelSingle {
     }
 
     /**
-     * @param $studyYear
-     * @param $diff
+     * @param int|null $studyYear
+     * @param int $diff
      * @return int|null
      */
-    private function extrapolateStudyYear(int $studyYear = null, int $diff = 0) {
+    private function extrapolateStudyYear(int $studyYear = null, int $diff = 0): ?int {
         if (!$studyYear) {
             return null;
         }
@@ -98,15 +87,12 @@ class ModelPersonHistory extends AbstractModelSingle {
                     $result = null;
                 }
             }
-        } else if ($studyYear >= 1 && $studyYear <= 4) {
+        } elseif ($studyYear >= 1 && $studyYear <= 4) {
             $result = $studyYear + $diff;
             if ($result > 4) {
                 $result = null;
             }
         }
-
         return $result;
     }
-
 }
-

@@ -47,9 +47,9 @@ class LoginFactory {
             $newPwd->addCondition(Form::FILLED)->addRule(Form::MIN_LENGTH, _('Heslo musí mít alespoň %d znaků.'), 6);
 
             if ($options & self::VERIFY_OLD_PASSWORD) {
-                $newPwd->addConditionOn($container['old_password'], Form::FILLED)
+                $newPwd->addConditionOn($container->getComponent('old_password'), Form::FILLED)
                     ->addRule(Form::FILLED, _('Je třeba nastavit nové heslo.'));
-            } else if ($options & self::REQUIRE_PASSWORD) {
+            } elseif ($options & self::REQUIRE_PASSWORD) {
                 $newPwd->addRule(Form::FILLED, _('Heslo nemůže být prázdné.'));
             }
 
@@ -61,5 +61,4 @@ class LoginFactory {
 
         return $container;
     }
-
 }

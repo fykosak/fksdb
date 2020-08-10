@@ -6,21 +6,13 @@ use Nette\Application\UI\Control;
 
 /**
  * Interface IChart
- * @package FKSDB\Components\Controls\Chart
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 interface IChart {
-    /**
-     * @return string
-     */
-    public function getAction(): string;
 
-    /**
-     * @return string
-     */
     public function getTitle(): string;
 
-    /**
-     * @return Control
-     */
     public function getControl(): Control;
+
+    public function getDescription(): ?string;
 }

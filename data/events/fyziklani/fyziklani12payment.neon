@@ -1,9 +1,0 @@
-
-parameters:
-    events:
-        fyziklani13:
-            payment:
-                transitions:
-                    __init->new:
-                        type: success
-                        label: _('Pokračovať k vytvoreniu platby')

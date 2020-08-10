@@ -2,75 +2,71 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\DbNames;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FyziklaniModule\BasePresenter;
+use Nette\Application\UI\Presenter;
+use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class ResultsCategoryGrid
- * @package FKSDB\Components\Grids\Fyziklani
+ * *
  */
 class ResultsCategoryGrid extends BaseGrid {
 
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /**
-     * @var string
-     */
-    private $category;
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+
+    private ModelEvent $event;
+
+    private string $category;
 
     /**
      * FyziklaniSubmitsGrid constructor.
      * @param ModelEvent $event
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
      * @param string $category
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param Container $container
      */
-    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam, string $category, TableReflectionFactory $tableReflectionFactory) {
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+    public function __construct(ModelEvent $event, string $category, Container $container) {
+        parent::__construct($container);
         $this->event = $event;
         $this->category = $category;
-        parent::__construct($tableReflectionFactory);
+    }
+
+    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+    }
+
+    protected function getData(): IDataSource {
+        $teams = $this->serviceFyziklaniTeam->findParticipating($this->event)
+            ->where('category', $this->category)
+            ->order('name');
+        return new NDataSource($teams);
+
     }
 
     /**
-     * @param BasePresenter $presenter
+     * @param Presenter $presenter
+     * @return void
      * @throws DuplicateColumnException
+     * @throws BadTypeException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->paginate = false;
 
         $this->addColumns([
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.e_fyziklani_team_id',
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.name',
-            DbNames::TAB_E_FYZIKLANI_TEAM . '.rank_category',
+            'e_fyziklani_team.e_fyziklani_team_id',
+            'e_fyziklani_team.name',
+            'e_fyziklani_team.rank_category',
         ]);
-
-        $teams = $this->serviceFyziklaniTeam->findParticipating($this->event)
-            ->where('category', $this->category)
-            ->order('name');
-        $dataSource = new NDataSource($teams);
-        $this->setDataSource($dataSource);
-
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelFyziklaniTeam::class;
     }
