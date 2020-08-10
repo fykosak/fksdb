@@ -144,7 +144,7 @@ class ReferencedPersonFactory {
                 }
                 return $person->getPermanentAddress(true);
             case 'person_has_flag':
-                return ($flag = $person->getMPersonHasFlag($field)) ? (bool)$flag['value'] : null;
+                return ($flag = $person->getPersonHasFlag($field)) ? (bool)$flag['value'] : null;
             default:
                 throw new InvalidArgumentException("Unknown person sub '$sub'.");
         }

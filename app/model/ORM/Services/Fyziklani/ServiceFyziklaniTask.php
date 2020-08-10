@@ -8,6 +8,8 @@ use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
@@ -15,12 +17,13 @@ use FKSDB\ORM\Tables\TypedTableSelection;
 class ServiceFyziklaniTask extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    public function getModelClassName(): string {
-        return ModelFyziklaniTask::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_FYZIKLANI_TASK;
+    /**
+     * ServiceFyziklaniTask constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
+     */
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_FYZIKLANI_TASK, ModelFyziklaniTask::class);
     }
 
     public function findByLabel(string $label, ModelEvent $event): ?ModelFyziklaniTask {

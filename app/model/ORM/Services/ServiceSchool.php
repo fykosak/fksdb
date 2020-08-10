@@ -8,6 +8,8 @@ use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -15,12 +17,13 @@ use FKSDB\ORM\Tables\TypedTableSelection;
 class ServiceSchool extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    public function getModelClassName(): string {
-        return ModelSchool::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_SCHOOL;
+    /**
+     * ServiceSchool constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
+     */
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_SCHOOL, ModelSchool::class);
     }
 
     public function getSchools(): TypedTableSelection {

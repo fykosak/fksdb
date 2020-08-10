@@ -19,7 +19,7 @@ class ServiceMTsafParticipant extends AbstractServiceMulti {
      * @param ServiceTsafParticipant $joinedService
      */
     public function __construct(ServiceEventParticipant $mainService, ServiceTsafParticipant $joinedService) {
-        parent::__construct($mainService, $joinedService);
+        parent::__construct($mainService, $joinedService, 'event_participant_id', ModelMTsafParticipant::class);
     }
 
     /**
@@ -28,13 +28,5 @@ class ServiceMTsafParticipant extends AbstractServiceMulti {
     public function dispose(IModel $model): void {
         parent::dispose($model);
         $this->getMainService()->dispose($model->getMainModel());
-    }
-
-    public function getJoiningColumn(): string {
-        return 'event_participant_id';
-    }
-
-    public function getModelClassName(): string {
-        return ModelMTsafParticipant::class;
     }
 }
