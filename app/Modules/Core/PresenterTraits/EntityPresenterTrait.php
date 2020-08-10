@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
@@ -20,8 +22,8 @@ use Nette\Security\IResource;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 trait EntityPresenterTrait {
-
-    protected AbstractModelSingle $model;
+    /** @var AbstractModelSingle */
+    protected $model;
     /**
      * @var int
      * @persistent
@@ -117,7 +119,7 @@ trait EntityPresenterTrait {
         $id = $this->getParameter($this->getPrimaryParameterName());
         // protection for tests ev. change URL during app is running
         if (isset($this->model) && $id !== $this->model->getPrimary()) {
-            unset($this->model);
+            $this->model = null;
         }
         if (!isset($this->model)) {
             $model = $this->getORMService()->findByPrimary($id);
