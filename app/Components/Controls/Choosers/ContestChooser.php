@@ -75,7 +75,7 @@ class ContestChooser extends BaseComponent {
     /**
      * @param string|array role enum|CONTESTS_ALL|array of contests
      */
-    public function setContests($contestsDefinition) {
+    public function setContests($contestsDefinition): void {
         $this->contestsDefinition = $contestsDefinition;
     }
 

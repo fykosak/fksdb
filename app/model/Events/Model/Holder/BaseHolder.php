@@ -26,8 +26,7 @@ class BaseHolder {
     const STATE_COLUMN = 'status';
     const EVENT_COLUMN = 'event_id';
 
-    /** @var string */
-    private $name;
+    private string $name;
 
     /** @var string */
     private $label;

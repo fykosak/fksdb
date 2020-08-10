@@ -43,11 +43,7 @@ class GroupOptions implements IOptionsProvider {
         $this->serviceDsefGroup = $serviceDsefGroup;
     }
 
-    /**
-     * @param iterable $groups
-     * @return array
-     */
-    private function transformGroups($groups) {
+    private function transformGroups(iterable $groups): array {
         $result = [];
         foreach ($groups as $name => $capacity) {
             $result[] = [

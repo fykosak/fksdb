@@ -15,11 +15,9 @@ abstract class WebLoader extends Control {
     const ATTRIBUTES = 'attr';
     const UNTAGGED = '__untagged';
 
-    /** @var string[] */
-    private $files = [];
+    private array $files = [];
 
-    /**@var string[] */
-    private $inlines = [];
+    private array $inlines = [];
 
     public function addFile(string $file, array $attributes = []): void {
         $hash = $file . join(':', $attributes);

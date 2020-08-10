@@ -19,21 +19,19 @@ use Nette\Utils\DateTime;
  */
 class AccountManager {
 
-    /** @var ServiceLogin */
-    private $serviceLogin;
+    private ServiceLogin $serviceLogin;
 
-    /** @var ServiceAuthToken */
-    private $serviceAuthToken;
+    private ServiceAuthToken $serviceAuthToken;
     /** @var string */
     private $invitationExpiration = '+1 month';
     /** @var string */
     private $recoveryExpiration = '+1 day';
     /** @var string */
     private $emailFrom;
-    /** @var ServiceEmailMessage */
-    private $serviceEmailMessage;
-    /** @var MailTemplateFactory */
-    private $mailTemplateFactory;
+
+    private ServiceEmailMessage $serviceEmailMessage;
+
+    private MailTemplateFactory $mailTemplateFactory;
 
     /**
      * AccountManager constructor.

@@ -16,17 +16,13 @@ use Nette\SmartObject;
 abstract class AbstractServiceMulti implements IService {
     use SmartObject;
 
-    /** @var AbstractServiceSingle */
-    protected $mainService;
+    protected AbstractServiceSingle $mainService;
 
-    /** @var AbstractServiceSingle */
-    protected $joinedService;
+    protected AbstractServiceSingle $joinedService;
 
-    /** @var string */
-    private $joiningColumn;
+    private string $joiningColumn;
 
-    /** @var string */
-    private $modelClassName;
+    private string $modelClassName;
 
     /**
      * AbstractServiceMulti constructor.
@@ -61,7 +57,7 @@ abstract class AbstractServiceMulti implements IService {
      * @param array $data
      * @return AbstractModelMulti
      */
-    public function createNewModel(array $data): IModel {
+    public function createNewModel(array $data): AbstractModelMulti {
         $mainModel = $this->getMainService()->createNewModel($data);
         $data[$this->getJoiningColumn()] = $mainModel->{$this->getJoiningColumn()};
         $joinedModel = $this->getJoinedService()->createNewModel($data);
@@ -101,7 +97,7 @@ abstract class AbstractServiceMulti implements IService {
      * @param AbstractModelMulti|IModel $model
      * @throws InvalidArgumentException
      */
-    private function checkType(AbstractModelMulti $model) {
+    private function checkType(AbstractModelMulti $model): void {
         $modelClassName = $this->getModelClassName();
         if (!$model instanceof $modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));

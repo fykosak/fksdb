@@ -42,7 +42,7 @@ class LanguageChooser extends Chooser {
     }
 
     /**
-     * @return array|iterable
+     * @return array
      * @throws BadTypeException
      */
     protected function getItems(): array {

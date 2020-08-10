@@ -15,8 +15,7 @@ use Nette\DI\Container;
  */
 class ParticipantAcquaintanceChartControl extends ReactComponent implements IChart {
 
-    /** @var int */
-    private $event;
+    private ModelEvent $event;
 
     /**
      * ParticipantAcquaintanceChartControl constructor.

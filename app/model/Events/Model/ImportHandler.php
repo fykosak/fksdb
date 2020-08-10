@@ -125,7 +125,7 @@ class ImportHandler {
             if (is_numeric($columnName)) { // hack for new PDO
                 continue;
             }
-            list($baseHolderName, $fieldName) = $this->prepareColumnName($columnName, $primaryBaseHolder);
+            [$baseHolderName, $fieldName] = $this->prepareColumnName($columnName, $primaryBaseHolder);
 
             if (!isset($values[$baseHolderName])) {
                 $values[$baseHolderName] = [];

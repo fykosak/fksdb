@@ -28,8 +28,8 @@ abstract class DefaultColumnFactory extends AbstractColumnFactory {
     private $omitInputField = false;
     /** @var FieldLevelPermission */
     private $permission;
-    /** @var MetaDataFactory */
-    private $metaDataFactory;
+
+    private MetaDataFactory $metaDataFactory;
 
     /**
      * StringRow constructor.

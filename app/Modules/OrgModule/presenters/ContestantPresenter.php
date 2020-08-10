@@ -16,11 +16,11 @@ use Nette\Application\UI\Form;
  * @method ModelContestant getModel()
  */
 class ContestantPresenter extends ExtendedPersonPresenter {
-    /** @var string */
-    protected $fieldsDefinition = 'adminContestant';
+
+    protected string $fieldsDefinition = 'adminContestant';
 
     private ServiceContestant $serviceContestant;
-    
+
     public function injectServiceContestant(ServiceContestant $serviceContestant): void {
         $this->serviceContestant = $serviceContestant;
     }

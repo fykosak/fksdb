@@ -25,17 +25,14 @@ use Tracy\Debugger;
  */
 abstract class AbstractServiceSingle extends Selection implements IService {
 
-    /** @var string */
-    private $modelClassName;
+    private string $modelClassName;
 
-    /** @var string */
-    private $tableName;
+    private string $tableName;
 
     /**
      * AbstractServiceSingle constructor.
      * @param Context $connection
      * @param IConventions $conventions
-     * FKSDB\ORM\AbstractServiceSingle constructor.
      * @param string $tableName
      * @param string $modelClassName
      */

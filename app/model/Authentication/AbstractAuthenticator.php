@@ -17,11 +17,9 @@ use Nette\Utils\DateTime;
  */
 abstract class AbstractAuthenticator /* implements IAuthenticator */
 {
-    /** @var ServiceLogin */
-    protected $serviceLogin;
+    protected ServiceLogin $serviceLogin;
 
-    /** @var YearCalculator */
-    protected $yearCalculator;
+    protected YearCalculator $yearCalculator;
 
     /**
      * AbstractAuthenticator constructor.
@@ -33,11 +31,7 @@ abstract class AbstractAuthenticator /* implements IAuthenticator */
         $this->yearCalculator = $yearCalculator;
     }
 
-    /**
-     * @param ModelLogin $login
-     * @return void
-     */
-    protected function logAuthentication(ModelLogin $login) {
+    protected function logAuthentication(ModelLogin $login): void {
         $this->serviceLogin->updateModel2($login, ['last_login' => DateTime::from(time())]);
     }
 }

@@ -38,7 +38,7 @@ class EventTypeRow extends AbstractColumnFactory {
      * @throws \InvalidArgumentException
      */
     public function createField(...$args): BaseControl {
-        list($contest) = $args;
+        [$contest] = $args;
         if (\is_null($contest) || !$contest instanceof ModelContest) {
             throw new \InvalidArgumentException();
         }
