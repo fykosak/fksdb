@@ -13,8 +13,8 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class StateColumnFactory extends DefaultColumnFactory {
-    /** @var array[] */
-    protected $states = [];
+
+    protected array $states = [];
 
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         $state = $model->{$this->getModelAccessKey()};
@@ -25,11 +25,7 @@ class StateColumnFactory extends DefaultColumnFactory {
         return Html::el('span')->addAttributes(['class' => $stateDef['badge']])->addText(_($stateDef['label']));
     }
 
-    /**
-     * @param array $states
-     * @return void
-     */
-    public function setStates(array $states) {
+    public function setStates(array $states): void {
         $this->states = $states;
     }
 

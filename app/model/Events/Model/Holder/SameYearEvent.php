@@ -16,8 +16,7 @@ class SameYearEvent implements IEventRelation {
     /** @var mixed */
     private $eventTypeId;
 
-    /** @var ServiceEvent */
-    private $serviceEvent;
+    private ServiceEvent $serviceEvent;
 
     /**
      * SameYearEvent constructor.
@@ -29,11 +28,7 @@ class SameYearEvent implements IEventRelation {
         $this->serviceEvent = $serviceEvent;
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return ModelEvent
-     */
-    public function getEvent(ModelEvent $event) {
+    public function getEvent(ModelEvent $event): ModelEvent {
         $result = $this->serviceEvent->getTable()->where([
             'event_type_id' => $this->eventTypeId,
             'year' => $event->year,
@@ -48,5 +43,4 @@ class SameYearEvent implements IEventRelation {
             return $event;
         }
     }
-
 }

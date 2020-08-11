@@ -140,7 +140,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * Standard ACL from acl.neon
      * @throws EventNotFoundException
      */
-    protected function isContestsOrgAuthorized($resource, $privilege): bool {
+    protected function isContestsOrgAuthorized($resource, ?string $privilege): bool {
         return $this->getEventAuthorizator()->isContestOrgAllowed($resource, $privilege, $this->getEvent());
     }
 
@@ -152,7 +152,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * TODO vyfakuje to aj cartesianov
      * @throws EventNotFoundException
      */
-    protected function isEventAndContestOrgAuthorized($resource, string $privilege): bool {
+    protected function isEventAndContestOrgAuthorized($resource, ?string $privilege): bool {
         return $this->getEventAuthorizator()->isEventAndContestOrgAllowed($resource, $privilege, $this->getEvent());
     }
 
@@ -163,7 +163,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * Check if has contest permission or is Event org
      * @throws EventNotFoundException
      */
-    public function isEventOrContestOrgAuthorized($resource, $privilege): bool {
+    public function isEventOrContestOrgAuthorized($resource, ?string $privilege): bool {
         return $this->getEventAuthorizator()->isEventOrContestOrgAllowed($resource, $privilege, $this->getEvent());
     }
 

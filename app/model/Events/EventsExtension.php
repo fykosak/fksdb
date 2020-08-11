@@ -53,8 +53,8 @@ class EventsExtension extends CompilerExtension {
 
     /** @const Regexp for configuration section names */
     const NAME_PATTERN = '/[a-z0-9_]/i';
-    /** @var string[] */
-    public static $semanticMap = [
+
+    public static array $semanticMap = [
         'RefPerson' => PersonFactory::class,
         'Chooser' => ChooserFactory::class,
         'Checkbox' => CheckboxFactory::class,
@@ -79,8 +79,8 @@ class EventsExtension extends CompilerExtension {
 
     /** @var array[baseMachineFullName] => expanded configuration */
     private $baseMachineConfig = [];
-    /** @var string */
-    private $schemeFile;
+
+    private string $schemeFile;
 
     /**
      * EventsExtension constructor.
@@ -134,10 +134,7 @@ class EventsExtension extends CompilerExtension {
         $this->createLayoutResolverFactory();
     }
 
-    /**
-     * @return void
-     */
-    private function loadScheme() {
+    private function loadScheme(): void {
         $loader = new Loader();
         $this->getContainerBuilder()->addDependency($this->schemeFile);
         $this->scheme = $loader->load($this->schemeFile);
@@ -176,20 +173,13 @@ class EventsExtension extends CompilerExtension {
         return $this->baseMachineConfig[$key];
     }
 
-    /**
-     * @param string $name
-     * @return void
-     */
-    private function validateConfigName(string $name) {
+    private function validateConfigName(string $name): void {
         if (!preg_match(self::NAME_PATTERN, $name)) {
             throw new InvalidArgumentException("Section name '$name' in events configuration is invalid.");
         }
     }
 
-    /**
-     * @return void
-     */
-    private function createLayoutResolverFactory() {
+    private function createLayoutResolverFactory(): void {
         $def = $this->getContainerBuilder()->addDefinition(self::MAIN_RESOLVER);
         $def->setFactory(LayoutResolver::class);
 
@@ -366,7 +356,7 @@ class EventsExtension extends CompilerExtension {
      * @param array $definition
      * @throws NeonSchemaException
      */
-    private function createHolderFactory(string $name, array $definition) {
+    private function createHolderFactory(string $name, array $definition): void {
         $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
         // Create factory definition.
         $factoryName = $this->getHolderName($name);
@@ -410,7 +400,7 @@ class EventsExtension extends CompilerExtension {
      * @return ServiceDefinition
      * @throws NeonSchemaException
      */
-    private function createBaseHolderFactory(string $eventName, string $baseName, string $instanceName, array $instanceDefinition) {
+    private function createBaseHolderFactory(string $eventName, string $baseName, string $instanceName, array $instanceDefinition): ServiceDefinition {
         $definition = $this->getBaseMachineConfig($eventName, $baseName);
         $factoryName = $this->getBaseHolderName($eventName, $baseName);
         $factory = $this->getContainerBuilder()->addDefinition(uniqid($factoryName));

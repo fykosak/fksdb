@@ -26,12 +26,7 @@ class EventDispatchFactory {
         $this->container = $container;
     }
 
-    /**
-     * @param array $key
-     * @param string $machineName
-     * @param string $holderMethodName
-     */
-    public function addEvent(array $key, string $holderMethodName, string $machineName) {
+    public function addEvent(array $key, string $holderMethodName, string $machineName): void {
         $this->definitions[] = [
             'keys' => $key,
             'holderMethod' => $holderMethodName,

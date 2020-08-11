@@ -63,7 +63,7 @@ class AccountManager {
      * @param string $invitationExpiration
      * @return void
      */
-    public function setInvitationExpiration($invitationExpiration) {
+    public function setInvitationExpiration($invitationExpiration): void {
         $this->invitationExpiration = $invitationExpiration;
     }
 
@@ -78,7 +78,7 @@ class AccountManager {
      * @param string $recoveryExpiration
      * @return void
      */
-    public function setRecoveryExpiration($recoveryExpiration) {
+    public function setRecoveryExpiration($recoveryExpiration): void {
         $this->recoveryExpiration = $recoveryExpiration;
     }
 
@@ -86,11 +86,7 @@ class AccountManager {
         return $this->emailFrom;
     }
 
-    /**
-     * @param string $emailFrom
-     * @return void
-     */
-    public function setEmailFrom(string $emailFrom) {
+    public function setEmailFrom(string $emailFrom): void {
         $this->emailFrom = $emailFrom;
     }
 
@@ -130,7 +126,7 @@ class AccountManager {
      * @return void
      * @throws UnsupportedLanguageException
      */
-    public function sendRecovery(ModelLogin $login, string $lang = null) {
+    public function sendRecovery(ModelLogin $login, string $lang = null): void {
         $person = $login->getPerson();
         $recoveryAddress = $person ? $person->getInfo()->email : null;
         if (!$recoveryAddress) {
@@ -161,11 +157,7 @@ class AccountManager {
         $this->serviceEmailMessage->addMessageToSend($data);
     }
 
-    /**
-     * @param ModelLogin $login
-     * @return void
-     */
-    public function cancelRecovery(ModelLogin $login) {
+    public function cancelRecovery(ModelLogin $login): void {
         $this->serviceAuthToken->getTable()->where([
             'login_id' => $login->login_id,
             'type' => ModelAuthToken::TYPE_RECOVERY,

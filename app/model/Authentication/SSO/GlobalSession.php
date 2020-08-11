@@ -15,11 +15,9 @@ use Nette\InvalidStateException;
  */
 class GlobalSession implements IGlobalSession {
 
-    /** @var ServiceGlobalSession */
-    private $serviceGlobalSession;
+    private ServiceGlobalSession $serviceGlobalSession;
 
-    /** @var IGSIDHolder */
-    private $gsidHolder;
+    private IGSIDHolder $gsidHolder;
 
     /** @var ModelGlobalSession|null */
     private $globalSession;
@@ -45,7 +43,7 @@ class GlobalSession implements IGlobalSession {
     /**
      * @param null $sessionId
      */
-    public function start($sessionId = null) {
+    public function start($sessionId = null): void {
         $sessionId = $sessionId ?: $this->gsidHolder->getGSID();
         if ($sessionId) {
             $this->globalSession = $this->serviceGlobalSession->findByPrimary($sessionId);
@@ -83,7 +81,7 @@ class GlobalSession implements IGlobalSession {
         }
     }
 
-    public function destroy() {
+    public function destroy(): void {
         if (!$this->started) {
             throw new InvalidStateException("Global session not started.");
         }

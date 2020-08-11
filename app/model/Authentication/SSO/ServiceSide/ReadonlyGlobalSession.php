@@ -16,11 +16,9 @@ class ReadonlyGlobalSession implements IGlobalSession {
 
     const TABLE = 'global_session';
 
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
-    /** @var IGSIDHolder */
-    private $gsidHolder;
+    private IGSIDHolder $gsidHolder;
 
     /** @var array */
     private $data = [];
@@ -42,7 +40,7 @@ class ReadonlyGlobalSession implements IGlobalSession {
         return $this->gsidHolder->getGSID();
     }
 
-    public function start() {
+    public function start(): void {
         $gsid = $this->gsidHolder->getGSID();
         if (!$gsid) {
             return;
@@ -63,7 +61,7 @@ class ReadonlyGlobalSession implements IGlobalSession {
         }
     }
 
-    public function destroy() {
+    public function destroy(): void {
         // Note: This is read-only implementation, global session is not actually deleted.
         $this->gsidHolder->setGSID(null);
         $this->data = [];

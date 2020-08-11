@@ -54,7 +54,7 @@ class EventAuthorizator {
      * @return bool
      * @deprecated
      */
-    public function isAllowed($resource, $privilege, ModelEvent $event): bool {
+    public function isAllowed($resource, ?string $privilege, ModelEvent $event): bool {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $event->getContest());
     }
 
@@ -64,7 +64,7 @@ class EventAuthorizator {
      * @param ModelEvent $event
      * @return bool
      */
-    public function isContestOrgAllowed($resource, $privilege, ModelEvent $event): bool {
+    public function isContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $event->getContest());
     }
 
@@ -74,7 +74,7 @@ class EventAuthorizator {
      * @param ModelEvent $event
      * @return bool
      */
-    public function isEventOrContestOrgAllowed($resource, $privilege, ModelEvent $event): bool {
+    public function isEventOrContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool {
         if (!$this->getUser()->isAuthenticated()) {
             return false;
         }
@@ -90,7 +90,7 @@ class EventAuthorizator {
      * @param ModelEvent $event
      * @return bool
      */
-    public function isEventAndContestOrgAllowed($resource, $privilege, ModelEvent $event): bool {
+    public function isEventAndContestOrgAllowed($resource, ?string $privilege, ModelEvent $event): bool {
         if (!$this->getUser()->isAuthenticated()) {
             return false;
         }
@@ -106,7 +106,7 @@ class EventAuthorizator {
      * @param ModelEvent $event
      * @return bool
      */
-    private function isEventOrg($resource, $privilege, ModelEvent $event): bool {
+    private function isEventOrg($resource, ?string $privilege, ModelEvent $event): bool {
         return (new EventOrgByIdAssertion($this->getUser(), $this->context))($this->getPermission(), null, $resource, $privilege, $event->event_id);
     }
 }
