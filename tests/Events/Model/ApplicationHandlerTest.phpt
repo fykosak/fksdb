@@ -210,7 +210,7 @@ class ApplicationHandlerTest extends EventTestCase {
             'privacy' => true,
         ];
         $data = ArrayHash::from($data);
-        $this->fixture->storeAndExecute($this->holder, $data);
+        $this->fixture->storeAndExecuteValues($this->holder, $data);
 
         /** @var ModelFyziklaniTeam $team */
         $team = $this->serviceTeam->getTable()->where('name', $teamName)->fetch();

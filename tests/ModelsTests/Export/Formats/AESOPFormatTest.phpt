@@ -19,10 +19,7 @@ use Tester\Assert;
 
 class AESOPFormatTest extends DatabaseTestCase {
 
-    /**
-     * @var AESOPFormat
-     */
-    private $fixture;
+    private AESOPFormat $fixture;
 
     protected function setUp() {
         global $container;

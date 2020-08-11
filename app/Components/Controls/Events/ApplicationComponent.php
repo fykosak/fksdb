@@ -218,7 +218,7 @@ class ApplicationComponent extends BaseComponent {
      */
     private function execute(?Form $form, ?string $explicitTransitionName): void {
         try {
-            $this->handler->storeAndExecute($this->holder, $form, $explicitTransitionName);
+            $this->handler->storeAndExecuteForm($this->holder, $form, $explicitTransitionName);
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             $this->finalRedirect();
         } catch (ApplicationHandlerException $exception) {

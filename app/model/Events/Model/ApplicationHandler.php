@@ -26,8 +26,6 @@ use Nette\Database\Connection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
-use Nette\Utils\Json;
-use Nette\Utils\JsonException;
 use Tracy\Debugger;
 
 /**
@@ -89,32 +87,19 @@ class ApplicationHandler {
         return $this->logger;
     }
 
-    /**
-     * @param Holder $holder
-     * @param iterable $data
-     * @throws JsonException
-     */
-    final public function store(Holder $holder, iterable $data): void {
-        $this->_storeAndExecute($holder, $data, null, self::STATE_OVERWRITE);
+    final public function store(Holder $holder, ArrayHash $data): void {
+        $this->_storeAndExecute($holder, $data, null, null, self::STATE_OVERWRITE);
     }
 
-    /**
-     * @param Holder $holder
-     * @param Form|ArrayHash|null $data
-     * @param string|null $explicitTransitionName
-     * @throws JsonException
-     */
-    public function storeAndExecute(Holder $holder, $data = null, $explicitTransitionName = null) {
-        $this->_storeAndExecute($holder, $data, $explicitTransitionName, self::STATE_TRANSITION);
+    final public function storeAndExecuteValues(Holder $holder, ArrayHash $data): void {
+        $this->_storeAndExecute($holder, $data, null, null, self::STATE_TRANSITION);
     }
 
-    /**
-     * @param Holder $holder
-     * @param string $explicitTransitionName
-     * @return void
-     * @throws JsonException
-     */
-    public function onlyExecute(Holder $holder, string $explicitTransitionName) {
+    final public function storeAndExecuteForm(Holder $holder, Form $form, ?string $explicitTransitionName = null): void {
+        $this->_storeAndExecute($holder, null, $form, $explicitTransitionName, self::STATE_TRANSITION);
+    }
+
+    final public function onlyExecute(Holder $holder, string $explicitTransitionName): void {
         $this->initializeMachine();
 
         try {
@@ -156,16 +141,7 @@ class ApplicationHandler {
         }
     }
 
-    /**
-     * @param Holder $holder
-     * @param ArrayHash|null $data
-     * @param Form|null $form
-     * @param string|null $explicitTransitionName
-     * @param string $execute
-     * @return void
-     * @throws JsonException
-     */
-    private function _storeAndExecute(Holder $holder, $data, $explicitTransitionName, $execute): void {
+    private function _storeAndExecute(Holder $holder, ?ArrayHash $data, ?Form $form, ?string $explicitTransitionName, ?string $execute): void {
         $this->initializeMachine();
 
         try {
@@ -179,8 +155,8 @@ class ApplicationHandler {
                 $transitions[$explicitMachineName] = $this->machine->getBaseMachine($explicitMachineName)->getTransition($explicitTransitionName);
             }
 
-            if ($data) {
-                $transitions = $this->processData($data, $transitions, $holder, $execute);
+            if ($data || $form) {
+                $transitions = $this->processData($data, $form, $transitions, $holder, $execute);
             }
 
             if ($execute == self::STATE_OVERWRITE) {
@@ -220,39 +196,28 @@ class ApplicationHandler {
             $container->setConflicts($exception->getConflicts());
             $message = sprintf(_('Některá pole skupiny "%s" neodpovídají existujícímu záznamu.'), $container->getOption('label'));
             $this->logger->log(new Message($message, ILogger::ERROR));
-            $this->formRollback($data);
+            $this->formRollback($form);
             $this->reRaise($exception);
         } catch (SecondaryModelDataConflictException $exception) {
             $message = sprintf(_('Data ve skupině "%s" kolidují s již existující přihláškou.'), $exception->getBaseHolder()->getLabel());
             Debugger::log($exception, 'app-conflict');
             $this->logger->log(new Message($message, ILogger::ERROR));
-            $this->formRollback($data);
+            $this->formRollback($form);
             $this->reRaise($exception);
         } catch (DuplicateApplicationException|MachineExecutionException|SubmitProcessingException|FullCapacityException|ExistingPaymentException $exception) {
             $this->logger->log(new Message($exception->getMessage(), ILogger::ERROR));
-            $this->formRollback($data);
+            $this->formRollback($form);
             $this->reRaise($exception);
         }
     }
 
-    /**
-     * @param ArrayHash|null $values
-     * @param Form|null $form
-     * @param array $transitions
-     * @param Holder $holder
-     * @param string $execute
-     * @return array
-     * @throws JsonException
-     */
-    private function processData($data, $transitions, Holder $holder, $execute) {
-        if ($data instanceof Form) {
-            $values = FormUtils::emptyStrToNull($data->getValues());
-            $form = $data;
+    private function processData(?ArrayHash $data, ?Form $form, array $transitions, Holder $holder, ?string $execute): array {
+        if ($form) {
+            $values = FormUtils::emptyStrToNull($form->getValues());
         } else {
             $values = $data;
-            $form = null;
         }
-        Debugger::log(Json::encode((array)$values), 'app-form');
+        Debugger::log(json_encode((array)$values), 'app-form');
         $primaryName = $holder->getPrimaryHolder()->getName();
         $newStates = [];
         if (isset($values[$primaryName][BaseHolder::STATE_COLUMN])) {
@@ -281,14 +246,10 @@ class ApplicationHandler {
         }
     }
 
-    /**
-     * @param iterable $data
-     * @return void
-     */
-    private function formRollback($data): void {
-        if ($data instanceof Form) {
+    private function formRollback(?Form $form): void {
+        if ($form) {
             /** @var ReferencedId $referencedId */
-            foreach ($data->getComponents(true, ReferencedId::class) as $referencedId) {
+            foreach ($form->getComponents(true, ReferencedId::class) as $referencedId) {
                 $referencedId->rollback();
             }
         }
