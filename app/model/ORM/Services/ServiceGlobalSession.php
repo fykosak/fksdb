@@ -16,7 +16,7 @@ use Nette\Utils\Random;
  */
 class ServiceGlobalSession extends AbstractServiceSingle {
 
-    const SESSION_ID_LENGTH = 32;
+    private const SESSION_ID_LENGTH = 32;
 
     private Request $request;
 

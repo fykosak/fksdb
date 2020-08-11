@@ -35,7 +35,7 @@ abstract class PersonFileLevelTest extends PersonTest {
      * @throws BadTypeException
      */
     final protected function getRowFactory(): ITestedColumnFactory {
-        if (!isset($this->rowFactory) || is_null($this->rowFactory)) {
+        if (!isset($this->rowFactory)) {
             $rowFactory = $this->tableReflectionFactory->loadColumnFactory($this->fieldName);
             if (!$rowFactory instanceof ITestedColumnFactory) {
                 throw new BadTypeException(ITestedColumnFactory::class, $this->rowFactory);

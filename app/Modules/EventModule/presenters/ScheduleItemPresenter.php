@@ -35,8 +35,8 @@ class ScheduleItemPresenter extends BasePresenter {
      * @persistent
      */
     public $groupId;
-    /** @var ModelScheduleGroup */
-    private $group;
+
+    private ModelScheduleGroup $group;
 
     private ServiceScheduleItem $serviceScheduleItem;
 
@@ -117,7 +117,7 @@ class ScheduleItemPresenter extends BasePresenter {
      * @throws InvalidStateException
      */
     private function getGroup(): ModelScheduleGroup {
-        if (!$this->group) {
+        if (!isset($this->group)) {
             $group = $this->serviceScheduleGroup->findByPrimary($this->groupId);
             if (!$group) {
                 throw new InvalidStateException();

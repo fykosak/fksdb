@@ -38,7 +38,6 @@ class RelatedPersonSource extends AggregatedPersonSource implements IHolderSourc
     /**
      * @param ModelEvent $event
      * @return SingleEventSource|null
-     *
      * @throws NeonSchemaException
      */
     public function processEvent(ModelEvent $event): ?SingleEventSource {
@@ -76,5 +75,4 @@ class RelatedPersonSource extends AggregatedPersonSource implements IHolderSourc
 
         return $eventSource;
     }
-
 }

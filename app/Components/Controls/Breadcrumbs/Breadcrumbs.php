@@ -108,7 +108,7 @@ class Breadcrumbs extends BaseComponent {
         }
     }
 
-    /*     * **********************
+    /* ***********************
      * Rendering
      * ********************** */
 

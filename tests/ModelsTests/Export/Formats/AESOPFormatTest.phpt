@@ -28,9 +28,9 @@ class AESOPFormatTest extends DatabaseTestCase {
         global $container;
         parent::setUp();
         /** @var ExportFormatFactory $exportFactory */
-        $exportFactory = $this->getContext()->getByType(ExportFormatFactory::class);
+        $exportFactory = $this->getContainer()->getByType(ExportFormatFactory::class);
         /** @var StoredQueryFactory $queryFactory */
-        $queryFactory = $this->getContext()->getByType(StoredQueryFactory::class);
+        $queryFactory = $this->getContainer()->getByType(StoredQueryFactory::class);
         //$queryFactory->setPresenter(new MockSeriesPresenter());
 
         $parameters = [

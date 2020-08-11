@@ -15,18 +15,17 @@ class BaseMachine {
     const STATE_INIT = '__init';
     const STATE_TERMINATED = '__terminated';
     const STATE_ANY = '*';
-    const EXECUTABLE = 0x1;
-    const VISIBLE = 0x2;
+
+    public const EXECUTABLE = 0x1;
+    public const VISIBLE = 0x2;
 
     private string $name;
-    /** @var string[] */
-    private $states;
 
-    /** @var Transition[] */
-    private $transitions = [];
+    private array $states;
 
-    /** @var Machine */
-    private $machine;
+    private array $transitions = [];
+
+    private Machine $machine;
 
     /**
      * BaseMachine constructor.
@@ -44,17 +43,11 @@ class BaseMachine {
         $this->states[] = $state;
     }
 
-    /**
-     * @return string[]
-     */
     public function getStates(): array {
         return $this->states;
     }
 
-    /**
-     * @return Machine
-     */
-    public function getMachine() {
+    public function getMachine(): Machine {
         return $this->machine;
     }
 
@@ -108,20 +101,14 @@ class BaseMachine {
      * @param int $mode
      * @return Transition[]
      */
-    public function getAvailableTransitions(Holder $holder, string $sourceState, $mode = self::EXECUTABLE): array {
+    public function getAvailableTransitions(Holder $holder, string $sourceState, int $mode = self::EXECUTABLE): array {
         return array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($mode, $holder) {
             return
                 (!($mode & self::EXECUTABLE) || $transition->canExecute($holder)) && (!($mode & self::VISIBLE) || $transition->isVisible($holder));
         });
     }
 
-
-    /**
-     * @param string $sourceState
-     * @param string $targetState
-     * @return Transition[]|null
-     */
-    public function getTransitionByTarget(string $sourceState, string $targetState) {
+    public function getTransitionByTarget(string $sourceState, string $targetState): ?Transition {
         $candidates = array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($targetState) {
             return $transition->getTarget() == $targetState;
         });

@@ -106,9 +106,7 @@ class ImportComponent extends BaseComponent {
             $stateless = $values['stateless'];
 
             // initialize import handler
-            $importHandler = new ImportHandler($this->getContext());
-            $importHandler->setInput($parser);
-            $importHandler->setSource($this->source);
+            $importHandler = new ImportHandler($this->getContext(), $parser, $this->source);
 
             Debugger::timer();
             $result = $importHandler->import($this->handler, $errorMode, $stateless);

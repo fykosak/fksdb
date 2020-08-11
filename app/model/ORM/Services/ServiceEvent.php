@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Services;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyDBTrait;
@@ -15,6 +16,7 @@ use Nette\Database\IConventions;
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelEvent createNewModel(array $data)
+ * @method ModelEvent|null findByPrimary($key)
  */
 class ServiceEvent extends AbstractServiceSingle {
 

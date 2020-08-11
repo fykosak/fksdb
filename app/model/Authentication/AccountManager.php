@@ -22,12 +22,12 @@ class AccountManager {
     private ServiceLogin $serviceLogin;
 
     private ServiceAuthToken $serviceAuthToken;
-    /** @var string */
-    private $invitationExpiration = '+1 month';
-    /** @var string */
-    private $recoveryExpiration = '+1 day';
-    /** @var string */
-    private $emailFrom;
+
+    private string $invitationExpiration = '+1 month';
+
+    private string $recoveryExpiration = '+1 day';
+
+    private string $emailFrom;
 
     private ServiceEmailMessage $serviceEmailMessage;
 
@@ -52,33 +52,19 @@ class AccountManager {
         $this->mailTemplateFactory = $mailTemplateFactory;
     }
 
-    /**
-     * @return string
-     */
-    public function getInvitationExpiration() {
+    public function getInvitationExpiration(): string {
         return $this->invitationExpiration;
     }
 
-    /**
-     * @param string $invitationExpiration
-     * @return void
-     */
-    public function setInvitationExpiration($invitationExpiration): void {
+    public function setInvitationExpiration(string $invitationExpiration): void {
         $this->invitationExpiration = $invitationExpiration;
     }
 
-    /**
-     * @return string
-     */
-    public function getRecoveryExpiration() {
+    public function getRecoveryExpiration(): string {
         return $this->recoveryExpiration;
     }
 
-    /**
-     * @param string $recoveryExpiration
-     * @return void
-     */
-    public function setRecoveryExpiration($recoveryExpiration): void {
+    public function setRecoveryExpiration(string $recoveryExpiration): void {
         $this->recoveryExpiration = $recoveryExpiration;
     }
 
@@ -126,7 +112,7 @@ class AccountManager {
      * @return void
      * @throws UnsupportedLanguageException
      */
-    public function sendRecovery(ModelLogin $login, string $lang = null): void {
+    public function sendRecovery(ModelLogin $login, ?string $lang = null): void {
         $person = $login->getPerson();
         $recoveryAddress = $person ? $person->getInfo()->email : null;
         if (!$recoveryAddress) {
@@ -164,7 +150,7 @@ class AccountManager {
         ])->delete();
     }
 
-    final public function createLogin(ModelPerson $person, string $login = null, string $password = null): ModelLogin {
+    final public function createLogin(ModelPerson $person, ?string $login = null, ?string $password = null): ModelLogin {
         /** @var ModelLogin $login */
         $login = $this->serviceLogin->createNewModel([
             'person_id' => $person->person_id,

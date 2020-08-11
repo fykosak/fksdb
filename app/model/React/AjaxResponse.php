@@ -16,29 +16,19 @@ final class AjaxResponse implements Nette\Application\IResponse {
 
     use SmartObject;
 
-    /** @var array */
-    private $content = [];
+    private array $content = [];
 
-    /** @var int */
-    private $code = 200;
+    private int $code = 200;
 
     final public function getContentType(): string {
         return 'application/json';
     }
 
-    /**
-     * @param int $code
-     * @return void
-     */
-    public function setCode(int $code) {
+    public function setCode(int $code): void {
         $this->code = $code;
     }
 
-    /**
-     * @param array $content
-     * @return void
-     */
-    public function setContent(array $content) {
+    public function setContent(array $content): void {
         $this->content = $content;
     }
 
@@ -47,7 +37,7 @@ final class AjaxResponse implements Nette\Application\IResponse {
      * @param IResponse $httpResponse
      * @throws JsonException
      */
-    public function send(IRequest $httpRequest, IResponse $httpResponse) {
+    public function send(IRequest $httpRequest, IResponse $httpResponse): void {
         $httpResponse->setCode($this->code);
         $httpResponse->setContentType($this->getContentType());
         $httpResponse->setExpiration(false);

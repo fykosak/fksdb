@@ -41,7 +41,6 @@ abstract class AggregatedPersonSource implements IHolderSource {
 
     /**
      * @return void
-     *
      * @throws NeonSchemaException
      */
     private function loadData(): void {

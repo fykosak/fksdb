@@ -17,9 +17,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         parent::beforeRender();
     }
 
-    /**
-     * @return string[]
-     */
     protected function getNavRoots(): array {
         $roots = parent::getNavRoots();
         $roots[] = 'Common.Dashboard.default';

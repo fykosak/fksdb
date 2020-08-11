@@ -61,7 +61,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     private function getContestsProperty(): array {
-        if (!isset($this->contestsProperty) || is_null($this->contestsProperty)) {
+        if (!isset($this->contestsProperty)) {
             $this->contestsProperty = [];
             $query = $this->getServiceContest()->getTable();
             /** @var ModelContest $contest */

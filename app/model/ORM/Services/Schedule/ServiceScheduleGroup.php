@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Services\Schedule;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyDBTrait;
@@ -12,6 +13,7 @@ use Nette\Database\IConventions;
 /**
  * Class ServiceScheduleGroup
  * @author Michal Červeňák <miso@fykos.cz>
+ * @method ModelScheduleGroup|null findByPrimary($key)
  */
 class ServiceScheduleGroup extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;

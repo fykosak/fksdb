@@ -38,7 +38,6 @@ class SubmitPresenter extends BasePresenter {
     /* ***** Title methods *****/
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      */
     public function titleCreate(): void {
@@ -47,7 +46,6 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      */
     public function titleList(): void {
@@ -56,7 +54,6 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      */
     public function titleEdit(): void {

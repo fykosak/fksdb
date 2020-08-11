@@ -37,24 +37,22 @@ use Tracy\Debugger;
  */
 class ApplicationHandler {
 
-    const ERROR_ROLLBACK = 'rollback';
-    const ERROR_SKIP = 'skip';
-    const STATE_TRANSITION = 'transition';
-    const STATE_OVERWRITE = 'overwrite';
+    public const ERROR_ROLLBACK = 'rollback';
+    public const ERROR_SKIP = 'skip';
+    public const STATE_TRANSITION = 'transition';
+    public const STATE_OVERWRITE = 'overwrite';
 
     private ModelEvent $event;
 
     private ILogger $logger;
 
-    /** @var string */
-    private $errorMode = self::ERROR_ROLLBACK;
+    private string $errorMode = self::ERROR_ROLLBACK;
 
     private Connection $connection;
 
     private Container $container;
 
-    /** @var Machine */
-    private $machine;
+    private Machine $machine;
 
     private EventDispatchFactory $eventDispatchFactory;
 
@@ -74,26 +72,15 @@ class ApplicationHandler {
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
-    /**
-     * @return string
-     */
-    public function getErrorMode() {
+    public function getErrorMode(): string {
         return $this->errorMode;
     }
 
-    /**
-     * @param string $errorMode
-     * @return void
-     */
-    public function setErrorMode($errorMode) {
+    public function setErrorMode(string $errorMode): void {
         $this->errorMode = $errorMode;
     }
 
-    /**
-     * @return Machine
-     *
-     */
-    public function getMachine() {
+    public function getMachine(): Machine {
         $this->initializeMachine();
         return $this->machine;
     }
@@ -125,6 +112,7 @@ class ApplicationHandler {
      * @param Holder $holder
      * @param string $explicitTransitionName
      * @return void
+     * @throws JsonException
      */
     public function onlyExecute(Holder $holder, string $explicitTransitionName) {
         $this->initializeMachine();
@@ -162,23 +150,7 @@ class ApplicationHandler {
             Debugger::log($exception, 'app-conflict');
             $this->logger->log(new Message($message, ILogger::ERROR));
             $this->reRaise($exception);
-        } catch (DuplicateApplicationException $exception) {
-            $message = $exception->getMessage();
-            $this->logger->log(new Message($message, ILogger::ERROR));
-            $this->reRaise($exception);
-        } catch (MachineExecutionException $exception) {
-            $this->logger->log(new Message($exception->getMessage(), ILogger::ERROR));
-            $this->reRaise($exception);
-        } catch (SubmitProcessingException $exception) {
-            $this->logger->log(new Message($exception->getMessage(), ILogger::ERROR));
-            $this->reRaise($exception);
-        } catch (FullCapacityException $exception) {
-            $this->logger->log(new Message($exception->getMessage(), ILogger::ERROR));
-            $this->reRaise($exception);
-        } catch (ExistingPaymentException $exception) {
-            $this->logger->log(new Message($exception->getMessage(), ILogger::ERROR));
-            $this->reRaise($exception);
-        } catch (UnavailableTransitionException $exception) {
+        } catch (DuplicateApplicationException|MachineExecutionException|SubmitProcessingException|FullCapacityException|ExistingPaymentException|UnavailableTransitionException $exception) {
             $this->logger->log(new Message($exception->getMessage(), ILogger::ERROR));
             $this->reRaise($exception);
         }
@@ -186,9 +158,11 @@ class ApplicationHandler {
 
     /**
      * @param Holder $holder
-     * @param iterable $data
-     * @param string $explicitTransitionName
-     * @param bool|mixed $execute
+     * @param ArrayHash|null $data
+     * @param Form|null $form
+     * @param string|null $explicitTransitionName
+     * @param string $execute
+     * @return void
      * @throws JsonException
      */
     private function _storeAndExecute(Holder $holder, $data, $explicitTransitionName, $execute): void {
@@ -244,7 +218,6 @@ class ApplicationHandler {
         } catch (ModelDataConflictException $exception) {
             $container = $exception->getReferencedId()->getReferencedContainer();
             $container->setConflicts($exception->getConflicts());
-
             $message = sprintf(_('Některá pole skupiny "%s" neodpovídají existujícímu záznamu.'), $container->getOption('label'));
             $this->logger->log(new Message($message, ILogger::ERROR));
             $this->formRollback($data);
@@ -255,24 +228,7 @@ class ApplicationHandler {
             $this->logger->log(new Message($message, ILogger::ERROR));
             $this->formRollback($data);
             $this->reRaise($exception);
-        } catch (DuplicateApplicationException $exception) {
-            $message = $exception->getMessage();
-            $this->logger->log(new Message($message, ILogger::ERROR));
-            $this->formRollback($data);
-            $this->reRaise($exception);
-        } catch (MachineExecutionException $exception) {
-            $this->logger->log(new Message($exception->getMessage(), ILogger::ERROR));
-            $this->formRollback($data);
-            $this->reRaise($exception);
-        } catch (SubmitProcessingException $exception) {
-            $this->logger->log(new Message($exception->getMessage(), ILogger::ERROR));
-            $this->formRollback($data);
-            $this->reRaise($exception);
-        } catch (FullCapacityException $exception) {
-            $this->logger->log(new Message($exception->getMessage(), ILogger::ERROR));
-            $this->formRollback($data);
-            $this->reRaise($exception);
-        } catch (ExistingPaymentException $exception) {
+        } catch (DuplicateApplicationException|MachineExecutionException|SubmitProcessingException|FullCapacityException|ExistingPaymentException $exception) {
             $this->logger->log(new Message($exception->getMessage(), ILogger::ERROR));
             $this->formRollback($data);
             $this->reRaise($exception);
@@ -280,12 +236,12 @@ class ApplicationHandler {
     }
 
     /**
-     * @param iterable $data
+     * @param ArrayHash|null $values
+     * @param Form|null $form
      * @param array $transitions
      * @param Holder $holder
      * @param string $execute
-     * @return mixed
-     * @throws MachineExecutionException
+     * @return array
      * @throws JsonException
      */
     private function processData($data, $transitions, Holder $holder, $execute) {
@@ -320,7 +276,7 @@ class ApplicationHandler {
     }
 
     private function initializeMachine(): void {
-        if (!$this->machine) {
+        if (!isset($this->machine)) {
             $this->machine = $this->eventDispatchFactory->getEventMachine($this->event);
         }
     }
@@ -351,11 +307,7 @@ class ApplicationHandler {
         }
     }
 
-    /**
-     * @param bool $final
-     * @return void
-     */
-    public function commit($final = false): void {
+    public function commit(bool $final = false): void {
         if ($this->connection->getPdo()->inTransaction() && ($this->errorMode == self::ERROR_ROLLBACK || $final)) {
             $this->connection->commit();
         }

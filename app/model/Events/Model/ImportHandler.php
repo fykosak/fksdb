@@ -29,33 +29,17 @@ class ImportHandler {
 
     private Container $container;
 
-    /** @var SingleEventSource */
-    private $source;
+    private SingleEventSource $source;
 
-    /** @var CSVParser */
-    private $parser;
+    private CSVParser $parser;
 
     /**
      * ImportHandler constructor.
      * @param Container $container
      */
-    public function __construct(Container $container) {
+    public function __construct(Container $container, CSVParser $parser, SingleEventSource $source) {
         $this->container = $container;
-    }
-
-    /**
-     * @param CSVParser $parser
-     * @return void
-     */
-    public function setInput(CSVParser $parser) {
         $this->parser = $parser;
-    }
-
-    /**
-     * @param SingleEventSource $source
-     * @return void
-     */
-    public function setSource(SingleEventSource $source) {
         $this->source = $source;
     }
 
@@ -64,7 +48,6 @@ class ImportHandler {
      * @param string $errorMode
      * @param string $stateless
      * @return bool
-     *
      * @throws JsonException
      * @throws NeonSchemaException
      */

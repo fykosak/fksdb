@@ -166,7 +166,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @throws AbortException
      */
-    public function actionRecover() {
+    public function actionRecover(): void {
         if ($this->isLoggedIn()) {
             $this->initialRedirect();
         }
@@ -208,7 +208,7 @@ final class AuthenticationPresenter extends BasePresenter {
         $form->addSubmit('send', _('Log in'));
         $form->addProtection(_('The form has expired. Please send it again.'));
         $form->onSuccess[] = function (Form $form) {
-            return $this->loginFormSubmitted($form);
+            $this->loginFormSubmitted($form);
         };
         return $form;
     }
@@ -237,7 +237,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @param Form $form
      * @throws AbortException
      */
-    private function loginFormSubmitted(Form $form) {
+    private function loginFormSubmitted(Form $form): void {
         $values = $form->getValues();
         try {
             // TODO use form->getValues()
@@ -257,7 +257,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws UnsupportedLanguageException
      */
-    private function recoverFormSubmitted(Form $form) {
+    private function recoverFormSubmitted(Form $form): void {
         $connection = $this->serviceAuthToken->getConnection();
         try {
             $values = $form->getValues();
@@ -286,7 +286,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws Exception
      */
-    private function loginBackLinkRedirect($login = null) {
+    private function loginBackLinkRedirect($login = null): void {
         if (!$this->backlink) {
             return;
         }

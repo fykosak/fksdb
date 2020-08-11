@@ -19,7 +19,7 @@ use Nette\Localization\ITranslator;
  */
 class MailTemplateFactory {
 
-    /* without trailing slash */
+    /** without trailing slash */
     private string $templateDir;
     /** @var Application */
     private $application;

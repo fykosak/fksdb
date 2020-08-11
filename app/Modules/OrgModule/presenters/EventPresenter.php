@@ -39,7 +39,6 @@ class EventPresenter extends BasePresenter {
 
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */

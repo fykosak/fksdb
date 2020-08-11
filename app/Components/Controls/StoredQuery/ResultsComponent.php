@@ -64,13 +64,13 @@ class ResultsComponent extends BaseComponent {
     }
 
     private function hasStoredQuery(): bool {
-        return isset($this->storedQuery) && !is_null($this->storedQuery);
+        return isset($this->storedQuery);
     }
 
     public function setParameters(array $parameters): void {
         $this->parameters = $parameters;
     }
-    
+
     public function updateParameters(array $parameters): void {
         if (!$this->parameters) {
             $this->parameters = [];
@@ -165,7 +165,9 @@ class ResultsComponent extends BaseComponent {
         }
     }
 
-    // TODO is this really need?
+    /**
+     * TODO is this really need?
+      G*/
     private function isAuthorized(): bool {
         if (!$this->hasStoredQuery()) {
             return false;

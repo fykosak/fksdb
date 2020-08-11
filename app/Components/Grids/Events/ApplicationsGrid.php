@@ -32,21 +32,20 @@ class ApplicationsGrid extends BaseComponent {
     private IHolderSource $source;
 
     /** @var Holder[] */
-    private $holders = [];
+    private array $holders = [];
 
     /** @var Machine[] */
-    private $machines = [];
+    private array $machines = [];
 
     /** @var ModelEvent[] */
-    private $eventApplications = [];
+    private array $eventApplications = [];
 
     /** @var ApplicationHandler[] */
-    private $handlers = [];
+    private array $handlers = [];
 
     private ApplicationHandlerFactory $handlerFactory;
 
-    /** @var string */
-    private $templateFile;
+    private string $templateFile;
 
     private EventDispatchFactory $eventDispatchFactory;
 

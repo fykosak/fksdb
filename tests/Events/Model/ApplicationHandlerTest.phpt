@@ -24,10 +24,7 @@ class ApplicationHandlerTest extends EventTestCase {
 
     use MockApplicationTrait;
 
-    /**
-     * @var ApplicationHandler
-     */
-    private $fixture;
+    private ApplicationHandler $fixture;
 
     /**
      * @var ServiceFyziklaniTeam

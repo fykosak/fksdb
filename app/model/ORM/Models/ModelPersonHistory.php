@@ -69,12 +69,7 @@ class ModelPersonHistory extends AbstractModelSingle implements ISchoolReference
         return $class;
     }
 
-    /**
-     * @param int|null $studyYear
-     * @param int $diff
-     * @return int|null
-     */
-    private function extrapolateStudyYear(int $studyYear = null, int $diff = 0): ?int {
+    private function extrapolateStudyYear(?int $studyYear = null, int $diff = 0): ?int {
         if (!$studyYear) {
             return null;
         }

@@ -23,8 +23,8 @@ use Nette\Neon\Neon;
  */
 class BaseHolder {
 
-    const STATE_COLUMN = 'status';
-    const EVENT_COLUMN = 'event_id';
+    public const STATE_COLUMN = 'status';
+    public const EVENT_COLUMN = 'event_id';
 
     private string $name;
 
@@ -34,7 +34,7 @@ class BaseHolder {
 
     private DataValidator $validator;
 
-    /* Relation to the primary holder's event.     */
+    /** Relation to the primary holder's event.     */
     private ?IEventRelation $eventRelation;
 
     private ModelEvent $event;
@@ -155,7 +155,7 @@ class BaseHolder {
     }
 
     /**
-     * @param mixed $paramScheme
+     * @param array $paramScheme
      * @return void
      */
     public function setParamScheme($paramScheme): void {
@@ -377,10 +377,7 @@ class BaseHolder {
         return $model[$personColumn];
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return $this->name;
     }
 
@@ -390,7 +387,7 @@ class BaseHolder {
     /**
      * @throws NeonSchemaException
      */
-    private function cacheParameters() {
+    private function cacheParameters(): void {
         $parameters = isset($this->getEvent()->parameters) ? $this->getEvent()->parameters : '';
         $parameters = $parameters ? Neon::decode($parameters) : [];
         $this->parameters = NeonScheme::readSection($parameters, $this->getParamScheme());

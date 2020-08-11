@@ -25,10 +25,9 @@ use Nette\Security\IResource;
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
 
-    /** @var ModelEvent */
-    private $event;
-    /** @var Holder */
-    private $holder;
+    private ModelEvent $event;
+
+    private Holder $holder;
 
     /**
      * @var int
@@ -82,7 +81,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws EventNotFoundException
      */
     protected function getEvent(): ModelEvent {
-        if (!$this->event) {
+        if (!isset($this->event)) {
             $model = $this->getServiceEvent()->findByPrimary($this->eventId);
             if (!$model) {
                 throw new EventNotFoundException();
@@ -98,7 +97,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws NeonSchemaException
      */
     protected function getHolder(): Holder {
-        if (!$this->holder) {
+        if (!isset($this->holder)) {
             $this->holder = $this->getEventDispatchFactory()->getDummyHolder($this->getEvent());
         }
         return $this->holder;

@@ -31,7 +31,7 @@ abstract class BasePresenter extends ContestPresenter {
      * @throws ForbiddenRequestException
      */
     public function getContestant(): ?ModelContestant {
-        if (!isset($this->contestant) || is_null($this->contestant)) {
+        if (!isset($this->contestant)) {
             /** @var ModelPerson $person */
             $person = $this->user->getIdentity()->getPerson();
             $contestant = $person->related(DbNames::TAB_CONTESTANT_BASE, 'person_id')->where([
@@ -44,9 +44,6 @@ abstract class BasePresenter extends ContestPresenter {
         return $this->contestant;
     }
 
-    /**
-     * @return string[]
-     */
     protected function getNavRoots(): array {
         return ['Public.Dashboard.default'];
     }

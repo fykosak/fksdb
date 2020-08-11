@@ -35,7 +35,6 @@ use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
 use ReflectionException;
 use FKSDB\Utils\Utils;
-use Tracy\Debugger;
 
 /**
  * Base presenter for all application presenters.
@@ -74,19 +73,15 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     private PresenterBuilder $presenterBuilder;
 
-    /** @var PageTitle|null */
-    private $pageTitle;
+    private ?PageTitle $pageTitle;
 
-    /** @var bool */
-    private $authorized = true;
+    private bool $authorized = true;
 
-    /** @var bool[] */
-    private $authorizedCache = [];
+    private array $authorizedCache = [];
 
-    /** @var FullHttpRequest */
-    private $fullRequest;
-    /** @var PageStyleContainer */
-    private $pageStyleContainer;
+    private FullHttpRequest $fullRequest;
+
+    private PageStyleContainer $pageStyleContainer;
 
     public function getYearCalculator(): YearCalculator {
         return $this->yearCalculator;
@@ -187,7 +182,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this;
     }
 
-    private function callTitleMethod() {
+    private function callTitleMethod(): void {
         $method = $this->formatTitleMethod($this->getView());
         if (method_exists($this, $method)) {
             $this->{$method}();
@@ -197,7 +192,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     public function getTitle(): PageTitle {
-        if (!isset($this->pageTitle) || is_null($this->pageTitle)) {
+        if (!isset($this->pageTitle)) {
             $this->callTitleMethod();
         }
         return $this->pageTitle ?? new PageTitle();
@@ -243,9 +238,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->putIntoBreadcrumbs();
     }
 
-    /**
-     * @return string[]
-     */
     protected function getNavRoots(): array {
         return [];
     }
@@ -382,7 +374,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * Nette workaround
      *      * ****************************** */
     public function getFullHttpRequest(): FullHttpRequest {
-        if ($this->fullRequest === null) {
+        if (!isset($this->fullRequest)) {
             $payload = file_get_contents('php://input');
             $this->fullRequest = new FullHttpRequest($this->getHttpRequest(), $payload);
         }
