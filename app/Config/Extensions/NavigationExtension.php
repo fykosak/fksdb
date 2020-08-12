@@ -58,7 +58,7 @@ class NavigationExtension extends CompilerExtension {
      * @param ServiceDefinition $navbar
      * @param null $parent
      */
-    private function createFromStructure($structure, ServiceDefinition $navbar, $parent = null) {
+    private function createFromStructure(iterable $structure, ServiceDefinition $navbar, $parent = null) {
         foreach ($structure as $nodeId => $children) {
             if (is_array($children)) {
                 if (!isset($this->createdNodes[$nodeId])) {
@@ -68,7 +68,7 @@ class NavigationExtension extends CompilerExtension {
                     }
                 }
                 $this->createFromStructure($children, $navbar, $nodeId);
-            } elseif (!is_array($children)) {
+            } else {
                 $nodeId = $children;
                 if (!isset($this->createdNodes[$nodeId])) {
                     $this->createNode($navbar, $nodeId);

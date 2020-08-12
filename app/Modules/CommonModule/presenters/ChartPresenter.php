@@ -13,11 +13,11 @@ use FKSDB\Components\Controls\Chart\TotalPersonsChartControl;
 class ChartPresenter extends BasePresenter {
     use ChartPresenterTrait;
 
-    public function authorizedList() {
+    public function authorizedList(): void {
         $this->setAuthorized($this->isAnyContestAuthorized('chart', 'list'));
     }
 
-    public function authorizedChart() {
+    public function authorizedChart(): void {
         $this->setAuthorized($this->isAnyContestAuthorized('chart', 'chart'));
     }
 
@@ -26,9 +26,6 @@ class ChartPresenter extends BasePresenter {
         $this->selectChart();
     }
 
-    /**
-     * @return IChart[]
-     */
     protected function registerCharts(): array {
         return [
             'totalPersons' => new TotalPersonsChartControl($this->getContext()),

@@ -23,8 +23,7 @@ class ChooserFactory extends AbstractFactory {
     /** @var string */
     private $prompt;
 
-    /** @var IOptionsProvider */
-    private $optionsProvider;
+    private IOptionsProvider $optionsProvider;
 
     /**
      * ChooserFactory constructor.
@@ -67,7 +66,7 @@ class ChooserFactory extends AbstractFactory {
      * @param Field $field
      * @return void
      */
-    protected function setDefaultValue(IComponent $component, Field $field) {
+    protected function setDefaultValue(IComponent $component, Field $field): void {
         $component->setDefaultValue($field->getValue());
     }
 
@@ -75,7 +74,7 @@ class ChooserFactory extends AbstractFactory {
      * @param BaseControl|IComponent $component
      * @return void
      */
-    protected function setDisabled(IComponent $component) {
+    protected function setDisabled(IComponent $component): void {
         $component->setDisabled();
     }
 

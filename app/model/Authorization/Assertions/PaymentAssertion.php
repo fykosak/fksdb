@@ -1,6 +1,6 @@
 <?php
 
-namespace Authorization\Assertions;
+namespace FKSDB\Authorization\Assertions;
 
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Transitions\Machine;

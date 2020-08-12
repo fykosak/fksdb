@@ -1,5 +1,7 @@
 <?php
 
+namespace FKSDB;
+
 use Nette\Http\Request;
 use Nette\SmartObject;
 

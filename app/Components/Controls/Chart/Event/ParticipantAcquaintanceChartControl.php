@@ -17,8 +17,7 @@ use Nette\Utils\JsonException;
  */
 class ParticipantAcquaintanceChartControl extends ReactComponent implements IChart {
 
-    /** @var int */
-    private $event;
+    private ModelEvent $event;
 
     /**
      * ParticipantAcquaintanceChartControl constructor.
@@ -67,10 +66,7 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return null;
     }
 }

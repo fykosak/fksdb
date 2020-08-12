@@ -10,7 +10,7 @@ use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use SQL\ViewDataSource;
+use FKSDB\SQL\ViewDataSource;
 
 /**
  *
@@ -18,10 +18,9 @@ use SQL\ViewDataSource;
  */
 class ContestantsFromSchoolGrid extends BaseGrid {
 
-    /** @var ServiceContestant */
-    private $serviceContestant;
-    /** @var ModelSchool */
-    private $school;
+    private ServiceContestant $serviceContestant;
+
+    private ModelSchool $school;
 
     /**
      * ContestantsGrid constructor.
@@ -33,11 +32,7 @@ class ContestantsFromSchoolGrid extends BaseGrid {
         $this->school = $school;
     }
 
-    /**
-     * @param ServiceContestant $serviceContestant
-     * @return void
-     */
-    public function injectServiceContestant(ServiceContestant $serviceContestant) {
+    public function injectServiceContestant(ServiceContestant $serviceContestant): void {
         $this->serviceContestant = $serviceContestant;
     }
 
@@ -55,7 +50,7 @@ class ContestantsFromSchoolGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->addColumns(['person.full_name', 'contestant_base.year', /*'person_history.study_year',*/ 'contest.contest']);
 

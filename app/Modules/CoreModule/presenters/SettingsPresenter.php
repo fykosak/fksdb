@@ -4,7 +4,7 @@ namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
-use Authentication\PasswordAuthenticator;
+use FKSDB\Authentication\PasswordAuthenticator;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\LoginFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
@@ -28,51 +28,31 @@ class SettingsPresenter extends AuthenticatedPresenter {
 
     const CONT_LOGIN = 'login';
 
-    /** @var LoginFactory */
-    private $loginFactory;
+    private LoginFactory $loginFactory;
 
-    /** @var ServiceLogin */
-    private $loginService;
+    private ServiceLogin $loginService;
 
-    /** @var UniqueEmailFactory */
-    private $uniqueEmailFactory;
+    private UniqueEmailFactory $uniqueEmailFactory;
 
-    /** @var UniqueLoginFactory */
-    private $uniqueLoginFactory;
+    private UniqueLoginFactory $uniqueLoginFactory;
 
-    /**
-     * @param LoginFactory $loginFactory
-     * @return void
-     */
-    public function injectLoginFactory(LoginFactory $loginFactory) {
+    public function injectLoginFactory(LoginFactory $loginFactory): void {
         $this->loginFactory = $loginFactory;
     }
 
-    /**
-     * @param ServiceLogin $loginService
-     * @return void
-     */
-    public function injectLoginService(ServiceLogin $loginService) {
+    public function injectLoginService(ServiceLogin $loginService): void {
         $this->loginService = $loginService;
     }
 
-    /**
-     * @param UniqueEmailFactory $uniqueEmailFactory
-     * @return void
-     */
-    public function injectUniqueEmailFactory(UniqueEmailFactory $uniqueEmailFactory) {
+    public function injectUniqueEmailFactory(UniqueEmailFactory $uniqueEmailFactory): void {
         $this->uniqueEmailFactory = $uniqueEmailFactory;
     }
 
-    /**
-     * @param UniqueLoginFactory $uniqueLoginFactory
-     * @return void
-     */
-    public function injectUniqueLoginFactory(UniqueLoginFactory $uniqueLoginFactory) {
+    public function injectUniqueLoginFactory(UniqueLoginFactory $uniqueLoginFactory): void {
         $this->uniqueLoginFactory = $uniqueLoginFactory;
     }
 
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Settings'), 'fa fa-cogs'));
     }
 
@@ -80,7 +60,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
      * @return void
      * @throws BadTypeException
      */
-    public function renderDefault() {
+    public function renderDefault(): void {
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
 
@@ -151,7 +131,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
      * @param Form $form
      * @throws AbortException
      */
-    private function handleSettingsFormSuccess(Form $form) {
+    private function handleSettingsFormSuccess(Form $form): void {
         $values = $form->getValues();
         $tokenAuthentication =
             $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||

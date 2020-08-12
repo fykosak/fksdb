@@ -1,14 +1,14 @@
 <?php
 
-namespace Persons;
+namespace FKSDB\Persons;
 
 use FKSDB\Components\Forms\Controls\Schedule\Handler;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\ORM\Services\ServicePersonHasFlag;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServicePersonInfo;
 use Nette\SmartObject;
-use FKSDB\ORM\ServicesMulti\ServiceMPersonHasFlag;
 use FKSDB\ORM\ServicesMulti\ServiceMPostContact;
 
 /**
@@ -19,22 +19,17 @@ use FKSDB\ORM\ServicesMulti\ServiceMPostContact;
 class ReferencedPersonHandlerFactory {
     use SmartObject;
 
-    /** @var ServicePerson */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
-    /** @var ServicePersonInfo */
-    private $servicePersonInfo;
+    private ServicePersonInfo $servicePersonInfo;
 
-    /** @var ServicePersonHistory */
-    private $servicePersonHistory;
+    private ServicePersonHistory $servicePersonHistory;
 
-    /** @var ServiceMPostContact */
-    private $serviceMPostContact;
+    private ServiceMPostContact $serviceMPostContact;
 
-    /** @var ServiceMPersonHasFlag */
-    private $serviceMPersonHasFlag;
-    /** @var Handler */
-    private $eventScheduleHandler;
+    private ServicePersonHasFlag $servicePersonHasFlag;
+
+    private Handler $eventScheduleHandler;
 
     /**
      * ReferencedPersonHandlerFactory constructor.
@@ -42,7 +37,7 @@ class ReferencedPersonHandlerFactory {
      * @param ServicePersonInfo $servicePersonInfo
      * @param ServicePersonHistory $servicePersonHistory
      * @param ServiceMPostContact $serviceMPostContact
-     * @param ServiceMPersonHasFlag $serviceMPersonHasFlag
+     * @param ServicePersonHasFlag $servicePersonHasFlag
      * @param Handler $eventScheduleHandler
      */
     public function __construct(
@@ -50,14 +45,14 @@ class ReferencedPersonHandlerFactory {
         ServicePersonInfo $servicePersonInfo,
         ServicePersonHistory $servicePersonHistory,
         ServiceMPostContact $serviceMPostContact,
-        ServiceMPersonHasFlag $serviceMPersonHasFlag,
+        ServicePersonHasFlag $servicePersonHasFlag,
         Handler $eventScheduleHandler
     ) {
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
         $this->servicePersonHistory = $servicePersonHistory;
         $this->serviceMPostContact = $serviceMPostContact;
-        $this->serviceMPersonHasFlag = $serviceMPersonHasFlag;
+        $this->servicePersonHasFlag = $servicePersonHasFlag;
         $this->eventScheduleHandler = $eventScheduleHandler;
     }
 
@@ -73,7 +68,7 @@ class ReferencedPersonHandlerFactory {
             $this->servicePersonInfo,
             $this->servicePersonHistory,
             $this->serviceMPostContact,
-            $this->serviceMPersonHasFlag,
+            $this->servicePersonHasFlag,
             $this->eventScheduleHandler,
             $acYear,
             $resolution

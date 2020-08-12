@@ -13,8 +13,7 @@ use Nette\Application\UI\Presenter;
  */
 class PresenterBuilder {
 
-    /** @var IPresenterFactory */
-    private $presenterFactory;
+    private IPresenterFactory $presenterFactory;
     /** @var array */
     private $presenterCache = [];
 
@@ -56,11 +55,7 @@ class PresenterBuilder {
         return $presenter;
     }
 
-    /**
-     * @param string $presenterName
-     * @return Presenter
-     */
-    private function getCachePresenter($presenterName) {
+    private function getCachePresenter(string $presenterName): Presenter {
         if (!isset($this->presenters[$presenterName])) {
             $this->presenterCache[$presenterName] = $this->presenterFactory->createPresenter($presenterName);
         }

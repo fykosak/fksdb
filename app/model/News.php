@@ -1,5 +1,7 @@
 <?php
 
+namespace FKSDB\News;
+
 use FKSDB\ORM\Models\ModelContest;
 use Nette\DI\Container;
 use Nette\SmartObject;
@@ -10,8 +12,7 @@ use Nette\SmartObject;
 class News {
     use SmartObject;
 
-    /** @var Container */
-    private $container;
+    private Container $container;
 
     /**
      * News constructor.

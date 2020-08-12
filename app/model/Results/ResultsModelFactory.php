@@ -5,6 +5,8 @@ namespace FKSDB\Results;
 use DOMDocument;
 use DOMNode;
 use Exception;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\Results\EvaluationStrategies\EvaluationFykos2001;
@@ -24,7 +26,7 @@ use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use SoapFault;
 use Tracy\Debugger;
-use WebService\IXMLNodeSerializer;
+use FKSDB\WebService\IXMLNodeSerializer;
 
 /**
  * Description of FKSDB\Results\ResultsModelFactory
@@ -34,11 +36,9 @@ use WebService\IXMLNodeSerializer;
 class ResultsModelFactory implements IXMLNodeSerializer {
     use SmartObject;
 
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
-    /** @var ServiceTask */
-    private $serviceTask;
+    private ServiceTask $serviceTask;
 
     /**
      * FKSDB\Results\ResultsModelFactory constructor.
@@ -145,11 +145,11 @@ class ResultsModelFactory implements IXMLNodeSerializer {
      * @param int $format
      * @return void
      * @throws SoapFault
-     * @throws InvalidArgumentException
+     * @throws BadTypeException
      */
-    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $format) {
+    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $format): void {
         if (!$dataSource instanceof AbstractResultsModel) {
-            throw new InvalidArgumentException('Expected FKSDB\Results\IResultsModel, got ' . get_class($dataSource) . '.');
+            throw new BadTypeException(AbstractModelSingle::class, $dataSource);
         }
 
         if ($format !== self::EXPORT_FORMAT_1) {

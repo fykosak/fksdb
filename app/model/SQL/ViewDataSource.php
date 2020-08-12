@@ -1,6 +1,6 @@
 <?php
 
-namespace SQL;
+namespace FKSDB\SQL;
 
 use NiftyGrid\DataSource\NDataSource;
 
@@ -10,8 +10,8 @@ use NiftyGrid\DataSource\NDataSource;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ViewDataSource extends NDataSource {
-    /** @var string */
-    private $primaryKey;
+
+    private string $primaryKey;
 
     /**
      * ViewDataSource constructor.
@@ -23,10 +23,7 @@ class ViewDataSource extends NDataSource {
         $this->primaryKey = $primaryKey;
     }
 
-    /**
-     * @return string|int
-     */
-    public function getPrimaryKey() {
+    public function getPrimaryKey(): string {
         return $this->primaryKey;
     }
 }

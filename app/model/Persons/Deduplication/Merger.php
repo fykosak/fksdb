@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons\Deduplication;
+namespace FKSDB\Persons\Deduplication;
 
 use FKSDB\Logging\DevNullLogger;
 use FKSDB\Logging\ILogger;
@@ -30,14 +30,12 @@ class Merger {
     /** @var ActiveRow */
     private $mergedRow;
 
-    /** @var Context */
-    private $context;
+    private Context $context;
 
     /** @var array */
     private $configuration;
 
-    /** @var ILogger */
-    private $logger;
+    private ILogger $logger;
 
     /**
      *

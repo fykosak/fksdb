@@ -8,6 +8,7 @@ use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceContest;
@@ -16,26 +17,18 @@ use FKSDB\Tests\ModelTests\DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Persons\ExtendedPersonHandler;
-use Persons\ExtendedPersonHandlerFactory;
-use Persons\IExtendedPersonPresenter;
-use Persons\IModifiabilityResolver;
-use Persons\IVisibilityResolver;
-use Persons\ReferencedPersonHandler;
+use FKSDB\Persons\ExtendedPersonHandler;
+use FKSDB\Persons\ExtendedPersonHandlerFactory;
+use FKSDB\Persons\IExtendedPersonPresenter;
+use FKSDB\Persons\IModifiabilityResolver;
+use FKSDB\Persons\IVisibilityResolver;
+use FKSDB\Persons\ReferencedPersonHandler;
 use Tester\Assert;
 
 class ExtendedPersonHandlerTest extends DatabaseTestCase {
     use MockApplicationTrait;
 
-    /**
-     * @var Container
-     */
-    private $container;
-
-    /**
-     * @var ExtendedPersonHandler
-     */
-    private $fixture;
+    private ExtendedPersonHandler $fixture;
 
     /**
      * @var ReferencedPersonFactory
@@ -49,15 +42,14 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
     public function __construct(Container $container) {
         parent::__construct($container);
         $this->setContainer($container);
-        $this->container = $container;
     }
 
     protected function setUp() {
         parent::setUp();
         $this->mockApplication();
-        $handlerFactory = $this->container->getByType(ExtendedPersonHandlerFactory::class);
+        $handlerFactory = $this->getContainer()->getByType(ExtendedPersonHandlerFactory::class);
 
-        $service = $this->container->getByType(ServiceContestant::class);
+        $service = $this->getContainer()->getByType(ServiceContestant::class);
         $contest = $this->container->getByType(ServiceContest::class)->findByPrimary(ModelContest::ID_FYKOS);
         $this->fixture = $handlerFactory->create($service, $contest, 1, 'cs');
         $this->referencedPersonFactory = $this->container->getByType(ReferencedPersonFactory::class);
@@ -196,8 +188,8 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
 
 class PersonPresenter extends BasePresenter implements IExtendedPersonPresenter {
 
-    public function getModel() {
-
+    public function getModel(): ?IModel {
+        return null;
     }
 
     public function messageCreate(): string {

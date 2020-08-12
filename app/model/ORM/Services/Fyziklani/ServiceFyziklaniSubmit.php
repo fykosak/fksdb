@@ -10,6 +10,8 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
@@ -18,20 +20,16 @@ use FKSDB\ORM\Tables\TypedTableSelection;
 class ServiceFyziklaniSubmit extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    public function getModelClassName(): string {
-        return ModelFyziklaniSubmit::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_FYZIKLANI_SUBMIT;
-    }
-
     /**
-     * @param ModelFyziklaniTask $task
-     * @param ModelFyziklaniTeam $team
-     * @return ModelFyziklaniSubmit|null
+     * ServiceFyziklaniSubmit constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
      */
-    public function findByTaskAndTeam(ModelFyziklaniTask $task, ModelFyziklaniTeam $team) {
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_FYZIKLANI_SUBMIT, ModelFyziklaniSubmit::class);
+    }
+
+    public function findByTaskAndTeam(ModelFyziklaniTask $task, ModelFyziklaniTeam $team): ?ModelFyziklaniSubmit {
         /** @var ModelFyziklaniSubmit $row */
         $row = $this->getTable()->where([
             'fyziklani_task_id' => $task->fyziklani_task_id,
@@ -44,12 +42,7 @@ class ServiceFyziklaniSubmit extends AbstractServiceSingle {
         return $this->getTable()->where('e_fyziklani_team_id.event_id', $event->event_id);
     }
 
-    /**
-     * @param ModelEvent $event
-     * @param null $lastUpdated
-     * @return array
-     */
-    public function getSubmitsAsArray(ModelEvent $event, $lastUpdated = null): array {
+    public function getSubmitsAsArray(ModelEvent $event, ?string $lastUpdated): array {
         $query = $this->getTable()->where('e_fyziklani_team.event_id', $event->event_id);
         $submits = [];
         if ($lastUpdated) {

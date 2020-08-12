@@ -1,6 +1,6 @@
 <?php
 
-namespace Authorization\Assertions;
+namespace FKSDB\Authorization\Assertions;
 
 use FKSDB\StoredQuery\StoredQuery;
 use Nette\InvalidArgumentException;
@@ -18,8 +18,7 @@ class StoredQueryTagAssertion {
 
     use SmartObject;
 
-    /** @var array */
-    private $tagNames;
+    private array $tagNames;
 
     /**
      * StoredQueryTagAssertion constructor.
@@ -44,9 +43,8 @@ class StoredQueryTagAssertion {
         if (!$storedQuery instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');
         }
-        foreach ($storedQuery->getQueryPattern()->getMStoredQueryTags() as $modelMStoredQueryTag) {
-            $tagName = $modelMStoredQueryTag->getStoredQueryTagType()->name;
-            if (in_array($tagName, $this->tagNames)) {
+        foreach ($storedQuery->getQueryPattern()->getStoredQueryTagTypes() as $tagType) {
+            if (in_array($tagType->name, $this->tagNames)) {
                 return true;
             }
         }

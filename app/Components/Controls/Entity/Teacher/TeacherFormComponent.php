@@ -5,13 +5,12 @@ namespace FKSDB\Components\Controls\Entity\Teacher;
 use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Controls\Entity\ReferencedPersonTrait;
-use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Components\DatabaseReflection\OmittedControlException;
+use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\DBReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\ModelException;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelTeacher;
@@ -19,7 +18,6 @@ use FKSDB\ORM\Services\ServiceTeacher;
 use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\Forms\Form;
-use Tracy\Debugger;
 
 /**
  * Class TeacherForm
@@ -31,25 +29,16 @@ class TeacherFormComponent extends AbstractEntityFormComponent implements IEditE
 
     const CONTAINER = 'teacher';
 
-    /** @var SchoolFactory */
-    protected $schoolFactory;
+    protected SchoolFactory $schoolFactory;
 
-    /** @var SingleReflectionFormFactory */
-    private $singleReflectionFormFactory;
+    private SingleReflectionFormFactory $singleReflectionFormFactory;
 
-    /** @var ServiceTeacher */
-    protected $serviceTeacher;
+    protected ServiceTeacher $serviceTeacher;
 
     /** @var ModelTeacher */
     private $model;
 
-    /**
-     * @param SingleReflectionFormFactory $singleReflectionFormFactory
-     * @param SchoolFactory $schoolFactory
-     * @param ServiceTeacher $serviceTeacher
-     * @return void
-     */
-    public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, SchoolFactory $schoolFactory, ServiceTeacher $serviceTeacher) {
+    public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, SchoolFactory $schoolFactory, ServiceTeacher $serviceTeacher): void {
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->schoolFactory = $schoolFactory;
         $this->serviceTeacher = $serviceTeacher;
@@ -62,7 +51,7 @@ class TeacherFormComponent extends AbstractEntityFormComponent implements IEditE
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    protected function configureForm(Form $form) {
+    protected function configureForm(Form $form): void {
         $container = $this->createTeacherContainer();
         $schoolContainer = $this->schoolFactory->createSchoolSelect();
         $container->addComponent($schoolContainer, 'school_id');
@@ -79,20 +68,15 @@ class TeacherFormComponent extends AbstractEntityFormComponent implements IEditE
      * @return void
      * @throws AbortException
      */
-    protected function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form): void {
         $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
-        try {
-            if ($this->create) {
-                $this->getORMService()->createNewModel($data);
-            } else {
-                $this->getORMService()->updateModel2($this->model, $data);
-            }
-            $this->getPresenter()->flashMessage($this->create ? _('Teacher has been created') : _('Teacher has been updated'), Message::LVL_SUCCESS);
-            $this->getPresenter()->redirect('list');
-        } catch (ModelException $exception) {
-            Debugger::log($exception);
-            $this->flashMessage(_('Error'), Message::LVL_DANGER);
+        if ($this->create) {
+            $this->getORMService()->createNewModel($data);
+        } else {
+            $this->getORMService()->updateModel2($this->model, $data);
         }
+        $this->getPresenter()->flashMessage($this->create ? _('Teacher has been created') : _('Teacher has been updated'), Message::LVL_SUCCESS);
+        $this->getPresenter()->redirect('list');
     }
 
     /**
@@ -100,7 +84,7 @@ class TeacherFormComponent extends AbstractEntityFormComponent implements IEditE
      * @return void
      * @throws BadTypeException
      */
-    public function setModel(AbstractModelSingle $model) {
+    public function setModel(AbstractModelSingle $model): void {
         $this->model = $model;
         $this->getForm()->setDefaults([self::CONTAINER => $model->toArray()]);
     }

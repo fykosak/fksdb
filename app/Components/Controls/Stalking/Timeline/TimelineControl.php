@@ -18,8 +18,8 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class TimelineControl extends ReactComponent {
-    /** @var YearCalculator */
-    private $yearCalculator;
+
+    private YearCalculator $yearCalculator;
 
     /**
      * TimelineControl constructor.
@@ -28,11 +28,8 @@ class TimelineControl extends ReactComponent {
     public function __construct(Container $container) {
         parent::__construct($container, 'person.detail.timeline');
     }
-    /**
-     * @param YearCalculator $yearCalculator
-     * @return void
-     */
-    public function injectYearCalculator(YearCalculator $yearCalculator) {
+
+    public function injectYearCalculator(YearCalculator $yearCalculator): void {
         $this->yearCalculator = $yearCalculator;
     }
 
@@ -167,10 +164,10 @@ class TimelineControl extends ReactComponent {
      * @throws \Exception
      */
     public function getData(...$args): string {
-        list($person) = $args;
-        list($events, $calculatedEvents) = $this->calculateEvents($person);
-        list($dates, $longTimeEvents) = $this->calculateData($person);
-        list($first, $last) = $this->calculateFirstAndLast($person, $events, $dates);
+        [$person] = $args;
+        [$events, $calculatedEvents] = $this->calculateEvents($person);
+        [$dates, $longTimeEvents] = $this->calculateData($person);
+        [$first, $last] = $this->calculateFirstAndLast($person, $events, $dates);
 
         $data = [
             'scale' => [

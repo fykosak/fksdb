@@ -23,29 +23,13 @@ use Nette\Forms\IControl;
  */
 class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
 
-    /** @var ServiceSchool */
-    private $serviceSchool;
+    private ServiceSchool $serviceSchool;
 
-    /** @var ServicePersonHistory */
-    private $servicePersonHistory;
+    private ServicePersonHistory $servicePersonHistory;
 
     /** @var Holder */
     private $holder;
 
-    /**
-     * @return Holder
-     */
-    public function getHolder() {
-        return $this->holder;
-    }
-
-    /**
-     * @param Holder $holder
-     * @return void
-     */
-    public function setHolder(Holder $holder) {
-        $this->holder = $holder;
-    }
 
     /**
      * FlagCheck constructor.
@@ -57,21 +41,23 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
         $this->servicePersonHistory = $servicePersonHistory;
     }
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return void
-     */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder) {
+    public function getHolder(): Holder {
+        return $this->holder;
+    }
+
+    public function setHolder(Holder $holder): void {
+        $this->holder = $holder;
+    }
+
+    protected function _adjust(Form $form, Machine $machine, Holder $holder): void {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $studyYearControls = $this->getControl("p*.person_id.person_history.study_year");
         $personControls = $this->getControl('p*.person_id');
         $spamControls = $this->getControl('p*.person_id.person_has_flag.spam_mff');
 
-        $msgForeign = _('Zasílání informačních materiálů je dostupné pouze českým a slovenským studentům.');
-        $msgOld = _('Zasílání informačních materiálů je dostupné pouze SŠ studentům.');
+        $msgForeign = _('This option is only available to Czech and Slovak students.');
+        $msgOld = _('This option is only available to secondary school students.');
         /**
          * @var  $i
          * @var BaseControl $control

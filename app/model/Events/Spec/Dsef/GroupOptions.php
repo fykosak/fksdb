@@ -17,11 +17,9 @@ use FKSDB\ORM\ServicesMulti\Events\ServiceMDsefParticipant;
 class GroupOptions implements IOptionsProvider {
     use SmartObject;
 
-    /** @var ServiceMDsefParticipant */
-    private $serviceMParticipant;
+    private ServiceMDsefParticipant $serviceMParticipant;
 
-    /** @var ServiceDsefGroup */
-    private $serviceDsefGroup;
+    private ServiceDsefGroup $serviceDsefGroup;
     /** @var array|string */
     private $includeStates;
     /** @var array|string|string[] */
@@ -45,11 +43,7 @@ class GroupOptions implements IOptionsProvider {
         $this->serviceDsefGroup = $serviceDsefGroup;
     }
 
-    /**
-     * @param iterable $groups
-     * @return array
-     */
-    private function transformGroups($groups) {
+    private function transformGroups(iterable $groups): array {
         $result = [];
         foreach ($groups as $name => $capacity) {
             $result[] = [
@@ -104,7 +98,7 @@ class GroupOptions implements IOptionsProvider {
                 if ($selfGroup === $key) {
                     $remains -= 1;
                 }
-                $info = sprintf(_('(%d volných míst)'), $remains);
+                $info = sprintf(_('(%d vacancies)'), $remains);
                 $result[$key] = $group->name . ' ' . $info;
             }
         }

@@ -7,7 +7,6 @@ use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Controls\Entity\ReferencedPersonTrait;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\ModelException;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelEvent;
@@ -17,7 +16,6 @@ use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\Forms\Form;
 use Nette\DI\Container;
-use Tracy\Debugger;
 
 /**
  * Class EventOrgFormComponent
@@ -29,12 +27,9 @@ class EventOrgFormComponent extends AbstractEntityFormComponent implements IEdit
 
     const CONTAINER = 'event_org';
 
-    /** @var ServiceEventOrg */
-    protected $serviceEventOrg;
+    protected ServiceEventOrg $serviceEventOrg;
 
-    /** @var ModelEvent */
-    protected $event;
-
+    protected ModelEvent $event;
     /** @var ModelEventOrg */
     private $model;
 
@@ -49,19 +44,11 @@ class EventOrgFormComponent extends AbstractEntityFormComponent implements IEdit
         $this->event = $event;
     }
 
-    /**
-     * @param ServiceEventOrg $serviceEventOrg
-     * @return void
-     */
-    public function injectPrimary(ServiceEventOrg $serviceEventOrg) {
+    public function injectPrimary(ServiceEventOrg $serviceEventOrg): void {
         $this->serviceEventOrg = $serviceEventOrg;
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     */
-    protected function configureForm(Form $form) {
+    protected function configureForm(Form $form): void {
         $container = new ModelContainer();
         $personInput = $this->createPersonSelect();
         $personInput->setDisabled(!$this->create);
@@ -75,23 +62,18 @@ class EventOrgFormComponent extends AbstractEntityFormComponent implements IEdit
      * @return void
      * @throws AbortException
      */
-    protected function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form): void {
         $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
         if (!isset($data['event_id'])) {
             $data['event_id'] = $this->event->event_id;
         }
-        try {
-            if ($this->create) {
-                $this->getORMService()->createNewModel($data);
-            } else {
-                $this->getORMService()->updateModel2($this->model, $data);
-            }
-            $this->getPresenter()->flashMessage($this->create ? _('Event org has been created') : _('Event org has been updated'), Message::LVL_SUCCESS);
-            $this->getPresenter()->redirect('list');
-        } catch (ModelException $exception) {
-            Debugger::log($exception);
-            $this->flashMessage(_('Error'), Message::LVL_DANGER);
+        if ($this->create) {
+            $this->getORMService()->createNewModel($data);
+        } else {
+            $this->getORMService()->updateModel2($this->model, $data);
         }
+        $this->getPresenter()->flashMessage($this->create ? _('Event org has been created') : _('Event org has been updated'), Message::LVL_SUCCESS);
+        $this->getPresenter()->redirect('list');
     }
 
     /**
@@ -99,7 +81,7 @@ class EventOrgFormComponent extends AbstractEntityFormComponent implements IEdit
      * @return void
      * @throws BadTypeException
      */
-    public function setModel(AbstractModelSingle $model) {
+    public function setModel(AbstractModelSingle $model): void {
         $this->model = $model;
         $this->getForm()->setDefaults([self::CONTAINER => $model->toArray()]);
     }

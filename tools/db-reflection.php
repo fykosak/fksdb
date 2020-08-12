@@ -1,6 +1,6 @@
 <?php
 
-use FKSDB\Components\DatabaseReflection\ColumnFactories\IColumnFactory;
+use FKSDB\DBReflection\ColumnFactories\IColumnFactory;
 use Nette\DI\Container;
 
 const SAFE_LIMIT = 500;

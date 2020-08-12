@@ -19,18 +19,12 @@ interface IGlobalSession extends ArrayAccess {
 
     const UID = 'uid';
 
-    /**
-     * @return void
-     */
-    public function start();
+    public function start(): void;
 
     /**
      * @return string
      */
     public function getId();
 
-    /**
-     * @return void
-     */
-    public function destroy();
+    public function destroy(): void;
 }

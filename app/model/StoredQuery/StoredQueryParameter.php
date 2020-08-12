@@ -11,12 +11,12 @@ use Nette\InvalidStateException;
 class StoredQueryParameter {
     /** @var mixed */
     private $defaultValue;
-    /** @var string */
-    private $name;
-    /** @var int */
-    private $PDOType;
-    /** @var string|null */
-    private $description;
+
+    private string $name;
+
+    private int $PDOType;
+
+    private ?string $description;
 
     /**
      * StoredQueryParameter constructor.
@@ -47,10 +47,7 @@ class StoredQueryParameter {
         return $this->PDOType;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return $this->description;
     }
 

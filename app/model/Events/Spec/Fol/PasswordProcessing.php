@@ -26,7 +26,7 @@ class PasswordProcessing extends AbstractProcessing {
      * @param Form|null $form
      * @return void
      */
-    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
+    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null): void {
         if (!isset($values['team'])) {
             return;
         }
@@ -40,7 +40,7 @@ class PasswordProcessing extends AbstractProcessing {
         }
 
         if ($original !== null && $original != $result) {
-            $logger->log(new Message(_('Nastaveno nové herní heslo.'), ILogger::INFO));
+            $logger->log(new Message(_('Set new game password.'), ILogger::INFO));
         }
     }
 

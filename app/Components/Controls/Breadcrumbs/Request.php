@@ -16,13 +16,11 @@ class Request {
     /** @var null|int */
     public $user;
 
-    /** @var AppRequest */
-    public $request;
+    public AppRequest $request;
 
-    /** @var PageTitle */
-    public $title;
+    public PageTitle $title;
 
-    /** @var string backling ID */
+    /** @var string backLing ID */
     public $parent;
 
     /** @var string */

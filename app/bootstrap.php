@@ -1,42 +1,37 @@
 <?php
 
-use Kdyby\Extension\Forms\Replicator\Replicator;
+namespace FKSDB;
+
 use Nette\Configurator;
 use Nette\Utils\Finder;
 
 // Load Nette Framework
 require LIBS_DIR . '/../vendor/autoload.php';
 
-define('CONFIG_DIR', dirname(__FILE__) . DIRECTORY_SEPARATOR . 'config');
+class Bootstrap {
+    public static function boot(): Configurator {
+        $configurator = new Configurator();
 
-// Configure application
-$configurator = new Configurator();
+        // Enable Nette Debugger for error visualisation & logging
+        $configurator->enableTracy(__DIR__ . '/../log');
+        $configurator->enableDebugger(__DIR__ . '/../log');
+        error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING & ~E_USER_NOTICE & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
 
-// Enable Nette Debugger for error visualisation & logging
-$configurator->enableDebugger(dirname(__FILE__) . '/../log');
-error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING & ~E_USER_NOTICE & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
+        $configurator->setTempDirectory(__DIR__ . '/../temp');
+        // Enable RobotLoader - this will load all classes automatically
+        $configurator->createRobotLoader()
+            ->addDirectory(APP_DIR)
+            ->addDirectory(LIBS_DIR)
+            ->register();
 
-// Enable RobotLoader - this will load all classes automatically
-$configurator->setTempDirectory(dirname(__FILE__) . '/../temp');
-$configurator->createRobotLoader()
-    ->addDirectory(APP_DIR)
-    ->addDirectory(LIBS_DIR)
-    ->register();
+        // Create Dependency Injection container from config.neon file
+        $configurator->addConfig(APP_DIR . '/config/config.neon');
+        $configurator->addConfig(APP_DIR . '/config/config.local.neon');
 
-// Create Dependency Injection container from config.neon file
-$configurator->addConfig(CONFIG_DIR . '/config.neon', Configurator::NONE);
-$configurator->addConfig(CONFIG_DIR . '/config.local.neon', Configurator::NONE);
-
-// Load all .neon files in events data directory
-foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/../data/events') as $filename => $file) {
-    $configurator->addConfig($filename, Configurator::NONE);
+        // Load all .neon files in events data directory
+        foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/../data/events') as $filename => $file) {
+            $configurator->addConfig($filename);
+        }
+        return $configurator;
+    }
 }
-
-$container = $configurator->createContainer();
-
-// Register addons
-Replicator::register();
-
-// Configure and run the application!
-$container->application->run();
-

@@ -7,8 +7,8 @@
 
 services:
     # assertions
-    ownerAssertion: Authorization\Assertions\OwnerAssertion
-    paymentAssertion: Authorization\Assertions\PaymentAssertion
+    ownerAssertion: FKSDB\Authorization\Assertions\OwnerAssertion
+    paymentAssertion: FKSDB\Authorization\Assertions\PaymentAssertion
 
     # data services
     #- authorizator:
@@ -158,7 +158,6 @@ acl:
     - allow(boss, fyziklani.results, ::constant(Nette\Security\Permission::ALL)) # všetko s výsledkovkami
     - allow(boss, fyziklani.gameSetup, ::constant(Nette\Security\Permission::ALL)) # pozerať nastavnie
     - allow(boss, fyziklani.close, ::constant(Nette\Security\Permission::ALL)) # pozerať nastavnie
-
 
     # eventModule
     - allow(registered, event.dashboard, ::constant(Nette\Security\Permission::ALL))

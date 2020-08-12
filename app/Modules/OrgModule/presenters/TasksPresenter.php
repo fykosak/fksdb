@@ -16,7 +16,7 @@ use Nette\Application\UI\Form;
 use Nette\DeprecatedException;
 use Nette\InvalidStateException;
 use Tracy\Debugger;
-use Pipeline\PipelineException;
+use FKSDB\Pipeline\PipelineException;
 use SimpleXMLElement;
 use FKSDB\Tasks\PipelineFactory;
 use FKSDB\Tasks\SeriesData;
@@ -31,36 +31,21 @@ class TasksPresenter extends BasePresenter {
     const SOURCE_ASTRID = 'astrid';
     const SOURCE_FILE = 'file';
 
-    /** @var SeriesCalculator */
-    private $seriesCalculator;
+    private SeriesCalculator $seriesCalculator;
 
-    /** @var PipelineFactory */
-    private $pipelineFactory;
+    private PipelineFactory $pipelineFactory;
 
-    /** @var Downloader */
-    private $downloader;
+    private Downloader $downloader;
 
-    /**
-     * @param SeriesCalculator $seriesCalculator
-     * @return void
-     */
-    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator) {
+    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator): void {
         $this->seriesCalculator = $seriesCalculator;
     }
 
-    /**
-     * @param PipelineFactory $pipelineFactory
-     * @return void
-     */
-    public function injectPipelineFactory(PipelineFactory $pipelineFactory) {
+    public function injectPipelineFactory(PipelineFactory $pipelineFactory): void {
         $this->pipelineFactory = $pipelineFactory;
     }
 
-    /**
-     * @param Downloader $downloader
-     * @return void
-     */
-    public function injectDownloader(Downloader $downloader) {
+    public function injectDownloader(Downloader $downloader): void {
         $this->downloader = $downloader;
     }
 
@@ -68,11 +53,11 @@ class TasksPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function authorizedImport() {
+    public function authorizedImport(): void {
         $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'insert', $this->getSelectedContest()));
     }
 
-    public function titleImport() {
+    public function titleImport(): void {
         $this->setPageTitle(new PageTitle(_('Import úloh'), 'fa fa-upload'));
     }
 
@@ -119,7 +104,7 @@ class TasksPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    private function validSubmitSeriesForm(Form $seriesForm) {
+    private function validSubmitSeriesForm(Form $seriesForm): void {
         $values = $seriesForm->getValues();
         $series = $values['series'];
         $file = null;

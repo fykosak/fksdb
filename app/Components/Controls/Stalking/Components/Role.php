@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
-use Authorization\Grant;
-use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
+use FKSDB\Authorization\Grant;
+use FKSDB\DBReflection\FieldLevelPermission;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelGrant;
 use FKSDB\ORM\Models\ModelPerson;
@@ -12,14 +12,9 @@ use FKSDB\ORM\Models\ModelPerson;
  * Class Role
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class Role extends AbstractStalkingComponent {
-    /**
-     * @param ModelPerson $person
-     * @param int $userPermissions
-     * @return void
-     */
-    public function render(ModelPerson $person, int $userPermissions) {
-        $this->beforeRender($person,_('Roles'), $userPermissions,FieldLevelPermission::ALLOW_RESTRICT);
+class Role extends StalkingControl {
+    public function render(ModelPerson $person, int $userPermissions): void {
+        $this->beforeRender($person, _('Roles'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
         $template = $this->template;
         $login = $person->getLogin();
         $roles = [];
@@ -30,7 +25,7 @@ class Role extends AbstractStalkingComponent {
             }
         }
         $this->template->roles = $roles;
-        $template->setFile(__DIR__ . '/Role.latte');
+        $template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.role.latte');
         $template->render();
     }
 }

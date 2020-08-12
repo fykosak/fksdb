@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons;
+namespace FKSDB\Persons;
 
 use FKSDB\Authentication\AccountManager;
 use FKSDB\ORM\IService;
@@ -15,14 +15,11 @@ use Nette\Database\Connection;
  */
 class ExtendedPersonHandlerFactory {
 
-    /** @var ServicePerson */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
-    /** @var AccountManager */
-    private $accountManager;
+    private AccountManager $accountManager;
 
     /**
      * ExtendedPersonHandlerFactory constructor.

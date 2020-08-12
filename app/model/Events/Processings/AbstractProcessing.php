@@ -30,8 +30,8 @@ abstract class AbstractProcessing implements IProcessing {
     private $formPathCache;
     /** @var mixed */
     private $states;
-    /** @var Holder */
-    private $holder;
+
+    private Holder $holder;
     /** @var mixed */
     private $values;
 
@@ -60,13 +60,13 @@ abstract class AbstractProcessing implements IProcessing {
      * @param Form|null $form
      * @return void
      */
-    abstract protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null);
+    abstract protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null): void;
 
     /**
      * @param string $mask
      * @return bool
      */
-    final protected function hasWildcart($mask) {
+    final protected function hasWildCart($mask): bool {
         return strpos($mask, self::WILDCART) !== false;
     }
 
@@ -153,7 +153,7 @@ abstract class AbstractProcessing implements IProcessing {
     /**
      * @param Form $form
      */
-    private function setForm($form) {
+    private function setForm($form): void {
         $this->formPathCache = [];
         if (!$form) {
             return;

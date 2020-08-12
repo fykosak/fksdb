@@ -10,7 +10,7 @@ use Nette\Database\Table\Selection;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use SQL\SearchableDataSource;
+use FKSDB\SQL\SearchableDataSource;
 
 /**
  *
@@ -18,14 +18,9 @@ use SQL\SearchableDataSource;
  */
 class TeachersGrid extends BaseGrid {
 
-    /** @var ServiceTeacher */
-    private $serviceTeacher;
+    private ServiceTeacher $serviceTeacher;
 
-    /**
-     * @param ServiceTeacher $serviceTeacher
-     * @return void
-     */
-    public function injectServiceTeacher(ServiceTeacher $serviceTeacher) {
+    public function injectServiceTeacher(ServiceTeacher $serviceTeacher): void {
         $this->serviceTeacher = $serviceTeacher;
     }
 
@@ -49,7 +44,7 @@ class TeachersGrid extends BaseGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         //
         // columns

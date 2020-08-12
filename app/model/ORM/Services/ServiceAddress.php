@@ -2,13 +2,16 @@
 
 namespace FKSDB\ORM\Services;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelAddress;
 use FKSDB\ORM\Models\ModelRegion;
-use InvalidPostalCode;
+use FKSDB\ORM\Services\Exception\InvalidPostalCode;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 use Tracy\Debugger;
 
 /**
@@ -17,29 +20,30 @@ use Tracy\Debugger;
 class ServiceAddress extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    const PATTERN = '/[0-9]{5}/';
+    private const PATTERN = '/[0-9]{5}/';
 
-    public function getModelClassName(): string {
-        return ModelAddress::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_ADDRESS;
+    /**
+     * ServiceAddress constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
+     */
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_ADDRESS, ModelAddress::class);
     }
 
     /**
      * @param array $data
      * @return ModelAddress
      */
-    public function createNewModel(array $data): IModel {
-        if (!isset($data['region_id']) || is_null($data['region_id'])) {
+    public function createNewModel(array $data): AbstractModelSingle {
+        if (!isset($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }
         return parent::createNewModel($data);
     }
 
     public function updateModel2(IModel $model, array $data): bool {
-        if (!isset($data['region_id']) || is_null($data['region_id'])) {
+        if (!isset($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }
         return parent::updateModel2($model, $data);
@@ -51,7 +55,7 @@ class ServiceAddress extends AbstractServiceSingle {
      * @return int
      * @throws InvalidPostalCode
      */
-    public function inferRegion($postalCode) {
+    public function inferRegion(?string $postalCode): int {
         if (!$postalCode) {
             throw new InvalidPostalCode($postalCode);
         }
@@ -79,12 +83,7 @@ class ServiceAddress extends AbstractServiceSingle {
         }
     }
 
-    /**
-     *
-     * @param string $postalCode
-     * @return bool
-     */
-    public function tryInferRegion($postalCode): bool {
+    public function tryInferRegion(?string $postalCode): bool {
         try {
             $this->inferRegion($postalCode);
             return true;

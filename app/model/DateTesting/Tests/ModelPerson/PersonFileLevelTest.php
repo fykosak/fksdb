@@ -2,8 +2,8 @@
 
 namespace FKSDB\DataTesting\Tests\Person;
 
-use FKSDB\Components\DatabaseReflection\ColumnFactories\ITestedColumnFactory;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\DBReflection\ColumnFactories\ITestedColumnFactory;
+use FKSDB\DBReflection\DBReflectionFactory;
 use FKSDB\Exceptions\BadTypeException;
 
 /**
@@ -11,20 +11,20 @@ use FKSDB\Exceptions\BadTypeException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class PersonFileLevelTest extends PersonTest {
-    /** @var ITestedColumnFactory */
-    private $rowFactory;
-    /** @var string */
-    private $fieldName;
-    /** @var TableReflectionFactory */
-    private $tableReflectionFactory;
+
+    private ITestedColumnFactory $rowFactory;
+
+    private string $fieldName;
+
+    private DBReflectionFactory $tableReflectionFactory;
 
     /**
      * PersonFileLevelTest constructor.
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param DBReflectionFactory $tableReflectionFactory
      * @param string $fieldName
      * @throws BadTypeException
      */
-    public function __construct(TableReflectionFactory $tableReflectionFactory, string $fieldName) {
+    public function __construct(DBReflectionFactory $tableReflectionFactory, string $fieldName) {
         $this->fieldName = $fieldName;
         $this->tableReflectionFactory = $tableReflectionFactory;
         parent::__construct(str_replace('.', '__', $fieldName), $this->getRowFactory()->getTitle());
@@ -35,11 +35,12 @@ abstract class PersonFileLevelTest extends PersonTest {
      * @throws BadTypeException
      */
     final protected function getRowFactory(): ITestedColumnFactory {
-        if (!$this->rowFactory) {
-            $this->rowFactory = $this->tableReflectionFactory->loadColumnFactory($this->fieldName);
-            if (!$this->rowFactory instanceof ITestedColumnFactory) {
+        if (!isset($this->rowFactory)) {
+            $rowFactory = $this->tableReflectionFactory->loadColumnFactory($this->fieldName);
+            if (!$rowFactory instanceof ITestedColumnFactory) {
                 throw new BadTypeException(ITestedColumnFactory::class, $this->rowFactory);
             }
+            $this->rowFactory = $rowFactory;
         }
         return $this->rowFactory;
     }

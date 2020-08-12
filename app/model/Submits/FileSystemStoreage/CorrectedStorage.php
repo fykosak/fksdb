@@ -61,32 +61,28 @@ class CorrectedStorage implements ISubmitStorage {
         $this->contestMap = $contestMap;
     }
 
-    /**
-     * @param IStorageProcessing $processing
-     * @return void
-     */
-    public function addProcessing(IStorageProcessing $processing) {
+    public function addProcessing(IStorageProcessing $processing): void {
         $this->processings[] = $processing;
     }
 
     /**
      * @throws NotImplementedException
      */
-    public function beginTransaction() {
+    public function beginTransaction(): void {
         throw new NotImplementedException();
     }
 
     /**
      * @throws NotImplementedException
      */
-    public function commit() {
+    public function commit(): void {
         throw new NotImplementedException();
     }
 
     /**
      * @throws NotImplementedException
      */
-    public function rollback() {
+    public function rollback(): void {
         throw new NotImplementedException();
     }
 
@@ -95,7 +91,7 @@ class CorrectedStorage implements ISubmitStorage {
      * @param ModelSubmit $submit
      * @throws NotImplementedException
      */
-    public function storeFile($filename, ModelSubmit $submit) {
+    public function storeFile($filename, ModelSubmit $submit): void {
         throw new NotImplementedException();
     }
 
@@ -104,7 +100,7 @@ class CorrectedStorage implements ISubmitStorage {
      * @param int $type
      * @return null|string
      */
-    public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED) {
+    public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED): ?string {
         $dir = $this->root . DIRECTORY_SEPARATOR . $this->createDirname($submit);
 
         try {
@@ -139,7 +135,7 @@ class CorrectedStorage implements ISubmitStorage {
      * @param ModelSubmit $submit
      * @throws NotImplementedException
      */
-    public function deleteFile(ModelSubmit $submit) {
+    public function deleteFile(ModelSubmit $submit): void {
         throw new NotImplementedException();
     }
 

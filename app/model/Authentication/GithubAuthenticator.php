@@ -1,12 +1,12 @@
 <?php
 
-namespace Authentication;
+namespace FKSDB\Authentication;
 
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\YearCalculator;
-use FullHttpRequest;
-use Github\Events\Event;
+use FKSDB\FullHttpRequest;
+use FKSDB\Github\Events\Event;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\Security\AuthenticationException;
@@ -22,8 +22,7 @@ class GithubAuthenticator extends AbstractAuthenticator {
     const SESSION_NS = 'auth';
     const HTTP_AUTH_HEADER = 'X-Hub-Signature';
 
-    /** @var Container  */
-    private $container;
+    private Container $container;
 
     /**
      * GithubAuthenticator constructor.
@@ -33,7 +32,7 @@ class GithubAuthenticator extends AbstractAuthenticator {
      */
     public function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator, Container $container) {
         parent::__construct($serviceLogin, $yearCalculator);
-        $this->container=$container;
+        $this->container = $container;
     }
 
     /**

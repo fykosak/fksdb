@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Controls\Entity;
 
+use FKSDB\Components\Forms\Containers\PersonPaymentContainer;
 use FKSDB\Components\Forms\Controls\Payment\CurrencyField;
-use FKSDB\Components\Forms\Controls\Payment\PaymentSelectField;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
@@ -12,7 +12,6 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPayment;
-use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServiceSchedulePayment;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Handler\DuplicatePaymentException;
@@ -25,7 +24,6 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
-use Nette\Utils\JsonException;
 
 /**
  * Class SelectForm
@@ -33,29 +31,20 @@ use Nette\Utils\JsonException;
  */
 class PaymentFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
 
-    /** @var PersonFactory */
-    private $personFactory;
+    private PersonFactory $personFactory;
 
-    /** @var PersonProvider */
-    private $personProvider;
+    private PersonProvider $personProvider;
 
-    /** @var ServicePersonSchedule */
-    private $servicePersonSchedule;
+    private bool $isOrg;
 
-    /** @var bool */
-    private $isOrg;
-
-    /** @var PaymentMachine */
-    private $machine;
+    private PaymentMachine $machine;
 
     /** @var ModelPayment */
     private $model;
 
-    /** @var ServicePayment */
-    private $servicePayment;
+    private ServicePayment $servicePayment;
 
-    /** @var ServiceSchedulePayment */
-    private $serviceSchedulePayment;
+    private ServiceSchedulePayment $serviceSchedulePayment;
 
     /**
      * SelectForm constructor.
@@ -75,25 +64,15 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
         $this->isOrg = $isOrg;
     }
 
-    /**
-     * @param ServicePayment $servicePayment
-     * @param PersonFactory $personFactory
-     * @param PersonProvider $personProvider
-     * @param ServicePersonSchedule $servicePersonSchedule
-     * @param ServiceSchedulePayment $serviceSchedulePayment
-     * @return void
-     */
     public function injectPrimary(
         ServicePayment $servicePayment,
         PersonFactory $personFactory,
         PersonProvider $personProvider,
-        ServicePersonSchedule $servicePersonSchedule,
         ServiceSchedulePayment $serviceSchedulePayment
-    ) {
+    ): void {
         $this->servicePayment = $servicePayment;
         $this->personFactory = $personFactory;
         $this->personProvider = $personProvider;
-        $this->servicePersonSchedule = $servicePersonSchedule;
         $this->serviceSchedulePayment = $serviceSchedulePayment;
     }
 
@@ -102,7 +81,7 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
      * @return void
      * @throws BadTypeException
      */
-    public function setModel(AbstractModelSingle $modelPayment) {
+    public function setModel(AbstractModelSingle $modelPayment): void {
         $this->model = $modelPayment;
         $values = $this->model->toArray();
         $values['payment_accommodation'] = $this->serializeScheduleValue();
@@ -113,7 +92,7 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
      * @return void
      * @throws BadTypeException
      */
-    public function render() {
+    public function render(): void {
         if ($this->create) {
             /** @var ModelLogin $login */
             $login = $this->getPresenter()->getUser()->getIdentity();
@@ -124,13 +103,15 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
         parent::render();
     }
 
-    private function serializeScheduleValue(): string {
+    private function serializeScheduleValue(): array {
         $query = $this->model->getRelatedPersonSchedule();
         $items = [];
         foreach ($query as $row) {
-            $items[$row->person_schedule_id] = true;
+            $key = 'person' . $row->person_id;
+            $items[$key] = $items[$key] ?? [];
+            $items[$key][$row->person_schedule_id] = true;
         }
-        return \json_encode($items);
+        return $items;
     }
 
     /**
@@ -141,7 +122,7 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
      * @throws NotImplementedException
      * @throws UnavailableTransitionsException
      */
-    protected function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
         $data = [
             'currency' => $values['currency'],
@@ -161,7 +142,8 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
         $connection->beginTransaction();
 
         try {
-            $this->serviceSchedulePayment->prepareAndUpdate($values['payment_accommodation'], $model);
+            $this->serviceSchedulePayment->store((array)$values['payment_accommodation'], $model);
+            //$this->serviceSchedulePayment->prepareAndUpdate($values['payment_accommodation'], $model);
         } catch (DuplicatePaymentException $exception) {
             $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             $connection->rollBack();
@@ -177,14 +159,7 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
         $this->getPresenter()->redirect('detail', ['id' => $model->payment_id]);
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     * @throws BadRequestException
-     * @throws JsonException
-     * @throws BadRequestException
-     */
-    protected function configureForm(Form $form) {
+    protected function configureForm(Form $form): void {
         if ($this->isOrg) {
             $form->addComponent($this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider), 'person_id');
         } else {
@@ -193,7 +168,7 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
         $currencyField = new CurrencyField();
         $currencyField->setRequired(_('Please select currency'));
         $form->addComponent($currencyField, 'currency');
-        $form->addComponent(new PaymentSelectField($this->servicePersonSchedule, $this->machine->getEvent(), $this->machine->getScheduleGroupTypes(), !$this->create), 'payment_accommodation');
+        $form->addComponent(new PersonPaymentContainer($this->getContext(), $this->machine->getEvent(), $this->machine->getScheduleGroupTypes(), !$this->create), 'payment_accommodation');
     }
 
     protected function appendSubmitButton(Form $form): SubmitButton {

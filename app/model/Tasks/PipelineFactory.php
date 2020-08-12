@@ -8,7 +8,7 @@ use FKSDB\ORM\Services\ServiceStudyYear;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\ORM\Services\ServiceTaskContribution;
 use FKSDB\ORM\Services\ServiceTaskStudyYear;
-use Pipeline\Pipeline;
+use FKSDB\Pipeline\Pipeline;
 
 /**
  * This is not real factory, it's only used as an internode for defining
@@ -36,20 +36,15 @@ class PipelineFactory {
      */
     private $defaultStudyYears;
 
-    /** @var ServiceTask */
-    private $serviceTask;
+    private ServiceTask $serviceTask;
 
-    /** @var ServiceTaskContribution */
-    private $serviceTaskContribution;
+    private ServiceTaskContribution $serviceTaskContribution;
 
-    /** @var ServiceTaskStudyYear */
-    private $serviceTaskStudyYear;
+    private ServiceTaskStudyYear $serviceTaskStudyYear;
 
-    /** @var ServiceStudyYear */
-    private $serviceStudyYear;
+    private ServiceStudyYear $serviceStudyYear;
 
-    /** @var ServiceOrg */
-    private $serviceOrg;
+    private ServiceOrg $serviceOrg;
 
     /**
      * PipelineFactory constructor.

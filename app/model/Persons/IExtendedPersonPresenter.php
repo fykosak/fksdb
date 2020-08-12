@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons;
+namespace FKSDB\Persons;
 
 use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\AbstractModelSingle;
@@ -12,10 +12,7 @@ use FKSDB\ORM\IModel;
  */
 interface IExtendedPersonPresenter {
 
-    /**
-     * @return IModel|AbstractModelSingle|AbstractModelMulti
-     */
-    public function getModel();
+    public function getModel(): ?IModel;
 
     /**
      * @note First '%s' is replaced with referenced person's name.

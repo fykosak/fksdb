@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\ContestChooser;
+use FKSDB\Components\Controls\Choosers\ContestChooser;
 use FKSDB\Modules\Core\ContestPresenter\ContestPresenter;
 use FKSDB\ORM\Models\ModelRole;
 

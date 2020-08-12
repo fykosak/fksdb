@@ -42,17 +42,12 @@ class PersonTestControl extends BaseComponent {
      * @persistent
      */
     public $levels = [];
-    /** @var ServicePerson */
-    private $servicePerson;
-    /** @var DataTestingFactory */
-    private $dataTestingFactory;
 
-    /**
-     * @param ServicePerson $servicePerson
-     * @param DataTestingFactory $dataTestingFactory
-     * @return void
-     */
-    public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory) {
+    private ServicePerson $servicePerson;
+
+    private DataTestingFactory $dataTestingFactory;
+
+    public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory): void {
         $this->servicePerson = $servicePerson;
         $this->dataTestingFactory = $dataTestingFactory;
     }
@@ -64,10 +59,10 @@ class PersonTestControl extends BaseComponent {
     protected function createComponentForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
-        $form->addText('start_id', _('From person_id'))
+        $form->addText('start_id', sprintf(_('From %s'), 'person_id'))
             ->addRule(Form::INTEGER)
             ->setDefaultValue($this->startId);
-        $form->addText('end_id', _('To person_id'))
+        $form->addText('end_id', sprintf(_('To %s'), 'person_id'))
             ->addRule(Form::INTEGER)
             ->setDefaultValue($this->endId);
         $levelsContainer = new ContainerWithOptions();
@@ -138,10 +133,7 @@ class PersonTestControl extends BaseComponent {
         return $logs;
     }
 
-    /**
-     * @return void
-     */
-    public function render() {
+    public function render(): void {
         $this->template->logs = $this->calculateProblems();
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();

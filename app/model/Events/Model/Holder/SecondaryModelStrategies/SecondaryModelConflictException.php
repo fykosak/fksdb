@@ -14,11 +14,9 @@ use RuntimeException;
  */
 class SecondaryModelConflictException extends RuntimeException {
 
-    /** @var BaseHolder */
-    private $baseHolder;
+    private BaseHolder $baseHolder;
 
-    /** @var IModel[] */
-    private $conflicts;
+    private iterable $conflicts;
 
     /**
      * SecondaryModelConflictException constructor.
@@ -27,18 +25,13 @@ class SecondaryModelConflictException extends RuntimeException {
      * @param null $code
      * @param null $previous
      */
-    public function __construct(BaseHolder $baseHolder, $conflicts, $code = null, $previous = null) {
+    public function __construct(BaseHolder $baseHolder, iterable $conflicts, $code = null, $previous = null) {
         parent::__construct($this->createMessage($baseHolder->getModel(), $conflicts), $code, $previous);
         $this->baseHolder = $baseHolder;
         $this->conflicts = $conflicts;
     }
 
-    /**
-     * @param IModel $model
-     * @param iterable $conflicts
-     * @return string
-     */
-    private function createMessage(IModel $model, $conflicts) {
+    private function createMessage(IModel $model, iterable $conflicts): string {
         $ids = null;
         /** @var ActiveRow $conflict */
         foreach ($conflicts as $conflict) {
@@ -48,17 +41,11 @@ class SecondaryModelConflictException extends RuntimeException {
         return sprintf('Model with PK %s conflicts with other models: %s.', $id, $ids);
     }
 
-    /**
-     * @return BaseHolder
-     */
-    public function getBaseHolder() {
+    public function getBaseHolder(): BaseHolder {
         return $this->baseHolder;
     }
 
-    /**
-     * @return IModel[]
-     */
-    public function getConflicts() {
+    public function getConflicts(): iterable {
         return $this->conflicts;
     }
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace Github;
+namespace FKSDB\Github;
 
-use Github\Events\Event;
-use Github\Events\PingEvent;
-use Github\Events\PushEvent;
+use FKSDB\Github\Events\Event;
+use FKSDB\Github\Events\PingEvent;
+use FKSDB\Github\Events\PushEvent;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 
@@ -32,14 +32,14 @@ class EventFactory {
     }
 
     private function createPing(array $data): PingEvent {
-        $event = new Events\PingEvent();
+        $event = new PingEvent();
         $this->fillBase($event, $data);
         self::fillHelper(['zen', 'hook_id'], $event, $data);
         return $event;
     }
 
     private function createPush(array $data): PushEvent {
-        $event = new Events\PushEvent();
+        $event = new PushEvent();
         $this->fillBase($event, $data);
         self::fillHelper(['before', 'after', 'ref'], $event, $data);
         return $event;

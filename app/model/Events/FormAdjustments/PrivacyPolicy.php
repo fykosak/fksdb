@@ -2,8 +2,8 @@
 
 namespace FKSDB\Events\FormAdjustments;
 
-use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Components\DatabaseReflection\OmittedControlException;
+use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\DBReflection\OmittedControlException;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
@@ -19,7 +19,7 @@ use Nette\Utils\ArrayHash;
 
 /**
  * Creates required checkbox for whole application and then
- * sets agreed bit in all person_info containers found (even for editations).
+ * sets agreed bit in all person_info containers found (even for editing).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
@@ -27,12 +27,11 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
 
     use SmartObject;
 
-    const CONTROL_NAME = 'privacy';
+    protected const CONTROL_NAME = 'privacy';
 
-    /** @var ServicePersonInfo */
-    private $servicePersonInfo;
-    /** @var SingleReflectionFormFactory */
-    private $singleReflectionFormFactory;
+    private ServicePersonInfo $servicePersonInfo;
+
+    private SingleReflectionFormFactory $singleReflectionFormFactory;
 
     /**
      * PrivacyPolicy constructor.
@@ -53,13 +52,13 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
      * @throws OmittedControlException
      * @throws BadTypeException
      */
-    public function adjust(Form $form, Machine $machine, Holder $holder) {
+    public function adjust(Form $form, Machine $machine, Holder $holder): void {
         if ($holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT) {
             return;
         }
 
         $control = $this->singleReflectionFormFactory->createField('person_info', 'agreed');
-        $control->addRule(Form::FILLED, _('Před odesláním je třeba potvrdit souhlas se zpracováním osobních údajů.'));
+        $control->addRule(Form::FILLED, _('You have to agree with the privacy policy before submitting.'));
 
         $firstSubmit = FormUtils::findFirstSubmit($form);
         $form->addComponent($control, self::CONTROL_NAME, $firstSubmit->getName());

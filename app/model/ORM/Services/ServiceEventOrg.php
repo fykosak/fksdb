@@ -2,15 +2,16 @@
 
 namespace FKSDB\ORM\Services;
 
-use DuplicateOrgException;
+use FKSDB\ORM\Services\Exception\DuplicateOrgException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyDBTrait;
-use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * Class ServiceEventOrg
@@ -19,12 +20,13 @@ use FKSDB\ORM\Tables\TypedTableSelection;
 class ServiceEventOrg extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    public function getModelClassName(): string {
-        return ModelEventOrg::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_EVENT_ORG;
+    /**
+     * ServiceEventOrg constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
+     */
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_EVENT_ORG, ModelEventOrg::class);
     }
 
     /*/**
@@ -43,11 +45,7 @@ class ServiceEventOrg extends AbstractServiceSingle {
         }
     }*/
 
-    /**
-     * @param array $data
-     * @return ModelEventOrg
-     */
-    public function createNewModel(array $data): IModel {
+    public function createNewModel(array $data): ModelEventOrg {
         try {
             return parent::createNewModel($data);
         } catch (ModelException $exception) {

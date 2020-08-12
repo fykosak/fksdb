@@ -14,22 +14,32 @@ use Nette\Forms\IControl;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Field {
-    /* ** NAME ** */
-    /** @var string */
-    private $name;
 
-    public function getName(): string {
-        return $this->name;
-    }
-    /* ** LABEL ** */
+    private string $name;
 
-    /** @var string|null */
-    private $label;
+    private bool $determining;
 
-    /** @return string|null */
-    public function getLabel() {
-        return $this->label;
-    }
+    private ?string $label;
+
+    private ?string $description;
+
+    private BaseHolder $baseHolder;
+
+    private ExpressionEvaluator $evaluator;
+
+    private IFieldFactory $factory;
+
+    /** @var mixed */
+    private $default;
+
+    /** @var bool|callable */
+    private $required;
+
+    /** @var bool|callable */
+    private $modifiable;
+
+    /** @var bool|callable */
+    private $visible;
 
     /**
      * Field constructor.
@@ -41,60 +51,37 @@ class Field {
         $this->label = $label;
     }
 
-    /*
-     * Accessors
-     */
-    /* ** BASE HOLDER ** */
-    /** @var BaseHolder */
-    private $baseHolder;
+    public function getName(): string {
+        return $this->name;
+    }
+
+    public function getLabel(): ?string {
+        return $this->label;
+    }
 
     public function getBaseHolder(): BaseHolder {
         return $this->baseHolder;
     }
 
-    /**
-     * @param BaseHolder $baseHolder
-     * @return void
-     */
-    public function setBaseHolder(BaseHolder $baseHolder) {
+    public function setBaseHolder(BaseHolder $baseHolder): void {
         $this->baseHolder = $baseHolder;
     }
-    /* ** DESCRIPTION ** */
-    /** @var string */
-    private $description;
 
-    /** @return string */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return $this->description;
     }
 
-    /**
-     * @param string|null $description
-     * @return void
-     */
-    public function setDescription($description) {
+    public function setDescription(?string $description): void {
         $this->description = $description;
     }
-
-    /* ** DETERMINING ** */
-    /** @var bool */
-    private $determining;
 
     public function isDetermining(): bool {
         return $this->determining;
     }
 
-    /**
-     * @param bool $determining
-     * @return void
-     */
-    public function setDetermining(bool $determining) {
+    public function setDetermining(bool $determining): void {
         $this->determining = $determining;
     }
-
-    /* ** DEFAULT ** */
-    /** @var mixed */
-    private $default;
 
     /** @return mixed */
     public function getDefault() {
@@ -105,30 +92,15 @@ class Field {
      * @param mixed $default
      * @return void
      */
-    public function setDefault($default) {
+    public function setDefault($default): void {
         $this->default = $default;
     }
-    /* ** EVALUATOR ** */
-    /** @var ExpressionEvaluator */
-    private $evaluator;
 
-    /**
-     * @param ExpressionEvaluator $evaluator
-     * @return void
-     */
-    public function setEvaluator(ExpressionEvaluator $evaluator) {
+    public function setEvaluator(ExpressionEvaluator $evaluator): void {
         $this->evaluator = $evaluator;
     }
-    /* ** FACTORY ** */
 
-    /** @var IFieldFactory */
-    private $factory;
-
-    /**
-     * @param IFieldFactory $factory
-     * @return void
-     */
-    public function setFactory(IFieldFactory $factory) {
+    public function setFactory(IFieldFactory $factory): void {
         $this->factory = $factory;
     }
 
@@ -139,11 +111,7 @@ class Field {
         return $this->factory->createComponent($this);
     }
 
-    /**
-     * @param IComponent $component
-     * @return void
-     */
-    public function setFieldDefaultValue(IComponent $component) {
+    public function setFieldDefaultValue(IComponent $component): void {
         $this->factory->setFieldDefaultValue($component, $this);
     }
 
@@ -152,52 +120,43 @@ class Field {
     }
 
     /* ********* "Runtime" operations *********     */
-    /* ** REQUIRED ** */
-    /** @var bool|callable */
-    private $required;
 
     public function isRequired(): bool {
         return $this->evaluator->evaluate($this->required, $this);
     }
 
     /** @param bool|callable $required */
-    public function setRequired($required) {
+    public function setRequired($required): void {
         $this->required = $required;
     }
+
     /* ** MODIFIABLE ** */
-    /** @var bool|callable */
-    private $modifiable;
 
     public function isModifiable(): bool {
-        return $this->getBaseHolder()->isModifiable() && $this->evaluator->evaluate($this->modifiable, $this);
+        return $this->getBaseHolder()->isModifiable() && (bool)$this->evaluator->evaluate($this->modifiable, $this);
     }
 
     /** @param bool|callable $modifiable */
-    public function setModifiable($modifiable) {
+    public function setModifiable($modifiable): void {
         $this->modifiable = $modifiable;
     }
+
     /* ** VISIBLE ** */
-    /** @var bool|callable */
-    private $visible;
 
     public function isVisible(): bool {
-        return $this->evaluator->evaluate($this->visible, $this);
+        return (bool)$this->evaluator->evaluate($this->visible, $this);
     }
 
     /**
      * @param callable|bool $visible
      * @return void
      */
-    public function setVisible($visible) {
+    public function setVisible($visible): void {
         $this->visible = $visible;
     }
 
-    /**
-     * @param DataValidator $validator
-     * @return bool
-     */
-    public function validate(DataValidator $validator) {
-        return $this->factory->validate($this, $validator);
+    public function validate(DataValidator $validator): bool {
+        return (bool)$this->factory->validate($this, $validator);
     }
 
     /**
@@ -214,11 +173,7 @@ class Field {
         return null;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return "{$this->baseHolder}.{$this->name}";
     }
-
 }

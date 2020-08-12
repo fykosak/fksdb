@@ -2,7 +2,7 @@
 
 namespace FKSDB\DataTesting;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\DBReflection\DBReflectionFactory;
 use FKSDB\DataTesting\Tests\Person\PersonTest;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Services\ServiceContest;
@@ -13,19 +13,19 @@ use FKSDB\ORM\Services\ServiceContest;
  */
 class DataTestingFactory {
     /** @var PersonTest[][] */
-    private $tests = [];
-    /** @var ServiceContest */
-    private $serviceContest;
-    /** @var TableReflectionFactory */
-    private $tableReflectionFactory;
+    private array $tests = [];
+
+    private ServiceContest $serviceContest;
+
+    private DBReflectionFactory $tableReflectionFactory;
 
     /**
      * DataTestingFactory constructor.
      * @param ServiceContest $serviceContest
-     * @param TableReflectionFactory $tableReflectionFactory
+     * @param DBReflectionFactory $tableReflectionFactory
      * @throws BadTypeException
      */
-    public function __construct(ServiceContest $serviceContest, TableReflectionFactory $tableReflectionFactory) {
+    public function __construct(ServiceContest $serviceContest, DBReflectionFactory $tableReflectionFactory) {
         $this->serviceContest = $serviceContest;
         $this->tableReflectionFactory = $tableReflectionFactory;
         $this->registersTests();
@@ -35,7 +35,7 @@ class DataTestingFactory {
      * @return void
      * @throws BadTypeException
      */
-    private function registersTests() {
+    private function registersTests(): void {
         $tests = [
             new Tests\Person\GenderFromBornNumberTest(),
             new Tests\Person\ParticipantsDurationTest(),
@@ -52,9 +52,6 @@ class DataTestingFactory {
      * @return PersonTest[]
      */
     public function getTests(string $section): array {
-        if (isset($this->tests[$section])) {
-            return $this->tests[$section];
-        }
-        return [];
+        return $this->tests[$section] ?? [];
     }
 }

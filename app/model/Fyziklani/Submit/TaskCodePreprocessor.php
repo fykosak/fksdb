@@ -15,12 +15,11 @@ use Nette\Database\Table\ActiveRow;
  */
 final class TaskCodePreprocessor {
 
-    /** @var ServiceFyziklaniTask */
-    private $serviceFyziklaniTask;
-    /** @var ServiceFyziklaniTeam */
-    private $serviceFyziklaniTeam;
-    /** @var ModelEvent */
-    private $event;
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
+
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+
+    private ModelEvent $event;
 
     /**
      * TaskCodeHandler constructor.

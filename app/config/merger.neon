@@ -51,22 +51,22 @@ parameters:
 
 # Instantces of merge strategies.
 services:
-    merge.cummulative: Persons\Deduplication\MergeStrategy\CummulativeStrategy
+    merge.cummulative: FKSDB\Persons\Deduplication\MergeStrategy\CummulativeStrategy
     merge.cummTrunk:
-        class: Persons\Deduplication\MergeStrategy\CummulativeStrategy
+        class: FKSDB\Persons\Deduplication\MergeStrategy\CummulativeStrategy
         arguments: [trunk]
     merge.cummMerged:
-        class: Persons\Deduplication\MergeStrategy\CummulativeStrategy
+        class: FKSDB\Persons\Deduplication\MergeStrategy\CummulativeStrategy
         arguments: [merged]
-    merge.trunk: Persons\Deduplication\MergeStrategy\TrunkStrategy
-    merge.merged: Persons\Deduplication\MergeStrategy\MergedStrategy
-    merge.fail: Persons\Deduplication\MergeStrategy\FailStrategy
+    merge.trunk: FKSDB\Persons\Deduplication\MergeStrategy\TrunkStrategy
+    merge.merged: FKSDB\Persons\Deduplication\MergeStrategy\MergedStrategy
+    merge.fail: FKSDB\Persons\Deduplication\MergeStrategy\FailStrategy
     merge.greater:
-        class: Persons\Deduplication\MergeStrategy\CompareStrategy
+        class: FKSDB\Persons\Deduplication\MergeStrategy\CompareStrategy
         arguments: [greater]
     merge.less:
-        class: Persons\Deduplication\MergeStrategy\CompareStrategy
+        class: FKSDB\Persons\Deduplication\MergeStrategy\CompareStrategy
         arguments: [less]
     merge.null:
-        class: Persons\Deduplication\MergeStrategy\ConstantStrategy
+        class: FKSDB\Persons\Deduplication\MergeStrategy\ConstantStrategy
         arguments: [null]

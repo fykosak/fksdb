@@ -7,5 +7,5 @@ namespace FKSDB\ORM\Models;
  * *
  */
 interface ISchoolReferencedModel {
-    public function getSchool(): ModelSchool;
+    public function getSchool(): ?ModelSchool;
 }

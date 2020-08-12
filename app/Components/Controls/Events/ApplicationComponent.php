@@ -13,6 +13,7 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
+use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -28,17 +29,14 @@ use Nette\Utils\JsonException;
  */
 class ApplicationComponent extends BaseComponent {
 
-    /** @var ApplicationHandler */
-    private $handler;
+    private ApplicationHandler $handler;
 
-    /** @var Holder */
-    private $holder;
+    private Holder $holder;
 
     /** @var callable ($primaryModelId, $eventId) */
     private $redirectCallback;
 
-    /** @var string */
-    private $templateFile;
+    private string $templateFile;
 
     /**
      * ApplicationComponent constructor.
@@ -55,26 +53,19 @@ class ApplicationComponent extends BaseComponent {
     /**
      * @param string $template name of the standard template or whole path
      */
-    public function setTemplate(string $template) {
+    public function setTemplate(string $template): void {
         if (stripos($template, '.latte') !== false) {
             $this->templateFile = $template;
         } else {
-            $this->templateFile = __DIR__ . DIRECTORY_SEPARATOR . "ApplicationComponent.$template.latte";
+            $this->templateFile = __DIR__ . DIRECTORY_SEPARATOR . "layout.application.$template.latte";
         }
     }
 
-    /**
-     * @return callable
-     */
-    public function getRedirectCallback() {
+    public function getRedirectCallback(): callable {
         return $this->redirectCallback;
     }
 
-    /**
-     * @param callable $redirectCallback
-     * @return void
-     */
-    public function setRedirectCallback(callable $redirectCallback) {
+    public function setRedirectCallback(callable $redirectCallback): void {
         $this->redirectCallback = $redirectCallback;
     }
 
@@ -86,19 +77,11 @@ class ApplicationComponent extends BaseComponent {
         return $this->getPresenter()->getContestAuthorizator()->isAllowed($event, 'application', $event->getContest());
     }
 
-    /**
-     * @return void
-     *
-     */
-    public function render() {
+    public function render(): void {
         $this->renderForm();
     }
 
-    /**
-     * @return void
-     *
-     */
-    public function renderForm() {
+    public function renderForm(): void {
         if (!$this->templateFile) {
             throw new InvalidStateException('Must set template for the application form.');
         }
@@ -115,14 +98,14 @@ class ApplicationComponent extends BaseComponent {
      * @param string $mode
      * @return void
      */
-    public function renderInline($mode) {
+    public function renderInline($mode): void {
         $this->template->mode = $mode;
         $this->template->holder = $this->holder;
         $this->template->primaryModel = $this->holder->getPrimaryHolder()->getModel();
         $this->template->primaryMachine = $this->getMachine()->getPrimaryMachine();
         $this->template->canEdit = $this->canEdit();
         $this->template->state = $this->holder->getPrimaryHolder()->getModelState();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ApplicationComponent.inline.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.application.inline.latte');
         $this->template->render();
     }
 
@@ -213,7 +196,7 @@ class ApplicationComponent extends BaseComponent {
      *
      * @throws JsonException
      */
-    public function handleSubmit(Form $form, $explicitTransitionName = null) {
+    public function handleSubmit(Form $form, $explicitTransitionName = null): void {
         $this->execute($form, $explicitTransitionName);
     }
 
@@ -222,19 +205,19 @@ class ApplicationComponent extends BaseComponent {
      * @throws AbortException
      * @throws JsonException
      */
-    public function handleTransition($transitionName) {
+    public function handleTransition($transitionName): void {
         $this->execute(null, $transitionName);
     }
 
     /**
      * @param Form|null $form
-     * @param null $explicitTransitionName
+     * @param string|null $explicitTransitionName
+     * @return void
      * @throws AbortException
-     * @throws JsonException
      */
-    private function execute(Form $form = null, $explicitTransitionName = null) {
+    private function execute(?Form $form, ?string $explicitTransitionName): void {
         try {
-            $this->handler->storeAndExecute($this->holder, $form, $explicitTransitionName);
+            $this->handler->storeAndExecuteForm($this->holder, $form, $explicitTransitionName);
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             $this->finalRedirect();
         } catch (ApplicationHandlerException $exception) {
@@ -254,17 +237,14 @@ class ApplicationComponent extends BaseComponent {
         return $this->handler->getMachine();
     }
 
-    /**
-     * @return bool
-     */
-    private function canEdit() {
+    private function canEdit(): bool {
         return $this->holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
     /**
      * @throws AbortException
      */
-    private function finalRedirect() {
+    private function finalRedirect(): void {
         if ($this->redirectCallback) {
             $id = $this->holder->getPrimaryHolder()->getModel()->getPrimary(false);
             ($this->redirectCallback)($id, $this->holder->getPrimaryHolder()->getEvent()->getPrimary());

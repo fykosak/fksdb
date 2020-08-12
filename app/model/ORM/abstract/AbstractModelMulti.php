@@ -14,14 +14,11 @@ use Nette\SmartObject;
 abstract class AbstractModelMulti implements IModel {
     use SmartObject;
 
-    /** @var AbstractModelSingle */
-    protected $mainModel;
+    protected AbstractModelSingle $mainModel;
 
-    /** @var AbstractModelSingle */
-    protected $joinedModel;
+    protected AbstractModelSingle $joinedModel;
 
-    /** @var AbstractServiceMulti */
-    protected $service;
+    protected AbstractServiceMulti $service;
 
     /**
      * @note DO NOT use directly, use AbstractServiceMulti::composeModel or FKSDB\ORM\AbstractModelMulti::createFromExistingModels.
@@ -30,7 +27,7 @@ abstract class AbstractModelMulti implements IModel {
      * @param AbstractModelSingle $mainModel
      * @param AbstractModelSingle $joinedModel
      */
-    public function __construct($service, AbstractModelSingle $mainModel, AbstractModelSingle $joinedModel) {
+    public function __construct(?AbstractServiceMulti $service, AbstractModelSingle $mainModel, AbstractModelSingle $joinedModel) {
         if (is_null($service)) {
             $this->joinedModel = $joinedModel;
             $this->mainModel = $mainModel;
@@ -49,19 +46,12 @@ abstract class AbstractModelMulti implements IModel {
         return $this->getMainModel()->toArray() + $this->getJoinedModel()->toArray();
     }
 
-    /**
-     * @return AbstractModelSingle|IModel
-     */
-    public function getMainModel() {
+    public function getMainModel(): AbstractModelSingle {
         return $this->mainModel;
     }
 
-    /**
-     * @param AbstractModelSingle $mainModel
-     * @return void
-     */
-    public function setMainModel(AbstractModelSingle $mainModel) {
-        if (!$this->service) {
+    public function setMainModel(AbstractModelSingle $mainModel): void {
+        if (!isset($this->service)) {
             throw new InvalidStateException('Cannot set main model on multiModel w/out service.');
         }
         $this->mainModel = $mainModel;
@@ -71,18 +61,11 @@ abstract class AbstractModelMulti implements IModel {
         }
     }
 
-    /**
-     * @return AbstractModelSingle|IModel
-     */
-    public function getJoinedModel() {
+    public function getJoinedModel(): AbstractModelSingle {
         return $this->joinedModel;
     }
 
-    /**
-     * @param AbstractModelSingle $joinedModel
-     * @return void
-     */
-    public function setJoinedModel(AbstractModelSingle $joinedModel) {
+    public function setJoinedModel(AbstractModelSingle $joinedModel): void {
         $this->joinedModel = $joinedModel;
     }
 
@@ -90,11 +73,7 @@ abstract class AbstractModelMulti implements IModel {
         return $this->service;
     }
 
-    /**
-     * @param AbstractServiceMulti $service
-     * @return void
-     */
-    public function setService(AbstractServiceMulti $service) {
+    public function setService(AbstractServiceMulti $service): void {
         $this->service = $service;
     }
 

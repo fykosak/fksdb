@@ -29,8 +29,7 @@ class AutocompleteSelectBox extends TextBase {
 
     private $dataProvider;
 
-    /** @var bool */
-    private $ajax;
+    private bool $ajax;
 
     /** @var bool */
     private $multiSelect = false;
@@ -44,7 +43,7 @@ class AutocompleteSelectBox extends TextBase {
      * @see http://api.jqueryui.com/autocomplete/#method-_renderItem
      * @var string
      */
-    private $renderMethod;
+    private ?string $renderMethod;
     /** @var bool */
     private $attachedJSON = false;
     /** @var bool */
@@ -56,7 +55,7 @@ class AutocompleteSelectBox extends TextBase {
      * @param string|null $label
      * @param string|null $renderMethod
      */
-    public function __construct(bool $ajax, $label = null, $renderMethod = null) {
+    public function __construct(bool $ajax, ?string $label = null, ?string $renderMethod = null) {
         parent::__construct($label);
 
         $this->monitor(IAutocompleteJSONProvider::class, function (IAutocompleteJSONProvider $provider) {
@@ -83,10 +82,7 @@ class AutocompleteSelectBox extends TextBase {
         return $this->dataProvider;
     }
 
-    /**
-     * @return null|string
-     */
-    public function getRenderMethod() {
+    public function getRenderMethod(): ?string {
         return $this->renderMethod;
     }
 
@@ -98,11 +94,7 @@ class AutocompleteSelectBox extends TextBase {
         return $this->multiSelect;
     }
 
-    /**
-     * @param IDataProvider $dataProvider
-     * @return void
-     */
-    public function setDataProvider(IDataProvider $dataProvider) {
+    public function setDataProvider(IDataProvider $dataProvider): void {
         if ($this->ajax && !($dataProvider instanceof IFilteredDataProvider)) {
             throw new InvalidArgumentException('Data provider for AJAX must be instance of IFilteredDataProvider.');
         }
@@ -165,7 +157,7 @@ class AutocompleteSelectBox extends TextBase {
             $wasSent = false;
         }
         if ($wasSent && !Arrays::get($this->getForm()->getHttpData(), $metaPath, null)) {
-            $this->addError(sprintf(_('Políčko %s potřebuje povolený Javascript.'), $this->caption));
+            $this->addError(sprintf(_('Field %s requires JavaScript enabled.'), $this->caption));
             $this->setValue(null);
         } else {
             parent::loadHttpData();

@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons;
+namespace FKSDB\Persons;
 
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
@@ -15,8 +15,7 @@ use Nette\SmartObject;
 class SelfResolver implements IVisibilityResolver, IModifiabilityResolver {
     use SmartObject;
 
-    /** @var User */
-    private $user;
+    private User $user;
 
     /**
      * SelfResolver constructor.

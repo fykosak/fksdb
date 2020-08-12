@@ -13,37 +13,19 @@ use Nette\Utils\ArrayHash;
  */
 interface IReferencedHandler {
 
-    const RESOLUTION_OVERWRITE = 'overwrite';
-    const RESOLUTION_KEEP = 'keep';
-    const RESOLUTION_EXCEPTION = 'exception';
+    public const RESOLUTION_OVERWRITE = 'overwrite';
+    public const RESOLUTION_KEEP = 'keep';
+    public const RESOLUTION_EXCEPTION = 'exception';
 
     public function getResolution(): string;
 
-    /**
-     * @param string $resolution
-     * @return void
-     */
-    public function setResolution(string $resolution);
+    public function setResolution(string $resolution): void;
 
-    /**
-     * @param IModel $model
-     * @param ArrayHash $values
-     * @return void
-     */
-    public function update(IModel $model, ArrayHash $values);
+    public function update(IModel $model, ArrayHash $values): void;
 
-    /**
-     * @param ArrayHash $values
-     * @return AbstractModelSingle
-     */
-    public function createFromValues(ArrayHash $values);
+    public function createFromValues(ArrayHash $values): AbstractModelSingle;
 
     public function isSecondaryKey(string $field): bool;
 
-    /**
-     * @param string $field
-     * @param string $key
-     * @return IModel
-     */
-    public function findBySecondaryKey(string $field, string $key);
+    public function findBySecondaryKey(string $field, string $key): ?AbstractModelSingle;
 }

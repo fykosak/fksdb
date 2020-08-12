@@ -35,9 +35,9 @@ class TransitionButtonsControl extends BaseComponent {
         $this->model = $model;
     }
 
-    public function render() {
+    public function render(): void {
         $this->template->buttons = $this->machine->getAvailableTransitions($this->model);
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'TransitionButtonsControl.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.transition.latte');
         $this->template->render();
     }
 
@@ -45,7 +45,7 @@ class TransitionButtonsControl extends BaseComponent {
      * @param string $name
      * @throws AbortException
      */
-    public function handleTransition($name) {
+    public function handleTransition($name): void {
         try {
             $this->machine->executeTransition($name, $this->model);
         } catch (ForbiddenRequestException $exception) {
@@ -56,7 +56,7 @@ class TransitionButtonsControl extends BaseComponent {
             return;
         } catch (\Exception $exception) {
             Debugger::log($exception);
-            $this->getPresenter()->flashMessage(_('Nastala chyba'), BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage(_('Some error emerged'), BasePresenter::FLASH_ERROR);
         }
         $this->redirect('this');
     }

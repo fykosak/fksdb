@@ -2,9 +2,10 @@
 
 namespace FKSDB\WebService;
 
-use Authorization\ContestAuthorizator;
+use FKSDB\Authorization\ContestAuthorizator;
 use DOMDocument;
 use DOMElement;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\StoredQuery\StoredQuery;
 use FKSDB\StoredQuery\StoredQueryFactory;
 use FKSDB\ORM\Models\ModelLogin;
@@ -21,7 +22,6 @@ use SoapFault;
 use SoapVar;
 use FKSDB\Stats\StatsModelFactory;
 use stdClass;
-use WebService\IXMLNodeSerializer;
 
 /**
  * Web service provider for fksdb.wdsl
@@ -30,28 +30,22 @@ use WebService\IXMLNodeSerializer;
 class WebServiceModel {
 
     /** @var array  contest name => contest_id */
-    private $inverseContestMap;
+    private array $inverseContestMap;
 
-    /** @var ServiceContest */
-    private $serviceContest;
+    private ServiceContest $serviceContest;
 
-    /** @var ResultsModelFactory */
-    private $resultsModelFactory;
+    private ResultsModelFactory $resultsModelFactory;
 
-    /** @var StatsModelFactory */
-    private $statsModelFactory;
+    private StatsModelFactory $statsModelFactory;
 
     /** @var ModelLogin */
     private $authenticatedLogin;
 
-    /** @var IAuthenticator */
-    private $authenticator;
+    private IAuthenticator $authenticator;
 
-    /** @var StoredQueryFactory */
-    private $storedQueryFactory;
+    private StoredQueryFactory $storedQueryFactory;
 
-    /** @var ContestAuthorizator */
-    private $contestAuthorizator;
+    private ContestAuthorizator $contestAuthorizator;
 
     /**
      * FKSDB\WebService\WebServiceModel constructor.
@@ -63,7 +57,15 @@ class WebServiceModel {
      * @param StoredQueryFactory $storedQueryFactory
      * @param ContestAuthorizator $contestAuthorizator
      */
-    public function __construct(array $inverseContestMap, ServiceContest $serviceContest, ResultsModelFactory $resultsModelFactory, StatsModelFactory $statsModelFactory, IAuthenticator $authenticator, StoredQueryFactory $storedQueryFactory, ContestAuthorizator $contestAuthorizator) {
+    public function __construct(
+        array $inverseContestMap,
+        ServiceContest $serviceContest,
+        ResultsModelFactory $resultsModelFactory,
+        StatsModelFactory $statsModelFactory,
+        IAuthenticator $authenticator,
+        StoredQueryFactory $storedQueryFactory,
+        ContestAuthorizator $contestAuthorizator
+    ) {
         $this->inverseContestMap = $inverseContestMap;
         $this->serviceContest = $serviceContest;
         $this->resultsModelFactory = $resultsModelFactory;
@@ -100,7 +102,7 @@ class WebServiceModel {
     }
 
     /**
-     * @param mixed $args
+     * @param stdClass $args
      * @return SoapVar
      * @throws BadRequestException
      * @throws SoapFault
@@ -337,6 +339,7 @@ class WebServiceModel {
      * @param DOMDocument $doc
      * @return DOMElement
      * @throws SoapFault
+     * @throws BadTypeException
      */
     private function createDetailNode(AbstractResultsModel $resultsModel, DOMDocument $doc): DOMElement {
         $detailNode = $doc->createElement('detail');
@@ -351,6 +354,7 @@ class WebServiceModel {
      * @param DOMDocument $doc
      * @return DOMElement
      * @throws SoapFault
+     * @throws BadTypeException
      */
     private function createCumulativeNode(AbstractResultsModel $resultsModel, DOMDocument $doc): DOMElement {
         $cumulativeNode = $doc->createElement('cumulative');
@@ -365,6 +369,7 @@ class WebServiceModel {
      * @param DOMDocument $doc
      * @return DOMElement
      * @throws SoapFault
+     * @throws BadTypeException
      */
     private function createSchoolCumulativeNode(AbstractResultsModel $resultsModel, DOMDocument $doc): DOMElement {
         $schoolNode = $doc->createElement('school-cumulative');
@@ -379,6 +384,7 @@ class WebServiceModel {
      * @param DOMDocument $doc
      * @return DOMElement
      * @throws SoapFault
+     * @throws BadTypeException
      */
     private function createBrojureNode(AbstractResultsModel $resultsModel, DOMDocument $doc): DOMElement {
         $brojureNode = $doc->createElement('brojure');

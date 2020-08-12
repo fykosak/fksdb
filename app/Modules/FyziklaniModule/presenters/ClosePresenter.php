@@ -44,7 +44,7 @@ class ClosePresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws EventNotFoundException
      */
-    public function titleTeam() {
+    public function titleTeam(): void {
         $this->setPageTitle(new PageTitle(\sprintf(_('Uzavírání bodování týmu "%s"'), $this->getEntity()->name), 'fa fa-check-square-o'));
     }
 
@@ -55,7 +55,7 @@ class ClosePresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws EventNotFoundException
      */
-    public function titleHard() {
+    public function titleHard(): void {
         $this->titleTeam();
     }
 
@@ -64,14 +64,14 @@ class ClosePresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function authorizedTeam() {
+    public function authorizedTeam(): void {
         $this->setAuthorized($this->isEventOrContestOrgAuthorized($this->getModelResource(), 'team'));
     }
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizeHard() {
+    public function authorizeHard(): void {
         $this->setAuthorized($this->isEventOrContestOrgAuthorized($this->getModelResource(), 'hard'));
     }
 
@@ -93,7 +93,7 @@ class ClosePresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws EventNotFoundException
      */
-    public function actionTeam() {
+    public function actionTeam(): void {
         try {
             $this->getEntity()->canClose();
         } catch (AlreadyClosedException $exception) {
@@ -113,7 +113,7 @@ class ClosePresenter extends BasePresenter {
      * @throws ModelNotFoundException
      * @throws EventNotFoundException
      */
-    public function actionHard() {
+    public function actionHard(): void {
         $control = $this->getComponent('closeTeamControl');
         if (!$control instanceof CloseTeamControl) {
             throw new BadTypeException(CloseTeamControl::class, $control);

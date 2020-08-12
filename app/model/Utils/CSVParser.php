@@ -19,10 +19,10 @@ class CSVParser implements Iterator {
     const BOM = '\xEF\xBB\xBF';
     /** @var resource */
     private $file;
-    /** @var string */
-    private $delimiter;
-    /** @var int */
-    private $indexType;
+
+    private string $delimiter;
+
+    private int $indexType;
     /** @var int */
     private $rowNumber;
     /** @var int */

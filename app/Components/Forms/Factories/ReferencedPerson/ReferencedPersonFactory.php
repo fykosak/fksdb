@@ -16,9 +16,9 @@ use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use Nette\Utils\JsonException;
-use Persons\IModifiabilityResolver;
-use Persons\IVisibilityResolver;
-use Persons\ReferencedPersonHandlerFactory;
+use FKSDB\Persons\IModifiabilityResolver;
+use FKSDB\Persons\IVisibilityResolver;
+use FKSDB\Persons\ReferencedPersonHandlerFactory;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -28,25 +28,17 @@ use Persons\ReferencedPersonHandlerFactory;
 class ReferencedPersonFactory {
     use SmartObject;
 
-    /** @var ServicePerson */
-    protected $servicePerson;
+    protected ServicePerson $servicePerson;
 
-    /** @var PersonFactory */
-    protected $personFactory;
+    protected PersonFactory $personFactory;
 
+    protected ReferencedPersonHandlerFactory $referencedPersonHandlerFactory;
 
-    /** @var ReferencedPersonHandlerFactory */
-    protected $referencedPersonHandlerFactory;
+    protected PersonProvider $personProvider;
 
-    /** @var PersonProvider */
-    protected $personProvider;
+    private PersonScheduleFactory $personScheduleFactory;
 
-    /** @var PersonScheduleFactory */
-    private $personScheduleFactory;
-    /** @var ModelEvent */
-    private $event;
-    /** @var Container */
-    private $context;
+    private Container $context;
 
     /**
      * AbstractReferencedPersonFactory constructor.
@@ -152,7 +144,7 @@ class ReferencedPersonFactory {
                 }
                 return $person->getPermanentAddress(true);
             case 'person_has_flag':
-                return ($flag = $person->getMPersonHasFlag($field)) ? (bool)$flag['value'] : null;
+                return ($flag = $person->getPersonHasFlag($field)) ? (bool)$flag['value'] : null;
             default:
                 throw new InvalidArgumentException("Unknown person sub '$sub'.");
         }

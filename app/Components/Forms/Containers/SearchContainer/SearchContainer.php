@@ -14,19 +14,14 @@ use Nette\Forms\Controls\SubmitButton;
  */
 abstract class SearchContainer extends ContainerWithOptions {
 
-    const CSS_AJAX = 'ajax';
+    protected const CSS_AJAX = 'ajax';
 
-    const CONTROL_SEARCH = '_c_search';
-    const SUBMIT_SEARCH = '__search';
+    protected const CONTROL_SEARCH = '_c_search';
+    protected const SUBMIT_SEARCH = '__search';
 
-    /** @var ReferencedId */
-    protected $referencedId;
+    protected ReferencedId $referencedId;
 
-    /**
-     * @param ReferencedId $referencedId
-     * @return void
-     */
-    public function setReferencedId(ReferencedId $referencedId) {
+    public function setReferencedId(ReferencedId $referencedId): void {
         $this->referencedId = $referencedId;
         $control = $this->createSearchControl();
         if ($control) {
@@ -41,7 +36,7 @@ abstract class SearchContainer extends ContainerWithOptions {
             && $this->getComponent(self::SUBMIT_SEARCH)->isSubmittedBy();
     }
 
-    protected function createSearchButton() {
+    protected function createSearchButton(): void {
         $submit = $this->addSubmit(self::SUBMIT_SEARCH, _('Find'));
         $submit->setValidationScope(false);
 
@@ -62,10 +57,7 @@ abstract class SearchContainer extends ContainerWithOptions {
         };
     }
 
-    /**
-     * @return BaseControl|null
-     */
-    abstract protected function createSearchControl();
+    abstract protected function createSearchControl(): ?BaseControl;
 
     abstract protected function getSearchCallback(): callable;
 

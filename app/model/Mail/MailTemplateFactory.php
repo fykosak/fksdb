@@ -1,6 +1,6 @@
 <?php
 
-namespace Mail;
+namespace FKSDB\Mail;
 
 use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\BasePresenter;
@@ -19,14 +19,14 @@ use Nette\Localization\ITranslator;
  */
 class MailTemplateFactory {
 
-    /** @var string without trailing slash */
-    private $templateDir;
+    /** without trailing slash */
+    private string $templateDir;
     /** @var Application */
     private $application;
-    /** @var ITranslator */
-    private $translator;
-    /** @var IRequest */
-    private $request;
+
+    private ITranslator $translator;
+
+    private IRequest $request;
 
     /**
      * MailTemplateFactory constructor.

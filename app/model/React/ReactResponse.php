@@ -10,7 +10,8 @@ use Nette\SmartObject;
 use Nette\Utils\JsonException;
 
 /**
- * Class FKSDB\React\ReactResponse
+ * Class ReactResponse
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 final class ReactResponse implements Nette\Application\IResponse {
 

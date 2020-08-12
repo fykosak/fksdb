@@ -15,7 +15,7 @@ class ResultsPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function titleCorrelationStatistics() {
+    public function titleCorrelationStatistics(): void {
         $this->setPageTitle(new PageTitle(_('Correlation statistics'), 'fa fa-pie-chart'));
     }
 
@@ -23,7 +23,7 @@ class ResultsPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function titleList() {
+    public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('Results and statistics'), 'fa fa-trophy'));
     }
 
@@ -31,7 +31,7 @@ class ResultsPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function titleTable() {
+    public function titleTable(): void {
         $this->setPageTitle(new PageTitle(_('Detailed results'), 'fa fa-trophy'));
     }
 
@@ -39,7 +39,7 @@ class ResultsPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function titlePresentation() {
+    public function titlePresentation(): void {
         $this->setPageTitle(new PageTitle(_('Results presentation'), 'fa fa-table'));
     }
 
@@ -47,7 +47,7 @@ class ResultsPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function titleTeamStatistics() {
+    public function titleTeamStatistics(): void {
         $this->setPageTitle(new PageTitle(_('Teams statistics'), 'fa fa-line-chart'));
     }
 
@@ -55,7 +55,7 @@ class ResultsPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function titleTaskStatistics() {
+    public function titleTaskStatistics(): void {
         $this->setPageTitle(new PageTitle(_('Tasks statistics'), 'fa fa-pie-chart'));
     }
 
@@ -63,7 +63,7 @@ class ResultsPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function authorizedList() {
+    public function authorizedList(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'list'));
     }
 
@@ -71,7 +71,7 @@ class ResultsPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function authorizedResultsTable() {
+    public function authorizedResultsTable(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'table'));
     }
 
@@ -79,7 +79,7 @@ class ResultsPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function authorizedTaskStatistics() {
+    public function authorizedTaskStatistics(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'taskStatistics'));
     }
 
@@ -87,7 +87,7 @@ class ResultsPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function authorizedTeamStatistics() {
+    public function authorizedTeamStatistics(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'teamStatistics'));
     }
 
@@ -95,7 +95,7 @@ class ResultsPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function authorizedCorrelationStatistics() {
+    public function authorizedCorrelationStatistics(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'correlation'));
     }
 
@@ -103,7 +103,7 @@ class ResultsPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function authorizedPresentation() {
+    public function authorizedPresentation(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.results', 'presentation'));
     }
 
@@ -145,6 +145,14 @@ class ResultsPresenter extends BasePresenter {
      */
     protected function createComponentCorrelationStatistics(): ResultsAndStatistics {
         return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.statistics.correlation');
+    }
+
+    protected function beforeRender() {
+        switch ($this->getAction()) {
+            case 'table':
+                $this->getPageStyleContainer()->setWidePage();
+        }
+        parent::beforeRender();
     }
 
     /**

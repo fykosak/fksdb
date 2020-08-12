@@ -2,24 +2,23 @@
 
 namespace FKSDB\Modules\CoreModule;
 
-use Authentication\SSO\GlobalSession;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\BasePresenter;
 use Exception;
 use FKSDB\Authentication\AccountManager;
-use Authentication\LoginUserStorage;
-use Authentication\PasswordAuthenticator;
+use FKSDB\Authentication\LoginUserStorage;
+use FKSDB\Authentication\PasswordAuthenticator;
 use FKSDB\Authentication\RecoveryException;
-use Authentication\TokenAuthenticator;
+use FKSDB\Authentication\TokenAuthenticator;
 use FKSDB\Authentication\SSO\IGlobalSession;
 use FKSDB\Authentication\SSO\ServiceSide\Authentication;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\UI\PageTitle;
-use Mail\SendFailedException;
+use FKSDB\Mail\SendFailedException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
@@ -54,58 +53,35 @@ final class AuthenticationPresenter extends BasePresenter {
     /** @persistent */
     public $flag;
 
-    /** @var ServiceAuthToken */
-    private $serviceAuthToken;
+    private ServiceAuthToken $serviceAuthToken;
 
-    /**
-     * todo check if type is persistent
-     * @var GlobalSession
-     */
-    private $globalSession;
+    private IGlobalSession $globalSession;
 
-    /** @var PasswordAuthenticator */
-    private $passwordAuthenticator;
+    private PasswordAuthenticator $passwordAuthenticator;
 
-    /** @var AccountManager */
-    private $accountManager;
+    private AccountManager $accountManager;
 
-    /**
-     * @param ServiceAuthToken $serviceAuthToken
-     * @return void
-     */
-    public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken) {
+    public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken): void {
         $this->serviceAuthToken = $serviceAuthToken;
     }
 
-    /**
-     * @param IGlobalSession $globalSession
-     * @return void
-     */
-    public function injectGlobalSession(IGlobalSession $globalSession) {
+    public function injectGlobalSession(IGlobalSession $globalSession): void {
         $this->globalSession = $globalSession;
     }
 
-    /**
-     * @param PasswordAuthenticator $passwordAuthenticator
-     * @return void
-     */
-    public function injectPasswordAuthenticator(PasswordAuthenticator $passwordAuthenticator) {
+    public function injectPasswordAuthenticator(PasswordAuthenticator $passwordAuthenticator): void {
         $this->passwordAuthenticator = $passwordAuthenticator;
     }
 
-    /**
-     * @param AccountManager $accountManager
-     * @return void
-     */
-    public function injectAccountManager(AccountManager $accountManager) {
+    public function injectAccountManager(AccountManager $accountManager): void {
         $this->accountManager = $accountManager;
     }
 
-    public function titleLogin() {
+    public function titleLogin(): void {
         $this->setPageTitle(new PageTitle(_('Login')));
     }
 
-    public function titleRecover() {
+    public function titleRecover(): void {
         $this->setPageTitle(new PageTitle(_('Password recovery')));
     }
 
@@ -113,7 +89,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws InvalidLinkException
      */
-    public function actionLogout() {
+    public function actionLogout(): void {
         $subDomainAuth = $this->getContext()->getParameters()['subdomain']['auth'];
         $subDomain = $this->getParameter('subdomain');
 
@@ -144,7 +120,7 @@ final class AuthenticationPresenter extends BasePresenter {
             $this->globalSession->start($this->getParameter(self::PARAM_GSID));
             $this->getUser()->logout(true);
         }
-        $this->flashMessage(_('Byl jste odhlášen.'), self::FLASH_SUCCESS);
+        $this->flashMessage(_('You were logged out.'), self::FLASH_SUCCESS);
         $this->loginBackLinkRedirect();
         $this->redirect('login');
     }
@@ -153,7 +129,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws BadTypeException
      */
-    public function actionLogin() {
+    public function actionLogin(): void {
         if ($this->isLoggedIn()) {
             /** @var ModelLogin $login */
             $login = $this->getUser()->getIdentity();
@@ -166,10 +142,10 @@ final class AuthenticationPresenter extends BasePresenter {
             if ($this->getParameter(self::PARAM_REASON)) {
                 switch ($this->getParameter(self::PARAM_REASON)) {
                     case self::REASON_TIMEOUT:
-                        $this->flashMessage(_('Byl(a) jste příliš dlouho neaktivní a pro jistotu Vás systém odhlásil.'), self::FLASH_INFO);
+                        $this->flashMessage(_('You\'ve been logged out due to inactivity.'), self::FLASH_INFO);
                         break;
                     case self::REASON_AUTH:
-                        $this->flashMessage(_('Stránka požaduje přihlášení.'), self::FLASH_ERROR);
+                        $this->flashMessage(_('You must be logged in to continue.'), self::FLASH_ERROR);
                         break;
                 }
             }
@@ -190,7 +166,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @throws AbortException
      */
-    public function actionRecover() {
+    public function actionRecover(): void {
         if ($this->isLoggedIn()) {
             $this->initialRedirect();
         }
@@ -216,7 +192,7 @@ final class AuthenticationPresenter extends BasePresenter {
     protected function createComponentLoginForm(): Form {
         $form = new Form($this, 'loginForm');
         $form->addText('id', _('Login or e-mail'))
-            ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'))
+            ->addRule(Form::FILLED, _('Insert login or email address.'))
             ->getControlPrototype()->addAttributes([
                 'class' => 'top form-control',
                 'autofocus' => true,
@@ -224,15 +200,15 @@ final class AuthenticationPresenter extends BasePresenter {
                 'autocomplete' => 'username',
             ]);
         $form->addPassword('password', _('Password'))
-            ->addRule(Form::FILLED, _('Zadejte heslo.'))->getControlPrototype()->addAttributes([
+            ->addRule(Form::FILLED, _('Type password.'))->getControlPrototype()->addAttributes([
                 'class' => 'bottom mb-3 form-control',
                 'placeholder' => _('Password'),
                 'autocomplete' => 'current-password',
             ]);
         $form->addSubmit('send', _('Log in'));
-        $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
+        $form->addProtection(_('The form has expired. Please send it again.'));
         $form->onSuccess[] = function (Form $form) {
-            return $this->loginFormSubmitted($form);
+            $this->loginFormSubmitted($form);
         };
         return $form;
     }
@@ -244,12 +220,12 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     protected function createComponentRecoverForm(): Form {
         $form = new Form();
-        $form->addText('id', _('Přihlašovací jméno nebo email'))
-            ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'));
+        $form->addText('id', _('Login or e-mail address'))
+            ->addRule(Form::FILLED, _('Insert login or email address.'));
 
-        $form->addSubmit('send', _('Pokračovat'));
+        $form->addSubmit('send', _('Continue'));
 
-        $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
+        $form->addProtection(_('The form has expired. Please send it again.'));
 
         $form->onSuccess[] = function (Form $form) {
             $this->recoverFormSubmitted($form);
@@ -261,7 +237,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @param Form $form
      * @throws AbortException
      */
-    private function loginFormSubmitted(Form $form) {
+    private function loginFormSubmitted(Form $form): void {
         $values = $form->getValues();
         try {
             // TODO use form->getValues()
@@ -281,7 +257,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws UnsupportedLanguageException
      */
-    private function recoverFormSubmitted(Form $form) {
+    private function recoverFormSubmitted(Form $form): void {
         $connection = $this->serviceAuthToken->getConnection();
         try {
             $values = $form->getValues();
@@ -290,7 +266,7 @@ final class AuthenticationPresenter extends BasePresenter {
             $login = $this->passwordAuthenticator->findLogin($values['id']);
             $this->accountManager->sendRecovery($login, $login->getPerson()->getPreferredLang() ?: $this->getLang());
             $email = Utils::cryptEmail($login->getPerson()->getInfo()->email);
-            $this->flashMessage(sprintf(_('Na email %s byly poslány další instrukce k obnovení přístupu.'), $email), self::FLASH_SUCCESS);
+            $this->flashMessage(sprintf(_('Further instructions for the recovery have been sent to %s.'), $email), self::FLASH_SUCCESS);
             $connection->commit();
             $this->redirect('login');
         } catch (AuthenticationException $exception) {
@@ -310,7 +286,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws Exception
      */
-    private function loginBackLinkRedirect($login = null) {
+    private function loginBackLinkRedirect($login = null): void {
         if (!$this->backlink) {
             return;
         }
@@ -341,7 +317,7 @@ final class AuthenticationPresenter extends BasePresenter {
             if (in_array($url->getHost(), $this->getContext()->getParameters()['authentication']['backlinkHosts'])) {
                 $this->redirectUrl((string)$url, 303);
             } else {
-                $this->flashMessage(sprintf(_('Nedovolený backlink %s.'), (string)$url), self::FLASH_ERROR);
+                $this->flashMessage(sprintf(_('Backlink %s not allowed'), (string)$url), self::FLASH_ERROR);
             }
         }
     }
@@ -349,7 +325,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @throws AbortException
      */
-    private function initialRedirect() {
+    private function initialRedirect(): void {
         if ($this->backlink) {
             $this->restoreRequest($this->backlink);
         }
@@ -358,7 +334,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     protected function beforeRender() {
         $this->getPageStyleContainer()->styleId = 'login';
-        $this->getPageStyleContainer()->mainContainerClassName = '';
+        $this->getPageStyleContainer()->mainContainerClassNames = [];
         parent::beforeRender();
     }
 }

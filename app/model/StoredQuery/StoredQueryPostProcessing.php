@@ -12,10 +12,9 @@ use Nette\SmartObject;
 abstract class StoredQueryPostProcessing {
     use SmartObject;
 
-    /** @var array */
-    protected $parameters;
+    protected array $parameters = [];
 
-    final public function resetParameters() {
+    final public function resetParameters(): void {
         $this->parameters = [];
     }
 
@@ -23,7 +22,7 @@ abstract class StoredQueryPostProcessing {
      * @param mixed $key
      * @param mixed $value
      */
-    final public function bindValue($key, $value) {
+    final public function bindValue($key, $value): void {
         $this->parameters[$key] = $value; // type is ignored so far
     }
 
@@ -31,11 +30,7 @@ abstract class StoredQueryPostProcessing {
         return true;
     }
 
-    /**
-     * @param \PDOStatement $data
-     * @return iterable
-     */
-    abstract public function processData(\PDOStatement $data);
+    abstract public function processData(\PDOStatement $data): iterable;
 
     abstract public function getDescription(): string;
 }

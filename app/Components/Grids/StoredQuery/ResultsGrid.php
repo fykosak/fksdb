@@ -4,7 +4,7 @@ namespace FKSDB\Components\Grids\StoredQuery;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\StoredQuery\StoredQuery;
-use FKSDB\Components\Controls\ResultsComponent;
+use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -20,8 +20,7 @@ use PDOException;
  */
 class ResultsGrid extends BaseGrid {
 
-    /** @var StoredQuery */
-    private $storedQuery;
+    private StoredQuery $storedQuery;
 
     /**
      * StoredQueryGrid constructor.
@@ -43,7 +42,7 @@ class ResultsGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
         try {

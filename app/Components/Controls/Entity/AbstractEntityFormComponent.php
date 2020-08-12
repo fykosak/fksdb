@@ -5,9 +5,14 @@ namespace FKSDB\Components\Controls\Entity;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\ModelException;
+use FKSDB\Messages\Message;
+use Nette\Application\AbortException;
+use Nette\Database\ConstraintViolationException;
 use Nette\Forms\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
+use Tracy\Debugger;
 
 /**
  * Class AbstractEntityFormControl
@@ -15,8 +20,7 @@ use Nette\Forms\Controls\SubmitButton;
  */
 abstract class AbstractEntityFormComponent extends BaseComponent {
 
-    /** @var bool */
-    protected $create;
+    protected bool $create;
 
     /**
      * AbstractEntityFormControl constructor.
@@ -53,9 +57,32 @@ abstract class AbstractEntityFormComponent extends BaseComponent {
         $this->configureForm($control->getForm());
         $this->appendSubmitButton($control->getForm())
             ->onClick[] = function (SubmitButton $button) {
-            $this->handleFormSuccess($button->getForm());
+            $this->handleSuccess($button);
         };
         return $control;
+    }
+
+    /**
+     * @param SubmitButton $button
+     * @return void
+     * @throws AbortException
+     */
+    private function handleSuccess(SubmitButton $button): void {
+        try {
+            $this->handleFormSuccess($button->getForm());
+        } catch (ModelException $exception) {
+            Debugger::log($exception);
+            $previous = $exception->getPrevious();
+            if ($previous && $previous instanceof ConstraintViolationException) {
+                $this->flashMessage($previous->getMessage(), Message::LVL_DANGER);
+            } else {
+                $this->flashMessage(_('Error when storing model'), Message::LVL_DANGER);
+            }
+        } catch (AbortException $exception) {
+            throw $exception;
+        } catch (\Throwable $exception) {
+            $this->flashMessage(_('Error'), Message::LVL_DANGER);
+        }
     }
 
     protected function appendSubmitButton(Form $form): SubmitButton {
@@ -65,21 +92,16 @@ abstract class AbstractEntityFormComponent extends BaseComponent {
     /**
      * @param Form $form
      * @return void
+     * @throws AbortException
+     * @throws ModelException
      */
-    abstract protected function handleFormSuccess(Form $form);
+    abstract protected function handleFormSuccess(Form $form): void;
 
-    /**
-     * @return void
-     */
-    public function render() {
+    public function render(): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . '@layout.latte');
         $this->template->render();
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     */
-    protected function configureForm(Form $form) {
+    protected function configureForm(Form $form): void {
     }
 }

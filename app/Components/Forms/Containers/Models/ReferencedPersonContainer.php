@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Containers\Models;
 
-use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Components\DatabaseReflection\OmittedControlException;
+use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\DBReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\AddressFactory;
@@ -27,9 +27,9 @@ use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Utils\JsonException;
-use Persons\IModifiabilityResolver;
-use Persons\IVisibilityResolver;
-use Persons\ReferencedPersonHandler;
+use FKSDB\Persons\IModifiabilityResolver;
+use FKSDB\Persons\IVisibilityResolver;
+use FKSDB\Persons\ReferencedPersonHandler;
 
 /**
  * Class ReferencedPersonContainer
@@ -42,28 +42,27 @@ class ReferencedPersonContainer extends ReferencedContainer {
     const EXTRAPOLATE = 0x4;
     const HAS_DELIVERY = 0x8;
 
-    /** @var IModifiabilityResolver */
-    public $modifiabilityResolver;
-    /** @var IVisibilityResolver */
-    public $visibilityResolver;
-    /** @var int */
-    public $acYear;
-    /** @var array */
-    private $fieldsDefinition;
-    /** @var ServicePerson */
-    protected $servicePerson;
-    /** @var SingleReflectionFormFactory */
-    protected $singleReflectionFormFactory;
-    /**@var FlagFactory */
-    protected $flagFactory;
-    /** @var AddressFactory */
-    protected $addressFactory;
-    /** @var PersonScheduleFactory */
-    private $personScheduleFactory;
-    /** @var ModelEvent */
-    protected $event;
-    /** @var bool */
-    private $configured = false;
+    public IModifiabilityResolver $modifiabilityResolver;
+
+    public IVisibilityResolver $visibilityResolver;
+
+    public int $acYear;
+
+    private array $fieldsDefinition;
+
+    protected ServicePerson $servicePerson;
+
+    protected SingleReflectionFormFactory $singleReflectionFormFactory;
+
+    protected FlagFactory $flagFactory;
+
+    protected AddressFactory $addressFactory;
+
+    private PersonScheduleFactory $personScheduleFactory;
+
+    protected ?ModelEvent $event;
+
+    private bool $configured = false;
 
     /**
      * ReferencedPersonContainer constructor.
@@ -81,7 +80,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
         IVisibilityResolver $visibilityResolver,
         int $acYear,
         array $fieldsDefinition,
-        $event,
+        ?ModelEvent $event,
         bool $allowClear
     ) {
         parent::__construct($container, $allowClear);
@@ -97,21 +96,13 @@ class ReferencedPersonContainer extends ReferencedContainer {
         });
     }
 
-    /**
-     * AbstractReferencedPersonFactory constructor.
-     * @param AddressFactory $addressFactory
-     * @param FlagFactory $flagFactory
-     * @param ServicePerson $servicePerson
-     * @param SingleReflectionFormFactory $singleReflectionFormFactory
-     * @param PersonScheduleFactory $personScheduleFactory
-     */
     public function injectPrimary(
         AddressFactory $addressFactory,
         FlagFactory $flagFactory,
         ServicePerson $servicePerson,
         SingleReflectionFormFactory $singleReflectionFormFactory,
         PersonScheduleFactory $personScheduleFactory
-    ) {
+    ): void {
         $this->servicePerson = $servicePerson;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->flagFactory = $flagFactory;
@@ -128,17 +119,17 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @throws NotImplementedException
      * @throws OmittedControlException
      */
-    protected function configure() {
+    protected function configure(): void {
         foreach ($this->fieldsDefinition as $sub => $fields) {
             $subContainer = new ContainerWithOptions();
             if ($sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
                 $subContainer->setOption('showGroup', true);
-                $subContainer->setOption('label', _('Doručovací adresa'));
+                $subContainer->setOption('label', _('Deliver address'));
             } elseif ($sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
                 $subContainer->setOption('showGroup', true);
-                $label = _('Trvalá adresa');
+                $label = _('Permanent address');
                 if (isset($this[ReferencedPersonHandler::POST_CONTACT_DELIVERY])) {
-                    $label .= ' ' . _('(je-li odlišná od doručovací)');
+                    $label .= ' ' . _('(when different from delivery address)');
                 }
                 $subContainer->setOption('label', $label);
             }
@@ -163,7 +154,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
                                 return false;
                             }
                             return true;
-                        }, _('S e-mailem %value byla nalezena (formálně) jiná (ale pravděpodobně duplicitní) osoba, a tak ve formuláři nahradila původní.'));
+                        }, _('There is (formally) different person with email %value. Probably it is a duplicate so it substituted original data in the form.'));
                 }
 
                 $subContainer->addComponent($control, $fieldName);
@@ -178,7 +169,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @return void
      * @throws JsonException
      */
-    public function setModel(IModel $model = null, string $mode = ReferencedId::MODE_NORMAL) {
+    public function setModel(IModel $model = null, string $mode = ReferencedId::MODE_NORMAL): void {
 
         $modifiable = $model ? $this->modifiabilityResolver->isModifiable($model) : true;
         $resolution = $model ? $this->modifiabilityResolver->getResolutionMode($model) : ReferencedPersonHandler::RESOLUTION_OVERWRITE;
@@ -291,13 +282,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
 
     }
 
-    /**
-     * @param BaseControl $control
-     * @param string $fieldName
-     * @param array $metadata
-     * @return void
-     */
-    protected function appendMetadata(BaseControl $control, string $fieldName, array $metadata) {
+    protected function appendMetadata(BaseControl $control, string $fieldName, array $metadata): void {
         foreach ($metadata as $key => $value) {
             switch ($key) {
                 case 'required':
@@ -305,9 +290,9 @@ class ReferencedPersonContainer extends ReferencedContainer {
                         $conditioned = $control->addConditionOn($this->getReferencedId(), Form::FILLED);
 
                         if ($fieldName == 'agreed') { // NOTE: this may need refactoring when more customization requirements occurre
-                            $conditioned->addRule(Form::FILLED, _('Bez souhlasu nelze bohužel pokračovat.'));
+                            $conditioned->addRule(Form::FILLED, _('Confirmation is necessary to proceed.'));
                         } else {
-                            $conditioned->addRule(Form::FILLED, _('Pole %label je povinné.'));
+                            $conditioned->addRule(Form::FILLED, _('Field %label is required.'));
                         }
                     }
                     break;
@@ -324,12 +309,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
         }
     }
 
-    /**
-     * @param IComponent $component
-     * @param bool $value
-     * @return void
-     */
-    protected function setWriteOnly(IComponent $component, bool $value) {
+    protected function setWriteOnly(IComponent $component, bool $value): void {
         if ($component instanceof IWriteOnly) {
             $component->setWriteOnly($value);
         } elseif ($component instanceof IContainer) {

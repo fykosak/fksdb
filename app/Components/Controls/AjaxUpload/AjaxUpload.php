@@ -9,6 +9,7 @@ use FKSDB\Logging\ILogger;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelContestant;
+use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\ORM\Tables\TypedTableSelection;
@@ -19,6 +20,7 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Nette\Http\FileUpload;
 use Nette\Http\Response;
@@ -31,11 +33,9 @@ use FKSDB\Modules\PublicModule\SubmitPresenter;
  */
 class AjaxUpload extends ReactComponent {
 
-    /** @var ServiceSubmit */
-    private $serviceSubmit;
+    private ServiceSubmit $serviceSubmit;
 
-    /** @var UploadedStorage */
-    private $uploadedStorage;
+    private UploadedStorage $uploadedStorage;
 
     /** @var TypedTableSelection */
     private $availableTasks;
@@ -43,16 +43,9 @@ class AjaxUpload extends ReactComponent {
     /**@var ModelContestant */
     private $contestant;
 
-    /**@var SubmitHandlerFactory */
-    private $submitHandlerFactory;
+    private SubmitHandlerFactory $submitHandlerFactory;
 
-    /**
-     * @param ServiceSubmit $serviceSubmit
-     * @param UploadedStorage $uploadedStorage
-     * @param SubmitHandlerFactory $submitHandlerFactory
-     * @return void
-     */
-    public function injectPrimary(ServiceSubmit $serviceSubmit, UploadedStorage $uploadedStorage, SubmitHandlerFactory $submitHandlerFactory) {
+    public function injectPrimary(ServiceSubmit $serviceSubmit, UploadedStorage $uploadedStorage, SubmitHandlerFactory $submitHandlerFactory): void {
         $this->serviceSubmit = $serviceSubmit;
         $this->uploadedStorage = $uploadedStorage;
         $this->submitHandlerFactory = $submitHandlerFactory;
@@ -91,9 +84,26 @@ class AjaxUpload extends ReactComponent {
         /** @var ModelTask $task */
         foreach ($this->availableTasks as $task) {
             $submit = $this->serviceSubmit->findByContestant($this->contestant->ct_id, $task->task_id);
-            $data[$task->task_id] = ServiceSubmit::serializeSubmit($submit, $task, $this->getPresenter());
+            $data[$task->task_id] = self::serializeSubmit($submit, $task, $this->getPresenter());
         }
         return json_encode($data);
+    }
+
+    /**
+     * @param ModelSubmit|null $submit
+     * @param ModelTask $task
+     * @param Presenter $presenter
+     * @return array
+     * @throws InvalidLinkException
+     */
+    public static function serializeSubmit($submit, ModelTask $task, Presenter $presenter): array {
+        return [
+            'submitId' => $submit ? $submit->submit_id : null,
+            'name' => $task->getFQName(),
+            'href' => $submit ? $presenter->link('download', ['id' => $submit->submit_id]) : null,
+            'taskId' => $task->task_id,
+            'deadline' => sprintf(_('Termín %s'), $task->submit_deadline),
+        ];
     }
 
     /**
@@ -102,7 +112,7 @@ class AjaxUpload extends ReactComponent {
      * @throws InvalidLinkException
      * @throws BadTypeException
      */
-    public function handleUpload() {
+    public function handleUpload(): void {
         $response = new ReactResponse();
 
         $files = $this->getHttpRequest()->getFiles();
@@ -133,7 +143,7 @@ class AjaxUpload extends ReactComponent {
             $this->serviceSubmit->getConnection()->commit();
             $response->addMessage(new Message(_('Upload successful'), ILogger::SUCCESS));
             $response->setAct('upload');
-            $response->setData($this->serviceSubmit->serializeSubmit($submit, $task, $this->getPresenter()));
+            $response->setData(self::serializeSubmit($submit, $task, $this->getPresenter()));
             $this->getPresenter()->sendResponse($response);
         }
     }
@@ -144,7 +154,7 @@ class AjaxUpload extends ReactComponent {
      * @throws InvalidLinkException
      * @throws BadTypeException
      */
-    public function handleRevoke() {
+    public function handleRevoke(): void {
         $submitId = $this->getReactRequest()->requestData['submitId'];
         $logger = new MemoryLogger();
         $data = $this->submitHandlerFactory->handleRevoke($this->getPresenter(), $logger, $submitId);
@@ -164,7 +174,7 @@ class AjaxUpload extends ReactComponent {
      * @throws ForbiddenRequestException
      * @throws NotFoundException
      */
-    public function handleDownload() {
+    public function handleDownload(): void {
         $submitId = $this->getReactRequest()->requestData['submitId'];
         $logger = new MemoryLogger();
         $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $logger, $submitId);

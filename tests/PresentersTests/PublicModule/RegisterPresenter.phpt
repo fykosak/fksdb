@@ -4,8 +4,9 @@ namespace FKSDB\Tests\PresentersTests\PublicModule;
 
 $container = require '../../bootstrap.php';
 
-use Authentication\LoginUserStorage;
+use FKSDB\Authentication\LoginUserStorage;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
+use Nette\Application\IPresenter;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
@@ -16,15 +17,7 @@ use Tester\Assert;
 
 class RegisterPresenterTest extends DatabaseTestCase {
 
-    /**
-     * @var Container
-     */
-    private $container;
-
-    /**
-     * @var RegisterPresenter
-     */
-    private $fixture;
+    private IPresenter $fixture;
 
     /**
      * RegisterPresenterTest constructor.
@@ -32,17 +25,16 @@ class RegisterPresenterTest extends DatabaseTestCase {
      */
     public function __construct(Container $container) {
         parent::__construct($container);
-        $this->container = $container;
     }
 
     protected function setUp() {
         parent::setUp();
 
-        $presenterFactory = $this->container->getByType(IPresenterFactory::class);
+        $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);
         $this->fixture = $presenterFactory->createPresenter('Public:Register');
         $this->fixture->autoCanonicalize = false;
 
-        $this->container->getByType(LoginUserStorage::class)->setPresenter($this->fixture);
+        $this->getContainer()->getByType(LoginUserStorage::class)->setPresenter($this->fixture);
     }
 
     public function testDispatch() {

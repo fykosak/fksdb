@@ -10,6 +10,8 @@ use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPersonInfo;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -19,19 +21,16 @@ use FKSDB\ORM\Models\ModelPersonInfo;
 class ServicePersonInfo extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    public function getModelClassName(): string {
-        return ModelPersonInfo::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_PERSON_INFO;
-    }
-
     /**
-     * @param array $data
-     * @return ModelPersonInfo
+     * ServicePersonInfo constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
      */
-    public function createNewModel(array $data): IModel {
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_PERSON_INFO, ModelPersonInfo::class);
+    }
+
+    public function createNewModel(array $data): ModelPersonInfo {
         if (isset($data['agreed']) && $data['agreed'] == '1') {
             $data['agreed'] = new DateTime();
         }
@@ -54,13 +53,7 @@ class ServicePersonInfo extends AbstractServiceSingle {
         return parent::updateModel2($model, $data);
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param ModelPersonInfo|null $info
-     * @param array $data
-     * @return ModelPersonInfo
-     */
-    public function store(ModelPerson $person, $info, array $data): ModelPersonInfo {
+    public function store(ModelPerson $person, ?ModelPersonInfo $info, array $data): ModelPersonInfo {
         if ($info) {
             $this->updateModel2($info, $data);
             return $this->refresh($info);

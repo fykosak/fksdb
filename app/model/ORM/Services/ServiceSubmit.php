@@ -2,30 +2,34 @@
 
 namespace FKSDB\ORM\Services;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\Presenter;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @method ModelSubmit findByPrimary($key)
+ * @method ModelSubmit createNewModel(array $data)
+ * @method ModelSubmit refresh(AbstractModelSingle $model)
  */
 class ServiceSubmit extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    /** @var array */
-    private $submitCache = [];
+    private array $submitCache = [];
 
-    public function getModelClassName(): string {
-        return ModelSubmit::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_SUBMIT;
+    /**
+     * ServiceSubmit constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
+     */
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_SUBMIT, ModelSubmit::class);
     }
 
     /**
@@ -33,12 +37,12 @@ class ServiceSubmit extends AbstractServiceSingle {
      *
      * @param int $ctId
      * @param int $taskId
+     * @param bool $useCache
      * @return ModelSubmit|null
      */
-    public function findByContestant(int $ctId, int $taskId) {
+    public function findByContestant(int $ctId, int $taskId, bool $useCache = true): ?ModelSubmit {
         $key = $ctId . ':' . $taskId;
-
-        if (!array_key_exists($key, $this->submitCache)) {
+        if (!isset($this->submitCache[$key]) || !$useCache) {
             $result = $this->getTable()->where([
                 'ct_id' => $ctId,
                 'task_id' => $taskId,
@@ -58,20 +62,22 @@ class ServiceSubmit extends AbstractServiceSingle {
             ->select(DbNames::TAB_TASK . '.*');
     }
 
-    /**
-     * @param ModelSubmit|null $submit
-     * @param ModelTask $task
-     * @param Presenter $presenter
-     * @return array
-     * @throws InvalidLinkException
-     */
-    public static function serializeSubmit($submit, ModelTask $task, Presenter $presenter): array {
+    public function store(?ModelSubmit $submit, array $data): ModelSubmit {
+        if (is_null($submit)) {
+            return $this->createNewModel($data);
+        } else {
+            $this->updateModel2($submit, $data);
+            return $this->refresh($submit);
+        }
+    }
+
+    public static function serializeSubmit(?ModelSubmit $submit, ModelTask $task, ?int $studyYear): array {
         return [
             'submitId' => $submit ? $submit->submit_id : null,
             'name' => $task->getFQName(),
-            'href' => $submit ? $presenter->link('download', ['id' => $submit->submit_id]) : null,
             'taskId' => $task->task_id,
-            'deadline' => sprintf(_('Termín %s'), $task->submit_deadline),
+            'deadline' => sprintf(_('Deadline %s'), $task->submit_deadline),
+            'disabled' => !in_array($studyYear, array_keys($task->getStudyYears())),
         ];
     }
 }

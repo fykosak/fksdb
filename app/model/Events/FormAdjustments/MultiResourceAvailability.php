@@ -32,8 +32,8 @@ class MultiResourceAvailability extends AbstractAdjustment {
     private $excludeStates;
     /** @var string */
     private $message;
-    /** @var Context */
-    private $database;
+
+    private Context $database;
 
     /**
      * @param array|string $fields
@@ -64,13 +64,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
         $this->excludeStates = $excludeStates;
     }
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return void
-     */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder) {
+    protected function _adjust(Form $form, Machine $machine, Holder $holder): void {
         $groups = $holder->getGroupedSecondaryHolders();
         $groups[] = [
             'service' => $holder->getPrimaryHolder()->getService(),
@@ -158,7 +152,6 @@ class MultiResourceAvailability extends AbstractAdjustment {
                 $capacities[$option['value']] = $option['capacity'];
             }
         }
-
 
         foreach ($controls as $control) {
             $newItems = [];

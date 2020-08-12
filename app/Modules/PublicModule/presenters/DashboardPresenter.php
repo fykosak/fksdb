@@ -8,7 +8,7 @@ use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
-use News;
+use FKSDB\News\News;
 
 /**
  * Just proof of concept.
@@ -16,14 +16,10 @@ use News;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DashboardPresenter extends BasePresenter {
-    /** @var News */
-    private $news;
 
-    /**
-     * @param News $news
-     * @return void
-     */
-    public function injectNews(News $news) {
+    private News $news;
+
+    public function injectNews(News $news): void {
         $this->news = $news;
     }
 
@@ -31,7 +27,7 @@ class DashboardPresenter extends BasePresenter {
      * @throws AbortException
      * @throws ForbiddenRequestException
      */
-    protected function unauthorizedAccess() {
+    protected function unauthorizedAccess(): void {
         if ($this->getParam(AuthenticationPresenter::PARAM_DISPATCH)) {
             parent::unauthorizedAccess();
         } else {
@@ -39,13 +35,13 @@ class DashboardPresenter extends BasePresenter {
         }
     }
 
-    public function authorizedDefault() {
+    public function authorizedDefault(): void {
         $login = $this->getUser()->getIdentity();
         $access = (bool)$login;
         $this->setAuthorized($access);
     }
 
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Dashboard'), 'fa fa-dashboard'));
     }
 
@@ -54,10 +50,9 @@ class DashboardPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws UnsupportedLanguageException
      */
-    public function renderDefault() {
+    public function renderDefault(): void {
         foreach ($this->news->getNews($this->getSelectedContest(), $this->getLang()) as $new) {
             $this->flashMessage($new);
         }
     }
-
 }

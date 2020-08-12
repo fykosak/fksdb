@@ -16,8 +16,7 @@ class Authentication {
     const PARAM_GSID = 'gsid';
     const FLAG_SSO_LOGIN = 'sso';
 
-    /** @var IGlobalSession */
-    private $globalSession;
+    private IGlobalSession $globalSession;
 
     /** @var string */
     private $loginURL;
@@ -37,10 +36,7 @@ class Authentication {
         $this->logoutURL = $logoutURL;
     }
 
-    /**
-     * @return bool
-     */
-    public function isAuthenticated() {
+    public function isAuthenticated(): bool {
         return isset($this->globalSession[IGlobalSession::UID]);
     }
 
@@ -54,7 +50,7 @@ class Authentication {
     /**
      * @param null $backlink
      */
-    public function login($backlink = null) {
+    public function login($backlink = null): void {
         $backlink = $backlink ?: $this->getDefaultBacklink();
 
         $data = [
@@ -72,7 +68,7 @@ class Authentication {
     /**
      * @param null $backlink
      */
-    public function logout($backlink = null) {
+    public function logout($backlink = null): void {
         $backlink = $backlink ?: $this->getDefaultBacklink();
 
         $data = [
@@ -111,5 +107,4 @@ class Authentication {
 
         return $url;
     }
-
 }

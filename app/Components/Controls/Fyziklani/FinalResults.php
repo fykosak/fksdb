@@ -15,11 +15,9 @@ use Nette\DI\Container;
  */
 class FinalResults extends BaseComponent {
 
-    /** @var ServiceFyziklaniTeam|null */
-    private $serviceFyziklaniTeam;
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    /** @var ModelEvent */
-    private $event;
+    private ModelEvent$event;
 
     /**
      * FinalResults constructor.
@@ -31,11 +29,7 @@ class FinalResults extends BaseComponent {
         $this->event = $event;
     }
 
-    /**
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @return void
-     */
-    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
@@ -70,12 +64,9 @@ class FinalResults extends BaseComponent {
         return new ResultsTotalGrid($this->event, $this->getContext());
     }
 
-    /**
-     * @return void
-     */
-    public function render() {
+    public function render(): void {
         $this->template->that = $this;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'FinalResults.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.finalResults.latte');
         $this->template->render();
     }
 }

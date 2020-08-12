@@ -13,13 +13,10 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     protected function beforeRender() {
         $this->getPageStyleContainer()->styleId = 'theme-light common';
-        $this->getPageStyleContainer()->navBarClassName = 'bg-dark navbar-dark';
+        $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
         parent::beforeRender();
     }
 
-    /**
-     * @return string[]
-     */
     protected function getNavRoots(): array {
         $roots = parent::getNavRoots();
         $roots[] = 'Common.Dashboard.default';
@@ -32,7 +29,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @param string|null $privilege
      * @return bool
      */
-    protected function isAnyContestAuthorized($resource, string $privilege): bool {
+    protected function isAnyContestAuthorized($resource, ?string $privilege): bool {
         return $this->getContestAuthorizator()->isAllowedForAnyContest($resource, $privilege);
     }
 }

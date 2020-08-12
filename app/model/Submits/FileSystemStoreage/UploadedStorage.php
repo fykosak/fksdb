@@ -73,22 +73,18 @@ class UploadedStorage implements ISubmitStorage {
         $this->contestMap = $contestMap;
     }
 
-    /**
-     * @param IStorageProcessing $processing
-     * @return void
-     */
-    public function addProcessing(IStorageProcessing $processing) {
+    public function addProcessing(IStorageProcessing $processing): void {
         $this->processings[] = $processing;
     }
 
-    public function beginTransaction() {
+    public function beginTransaction(): void {
         $this->todo = [];
     }
 
     /**
      * @throws StorageException for unsuccessful commit
      */
-    public function commit() {
+    public function commit(): void {
         if ($this->todo === null) {
             throw new InvalidStateException('Cannot commit out of transaction.');
         }
@@ -141,7 +137,7 @@ class UploadedStorage implements ISubmitStorage {
      *
      * @throws InvalidStateException
      */
-    public function rollback() {
+    public function rollback(): void {
         if ($this->todo === null) {
             throw new InvalidStateException('Cannot rollback out of transaction.');
         }
@@ -154,7 +150,7 @@ class UploadedStorage implements ISubmitStorage {
      * @param ModelSubmit $submit
      * @return void
      */
-    public function storeFile($filename, ModelSubmit $submit) {
+    public function storeFile($filename, ModelSubmit $submit): void {
         if ($this->todo === null) {
             throw new InvalidStateException('Cannot store file out of transaction.');
         }
@@ -170,7 +166,7 @@ class UploadedStorage implements ISubmitStorage {
      * @param int $type
      * @return null|string
      */
-    public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED) {
+    public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED): ?string {
         $files = $this->retrieveFiles($submit);
         if ($type == self::TYPE_ORIGINAL) {
             $files = array_filter($files, function (\SplFileInfo $file) {
@@ -203,11 +199,7 @@ class UploadedStorage implements ISubmitStorage {
         return (bool)$this->retrieveFile($submit);
     }
 
-    /**
-     * @param ModelSubmit $submit
-     * @return void
-     */
-    public function deleteFile(ModelSubmit $submit) {
+    public function deleteFile(ModelSubmit $submit): void {
         $fails = [];
         $files = $this->retrieveFiles($submit);
         foreach ($files as $file) {

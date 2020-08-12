@@ -3,8 +3,8 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\DBReflection\FieldLevelPermission;
+use FKSDB\DBReflection\DBReflectionFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\AbstractModelSingle;
@@ -29,7 +29,7 @@ use NiftyGrid\Grid;
 use NiftyGrid\GridException;
 use NiftyGrid\GridPaginator;
 use PePa\CSVResponse;
-use SQL\SearchableDataSource;
+use FKSDB\SQL\SearchableDataSource;
 
 /**
  *
@@ -38,10 +38,10 @@ use SQL\SearchableDataSource;
 abstract class BaseGrid extends Grid {
     /** @persistent string */
     public $searchTerm;
-    /** @var TableReflectionFactory */
-    protected $tableReflectionFactory;
-    /** @var Container */
-    private $container;
+
+    protected DBReflectionFactory $tableReflectionFactory;
+
+    private Container $container;
 
     /**
      * BaseGrid constructor.
@@ -53,19 +53,11 @@ abstract class BaseGrid extends Grid {
         $container->callInjects($this);
     }
 
-    /**
-     * @param TableReflectionFactory $tableReflectionFactory
-     * @return void
-     */
-    public function injectTableReflectionFactory(TableReflectionFactory $tableReflectionFactory) {
+    public function injectTableReflectionFactory(DBReflectionFactory $tableReflectionFactory): void {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    /**
-     * @param Presenter $presenter
-     * @return void
-     */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         try {
             $this->setDataSource($this->getData());
         } catch (NotImplementedException $exception) {
@@ -111,7 +103,7 @@ abstract class BaseGrid extends Grid {
     /**
      * @throws GridException
      */
-    public function render() {
+    public function render(): void {
         $paginator = $this->getPaginator();
 
         // this has to be done already here (and in the parent call again :-( )
@@ -218,7 +210,7 @@ abstract class BaseGrid extends Grid {
             if (!$model instanceof AbstractModelSingle) {
                 $model = $this->getModelClassName()::createFromActiveRow($model);
             }
-            return $factory->renderValue($model, $userPermission);
+            return $factory->render($model, $userPermission);
         })->setSortable(false);
     }
 
@@ -233,7 +225,7 @@ abstract class BaseGrid extends Grid {
         $factory = $this->tableReflectionFactory->loadColumnFactory($factoryName);
         return $this->addColumn(str_replace('.', '__', $factoryName), $factory->getTitle())->setRenderer(function ($row) use ($factory, $accessCallback) {
             $model = $accessCallback($row);
-            return $factory->renderValue($model, 1);
+            return $factory->render($model, 1);
         });
     }
 
@@ -251,7 +243,7 @@ abstract class BaseGrid extends Grid {
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    protected function addColumns(array $fields) {
+    protected function addColumns(array $fields): void {
         foreach ($fields as $name) {
             $this->addReflectionColumn($name);
         }
@@ -337,7 +329,7 @@ abstract class BaseGrid extends Grid {
     /**
      * @throws AbortException
      */
-    public function handleCsv() {
+    public function handleCsv(): void {
         $columns = $this['columns']->components;
         $rows = $this->dataSource->getData();
         $data = [];

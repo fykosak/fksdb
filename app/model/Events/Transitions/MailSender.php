@@ -18,7 +18,7 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\ORM\Services\ServicePerson;
-use Mail\MailTemplateFactory;
+use FKSDB\Mail\MailTemplateFactory;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
@@ -52,19 +52,15 @@ class MailSender {
      */
     private $addressees;
 
-    /** @var MailTemplateFactory */
-    private $mailTemplateFactory;
+    private MailTemplateFactory $mailTemplateFactory;
 
-    /** @var AccountManager */
-    private $accountManager;
+    private AccountManager $accountManager;
 
-    /** @var ServiceAuthToken */
-    private $serviceAuthToken;
+    private ServiceAuthToken $serviceAuthToken;
 
-    /** @var ServicePerson */
-    private $servicePerson;
-    /** @var ServiceEmailMessage */
-    private $serviceEmailMessage;
+    private ServicePerson $servicePerson;
+
+    private ServiceEmailMessage $serviceEmailMessage;
 
     /**
      * MailSender constructor.
@@ -100,7 +96,7 @@ class MailSender {
      * @return void
      * @throws UnsupportedLanguageException
      */
-    public function __invoke(Transition $transition, Holder $holder) {
+    public function __invoke(Transition $transition, Holder $holder): void {
         $this->send($transition, $holder);
     }
 
@@ -110,7 +106,7 @@ class MailSender {
      * @return void
      * @throws UnsupportedLanguageException
      */
-    private function send(Transition $transition, Holder $holder) {
+    private function send(Transition $transition, Holder $holder): void {
         $personIds = $this->resolveAdressees($transition, $holder);
         $persons = $this->servicePerson->getTable()
             ->where('person.person_id', $personIds)

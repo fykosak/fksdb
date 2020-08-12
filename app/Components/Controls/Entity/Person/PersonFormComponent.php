@@ -4,13 +4,12 @@ namespace FKSDB\Components\Controls\Entity\Person;
 
 use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
 use FKSDB\Components\Controls\Entity\IEditEntityForm;
-use FKSDB\Components\DatabaseReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
-use FKSDB\Components\DatabaseReflection\OmittedControlException;
+use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\DBReflection\FieldLevelPermission;
+use FKSDB\DBReflection\OmittedControlException;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\ModelException;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\Messages\Message;
@@ -21,14 +20,11 @@ use FKSDB\ORM\Services\ServiceAddress;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonInfo;
 use FKSDB\ORM\Services\ServicePostContact;
-use FKSDB\ORM\ServicesMulti\ServiceMPostContact;
 use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
-use Nette\Database\UniqueConstraintViolationException;
 use Nette\Forms\Form;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
-use Tracy\Debugger;
 
 /**
  * Class AbstractPersonFormControl
@@ -42,29 +38,21 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
     const PERSON_CONTAINER = 'person';
     const PERSON_INFO_CONTAINER = 'person_info';
 
-    /** @var SingleReflectionFormFactory */
-    protected $singleReflectionFormFactory;
+    protected SingleReflectionFormFactory $singleReflectionFormFactory;
 
-    /** @var AddressFactory */
-    protected $addressFactory;
+    protected AddressFactory $addressFactory;
 
-    /** @var ServicePerson */
-    protected $servicePerson;
+    protected ServicePerson $servicePerson;
 
-    /** @var ServicePersonInfo */
-    protected $servicePersonInfo;
+    protected ServicePersonInfo $servicePersonInfo;
 
-    /** @var ServiceMPostContact */
-    private $servicePostContact;
+    private ServicePostContact $servicePostContact;
 
-    /** @var ServiceAddress */
-    private $serviceAddress;
+    private ServiceAddress $serviceAddress;
 
-    /** @var MemoryLogger */
-    private $logger;
+    private MemoryLogger $logger;
 
-    /** @var FieldLevelPermission */
-    private $userPermission;
+    private FieldLevelPermission $userPermission;
 
     /** @var ModelPerson */
     private $model;
@@ -81,15 +69,6 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
         $this->logger = new MemoryLogger();
     }
 
-    /**
-     * @param SingleReflectionFormFactory $singleReflectionFormFactory
-     * @param ServicePerson $servicePerson
-     * @param ServicePersonInfo $servicePersonInfo
-     * @param AddressFactory $addressFactory
-     * @param ServicePostContact $servicePostContact
-     * @param ServiceAddress $serviceAddress
-     * @return void
-     */
     public function injectFactories(
         SingleReflectionFormFactory $singleReflectionFormFactory,
         ServicePerson $servicePerson,
@@ -97,7 +76,7 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
         AddressFactory $addressFactory,
         ServicePostContact $servicePostContact,
         ServiceAddress $serviceAddress
-    ) {
+    ): void {
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
@@ -113,7 +92,7 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    protected function configureForm(Form $form) {
+    protected function configureForm(Form $form): void {
         $fields = $this->getContext()->getParameters()['common']['editPerson'];
         foreach ($fields as $table => $rows) {
             switch ($table) {
@@ -138,7 +117,7 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
      * @return void
      * @throws BadTypeException
      */
-    public function setModel(AbstractModelSingle $model) {
+    public function setModel(AbstractModelSingle $model): void {
         $this->model = $model;
         $this->getForm()->setDefaults([
             self::PERSON_CONTAINER => $model->toArray(),
@@ -153,31 +132,20 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
      * @return void
      * @throws AbortException
      */
-    protected function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form): void {
         $connection = $this->servicePerson->getConnection();
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values, true);
-        try {
-            $connection->beginTransaction();
-            $this->logger->clear();
-            $person = $this->servicePerson->store($this->create ? null : $this->model, $data[self::PERSON_CONTAINER]);
-            $this->servicePersonInfo->store($person, $person->getInfo(), $data[self::PERSON_INFO_CONTAINER]);
-            $this->storeAddresses($person, $data);
+        $connection->beginTransaction();
+        $this->logger->clear();
+        $person = $this->servicePerson->store($this->create ? null : $this->model, $data[self::PERSON_CONTAINER]);
+        $this->servicePersonInfo->store($person, $person->getInfo(), $data[self::PERSON_INFO_CONTAINER]);
+        $this->storeAddresses($person, $data);
 
-            $connection->commit();
-            $this->logger->log(new Message($this->create ? _('Person has been created') : _('Data has been updated'), Message::LVL_SUCCESS));
-            FlashMessageDump::dump($this->logger, $this->getPresenter(), true);
-            $this->getPresenter()->redirect('this');
-        } catch (ModelException $exception) {
-            $connection->rollBack();
-            $previous = $exception->getPrevious();
-            if ($previous && $previous instanceof UniqueConstraintViolationException) {
-                $this->flashMessage(sprintf(_('Person with same data already exists: "%s"'), $previous->errorInfo[2] ?? ''), Message::LVL_DANGER);
-                return;
-            }
-            Debugger::log($exception);
-            $this->flashMessage(_('Error'), Message::LVL_DANGER);
-        }
+        $connection->commit();
+        $this->logger->log(new Message($this->create ? _('Person has been created') : _('Data has been updated'), Message::LVL_SUCCESS));
+        FlashMessageDump::dump($this->logger, $this->getPresenter(), true);
+        $this->getPresenter()->redirect('this');
     }
 
     public static function mapAddressContainerNameToType(string $containerName): string {
@@ -191,12 +159,7 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
         }
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param array $data
-     * @return void
-     */
-    private function storeAddresses(ModelPerson $person, array $data) {
+    private function storeAddresses(ModelPerson $person, array $data): void {
         foreach ([self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT] as $type) {
             $datum = FormUtils::removeEmptyValues($data[$type]);
             $shortType = self::mapAddressContainerNameToType($type);

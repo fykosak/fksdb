@@ -23,26 +23,17 @@ use Nette\Utils\DateTime;
  */
 class ResultsAndStatistics extends FyziklaniReactControl {
 
-    /** @var ServiceFyziklaniTeam */
-    private $serviceFyziklaniTeam;
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    /** @var ServiceFyziklaniTask */
-    private $serviceFyziklaniTask;
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
 
-    /** @var ServiceFyziklaniSubmit */
-    private $serviceFyziklaniSubmit;
+    private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
 
-    /**
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @return void
-     */
     public function injectPrimary(
         ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
         ServiceFyziklaniTask $serviceFyziklaniTask,
         ServiceFyziklaniTeam $serviceFyziklaniTeam
-    ) {
+    ): void {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
@@ -56,7 +47,7 @@ class ResultsAndStatistics extends FyziklaniReactControl {
      * @return void
      * @throws InvalidLinkException
      */
-    protected function configure() {
+    protected function configure(): void {
         $this->addAction('refresh', $this->link('refresh!'));
         parent::configure();
     }
@@ -68,7 +59,7 @@ class ResultsAndStatistics extends FyziklaniReactControl {
      * @throws BadTypeException
      * @throws NotSetGameParametersException
      */
-    public function handleRefresh() {
+    public function handleRefresh(): void {
         $presenter = $this->getPresenter();
         if (!$presenter->isAjax()) {
             throw new BadRequestException('', Response::S405_METHOD_NOT_ALLOWED);

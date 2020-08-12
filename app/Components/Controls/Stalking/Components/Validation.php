@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
-use FKSDB\Components\DatabaseReflection\FieldLevelPermission;
+use FKSDB\DBReflection\FieldLevelPermission;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\DataTesting\DataTestingFactory;
@@ -11,24 +11,15 @@ use FKSDB\DataTesting\DataTestingFactory;
  * Class Validation
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class Validation extends AbstractStalkingComponent {
-    /** @var DataTestingFactory */
-    private $validationFactory;
+class Validation extends StalkingControl {
 
-    /**
-     * @param DataTestingFactory $factory
-     * @return void
-     */
-    public function injectDataTestingFactory(DataTestingFactory $factory) {
+    private DataTestingFactory $validationFactory;
+
+    public function injectDataTestingFactory(DataTestingFactory $factory): void {
         $this->validationFactory = $factory;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param int $userPermissions
-     * @return void
-     */
-    public function render(ModelPerson $person, int $userPermissions) {
+    public function render(ModelPerson $person, int $userPermissions): void {
         $this->beforeRender($person, _('Validation'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
         $logger = new MemoryLogger();
         foreach ($this->validationFactory->getTests('person') as $test) {
@@ -36,7 +27,7 @@ class Validation extends AbstractStalkingComponent {
         }
 
         $this->template->logs = $logger->getMessages();
-        $this->template->setFile(__DIR__ . '/Validation.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.validation.latte');
         $this->template->render();
     }
 }

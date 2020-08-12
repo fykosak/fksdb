@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\Core\ContestPresenter;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
-use FKSDB\Components\Controls\ContestChooser;
+use FKSDB\Components\Controls\Choosers\ContestChooser;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\UI\PageTitle;
@@ -50,7 +50,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function getSelectedContest(): ModelContest {
+    public function getSelectedContest(): ?ModelContest {
         $contestChooser = $this->getComponent('contestChooser');
         if (!$contestChooser instanceof ContestChooser) {
             throw new BadTypeException(ContestChooser::class, $contestChooser);
@@ -94,16 +94,12 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
         }
         if (isset($contest) && $contest) {
             $this->getPageStyleContainer()->styleId = $contest->getContestSymbol();
-            $this->getPageStyleContainer()->navBarClassName = 'navbar-dark bg-' . $contest->getContestSymbol();
+            $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-' . $contest->getContestSymbol());
         }
         parent::beforeRender();
     }
 
-    /**
-     * @param PageTitle $pageTitle
-     * @return void
-     */
-    protected function setPageTitle(PageTitle $pageTitle) {
+    protected function setPageTitle(PageTitle $pageTitle): void {
         $pageTitle->subTitle = sprintf(_('%d. ročník'), $this->year) . ' ' . $pageTitle->subTitle;
         parent::setPageTitle($pageTitle);
     }

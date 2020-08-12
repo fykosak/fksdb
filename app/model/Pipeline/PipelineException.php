@@ -1,6 +1,6 @@
 <?php
 
-namespace Pipeline;
+namespace FKSDB\Pipeline;
 
 /**
  * Class PipelineException

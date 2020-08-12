@@ -11,18 +11,11 @@ use Nette\Application\UI\InvalidLinkException;
  */
 class SeriesChooser extends Chooser {
 
-    /** @var int */
-    private $currentSeries;
+    private int $currentSeries;
 
-    /** @var int[] */
-    private $allowedSeries;
+    private array $allowedSeries;
 
-    /**
-     * @param int $currentSeries
-     * @param array $allowedSeries
-     * @return void
-     */
-    public function setSeries(int $currentSeries, array $allowedSeries) {
+    public function setSeries(int $currentSeries, array $allowedSeries): void {
         $this->currentSeries = $currentSeries;
         $this->allowedSeries = $allowedSeries;
     }
@@ -31,10 +24,7 @@ class SeriesChooser extends Chooser {
         return new Title(sprintf(_('Series %d'), $this->currentSeries));
     }
 
-    /**
-     * @return int[]
-     */
-    protected function getItems() {
+    protected function getItems(): array {
         return $this->allowedSeries;
     }
 

@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Components\Forms\OptimisticForm;
-use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\Submits\SeriesTable;
 use Nette\Application\AbortException;
@@ -20,8 +19,7 @@ class PointsFormControl extends SeriesTableFormControl {
     /** @var callable */
     private $invalidCacheCallback;
 
-    /** @var ServiceSubmit */
-    private $serviceSubmit;
+    private ServiceSubmit $serviceSubmit;
 
     /**
      * PointsFormControl constructor.
@@ -35,11 +33,7 @@ class PointsFormControl extends SeriesTableFormControl {
         $this->invalidCacheCallback = $invalidCacheCallback;
     }
 
-    /**
-     * @param ServiceSubmit $serviceSubmit
-     * @return void
-     */
-    public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
+    public function injectServiceSubmit(ServiceSubmit $serviceSubmit): void {
         $this->serviceSubmit = $serviceSubmit;
     }
 
@@ -48,13 +42,12 @@ class PointsFormControl extends SeriesTableFormControl {
      * @throws AbortException
      * @throws ForbiddenRequestException
      */
-    protected function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form): void {
         foreach ($form->getHttpData()['submits'] as $submitId => $points) {
             if (!$this->getSeriesTable()->getSubmits()->where('submit_id', $submitId)->fetch()) {
                 // secure check for rewrite submitId.
                 throw new ForbiddenRequestException();
             }
-            /** @var ModelSubmit $submit */
             $submit = $this->serviceSubmit->findByPrimary($submitId);
             if ($points !== "" && $points !== $submit->raw_points) {
                 $this->serviceSubmit->updateModel2($submit, ['raw_points' => +$points]);
@@ -67,7 +60,7 @@ class PointsFormControl extends SeriesTableFormControl {
         $this->getPresenter()->redirect('this');
     }
 
-    public function render() {
+    public function render(): void {
         $form = $this->getComponent('form');
         if ($form instanceof OptimisticForm) {
             $form->setDefaults();

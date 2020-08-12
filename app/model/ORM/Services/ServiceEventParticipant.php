@@ -2,7 +2,7 @@
 
 namespace FKSDB\ORM\Services;
 
-use DuplicateApplicationException;
+use FKSDB\ORM\Services\Exception\DuplicateApplicationException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
@@ -10,18 +10,20 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceEventParticipant extends AbstractServiceSingle {
-
-    public function getModelClassName(): string {
-        return ModelEventParticipant::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_EVENT_PARTICIPANT;
+    /**
+     * ServiceEventParticipant constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
+     */
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_EVENT_PARTICIPANT, ModelEventParticipant::class);
     }
 
     /**
@@ -39,11 +41,7 @@ class ServiceEventParticipant extends AbstractServiceSingle {
         }
     }
 
-    /**
-     * @param array $data
-     * @return ModelEventParticipant
-     */
-    public function createNewModel(array $data): IModel {
+    public function createNewModel(array $data): ModelEventParticipant {
         try {
             return parent::createNewModel($data);
         } catch (ModelException $exception) {
@@ -61,7 +59,7 @@ class ServiceEventParticipant extends AbstractServiceSingle {
      * @return void
      * @deprecated
      */
-    public function updateModel(IModel $model, $data, $alive = true) {
+    public function updateModel(IModel $model, $data, $alive = true): void {
         parent::updateModel($model, $data, $alive);
         if (!$alive && !$model->isNew()) {
             $person = $model->getPerson();

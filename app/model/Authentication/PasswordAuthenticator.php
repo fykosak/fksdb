@@ -1,6 +1,6 @@
 <?php
 
-namespace Authentication;
+namespace FKSDB\Authentication;
 
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
@@ -15,8 +15,7 @@ use Nette\Security\IIdentity;
  */
 class PasswordAuthenticator extends AbstractAuthenticator implements IAuthenticator {
 
-    /** @var ServicePerson */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
     /**
      * PasswordAuthenticator constructor.
@@ -39,7 +38,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
      * @throws UnknownLoginException
      */
     public function authenticate(array $credentials) {
-        list($id, $password) = $credentials;
+        [$id, $password] = $credentials;
 
         $login = $this->findLogin($id);
 
@@ -61,7 +60,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
      * @throws NoLoginException
      * @throws UnknownLoginException
      */
-    public function findLogin($id) {
+    public function findLogin($id): ModelLogin {
         /** @var ModelPerson $person */
         $person = $this->servicePerson->getTable()->where(':person_info.email = ?', $id)->fetch();
         $login = null;
@@ -91,7 +90,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
      * @param ModelLogin $login
      * @return string
      */
-    public static function calculateHash($password, $login) {
+    public static function calculateHash($password, $login): string {
         return sha1($login->login_id . md5($password));
     }
 

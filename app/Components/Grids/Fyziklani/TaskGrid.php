@@ -10,7 +10,7 @@ use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateColumnException;
-use SQL\SearchableDataSource;
+use FKSDB\SQL\SearchableDataSource;
 
 /**
  * @author Michal Červeňák
@@ -18,10 +18,23 @@ use SQL\SearchableDataSource;
  */
 class TaskGrid extends BaseGrid {
 
-    /** @var ServiceFyziklaniTask */
-    private $serviceFyziklaniTask;
-    /** @var ModelEvent */
-    private $event;
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
+
+    private ModelEvent $event;
+
+    /**
+     * FyziklaniTaskGrid constructor.
+     * @param ModelEvent $event
+     * @param Container $container
+     */
+    public function __construct(ModelEvent $event, Container $container) {
+        parent::__construct($container);
+        $this->event = $event;
+    }
+
+    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask): void {
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+    }
 
     protected function getData(): IDataSource {
         $submits = $this->serviceFyziklaniTask->findAll($this->event);
@@ -36,28 +49,10 @@ class TaskGrid extends BaseGrid {
     }
 
     /**
-     * FyziklaniTaskGrid constructor.
-     * @param ModelEvent $event
-     * @param Container $container
-     */
-    public function __construct(ModelEvent $event, Container $container) {
-        parent::__construct($container);
-        $this->event = $event;
-    }
-
-    /**
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @return void
-     */
-    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask) {
-        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
-    }
-
-    /**
      * @param Presenter $presenter
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->addColumn('fyziklani_task_id', _('Task Id'));
         $this->addColumn('label', _('#'));

@@ -1,5 +1,7 @@
 <?php
 
+namespace FKSDB\ORM\Services\Exception;
+
 use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\Models\ModelPerson;
 

@@ -18,10 +18,10 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class AllPersonsGrid extends BaseGrid {
-    /** @var ServicePersonSchedule */
-    private $servicePersonSchedule;
-    /** @var ModelEvent */
-    private $event;
+
+    private ServicePersonSchedule $servicePersonSchedule;
+
+    private ModelEvent $event;
 
     /**
      * PersonsGrid constructor.
@@ -33,11 +33,7 @@ class AllPersonsGrid extends BaseGrid {
         $this->event = $event;
     }
 
-    /**
-     * @param ServicePersonSchedule $servicePersonSchedule
-     * @return void
-     */
-    public function injectServicePersonSchedule(ServicePersonSchedule $servicePersonSchedule) {
+    public function injectServicePersonSchedule(ServicePersonSchedule $servicePersonSchedule): void {
         $this->servicePersonSchedule = $servicePersonSchedule;
     }
 
@@ -54,7 +50,7 @@ class AllPersonsGrid extends BaseGrid {
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->paginate = false;

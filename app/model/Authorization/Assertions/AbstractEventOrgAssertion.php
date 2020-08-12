@@ -1,6 +1,6 @@
 <?php
 
-namespace Authorization\Assertions;
+namespace FKSDB\Authorization\Assertions;
 
 use FKSDB\StoredQuery\StoredQuery;
 use FKSDB\ORM\DbNames;
@@ -21,14 +21,11 @@ abstract class AbstractEventOrgAssertion {
 
     use SmartObject;
 
-    /** @var string */
-    private $parameterName;
+    private string $parameterName;
 
-    /** @var IUserStorage */
-    private $user;
+    private IUserStorage $user;
 
-    /** @var Context */
-    private $connection;
+    private Context $connection;
 
     /**
      * AbstractEventOrgAssertion constructor.
@@ -50,7 +47,7 @@ abstract class AbstractEventOrgAssertion {
      * @param null $parameterValue
      * @return bool
      */
-    public function __invoke(Permission $acl, $role, $resourceId, $privilege, $parameterValue = null) {
+    public function __invoke(Permission $acl, $role, $resourceId, $privilege, $parameterValue = null): bool {
         $storedQuery = $acl->getQueriedResource();
 
         if (!$storedQuery instanceof StoredQuery) {

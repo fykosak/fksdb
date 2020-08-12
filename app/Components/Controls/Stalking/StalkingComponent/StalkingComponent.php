@@ -14,14 +14,9 @@ use Nette\InvalidStateException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class StalkingComponent extends StalkingControl {
-    /** @var StalkingService */
-    private $stalkingService;
+    private StalkingService $stalkingService;
 
-    /**
-     * @param StalkingService $stalkingService
-     * @return void
-     */
-    public function injectStalkingService(StalkingService $stalkingService) {
+    public function injectStalkingService(StalkingService $stalkingService): void {
         $this->stalkingService = $stalkingService;
     }
 
@@ -32,7 +27,7 @@ class StalkingComponent extends StalkingControl {
      * @return void
      * @throws NotImplementedException
      */
-    public function render(string $section, ModelPerson $person, int $userPermission) {
+    public function render(string $section, ModelPerson $person, int $userPermission): void {
         $definition = $this->stalkingService->getSection($section);
         $this->beforeRender($person, _($definition['label']), $userPermission, $definition['minimalPermission']);
         $this->template->userPermission = $userPermission;
@@ -54,7 +49,7 @@ class StalkingComponent extends StalkingControl {
      * @return void
      * @throws NotImplementedException
      */
-    private function renderSingle(array $definition, ModelPerson $person) {
+    private function renderSingle(array $definition, ModelPerson $person): void {
 
         $model = null;
         switch ($definition['table']) {
@@ -73,7 +68,7 @@ class StalkingComponent extends StalkingControl {
 
         $this->template->model = $model;
         $this->template->rows = $definition['rows'];
-        $this->template->setFile(__DIR__ . '/layout.single.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
         $this->template->render();
     }
 
@@ -82,7 +77,7 @@ class StalkingComponent extends StalkingControl {
      * @param ModelPerson $person
      * @return void
      */
-    private function renderMulti(array $definition, ModelPerson $person) {
+    private function renderMulti(array $definition, ModelPerson $person): void {
         $models = [];
         $query = $person->related($definition['table']);
         foreach ($query as $datum) {
@@ -92,7 +87,7 @@ class StalkingComponent extends StalkingControl {
         $this->template->rows = $definition['rows'];
         $this->template->models = $models;
         $this->template->itemHeadline = $definition['itemHeadline'];
-        $this->template->setFile(__DIR__ . '/layout.multi.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.multi.latte');
         $this->template->render();
     }
 }

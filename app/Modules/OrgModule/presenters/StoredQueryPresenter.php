@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Entity\StoredQuery\StoredQueryFormComponent;
-use FKSDB\Components\Controls\StoredQueryTagCloud;
+use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
 use FKSDB\Entity\ModelNotFoundException;
@@ -26,14 +26,9 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
     use SeriesPresenterTrait;
     use EntityPresenterTrait;
 
-    /** @var ServiceStoredQuery */
-    private $serviceStoredQuery;
+    private ServiceStoredQuery $serviceStoredQuery;
 
-    /**
-     * @param ServiceStoredQuery $serviceStoredQuery
-     * @return void
-     */
-    public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery) {
+    public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery): void {
         $this->serviceStoredQuery = $serviceStoredQuery;
     }
 
@@ -43,7 +38,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleEdit() {
+    public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Edit query %s'), $this->getEntity()->name), 'fa fa-pencil'));
     }
 
@@ -56,7 +51,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function titleList() {
+    public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('Exports'), 'fa fa-database'));
     }
 
@@ -66,7 +61,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleDetail() {
+    public function titleDetail(): void {
         $title = sprintf(_('Detail of the query "%s"'), $this->getEntity()->name);
         $qid = $this->getEntity()->qid;
         if ($qid) {
@@ -91,7 +86,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ModelNotFoundException
      * @throws BadTypeException
      */
-    public function actionEdit() {
+    public function actionEdit(): void {
         $this->traitActionEdit();
     }
 
@@ -99,7 +94,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
      * @return void
      * @throws ModelNotFoundException
      */
-    public function renderDetail() {
+    public function renderDetail(): void {
         $this->template->model = $this->getEntity();
     }
 
@@ -139,11 +134,10 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
     /**
      * @param PageTitle $pageTitle
      * @return void
-     *
      * @throws ForbiddenRequestException
      * @throws BadTypeException
      */
-    protected function setPageTitle(PageTitle $pageTitle) {
+    protected function setPageTitle(PageTitle $pageTitle): void {
         $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
         parent::setPageTitle($pageTitle);
     }

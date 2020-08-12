@@ -20,26 +20,17 @@ use Nette\Utils\JsonException;
  */
 class RoutingEdit extends FyziklaniReactControl {
 
-    /** @var ServiceFyziklaniTeam */
-    private $serviceFyziklaniTeam;
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    /** @var ServiceFyziklaniRoom */
-    private $serviceFyziklaniRoom;
+    private ServiceFyziklaniRoom $serviceFyziklaniRoom;
 
-    /** @var ServiceFyziklaniTeamPosition */
-    private $serviceFyziklaniTeamPosition;
+    private ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition;
 
-    /**
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
-     * @param ServiceFyziklaniRoom $serviceFyziklaniRoom
-     * @return void
-     */
     public function injectPrimary(
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
         ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
         ServiceFyziklaniRoom $serviceFyziklaniRoom
-    ) {
+    ): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
         $this->serviceFyziklaniRoom = $serviceFyziklaniRoom;
@@ -64,7 +55,7 @@ class RoutingEdit extends FyziklaniReactControl {
     /**
      * @throws InvalidLinkException
      */
-    protected function configure() {
+    protected function configure(): void {
         $this->addAction('save', $this->link('save!'));
         parent::configure();
     }
@@ -74,7 +65,7 @@ class RoutingEdit extends FyziklaniReactControl {
      * @throws AbortException
      * @throws BadTypeException
      */
-    public function handleSave() {
+    public function handleSave(): void {
         $data = $this->getHttpRequest()->getPost('requestData');
         $updatedTeams = $this->serviceFyziklaniTeamPosition->updateRouting($data);
         $response = new ReactResponse();

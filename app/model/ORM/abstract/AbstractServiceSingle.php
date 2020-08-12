@@ -24,14 +24,22 @@ use Tracy\Debugger;
  * @author Michal Červeňak <miso@fykos.cz>
  */
 abstract class AbstractServiceSingle extends Selection implements IService {
+
+    private string $modelClassName;
+
+    private string $tableName;
+
     /**
      * AbstractServiceSingle constructor.
      * @param Context $connection
      * @param IConventions $conventions
-     * FKSDB\ORM\AbstractServiceSingle constructor.
+     * @param string $tableName
+     * @param string $modelClassName
      */
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, $this->getTableName());
+    public function __construct(Context $connection, IConventions $conventions, string $tableName, string $modelClassName) {
+        $this->tableName = $tableName;
+        $this->modelClassName = $modelClassName;
+        parent::__construct($connection, $conventions, $tableName);
     }
 
     /**
@@ -39,7 +47,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @return AbstractModelSingle
      * @throws ModelException
      */
-    public function createNewModel(array $data): IModel {
+    public function createNewModel(array $data): AbstractModelSingle {
         $modelClassName = $this->getModelClassName();
         $data = $this->filterData($data);
         try {
@@ -93,7 +101,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @param int $key
      * @return AbstractModelSingle|null
      */
-    public function findByPrimary($key) {
+    public function findByPrimary($key): ?AbstractModelSingle {
         /** @var AbstractModelSingle|null $result */
         $result = $this->getTable()->get($key);
         if ($result !== false) {
@@ -137,9 +145,13 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @return bool
      */
     public function updateModel2(IModel $model, array $data): bool {
-        $this->checkType($model);
-        $data = $this->filterData($data);
-        return $model->update($data);
+        try {
+            $this->checkType($model);
+            $data = $this->filterData($data);
+            return $model->update($data);
+        } catch (PDOException $exception) {
+            throw new ModelException('Error when storing model.', null, $exception);
+        }
     }
 
     /**
@@ -185,7 +197,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @throws InvalidArgumentException
      * @throws InvalidStateException
      */
-    public function dispose(IModel $model) {
+    public function dispose(IModel $model): void {
         $this->checkType($model);
         if (!$model->isNew() && $model->delete() === false) {
             $code = $this->context->getConnection()->getPdo()->errorCode();
@@ -272,5 +284,11 @@ abstract class AbstractServiceSingle extends Selection implements IService {
         return $this->columns;
     }
 
-    abstract protected function getTableName(): string;
+    final protected function getTableName(): string {
+        return $this->tableName;
+    }
+
+    final public function getModelClassName(): string {
+        return $this->modelClassName;
+    }
 }

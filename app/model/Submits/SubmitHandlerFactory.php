@@ -2,7 +2,8 @@
 
 namespace FKSDB\Submits;
 
-use Authorization\ContestAuthorizator;
+use FKSDB\Authorization\ContestAuthorizator;
+use FKSDB\Components\Control\AjaxUpload\AjaxUpload;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\ILogger;
@@ -26,14 +27,14 @@ use Nette\Utils\DateTime;
 use Tracy\Debugger;
 
 class SubmitHandlerFactory {
-    /** @var CorrectedStorage */
-    private $correctedStorage;
-    /** @var UploadedStorage */
-    private $uploadedStorage;
-    /** @var ServiceSubmit */
-    private $serviceSubmit;
-    /** @var ContestAuthorizator */
-    private $contestAuthorizator;
+
+    private CorrectedStorage $correctedStorage;
+
+    private UploadedStorage $uploadedStorage;
+
+    private ServiceSubmit $serviceSubmit;
+
+    private ContestAuthorizator $contestAuthorizator;
 
     /**
      * SubmitDownloadFactory constructor.
@@ -64,7 +65,7 @@ class SubmitHandlerFactory {
      * @throws ForbiddenRequestException
      * @throws NotFoundException
      */
-    public function handleDownloadUploaded(Presenter $presenter, ILogger $logger, int $id) {
+    public function handleDownloadUploaded(Presenter $presenter, ILogger $logger, int $id): void {
         $submit = $this->getSubmit($id, 'download.uploaded');
         $filename = $this->uploadedStorage->retrieveFile($submit);
         if ($submit->source != ModelSubmit::SOURCE_UPLOAD) {
@@ -89,7 +90,7 @@ class SubmitHandlerFactory {
      * @throws ForbiddenRequestException
      * @throws NotFoundException
      */
-    public function handleDownloadCorrected(Presenter $presenter, ILogger $logger, int $id) {
+    public function handleDownloadCorrected(Presenter $presenter, ILogger $logger, int $id): void {
         $submit = $this->getSubmit($id, 'download.corrected');
         if (!$submit->corrected) {
             $logger->log(new Message(_('Opravené riešenie nieje nahrané'), Message::LVL_WARNING));
@@ -112,8 +113,7 @@ class SubmitHandlerFactory {
      * @return array|null
      * @throws InvalidLinkException
      */
-    public function handleRevoke(Presenter $presenter, ILogger $logger, int $submitId) {
-        /** @var ModelSubmit $submit */
+    public function handleRevoke(Presenter $presenter, ILogger $logger, int $submitId): ?array {
         $submit = $this->serviceSubmit->findByPrimary($submitId);
         if (!$submit) {
             $logger->log(new Message(_('Neexistující submit.'), Message::LVL_DANGER));
@@ -131,7 +131,7 @@ class SubmitHandlerFactory {
         try {
             $this->uploadedStorage->deleteFile($submit);
             $this->serviceSubmit->dispose($submit);
-            $data = ServiceSubmit::serializeSubmit(null, $submit->getTask(), $presenter);
+            $data = AjaxUpload::serializeSubmit(null, $submit->getTask(), $presenter);
             $logger->log(new Message(\sprintf('Odevzdání úlohy %s zrušeno.', $submit->getTask()->getFQName()), ILogger::WARNING));
             return $data;
 
@@ -152,7 +152,7 @@ class SubmitHandlerFactory {
      * @param ModelContestant $contestant
      * @return AbstractModelSingle|IModel|ModelSubmit
      */
-    public function handleSave(FileUpload $file, ModelTask $task, ModelContestant $contestant) {
+    public function handleSave(FileUpload $file, ModelTask $task, ModelContestant $contestant): ModelSubmit {
         $submit = $this->serviceSubmit->findByContestant($contestant->ct_id, $task->task_id);
         if (is_null($submit)) {
             $submit = $this->serviceSubmit->createNewModel([
@@ -180,7 +180,6 @@ class SubmitHandlerFactory {
      * @throws NotFoundException
      */
     private function getSubmit(int $id, string $privilege): ModelSubmit {
-        /** @var ModelSubmit $submit */
         $submit = $this->serviceSubmit->findByPrimary($id);
 
         if (!$submit) {

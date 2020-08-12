@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
+use FKSDB\Components\Controls\DBReflection\ValuePrinterComponent;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
@@ -18,17 +18,13 @@ use Nette\DI\Container;
  */
 class SchoolCheckComponent extends BaseComponent {
 
-    /** @var ModelEvent */
-    private $event;
+    private ModelEvent $event;
 
-    /** @var int */
-    private $acYear;
+    private int $acYear;
 
-    /** @var ServiceSchool */
-    private $serviceSchool;
+    private ServiceSchool $serviceSchool;
 
-    /** @var ServiceFyziklaniTeam */
-    private $serviceFyziklaniTeam;
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
     /**
      * SchoolCheckControl constructor.
@@ -42,21 +38,12 @@ class SchoolCheckComponent extends BaseComponent {
         $this->acYear = $acYear;
     }
 
-    /**
-     * @param ServiceSchool $serviceSchool
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @return void
-     */
-    public function injectPrimary(ServiceSchool $serviceSchool, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    public function injectPrimary(ServiceSchool $serviceSchool, ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceSchool = $serviceSchool;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
-    /**
-     * @param ModelFyziklaniTeam $currentTeam
-     * @return void
-     */
-    public function render(ModelFyziklaniTeam $currentTeam) {
+    public function render(ModelFyziklaniTeam $currentTeam): void {
         $schools = [];
         $query = $this->serviceSchool->getConnection()->queryArgs(
             'select GROUP_CONCAT(DISTINCT e_fyziklani_team_id) as `teams`, school_id
@@ -74,7 +61,7 @@ group by school_id', [$this->acYear, array_keys($this->getSchoolsFromTeam($curre
             $schools[$row->school_id]['school'] = $this->serviceSchool->findByPrimary($row->school_id);
         }
         $this->template->schools = $schools;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'SchoolCheckControl.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.schoolCheck.latte');
         $this->template->render();
 
     }
