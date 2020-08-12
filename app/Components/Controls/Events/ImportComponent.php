@@ -84,7 +84,7 @@ class ImportComponent extends BaseComponent {
     }
 
     public function render(): void {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ImportComponent.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.import.latte');
         $this->template->render();
     }
 
