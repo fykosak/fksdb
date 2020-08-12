@@ -29,7 +29,7 @@ class ChartPresenter extends BasePresenter {
         $this->setAuthorized($this->isContestsOrgAuthorized($this->getModelResource(), 'chart'));
     }
 
-    protected function startup() {
+    protected function startup(): void {
         parent::startup();
         $this->selectChart();
     }

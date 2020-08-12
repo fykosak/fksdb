@@ -29,12 +29,11 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
     public $year;
 
     /**
-     *
      * @throws AbortException
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    protected function startup() {
+    protected function startup(): void {
         parent::startup();
         $contestChooser = $this->getComponent('contestChooser');
         if (!$contestChooser instanceof ContestChooser) {

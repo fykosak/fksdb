@@ -97,11 +97,10 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     /**
      * @return void
      * @throws AbortException
-     *
      * @throws ForbiddenRequestException
      * @throws Exception
      */
-    protected function startup() {
+    protected function startup(): void {
         parent::startup();
 
         $methods = $this->getAllowedAuthMethods();

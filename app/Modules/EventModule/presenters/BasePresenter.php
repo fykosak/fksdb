@@ -58,11 +58,10 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     /**
      * @return void
      * @throws AbortException
-     *
      * @throws NotImplementedException
      * @throws ForbiddenRequestException
      */
-    protected function startup() {
+    protected function startup(): void {
         if (!$this->isEnabled()) {
             throw new NotImplementedException();
         }
