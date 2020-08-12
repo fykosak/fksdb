@@ -3,7 +3,6 @@
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
 use FKSDB\Tests\Events\EventTestCase;
-use Nette\Application\IPresenter;
 use Nette\Utils\DateTime;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
 

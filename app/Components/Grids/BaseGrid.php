@@ -48,7 +48,6 @@ abstract class BaseGrid extends Grid {
      * @param Container $container
      */
     public function __construct(Container $container) {
-        parent::__construct();
         $this->container = $container;
         $container->callInjects($this);
     }

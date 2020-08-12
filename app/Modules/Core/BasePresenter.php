@@ -69,8 +69,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     private BreadcrumbsFactory $breadcrumbsFactory;
 
-    private Navigation $navigationControl;
-
     private PresenterBuilder $presenterBuilder;
 
     private ?PageTitle $pageTitle;
@@ -101,10 +99,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     public function injectBreadcrumbsFactory(BreadcrumbsFactory $breadcrumbsFactory): void {
         $this->breadcrumbsFactory = $breadcrumbsFactory;
-    }
-
-    public function injectNavigationControl(Navigation $navigationControl): void {
-        $this->navigationControl = $navigationControl;
     }
 
     public function injectPresenterBuilder(PresenterBuilder $presenterBuilder): void {
@@ -260,7 +254,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     protected function createComponentNavigation(): Navigation {
-        return $this->navigationControl;
+        return new Navigation($this->getContext());
     }
 
     protected function createComponentDetail(): DetailComponent {

@@ -1,10 +1,11 @@
 {
   "require": {
     "php": ">=7.4.0",
-    "tracy/tracy": "2.6.8",
-    "nette/tester": "2.3.3",
+    "tracy/tracy": "2.7.3",
+    "nette/tester": "2.0.2",
     "setasign/fpdf": "^1.8",
     "setasign/fpdi": "1.5.4",
+    "nette/reflection": "2.4.2",
     "nette/nette": "3.0.0"
   },
   "autoload": {

@@ -4,7 +4,6 @@ namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
 $container = require '../../bootstrap.php';
 
-use FKSDB\Events\Model\ApplicationHandler;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;

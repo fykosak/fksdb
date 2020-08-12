@@ -26,7 +26,6 @@ class GroupedContainer extends Container {
      * @param string $prefix
      */
     public function __construct($prefix) {
-        parent::__construct();
         $this->monitor(Form::class, function (Form $form) {
             $this->getName();
             foreach ($this->groups as $caption => $myGroup) {

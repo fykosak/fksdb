@@ -2,7 +2,6 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\SubmitPresenter;
 
-use FKSDB\Modules\PublicModule\SubmitPresenter;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\IPresenter;

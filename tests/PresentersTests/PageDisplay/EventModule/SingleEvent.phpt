@@ -41,5 +41,4 @@ class SingleEvent extends EventModuleTestCase {
     }
 }
 
-$testCase = new SingleEvent($container);
-$testCase->run();
+(new SingleEvent($container))->run();

@@ -6,7 +6,6 @@ use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Configurator;
 use Nette\Utils\Finder;
 use Tester\Environment;
-use Tracy\Debugger;
 
 // absolute filesystem path to this web root
 define('TESTS_DIR', dirname(__FILE__));
@@ -26,16 +25,12 @@ define('LOG_DIR', TESTS_DIR . '/../temp/tester/log');
 // Load Nette Framework
 require LIBS_DIR . '/../vendor/autoload.php';
 
-class Bootstrap {
+class TestBootstrap {
     public static function boot(): Configurator {
         $configurator = new Configurator();
-
         // Enable Nette Debugger for error visualisation & logging
-        $configurator->setDebugMode(false);
-        Debugger::$logDirectory = LOG_DIR;
+        $configurator->enableTracy(LOG_DIR);
         Environment::setup();
-        error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING & ~E_USER_NOTICE & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
-
 // Enable RobotLoader - this will load all classes automatically
         $configurator->setTempDirectory(TEMP_DIR);
         error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING & ~E_USER_NOTICE & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
@@ -56,15 +51,14 @@ class Bootstrap {
         }
         // Load .neon files for tests
         foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/neon') as $filename => $file) {
-            $configurator->addConfig($filename, Configurator::NONE);
+            $configurator->addConfig($filename);
         }
         return $configurator;
     }
 }
 
-
 // Configure application
-$configurator = Bootstrap::boot();
+$configurator = TestBootstrap::boot();
 
 $container = $configurator->createContainer();
 

@@ -6,6 +6,7 @@ use FKSDB\ORM\DbNames;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Request;
+use Nette\Database\IRow;
 use Nette\DI\Container;
 use Nette\DI\Config\Helpers;
 use Nette\Database\Row;
@@ -62,7 +63,7 @@ abstract class EventTestCase extends DatabaseTestCase {
 
     abstract protected function getEventId(): int;
 
-    protected function assertApplication(int $eventId, string $email): Row {
+    protected function assertApplication(int $eventId, string $email): ?IRow {
         $personId = $this->connection->fetchField('SELECT person_id FROM person_info WHERE email=?', $email);
         Assert::notEqual(false, $personId);
 
@@ -71,7 +72,7 @@ abstract class EventTestCase extends DatabaseTestCase {
         return $application;
     }
 
-    protected function assertExtendedApplication(Row $application, string $table): Row {
+    protected function assertExtendedApplication(Row $application, string $table): ?IRow {
         $application = $this->connection->fetch('SELECT * FROM `' . $table . '` WHERE event_participant_id = ?', $application->event_participant_id);
         Assert::notEqual(false, $application);
         return $application;

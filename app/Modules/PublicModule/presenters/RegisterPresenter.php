@@ -21,6 +21,7 @@ use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\Modules\Core\ContestPresenter\IContestPresenter;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
@@ -332,6 +333,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      * @throws \ReflectionException
+     * @throws BadRequestException
      */
     protected function beforeRender() {
         $contest = $this->getSelectedContest();

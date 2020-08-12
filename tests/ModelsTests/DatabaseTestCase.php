@@ -6,7 +6,7 @@ use FKSDB\Authentication\PasswordAuthenticator;
 use FKSDB\ORM\DbNames;
 use Nette\Database\Connection;
 use Nette\Database\Context;
-use Nette\Database\Row;
+use Nette\Database\IRow;
 use Nette\DI\Container;
 use Tester\Assert;
 use Tester\Environment;
@@ -101,7 +101,7 @@ abstract class DatabaseTestCase extends TestCase {
         return $personId;
     }
 
-    protected function assertPersonInfo(int $personId): Row {
+    protected function assertPersonInfo(int $personId): ?IRow {
         $personInfo = $this->connection->fetch('SELECT * FROM person_info WHERE person_id = ?', $personId);
         Assert::notEqual(false, $personInfo);
         return $personInfo;

@@ -36,6 +36,8 @@ class ImportHandler {
     /**
      * ImportHandler constructor.
      * @param Container $container
+     * @param CSVParser $parser
+     * @param SingleEventSource $source
      */
     public function __construct(Container $container, CSVParser $parser, SingleEventSource $source) {
         $this->container = $container;
@@ -48,7 +50,6 @@ class ImportHandler {
      * @param string $errorMode
      * @param string $stateless
      * @return bool
-     * @throws JsonException
      * @throws NeonSchemaException
      */
     public function import(ApplicationHandler $handler, string $errorMode, string $stateless): bool {

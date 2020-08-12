@@ -32,6 +32,7 @@ use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidArgumentException;
 
@@ -42,7 +43,7 @@ use Nette\InvalidArgumentException;
  */
 class ApplicationPresenter extends BasePresenter {
 
-    const PARAM_AFTER = 'a';
+    public const PARAM_AFTER = 'a';
 
     /** @var ModelEvent|null */
     private $event;
@@ -400,6 +401,7 @@ class ApplicationPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      * @throws \ReflectionException
+     * @throws BadRequestException
      */
     protected function beforeRender() {
         $event = $this->getEvent();

@@ -11,7 +11,7 @@ use FKSDB\Expressions\Predicates\After;
 use FKSDB\Expressions\Predicates\Before;
 use Nette\DI\Container;
 use Nette\DI\Helpers as DIHelpers;
-use Nette\DI\Statement;
+use Nette\DI\Definitions\Statement;
 use Nette\Reflection\ClassType;
 
 /**
@@ -20,8 +20,8 @@ use Nette\Reflection\ClassType;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Helpers {
-    /** @var string[] */
-    private static $semanticMap = [
+
+    private static array $semanticMap = [
         'and' => LogicAnd::class,
         'or' => LogicOr::class,
         'neg' => Not::class,
