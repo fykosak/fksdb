@@ -72,7 +72,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
 
-    protected function startup() {
+    protected function startup(): void {
         switch ($this->getAction()) {
             case 'execute':
                 $this->redirect(':Org:Export:execute', $this->getParameters());

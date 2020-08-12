@@ -55,7 +55,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         $this->storedQueryFactory = $storedQueryFactory;
     }
 
-    protected function startup() {
+    protected function startup(): void {
         switch ($this->getAction()) {
             case 'edit':
                 $this->redirect(':Org:StoredQuery:edit', $this->getParameters());

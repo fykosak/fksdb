@@ -10,7 +10,6 @@ use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
-use Nette\DI\Container;
 use ReflectionClass;
 use ReflectionMethod;
 
@@ -20,34 +19,18 @@ use ReflectionMethod;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Navigation extends BaseComponent {
-    /** @var array[] */
-    private $nodes = [];
 
-    /** @var array */
-    private $nodeChildren = [];
+    private PresenterBuilder $presenterBuilder;
 
-    /** @var PresenterBuilder */
-    private $presenterBuilder;
+    private NavigationFactory $navigationFactory;
 
-    /** @var array */
-    private $structure;
-
-    /**
-     * Navigation constructor.
-     * @param PresenterBuilder $presenterBuilder
-     * @param Container $container
-     */
-    public function __construct(PresenterBuilder $presenterBuilder, Container $container) {
-        parent::__construct($container);
+    public function injectPrimary(PresenterBuilder $presenterBuilder, NavigationFactory $navigationFactory): void {
         $this->presenterBuilder = $presenterBuilder;
+        $this->navigationFactory = $navigationFactory;
     }
 
-    /**
-     * @param string|int $nodeId
-     * @return array
-     */
-    public function getNode(string $nodeId) {
-        return $this->nodes[$nodeId];
+    public function getNode(string $nodeId): array {
+        return $this->navigationFactory->getNode($nodeId);
     }
 
     public function isActive(array $node): bool {
@@ -68,11 +51,9 @@ class Navigation extends BaseComponent {
             return true;
         }
 // try children
-        if (!isset($this->nodeChildren[$node['nodeId']])) {
-            return false;
-        }
-        foreach ($this->nodeChildren[$node['nodeId']] as $childId) {
-            if ($this->isActive($this->nodes[$childId])) {
+
+        foreach ($this->navigationFactory->getParent($node['nodeId']) as $childId) {
+            if ($this->isActive($this->getNode($childId))) {
                 return true;
             }
         }
@@ -101,8 +82,6 @@ class Navigation extends BaseComponent {
     /**
      * @param array $node
      * @return PageTitle
-     *
-     *
      * @throws BadRequestException
      * @throws BadTypeException
      */
@@ -137,34 +116,14 @@ class Navigation extends BaseComponent {
         return null;
     }
 
-    public function setStructure(array $structure): void {
-        $this->structure = $structure;
-    }
-
-    public function createNode(string $nodeId, array $arguments): void {
-        $this->nodes[$nodeId] = $arguments;
-    }
-
-    /**
-     * @param string|int $idChild
-     * @param string|int $idParent
-     * @return void
-     */
-    public function addParent($idChild, $idParent): void {
-        if (!isset($this->nodeChildren)) {
-            $this->nodeChildren[$idParent] = [];
-        }
-        $this->nodeChildren[$idParent][] = $idChild;
-    }
-
     public function renderNavbar(string $root): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.navbar.latte');
-        $this->renderFromRoot([$root => $this->structure[$root]]);
+        $this->renderFromRoot([$root => $this->navigationFactory->getStructure($root)]);
     }
 
     public function render(string $root): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
-        $this->renderFromRoot($this->structure[$root]);
+        $this->renderFromRoot($this->navigationFactory->getStructure($root));
     }
 
     private function renderFromRoot(array $nodes): void {
@@ -184,7 +143,6 @@ class Navigation extends BaseComponent {
     private function createLink(Presenter $presenter, array $node): string {
         $linkedPresenter = $this->preparePresenter($node['linkPresenter'], $node['linkAction'], $node['linkParams']);
         $linkParams = $this->actionParams($linkedPresenter, $node['linkAction'], $node['linkParams']);
-
         return $presenter->link(':' . $node['linkPresenter'] . ':' . $node['linkAction'], $linkParams);
     }
 
@@ -229,8 +187,6 @@ class Navigation extends BaseComponent {
      * @param string $action
      * @param string $providedParams
      * @return Presenter|INavigablePresenter
-     *
-     *
      * @throws BadRequestException
      * @throws BadTypeException
      */
@@ -242,4 +198,5 @@ class Navigation extends BaseComponent {
         }
         return $presenter;
     }
+
 }

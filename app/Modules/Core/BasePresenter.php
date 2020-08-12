@@ -69,8 +69,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     private BreadcrumbsFactory $breadcrumbsFactory;
 
-    private Navigation $navigationControl;
-
     private PresenterBuilder $presenterBuilder;
 
     private ?PageTitle $pageTitle;
@@ -103,10 +101,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->breadcrumbsFactory = $breadcrumbsFactory;
     }
 
-    public function injectNavigationControl(Navigation $navigationControl): void {
-        $this->navigationControl = $navigationControl;
-    }
-
     public function injectPresenterBuilder(PresenterBuilder $presenterBuilder): void {
         $this->presenterBuilder = $presenterBuilder;
     }
@@ -115,15 +109,12 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @return void
      * @throws UnsupportedLanguageException
      */
-    protected function startup() {
+    protected function startup(): void {
         parent::startup();
         $this->langTraitStartup();
     }
 
-    /**
-     * @return ITemplate
-     */
-    protected function createTemplate() {
+    protected function createTemplate(): ITemplate {
         $template = parent::createTemplate();
         $template->setTranslator($this->getTranslator());
         return $template;
@@ -262,8 +253,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     protected function createComponentNavigation(): Navigation {
-        $this->navigationControl->setParent();
-        return $this->navigationControl;
+        return new Navigation($this->getContext());
     }
 
     protected function createComponentDetail(): DetailComponent {
@@ -308,7 +298,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @param mixed $element
      * @throws ForbiddenRequestException
      */
-    public function checkRequirements($element) {
+    public function checkRequirements($element): void {
         parent::checkRequirements($element);
         $this->setAuthorized(true);
     }
@@ -316,7 +306,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /**
      * @param string $destination
      * @param null $args
-     * @return bool|mixed
+     * @return bool
      * @throws BadRequestException
      * @throws InvalidLinkException
      */
