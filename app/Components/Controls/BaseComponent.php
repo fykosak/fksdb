@@ -33,10 +33,7 @@ abstract class BaseComponent extends Control {
         $this->translator = $translator;
     }
 
-    /**
-     * @return ITemplate
-     */
-    protected function createTemplate() {
+    protected function createTemplate(): ITemplate {
         $template = parent::createTemplate();
         $template->setTranslator($this->translator);
         return $template;

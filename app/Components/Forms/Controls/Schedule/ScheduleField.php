@@ -33,6 +33,7 @@ class ScheduleField extends TextInput {
      * @param ServiceScheduleItem $serviceScheduleItem
      * @throws BadRequestException
      * @throws NotImplementedException
+     * @throws JsonException
      */
     public function __construct(ModelEvent $event, string $type, ServiceScheduleItem $serviceScheduleItem) {
         parent::__construct($this->getLabelByType($type));
@@ -41,7 +42,6 @@ class ScheduleField extends TextInput {
         $this->serviceScheduleItem = $serviceScheduleItem;
         $this->registerReact('event.schedule.' . $type);
         $this->appendProperty();
-
     }
 
     /**

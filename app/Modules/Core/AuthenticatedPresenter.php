@@ -83,7 +83,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      * @param mixed $element
      * @throws ForbiddenRequestException
      */
-    public function checkRequirements($element) {
+    public function checkRequirements($element): void {
         parent::checkRequirements($element);
         if ($element instanceof ReflectionClass) {
             $this->setAuthorized($this->isAuthorized() && $this->getUser()->isLoggedIn());
@@ -97,11 +97,10 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     /**
      * @return void
      * @throws AbortException
-     *
      * @throws ForbiddenRequestException
      * @throws Exception
      */
-    protected function startup() {
+    protected function startup(): void {
         parent::startup();
 
         $methods = $this->getAllowedAuthMethods();
