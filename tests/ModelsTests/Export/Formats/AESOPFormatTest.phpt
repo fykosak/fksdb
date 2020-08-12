@@ -80,11 +80,12 @@ class MockSeriesPresenter implements ISeriesPresenter {
     }
 
     /**
-     * @param string $message
+     * @param mixed $message
      * @param string $type
-     * @return void
+     * @return \stdClass
      */
-    public function flashMessage($message, $type = 'info') {
+    public function flashMessage($message, string $type = 'info'): \stdClass {
+        return new \stdClass();
     }
 }
 

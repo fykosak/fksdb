@@ -56,7 +56,7 @@ class Bootstrap {
         }
         // Load .neon files for tests
         foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/neon') as $filename => $file) {
-            $configurator->addConfig($filename, Configurator::NONE);
+            $configurator->addConfig($filename);
         }
         return $configurator;
     }
