@@ -11,11 +11,9 @@ use Nette\Application\UI\InvalidLinkException;
  */
 class SeriesChooser extends Chooser {
 
-    /** @var int */
-    private $currentSeries;
+    private int $currentSeries;
 
-    /** @var int[] */
-    private $allowedSeries;
+    private array $allowedSeries;
 
     public function setSeries(int $currentSeries, array $allowedSeries): void {
         $this->currentSeries = $currentSeries;

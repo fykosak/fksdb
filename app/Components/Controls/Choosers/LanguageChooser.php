@@ -15,14 +15,12 @@ use Nette\Application\UI\InvalidLinkException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class LanguageChooser extends Chooser {
-    /** @var array */
-    private $supportedLanguages = [];
 
-    /** @var string */
-    private $language;
+    private array $supportedLanguages = [];
 
-    /** @var bool */
-    private $modifiable;
+    private string $language;
+
+    private bool $modifiable;
 
     public function setLang(string $lang, bool $modifiable): void {
         $this->language = $lang;
