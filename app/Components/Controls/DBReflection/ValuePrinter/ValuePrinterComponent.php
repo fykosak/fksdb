@@ -44,7 +44,7 @@ class ValuePrinterComponent extends BaseComponent {
      * @throws BadTypeException
      */
     public function renderRow(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL): void {
-        $this->template->setFile(__DIR__ . '/layout.row.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.row.latte');
         $this->render($field, $model, $userPermission);
     }
 
@@ -56,7 +56,7 @@ class ValuePrinterComponent extends BaseComponent {
      * @throws BadTypeException
      */
     public function renderListItem(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL): void {
-        $this->template->setFile(__DIR__ . '/layout.listItem.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.listItem.latte');
         $this->render($field, $model, $userPermission);
     }
 
@@ -69,7 +69,7 @@ class ValuePrinterComponent extends BaseComponent {
      * @throws BadTypeException
      */
     public function renderOnlyValue(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL): void {
-        $this->template->setFile(__DIR__ . '/layout.onlyValue.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.onlyValue.latte');
         $this->render($field, $model, $userPermission);
     }
 }

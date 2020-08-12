@@ -32,7 +32,6 @@ class ScheduleField extends TextInput {
      * @param string $type
      * @param ServiceScheduleItem $serviceScheduleItem
      * @throws BadRequestException
-     * @throws JsonException
      * @throws NotImplementedException
      */
     public function __construct(ModelEvent $event, string $type, ServiceScheduleItem $serviceScheduleItem) {
@@ -69,7 +68,7 @@ class ScheduleField extends TextInput {
         }
     }
 
-    public function getData(...$args): string {
+    public function getData(): string {
         $groups = $this->event->getScheduleGroups()->where('schedule_group_type', $this->type);
         $groupList = [];
         foreach ($groups as $row) {

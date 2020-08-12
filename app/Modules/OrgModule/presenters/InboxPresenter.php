@@ -177,7 +177,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
     protected function beforeRender() {
         switch ($this->getAction()) {
             case 'inbox':
-                $this->getPageStyleContainer()->mainContainerClassName = str_replace('container ', 'container-fluid ', $this->getPageStyleContainer()->mainContainerClassName) . ' px-3';
+                $this->getPageStyleContainer()->setWidePage();
         }
         parent::beforeRender();
     }

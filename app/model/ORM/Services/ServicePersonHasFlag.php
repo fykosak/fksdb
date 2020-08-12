@@ -26,7 +26,6 @@ class ServicePersonHasFlag extends AbstractServiceSingle {
         parent::__construct($connection, $conventions, DbNames::TAB_PERSON_HAS_FLAG, ModelPersonHasFlag::class);
     }
 
-
     /**
      * @param null $data
      * @return AbstractModelSingle

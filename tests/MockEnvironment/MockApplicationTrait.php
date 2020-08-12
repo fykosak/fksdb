@@ -31,10 +31,7 @@ trait MockApplicationTrait {
         $this->container = $container;
     }
 
-    /**
-     * @return Container
-     */
-    protected function getContainer() {
+    protected function getContainer(): Container {
         return $this->container;
     }
 
@@ -42,7 +39,7 @@ trait MockApplicationTrait {
         $mockPresenter = new MockPresenter();
         $application = new MockApplication($mockPresenter);
 
-        $this->getContainer()->callInjects($mockPresenter);
+        $this->container->callInjects($mockPresenter);
         $mailFactory = $this->getContainer()->getByType(MailTemplateFactory::class);
         $mailFactory->injectApplication($application);
     }

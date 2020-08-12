@@ -15,8 +15,8 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonLinkRow extends AbstractColumnFactory {
-    /** @var LinkGenerator */
-    private $presenterComponent;
+
+    private LinkGenerator $presenterComponent;
 
     /**
      * PersonLinkRow constructor.

@@ -13,8 +13,7 @@ use FKSDB\ORM\AbstractModelSingle;
 final class ReferencedFactory {
 
     private string $modelClassName;
-    /**
-     * @var array
+    /*
      * modelClassName => string FQN of class/interface that can be access via 'method'-field
      * method => method name, that return Model of $this->modelClassName
      */
@@ -25,7 +24,7 @@ final class ReferencedFactory {
      * @param string $modelClassName
      * @param array|null $referencedAccess
      */
-    public function __construct(string $modelClassName, array $referencedAccess = null) {
+    public function __construct(string $modelClassName, ?array $referencedAccess) {
         $this->referencedAccess = $referencedAccess;
         $this->modelClassName = $modelClassName;
     }
@@ -43,7 +42,7 @@ final class ReferencedFactory {
         }
 
         // if referenced access is not set and model is not desired model throw exception
-        if (!isset($this->referencedAccess) || is_null($this->referencedAccess)) {
+        if (!isset($this->referencedAccess)) {
             throw new BadTypeException($this->modelClassName, get_class($model));
         }
         return $this->accessReferencedModel($model);

@@ -134,7 +134,6 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
     /**
      * @param PageTitle $pageTitle
      * @return void
-     *
      * @throws ForbiddenRequestException
      * @throws BadTypeException
      */

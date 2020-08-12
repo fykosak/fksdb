@@ -10,8 +10,8 @@ use Nette\Utils\DateTime;
 abstract class ScheduleTestCase extends EventTestCase {
     /** @var int */
     protected $itemId;
-    /** @var IPresenter */
-    protected $fixture;
+
+    protected IPresenter $fixture;
     /** @var int */
     protected $groupId;
     /** @var array */

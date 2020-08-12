@@ -51,8 +51,8 @@ class PersonSearchContainer extends SearchContainer {
             case self::SEARCH_EMAIL:
                 $control = new TextInput(_('E-mail'));
                 $control->addCondition(Form::FILLED)
-                    ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
-                $control->setOption('description', _('Nejprve zkuste najít osobu v naší databázi podle e-mailu.'));
+                    ->addRule(Form::EMAIL, _('Invalid e-mail.'));
+                $control->setOption('description', _('First of all try to find the person in our database using e-mail address'));
                 $control->setAttribute('placeholder', 'your-email@exmaple.com');
                 $control->setAttribute('autocomplete', 'email');
                 return $control;

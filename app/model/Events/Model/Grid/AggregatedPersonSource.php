@@ -41,10 +41,9 @@ abstract class AggregatedPersonSource implements IHolderSource {
 
     /**
      * @return void
-     *
      * @throws NeonSchemaException
      */
-    private function loadData() {
+    private function loadData(): void {
         $this->holders = [];
         /** @var ModelEvent $event */
         foreach ($this->events as $eventKey => $event) {
@@ -64,7 +63,7 @@ abstract class AggregatedPersonSource implements IHolderSource {
 
     /**
      * @param ModelEvent $event
-     * @return mixed
+     * @return Holder|SingleEventSource|null
      */
     abstract public function processEvent(ModelEvent $event);
 

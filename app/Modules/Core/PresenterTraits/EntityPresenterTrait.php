@@ -22,8 +22,8 @@ use Nette\Security\IResource;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 trait EntityPresenterTrait {
-    /** @var AbstractModelSingle */
-    protected $model;
+
+    protected ?AbstractModelSingle $model;
     /**
      * @var int
      * @persistent
@@ -104,7 +104,6 @@ trait EntityPresenterTrait {
 
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      */
     public function titleDelete(): void {
@@ -112,25 +111,37 @@ trait EntityPresenterTrait {
     }
 
     /**
-     * @return AbstractModelSingle
+     * @param bool $throw
+     * @return AbstractModelSingle|null
      * @throws ModelNotFoundException
      */
-    public function getEntity(): AbstractModelSingle {
+    public function getEntity(bool $throw = true): ?AbstractModelSingle {
         $id = $this->getParameter($this->getPrimaryParameterName());
         // protection for tests ev. change URL during app is running
-        if (isset($this->model) && $id !== $this->model->getPrimary()) {
-            $this->model = null;
-        }
-        if (!isset($this->model)) {
-            $model = $this->getORMService()->findByPrimary($id);
-            if ($model) {
-                $this->model = $model;
-            }
-        }
-        if (!isset($this->model)) {
-            throw new ModelNotFoundException('Model does not exists');
+        if (
+            (isset($this->model) && $id !== $this->model->getPrimary())
+            || !isset($this->model)
+        ) {
+            $this->model = $this->loadModel($throw);
         }
         return $this->model;
+    }
+
+    /**
+     * @param bool $throw
+     * @return AbstractModelSingle|null
+     * @throws ModelNotFoundException
+     */
+    private function loadModel(bool $throw = true): ?AbstractModelSingle {
+        $id = $this->getParameter($this->getPrimaryParameterName());
+        $candidate = $this->getORMService()->findByPrimary($id);
+        if ($candidate) {
+            return $candidate;
+        } elseif ($throw) {
+            throw new ModelNotFoundException('Model does not exists');
+        } else {
+            return null;
+        }
     }
 
     /**

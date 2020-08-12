@@ -104,20 +104,20 @@ class OrgPresenter extends BasePresenter {
     }
 
     /**
-     * @return Control
+     * @return OrgFormComponent
      * @throws ForbiddenRequestException
      * @throws BadTypeException
      */
-    protected function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): OrgFormComponent {
         return new OrgFormComponent($this->getContext(), $this->getSelectedContest(), true);
     }
 
     /**
-     * @return Control
+     * @return OrgFormComponent
      * @throws ForbiddenRequestException
      * @throws BadTypeException
      */
-    protected function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): OrgFormComponent {
         return new OrgFormComponent($this->getContext(), $this->getSelectedContest(), false);
     }
 

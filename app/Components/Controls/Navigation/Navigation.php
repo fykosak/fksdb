@@ -158,12 +158,12 @@ class Navigation extends BaseComponent {
     }
 
     public function renderNavbar(string $root): void {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.navbar.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.navbar.latte');
         $this->renderFromRoot([$root => $this->structure[$root]]);
     }
 
     public function render(string $root): void {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Navigation.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->renderFromRoot($this->structure[$root]);
     }
 

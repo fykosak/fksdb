@@ -16,13 +16,13 @@ class Downloader {
 
     private string $httpPassword;
 
-    /* without scheme (only domain name/IP) */
+    /** without scheme (only domain name/IP) */
     private string $host;
 
-    /* path to directory for temporary data */
+    /** path to directory for temporary data */
     private string $tmpDir;
 
-    /* contestId => contest name */
+    /** contestId => contest name */
     private array $contestMap;
 
     private Container $container;

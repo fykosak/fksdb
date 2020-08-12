@@ -19,10 +19,10 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PhoneColumnFactory extends DefaultColumnFactory implements ITestedColumnFactory {
-    /** @var PhoneNumberFactory */
-    protected $phoneNumberFactory;
-    /** @var bool */
-    private $isWriteOnly = true;
+
+    protected PhoneNumberFactory $phoneNumberFactory;
+
+    private bool $isWriteOnly = true;
 
     /**
      * PhoneRow constructor.
@@ -34,11 +34,7 @@ class PhoneColumnFactory extends DefaultColumnFactory implements ITestedColumnFa
         parent::__construct($metaDataFactory);
     }
 
-    /**
-     * @param bool $isWriteOnly
-     * @return void
-     */
-    public function setWriteOnly(bool $isWriteOnly) {
+    public function setWriteOnly(bool $isWriteOnly): void {
         $this->isWriteOnly = $isWriteOnly;
     }
 

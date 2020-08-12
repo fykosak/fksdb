@@ -74,12 +74,8 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         return $this->tokenAuthenticator;
     }
 
-    /**
-     * Formats action method name.
-     * @param string
-     * @return string
-     */
-    protected static function formatAuthorizedMethod($action) {
+    /* Formats action method name.*/
+    protected static function formatAuthorizedMethod(string $action): string {
         return 'authorized' . $action;
     }
 
@@ -133,7 +129,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     /**
      * @throws AbortException
      */
-    private function optionalLoginRedirect() {
+    private function optionalLoginRedirect(): void {
         if (!$this->requiresLogin()) {
             return;
         }
@@ -143,7 +139,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     /**
      * @throws AbortException
      */
-    final protected function loginRedirect() {
+    final protected function loginRedirect(): void {
         if ($this->user->logoutReason === UserStorage::INACTIVITY) {
             $reason = AuthenticationPresenter::REASON_TIMEOUT;
         } else {
@@ -169,15 +165,12 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * It may be overriden (should return realm).
-     * @return bool|string
+     * @return int
      */
-    public function getAllowedAuthMethods() {
+    public function getAllowedAuthMethods(): int {
         return self::AUTH_ALLOW_LOGIN | self::AUTH_ALLOW_TOKEN;
     }
 
-    /**
-     * @return string
-     */
     protected function getHttpRealm(): ?string {
         return null;
     }
@@ -192,7 +185,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     /**
      * @throws AbortException
      */
-    private function tryAuthToken() {
+    private function tryAuthToken(): void {
         $tokenData = $this->getParam(TokenAuthenticator::PARAM_AUTH_TOKEN);
 
         if (!$tokenData) {
@@ -201,7 +194,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
         try {
             $login = $this->tokenAuthenticator->authenticate($tokenData);
-            Debugger::log("$login signed in using token $tokenData.");
+            Debugger::log("$login signed in using token $tokenData.", 'token-login');
             if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_SSO)) {
                 $this->tokenAuthenticator->disposeAuthToken();
             } else {
@@ -215,10 +208,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         }
     }
 
-    /**
-     * @return void
-     */
-    private function tryHttpAuth() {
+    private function tryHttpAuth(): void {
         if (!isset($_SERVER['PHP_AUTH_USER'])) {
             $this->httpAuthPrompt();
             return;
@@ -241,10 +231,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         }
     }
 
-    /**
-     * @return void
-     */
-    private function httpAuthPrompt() {
+    private function httpAuthPrompt(): void {
         $realm = $this->getHttpRealm();
         if ($realm && $this->requiresLogin()) {
             header('WWW-Authenticate: Basic realm="' . $realm . '"');
@@ -257,7 +244,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     /**
      * @throws ForbiddenRequestException
      */
-    private function tryGithub() {
+    private function tryGithub(): void {
         if (!$this->getHttpRequest()->getHeader('X-GitHub-Event')) {
             return;
         }
@@ -275,5 +262,4 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             throw new ForbiddenRequestException(_('Chyba autentizace.'), Response::S403_FORBIDDEN, $exception);
         }
     }
-
 }

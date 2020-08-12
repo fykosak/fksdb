@@ -1,8 +1,9 @@
 <?php
 
-namespace FKSDB\Components\Controls;
+namespace FKSDB\Components\Controls\StoredQuery;
 
 use FKSDB\Authorization\ContestAuthorizator;
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Exports\ExportFormatFactory;
 use FKSDB\StoredQuery\StoredQuery;
 use FKSDB\StoredQuery\StoredQueryFactory as StoredQueryFactorySQL;
@@ -63,13 +64,13 @@ class ResultsComponent extends BaseComponent {
     }
 
     private function hasStoredQuery(): bool {
-        return isset($this->storedQuery) && !is_null($this->storedQuery);
+        return isset($this->storedQuery);
     }
 
     public function setParameters(array $parameters): void {
         $this->parameters = $parameters;
     }
-    
+
     public function updateParameters(array $parameters): void {
         if (!$this->parameters) {
             $this->parameters = [];
@@ -138,7 +139,7 @@ class ResultsComponent extends BaseComponent {
         $this->template->hasStoredQuery = $this->hasStoredQuery();
         $this->template->storedQuery = $this->storedQuery ?? null;
         $this->template->formats = $this->storedQuery ? $this->exportFormatFactory->getFormats($this->storedQuery) : [];
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'results.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.results.latte');
         $this->template->render();
     }
 
@@ -164,7 +165,9 @@ class ResultsComponent extends BaseComponent {
         }
     }
 
-    // TODO is this really need?
+    /**
+     * TODO is this really need?
+      G*/
     private function isAuthorized(): bool {
         if (!$this->hasStoredQuery()) {
             return false;

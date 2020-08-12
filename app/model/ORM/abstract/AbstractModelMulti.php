@@ -51,7 +51,7 @@ abstract class AbstractModelMulti implements IModel {
     }
 
     public function setMainModel(AbstractModelSingle $mainModel): void {
-        if (!isset($this->service) || is_null($this->service)) {
+        if (!isset($this->service)) {
             throw new InvalidStateException('Cannot set main model on multiModel w/out service.');
         }
         $this->mainModel = $mainModel;

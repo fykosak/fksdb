@@ -12,10 +12,9 @@ use Nette\InvalidArgumentException;
 class Machine {
 
     /** @var BaseMachine[] */
-    private $baseMachines = [];
+    private array $baseMachines = [];
 
-    /** @var BaseMachine */
-    private $primaryMachine;
+    private BaseMachine $primaryMachine;
 
     public function setPrimaryMachine(string $name): void {
         $this->primaryMachine = $this->getBaseMachine($name);

@@ -15,7 +15,7 @@ class SingleRestComponent extends BaseComponent {
     public function render(ModelPerson $person, ModelEvent $event): void {
         $this->template->rests = $person->getScheduleRests($event);
         $this->template->person = $person;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'person.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.person.latte');
         $this->template->render();
     }
 }

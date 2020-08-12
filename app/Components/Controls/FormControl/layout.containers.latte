@@ -1,7 +1,7 @@
 {form form}
     {* render root container *}
     {snippet groupContainer}
-        {includeblock FormControl.latte}
+        {import layout.macros.latte}
 
         {include #errors form => $mainContainer}
 

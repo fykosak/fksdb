@@ -32,7 +32,7 @@ class EmailRow extends AbstractColumnFactory {
     public function createField(...$args): BaseControl {
         $control = new TextInput($this->getTitle());
         $control->addCondition(Form::FILLED)
-            ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
+            ->addRule(Form::EMAIL, _('Invalid e-mail.'));
         return $control;
     }
 

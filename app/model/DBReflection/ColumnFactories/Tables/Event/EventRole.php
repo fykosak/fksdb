@@ -22,11 +22,9 @@ use Nette\Utils\Html;
  */
 class EventRole extends AbstractColumnFactory {
 
-    /** @var IUserStorage */
-    private $userStorage;
+    private IUserStorage $userStorage;
 
-    /** @var YearCalculator */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
     /**
      * EventRole constructor.

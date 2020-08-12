@@ -26,9 +26,6 @@ class ChartPresenter extends BasePresenter {
         $this->selectChart();
     }
 
-    /**
-     * @return IChart[]
-     */
     protected function registerCharts(): array {
         return [
             'totalPersons' => new TotalPersonsChartControl($this->getContext()),

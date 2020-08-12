@@ -17,7 +17,7 @@ use Nette\Utils\Random;
  */
 class ServiceAuthToken extends AbstractServiceSingle {
 
-    const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
+    private const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
     /**
      * ServiceAddress constructor.

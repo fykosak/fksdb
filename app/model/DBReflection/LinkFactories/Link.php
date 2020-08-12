@@ -9,12 +9,12 @@ use FKSDB\ORM\AbstractModelSingle;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class Link extends AbstractLink {
-    /** @var string */
-    private $destination;
-    /** @var array */
-    private $params;
-    /** @var string */
-    private $title;
+
+    private string $destination;
+
+    private array $params;
+
+    private string $title;
 
     /**
      * Link constructor.

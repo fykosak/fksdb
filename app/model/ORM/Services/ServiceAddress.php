@@ -36,14 +36,14 @@ class ServiceAddress extends AbstractServiceSingle {
      * @return ModelAddress
      */
     public function createNewModel(array $data): AbstractModelSingle {
-        if (!isset($data['region_id']) || is_null($data['region_id'])) {
+        if (!isset($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }
         return parent::createNewModel($data);
     }
 
     public function updateModel2(IModel $model, array $data): bool {
-        if (!isset($data['region_id']) || is_null($data['region_id'])) {
+        if (!isset($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }
         return parent::updateModel2($model, $data);
@@ -55,7 +55,7 @@ class ServiceAddress extends AbstractServiceSingle {
      * @return int
      * @throws InvalidPostalCode
      */
-    public function inferRegion($postalCode): int {
+    public function inferRegion(?string $postalCode): int {
         if (!$postalCode) {
             throw new InvalidPostalCode($postalCode);
         }
@@ -83,12 +83,7 @@ class ServiceAddress extends AbstractServiceSingle {
         }
     }
 
-    /**
-     *
-     * @param string $postalCode
-     * @return bool
-     */
-    public function tryInferRegion($postalCode): bool {
+    public function tryInferRegion(?string $postalCode): bool {
         try {
             $this->inferRegion($postalCode);
             return true;

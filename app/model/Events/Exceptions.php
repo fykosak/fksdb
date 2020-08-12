@@ -20,8 +20,7 @@ class MachineExecutionException extends RuntimeException {
  */
 class TransitionConditionFailedException extends MachineExecutionException {
 
-    /** @var Transition */
-    private $transition;
+    private Transition $transition;
 
     /**
      * TransitionConditionFailedException constructor.
@@ -35,13 +34,9 @@ class TransitionConditionFailedException extends MachineExecutionException {
         $this->transition = $blockingTransition;
     }
 
-    /**
-     * @return Transition
-     */
-    public function getTransition() {
+    public function getTransition(): Transition {
         return $this->transition;
     }
-
 }
 
 /**

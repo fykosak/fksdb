@@ -15,7 +15,6 @@ use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
-use Nette\Utils\ArrayHash;
 use Nette\Utils\JsonException;
 use Nette\DI\Container as DIContainer;
 
@@ -90,10 +89,10 @@ abstract class ReferencedContainer extends ContainerWithOptions {
     }
 
     /**
-     * @param array|ArrayHash $conflicts
+     * @param iterable $conflicts
      * @param null $container
      */
-    public function setConflicts($conflicts, $container = null): void {
+    public function setConflicts(iterable $conflicts, $container = null): void {
         $container = $container ?: $this;
         foreach ($conflicts as $key => $value) {
             $component = $container->getComponent($key, false);

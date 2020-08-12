@@ -15,7 +15,7 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class HealthInsuranceRow extends AbstractColumnFactory {
-    const ID_MAPPING = [
+    protected const ID_MAPPING = [
         111 => '(111) Všeobecná zdravotní pojišťovna ČR',
         201 => '(201) Vojenská zdravotní pojišťovna ČR',
         205 => '(205) Česká průmyslová zdravotní pojišťovna',

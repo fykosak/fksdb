@@ -68,7 +68,7 @@ class StalkingComponent extends StalkingControl {
 
         $this->template->model = $model;
         $this->template->rows = $definition['rows'];
-        $this->template->setFile(__DIR__ . '/layout.single.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.single.latte');
         $this->template->render();
     }
 
@@ -87,7 +87,7 @@ class StalkingComponent extends StalkingControl {
         $this->template->rows = $definition['rows'];
         $this->template->models = $models;
         $this->template->itemHeadline = $definition['itemHeadline'];
-        $this->template->setFile(__DIR__ . '/layout.multi.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.multi.latte');
         $this->template->render();
     }
 }

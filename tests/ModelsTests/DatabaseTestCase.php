@@ -13,13 +13,10 @@ use Tester\Environment;
 use Tester\TestCase;
 
 abstract class DatabaseTestCase extends TestCase {
-    /** @var Container */
-    private $container;
 
-    /**
-     * @var Connection
-     */
-    protected $connection;
+    private Container $container;
+
+    protected Connection $connection;
     /**
      * @var int
      */
@@ -39,7 +36,7 @@ abstract class DatabaseTestCase extends TestCase {
         $this->connection->query('USE fksdb_test' . $this->instanceNo);
     }
 
-    protected function getContext(): Container {
+    protected function getContainer(): Container {
         return $this->container;
     }
 
@@ -70,7 +67,7 @@ abstract class DatabaseTestCase extends TestCase {
      * @param bool|array $loginData Login credentials
      * @return int
      */
-    protected function createPerson($name, $surname, $info = [], $loginData = false) {
+    protected function createPerson($name, $surname, $info = [], $loginData = false): int {
         $this->connection->query("INSERT INTO person (other_name, family_name,gender) VALUES(?, ?,'M')", $name, $surname);
         $personId = $this->connection->getInsertId();
 

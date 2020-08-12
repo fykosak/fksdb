@@ -30,7 +30,6 @@ class PersonScheduleFactory {
      * @param ModelEvent $event
      * @return ScheduleField
      * @throws BadRequestException
-     * @throws JsonException
      * @throws NotImplementedException
      * @throws BadRequestException
      */
