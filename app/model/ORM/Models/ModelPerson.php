@@ -326,7 +326,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @param int eventId
      * @param string $type
      * @return string|null
-     * @throws JsonException
      */
     public function getSerializedSchedule(int $eventId, string $type): ?string {
         if (!$eventId) {
@@ -345,7 +344,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
             return null;
         }
 
-        return Json::encode($items);
+        return json_encode($items);
     }
 
     /**

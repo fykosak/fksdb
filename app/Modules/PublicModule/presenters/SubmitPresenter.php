@@ -172,7 +172,7 @@ class SubmitPresenter extends BasePresenter {
 
                 if ($submit && $this->uploadedSubmitStorage->fileExists($submit)) {
                     $overwrite = $container->addCheckbox('overwrite', _('Přepsat odeslané řešení.'));
-                    $conditionedUpload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(~Form::FILLED, _('Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.'));
+                    $conditionedUpload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(Form::BLANK, _('Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.'));
                 }
             } else {
                 //Implementaton of quiz questions

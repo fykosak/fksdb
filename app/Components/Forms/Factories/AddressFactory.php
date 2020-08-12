@@ -41,12 +41,7 @@ class AddressFactory {
         $this->container = $container;
     }
 
-    /**
-     * @param int $options
-     * @param IControl|null $conditioningField
-     * @return AddressContainer
-     */
-    public function createAddress(int $options = 0, IControl $conditioningField = null): AddressContainer {
+    public function createAddress(int $options = 0, ?IControl $conditioningField = null): AddressContainer {
         $container = new AddressContainer($this->container);
         $this->buildAddress($container, $options, $conditioningField);
         return $container;
@@ -74,7 +69,7 @@ class AddressFactory {
      * @param IControl $conditioningField
      * @param int $options
      */
-    public function buildAddress(AddressContainer $container, int $options = 0, IControl $conditioningField = null): void {
+    public function buildAddress(AddressContainer $container, int $options = 0, ?IControl $conditioningField = null): void {
         if ($options & self::SHOW_EXTENDED_ROWS) {
             $container->addText('first_row', _('První řádek'))
                 ->setOption('description', _('První volitelný řádek adresy (např. bytem u)'));

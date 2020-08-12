@@ -21,13 +21,7 @@ class LoginFactory {
     /** require nonempty (new) password */
     const REQUIRE_PASSWORD = 0x8;
 
-    /**
-     * @param int $options
-     * @param ControlGroup|null $group
-     * @param null $loginRule
-     * @return ModelContainer
-     */
-    public function createLogin($options = 0, ControlGroup $group = null, $loginRule = null): ModelContainer {
+    public function createLogin(int $options = 0, ?ControlGroup $group = null, ?callable $loginRule = null): ModelContainer {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 

@@ -16,7 +16,6 @@ use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Services\ServicePerson;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
@@ -332,13 +331,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
         return false;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param string $sub
-     * @param string $field
-     * @return bool
-     * @throws JsonException
-     */
     final public function isFilled(ModelPerson $person, string $sub, string $field): bool {
         $value = $this->getPersonValue($person, $sub, $field, ReferencedPersonContainer::TARGET_VALIDATION);
         return !($value === null || $value === '');
@@ -349,10 +341,9 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @param string $sub
      * @param string $field
      * @param int $options
-     * @return bool|ModelPostContact|mixed|null
-     * @throws JsonException
+     * @return mixed
      */
-    protected function getPersonValue($person, string $sub, string $field, int $options) {
+    protected function getPersonValue(?ModelPerson $person, string $sub, string $field, int $options) {
         return ReferencedPersonFactory::getPersonValue($person, $sub, $field, $this->acYear, $options, $this->event);
     }
 }

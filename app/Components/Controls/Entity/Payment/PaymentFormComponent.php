@@ -19,7 +19,6 @@ use FKSDB\Payment\Handler\EmptyDataException;
 use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\UnavailableTransitionsException;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;

@@ -20,8 +20,7 @@ class ChooserFactory extends AbstractFactory {
     const FORMAT_VALUE_META = 'value-meta';
     const FORMAT_KEY_META = 'key-meta';
 
-    /** @var string */
-    private $prompt;
+    private string $prompt;
 
     private IOptionsProvider $optionsProvider;
 
@@ -30,16 +29,12 @@ class ChooserFactory extends AbstractFactory {
      * @param string $prompt
      * @param IOptionsProvider $optionsProvider
      */
-    public function __construct($prompt, IOptionsProvider $optionsProvider) {
+    public function __construct(string $prompt, IOptionsProvider $optionsProvider) {
         $this->prompt = $prompt;
         $this->optionsProvider = $optionsProvider;
     }
 
-    /**
-     * @param Field $field
-     * @return SelectBox
-     */
-    public function createComponent(Field $field): IComponent {
+    public function createComponent(Field $field): SelectBox {
 
         $component = new SelectBox($field->getLabel());
         $component->setOption('description', $field->getDescription());

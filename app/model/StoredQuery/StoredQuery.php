@@ -83,11 +83,7 @@ class StoredQuery implements IDataSource, IResource {
         return $storedQuery;
     }
 
-    /**
-     * @return ModelStoredQuery
-     * @deprecated
-     */
-    public function getQueryPattern(): ModelStoredQuery {
+    public function getQueryPattern(): ?ModelStoredQuery {
         return $this->queryPattern;
     }
 

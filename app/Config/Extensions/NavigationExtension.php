@@ -21,7 +21,7 @@ class NavigationExtension extends CompilerExtension {
         $builder = $this->getContainerBuilder();
         $config = $this->getConfig();
         $navbar = $builder->addDefinition('navbar')
-            ->setClass(NavigationFactory::class);
+            ->setFactory(NavigationFactory::class);
         $navbar->setAutowired(true);
 
 

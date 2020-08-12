@@ -13,7 +13,6 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;

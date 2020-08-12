@@ -185,7 +185,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      * @throws AbortException
      */
     private function tryAuthToken(): void {
-        $tokenData = $this->getParam(TokenAuthenticator::PARAM_AUTH_TOKEN);
+        $tokenData = $this->getParameter(TokenAuthenticator::PARAM_AUTH_TOKEN);
 
         if (!$tokenData) {
             return;

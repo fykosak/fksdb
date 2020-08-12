@@ -139,7 +139,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         } else {
             $provider = $component->getDataProvider();
             $data = null;
-            if ($provider instanceof IFilteredDataProvider) {
+            if ($provider && $provider instanceof IFilteredDataProvider) {
                 $data = $provider->getFilteredItems($acQ);
             }
 

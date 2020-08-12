@@ -8,7 +8,6 @@ use FKSDB\Events\Model\ApplicationHandler;
 use FKSDB\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Events\Model\Grid\IHolderSource;
 use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\Modules\Core\BasePresenter;

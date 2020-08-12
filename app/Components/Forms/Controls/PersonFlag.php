@@ -19,13 +19,13 @@ class PersonFlag extends SelectBox {
      * Should be self::FLAG_* values on output?
      * @var bool
      */
-    private $useExplicitValues = false;
+    private bool $useExplicitValues = false;
 
     /**
      * PersonFlag constructor.
      * @param null $label
      */
-    public function __construct($label = NULL) {
+    public function __construct($label = null) {
         $items = [
             self::FLAG_YES => _('Ano'),
             self::FLAG_NO => _('Ne'),
@@ -67,10 +67,7 @@ class PersonFlag extends SelectBox {
         return $this;
     }
 
-    /**
-     * @return Html
-     */
-    public function getControl() {
+    public function getControl(): Html {
         $oldMapped = $this->useExplicitValues;
         $this->useExplicitValues = true;
         $control = parent::getControl();

@@ -60,7 +60,7 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
             $schoolControl = $schoolControls[$i];
             $personControl = $personControls[$i];
             $studyYearControl = $studyYearControls[$i];
-            $control->addCondition(~$form::FILLED)
+            $control->addCondition(Form::BLANK)
                 ->addRule(function () use ($schoolControl, $personControl, $studyYearControl, $form, $msg) {
                     if (!$personControl->getValue()) {
                         return true;

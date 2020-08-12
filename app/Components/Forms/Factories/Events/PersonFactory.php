@@ -26,7 +26,7 @@ use FKSDB\Persons\SelfResolver;
  */
 class PersonFactory extends AbstractFactory {
 
-    const VALUE_LOGIN = 'fromLogin';
+    private const VALUE_LOGIN = 'fromLogin';
 
     /** @var mixed */
     private $fieldsDefinition;
@@ -91,7 +91,7 @@ class PersonFactory extends AbstractFactory {
         $this->container = $container;
     }
 
-    public function createComponent(Field $field): IComponent {
+    public function createComponent(Field $field): ReferencedId {
         $searchType = $this->evaluator->evaluate($this->searchType, $field);
         $allowClear = $this->evaluator->evaluate($this->allowClear, $field);
 
