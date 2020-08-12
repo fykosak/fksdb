@@ -9,5 +9,5 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
  * *
  */
 interface IFyziklaniTeamReferencedModel {
-    public function getFyziklaniTeam(): ModelFyziklaniTeam;
+    public function getFyziklaniTeam(): ?ModelFyziklaniTeam;
 }

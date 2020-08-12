@@ -30,14 +30,14 @@ class PasswordFactory extends AbstractFactory {
      * @param TextInput|IComponent $component
      * @param Field $field
      */
-    protected function setDefaultValue(IComponent $component, Field $field) {
+    protected function setDefaultValue(IComponent $component, Field $field): void {
         $component->setDefaultValue('');
     }
 
     /**
      * @param TextInput|IComponent $component
      */
-    protected function setDisabled(IComponent $component) {
+    protected function setDisabled(IComponent $component): void {
         $component->setDisabled();
     }
 

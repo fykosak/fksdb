@@ -3,6 +3,7 @@
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
 use FKSDB\Tests\Events\EventTestCase;
+use Nette\Application\IPresenter;
 use Nette\Database\Row;
 use Nette\Utils\DateTime;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
@@ -10,10 +11,7 @@ use Tester\Assert;
 
 abstract class FolTestCase extends EventTestCase {
 
-    /**
-     * @var ApplicationPresenter
-     */
-    protected $fixture;
+    protected IPresenter $fixture;
     /** @var int */
     protected $personId;
     /**

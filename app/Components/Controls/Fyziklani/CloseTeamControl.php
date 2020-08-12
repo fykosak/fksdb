@@ -18,14 +18,12 @@ use Nette\DI\Container;
  */
 class CloseTeamControl extends BaseComponent {
 
-    /** @var ModelEvent */
-    private $event;
+    private ModelEvent $event;
 
     /** @var ModelFyziklaniTeam */
     private $team;
 
-    /** @var ServiceFyziklaniTask */
-    private $serviceFyziklaniTask;
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
 
     /**
      * CloseTeamControl constructor.
@@ -37,19 +35,11 @@ class CloseTeamControl extends BaseComponent {
         $this->event = $event;
     }
 
-    /**
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @return void
-     */
-    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask) {
+    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask): void {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 
-    /**
-     * @param ModelFyziklaniTeam $team
-     * @return void
-     */
-    public function setTeam(ModelFyziklaniTeam $team) {
+    public function setTeam(ModelFyziklaniTeam $team): void {
         $this->team = $team;
     }
 
@@ -57,7 +47,7 @@ class CloseTeamControl extends BaseComponent {
      * @return void
      * @throws AbortException
      */
-    public function handleClose() {
+    public function handleClose(): void {
         $connection = $this->serviceFyziklaniTask->getConnection();
         $connection->beginTransaction();
         $sum = (int)$this->team->getNonRevokedSubmits()->sum('points');
@@ -73,8 +63,8 @@ class CloseTeamControl extends BaseComponent {
      * @return void
      * @throws NotSetGameParametersException
      */
-    public function render() {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'CloseTeamControl.latte');
+    public function render(): void {
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.closeTeam.latte');
         $this->template->task = $this->getNextTask();
         $this->template->render();
     }

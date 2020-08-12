@@ -16,17 +16,12 @@ class PizzaControl extends BaseComponent {
 
     /** @var ModelPerson[] */
     private $persons = [];
-    /** @var ServicePerson */
-    private $servicePerson;
-    /** @var PersonFactory */
-    private $personFactory;
 
-    /**
-     * @param ServicePerson $servicePerson
-     * @param PersonFactory $personFactory
-     * @return void
-     */
-    public function injectPrimary(ServicePerson $servicePerson, PersonFactory $personFactory) {
+    private ServicePerson $servicePerson;
+
+    private PersonFactory $personFactory;
+
+    public function injectPrimary(ServicePerson $servicePerson, PersonFactory $personFactory): void {
         $this->servicePerson = $servicePerson;
         $this->personFactory = $personFactory;
     }

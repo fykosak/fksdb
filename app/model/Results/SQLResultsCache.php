@@ -16,11 +16,9 @@ use Nette\InvalidArgumentException;
  */
 class SQLResultsCache {
 
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
-    /** @var ServiceTask */
-    private $serviceTask;
+    private ServiceTask $serviceTask;
 
     /**
      * FKSDB\Results\SQLResultsCache constructor.
@@ -37,7 +35,7 @@ class SQLResultsCache {
      * @param ModelContest $contest
      * @param int $year
      */
-    public function invalidate(ModelContest $contest = null, $year = null) {
+    public function invalidate(ModelContest $contest = null, $year = null): void {
         $data = [
             'calc_points' => null,
         ];
@@ -64,7 +62,7 @@ class SQLResultsCache {
      * @param int $year
      * @throws BadRequestException
      */
-    public function recalculate(ModelContest $contest, $year) {
+    public function recalculate(ModelContest $contest, $year): void {
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($contest, $year);
         if ($evaluationStrategy === null) {
             throw new InvalidArgumentException('Undefined evaluation strategy for ' . $contest->name . '@' . $year);

@@ -13,9 +13,7 @@ use FKSDB\Config\NeonScheme;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\ModelException;
 use FKSDB\Logging\ILogger;
-use FKSDB\Messages\Message;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
@@ -30,35 +28,27 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
 use Nette\Neon\Neon;
 use Nette\Utils\Html;
-use Tracy\Debugger;
 
 /**
  * Class AbstractForm
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
-    const CONT_EVENT = 'event';
+    public const CONT_EVENT = 'event';
 
-    /** @var ModelContest */
-    protected $contest;
+    protected ModelContest $contest;
 
-    /** @var SingleReflectionFormFactory */
-    protected $singleReflectionFormFactory;
+    protected SingleReflectionFormFactory $singleReflectionFormFactory;
 
-    /** @var ServiceAuthToken */
-    protected $serviceAuthToken;
+    protected ServiceAuthToken $serviceAuthToken;
 
-    /** @var ServiceEvent */
-    protected $serviceEvent;
-
+    protected ServiceEvent $serviceEvent;
     /** @var ModelEvent */
     protected $model;
 
-    /** @var int */
-    private $year;
+    private int $year;
 
-    /** @var EventDispatchFactory */
-    private $eventDispatchFactory;
+    private EventDispatchFactory $eventDispatchFactory;
 
     /**
      * AbstractForm constructor.
@@ -73,19 +63,12 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
         $this->year = $year;
     }
 
-    /**
-     * @param SingleReflectionFormFactory $singleReflectionFormFactory
-     * @param ServiceAuthToken $serviceAuthToken
-     * @param ServiceEvent $serviceEvent
-     * @param EventDispatchFactory $eventDispatchFactory
-     * @return void
-     */
     public function injectPrimary(
         SingleReflectionFormFactory $singleReflectionFormFactory,
         ServiceAuthToken $serviceAuthToken,
         ServiceEvent $serviceEvent,
         EventDispatchFactory $eventDispatchFactory
-    ) {
+    ): void {
         $this->serviceAuthToken = $serviceAuthToken;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->serviceEvent = $serviceEvent;
@@ -99,16 +82,12 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    protected function configureForm(Form $form) {
+    protected function configureForm(Form $form): void {
         $eventContainer = $this->createEventContainer();
         $form->addComponent($eventContainer, self::CONT_EVENT);
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return void
-     */
-    protected function updateTokens(ModelEvent $event) {
+    protected function updateTokens(ModelEvent $event): void {
         $connection = $this->serviceAuthToken->getConnection();
         $connection->beginTransaction();
         // update also 'until' of authTokens in case that registration end has changed
@@ -125,7 +104,7 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
      * @throws BadTypeException
      * @throws NeonSchemaException
      */
-    public function setModel(AbstractModelSingle $model) {
+    public function setModel(AbstractModelSingle $model): void {
         $this->model = $model;
         $this->getForm()->setDefaults([
             self::CONT_EVENT => $model->toArray(),
@@ -174,7 +153,7 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
      * @return void
      * @throws AbortException
      */
-    protected function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT], true);
         if ($this->create) {

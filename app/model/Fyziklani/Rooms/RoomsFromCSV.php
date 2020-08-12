@@ -20,11 +20,9 @@ class RoomsFromCSV extends Stage {
     /** @var string */
     private $data;
 
-    /** @var ModelEvent */
-    private $event;
+    private ModelEvent $event;
 
-    /** @var ServiceFyziklaniTeam */
-    private $serviceTeam;
+    private ServiceFyziklaniTeam $serviceTeam;
 
     /**
      * RoomsFromCSV constructor.
@@ -39,11 +37,11 @@ class RoomsFromCSV extends Stage {
     /**
      * @param mixed $data
      */
-    public function setInput($data) {
+    public function setInput($data): void {
         $this->data = $data;
     }
 
-    public function process() {
+    public function process(): void {
         if (!file_exists($this->data)) {
             throw new PipelineException(sprintf('File %s doesn\'t exist.', $this->data));
         }

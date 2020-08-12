@@ -18,10 +18,9 @@ use Nette\Forms\IControl;
  */
 class UniqueCheck extends AbstractAdjustment {
 
-    /** @var string */
-    private $field;
-    /** @var string */
-    private $message;
+    private string $field;
+
+    private string $message;
 
     /**
      * UniqueCheck constructor.
@@ -33,13 +32,7 @@ class UniqueCheck extends AbstractAdjustment {
         $this->message = $message;
     }
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return void
-     */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder) {
+    protected function _adjust(Form $form, Machine $machine, Holder $holder): void {
         $controls = $this->getControl($this->field);
         if (!$controls) {
             return;
@@ -71,5 +64,4 @@ class UniqueCheck extends AbstractAdjustment {
             }, $this->message);
         }
     }
-
 }

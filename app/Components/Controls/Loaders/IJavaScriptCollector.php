@@ -12,7 +12,7 @@ interface IJavaScriptCollector {
     /**
      * @param string $file path relative to webroot
      */
-    public function registerJSFile(string $file);
+    public function registerJSFile(string $file): void;
 
     /**
      *
@@ -20,16 +20,16 @@ interface IJavaScriptCollector {
      * @param string $tag tag of the code for later reference
      * @deprecated Leads to eval for AJAX requests.
      */
-    public function registerJSCode(string $code, string $tag = null);
+    public function registerJSCode(string $code, string $tag = null): void;
 
     /**
      * @param string $file path relative to webroot
      */
-    public function unregisterJSFile(string $file);
+    public function unregisterJSFile(string $file): void;
 
     /**
      *
      * @param string $tag code tag to be removed
      */
-    public function unregisterJSCode(string $tag);
+    public function unregisterJSCode(string $tag): void;
 }

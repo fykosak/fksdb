@@ -41,20 +41,15 @@ abstract class AbstractResultsModel {
     const COL_ALIAS = 'alias';
     const DATA_PREFIX = 'd';
 
-    /** @var int */
-    protected $year;
+    protected int $year;
 
-    /** @var ModelContest */
-    protected $contest;
+    protected ModelContest $contest;
 
-    /** @var ServiceTask */
-    protected $serviceTask;
+    protected ServiceTask $serviceTask;
 
-    /** @var Connection */
-    protected $connection;
+    protected Connection $connection;
 
-    /** @var EvaluationStrategy */
-    protected $evaluationStrategy;
+    protected EvaluationStrategy $evaluationStrategy;
 
     /**
      * FKSDB\Results\Models\AbstractResultsModel constructor.
@@ -64,7 +59,7 @@ abstract class AbstractResultsModel {
      * @param int $year
      * @param EvaluationStrategy $evaluationStrategy
      */
-    public function __construct(ModelContest $contest, ServiceTask $serviceTask, Connection $connection, $year, EvaluationStrategy $evaluationStrategy) {
+    public function __construct(ModelContest $contest, ServiceTask $serviceTask, Connection $connection, int $year, EvaluationStrategy $evaluationStrategy) {
         $this->contest = $contest;
         $this->serviceTask = $serviceTask;
         $this->connection = $connection;

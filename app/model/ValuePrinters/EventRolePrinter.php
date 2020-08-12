@@ -14,8 +14,8 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventRolePrinter {
-    /** @var YearCalculator */
-    private $yearCalculator;
+
+    private YearCalculator $yearCalculator;
 
     /**
      * EventRolePrinter constructor.

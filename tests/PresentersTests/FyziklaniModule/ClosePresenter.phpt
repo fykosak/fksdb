@@ -6,6 +6,7 @@ $container = require '../../bootstrap.php';
 
 use FKSDB\Events\Model\ApplicationHandler;
 use MockEnvironment\MockApplicationTrait;
+use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\DI\Config\Helpers;
@@ -16,10 +17,7 @@ class ClosePresenter extends FyziklaniTestCase {
 
     use MockApplicationTrait;
 
-    /**
-     * @var ClosePresenter
-     */
-    private $fixture;
+    private IPresenter $fixture;
     /** @var int */
     private $teamIds;
     /** @var int */
@@ -187,7 +185,7 @@ class ClosePresenter extends FyziklaniTestCase {
      */
     public function testCloseCategory($category) {
         foreach ($this->getTestTeams($category) as $teamData) {
-            list($teamId, $pointsSum,) = $teamData;
+            [$teamId, $pointsSum,] = $teamData;
             $this->innertestCloseTeam($teamId, $pointsSum);
         }
 
@@ -209,9 +207,9 @@ class ClosePresenter extends FyziklaniTestCase {
 
     public function testCloseAll() {
         foreach ($this->getCategories() as $catData) {
-            list($category) = $catData;
+            [$category] = $catData;
             foreach ($this->getTestTeams($category) as $teamData) {
-                list($teamId, $pointsSum, $cRank, $rank) = $teamData;
+                [$teamId, $pointsSum, $cRank, $rank] = $teamData;
                 $this->innertestCloseTeam($teamId, $pointsSum);
             }
         }

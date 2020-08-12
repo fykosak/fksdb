@@ -73,11 +73,7 @@ class OptimisticForm extends Form {
         return parent::isValid();
     }
 
-    /**
-     * @param string $fingerprint
-     * @return void
-     */
-    private function setFingerprint(string $fingerprint) {
+    private function setFingerprint(string $fingerprint): void {
         $this->getFingerprintInput()->setValue($fingerprint);
     }
 }

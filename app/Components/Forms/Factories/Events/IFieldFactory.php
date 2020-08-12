@@ -38,10 +38,5 @@ interface IFieldFactory {
      */
     public function validate(Field $field, DataValidator $validator);
 
-    /**
-     * @param IComponent $component
-     * @param Field $field
-     * @return void
-     */
-    public function setFieldDefaultValue(IComponent $component, Field $field);
+    public function setFieldDefaultValue(IComponent $component, Field $field): void;
 }

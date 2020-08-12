@@ -20,14 +20,9 @@ use Nette\Security\IResource;
 class ScheduleGroupPresenter extends BasePresenter {
     use EventEntityPresenterTrait;
 
-    /** @var ServiceScheduleGroup */
-    private $serviceScheduleGroup;
+    private ServiceScheduleGroup $serviceScheduleGroup;
 
-    /**
-     * @param ServiceScheduleGroup $serviceScheduleGroup
-     * @return void
-     */
-    public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup) {
+    public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup): void {
         $this->serviceScheduleGroup = $serviceScheduleGroup;
     }
 
@@ -35,7 +30,7 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function titleList() {
+    public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('Schedule'), 'fa fa-calendar-check-o'));
     }
 
@@ -43,7 +38,7 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function titlePersons() {
+    public function titlePersons(): void {
         $this->setPageTitle(new PageTitle(_('Whole program'), 'fa fa-calendar-check-o'));
     }
 

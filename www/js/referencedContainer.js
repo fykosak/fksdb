@@ -163,25 +163,6 @@ $(function () {
             }
         }
     });
-    if (!$.nette.ext('referencedContainer')) {
-        $.nette.ext('referencedContainer', {
-            success: function (payload) {
-                if (payload.referencedContainer) {
-                    var elRefId = $('#' + payload.referencedContainer.id);
-                    elRefId.val(payload.referencedContainer.value);
-
-                    for (var id in payload.snippets) {
-                        var snippet = $('#' + id);
-                        $.fks.referencedContainer._proto.transformContainer(snippet, elRefId);
-                        snippet.closest('form').each(function () {
-                            window.Nette.initForm(this);
-                            $(this).enterSubmitForm('update');
-                        });
-                    }
-                }
-            }
-        }, {});
-    }
     $("[data-referenced]").referencedContainer();
 
 });

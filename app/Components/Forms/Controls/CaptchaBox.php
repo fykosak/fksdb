@@ -23,9 +23,8 @@ class CaptchaBox extends SelectBox {
 
         $this->addRule(function(BaseControl $control) {
                     return $control->getValue() == self::VALUE_NO;
-                }, _('Tento formulář je jenom pro lidi.'));
+                }, _('This form is for people only.'));
 
         $this->setDefaultValue(self::VALUE_YES);
     }
-
 }

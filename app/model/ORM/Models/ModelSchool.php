@@ -15,7 +15,7 @@ use Nette\Security\IResource;
  * @property-read bool|int active
  */
 class ModelSchool extends AbstractModelSingle implements IResource {
-    const RESOURCE_ID = 'school';
+    public const RESOURCE_ID = 'school';
 
     public function getAddress(): ModelAddress {
         return ModelAddress::createFromActiveRow($this->address);

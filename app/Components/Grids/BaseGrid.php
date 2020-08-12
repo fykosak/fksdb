@@ -38,10 +38,10 @@ use FKSDB\SQL\SearchableDataSource;
 abstract class BaseGrid extends Grid {
     /** @persistent string */
     public $searchTerm;
-    /** @var DBReflectionFactory */
-    protected $tableReflectionFactory;
-    /** @var Container */
-    private $container;
+
+    protected DBReflectionFactory $tableReflectionFactory;
+
+    private Container $container;
 
     /**
      * BaseGrid constructor.
@@ -53,19 +53,11 @@ abstract class BaseGrid extends Grid {
         $container->callInjects($this);
     }
 
-    /**
-     * @param DBReflectionFactory $tableReflectionFactory
-     * @return void
-     */
-    public function injectTableReflectionFactory(DBReflectionFactory $tableReflectionFactory) {
+    public function injectTableReflectionFactory(DBReflectionFactory $tableReflectionFactory): void {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    /**
-     * @param Presenter $presenter
-     * @return void
-     */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         try {
             $this->setDataSource($this->getData());
         } catch (NotImplementedException $exception) {
@@ -111,7 +103,7 @@ abstract class BaseGrid extends Grid {
     /**
      * @throws GridException
      */
-    public function render() {
+    public function render(): void {
         $paginator = $this->getPaginator();
 
         // this has to be done already here (and in the parent call again :-( )
@@ -251,7 +243,7 @@ abstract class BaseGrid extends Grid {
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    protected function addColumns(array $fields) {
+    protected function addColumns(array $fields): void {
         foreach ($fields as $name) {
             $this->addReflectionColumn($name);
         }
@@ -337,7 +329,7 @@ abstract class BaseGrid extends Grid {
     /**
      * @throws AbortException
      */
-    public function handleCsv() {
+    public function handleCsv(): void {
         $columns = $this['columns']->components;
         $rows = $this->dataSource->getData();
         $data = [];

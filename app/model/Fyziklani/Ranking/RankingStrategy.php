@@ -22,10 +22,9 @@ class RankingStrategy {
      */
     protected $presenter;
 
-    /** @var ServiceFyziklaniTeam */
-    private $serviceFyziklaniTeam;
-    /** @var ModelEvent */
-    private $event;
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+
+    private ModelEvent $event;
 
     /**
      * CloseSubmitStrategy constructor.

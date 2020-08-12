@@ -12,7 +12,7 @@ use FKSDB\UI\PageTitle;
  */
 class MyPaymentsPresenter extends AuthenticatedPresenter {
 
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('My payments'), 'fa fa-credit-card'));
     }
 

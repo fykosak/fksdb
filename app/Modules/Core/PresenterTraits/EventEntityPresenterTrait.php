@@ -26,8 +26,8 @@ trait EventEntityPresenterTrait {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    protected function getEntity() {
-        $model = $this->getBaseEntity();
+    protected function getEntity(): AbstractModelSingle {
+        $model = $this->getBaseEntity(true);
 
         if (!$model instanceof IEventReferencedModel) {
             throw new BadTypeException(IEventReferencedModel::class, $model);

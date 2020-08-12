@@ -17,15 +17,15 @@ class ErrorPresenter extends BasePresenter {
 
     protected function beforeRender() {
         $this->getPageStyleContainer()->styleId = 'error';
-        $this->getPageStyleContainer()->navBarClassName = 'bg-error navbar-dark';
+        $this->getPageStyleContainer()->setNavBarClassName('bg-error navbar-dark');
         parent::beforeRender();
     }
 
-    protected function putIntoBreadcrumbs() {
+    protected function putIntoBreadcrumbs(): void {
         /* empty */
     }
 
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Error')));
     }
 
@@ -34,7 +34,7 @@ class ErrorPresenter extends BasePresenter {
      * @return void
      * @throws AbortException
      */
-    public function renderDefault($exception) {
+    public function renderDefault($exception): void {
         if ($this->isAjax()) { // AJAX request? Just note this error in payload.
             $this->payload->error = true;
             $this->terminate();

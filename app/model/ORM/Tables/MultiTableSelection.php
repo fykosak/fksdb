@@ -14,8 +14,7 @@ use Nette\Database\Table\Selection;
  */
 class MultiTableSelection extends Selection {
 
-    /** @var AbstractServiceMulti */
-    private $service;
+    private AbstractServiceMulti $service;
 
     /**
      * MultiTableSelection constructor.

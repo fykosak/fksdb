@@ -28,7 +28,7 @@ class TaskPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function titleList() {
+    public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('Tasks'), 'fa fa-tasks'));
     }
 
@@ -36,21 +36,21 @@ class TaskPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function titleImport() {
+    public function titleImport(): void {
         $this->setPageTitle(new PageTitle(_('Tasks Import'), 'fa fa-upload'));
     }
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedList() {
+    public function authorizedList(): void {
         $this->setAuthorized($this->isEventOrContestOrgAuthorized('fyziklani.task', 'list'));
     }
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedImport() {
+    public function authorizedImport(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.task', 'import'));
     }
 
@@ -81,7 +81,7 @@ class TaskPresenter extends BasePresenter {
      * @throws AbortException
      * @throws EventNotFoundException
      */
-    private function taskImportFormSucceeded(Form $form) {
+    private function taskImportFormSucceeded(Form $form): void {
         $values = $form->getValues();
         $taskImportProcessor = new FyziklaniTaskImportProcessor($this->getContext()->getByType(ServiceFyziklaniTask::class), $this->getEvent());
         $logger = new MemoryLogger();

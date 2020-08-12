@@ -22,11 +22,9 @@ use Nette\Utils\Html;
  */
 class EventRole extends AbstractColumnFactory {
 
-    /** @var IUserStorage */
-    private $userStorage;
+    private IUserStorage $userStorage;
 
-    /** @var YearCalculator */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
     /**
      * EventRole constructor.
@@ -59,11 +57,7 @@ class EventRole extends AbstractColumnFactory {
         return (new EventRolePrinter($this->yearCalculator))($person, $event);
     }
 
-    /**
-     * @param AbstractModelSingle $model
-     * @return AbstractModelSingle|null
-     */
-    protected function resolveModel(AbstractModelSingle $model) {
+    protected function resolveModel(AbstractModelSingle $model): ?AbstractModelSingle {
         return $model; // need to be original model because of referenced access
     }
 

@@ -19,7 +19,7 @@ class DiplomasPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function titleResults() {
+    public function titleResults(): void {
         $this->setPageTitle(new PageTitle(_('Final results'), 'fa fa-trophy'));
     }
 
@@ -27,21 +27,21 @@ class DiplomasPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Calculate ranking'), 'fa fa-check'));
     }
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedResults() {
+    public function authorizedResults(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.diplomas', 'results'));
     }
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizeDefault() {
+    public function authorizeDefault(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.diplomas', 'calculate'));
     }
 
@@ -49,7 +49,7 @@ class DiplomasPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function renderDefault() {
+    public function renderDefault(): void {
         $items = [];
         foreach (['A', 'B', 'C'] as $category) {
             $items[$category] = [
@@ -74,7 +74,7 @@ class DiplomasPresenter extends BasePresenter {
      * @throws EventNotFoundException
      * @throws NotClosedTeamException
      */
-    public function handleCalculate(string $category = null) {
+    public function handleCalculate(string $category = null): void {
         $closeStrategy = new RankingStrategy($this->getEvent(), $this->getServiceFyziklaniTeam());
         $log = $closeStrategy($category);
         $this->flashMessage(Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(Html::el('ul')->addHtml($log)), \FKSDB\Modules\Core\BasePresenter::FLASH_SUCCESS);

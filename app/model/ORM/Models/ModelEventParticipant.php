@@ -40,19 +40,13 @@ use Nette\Security\IResource;
  * @property-read string schedule
  */
 class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel, IPaymentModel, IPersonReferencedModel, IResource {
-    const RESOURCE_ID = 'event.participant';
+    public const RESOURCE_ID = 'event.participant';
 
     const STATE_AUTO_INVITED = 'auto.invited';
     const STATE_AUTO_SPARE = 'auto.spare';
 
-    /**
-     * @return ModelPerson|null
-     */
-    public function getPerson() {
-        if (!$this->person) {
-            return null;
-        }
-        return ModelPerson::createFromActiveRow($this->person);
+    public function getPerson(): ?ModelPerson {
+        return $this->person ? ModelPerson::createFromActiveRow($this->person) : null;
     }
 
     /**

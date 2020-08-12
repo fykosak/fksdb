@@ -59,11 +59,7 @@ trait WriteOnlyTrait {
         return $this->writeOnly;
     }
 
-    /**
-     * @param bool $writeOnly
-     * @return void
-     */
-    public function setWriteOnly(bool $writeOnly = true) {
+    public function setWriteOnly(bool $writeOnly = true): void {
         $this->writeOnly = $writeOnly;
     }
 

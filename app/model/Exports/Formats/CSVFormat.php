@@ -19,14 +19,13 @@ class CSVFormat implements IExportFormat {
     const DEFAULT_DELIMITER = ';';
     const DEFAULT_QUOTE = false;
 
-    /** @var StoredQuery */
-    private $storedQuery;
-    /** @var string */
-    private $delimiter;
-    /** @var bool */
-    private $quote;
-    /** @var bool */
-    private $header;
+    private StoredQuery $storedQuery;
+
+    private string $delimiter;
+
+    private bool $quote;
+
+    private bool $header;
 
     /**
      * CSVFormat constructor.
@@ -42,10 +41,7 @@ class CSVFormat implements IExportFormat {
         $this->header = $header;
     }
 
-    /**
-     * @return CSVResponse
-     */
-    public function getResponse(): IResponse {
+    public function getResponse(): CSVResponse {
         $data = $this->storedQuery->getData();
         $name = $this->storedQuery->getName();
         $name .= '.csv';

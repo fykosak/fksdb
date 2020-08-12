@@ -12,21 +12,19 @@ use FKSDB\ORM\AbstractModelSingle;
  */
 final class ReferencedFactory {
 
-    /** @var string */
-    private $modelClassName;
-    /**
-     * @var array
+    private string $modelClassName;
+    /*
      * modelClassName => string FQN of class/interface that can be access via 'method'-field
      * method => method name, that return Model of $this->modelClassName
      */
-    private $referencedAccess;
+    private ?array $referencedAccess;
 
     /**
      * ReferencedFactory constructor.
      * @param string $modelClassName
      * @param array|null $referencedAccess
      */
-    public function __construct(string $modelClassName, array $referencedAccess = null) {
+    public function __construct(string $modelClassName, ?array $referencedAccess) {
         $this->referencedAccess = $referencedAccess;
         $this->modelClassName = $modelClassName;
     }
@@ -37,14 +35,14 @@ final class ReferencedFactory {
      * @throws CannotAccessModelException
      * @throws BadTypeException
      */
-    public function accessModel(AbstractModelSingle $model) {
+    public function accessModel(AbstractModelSingle $model): ?AbstractModelSingle {
         // model is already instance of desired model
         if ($model instanceof $this->modelClassName) {
             return $model;
         }
 
         // if referenced access is not set and model is not desired model throw exception
-        if (!isset($this->referencedAccess) || is_null($this->referencedAccess)) {
+        if (!isset($this->referencedAccess)) {
             throw new BadTypeException($this->modelClassName, get_class($model));
         }
         return $this->accessReferencedModel($model);
@@ -61,7 +59,7 @@ final class ReferencedFactory {
      * @throws CannotAccessModelException
      * @throws BadTypeException
      */
-    private function accessReferencedModel(AbstractModelSingle $model) {
+    private function accessReferencedModel(AbstractModelSingle $model): ?AbstractModelSingle {
         if ($model instanceof $this->referencedAccess['modelClassName']) {
             $referencedModel = $model->{$this->referencedAccess['method']}();
             if ($referencedModel) {

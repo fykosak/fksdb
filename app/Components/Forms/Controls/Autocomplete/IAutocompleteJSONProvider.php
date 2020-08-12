@@ -16,5 +16,5 @@ interface IAutocompleteJSONProvider extends IPresenter {
      * @param string|mixed $acQ
      * @return void
      */
-    public function handleAutocomplete($acName, $acQ);
+    public function handleAutocomplete($acName, $acQ): void;
 }

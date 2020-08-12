@@ -6,19 +6,16 @@ $container = require '../../../bootstrap.php';
 
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\BadRequestException;
+use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;
 use Nette\Utils\DateTime;
-use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use Tester\Assert;
 
 class ApplicationPresenterTest extends EventTestCase {
 
-    /**
-     * @var ApplicationPresenter
-     */
-    private $fixture;
+    private IPresenter $fixture;
 
     protected function getEventId(): int {
         return 0;

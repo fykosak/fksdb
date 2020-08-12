@@ -12,8 +12,7 @@ use FKSDB\ORM\Services\ServicePersonInfo;
  */
 class UniqueEmailFactory {
 
-    /** @var ServicePersonInfo */
-    private $servicePersonInfo;
+    private ServicePersonInfo $servicePersonInfo;
 
     /**
      * UniqueEmailFactory constructor.
@@ -23,15 +22,9 @@ class UniqueEmailFactory {
         $this->servicePersonInfo = $servicePersonInfo;
     }
 
-    /**
-     * @param ModelPerson|null $person
-     * @return UniqueEmail
-     */
-    public function create(ModelPerson $person = null) {
+    public function create(?ModelPerson $person): UniqueEmail {
         $rule = new UniqueEmail($this->servicePersonInfo);
         $rule->setIgnoredPerson($person);
-
         return $rule;
     }
-
 }

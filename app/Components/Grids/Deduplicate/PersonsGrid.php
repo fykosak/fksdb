@@ -19,11 +19,10 @@ use FKSDB\Persons\Deduplication\DuplicateFinder;
  */
 class PersonsGrid extends BaseGrid {
 
-    /** @var TypedTableSelection */
-    private $trunkPersons;
+    private TypedTableSelection $trunkPersons;
 
     /** @var ModelPerson[] trunkId => ModelPerson */
-    private $pairs;
+    private array $pairs;
 
     /**
      * PersonsGrid constructor.
@@ -46,7 +45,7 @@ class PersonsGrid extends BaseGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         /***** columns ****/

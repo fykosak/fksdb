@@ -13,11 +13,11 @@ interface IStylesheetCollector {
      * @param string $file path relative to webroot
      * @param array $media
      */
-    public function registerStylesheetFile(string $file, array $media = ['all']);
+    public function registerStylesheetFile(string $file, array $media = ['all']): void;
 
     /**
      * @param string $file path relative to webroot
      * @param array $media
      */
-    public function unregisterStylesheetFile(string $file, array $media = ['all']);
+    public function unregisterStylesheetFile(string $file, array $media = ['all']): void;
 }

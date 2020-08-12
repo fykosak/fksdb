@@ -7,14 +7,14 @@ namespace FKSDB\DBReflection;
  */
 class FieldLevelPermission {
 
-    const ALLOW_ANYBODY = 1;
-    const ALLOW_BASIC = 16;
-    const ALLOW_RESTRICT = 128;
-    const ALLOW_FULL = 1024;
-    /** @var int */
-    public $read;
-    /** @var int */
-    public $write;
+    public const ALLOW_ANYBODY = 1;
+    public const ALLOW_BASIC = 16;
+    public const ALLOW_RESTRICT = 128;
+    public const ALLOW_FULL = 1024;
+
+    public int $read;
+
+    public int $write;
 
     /**
      * FieldLevelPermission constructor.

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Components\Controls\ContestChooser;
+use FKSDB\Components\Controls\Choosers\ContestChooser;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\ContestPresenter\ContestPresenter;
 use FKSDB\ORM\DbNames;
@@ -17,8 +17,7 @@ use Nette\Application\ForbiddenRequestException;
  */
 abstract class BasePresenter extends ContestPresenter {
 
-    /** @var ModelContestant|null */
-    private $contestant;
+    private ?ModelContestant $contestant;
 
     protected function createComponentContestChooser(): ContestChooser {
         $control = new ContestChooser($this->getContext());
@@ -31,8 +30,8 @@ abstract class BasePresenter extends ContestPresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function getContestant() {
-        if (!isset($this->contestant) || is_null($this->contestant)) {
+    public function getContestant(): ?ModelContestant {
+        if (!isset($this->contestant)) {
             /** @var ModelPerson $person */
             $person = $this->user->getIdentity()->getPerson();
             $contestant = $person->related(DbNames::TAB_CONTESTANT_BASE, 'person_id')->where([
@@ -45,9 +44,6 @@ abstract class BasePresenter extends ContestPresenter {
         return $this->contestant;
     }
 
-    /**
-     * @return string[]
-     */
     protected function getNavRoots(): array {
         return ['Public.Dashboard.default'];
     }

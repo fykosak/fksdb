@@ -13,14 +13,10 @@ use FKSDB\ORM\AbstractModelSingle;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ValuePrinterComponent extends BaseComponent {
-    /** @var DBReflectionFactory */
-    private $tableReflectionFactory;
 
-    /**
-     * @param DBReflectionFactory $tableReflectionFactory
-     * @return void
-     */
-    public function injectTableReflectionFactory(DBReflectionFactory $tableReflectionFactory) {
+    private DBReflectionFactory $tableReflectionFactory;
+
+    public function injectTableReflectionFactory(DBReflectionFactory $tableReflectionFactory): void {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
@@ -31,7 +27,7 @@ class ValuePrinterComponent extends BaseComponent {
      * @return void
      * @throws BadTypeException
      */
-    public function render(string $field, AbstractModelSingle $model, int $userPermission) {
+    public function render(string $field, AbstractModelSingle $model, int $userPermission): void {
         $factory = $this->tableReflectionFactory->loadColumnFactory($field);
         $this->template->title = $factory->getTitle();
         $this->template->description = $factory->getDescription();
@@ -47,8 +43,8 @@ class ValuePrinterComponent extends BaseComponent {
      *
      * @throws BadTypeException
      */
-    public function renderRow(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL) {
-        $this->template->setFile(__DIR__ . '/layout.row.latte');
+    public function renderRow(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL): void {
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.row.latte');
         $this->render($field, $model, $userPermission);
     }
 
@@ -59,8 +55,8 @@ class ValuePrinterComponent extends BaseComponent {
      * @return void
      * @throws BadTypeException
      */
-    public function renderListItem(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL) {
-        $this->template->setFile(__DIR__ . '/layout.listItem.latte');
+    public function renderListItem(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL): void {
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.listItem.latte');
         $this->render($field, $model, $userPermission);
     }
 
@@ -72,8 +68,8 @@ class ValuePrinterComponent extends BaseComponent {
      *
      * @throws BadTypeException
      */
-    public function renderOnlyValue(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL) {
-        $this->template->setFile(__DIR__ . '/layout.onlyValue.latte');
+    public function renderOnlyValue(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL): void {
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.onlyValue.latte');
         $this->render($field, $model, $userPermission);
     }
 }

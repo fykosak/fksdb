@@ -17,10 +17,10 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class MyApplicationsGrid extends BaseGrid {
-    /** @var ModelPerson */
-    private $person;
-    /** @var ModelContest */
-    private $contest;
+
+    private ModelPerson $person;
+
+    private ModelContest $contest;
 
     /**
      * MyApplicationsGrid constructor.
@@ -40,7 +40,7 @@ class MyApplicationsGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->paginate = false;

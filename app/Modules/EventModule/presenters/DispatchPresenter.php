@@ -24,13 +24,13 @@ class DispatchPresenter extends AuthenticatedPresenter {
         return new DispatchGrid($login->getPerson(), $this->getContext());
     }
 
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('List of events'), 'fa fa-calendar'));
     }
 
     protected function beforeRender() {
         $this->getPageStyleContainer()->styleId = 'event';
-        $this->getPageStyleContainer()->navBarClassName = 'bg-dark navbar-dark';
+        $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
         parent::beforeRender();
     }
 }

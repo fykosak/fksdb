@@ -13,11 +13,9 @@ class Grant implements IRole {
 
     const CONTEST_ALL = -1;
 
-    /** @var int */
-    private $contestId;
+    private int $contestId;
 
-    /** @var string */
-    private $roleId;
+    private string $roleId;
 
     /**
      * Grant constructor.

@@ -26,7 +26,7 @@ class Display extends StalkingTestCase {
         $this->setContainer($container);
     }
 
-    public function testDisplay() {
+    public function testDisplay(): void {
 
         $request = $this->createRequest();
 

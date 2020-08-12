@@ -9,5 +9,5 @@ use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 interface IScheduleItemReferencedModel {
-    public function getScheduleItem(): ModelScheduleItem;
+    public function getScheduleItem(): ?ModelScheduleItem;
 }

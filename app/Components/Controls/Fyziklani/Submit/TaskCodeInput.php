@@ -27,12 +27,12 @@ use Nette\Utils\JsonException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class TaskCodeInput extends FyziklaniReactControl {
-    /** @var ServiceFyziklaniTeam */
-    private $serviceFyziklaniTeam;
-    /** @var ServiceFyziklaniTask */
-    private $serviceFyziklaniTask;
-    /** @var HandlerFactory */
-    private $handlerFactory;
+
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
+
+    private HandlerFactory $handlerFactory;
 
     /**
      * TaskCodeInput constructor.
@@ -46,13 +46,7 @@ class TaskCodeInput extends FyziklaniReactControl {
         });
     }
 
-    /**
-     * @param HandlerFactory $handlerFactory
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @return void
-     */
-    public function injectPrimary(HandlerFactory $handlerFactory, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    public function injectPrimary(HandlerFactory $handlerFactory, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->handlerFactory = $handlerFactory;
@@ -76,7 +70,7 @@ class TaskCodeInput extends FyziklaniReactControl {
      * @return void
      * @throws InvalidLinkException
      */
-    protected function configure() {
+    protected function configure(): void {
         $this->addAction('save', $this->link('save!'));
         parent::configure();
     }
@@ -86,7 +80,7 @@ class TaskCodeInput extends FyziklaniReactControl {
      * @throws AbortException
      * @throws BadTypeException
      */
-    public function handleSave() {
+    public function handleSave(): void {
         $request = $this->getReactRequest();
         $response = new ReactResponse();
         $response->setAct($request->act);

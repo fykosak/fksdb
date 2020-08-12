@@ -15,13 +15,11 @@ use Nette\DI\Container;
  */
 class ApplicationHandlerFactory {
 
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
-    /** @var Container */
-    private $container;
-    /** @var EventDispatchFactory */
-    private $eventDispatchFactory;
+    private Container $container;
+
+    private EventDispatchFactory $eventDispatchFactory;
 
     /**
      * ApplicationHandlerFactory constructor.
@@ -35,13 +33,7 @@ class ApplicationHandlerFactory {
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
-    /**
-     * @param ModelEvent $event
-     * @param ILogger $logger
-     * @return ApplicationHandler
-     */
-    public function create(ModelEvent $event, ILogger $logger) {
+    public function create(ModelEvent $event, ILogger $logger): ApplicationHandler {
         return new ApplicationHandler($event, $logger, $this->connection, $this->container, $this->eventDispatchFactory);
     }
-
 }

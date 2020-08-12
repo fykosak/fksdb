@@ -22,10 +22,7 @@ class BirthplaceRow extends AbstractColumnFactory {
         return _('Místo narození');
     }
 
-    /**
-     * @return string|null
-     */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return _('Město a okres (kvůli diplomům).');
     }
 

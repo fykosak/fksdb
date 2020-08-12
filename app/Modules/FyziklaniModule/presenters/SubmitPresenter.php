@@ -29,42 +29,34 @@ use Nette\Security\IResource;
 class SubmitPresenter extends BasePresenter {
     use EventEntityPresenterTrait;
 
-    /** @var HandlerFactory */
-    protected $handlerFactory;
+    protected HandlerFactory $handlerFactory;
 
-    /**
-     * @param HandlerFactory $handlerFactory
-     * @return void
-     */
-    public function injectHandlerFactory(HandlerFactory $handlerFactory) {
+    public function injectHandlerFactory(HandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
     }
 
     /* ***** Title methods *****/
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      */
-    public function titleCreate() {
+    public function titleCreate(): void {
         $this->setPageTitle(new PageTitle(_('Zadávání bodů'), 'fa fa-pencil-square-o'));
     }
 
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      */
-    public function titleList() {
+    public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('Submits'), 'fa fa-table'));
     }
 
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      */
-    public function titleEdit() {
+    public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(_('Úprava bodování'), 'fa fa-pencil'));
     }
 
@@ -75,7 +67,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function titleDetail() {
+    public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Detail of the submit #%d'), $this->getEntity()->fyziklani_submit_id), 'fa fa-pencil'));
     }
 
@@ -98,7 +90,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws ModelNotFoundException
      */
-    public function actionEdit() {
+    public function actionEdit(): void {
         $this->traitActionEdit();
     }
 
@@ -109,7 +101,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function renderDetail() {
+    public function renderDetail(): void {
         $this->template->model = $this->getEntity();
     }
 
@@ -120,7 +112,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function renderEdit() {
+    public function renderEdit(): void {
         $this->template->model = $this->getEntity();
     }
 
@@ -158,7 +150,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
-    public function handleCheck() {
+    public function handleCheck(): void {
         $logger = new MemoryLogger();
         $handler = $this->handlerFactory->create($this->getEvent());
         $handler->checkSubmit($logger, $this->getEntity(), $this->getEntity()->points);

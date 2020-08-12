@@ -10,7 +10,7 @@ use FKSDB\UI\PageTitle;
  */
 class DashboardPresenter extends BasePresenter {
 
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Common dashboard'), 'fa fa-dashboard'));
     }
 }

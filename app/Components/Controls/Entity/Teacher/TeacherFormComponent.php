@@ -29,25 +29,16 @@ class TeacherFormComponent extends AbstractEntityFormComponent implements IEditE
 
     const CONTAINER = 'teacher';
 
-    /** @var SchoolFactory */
-    protected $schoolFactory;
+    protected SchoolFactory $schoolFactory;
 
-    /** @var SingleReflectionFormFactory */
-    private $singleReflectionFormFactory;
+    private SingleReflectionFormFactory $singleReflectionFormFactory;
 
-    /** @var ServiceTeacher */
-    protected $serviceTeacher;
+    protected ServiceTeacher $serviceTeacher;
 
     /** @var ModelTeacher */
     private $model;
 
-    /**
-     * @param SingleReflectionFormFactory $singleReflectionFormFactory
-     * @param SchoolFactory $schoolFactory
-     * @param ServiceTeacher $serviceTeacher
-     * @return void
-     */
-    public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, SchoolFactory $schoolFactory, ServiceTeacher $serviceTeacher) {
+    public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, SchoolFactory $schoolFactory, ServiceTeacher $serviceTeacher): void {
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->schoolFactory = $schoolFactory;
         $this->serviceTeacher = $serviceTeacher;
@@ -60,7 +51,7 @@ class TeacherFormComponent extends AbstractEntityFormComponent implements IEditE
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    protected function configureForm(Form $form) {
+    protected function configureForm(Form $form): void {
         $container = $this->createTeacherContainer();
         $schoolContainer = $this->schoolFactory->createSchoolSelect();
         $container->addComponent($schoolContainer, 'school_id');
@@ -77,7 +68,7 @@ class TeacherFormComponent extends AbstractEntityFormComponent implements IEditE
      * @return void
      * @throws AbortException
      */
-    protected function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form): void {
         $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
         if ($this->create) {
             $this->getORMService()->createNewModel($data);
@@ -93,7 +84,7 @@ class TeacherFormComponent extends AbstractEntityFormComponent implements IEditE
      * @return void
      * @throws BadTypeException
      */
-    public function setModel(AbstractModelSingle $model) {
+    public function setModel(AbstractModelSingle $model): void {
         $this->model = $model;
         $this->getForm()->setDefaults([self::CONTAINER => $model->toArray()]);
     }

@@ -19,14 +19,11 @@ use Nette\DI\Container;
  */
 class MassTransitionsControl extends BaseComponent {
 
-    /** @var ModelEvent */
-    private $event;
+    private ModelEvent $event;
 
-    /** @var EventDispatchFactory */
-    private $eventDispatchFactory;
+    private EventDispatchFactory $eventDispatchFactory;
 
-    /** @var ApplicationHandlerFactory */
-    private $applicationHandlerFactory;
+    private ApplicationHandlerFactory $applicationHandlerFactory;
 
     /**
      * MassTransitionsControl constructor.
@@ -38,25 +35,16 @@ class MassTransitionsControl extends BaseComponent {
         $this->event = $event;
     }
 
-    /**
-     * @param EventDispatchFactory $eventDispatchFactory
-     * @param ApplicationHandlerFactory $applicationHandlerFactory
-     * @return void
-     */
-    public function injectPrimary(EventDispatchFactory $eventDispatchFactory, ApplicationHandlerFactory $applicationHandlerFactory) {
+    public function injectPrimary(EventDispatchFactory $eventDispatchFactory, ApplicationHandlerFactory $applicationHandlerFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
         $this->applicationHandlerFactory = $applicationHandlerFactory;
     }
 
-    /**
-     * @return void
-     *
-     */
-    public function render() {
+    public function render(): void {
         /** @var  $machine */
         $machine = $this->eventDispatchFactory->getEventMachine($this->event);
         $this->template->transitions = $machine->getPrimaryMachine()->getTransitions();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'MassTransitions.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.massTransitions.latte');
         $this->template->render();
     }
 
@@ -67,7 +55,7 @@ class MassTransitionsControl extends BaseComponent {
      *
      * @throws NeonSchemaException
      */
-    public function handleTransition(string $name) {
+    public function handleTransition(string $name): void {
         $source = new SingleEventSource($this->event, $this->getContext(), $this->eventDispatchFactory);
         $logger = new MemoryLogger();
         $total = 0;

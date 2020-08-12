@@ -17,18 +17,17 @@ use Nette\InvalidArgumentException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonSearchContainer extends SearchContainer {
-    const SEARCH_EMAIL = 'email';
-    const SEARCH_ID = 'id';
-    const SEARCH_NONE = 'none';
+    public const SEARCH_EMAIL = 'email';
+    public const SEARCH_ID = 'id';
+    public const SEARCH_NONE = 'none';
 
-    /** @var PersonFactory */
-    protected $personFactory;
-    /** @var string */
-    private $searchType;
-    /** @var PersonProvider */
-    protected $personProvider;
-    /** @var ServicePerson */
-    protected $servicePerson;
+    protected PersonFactory $personFactory;
+
+    private string $searchType;
+
+    protected PersonProvider $personProvider;
+
+    protected ServicePerson $servicePerson;
 
     /**
      * SearchContainer constructor.
@@ -40,28 +39,20 @@ class PersonSearchContainer extends SearchContainer {
         $this->searchType = $searchType;
     }
 
-    /**
-     * @param PersonFactory $personFactory
-     * @param ServicePerson $servicePerson
-     * @param PersonProvider $provider
-     * @return void
-     */
-    public function injectPrimary(PersonFactory $personFactory, ServicePerson $servicePerson, PersonProvider $provider) {
+    public function injectPrimary(PersonFactory $personFactory, ServicePerson $servicePerson, PersonProvider $provider): void {
         $this->personFactory = $personFactory;
         $this->servicePerson = $servicePerson;
         $this->personProvider = $provider;
     }
 
-    /**
-     * @return BaseControl|null
-     */
-    protected function createSearchControl() {
+
+    protected function createSearchControl(): ?BaseControl {
         switch ($this->searchType) {
             case self::SEARCH_EMAIL:
                 $control = new TextInput(_('E-mail'));
                 $control->addCondition(Form::FILLED)
-                    ->addRule(Form::EMAIL, _('Neplatný tvar e-mailu.'));
-                $control->setOption('description', _('Nejprve zkuste najít osobu v naší databázi podle e-mailu.'));
+                    ->addRule(Form::EMAIL, _('Invalid e-mail.'));
+                $control->setOption('description', _('First of all try to find the person in our database using e-mail address'));
                 $control->setAttribute('placeholder', 'your-email@exmaple.com');
                 $control->setAttribute('autocomplete', 'email');
                 return $control;

@@ -12,10 +12,7 @@ use Tester\TestCase;
 
 class ServiceAddressTest extends TestCase {
 
-    /**
-     * @var ServiceAddress
-     */
-    private $fixture;
+    private ServiceAddress $fixture;
 
     /**
      * ServiceAddressTest constructor.

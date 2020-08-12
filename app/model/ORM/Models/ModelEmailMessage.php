@@ -28,7 +28,7 @@ class ModelEmailMessage extends AbstractModelSingle implements IResource {
     const STATE_FAILED = 'failed'; // posielanie zlyhalo
     const STATE_CANCELED = 'canceled'; // posielanie zrušené
 
-    const RESOURCE_ID = 'email_message';
+    public const RESOURCE_ID = 'email_message';
 
     public function toMessage(): Message {
         $message = new Message();

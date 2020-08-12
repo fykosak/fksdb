@@ -18,8 +18,8 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class GroupsGrid extends BaseGrid {
-    /** @var ModelEvent */
-    private $event;
+
+    private ModelEvent $event;
 
     /**
      * GroupsGrid constructor.
@@ -47,7 +47,7 @@ class GroupsGrid extends BaseGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
         $this->addColumn('schedule_group_id', _('#'));

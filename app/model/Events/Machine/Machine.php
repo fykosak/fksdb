@@ -12,16 +12,11 @@ use Nette\InvalidArgumentException;
 class Machine {
 
     /** @var BaseMachine[] */
-    private $baseMachines = [];
+    private array $baseMachines = [];
 
-    /** @var BaseMachine */
-    private $primaryMachine;
+    private BaseMachine $primaryMachine;
 
-    /**
-     * @param string $name
-     * @return void
-     */
-    public function setPrimaryMachine(string $name) {
+    public function setPrimaryMachine(string $name): void {
         $this->primaryMachine = $this->getBaseMachine($name);
     }
 
@@ -29,11 +24,7 @@ class Machine {
         return $this->primaryMachine;
     }
 
-    /**
-     * @param BaseMachine $baseMachine
-     * @return void
-     */
-    public function addBaseMachine(BaseMachine $baseMachine) {
+    public function addBaseMachine(BaseMachine $baseMachine): void {
         $name = $baseMachine->getName();
         $this->baseMachines[$name] = $baseMachine;
 

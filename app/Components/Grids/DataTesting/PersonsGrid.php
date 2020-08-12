@@ -6,7 +6,6 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\DataTesting\DataTestingFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\DataTesting\TestLog;
 use FKSDB\Exceptions\NotImplementedException;
@@ -21,17 +20,12 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonsGrid extends BaseGrid {
-    /** @var ServicePerson */
-    private $servicePerson;
-    /** @var DataTestingFactory */
-    private $dataTestingFactory;
 
-    /**
-     * @param ServicePerson $servicePerson
-     * @param DataTestingFactory $dataTestingFactory
-     * @return void
-     */
-    public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory) {
+    private ServicePerson $servicePerson;
+
+    private DataTestingFactory $dataTestingFactory;
+
+    public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory): void {
         $this->servicePerson = $servicePerson;
         $this->dataTestingFactory = $dataTestingFactory;
     }
@@ -47,7 +41,7 @@ class PersonsGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->addColumns(['person.person_link']);
@@ -59,10 +53,6 @@ class PersonsGrid extends BaseGrid {
                 return self::createHtmlLog($logger->getMessages());
             });
         }
-    }
-
-    protected function getModelClassName(): string {
-        return ModelPerson::class;
     }
 
     /**

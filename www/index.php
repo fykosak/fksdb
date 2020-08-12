@@ -4,6 +4,10 @@
 // require '.maintenance.php';
 
 // absolute filesystem path to this web root
+use FKSDB\Bootstrap;
+use Kdyby\Extension\Forms\Replicator\Replicator;
+use Nette\Application\Application;
+
 define('WWW_DIR', dirname(__FILE__));
 
 // absolute filesystem path to the application root
@@ -14,3 +18,14 @@ define('LIBS_DIR', WWW_DIR . '/../libs');
 
 // load bootstrap file
 require APP_DIR . '/bootstrap.php';
+
+// inicializace prostředí + získání objektu Nette\Configurator
+$configurator = Bootstrap::boot();
+// vytvoření DI kontejneru
+$container = $configurator->createContainer();
+// Register addons
+Replicator::register();
+// DI kontejner vytvoří objekt Nette\Application\Application
+$application = $container->getByType(Application::class);
+// spuštění Nette aplikace
+$application->run();

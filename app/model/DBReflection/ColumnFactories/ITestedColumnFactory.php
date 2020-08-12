@@ -10,10 +10,5 @@ use FKSDB\ORM\AbstractModelSingle;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 interface ITestedColumnFactory extends IColumnFactory {
-    /**
-     * @param ILogger $logger
-     * @param AbstractModelSingle $model
-     * @return void
-     */
-    public function runTest(ILogger $logger, AbstractModelSingle $model);
+    public function runTest(ILogger $logger, AbstractModelSingle $model): void;
 }

@@ -18,8 +18,7 @@ use Nette\Utils\Html;
  */
 class CitizenshipRow extends AbstractColumnFactory {
 
-    /** @var ServiceRegion */
-    private $serviceRegion;
+    private ServiceRegion $serviceRegion;
 
     /**
      * CitizenshipField constructor.
@@ -33,10 +32,6 @@ class CitizenshipRow extends AbstractColumnFactory {
         return _('Státní příslušnost');
     }
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     */
     public function createField(...$args): BaseControl {
         $control = new SelectBox($this->getTitle());
         $control->setItems($this->getCountries());

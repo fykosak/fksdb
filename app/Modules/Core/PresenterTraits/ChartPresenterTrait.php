@@ -11,24 +11,24 @@ use Nette\Application\UI\Control;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 trait ChartPresenterTrait {
-    /** @var IChart */
-    protected $selectedChart;
-    /** @var IChart[] */
-    private $chartComponents;
 
-    public function titleChart() {
+    protected IChart $selectedChart;
+
+    private array $chartComponents;
+
+    public function titleChart(): void {
         $this->setPageTitle(new PageTitle($this->selectedChart->getTitle(), 'fa fa-pie-chart'));
     }
 
-    public function titleList() {
+    public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('Charts'), 'fa fa fa-pie-chart'));
     }
 
-    public function renderChart() {
+    public function renderChart(): void {
         $this->template->chart = $this->selectedChart;
     }
 
-    public function renderList() {
+    public function renderList(): void {
         $this->template->charts = $this->getCharts();
     }
 
@@ -40,7 +40,7 @@ trait ChartPresenterTrait {
         return $this->chartComponents;
     }
 
-    protected function selectChart() {
+    protected function selectChart(): void {
         $charts = $this->getCharts();
         $action = $this->getAction();
         if (isset($charts[$action])) {
@@ -53,9 +53,9 @@ trait ChartPresenterTrait {
         return $this->selectedChart->getControl();
     }
 
-    abstract public function authorizedList();
+    abstract public function authorizedList(): void;
 
-    abstract public function authorizedChart();
+    abstract public function authorizedChart(): void;
 
     /**
      * @return IChart[]

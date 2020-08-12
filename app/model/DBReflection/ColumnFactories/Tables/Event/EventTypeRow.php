@@ -17,8 +17,8 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventTypeRow extends AbstractColumnFactory {
-    /** @var ServiceEventType */
-    private $serviceEventType;
+
+    private ServiceEventType $serviceEventType;
 
     /**
      * EventTypeRow constructor.
@@ -38,7 +38,7 @@ class EventTypeRow extends AbstractColumnFactory {
      * @throws \InvalidArgumentException
      */
     public function createField(...$args): BaseControl {
-        list($contest) = $args;
+        [$contest] = $args;
         if (\is_null($contest) || !$contest instanceof ModelContest) {
             throw new \InvalidArgumentException();
         }

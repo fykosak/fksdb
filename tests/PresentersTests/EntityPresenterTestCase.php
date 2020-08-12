@@ -6,6 +6,7 @@ use FKSDB\Modules\OrgModule\OrgPresenter;
 use FKSDB\ORM\DbNames;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;
+use Nette\Application\IPresenter;
 use Nette\Application\IResponse;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
@@ -22,8 +23,8 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase {
 
     /** @var int */
     protected $cartesianPersonId;
-    /** @var OrgPresenter */
-    protected $fixture;
+
+    protected IPresenter $fixture;
 
     /**
      * OrgPresenter constructor.

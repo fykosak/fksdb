@@ -23,12 +23,7 @@ class EventCoveringTest extends PersonTest {
         parent::__construct('organization_participation_same_year', _('Organization and participation at same year'));
     }
 
-    /**
-     * @param ILogger $logger
-     * @param ModelPerson $person
-     * @return void
-     */
-    public function run(ILogger $logger, ModelPerson $person) {
+    public function run(ILogger $logger, ModelPerson $person): void {
         $contestantYears = [
             ModelContest::ID_FYKOS => [],
             ModelContest::ID_VYFUK => [],
@@ -59,14 +54,7 @@ class EventCoveringTest extends PersonTest {
         $this->check($logger, $contestantYears, $eventOrgYears, 'contestant', $person);
     }
 
-    /**
-     * @param ILogger $logger
-     * @param int[][] $data
-     * @param array $orgs
-     * @param string $type
-     * @param ModelPerson $person
-     */
-    private function check(ILogger $logger, array $data, array $orgs, string $type, ModelPerson $person) {
+    private function check(ILogger $logger, array $data, array $orgs, string $type, ModelPerson $person): void {
         foreach ($data as $contestId => $contestYears) {
             foreach ($contestYears as $year) {
                 if (\in_array($year, $orgs[$contestId])) {
@@ -87,14 +75,7 @@ class EventCoveringTest extends PersonTest {
         }
     }
 
-    /**
-     * @param int $year
-     * @param int $contestId
-     * @param string $typeP
-     * @param string $typeO
-     * @return TestLog
-     */
-    private function createLog(int $year, int $contestId, string $typeP, string $typeO) {
+    private function createLog(int $year, int $contestId, string $typeP, string $typeO): TestLog {
         return new TestLog($this->getTitle(), \sprintf(_('Organization and participation at same year %d and contestId %d %s<->%s. '), $year, $contestId, $typeP, $typeO), TestLog::LVL_DANGER);
     }
 

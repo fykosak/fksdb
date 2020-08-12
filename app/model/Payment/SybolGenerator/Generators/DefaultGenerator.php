@@ -14,20 +14,14 @@ use Nette\OutOfRangeException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class DefaultGenerator extends AbstractSymbolGenerator {
-    /** @var int */
-    private $variableSymbolStart;
-    /** @var int */
-    private $variableSymbolEnd;
-    /** @var array */
-    private $info;
 
-    /**
-     * @param int $variableSymbolStart
-     * @param int $variableSymbolEnd
-     * @param array $info
-     * @return void
-     */
-    public function setUp(int $variableSymbolStart, int $variableSymbolEnd, array $info) {
+    private int $variableSymbolStart;
+
+    private int $variableSymbolEnd;
+
+    private array $info;
+
+    public function setUp(int $variableSymbolStart, int $variableSymbolEnd, array $info): void {
         $this->variableSymbolEnd = $variableSymbolEnd;
         $this->variableSymbolStart = $variableSymbolStart;
         $this->info = $info;
@@ -62,7 +56,7 @@ class DefaultGenerator extends AbstractSymbolGenerator {
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      */
-    protected function create(ModelPayment $modelPayment) {
+    protected function create(ModelPayment $modelPayment): array {
 
         if ($modelPayment->hasGeneratedSymbols()) {
             throw new AlreadyGeneratedSymbolsException(\sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->getPaymentId()));

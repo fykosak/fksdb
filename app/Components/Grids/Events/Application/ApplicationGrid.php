@@ -28,7 +28,7 @@ class ApplicationGrid extends AbstractApplicationGrid {
      * @throws InvalidLinkException
      * @throws DuplicateGlobalButtonException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->paginate = false;

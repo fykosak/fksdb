@@ -13,11 +13,9 @@ use Nette\Forms\Controls\BaseControl;
  */
 class UniqueEmail {
 
-    /** @var ServicePersonInfo */
-    private $servicePersonInfo;
+    private ServicePersonInfo $servicePersonInfo;
 
-    /** @var ModelPerson */
-    private $ignoredPerson;
+    private ?ModelPerson $ignoredPerson;
 
     /**
      * UniqueEmail constructor.
@@ -27,25 +25,11 @@ class UniqueEmail {
         $this->servicePersonInfo = $servicePersonInfo;
     }
 
-    /**
-     * @return ModelPerson
-     */
-    public function getIgnoredPerson() {
-        return $this->ignoredPerson;
-    }
-
-    /**
-     * @param ModelPerson|null $ignoredPerson
-     */
-    public function setIgnoredPerson(ModelPerson $ignoredPerson = null) {
+    public function setIgnoredPerson(ModelPerson $ignoredPerson): void {
         $this->ignoredPerson = $ignoredPerson;
     }
 
-    /**
-     * @param BaseControl $control
-     * @return bool
-     */
-    public function __invoke(BaseControl $control) {
+    public function __invoke(BaseControl $control): bool {
         $email = $control->getValue();
 
         $conflicts = $this->servicePersonInfo->getTable()->where(['email' => $email]);
@@ -55,8 +39,6 @@ class UniqueEmail {
         if (count($conflicts) > 0) {
             return false;
         }
-
         return true;
     }
-
 }

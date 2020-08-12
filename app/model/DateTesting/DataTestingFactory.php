@@ -13,11 +13,11 @@ use FKSDB\ORM\Services\ServiceContest;
  */
 class DataTestingFactory {
     /** @var PersonTest[][] */
-    private $tests = [];
-    /** @var ServiceContest */
-    private $serviceContest;
-    /** @var DBReflectionFactory */
-    private $tableReflectionFactory;
+    private array $tests = [];
+
+    private ServiceContest $serviceContest;
+
+    private DBReflectionFactory $tableReflectionFactory;
 
     /**
      * DataTestingFactory constructor.
@@ -35,7 +35,7 @@ class DataTestingFactory {
      * @return void
      * @throws BadTypeException
      */
-    private function registersTests() {
+    private function registersTests(): void {
         $tests = [
             new Tests\Person\GenderFromBornNumberTest(),
             new Tests\Person\ParticipantsDurationTest(),
@@ -52,9 +52,6 @@ class DataTestingFactory {
      * @return PersonTest[]
      */
     public function getTests(string $section): array {
-        if (isset($this->tests[$section])) {
-            return $this->tests[$section];
-        }
-        return [];
+        return $this->tests[$section] ?? [];
     }
 }

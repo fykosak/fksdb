@@ -19,29 +19,22 @@ use Nette\Utils\Html;
 abstract class AbstractColumnFactory implements IColumnFactory {
     use SmartObject;
 
-    const PERMISSION_ALLOW_ANYBODY = 1;
-    const PERMISSION_ALLOW_BASIC = 16;
-    const PERMISSION_ALLOW_RESTRICT = 128;
-    const PERMISSION_ALLOW_FULL = 1024;
-    /** @var ReferencedFactory */
-    protected $referencedFactory;
+    public const PERMISSION_ALLOW_ANYBODY = 1;
+    public const PERMISSION_ALLOW_BASIC = 16;
+    public const PERMISSION_ALLOW_RESTRICT = 128;
+    public const PERMISSION_ALLOW_FULL = 1024;
+
+    protected ReferencedFactory $referencedFactory;
 
     public function createField(...$args): BaseControl {
         return new TextInput($this->getTitle());
     }
 
-    /**
-     * @param ReferencedFactory $factory
-     * @return void
-     */
-    public function setReferencedFactory(ReferencedFactory $factory) {
+    public function setReferencedFactory(ReferencedFactory $factory): void {
         $this->referencedFactory = $factory;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return null;
     }
 
@@ -67,7 +60,7 @@ abstract class AbstractColumnFactory implements IColumnFactory {
      * @return AbstractModelSingle|null
      * @throws BadTypeException
      */
-    protected function resolveModel(AbstractModelSingle $modelSingle) {
+    protected function resolveModel(AbstractModelSingle $modelSingle): ?AbstractModelSingle {
         return $this->referencedFactory->accessModel($modelSingle);
     }
 

@@ -18,14 +18,9 @@ use FKSDB\SQL\SearchableDataSource;
  */
 class SchoolsGrid extends BaseGrid {
 
-    /** @var ServiceSchool */
-    private $serviceSchool;
+    private ServiceSchool $serviceSchool;
 
-    /**
-     * @param ServiceSchool $serviceSchool
-     * @return void
-     */
-    public function injectServiceSchool(ServiceSchool $serviceSchool) {
+    public function injectServiceSchool(ServiceSchool $serviceSchool): void {
         $this->serviceSchool = $serviceSchool;
     }
 
@@ -47,7 +42,7 @@ class SchoolsGrid extends BaseGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         //
@@ -55,7 +50,7 @@ class SchoolsGrid extends BaseGrid {
         //
         $this->addColumn('name', _('Name'));
         $this->addColumn('city', _('City'));
-        $this->addColumn('active', _('Exists?'))->setRenderer(function (ModelSchool $row) {
+        $this->addColumn('active', _('Active?'))->setRenderer(function (ModelSchool $row) {
             return Html::el('span')->addAttributes(['class' => ('badge ' . ($row->active ? 'badge-success' : 'badge-danger'))])->addText(($row->active));
         });
 

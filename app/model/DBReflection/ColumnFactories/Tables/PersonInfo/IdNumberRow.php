@@ -21,10 +21,7 @@ class IdNumberRow extends AbstractColumnFactory {
         return _('Číslo OP');
     }
 
-    /**
-     * @return string|null
-     */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return _('U cizinců číslo pasu.');
     }
 

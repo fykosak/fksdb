@@ -21,14 +21,9 @@ trait SeriesPresenterTrait {
      */
     public $series;
 
-    /** @var SeriesCalculator */
-    protected $seriesCalculator;
+    protected SeriesCalculator $seriesCalculator;
 
-    /**
-     * @param SeriesCalculator $seriesCalculator
-     * @return void
-     */
-    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator) {
+    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator): void {
         $this->seriesCalculator = $seriesCalculator;
     }
 
@@ -51,7 +46,7 @@ trait SeriesPresenterTrait {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    protected function seriesTraitStartup() {
+    protected function seriesTraitStartup(): void {
         if (+$this->series !== $this->getSelectedSeries()) {
             $this->redirect('this', ['series' => $this->getSelectedSeries()]);
         }
@@ -94,7 +89,7 @@ trait SeriesPresenterTrait {
      */
     abstract protected function getContext();
 
-    abstract public function getSelectedContest(): ModelContest;
+    abstract public function getSelectedContest(): ?ModelContest;
 
     abstract public function getSelectedYear(): int;
 }

@@ -17,8 +17,8 @@ use Nette\Utils\ArrayHash;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class AddressContainer extends ModelContainer {
-    /** @var ServiceRegion */
-    private $serviceRegion;
+
+    private ServiceRegion $serviceRegion;
 
     /**
      * AddressContainer constructor.
@@ -28,11 +28,7 @@ class AddressContainer extends ModelContainer {
         parent::__construct($container);
     }
 
-    /**
-     * @param ServiceRegion $serviceRegion
-     * @return void
-     */
-    public function injectServiceRegion(ServiceRegion $serviceRegion) {
+    public function injectServiceRegion(ServiceRegion $serviceRegion): void {
         $this->serviceRegion = $serviceRegion;
     }
 
@@ -41,7 +37,7 @@ class AddressContainer extends ModelContainer {
      *
      * @param iterable $value
      */
-    public function setValue($value) {
+    public function setValue($value): void {
         $this->setValues($value === null ? [] : $value);
     }
 
@@ -50,7 +46,7 @@ class AddressContainer extends ModelContainer {
      *
      * @param iterable $value
      */
-    public function setDefaultValue($value) {
+    public function setDefaultValue($value): void {
         $this->setDefaults($value === null ? [] : $value);
     }
 
@@ -59,7 +55,7 @@ class AddressContainer extends ModelContainer {
      * @param bool $erase
      * @return Container|void
      */
-    public function setValues($values, $erase = false) {
+    public function setValues($values, $erase = false): void {
         if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) { //assert its from address table
             if ($values instanceof AbstractModelMulti) {
                 $address = $values->getMainModel();

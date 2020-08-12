@@ -14,12 +14,7 @@ use Nette\Forms\Form;
  */
 abstract class AbstractFactory implements IFieldFactory {
 
-    /**
-     * @param IComponent $component
-     * @param Field $field
-     * @return void
-     */
-    public function setFieldDefaultValue(IComponent $component, Field $field) {
+    public function setFieldDefaultValue(IComponent $component, Field $field): void {
         if (!$field->isModifiable()) {
             $this->setDisabled($component);
         }
@@ -27,12 +22,7 @@ abstract class AbstractFactory implements IFieldFactory {
         $this->appendRequiredRule($component, $field);
     }
 
-    /**
-     * @param IComponent $component
-     * @param Field $field
-     * @return void
-     */
-    final protected function appendRequiredRule(IComponent $component, Field $field) {
+    final protected function appendRequiredRule(IComponent $component, Field $field): void {
         $container = $component->getParent();
         $control = $this->getMainControl($component);
         if ($field->isRequired()) {
@@ -65,16 +55,7 @@ abstract class AbstractFactory implements IFieldFactory {
         }
     }
 
-    /**
-     * @param IComponent $component
-     * @return void
-     */
-    abstract protected function setDisabled(IComponent $component);
+    abstract protected function setDisabled(IComponent $component): void;
 
-    /**
-     * @param IComponent $component
-     * @param Field $field
-     * @return void
-     */
-    abstract protected function setDefaultValue(IComponent $component, Field $field);
+    abstract protected function setDefaultValue(IComponent $component, Field $field): void;
 }

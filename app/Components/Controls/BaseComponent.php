@@ -14,10 +14,10 @@ use Nette\Localization\ITranslator;
  * @property Template $template
  */
 abstract class BaseComponent extends Control {
-    /** @var Container */
-    private $context;
-    /** @var ITranslator */
-    private $translator;
+
+    private Container $context;
+
+    private ITranslator $translator;
 
     /**
      * SubmitsTableControl constructor.
@@ -28,11 +28,7 @@ abstract class BaseComponent extends Control {
         $this->context = $container;
     }
 
-    /**
-     * @param ITranslator $translator
-     * @return void
-     */
-    public function injectTranslator(ITranslator $translator) {
+    final public function injectTranslator(ITranslator $translator): void {
         $this->translator = $translator;
     }
 
@@ -42,10 +38,7 @@ abstract class BaseComponent extends Control {
         return $template;
     }
 
-    /**
-     * @return Container
-     */
-    final protected function getContext() {
+    final protected function getContext(): Container {
         return $this->context;
     }
 }

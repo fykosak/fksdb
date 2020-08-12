@@ -5,6 +5,7 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\SubmitPresenter;
 use FKSDB\Modules\PublicModule\SubmitPresenter;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;
+use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Database\Row;
 use Nette\DI\Config\Helpers;
@@ -33,10 +34,7 @@ abstract class SubmitTestCase extends DatabaseTestCase {
     /** @var int */
     protected $contestantId;
 
-    /**
-     * @var SubmitPresenter
-     */
-    protected $fixture;
+    protected IPresenter $fixture;
 
     /**
      * SubmitTestCase constructor.

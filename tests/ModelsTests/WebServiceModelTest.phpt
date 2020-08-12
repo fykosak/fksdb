@@ -16,10 +16,7 @@ class WebServiceModelTest extends DatabaseTestCase {
      */
     private $container;
 
-    /**
-     * @var WebServiceModel
-     */
-    private $fixture;
+    private WebServiceModel $fixture;
 
     /** @var int */
     private $personId;

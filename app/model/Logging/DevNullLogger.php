@@ -11,11 +11,7 @@ use FKSDB\Messages\Message;
  */
 class DevNullLogger extends StackedLogger {
 
-    /**
-     * @param Message $message
-     * @return void
-     */
-    protected function doLog(Message $message) {
+    protected function doLog(Message $message): void {
         /* empty */
     }
 

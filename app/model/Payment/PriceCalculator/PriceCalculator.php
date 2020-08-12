@@ -12,10 +12,10 @@ use FKSDB\Payment\PriceCalculator\PreProcess\IPreprocess;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PriceCalculator {
-    /** @var ServicePayment */
-    private $servicePayment;
+
+    private ServicePayment $servicePayment;
     /** @var IPreprocess[] */
-    private $preProcess = [];
+    private array $preProcess = [];
 
     /**
      * PriceCalculator constructor.
@@ -25,19 +25,11 @@ class PriceCalculator {
         $this->servicePayment = $servicePayment;
     }
 
-    /**
-     * @param IPreprocess $preProcess
-     * @return void
-     */
-    public function addPreProcess(IPreprocess $preProcess) {
+    public function addPreProcess(IPreprocess $preProcess): void {
         $this->preProcess[] = $preProcess;
     }
 
-    /**
-     * @param ModelPayment $modelPayment
-     * @return void
-     */
-    final public function __invoke(ModelPayment $modelPayment) {
+    final public function __invoke(ModelPayment $modelPayment): void {
         $price = new Price(0, $modelPayment->currency);
         foreach ($this->preProcess as $preProcess) {
             $subPrice = $preProcess->calculate($modelPayment);

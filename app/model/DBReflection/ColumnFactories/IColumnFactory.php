@@ -17,10 +17,7 @@ interface IColumnFactory {
      */
     public function createField(...$args): BaseControl;
 
-    /**
-     * @return string|null
-     */
-    public function getDescription();
+    public function getDescription(): ?string;
 
     public function render(AbstractModelSingle $model, int $userPermissionsLevel): Html;
 

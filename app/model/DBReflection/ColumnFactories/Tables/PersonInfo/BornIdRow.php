@@ -22,10 +22,7 @@ class BornIdRow extends AbstractColumnFactory {
         return _('Rodné číslo');
     }
 
-    /**
-     * @return string|null
-     */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return _('U cizinců prázdné.');
     }
 

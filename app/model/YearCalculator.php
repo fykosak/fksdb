@@ -19,27 +19,24 @@ class YearCalculator {
     /**
      * @const No. of years of shift for forward registration.
      */
-    const FORWARD_SHIFT = 1;
+    private const FORWARD_SHIFT = 1;
 
     /**
      * @const First month of the academic year (for high schoolers).
      */
-    const FIRST_AC_MONTH = 9;
+    public const FIRST_AC_MONTH = 9;
 
-    /** @var ServiceContestYear */
-    private $serviceContestYear;
+    private ServiceContestYear $serviceContestYear;
 
-    /** @var ServiceContest */
-    private $serviceContest;
+    private ServiceContest $serviceContest;
 
-    /** @var int[][] */
-    private $cache = [];
-    /** @var int[][] */
-    private $revCache = [];
-    /** @var int */
-    private $acYear;
-    /** @var Container */
-    private $container;
+    private array $cache = [];
+
+    private array $revCache = [];
+
+    private ?int $acYear;
+
+    private Container $container;
 
     /**
      * FKSDB\YearCalculator constructor.
@@ -61,7 +58,7 @@ class YearCalculator {
      * @return int
      * @throws InvalidArgumentException
      */
-    public function getAcademicYear(ActiveRow $contest, $year): int {
+    public function getAcademicYear(ActiveRow $contest, ?int $year): int {
         if (!isset($this->cache[$contest->contest_id]) || !isset($this->cache[$contest->contest_id][$year])) {
             throw new InvalidArgumentException("No academic year defined for {$contest->contest_id}:$year.");
         }
@@ -84,12 +81,7 @@ class YearCalculator {
         return $calYear;
     }
 
-    /**
-     * @param int $studyYear
-     * @param int|null $acYear
-     * @return int
-     */
-    public function getGraduationYear(int $studyYear, int $acYear = null): int {
+    public function getGraduationYear(int $studyYear, ?int $acYear): int {
         $acYear = ($acYear !== null) ? $acYear : $this->getCurrentAcademicYear();
 
         if ($studyYear >= 6 && $studyYear <= 9) {
@@ -115,7 +107,7 @@ class YearCalculator {
         return end($years);
     }
 
-    public function isValidYear(ModelContest $contest, int $year = null): bool {
+    public function isValidYear(ModelContest $contest, ?int $year): bool {
         return $year !== null && $year >= $this->getFirstYear($contest) && $year <= $this->getLastYear($contest);
     }
 
@@ -142,7 +134,7 @@ class YearCalculator {
         }
     }
 
-    private function preloadCache() {
+    private function preloadCache(): void {
         /** @var ModelContestYear $model */
         foreach ($this->serviceContestYear->getTable()->order('year') as $model) {
             if (!isset($this->cache[$model->contest_id])) {

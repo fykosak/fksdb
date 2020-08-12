@@ -22,10 +22,7 @@ class ModelFyziklaniTeamPosition extends AbstractModelSingle {
         return ModelFyziklaniRoom::createFromActiveRow($this->room);
     }
 
-    /**
-     * @return ModelFyziklaniTeam|null
-     */
-    public function getTeam() {
+    public function getTeam(): ?ModelFyziklaniTeam {
         if ($this->e_fyziklani_team_id) {
             return ModelFyziklaniTeam::createFromActiveRow($this->e_fyziklani_team);
         }

@@ -14,9 +14,6 @@ use Nette\InvalidArgumentException;
  */
 class EvaluationVyfuk2014 extends EvaluationStrategy {
 
-    /**
-     * @return array|null
-     */
     public function getCategories(): array {
         return [
             new ModelCategory(ModelCategory::CAT_ES_6),
@@ -48,9 +45,9 @@ class EvaluationVyfuk2014 extends EvaluationStrategy {
      */
     public function getPointsColumn(ActiveRow $task): string {
         if ($task->label == '1') {
-            return "IF (t.series < 7, (IF (ct.study_year NOT IN (6, 7), null, s.raw_points)), s.raw_points)";
+            return 'IF (t.series < 7, (IF (ct.study_year NOT IN (6, 7), null, s.raw_points)), s.raw_points)';
         } else {
-            return "s.raw_points";
+            return 's.raw_points';
         }
     }
 

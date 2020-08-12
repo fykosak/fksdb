@@ -17,29 +17,17 @@ use FKSDB\ORM\Models\ModelPerson;
  */
 abstract class StalkingControl extends BaseComponent {
 
-    /** @var DBReflectionFactory */
-    protected $tableReflectionFactory;
+    protected DBReflectionFactory $tableReflectionFactory;
 
-    /**
-     * @param DBReflectionFactory $tableReflectionFactory
-     * @return void
-     */
-    public function injectPrimary(DBReflectionFactory $tableReflectionFactory) {
+    public function injectPrimary(DBReflectionFactory $tableReflectionFactory): void {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param string $headline
-     * @param int $userPermissions
-     * @param int $minimalPermissions
-     * @return void
-     */
-    public function beforeRender(ModelPerson $person, string $headline, int $userPermissions, int $minimalPermissions) {
+    public function beforeRender(ModelPerson $person, string $headline, int $userPermissions, int $minimalPermissions): void {
         $this->template->gender = $person->gender;
         $this->template->headline = $headline;
         if ($userPermissions < $minimalPermissions) {
-            $this->template->setFile(__DIR__ . '/layout.permissionDenied.latte');
+            $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.permissionDenied.latte');
             $this->template->render();
         }
     }
@@ -59,6 +47,7 @@ abstract class StalkingControl extends BaseComponent {
     protected function createComponentValuePrinter(): ValuePrinterComponent {
         return new ValuePrinterComponent($this->getContext());
     }
+
     protected function createComponentLinkPrinter(): LinkPrinterComponent {
         return new LinkPrinterComponent($this->getContext());
     }

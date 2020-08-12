@@ -4,12 +4,10 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Fyziklani\SeatingControl;
 use FKSDB\Events\EventNotFoundException;
-use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
-use FKSDB\React\ReactResponse;
 use FKSDB\UI\PageTitle;
-use Nette\Application\AbortException;
+use Nette\DeprecatedException;
 
 /**
  *
@@ -17,14 +15,9 @@ use Nette\Application\AbortException;
  */
 class SeatingPresenter extends BasePresenter {
 
-    /** @var ServiceFyziklaniTeamPosition */
-    private $serviceFyziklaniTeamPosition;
+    private ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition;
 
-    /**
-     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
-     * @return void
-     */
-    public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition) {
+    public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition): void {
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
     }
 
@@ -32,7 +25,7 @@ class SeatingPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Rooming'), 'fa fa-arrows'));
     }
 
@@ -40,7 +33,7 @@ class SeatingPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function titleEdit() {
+    public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(_('Edit routing'), 'fa fa-pencil'));
     }
 
@@ -48,7 +41,7 @@ class SeatingPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function titleDownload() {
+    public function titleDownload(): void {
         $this->setPageTitle(new PageTitle(_('Download routing'), 'fa fa-download'));
     }
 
@@ -56,7 +49,7 @@ class SeatingPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function titleList() {
+    public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('List of all teams'), 'fa fa-print'));
     }
 
@@ -64,7 +57,7 @@ class SeatingPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function titlePreview() {
+    public function titlePreview(): void {
         $this->setPageTitle(new PageTitle(_('Preview'), 'fa fa-search'));
     }
 
@@ -76,12 +69,12 @@ class SeatingPresenter extends BasePresenter {
         return $this->getEvent()->event_type_id === 1;
     }
 
-    public function authorizedEdit() {
+    public function authorizedEdit(): void {
         $this->setAuthorized(false);
         // $this->setAuthorized(($this->eventIsAllowed('event.seating', 'edit')));
     }
 
-    public function authorizedDownload() {
+    public function authorizedDownload(): void {
         $this->setAuthorized(false);
         // $this->setAuthorized(($this->eventIsAllowed('event.seating', 'download')));
     }
@@ -89,47 +82,45 @@ class SeatingPresenter extends BasePresenter {
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedPreview() {
+    public function authorizedPreview(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized('event.seating', 'preview'));
     }
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedList() {
+    public function authorizedList(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized('event.seating', 'list'));
     }
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedDefault() {
+    public function authorizedDefault(): void {
         $download = $this->isContestsOrgAuthorized('event.seating', 'download');
         $edit = $this->isContestsOrgAuthorized('event.seating', 'edit');
         $this->setAuthorized($download || $edit);
     }
 
 
-    /**
-     * @throws AbortException
-     */
-    public function renderEdit() {
-        if ($this->isAjax()) {
-            $data = $this->getHttpRequest()->getPost('requestData');
-            $updatedTeams = $this->serviceFyziklaniTeamPosition->updateRouting($data);
-            $response = new ReactResponse();
-            $response->setAct('update-teams');
-            $response->setData(['updatedTeams' => $updatedTeams]);
-            $response->addMessage(new Message(_('Changes has been saved'), Message::LVL_SUCCESS));
-            $this->sendResponse($response);
-        }
+    public function renderEdit(): void {
+        throw new DeprecatedException();
+        /* if ($this->isAjax()) {
+             $data = $this->getHttpRequest()->getPost('requestData');
+             $updatedTeams = $this->serviceFyziklaniTeamPosition->updateRouting($data);
+             $response = new ReactResponse();
+             $response->setAct('update-teams');
+             $response->setData(['updatedTeams' => $updatedTeams]);
+             $response->addMessage(new Message(_('Changes has been saved'), Message::LVL_SUCCESS));
+             $this->sendResponse($response);
+         }*/
     }
 
     /**
      * @return void
      * @throws EventNotFoundException
      */
-    public function renderList() {
+    public function renderList(): void {
         $this->template->event = $this->getEvent();
         $teams = $this->getEvent()->getTeams();
         $this->template->teams = $teams;
@@ -145,7 +136,7 @@ class SeatingPresenter extends BasePresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function renderPreview() {
+    public function renderPreview(): void {
         $this->template->event = $this->getEvent();
     }
 

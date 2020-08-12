@@ -25,7 +25,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @return void
      * @throws EventNotFoundException
      */
-    public function titleImport() {
+    public function titleImport(): void {
         $this->setPageTitle(new PageTitle(_('Application import'), 'fa fa-upload'));
     }
 
@@ -42,7 +42,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * use same method of permissions as trait
      * @throws EventNotFoundException
      */
-    public function authorizedImport() {
+    public function authorizedImport(): void {
         $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'import'));
     }
 
@@ -76,7 +76,7 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
      * @throws ModelNotFoundException
      * @throws NeonSchemaException
      */
-    public function renderDetail() {
+    public function renderDetail(): void {
         parent::renderDetail();
         $this->template->fields = $this->getHolder()->getPrimaryHolder()->getFields();
         $this->template->model = $this->getEntity();

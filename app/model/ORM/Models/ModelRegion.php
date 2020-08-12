@@ -17,8 +17,8 @@ use FKSDB\ORM\AbstractModelSingle;
  */
 class ModelRegion extends AbstractModelSingle {
 
-    const CZECH_REPUBLIC = 3;
-    const SLOVAKIA = 2;
+    public const CZECH_REPUBLIC = 3;
+    public const SLOVAKIA = 2;
 
     public function matchPhone(string $number): bool {
         if (\is_null($this->phone_nsn) || \is_null($this->phone_prefix)) {

@@ -14,7 +14,7 @@ use Nette\Database\Table\ActiveRow;
  */
 class ModelEventType extends AbstractModelSingle implements IContestReferencedModel {
 
-    const FYZIKLANI = 1;
+    public const FYZIKLANI = 1;
 
     public function getContest(): ModelContest {
         return ModelContest::createFromActiveRow($this->contest);

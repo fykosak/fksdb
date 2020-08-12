@@ -17,7 +17,7 @@ class ContestBadge extends Badge {
      * @throws ContestNotFoundException
      */
     public static function getHtml(...$args): Html {
-        list($contest) = $args;
+        [$contest] = $args;
         $contestId = $contest;
         if ($contest instanceof ModelContest) {
             $contestId = $contest->contest_id;

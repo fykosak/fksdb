@@ -21,8 +21,8 @@ use Nette\Security\IResource;
  */
 class ModelSubmit extends AbstractModelSingle implements IResource, ITaskReferencedModel {
 
-    const SOURCE_UPLOAD = 'upload';
-    const SOURCE_POST = 'post';
+    public const SOURCE_UPLOAD = 'upload';
+    public const SOURCE_POST = 'post';
 
     public function isEmpty(): bool {
         return !($this->submitted_on || $this->note);

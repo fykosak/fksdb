@@ -17,8 +17,7 @@ use Nette\Forms\IControl;
  */
 abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment {
 
-    /** @var ServicePersonHistory */
-    private $servicePersonHistory;
+    private ServicePersonHistory $servicePersonHistory;
 
     /** @var Holder */
     private $holder;
@@ -31,18 +30,11 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
         $this->servicePersonHistory = $servicePersonHistory;
     }
 
-    /**
-     * @return Holder
-     */
-    public function getHolder() {
+    public function getHolder(): Holder {
         return $this->holder;
     }
 
-    /**
-     * @param Holder $holder
-     * @return void
-     */
-    public function setHolder(Holder $holder) {
+    public function setHolder(Holder $holder): void {
         $this->holder = $holder;
     }
 

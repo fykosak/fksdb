@@ -28,11 +28,9 @@ class EditComponent extends AbstractEntityFormComponent implements IEditEntityFo
     /** @var ModelFyziklaniSubmit */
     private $submit;
 
-    /** @var ModelEvent */
-    private $event;
+    private ModelEvent $event;
 
-    /** @var HandlerFactory */
-    private $handlerFactory;
+    private HandlerFactory $handlerFactory;
 
     /**
      * EditControl constructor.
@@ -49,15 +47,11 @@ class EditComponent extends AbstractEntityFormComponent implements IEditEntityFo
      * @return void
      * @throws NotSetGameParametersException
      */
-    protected function configureForm(Form $form) {
+    protected function configureForm(Form $form): void {
         $form->addComponent($this->createPointsField(), 'points');
     }
 
-    /**
-     * @param HandlerFactory $handlerFactory
-     * @return void
-     */
-    public function injectHandlerFactory(HandlerFactory $handlerFactory) {
+    public function injectHandlerFactory(HandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
     }
 
@@ -66,7 +60,7 @@ class EditComponent extends AbstractEntityFormComponent implements IEditEntityFo
      * @return void
      * @throws BadTypeException
      */
-    public function setModel(AbstractModelSingle $submit) {
+    public function setModel(AbstractModelSingle $submit): void {
         $this->submit = $submit;
         $this->getForm()->setDefaults([
             'team_id' => $this->submit->e_fyziklani_team_id,
@@ -81,7 +75,7 @@ class EditComponent extends AbstractEntityFormComponent implements IEditEntityFo
      * @throws NotSetGameParametersException
      */
     private function createPointsField(): RadioList {
-        $field = new RadioList(_('Počet bodů'));
+        $field = new RadioList(_('Number of points'));
         $items = [];
         foreach ($this->event->getFyziklaniGameSetup()->getAvailablePoints() as $points) {
             $items[$points] = $points;
@@ -95,7 +89,7 @@ class EditComponent extends AbstractEntityFormComponent implements IEditEntityFo
      * @param Form $form
      * @throws AbortException
      */
-    protected function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
         try {
             $logger = new MemoryLogger();

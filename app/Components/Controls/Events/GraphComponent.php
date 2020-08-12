@@ -14,14 +14,11 @@ use Nette\DI\Container;
  */
 class GraphComponent extends BaseComponent {
 
-    /** @var BaseMachine */
-    private $baseMachine;
+    private BaseMachine $baseMachine;
 
-    /** @var ExpressionPrinter */
-    private $expressionPrinter;
+    private ExpressionPrinter $expressionPrinter;
 
-    /** @var bool */
-    private $attachedJS = false;
+    private bool $attachedJS = false;
 
     /**
      * GraphComponent constructor.
@@ -42,18 +39,14 @@ class GraphComponent extends BaseComponent {
         $this->baseMachine = $baseMachine;
     }
 
-    /**
-     * @param ExpressionPrinter $expressionPrinter
-     * @return void
-     */
-    public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter) {
+    public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter): void {
         $this->expressionPrinter = $expressionPrinter;
     }
 
-    public function render() {
+    public function render(): void {
         $this->template->nodes = json_encode($this->prepareNodes());
         $this->template->edges = json_encode($this->prepareTransitions());
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'GraphComponent.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.graph.latte');
         $this->template->id = $this->getHtmlId();
         $this->template->render();
     }
@@ -80,7 +73,7 @@ class GraphComponent extends BaseComponent {
             $nodes[] = [
                 'id' => $state,
                 'label' => $this->baseMachine->getStateName($state),
-                'type' => $state === BaseMachine::STATE_INIT ? 'init' : $state === BaseMachine::STATE_TERMINATED ? 'terminated' : 'default',
+                'type' => $state === BaseMachine::STATE_INIT ? 'init' : ($state === BaseMachine::STATE_TERMINATED ? 'terminated' : 'default'),
             ];
         }
         return $nodes;

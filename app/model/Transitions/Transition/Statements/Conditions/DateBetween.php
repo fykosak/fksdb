@@ -11,10 +11,10 @@ use FKSDB\Transitions\Statements\Statement;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class DateBetween extends Statement {
-    /** @var DateTime */
-    private $to;
-    /** @var DateTime */
-    private $from;
+
+    private \DateTimeInterface $to;
+
+    private \DateTimeInterface $from;
 
     /**
      * DateBetween constructor.

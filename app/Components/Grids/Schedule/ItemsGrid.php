@@ -19,8 +19,8 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ItemsGrid extends BaseGrid {
-    /** @var ModelScheduleGroup */
-    private $group;
+
+    private ModelScheduleGroup $group;
 
     /**
      * ItemsGrid constructor.
@@ -48,7 +48,7 @@ class ItemsGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
         $this->addColumn('schedule_item_id', _('#'));

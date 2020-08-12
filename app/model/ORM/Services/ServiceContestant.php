@@ -6,6 +6,8 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelContestant;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 use Nette\Database\Table\Selection;
 
 /**
@@ -15,13 +17,15 @@ class ServiceContestant extends AbstractServiceSingle {
     /** @var string */
     protected $viewName = DbNames::VIEW_CONTESTANT;
 
-    public function getModelClassName(): string {
-        return ModelContestant::class;
+    /**
+     * ServiceContestant constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
+     */
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_CONTESTANT_BASE, ModelContestant::class);
     }
 
-    protected function getTableName(): string {
-        return DbNames::TAB_CONTESTANT_BASE;
-    }
 
     /**
      * @note Read-only (loads data from view).

@@ -28,33 +28,26 @@ use Nette\Utils\Strings;
 class ApplicationsGrid extends BaseComponent {
 
     const NAME_PREFIX = 'application_';
-    /** @var IHolderSource */
-    private $source;
+
+    private IHolderSource $source;
 
     /** @var Holder[] */
-    private $holders = [];
+    private array $holders = [];
 
     /** @var Machine[] */
-    private $machines = [];
+    private array $machines = [];
 
     /** @var ModelEvent[] */
-    private $eventApplications = [];
+    private array $eventApplications = [];
 
     /** @var ApplicationHandler[] */
-    private $handlers = [];
+    private array $handlers = [];
 
-    /** @var ApplicationHandlerFactory */
-    private $handlerFactory;
+    private ApplicationHandlerFactory $handlerFactory;
 
-    /** @var string */
-    private $templateFile;
+    private string $templateFile;
 
-    /** @var bool */
-    private $searchable = false;
-    /** @var bool */
-    private $attachedJS = false;
-    /** @var EventDispatchFactory */
-    private $eventDispatchFactory;
+    private EventDispatchFactory $eventDispatchFactory;
 
     /**
      * ApplicationsGrid constructor.
@@ -65,12 +58,6 @@ class ApplicationsGrid extends BaseComponent {
      */
     public function __construct(Container $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory) {
         parent::__construct($container);
-        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
-            if (!$this->attachedJS) {
-                $this->attachedJS = true;
-                $collector->registerJSFile('js/searchTable.js');
-            }
-        });
         $this->source = $source;
         $this->handlerFactory = $handlerFactory;
         $this->processSource();
@@ -88,27 +75,8 @@ class ApplicationsGrid extends BaseComponent {
         }
     }
 
-    /**
-     * @param EventDispatchFactory $eventDispatchFactory
-     * @return void
-     */
-    public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory) {
+    public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSearchable() {
-        return $this->searchable;
-    }
-
-    /**
-     * @param bool $searchable
-     * @return void
-     */
-    public function setSearchable($searchable) {
-        $this->searchable = $searchable;
     }
 
     /**

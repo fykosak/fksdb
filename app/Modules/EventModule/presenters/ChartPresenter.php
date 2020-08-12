@@ -18,14 +18,14 @@ class ChartPresenter extends BasePresenter {
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedList() {
+    public function authorizedList(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized($this->getModelResource(), 'list'));
     }
 
     /**
      * @throws EventNotFoundException
      */
-    public function authorizedChart() {
+    public function authorizedChart(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized($this->getModelResource(), 'chart'));
     }
 

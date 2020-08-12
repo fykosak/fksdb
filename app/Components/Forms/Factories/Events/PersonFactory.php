@@ -39,23 +39,17 @@ class PersonFactory extends AbstractFactory {
     /** @var mixed */
     private $visible;
 
-    /** @var ReferencedPersonFactory */
-    private $referencedPersonFactory;
+    private ReferencedPersonFactory $referencedPersonFactory;
 
-    /** @var SelfResolver */
-    private $selfResolver;
+    private SelfResolver $selfResolver;
 
-    /** @var ExpressionEvaluator */
-    private $evaluator;
+    private ExpressionEvaluator $evaluator;
 
-    /** @var User */
-    private $user;
+    private User $user;
 
-    /** @var ServicePerson */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
-    /** @var DIContainer */
-    private $container;
+    private DIContainer $container;
 
     /**
      * PersonFactory constructor.
@@ -71,7 +65,19 @@ class PersonFactory extends AbstractFactory {
      * @param ServicePerson $servicePerson
      * @param DIContainer $container
      */
-    public function __construct($fieldsDefinition, $searchType, $allowClear, $modifiable, $visible, ReferencedPersonFactory $referencedPersonFactory, SelfResolver $selfResolver, ExpressionEvaluator $evaluator, User $user, ServicePerson $servicePerson, DIContainer $container) {
+    public function __construct(
+        $fieldsDefinition,
+        $searchType,
+        $allowClear,
+        $modifiable,
+        $visible,
+        ReferencedPersonFactory $referencedPersonFactory,
+        SelfResolver $selfResolver,
+        ExpressionEvaluator $evaluator,
+        User $user,
+        ServicePerson $servicePerson,
+        DIContainer $container
+    ) {
         $this->fieldsDefinition = $fieldsDefinition;
         $this->searchType = $searchType;
         $this->allowClear = $allowClear;
@@ -104,7 +110,7 @@ class PersonFactory extends AbstractFactory {
      * @param ReferencedId|IComponent $component
      * @param Field $field
      */
-    protected function setDefaultValue(IComponent $component, Field $field) {
+    protected function setDefaultValue(IComponent $component, Field $field): void {
         $default = $field->getValue();
         if ($default == self::VALUE_LOGIN) {
             if ($this->user->isLoggedIn() && $this->user->getIdentity()->getPerson()) {
@@ -120,7 +126,7 @@ class PersonFactory extends AbstractFactory {
      * @param ReferencedId|IComponent $component
      * @return void
      */
-    protected function setDisabled(IComponent $component) {
+    protected function setDisabled(IComponent $component): void {
         $component->setDisabled();
     }
 

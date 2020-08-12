@@ -19,11 +19,7 @@ class SearchableDataSource extends NDataSource {
         return $this->filterCallback;
     }
 
-    /**
-     * @param callable $filterCallback
-     * @return void
-     */
-    public function setFilterCallback(callable $filterCallback) {
+    public function setFilterCallback(callable $filterCallback): void {
         $this->filterCallback = $filterCallback;
     }
 
@@ -31,7 +27,7 @@ class SearchableDataSource extends NDataSource {
      * @param mixed $value
      * @return void
      */
-    public function applyFilter($value) {
+    public function applyFilter($value): void {
         ($this->filterCallback)($this->getData(), $value);
     }
 }

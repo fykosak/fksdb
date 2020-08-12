@@ -11,38 +11,22 @@ use FKSDB\Messages\Message;
  */
 abstract class StackedLogger implements ILogger {
 
-    /** @var ILogger */
-    private $child;
+    private ?ILogger $child = null;
 
-    /**
-     * @return ILogger
-     */
-    public function getChild() {
+    public function getChild(): ?ILogger {
         return $this->child;
     }
 
-    /**
-     * @param ILogger $child
-     * @return void
-     */
-    public function setChild(ILogger $child) {
+    public function setChild(ILogger $child): void {
         $this->child = $child;
     }
 
-    /**
-     * @param Message $message
-     * @return void
-     */
-    final public function log(Message $message) {
+    final public function log(Message $message): void {
         $this->doLog($message);
         if ($this->getChild()) {
             $this->getChild()->log($message);
         }
     }
 
-    /**
-     * @param Message $message
-     * @return void
-     */
-    abstract protected function doLog(Message $message);
+    abstract protected function doLog(Message $message): void;
 }

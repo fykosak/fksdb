@@ -22,8 +22,7 @@ class GithubAuthenticator extends AbstractAuthenticator {
     const SESSION_NS = 'auth';
     const HTTP_AUTH_HEADER = 'X-Hub-Signature';
 
-    /** @var Container  */
-    private $container;
+    private Container $container;
 
     /**
      * GithubAuthenticator constructor.
@@ -33,7 +32,7 @@ class GithubAuthenticator extends AbstractAuthenticator {
      */
     public function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator, Container $container) {
         parent::__construct($serviceLogin, $yearCalculator);
-        $this->container=$container;
+        $this->container = $container;
     }
 
     /**

@@ -13,13 +13,8 @@ use Nette\Application\UI\Control;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class FlashMessageDump {
-    /**
-     * @param MemoryLogger $logger
-     * @param Control $control
-     * @param bool $clear
-     * @return void
-     */
-    public static function dump(MemoryLogger $logger, Control $control, bool $clear = true) {
+
+    public static function dump(MemoryLogger $logger, Control $control, bool $clear = true): void {
         foreach ($logger->getMessages() as $message) {
             $control->flashMessage($message->getMessage(), $message->getLevel());
         }

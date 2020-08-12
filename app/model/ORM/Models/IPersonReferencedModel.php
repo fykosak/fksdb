@@ -3,12 +3,9 @@
 namespace FKSDB\ORM\Models;
 
 /**
- * Class IPersonReferencedModel
- * *
+ * Interface IPersonReferencedModel
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 interface IPersonReferencedModel {
-    /**
-     * @return ModelPerson
-     */
-    public function getPerson();
+    public function getPerson(): ?ModelPerson;
 }

@@ -3,8 +3,8 @@
 namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Exceptions\NotFoundException;
-use FKSDB\Logging\FlashMessageDump;
-use FKSDB\Logging\MemoryLogger;
+use FKSDB\Messages\Message;
+use FKSDB\Submits\StorageException;
 use FKSDB\Submits\SubmitHandlerFactory;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -16,18 +16,13 @@ use Nette\Application\ForbiddenRequestException;
  */
 class SubmitsPreviewControl extends SeriesTableComponent {
 
-    /** @var SubmitHandlerFactory */
-    private $submitDownloadFactory;
+    private SubmitHandlerFactory $submitDownloadFactory;
 
-    /**
-     * @param SubmitHandlerFactory $submitDownloadFactory
-     * @return void
-     */
-    public function injectSubmitDownloadFactory(SubmitHandlerFactory $submitDownloadFactory) {
+    public function injectSubmitDownloadFactory(SubmitHandlerFactory $submitDownloadFactory): void {
         $this->submitDownloadFactory = $submitDownloadFactory;
     }
 
-    public function render() {
+    public function render(): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
     }
@@ -37,25 +32,33 @@ class SubmitsPreviewControl extends SeriesTableComponent {
      * @return void
      * @throws AbortException
      * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     * @throws NotFoundException
      */
-    public function handleDownloadUploaded(int $id) {
-        $logger = new MemoryLogger();
-        $this->submitDownloadFactory->handleDownloadUploaded($this->getPresenter(), $logger, $id);
-        FlashMessageDump::dump($logger, $this);
+    public function handleDownloadUploaded(int $id): void {
+        try {
+            $this->submitDownloadFactory->handleDownloadUploaded($this->getPresenter(), $id);
+        } catch (ForbiddenRequestException$exception) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+        } catch (NotFoundException$exception) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+        } catch (StorageException$exception) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+        }
     }
 
     /**
      * @param int $id
      * @throws AbortException
      * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     * @throws NotFoundException
      */
-    public function handleDownloadCorrected(int $id) {
-        $logger = new MemoryLogger();
-        $this->submitDownloadFactory->handleDownloadCorrected($this->getPresenter(), $logger, $id);
-        FlashMessageDump::dump($logger, $this);
+    public function handleDownloadCorrected(int $id): void {
+        try {
+            $this->submitDownloadFactory->handleDownloadCorrected($this->getPresenter(), $id);
+        } catch (ForbiddenRequestException$exception) {
+            $this->flashMessage(new Message($exception->getMessage(), Message::LVL_DANGER));
+        } catch (NotFoundException$exception) {
+            $this->flashMessage(new Message($exception->getMessage(), Message::LVL_DANGER));
+        } catch (StorageException $exception) {
+            $this->flashMessage(new Message($exception->getMessage(), Message::LVL_DANGER));
+        }
     }
 }

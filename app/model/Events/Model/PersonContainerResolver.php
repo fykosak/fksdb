@@ -19,17 +19,14 @@ class PersonContainerResolver implements IVisibilityResolver, IModifiabilityReso
 
     use SmartObject;
 
-    /** @var Field */
-    private $field;
+    private Field $field;
 
     /** @var mixed */
     private $condition;
 
-    /** @var SelfResolver */
-    private $selfResolver;
+    private SelfResolver $selfResolver;
 
-    /** @var ExpressionEvaluator */
-    private $evaluator;
+    private ExpressionEvaluator $evaluator;
 
     /**
      * PersonContainerResolver constructor.

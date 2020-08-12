@@ -23,13 +23,11 @@ class AddressFactory {
     const REQUIRED = 0x2;
     const NOT_WRITEONLY = 0x4;
 
-    /** @var ServiceAddress */
-    private $serviceAddress;
+    private ServiceAddress $serviceAddress;
 
-    /** @var ServiceRegion */
-    private $serviceRegion;
-    /** @var Container */
-    private $container;
+    private ServiceRegion $serviceRegion;
+
+    private Container $container;
 
     /**
      * AddressFactory constructor.
@@ -48,7 +46,7 @@ class AddressFactory {
      * @param IControl|null $conditioningField
      * @return AddressContainer
      */
-    public function createAddress($options = 0, IControl $conditioningField = null): AddressContainer {
+    public function createAddress(int $options = 0, IControl $conditioningField = null): AddressContainer {
         $container = new AddressContainer($this->container);
         $this->buildAddress($container, $options, $conditioningField);
         return $container;
@@ -76,7 +74,7 @@ class AddressFactory {
      * @param IControl $conditioningField
      * @param int $options
      */
-    public function buildAddress(AddressContainer $container, int $options = 0, IControl $conditioningField = null) {
+    public function buildAddress(AddressContainer $container, int $options = 0, IControl $conditioningField = null): void {
         if ($options & self::SHOW_EXTENDED_ROWS) {
             $container->addText('first_row', _('První řádek'))
                 ->setOption('description', _('První volitelný řádek adresy (např. bytem u)'));
@@ -149,5 +147,4 @@ class AddressFactory {
                 return $region->country_iso == $control->getValue();
             }, _('Zvolený stát neodpovídá zadanému PSČ.'));
     }
-
 }

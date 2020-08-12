@@ -14,17 +14,17 @@ use Nette\Application\UI\InvalidLinkException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class DispatchPresenter extends AuthenticatedPresenter {
-    /** @var array */
-    private $contestsProperty;
 
-    public function titleDefault() {
+    private array $contestsProperty;
+
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Rozcestník'), 'fa fa-home'));
     }
 
     /**
      * @throws InvalidLinkException
      */
-    public function renderDefault() {
+    public function renderDefault(): void {
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         $person = $login->getPerson();
@@ -34,7 +34,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     protected function beforeRender() {
-        $this->getPageStyleContainer()->navBarClassName = 'bg-dark navbar-dark';
+        $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
         parent::beforeRender();
     }
 
@@ -61,7 +61,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     private function getContestsProperty(): array {
-        if (!isset($this->contestsProperty) || is_null($this->contestsProperty)) {
+        if (!isset($this->contestsProperty)) {
             $this->contestsProperty = [];
             $query = $this->getServiceContest()->getTable();
             /** @var ModelContest $contest */

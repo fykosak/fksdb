@@ -22,8 +22,7 @@ use Nette\DI\Container;
  */
 class RelatedPersonSource extends AggregatedPersonSource implements IHolderSource {
 
-    /** @var ModelPerson */
-    private $person;
+    private ModelPerson $person;
 
     /**
      * RelatedPersonSource constructor.
@@ -39,10 +38,9 @@ class RelatedPersonSource extends AggregatedPersonSource implements IHolderSourc
     /**
      * @param ModelEvent $event
      * @return SingleEventSource|null
-     *
      * @throws NeonSchemaException
      */
-    public function processEvent(ModelEvent $event) {
+    public function processEvent(ModelEvent $event): ?SingleEventSource {
         $personId = $this->person->getPrimary();
 
         try {
@@ -77,5 +75,4 @@ class RelatedPersonSource extends AggregatedPersonSource implements IHolderSourc
 
         return $eventSource;
     }
-
 }

@@ -60,5 +60,4 @@ services:
     event.ServiceTsafParticipant:           FKSDB\ORM\Services\Events\ServiceTsafParticipant
     event.ServiceMTsafParticipant:          FKSDB\ORM\ServicesMulti\Events\ServiceMTsafParticipant
 
-    ServiceMPersonHasFlag:   FKSDB\ORM\ServicesMulti\ServiceMPersonHasFlag
     ServiceMPostContact:     FKSDB\ORM\ServicesMulti\ServiceMPostContact

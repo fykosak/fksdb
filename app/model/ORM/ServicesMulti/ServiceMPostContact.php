@@ -24,23 +24,15 @@ class ServiceMPostContact extends AbstractServiceMulti {
      * @param ServicePostContact $joinedService
      */
     public function __construct(ServiceAddress $mainService, ServicePostContact $joinedService) {
-        parent::__construct($mainService, $joinedService);
+        parent::__construct($mainService, $joinedService, 'address_id', ModelMPostContact::class);
     }
 
     /**
      * Delete post contact including the address.
      * @param IModel|AbstractModelMulti $model
      */
-    public function dispose(IModel $model) {
+    public function dispose(IModel $model): void {
         parent::dispose($model);
         $this->getMainService()->dispose($model->getMainModel());
-    }
-
-    public function getJoiningColumn(): string {
-        return 'address_id';
-    }
-
-    public function getModelClassName(): string {
-        return ModelMPostContact::class;
     }
 }

@@ -3,6 +3,7 @@
 namespace FKSDB\ORM\Models\StoredQuery;
 
 use FKSDB\ORM\AbstractModelSingle;
+use Nette\Database\Table\ActiveRow;
 
 /**
  * @todo Better (general) support for related collection setter.
@@ -12,6 +13,11 @@ use FKSDB\ORM\AbstractModelSingle;
  * @property-read string name
  * @property-read string description
  * @property-read int color
+ * @property-read ActiveRow tag_type
  */
 class ModelStoredQueryTag extends AbstractModelSingle {
+
+    public function getTagType(): ModelStoredQueryTagType {
+        return ModelStoredQueryTagType::createFromActiveRow($this->tag_type);
+    }
 }

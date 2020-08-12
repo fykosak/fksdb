@@ -14,10 +14,7 @@ use FKSDB\ORM\Models\ModelEventParticipant;
  */
 class ModelMTsafParticipant extends AbstractModelMulti implements IEventReferencedModel {
 
-    /**
-     * @return mixed
-     */
-    public function __toString() {
+    public function __toString(): string {
         if (!$this->getMainModel()->getPerson()) {
             trigger_error("Missing person in '" . $this->getMainModel() . "'.");
             //throw new InvalidStateException("Missing person in application ID '" . $this->getPrimary(false) . "'.");

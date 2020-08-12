@@ -20,8 +20,8 @@ use Nette\DI\Container;
  * @method SingleEventSource count()
  */
 class InitSource extends AggregatedPersonSource implements IHolderSource {
-    /** @var EventDispatchFactory */
-    private $eventDispatchFactory;
+
+    private EventDispatchFactory $eventDispatchFactory;
 
     /**
      * InitSource constructor.
@@ -39,7 +39,7 @@ class InitSource extends AggregatedPersonSource implements IHolderSource {
      * @return Holder
      * @throws NeonSchemaException
      */
-    public function processEvent(ModelEvent $event) {
+    public function processEvent(ModelEvent $event): Holder {
         $holder = $this->eventDispatchFactory->getDummyHolder($event);
         $holder->setModel();
         return $holder;

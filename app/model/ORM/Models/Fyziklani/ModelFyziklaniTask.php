@@ -19,5 +19,4 @@ class ModelFyziklaniTask extends AbstractModelSingle {
             'name' => $hideName ? null : $this->name,
         ];
     }
-
 }

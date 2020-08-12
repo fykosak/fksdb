@@ -14,7 +14,7 @@ use FKSDB\DataTesting\TestLog;
  */
 class ParticipantsDurationTest extends PersonTest {
 
-    const CONTESTS = [
+    private const CONTESTS = [
         ModelContest::ID_FYKOS => ['thresholds' => [4, 6]],
         ModelContest::ID_VYFUK => ['thresholds' => [4, 6]],
     ];
@@ -26,12 +26,7 @@ class ParticipantsDurationTest extends PersonTest {
         parent::__construct('participants_duration', _('Participate events'));
     }
 
-    /**
-     * @param ILogger $logger
-     * @param ModelPerson $person
-     * @return void
-     */
-    public function run(ILogger $logger, ModelPerson $person) {
+    public function run(ILogger $logger, ModelPerson $person): void {
         foreach (self::CONTESTS as $contestId => $contestDef) {
             $max = null;
             $min = null;

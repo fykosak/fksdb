@@ -18,7 +18,7 @@ class ImplicitEventRole extends EventRole {
      * @throws BadTypeException
      */
     protected function evaluate(...$args): bool {
-        list($model) = $args;
+        [$model] = $args;
         if (!($model instanceof IEventReferencedModel) || !($model instanceof IResource)) {
             throw new BadTypeException(IResource::class, $model);
         }
