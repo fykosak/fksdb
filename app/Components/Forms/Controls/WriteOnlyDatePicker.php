@@ -20,7 +20,7 @@ class WriteOnlyDatePicker extends DateInput implements IWriteOnly {
      * WriteOnlyDatePicker constructor.
      * @param null $label
      */
-    public function __construct($label = NULL) {
+    public function __construct($label = null) {
         parent::__construct($label);
         $this->writeOnlyAppendMonitors();
     }
@@ -28,7 +28,7 @@ class WriteOnlyDatePicker extends DateInput implements IWriteOnly {
     /**
      * @return Html
      */
-    public function getControl() {
+    public function getControl(): Html {
         $control = parent::getControl();
         $control = $this->writeOnlyAdjustControl($control);
         return $control;
@@ -47,7 +47,7 @@ class WriteOnlyDatePicker extends DateInput implements IWriteOnly {
         return $this;
     }
 
-    public function loadHttpData() {
+    public function loadHttpData(): void {
         parent::loadHttpData();
         $this->writeOnlyLoadHttpData();
     }

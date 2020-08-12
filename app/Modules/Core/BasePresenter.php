@@ -120,10 +120,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->langTraitStartup();
     }
 
-    /**
-     * @return ITemplate
-     */
-    protected function createTemplate() {
+    protected function createTemplate(): ITemplate {
         $template = parent::createTemplate();
         $template->setTranslator($this->getTranslator());
         return $template;
@@ -308,7 +305,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @param mixed $element
      * @throws ForbiddenRequestException
      */
-    public function checkRequirements($element) {
+    public function checkRequirements($element): void {
         parent::checkRequirements($element);
         $this->setAuthorized(true);
     }

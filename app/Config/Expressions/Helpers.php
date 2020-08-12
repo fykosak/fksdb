@@ -87,8 +87,9 @@ class Helpers {
             if (function_exists($entity)) {
                 return $entity(...$arguments);
             } else {
-                $rc = ClassType::from($entity);
-                return $rc->newInstanceArgs(DIHelpers::autowireArguments($rc->getConstructor(), $arguments, $container));
+            //    $rc = ClassType::from($entity);
+                return $container->createInstance($entity, $arguments);
+             //   return $rc->newInstanceArgs(DIHelpers::autowireArguments($rc->getConstructor(), $arguments, $container));
             }
         } else {
             return $expression;

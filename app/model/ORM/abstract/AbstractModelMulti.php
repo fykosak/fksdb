@@ -121,7 +121,7 @@ abstract class AbstractModelMulti implements IModel {
      * @param bool $need
      * @return mixed
      */
-    public function getPrimary($need = true) {
+    public function getPrimary(bool $need = true) {
         return $this->getJoinedModel()->getPrimary($need);
     }
 
@@ -129,7 +129,7 @@ abstract class AbstractModelMulti implements IModel {
      * @param bool $need
      * @return string
      */
-    public function getSignature($need = true) {
+    public function getSignature(bool $need = true) {
         return implode('|', (array)$this->getPrimary($need));
     }
 

@@ -2,7 +2,6 @@
 
 namespace FKSDB\Config\Extensions;
 
-use Nette\Application\Routers\Route;
 use Nette\DI\CompilerExtension;
 
 /**
@@ -34,7 +33,7 @@ class RouterExtension extends CompilerExtension {
                 }
                 foreach ($flags as $flag) {
                     $binFlag = constant("Nette\Application\Routers\Route::$flag");
-                    if ($disableSecured && $binFlag === Route::SECURED) {
+                    if ($disableSecured) {
                         continue;
                     }
                     $flagsBin |= $binFlag;

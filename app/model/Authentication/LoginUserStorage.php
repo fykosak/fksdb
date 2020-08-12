@@ -11,7 +11,7 @@ use FKSDB\YearCalculator;
 use Nette\Application\AbortException;
 use Nette\Application\Application;
 use Nette\Application\IPresenter;
-use Nette\Http\Request;
+use Nette\Http\IRequest;
 use Nette\Http\Session;
 use Nette\Http\UserStorage;
 use Nette\Security\Identity;
@@ -45,7 +45,7 @@ class LoginUserStorage extends UserStorage {
     /** @var IPresenter */
     private $presenter;
 
-    private Request $request;
+    private IRequest $request;
 
     /**
      * LoginUserStorage constructor.
@@ -54,7 +54,7 @@ class LoginUserStorage extends UserStorage {
      * @param YearCalculator $yearCalculator
      * @param GlobalSession $globalSession
      * @param Application $application
-     * @param Request $request
+     * @param IRequest $request
      */
     public function __construct(
         Session $sessionHandler,
@@ -62,7 +62,7 @@ class LoginUserStorage extends UserStorage {
         YearCalculator $yearCalculator,
         GlobalSession $globalSession,
         Application $application,
-        Request $request
+        IRequest $request
     ) {
         parent::__construct($sessionHandler);
         $this->serviceLogin = $loginService;
@@ -107,7 +107,7 @@ class LoginUserStorage extends UserStorage {
      * @return bool
      * @throws AbortException
      */
-    public function isAuthenticated() {
+    public function isAuthenticated(): bool {
         $local = parent::isAuthenticated();
         $global = isset($this->globalSession[GlobalSession::UID]) ? $this->globalSession[GlobalSession::UID] : null;
 

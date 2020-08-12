@@ -5,7 +5,7 @@ namespace FKSDB\Authentication\SSO;
 use FKSDB\Authentication\TokenAuthenticator;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Services\ServiceAuthToken;
-use Nette\Http\Request;
+use Nette\Http\IRequest;
 use Nette\Http\Session;
 
 /**
@@ -22,15 +22,15 @@ class TokenGSIDHolder implements IGSIDHolder {
 
     private ServiceAuthToken $serviceAuthToken;
 
-    private Request $request;
+    private IRequest $request;
 
     /**
      * TokenGSIDHolder constructor.
      * @param Session $session
      * @param ServiceAuthToken $serviceAuthToken
-     * @param Request $request
+     * @param IRequest $request
      */
-    public function __construct(Session $session, ServiceAuthToken $serviceAuthToken, Request $request) {
+    public function __construct(Session $session, ServiceAuthToken $serviceAuthToken, IRequest $request) {
         $this->session = $session;
         $this->serviceAuthToken = $serviceAuthToken;
         $this->request = $request;

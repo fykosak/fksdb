@@ -24,7 +24,6 @@ abstract class BaseComponent extends Control {
      * @param Container $container
      */
     public function __construct(Container $container) {
-        parent::__construct();
         $container->callInjects($this);
         $this->context = $container;
     }
@@ -33,10 +32,7 @@ abstract class BaseComponent extends Control {
         $this->translator = $translator;
     }
 
-    /**
-     * @return ITemplate
-     */
-    protected function createTemplate() {
+    protected function createTemplate(): ITemplate {
         $template = parent::createTemplate();
         $template->setTranslator($this->translator);
         return $template;

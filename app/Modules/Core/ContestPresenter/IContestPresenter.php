@@ -22,9 +22,9 @@ interface IContestPresenter {
     public function getSelectedAcademicYear(): int;
 
     /**
-     * @param string $message
+     * @param $message
      * @param string $type
-     * @return void
+     * @return \stdClass
      */
-    public function flashMessage($message, $type = 'info');
+    public function flashMessage($message, string $type = 'info'): \stdClass;
 }

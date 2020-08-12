@@ -7,7 +7,7 @@ use FKSDB\Localization\GettextTranslator;
 use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\ORM\Models\ModelLogin;
 use Nette\DI\Container;
-use Nette\Http\Request;
+use Nette\Http\IRequest;
 use Nette\Security\User;
 
 /**
@@ -97,7 +97,7 @@ trait LangPresenterTrait {
     abstract public function getUser();
 
     /**
-     * @return Request
+     * @return IRequest
      */
     abstract public function getHttpRequest();
 }

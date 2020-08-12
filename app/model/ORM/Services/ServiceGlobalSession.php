@@ -7,7 +7,7 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelGlobalSession;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
-use Nette\Http\Request;
+use Nette\Http\IRequest;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
 
@@ -18,15 +18,15 @@ class ServiceGlobalSession extends AbstractServiceSingle {
 
     private const SESSION_ID_LENGTH = 32;
 
-    private Request $request;
+    private IRequest $request;
 
     /**
      * FKSDB\ORM\Services\ServiceGlobalSession constructor.
-     * @param Request $request
+     * @param IRequest $request
      * @param Context $context
      * @param IConventions $conventions
      */
-    public function __construct(Request $request, Context $context, IConventions $conventions) {
+    public function __construct(IRequest $request, Context $context, IConventions $conventions) {
         parent::__construct($context, $conventions, DbNames::TAB_GLOBAL_SESSION, ModelGlobalSession::class);
         $this->request = $request;
     }

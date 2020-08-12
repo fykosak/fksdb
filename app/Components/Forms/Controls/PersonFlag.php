@@ -25,7 +25,7 @@ class PersonFlag extends SelectBox {
      * PersonFlag constructor.
      * @param null $label
      */
-    public function __construct($label = NULL) {
+    public function __construct($label = null) {
         $items = [
             self::FLAG_YES => _('Ano'),
             self::FLAG_NO => _('Ne'),
@@ -70,7 +70,7 @@ class PersonFlag extends SelectBox {
     /**
      * @return Html
      */
-    public function getControl() {
+    public function getControl(): Html {
         $oldMapped = $this->useExplicitValues;
         $this->useExplicitValues = true;
         $control = parent::getControl();

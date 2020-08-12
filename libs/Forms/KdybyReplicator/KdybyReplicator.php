@@ -91,7 +91,7 @@ class Replicator extends Container
 	 *
 	 * @param \Nette\ComponentModel\IContainer
 	 */
-	protected function attached($obj)
+	protected function attached(Nette\ComponentModel\IComponent $obj):void
 	{
 		parent::attached($obj);
 
@@ -133,7 +133,7 @@ class Replicator extends Container
 	 * @param string $name
 	 * @return \Nette\Forms\Container
 	 */
-	protected function createComponent($name)
+	protected function createComponent(string $name):?Nette\ComponentModel\IComponent
 	{
 		$container = $this->createContainer($name);
 		$container->currentGroup = $this->currentGroup;

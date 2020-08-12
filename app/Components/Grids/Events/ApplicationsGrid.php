@@ -95,11 +95,7 @@ class ApplicationsGrid extends BaseComponent {
         }
     }
 
-    /**
-     * @param string $name
-     * @return ApplicationComponent|IComponent
-     */
-    protected function createComponent($name) {
+    protected function createComponent(string $name): IComponent {
 
         $key = null;
         if (Strings::startsWith($name, self::NAME_PREFIX)) {
