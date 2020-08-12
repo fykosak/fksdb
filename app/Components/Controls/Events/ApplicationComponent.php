@@ -57,7 +57,7 @@ class ApplicationComponent extends BaseComponent {
         if (stripos($template, '.latte') !== false) {
             $this->templateFile = $template;
         } else {
-            $this->templateFile = __DIR__ . DIRECTORY_SEPARATOR . "ApplicationComponent.$template.latte";
+            $this->templateFile = __DIR__ . DIRECTORY_SEPARATOR . "layout.application.$template.latte";
         }
     }
 
@@ -105,7 +105,7 @@ class ApplicationComponent extends BaseComponent {
         $this->template->primaryMachine = $this->getMachine()->getPrimaryMachine();
         $this->template->canEdit = $this->canEdit();
         $this->template->state = $this->holder->getPrimaryHolder()->getModelState();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ApplicationComponent.inline.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.application.inline.latte');
         $this->template->render();
     }
 
@@ -214,7 +214,6 @@ class ApplicationComponent extends BaseComponent {
      * @param string|null $explicitTransitionName
      * @return void
      * @throws AbortException
-     * @throws JsonException
      */
     private function execute(?Form $form, ?string $explicitTransitionName): void {
         try {

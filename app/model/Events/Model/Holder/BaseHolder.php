@@ -55,6 +55,7 @@ class BaseHolder {
 
     private Holder $holder;
 
+    /** @var Field[] */
     private array $fields = [];
 
     /** @var IModel */

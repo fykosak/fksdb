@@ -35,8 +35,7 @@ class SubmitsGrid extends BaseGrid {
 
     private SubmitHandlerFactory $submitHandlerFactory;
 
-    /** @var int */
-    private $academicYear;
+    private int $academicYear;
 
     /**
      * SubmitsGrid constructor.
