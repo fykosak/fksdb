@@ -52,7 +52,7 @@ $(function () {
                     return data;
                 }
                 let found = false;
-                for (var i in data) {
+                for (const i in data) {
                     if (data[i].value == defaultValue) {
                         found = true;
                         break;
@@ -74,7 +74,7 @@ $(function () {
 
             if (this.element.data('ac-ajax')) {
                 options.source = (request, response) => {
-                    var term = termFunction(request.term);
+                    const term = termFunction(request.term);
                     if (term in cache) {
                         response(cache[term]);
                         return;
@@ -142,7 +142,7 @@ $(function () {
 
             const renderMethod = this.element.data('ac-render-method');
             if (renderMethod) {
-                acEl.data('ui-autocomplete')._renderItem = () => {
+                acEl.data('ui-autocomplete')._renderItem = (ul, item) => {
                     return eval(renderMethod);
                 };
             }

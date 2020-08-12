@@ -64,8 +64,6 @@ class PersonPaymentContainer extends ContainerWithOptions {
         /** @var ModelPersonSchedule $model */
         foreach ($query as $model) {
             if ($this->showAll || !$model->hasActivePayment()) {
-                Debugger::barDump($lastPersonId, 'LPID');
-                Debugger::barDump($model->person_id, 'PID');
                 if ($model->person_id !== $lastPersonId) {
                     $container = new ModelContainer();
                     $this->addComponent($container, 'person' . $model->person_id);
