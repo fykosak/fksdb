@@ -29,6 +29,11 @@ class Navigation extends BaseComponent {
         $this->navigationFactory = $navigationFactory;
     }
 
+    // used in template
+    public function getNode(string $nodeId): array {
+        return $this->navigationFactory->getNode($nodeId);
+    }
+
     public function isActive(array $node): bool {
         if (isset($node['linkPresenter'])) {
             /** @var BasePresenter $presenter */
