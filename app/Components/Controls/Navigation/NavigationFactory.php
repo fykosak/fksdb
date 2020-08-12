@@ -2,9 +2,10 @@
 
 namespace FKSDB\Components\Controls\Navigation;
 
-
-use Tracy\Debugger;
-
+/**
+ * Class NavigationFactory
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class NavigationFactory {
     private array $nodes = [];
 

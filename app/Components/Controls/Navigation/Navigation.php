@@ -29,10 +29,6 @@ class Navigation extends BaseComponent {
         $this->navigationFactory = $navigationFactory;
     }
 
-    public function getNode(string $nodeId): array {
-        return $this->navigationFactory->getNode($nodeId);
-    }
-
     public function isActive(array $node): bool {
         if (isset($node['linkPresenter'])) {
             /** @var BasePresenter $presenter */
@@ -53,7 +49,7 @@ class Navigation extends BaseComponent {
 // try children
 
         foreach ($this->navigationFactory->getParent($node['nodeId']) as $childId) {
-            if ($this->isActive($this->getNode($childId))) {
+            if ($this->isActive($this->navigationFactory->getNode($childId))) {
                 return true;
             }
         }
@@ -198,5 +194,4 @@ class Navigation extends BaseComponent {
         }
         return $presenter;
     }
-
 }
