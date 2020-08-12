@@ -12,22 +12,22 @@ use Nette\Forms\Controls\BaseControl;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class DefaultColumnFactory extends AbstractColumnFactory {
-    /** @var string */
-    private $title;
-    /** @var string */
-    private $tableName;
-    /** @var string */
-    private $modelAccessKey;
-    /** @var string|null */
-    private $description;
-    /** @var array */
-    private $metaData;
-    /** @var bool */
-    private $required = false;
-    /** @var bool */
-    private $omitInputField = false;
-    /** @var FieldLevelPermission */
-    private $permission;
+
+    private string $title;
+
+    private string $tableName;
+
+    private string $modelAccessKey;
+
+    private ?string $description;
+
+    private array $metaData;
+
+    private bool $required = false;
+
+    private bool $omitInputField = false;
+
+    private FieldLevelPermission $permission;
 
     private MetaDataFactory $metaDataFactory;
 
@@ -40,14 +40,7 @@ abstract class DefaultColumnFactory extends AbstractColumnFactory {
         $this->permission = new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
     }
 
-    /**
-     * @param string $tableName
-     * @param string $modelAccessKey
-     * @param string $title
-     * @param string|null $description
-     * @return void
-     */
-    final public function setUp(string $tableName, string $modelAccessKey, string $title, $description) {
+    final public function setUp(string $tableName, string $modelAccessKey, string $title, ?string $description): void {
         $this->title = $title;
         $this->tableName = $tableName;
         $this->modelAccessKey = $modelAccessKey;
@@ -74,30 +67,18 @@ abstract class DefaultColumnFactory extends AbstractColumnFactory {
         return $field;
     }
 
-    /**
-     * @param array $values
-     * @return void
-     */
-    final public function setPermissionValue(array $values) {
+    final public function setPermissionValue(array $values): void {
         $this->permission = new FieldLevelPermission(
             constant(self::class . '::PERMISSION_ALLOW_' . $values['read']),
             constant(self::class . '::PERMISSION_ALLOW_' . $values['write'])
         );
     }
 
-    /**
-     * @param bool $value
-     * @return void
-     */
-    final public function setRequired(bool $value) {
+    final public function setRequired(bool $value): void {
         $this->required = $value;
     }
 
-    /**
-     * @param bool $omit
-     * @return void
-     */
-    final public function setOmitInputField(bool $omit) {
+    final public function setOmitInputField(bool $omit): void {
         $this->omitInputField = $omit;
     }
 

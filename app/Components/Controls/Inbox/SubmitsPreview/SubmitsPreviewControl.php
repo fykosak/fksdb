@@ -3,8 +3,8 @@
 namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Exceptions\NotFoundException;
-use FKSDB\Logging\FlashMessageDump;
-use FKSDB\Logging\MemoryLogger;
+use FKSDB\Messages\Message;
+use FKSDB\Submits\StorageException;
 use FKSDB\Submits\SubmitHandlerFactory;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -32,25 +32,33 @@ class SubmitsPreviewControl extends SeriesTableComponent {
      * @return void
      * @throws AbortException
      * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     * @throws NotFoundException
      */
     public function handleDownloadUploaded(int $id): void {
-        $logger = new MemoryLogger();
-        $this->submitDownloadFactory->handleDownloadUploaded($this->getPresenter(), $logger, $id);
-        FlashMessageDump::dump($logger, $this);
+        try {
+            $this->submitDownloadFactory->handleDownloadUploaded($this->getPresenter(), $id);
+        } catch (ForbiddenRequestException$exception) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+        } catch (NotFoundException$exception) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+        } catch (StorageException$exception) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+        }
     }
 
     /**
      * @param int $id
      * @throws AbortException
      * @throws BadRequestException
-     * @throws ForbiddenRequestException
-     * @throws NotFoundException
      */
     public function handleDownloadCorrected(int $id): void {
-        $logger = new MemoryLogger();
-        $this->submitDownloadFactory->handleDownloadCorrected($this->getPresenter(), $logger, $id);
-        FlashMessageDump::dump($logger, $this);
+        try {
+            $this->submitDownloadFactory->handleDownloadCorrected($this->getPresenter(), $id);
+        } catch (ForbiddenRequestException$exception) {
+            $this->flashMessage(new Message($exception->getMessage(), Message::LVL_DANGER));
+        } catch (NotFoundException$exception) {
+            $this->flashMessage(new Message($exception->getMessage(), Message::LVL_DANGER));
+        } catch (StorageException $exception) {
+            $this->flashMessage(new Message($exception->getMessage(), Message::LVL_DANGER));
+        }
     }
 }

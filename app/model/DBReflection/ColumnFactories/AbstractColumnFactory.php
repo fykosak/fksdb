@@ -19,10 +19,10 @@ use Nette\Utils\Html;
 abstract class AbstractColumnFactory implements IColumnFactory {
     use SmartObject;
 
-    const PERMISSION_ALLOW_ANYBODY = 1;
-    const PERMISSION_ALLOW_BASIC = 16;
-    const PERMISSION_ALLOW_RESTRICT = 128;
-    const PERMISSION_ALLOW_FULL = 1024;
+    public const PERMISSION_ALLOW_ANYBODY = 1;
+    public const PERMISSION_ALLOW_BASIC = 16;
+    public const PERMISSION_ALLOW_RESTRICT = 128;
+    public const PERMISSION_ALLOW_FULL = 1024;
 
     protected ReferencedFactory $referencedFactory;
 

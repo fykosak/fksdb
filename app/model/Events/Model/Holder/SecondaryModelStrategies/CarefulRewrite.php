@@ -13,24 +13,17 @@ use FKSDB\ORM\IService;
  */
 class CarefulRewrite extends SecondaryModelStrategy {
 
-    /** @var array */
-    private $safeKeys;
+    private array $safeKeys;
 
     /**
      * CarefulRewrite constructor.
      * @param array $safeKeys
      */
-    public function __construct($safeKeys = []) {
+    public function __construct(array $safeKeys = []) {
         $this->safeKeys = $safeKeys;
     }
 
-    /**
-     * @param BaseHolder $holder
-     * @param array $secondaries
-     * @param array $joinData
-     * @return void
-     */
-    protected function resolveMultipleSecondaries(BaseHolder $holder, array $secondaries, array $joinData) {
+    protected function resolveMultipleSecondaries(BaseHolder $holder, array $secondaries, array $joinData): void {
         if (count($secondaries) > 1) {
             throw new SecondaryModelConflictException($holder, $secondaries);
         }
@@ -66,14 +59,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
         return $result;
     }
 
-    /**
-     * @param IModel $currentModel
-     * @param IModel $foundModel
-     * @param array $joinData
-     * @param IService $service
-     * @return void
-     */
-    private function updateFoundModel(IModel $currentModel, IModel $foundModel, array $joinData, IService $service) {
+    private function updateFoundModel(IModel $currentModel, IModel $foundModel, array $joinData, IService $service): void {
         $currentArray = $currentModel->toArray();
         $data = [];
         foreach ($currentArray as $key => $value) {

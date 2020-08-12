@@ -61,7 +61,7 @@ group by school_id', [$this->acYear, array_keys($this->getSchoolsFromTeam($curre
             $schools[$row->school_id]['school'] = $this->serviceSchool->findByPrimary($row->school_id);
         }
         $this->template->schools = $schools;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'SchoolCheckControl.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.schoolCheck.latte');
         $this->template->render();
 
     }

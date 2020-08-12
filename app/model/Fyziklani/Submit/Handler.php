@@ -206,7 +206,7 @@ class Handler {
             /* ugly, force current timestamp in database
              * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
              */
-            'created' => null,
+            //'created' => null, TODO!!!
         ]);
         $this->logEvent($submit, 'created', \sprintf(' points %d', $points));
 

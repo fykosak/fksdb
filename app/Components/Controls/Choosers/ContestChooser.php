@@ -1,7 +1,8 @@
 <?php
 
-namespace FKSDB\Components\Controls;
+namespace FKSDB\Components\Controls\Choosers;
 
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Modules\Core\ContestPresenter\ContestPresenter;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelContestant;
@@ -315,7 +316,7 @@ class ContestChooser extends BaseComponent {
         $this->template->currentYear = $this->getYear();
         $this->template->class = ($class !== null) ? $class : "nav navbar-nav navbar-right";
 
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ContestChooser.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.contest.latte');
         $this->template->render();
     }
 

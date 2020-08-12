@@ -30,17 +30,17 @@ class SchoolFactory {
         $container = new ModelContainer();
         $container->addText('name_full', _('Full name'))
             ->addRule(Form::MAX_LENGTH, null, 255)
-            ->setOption('description', _('Úplný nezkrácený název školy.'));
+            ->setOption('description', _('Full name of the school.'));
 
         $container->addText('name', _('Name'))
             ->addRule(Form::MAX_LENGTH, null, 255)
             ->addRule(Form::FILLED, _('Name is required.'))
-            ->setOption('description', _('Název na obálku.'));
+            ->setOption('description', _('Envelope name.'));
 
         $container->addText('name_abbrev', _('Abbreviated name'))
             ->addRule(Form::MAX_LENGTH, _('Délka zkráceného názvu je omezena na %d znaků.'), 32)
-            ->addRule(Form::FILLED, _('Zkrácený název je povinný.'))
-            ->setOption('description', _('Název krátký do výsledkovky.'));
+            ->addRule(Form::FILLED, _('Short name is required.'))
+            ->setOption('description', _('Very short name.'));
 
         $container->addText('email', _('Contact e-mail'))
             ->addCondition(Form::FILLED)
@@ -52,7 +52,7 @@ class SchoolFactory {
         $container->addText('izo', _('IZO'))
             ->addRule(Form::MAX_LENGTH, _('Délka IZO je omezena na %d znaků.'), 32);
 
-        $container->addCheckbox('active', _('Aktivní záznam'))
+        $container->addCheckbox('active', _('Active record'))
             ->setDefaultValue(true);
 
         $container->addText('note', _('Note'));
@@ -64,7 +64,7 @@ class SchoolFactory {
         $schoolElement = new AutocompleteSelectBox(true, _('School'));
         $schoolElement->setDataProvider($this->schoolProvider);
         if ($options & self::SHOW_UNKNOWN_SCHOOL_HINT) {
-            $schoolElement->setOption('description', sprintf(_('Pokud nelze školu nalézt, napište na %s.'), 'schola.novum () fykos.cz'));
+            $schoolElement->setOption('description', sprintf(_('If you cannot find the school, ask on e-mail %s.'), 'schola.novum () fykos.cz'));
         }
         return $schoolElement;
     }

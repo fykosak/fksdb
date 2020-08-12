@@ -17,8 +17,7 @@ use Tester\Assert;
  */
 class SchoolPresenterTest extends EntityPresenterTestCase {
 
-    /** @var int */
-    private $schoolId;
+    private int $schoolId;
 
     protected function setUp() {
         parent::setUp();
@@ -38,7 +37,7 @@ class SchoolPresenterTest extends EntityPresenterTestCase {
         ]);
     }
 
-    public function testList() {
+    public function testList(): void {
         $request = $this->createGetRequest('list', []);
         $response = $this->fixture->run($request);
         $html = $this->assertPageDisplay($response);
@@ -47,7 +46,7 @@ class SchoolPresenterTest extends EntityPresenterTestCase {
     }
 
 
-    public function testCreate() {
+    public function testCreate(): void {
         $init = $this->countSchools();
         $response = $this->createFormRequest('create', [
                 SchoolFormComponent::CONT_ADDRESS => [
@@ -70,7 +69,7 @@ class SchoolPresenterTest extends EntityPresenterTestCase {
     }
 
 
-    public function testEdit() {
+    public function testEdit(): void {
         $init = $this->countSchools();
         $response = $this->createFormRequest('edit',
             [

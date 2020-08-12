@@ -18,8 +18,7 @@ use Nette\Utils\Html;
  */
 class StudyYearRow extends AbstractColumnFactory {
 
-    /** @var YearCalculator */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
     /**
      * StudyYearRow constructor.

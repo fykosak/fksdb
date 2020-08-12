@@ -29,7 +29,7 @@ abstract class BaseComponent extends Control {
         $this->context = $container;
     }
 
-    public function injectTranslator(ITranslator $translator): void {
+    final public function injectTranslator(ITranslator $translator): void {
         $this->translator = $translator;
     }
 

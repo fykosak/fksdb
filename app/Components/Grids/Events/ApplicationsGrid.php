@@ -32,26 +32,20 @@ class ApplicationsGrid extends BaseComponent {
     private IHolderSource $source;
 
     /** @var Holder[] */
-    private $holders = [];
+    private array $holders = [];
 
     /** @var Machine[] */
-    private $machines = [];
+    private array $machines = [];
 
     /** @var ModelEvent[] */
-    private $eventApplications = [];
+    private array $eventApplications = [];
 
     /** @var ApplicationHandler[] */
-    private $handlers = [];
+    private array $handlers = [];
 
     private ApplicationHandlerFactory $handlerFactory;
 
-    /** @var string */
-    private $templateFile;
-
-    /** @var bool */
-    private $searchable = false;
-    /** @var bool */
-    private $attachedJS = false;
+    private string $templateFile;
 
     private EventDispatchFactory $eventDispatchFactory;
 
@@ -64,12 +58,6 @@ class ApplicationsGrid extends BaseComponent {
      */
     public function __construct(Container $container, IHolderSource $source, ApplicationHandlerFactory $handlerFactory) {
         parent::__construct($container);
-        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
-            if (!$this->attachedJS) {
-                $this->attachedJS = true;
-                $collector->registerJSFile('js/searchTable.js');
-            }
-        });
         $this->source = $source;
         $this->handlerFactory = $handlerFactory;
         $this->processSource();
@@ -89,21 +77,6 @@ class ApplicationsGrid extends BaseComponent {
 
     public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
-    }
-
-    /**
-     * @return bool
-     */
-    public function isSearchable() {
-        return $this->searchable;
-    }
-
-    /**
-     * @param bool $searchable
-     * @return void
-     */
-    public function setSearchable($searchable) {
-        $this->searchable = $searchable;
     }
 
     /**

@@ -7,10 +7,10 @@ use FKSDB\Application\IStylesheetCollector;
 use FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs;
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory;
 use FKSDB\Components\Controls\Choosers\ThemeChooser;
+use FKSDB\Components\Controls\DBReflection\DetailComponent;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Components\Controls\Navigation\Navigation;
 use FKSDB\Components\Controls\PresenterBuilder;
-use FKSDB\Components\Controls\DBReflection\DetailComponent;
 use FKSDB\Components\Controls\DBReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
@@ -73,19 +73,15 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     private PresenterBuilder $presenterBuilder;
 
-    /** @var PageTitle|null */
-    private $pageTitle;
+    private ?PageTitle $pageTitle;
 
-    /** @var bool */
-    private $authorized = true;
+    private bool $authorized = true;
 
-    /** @var bool[] */
-    private $authorizedCache = [];
+    private array $authorizedCache = [];
 
-    /** @var FullHttpRequest */
-    private $fullRequest;
-    /** @var PageStyleContainer */
-    private $pageStyleContainer;
+    private FullHttpRequest $fullRequest;
+
+    private PageStyleContainer $pageStyleContainer;
 
     public function getYearCalculator(): YearCalculator {
         return $this->yearCalculator;
@@ -141,11 +137,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @param mixed|string $acQ
      * @return void
      * @throws AbortException
-     * @throws BadRequestException
      */
     public function handleAutocomplete($acName, $acQ): void {
         if (!$this->isAjax()) {
-            throw new BadRequestException('Can be called only by AJAX.');
+            ['acQ' => $acQ] = (array)json_decode($this->getHttpRequest()->getRawBody());
         }
         $component = $this->getComponent($acName);
         if (!($component instanceof AutocompleteSelectBox)) {
@@ -187,7 +182,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this;
     }
 
-    private function callTitleMethod() {
+    private function callTitleMethod(): void {
         $method = $this->formatTitleMethod($this->getView());
         if (method_exists($this, $method)) {
             $this->{$method}();
@@ -197,7 +192,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     public function getTitle(): PageTitle {
-        if (!isset($this->pageTitle) || is_null($this->pageTitle)) {
+        if (!isset($this->pageTitle)) {
             $this->callTitleMethod();
         }
         return $this->pageTitle ?? new PageTitle();
@@ -243,9 +238,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->putIntoBreadcrumbs();
     }
 
-    /**
-     * @return string[]
-     */
     protected function getNavRoots(): array {
         return [];
     }
@@ -382,7 +374,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * Nette workaround
      *      * ****************************** */
     public function getFullHttpRequest(): FullHttpRequest {
-        if ($this->fullRequest === null) {
+        if (!isset($this->fullRequest)) {
             $payload = file_get_contents('php://input');
             $this->fullRequest = new FullHttpRequest($this->getHttpRequest(), $payload);
         }

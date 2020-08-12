@@ -95,7 +95,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
             ];
         } catch (BadRequestException $exception) {
             if ($exception->getCode() == Response::S500_INTERNAL_SERVER_ERROR) {
-                $presenter->flashMessage(_('Kontext pro dotazy není dostupný'), BasePresenter::FLASH_WARNING);
+                $presenter->flashMessage(_('Series context for queries is not available'), BasePresenter::FLASH_WARNING);
                 return [];
             } else {
                 throw $exception;

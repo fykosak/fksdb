@@ -57,7 +57,7 @@ class ImportComponent extends BaseComponent {
 
         $form->addUpload('file', _('Soubor s přihláškami'))
             ->addRule(Form::FILLED)
-            ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze CSV soubory.'), 'text/plain'); //TODO verify this check at production server
+            ->addRule(Form::MIME_TYPE, _('Only CSV files are accepted.'), 'text/plain'); //TODO verify this check at production server
 
         $form->addRadioList('errorMode', _('Chování při chybě'))
             ->setItems([
@@ -68,13 +68,13 @@ class ImportComponent extends BaseComponent {
 
         $form->addRadioList('stateless', _('Přihlášky bez uvedeného stavu'))
             ->setItems([
-                ImportHandler::STATELESS_IGNORE => _('Ignorovat.'),
+                ImportHandler::STATELESS_IGNORE => _('Ignore.'),
                 ImportHandler::STATELESS_KEEP => _('Ponechat původní stav.'),
             ])
             ->setDefaultValue(ImportHandler::STATELESS_IGNORE);
 
 
-        $form->addSubmit('import', _('Importovat'));
+        $form->addSubmit('import', _('Import'));
 
         $form->onSuccess[] = function (Form $form) {
             $this->handleFormImport($form);
@@ -106,9 +106,7 @@ class ImportComponent extends BaseComponent {
             $stateless = $values['stateless'];
 
             // initialize import handler
-            $importHandler = new ImportHandler($this->getContext());
-            $importHandler->setInput($parser);
-            $importHandler->setSource($this->source);
+            $importHandler = new ImportHandler($this->getContext(), $parser, $this->source);
 
             Debugger::timer();
             $result = $importHandler->import($this->handler, $errorMode, $stateless);

@@ -28,25 +28,22 @@ use Nette\Utils\ArrayHash;
 class Holder {
 
     /** @var IFormAdjustment[] */
-    private $formAdjustments = [];
+    private array $formAdjustments = [];
 
     /** @var IProcessing[] */
-    private $processings = [];
+    private array $processings = [];
 
     /** @var BaseHolder[] */
-    private $baseHolders = [];
+    private array $baseHolders = [];
 
     /** @var BaseHolder[] */
-    private $secondaryBaseHolders = [];
+    private array $secondaryBaseHolders = [];
 
-    /** @var BaseHolder */
-    private $primaryHolder;
+    private BaseHolder $primaryHolder;
 
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
-    /** @var SecondaryModelStrategy */
-    private $secondaryModelStrategy;
+    private SecondaryModelStrategy $secondaryModelStrategy;
 
     /**
      * Holder constructor.
@@ -105,11 +102,7 @@ class Holder {
         return $this->baseHolders;
     }
 
-    /**
-     * @param string $name
-     * @return bool
-     */
-    public function hasBaseHolder($name): bool {
+    public function hasBaseHolder(string $name): bool {
         return isset($this->baseHolders[$name]);
     }
 
@@ -133,11 +126,7 @@ class Holder {
         return $this;
     }
 
-    /**
-     * @param IModel|null $primaryModel
-     * @param array|null $secondaryModels
-     */
-    public function setModel(IModel $primaryModel = null, array $secondaryModels = null): void {
+    public function setModel(?IModel $primaryModel = null, ?array $secondaryModels = null): void {
         foreach ($this->getGroupedSecondaryHolders() as $key => $group) {
             if ($secondaryModels) {
                 $this->secondaryModelStrategy->setSecondaryModels($group['holders'], $secondaryModels[$key]);
@@ -184,7 +173,7 @@ class Holder {
      * @param Form $form
      * @return string[] machineName => new state
      */
-    public function processFormValues(ArrayHash $values, Machine $machine, $transitions, ILogger $logger, Form $form = null): array {
+    public function processFormValues(ArrayHash $values, Machine $machine, array $transitions, ILogger $logger, ?Form $form): array {
         $newStates = [];
         foreach ($transitions as $name => $transition) {
             $newStates[$name] = $transition->getTarget();
@@ -210,12 +199,7 @@ class Holder {
         return $newStates;
     }
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @return void
-     */
-    public function adjustForm(Form $form, Machine $machine) {
+    public function adjustForm(Form $form, Machine $machine): void {
         foreach ($this->formAdjustments as $adjustment) {
             $adjustment->adjust($form, $machine, $this);
         }

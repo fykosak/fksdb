@@ -25,13 +25,7 @@ class ServicePerson extends AbstractServiceSingle {
         parent::__construct($connection, $conventions, DbNames::TAB_PERSON, ModelPerson::class);
     }
 
-    /**
-     * Syntactic sugar.
-     *
-     * @param string $email
-     * @return ModelPerson|null
-     */
-    public function findByEmail($email): ?ModelPerson {
+    public function findByEmail(?string $email): ?ModelPerson {
         if (!$email) {
             return null;
         }

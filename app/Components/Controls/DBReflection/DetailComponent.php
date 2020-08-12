@@ -25,7 +25,7 @@ class DetailComponent extends BaseComponent {
     public function render(string $section, AbstractModelSingle $model): void {
         $this->template->data = $this->detailFactory->getSection($section);
         $this->template->model = $model;
-        $this->template->setFile(__DIR__ . '/layout.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR);
         $this->template->render();
     }
 }

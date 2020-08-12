@@ -3,15 +3,13 @@
 namespace FKSDB\Tests\Events\FormAdjustments;
 
 use FKSDB\Tests\Events\EventTestCase;
+use Nette\Application\IPresenter;
 use Nette\Utils\DateTime;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
 
 abstract class ResourceAvailabilityTestCase extends EventTestCase {
 
-    /**
-     * @var ApplicationPresenter
-     */
-    protected $fixture;
+    protected IPresenter $fixture;
     /**
      * @var array
      */

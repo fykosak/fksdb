@@ -29,7 +29,6 @@ class TeacherPresenter extends BasePresenter {
 
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
@@ -47,7 +46,6 @@ class TeacherPresenter extends BasePresenter {
 
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      */
     public function titleDetail(): void {

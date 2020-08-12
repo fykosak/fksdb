@@ -108,7 +108,7 @@ class Breadcrumbs extends BaseComponent {
         }
     }
 
-    /*     * **********************
+    /* ***********************
      * Rendering
      * ********************** */
 
@@ -123,7 +123,7 @@ class Breadcrumbs extends BaseComponent {
                 'title' => $naviRequest->title,
             ];
         }
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Breadcrumbs.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.breadcrumbs.latte');
         $this->template->path = $path;
         $this->template->render();
     }

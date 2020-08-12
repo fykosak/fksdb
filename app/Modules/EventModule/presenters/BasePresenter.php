@@ -25,10 +25,9 @@ use Nette\Security\IResource;
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
 
-    /** @var ModelEvent */
-    private $event;
-    /** @var Holder */
-    private $holder;
+    private ModelEvent $event;
+
+    private Holder $holder;
 
     /**
      * @var int
@@ -82,7 +81,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws EventNotFoundException
      */
     protected function getEvent(): ModelEvent {
-        if (!$this->event) {
+        if (!isset($this->event)) {
             $model = $this->getServiceEvent()->findByPrimary($this->eventId);
             if (!$model) {
                 throw new EventNotFoundException();
@@ -98,7 +97,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws NeonSchemaException
      */
     protected function getHolder(): Holder {
-        if (!$this->holder) {
+        if (!isset($this->holder)) {
             $this->holder = $this->getEventDispatchFactory()->getDummyHolder($this->getEvent());
         }
         return $this->holder;
@@ -140,7 +139,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * Standard ACL from acl.neon
      * @throws EventNotFoundException
      */
-    protected function isContestsOrgAuthorized($resource, $privilege): bool {
+    protected function isContestsOrgAuthorized($resource, ?string $privilege): bool {
         return $this->getEventAuthorizator()->isContestOrgAllowed($resource, $privilege, $this->getEvent());
     }
 
@@ -152,7 +151,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * TODO vyfakuje to aj cartesianov
      * @throws EventNotFoundException
      */
-    protected function isEventAndContestOrgAuthorized($resource, string $privilege): bool {
+    protected function isEventAndContestOrgAuthorized($resource, ?string $privilege): bool {
         return $this->getEventAuthorizator()->isEventAndContestOrgAllowed($resource, $privilege, $this->getEvent());
     }
 
@@ -163,7 +162,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * Check if has contest permission or is Event org
      * @throws EventNotFoundException
      */
-    public function isEventOrContestOrgAuthorized($resource, $privilege): bool {
+    public function isEventOrContestOrgAuthorized($resource, ?string $privilege): bool {
         return $this->getEventAuthorizator()->isEventOrContestOrgAllowed($resource, $privilege, $this->getEvent());
     }
 
@@ -189,13 +188,13 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         $this->getPageStyleContainer()->styleId = 'event event-type-' . $this->getEvent()->event_type_id;
         switch ($this->getEvent()->event_type_id) {
             case 1:
-                $this->getPageStyleContainer()->navBarClassName = 'bg-fyziklani navbar-dark';
+                $this->getPageStyleContainer()->setNavBarClassName('bg-fyziklani navbar-dark');
                 break;
             case 9:
-                $this->getPageStyleContainer()->navBarClassName = 'bg-fol navbar-light';
+                $this->getPageStyleContainer()->setNavBarClassName('bg-fol navbar-light');
                 break;
             default:
-                $this->getPageStyleContainer()->navBarClassName = 'bg-light navbar-light';
+                $this->getPageStyleContainer()->setNavBarClassName('bg-light navbar-light');
         }
         parent::beforeRender();
     }

@@ -120,7 +120,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @param int $fid
      * @return ModelPersonHasFlag|null
      */
-    public function getPersonHasFlag($fid): ?array {
+    public function getPersonHasFlag($fid): ?ModelPersonHasFlag {
         $flags = $this->getPersonHasFlags();
         foreach ($flags as $flag) {
             if ($flag->getFlag()->fid === $fid) {
@@ -138,7 +138,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @param string|null $type
      * @return ModelMPostContact[]
      */
-    public function getMPostContacts(string $type = null): array {
+    public function getMPostContacts(?string $type = null): array {
         $postContacts = $this->getPostContacts();
         if ($postContacts && $type !== null) {
             $postContacts->where(['type' => $type]);

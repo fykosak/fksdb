@@ -96,7 +96,7 @@ class MailSender {
      * @return void
      * @throws UnsupportedLanguageException
      */
-    public function __invoke(Transition $transition, Holder $holder) {
+    public function __invoke(Transition $transition, Holder $holder): void {
         $this->send($transition, $holder);
     }
 

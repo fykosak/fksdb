@@ -98,7 +98,7 @@ class GroupOptions implements IOptionsProvider {
                 if ($selfGroup === $key) {
                     $remains -= 1;
                 }
-                $info = sprintf(_('(%d volných míst)'), $remains);
+                $info = sprintf(_('(%d vacancies)'), $remains);
                 $result[$key] = $group->name . ' ' . $info;
             }
         }

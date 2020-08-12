@@ -44,11 +44,11 @@ class EvaluationVyfuk2011 extends EvaluationStrategy {
     }
 
     public function getPointsColumn(ActiveRow $task): string {
-        return "s.raw_points";
+        return 's.raw_points';
     }
 
     public function getSumColumn(): string {
-        return "s.raw_points";
+        return 's.raw_points';
     }
 
     /**

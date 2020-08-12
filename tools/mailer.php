@@ -11,7 +11,7 @@ const SAFE_LIMIT = 500;
 /**
  * @var Container $container
  */
-$container = require './bootstrap.php';
+$container = require __DIR__ . '/bootstrap.php';
 set_time_limit(60);
 if (!$container->getParameters()['spamMailer'] || !$container->getParameters()['spamMailer']['enabled']) {
     exit(0);

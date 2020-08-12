@@ -29,10 +29,7 @@ class GithubPresenter extends AuthenticatedPresenter {
         $this->updater = $updater;
     }
 
-    /**
-     * @return bool|int|string
-     */
-    public function getAllowedAuthMethods() {
+    public function getAllowedAuthMethods(): int {
         return AuthenticatedPresenter::AUTH_ALLOW_GITHUB;
     }
 
@@ -41,7 +38,7 @@ class GithubPresenter extends AuthenticatedPresenter {
         $this->setAuthorized(true);
     }
 
-    public function actionApi() {
+    public function actionApi(): void {
         $type = $this->getFullHttpRequest()->getRequest()->getHeader(Event::HTTP_HEADER);
         $payload = $this->getFullHttpRequest()->getPayload();
         $data = json_decode($payload, true);

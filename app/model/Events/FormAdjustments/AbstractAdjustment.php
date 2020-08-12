@@ -60,10 +60,7 @@ abstract class AbstractAdjustment implements IFormAdjustment {
         return $result;
     }
 
-    /**
-     * @param Form $form
-     */
-    private function setForm($form): void {
+    private function setForm(Form $form): void {
         $this->pathCache = [];
         /** @var Control $control */
         // TODO not type safe

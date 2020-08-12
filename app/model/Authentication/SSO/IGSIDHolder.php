@@ -15,5 +15,5 @@ interface IGSIDHolder {
      * @param mixed $gsid
      * @return void
      */
-    public function setGSID($gsid);
+    public function setGSID($gsid): void;
 }

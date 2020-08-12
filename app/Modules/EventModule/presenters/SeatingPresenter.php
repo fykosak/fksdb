@@ -4,12 +4,10 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Fyziklani\SeatingControl;
 use FKSDB\Events\EventNotFoundException;
-use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
-use FKSDB\React\ReactResponse;
 use FKSDB\UI\PageTitle;
-use Nette\Application\AbortException;
+use Nette\DeprecatedException;
 
 /**
  *
@@ -105,19 +103,17 @@ class SeatingPresenter extends BasePresenter {
     }
 
 
-    /**
-     * @throws AbortException
-     */
     public function renderEdit(): void {
-        if ($this->isAjax()) {
-            $data = $this->getHttpRequest()->getPost('requestData');
-            $updatedTeams = $this->serviceFyziklaniTeamPosition->updateRouting($data);
-            $response = new ReactResponse();
-            $response->setAct('update-teams');
-            $response->setData(['updatedTeams' => $updatedTeams]);
-            $response->addMessage(new Message(_('Changes has been saved'), Message::LVL_SUCCESS));
-            $this->sendResponse($response);
-        }
+        throw new DeprecatedException();
+        /* if ($this->isAjax()) {
+             $data = $this->getHttpRequest()->getPost('requestData');
+             $updatedTeams = $this->serviceFyziklaniTeamPosition->updateRouting($data);
+             $response = new ReactResponse();
+             $response->setAct('update-teams');
+             $response->setData(['updatedTeams' => $updatedTeams]);
+             $response->addMessage(new Message(_('Changes has been saved'), Message::LVL_SUCCESS));
+             $this->sendResponse($response);
+         }*/
     }
 
     /**

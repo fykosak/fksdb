@@ -67,7 +67,7 @@ class SeatingControl extends BaseComponent {
         $this->template->places = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms($event));
         $this->template->mode = $mode;
         $this->template->lang = $lang;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Seating.' . $mode . '.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.' . $mode . '.latte');
         $this->template->render();
     }
 

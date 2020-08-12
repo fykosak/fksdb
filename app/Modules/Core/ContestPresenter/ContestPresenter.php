@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\Core\ContestPresenter;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
-use FKSDB\Components\Controls\ContestChooser;
+use FKSDB\Components\Controls\Choosers\ContestChooser;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\UI\PageTitle;
@@ -94,7 +94,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
         }
         if (isset($contest) && $contest) {
             $this->getPageStyleContainer()->styleId = $contest->getContestSymbol();
-            $this->getPageStyleContainer()->navBarClassName = 'navbar-dark bg-' . $contest->getContestSymbol();
+            $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-' . $contest->getContestSymbol());
         }
         parent::beforeRender();
     }

@@ -46,12 +46,12 @@ class ContestAuthorizator {
      * User must posses the role (for the resource:privilege) in the context
      * of the queried contest.
      *
-     * @param IResource|string $resource
-     * @param string $privilege
+     * @param IResource|string|null $resource
+     * @param string|null $privilege
      * @param int|ModelContest $contest queried contest
      * @return bool
      */
-    public function isAllowed($resource, $privilege, $contest): bool {
+    public function isAllowed($resource, ?string $privilege, $contest): bool {
         if (!$this->getUser()->isLoggedIn()) {
             $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
             return $this->getPermission()->isAllowed($role, $resource, $privilege);
@@ -62,11 +62,11 @@ class ContestAuthorizator {
     }
 
     /**
-     * @param IResource|string $resource
-     * @param string $privilege
+     * @param IResource|string|null $resource
+     * @param string|null $privilege
      * @return bool
      */
-    final public function isAllowedForAnyContest($resource, string $privilege = null): bool {
+    final public function isAllowedForAnyContest($resource, ?string $privilege): bool {
         if (!$this->getUser()->isLoggedIn()) {
             $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
             return $this->getPermission()->isAllowed($role, $resource, $privilege);

@@ -66,7 +66,7 @@ class FinalResults extends BaseComponent {
 
     public function render(): void {
         $this->template->that = $this;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'FinalResults.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.finalResults.latte');
         $this->template->render();
     }
 }

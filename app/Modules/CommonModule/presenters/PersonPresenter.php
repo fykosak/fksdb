@@ -64,9 +64,7 @@ class PersonPresenter extends BasePresenter {
 
     private PersonFactory $personFactory;
 
-
-    /** @var FieldLevelPermission */
-    private $userPermissions;
+    private int $userPermissions;
 
     public function injectServicePerson(ServicePerson $servicePerson): void {
         $this->servicePerson = $servicePerson;
@@ -265,6 +263,10 @@ class PersonPresenter extends BasePresenter {
         return new Stalking\Validation($this->getContext());
     }
 
+    /**
+     * @return Stalking\Timeline\TimelineControl
+     * @throws ModelNotFoundException
+     */
     protected function createComponentTimeline(): Stalking\Timeline\TimelineControl {
         return new Stalking\Timeline\TimelineControl($this->getContext());
     }
@@ -343,7 +345,7 @@ class PersonPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      */
     private function getUserPermissions(): int {
-        if (!isset($this->userPermissions) || is_null($this->userPermissions)) {
+        if (!isset($this->userPermissions)) {
             $this->userPermissions = FieldLevelPermission::ALLOW_ANYBODY;
             try {
                 $person = $this->getEntity();
@@ -364,11 +366,7 @@ class PersonPresenter extends BasePresenter {
         return $this->userPermissions;
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     */
-    private function updateMergeForm(Form $form) {
+    private function updateMergeForm(Form $form): void {
         if (false && !$form->isSubmitted()) { // new form is without any conflict, we use it to clear the session
             $this->setMergeConflicts(null);
             return;

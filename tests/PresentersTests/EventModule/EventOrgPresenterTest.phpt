@@ -18,14 +18,13 @@ use Tester\Assert;
  */
 class EventOrgPresenterTest extends EntityPresenterTestCase {
 
-    /** @var int */
-    private $personId;
-    /** @var int */
-    private $eventOrgPersonId;
-    /** @var int */
-    private $eventOrgId;
-    /** @var int */
-    private $eventId;
+    private int $personId;
+
+    private int $eventOrgPersonId;
+
+    private int $eventOrgId;
+
+    private int $eventId;
 
     protected function setUp() {
         parent::setUp();
@@ -44,7 +43,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
         $this->personId = $this->createPerson('Tester_C', 'Testrovič_C');
     }
 
-    public function testList() {
+    public function testList(): void {
         $request = $this->createGetRequest('list', []);
         $response = $this->fixture->run($request);
         $html = $this->assertPageDisplay($response);
@@ -53,7 +52,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
         Assert::contains('note-original', $html);
     }
 
-    public function testCreate() {
+    public function testCreate(): void {
         $init = $this->countEventOrgs();
         $response = $this->createFormRequest('create', [
             EventOrgFormComponent::CONTAINER => [
@@ -67,7 +66,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
         Assert::equal($init + 1, $after);
     }
 
-    public function testModelErrorCreate() {
+    public function testModelErrorCreate(): void {
         $init = $this->countEventOrgs();
         $response = $this->createFormRequest('create', [
                 EventOrgFormComponent::CONTAINER => [
@@ -83,7 +82,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
     }
 
 
-    public function testEdit() {
+    public function testEdit(): void {
         $response = $this->createFormRequest('edit', [
             EventOrgFormComponent::CONTAINER => [
                 'person_id__meta' => $this->eventOrgPersonId,
@@ -98,7 +97,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
     }
 
 
-    public function testDetail() {
+    public function testDetail(): void {
         $request = $this->createGetRequest('list', []);
         $response = $this->fixture->run($request);
         $html = $this->assertPageDisplay($response);
@@ -121,7 +120,7 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
         return parent::createGetRequest($action, $params, $postData);
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM event_org');
         $this->connection->query('DELETE FROM event');
         parent::tearDown();

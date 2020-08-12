@@ -46,9 +46,9 @@ class EvaluationFykos2011 extends EvaluationStrategy {
      */
     public function getPointsColumn(ActiveRow $task): string {
         if ($task->label == '1' || $task->label == '2') {
-            return "IF(ct.study_year IN (6,7,8,9,1,2), 2 * s.raw_points, s.raw_points)";
+            return 'IF(ct.study_year IN (6,7,8,9,1,2), 2 * s.raw_points, s.raw_points)';
         } else {
-            return "s.raw_points";
+            return 's.raw_points';
         }
     }
 
