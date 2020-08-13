@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Entity\Event\EventFormComponent;
+use FKSDB\Components\Controls\Entity\EventFormComponent;
 use FKSDB\Components\Grids\Events\EventsGrid;
 use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Exceptions\BadTypeException;

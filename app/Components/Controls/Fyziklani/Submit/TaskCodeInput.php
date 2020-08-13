@@ -52,11 +52,10 @@ class TaskCodeInput extends AjaxComponent {
     }
 
     /**
-     * @param mixed ...$args
      * @return array
      * @throws NotSetGameParametersException
      */
-    protected function getData(...$args): array {
+    protected function getData(): array {
         return [
             'availablePoints' => $this->event->getFyziklaniGameSetup()->getAvailablePoints(),
             'tasks' => $this->serviceFyziklaniTask->getTasksAsArray($this->event),
@@ -79,7 +78,7 @@ class TaskCodeInput extends AjaxComponent {
      * @throws BadTypeException
      * @throws AbortException
      */
-    public function handleSave() {
+    public function handleSave(): void {
         $data = (array)json_decode($this->getHttpRequest()->getRawBody());
         try {
             $handler = $this->handlerFactory->create($this->event);

@@ -27,10 +27,7 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
         $this->event = $event;
     }
 
-    /**
-     * @return array|mixed|null
-     */
-    public function getData() {
+    public function getData(): array {
         $data = [];
         foreach ($this->event->getParticipants()->where('status', ['participated', 'applied']) as $row) {
 

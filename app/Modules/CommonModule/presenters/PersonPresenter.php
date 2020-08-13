@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\CommonModule;
 
-use FKSDB\Components\Controls\Entity\Person\PersonFormComponent;
+use FKSDB\Components\Controls\Entity\PersonFormComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Person\PizzaControl;
 use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;

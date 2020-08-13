@@ -19,8 +19,7 @@ class TeamApplicationsTimeProgress extends ReactComponent implements IChart {
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    /** @var ModelEventType */
-    private $eventType;
+    private ModelEventType $eventType;
 
     private ServiceEvent $serviceEvent;
 
@@ -39,10 +38,7 @@ class TeamApplicationsTimeProgress extends ReactComponent implements IChart {
         $this->serviceEvent = $serviceEvent;
     }
 
-    /**
-     * @return array[]|mixed|null
-     */
-    protected function getData() {
+    protected function getData(): array {
         $data = [
             'teams' => [],
             'events' => [],

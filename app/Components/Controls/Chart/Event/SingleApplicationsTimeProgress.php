@@ -11,6 +11,7 @@ use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
+
 /**
  * Class SingleApplicationsTimeProgress
  * @author Michal Červeňák <miso@fykos.cz>
@@ -19,8 +20,7 @@ class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
 
     private ServiceEventParticipant $serviceEventParticipant;
 
-    /** @var ModelEventType */
-    private $eventType;
+    private ModelEventType $eventType;
 
     private ServiceEvent $serviceEvent;
 
@@ -39,10 +39,7 @@ class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
         $this->serviceEvent = $serviceEvent;
     }
 
-    /**
-     * @return array[]|mixed|null
-     */
-    protected function getData() {
+    protected function getData(): array {
         $data = [
             'participants' => [],
             'events' => [],

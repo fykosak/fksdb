@@ -72,7 +72,7 @@ class ResultsAndStatistics extends AjaxComponent {
      * @throws BadTypeException
      * @throws NotSetGameParametersException
      */
-    protected function getData() {
+    protected function getData(): array {
         $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
 
         $presenter = $this->getPresenter();

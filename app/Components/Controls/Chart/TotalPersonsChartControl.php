@@ -28,10 +28,7 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
         $this->servicePerson = $servicePerson;
     }
 
-    /**
-     * @return array|mixed|null
-     */
-    public function getData() {
+    public function getData(): array {
         $query = $this->servicePerson->getTable()->order('created');
         $data = [];
         /** @var ModelPerson $person */

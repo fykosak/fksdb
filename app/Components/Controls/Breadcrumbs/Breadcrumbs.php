@@ -54,7 +54,7 @@ class Breadcrumbs extends BaseComponent {
      *
      * @var bool
      */
-    private $storedRequest = false;
+    private bool $storedRequest = false;
 
     /**
      * Breadcrumbs constructor.
@@ -97,7 +97,7 @@ class Breadcrumbs extends BaseComponent {
         $this->storeRequest($originalBackLink);
     }
 
-    public function reset() {
+    public function reset(): void {
         foreach ([
                      self::SECTION_BACKIDS,
                      self::SECTION_REQUESTS,
@@ -158,10 +158,10 @@ class Breadcrumbs extends BaseComponent {
 
     /**
      * @param AppRequest $request
-     * @param null $maxLen
+     * @param int|null $maxLen
      * @return NaviRequest[]
      */
-    private function getTraversePath(AppRequest $request, $maxLen = null) {
+    private function getTraversePath(AppRequest $request, ?int $maxLen = null): array {
         $requests = $this->getRequests();
         $backLinkMap = $this->getBackLinkMap();
 
@@ -202,7 +202,7 @@ class Breadcrumbs extends BaseComponent {
      * @return string
      * @throws \ReflectionException
      */
-    private function getPathKey($request) {
+    private function getPathKey($request): string {
         if ($request instanceof AppRequest) {
             $parameters = $request->getParameters();
             $presenterName = $request->getPresenterName();
@@ -302,11 +302,7 @@ class Breadcrumbs extends BaseComponent {
         return $presenterName . ':' . $paramKey;
     }
 
-    /**
-     * @param string $requestKey
-     * @return string
-     */
-    private function getBackLinkId($requestKey) {
+    private function getBackLinkId(string $requestKey): string {
         $reverseBackLinkMap = $this->getReverseBackLinkMap();
 
         if (isset($reverseBackLinkMap[$requestKey])) {
@@ -330,7 +326,7 @@ class Breadcrumbs extends BaseComponent {
      * @param array $parameters
      * @return array
      */
-    protected function filterParameters($parameters): array {
+    protected function filterParameters(iterable $parameters): array {
         $result = [];
         foreach ($parameters as $key => $value) {
             if ($key == Presenter::FLASH_KEY) {

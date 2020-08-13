@@ -19,8 +19,7 @@ use Nette\DI\Container;
  */
 class TimelineControl extends ReactComponent {
 
-    /** @var ModelPerson */
-    private $person;
+    private ModelPerson $person;
 
     private YearCalculator $yearCalculator;
 
@@ -52,7 +51,7 @@ class TimelineControl extends ReactComponent {
      * @return \array[][]
      * @throws \Exception
      */
-    private function calculateData() {
+    private function calculateData(): array {
 
         $dates = [
             'since' => [],
@@ -162,10 +161,10 @@ class TimelineControl extends ReactComponent {
     }
 
     /**
-     * @return mixed
+     * @return array
      * @throws \Exception
      */
-    public function getData() {
+    public function getData(): array {
         [$events, $calculatedEvents] = $this->calculateEvents();
         [$dates, $longTimeEvents] = $this->calculateData();
         [$first, $last] = $this->calculateFirstAndLast($events, $dates);

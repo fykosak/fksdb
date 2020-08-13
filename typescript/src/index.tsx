@@ -12,7 +12,6 @@ import FyziklaniResultsTable from '@apps/fyziklaniResults/table';
 import { appsCollector } from '@appsCollector/index';
 import { mapRegister } from '@appsCollector/mapRegister';
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 
 appsCollector.register(eventSchedule);
 

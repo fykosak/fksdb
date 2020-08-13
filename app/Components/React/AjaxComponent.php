@@ -23,7 +23,7 @@ abstract class AjaxComponent extends ReactComponent {
      * @return void
      * @throws AbortException
      */
-    protected function sendAjaxResponse(int $code = Response::S200_OK) {
+    protected function sendAjaxResponse(int $code = Response::S200_OK): void {
         $response = new AjaxResponse();
         $response->setCode($code);
         $response->setContent($this->getResponseData());

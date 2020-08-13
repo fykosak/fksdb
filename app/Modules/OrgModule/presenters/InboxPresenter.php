@@ -129,7 +129,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    protected function startup() {
+    protected function startup(): void {
         parent::startup();
         $this->seriesTraitStartup();
         $this->seriesTable->setContest($this->getSelectedContest());
