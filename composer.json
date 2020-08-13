@@ -17,11 +17,7 @@
     "nette/caching": "2.5.9",
     "latte/latte": "2.8.1",
 
-
-
     "tracy/tracy": "2.6.8",
-
-
 
     "nette/tester": "2.3.3",
     "nette/application": "~2.4.0",
