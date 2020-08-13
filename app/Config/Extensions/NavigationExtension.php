@@ -2,7 +2,7 @@
 
 namespace FKSDB\Config\Extensions;
 
-use FKSDB\Components\Controls\Navigation\Navigation;
+use FKSDB\Components\Controls\Navigation\NavigationFactory;
 use Nette\DI\CompilerExtension;
 use Nette\DI\ServiceDefinition;
 
@@ -13,19 +13,15 @@ use Nette\DI\ServiceDefinition;
  */
 class NavigationExtension extends CompilerExtension {
 
-    /** @var array */
-    private $createdNodes = [];
+    private array $createdNodes = [];
 
     public function loadConfiguration() {
         parent::loadConfiguration();
 
         $builder = $this->getContainerBuilder();
-        $config = $this->getConfig([
-            'nodes' => [],
-            'structure' => [],
-        ]);
+        $config = $this->getConfig();
         $navbar = $builder->addDefinition('navbar')
-            ->setClass(Navigation::class);
+            ->setClass(NavigationFactory::class);
         $navbar->setAutowired(true);
 
 

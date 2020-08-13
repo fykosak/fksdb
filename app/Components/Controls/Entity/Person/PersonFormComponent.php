@@ -1,9 +1,7 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity\Person;
+namespace FKSDB\Components\Controls\Entity;
 
-use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
-use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\DBReflection\FieldLevelPermission;
 use FKSDB\DBReflection\OmittedControlException;
@@ -29,14 +27,15 @@ use Nette\InvalidArgumentException;
 /**
  * Class AbstractPersonFormControl
  * @author Michal Červeňák <miso@fykos.cz>
+ * @property ModelPerson $model
  */
-class PersonFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
+class PersonFormComponent extends EditEntityFormComponent {
 
-    const POST_CONTACT_DELIVERY = 'post_contact_d';
-    const POST_CONTACT_PERMANENT = 'post_contact_p';
+    public const POST_CONTACT_DELIVERY = 'post_contact_d';
+    public const POST_CONTACT_PERMANENT = 'post_contact_p';
 
-    const PERSON_CONTAINER = 'person';
-    const PERSON_INFO_CONTAINER = 'person_info';
+    public const PERSON_CONTAINER = 'person';
+    public const PERSON_INFO_CONTAINER = 'person_info';
 
     protected SingleReflectionFormFactory $singleReflectionFormFactory;
 
@@ -53,9 +52,6 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
     private MemoryLogger $logger;
 
     private FieldLevelPermission $userPermission;
-
-    /** @var ModelPerson */
-    private $model;
 
     /**
      * AbstractPersonFormControl constructor.
@@ -83,6 +79,17 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
         $this->addressFactory = $addressFactory;
         $this->servicePostContact = $servicePostContact;
         $this->serviceAddress = $serviceAddress;
+    }
+
+    public static function mapAddressContainerNameToType(string $containerName): string {
+        switch ($containerName) {
+            case self::POST_CONTACT_PERMANENT:
+                return ModelPostContact::TYPE_PERMANENT;
+            case self::POST_CONTACT_DELIVERY:
+                return ModelPostContact::TYPE_DELIVERY;
+            default:
+                throw new InvalidArgumentException();
+        }
     }
 
     /**
@@ -113,21 +120,6 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
     }
 
     /**
-     * @param AbstractModelSingle|ModelPerson $model
-     * @return void
-     * @throws BadTypeException
-     */
-    public function setModel(AbstractModelSingle $model): void {
-        $this->model = $model;
-        $this->getForm()->setDefaults([
-            self::PERSON_CONTAINER => $model->toArray(),
-            self::PERSON_INFO_CONTAINER => $model->getInfo() ? $model->getInfo()->toArray() : null,
-            self::POST_CONTACT_DELIVERY => $model->getDeliveryAddress2() ?: [],
-            self::POST_CONTACT_PERMANENT => $model->getPermanentAddress2() ?: [],
-        ]);
-    }
-
-    /**
      * @param Form $form
      * @return void
      * @throws AbortException
@@ -148,14 +140,19 @@ class PersonFormComponent extends AbstractEntityFormComponent implements IEditEn
         $this->getPresenter()->redirect('this');
     }
 
-    public static function mapAddressContainerNameToType(string $containerName): string {
-        switch ($containerName) {
-            case self::POST_CONTACT_PERMANENT:
-                return ModelPostContact::TYPE_PERMANENT;
-            case self::POST_CONTACT_DELIVERY:
-                return ModelPostContact::TYPE_DELIVERY;
-            default:
-                throw new InvalidArgumentException();
+    /**
+     * @param AbstractModelSingle|ModelPerson $model
+     * @return void
+     * @throws BadTypeException
+     */
+    protected function setDefaults(?AbstractModelSingle $model): void {
+        if (!is_null($model)) {
+            $this->getForm()->setDefaults([
+                self::PERSON_CONTAINER => $model->toArray(),
+                self::PERSON_INFO_CONTAINER => $model->getInfo() ? $model->getInfo()->toArray() : null,
+                self::POST_CONTACT_DELIVERY => $model->getDeliveryAddress2() ?: [],
+                self::POST_CONTACT_PERMANENT => $model->getPermanentAddress2() ?: [],
+            ]);
         }
     }
 

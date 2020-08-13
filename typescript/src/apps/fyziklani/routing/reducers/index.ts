@@ -1,7 +1,7 @@
 import {
-    State as FetchApiState,
-    submit,
-} from '@fetchApi/reducers/submit';
+    fetchApi,
+    FetchApiState,
+} from '@fetchApi/reducer';
 import { combineReducers } from 'redux';
 import { DragNDropData } from '../middleware/interfaces';
 import {
@@ -15,7 +15,7 @@ import {
 
 export const app = combineReducers({
     dragNDrop,
-    fetchApi: submit,
+    fetchApi,
     teams,
 
 });

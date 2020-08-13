@@ -19,7 +19,6 @@ use FKSDB\Payment\Handler\EmptyDataException;
 use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\UnavailableTransitionsException;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
@@ -28,8 +27,9 @@ use Nette\Forms\Form;
 /**
  * Class SelectForm
  * @author Michal Červeňák <miso@fykos.cz>
+ * @property ModelPayment $model
  */
-class PaymentFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
+class PaymentFormComponent extends EditEntityFormComponent {
 
     private PersonFactory $personFactory;
 
@@ -38,9 +38,6 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
     private bool $isOrg;
 
     private PaymentMachine $machine;
-
-    /** @var ModelPayment */
-    private $model;
 
     private ServicePayment $servicePayment;
 
@@ -76,42 +73,20 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
         $this->serviceSchedulePayment = $serviceSchedulePayment;
     }
 
-    /**
-     * @param ModelPayment|AbstractModelSingle $modelPayment
-     * @return void
-     * @throws BadTypeException
-     */
-    public function setModel(AbstractModelSingle $modelPayment): void {
-        $this->model = $modelPayment;
-        $values = $this->model->toArray();
-        $values['payment_accommodation'] = $this->serializeScheduleValue();
-        $this->getForm()->setDefaults($values);
+    protected function appendSubmitButton(Form $form): SubmitButton {
+        return $form->addSubmit('submit', $this->create ? _('Proceed to summary') : _('Save payment'));
     }
 
-    /**
-     * @return void
-     * @throws BadTypeException
-     */
-    public function render(): void {
-        if ($this->create) {
-            /** @var ModelLogin $login */
-            $login = $this->getPresenter()->getUser()->getIdentity();
-            $this->getForm()->setDefaults([
-                'person_id' => $login->getPerson()->person_id,
-            ]);
+    protected function configureForm(Form $form): void {
+        if ($this->isOrg) {
+            $form->addComponent($this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider), 'person_id');
+        } else {
+            $form->addHidden('person_id');
         }
-        parent::render();
-    }
-
-    private function serializeScheduleValue(): array {
-        $query = $this->model->getRelatedPersonSchedule();
-        $items = [];
-        foreach ($query as $row) {
-            $key = 'person' . $row->person_id;
-            $items[$key] = $items[$key] ?? [];
-            $items[$key][$row->person_schedule_id] = true;
-        }
-        return $items;
+        $currencyField = new CurrencyField();
+        $currencyField->setRequired(_('Please select currency'));
+        $form->addComponent($currencyField, 'currency');
+        $form->addComponent(new PersonPaymentContainer($this->getContext(), $this->machine->getEvent(), $this->machine->getScheduleGroupTypes(), !$this->create), 'payment_accommodation');
     }
 
     /**
@@ -159,19 +134,29 @@ class PaymentFormComponent extends AbstractEntityFormComponent implements IEditE
         $this->getPresenter()->redirect('detail', ['id' => $model->payment_id]);
     }
 
-    protected function configureForm(Form $form): void {
-        if ($this->isOrg) {
-            $form->addComponent($this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider), 'person_id');
+    /**
+     * @param ModelPayment|AbstractModelSingle $model
+     * @return void
+     * @throws BadTypeException
+     */
+    protected function setDefaults(?AbstractModelSingle $model): void {
+        if (!is_null($model)) {
+            $values = $this->model->toArray();
+            $query = $this->model->getRelatedPersonSchedule();
+            $items = [];
+            foreach ($query as $row) {
+                $key = 'person' . $row->person_id;
+                $items[$key] = $items[$key] ?? [];
+                $items[$key][$row->person_schedule_id] = true;
+            }
+            $values['payment_accommodation'] = $items;
+            $this->getForm()->setDefaults($values);
         } else {
-            $form->addHidden('person_id');
+            /** @var ModelLogin $login */
+            $login = $this->getPresenter()->getUser()->getIdentity();
+            $this->getForm()->setDefaults([
+                'person_id' => $login->getPerson()->person_id,
+            ]);
         }
-        $currencyField = new CurrencyField();
-        $currencyField->setRequired(_('Please select currency'));
-        $form->addComponent($currencyField, 'currency');
-        $form->addComponent(new PersonPaymentContainer($this->getContext(), $this->machine->getEvent(), $this->machine->getScheduleGroupTypes(), !$this->create), 'payment_accommodation');
-    }
-
-    protected function appendSubmitButton(Form $form): SubmitButton {
-        return $form->addSubmit('submit', $this->create ? _('Proceed to summary') : _('Save payment'));
     }
 }

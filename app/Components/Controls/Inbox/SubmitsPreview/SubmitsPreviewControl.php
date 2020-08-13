@@ -3,6 +3,8 @@
 namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Exceptions\NotFoundException;
+use FKSDB\Logging\FlashMessageDump;
+use FKSDB\Logging\MemoryLogger;
 use FKSDB\Messages\Message;
 use FKSDB\Submits\StorageException;
 use FKSDB\Submits\SubmitHandlerFactory;
@@ -34,8 +36,10 @@ class SubmitsPreviewControl extends SeriesTableComponent {
      * @throws BadRequestException
      */
     public function handleDownloadUploaded(int $id): void {
+        $logger = new MemoryLogger();
         try {
-            $this->submitDownloadFactory->handleDownloadUploaded($this->getPresenter(), $id);
+            $this->submitDownloadFactory->handleDownloadUploaded($this->getPresenter(), $logger, $id);
+            FlashMessageDump::dump($logger, $this);
         } catch (ForbiddenRequestException$exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
         } catch (NotFoundException$exception) {
@@ -51,8 +55,10 @@ class SubmitsPreviewControl extends SeriesTableComponent {
      * @throws BadRequestException
      */
     public function handleDownloadCorrected(int $id): void {
+        $logger = new MemoryLogger();
         try {
-            $this->submitDownloadFactory->handleDownloadCorrected($this->getPresenter(), $id);
+            $this->submitDownloadFactory->handleDownloadCorrected($this->getPresenter(), $logger, $id);
+            FlashMessageDump::dump($logger, $this);
         } catch (ForbiddenRequestException$exception) {
             $this->flashMessage(new Message($exception->getMessage(), Message::LVL_DANGER));
         } catch (NotFoundException$exception) {

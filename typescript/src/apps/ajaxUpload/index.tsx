@@ -1,4 +1,4 @@
-import { mapRegister } from '@appsCollector';
+import { mapRegister } from '@appsCollector/mapRegister';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Index from './components';

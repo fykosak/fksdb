@@ -60,7 +60,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
         $this->serviceTaskContribution = $serviceTaskContribution;
     }
 
-    protected function startup() {
+    protected function startup(): void {
         $this->seriesTraitStartup();
         parent::startup();
         $this->seriesTable->setContest($this->getSelectedContest());

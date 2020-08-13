@@ -1,9 +1,9 @@
-import * as React from 'react';
 import {
     Submits,
     Task,
     Team,
-} from '../../../fyziklani/helpers/interfaces';
+} from '@apps/fyziklani/helpers/interfaces';
+import * as React from 'react';
 
 interface OwnProps {
     submits: Submits;
