@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Room } from '../../../helpers/interfaces/';
+import { Room } from '../../../helpers/interfaces';
 import Place from './place';
 
 interface OwnProps {
