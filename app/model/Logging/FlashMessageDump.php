@@ -14,12 +14,14 @@ use Nette\Application\UI\Control;
  */
 class FlashMessageDump {
 
-    public static function dump(MemoryLogger $logger, Control $control, bool $clear = true): void {
-        foreach ($logger->getMessages() as $message) {
-            $control->flashMessage($message->getMessage(), $message->getLevel());
-        }
-        if ($clear) {
-            $logger->clear();
+    public static function dump(ILogger $logger, Control $control, bool $clear = true): void {
+        if ($logger instanceof MemoryLogger) {
+            foreach ($logger->getMessages() as $message) {
+                $control->flashMessage($message->getMessage(), $message->getLevel());
+            }
+            if ($clear) {
+                $logger->clear();
+            }
         }
     }
 }
