@@ -1,4 +1,4 @@
-import { App } from '@appsCollector';
+import { App } from '@appsCollector/index';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Index from './components';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Item } from '../../results/middleware/results/calculateData';
+import { Item } from '../../results/calculateData';
 import { getColorByPoints } from '../../statistics/middleware/charts/colors';
 
 interface OwnProps {

@@ -1,11 +1,9 @@
-import { mapRegister } from '@appsCollector';
 import AbstractChart from '@shared/components/chart';
 import { axisBottom } from 'd3-axis';
 import { scaleOrdinal, ScaleTime } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { select } from 'd3-selection';
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 
 interface Event {
     begin: string;
@@ -61,7 +59,7 @@ interface Props {
     };
 }
 
-class DetailTimeline extends AbstractChart<Props, {}> {
+export default class PersonTimeLine extends AbstractChart<Props, {}> {
     private colorScale;
     private readonly lineHeight = 30;
     private rowNumber;
@@ -168,12 +166,3 @@ class DetailTimeline extends AbstractChart<Props, {}> {
         select(this.xAxis).call(xAxis);
     }
 }
-
-export const person = () => {
-    mapRegister.register('person.detail.timeline', (element, reactId, rawData, actions) => {
-        const c = document.createElement('div');
-        element.appendChild(c);
-        const data = JSON.parse(rawData);
-        ReactDOM.render(<DetailTimeline data={data}/>, c);
-    });
-};

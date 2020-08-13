@@ -1,26 +1,32 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { FyziklaniResultsCoreStore } from '../reducers/coreStore';
-import Loading from './loading';
+
+interface OwnProps {
+    accessKey: string;
+    children: any;
+}
 
 interface StateProps {
     isReady: boolean;
 }
 
-class LoadingSwitch extends React.Component<StateProps, {}> {
+class LoadingSwitch extends React.Component<StateProps & OwnProps, {}> {
     public render() {
 
         const {isReady} = this.props;
         if (!isReady) {
-            return <Loading/>;
+            return <div className="load" style={{textAlign: 'center'}}>
+                <img alt="logo" src="/images/fof/logo-animated.svg" style={{width: '50%'}}/>
+            </div>;
         }
         return <>{this.props.children}</>;
     }
 }
 
-const mapStateToProps = (state: FyziklaniResultsCoreStore): StateProps => {
+const mapStateToProps = (state: FyziklaniResultsCoreStore, ownProps: OwnProps): StateProps => {
     return {
-        isReady: state.options.isReady,
+        isReady: state.fetchApi.hasOwnProperty(ownProps.accessKey),
     };
 };
 

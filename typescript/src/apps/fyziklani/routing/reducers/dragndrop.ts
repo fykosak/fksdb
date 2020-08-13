@@ -1,20 +1,7 @@
-import {
-    ACTION_DRAG_END,
-    ACTION_DRAG_START,
-    ACTION_DROP_ITEM,
-    ActionDragStart,
-} from '../actions/dragndrop';
+import { ACTION_DRAG_END, ACTION_DROP_ITEM } from '@shared/dragndrop';
 
 export interface State<D> {
     data?: D;
-}
-
-function dragStart<D>(state: State<D>, action: ActionDragStart<D>): State<D> {
-    const {data} = action;
-    return {
-        ...state,
-        data,
-    };
 }
 
 function dragEnd<D>(state: State<D>): State<D> {
@@ -26,8 +13,6 @@ function dragEnd<D>(state: State<D>): State<D> {
 
 export function dragNDrop<D = any>(state: State<D> = {data: null}, action): State<D> {
     switch (action.type) {
-        case ACTION_DRAG_START:
-            return dragStart<D>(state, action);
         case ACTION_DROP_ITEM:
         case ACTION_DRAG_END:
             return dragEnd<D>(state);

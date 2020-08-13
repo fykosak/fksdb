@@ -1,11 +1,5 @@
-import { config } from '@config';
+import StoreCreator from '@shared/components/storeCreator';
 import * as React from 'react';
-import { Provider } from 'react-redux';
-import {
-    applyMiddleware,
-    createStore,
-} from 'redux';
-import logger from 'redux-logger';
 import {
     Room,
     Team,
@@ -19,15 +13,11 @@ interface OwnProps {
 }
 
 export default class extends React.Component<OwnProps, {}> {
-
     public render() {
-        const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
         const {teams, rooms} = this.props;
 
-        return (
-            <Provider store={store}>
-                <App teams={teams} rooms={rooms}/>
-            </Provider>
-        );
+        return <StoreCreator app={app}>
+            <App teams={teams} rooms={rooms}/>
+        </StoreCreator>;
     }
 }

@@ -84,7 +84,6 @@ const setAutoSwitch = (state: State, action): State => {
     return {
         ...state,
         autoSwitch: action.state,
-
     };
 };
 

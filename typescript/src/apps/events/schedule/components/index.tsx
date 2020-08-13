@@ -1,15 +1,9 @@
-import { config } from '@config';
 import { lang } from '@i18n/i18n';
-import InputConnector from '@inputConnector/compoenents/index';
+import InputConnector from '@inputConnector/netteInputConnector';
+import StoreCreator from '@shared/components/storeCreator';
 import * as React from 'react';
-import { Provider } from 'react-redux';
-import {
-    applyMiddleware,
-    createStore,
-} from 'redux';
-import logger from 'redux-logger';
-import { ScheduleGroupDef } from '../middleware/interfaces';
-import { app } from '../reducer/';
+import { ScheduleGroupDef } from '../interfaces';
+import { app } from '../reducer';
 import Container from './container';
 
 interface OwnProps {
@@ -34,16 +28,12 @@ export interface Params {
 export default class Index extends React.Component<OwnProps, {}> {
 
     public render() {
-        const store = config.dev ? createStore(app, applyMiddleware(logger)) : createStore(app);
-
-        return (
-            <Provider store={store}>
-                <>
-                    <InputConnector input={this.props.input}/>
-                    {this.getComponentByMode()}
-                </>
-            </Provider>
-        );
+        return <StoreCreator app={app}>
+            <>
+                <InputConnector input={this.props.input}/>
+                {this.getComponentByMode()}
+            </>
+        </StoreCreator>;
     }
 
     private getComponentByMode(): JSX.Element {

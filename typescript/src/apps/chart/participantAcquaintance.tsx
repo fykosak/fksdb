@@ -26,10 +26,10 @@ interface OwnProps {
     data: Data[];
 }
 
-export default class Index extends React.Component<OwnProps, State> {
-    private innerRadius = 320;
-    private outerRadius = 340;
-    private textRadius = 360;
+export default class ParticipantAcquaintance extends React.Component<OwnProps, State> {
+    private readonly innerRadius = 320;
+    private readonly outerRadius = 340;
+    private readonly textRadius = 360;
 
     constructor(props) {
         super(props);
