@@ -22,8 +22,7 @@ class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
 
     private ServiceEventParticipant $serviceEventParticipant;
 
-    /** @var ModelEventType */
-    private $eventType;
+    private ModelEventType $eventType;
 
     private ServiceEvent $serviceEvent;
 

@@ -1,9 +1,7 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity\Event;
+namespace FKSDB\Components\Controls\Entity;
 
-use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
-use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\DBReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\ModelContainer;
@@ -32,8 +30,9 @@ use Nette\Utils\Html;
 /**
  * Class AbstractForm
  * @author Michal Červeňák <miso@fykos.cz>
+ * @property ModelEvent $model
  */
-class EventFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
+class EventFormComponent extends EditEntityFormComponent {
     public const CONT_EVENT = 'event';
 
     protected ModelContest $contest;
@@ -43,8 +42,6 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
     protected ServiceAuthToken $serviceAuthToken;
 
     protected ServiceEvent $serviceEvent;
-    /** @var ModelEvent */
-    protected $model;
 
     private int $year;
 
@@ -87,67 +84,6 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
         $form->addComponent($eventContainer, self::CONT_EVENT);
     }
 
-    protected function updateTokens(ModelEvent $event): void {
-        $connection = $this->serviceAuthToken->getConnection();
-        $connection->beginTransaction();
-        // update also 'until' of authTokens in case that registration end has changed
-        $tokenData = ['until' => $event->registration_end ?: $event->end];
-        foreach ($this->serviceAuthToken->findTokensByEventId($event->event_id) as $token) {
-            $this->serviceAuthToken->updateModel2($token, $tokenData);
-        }
-        $connection->commit();
-    }
-
-    /**
-     * @param AbstractModelSingle $model
-     * @return void
-     * @throws BadTypeException
-     * @throws NeonSchemaException
-     */
-    public function setModel(AbstractModelSingle $model): void {
-        $this->model = $model;
-        $this->getForm()->setDefaults([
-            self::CONT_EVENT => $model->toArray(),
-        ]);
-        /** @var TextArea $paramControl */
-        $paramControl = $this->getForm()->getComponent(self::CONT_EVENT)->getComponent('parameters');
-        $holder = $this->eventDispatchFactory->getDummyHolder($this->model);
-        $paramControl->setOption('description', $this->createParamDescription($holder));
-        $paramControl->addRule(function (BaseControl $control) use ($holder) {
-
-            $scheme = $holder->getPrimaryHolder()->getParamScheme();
-            $parameters = $control->getValue();
-            try {
-                if ($parameters) {
-                    $parameters = Neon::decode($parameters);
-                } else {
-                    $parameters = [];
-                }
-                NeonScheme::readSection($parameters, $scheme);
-                return true;
-            } catch (NeonSchemaException $exception) {
-                $control->addError($exception->getMessage());
-                return false;
-            }
-        }, _('Parameters does not fulfill the Neon scheme'));
-    }
-
-    protected function createParamDescription(Holder $holder): Html {
-        $scheme = $holder->getPrimaryHolder()->getParamScheme();
-        $result = Html::el('ul');
-        foreach ($scheme as $key => $meta) {
-            $item = Html::el('li');
-            $result->addText($item);
-
-            $item->addHtml(Html::el(null)->setText($key));
-            if (isset($meta['default'])) {
-                $item->addText(': ');
-                $item->addHtml(Html::el(null)->setText(Utils::getRepr($meta['default'])));
-            }
-        }
-        return $result;
-    }
-
     /**
      * @param Form $form
      * @return void
@@ -169,11 +105,46 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
     }
 
     /**
+     * @param AbstractModelSingle|ModelEvent $model
+     * @return void
+     * @throws BadTypeException
+     * @throws NeonSchemaException
+     */
+    protected function setDefaults(?AbstractModelSingle $model): void {
+        if (!is_null($model)) {
+            $this->getForm()->setDefaults([
+                self::CONT_EVENT => $model->toArray(),
+            ]);
+            /** @var TextArea $paramControl */
+            $paramControl = $this->getForm()->getComponent(self::CONT_EVENT)->getComponent('parameters');
+            $holder = $this->eventDispatchFactory->getDummyHolder($this->model);
+            $paramControl->setOption('description', $this->createParamDescription($holder));
+            $paramControl->addRule(function (BaseControl $control) use ($holder): bool {
+
+                $scheme = $holder->getPrimaryHolder()->getParamScheme();
+                $parameters = $control->getValue();
+                try {
+                    if ($parameters) {
+                        $parameters = Neon::decode($parameters);
+                    } else {
+                        $parameters = [];
+                    }
+                    NeonScheme::readSection($parameters, $scheme);
+                    return true;
+                } catch (NeonSchemaException $exception) {
+                    $control->addError($exception->getMessage());
+                    return false;
+                }
+            }, _('Parameters does not fulfill the Neon scheme'));
+        }
+    }
+
+    /**
      * @throws AbstractColumnException
      * @throws OmittedControlException
      * @throws BadTypeException
      */
-    public function createEventContainer(): ModelContainer {
+    private function createEventContainer(): ModelContainer {
         return $this->singleReflectionFormFactory->createContainer('event', [
             'event_type_id',
             'event_year',
@@ -186,4 +157,32 @@ class EventFormComponent extends AbstractEntityFormComponent implements IEditEnt
             'parameters',
         ], $this->contest);
     }
+
+    private function createParamDescription(Holder $holder): Html {
+        $scheme = $holder->getPrimaryHolder()->getParamScheme();
+        $result = Html::el('ul');
+        foreach ($scheme as $key => $meta) {
+            $item = Html::el('li');
+            $result->addText($item);
+
+            $item->addHtml(Html::el(null)->setText($key));
+            if (isset($meta['default'])) {
+                $item->addText(': ');
+                $item->addHtml(Html::el(null)->setText(Utils::getRepr($meta['default'])));
+            }
+        }
+        return $result;
+    }
+
+    private function updateTokens(ModelEvent $event): void {
+        $connection = $this->serviceAuthToken->getConnection();
+        $connection->beginTransaction();
+        // update also 'until' of authTokens in case that registration end has changed
+        $tokenData = ['until' => $event->registration_end ?: $event->end];
+        foreach ($this->serviceAuthToken->findTokensByEventId($event->event_id) as $token) {
+            $this->serviceAuthToken->updateModel2($token, $tokenData);
+        }
+        $connection->commit();
+    }
+
 }
