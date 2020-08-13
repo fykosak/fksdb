@@ -1,9 +1,7 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity\Fyziklani\Submit;
+namespace FKSDB\Components\Controls\Entity;
 
-use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
-use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\Fyziklani\Submit\ClosedSubmittingException;
@@ -22,11 +20,9 @@ use Nette\Forms\Controls\RadioList;
 /**
  * Class EditControl
  * @author Michal Červeňák <miso@fykos.cz>
+ * @property ModelFyziklaniSubmit $model
  */
-class EditComponent extends AbstractEntityFormComponent implements IEditEntityForm {
-
-    /** @var ModelFyziklaniSubmit */
-    private $submit;
+class FyziklaniSubmitEditComponent extends EditEntityFormComponent {
 
     private ModelEvent $event;
 
@@ -42,6 +38,10 @@ class EditComponent extends AbstractEntityFormComponent implements IEditEntityFo
         $this->event = $event;
     }
 
+    public function injectHandlerFactory(HandlerFactory $handlerFactory): void {
+        $this->handlerFactory = $handlerFactory;
+    }
+
     /**
      * @param Form $form
      * @return void
@@ -51,22 +51,36 @@ class EditComponent extends AbstractEntityFormComponent implements IEditEntityFo
         $form->addComponent($this->createPointsField(), 'points');
     }
 
-    public function injectHandlerFactory(HandlerFactory $handlerFactory): void {
-        $this->handlerFactory = $handlerFactory;
-    }
-
     /**
-     * @param AbstractModelSingle $submit
+     * @param AbstractModelSingle|ModelFyziklaniSubmit $model
      * @return void
      * @throws BadTypeException
      */
-    public function setModel(AbstractModelSingle $submit): void {
-        $this->submit = $submit;
-        $this->getForm()->setDefaults([
-            'team_id' => $this->submit->e_fyziklani_team_id,
-            'points' => $this->submit->points,
-        ]);
+    protected function setDefaults(?AbstractModelSingle $model): void {
+        if (!is_null($model)) {
+            $this->getForm()->setDefaults([
+                'team_id' => $this->model->e_fyziklani_team_id,
+                'points' => $this->model->points,
+            ]);
+        }
+    }
 
+    /**
+     * @param Form $form
+     * @throws AbortException
+     */
+    protected function handleFormSuccess(Form $form): void {
+        $values = $form->getValues();
+        try {
+            $logger = new MemoryLogger();
+            $handler = $this->handlerFactory->create($this->event);
+            $handler->changePoints($logger, $this->model, $values['points']);
+            FlashMessageDump::dump($logger, $this->getPresenter());
+            $this->redirect('this');
+        } catch (ClosedSubmittingException $exception) {
+            $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->redirect('this');
+        }
     }
 
     /**
@@ -83,23 +97,5 @@ class EditComponent extends AbstractEntityFormComponent implements IEditEntityFo
         $field->setItems($items);
         $field->setRequired();
         return $field;
-    }
-
-    /**
-     * @param Form $form
-     * @throws AbortException
-     */
-    protected function handleFormSuccess(Form $form): void {
-        $values = $form->getValues();
-        try {
-            $logger = new MemoryLogger();
-            $handler = $this->handlerFactory->create($this->event);
-            $handler->changePoints($logger, $this->submit, $values['points']);
-            FlashMessageDump::dump($logger, $this->getPresenter());
-            $this->redirect('this');
-        } catch (ClosedSubmittingException $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
-            $this->redirect('this');
-        }
     }
 }

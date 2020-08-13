@@ -1,11 +1,9 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity\StoredQuery;
+namespace FKSDB\Components\Controls\Entity;
 
-use FKSDB\StoredQuery\StoredQueryFactory;
-use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
-use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
+use FKSDB\StoredQuery\StoredQueryFactory;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\ModelException;
@@ -24,17 +22,17 @@ use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Tracy\Debugger;
 
 /**
  * Class StoredQueryForm
  * @author Michal Červeňák <miso@fykos.cz>
  * @method StoredQueryPresenter getPresenter($throw = true)
+ * @property ModelStoredQuery $model
  */
-class StoredQueryFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
-    const CONT_CONSOLE = 'console';
-    const CONT_PARAMS_META = 'paramsMeta';
-    const CONT_META = 'meta';
+class StoredQueryFormComponent extends EditEntityFormComponent {
+    private const CONT_CONSOLE = 'console';
+    private const CONT_PARAMS_META = 'paramsMeta';
+    private const CONT_META = 'meta';
 
     private StoredQueryFormFactory $storedQueryFormFactory;
 
@@ -46,21 +44,33 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
 
     private StoredQueryFactory $storedQueryFactory;
 
-    /** @var ModelStoredQuery */
-    private $model;
-
     /**
      * @param Form $form
      * @return void
      * @throws AbortException
+     * @throws ModelException
      */
     protected function handleFormSuccess(Form $form): void {
-        try {
-            $this->create ? $this->handleCreateSuccess($form) : $this->handleEditSuccess($form);
-        } catch (ModelException $exception) {
-            $this->flashMessage(_('Database error (store).'), Message::LVL_DANGER);
-            Debugger::log($exception);
+        $values = FormUtils::emptyStrToNull($form->getValues(), true);
+        $connection = $this->serviceStoredQuery->getConnection();
+        $connection->beginTransaction();
+
+        $data = array_merge($values[self::CONT_CONSOLE], $values[self::CONT_META]);
+
+        if ($this->create) {
+            $model = $this->serviceStoredQuery->createNewModel($data);
+        } else {
+            $model = $this->model;
+            $this->serviceStoredQuery->updateModel2($model, $data);
         }
+
+        $this->saveTags($values[self::CONT_META]['tags'], $model->query_id);
+        $this->saveParameters($values[self::CONT_PARAMS_META], $model->query_id);
+
+        //$this->getPresenter()->clearSession();
+        $connection->commit();
+        $this->getPresenter()->flashMessage($this->create ? _('Query has been created') : _('Query has been edited'), Message::LVL_SUCCESS);
+        $this->getPresenter()->redirect('list');
     }
 
     public function injectPrimary(
@@ -98,49 +108,6 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
         };
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     * @throws AbortException
-     */
-    private function handleEditSuccess(Form $form): void {
-        $this->handleSave($form);
-        $this->getPresenter()->flashMessage(_('Query has been edited'), Message::LVL_SUCCESS);
-        $this->getPresenter()->redirect('list');
-    }
-
-    /**
-     * @param Form $form
-     * @return void
-     * @throws AbortException
-     */
-    private function handleCreateSuccess(Form $form): void {
-        $this->handleSave($form);
-        $this->getPresenter()->flashMessage(_('Query has been created'), Message::LVL_SUCCESS);
-        $this->getPresenter()->redirect('list');
-    }
-
-    private function handleSave(Form $form): void {
-        $values = FormUtils::emptyStrToNull($form->getValues(), true);
-        $connection = $this->serviceStoredQuery->getConnection();
-        $connection->beginTransaction();
-
-        $data = array_merge($values[self::CONT_CONSOLE], $values[self::CONT_META]);
-
-        if ($this->create) {
-            $model = $this->serviceStoredQuery->createNewModel($data);
-        } else {
-            $model = $this->model;
-            $this->serviceStoredQuery->updateModel2($model, $data);
-        }
-
-        $this->saveTags($values[self::CONT_META]['tags'], $model->query_id);
-        $this->saveParameters($values[self::CONT_PARAMS_META], $model->query_id);
-
-        //$this->getPresenter()->clearSession();
-        $connection->commit();
-    }
-
     private function saveTags(array $tags, int $queryId): void {
         $this->serviceStoredQueryTag->getTable()->where([
             'query_id' => $queryId,
@@ -167,27 +134,27 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent implements IE
     }
 
     /**
-     * @param AbstractModelSingle|ModelStoredQuery $model
+     * @param AbstractModelSingle|ModelStoredQuery|null $model
      * @return void
      * @throws BadTypeException
      */
-    public function setModel(AbstractModelSingle $model): void {
-        $this->model = $model;
-
-        $values = [];
-        $values[self::CONT_CONSOLE] = $model;
-        $values[self::CONT_META] = $model->toArray();
-        $values[self::CONT_META]['tags'] = $model->getTags()->fetchPairs('tag_type_id', 'tag_type_id');
-        $values[self::CONT_PARAMS_META] = [];
-        foreach ($model->getParameters() as $parameter) {
-            $paramData = $parameter->toArray();
-            $paramData['default'] = $parameter->getDefaultValue();
-            $values[self::CONT_PARAMS_META][] = $paramData;
+    protected function setDefaults(?AbstractModelSingle $model): void {
+        if (!is_null($model)) {
+            $values = [];
+            $values[self::CONT_CONSOLE] = $model;
+            $values[self::CONT_META] = $model->toArray();
+            $values[self::CONT_META]['tags'] = $model->getTags()->fetchPairs('tag_type_id', 'tag_type_id');
+            $values[self::CONT_PARAMS_META] = [];
+            foreach ($model->getParameters() as $parameter) {
+                $paramData = $parameter->toArray();
+                $paramData['default'] = $parameter->getDefaultValue();
+                $values[self::CONT_PARAMS_META][] = $paramData;
+            }
+            if ($model->php_post_proc) {
+                $this->flashMessage(_('Query result is still processed by PHP. Stick to the correct names of columns and parameters.'), BasePresenter::FLASH_WARNING);
+            }
+            $this->getForm()->setDefaults($values);
         }
-        if ($model->php_post_proc) {
-            $this->flashMessage(_('Query result is still processed by PHP. Stick to the correct names of columns and parameters.'), BasePresenter::FLASH_WARNING);
-        }
-        $this->getForm()->setDefaults($values);
     }
 
     protected function createComponentQueryResultsComponent(): ResultsComponent {

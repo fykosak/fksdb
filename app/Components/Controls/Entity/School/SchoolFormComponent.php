@@ -1,9 +1,7 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity\School;
+namespace FKSDB\Components\Controls\Entity;
 
-use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
-use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Exceptions\BadTypeException;
@@ -19,11 +17,12 @@ use Nette\Forms\Form;
 /**
  * Class AbstractForm
  * @author Michal Červeňák <miso@fykos.cz>
+ * @property ModelSchool $model
  */
-class SchoolFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
+class SchoolFormComponent extends EditEntityFormComponent {
 
-    const CONT_ADDRESS = 'address';
-    const CONT_SCHOOL = 'school';
+    public const CONT_ADDRESS = 'address';
+    public const CONT_SCHOOL = 'school';
 
     protected ServiceAddress $serviceAddress;
 
@@ -32,9 +31,6 @@ class SchoolFormComponent extends AbstractEntityFormComponent implements IEditEn
     protected SchoolFactory $schoolFactory;
 
     protected AddressFactory $addressFactory;
-
-    /** @var ModelSchool; */
-    protected $model;
 
     public function injectPrimary(
         AddressFactory $addressFactory,
@@ -91,11 +87,12 @@ class SchoolFormComponent extends AbstractEntityFormComponent implements IEditEn
      * @return void
      * @throws BadTypeException
      */
-    public function setModel(AbstractModelSingle $model): void {
-        $this->model = $model;
-        $this->getForm()->setDefaults([
-            self::CONT_SCHOOL => $model->toArray(),
-            self::CONT_ADDRESS => $model->getAddress() ? $model->getAddress()->toArray() : null,
-        ]);
+    protected function setDefaults(?AbstractModelSingle $model): void {
+        if (!is_null($model)) {
+            $this->getForm()->setDefaults([
+                self::CONT_SCHOOL => $model->toArray(),
+                self::CONT_ADDRESS => $model->getAddress() ? $model->getAddress()->toArray() : null,
+            ]);
+        }
     }
 }

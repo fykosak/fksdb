@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Entity\Org\OrgFormComponent;
+use FKSDB\Components\Controls\Entity\OrgFormComponent;
 use FKSDB\Components\Grids\OrgsGrid;
 use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Exceptions\BadTypeException;

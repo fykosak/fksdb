@@ -1,10 +1,7 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity\EventOrg;
+namespace FKSDB\Components\Controls\Entity;
 
-use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
-use FKSDB\Components\Controls\Entity\IEditEntityForm;
-use FKSDB\Components\Controls\Entity\ReferencedPersonTrait;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Messages\Message;
@@ -20,18 +17,17 @@ use Nette\DI\Container;
 /**
  * Class EventOrgFormComponent
  * @author Michal Červeňák <miso@fykos.cz>
+ * @property ModelEventOrg $model
  */
-class EventOrgFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
+class EventOrgFormComponent extends EditEntityFormComponent {
 
     use ReferencedPersonTrait;
 
-    const CONTAINER = 'event_org';
+    public const CONTAINER = 'event_org';
 
     protected ServiceEventOrg $serviceEventOrg;
 
     protected ModelEvent $event;
-    /** @var ModelEventOrg */
-    private $model;
 
     /**
      * AbstractForm constructor.
@@ -68,25 +64,22 @@ class EventOrgFormComponent extends AbstractEntityFormComponent implements IEdit
             $data['event_id'] = $this->event->event_id;
         }
         if ($this->create) {
-            $this->getORMService()->createNewModel($data);
+            $this->serviceEventOrg->createNewModel($data);
         } else {
-            $this->getORMService()->updateModel2($this->model, $data);
+            $this->serviceEventOrg->updateModel2($this->model, $data);
         }
         $this->getPresenter()->flashMessage($this->create ? _('Event org has been created') : _('Event org has been updated'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 
     /**
-     * @param AbstractModelSingle $model
+     * @param AbstractModelSingle|ModelEventOrg $model
      * @return void
      * @throws BadTypeException
      */
-    public function setModel(AbstractModelSingle $model): void {
-        $this->model = $model;
-        $this->getForm()->setDefaults([self::CONTAINER => $model->toArray()]);
-    }
-
-    protected function getORMService(): ServiceEventOrg {
-        return $this->serviceEventOrg;
+    protected function setDefaults(?AbstractModelSingle $model): void {
+        if (!is_null($model)) {
+            $this->getForm()->setDefaults([self::CONTAINER => $model->toArray()]);
+        }
     }
 }
