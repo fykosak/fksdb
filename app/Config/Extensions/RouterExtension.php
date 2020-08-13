@@ -21,7 +21,6 @@ class RouterExtension extends CompilerExtension {
             'disableSecured' => false,
         ]);
         $router = $container->getDefinition('router');
-        $disableSecured = $config['disableSecured'];
 
         foreach ($config['routes'] as $action) {
             $mask = $action['mask'];
@@ -34,9 +33,6 @@ class RouterExtension extends CompilerExtension {
                 }
                 foreach ($flags as $flag) {
                     $binFlag = constant("Nette\Application\Routers\Route::$flag");
-                    if ($disableSecured && $binFlag === Route::SECURED) {
-                        continue;
-                    }
                     $flagsBin |= $binFlag;
                 }
                 unset($action['flags']);
