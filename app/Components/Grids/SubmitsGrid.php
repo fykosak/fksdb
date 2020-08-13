@@ -15,6 +15,7 @@ use FKSDB\Submits\SubmitHandlerFactory;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
@@ -74,7 +75,7 @@ class SubmitsGrid extends BaseGrid {
         // columns
         //
         $this->addColumn('task', _('Task'))
-            ->setRenderer(function (ModelSubmit $row) {
+            ->setRenderer(function (ModelSubmit $row): string {
                 return $row->getTask()->getFQName();
             });
         $this->addColumn('submitted_on', _('Čas odevzdání'));
@@ -86,23 +87,23 @@ class SubmitsGrid extends BaseGrid {
         $this->addButton('revoke', _('Cancel'))
             ->setClass('btn btn-sm btn-warning')
             ->setText(_('Cancel'))
-            ->setShow(function (ModelSubmit $row) {
+            ->setShow(function (ModelSubmit $row): bool {
                 return $row->canRevoke();
             })
-            ->setLink(function (ModelSubmit $row) {
+            ->setLink(function (ModelSubmit $row): string {
                 return $this->link('revoke!', $row->submit_id);
             })
-            ->setConfirmationDialog(function (ModelSubmit $row) {
+            ->setConfirmationDialog(function (ModelSubmit $row): string {
                 return \sprintf(_('Opravdu vzít řešení úlohy %s zpět?'), $row->getTask()->getFQName());
             });
         $this->addButton('download_uploaded')
-            ->setText(_('Download original'))->setLink(function (ModelSubmit $row) {
+            ->setText(_('Download original'))->setLink(function (ModelSubmit $row): string {
                 return $this->link('downloadUploaded!', $row->submit_id);
             });
         $this->addButton('download_corrected')
-            ->setText(_('Download corrected'))->setLink(function (ModelSubmit $row) {
+            ->setText(_('Download corrected'))->setLink(function (ModelSubmit $row): string {
                 return $this->link('downloadCorrected!', $row->submit_id);
-            })->setShow(function (ModelSubmit $row) {
+            })->setShow(function (ModelSubmit $row): bool {
                 return $row->corrected;
             });
 
@@ -113,11 +114,13 @@ class SubmitsGrid extends BaseGrid {
     /**
      * @param int $id
      * @return void
+     * @throws InvalidLinkException
      */
     public function handleRevoke(int $id) {
         $logger = new MemoryLogger();
         try {
-            $this->submitHandlerFactory->handleRevoke($logger, $id, $this->academicYear);
+            $this->submitHandlerFactory->handleRevoke($this->getPresenter(), $logger, $id);
+            FlashMessageDump::dump($logger, $this);
         } catch (ForbiddenRequestException$exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
         } catch (NotFoundException$exception) {
@@ -129,7 +132,6 @@ class SubmitsGrid extends BaseGrid {
             Debugger::log($exception);
             $this->flashMessage(_('Během mazání úlohy %s došlo k chybě.'), Message::LVL_DANGER);
         }
-        FlashMessageDump::dump($logger, $this);
     }
 
     /**
@@ -138,8 +140,10 @@ class SubmitsGrid extends BaseGrid {
      * @throws BadRequestException
      */
     public function handleDownloadUploaded(int $id) {
+        $logger = new MemoryLogger();
         try {
-            $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $id);
+            $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $logger, $id);
+            FlashMessageDump::dump($logger, $this);
         } catch (ForbiddenRequestException$exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
         } catch (NotFoundException$exception) {
@@ -155,8 +159,10 @@ class SubmitsGrid extends BaseGrid {
      * @throws BadRequestException
      */
     public function handleDownloadCorrected(int $id) {
+        $logger = new MemoryLogger();
         try {
-            $this->submitHandlerFactory->handleDownloadCorrected($this->getPresenter(), $id);
+            $this->submitHandlerFactory->handleDownloadCorrected($this->getPresenter(), $logger, $id);
+            FlashMessageDump::dump($logger, $this);
         } catch (ForbiddenRequestException$exception) {
             $this->flashMessage(new Message($exception->getMessage(), Message::LVL_DANGER));
         } catch (NotFoundException$exception) {

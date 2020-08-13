@@ -111,10 +111,12 @@ class SubmitHandlerFactory {
      * @param ILogger $logger
      * @param int $submitId
      * @return array|null
+     * @throws ForbiddenRequestException
      * @throws InvalidLinkException
+     * @throws NotFoundException
      */
     public function handleRevoke(Presenter $presenter, ILogger $logger, int $submitId): ?array {
-        $submit = $this->serviceSubmit->findByPrimary($submitId);
+        $submit = $this->getSubmit($submitId, 'revoke');
         if (!$submit) {
             $logger->log(new Message(_('Neexistující submit.'), Message::LVL_DANGER));
             return null;
