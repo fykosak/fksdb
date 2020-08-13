@@ -4,12 +4,13 @@ namespace FKSDB\Tests\PresentersTests\OrgModule;
 
 $container = require '../../bootstrap.php';
 
-use FKSDB\Components\Controls\Entity\School\SchoolFormComponent;
+use FKSDB\Components\Controls\Entity\SchoolFormComponent;
 use FKSDB\ORM\DbNames;
 use FKSDB\Tests\PresentersTests\EntityPresenterTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
 use Tester\Assert;
+use Tester\Environment;
 
 /**
  * Class EventPresenterTest
@@ -118,6 +119,5 @@ class SchoolPresenterTest extends EntityPresenterTestCase {
         return $this->connection->query('SELECT * FROM school')->getRowCount();
     }
 }
-
 $testCase = new SchoolPresenterTest($container);
 $testCase->run();

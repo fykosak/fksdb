@@ -1,10 +1,7 @@
 <?php
 
-namespace FKSDB\Components\Controls\Entity\Teacher;
+namespace FKSDB\Components\Controls\Entity;
 
-use FKSDB\Components\Controls\Entity\AbstractEntityFormComponent;
-use FKSDB\Components\Controls\Entity\IEditEntityForm;
-use FKSDB\Components\Controls\Entity\ReferencedPersonTrait;
 use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\DBReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\ModelContainer;
@@ -22,21 +19,19 @@ use Nette\Forms\Form;
 /**
  * Class TeacherForm
  * @author Michal Červeňák <miso@fykos.cz>
+ * @property ModelTeacher $model
  */
-class TeacherFormComponent extends AbstractEntityFormComponent implements IEditEntityForm {
+class TeacherFormComponent extends EditEntityFormComponent {
 
     use ReferencedPersonTrait;
 
-    const CONTAINER = 'teacher';
+    private const CONTAINER = 'teacher';
 
     protected SchoolFactory $schoolFactory;
 
     private SingleReflectionFormFactory $singleReflectionFormFactory;
 
     protected ServiceTeacher $serviceTeacher;
-
-    /** @var ModelTeacher */
-    private $model;
 
     public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, SchoolFactory $schoolFactory, ServiceTeacher $serviceTeacher): void {
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
@@ -80,13 +75,14 @@ class TeacherFormComponent extends AbstractEntityFormComponent implements IEditE
     }
 
     /**
-     * @param AbstractModelSingle $model
+     * @param AbstractModelSingle|null $model
      * @return void
      * @throws BadTypeException
      */
-    public function setModel(AbstractModelSingle $model): void {
-        $this->model = $model;
-        $this->getForm()->setDefaults([self::CONTAINER => $model->toArray()]);
+    protected function setDefaults(?AbstractModelSingle $model): void {
+        if (!is_null($model)) {
+            $this->getForm()->setDefaults([self::CONTAINER => $model->toArray()]);
+        }
     }
 
     protected function getORMService(): ServiceTeacher {

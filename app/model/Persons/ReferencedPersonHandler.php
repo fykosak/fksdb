@@ -2,7 +2,7 @@
 
 namespace FKSDB\Persons;
 
-use FKSDB\Components\Controls\Entity\Person\PersonFormComponent;
+use FKSDB\Components\Controls\Entity\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\IReferencedHandler;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
