@@ -1,7 +1,7 @@
 {block content}
-    {php $presenter->registerJSFile('js/codemirror.min.js')}
-    {php $presenter->registerJSFile('js/sqlconsole.js')}
-    {php $presenter->registerStylesheetFile('css/codemirror.css', array('screen', 'projection', 'tv'))}
+    {do $presenter->registerJSFile('js/codemirror.min.js')}
+    {do $presenter->registerJSFile('js/sqlconsole.js')}
+    {do $presenter->registerStylesheetFile('css/codemirror.css', array('screen', 'projection', 'tv'))}
     <div class="btn-group">
         <a href="{plink :Org:Export:execute ,'id' => $model->getPrimary()}"
            class="btn btn-primary"

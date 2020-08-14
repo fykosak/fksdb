@@ -1,7 +1,7 @@
 import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import HardVisibleSwitch from '../../../hardVisible/compoents/hardVisibleSwitch';
+import HardVisibleSwitch from '../../../hardVisible/component';
 import { FyziklaniResultsPresentationStore } from '../../reducers';
 import ColsField from './colsField';
 import DelayField from './delayField';

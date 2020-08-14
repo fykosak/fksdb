@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Team } from '../../../helpers/interfaces/';
+import { Team } from '../../../helpers/interfaces';
 import { Store as RoutingStore } from '../../reducers/';
 import TeamComponent from '../team/';
 

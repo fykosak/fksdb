@@ -1,4 +1,4 @@
-import { NetteActions } from '@appsCollector';
+import { NetteActions } from '@appsCollector/netteActions';
 import * as React from 'react';
 import {
     UploadData,
