@@ -96,7 +96,6 @@ class BrojureResultsModel extends AbstractResultsModel {
      * @param mixed $series
      */
     public function setSeries($series) {
-        $this->dataColumns = null;
         $this->series = $series;
         // invalidate cache of columns
         $this->dataColumns = [];
