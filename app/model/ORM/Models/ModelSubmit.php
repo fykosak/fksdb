@@ -23,6 +23,7 @@ class ModelSubmit extends AbstractModelSingle implements IResource, ITaskReferen
 
     public const SOURCE_UPLOAD = 'upload';
     public const SOURCE_POST = 'post';
+    public const SOURCE_FORM = 'form';
 
     public function isEmpty(): bool {
         return !($this->submitted_on || $this->note);

@@ -5,29 +5,56 @@ namespace FKSDB\Results;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceTask;
+use FKSDB\ORM\Services\ServiceQuizQuestion;
+use FKSDB\ORM\Services\ServiceSubmit;
+use FKSDB\ORM\Services\ServiceSubmitQuizQuestion;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
 
 /**
- * Fill caclulated points into database.
+ * Fill calculated points into database.
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class SQLResultsCache {
 
+    /**
+     * @var Connection 
+     */
     private Connection $connection;
 
+    /**
+     * @var ServiceTask
+     */
     private ServiceTask $serviceTask;
+
+    /**
+     * @var ServiceQuizQuestion
+     */
+    private ServiceQuizQuestion $serviceQuizQuestion;
+
+    /**
+     * @var ServiceSubmit
+     */
+    private ServiceSubmit $serviceSubmit;
+
+    /**
+     * @var ServiceSubmitQuizQuestion
+     */
+    private ServiceSubmitQuizQuestion $serviceSubmitQuizQuestion;
 
     /**
      * FKSDB\Results\SQLResultsCache constructor.
      * @param Connection $connection
      * @param ServiceTask $serviceTask
      */
-    public function __construct(Connection $connection, ServiceTask $serviceTask) {
+    public function __construct(Connection $connection, ServiceTask $serviceTask, ServiceQuizQuestion $serviceQuizQuestion, ServiceSubmit $serviceSubmit, ServiceSubmitQuizQuestion $serviceSubmitQuizQuestion) {
         $this->connection = $connection;
         $this->serviceTask = $serviceTask;
+        $this->serviceQuizQuestion = $serviceQuizQuestion;
+        $this->serviceSubmit = $serviceSubmit;
+        $this->serviceSubmitQuizQuestion = $serviceSubmitQuizQuestion;
     }
 
     /**
@@ -95,6 +122,45 @@ class SQLResultsCache {
             $this->connection->query($sql);
         }
         $this->connection->commit();
+    }
+
+    /**
+     * Calculate points from form-based tasks, such as quizzes.
+     *
+     * @param ModelContest $contest
+     * @param int $year
+     * @param int $series
+     */
+    public function calculateQuizPoints(ModelContest $contest, $year, $series): void {
+        $tasks = $this->serviceTask->getTable()->where([
+            'contest_id' => $contest->contest_id,
+            'year' => $year,
+            'series' => $series
+        ]);
+        foreach($tasks as $task) {
+            $questions = $this->serviceQuizQuestion->getTable()->where([
+                'task_id' => $task->task_id,
+            ]);
+            if (count($questions) == 0){
+                continue;
+            }
+            $submits = $this->serviceSubmit->getTable()->where([
+                'task_id' => $task->task_id,
+            ]);
+            foreach($submits as $submit) {
+                $total = 0;
+                foreach($questions as $question) {
+                    $answer = $this->serviceSubmitQuizQuestion->findByContestant($submit->ct_id, $question->question_id)->answer;
+                    $correct = $question->answer;
+                    $points = $question->points;
+                    if($answer == $correct) {
+                        $total += $points;
+                    }
+                }
+                $submit->points = $total;
+                $this->serviceSubmit->updateModel2($submit, ['raw_points' => +$total]);
+            }
+        }
     }
 
 }

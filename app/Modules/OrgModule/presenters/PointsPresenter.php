@@ -167,6 +167,20 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
         $this->redirect('this');
     }
 
+    public function handleCalculateQuizPoints(): void {
+        try{
+            $contest = $this->getSelectedContest();
+            $year = $this->getSelectedYear();
+            $series = $this->getSelectedSeries();
+
+            $this->SQLResultsCache->calculateQuizPoints($contest, $year, $series);
+            $this->flashMessage(_('Body kvízových úloh spočteny.'), self::FLASH_INFO);
+        } catch (InvalidArgumentException $exception) {
+            $this->flashMessage(_('Chyba při výpočtu.'), self::FLASH_ERROR);
+            Debugger::log($exception);
+        }
+    }
+
     private function getGradedTasks(): array {
         /**@var ModelLogin $login */
         $login = $this->getUser()->getIdentity();

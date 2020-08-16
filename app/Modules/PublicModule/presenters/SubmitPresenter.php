@@ -266,10 +266,16 @@ class SubmitPresenter extends BasePresenter {
                 foreach ($questions as $question) {
                     $name = 'question' . $question->question_id;
                     $answer = $taskValues[$name];
-                    $this->submitQuizQuestionService->saveSubmittedQuestion($question, $this->getContestant(), $answer);
+                    if($answer != null){
+                        $this->submitQuizQuestionService->saveSubmittedQuestion($question, $this->getContestant(), $answer);
+                    }
                 }
 
                 if (!isset($taskValues['file'])) { // upload field was disabled
+                    if(count($questions)){
+                        $this->submitHandlerFactory->handleFormSubmit($task, $this->getContestant());
+                        $this->flashMessage(sprintf(_('Úloha %s odevzdána.'), $task->label), self::FLASH_SUCCESS);
+                    }
                     continue;
                 }
                 if (!$taskValues['file']->isOk()) {

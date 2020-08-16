@@ -175,6 +175,30 @@ class SubmitHandlerFactory {
     }
 
     /**
+     * @param ModelTask $task
+     * @param ModelContestant $contestant
+     * @return AbstractModelSingle|IModel|ModelSubmit
+     */
+    public function handleFormSubmit(ModelTask $task, ModelContestant $contestant): ModelSubmit{
+        $submit = $this->serviceSubmit->findByContestant($contestant->ct_id, $task->task_id);
+        $source = ModelSubmit::SOURCE_FORM;
+        if (is_null($submit)) {
+            $submit = $this->serviceSubmit->createNewModel([
+                'task_id' => $task->task_id,
+                'ct_id' => $contestant->ct_id,
+                'submitted_on' => new DateTime(),
+                'source' => $source,
+            ]);
+        } else {
+            $this->serviceSubmit->updateModel2($submit, [
+                'submitted_on' => new DateTime(),
+                'source' => $source,
+            ]);
+        }
+        return $submit;
+    }
+
+    /**
      * @param int $id
      * @param string $privilege
      * @return ModelSubmit

@@ -664,7 +664,7 @@ CREATE TABLE IF NOT EXISTS `submit` (
   `task_id`      INT(11)                 NOT NULL
   COMMENT 'Task',
   `submitted_on` DATETIME                NULL     DEFAULT NULL,
-  `source`       ENUM ('post', 'upload') NOT NULL
+  `source`       ENUM ('post', 'upload', 'form') NOT NULL
   COMMENT 'odkud přišlo řešení',
   `note`         VARCHAR(255)            NULL     DEFAULT NULL
   COMMENT 'Pocet stranek a jine poznamky',
