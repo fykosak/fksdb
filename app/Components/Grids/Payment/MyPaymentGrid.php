@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Grids\Payment;
 
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\ModelPayment;
 use Nette\Application\UI\Presenter;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
@@ -36,10 +35,6 @@ class MyPaymentGrid extends PaymentGrid {
             'payment.price',
             'payment.state',
         ]);
-
-        $this->addColumn('event', _('Event'))->setRenderer(function (ModelPayment $payment) {
-            return $payment->getEvent()->name;
-        });
         $this->addLink('payment.detail', true);
     }
 }

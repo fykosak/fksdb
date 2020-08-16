@@ -27,9 +27,9 @@ use Nette\Security\IResource;
  */
 class ModelEvent extends AbstractModelSingle implements IResource, IContestReferencedModel {
 
-    const TEAM_EVENTS = [1, 9, 13];
+    public const TEAM_EVENTS = [1, 9, 13];
 
-    const RESOURCE_ID = 'event';
+    public const RESOURCE_ID = 'event';
 
     public function getEventType(): ModelEventType {
         return ModelEventType::createFromActiveRow($this->event_type);

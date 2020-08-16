@@ -19,9 +19,9 @@ use FKSDB\Persons\ReferencedPersonHandler;
  */
 class AddressFactory {
 
-    const SHOW_EXTENDED_ROWS = 0x1;
-    const REQUIRED = 0x2;
-    const NOT_WRITEONLY = 0x4;
+    public const SHOW_EXTENDED_ROWS = 0x1;
+    public const REQUIRED = 0x2;
+    public const NOT_WRITEONLY = 0x4;
 
     private ServiceAddress $serviceAddress;
 
@@ -115,7 +115,7 @@ class AddressFactory {
         $target->addConditionOn($country, Form::FILLED)->addRule(Form::FILLED, _('Při vyplněném státu musí mít adresa vyplněno i místo.'));
 
         /* Country + postal code validation */
-        $validPostalCode = function (BaseControl $control) {
+        $validPostalCode = function (BaseControl $control): bool {
             return $this->serviceAddress->tryInferRegion($control->getValue());
         };
 

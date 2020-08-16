@@ -32,10 +32,10 @@ class EvaluationNullObject extends EvaluationStrategy {
 
     /**
      * @param ActiveRow $task
-     * @return string|void
+     * @return string
      * @throws NotImplementedException
      */
-    public function getPointsColumn(ActiveRow $task) {
+    public function getPointsColumn(ActiveRow $task): string {
         throw new NotImplementedException();
     }
 
@@ -53,7 +53,7 @@ class EvaluationNullObject extends EvaluationStrategy {
      * @return int|void
      * @throws NotImplementedException
      */
-    public function getTaskPoints(ActiveRow $task, ModelCategory $category) {
+    public function getTaskPoints(ActiveRow $task, ModelCategory $category): ?int {
         throw new NotImplementedException();
     }
 

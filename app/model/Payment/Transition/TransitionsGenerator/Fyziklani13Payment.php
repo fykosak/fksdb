@@ -3,7 +3,6 @@
 namespace FKSDB\Payment\Transition\Transitions;
 
 use FKSDB\Authorization\EventAuthorizator;
-use Closure;
 use Exception;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\DbNames;
@@ -27,16 +26,15 @@ use Tracy\Debugger;
  */
 class Fyziklani13Payment extends AbstractTransitionsGenerator {
 
-    /** @var Connection */
-    private $connection;
-    /** @var ServicePayment */
-    private $servicePayment;
-    /** @var EventAuthorizator */
-    private $eventAuthorizator;
-    /** @var ServiceEmailMessage */
-    private $serviceEmailMessage;
-    /** @var MailTemplateFactory */
-    private $mailTemplateFactory;
+    private Connection $connection;
+
+    private ServicePayment $servicePayment;
+
+    private EventAuthorizator $eventAuthorizator;
+
+    private ServiceEmailMessage $serviceEmailMessage;
+
+    private MailTemplateFactory $mailTemplateFactory;
 
     /**
      * Fyziklani13Payment constructor.
@@ -66,7 +64,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      * @throws BadTypeException
      * @throws Exception
      */
-    public function createTransitions(Machine $machine) {
+    public function createTransitions(Machine $machine): void {
         if (!$machine instanceof PaymentMachine) {
             throw new BadTypeException(PaymentMachine::class, $machine);
         }
@@ -82,7 +80,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      * @param PaymentMachine $machine
      * @throws Exception
      */
-    private function addTransitionInitToNew(PaymentMachine $machine) {
+    private function addTransitionInitToNew(PaymentMachine $machine): void {
         $transition = new Transition(Machine::STATE_INIT, ModelPayment::STATE_NEW, _('Create'));
         $transition->setCondition($this->getDatesCondition());
         $machine->addTransition($transition);
@@ -93,7 +91,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
      * @return void
      * @throws Exception
      */
-    private function addTransitionNewToWaiting(PaymentMachine $machine) {
+    private function addTransitionNewToWaiting(PaymentMachine $machine): void {
         $transition = new Transition(ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING, _('Confirm payment'));
 
         $transition->setType(Transition::TYPE_SUCCESS);
@@ -127,16 +125,12 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         return new DateBetween('2019-01-21', '2019-02-15');
     }
 
-    /**
-     * @param PaymentMachine $machine
-     * @return void
-     */
-    private function addTransitionAllToCanceled(PaymentMachine $machine) {
+    private function addTransitionAllToCanceled(PaymentMachine $machine): void {
         foreach ([ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING] as $state) {
 
             $transition = new Transition($state, ModelPayment::STATE_CANCELED, _('Cancel payment'));
             $transition->setType(Transition::TYPE_DANGER);
-            $transition->setCondition(function () {
+            $transition->setCondition(function (): bool {
                 return true;
             });
             $transition->beforeExecuteCallbacks[] = $this->getClosureDeleteRows();
@@ -147,11 +141,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         }
     }
 
-    /**
-     * @param PaymentMachine $machine
-     * @return void
-     */
-    private function addTransitionWaitingToReceived(PaymentMachine $machine) {
+    private function addTransitionWaitingToReceived(PaymentMachine $machine): void {
         $transition = new Transition(ModelPayment::STATE_WAITING, ModelPayment::STATE_RECEIVED, _('Paid'));
         $transition->beforeExecuteCallbacks[] = function (ModelPayment $modelPayment) {
             foreach ($modelPayment->getRelatedPersonSchedule() as $personSchedule) {
@@ -180,8 +170,8 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         $machine->addTransition($transition);
     }
 
-    private function getClosureDeleteRows(): Closure {
-        return function (ModelPayment $modelPayment) {
+    private function getClosureDeleteRows(): callable {
+        return function (ModelPayment $modelPayment): void {
             Debugger::log('payment-deleted--' . \json_encode($modelPayment->toArray()), 'payment-info');
             foreach ($modelPayment->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id') as $row) {
                 Debugger::log('payment-row-deleted--' . \json_encode($row->toArray()), 'payment-info');

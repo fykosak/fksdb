@@ -42,7 +42,7 @@ use Nette\InvalidArgumentException;
  */
 class ApplicationPresenter extends BasePresenter {
 
-    const PARAM_AFTER = 'a';
+    public const PARAM_AFTER = 'a';
 
     /** @var ModelEvent|null */
     private $event;
@@ -401,7 +401,7 @@ class ApplicationPresenter extends BasePresenter {
      * @throws UnsupportedLanguageException
      * @throws \ReflectionException
      */
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         $event = $this->getEvent();
         if ($event) {
             $this->getPageStyleContainer()->styleId = ' event-type-' . $event->event_type_id;

@@ -36,10 +36,10 @@ use FKSDB\Persons\ReferencedPersonHandler;
  */
 class ReferencedPersonContainer extends ReferencedContainer {
 
-    const TARGET_FORM = 0x1;
-    const TARGET_VALIDATION = 0x2;
-    const EXTRAPOLATE = 0x4;
-    const HAS_DELIVERY = 0x8;
+    public const TARGET_FORM = 0x1;
+    public const TARGET_VALIDATION = 0x2;
+    public const EXTRAPOLATE = 0x4;
+    public const HAS_DELIVERY = 0x8;
 
     public IModifiabilityResolver $modifiabilityResolver;
 
@@ -140,11 +140,11 @@ class ReferencedPersonContainer extends ReferencedContainer {
                         throw new InvalidStateException("Should define uniqueness validator for field $sub.$fieldName.");
                     }
 
-                    $control->addCondition(function () { // we use this workaround not to call getValue inside validation out of transaction
+                    $control->addCondition(function (): bool { // we use this workaround not to call getValue inside validation out of transaction
                         $personId = $this->getReferencedId()->getValue(false);
                         return $personId && $personId != ReferencedId::VALUE_PROMISE;
                     })
-                        ->addRule(function (BaseControl $control) use ($fullFieldName) {
+                        ->addRule(function (BaseControl $control) use ($fullFieldName) : bool {
                             $personId = $this->getReferencedId()->getValue(false);
 
                             $foundPerson = $this->getReferencedId()->getHandler()->findBySecondaryKey($fullFieldName, $control->getValue());
@@ -166,7 +166,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @param IModel|ModelPerson|null $model
      * @param string $mode
      * @return void
-     * @throws JsonException
      */
     public function setModel(IModel $model = null, string $mode = ReferencedId::MODE_NORMAL): void {
 

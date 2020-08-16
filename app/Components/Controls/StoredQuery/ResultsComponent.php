@@ -25,8 +25,8 @@ use PDOException;
  */
 class ResultsComponent extends BaseComponent {
 
-    const CONT_PARAMS = 'params';
-    const PARAMETER_URL_PREFIX = 'p_';
+    public const CONT_PARAMS = 'params';
+    public const PARAMETER_URL_PREFIX = 'p_';
 
     /**
      * @persistent

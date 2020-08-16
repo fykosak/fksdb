@@ -7,8 +7,8 @@ namespace FKSDB\Components\Controls\Stalking;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class StalkingService {
-    /** @var array[] */
-    private $definition;
+
+    private array $definition;
 
     public function setSections(array $definition): void {
         $this->definition = $definition;

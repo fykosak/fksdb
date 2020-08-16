@@ -15,7 +15,7 @@ class LayoutResolver {
 
     use SmartObject;
 
-    const TEMPLATE_EXT = '.latte';
+    public const TEMPLATE_EXT = '.latte';
 
     private array $definitions;
 

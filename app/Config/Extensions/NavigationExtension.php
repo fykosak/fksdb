@@ -15,7 +15,7 @@ class NavigationExtension extends CompilerExtension {
 
     private array $createdNodes = [];
 
-    public function loadConfiguration() {
+    public function loadConfiguration(): void {
         parent::loadConfiguration();
 
         $builder = $this->getContainerBuilder();

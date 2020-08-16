@@ -7,6 +7,7 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use Nette\Application\UI\Presenter;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
@@ -54,19 +55,19 @@ class PersonGrid extends BaseGrid {
         $this->paginate = false;
 
         $this->addColumn('person_schedule_id', _('#'));
-        $this->addColumn('group_label', _('Group'))->setRenderer(function ($row) {
+        $this->addColumn('group_label', _('Group'))->setRenderer(function ($row): string {
             $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->getScheduleItem()->getScheduleGroup()->getLabel();
         });
-        $this->addColumn('item_label', _('Item'))->setRenderer(function ($row) {
+        $this->addColumn('item_label', _('Item'))->setRenderer(function ($row): string {
             $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->getScheduleItem()->getLabel();
         });
-        $this->addJoinedColumn('schedule_item.price_czk', function ($row) {
+        $this->addJoinedColumn('schedule_item.price_czk', function ($row): ModelScheduleItem {
             $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->getScheduleItem();
         });
-        $this->addJoinedColumn('schedule_item.price_eur', function ($row) {
+        $this->addJoinedColumn('schedule_item.price_eur', function ($row): ModelScheduleItem {
             $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->getScheduleItem();
         });

@@ -13,17 +13,13 @@ use Nette\Database\Row;
  */
 class TaskStatsModel {
 
-    /** @var int */
-    protected $year;
+    protected int $year;
 
-    /** @var ModelContest */
-    protected $contest;
+    protected ModelContest $contest;
 
-    /** @var Connection */
-    protected $connection;
+    protected Connection $connection;
 
-    /** @var int */
-    protected $series;
+    protected int $series;
 
     /**
      * TaskStatsModel constructor.
@@ -41,11 +37,7 @@ class TaskStatsModel {
         return $this->series;
     }
 
-    /**
-     * @param int $series
-     * @return void
-     */
-    public function setSeries(int $series) {
+    public function setSeries(int $series): void {
         $this->series = $series;
     }
 

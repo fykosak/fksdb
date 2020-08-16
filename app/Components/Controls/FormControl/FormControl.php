@@ -14,7 +14,7 @@ use Nette\Application\UI\Form;
  */
 class FormControl extends Control {
 
-    const SNIPPET_MAIN = 'groupContainer';
+    public const SNIPPET_MAIN = 'groupContainer';
 
     protected function createComponentForm(): Form {
         return new Form();

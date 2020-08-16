@@ -19,8 +19,8 @@ abstract class AbstractAdjustment implements IFormAdjustment {
 
     use SmartObject;
 
-    const DELIMITER = '.';
-    const WILDCART = '*';
+    public const DELIMITER = '.';
+    public const WILDCART = '*';
     /** @var array */
     private $pathCache;
 

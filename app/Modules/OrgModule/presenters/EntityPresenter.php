@@ -20,9 +20,9 @@ use Nette\Application\UI\Form;
  */
 abstract class EntityPresenter extends BasePresenter {
 
-    const COMP_EDIT_FORM = 'editComponent';
-    const COMP_CREATE_FORM = 'createComponent';
-    const COMP_GRID = 'grid';
+    public const COMP_EDIT_FORM = 'editComponent';
+    public const COMP_CREATE_FORM = 'createComponent';
+
     /**
      * @var int
      * @persistent
@@ -107,16 +107,13 @@ abstract class EntityPresenter extends BasePresenter {
      * @param int $id
      * @return AbstractModelSingle
      */
-    abstract protected function loadModel($id);
+    abstract protected function loadModel($id): ?IModel;
 
     abstract protected function createComponentEditComponent(): FormControl;
 
     abstract protected function createComponentCreateComponent(): FormControl;
 
-    /**
-     * @return BaseGrid
-     */
-    abstract protected function createComponentGrid();
+    abstract protected function createComponentGrid(): BaseGrid;
 
     abstract protected function getModelResource(): string;
 }

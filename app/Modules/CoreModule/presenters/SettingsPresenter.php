@@ -26,7 +26,7 @@ use Nette\Forms\Controls\TextInput;
  */
 class SettingsPresenter extends AuthenticatedPresenter {
 
-    const CONT_LOGIN = 'login';
+    public const CONT_LOGIN = 'login';
 
     private LoginFactory $loginFactory;
 
@@ -111,7 +111,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
         if ($oldPasswordControl) {
             $oldPasswordControl
                 ->addCondition(Form::FILLED)
-                ->addRule(function (BaseControl $control) use ($login) {
+                ->addRule(function (BaseControl $control) use ($login): bool {
                     $hash = PasswordAuthenticator::calculateHash($control->getValue(), $login);
                     return $hash == $login->hash;
                 }, 'Špatně zadané staré heslo.');

@@ -16,8 +16,8 @@ use Nette\Security\AuthenticationException;
  */
 class TokenAuthenticator extends AbstractAuthenticator {
 
-    const PARAM_AUTH_TOKEN = 'at';
-    const SESSION_NS = 'auth';
+    public const PARAM_AUTH_TOKEN = 'at';
+    public const SESSION_NS = 'auth';
 
     private ServiceAuthToken $authTokenService;
 

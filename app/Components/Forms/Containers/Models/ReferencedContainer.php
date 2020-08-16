@@ -25,10 +25,10 @@ use Nette\DI\Container as DIContainer;
  */
 abstract class ReferencedContainer extends ContainerWithOptions {
 
-    const ID_MASK = 'frm%s-%s';
-    const CSS_AJAX = 'ajax';
-    const CONTROL_COMPACT = '_c_compact';
-    const SUBMIT_CLEAR = '__clear';
+    public const ID_MASK = 'frm%s-%s';
+    public const CSS_AJAX = 'ajax';
+    public const CONTROL_COMPACT = '_c_compact';
+    public const SUBMIT_CLEAR = '__clear';
 
     private ReferencedId $referencedId;
 

@@ -42,8 +42,8 @@ use Nette\Security\IResource;
 class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel, IPaymentModel, IPersonReferencedModel, IResource {
     public const RESOURCE_ID = 'event.participant';
 
-    const STATE_AUTO_INVITED = 'auto.invited';
-    const STATE_AUTO_SPARE = 'auto.spare';
+    public const STATE_AUTO_INVITED = 'auto.invited';
+    public const STATE_AUTO_SPARE = 'auto.spare';
 
     public function getPerson(): ?ModelPerson {
         return $this->person ? ModelPerson::createFromActiveRow($this->person) : null;

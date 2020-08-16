@@ -16,7 +16,7 @@ use Nette\SmartObject;
 class EventFactory {
     use SmartObject;
 
-    const HTTP_HEADER = 'X-GitHub-Event';
+    public const HTTP_HEADER = 'X-GitHub-Event';
 
     /** @var Repository[] */
     private $repositoryCache = [];

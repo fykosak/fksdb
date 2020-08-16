@@ -147,7 +147,7 @@ class ResultsPresenter extends BasePresenter {
         return new ResultsAndStatistics($this->getContext(), $this->getEvent(), 'fyziklani.statistics.correlation');
     }
 
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         switch ($this->getAction()) {
             case 'table':
                 $this->getPageStyleContainer()->setWidePage();

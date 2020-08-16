@@ -16,7 +16,6 @@ use Nette\ComponentModel\IComponent;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\IControl;
 use Nette\Security\User;
-use Nette\Utils\JsonException;
 use FKSDB\Persons\SelfResolver;
 
 /**
@@ -142,7 +141,6 @@ class PersonFactory extends AbstractFactory {
      * @param Field $field
      * @param DataValidator $validator
      * @return bool|void
-     * @throws JsonException
      */
     public function validate(Field $field, DataValidator $validator) {
         // check person ID itself

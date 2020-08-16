@@ -67,7 +67,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
             $personControl = $personControls[$i];
             $studyYearControl = $studyYearControls[$i];
             $control->addCondition($form::FILLED)
-                ->addRule(function () use ($schoolControl, $personControl, $form, $msgForeign) {
+                ->addRule(function () use ($schoolControl, $personControl, $form, $msgForeign) : bool {
                     $schoolId = $this->getSchoolId($schoolControl, $personControl);
                     if (!$this->serviceSchool->isCzSkSchool($schoolId)) {
                         $form->addError($msgForeign);
@@ -75,7 +75,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
                     }
                     return true;
                 }, $msgForeign)
-                ->addRule(function () use ($studyYearControl, $personControl, $form, $msgOld) {
+                ->addRule(function () use ($studyYearControl, $personControl, $form, $msgOld): bool {
                     $studyYear = $this->getStudyYear($studyYearControl, $personControl);
                     if (!$this->isStudent($studyYear)) {
                         $form->addError($msgOld);

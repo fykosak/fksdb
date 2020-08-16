@@ -24,7 +24,6 @@ use FKSDB\ORM\ModelsMulti\ModelMPostContact;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
-use Nette\Utils\JsonException;
 use FKSDB\ORM\ServicesMulti\ServiceMPostContact;
 
 /**
@@ -102,7 +101,6 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @return ModelPerson
      * @throws ExistingPaymentException
      * @throws FullCapacityException
-     * @throws JsonException
      * @throws NotImplementedException
      */
     public function createFromValues(ArrayHash $values): ModelPerson {
@@ -119,7 +117,6 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @return void
      * @throws ExistingPaymentException
      * @throws FullCapacityException
-     * @throws JsonException
      * @throws NotImplementedException
      */
     public function update(IModel $model, ArrayHash $values): void {
@@ -137,7 +134,6 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @return void
      * @throws ModelException
      * @throws ModelDataConflictException
-     * @throws JsonException
      * @throws ExistingPaymentException
      * @throws StorageException
      * @throws FullCapacityException
@@ -285,21 +281,11 @@ class ReferencedPersonHandler implements IReferencedHandler {
         return $conflicts;
     }
 
-    /**
-     * @param array $data
-     * @param ModelPerson|null $person
-     * @return ModelPerson
-     */
-    private function storePerson($person, array $data): ModelPerson {
+    private function storePerson(?ModelPerson $person, array $data): ModelPerson {
         return $this->servicePerson->store($person, (array)$data['person']);
     }
 
-    /**
-     * @param ArrayHash $data
-     * @param ArrayHash|array $conflicts
-     * @return ArrayHash
-     */
-    private function removeConflicts($data, $conflicts) {
+    private function removeConflicts(iterable $data, iterable $conflicts): iterable {
         $result = $data;
         foreach ($conflicts as $key => $value) {
             if (isset($data[$key])) {

@@ -53,7 +53,7 @@ class RelatedPersonSource extends AggregatedPersonSource implements IHolderSourc
         $subConditions = [];
         $count = 0;
 
-        $primaryPersonIds = $eventSource->getDummyHolder()->getPrimaryHolder()->getPersonIds();
+        $primaryPersonIds = $eventSource->getDummyHolder()->getPrimaryHolder()->getPersonIdColumns();
         if ($primaryPersonIds) {
             $subConditions[] = implode(' = ?  OR ', $primaryPersonIds) . ' = ?';
             $count += count($primaryPersonIds);

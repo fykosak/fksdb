@@ -42,7 +42,7 @@
                     {control languageChooser}
                     {*control themeChooser*}
                     {if $user->isLoggedIn()}
-                        {var $login => $user->getIdentity()}
+                        {var $login = $user->getIdentity()}
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                                 <span class="fa fa-user"></span>

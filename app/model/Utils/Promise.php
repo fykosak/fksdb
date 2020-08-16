@@ -15,8 +15,8 @@ class Promise {
 
     /** @var callable */
     private $callback;
-    /** @var bool */
-    private $called = false;
+
+    private bool $called = false;
     /** @var mixed */
     private $value;
 

@@ -33,13 +33,13 @@ use FKSDB\Utils\Utils;
  */
 class Breadcrumbs extends BaseComponent {
 
-    const SECTION_REQUESTS = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.main';
-    const SECTION_BACKIDS = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.backids';
-    const SECTION_REVERSE = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.reverse';
-    const SECTION_PATH_REVERSE = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.pathReverse';
+    public const SECTION_REQUESTS = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.main';
+    public const SECTION_BACKIDS = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.backids';
+    public const SECTION_REVERSE = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.reverse';
+    public const SECTION_PATH_REVERSE = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.pathReverse';
     // const EXPIRATION = '+ 10 minutes';
-    const BACKID_LEN = 4;
-    const BACKID_DOMAIN = '0-9a-zA-Z';
+    public const BACKID_LEN = 4;
+    public const BACKID_DOMAIN = '0-9a-zA-Z';
 
     private Session $session;
 

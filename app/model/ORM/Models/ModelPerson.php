@@ -11,8 +11,6 @@ use FKSDB\YearCalculator;
 use FKSDB\ORM\ModelsMulti\ModelMPostContact;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
-use Nette\Utils\Json;
-use Nette\Utils\JsonException;
 
 /**
  *

@@ -14,12 +14,12 @@ use Nette\Utils\JsonException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 trait ReactComponentTrait {
-    /** @var string[] */
-    private $actions = [];
-    /** @var bool */
-    private static $attachedJS = false;
-    /** @var string */
-    protected $reactId;
+
+    private array $actions = [];
+
+    private static bool $attachedJS = false;
+
+    protected string $reactId;
 
     /**
      * @param string $reactId
@@ -56,7 +56,7 @@ trait ReactComponentTrait {
         $html->setAttribute('data-actions', Json::encode($this->actions));
     }
 
-    private function registerMonitor() {
+    private function registerMonitor(): void {
         $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
             if (!self::$attachedJS) {
                 self::$attachedJS = true;

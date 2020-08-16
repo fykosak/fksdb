@@ -35,10 +35,7 @@ class After extends EvaluatedExpression {
         return $datetime->getTimestamp() <= time();
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return "now >= {$this->datetime}";
     }
 

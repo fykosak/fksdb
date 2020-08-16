@@ -12,9 +12,9 @@ use Nette\DI\CompilerExtension;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PaymentExtension extends CompilerExtension {
-    const MACHINE_PREFIX = 'machine.';
+    public const MACHINE_PREFIX = 'machine.';
 
-    public function loadConfiguration() {
+    public function loadConfiguration(): void {
         $builder = $this->getContainerBuilder();
         foreach ($this->config as $item) {
             $symbolGenerator = $builder->addDefinition($this->prefix('symbolGenerator.' . $item['eventId']))

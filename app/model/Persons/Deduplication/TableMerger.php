@@ -27,14 +27,12 @@ class TableMerger {
 
     private Context $context;
 
-    /** @var ActiveRow */
-    private $trunkRow;
+    private ActiveRow $trunkRow;
 
-    /** @var ActiveRow */
-    private $mergedRow;
+    private ActiveRow $mergedRow;
 
     /** @var IMergeStrategy[] */
-    private $columnMergeStrategies = [];
+    private array $columnMergeStrategies = [];
 
     private IMergeStrategy $globalMergeStrategy;
 
@@ -60,21 +58,12 @@ class TableMerger {
      * Merging
      * ****************************** */
 
-    /**
-     * @param ActiveRow $trunkRow
-     * @param ActiveRow $mergedRow
-     * @return void
-     */
-    public function setMergedPair(ActiveRow $trunkRow, ActiveRow $mergedRow) {
+    public function setMergedPair(ActiveRow $trunkRow, ActiveRow $mergedRow): void {
         $this->trunkRow = $trunkRow;
         $this->mergedRow = $mergedRow;
     }
 
-    /**
-     * @param string $column
-     * @param IMergeStrategy|null $mergeStrategy
-     */
-    public function setColumnMergeStrategy($column, IMergeStrategy $mergeStrategy = null) {
+    public function setColumnMergeStrategy(string $column, ?IMergeStrategy $mergeStrategy = null): void {
         if (!$mergeStrategy) {
             unset($this->columnMergeStrategies[$column]);
         } else {
@@ -87,7 +76,7 @@ class TableMerger {
      * @param mixed $column
      * @return bool
      */
-    private function tryColumnMerge($column) {
+    private function tryColumnMerge($column): bool {
         if ($this->getMerger()->hasResolution($this->trunkRow, $this->mergedRow, $column)) {
             $values = [
                 $column => $this->getMerger()->getResolution($this->trunkRow, $this->mergedRow, $column),
@@ -114,17 +103,14 @@ class TableMerger {
         }
     }
 
-    /**
-     * @return Merger
-     */
-    private function getMerger() {
+    private function getMerger(): Merger {
         return $this->merger;
     }
 
     /**
      * @param null $mergedParent
      */
-    public function merge($mergedParent = null) {
+    public function merge($mergedParent = null): void {
         $this->trunkRow->getTable()->accessColumn(null); // stupid touch
         $this->mergedRow->getTable()->accessColumn(null); // stupid touch
 

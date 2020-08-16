@@ -40,7 +40,7 @@ abstract class AbstractDateInput extends TextInput {
      * @param string|DateTime $value
      * @return static
      */
-    public function setValue($value) {
+    public function setValue($value): self {
         if ($value) {
             $this->value = DateTime::from($value);
         } else {

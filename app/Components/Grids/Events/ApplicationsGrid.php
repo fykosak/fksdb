@@ -26,7 +26,7 @@ use Nette\Utils\Strings;
  */
 class ApplicationsGrid extends BaseComponent {
 
-    const NAME_PREFIX = 'application_';
+    public const NAME_PREFIX = 'application_';
 
     private IHolderSource $source;
 
@@ -110,7 +110,7 @@ class ApplicationsGrid extends BaseComponent {
         return new ApplicationComponent($this->getContext(), $this->handlers[$key], $this->holders[$key]);
     }
 
-    public function render() {
+    public function render(): void {
         if (!$this->templateFile) {
             throw new InvalidStateException('Must set template for the grid.');
         }

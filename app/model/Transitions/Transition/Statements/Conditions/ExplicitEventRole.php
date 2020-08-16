@@ -10,10 +10,10 @@ use FKSDB\ORM\Models\ModelEvent;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ExplicitEventRole extends EventRole {
-    /** @var ModelEvent */
-    private $event;
-    /** @var string */
-    private $resource;
+
+    private ModelEvent $event;
+
+    private string $resource;
 
     /**
      * ExplicitEventRole constructor.
@@ -28,10 +28,6 @@ class ExplicitEventRole extends EventRole {
         $this->resource = $resource;
     }
 
-    /**
-     * @param array $args
-     * @return bool
-     */
     protected function evaluate(...$args): bool {
         return $this->eventAuthorizator->isContestOrgAllowed($this->resource, $this->privilege, $this->event);
     }
