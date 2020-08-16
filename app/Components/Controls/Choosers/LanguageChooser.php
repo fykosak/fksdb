@@ -2,11 +2,10 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Localization\UnsupportedLanguageException;
-use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\UI\Title;
+use Nette\Application\AbortException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Http\IRequest;
@@ -52,26 +51,16 @@ class LanguageChooser extends Chooser {
      *
      * Should be final
      * @throws UnsupportedLanguageException
+     * @throws AbortException
+     * @note do not call in constructor, call after component is attached
      */
     public function init(): void {
         if (!isset($this->language)) {
-            $candidate = $this->getUserPreferredLang();
-            if (!$candidate) {
-                $candidate = $this->urlLang;
-            }
-            $supportedLanguages = $this->getTranslator()->getSupportedLanguages();
-            if (!$candidate || !in_array($candidate, $supportedLanguages)) {
-                $candidate = $this->request->detectLanguage($supportedLanguages);
-            }
-            if (!$candidate) {
-                $candidate = $this->getContext()->getParameters()['localization']['defaultLanguage'];
-            }
-            // final check
-            if (!in_array($candidate, $supportedLanguages)) {
-                throw new UnsupportedLanguageException($candidate);
-            }
-            $this->language = $candidate;
+            $this->language = $this->selectLang();
             $this->getTranslator()->setLang($this->language);
+        }
+        if ($this->urlLang !== $this->language) {
+            $this->getPresenter()->redirect('this', ['lang' => $this->language]);
         }
     }
 
@@ -81,10 +70,31 @@ class LanguageChooser extends Chooser {
      * @return string ISO 639-1
      * Should be final
      * @throws UnsupportedLanguageException
+     * @throws AbortException
      */
     final public function getLang(): string {
         $this->init();
         return $this->language;
+    }
+
+    /**
+     * @return string
+     * @throws UnsupportedLanguageException
+     */
+    private function selectLang(): string {
+        $candidate = $this->getUserPreferredLang() ?? $this->urlLang;
+        $supportedLanguages = $this->getTranslator()->getSupportedLanguages();
+        if (!$candidate || !in_array($candidate, $supportedLanguages)) {
+            $candidate = $this->request->detectLanguage($supportedLanguages);
+        }
+        if (!$candidate) {
+            $candidate = $this->getContext()->getParameters()['localization']['defaultLanguage'];
+        }
+        // final check
+        if (!in_array($candidate, $supportedLanguages)) {
+            throw new UnsupportedLanguageException($candidate);
+        }
+        return $candidate;
     }
 
     public function render(): void {
@@ -108,6 +118,7 @@ class LanguageChooser extends Chooser {
         return !$this->getUserPreferredLang();
     }
 
+    /* ************ CHOOSER METHODS *************** */
     protected function getTitle(): Title {
         return new Title(isset(self::$languageNames[$this->language]) ? self::$languageNames[$this->language] : _('Language'), 'fa fa-language');
     }
