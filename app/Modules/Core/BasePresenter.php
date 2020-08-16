@@ -117,13 +117,21 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->translator = $translator;
     }
 
-    final public function getTranslator(): GettextTranslator {
-        return $this->translator;
+    /**
+     * @return void
+     * @throws UnsupportedLanguageException
+     */
+    protected function startup() {
+        parent::startup();
+        /** @var LanguageChooser $control */
+        $control = $this->getComponent('languageChooser');
+        $control->init();
     }
+
 
     protected function createTemplate(): ITemplate {
         $template = parent::createTemplate();
-        $template->setTranslator($this->getTranslator());
+        $template->setTranslator($this->translator);
         return $template;
     }
 
@@ -275,7 +283,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @return string
      * @throws UnsupportedLanguageException
      */
-    protected function getLang(): string {
+    public function getLang(): string {
         /** @var LanguageChooser $control */
         $control = $this->getComponent('languageChooser');
         return $control->getLang();

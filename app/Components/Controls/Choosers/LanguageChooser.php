@@ -7,7 +7,6 @@ use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\UI\Title;
-use Nette\Application\IPresenter;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Http\IRequest;
@@ -41,9 +40,6 @@ class LanguageChooser extends Chooser {
     public function __construct(Container $container, ?string $urlLang) {
         parent::__construct($container);
         $this->urlLang = $urlLang;
-        $this->monitor(IPresenter::class, function (): void {
-            $this->init();
-        });
     }
 
     public function injectPrimary(User $user, IRequest $request): void {
@@ -57,7 +53,7 @@ class LanguageChooser extends Chooser {
      * Should be final
      * @throws UnsupportedLanguageException
      */
-    private function init(): void {
+    public function init(): void {
         if (!isset($this->language)) {
             $candidate = $this->getUserPreferredLang();
             if (!$candidate) {
@@ -75,8 +71,8 @@ class LanguageChooser extends Chooser {
                 throw new UnsupportedLanguageException($candidate);
             }
             $this->language = $candidate;
+            $this->getTranslator()->setLang($this->language);
         }
-        $this->getTranslator()->setLang($this->language);
     }
 
     /**
@@ -116,17 +112,9 @@ class LanguageChooser extends Chooser {
         return new Title(isset(self::$languageNames[$this->language]) ? self::$languageNames[$this->language] : _('Language'), 'fa fa-language');
     }
 
-    /**
-     * @return array
-     * @throws BadTypeException
-     */
     protected function getItems(): array {
         if (!count($this->supportedLanguages)) {
-            $presenter = $this->getPresenter();
-            if (!$presenter instanceof BasePresenter) {
-                throw new BadTypeException(BasePresenter::class, $presenter);
-            }
-            $this->supportedLanguages = $presenter->getTranslator()->getSupportedLanguages();
+            $this->supportedLanguages = $this->getTranslator()->getSupportedLanguages();
         }
         return $this->supportedLanguages;
     }
