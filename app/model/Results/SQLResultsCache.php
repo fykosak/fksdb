@@ -19,35 +19,23 @@ use Nette\InvalidArgumentException;
  */
 class SQLResultsCache {
 
-    /**
-     * @var Connection 
-     */
     private Connection $connection;
 
-    /**
-     * @var ServiceTask
-     */
     private ServiceTask $serviceTask;
 
-    /**
-     * @var ServiceQuizQuestion
-     */
     private ServiceQuizQuestion $serviceQuizQuestion;
 
-    /**
-     * @var ServiceSubmit
-     */
     private ServiceSubmit $serviceSubmit;
 
-    /**
-     * @var ServiceSubmitQuizQuestion
-     */
     private ServiceSubmitQuizQuestion $serviceSubmitQuizQuestion;
 
     /**
      * FKSDB\Results\SQLResultsCache constructor.
      * @param Connection $connection
      * @param ServiceTask $serviceTask
+     * @param ServiceQuizQuestion $serviceQuizQuestion
+     * @param ServiceSubmit $serviceSubmit
+     * @param ServiceSubmitQuizQuestion $serviceSubmitQuizQuestion
      */
     public function __construct(Connection $connection, ServiceTask $serviceTask, ServiceQuizQuestion $serviceQuizQuestion, ServiceSubmit $serviceSubmit, ServiceSubmitQuizQuestion $serviceSubmitQuizQuestion) {
         $this->connection = $connection;
@@ -131,11 +119,11 @@ class SQLResultsCache {
      * @param int $year
      * @param int $series
      */
-    public function calculateQuizPoints(ModelContest $contest, $year, $series): void {
+    public function calculateQuizPoints(ModelContest $contest, int $year, int $series): void {
         $tasks = $this->serviceTask->getTable()->where([
             'contest_id' => $contest->contest_id,
             'year' => $year,
-            'series' => $series
+            'series' => $series,
         ]);
         foreach($tasks as $task) {
             $questions = $this->serviceQuizQuestion->getTable()->where([
@@ -157,7 +145,6 @@ class SQLResultsCache {
                         $total += $points;
                     }
                 }
-                $submit->points = $total;
                 $this->serviceSubmit->updateModel2($submit, ['raw_points' => +$total]);
             }
         }

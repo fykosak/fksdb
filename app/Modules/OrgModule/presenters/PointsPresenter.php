@@ -167,6 +167,10 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
         $this->redirect('this');
     }
 
+    /**
+     * @return void
+     * @throws AbortException
+     */
     public function handleCalculateQuizPoints(): void {
         try{
             $contest = $this->getSelectedContest();
@@ -175,7 +179,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
 
             $this->SQLResultsCache->calculateQuizPoints($contest, $year, $series);
             $this->flashMessage(_('Body kvízových úloh spočteny.'), self::FLASH_INFO);
-        } catch (InvalidArgumentException $exception) {
+        } catch (Exception $exception) {
             $this->flashMessage(_('Chyba při výpočtu.'), self::FLASH_ERROR);
             Debugger::log($exception);
         }
