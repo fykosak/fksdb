@@ -110,6 +110,11 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
 
     public function renderEntry(): void {
         $this->template->showAll = (bool)$this->all;
+        if ($this->getSelectedContest()->contest_id == 2 && $this->getSelectedSeries() >= 7) {
+            $this->template->hasQuizTask = true;
+        } else {
+            $this->template->hasQuizTask = false;
+        }
     }
 
     protected function createComponentPointsForm(): PointsFormControl {

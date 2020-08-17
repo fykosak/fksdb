@@ -3,8 +3,11 @@
     <td>
         {if $submit }
             {var $name = 'submits['.$submit->submit_id.']'}
-            <input type="number" class="form-control" min="0" step="1" name="{$name}"
-                   value="{$submit->raw_points}"/>
+            {if ($submit->source === FKSDB\ORM\Models\ModelSubmit::SOURCE_FORM)}
+                <span class="form-control">{$submit->raw_points}<span/>
+            {else}
+                <input type="number" class="form-control" min="0" step="1" name="{$name}" value="{$submit->raw_points}"/>
+            {/if}
         {/if}
     </td>
 {/define}

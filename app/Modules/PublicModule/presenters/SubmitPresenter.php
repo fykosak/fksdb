@@ -261,30 +261,26 @@ class SubmitPresenter extends BasePresenter {
 
                 $taskValues = $values['task' . $task->task_id];
 
-                //Implemetation of quiz questions
-                /** @var ModelQuizQuestion $question */
-                foreach ($questions as $question) {
-                    $name = 'question' . $question->question_id;
-                    $answer = $taskValues[$name];
-                    if($answer != null){
-                        $this->submitQuizQuestionService->saveSubmittedQuestion($question, $this->getContestant(), $answer);
+                if (count($questions)) {
+                    /** @var ModelQuizQuestion $question */
+                    foreach ($questions as $question) {
+                        $name = 'question' . $question->question_id;
+                        $answer = $taskValues[$name];
+                        if($answer != null){
+                            $this->submitQuizQuestionService->saveSubmittedQuestion($question, $this->getContestant(), $answer);
+                        }
                     }
-                }
-
-                if (!isset($taskValues['file'])) { // upload field was disabled
-                    if(count($questions)){
-                        $this->submitHandlerFactory->handleFormSubmit($task, $this->getContestant());
-                        $this->flashMessage(sprintf(_('Úloha %s odevzdána.'), $task->label), self::FLASH_SUCCESS);
+                    $this->submitHandlerFactory->handleQuizSubmit($task, $this->getContestant());
+                } else {
+                    if (!isset($taskValues['file'])) { // upload field was disabled
+                        continue;
                     }
-                    continue;
+                    if (!$taskValues['file']->isOk()) {
+                        Debugger::log(sprintf("Uploaded file error %s.", $taskValues['file']->getError()), Debugger::WARNING);
+                        continue;
+                    }
+                    $this->submitHandlerFactory->handleSave($taskValues['file'], $task, $this->getContestant());
                 }
-                if (!$taskValues['file']->isOk()) {
-                    Debugger::log(sprintf("Uploaded file error %s.", $taskValues['file']->getError()), Debugger::WARNING);
-                    continue;
-                }
-
-                $this->submitHandlerFactory->handleSave($taskValues['file'], $task, $this->getContestant());
-
                 $this->flashMessage(sprintf(_('Úloha %s odevzdána.'), $task->label), self::FLASH_SUCCESS);
             }
 

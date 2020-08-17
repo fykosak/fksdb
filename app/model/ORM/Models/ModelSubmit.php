@@ -60,4 +60,12 @@ class ModelSubmit extends AbstractModelSingle implements IResource, ITaskReferen
         $deadline = $this->getTask()->submit_deadline ? $this->getTask()->submit_deadline->getTimestamp() : ($now + 1);
         return ($now <= $deadline) && ($now >= $start);
     }
+
+    public function isQuiz(): bool {
+        if ($this->source == self::SOURCE_FORM) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }

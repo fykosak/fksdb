@@ -1,8 +1,12 @@
 {layout '../layout.form.latte'}
 {define #submit-row}
     <td>
-        {if $submit && ($submit->source === FKSDB\ORM\Models\ModelSubmit::SOURCE_UPLOAD)}
-            <span class="badge badge-info">{_'was uploaded'}</span>
+        {if $submit}
+            {if ($submit->source === FKSDB\ORM\Models\ModelSubmit::SOURCE_UPLOAD)}
+                <span class="badge badge-info">{_'was uploaded'}</span>
+            {elseif ($submit->source === FKSDB\ORM\Models\ModelSubmit::SOURCE_FORM)}
+                <span class="badge badge-info">{_'was uploaded via a quiz form'}</span>
+            {/if}
         {else}
         {var $name = 'submits['.$ctId.']['.$taskId.']'}
             <input type="date" class="form-control" name="{$name}"
