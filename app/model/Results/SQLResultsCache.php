@@ -120,34 +120,17 @@ class SQLResultsCache {
      * @param int $series
      */
     public function calculateQuizPoints(ModelContest $contest, int $year, int $series): void {
-        $tasks = $this->serviceTask->getTable()->where([
-            'contest_id' => $contest->contest_id,
-            'year' => $year,
-            'series' => $series,
-        ]);
-        foreach($tasks as $task) {
-            $questions = $this->serviceQuizQuestion->getTable()->where([
-                'task_id' => $task->task_id,
-            ]);
-            if (count($questions) == 0){
-                continue;
-            }
-            $submits = $this->serviceSubmit->getTable()->where([
-                'task_id' => $task->task_id,
-            ]);
-            foreach($submits as $submit) {
-                $total = 0;
-                foreach($questions as $question) {
-                    $answer = $this->serviceSubmitQuizQuestion->findByContestant($submit->ct_id, $question->question_id)->answer;
-                    $correct = $question->answer;
-                    $points = $question->points;
-                    if($answer == $correct) {
-                        $total += $points;
-                    }
-                }
-                $this->serviceSubmit->updateModel2($submit, ['raw_points' => +$total]);
-            }
-        }
+        $params = [];
+        $params[] = 'contest_id=' . $contest->contest_id;
+        $params[] = 'year=' . $year;
+        $params[] = 'series=' . $series;
+        $sql = 'UPDATE submit s, (SELECT sq.ct_id, sq.question_id, sq.answer, q.task_id, q.points,
+        q.answer AS "corr_answer", t.contest_id, t.year, t.series,
+        SUM(IF(sq.answer=q.answer, q.points, 0)) AS "total" FROM submit_quiz sq
+        JOIN quiz q USING (question_id) JOIN task t USING (task_id)
+        WHERE t.' . implode(' AND t.', $params) . ' GROUP BY task_id, ct_id
+        ) as T SET s.raw_points = T.total
+        WHERE T.' . implode(' AND T.', $params) . ' AND s.ct_id = T.ct_id AND s.task_id = T.task_id';
+        $this->connection->query($sql);
     }
-
 }

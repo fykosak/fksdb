@@ -62,7 +62,7 @@ class ModelSubmit extends AbstractModelSingle implements IResource, ITaskReferen
     }
 
     public function isQuiz(): bool {
-        if ($this->source == self::SOURCE_FORM) {
+        if ($this->source === self::SOURCE_FORM) {
             return true;
         } else {
             return false;
