@@ -1,7 +1,7 @@
-import { State as FetchApiState, submit } from '@fetchApi/reducers/submit';
-import { fyziklaniDownloader, State as DownloaderState } from '../../downloader/reducers';
-import { fyziklaniOptions, State as OptionsState } from '../../hardVisible/reducers';
-import { fyziklaniTimer, State as TimerState } from '../../timer/reducers/timer';
+import { FetchApiState, fetchApi } from '@fetchApi/reducer';
+import { fyziklaniDownloader, State as DownloaderState } from '../../downloader/reducer';
+import { fyziklaniOptions, State as OptionsState } from '../../hardVisible/reducer';
+import { fyziklaniTimer, State as TimerState } from '../../timer/reducer';
 import { fyziklaniData, State as DataState } from './data';
 
 export interface FyziklaniResultsCoreStore {
@@ -15,7 +15,7 @@ export interface FyziklaniResultsCoreStore {
 export const coreApp = {
     data: fyziklaniData,
     downloader: fyziklaniDownloader,
-    fetchApi: submit,
+    fetchApi,
     options: fyziklaniOptions,
     timer: fyziklaniTimer,
 };

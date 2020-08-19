@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Controls;
 
+use FKSDB\Localization\GettextTranslator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\ITemplate;
 use Nette\Bridges\ApplicationLatte\Template;
@@ -17,7 +18,7 @@ abstract class BaseComponent extends Control {
 
     private Container $context;
 
-    private ITranslator $translator;
+    private GettextTranslator $translator;
 
     /**
      * SubmitsTableControl constructor.
@@ -29,8 +30,12 @@ abstract class BaseComponent extends Control {
         $this->context = $container;
     }
 
-    final public function injectTranslator(ITranslator $translator): void {
+    final public function injectTranslator(GettextTranslator $translator): void {
         $this->translator = $translator;
+    }
+
+    final protected function getTranslator(): GettextTranslator {
+        return $this->translator;
     }
 
     protected function createTemplate(): ITemplate {

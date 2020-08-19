@@ -6,7 +6,7 @@ import { Dispatch } from 'redux';
 import {
     ScheduleGroupType,
     ScheduleItemDef,
-} from '../middleware/interfaces';
+} from '../interfaces';
 import { Store } from '../reducer';
 import { Params } from './index';
 import CapacityLabel from './parts/capacityLabel';

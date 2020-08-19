@@ -1,11 +1,11 @@
-import { ACTION_SUBMIT_SUCCESS } from '@fetchApi/actions/submit';
-import { ActionSubmitSuccess } from '@fetchApi/middleware/interfaces';
+import { ACTION_FETCH_SUCCESS, ActionFetchSuccess } from '@fetchApi/actions';
+import { Response2 } from '@fetchApi/interfaces';
 import {
     Submits,
     Task,
     Team,
-} from '../../../fyziklani/helpers/interfaces';
-import { ResponseData } from '../../downloader/interfaces';
+} from '@apps/fyziklani/helpers/interfaces';
+import { ResponseData } from '../../downloader/inferfaces';
 
 export interface State {
     submits?: Submits;
@@ -17,8 +17,8 @@ export interface State {
     tasksOnBoard?: number;
 }
 
-const addData = (state: State, action: ActionSubmitSuccess<ResponseData>): State => {
-    const {submits, tasks, teams, categories, availablePoints, tasksOnBoard} = action.data.responseData;
+const fetchSuccess = (state: State, action: ActionFetchSuccess<Response2<ResponseData>>): State => {
+    const {submits, tasks, teams, categories, availablePoints, tasksOnBoard} = action.data.data;
     return {
         ...state,
         availablePoints: availablePoints.map((value) => +value),
@@ -35,8 +35,8 @@ const addData = (state: State, action: ActionSubmitSuccess<ResponseData>): State
 
 export const fyziklaniData = (state: State = {}, action): State => {
     switch (action.type) {
-        case ACTION_SUBMIT_SUCCESS:
-            return addData(state, action);
+        case ACTION_FETCH_SUCCESS:
+            return fetchSuccess(state, action);
         default:
             return state;
     }

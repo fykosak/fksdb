@@ -1,5 +1,5 @@
 import { UploadDataItem } from '@apps/ajaxUpload/middleware/uploadDataItem';
-import { NetteActions } from '@appsCollector';
+import { NetteActions } from '@appsCollector/netteActions';
 import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -7,7 +7,7 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { deleteUploadedFile, downloadUploadedFile } from '../../../actions/uploadData';
+import { deleteUploadedFile } from '../../../actions/uploadData';
 
 interface OwnProps {
     submit: UploadDataItem;

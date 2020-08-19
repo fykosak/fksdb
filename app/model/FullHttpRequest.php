@@ -2,7 +2,8 @@
 
 namespace FKSDB;
 
-use Nette\Http\Request;
+use mysql_xdevapi\Result;
+use Nette\Http\IRequest;
 use Nette\SmartObject;
 
 /**
@@ -15,30 +16,25 @@ class FullHttpRequest {
 
     use SmartObject;
 
-    /** @var Request */
-    private $request;
+    private IRequest $request;
 
-    /** @var string */
-    private $payload;
+    private string $payload;
 
     /**
      * FullHttpRequest constructor.
-     * @param Request $request
+     * @param IRequest $request
      * @param mixed $payload
      */
-    public function __construct(Request $request, $payload) {
+    public function __construct(IRequest $request, string $payload) {
         $this->request = $request;
         $this->payload = $payload;
     }
 
-    public function getRequest(): Request {
+    public function getRequest(): IRequest {
         return $this->request;
     }
 
-    /**
-     * @return string
-     */
-    public function getPayload() {
+    public function getPayload(): string {
         return $this->payload;
     }
 }

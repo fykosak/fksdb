@@ -6,6 +6,7 @@ use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Application\IStylesheetCollector;
 use FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs;
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory;
+use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Components\Controls\Choosers\ThemeChooser;
 use FKSDB\Components\Controls\DBReflection\DetailComponent;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
@@ -16,10 +17,10 @@ use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
 use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Localization\GettextTranslator;
 use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Logging\ILogger;
 use FKSDB\Modules\Core\PresenterTraits\CollectorPresenterTrait;
-use FKSDB\Modules\Core\PresenterTraits\LangPresenterTrait;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\UI\PageStyleContainer;
 use FKSDB\UI\PageTitle;
@@ -43,15 +44,14 @@ use FKSDB\Utils\Utils;
 abstract class BasePresenter extends Presenter implements IJavaScriptCollector, IStylesheetCollector, IAutocompleteJSONProvider, INavigablePresenter {
 
     use CollectorPresenterTrait;
-    use LangPresenterTrait;
 
-    const FLASH_SUCCESS = ILogger::SUCCESS;
+    public const FLASH_SUCCESS = ILogger::SUCCESS;
 
-    const FLASH_INFO = ILogger::INFO;
+    public const FLASH_INFO = ILogger::INFO;
 
-    const FLASH_WARNING = ILogger::WARNING;
+    public const FLASH_WARNING = ILogger::WARNING;
 
-    const FLASH_ERROR = ILogger::ERROR;
+    public const FLASH_ERROR = ILogger::ERROR;
 
     /** @persistent  */
     public $tld;
@@ -62,6 +62,12 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @persistent
      */
     public $bc;
+
+    /**
+     * @persistent
+     * @internal
+     */
+    public $lang;
 
     private YearCalculator $yearCalculator;
 
@@ -80,6 +86,8 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     private FullHttpRequest $fullRequest;
 
     private PageStyleContainer $pageStyleContainer;
+
+    private GettextTranslator $translator;
 
     public function getYearCalculator(): YearCalculator {
         return $this->yearCalculator;
@@ -105,18 +113,25 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->presenterBuilder = $presenterBuilder;
     }
 
+    final public function injectTranslator(GettextTranslator $translator): void {
+        $this->translator = $translator;
+    }
+
     /**
      * @return void
      * @throws UnsupportedLanguageException
      */
-    protected function startup(): void {
+    protected function startup() {
         parent::startup();
-        $this->langTraitStartup();
+        /** @var LanguageChooser $control */
+        $control = $this->getComponent('languageChooser');
+        $control->init();
     }
+
 
     protected function createTemplate(): ITemplate {
         $template = parent::createTemplate();
-        $template->setTranslator($this->getTranslator());
+        $template->setTranslator($this->translator);
         return $template;
     }
 
@@ -193,11 +208,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->pageTitle = $pageTitle;
     }
 
-    /**
-     * @param string $backLink
-     * @return null|string
-     */
-    public function setBackLink($backLink) {
+    public function setBackLink(string $backLink): ?string {
         $old = $this->bc;
         $this->bc = $backLink;
         return $old;
@@ -262,6 +273,20 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     protected function createComponentThemeChooser(): ThemeChooser {
         return new ThemeChooser($this->getContext());
+    }
+
+    final protected function createComponentLanguageChooser(): LanguageChooser {
+        return new LanguageChooser($this->getContext(), $this->lang);
+    }
+
+    /**
+     * @return string
+     * @throws UnsupportedLanguageException
+     */
+    public function getLang(): string {
+        /** @var LanguageChooser $control */
+        $control = $this->getComponent('languageChooser');
+        return $control->getLang();
     }
 
     /**

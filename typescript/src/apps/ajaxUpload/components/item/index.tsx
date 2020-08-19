@@ -1,4 +1,5 @@
-import { NetteActions } from '@appsCollector';
+import UploadContainer from '@apps/ajaxUpload/components/item/container';
+import { NetteActions } from '@appsCollector/netteActions';
 import { config } from '@config';
 import * as React from 'react';
 import { Provider } from 'react-redux';
@@ -9,7 +10,6 @@ import {
 import logger from 'redux-logger';
 import { UploadDataItem } from '../../middleware/uploadDataItem';
 import { app } from '../../reducers';
-import UploadContainer from '@apps/ajaxUpload/components/item/container';
 
 interface IProps {
     data: UploadDataItem;
