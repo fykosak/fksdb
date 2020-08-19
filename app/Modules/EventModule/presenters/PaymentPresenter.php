@@ -5,7 +5,6 @@ namespace FKSDB\Modules\EventModule;
 use FKSDB\Components\Controls\Entity\PaymentFormComponent;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
-use FKSDB\Payment\PaymentExtension;
 use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Events\EventNotFoundException;
 use FKSDB\Exceptions\BadTypeException;
@@ -18,6 +17,7 @@ use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
+use Tracy\Debugger;
 
 /**
  * Class PaymentPresenter
@@ -160,7 +160,8 @@ class PaymentPresenter extends BasePresenter {
      */
     private function getMachine(): PaymentMachine {
         if (!isset($this->machine)) {
-            $machine = $this->getContext()->getService('payment.' . PaymentExtension::MACHINE_PREFIX . $this->getEvent()->event_id);
+
+            $machine = $this->getContext()->getService(sprintf('fyziklani%dpayment.machine', $this->getEvent()->event_year));
             if (!$machine instanceof PaymentMachine) {
                 throw new BadTypeException(PaymentMachine::class, $this->machine);
             }
@@ -173,6 +174,7 @@ class PaymentPresenter extends BasePresenter {
         try {
             $this->getMachine();
         } catch (\Exception $exception) {
+            Debugger::barDump($exception);
             return false;
         }
         return true;

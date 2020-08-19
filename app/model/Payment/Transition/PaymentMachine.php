@@ -8,7 +8,7 @@ use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Payment\SymbolGenerator\Generators\AbstractSymbolGenerator;
-use FKSDB\Transitions\AbstractTransitionsGenerator;
+use FKSDB\Transitions\ITransitionsDecorator;
 use FKSDB\Transitions\Machine;
 use Nette\Database\Context;
 
@@ -40,12 +40,8 @@ class PaymentMachine extends Machine {
         $this->serviceEvent = $serviceEvent;
     }
 
-    /**
-     * @param AbstractTransitionsGenerator $factory
-     * @return void
-     */
-    public function setTransitions(AbstractTransitionsGenerator $factory) {
-        $factory->createTransitions($this);
+    public function decorateTransitions(ITransitionsDecorator $factory): void {
+        $factory->decorate($this);
     }
 
     /**
@@ -69,23 +65,11 @@ class PaymentMachine extends Machine {
     }
 
     /**
-     * @param AbstractSymbolGenerator $abstractSymbolGenerator
-     * @return void
-     */
-    public function setSymbolGenerator(AbstractSymbolGenerator $abstractSymbolGenerator) {
-        $this->symbolGenerator = $abstractSymbolGenerator;
-    }
-
-    /**
      * @param PriceCalculator $priceCalculator
      * @return void
      */
     public function setPriceCalculator(PriceCalculator $priceCalculator) {
         $this->priceCalculator = $priceCalculator;
-    }
-
-    public function getSymbolGenerator(): AbstractSymbolGenerator {
-        return $this->symbolGenerator;
     }
 
     public function getPriceCalculator(): PriceCalculator {

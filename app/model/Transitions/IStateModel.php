@@ -2,6 +2,7 @@
 
 namespace FKSDB\Transitions;
 
+use FKSDB\ORM\IModel;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
 
@@ -9,17 +10,11 @@ use Nette\Database\IConventions;
  * Interface IStateModel
  * @author Michal Červeňák <miso@fykos.cz>
  */
-interface IStateModel {
-    /**
-     * @param string $newState
-     * @return void
-     */
-    public function updateState(string $newState);
+interface IStateModel extends IModel {
 
-    /**
-     * @return string|null
-     */
-    public function getState();
+    public function updateState(string $newState): void;
+
+    public function getState(): ?string;
 
     public function refresh(Context $connection, IConventions $conventions): self;
 }

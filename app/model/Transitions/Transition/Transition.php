@@ -4,6 +4,7 @@ namespace FKSDB\Transitions;
 
 use FKSDB\Logging\ILogger;
 use FKSDB\Transitions\Statements\Statement;
+use Tracy\Debugger;
 
 /**
  * Class Transition
@@ -58,18 +59,11 @@ final class Transition {
         return $this->fromState . '__' . $this->toState;
     }
 
-    /**
-     * @return string
-     */
-    public function getType() {
+    public function getType(): string {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     * @return void
-     */
-    public function setType(string $type) {
+    public function setType(string $type): void {
         $this->type = $type;
     }
 
@@ -80,7 +74,7 @@ final class Transition {
     /**
      * @param callable|Statement $callback
      */
-    public function setCondition(callable $callback) {
+    public function setCondition(callable $callback): void {
         $this->condition = $callback;
     }
 
@@ -88,29 +82,26 @@ final class Transition {
         return $this->fromState === Machine::STATE_INIT;
     }
 
-    /**
-     * @param IStateModel $model
-     * @return bool
-     */
-    public function canExecute($model): bool {
+    public function canExecute(?IStateModel $model): bool {
+        Debugger::barDump($this->condition);
         return ($this->condition)($model);
     }
 
-    /**
-     * @param IStateModel $model
-     * @return void
-     */
-    final public function beforeExecute(IStateModel &$model) {
+    public function addBeforeExecute(callable $callBack): void {
+        $this->beforeExecuteCallbacks[] = $callBack;
+    }
+
+    public function addAfterExecute(callable $callBack): void {
+        $this->afterExecuteCallbacks[] = $callBack;
+    }
+
+    final public function beforeExecute(IStateModel $model): void {
         foreach ($this->beforeExecuteCallbacks as $callback) {
             $callback($model);
         }
     }
 
-    /**
-     * @param IStateModel $model
-     * @return void
-     */
-    final public function afterExecute(IStateModel &$model) {
+    final public function afterExecute(IStateModel $model): void {
         foreach ($this->afterExecuteCallbacks as $callback) {
             $callback($model);
         }

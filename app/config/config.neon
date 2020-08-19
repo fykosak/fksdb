@@ -200,8 +200,8 @@ extensions:
     navigation: FKSDB\Config\Extensions\NavigationExtension
     events: FKSDB\Events\EventsExtension(%appDir%/../app/config/events.neon)
     stalking: FKSDB\Config\Extensions\StalkingExtension
-    payment: FKSDB\Payment\PaymentExtension
     DBReflection: FKSDB\DBReflection\DBReflectionExtension
+    transitions: FKSDB\Payment\Transition\TransitionsExtension
 
 includes:
     - router.neon

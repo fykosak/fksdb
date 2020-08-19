@@ -12,7 +12,7 @@ use Nette\DI\CompilerExtension;
  */
 class RouterExtension extends CompilerExtension {
 
-    public function loadConfiguration() {
+    public function loadConfiguration(): void {
         parent::loadConfiguration();
 
         $container = $this->getContainerBuilder();

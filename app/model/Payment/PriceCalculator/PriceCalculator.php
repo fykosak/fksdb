@@ -6,12 +6,14 @@ use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Price;
 use FKSDB\Payment\PriceCalculator\PreProcess\IPreprocess;
+use FKSDB\Transitions\Callbacks\ITransitionCallback;
+use FKSDB\Transitions\IStateModel;
 
 /**
  * Class PriceCalculator
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PriceCalculator {
+class PriceCalculator implements ITransitionCallback {
 
     private ServicePayment $servicePayment;
     /** @var IPreprocess[] */
@@ -29,7 +31,7 @@ class PriceCalculator {
         $this->preProcess[] = $preProcess;
     }
 
-    final public function __invoke(ModelPayment $modelPayment): void {
+    final public function __invoke(IStateModel $modelPayment, ...$args): void {
         $price = new Price(0, $modelPayment->currency);
         foreach ($this->preProcess as $preProcess) {
             $subPrice = $preProcess->calculate($modelPayment);
@@ -37,6 +39,7 @@ class PriceCalculator {
         }
         $this->servicePayment->updateModel2($modelPayment, ['price' => $price->getAmount(), 'currency' => $price->getCurrency()]);
     }
+
 
     /**
      * @param ModelPayment $modelPayment
@@ -48,5 +51,9 @@ class PriceCalculator {
             $items = \array_merge($items, $preProcess->getGridItems($modelPayment));
         }
         return $items;
+    }
+
+    public function invoke(IStateModel $model, ...$args): void {
+        $this->__invoke($model, ...$args);
     }
 }
