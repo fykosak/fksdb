@@ -2,7 +2,6 @@
 
 namespace FKSDB\Events\FormAdjustments;
 
-use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
@@ -33,7 +32,7 @@ class Captcha implements IFormAdjustment {
     }
 
     public function adjust(Form $form, Machine $machine, Holder $holder): void {
-        if ($holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT || $this->user->isLoggedIn()) {
+        if ($holder->getPrimaryHolder()->getModelState() != \FKSDB\Transitions\Machine::STATE_INIT || $this->user->isLoggedIn()) {
             return;
         }
         $control = new CaptchaBox();

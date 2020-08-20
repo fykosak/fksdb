@@ -13,8 +13,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\Transitions\IStateModel;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 use Nette\Database\Table\ActiveRow;
 use FKSDB\Exceptions\NotImplementedException;
 
@@ -92,21 +90,11 @@ class ModelPersonSchedule extends AbstractModelSingle implements
         }
     }
 
-    public function updateState(?string $newState): void {
-        $this->update(['state' => $newState]);
-    }
-
     public function getState(): ?string {
         return $this->state;
     }
 
-    /**
-     * @param Context $connection
-     * @param IConventions $conventions
-     * @return IStateModel
-     * @throws NotImplementedException
-     */
-    public function refresh(Context $connection, IConventions $conventions): IStateModel {
-        throw new NotImplementedException();
+    public function getStateColumn(): string {
+        return 'state';
     }
 }

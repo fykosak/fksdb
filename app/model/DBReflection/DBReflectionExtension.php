@@ -14,10 +14,10 @@ use FKSDB\DBReflection\ColumnFactories\{DateRow,
     TextColumnFactory,
     TimeRow
 };
+use FKSDB\Config\Expressions\Helpers;
 use FKSDB\DBReflection\LinkFactories\Link;
 use Nette\DI\CompilerExtension;
 use Nette\DI\ServiceDefinition;
-use Nette\DI\Statement;
 use FKSDB\Exceptions\NotImplementedException;
 
 /**
@@ -28,7 +28,7 @@ class DBReflectionExtension extends CompilerExtension {
     /**
      * @throws NotImplementedException
      */
-    public function loadConfiguration() {
+    public function loadConfiguration(): void {
         $this->registerFactories($this->config['tables']);
         $this->registerDetails($this->config['details']);
     }
@@ -201,24 +201,13 @@ class DBReflectionExtension extends CompilerExtension {
         $this->setUpDefaultFactory($factory, $tableName, $fieldName, EmailColumnFactory::class, $field);
     }
 
-    /**
-     * @param string|Statement $value
-     * @return string
-     */
-    private function translate($value): string {
-        if ($value instanceof Statement) {
-            return ($value->entity)(...$value->arguments);
-        }
-        return $value;
-    }
-
     private function setUpDefaultFactory(ServiceDefinition $factory, string $tableName, string $fieldName, string $factoryClassName, array $field): void {
         $factory->setFactory($factoryClassName)
             ->addSetup('setUp', [
                 $tableName,
                 isset($field['accessKey']) ? $field['accessKey'] : $fieldName,
-                $this->translate($field['title']),
-                isset($field['description']) ? $this->translate($field['description']) : null,
+                Helpers::translate($field['title']),
+                isset($field['description']) ? Helpers::translate($field['description']) : null,
             ]);
         if (isset($field['permission'])) {
             if (is_array($field['permission'])) {

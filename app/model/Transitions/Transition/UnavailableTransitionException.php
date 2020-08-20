@@ -17,12 +17,11 @@ class UnavailableTransitionException extends \Exception {
      * @param IModel $model
      */
     public function __construct($transition, $model) {
+        $target = $transition->getTargetState();
         if ($transition instanceof EventTransition) {
             $source = $transition->getSource();
-            $target = $transition->getTarget();
         } elseif ($transition instanceof Transition) {
-            $source = $transition->getFromState();
-            $target = $transition->getToState();
+            $source = $transition->getSourceState();
         } else {
             throw new InvalidStateException();
         }

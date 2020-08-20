@@ -7,27 +7,23 @@ use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\PriceCalculator\PriceCalculator;
-use FKSDB\Payment\SymbolGenerator\Generators\AbstractSymbolGenerator;
 use FKSDB\Transitions\ITransitionsDecorator;
 use FKSDB\Transitions\Machine;
 use Nette\Database\Context;
 
 /**
  * Class PaymentMachine
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PaymentMachine extends Machine {
-    /** @var PriceCalculator */
-    private $priceCalculator;
-    /** @var AbstractSymbolGenerator */
-    private $symbolGenerator;
-    /** @var ModelEvent */
-    private $event;
-    /** @var ServiceEvent */
-    private $serviceEvent;
 
-    /** @var string[] */
-    private $scheduleGroupTypes;
+    private PriceCalculator $priceCalculator;
+
+    private ModelEvent $event;
+
+    private ServiceEvent $serviceEvent;
+
+    private array $scheduleGroupTypes;
 
     /**
      * PaymentMachine constructor.
@@ -40,23 +36,15 @@ class PaymentMachine extends Machine {
         $this->serviceEvent = $serviceEvent;
     }
 
-    public function decorateTransitions(ITransitionsDecorator $factory): void {
-        $factory->decorate($this);
+    public function decorateTransitions(ITransitionsDecorator $decorator): void {
+        $decorator->decorate($this);
     }
 
-    /**
-     * @param int $eventId
-     * @return void
-     */
-    public function setEventId(int $eventId) {
+    public function setEventId(int $eventId): void {
         $this->event = $this->serviceEvent->findByPrimary($eventId);
     }
 
-    /**
-     * @param array $types
-     * @return void
-     */
-    public function setScheduleGroupTypes(array $types) {
+    public function setScheduleGroupTypes(array $types): void {
         $this->scheduleGroupTypes = $types;
     }
 
@@ -64,11 +52,7 @@ class PaymentMachine extends Machine {
         return $this->scheduleGroupTypes;
     }
 
-    /**
-     * @param PriceCalculator $priceCalculator
-     * @return void
-     */
-    public function setPriceCalculator(PriceCalculator $priceCalculator) {
+    public function setPriceCalculator(PriceCalculator $priceCalculator): void {
         $this->priceCalculator = $priceCalculator;
     }
 

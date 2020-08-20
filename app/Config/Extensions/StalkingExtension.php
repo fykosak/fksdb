@@ -11,7 +11,7 @@ use Nette\DI\CompilerExtension;
  */
 class StalkingExtension extends CompilerExtension {
 
-    public function loadConfiguration() {
+    public function loadConfiguration(): void {
         $builder = $this->getContainerBuilder();
         $config = [];
         foreach ($this->config['components'] as $tableName => $component) {

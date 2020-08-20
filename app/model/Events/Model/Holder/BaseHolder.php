@@ -2,7 +2,6 @@
 
 namespace FKSDB\Events\Model\Holder;
 
-use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Config\NeonSchemaException;
@@ -12,6 +11,7 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\Transitions\Machine;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Neon\Neon;
@@ -208,9 +208,9 @@ class BaseHolder {
     }
 
     public function saveModel(): void {
-        if ($this->getModelState() == BaseMachine::STATE_TERMINATED) {
+        if ($this->getModelState() == Machine::STATE_TERMINATED) {
             $this->service->dispose($this->getModel());
-        } elseif ($this->getModelState() != BaseMachine::STATE_INIT) {
+        } elseif ($this->getModelState() != Machine::STATE_INIT) {
             $this->service->save($this->getModel());
         }
     }
@@ -218,7 +218,7 @@ class BaseHolder {
     public function getModelState(): string {
         $model = $this->getModel();
         if ($model->isNew() && !$model[self::STATE_COLUMN]) {
-            return BaseMachine::STATE_INIT;
+            return Machine::STATE_INIT;
         } else {
             return $model[self::STATE_COLUMN];
         }

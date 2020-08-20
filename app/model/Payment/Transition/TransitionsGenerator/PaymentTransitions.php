@@ -6,14 +6,13 @@ use FKSDB\Authorization\EventAuthorizator;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelPayment;
-use FKSDB\ORM\Services\ServicePayment;
+use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\ITransitionsDecorator;
 use FKSDB\Transitions\Machine;
 use FKSDB\Transitions\Statements\Conditions\ExplicitEventRole;
 use FKSDB\Transitions\Transition;
-use Nette\Database\Connection;
-use Nette\DI\Container;
+use FKSDB\Transitions\UnavailableTransitionsException;
 use Tracy\Debugger;
 
 /**
@@ -22,31 +21,21 @@ use Tracy\Debugger;
  */
 abstract class PaymentTransitions implements ITransitionsDecorator {
 
-    protected Connection $connection;
-
-    protected ServicePayment $servicePayment;
-
     protected EventAuthorizator $eventAuthorizator;
 
-    protected Container $container;
+    protected ServicePersonSchedule $servicePersonSchedule;
 
     /**
      * Fyziklani13Payment constructor.
-     * @param Container $container
-     * @param ServicePayment $servicePayment
-     * @param Connection $connection
      * @param EventAuthorizator $eventAuthorizator
+     * @param ServicePersonSchedule $servicePersonSchedule
      */
     public function __construct(
-        Container $container,
-        ServicePayment $servicePayment,
-        Connection $connection,
-        EventAuthorizator $eventAuthorizator
+        EventAuthorizator $eventAuthorizator,
+        ServicePersonSchedule $servicePersonSchedule
     ) {
-        $this->container = $container;
-        $this->connection = $connection;
-        $this->servicePayment = $servicePayment;
         $this->eventAuthorizator = $eventAuthorizator;
+        $this->servicePersonSchedule = $servicePersonSchedule;
     }
 
     /**
@@ -59,40 +48,21 @@ abstract class PaymentTransitions implements ITransitionsDecorator {
         if (!$machine instanceof PaymentMachine) {
             throw new BadTypeException(PaymentMachine::class, $machine);
         }
-        $machine->setExplicitCondition(new ExplicitEventRole($this->eventAuthorizator, 'org', $machine->getEvent(), ModelPayment::RESOURCE_ID));
+        $machine->setImplicitCondition(new ExplicitEventRole($this->eventAuthorizator, 'org', $machine->getEvent(), ModelPayment::RESOURCE_ID));
 
-        $this->addTransitionInitToNew($machine);
-        $this->addTransitionNewToWaiting($machine);
-        $this->addTransitionAllToCanceled($machine);
-        $this->addTransitionWaitingToReceived($machine);
-        Debugger::barDump($machine, 'M');
+        $this->decorateTransitionInitToNew($machine);
+        $this->decorateTransitionNewToWaiting($machine);
+        $this->decorateTransitionAllToCanceled($machine);
+        $this->decorateTransitionWaitingToReceived($machine);
     }
-    /**
-     * @param Machine $machine
-     * @return void
-     * @throws BadTypeException
-     * @throws \Exception
-     */
-    /*  public function createTransitions(Machine $machine): void {
-          if (!$machine instanceof PaymentMachine) {
-              throw new BadTypeException(PaymentMachine::class, $machine);
-          }
-          $machine->setExplicitCondition(new ExplicitEventRole($this->eventAuthorizator, 'org', $machine->getEvent(), ModelPayment::RESOURCE_ID));
-
-          $this->addTransitionInitToNew($machine);
-          $this->addTransitionNewToWaiting($machine);
-          $this->addTransitionAllToCanceled($machine);
-          $this->addTransitionWaitingToReceived($machine);
-          Debugger::barDump($machine);
-      }*/
 
     /**
      * implicit transition when creating model (it's not executed only try condition!)
      * @param PaymentMachine $machine
      * @throws \Exception
      */
-    private function addTransitionInitToNew(PaymentMachine $machine): void {
-        $transition = $this->getTransition(Machine::STATE_INIT, ModelPayment::STATE_NEW);
+    private function decorateTransitionInitToNew(PaymentMachine $machine): void {
+        $transition = $machine->getTransitionById(Transition::createId(Machine::STATE_INIT, ModelPayment::STATE_NEW));
         $transition->setCondition($this->getDatesCondition());
     }
 
@@ -101,21 +71,24 @@ abstract class PaymentTransitions implements ITransitionsDecorator {
      * @return void
      * @throws \Exception
      */
-    private function addTransitionNewToWaiting(PaymentMachine $machine): void {
-        $transition = $this->getTransition(ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING);
+    private function decorateTransitionNewToWaiting(PaymentMachine $machine): void {
+        $transition = $machine->getTransitionById(Transition::createId(ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING));
         $transition->setCondition($this->getDatesCondition());
     }
 
     abstract protected function getDatesCondition(): callable;
 
-    private function addTransitionAllToCanceled(PaymentMachine $machine): void {
+    /**
+     * @param PaymentMachine $machine
+     * @return void
+     * @throws UnavailableTransitionsException
+     */
+    private function decorateTransitionAllToCanceled(PaymentMachine $machine): void {
 
         foreach ([ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING] as $state) {
 
-            $transition = $this->getTransition($state, ModelPayment::STATE_CANCELED);
-            $transition->setCondition(function (): bool {
-                return true;
-            });
+            $transition = $machine->getTransitionById(Transition::createId($state, ModelPayment::STATE_CANCELED));
+            $transition->setCondition(true);
             $transition->beforeExecuteCallbacks[] = $this->getClosureDeleteRows();
             $transition->beforeExecuteCallbacks[] = function (ModelPayment $modelPayment) {
                 $modelPayment->update(['price' => null]);
@@ -123,16 +96,19 @@ abstract class PaymentTransitions implements ITransitionsDecorator {
         }
     }
 
-    private function addTransitionWaitingToReceived(PaymentMachine $machine): void {
-        $transition = $this->getTransition(ModelPayment::STATE_WAITING, ModelPayment::STATE_RECEIVED);
+    /**
+     * @param PaymentMachine $machine
+     * @return void
+     * @throws UnavailableTransitionsException
+     */
+    private function decorateTransitionWaitingToReceived(PaymentMachine $machine): void {
+        $transition = $machine->getTransitionById(Transition::createId(ModelPayment::STATE_WAITING, ModelPayment::STATE_RECEIVED));
         $transition->beforeExecuteCallbacks[] = function (ModelPayment $modelPayment) {
             foreach ($modelPayment->getRelatedPersonSchedule() as $personSchedule) {
-                $personSchedule->updateState('received');
+                $this->servicePersonSchedule->updateModel2($personSchedule, [$personSchedule->getStateColumn() => 'received']);
             }
         };
-        $transition->setCondition(function (): bool {
-            return false;
-        });
+        $transition->setCondition(false);
     }
 
     private function getClosureDeleteRows(): callable {
@@ -143,14 +119,5 @@ abstract class PaymentTransitions implements ITransitionsDecorator {
                 $row->delete();
             }
         };
-    }
-
-    abstract protected function getEmailDirectory(): string;
-
-    abstract protected function getMachinePrefix(): string;
-
-    final protected function getTransition(string $source, string $target): Transition {
-        $mask = 'transitions.%s.%s.%s';
-        return $this->container->getService(sprintf($mask, $this->getMachinePrefix(), $source, $target));
     }
 }

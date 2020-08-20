@@ -4,7 +4,6 @@ namespace FKSDB\Events\Model\Holder;
 
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\FormAdjustments\IFormAdjustment;
-use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Machine\Transition;
 use FKSDB\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;
@@ -141,7 +140,7 @@ class Holder {
         /*
          * When deleting, first delete children, then parent.
          */
-        if ($this->primaryHolder->getModelState() == BaseMachine::STATE_TERMINATED) {
+        if ($this->primaryHolder->getModelState() == \FKSDB\Transitions\Machine::STATE_TERMINATED) {
             foreach ($this->secondaryBaseHolders as $name => $baseHolder) {
                 $baseHolder->saveModel();
             }
@@ -176,7 +175,7 @@ class Holder {
     public function processFormValues(ArrayHash $values, Machine $machine, array $transitions, ILogger $logger, ?Form $form): array {
         $newStates = [];
         foreach ($transitions as $name => $transition) {
-            $newStates[$name] = $transition->getTarget();
+            $newStates[$name] = $transition->getTargetState();
         }
         foreach ($this->processings as $processing) {
             $result = $processing->process($newStates, $values, $machine, $this, $logger, $form);
@@ -188,7 +187,7 @@ class Holder {
         foreach ($this->baseHolders as $name => $baseHolder) {
             $stateExist = isset($newStates[$name]);
             if ($stateExist) {
-                $alive = ($newStates[$name] != BaseMachine::STATE_TERMINATED);
+                $alive = ($newStates[$name] != \FKSDB\Transitions\Machine::STATE_TERMINATED);
             } else {
                 $alive = true;
             }

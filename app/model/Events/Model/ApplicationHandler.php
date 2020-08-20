@@ -3,7 +3,6 @@
 namespace FKSDB\Events\Model;
 
 use FKSDB\ORM\Services\Exception\DuplicateApplicationException;
-use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Machine\Transition;
 use FKSDB\Events\MachineExecutionException;
@@ -231,7 +230,7 @@ class ApplicationHandler {
                 $transition = $this->machine->getBaseMachine($name)->getTransitionByTarget($state, $newState);
                 if ($transition) {
                     $transitions[$name] = $transition;
-                } elseif (!($state == BaseMachine::STATE_INIT && $newState == BaseMachine::STATE_TERMINATED)) {
+                } elseif (!($state == \FKSDB\Transitions\Machine::STATE_INIT && $newState == \FKSDB\Transitions\Machine::STATE_TERMINATED)) {
                     $msg = _('There is not a transition from state "%s" of machine "%s" to state "%s".');
                     throw new MachineExecutionException(sprintf($msg, $this->machine->getBaseMachine($name)->getStateName($state), $holder->getBaseHolder($name)->getLabel(), $this->machine->getBaseMachine($name)->getStateName($newState)));
                 }

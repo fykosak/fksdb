@@ -2,7 +2,6 @@
 
 namespace FKSDB\Events\FormAdjustments;
 
-use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Events\Model\Holder\Holder;
@@ -49,7 +48,7 @@ class ResourceAvailability extends AbstractAdjustment {
      * @param string|array $includeStates any state or array of state
      * @param string|array $excludeStates any state or array of state
      */
-    public function __construct($fields, $paramCapacity, $message, $includeStates = BaseMachine::STATE_ANY, $excludeStates = ['cancelled']) {
+    public function __construct($fields, $paramCapacity, $message, $includeStates = \FKSDB\Transitions\Machine::STATE_ANY, $excludeStates = ['cancelled']) {
         $this->setFields($fields);
         $this->paramCapacity = $paramCapacity;
         $this->message = $message;
@@ -107,10 +106,10 @@ class ResourceAvailability extends AbstractAdjustment {
             /** @var GroupedSelection $table */
             $table = $serviceData['service']->getTable();
             $table->where($firstHolder->getEventId(), $event->getPrimary());
-            if ($this->includeStates !== BaseMachine::STATE_ANY) {
+            if ($this->includeStates !== \FKSDB\Transitions\Machine::STATE_ANY) {
                 $table->where(BaseHolder::STATE_COLUMN, $this->includeStates);
             }
-            if ($this->excludeStates !== BaseMachine::STATE_ANY) {
+            if ($this->excludeStates !== \FKSDB\Transitions\Machine::STATE_ANY) {
                 $table->where('NOT ' . BaseHolder::STATE_COLUMN, $this->excludeStates);
             } else {
                 $table->where('1=0');

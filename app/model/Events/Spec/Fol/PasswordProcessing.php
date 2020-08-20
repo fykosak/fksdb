@@ -2,7 +2,6 @@
 
 namespace FKSDB\Events\Spec\Fol;
 
-use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Events\Processings\AbstractProcessing;
@@ -31,7 +30,7 @@ class PasswordProcessing extends AbstractProcessing {
             return;
         }
 
-        $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->password : null;
+        $original = $holder->getPrimaryHolder()->getModelState() != \FKSDB\Transitions\Machine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->password : null;
 
         if (!isset($values['team']['password']) || !$values['team']['password']) {
             $result = $values['team']['password'] = $original;

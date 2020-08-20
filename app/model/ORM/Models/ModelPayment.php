@@ -4,16 +4,11 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelSchedulePayment;
-use FKSDB\ORM\Tables\TypedTableSelection;
-use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
 use FKSDB\Transitions\IStateModel;
 use FKSDB\Transitions\Machine;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 
@@ -39,7 +34,7 @@ use Nette\Security\IResource;
  * @property-read string iban
  * @property-read string swift
  */
-class ModelPayment extends AbstractModelSingle implements IResource, IStateModel, IEventReferencedModel, IPaymentModel, IPersonReferencedModel {
+class ModelPayment extends AbstractModelSingle implements IResource, IStateModel, IEventReferencedModel, IPersonReferencedModel {
     const STATE_WAITING = 'waiting'; // waiting for confirm payment
     const STATE_RECEIVED = 'received'; // payment received
     const STATE_CANCELED = 'canceled'; // payment canceled
@@ -88,21 +83,11 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
         return $this->constant_symbol || $this->variable_symbol || $this->specific_symbol || $this->bank_account || $this->bank_name || $this->recipient;
     }
 
-    public function updateState(?string $newState): void {
-        $this->update(['state' => $newState]);
-    }
-
     public function getState(): ?string {
         return $this->state;
     }
 
-    /**
-     * @param Context $connection
-     * @param IConventions $conventions
-     * @return ModelPayment|IModel|ActiveRow|AbstractModelSingle
-     */
-    public function refresh(Context $connection, IConventions $conventions): IStateModel {
-        $query = new TypedTableSelection(self::class, DbNames::TAB_PAYMENT, $connection, $conventions);
-        return $query->get($this->getPrimary());
+    public function getStateColumn(): string {
+        return 'state';
     }
 }

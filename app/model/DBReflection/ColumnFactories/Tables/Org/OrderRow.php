@@ -13,19 +13,19 @@ use Nette\Utils\Html;
 /**
  * Class OrderRow
  * @author Michal Červeňák <miso@fykos.cz>
- * TODO update roles
  */
 class OrderRow extends AbstractOrgRowFactory {
-    const ORDER_MAPPING = [
-        0 => '0 - newbie',
-        1 => '1 - pasivny org',
-        2 => '2 - org',
-        3 => '3 - aktívny org',
-        4 => '4 - aktívnejši org',
-        5 => '5 - Vedíci akcii a častí seminaru',
-        6 => '6 - zástupca hlavního organizátora',
-        7 => '7 - hlavní organizátor',
-        9 => '9 - vedoucí semináře',
+    public const ORDER_MAPPING = [
+        0 => 'pasivní org',
+        1 => 'org',
+        2 => 'aktivní org',
+        3 => '',
+        4 => 'vedení',
+        5 => '',
+        6 => 'zástupce hlavního organizátora',
+        7 => 'hlavní organizátor',
+        8 => '',
+        9 => 'vedoucí semináře',
     ];
 
     public function getDescription(): ?string {
@@ -47,10 +47,6 @@ class OrderRow extends AbstractOrgRowFactory {
         return (new StringPrinter())($model->order);
     }
 
-    /**
-     * @param array $args
-     * @return BaseControl
-     */
     public function createField(...$args): BaseControl {
         $control = new SelectBox($this->getTitle());
         $control->setOption('description', $this->getDescription());

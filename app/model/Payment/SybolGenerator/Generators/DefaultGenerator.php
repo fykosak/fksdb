@@ -4,9 +4,7 @@ namespace FKSDB\Payment\SymbolGenerator\Generators;
 
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
-use FKSDB\Payment\SymbolGenerator\Generators\AbstractSymbolGenerator;
 use FKSDB\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
-use FKSDB\Transitions\Callbacks\ITransitionCallback;
 use Nette\Http\Response;
 use Nette\OutOfRangeException;
 

@@ -2,7 +2,6 @@
 
 namespace FKSDB\Events\Processings;
 
-use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Logging\ILogger;
@@ -119,12 +118,12 @@ abstract class AbstractProcessing implements IProcessing {
      * @param string $name
      * @return bool
      */
-    final protected function isBaseReallyEmpty($name) {
+    final protected function isBaseReallyEmpty($name): bool {
         $baseHolder = $this->holder->getBaseHolder($name);
-        if ($baseHolder->getModelState() == BaseMachine::STATE_INIT) {
+        if ($baseHolder->getModelState() == \FKSDB\Transitions\Machine::STATE_INIT) {
             return true; // it was empty since beginning
         }
-        if (isset($this->states[$name]) && $this->states[$name] == BaseMachine::STATE_TERMINATED) {
+        if (isset($this->states[$name]) && $this->states[$name] == \FKSDB\Transitions\Machine::STATE_TERMINATED) {
             return true; // it has been deleted by user
         }
         return false;

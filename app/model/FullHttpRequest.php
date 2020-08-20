@@ -2,7 +2,6 @@
 
 namespace FKSDB;
 
-use mysql_xdevapi\Result;
 use Nette\Http\IRequest;
 use Nette\SmartObject;
 

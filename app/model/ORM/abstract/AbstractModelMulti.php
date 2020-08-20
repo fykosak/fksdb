@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM;
 
+use FKSDB\Exceptions\NotImplementedException;
 use LogicException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
@@ -172,4 +173,10 @@ abstract class AbstractModelMulti implements IModel {
         throw new LogicException("Cannot update multiModel directly.");
     }
 
+    /**
+     * @throws NotImplementedException
+     */
+    public function refresh(): self {
+        throw new NotImplementedException();
+    }
 }

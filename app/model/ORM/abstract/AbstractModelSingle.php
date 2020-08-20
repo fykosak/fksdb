@@ -101,4 +101,9 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
         $data = parent::toArray();
         return array_merge($data, $this->tmpData);
     }
+
+    public function refresh(): self {
+        $row = $this->getTable()->get($this->getPrimary());
+        return static::createFromActiveRow($row);
+    }
 }

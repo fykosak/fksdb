@@ -4,7 +4,6 @@ namespace FKSDB\Exports\Formats;
 
 use FKSDB\Exports\IExportFormat;
 use FKSDB\StoredQuery\StoredQuery;
-use Nette\Application\IResponse;
 use Nette\SmartObject;
 use PePa\CSVResponse;
 

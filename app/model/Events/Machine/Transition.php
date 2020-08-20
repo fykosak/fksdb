@@ -2,29 +2,19 @@
 
 namespace FKSDB\Events\Machine;
 
-use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Events\TransitionConditionFailedException;
 use FKSDB\Events\TransitionOnExecutedException;
 use FKSDB\Events\TransitionUnsatisfiedTargetException;
-use FKSDB\Logging\ILogger;
 use Nette\InvalidArgumentException;
-use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
- * @property array onExecuted
  */
-class Transition {
-    use SmartObject;
-
-    const TYPE_SUCCESS = ILogger::SUCCESS;
-    const TYPE_WARNING = ILogger::WARNING;
-    const TYPE_DANGEROUS = ILogger::ERROR;
-    const TYPE_DEFAULT = 'secondary';
+class Transition extends \FKSDB\Transitions\Transition {
 
     private BaseMachine $baseMachine;
 
@@ -34,23 +24,10 @@ class Transition {
 
     private string $name;
 
-    private string $target;
-
     private string $source;
-
-    private ?string $label;
-
-    /** @var bool|callable */
-    private $condition;
 
     /** @var bool|callable */
     private $visible;
-
-    private ExpressionEvaluator $evaluator;
-
-    public array $onExecuted = [];
-
-    private string $type;
 
     /**
      * Transition constructor.
@@ -60,20 +37,8 @@ class Transition {
      */
     public function __construct(string $mask, ?string $label = null, string $type = self::TYPE_DEFAULT) {
         $this->setMask($mask);
-        $this->label = $label;
-        if (!in_array($type, $this->getAllowedBehaviorTypes())) {
-            throw new InvalidArgumentException(sprintf('Behavior type %s not allowed', $type));
-        }
-        $this->type = $type;
-    }
-
-    private function getAllowedBehaviorTypes(): array {
-        return [
-            self::TYPE_SUCCESS,
-            self::TYPE_WARNING,
-            self::TYPE_DANGEROUS,
-            self::TYPE_DEFAULT,
-        ];
+        $this->setLabel($label ?? '');
+        $this->setBehaviorType($type);
     }
 
     /**
@@ -83,25 +48,21 @@ class Transition {
         return $this->name;
     }
 
-    public function getType(): string {
+    public function getBehaviorType(): string {
         if ($this->isTerminating()) {
             return self::TYPE_DANGEROUS;
         }
         if ($this->isCreating()) {
             return self::TYPE_SUCCESS;
         }
-        return $this->type;
+        return parent::getBehaviorType();
     }
 
-    private function setName(string $name): void {
+    private function setName(string $mask): void {
         // it's used for component naming
-        $name = str_replace('*', '_any_', $name);
+        $name = str_replace('*', '_any_', $mask);
         $name = str_replace('|', '_or_', $name);
         $this->name = preg_replace('/[^a-z0-9_]/i', '_', $name);
-    }
-
-    public function getLabel(): ?string {
-        return $this->label;
     }
 
     public function getMask(): string {
@@ -110,7 +71,8 @@ class Transition {
 
     public function setMask(string $mask): void {
         $this->mask = $mask;
-        [$this->source, $this->target] = self::parseMask($mask);
+        [$this->source, $target] = self::parseMask($mask);
+        $this->setTargetState($target);
         $this->setName($mask);
     }
 
@@ -122,32 +84,16 @@ class Transition {
         $this->baseMachine = $baseMachine;
     }
 
-    public function getTarget(): string {
-        return $this->target;
-    }
-
     public function getSource(): string {
         return $this->source;
     }
 
     public function isCreating(): bool {
-        return strpos($this->source, BaseMachine::STATE_INIT) !== false;
-    }
-
-    public function isTerminating(): bool {
-        return $this->target == BaseMachine::STATE_TERMINATED;
+        return strpos($this->source, \FKSDB\Transitions\Machine::STATE_INIT) !== false;
     }
 
     public function isVisible(Holder $holder): bool {
         return $this->getEvaluator()->evaluate($this->visible, $holder);
-    }
-
-    /**
-     * @param callable|bool $condition
-     * @return void
-     */
-    public function setCondition($condition): void {
-        $this->condition = $condition;
     }
 
     /**
@@ -156,14 +102,6 @@ class Transition {
      */
     public function setVisible($visible): void {
         $this->visible = $visible;
-    }
-
-    private function getEvaluator(): ExpressionEvaluator {
-        return $this->evaluator;
-    }
-
-    public function setEvaluator(ExpressionEvaluator $evaluator): void {
-        $this->evaluator = $evaluator;
     }
 
     public function addInducedTransition(BaseMachine $targetMachine, string $targetState): void {
@@ -204,10 +142,6 @@ class Transition {
             return $this;
         }
         return null;
-    }
-
-    private function isConditionFulfilled(Holder $holder): bool {
-        return (bool)$this->getEvaluator()->evaluate($this->condition, $holder);
     }
 
     /**
@@ -279,9 +213,7 @@ class Transition {
             $inducedTransition->executed($holder, []);
         }
         try {
-            foreach ($this->onExecuted as $cb) {
-                $cb($this, $holder);
-            }
+            $this->callAfterExecute($this,$holder);
         } catch (\Exception $exception) {
             throw new TransitionOnExecutedException($this->getName(), null, $exception);
         }
@@ -292,7 +224,7 @@ class Transition {
      * @param BaseHolder $holder
      */
     private function changeState(BaseHolder $holder): void {
-        $holder->setModelState($this->getTarget());
+        $holder->setModelState($this->getTargetState());
     }
 
     /**
@@ -302,7 +234,7 @@ class Transition {
     public function matches(string $mask): bool {
         $parts = self::parseMask($mask);
 
-        if (count($parts) == 2 && $parts[1] != $this->getTarget()) {
+        if (count($parts) == 2 && $parts[1] != $this->getTargetState()) {
             return false;
         }
         $stateMask = $parts[0];
@@ -310,8 +242,8 @@ class Transition {
         /*
          * Star matches any state but meta-states (initial and terminal)
          */
-        if (strpos(BaseMachine::STATE_ANY, $stateMask) !== false || (strpos(BaseMachine::STATE_ANY, $this->source) !== false &&
-                ($mask != BaseMachine::STATE_INIT && $mask != BaseMachine::STATE_TERMINATED))) {
+        if (strpos(\FKSDB\Transitions\Machine::STATE_ANY, $stateMask) !== false || (strpos(\FKSDB\Transitions\Machine::STATE_ANY, $this->source) !== false &&
+                ($mask != \FKSDB\Transitions\Machine::STATE_INIT && $mask != \FKSDB\Transitions\Machine::STATE_TERMINATED))) {
             return true;
         }
 
@@ -338,11 +270,11 @@ class Transition {
         $sources = explode('|', $sources);
 
         foreach ($sources as $source) {
-            if (!in_array($source, array_merge($states, [BaseMachine::STATE_ANY, BaseMachine::STATE_INIT]))) {
+            if (!in_array($source, array_merge($states, [\FKSDB\Transitions\Machine::STATE_ANY, \FKSDB\Transitions\Machine::STATE_INIT]))) {
                 return false;
             }
         }
-        if (!in_array($target, array_merge($states, [BaseMachine::STATE_TERMINATED]))) {
+        if (!in_array($target, array_merge($states, [\FKSDB\Transitions\Machine::STATE_TERMINATED]))) {
             return false;
         }
         return true;

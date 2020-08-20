@@ -2,9 +2,9 @@
 
 namespace FKSDB\Payment\Transition;
 
+use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Transitions\Transition;
 use Nette\DI\CompilerExtension;
-use Nette\DI\Statement;
 
 /**
  * Class PaymentTransitionsExtension
@@ -20,7 +20,6 @@ class TransitionsExtension extends CompilerExtension {
                 [$sources, $target] = self::parseMask($mask);
                 foreach ($sources as $source) {
                     $this->createTransition($machineName, $source, $target, $transition);
-
                 }
             }
         }
@@ -40,8 +39,8 @@ class TransitionsExtension extends CompilerExtension {
         foreach ($builder->findByTag($machineName) as $name => $transition) {
             $machineDefinition->addSetup('addTransition', [$builder->getDefinition($name)]);
         }
-        if (isset($machine['transitionsDecorator'])) {
-            $machineDefinition->addSetup('decorateTransitions', [$machine['transitionsDecorator']]);
+        if (isset($machineConfig['transitionsDecorator'])) {
+            $machineDefinition->addSetup('decorateTransitions', [$machineConfig['transitionsDecorator']]);
         }
     }
 
@@ -49,26 +48,23 @@ class TransitionsExtension extends CompilerExtension {
         $builder = $this->getContainerBuilder();
         $factory = $builder->addDefinition($this->prefix($machineName . '.' . $source . '.' . $target))
             ->addTag($machineName)
-            ->setFactory(Transition::class, [$source, $target, self::translate($transitionConfig['label'])]);
+            ->setType(Transition::class)
+            ->addSetup('setSourceState', [$source])
+            ->addSetup('setTargetState', [$target])
+            ->addSetup('setLabel', [Helpers::translate($transitionConfig['label'])]);
         if (isset($transitionConfig['behaviorType'])) {
-            $factory->addSetup('setType', [$transitionConfig['behaviorType']]);
+            $factory->addSetup('setBehaviorType', [$transitionConfig['behaviorType']]);
         }
         if (isset($transitionConfig['beforeExecute'])) {
             foreach ($transitionConfig['beforeExecute'] as $callback) {
                 $factory->addSetup('addBeforeExecute', [$callback]);
             }
         }
-    }
-
-    /**
-     * @param $statement
-     * @return Statement|string
-     */
-    private function translate($statement) {
-        if ($statement instanceof Statement && $statement->entity === '_') {
-            return _(...$statement->arguments);
+        if (isset($transitionConfig['afterExecute'])) {
+            foreach ($transitionConfig['afterExecute'] as $callback) {
+                $factory->addSetup('addAfterExecute', [$callback]);
+            }
         }
-        return $statement;
     }
 
     public static function parseMask(string $mask): array {

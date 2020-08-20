@@ -13,13 +13,11 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
-use Nette\Utils\JsonException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -162,7 +160,7 @@ class ApplicationComponent extends BaseComponent {
                     $transitionSubmit = false; // if there is more than one submit set no one
                 }
             }
-            $submit->getControlPrototype()->addAttributes(['btn btn-' . $transition->getType()]);
+            $submit->getControlPrototype()->addAttributes(['btn btn-' . $transition->getBehaviorType()]);
         }
 
         /*
@@ -193,8 +191,6 @@ class ApplicationComponent extends BaseComponent {
      * @param Form $form
      * @param null $explicitTransitionName
      * @throws AbortException
-     *
-     * @throws JsonException
      */
     public function handleSubmit(Form $form, $explicitTransitionName = null): void {
         $this->execute($form, $explicitTransitionName);
@@ -203,7 +199,6 @@ class ApplicationComponent extends BaseComponent {
     /**
      * @param string $transitionName
      * @throws AbortException
-     * @throws JsonException
      */
     public function handleTransition($transitionName): void {
         $this->execute(null, $transitionName);
@@ -238,7 +233,7 @@ class ApplicationComponent extends BaseComponent {
     }
 
     private function canEdit(): bool {
-        return $this->holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
+        return $this->holder->getPrimaryHolder()->getModelState() != \FKSDB\Transitions\Machine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
     /**

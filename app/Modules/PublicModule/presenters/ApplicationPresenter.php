@@ -4,7 +4,6 @@ namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Config\NeonSchemaException;
-use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Events\Model\Grid\InitSource;
@@ -140,7 +139,7 @@ class ApplicationPresenter extends BasePresenter {
     protected function unauthorizedAccess(): void {
         if ($this->getAction() == 'default') {
             $this->initializeMachine();
-            if ($this->getHolder()->getPrimaryHolder()->getModelState() == BaseMachine::STATE_INIT) {
+            if ($this->getHolder()->getPrimaryHolder()->getModelState() == \FKSDB\Transitions\Machine::STATE_INIT) {
                 return;
             }
         }
@@ -193,7 +192,7 @@ class ApplicationPresenter extends BasePresenter {
 
         if (!$this->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->holder, $this->getHolder()->getPrimaryHolder()->getModelState())) {
 
-            if ($this->getHolder()->getPrimaryHolder()->getModelState() == BaseMachine::STATE_INIT) {
+            if ($this->getHolder()->getPrimaryHolder()->getModelState() == \FKSDB\Transitions\Machine::STATE_INIT) {
                 $this->setView('closed');
                 $this->flashMessage(_('Přihlašování není povoleno.'), BasePresenter::FLASH_INFO);
             } elseif (!$this->getParameter(self::PARAM_AFTER, false)) {

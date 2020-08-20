@@ -95,7 +95,7 @@ class EventsExtension extends CompilerExtension {
      * @return void
      * @throws NeonSchemaException
      */
-    public function loadConfiguration() {
+    public function loadConfiguration(): void {
         parent::loadConfiguration();
 
         $this->loadScheme();
@@ -213,7 +213,10 @@ class EventsExtension extends CompilerExtension {
             }
         }
         $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
-        $factory->addSetup('$service->onExecuted = array_merge($service->onExecuted, ?)', [$definition['onExecuted']]);
+        foreach ($definition['onExecuted'] as $cb) {
+            $factory->addSetup('addAfterExecute', [$cb]);
+        }
+
         return $factory;
     }
 

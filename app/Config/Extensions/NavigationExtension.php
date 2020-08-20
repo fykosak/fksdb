@@ -15,13 +15,13 @@ class NavigationExtension extends CompilerExtension {
 
     private array $createdNodes = [];
 
-    public function loadConfiguration() {
+    public function loadConfiguration(): void {
         parent::loadConfiguration();
 
         $builder = $this->getContainerBuilder();
         $config = $this->getConfig();
         $navbar = $builder->addDefinition('navbar')
-            ->setClass(NavigationFactory::class);
+            ->setType(NavigationFactory::class);
         $navbar->setAutowired(true);
 
 
@@ -30,7 +30,6 @@ class NavigationExtension extends CompilerExtension {
         }
 
         $this->createFromStructure($config['structure'], $navbar);
-
 
         $navbar->addSetup('$service->setStructure(?);', [$config['structure']]);
     }

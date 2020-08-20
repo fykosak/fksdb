@@ -45,7 +45,7 @@ class TransitionButtonsControl extends BaseComponent {
      * @param string $name
      * @throws AbortException
      */
-    public function handleTransition($name): void {
+    public function handleTransition(string $name): void {
         try {
             $this->machine->executeTransition($name, $this->model);
         } catch (ForbiddenRequestException $exception) {

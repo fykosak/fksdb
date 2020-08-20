@@ -2,7 +2,6 @@
 
 namespace FKSDB\Events\Spec\Fol;
 
-use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Field;
 use FKSDB\Events\Model\Holder\Holder;
@@ -136,7 +135,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
 
         $result = $values['team']['category'] = $this->getCategory($participants);
 
-        $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
+        $original = $holder->getPrimaryHolder()->getModelState() != \FKSDB\Transitions\Machine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
         if ($original != $result) {
             $logger->log(new Message(sprintf(_('Team inserted to category %s.'), $this->categoryNames[$result]), ILogger::INFO));
         }

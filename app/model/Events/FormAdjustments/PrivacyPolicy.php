@@ -5,7 +5,6 @@ namespace FKSDB\Events\FormAdjustments;
 use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\DBReflection\OmittedControlException;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Events\Processings\IProcessing;
@@ -53,7 +52,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
      * @throws BadTypeException
      */
     public function adjust(Form $form, Machine $machine, Holder $holder): void {
-        if ($holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT) {
+        if ($holder->getPrimaryHolder()->getModelState() != \FKSDB\Transitions\Machine::STATE_INIT) {
             return;
         }
 

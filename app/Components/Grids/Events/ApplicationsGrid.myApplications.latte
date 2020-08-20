@@ -1,19 +1,20 @@
 {layout 'ApplicationsGrid.@layout.latte'}
 
 {block header}
-<thead>
+    <thead>
     <tr>
         <th>{_'Akce'}</th>
         <th>{_'Přihláška'}</th>
         {include #menuHeader}
     </tr>
-</thead>
+    </thead>
 {/block}
 
 {block row}
-<tr>
-    <td><span title="{$event->event_type->name}">{$event->name}</span></td>
-    <td>{if $holder->getPrimaryHolder()->getModelState() == FKSDB\Events\Machine\BaseMachine::STATE_INIT}&mdash;{else}{$holder->getPrimaryHolder()->getModel()->__toString()}{/if}</td>
-    {include #menuRow key => $key, holder => $holder}
-</tr>
+    <tr>
+        <td><span title="{$event->event_type->name}">{$event->name}</span></td>
+        <td>
+            {if $holder->getPrimaryHolder()->getModelState() == \FKSDB\Transitions\Machine::STATE_INIT}&mdash;{else}{$holder->getPrimaryHolder()->getModel()->__toString()}{/if}</td>
+        {include #menuRow key => $key, holder => $holder}
+    </tr>
 {/block}

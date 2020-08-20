@@ -17,20 +17,21 @@ use Nette\Database\Table\ActiveRow;
  */
 abstract class Machine {
 
-    const STATE_INIT = '__init';
-    const STATE_TERMINATED = '__terminated';
+    public const STATE_INIT = '__init';
+    public const STATE_TERMINATED = '__terminated';
+    public const STATE_ANY = '*';
 
     /** @var Transition[] */
-    private $transitions = [];
-    /** @var Context */
-    protected $context;
-    /** @var IService */
-    private $service;
+    private array $transitions = [];
+
+    protected Context $context;
+
+    private IService $service;
     /**
-     * @var callable
+     * @var callable|null
      * if callback return true, transition is allowed explicit, independently of transition's condition
      */
-    private $explicitCondition;
+    private $implicitCondition = null;
 
     /**
      * Machine constructor.
@@ -42,11 +43,7 @@ abstract class Machine {
         $this->service = $service;
     }
 
-    /**
-     * @param Transition $transition
-     * @return void
-     */
-    public function addTransition(Transition $transition) {
+    public function addTransition(Transition $transition): void {
         $this->transitions[] = $transition;
     }
 
@@ -58,16 +55,16 @@ abstract class Machine {
     }
 
     /**
-     * @param IStateModel $model
+     * @param IStateModel|null $model
      * @return Transition[]
      */
-    public function getAvailableTransitions(IStateModel $model = null): array {
+    public function getAvailableTransitions(?IStateModel $model): array {
         $state = $model ? $model->getState() : null;
         if (\is_null($state)) {
             $state = self::STATE_INIT;
         }
-        return \array_filter($this->getTransitions(), function (Transition $transition) use ($model, $state) {
-            return ($transition->getFromState() === $state) && $this->canExecute($transition, $model);
+        return \array_filter($this->getTransitions(), function (Transition $transition) use ($model, $state): bool {
+            return $transition->matchSource($state) && $this->canExecute($transition, $model);
         });
     }
 
@@ -77,8 +74,8 @@ abstract class Machine {
      * @return Transition
      * @throws UnavailableTransitionsException
      */
-    protected function findTransitionById(string $id, IStateModel $model): Transition {
-        $transitions = \array_filter($this->getAvailableTransitions($model), function (Transition $transition) use ($id) {
+    public function getAvailableTransitionById(string $id, IStateModel $model): Transition {
+        $transitions = \array_filter($this->getAvailableTransitions($model), function (Transition $transition) use ($id): bool {
             return $transition->getId() === $id;
         });
 
@@ -86,7 +83,19 @@ abstract class Machine {
     }
 
     /**
-     * @param array $transitions
+     * @param string $id
+     * @return Transition
+     * @throws UnavailableTransitionsException
+     */
+    public function getTransitionById(string $id): Transition {
+        $transitions = \array_filter($this->getTransitions(), function (Transition $transition) use ($id): bool {
+            return $transition->getId() === $id;
+        });
+        return $this->selectTransition($transitions);
+    }
+
+    /**
+     * @param Transition[] $transitions
      * @return Transition
      * @throws LogicException
      * @throws UnavailableTransitionsException
@@ -104,24 +113,16 @@ abstract class Machine {
     }
 
     /* ********** CONDITION ******** */
-    /**
-     * @param callable $condition
-     * @return void
-     */
-    public function setExplicitCondition(callable $condition) {
-        $this->explicitCondition = $condition;
+
+    public function setImplicitCondition(callable $implicitCondition): void {
+        $this->implicitCondition = $implicitCondition;
     }
 
-    /**
-     * @param Transition $transition
-     * @param IStateModel|null $model
-     * @return bool
-     */
-    protected function canExecute(Transition $transition, IStateModel $model = null): bool {
-        if ($this->explicitCondition && ($this->explicitCondition)($model)) {
+    protected function canExecute(Transition $transition, ?IStateModel $model): bool {
+        if (isset($this->implicitCondition) && ($this->implicitCondition)($model)) {
             return true;
         }
-        return $transition->canExecute($model);
+        return $transition->canExecute2($model);
     }
     /* ********** EXECUTION ******** */
 
@@ -129,13 +130,12 @@ abstract class Machine {
      * @param string $id
      * @param IStateModel $model
      * @return IStateModel
-     *
      * @throws ForbiddenRequestException
      * @throws UnavailableTransitionsException
      * @throws Exception
      */
     public function executeTransition(string $id, IStateModel $model): IStateModel {
-        $transition = $this->findTransitionById($id, $model);
+        $transition = $this->getAvailableTransitionById($id, $model);
         if (!$this->canExecute($transition, $model)) {
             throw new ForbiddenRequestException(_('Prechod sa nedá vykonať'));
         }
@@ -149,12 +149,12 @@ abstract class Machine {
      * @throws BadTypeException
      * @throws Exception
      */
-    private function execute(Transition $transition, IStateModel $model = null): IStateModel {
+    private function execute(Transition $transition, IStateModel $model): IStateModel {
         if (!$this->context->getConnection()->getPdo()->inTransaction()) {
             $this->context->getConnection()->beginTransaction();
         }
         try {
-            $transition->beforeExecute($model);
+            $transition->callBeforeExecute($model);
         } catch (Exception $exception) {
             $this->context->getConnection()->rollBack();
             throw $exception;
@@ -164,12 +164,13 @@ abstract class Machine {
         }
 
         $this->context->getConnection()->commit();
-        $model->updateState($transition->getToState());
+        $this->service->updateModel2($model, [$model->getStateColumn() => $transition->getTargetState()]);
         /* select from DB new (updated) model */
 
         // $newModel = $model;
-        $newModel = $model->refresh($this->context, $this->context->getConventions());
-        $transition->afterExecute($newModel);
+        /** @var IStateModel $newModel */
+        $newModel = $model->refresh();
+        $transition->callAfterExecute($newModel);
         return $newModel;
     }
 
@@ -183,7 +184,7 @@ abstract class Machine {
      */
     private function getCreatingTransition(): Transition {
         $transitions = \array_filter($this->getTransitions(), function (Transition $transition) {
-            return $transition->getFromState() === self::STATE_INIT && $transition->getToState() === $this->getCreatingState();
+            return $transition->getSourceState() === self::STATE_INIT && $transition->getTargetState() === $this->getCreatingState();
         });
         return $this->selectTransition($transitions);
     }

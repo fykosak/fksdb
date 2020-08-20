@@ -17,11 +17,7 @@ abstract class AbstractLink implements ILinkFactory {
 
     protected ReferencedFactory $referencedFactory;
 
-    /**
-     * @param ReferencedFactory $factory
-     * @return void
-     */
-    public function setReferencedFactory(ReferencedFactory $factory) {
+    public function setReferencedFactory(ReferencedFactory $factory): void {
         $this->referencedFactory = $factory;
     }
 

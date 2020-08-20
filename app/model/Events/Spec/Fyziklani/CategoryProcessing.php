@@ -2,7 +2,6 @@
 
 namespace FKSDB\Events\Spec\Fyziklani;
 
-use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Events\Processings\AbstractProcessing;
@@ -102,7 +101,7 @@ class CategoryProcessing extends AbstractProcessing {
         }
 
         $values['team']['category'] = $values['team']['force_a'] ? "A" : $this->getCategory($participants);
-        $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
+        $original = $holder->getPrimaryHolder()->getModelState() != \FKSDB\Transitions\Machine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
 
         if ($original != $values['team']['category']) {
             $logger->log(new Message(sprintf(_('Team inserted to category %s.'), $values['team']['category']), ILogger::INFO));

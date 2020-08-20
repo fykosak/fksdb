@@ -12,11 +12,8 @@ use Nette\InvalidArgumentException;
  */
 class BaseMachine {
 
-    const STATE_INIT = '__init';
-    const STATE_TERMINATED = '__terminated';
-    const STATE_ANY = '*';
-
     public const EXECUTABLE = 0x1;
+
     public const VISIBLE = 0x2;
 
     private string $name;
@@ -79,9 +76,9 @@ class BaseMachine {
      */
     public function getStateName(string $state): string {
         switch ($state) {
-            case self::STATE_INIT:
+            case \FKSDB\Transitions\Machine::STATE_INIT:
                 return _('initial');
-            case self::STATE_TERMINATED:
+            case \FKSDB\Transitions\Machine::STATE_TERMINATED:
                 return _('terminated');
             default:
                 return _($state);
@@ -110,7 +107,7 @@ class BaseMachine {
 
     public function getTransitionByTarget(string $sourceState, string $targetState): ?Transition {
         $candidates = array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($targetState) {
-            return $transition->getTarget() == $targetState;
+            return $transition->getTargetState() == $targetState;
         });
         if (count($candidates) == 0) {
             return null;

@@ -5,6 +5,7 @@ namespace FKSDB\Components\Events;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Application\IJavaScriptCollector;
+use FKSDB\Transitions\Machine;
 use Nette\DI\Container;
 
 /**
@@ -59,7 +60,7 @@ class GraphComponent extends BaseComponent {
      * @return string[]
      */
     private function getAllStates(): array {
-        return array_merge($this->baseMachine->getStates(), [BaseMachine::STATE_INIT, BaseMachine::STATE_TERMINATED]);
+        return array_merge($this->baseMachine->getStates(), [Machine::STATE_INIT, Machine::STATE_TERMINATED]);
     }
 
     /**
@@ -73,7 +74,7 @@ class GraphComponent extends BaseComponent {
             $nodes[] = [
                 'id' => $state,
                 'label' => $this->baseMachine->getStateName($state),
-                'type' => $state === BaseMachine::STATE_INIT ? 'init' : ($state === BaseMachine::STATE_TERMINATED ? 'terminated' : 'default'),
+                'type' => $state === Machine::STATE_INIT ? 'init' : ($state === Machine::STATE_TERMINATED ? 'terminated' : 'default'),
             ];
         }
         return $nodes;
@@ -90,7 +91,7 @@ class GraphComponent extends BaseComponent {
                 if ($transition->matches($state)) {
                     $edges[] = [
                         'source' => $state,
-                        'target' => $transition->getTarget(),
+                        'target' => $transition->getTargetState(),
                         'condition' => $this->expressionPrinter->printExpression($transition->getCondition()),
                         'label' => $transition->getLabel(),
                     ];

@@ -7,7 +7,6 @@ use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Application\BadRequestException;
-use Nette\Utils\JsonException;
 
 /**
  * Class PersonScheduleFactory

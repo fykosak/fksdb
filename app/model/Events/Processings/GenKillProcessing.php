@@ -2,7 +2,6 @@
 
 namespace FKSDB\Events\Processings;
 
-use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Events\Model\Holder\Holder;
@@ -52,8 +51,8 @@ class GenKillProcessing implements IProcessing {
 
             $baseMachine = $machine->getBaseMachine($name);
             if (!$isFilled) {
-                $result[$name] = BaseMachine::STATE_TERMINATED;
-            } elseif ($holder->getBaseHolder($name)->getModelState() == BaseMachine::STATE_INIT) {
+                $result[$name] = \FKSDB\Transitions\Machine::STATE_TERMINATED;
+            } elseif ($holder->getBaseHolder($name)->getModelState() == \FKSDB\Transitions\Machine::STATE_INIT) {
                 if (isset($values[$name][BaseHolder::STATE_COLUMN])) {
                     $result[$name] = $values[$name][BaseHolder::STATE_COLUMN];
                 } else {
@@ -65,7 +64,7 @@ class GenKillProcessing implements IProcessing {
                     } elseif (count($transitions) > 1) {
                         throw new SubmitProcessingException(_("$name: Přechod z počátečního stavu není jednoznačný."));
                     } else {
-                        $result[$name] = reset($transitions)->getTarget();
+                        $result[$name] = reset($transitions)->getTargetState();
                     }
                 }
             }

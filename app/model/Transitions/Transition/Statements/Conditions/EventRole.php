@@ -10,17 +10,17 @@ use FKSDB\Transitions\Statements\Statement;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class EventRole extends Statement {
-    /** @var EventAuthorizator */
-    protected $eventAuthorizator;
-    /** @var string */
-    protected $privilege;
+
+    protected EventAuthorizator $eventAuthorizator;
+
+    protected ?string $privilege;
 
     /**
      * EventRole constructor.
      * @param EventAuthorizator $eventAuthorizator
      * @param string $privilege
      */
-    public function __construct(EventAuthorizator $eventAuthorizator, string $privilege) {
+    public function __construct(EventAuthorizator $eventAuthorizator, ?string $privilege) {
         $this->eventAuthorizator = $eventAuthorizator;
         $this->privilege = $privilege;
     }

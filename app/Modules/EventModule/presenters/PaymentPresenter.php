@@ -17,7 +17,6 @@ use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
-use Tracy\Debugger;
 
 /**
  * Class PaymentPresenter
@@ -174,7 +173,6 @@ class PaymentPresenter extends BasePresenter {
         try {
             $this->getMachine();
         } catch (\Exception $exception) {
-            Debugger::barDump($exception);
             return false;
         }
         return true;

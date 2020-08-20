@@ -32,4 +32,6 @@ interface IModel extends ArrayAccess {
      * @return string
      */
     public function getSignature($need = true);
+
+    public function refresh(): self;
 }
