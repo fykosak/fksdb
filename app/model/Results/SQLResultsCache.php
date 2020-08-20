@@ -5,9 +5,6 @@ namespace FKSDB\Results;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceTask;
-use FKSDB\ORM\Services\ServiceQuizQuestion;
-use FKSDB\ORM\Services\ServiceSubmit;
-use FKSDB\ORM\Services\ServiceSubmitQuizQuestion;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\InvalidArgumentException;
@@ -23,26 +20,14 @@ class SQLResultsCache {
 
     private ServiceTask $serviceTask;
 
-    private ServiceQuizQuestion $serviceQuizQuestion;
-
-    private ServiceSubmit $serviceSubmit;
-
-    private ServiceSubmitQuizQuestion $serviceSubmitQuizQuestion;
-
     /**
      * FKSDB\Results\SQLResultsCache constructor.
      * @param Connection $connection
      * @param ServiceTask $serviceTask
-     * @param ServiceQuizQuestion $serviceQuizQuestion
-     * @param ServiceSubmit $serviceSubmit
-     * @param ServiceSubmitQuizQuestion $serviceSubmitQuizQuestion
      */
-    public function __construct(Connection $connection, ServiceTask $serviceTask, ServiceQuizQuestion $serviceQuizQuestion, ServiceSubmit $serviceSubmit, ServiceSubmitQuizQuestion $serviceSubmitQuizQuestion) {
+    public function __construct(Connection $connection, ServiceTask $serviceTask) {
         $this->connection = $connection;
         $this->serviceTask = $serviceTask;
-        $this->serviceQuizQuestion = $serviceQuizQuestion;
-        $this->serviceSubmit = $serviceSubmit;
-        $this->serviceSubmitQuizQuestion = $serviceSubmitQuizQuestion;
     }
 
     /**
@@ -77,7 +62,7 @@ class SQLResultsCache {
      * @param int $year
      * @throws BadRequestException
      */
-    public function recalculate(ModelContest $contest, $year): void {
+    public function recalculate(ModelContest $contest, int $year): void {
         $evaluationStrategy = ResultsModelFactory::findEvaluationStrategy($contest, $year);
         if ($evaluationStrategy === null) {
             throw new InvalidArgumentException('Undefined evaluation strategy for ' . $contest->name . '@' . $year);
