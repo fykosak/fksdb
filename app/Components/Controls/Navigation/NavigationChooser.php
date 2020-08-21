@@ -78,7 +78,7 @@ class NavigationChooser extends Chooser {
      * @throws BadRequestException
      * @throws BadTypeException
      */
-    public function getItemLabel($item): Title {
+    public function getItemTitle($item): Title {
         if (isset($item['linkPresenter'])) {
             $presenter = $this->navigationFactory->preparePresenter($this->getPresenter(), $item['linkPresenter'], $item['linkAction'], $item['linkParams']);
             $presenter->setView($presenter->getView()); // to force update the title

@@ -8,8 +8,8 @@
             {var $hasNode = true}
             <a href="{$control->getItemLink($item)}"
                class="mb-3 d-block navigation-item p-2">
-                <span class="icon d-sm-inline-block d-md-block mx-2"><i class="{$control->getItemLabel($item)->icon}"></i></span>
-                <span class="text d-xs-inline-block d-md-block">{$control->getItemLabel($item)->title}</span>
+                <span class="icon d-sm-inline-block d-md-block mx-2"><i class="{$control->getItemTitle($item)->icon}"></i></span>
+                <span class="text d-xs-inline-block d-md-block">{$control->getItemTitle($item)->title}</span>
             </a>
         {/foreach}
     </nav>
