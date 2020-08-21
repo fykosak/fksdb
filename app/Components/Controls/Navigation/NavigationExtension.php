@@ -14,21 +14,18 @@ class NavigationExtension extends CompilerExtension {
     public function loadConfiguration(): void {
         parent::loadConfiguration();
 
-        $builder = $this->getContainerBuilder();
         $config = $this->getConfig();
-
-        $navbar = $builder->addDefinition('navbar')
+        $navbar = $this->getContainerBuilder()->addDefinition('navbar')
             ->setType(NavigationFactory::class);
-        $navbar->setAutowired(true);
 
         $navbar->addSetup('setStructure', [$this->createFromStructure($config['structure'])]);
     }
 
-    private function createNode(string $nodeId, array $arguments = []): array {
+    private function createNode(string $nodeId, array $arguments): array {
         return $this->parseIdAsLink($nodeId, $arguments);
     }
 
-    private function createFromStructure(iterable $structure): array {
+    private function createFromStructure(array $structure): array {
         $structureData = [];
         foreach ($structure as $nodeId => $children) {
             $structureData[$nodeId] = $this->createNode($nodeId, []);
@@ -40,7 +37,7 @@ class NavigationExtension extends CompilerExtension {
         return $structureData;
     }
 
-    private function parseIdAsLink(string $nodeId, ?array $arguments): array {
+    private function parseIdAsLink(string $nodeId, array $arguments): array {
         $data = $arguments;
         $fullQualityAction = str_replace('.', ':', $nodeId);
         $a = strrpos($fullQualityAction, ':');

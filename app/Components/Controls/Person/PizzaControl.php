@@ -15,7 +15,7 @@ use Nette\Application\UI\Form;
 class PizzaControl extends BaseComponent {
 
     /** @var ModelPerson[] */
-    private $persons = [];
+    private array $persons = [];
 
     private ServicePerson $servicePerson;
 
@@ -46,7 +46,7 @@ class PizzaControl extends BaseComponent {
         return $control;
     }
 
-    public function render() {
+    public function render(): void {
         $this->template->persons = $this->persons;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
