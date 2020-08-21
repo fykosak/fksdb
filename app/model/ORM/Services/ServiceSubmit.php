@@ -5,7 +5,7 @@ namespace FKSDB\ORM\Services;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\DeprecatedLazyDBTrait;
+use FKSDB\ORM\DeprecatedLazyService;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Tables\TypedTableSelection;
@@ -19,7 +19,7 @@ use Nette\Database\IConventions;
  * @method ModelSubmit refresh(AbstractModelSingle $model)
  */
 class ServiceSubmit extends AbstractServiceSingle {
-    use DeprecatedLazyDBTrait;
+    use DeprecatedLazyService;
 
     private array $submitCache = [];
 

@@ -6,12 +6,9 @@ use FKSDB\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\ApplicationHandlerFactory;
-use FKSDB\Events\Model\Grid\InitSource;
-use FKSDB\Events\Model\Grid\RelatedPersonSource;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\Choosers\ContestChooser;
 use FKSDB\Components\Events\ApplicationComponent;
-use FKSDB\Components\Events\ApplicationsGrid;
 use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Exceptions\BadTypeException;
@@ -85,6 +82,19 @@ class ApplicationPresenter extends BasePresenter {
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
+    protected function startup(): void {
+        switch ($this->getAction()) {
+            case 'edit':
+                $this->forward('default', $this->getParameters());
+                break;
+            case 'list':
+                $this->forward(':Core:MyApplications:default', $this->getParameters());
+                break;
+        }
+
+        parent::startup();
+    }
+
     /**
      * @param int $eventId
      * @param int $id
@@ -103,11 +113,9 @@ class ApplicationPresenter extends BasePresenter {
         }
     }
 
-    public function authorizedList(): void {
-        $this->setAuthorized($this->getUser()->isLoggedIn() && $this->getUser()->getIdentity()->getPerson());
-    }
-
     /**
+     * @return void
+     * @throws NeonSchemaException
      * @throws \Throwable
      */
     public function titleDefault(): void {
@@ -115,19 +123,6 @@ class ApplicationPresenter extends BasePresenter {
             $this->setPageTitle(new PageTitle(\sprintf(_('Application for %s: %s'), $this->getEvent()->name, $this->getEventApplication()->__toString()), 'fa fa-calendar-check-o'));
         } else {
             $this->setPageTitle(new PageTitle($this->getEvent(), 'fa fa-calendar-check-o'));
-        }
-    }
-
-    /**
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
-    public function titleList(): void {
-        $contest = $this->getSelectedContest();
-        if ($contest) {
-            $this->setPageTitle(new PageTitle(\sprintf(_('Moje přihlášky (%s)'), $contest->name), 'fa fa-calendar'));
-        } else {
-            $this->setPageTitle(new PageTitle(_('Moje přihlášky'), 'fa fa-calendar'));
         }
     }
 
@@ -154,9 +149,7 @@ class ApplicationPresenter extends BasePresenter {
     /**
      * @param int $eventId
      * @param int $id
-     *
      * @throws AbortException
-     *
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      * @throws NeonSchemaException
@@ -210,16 +203,6 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
-    public function actionList(): void {
-        if (!$this->getSelectedContest()) {
-            $this->setView('contestChooser');
-        }
-    }
-
-    /**
      * @return void
      * @throws NeonSchemaException
      */
@@ -240,8 +223,6 @@ class ApplicationPresenter extends BasePresenter {
             $component->setContests([
                 $this->getEvent()->getEventType()->contest_id,
             ]);
-        } elseif ($this->getAction() == 'list') {
-            $component->setContests(ContestChooser::CONTESTS_ALL);
         }
         return $component;
     }
@@ -265,45 +246,6 @@ class ApplicationPresenter extends BasePresenter {
         });
         $component->setTemplate($this->layoutResolver->getFormLayout($this->getEvent()));
         return $component;
-    }
-
-    /**
-     * @return ApplicationsGrid
-     *
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
-    protected function createComponentApplicationsGrid(): ApplicationsGrid {
-        $person = $this->getUser()->getIdentity()->getPerson();
-        $events = $this->serviceEvent->getTable();
-        $events->where('event_type.contest_id', $this->getSelectedContest()->contest_id);
-
-        $source = new RelatedPersonSource($person, $events, $this->getContext());
-
-        $grid = new ApplicationsGrid($this->getContext(), $source, $this->handlerFactory);
-
-        $grid->setTemplate('myApplications');
-
-        return $grid;
-    }
-
-    /**
-     * @return ApplicationsGrid
-     *
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
-    protected function createComponentNewApplicationsGrid(): ApplicationsGrid {
-        $events = $this->serviceEvent->getTable();
-        $events->where('event_type.contest_id', $this->getSelectedContest()->contest_id)
-            ->where('registration_begin <= NOW()')
-            ->where('registration_end >= NOW()');
-
-        $source = new InitSource($events, $this->getContext(), $this->eventDispatchFactory);
-        $grid = new ApplicationsGrid($this->getContext(), $source, $this->handlerFactory);
-        $grid->setTemplate('myApplications');
-
-        return $grid;
     }
 
     private function getEvent(): ?ModelEvent {
@@ -400,7 +342,7 @@ class ApplicationPresenter extends BasePresenter {
      * @throws UnsupportedLanguageException
      * @throws \ReflectionException
      */
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         $event = $this->getEvent();
         if ($event) {
             $this->getPageStyleContainer()->styleId = ' event-type-' . $event->event_type_id;

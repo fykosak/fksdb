@@ -174,7 +174,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
         return new SubmitsPreviewControl($this->getContext(), $this->seriesTable);
     }
 
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         switch ($this->getAction()) {
             case 'inbox':
                 $this->getPageStyleContainer()->setWidePage();
@@ -185,9 +185,9 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
     /**
      * @param PageTitle $pageTitle
      * @return void
-     *
      * @throws BadTypeException
      * @throws ForbiddenRequestException
+     * @throws AbortException
      */
     protected function setPageTitle(PageTitle $pageTitle): void {
         $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());

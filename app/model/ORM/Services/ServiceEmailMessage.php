@@ -4,7 +4,7 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\DeprecatedLazyDBTrait;
+use FKSDB\ORM\DeprecatedLazyService;
 use FKSDB\ORM\Models\ModelEmailMessage;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Database\Context;
@@ -17,7 +17,7 @@ use Nette\Database\Table\ActiveRow;
  * @method ModelEmailMessage createNewModel(array $data)
  */
 class ServiceEmailMessage extends AbstractServiceSingle {
-    use DeprecatedLazyDBTrait;
+    use DeprecatedLazyService;
 
     /**
      * ServiceEmailMessage constructor.

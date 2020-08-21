@@ -4,7 +4,7 @@ namespace FKSDB\ORM\Services\Schedule;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\DeprecatedLazyDBTrait;
+use FKSDB\ORM\DeprecatedLazyService;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
@@ -14,7 +14,7 @@ use Nette\Database\IConventions;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ServiceScheduleItem extends AbstractServiceSingle {
-    use DeprecatedLazyDBTrait;
+    use DeprecatedLazyService;
 
     /**
      * ServiceScheduleItem constructor.

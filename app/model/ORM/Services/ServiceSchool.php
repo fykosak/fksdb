@@ -4,7 +4,7 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\DeprecatedLazyDBTrait;
+use FKSDB\ORM\DeprecatedLazyService;
 use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Tables\TypedTableSelection;
@@ -15,7 +15,7 @@ use Nette\Database\IConventions;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceSchool extends AbstractServiceSingle {
-    use DeprecatedLazyDBTrait;
+    use DeprecatedLazyService;
 
     /**
      * ServiceSchool constructor.

@@ -23,16 +23,16 @@ class GenderFromBornNumberTest extends PersonTest {
         $info = $person->getInfo();
 
         if (!$info) {
-            // $logger->log(new TestLog($this->getTitle(), 'Person info is not set', TestLog::LVL_INFO));
+            $logger->log(new TestLog($this->getTitle(), 'Person info is not set', TestLog::LVL_SKIP));
             return;
         }
 
         if (!$person->gender) {
-            $logger->log(new TestLog($this->getTitle(), _('Gender is not set'), TestLog::LVL_WARNING));
+            $logger->log(new TestLog($this->getTitle(), _('Gender is not set'), TestLog::LVL_SKIP));
             return;
         }
         if (!$info->born_id) {
-            // $logger->log(new TestLog($this->getTitle(), _('Born number is not set'), TestLog::LVL_INFO));
+            $logger->log(new TestLog($this->getTitle(), _('Born number is not set'), TestLog::LVL_SKIP));
             return;
         }
 

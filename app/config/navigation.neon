@@ -1,23 +1,14 @@
 navigation:
     nodes:
-        vyfuk:
-            title: Web Výfuku
-            link: http://vyfuk.mff.cuni.cz/
-            icon: 'fa fa-external-link'
-        fykos:
-            title: Web FYKOSu
-            link: http://%domain.cz%/
-            icon: 'fa fa-external-link'
-        Fyziklani:
-            title: Web Fyziklani
-            link: http://Fyziklani.cz/
-            icon: 'fa fa-external-link'
+        Event.Payment.create:
+            params:
+                eventId: 145
+            visible: true
         Public.Submit.default:
             visible: true
 
     structure:
         Org.Dashboard.default:
-            - Core.Dispatch.default
             - Org.Inbox.default
             - Org.Points.entry
             - Org.Tasks.import
@@ -30,7 +21,13 @@ navigation:
             - Common.Deduplicate.person
             - Common.Person.search
             - Common.Dashboard.default
-            - Org.Dashboard.default
+            - Common.Validation.default
+            - Common.Spam.list
+            - Common.Chart.list
+        Core.Dispatch.default:
+            - Core.MyApplications.default
+            - Core.MyPayments.default
+            #- Event.Payment.create
         Common.Dashboard.default:
             - Common.Dashboard.default
             - Common.Validation.default
@@ -42,12 +39,9 @@ navigation:
             - Common.Validation.preview
             - Common.Validation.list
         Public.Dashboard.default:
-            - Core.Dispatch.Default
+            - Core.Dispatch.default
             - Public.Submit.default
-            - Public.Application.list
-            - fykos
-            - vyfuk
-            - Fyziklani
+            - Core.MyApplications.default
         Fyziklani.Dashboard.default:
             - Fyziklani.Submit.create
             - Fyziklani.Submit.list

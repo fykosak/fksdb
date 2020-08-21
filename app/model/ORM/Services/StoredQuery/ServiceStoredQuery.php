@@ -4,7 +4,7 @@ namespace FKSDB\ORM\Services\StoredQuery;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\DeprecatedLazyDBTrait;
+use FKSDB\ORM\DeprecatedLazyService;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Database\Context;
@@ -14,7 +14,7 @@ use Nette\Database\IConventions;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceStoredQuery extends AbstractServiceSingle {
-    use DeprecatedLazyDBTrait;
+    use DeprecatedLazyService;
 
     private ServiceStoredQueryTag $serviceStoredQueryTag;
 

@@ -6,8 +6,6 @@ use FKSDB\Application\IJavaScriptCollector;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
-use Nette\Utils\Json;
-use Nette\Utils\JsonException;
 
 /**
  * Trait ReactField
@@ -33,7 +31,7 @@ trait ReactComponentTrait {
     /**
      * @param mixed ...$args
      * @throws BadRequestException
-     * @throws JsonException Can be used only with BaseControl
+     * @note Can be used only with BaseControl
      */
     protected function appendProperty(...$args) {
         if (!$this instanceof BaseControl) {
@@ -46,17 +44,16 @@ trait ReactComponentTrait {
      * @param Html $html
      * @param mixed ...$args
      * @return void
-     * @throws JsonException
      */
     protected function appendPropertyTo(Html $html, ...$args) {
         $this->configure();
         $html->setAttribute('data-react-root', true);
         $html->setAttribute('data-react-id', $this->reactId);
         $html->setAttribute('data-data', $this->getData(...$args));
-        $html->setAttribute('data-actions', Json::encode($this->actions));
+        $html->setAttribute('data-actions', json_encode($this->actions));
     }
 
-    private function registerMonitor() {
+    private function registerMonitor(): void {
         $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
             if (!self::$attachedJS) {
                 self::$attachedJS = true;

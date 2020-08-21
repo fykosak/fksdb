@@ -120,6 +120,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /**
      * @return void
      * @throws UnsupportedLanguageException
+     * @throws AbortException
      */
     protected function startup() {
         parent::startup();
@@ -227,7 +228,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @throws ReflectionException
      * @throws UnsupportedLanguageException
      */
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         parent::beforeRender();
 
         $this->tryCall($this->formatTitleMethod($this->getView()), $this->params);
@@ -282,6 +283,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /**
      * @return string
      * @throws UnsupportedLanguageException
+     * @throws AbortException
      */
     public function getLang(): string {
         /** @var LanguageChooser $control */

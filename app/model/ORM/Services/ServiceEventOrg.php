@@ -5,7 +5,7 @@ namespace FKSDB\ORM\Services;
 use FKSDB\ORM\Services\Exception\DuplicateOrgException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\DeprecatedLazyDBTrait;
+use FKSDB\ORM\DeprecatedLazyService;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\Exceptions\ModelException;
@@ -18,7 +18,7 @@ use Nette\Database\IConventions;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ServiceEventOrg extends AbstractServiceSingle {
-    use DeprecatedLazyDBTrait;
+    use DeprecatedLazyService;
 
     /**
      * ServiceEventOrg constructor.

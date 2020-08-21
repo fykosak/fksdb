@@ -49,7 +49,7 @@ class PhoneColumnFactory extends DefaultColumnFactory implements ITestedColumnFa
         $control->addRule(Form::MAX_LENGTH, null, 32);
         $control->setOption('description', _('Use an international format, starting with "+"'));
         $control->addCondition(Form::FILLED)
-            ->addRule(function (BaseControl $control) {
+            ->addRule(function (BaseControl $control): bool {
                 if ($control->getValue() === WriteOnlyInput::VALUE_ORIGINAL) {
                     return true;
                 }
@@ -62,12 +62,14 @@ class PhoneColumnFactory extends DefaultColumnFactory implements ITestedColumnFa
 
         $value = $model->{$this->getModelAccessKey()};
         if (\is_null($value)) {
+            $logger->log(new TestLog($this->getTitle(), \sprintf(_('%s is not set'), $this->getTitle()), TestLog::LVL_SKIP));
+
             return;
         }
         if (!$this->phoneNumberFactory->isValid($value)) {
-            $logger->log(new TestLog($this->getTitle(), \sprintf('%s number (%s) is not valid', $this->getTitle(), $value), TestLog::LVL_DANGER));
+            $logger->log(new TestLog($this->getTitle(), \sprintf(_('%s (%s) is not valid'), $this->getTitle(), $value), TestLog::LVL_DANGER));
         } else {
-            $logger->log(new TestLog($this->getTitle(), \sprintf('%s is valid', $this->getTitle()), TestLog::LVL_SUCCESS));
+            $logger->log(new TestLog($this->getTitle(), \sprintf(_('%s is valid'), $this->getTitle()), TestLog::LVL_SUCCESS));
         }
     }
 

@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyService;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelQuizQuestion;
 use FKSDB\ORM\Models\ModelSubmitQuizQuestion;
@@ -15,6 +16,7 @@ use Nette\Utils\DateTime;
  * @author Miroslav Jarý <mira.jary@gmail.com>
  */
 class ServiceSubmitQuizQuestion extends AbstractServiceSingle {
+    use DeprecatedLazyService;
 
     /**
      * ServiceSubmitQuizQuestion constructor.

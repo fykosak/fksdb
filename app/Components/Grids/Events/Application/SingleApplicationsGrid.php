@@ -17,7 +17,7 @@ use NiftyGrid\DuplicateGlobalButtonException;
  * Class ApplicationGrid
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class ApplicationGrid extends AbstractApplicationGrid {
+class SingleApplicationsGrid extends AbstractApplicationsGrid {
 
     /**
      * @param Presenter $presenter

@@ -332,7 +332,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @throws UnsupportedLanguageException
      * @throws \ReflectionException
      */
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         $contest = $this->getSelectedContest();
         if ($contest) {
             $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');

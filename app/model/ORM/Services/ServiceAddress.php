@@ -5,7 +5,7 @@ namespace FKSDB\ORM\Services;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\DeprecatedLazyDBTrait;
+use FKSDB\ORM\DeprecatedLazyService;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelAddress;
 use FKSDB\ORM\Models\ModelRegion;
@@ -18,7 +18,7 @@ use Tracy\Debugger;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceAddress extends AbstractServiceSingle {
-    use DeprecatedLazyDBTrait;
+    use DeprecatedLazyService;
 
     private const PATTERN = '/[0-9]{5}/';
 

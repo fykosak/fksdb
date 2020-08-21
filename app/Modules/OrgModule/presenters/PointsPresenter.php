@@ -72,6 +72,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      * @return void
      * @throws ForbiddenRequestException
      * @throws BadTypeException
+     * @throws AbortException
      */
     public function titleEntry(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Zadávání bodů %d. série'), $this->getSelectedSeries()), 'fa fa-trophy'));
@@ -81,6 +82,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      * @return void
      * @throws BadTypeException
      * @throws ForbiddenRequestException
+     * @throws AbortException
      */
     public function titlePreview(): void {
         $this->setPageTitle(new PageTitle(_('Points'), 'fa fa-inbox'));
@@ -189,7 +191,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
         return array_values($gradedTasks);
     }
 
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         $this->getPageStyleContainer()->setWidePage();
         parent::beforeRender();
     }
@@ -197,9 +199,9 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
     /**
      * @param PageTitle $pageTitle
      * @return void
-     *
      * @throws ForbiddenRequestException
      * @throws BadTypeException
+     * @throws AbortException
      */
     protected function setPageTitle(PageTitle $pageTitle): void {
         $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());

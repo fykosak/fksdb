@@ -17,6 +17,7 @@ use FKSDB\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\{EntityPresenterTrait, SeriesPresenterTrait};
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
+use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
@@ -184,6 +185,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      * @return void
      * @throws ForbiddenRequestException
      * @throws BadTypeException
+     * @throws AbortException
      */
     protected function setPageTitle(PageTitle $pageTitle): void {
         $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());

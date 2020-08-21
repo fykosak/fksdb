@@ -4,7 +4,7 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\DeprecatedLazyDBTrait;
+use FKSDB\ORM\DeprecatedLazyService;
 use FKSDB\ORM\Models\ModelQuizQuestion;
 use FKSDB\ORM\Models\ModelTask;
 use Nette\Database\Context;
@@ -14,7 +14,7 @@ use Nette\Database\IConventions;
  * @author Miroslav Jarý <mira.jary@gmail.com>
  */
 class ServiceQuizQuestion extends AbstractServiceSingle {
-    use DeprecatedLazyDBTrait;
+    use DeprecatedLazyService;
 
     /**
      * ServiceQuizQuestion constructor.

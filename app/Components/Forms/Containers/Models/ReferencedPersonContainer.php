@@ -239,7 +239,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @return IComponent
      * @throws AbstractColumnException
      * @throws BadTypeException
-     * @throws JsonException
      * @throws NotImplementedException
      * @throws OmittedControlException
      * @throws BadRequestException

@@ -4,7 +4,7 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\DeprecatedLazyDBTrait;
+use FKSDB\ORM\DeprecatedLazyService;
 use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Database\Context;
@@ -15,7 +15,7 @@ use Nette\Database\IConventions;
  * @method ModelRegion findByPrimary($key)
  */
 class ServiceRegion extends AbstractServiceSingle {
-    use DeprecatedLazyDBTrait;
+    use DeprecatedLazyService;
 
     /**
      * ServiceRegion constructor.

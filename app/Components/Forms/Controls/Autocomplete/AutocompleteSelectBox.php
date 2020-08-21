@@ -147,7 +147,7 @@ class AutocompleteSelectBox extends TextBase {
         return $control;
     }
 
-    public function loadHttpData() {
+    public function loadHttpData(): void {
         $path = explode('[', strtr(str_replace(['[]', ']'], '', $this->getHtmlName()), '.', '_'));
         $metaPath = $path;
         $metaPath[count($metaPath) - 1] .= self::META_ELEMENT_SUFFIX;

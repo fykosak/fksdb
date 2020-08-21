@@ -4,7 +4,7 @@ namespace FKSDB\ORM\Services\Fyziklani;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\DeprecatedLazyDBTrait;
+use FKSDB\ORM\DeprecatedLazyService;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Database\Context;
@@ -15,7 +15,7 @@ use Nette\Database\IConventions;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
-    use DeprecatedLazyDBTrait;
+    use DeprecatedLazyService;
 
     /**
      * ServiceFyziklaniTeamPosition constructor.

@@ -12,6 +12,8 @@ use Nette\Utils\Html;
  */
 class TestLog extends Message {
 
+    public const LVL_SKIP = 'secondary';
+
     public ?Html $detail;
 
     public string $testName;
@@ -33,7 +35,7 @@ class TestLog extends Message {
      * @return string[]
      */
     public static function getAvailableLevels(): array {
-        return [self::LVL_DANGER, self::LVL_WARNING, self::LVL_SUCCESS, self::LVL_INFO];
+        return [self::LVL_DANGER, self::LVL_WARNING, self::LVL_SUCCESS, self::LVL_INFO, self::LVL_SKIP];
     }
 
     /**
@@ -50,6 +52,8 @@ class TestLog extends Message {
                 return 'fa fa-info';
             case self::LVL_SUCCESS:
                 return 'fa fa-check';
+            case self::LVL_SKIP:
+                return 'fa fa-minus';
             default:
                 throw new NotImplementedException(\sprintf('Level "%s" is not supported', $this->getLevel()));
         }

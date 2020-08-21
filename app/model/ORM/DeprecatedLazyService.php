@@ -9,7 +9,7 @@ use Nette\DeprecatedException;
  * @author Michal Červeňák <miso@fykos.cz>
  * Use for IService that is lazy DB access not supported
  */
-trait DeprecatedLazyDBTrait {
+trait DeprecatedLazyService {
     /**
      * @param null $data
      * @return void

@@ -2,6 +2,7 @@
 
 namespace FKSDB\Modules\CoreModule;
 
+use FKSDB\Authentication\SSO\GlobalSession;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Localization\UnsupportedLanguageException;
@@ -55,6 +56,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     private ServiceAuthToken $serviceAuthToken;
 
+    /** @var IGlobalSession|GlobalSession */
     private IGlobalSession $globalSession;
 
     private PasswordAuthenticator $passwordAuthenticator;
@@ -332,7 +334,7 @@ final class AuthenticationPresenter extends BasePresenter {
         $this->redirect(':Core:Dispatch:');
     }
 
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         $this->getPageStyleContainer()->styleId = 'login';
         $this->getPageStyleContainer()->mainContainerClassNames = [];
         parent::beforeRender();

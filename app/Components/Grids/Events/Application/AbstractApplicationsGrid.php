@@ -21,7 +21,7 @@ use FKSDB\SQL\SearchableDataSource;
  * Class AbstractApplicationGrid
  * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class AbstractApplicationGrid extends BaseGrid {
+abstract class AbstractApplicationsGrid extends BaseGrid {
 
     protected ModelEvent $event;
 
