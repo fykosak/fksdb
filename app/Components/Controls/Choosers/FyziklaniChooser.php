@@ -55,8 +55,8 @@ class FyziklaniChooser extends Chooser {
      * @param ModelEvent $item
      * @return string
      */
-    public function getItemLabel($item): string {
-        return $item->name;
+    public function getItemLabel($item): Title {
+        return new Title($item->name);
     }
 
     /**

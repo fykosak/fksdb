@@ -34,13 +34,21 @@ abstract class Chooser extends BaseComponent {
 
     /**
      * @param mixed $item
-     * @return string
+     * @return Title
      */
-    abstract public function getItemLabel($item): string;
+    abstract public function getItemLabel($item): Title;
 
     /**
      * @param mixed $item
      * @return string
      */
     abstract public function getItemLink($item): string;
+
+    /**
+     * @param mixed $item
+     * @return bool
+     */
+    public function isItemVisible($item): bool {
+        return true;
+    }
 }

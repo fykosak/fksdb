@@ -60,10 +60,10 @@ class ThemeChooser extends Chooser {
 
     /**
      * @param string $item
-     * @return string
+     * @return Title
      */
-    public function getItemLabel($item): string {
-        return $item;
+    public function getItemLabel($item): Title {
+        return new Title($item);
     }
 
     /**
