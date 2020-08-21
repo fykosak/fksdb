@@ -23,7 +23,7 @@ class FyziklaniModule extends EventModuleTestCase {
         ];
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->insert(DbNames::TAB_FYZIKLANI_GAME_SETUP, [
             'event_id' => $this->eventId,
@@ -58,7 +58,7 @@ class FyziklaniModule extends EventModuleTestCase {
         ];
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM fyziklani_game_setup');
         parent::tearDown();
     }

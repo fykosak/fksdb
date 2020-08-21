@@ -17,7 +17,7 @@ class SecondaryLimitOk extends ResourceAvailabilityTestCase {
      */
     private $tsafEventId;
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->tsafEventId = $this->createEvent([
             'event_type_id' => 7,
@@ -40,7 +40,7 @@ EOT
         }
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM e_tsaf_participant');
         parent::tearDown();
     }

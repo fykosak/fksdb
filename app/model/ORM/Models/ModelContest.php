@@ -3,6 +3,7 @@
 namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\DeprecatedLazyModel;
 use Nette\Utils\Strings;
 
 /**
@@ -12,6 +13,8 @@ use Nette\Utils\Strings;
  * @property-read string $name
  */
 class ModelContest extends AbstractModelSingle {
+    use DeprecatedLazyModel;
+
     const ID_FYKOS = 1;
     const ID_VYFUK = 2;
 

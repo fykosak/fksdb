@@ -30,7 +30,7 @@ class Extrapolate extends DatabaseTestCase {
         $this->service = $container->getByType(ServicePersonHistory::class);
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->personId = $this->insert(DbNames::TAB_PERSON, [
             'family_name' => 'Testerovič',

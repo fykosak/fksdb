@@ -5,6 +5,7 @@ namespace FKSDB\ORM\Models;
 use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyModel;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
@@ -26,6 +27,7 @@ use Nette\Security\IResource;
  * @property-read string parameters
  */
 class ModelEvent extends AbstractModelSingle implements IResource, IContestReferencedModel {
+    use DeprecatedLazyModel;
 
     const TEAM_EVENTS = [1, 9, 13];
 

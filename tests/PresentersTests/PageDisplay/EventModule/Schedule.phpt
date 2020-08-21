@@ -14,7 +14,7 @@ class Schedule extends EventModuleTestCase {
     /** @var int */
     private $scheduleGroupId;
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->scheduleGroupId = $this->insert(DbNames::TAB_SCHEDULE_GROUP, [
             'schedule_group_type' => 'accommodation',
@@ -38,7 +38,7 @@ class Schedule extends EventModuleTestCase {
     }
 
     protected function transformParams(string $presenterName, string $action, array $params): array {
-        list($presenterName, $action, $params) = parent::transformParams($presenterName, $action, $params);
+        [$presenterName, $action, $params] = parent::transformParams($presenterName, $action, $params);
         $params['groupId'] = $this->scheduleGroupId;
         return [$presenterName, $action, $params];
     }
@@ -51,7 +51,7 @@ class Schedule extends EventModuleTestCase {
         ];
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM schedule_group');
         $this->connection->query('DELETE FROM event');
         parent::tearDown();

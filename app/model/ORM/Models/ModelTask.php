@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyModel;
 use Nette\Utils\Strings;
 use FKSDB\Utils\Utils;
 
@@ -21,6 +22,7 @@ use FKSDB\Utils\Utils;
  * @property-read \DateTimeInterface submit_start
  */
 class ModelTask extends AbstractModelSingle implements IContestReferencedModel {
+    use DeprecatedLazyModel;
 
     public function getFQName(): string {
         return sprintf('%s.%s %s', Utils::toRoman($this->series), $this->label, $this->name_cs);

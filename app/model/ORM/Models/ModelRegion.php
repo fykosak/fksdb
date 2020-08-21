@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\Components\Controls\PhoneNumber\InvalidPhoneNumberException;
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\DeprecatedLazyModel;
 
 /**
  *
@@ -16,6 +17,7 @@ use FKSDB\ORM\AbstractModelSingle;
  * @property-read string phone_prefix
  */
 class ModelRegion extends AbstractModelSingle {
+    use DeprecatedLazyModel;
 
     public const CZECH_REPUBLIC = 3;
     public const SLOVAKIA = 2;

@@ -27,7 +27,7 @@ class RegisterPresenterTest extends DatabaseTestCase {
         parent::__construct($container);
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);

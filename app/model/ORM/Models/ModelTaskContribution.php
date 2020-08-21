@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyModel;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -16,6 +17,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read ActiveRow task
  */
 class ModelTaskContribution extends AbstractModelSingle implements IPersonReferencedModel, ITaskReferencedModel, IContestReferencedModel {
+    use DeprecatedLazyModel;
 
     public const TYPE_AUTHOR = 'author';
     public const TYPE_SOLUTION = 'solution';

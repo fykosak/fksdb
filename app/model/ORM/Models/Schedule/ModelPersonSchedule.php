@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Models\Schedule;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyModel;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\IPaymentReferencedModel;
 use FKSDB\ORM\Models\IPersonReferencedModel;
@@ -33,6 +34,7 @@ class ModelPersonSchedule extends AbstractModelSingle implements
     IPaymentReferencedModel,
     IEventReferencedModel,
     IScheduleItemReferencedModel {
+    use DeprecatedLazyModel;
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);

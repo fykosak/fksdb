@@ -30,7 +30,7 @@ class WebServiceModelTest extends DatabaseTestCase {
         $this->container = $container;
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->fixture = $this->container->getService('webServiceModel');
@@ -38,7 +38,7 @@ class WebServiceModelTest extends DatabaseTestCase {
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         parent::tearDown();
     }
 

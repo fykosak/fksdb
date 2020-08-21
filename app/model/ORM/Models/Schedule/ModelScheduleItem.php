@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Models\Schedule;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyModel;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\IScheduleGroupReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
@@ -30,6 +31,8 @@ use Nette\Security\IResource;
  * @property-read string description_en
  */
 class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupReferencedModel, IEventReferencedModel, IResource {
+    use DeprecatedLazyModel;
+
     public const RESOURCE_ID = 'event.scheduleItem';
 
     public function getScheduleGroup(): ModelScheduleGroup {
@@ -59,6 +62,7 @@ class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupRef
     public function getInterested(): GroupedSelection {
         return $this->related(DbNames::TAB_PERSON_SCHEDULE);
     }
+
     /* ****** CAPACITY CALCULATION *******/
 
     public function getCapacity(): ?int {

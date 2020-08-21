@@ -20,7 +20,7 @@ class PrimaryLast extends ResourceAvailabilityTestCase {
      */
     private $appId;
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $personId = $this->createPerson('Paní', 'Černá', ['email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')], true);

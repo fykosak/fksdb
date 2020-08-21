@@ -3,6 +3,7 @@
 namespace FKSDB\ORM\Models\Fyziklani;
 
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\DeprecatedLazyModel;
 
 /**
  * Class ModelFyziklaniGameSetup
@@ -18,6 +19,8 @@ use FKSDB\ORM\AbstractModelSingle;
  * @property-read string available_points
  */
 class ModelFyziklaniGameSetup extends AbstractModelSingle {
+    use DeprecatedLazyModel;
+
     /**
      * @return int[]
      */

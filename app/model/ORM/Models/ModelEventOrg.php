@@ -3,6 +3,7 @@
 namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\DeprecatedLazyModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
@@ -15,6 +16,8 @@ use Nette\Security\IResource;
  * @property-read int e_org_id
  */
 class ModelEventOrg extends AbstractModelSingle implements IResource, IEventReferencedModel, IPersonReferencedModel {
+    use DeprecatedLazyModel;
+
     public const RESOURCE_ID = 'eventOrg';
 
     public function getPerson(): ModelPerson {

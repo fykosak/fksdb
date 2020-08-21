@@ -1,16 +1,18 @@
 {layout ../@layout.latte}
+{varType FKSDB\Components\Controls\Choosers\Chooser $control}
 {block content}
     <div class="nav-item dropdown">
         <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#">
-            <span n:tag-if="$title->icon" class="{$title->icon}"></span>
-            {$title->title}
+            {$title->toHtml()}
         </a>
         <div class="dropdown-menu">
             {foreach $items as $item}
+                {continueIf !$control->isItemVisible($item)}
                 {if $control->isItemActive($item)}
-                    <span class="dropdown-item active">{$control->getItemLabel($item)}</span>
+                    <span class="dropdown-item active">{$control->getItemLabel($item)->toHtml()}</span>
                 {else}
-                    <a class="dropdown-item" href="{$control->getItemLink($item)}">{$control->getItemLabel($item)}</a>
+                    <a class="dropdown-item"
+                       href="{$control->getItemLink($item)}">{$control->getItemLabel($item)->toHtml()}</a>
                 {/if}
             {/foreach}
         </div>

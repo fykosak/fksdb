@@ -20,7 +20,7 @@ class SchoolPresenterTest extends EntityPresenterTestCase {
 
     private int $schoolId;
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->loginUser();
         $addressId = $this->insert(DbNames::TAB_ADDRESS, [
@@ -109,7 +109,7 @@ class SchoolPresenterTest extends EntityPresenterTestCase {
         return 'Common:School';
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM school');
         $this->connection->query('DELETE FROM address');
         parent::tearDown();
@@ -119,5 +119,6 @@ class SchoolPresenterTest extends EntityPresenterTestCase {
         return $this->connection->query('SELECT * FROM school')->getRowCount();
     }
 }
+
 $testCase = new SchoolPresenterTest($container);
 $testCase->run();

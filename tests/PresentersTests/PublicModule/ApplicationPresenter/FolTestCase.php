@@ -23,7 +23,7 @@ abstract class FolTestCase extends EventTestCase {
         return $this->eventId;
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $future = DateTime::from(time() + DateTime::DAY);
@@ -43,7 +43,7 @@ EOT
         $this->personId = $this->createPerson('Paní', 'Bílá', ['email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')], true);
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM e_fyziklani_participant');
         $this->connection->query('DELETE FROM e_fyziklani_team');
         parent::tearDown();

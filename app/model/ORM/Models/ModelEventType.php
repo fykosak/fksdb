@@ -3,6 +3,7 @@
 namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\DeprecatedLazyModel;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -13,6 +14,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read int event_type_id
  */
 class ModelEventType extends AbstractModelSingle implements IContestReferencedModel {
+    use DeprecatedLazyModel;
 
     public const FYZIKLANI = 1;
 

@@ -14,7 +14,7 @@ abstract class TsafTestCase extends DsefTestCase {
         return $this->eventId;
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->dsefEventId = $this->eventId;
 
@@ -29,7 +29,7 @@ EOT
         ]);
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM e_tsaf_participant');
         $this->connection->query('DELETE FROM e_dsef_participant');
         parent::tearDown();

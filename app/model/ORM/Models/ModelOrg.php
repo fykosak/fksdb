@@ -3,6 +3,7 @@
 namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\DeprecatedLazyModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 
@@ -23,6 +24,8 @@ use Nette\Security\IResource;
  * @property-read string domain_alias
  */
 class ModelOrg extends AbstractModelSingle implements IResource, IPersonReferencedModel, IContestReferencedModel {
+    use DeprecatedLazyModel;
+
     public const RESOURCE_ID = 'org';
 
     public function getContest(): ModelContest {

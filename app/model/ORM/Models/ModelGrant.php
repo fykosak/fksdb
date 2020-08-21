@@ -3,6 +3,7 @@
 namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\DeprecatedLazyModel;
 
 /**
  *
@@ -10,5 +11,5 @@ use FKSDB\ORM\AbstractModelSingle;
  * @property-read int contest_id
  */
 class ModelGrant extends AbstractModelSingle {
-
+    use DeprecatedLazyModel;
 }

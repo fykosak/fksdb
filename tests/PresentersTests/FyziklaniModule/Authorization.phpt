@@ -39,7 +39,7 @@ class Authorization extends FyziklaniTestCase {
         $this->setContainer($container);
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->perPerson = $this->createPerson('Karkulka', 'Červená', [
@@ -83,7 +83,7 @@ class Authorization extends FyziklaniTestCase {
         $this->mockApplication();
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM contestant_base');
         parent::tearDown();
     }

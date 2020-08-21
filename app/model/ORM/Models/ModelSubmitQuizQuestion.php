@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyModel;
 
 /**
  *
@@ -15,6 +16,7 @@ use FKSDB\ORM\DbNames;
  * @property-read string answer
  */
 class ModelSubmitQuizQuestion extends AbstractModelSingle implements ITaskReferencedModel {
+    use DeprecatedLazyModel;
 
     public function getTask(): ModelTask {
         return ModelTask::createFromActiveRow($this->ref(DbNames::TAB_TASK, 'task_id'));

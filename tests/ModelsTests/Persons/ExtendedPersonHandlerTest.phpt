@@ -44,7 +44,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $this->setContainer($container);
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->mockApplication();
         $handlerFactory = $this->getContainer()->getByType(ExtendedPersonHandlerFactory::class);
@@ -55,7 +55,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $this->referencedPersonFactory = $this->container->getByType(ReferencedPersonFactory::class);
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM contestant_base');
         $this->connection->query('DELETE FROM auth_token');
         $this->connection->query('DELETE FROM login');
@@ -64,7 +64,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
     }
 
 
-    public function testNewPerson() {
+    public function testNewPerson(): void {
 
         $presenter = new PersonPresenter();
         // Define a form

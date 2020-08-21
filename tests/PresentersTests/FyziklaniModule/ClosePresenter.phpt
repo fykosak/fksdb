@@ -32,7 +32,7 @@ class ClosePresenter extends FyziklaniTestCase {
         $this->setContainer($container);
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->eventId = $this->createEvent([]);
@@ -103,7 +103,7 @@ class ClosePresenter extends FyziklaniTestCase {
         $this->authenticate($this->userPersonId);
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         parent::tearDown();
     }
 

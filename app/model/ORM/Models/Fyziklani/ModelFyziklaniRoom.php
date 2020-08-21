@@ -1,7 +1,9 @@
 <?php
 
 namespace FKSDB\ORM\Models\Fyziklani;
+
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\DeprecatedLazyModel;
 
 /**
  * Class FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom
@@ -12,6 +14,7 @@ use FKSDB\ORM\AbstractModelSingle;
  * @property-read int columns
  */
 class ModelFyziklaniRoom extends AbstractModelSingle {
+    use DeprecatedLazyModel;
 
     public function __toArray(): array {
         return [

@@ -50,7 +50,6 @@
     <div n:class="form-group, $field->hasErrors() ? has-error" id="{$field->getHtmlId()}-pair">
         {label $field /}
         {foreach $field->getItems() as $key => $item}
-            {dump $field->getControlPart($key)}
             <div class="form-check">
                 {$field->getControlPart($key)->addAttributes(['class'=>'form-check-input'])}
                 {$field->getLabelPart($key)->addAttributes(['class'=>'form-check-label'])}

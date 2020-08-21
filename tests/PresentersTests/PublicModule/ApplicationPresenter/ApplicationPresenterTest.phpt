@@ -21,12 +21,12 @@ class ApplicationPresenterTest extends EventTestCase {
         return 0;
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->fixture = $this->createPresenter('Public:Application');
     }
 
-    public function test404() {
+    public function test404(): void {
         $fixture = $this->fixture;
         Assert::exception(function () use ($fixture) {
             $request = new Request('Public:Register', 'GET', [

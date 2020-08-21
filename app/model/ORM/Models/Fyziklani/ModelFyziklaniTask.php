@@ -1,7 +1,9 @@
 <?php
 
 namespace FKSDB\ORM\Models\Fyziklani;
+
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\DeprecatedLazyModel;
 
 /**
  *
@@ -11,6 +13,7 @@ use FKSDB\ORM\AbstractModelSingle;
  * @property-read int fyziklani_task_id
  */
 class ModelFyziklaniTask extends AbstractModelSingle {
+    use DeprecatedLazyModel;
 
     public function __toArray(bool $hideName = false): array {
         return [

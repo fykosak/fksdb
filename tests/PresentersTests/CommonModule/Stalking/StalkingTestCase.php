@@ -31,7 +31,7 @@ abstract class StalkingTestCase extends DatabaseTestCase {
         $this->setContainer($container);
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->personId = $this->insert(DbNames::TAB_PERSON, [
             'family_name' => 'Testerovič',

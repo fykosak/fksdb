@@ -3,6 +3,7 @@
 namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\DeprecatedLazyModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 
@@ -21,6 +22,8 @@ use Nette\Security\IResource;
  * @property-read int teacher_id
  */
 class ModelTeacher extends AbstractModelSingle implements IResource, IPersonReferencedModel, ISchoolReferencedModel {
+    use DeprecatedLazyModel;
+
     public const RESOURCE_ID = 'teacher';
 
     public function getPerson(): ModelPerson {

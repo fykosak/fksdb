@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Models;
 
+use FKSDB\ORM\DeprecatedLazyModel;
 use \Nette\Mail\Message;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Security\IResource;
@@ -22,6 +23,8 @@ use Nette\Security\IResource;
  * @property-read \DateTimeInterface sent
  */
 class ModelEmailMessage extends AbstractModelSingle implements IResource {
+    use DeprecatedLazyModel;
+
     const STATE_SAVED = 'saved'; // uložená, na ďalšiu úpravu
     const STATE_WAITING = 'waiting'; //čaká na poslanie
     const STATE_SENT = 'sent'; // úspešné poslané (môže sa napr. ešte odraziť)

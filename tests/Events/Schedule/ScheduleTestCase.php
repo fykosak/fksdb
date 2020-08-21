@@ -23,7 +23,7 @@ abstract class ScheduleTestCase extends EventTestCase {
         return $this->eventId;
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->eventId = $this->createEvent([
@@ -133,7 +133,7 @@ EOT
 
     abstract public function getAccommodationCapacity(): int;
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM e_dsef_participant');
         $this->connection->query('DELETE FROM e_dsef_group');
         $this->connection->query('DELETE FROM person_schedule');

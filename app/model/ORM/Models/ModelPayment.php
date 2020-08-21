@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyModel;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\Payment\Price;
@@ -35,6 +36,8 @@ use Nette\Security\IResource;
  * @property-read string swift
  */
 class ModelPayment extends AbstractModelSingle implements IResource, IStateModel, IEventReferencedModel, IPersonReferencedModel {
+    use DeprecatedLazyModel;
+
     const STATE_WAITING = 'waiting'; // waiting for confirm payment
     const STATE_RECEIVED = 'received'; // payment received
     const STATE_CANCELED = 'canceled'; // payment canceled

@@ -3,6 +3,7 @@
 namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\DeprecatedLazyModel;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -14,6 +15,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read int question_nr
  */
 class ModelQuizQuestion extends AbstractModelSingle implements IContestReferencedModel {
+    use DeprecatedLazyModel;
 
     public function getFQName(): string {
         return sprintf(_('%s. otázka'), $this->question_nr);

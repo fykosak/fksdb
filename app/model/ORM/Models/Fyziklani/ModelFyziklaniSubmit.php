@@ -5,6 +5,7 @@ namespace FKSDB\ORM\Models\Fyziklani;
 use FKSDB\Fyziklani\Submit\AlreadyRevokedSubmitException;
 use FKSDB\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\DeprecatedLazyModel;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\IFyziklaniTaskReferencedModel;
 use FKSDB\ORM\Models\IFyziklaniTeamReferencedModel;
@@ -29,6 +30,8 @@ use Nette\Security\IResource;
  * @property-read \DateTimeInterface modified
  */
 class ModelFyziklaniSubmit extends AbstractModelSingle implements IFyziklaniTeamReferencedModel, IEventReferencedModel, IFyziklaniTaskReferencedModel, IResource {
+    use DeprecatedLazyModel;
+
     const STATE_NOT_CHECKED = 'not_checked';
     const STATE_CHECKED = 'checked';
 

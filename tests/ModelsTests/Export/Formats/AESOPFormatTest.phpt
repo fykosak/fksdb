@@ -21,7 +21,7 @@ class AESOPFormatTest extends DatabaseTestCase {
 
     private AESOPFormat $fixture;
 
-    protected function setUp() {
+    protected function setUp(): void {
         global $container;
         parent::setUp();
         /** @var ExportFormatFactory $exportFactory */
@@ -41,11 +41,11 @@ class AESOPFormatTest extends DatabaseTestCase {
         $this->fixture = $exportFactory->createFormat(ExportFormatFactory::AESOP, $storedQuery);
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         parent::tearDown();
     }
 
-    public function testResponse() {
+    public function testResponse(): void {
         $response = $this->fixture->getResponse();
 
         Assert::type(PlainTextResponse::class, $response);
@@ -96,7 +96,7 @@ class MockQueryParameter extends StoredQueryParameter {
 
 class MockProcessing extends StoredQueryPostProcessing {
 
-    public function getMaxPoints() {
+    public function getMaxPoints(): int {
         return 0;
     }
 

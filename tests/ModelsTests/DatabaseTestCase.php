@@ -40,7 +40,7 @@ abstract class DatabaseTestCase extends TestCase {
         return $this->container;
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         Environment::lock(LOCK_DB . $this->instanceNo, TEMP_DIR);
         $this->connection->query("INSERT INTO address (address_id, target, city, region_id) VALUES(1, 'nikde', 'nicov', 3)");
         $this->connection->query("INSERT INTO school (school_id, name, name_abbrev, address_id) VALUES(1, 'Skola', 'SK', 1)");
@@ -48,7 +48,7 @@ abstract class DatabaseTestCase extends TestCase {
         $this->connection->query("INSERT INTO contest_year (contest_id, year, ac_year) VALUES(2, 1, 2000)");
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM org');
         $this->connection->query('DELETE FROM global_session');
         $this->connection->query('DELETE FROM login');

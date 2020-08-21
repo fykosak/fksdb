@@ -35,7 +35,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase {
         $this->setContainer($container);
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->fixture = $this->createPresenter($this->getPresenterName());
     }
@@ -69,7 +69,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase {
         $source = $response->getSource();
         Assert::type(ITemplate::class, $source);
 
-        Assert::noError(function () use ($source) {
+        Assert::noError(function () use ($source) : string {
             return (string)$source;
         });
         return (string)$source;

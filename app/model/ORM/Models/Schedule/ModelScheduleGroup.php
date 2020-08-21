@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Models\Schedule;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyModel;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\ActiveRow;
@@ -23,6 +24,7 @@ use Nette\Security\IResource;
  * @property-read string name_en
  */
 class ModelScheduleGroup extends AbstractModelSingle implements IEventReferencedModel, IResource {
+    use DeprecatedLazyModel;
 
     public const RESOURCE_ID = 'event.scheduleGroup';
 

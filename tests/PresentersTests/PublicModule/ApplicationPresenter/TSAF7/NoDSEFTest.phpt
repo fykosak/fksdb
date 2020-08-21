@@ -13,7 +13,7 @@ class NoDSEFTest extends TsafTestCase {
     /** @var int */
     private $tsafAppId;
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->authenticate($this->personId);
 

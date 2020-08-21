@@ -9,12 +9,12 @@ use Tester\Assert;
 
 class RestrictedUpload extends SubmitTestCase {
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->createPersonHistory($this->personId, 2000, 1, 9);
     }
 
-    public function testSubmit() {
+    public function testSubmit(): void {
         $request = $this->createPostRequest([
             'upload' => 'Odeslat',
             'tasks' => "{$this->taskAll},{$this->taskRestricted}",

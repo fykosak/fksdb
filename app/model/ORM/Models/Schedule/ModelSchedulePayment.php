@@ -3,6 +3,7 @@
 namespace FKSDB\ORM\Models\Schedule;
 
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\DeprecatedLazyModel;
 use FKSDB\ORM\Models\IPaymentReferencedModel;
 use FKSDB\ORM\Models\ModelPayment;
 use Nette\Database\Table\ActiveRow;
@@ -15,6 +16,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read int person_schedule_id
  */
 class ModelSchedulePayment extends AbstractModelSingle implements IPaymentReferencedModel {
+    use DeprecatedLazyModel;
 
     public function getPayment(): ModelPayment {
         return ModelPayment::createFromActiveRow($this->payment);

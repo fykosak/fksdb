@@ -3,6 +3,7 @@
 namespace FKSDB\ORM\Models\StoredQuery;
 
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\DeprecatedLazyModel;
 
 /**
  * @todo Better (general) support for related collection setter.
@@ -14,4 +15,5 @@ use FKSDB\ORM\AbstractModelSingle;
  * @property-read int color
  */
 class ModelStoredQueryTagType extends AbstractModelSingle {
+    use DeprecatedLazyModel;
 }

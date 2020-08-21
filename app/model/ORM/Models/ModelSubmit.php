@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyModel;
 use Nette\Security\IResource;
 
 /**
@@ -20,6 +21,7 @@ use Nette\Security\IResource;
  * @property-read bool corrected
  */
 class ModelSubmit extends AbstractModelSingle implements IResource, ITaskReferencedModel {
+    use DeprecatedLazyModel;
 
     public const SOURCE_UPLOAD = 'upload';
     public const SOURCE_POST = 'post';

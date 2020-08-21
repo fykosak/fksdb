@@ -3,6 +3,7 @@
 namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\DeprecatedLazyModel;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -12,6 +13,7 @@ use Nette\Database\Table\ActiveRow;
  * @property-read ActiveRow flag
  */
 class ModelPersonHasFlag extends AbstractModelSingle {
+    use DeprecatedLazyModel;
 
     public function getFlag(): ModelFlag {
         return ModelFlag::createFromActiveRow($this->flag);

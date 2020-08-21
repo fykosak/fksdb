@@ -3,6 +3,7 @@
 namespace FKSDB\ORM\Models\StoredQuery;
 
 use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\DeprecatedLazyModel;
 use Nette\InvalidStateException;
 use PDO;
 
@@ -17,6 +18,7 @@ use PDO;
  * @property-read string description
  */
 class ModelStoredQueryParameter extends AbstractModelSingle {
+    use DeprecatedLazyModel;
 
     const TYPE_INT = 'integer';
     const TYPE_STRING = 'string';

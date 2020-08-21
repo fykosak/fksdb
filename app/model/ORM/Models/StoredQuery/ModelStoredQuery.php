@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Models\StoredQuery;
 
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyModel;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
 
@@ -18,6 +19,7 @@ use Nette\Security\IResource;
  * @property-read string name
  */
 class ModelStoredQuery extends AbstractModelSingle implements IResource {
+    use DeprecatedLazyModel;
 
     public const RESOURCE_ID = 'storedQuery';
 

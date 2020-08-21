@@ -25,7 +25,7 @@ abstract class ResourceAvailabilityTestCase extends EventTestCase {
         return $this->eventId;
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $capacity = $this->getCapacity();
@@ -76,7 +76,7 @@ EOT
         ]);
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM e_dsef_participant');
         $this->connection->query('DELETE FROM e_dsef_group');
         parent::tearDown();
