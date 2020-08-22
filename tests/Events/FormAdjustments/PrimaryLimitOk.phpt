@@ -12,7 +12,7 @@ $container = require '../../bootstrap.php';
 
 class PrimaryLimitOk extends ResourceAvailabilityTestCase {
 
-    public function testDisplay() {
+    public function testDisplay(): void {
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',
@@ -36,7 +36,6 @@ class PrimaryLimitOk extends ResourceAvailabilityTestCase {
     protected function getCapacity(): int {
         return 3;
     }
-
 }
 
 $testCase = new PrimaryLimitOk($container);

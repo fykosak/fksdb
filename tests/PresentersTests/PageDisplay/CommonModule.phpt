@@ -12,13 +12,13 @@ $container = require '../../bootstrap.php';
  */
 class CommonModule extends AbstractPageDisplayTestCase {
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->insert(DbNames::TAB_PERSON_INFO, ['person_id' => $this->personId]);
     }
 
     protected function transformParams(string $presenterName, string $action, array $params): array {
-        list($presenterName, $action, $params) = parent::transformParams($presenterName, $action, $params);
+        [$presenterName, $action, $params] = parent::transformParams($presenterName, $action, $params);
         if ($presenterName === 'Common:Person') {
             $params['id'] = $this->personId;
         }
@@ -46,7 +46,7 @@ class CommonModule extends AbstractPageDisplayTestCase {
         ];
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM person_info');
         parent::tearDown();
     }

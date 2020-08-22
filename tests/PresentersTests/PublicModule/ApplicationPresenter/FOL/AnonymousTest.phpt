@@ -14,7 +14,7 @@ use Tester\Assert;
 
 class AnonymousTest extends FolTestCase {
 
-    public function testDisplay() {
+    public function testDisplay(): void {
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'en',
@@ -33,7 +33,7 @@ class AnonymousTest extends FolTestCase {
         Assert::contains('Register team', $html);
     }
 
-    public function testAnonymousRegistration() {
+    public function testAnonymousRegistration(): void {
         $request = $this->createPostRequest([
             'team' => [
                 'name' => 'Okurkový tým',
@@ -75,7 +75,6 @@ class AnonymousTest extends FolTestCase {
         $eApplication = $this->assertExtendedApplication($application, 'e_fyziklani_participant');
         Assert::equal($teamApplication->e_fyziklani_team_id, $eApplication->e_fyziklani_team_id);
     }
-
 }
 
 $testCase = new AnonymousTest($container);

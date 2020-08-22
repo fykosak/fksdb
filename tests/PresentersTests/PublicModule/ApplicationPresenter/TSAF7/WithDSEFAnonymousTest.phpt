@@ -10,9 +10,9 @@ use Tester\Assert;
 
 class WithDSEFAnonymousTest extends TsafTestCase {
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
-        $adminId = $this->createPerson('Admin', 'Adminovič', [], true);
+        $adminId = $this->createPerson('Admin', 'Adminovič', [],  []);
         $this->insert('grant', [
             'login_id' => $adminId,
             'role_id' => 5,
@@ -33,7 +33,7 @@ class WithDSEFAnonymousTest extends TsafTestCase {
         ]);
     }
 
-    public function testRegistration() {
+    public function testRegistration(): void {
         $request = $this->createPostRequest([
             'participantTsaf' => [
                 'person_id' => $this->personId,
@@ -91,7 +91,6 @@ class WithDSEFAnonymousTest extends TsafTestCase {
         Assert::equal(1, $eApplication->e_dsef_group_id);
         Assert::equal(3, $eApplication->lunch_count);
     }
-
 }
 
 $testCase = new WithDSEFAnonymousTest($container);
