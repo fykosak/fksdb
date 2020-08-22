@@ -5,7 +5,6 @@ namespace FKSDB\Tests\Events\FormAdjustments;
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\IPresenter;
 use Nette\Utils\DateTime;
-use FKSDB\Modules\PublicModule\ApplicationPresenter;
 
 abstract class ResourceAvailabilityTestCase extends EventTestCase {
 
@@ -25,7 +24,7 @@ abstract class ResourceAvailabilityTestCase extends EventTestCase {
         return $this->eventId;
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $capacity = $this->getCapacity();
@@ -76,7 +75,7 @@ EOT
         ]);
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM e_dsef_participant');
         $this->connection->query('DELETE FROM e_dsef_group');
         parent::tearDown();

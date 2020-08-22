@@ -19,7 +19,7 @@ class DeleteTest extends ScheduleTestCase {
     /** @var int */
     private $lastPSId;
 
-    public function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->lastPersonId = $this->createPerson('Paní', 'Bílá III.',
             [

@@ -12,7 +12,7 @@ class CancelTest extends TsafTestCase {
     /** @var int */
     private $tsafAppId;
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $adminId = $this->createPerson('Admin', 'Adminovič', [], true);

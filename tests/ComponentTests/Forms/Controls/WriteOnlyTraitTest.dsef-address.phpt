@@ -17,7 +17,7 @@ class WriteOnlyTraitTest extends DsefTestCase {
     /** @var int */
     private $dsefAppId;
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         // create address for person

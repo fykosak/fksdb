@@ -14,13 +14,13 @@ use Tester\Assert;
 
 class AuthTest extends DsefTestCase {
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->authenticate($this->personId);
     }
 
-    public function testDisplay() {
+    public function testDisplay(): void {
         Assert::equal(true, $this->fixture->getUser()->isLoggedIn());
 
         $request = new Request('Public:Application', 'GET', [

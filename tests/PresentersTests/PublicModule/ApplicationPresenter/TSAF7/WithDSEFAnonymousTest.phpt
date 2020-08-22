@@ -10,7 +10,7 @@ use Tester\Assert;
 
 class WithDSEFAnonymousTest extends TsafTestCase {
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $adminId = $this->createPerson('Admin', 'Adminovič', [], true);
         $this->insert('grant', [

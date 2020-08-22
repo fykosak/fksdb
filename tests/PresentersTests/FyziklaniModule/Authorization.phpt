@@ -18,17 +18,16 @@ use Tester\Assert;
 class Authorization extends FyziklaniTestCase {
 
     use MockApplicationTrait;
+    
+    private int $perPerson;
 
-    /** @var int */
-    private $perPerson;
-    /** @var int */
-    private $perOrg;
-    /** @var int */
-    private $perOrgOther;
-    /** @var int */
-    private $perContestant;
-    /** @var int */
-    private $submitId;
+    private int $perOrg;
+
+    private int $perOrgOther;
+
+    private int $perContestant;
+
+    private int $submitId;
 
     /**
      * AuthorizationTest constructor.
@@ -39,7 +38,7 @@ class Authorization extends FyziklaniTestCase {
         $this->setContainer($container);
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->perPerson = $this->createPerson('Karkulka', 'Červená', [
@@ -83,7 +82,7 @@ class Authorization extends FyziklaniTestCase {
         $this->mockApplication();
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM contestant_base');
         parent::tearDown();
     }
@@ -114,7 +113,7 @@ class Authorization extends FyziklaniTestCase {
     /**
      * @dataProvider getTestData
      */
-    public function testAccess($personId, string $presenterName, array $actions, bool $results) {
+    public function testAccess($personId, string $presenterName, array $actions, bool $results): void {
         if (!is_array($actions)) {
             $actions = [$actions];
         }
@@ -153,7 +152,6 @@ class Authorization extends FyziklaniTestCase {
             }
         }
     }
-
 }
 
 $testCase = new Authorization($container);

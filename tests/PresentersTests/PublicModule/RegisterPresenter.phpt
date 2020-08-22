@@ -12,7 +12,6 @@ use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\DI\Container;
 use Nette\Application\UI\ITemplate;
-use FKSDB\Modules\PublicModule\RegisterPresenter;
 use Tester\Assert;
 
 class RegisterPresenterTest extends DatabaseTestCase {
@@ -27,7 +26,7 @@ class RegisterPresenterTest extends DatabaseTestCase {
         parent::__construct($container);
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);

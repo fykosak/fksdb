@@ -6,10 +6,7 @@ use FKSDB\Modules\Core\BasePresenter;
 
 class MockApplication {
 
-    /**
-     * @var BasePresenter
-     */
-    private $presenter;
+    private BasePresenter$presenter;
 
     /**
      * MockApplication constructor.
@@ -19,10 +16,7 @@ class MockApplication {
         $this->presenter = $presenter;
     }
 
-    /**
-     * @return BasePresenter
-     */
-    public function getPresenter() {
+    public function getPresenter(): BasePresenter {
         return $this->presenter;
     }
 }

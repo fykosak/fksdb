@@ -11,10 +11,7 @@ use Tester\Assert;
 
 class DBExtrapolate extends DatabaseTestCase {
 
-    /**
-     * @var ServicePerson
-     */
-    private $service;
+    private ServicePerson $service;
 
     /**
      * ModelPersonHistoryTest constructor.

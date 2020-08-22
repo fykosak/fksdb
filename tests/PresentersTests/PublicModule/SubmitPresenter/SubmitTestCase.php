@@ -2,7 +2,6 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\SubmitPresenter;
 
-use FKSDB\Modules\PublicModule\SubmitPresenter;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\IPresenter;
@@ -45,7 +44,7 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         $this->setContainer($container);
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         Environment::lock(LOCK_UPLOAD, TEMP_DIR);
 
@@ -100,7 +99,7 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         $this->fakeProtection(self::TOKEN);
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM submit');
         $this->connection->query('DELETE FROM task');
         $this->connection->query('DELETE FROM contestant_base');
