@@ -7,7 +7,9 @@ use FKSDB\Fyziklani\Closing\NotCheckedSubmitsException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Events\ModelFyziklaniParticipant;
+use FKSDB\ORM\Models\IContestReferencedModel;
 use FKSDB\ORM\Models\IEventReferencedModel;
+use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
@@ -33,11 +35,15 @@ use Nette\Security\IResource;
  * @author Michal Červeňák <miso@fykos.cz>
  *
  */
-class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferencedModel, IResource {
+class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferencedModel, IResource, IContestReferencedModel {
     public const RESOURCE_ID = 'fyziklani.team';
 
     public function __toString(): string {
         return $this->name;
+    }
+
+    public function getContest(): ModelContest {
+        return $this->getEvent()->getContest();
     }
 
     public function getTeacher(): ?ModelPerson {

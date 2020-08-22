@@ -19,7 +19,6 @@ use FKSDB\Components\Forms\Factories\Events\ArrayOptions;
 use FKSDB\Components\Forms\Factories\Events\CheckboxFactory;
 use FKSDB\Components\Forms\Factories\Events\ChooserFactory;
 use FKSDB\Components\Forms\Factories\Events\PersonFactory;
-use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;
@@ -41,7 +40,6 @@ use Nette\Utils\Strings;
  */
 class EventsExtension extends CompilerExtension {
 
-    public const MAIN_RESOLVER = 'eventLayoutResolver';
     public const FIELD_FACTORY = 'Field_';
     public const MACHINE_PREFIX = 'Machine_';
     public const HOLDER_PREFIX = 'Holder_';
@@ -67,18 +65,11 @@ class EventsExtension extends CompilerExtension {
         'parameter' => Parameter::class,
         'count' => Count::class,
     ];
-    /** @var array */
-    private $scheme;
 
-    /**
-     * Global registry of available events definitions.
-     *
-     * @var array[definitionName] => definition[] where definition (eventTypes =>, years =>, tableLayout =>, formLayout =>)
-     */
-    private $definitionsMap = [];
+    private array $scheme;
 
     /** @var array[baseMachineFullName] => expanded configuration */
-    private $baseMachineConfig = [];
+    private array $baseMachineConfig = [];
 
     private string $schemeFile;
 
@@ -105,17 +96,11 @@ class EventsExtension extends CompilerExtension {
         $eventDispatchFactory = $this->getContainerBuilder()
             ->addDefinition('event.dispatch')->setFactory(EventDispatchFactory::class);
 
-
+        $eventDispatchFactory->addSetup('setTemplateDir', [$this->getContainerBuilder()->parameters['events']['templateDir']]);
         foreach ($config as $definitionName => $definition) {
             $this->validateConfigName($definitionName);
             $definition = NeonScheme::readSection($definition, $this->scheme['definition']);
             $eventTypeIds = is_array($definition['event_type_id']) ? $definition['event_type_id'] : [$definition['event_type_id']];
-
-            $this->definitionsMap[$definitionName] = [
-                'eventTypes' => $eventTypeIds,
-                'years' => $definition['eventYears'],
-                'formLayout' => $definition['formLayout'],
-            ];
             /*
              * Create base machine factories.
              */
@@ -128,10 +113,8 @@ class EventsExtension extends CompilerExtension {
             $holderName = $this->getHolderName($definitionName);
             $machineName = $this->getMachineName($definitionName);
             $holderMethodName = Container::getMethodName($holderName);
-            $eventDispatchFactory->addSetup('addEvent', [$keys, $holderMethodName, $machineName]);
+            $eventDispatchFactory->addSetup('addEvent', [$keys, $holderMethodName, $machineName, $definition['formLayout']]);
         }
-
-        $this->createLayoutResolverFactory();
     }
 
     private function loadScheme(): void {
@@ -177,15 +160,6 @@ class EventsExtension extends CompilerExtension {
         if (!preg_match(self::NAME_PATTERN, $name)) {
             throw new InvalidArgumentException("Section name '$name' in events configuration is invalid.");
         }
-    }
-
-    private function createLayoutResolverFactory(): void {
-        $def = $this->getContainerBuilder()->addDefinition(self::MAIN_RESOLVER);
-        $def->setFactory(LayoutResolver::class);
-
-        $parameters = $this->getContainerBuilder()->parameters;
-        $templateDir = $parameters['events']['templateDir'];
-        $def->setArguments([$templateDir, $this->definitionsMap]); //TODO!!
     }
 
     private function createTransitionService(string $baseName, array $states, string $mask, array $definition): ServiceDefinition {

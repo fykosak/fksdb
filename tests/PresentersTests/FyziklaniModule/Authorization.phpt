@@ -19,16 +19,15 @@ class Authorization extends FyziklaniTestCase {
 
     use MockApplicationTrait;
 
-    /** @var int */
-    private $perPerson;
-    /** @var int */
-    private $perOrg;
-    /** @var int */
-    private $perOrgOther;
-    /** @var int */
-    private $perContestant;
-    /** @var int */
-    private $submitId;
+    private int $perPerson;
+
+    private int $perOrg;
+
+    private int $perOrgOther;
+
+    private int $perContestant;
+
+    private int $submitId;
 
     /**
      * AuthorizationTest constructor.
@@ -39,26 +38,26 @@ class Authorization extends FyziklaniTestCase {
         $this->setContainer($container);
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->perPerson = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka@les.cz', 'born' => DateTime::from('2000-01-01'),
-        ], true);
+        ],  []);
 
         $this->perOrg = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka2@les.cz', 'born' => DateTime::from('2000-01-01'),
-        ], true);
+        ],  []);
         $this->insert(DbNames::TAB_ORG, ['person_id' => $this->perOrg, 'contest_id' => 1, 'since' => 0, 'order' => 0]);
 
         $this->perOrgOther = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka3@les.cz', 'born' => DateTime::from('2000-01-01'),
-        ], true);
+        ],  []);
         $this->insert(DbNames::TAB_ORG, ['person_id' => $this->perOrgOther, 'contest_id' => 2, 'since' => 0, 'order' => 0]);
 
         $this->perContestant = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka4@les.cz', 'born' => DateTime::from('2000-01-01'),
-        ], true);
+        ],  []);
         $this->insert(DbNames::TAB_CONTESTANT_BASE, ['person_id' => $this->perContestant, 'contest_id' => 1, 'year' => 1]);
 
         $this->eventId = $this->createEvent([]);
@@ -83,7 +82,7 @@ class Authorization extends FyziklaniTestCase {
         $this->mockApplication();
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM contestant_base');
         parent::tearDown();
     }
@@ -114,16 +113,16 @@ class Authorization extends FyziklaniTestCase {
     /**
      * @dataProvider getTestData
      */
-    public function testAccess($personId, string $presenterName, array $actions, bool $results) {
+    public function testAccess(?string $personCol, string $presenterName, array $actions, bool $results): void {
         if (!is_array($actions)) {
             $actions = [$actions];
         }
         if (!is_array($results)) {
             $results = array_fill(0, count($actions), $results);
         }
-        if ($personId) {
+        if ($personCol) {
             /* Use indirect access because data provider is called before test set up. */
-            $this->authenticate($this->{$personId});
+            $this->authenticate($this->{$personCol});
         }
 
         $presenter = $this->createPresenter($presenterName);
@@ -153,7 +152,6 @@ class Authorization extends FyziklaniTestCase {
             }
         }
     }
-
 }
 
 $testCase = new Authorization($container);

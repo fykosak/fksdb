@@ -30,7 +30,7 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
         $this->setContainer($container);
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->personId = $this->insert(DbNames::TAB_PERSON, [
@@ -55,8 +55,8 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
     /**
      * @dataProvider getPages
      */
-    final public function testDisplay(string $presenterName, string $action, array $params = []) {
-        list($presenterName, $action, $params) = $this->transformParams($presenterName, $action, $params);
+    final public function testDisplay(string $presenterName, string $action, array $params = []): void {
+        [$presenterName, $action, $params] = $this->transformParams($presenterName, $action, $params);
         $fixture = $this->createPresenter($presenterName);
         $request = $this->createRequest($presenterName, $action, $params);
         $response = $fixture->run($request);
@@ -64,7 +64,7 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
         $source = $response->getSource();
         Assert::type(ITemplate::class, $source);
 
-        Assert::noError(function () use ($source) {
+        Assert::noError(function () use ($source) : string {
             return (string)$source;
         });
     }
@@ -75,7 +75,7 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
 
     abstract public function getPages(): array;
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM global_session');
         $this->connection->query('DELETE FROM `grant`');
         $this->connection->query('DELETE FROM login');

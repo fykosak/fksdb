@@ -3,25 +3,22 @@
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
 use FKSDB\Tests\Events\EventTestCase;
-use Nette\Application\IPresenter;
 use Nette\Utils\DateTime;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
 
 abstract class DsefTestCase extends EventTestCase {
 
     protected ApplicationPresenter $fixture;
-    /** @var int */
-    protected $personId;
-    /**
-     * @var int
-     */
-    protected $eventId;
+
+    protected int $personId;
+
+    protected int $eventId;
 
     protected function getEventId(): int {
         return $this->eventId;
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->eventId = $this->createEvent([
@@ -43,10 +40,10 @@ EOT
         $this->fixture = $this->createPresenter('Public:Application');
         $this->mockApplication();
 
-        $this->personId = $this->createPerson('Paní', 'Bílá', ['email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')], true);
+        $this->personId = $this->createPerson('Paní', 'Bílá', ['email' => 'bila@hrad.cz', 'born' => DateTime::from('2000-01-01')],  []);
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM e_dsef_participant');
         $this->connection->query('DELETE FROM e_dsef_group');
         parent::tearDown();

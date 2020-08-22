@@ -39,7 +39,13 @@ use Nette\Security\IResource;
  * @property-read string used_drugs užívané léky
  * @property-read string schedule
  */
-class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel, IPaymentModel, IPersonReferencedModel, IResource {
+class ModelEventParticipant extends AbstractModelSingle implements
+    IEventReferencedModel,
+    IPaymentModel,
+    IPersonReferencedModel,
+    IResource,
+    IContestReferencedModel {
+
     public const RESOURCE_ID = 'event.participant';
 
     public const STATE_AUTO_INVITED = 'auto.invited';
@@ -47,6 +53,10 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
 
     public function getPerson(): ?ModelPerson {
         return $this->person ? ModelPerson::createFromActiveRow($this->person) : null;
+    }
+
+    public function getContest(): ModelContest {
+        return $this->getEvent()->getContest();
     }
 
     /**

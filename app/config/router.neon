@@ -24,7 +24,7 @@ parameters:
         db: db
 
     # Pipe-separated list of presenters w/out module
-    rootPresenters: settings|github|my-payments
+    rootPresenters: settings|github|my-payments|my-applications
 
     # Pipe-separated list of modules
     modules: org|public

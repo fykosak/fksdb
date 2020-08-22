@@ -17,6 +17,7 @@ use Nette\Bridges\ApplicationLatte\Template;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use FKSDB\Exceptions\NotImplementedException;
+use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 use NiftyGrid\Components\Button;
 use NiftyGrid\Components\Column;
@@ -57,6 +58,10 @@ abstract class BaseGrid extends Grid {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
+    public function injectTranslator(ITranslator $translator): void {
+        $this->setTranslator($translator);
+    }
+
     protected function configure(Presenter $presenter): void {
         try {
             $this->setDataSource($this->getData());
@@ -91,9 +96,9 @@ abstract class BaseGrid extends Grid {
          * @var Template $template
          */
         $paginator = $this->getComponent('paginator');
-        $paginator->getTemplate()->setTranslator($presenter->getTranslator());
+        $paginator->getTemplate()->setTranslator($this->getTranslator());
         $template = parent::createTemplate();
-        $template->setTranslator($presenter->getTranslator());
+        $template->setTranslator($this->getTranslator());
         return $template;
     }
 

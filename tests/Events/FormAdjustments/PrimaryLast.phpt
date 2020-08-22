@@ -15,15 +15,13 @@ use Tester\DomQuery;
 $container = require '../../bootstrap.php';
 
 class PrimaryLast extends ResourceAvailabilityTestCase {
-    /**
-     * @var int
-     */
-    private $appId;
 
-    protected function setUp() {
+    private int $appId;
+
+    protected function setUp(): void {
         parent::setUp();
 
-        $personId = $this->createPerson('Paní', 'Černá', ['email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')], true);
+        $personId = $this->createPerson('Paní', 'Černá', ['email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')], []);
         $this->appId = $this->insert('event_participant', [
             'person_id' => $personId,
             'event_id' => $this->eventId,
@@ -37,7 +35,7 @@ class PrimaryLast extends ResourceAvailabilityTestCase {
         $this->authenticate($personId);
     }
 
-    public function testDisplay() {
+    public function testDisplay(): void {
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',

@@ -3,7 +3,6 @@
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Authentication\PasswordAuthenticator;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\LoginFactory;
@@ -24,7 +23,7 @@ use Nette\Forms\Controls\TextInput;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class SettingsPresenter extends AuthenticatedPresenter {
+class SettingsPresenter extends BasePresenter {
 
     public const CONT_LOGIN = 'login';
 

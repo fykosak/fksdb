@@ -11,10 +11,7 @@ use Tester\Assert;
 
 class DBExtrapolate extends DatabaseTestCase {
 
-    /**
-     * @var ServicePerson
-     */
-    private $service;
+    private ServicePerson $service;
 
     /**
      * ModelPersonHistoryTest constructor.
@@ -26,7 +23,7 @@ class DBExtrapolate extends DatabaseTestCase {
         $this->service = $service;
     }
 
-    public function testNull() {
+    public function testNull(): void {
         $personId = $this->createPerson('Student', 'Pilný');
         $this->createPersonHistory($personId, 2000, 1, 1);
 
