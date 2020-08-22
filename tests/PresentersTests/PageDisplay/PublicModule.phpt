@@ -25,7 +25,6 @@ class PublicModule extends AbstractPageDisplayTestCase {
 
     public function getPages(): array {
         return [
-            ['Public:Application', 'list'],
             ['Public:Dashboard', 'default'],
             ['Public:Submit', 'ajax'],
             ['Public:Submit', 'default'],

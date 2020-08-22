@@ -15,7 +15,7 @@ use Tracy\Debugger;
  */
 class ErrorPresenter extends BasePresenter {
 
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         $this->getPageStyleContainer()->styleId = 'error';
         $this->getPageStyleContainer()->setNavBarClassName('bg-error navbar-dark');
         parent::beforeRender();

@@ -44,7 +44,7 @@ navigation:
         Public.Dashboard.default:
             - Core.Dispatch.Default
             - Public.Submit.default
-            - Public.Application.list
+            - Core.MyApplications.default
             - fykos
             - vyfuk
             - Fyziklani
