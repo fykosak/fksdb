@@ -16,7 +16,7 @@ use Tester\Assert;
  */
 class AnonymousMissMatchTest extends DsefTestCase {
 
-    public function testRegistration() {
+    public function testRegistration(): void {
         //Assert::equal(false, $this->fixture->getUser()->isLoggedIn()); (presnter not ready for redirect)
 
         $request = $this->createPostRequest([
@@ -65,7 +65,6 @@ class AnonymousMissMatchTest extends DsefTestCase {
         Assert::equal(null, $info->id_number); // shouldn't be rewritten
         Assert::equal(DateTime::from('2000-01-01'), $info->born); // shouldn't be rewritten
     }
-
 }
 
 $testCase = new AnonymousMissMatchTest($container);

@@ -36,7 +36,7 @@ abstract class Chooser extends BaseComponent {
      * @param mixed $item
      * @return Title
      */
-    abstract public function getItemLabel($item): Title;
+    abstract public function getItemTitle($item): Title;
 
     /**
      * @param mixed $item

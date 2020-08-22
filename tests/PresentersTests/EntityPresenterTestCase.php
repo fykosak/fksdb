@@ -2,7 +2,6 @@
 
 namespace FKSDB\Tests\PresentersTests;
 
-use FKSDB\Modules\OrgModule\OrgPresenter;
 use FKSDB\ORM\DbNames;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;
@@ -21,8 +20,7 @@ use Tester\Assert;
 abstract class EntityPresenterTestCase extends DatabaseTestCase {
     use MockApplicationTrait;
 
-    /** @var int */
-    protected $cartesianPersonId;
+    protected int $cartesianPersonId;
 
     protected IPresenter $fixture;
 
@@ -52,7 +50,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase {
         return new Request($this->getPresenterName(), 'GET', $params, $postData);
     }
 
-    protected function loginUser(int $roleId = 1000) {
+    protected function loginUser(int $roleId = 1000): void {
         $this->cartesianPersonId = $this->insert(DbNames::TAB_PERSON, [
             'family_name' => 'Cartesian',
             'other_name' => 'Cartesiansky',

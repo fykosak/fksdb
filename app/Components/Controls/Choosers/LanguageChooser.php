@@ -142,9 +142,9 @@ class LanguageChooser extends Chooser {
 
     /**
      * @param string $item
-     * @return string
+     * @return Title
      */
-    public function getItemLabel($item): Title {
+    public function getItemTitle($item): Title {
         return new Title(self::$languageNames[$item]);
     }
 

@@ -36,7 +36,7 @@ class EventPresenterTest extends EntityPresenterTestCase {
         ]);
     }
 
-    public function testList() {
+    public function testList(): void {
         $request = $this->createGetRequest('list', []);
         $response = $this->fixture->run($request);
         $html = $this->assertPageDisplay($response);
@@ -45,7 +45,7 @@ class EventPresenterTest extends EntityPresenterTestCase {
         Assert::contains('#' . $this->eventId, $html);
     }
 
-    public function testCreate() {
+    public function testCreate(): void {
         $init = $this->countEvents();
         $response = $this->createFormRequest('create', [
             EventFormComponent::CONT_EVENT => [
@@ -62,7 +62,7 @@ class EventPresenterTest extends EntityPresenterTestCase {
         Assert::equal($init + 1, $after);
     }
 
-    public function testCreateDuplicate() {
+    public function testCreateDuplicate(): void {
         $init = $this->countEvents();
         $response = $this->createFormRequest('create', [
             EventFormComponent::CONT_EVENT => [
@@ -81,7 +81,7 @@ class EventPresenterTest extends EntityPresenterTestCase {
         Assert::equal($init, $after);
     }
 
-    public function testEdit() {
+    public function testEdit(): void {
         $response = $this->createFormRequest('edit', [
             EventFormComponent::CONT_EVENT => [
                 'event_type_id' => 1,

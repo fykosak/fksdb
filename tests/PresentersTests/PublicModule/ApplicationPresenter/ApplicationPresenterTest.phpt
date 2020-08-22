@@ -39,7 +39,7 @@ class ApplicationPresenterTest extends EventTestCase {
         }, BadRequestException::class, 'Neexistující akce.', 404);
     }
 
-    public function test404Application() {
+    public function test404Application(): void {
         $fixture = $this->fixture;
         $eventId = $this->createEvent([
             'event_type_id' => 2,
@@ -60,7 +60,7 @@ class ApplicationPresenterTest extends EventTestCase {
         }, BadRequestException::class, 'Neexistující přihláška.', 404);
     }
 
-    public function testClosed() {
+    public function testClosed(): void {
         $eventId = $this->createEvent([
             'event_type_id' => 2,
             'event_year' => 20,

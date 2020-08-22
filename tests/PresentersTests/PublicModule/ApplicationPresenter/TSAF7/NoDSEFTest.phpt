@@ -10,8 +10,8 @@ use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
 class NoDSEFTest extends TsafTestCase {
-    /** @var int */
-    private $tsafAppId;
+
+    protected int $tsafAppId;
 
     protected function setUp(): void {
         parent::setUp();
@@ -28,7 +28,7 @@ class NoDSEFTest extends TsafTestCase {
         ]);
     }
 
-    public function testRegistration() {
+    public function testRegistration(): void {
         $request = $this->createPostRequest([
             'participantTsaf' => [
                 'person_id' => $this->personId,
@@ -91,7 +91,6 @@ class NoDSEFTest extends TsafTestCase {
 
         Assert::equal($before + 2, $serviceEmail->getTable()->count());
     }
-
 }
 
 $testCase = new NoDSEFTest($container);

@@ -111,7 +111,7 @@ class SeriesChooser extends Chooser {
      * @param int $item
      * @return Title
      */
-    public function getItemLabel($item): Title {
+    public function getItemTitle($item): Title {
         return new Title(sprintf(_('Series %d'), $item));
     }
 

@@ -10,7 +10,6 @@ use FKSDB\Tests\PresentersTests\EntityPresenterTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
 use Tester\Assert;
-use Tester\Environment;
 
 /**
  * Class EventPresenterTest

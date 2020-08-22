@@ -2,7 +2,6 @@
 
 namespace FKSDB\Tests\PresentersTests\CommonModule\Stalking;
 
-use FKSDB\Modules\CommonModule\PersonPresenter;
 use FKSDB\ORM\DbNames;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;

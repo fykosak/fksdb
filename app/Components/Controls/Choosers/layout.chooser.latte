@@ -9,10 +9,10 @@
             {foreach $items as $item}
                 {continueIf !$control->isItemVisible($item)}
                 {if $control->isItemActive($item)}
-                    <span class="dropdown-item active">{$control->getItemLabel($item)->toHtml()}</span>
+                    <span class="dropdown-item active">{$control->getItemTitle($item)->toHtml()}</span>
                 {else}
                     <a class="dropdown-item"
-                       href="{$control->getItemLink($item)}">{$control->getItemLabel($item)->toHtml()}</a>
+                       href="{$control->getItemLink($item)}">{$control->getItemTitle($item)->toHtml()}</a>
                 {/if}
             {/foreach}
         </div>

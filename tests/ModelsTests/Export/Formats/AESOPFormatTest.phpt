@@ -89,7 +89,7 @@ class MockSeriesPresenter implements ISeriesPresenter {
 }
 
 class MockQueryParameter extends StoredQueryParameter {
-    public function __construct($name) {
+    public function __construct(string $name) {
         parent::__construct($name, null, \PDO::PARAM_STR);
     }
 }

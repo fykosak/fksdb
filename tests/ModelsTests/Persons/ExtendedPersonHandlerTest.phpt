@@ -30,10 +30,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
 
     private ExtendedPersonHandler $fixture;
 
-    /**
-     * @var ReferencedPersonFactory
-     */
-    private $referencedPersonFactory;
+    private ReferencedPersonFactory $referencedPersonFactory;
 
     /**
      * ExtendedPersonHandlerTest constructor.
@@ -42,6 +39,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
     public function __construct(Container $container) {
         parent::__construct($container);
         $this->setContainer($container);
+        $this->referencedPersonFactory = $this->container->getByType(ReferencedPersonFactory::class);
     }
 
     protected function setUp(): void {
@@ -52,7 +50,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $service = $this->getContainer()->getByType(ServiceContestant::class);
         $contest = $this->container->getByType(ServiceContest::class)->findByPrimary(ModelContest::ID_FYKOS);
         $this->fixture = $handlerFactory->create($service, $contest, 1, 'cs');
-        $this->referencedPersonFactory = $this->container->getByType(ReferencedPersonFactory::class);
+
     }
 
     protected function tearDown(): void {

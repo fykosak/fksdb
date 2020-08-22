@@ -4,7 +4,6 @@ namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
 $container = require '../../bootstrap.php';
 
-use FKSDB\Events\Model\ApplicationHandler;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
@@ -165,7 +164,7 @@ class ClosePresenter extends FyziklaniTestCase {
     /**
      * Not a real test method.
      */
-    private function innertestCloseTeam(int $teamId, $pointsSum) {
+    private function innertestCloseTeam(int $teamId, int $pointsSum): void {
         $request = $this->createPostRequest([
             'id' => $teamId,
         ], [
@@ -183,7 +182,7 @@ class ClosePresenter extends FyziklaniTestCase {
     /**
      * @dataProvider getCategories
      */
-    public function testCloseCategory($category) {
+    public function testCloseCategory(string $category): void {
         foreach ($this->getTestTeams($category) as $teamData) {
             [$teamId, $pointsSum,] = $teamData;
             $this->innertestCloseTeam($teamId, $pointsSum);
@@ -205,7 +204,7 @@ class ClosePresenter extends FyziklaniTestCase {
             }*/
     }
 
-    public function testCloseAll() {
+    public function testCloseAll(): void {
         foreach ($this->getCategories() as $catData) {
             [$category] = $catData;
             foreach ($this->getTestTeams($category) as $teamData) {

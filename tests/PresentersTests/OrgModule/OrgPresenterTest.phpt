@@ -34,7 +34,7 @@ class OrgPresenterTest extends EntityPresenterTestCase {
         $this->personId = $this->createPerson('Tester_C', 'Testrovič_C');
     }
 
-    public function testList() {
+    public function testList(): void {
         $request = $this->createGetRequest('list', []);
         $response = $this->fixture->run($request);
         $html = $this->assertPageDisplay($response);
@@ -43,7 +43,7 @@ class OrgPresenterTest extends EntityPresenterTestCase {
         Assert::contains('Still organises', $html);
     }
 
-    public function testCreate() {
+    public function testCreate(): void {
         $init = $this->countOrgs();
         $response = $this->createFormRequest('create', [
             OrgFormComponent::CONTAINER => [
@@ -59,7 +59,7 @@ class OrgPresenterTest extends EntityPresenterTestCase {
         Assert::equal($init + 1, $after);
     }
 
-    public function testOutRangeCreate() {
+    public function testOutRangeCreate(): void {
         $init = $this->countOrgs();
         $response = $this->createFormRequest('create', [
             OrgFormComponent::CONTAINER => [
@@ -76,7 +76,7 @@ class OrgPresenterTest extends EntityPresenterTestCase {
         Assert::equal($init, $after);
     }
 
-    public function testModelErrorCreate() {
+    public function testModelErrorCreate(): void {
         $init = $this->countOrgs();
         $response = $this->createFormRequest('create', [
             OrgFormComponent::CONTAINER => [
@@ -94,7 +94,7 @@ class OrgPresenterTest extends EntityPresenterTestCase {
     }
 
 
-    public function testEdit() {
+    public function testEdit(): void {
         $response = $this->createFormRequest('edit', [
             OrgFormComponent::CONTAINER => [
                 'person_id__meta' => $this->orgPersonId,

@@ -5,10 +5,10 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 use Nette\Utils\DateTime;
 
 abstract class TsafTestCase extends DsefTestCase {
-    /** @var int */
-    protected $dsefEventId;
-    /** @var int */
-    protected $tsafEventId;
+
+    protected int $dsefEventId;
+
+    protected int $tsafEventId;
 
     protected function getEventId(): int {
         return $this->eventId;

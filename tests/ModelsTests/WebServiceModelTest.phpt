@@ -11,15 +11,9 @@ use Tester\Assert;
 
 class WebServiceModelTest extends DatabaseTestCase {
 
-    /**
-     * @var Container
-     */
-    private $container;
+    private Container $container;
 
     private WebServiceModel $fixture;
-
-    /** @var int */
-    private $personId;
 
     /**
      * WebServiceModelTest constructor.
@@ -34,7 +28,7 @@ class WebServiceModelTest extends DatabaseTestCase {
         parent::setUp();
 
         $this->fixture = $this->container->getService('webServiceModel');
-        $this->personId = $this->createPerson('Homer', 'Simpson', [], ['login' => 'homer', 'hash' => '123456']);
+        $this->createPerson('Homer', 'Simpson', [], ['login' => 'homer', 'hash' => '123456']);
         $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
     }
 
@@ -42,7 +36,7 @@ class WebServiceModelTest extends DatabaseTestCase {
         parent::tearDown();
     }
 
-    public function testResults() {
+    public function testResults(): void {
         $header = [
             'username' => 'homer',
             'password' => '123456',

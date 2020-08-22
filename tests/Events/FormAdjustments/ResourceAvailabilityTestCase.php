@@ -5,19 +5,14 @@ namespace FKSDB\Tests\Events\FormAdjustments;
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\IPresenter;
 use Nette\Utils\DateTime;
-use FKSDB\Modules\PublicModule\ApplicationPresenter;
 
 abstract class ResourceAvailabilityTestCase extends EventTestCase {
 
     protected IPresenter $fixture;
-    /**
-     * @var array
-     */
-    protected $persons = [];
-    /**
-     * @var int
-     */
-    protected $eventId;
+
+    protected array $persons = [];
+
+    protected int $eventId;
 
     abstract protected function getCapacity(): int;
 
