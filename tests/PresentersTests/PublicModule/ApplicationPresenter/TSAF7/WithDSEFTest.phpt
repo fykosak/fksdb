@@ -10,10 +10,10 @@ use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
 class WithDSEFTest extends TsafTestCase {
-    /** @var int */
-    private $tsafAppId;
 
-    protected function setUp() {
+    private int $tsafAppId;
+
+    protected function setUp(): void {
         parent::setUp();
         $this->authenticate($this->personId);
 
@@ -41,7 +41,7 @@ class WithDSEFTest extends TsafTestCase {
         ]);
     }
 
-    public function testRegistration() {
+    public function testRegistration(): void {
         $request = $this->createPostRequest([
             'participantTsaf' => [
                 'person_id' => $this->personId,

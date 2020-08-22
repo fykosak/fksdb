@@ -197,7 +197,7 @@ session:
 extensions:
     fksrouter: FKSDB\Config\Extensions\RouterExtension
     acl: FKSDB\Authorization\ACLExtension
-    navigation: FKSDB\Config\Extensions\NavigationExtension
+    navigation: FKSDB\Components\Controls\Navigation\NavigationExtension
     events: FKSDB\Events\EventsExtension(%appDir%/../app/config/events.neon)
     stalking: FKSDB\Config\Extensions\StalkingExtension
     payment: FKSDB\Payment\PaymentExtension

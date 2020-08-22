@@ -9,7 +9,7 @@ use FKSDB\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Components\Events\MassTransitionsControl;
-use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
+use FKSDB\Components\Grids\Events\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\MemoryLogger;
@@ -129,11 +129,11 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @return AbstractApplicationGrid
+     * @return AbstractApplicationsGrid
      * @throws AbortException
      *
      */
-    abstract protected function createComponentGrid(): AbstractApplicationGrid;
+    abstract protected function createComponentGrid(): AbstractApplicationsGrid;
 
     /**
      * @return Control

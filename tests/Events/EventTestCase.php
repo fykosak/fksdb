@@ -24,7 +24,7 @@ abstract class EventTestCase extends DatabaseTestCase {
         $this->setContainer($container);
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM event_participant');
         $this->connection->query('DELETE FROM event');
         $this->connection->query('DELETE FROM auth_token');

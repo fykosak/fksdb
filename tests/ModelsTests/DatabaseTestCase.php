@@ -17,10 +17,8 @@ abstract class DatabaseTestCase extends TestCase {
     private Container $container;
 
     protected Connection $connection;
-    /**
-     * @var int
-     */
-    private $instanceNo;
+
+    private int $instanceNo;
 
     /**
      * DatabaseTestCase constructor.
@@ -40,7 +38,7 @@ abstract class DatabaseTestCase extends TestCase {
         return $this->container;
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         Environment::lock(LOCK_DB . $this->instanceNo, TEMP_DIR);
         $this->connection->query("INSERT INTO address (address_id, target, city, region_id) VALUES(1, 'nikde', 'nicov', 3)");
         $this->connection->query("INSERT INTO school (school_id, name, name_abbrev, address_id) VALUES(1, 'Skola', 'SK', 1)");
@@ -48,7 +46,7 @@ abstract class DatabaseTestCase extends TestCase {
         $this->connection->query("INSERT INTO contest_year (contest_id, year, ac_year) VALUES(2, 1, 2000)");
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM org');
         $this->connection->query('DELETE FROM global_session');
         $this->connection->query('DELETE FROM login');
@@ -59,15 +57,7 @@ abstract class DatabaseTestCase extends TestCase {
         $this->connection->query('DELETE FROM person');
     }
 
-    /**
-     *
-     * @param string $name
-     * @param string $surname
-     * @param array $info
-     * @param bool|array $loginData Login credentials
-     * @return int
-     */
-    protected function createPerson($name, $surname, $info = [], $loginData = false): int {
+    protected function createPerson(string $name, string $surname, array $info = [], ?array $loginData = null): int {
         $this->connection->query("INSERT INTO person (other_name, family_name,gender) VALUES(?, ?,'M')", $name, $surname);
         $personId = $this->connection->getInsertId();
 
@@ -76,18 +66,13 @@ abstract class DatabaseTestCase extends TestCase {
             $this->insert(DbNames::TAB_PERSON_INFO, $info);
         }
 
-        if ($loginData) {
+        if (!is_null($loginData)) {
             $data = [
                 'login_id' => $personId,
                 'person_id' => $personId,
                 'active' => 1,
             ];
-
-            if (is_array($loginData)) {
-                $loginData = array_merge($data, $loginData);
-            } else {
-                $loginData = $data;
-            }
+            $loginData = array_merge($data, $loginData);
 
             $this->insert(DbNames::TAB_LOGIN, $loginData);
 
@@ -107,7 +92,7 @@ abstract class DatabaseTestCase extends TestCase {
         return $personInfo;
     }
 
-    protected function createPersonHistory(int $personId, $acYear, $school = null, $studyYear = null, $class = null): int {
+    protected function createPersonHistory(int $personId, int $acYear, ?int $school = null, ?int $studyYear = null, ?string $class = null): int {
         $this->connection->query("INSERT INTO person_history (person_id, ac_year, school_id, class, study_year) VALUES(?, ?, ?, ?, ?)", $personId, $acYear, $school, $class, $studyYear);
         return $this->connection->getInsertId();
     }
