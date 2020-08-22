@@ -80,9 +80,7 @@ class WithDSEFAnonymousTest extends TsafTestCase {
         $application = $this->assertApplication($this->tsafEventId, 'bila@hrad.cz');
         Assert::equal('applied', $application->status);
         Assert::equal('F_S', $application->tshirt_size);
-
-        $eApplication = $this->assertExtendedApplication($application, 'e_tsaf_participant');
-        Assert::equal('F_M', $eApplication->jumper_size);
+        Assert::equal('F_M', $application->jumper_size);
 
         $application = $this->assertApplication($this->dsefEventId, 'bila@hrad.cz');
         Assert::equal('applied.tsaf', $application->status);

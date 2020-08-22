@@ -22,10 +22,6 @@ class NoDSEFTest extends TsafTestCase {
             'event_id' => $this->tsafEventId,
             'status' => 'invited',
         ]);
-
-        $this->insert('e_tsaf_participant', [
-            'event_participant_id' => $this->tsafAppId,
-        ]);
     }
 
     public function testRegistration(): void {
@@ -78,9 +74,7 @@ class NoDSEFTest extends TsafTestCase {
         $application = $this->assertApplication($this->tsafEventId, 'bila@hrad.cz');
         Assert::equal('applied', $application->status);
         Assert::equal('F_S', $application->tshirt_size);
-
-        $eApplication = $this->assertExtendedApplication($application, 'e_tsaf_participant');
-        Assert::equal('F_M', $eApplication->jumper_size);
+        Assert::equal('F_M', $application->jumper_size);
 
         $application = $this->assertApplication($this->dsefEventId, 'bila@hrad.cz');
         Assert::equal('applied.tsaf', $application->status);

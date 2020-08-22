@@ -133,6 +133,7 @@ CREATE TABLE IF NOT EXISTS `event_participant` (
   COMMENT 'alergie, léky, úrazy,...',
   `tshirt_size`           TEXT          NULL     DEFAULT NULL,
   `tshirt_color`          VARCHAR(20)   NULL     DEFAULT NULL,
+  `jumper_size`           VARCHAR(20)   NULL     DEFAULT NULL,
   `price`                 DECIMAL(6, 2) NULL     DEFAULT NULL
   COMMENT 'vypočtená cena',
   `arrival_time`          VARCHAR(20)   NULL     DEFAULT NULL
@@ -1047,53 +1048,6 @@ CREATE TABLE IF NOT EXISTS `e_dsef_participant` (
   CONSTRAINT `fk_e_dsef_participant_e_dsef_group1`
   FOREIGN KEY (`e_dsef_group_id`)
   REFERENCES `e_dsef_group` (`e_dsef_group_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-)
-  ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Table `e_vikend_participant`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `e_vikend_participant` (
-  `event_participant_id` INT         NOT NULL,
-  `answer`               VARCHAR(64) NULL DEFAULT NULL,
-  `gives_lecture`        VARCHAR(64) NULL DEFAULT NULL,
-  `gives_lecture_desc`   TEXT        NULL DEFAULT NULL,
-  `wants_lecture`        VARCHAR(64) NULL DEFAULT NULL,
-  PRIMARY KEY (`event_participant_id`),
-  CONSTRAINT `fk_e_vikend_participant_event_participant1`
-  FOREIGN KEY (`event_participant_id`)
-  REFERENCES `event_participant` (`event_participant_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-)
-  ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Table `e_sous_participant`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `e_sous_participant` (
-  `event_participant_id` INT NOT NULL,
-  PRIMARY KEY (`event_participant_id`),
-  CONSTRAINT `fk_e_sous_participant_event_participant1`
-  FOREIGN KEY (`event_participant_id`)
-  REFERENCES `event_participant` (`event_participant_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-)
-  ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Table `e_tsaf_participant`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `e_tsaf_participant` (
-  `event_participant_id` INT         NOT NULL,
-  `jumper_size`          VARCHAR(20) NULL DEFAULT NULL,
-  PRIMARY KEY (`event_participant_id`),
-  CONSTRAINT `fk_e_tsaf_participant_event_participant1`
-  FOREIGN KEY (`event_participant_id`)
-  REFERENCES `event_participant` (`event_participant_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 )

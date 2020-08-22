@@ -28,6 +28,7 @@ use Nette\Security\IResource;
  * @property-read string health_restrictions alergie, léky, úrazy
  * @property-read string tshirt_size
  * @property-read string tshirt_color
+ * @property-read string jumper_size
  * @property-read float price DECIMAL(6,2) vypočtená cena
  * @property-read string arrival_time Čas příjezdu
  * @property-read string arrival_destination Místo prijezdu
