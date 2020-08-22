@@ -6,6 +6,7 @@ use FKSDB\Tests\ModelTests\DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
+use Nette\Application\Responses\RedirectResponse;
 use Nette\Database\Row;
 use Nette\DI\Config\Helpers;
 use Nette\DI\Container;
@@ -82,7 +83,7 @@ abstract class SubmitTestCase extends DatabaseTestCase {
             'study_year' => '7',
         ]);
 
-        $this->personId = $this->createPerson('Matyáš', 'Korvín', [],  []);
+        $this->personId = $this->createPerson('Matyáš', 'Korvín', [], []);
         $this->contestantId = $this->insert('contestant_base', [
             'contest_id' => 1,
             'year' => 1,
@@ -135,6 +136,24 @@ abstract class SubmitTestCase extends DatabaseTestCase {
             'tmp_name' => $file,
             'error' => 0,
         ])];
+    }
+
+    protected function innerTestSubmit(): void {
+        $request = $this->createPostRequest([
+            'upload' => 'Odeslat',
+            'tasks' => "{$this->taskAll},{$this->taskRestricted}",
+            '_token_' => self::TOKEN,
+        ]);
+
+        $request->setFiles([
+            "task{$this->taskAll}" => $this->createFileUpload(),
+            "task{$this->taskRestricted}" => $this->createFileUpload(),
+        ]);
+        $response = $this->fixture->run($request);
+
+        Assert::type(RedirectResponse::class, $response);
+
+        $this->assertSubmit($this->contestantId, $this->taskAll);
     }
 
     protected function assertSubmit(int $contestantId, int $taskId): Row {
