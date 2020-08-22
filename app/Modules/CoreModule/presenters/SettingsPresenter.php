@@ -3,7 +3,6 @@
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Authentication\PasswordAuthenticator;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\LoginFactory;
@@ -24,9 +23,9 @@ use Nette\Forms\Controls\TextInput;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class SettingsPresenter extends AuthenticatedPresenter {
+class SettingsPresenter extends BasePresenter {
 
-    const CONT_LOGIN = 'login';
+    public const CONT_LOGIN = 'login';
 
     private LoginFactory $loginFactory;
 
@@ -111,7 +110,7 @@ class SettingsPresenter extends AuthenticatedPresenter {
         if ($oldPasswordControl) {
             $oldPasswordControl
                 ->addCondition(Form::FILLED)
-                ->addRule(function (BaseControl $control) use ($login) {
+                ->addRule(function (BaseControl $control) use ($login) : bool {
                     $hash = PasswordAuthenticator::calculateHash($control->getValue(), $login);
                     return $hash == $login->hash;
                 }, 'Špatně zadané staré heslo.');
