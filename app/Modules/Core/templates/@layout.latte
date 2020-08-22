@@ -1,3 +1,5 @@
+{varType FKSDB\UI\PageStyleContainer $pageStyleContainer}
+{varType FKSDB\UI\PageTitle $pageTitle}
 <!DOCTYPE html>
 <html lang="{$lang}">
 <head>
@@ -33,7 +35,7 @@
             <div class="navbar-nav mr-auto">
                 {block nav-left}
                     {foreach $navRoots as $root}
-                        {control navigation:navbar $root}
+                        {control navigationChooser $root}
                     {/foreach}
                 {/block}
             </div>
@@ -42,7 +44,7 @@
                     {control languageChooser}
                     {*control themeChooser*}
                     {if $user->isLoggedIn()}
-                        {var $login => $user->getIdentity()}
+                        {var $login = $user->getIdentity()}
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                                 <span class="fa fa-user"></span>
@@ -86,10 +88,14 @@
     <footer>
         <div class="container text-center text-muted py-3">
         <span class="">
-            <a href="http://fykos.cz/" title="{_'Fyzikální korespondenční seminář MFF UK'}">FYKOS</a>
+            <a href="//fykos.cz/" title="{_'Fyzikální korespondenční seminář MFF UK'}">FYKOS</a>
             <span>| </span>
-            <a href="http://vyfuk.mff.cuni.cz/"
-               title="{_'Fyzikální korespondenční seminář MFF UK pro ZŠ a nižší ročníky gymnázií'}">Výfuk</a> |
+            <a href="//vyfuk.mff.cuni.cz/"
+               title="{_'Fyzikální korespondenční seminář MFF UK pro ZŠ a nižší ročníky gymnázií'}">Výfuk</a>
+            <span>| </span>
+            <a href="//fyziklani.cz/"
+               title="">Fyziklání</a>
+            <span>| </span>
             <span>{_'Správce systému'}: </span>
             <a href="m&#97;ilto:webmaster&#64;fykos.cz">webmaster&#64;fykos.cz</a>
         </span>

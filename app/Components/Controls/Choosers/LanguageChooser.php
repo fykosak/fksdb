@@ -50,16 +50,17 @@ class LanguageChooser extends Chooser {
      * Preferred language of the page
      *
      * Should be final
-     * @throws UnsupportedLanguageException
+     * @param bool $redirect
      * @throws AbortException
+     * @throws UnsupportedLanguageException
      * @note do not call in constructor, call after component is attached
      */
-    public function init(): void {
+    public function init(bool $redirect = true): void {
         if (!isset($this->language)) {
             $this->language = $this->selectLang();
             $this->getTranslator()->setLang($this->language);
         }
-        if ($this->urlLang !== $this->language) {
+        if ($redirect && $this->urlLang !== $this->language) {
             $this->getPresenter()->redirect('this', ['lang' => $this->language]);
         }
     }
@@ -67,13 +68,14 @@ class LanguageChooser extends Chooser {
     /**
      * Preferred language of the page
      *
+     * @param bool $redirect
      * @return string ISO 639-1
      * Should be final
-     * @throws UnsupportedLanguageException
      * @throws AbortException
+     * @throws UnsupportedLanguageException
      */
-    final public function getLang(): string {
-        $this->init();
+    final public function getLang(bool $redirect = true): string {
+        $this->init($redirect);
         return $this->language;
     }
 
@@ -140,10 +142,10 @@ class LanguageChooser extends Chooser {
 
     /**
      * @param string $item
-     * @return string
+     * @return Title
      */
-    public function getItemLabel($item): string {
-        return self::$languageNames[$item];
+    public function getItemTitle($item): Title {
+        return new Title(self::$languageNames[$item]);
     }
 
     /**
