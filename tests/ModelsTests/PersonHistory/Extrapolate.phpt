@@ -57,7 +57,7 @@ class Extrapolate extends DatabaseTestCase {
         ]);
     }
 
-    public function testSimple() {
+    public function testSimple(): void {
         $fixture = $this->service->createNewModel([
             'person_id' => $this->personId,
             'ac_year' => 2000,
@@ -73,7 +73,7 @@ class Extrapolate extends DatabaseTestCase {
         Assert::same(4, $extrapolated->study_year);
     }
 
-    public function testNull() {
+    public function testNull(): void {
         $fixture = $this->service->createNewModel([
             'person_id' => $this->personId,
             'ac_year' => 2000,
@@ -92,7 +92,7 @@ class Extrapolate extends DatabaseTestCase {
     /**
      * @dataProvider getStudyYearData
      */
-    public function testStudyYear(int $from, int $step, $to) {
+    public function testStudyYear(int $from, int $step,?int $to): void {
         $fixture = $this->service->createNewModel([
             'person_id' => $this->personId,
             'ac_year' => 2000,

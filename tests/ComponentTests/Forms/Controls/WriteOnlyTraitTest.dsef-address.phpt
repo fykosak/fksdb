@@ -47,7 +47,7 @@ class WriteOnlyTraitTest extends DsefTestCase {
         ]);
 
         // create admin
-        $adminId = $this->createPerson('Admin', 'Adminovič', [], true);
+        $adminId = $this->createPerson('Admin', 'Adminovič', [], []);
         $this->insert('grant', [
             'login_id' => $adminId,
             'role_id' => 5,
@@ -56,7 +56,7 @@ class WriteOnlyTraitTest extends DsefTestCase {
         $this->authenticate($adminId);
     }
 
-    public function testDisplay() {
+    public function testDisplay(): void {
         Assert::equal(true, $this->fixture->getUser()->isLoggedIn());
 
         $request = new Request('Public:Application', 'GET', [
@@ -83,7 +83,7 @@ class WriteOnlyTraitTest extends DsefTestCase {
         Assert::notContains('SinCity', $html);
     }
 
-    public function testSave() {
+    public function testSave(): void {
         Assert::equal(true, $this->fixture->getUser()->isLoggedIn());
 
         $request = $this->createPostRequest([
@@ -152,7 +152,6 @@ class WriteOnlyTraitTest extends DsefTestCase {
         Assert::equal('SinCity', $address->city);
         Assert::equal('67401', $address->postal_code);
     }
-
 }
 
 $testCase = new WriteOnlyTraitTest($container);

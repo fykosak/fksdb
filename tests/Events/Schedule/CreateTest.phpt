@@ -9,7 +9,7 @@ $container = require '../../bootstrap.php';
 
 class CreateTest extends ScheduleTestCase {
 
-    public function testRegistration() {
+    public function testRegistration(): void {
         $request = $this->createAccommodationRequest();
 
         $response = $this->fixture->run($request);

@@ -6,7 +6,7 @@ use FKSDB\Modules\Core\BasePresenter;
 
 class MockApplication {
 
-    private BasePresenter$presenter;
+    private BasePresenter $presenter;
 
     /**
      * MockApplication constructor.

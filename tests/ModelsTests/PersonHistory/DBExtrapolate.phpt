@@ -23,7 +23,7 @@ class DBExtrapolate extends DatabaseTestCase {
         $this->service = $service;
     }
 
-    public function testNull() {
+    public function testNull(): void {
         $personId = $this->createPerson('Student', 'Pilný');
         $this->createPersonHistory($personId, 2000, 1, 1);
 

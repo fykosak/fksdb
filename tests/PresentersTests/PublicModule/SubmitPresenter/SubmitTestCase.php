@@ -18,20 +18,16 @@ abstract class SubmitTestCase extends DatabaseTestCase {
 
     use MockApplicationTrait;
 
-    const TOKEN = 'foo';
-    const FILE_01 = 'file01.pdf';
-    /**
-     * @var int
-     */
-    protected $taskAll;
-    /**
-     * @var int
-     */
-    protected $taskRestricted;
-    /** @var int */
-    protected $personId;
-    /** @var int */
-    protected $contestantId;
+    public const TOKEN = 'foo';
+    public const FILE_01 = 'file01.pdf';
+
+    protected int $taskAll;
+
+    protected int $taskRestricted;
+
+    protected int $personId;
+
+    protected int $contestantId;
 
     protected IPresenter $fixture;
 
@@ -86,7 +82,7 @@ abstract class SubmitTestCase extends DatabaseTestCase {
             'study_year' => '7',
         ]);
 
-        $this->personId = $this->createPerson('Matyáš', 'Korvín', [], true);
+        $this->personId = $this->createPerson('Matyáš', 'Korvín', [],  []);
         $this->contestantId = $this->insert('contestant_base', [
             'contest_id' => 1,
             'year' => 1,
@@ -147,12 +143,7 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         return $submit;
     }
 
-    /**
-     * @param int $contestantId
-     * @param int $taskId
-     * @return void
-     */
-    protected function assertNotSubmit(int $contestantId, int $taskId) {
+    protected function assertNotSubmit(int $contestantId, int $taskId): void {
         $submit = $this->connection->fetch('SELECT * FROM submit WHERE ct_id = ? AND task_id = ?', $contestantId, $taskId);
         Assert::equal(false, $submit);
     }

@@ -43,7 +43,7 @@ class AuthTest extends DsefTestCase {
         Assert::contains('Paní Bílá', $html);
     }
 
-    public function testAuthRegistration() {
+    public function testAuthRegistration(): void {
         Assert::equal(true, $this->fixture->getUser()->isLoggedIn());
 
         $request = $this->createPostRequest([
@@ -94,7 +94,6 @@ class AuthTest extends DsefTestCase {
         Assert::equal(1, $eApplication->e_dsef_group_id);
         Assert::equal(3, $eApplication->lunch_count);
     }
-
 }
 
 $testCase = new AuthTest($container);

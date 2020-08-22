@@ -26,15 +26,9 @@ class ApplicationHandlerTest extends EventTestCase {
 
     private ApplicationHandler $fixture;
 
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceTeam;
+    private ServiceFyziklaniTeam $serviceTeam;
 
-    /**
-     * @var Holder
-     */
-    private $holder;
+    private Holder $holder;
 
     /**
      * ApplicationHandlerTest constructor.
@@ -43,6 +37,7 @@ class ApplicationHandlerTest extends EventTestCase {
     public function __construct(Container $container) {
         parent::__construct($container);
         $this->setContainer($container);
+        $this->serviceTeam = $this->getContainer()->getByType(ServiceFyziklaniTeam::class);
     }
 
     protected function getEventId(): int {
@@ -55,7 +50,6 @@ class ApplicationHandlerTest extends EventTestCase {
         $this->connection->query("INSERT INTO event (event_id, event_type_id, year, event_year, begin, end, name)"
             . "                          VALUES (1, 1, 1, 1, '2001-01-02', '2001-01-02', 'Testovací Fyziklání')");
 
-        $this->serviceTeam = $this->getContainer()->getByType(ServiceFyziklaniTeam::class);
         /** @var ServiceEvent $serviceEvent */
         $serviceEvent = $this->getContainer()->getByType(ServiceEvent::class);
 

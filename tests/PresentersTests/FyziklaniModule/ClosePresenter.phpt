@@ -164,7 +164,7 @@ class ClosePresenter extends FyziklaniTestCase {
     /**
      * Not a real test method.
      */
-    private function innertestCloseTeam(int $teamId, $pointsSum) {
+    private function innertestCloseTeam(int $teamId, int $pointsSum): void {
         $request = $this->createPostRequest([
             'id' => $teamId,
         ], [
@@ -182,7 +182,7 @@ class ClosePresenter extends FyziklaniTestCase {
     /**
      * @dataProvider getCategories
      */
-    public function testCloseCategory($category): void {
+    public function testCloseCategory(string $category): void {
         foreach ($this->getTestTeams($category) as $teamData) {
             [$teamId, $pointsSum,] = $teamData;
             $this->innertestCloseTeam($teamId, $pointsSum);

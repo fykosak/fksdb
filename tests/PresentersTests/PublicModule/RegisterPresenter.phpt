@@ -18,14 +18,6 @@ class RegisterPresenterTest extends DatabaseTestCase {
 
     private IPresenter $fixture;
 
-    /**
-     * RegisterPresenterTest constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-    }
-
     protected function setUp(): void {
         parent::setUp();
 
@@ -36,7 +28,7 @@ class RegisterPresenterTest extends DatabaseTestCase {
         $this->getContainer()->getByType(LoginUserStorage::class)->setPresenter($this->fixture);
     }
 
-    public function testDispatch() {
+    public function testDispatch(): void {
         $request = new Request('Public:Register', 'GET', [
             'action' => 'contest',
             'lang' => 'en',

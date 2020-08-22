@@ -55,7 +55,7 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
     /**
      * @dataProvider getPages
      */
-    final public function testDisplay(string $presenterName, string $action, array $params = []) {
+    final public function testDisplay(string $presenterName, string $action, array $params = []): void {
         [$presenterName, $action, $params] = $this->transformParams($presenterName, $action, $params);
         $fixture = $this->createPresenter($presenterName);
         $request = $this->createRequest($presenterName, $action, $params);

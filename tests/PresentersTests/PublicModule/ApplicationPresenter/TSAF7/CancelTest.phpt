@@ -9,13 +9,13 @@ use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
 class CancelTest extends TsafTestCase {
-    /** @var int */
-    private $tsafAppId;
+
+    private int $tsafAppId;
 
     protected function setUp(): void {
         parent::setUp();
 
-        $adminId = $this->createPerson('Admin', 'Adminovič', [], true);
+        $adminId = $this->createPerson('Admin', 'Adminovič', [],  []);
         $this->insert('grant', [
             'login_id' => $adminId,
             'role_id' => 5,
@@ -46,7 +46,7 @@ class CancelTest extends TsafTestCase {
         ]);
     }
 
-    public function testCancel() {
+    public function testCancel(): void {
         $request = $this->createPostRequest([
             'participantTsaf' => [
                 'person_id' => $this->personId,
@@ -105,7 +105,6 @@ class CancelTest extends TsafTestCase {
         Assert::equal(1, $eApplication->e_dsef_group_id);
         Assert::equal(3, $eApplication->lunch_count);
     }
-
 }
 
 $testCase = new CancelTest($container);
