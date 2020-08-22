@@ -13,7 +13,7 @@ use Tester\Assert;
 
 class AnonymousTest extends DsefTestCase {
 
-    public function testDisplay() {
+    public function testDisplay(): void {
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',
@@ -32,7 +32,7 @@ class AnonymousTest extends DsefTestCase {
         Assert::contains('Účastník', $html);
     }
 
-    public function testAnonymousRegistration() {
+    public function testAnonymousRegistration(): void {
         $request = $this->createPostRequest([
             'participant' => [
                 'person_id' => "__promise",
@@ -75,7 +75,6 @@ class AnonymousTest extends DsefTestCase {
         Assert::equal(1, $eApplication->e_dsef_group_id);
         Assert::equal(3, $eApplication->lunch_count);
     }
-
 }
 
 $testCase = new AnonymousTest($container);

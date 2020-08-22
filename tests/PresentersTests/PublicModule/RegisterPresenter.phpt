@@ -10,24 +10,14 @@ use Nette\Application\IPresenter;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
-use Nette\DI\Container;
 use Nette\Application\UI\ITemplate;
-use FKSDB\Modules\PublicModule\RegisterPresenter;
 use Tester\Assert;
 
 class RegisterPresenterTest extends DatabaseTestCase {
 
     private IPresenter $fixture;
 
-    /**
-     * RegisterPresenterTest constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-    }
-
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);
@@ -37,7 +27,7 @@ class RegisterPresenterTest extends DatabaseTestCase {
         $this->getContainer()->getByType(LoginUserStorage::class)->setPresenter($this->fixture);
     }
 
-    public function testDispatch() {
+    public function testDispatch(): void {
         $request = new Request('Public:Register', 'GET', [
             'action' => 'contest',
             'lang' => 'en',

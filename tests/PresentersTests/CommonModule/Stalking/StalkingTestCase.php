@@ -2,7 +2,6 @@
 
 namespace FKSDB\Tests\PresentersTests\CommonModule\Stalking;
 
-use FKSDB\Modules\CommonModule\PersonPresenter;
 use FKSDB\ORM\DbNames;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;
@@ -31,7 +30,7 @@ abstract class StalkingTestCase extends DatabaseTestCase {
         $this->setContainer($container);
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->personId = $this->insert(DbNames::TAB_PERSON, [
             'family_name' => 'Testerovič',
