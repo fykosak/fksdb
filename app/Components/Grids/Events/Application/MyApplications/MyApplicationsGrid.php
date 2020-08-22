@@ -35,6 +35,7 @@ abstract class MyApplicationsGrid extends BaseGrid {
      * @throws InvalidLinkException
      * @throws DuplicateButtonException
      * @throws DuplicateGlobalButtonException
+     * @throws DuplicateButtonException
      */
     protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
@@ -50,6 +51,5 @@ abstract class MyApplicationsGrid extends BaseGrid {
                 'id' => $model->event_participant_id,
             ]);
         });
-        $this->addCSVDownloadButton();
     }
 }

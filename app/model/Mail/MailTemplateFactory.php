@@ -93,6 +93,7 @@ class MailTemplateFactory {
      * @param string $lang ISO 639-1
      * @return ITemplate
      * @throws UnsupportedLanguageException
+     * @throws \Nette\Application\AbortException
      */
     final public function createFromFile(string $filename, string $lang = null): ITemplate {
         /** @var Presenter $presenter */

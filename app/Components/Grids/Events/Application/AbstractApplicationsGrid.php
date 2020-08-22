@@ -9,6 +9,7 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -88,6 +89,17 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
         return $control;
     }
 
+    /**
+     * @param Presenter $presenter
+     * @return void
+     * @throws BadTypeException
+     * @throws DuplicateColumnException
+     */
+    protected function configure(Presenter $presenter): void {
+        parent::configure($presenter);
+        $this->addHolderColumns();
+    }
+
     public function getFilterCallBack(): Closure {
         return function (Selection $table, $value) {
             $states = [];
@@ -105,19 +117,19 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
     abstract protected function getHoldersColumns(): array;
 
     /**
-     * @param array $fields
      * @return void
-     * @throws DuplicateColumnException
      * @throws BadTypeException
+     * @throws DuplicateColumnException
      */
-    protected function addColumns(array $fields): void {
+    protected function addHolderColumns(): void {
         $holderFields = $this->holder->getPrimaryHolder()->getFields();
+        $fields = [];
         foreach ($holderFields as $name => $def) {
             if (\in_array($name, $this->getHoldersColumns())) {
                 $fields[] = $this->getTableName() . '.' . $name;
             }
         }
-        parent::addColumns($fields);
+        $this->addColumns($fields);
     }
 
     abstract protected function getTableName(): string;

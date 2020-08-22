@@ -80,6 +80,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
     /* ***************** TITLES ***********************/
     /**
      * @return void
+     * @throws AbortException
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
@@ -89,6 +90,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
+     * @throws AbortException
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
@@ -98,6 +100,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
+     * @throws AbortException
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
@@ -107,6 +110,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
+     * @throws AbortException
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
@@ -116,6 +120,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
+     * @throws AbortException
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */

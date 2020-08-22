@@ -23,7 +23,6 @@ class MyTeamApplicationsGrid extends MyApplicationsGrid {
         $source = $this->person->getEventParticipant()
             ->where('event.event_type_id IN ?', ModelEvent::TEAM_EVENTS)
             ->select('event_participant.*, :e_fyziklani_participant.e_fyziklani_team.*');
-
         return new NDataSource($source);
     }
 
@@ -42,6 +41,7 @@ class MyTeamApplicationsGrid extends MyApplicationsGrid {
         $this->addColumns([
             'event.name',
             'e_fyziklani_team.name',
+            'contest.contest',
             'e_fyziklani_team.status',
         ]);
     }

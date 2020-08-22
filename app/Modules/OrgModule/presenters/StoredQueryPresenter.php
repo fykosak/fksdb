@@ -35,6 +35,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
+     * @throws AbortException
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -49,6 +50,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
+     * @throws AbortException
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
@@ -58,6 +60,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
+     * @throws AbortException
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException

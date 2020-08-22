@@ -13,17 +13,16 @@ use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 
+
 /**
  * Class ApplicationGrid
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class MySingleApplicationsGrid extends MyApplicationsGrid {
 
-
     protected function getData(): IDataSource {
         $source = $this->person->getEventParticipant()
             ->where('event.event_type_id NOT IN ?', ModelEvent::TEAM_EVENTS);
-        //$source->select('event_participant.*,event.*');
         return new NDataSource($source);
     }
 
@@ -41,6 +40,7 @@ class MySingleApplicationsGrid extends MyApplicationsGrid {
 
         $this->addColumns([
             'event.name',
+            'contest.contest',
             'event_participant.status',
         ]);
     }

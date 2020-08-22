@@ -151,8 +151,10 @@ class AjaxUpload extends ReactComponent {
     /**
      * @return void
      * @throws AbortException
-     * @throws InvalidLinkException
      * @throws BadTypeException
+     * @throws ForbiddenRequestException
+     * @throws InvalidLinkException
+     * @throws NotFoundException
      */
     public function handleRevoke(): void {
         $submitId = $this->getReactRequest()->requestData['submitId'];

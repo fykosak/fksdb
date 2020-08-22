@@ -7,7 +7,6 @@ use FKSDB\DBReflection\FieldLevelPermission;
 use FKSDB\ValuePrinters\StringPrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\YearCalculator;
-use http\Exception\InvalidArgumentException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
@@ -43,7 +42,6 @@ class StudyYearRow extends AbstractColumnFactory {
     /**
      * @param array $args
      * @return BaseControl
-     * @throws InvalidArgumentException
      */
     public function createField(...$args): BaseControl {
         [$acYear] = $args;

@@ -84,6 +84,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
+     * @throws AbortException
      * @throws BadRequestException
      * @throws BadTypeException
      * @throws ForbiddenRequestException

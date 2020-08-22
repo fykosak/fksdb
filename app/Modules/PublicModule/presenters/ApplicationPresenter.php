@@ -9,7 +9,6 @@ use FKSDB\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\Choosers\ContestChooser;
 use FKSDB\Components\Events\ApplicationComponent;
-use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\GoneException;
@@ -56,8 +55,6 @@ class ApplicationPresenter extends BasePresenter {
 
     private RelatedPersonAuthorizator $relatedPersonAuthorizator;
 
-    private LayoutResolver $layoutResolver;
-
     private ApplicationHandlerFactory $handlerFactory;
 
     private EventDispatchFactory $eventDispatchFactory;
@@ -68,10 +65,6 @@ class ApplicationPresenter extends BasePresenter {
 
     public function injectRelatedPersonAuthorizator(RelatedPersonAuthorizator $relatedPersonAuthorizator): void {
         $this->relatedPersonAuthorizator = $relatedPersonAuthorizator;
-    }
-
-    public function injectLayoutResolver(LayoutResolver $layoutResolver): void {
-        $this->layoutResolver = $layoutResolver;
     }
 
     public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory): void {
@@ -244,7 +237,7 @@ class ApplicationPresenter extends BasePresenter {
                 self::PARAM_AFTER => true,
             ]);
         });
-        $component->setTemplate($this->layoutResolver->getFormLayout($this->getEvent()));
+        $component->setTemplate($this->eventDispatchFactory->getFormLayout($this->getEvent()));
         return $component;
     }
 
@@ -338,6 +331,7 @@ class ApplicationPresenter extends BasePresenter {
 
     /**
      * @return void
+     * @throws AbortException
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      * @throws \ReflectionException

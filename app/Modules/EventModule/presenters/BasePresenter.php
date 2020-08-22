@@ -178,6 +178,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @return void
+     * @throws AbortException
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws UnsupportedLanguageException

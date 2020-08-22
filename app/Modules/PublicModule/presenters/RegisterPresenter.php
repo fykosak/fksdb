@@ -254,6 +254,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @return FormControl
+     * @throws AbortException
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
@@ -328,6 +329,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     /**
      * @return void
+     * @throws AbortException
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      * @throws \ReflectionException
