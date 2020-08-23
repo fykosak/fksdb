@@ -10,7 +10,7 @@ use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Components\Controls\Choosers\ThemeChooser;
 use FKSDB\Components\Controls\DBReflection\DetailComponent;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
-use FKSDB\Components\Controls\Navigation\Navigation;
+use FKSDB\Components\Controls\Navigation\NavigationChooser;
 use FKSDB\Components\Controls\PresenterBuilder;
 use FKSDB\Components\Controls\DBReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
@@ -120,6 +120,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /**
      * @return void
      * @throws UnsupportedLanguageException
+     * @throws AbortException
      */
     protected function startup() {
         parent::startup();
@@ -226,6 +227,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @throws BadTypeException
      * @throws ReflectionException
      * @throws UnsupportedLanguageException
+     * @throws AbortException
      */
     protected function beforeRender() {
         parent::beforeRender();
@@ -263,8 +265,8 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->breadcrumbsFactory->create();
     }
 
-    protected function createComponentNavigation(): Navigation {
-        return new Navigation($this->getContext());
+    protected function createComponentNavigationChooser(): NavigationChooser {
+        return new NavigationChooser($this->getContext());
     }
 
     protected function createComponentDetail(): DetailComponent {
@@ -282,6 +284,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     /**
      * @return string
      * @throws UnsupportedLanguageException
+     * @throws AbortException
      */
     public function getLang(): string {
         /** @var LanguageChooser $control */

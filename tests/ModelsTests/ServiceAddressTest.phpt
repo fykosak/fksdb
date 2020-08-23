@@ -25,7 +25,7 @@ class ServiceAddressTest extends TestCase {
     /**
      * @dataProvider getPostalCodeData
      */
-    public function testStudyYear(string $postalCode, $region) {
+    public function testStudyYear(string $postalCode, ?int $region): void {
         if ($region === null) {
             Assert::exception(function () use ($postalCode) {
                 $this->fixture->inferRegion($postalCode);
@@ -44,7 +44,6 @@ class ServiceAddressTest extends TestCase {
             ['354 0', null],
         ];
     }
-
 }
 
 $testCase = new ServiceAddressTest($container->getByType(ServiceAddress::class));

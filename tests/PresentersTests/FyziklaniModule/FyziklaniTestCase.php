@@ -13,10 +13,9 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
 
     use MockApplicationTrait;
 
-    /** @var int */
-    protected $eventId;
-    /** @var int */
-    protected $userPersonId;
+    protected int $eventId;
+
+    protected int $userPersonId;
 
     /**
      * FyziklaniTestCase constructor.
@@ -27,14 +26,14 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
         $this->setContainer($container);
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
-        $this->userPersonId = $this->createPerson('Paní', 'Černá', ['email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')], true);
+        $this->userPersonId = $this->createPerson('Paní', 'Černá', ['email' => 'cerna@hrad.cz', 'born' => DateTime::from('2000-01-01')],  []);
         $this->insert(DbNames::TAB_ORG, ['person_id' => $this->userPersonId, 'contest_id' => 1, 'since' => 0, 'order' => 0]);
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM fyziklani_submit');
         $this->connection->query('DELETE FROM fyziklani_task');
         $this->connection->query('DELETE FROM e_fyziklani_team');
