@@ -23,7 +23,7 @@ class ModelSubmit extends AbstractModelSingle implements IResource, ITaskReferen
 
     public const SOURCE_UPLOAD = 'upload';
     public const SOURCE_POST = 'post';
-    public const SOURCE_FORM = 'form';
+    public const SOURCE_QUIZ = 'quiz';
 
     public function isEmpty(): bool {
         return !($this->submitted_on || $this->note);
@@ -62,7 +62,7 @@ class ModelSubmit extends AbstractModelSingle implements IResource, ITaskReferen
     }
 
     public function isQuiz(): bool {
-        if ($this->source === self::SOURCE_FORM) {
+        if ($this->source === self::SOURCE_QUIZ) {
             return true;
         } else {
             return false;

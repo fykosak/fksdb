@@ -154,7 +154,7 @@ class SubmitHandlerFactory {
     }
 
     public function handleQuizSubmit(ModelTask $task, ModelContestant $contestant): ModelSubmit {
-        return $this->handleStoreSubmit($task, $contestant, ModelSubmit::SOURCE_FORM);
+        return $this->handleStoreSubmit($task, $contestant, ModelSubmit::SOURCE_QUIZ);
     }
 
     private function handleStoreSubmit(ModelTask $task, ModelContestant $contestant, string $source): ModelSubmit {
