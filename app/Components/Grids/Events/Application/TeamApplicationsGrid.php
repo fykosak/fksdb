@@ -10,7 +10,6 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
-use Nette\Database\Table\Selection;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
@@ -19,7 +18,7 @@ use NiftyGrid\DuplicateGlobalButtonException;
  * Class TeamApplicationGrid
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class TeamApplicationGrid extends AbstractApplicationGrid {
+class TeamApplicationsGrid extends AbstractApplicationsGrid {
 
     /**
      * @param Presenter $presenter
@@ -31,7 +30,7 @@ class TeamApplicationGrid extends AbstractApplicationGrid {
      * @throws BadTypeException
      */
     protected function configure(Presenter $presenter): void {
-        parent::configure($presenter);
+
         $this->paginate = false;
 
         $this->addColumns([
@@ -49,12 +48,10 @@ class TeamApplicationGrid extends AbstractApplicationGrid {
         });
         $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'e_fyziklani_team_id']);
         $this->addCSVDownloadButton();
+        parent::configure($presenter);
     }
 
-    /**
-     * @return GroupedSelection
-     */
-    protected function getSource(): Selection {
+    protected function getSource(): GroupedSelection {
         return $this->event->getTeams();
     }
 

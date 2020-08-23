@@ -13,5 +13,5 @@
     <a class="btn btn-secondary"
        href="{plink :Org:Event:edit id=>$event->event_id ,contestId => $event->getEventType()->contest_id, year=>$event->year}">{_'Edit'}</a>
     <h2>{_'Actions'}</h2>
-    {control navigation 'Event.Dashboard.default'}
+    {control navigationChooser:board 'Event.Dashboard.default'}
 {/block}

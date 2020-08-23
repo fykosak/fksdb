@@ -12,14 +12,12 @@ use Tester\Assert;
 $container = require '../../bootstrap.php';
 
 class DeleteTest extends ScheduleTestCase {
-    /** @var int */
-    protected $lastPersonId;
-    /** @var int */
-    protected $dsefAppId;
-    /** @var int */
-    private $lastPSId;
 
-    public function setUp() {
+    protected int $lastPersonId;
+
+    protected int $dsefAppId;
+
+    protected function setUp(): void {
         parent::setUp();
         $this->lastPersonId = $this->createPerson('Paní', 'Bílá III.',
             [
@@ -36,7 +34,7 @@ class DeleteTest extends ScheduleTestCase {
                 'event_participant_id' => $this->dsefAppId,
                 'e_dsef_group_id' => 2,
             ]);
-        $this->lastPSId = $this->insert('person_schedule', [
+        $this->insert('person_schedule', [
             'person_id' => $this->lastPersonId,
             'schedule_item_id' => $this->itemId,
         ]);
@@ -46,7 +44,7 @@ class DeleteTest extends ScheduleTestCase {
 
     }
 
-    public function testRegistration() {
+    public function testRegistration(): void {
         $postData = [
             'participant' => [
                 'person_id' => $this->lastPersonId,

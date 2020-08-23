@@ -12,12 +12,12 @@ use Tester\Assert;
 
 class AnonymousMatchTest extends DsefTestCase {
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM e_dsef_participant');
         parent::tearDown();
     }
 
-    public function testRegistration() {
+    public function testRegistration(): void {
         //Assert::equal(false, $this->fixture->getUser()->isLoggedIn()); (presnter not ready for redirect)
 
         $request = $this->createPostRequest([

@@ -12,18 +12,18 @@ abstract class ScheduleTestCase extends EventTestCase {
     protected $itemId;
 
     protected IPresenter $fixture;
-    /** @var int */
-    protected $groupId;
-    /** @var array */
-    protected $persons = [];
-    /** @var int */
-    protected $eventId;
+
+    protected int $groupId;
+
+    protected array $persons = [];
+
+    protected int $eventId;
 
     protected function getEventId(): int {
         return $this->eventId;
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->eventId = $this->createEvent([
@@ -133,7 +133,7 @@ EOT
 
     abstract public function getAccommodationCapacity(): int;
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM e_dsef_participant');
         $this->connection->query('DELETE FROM e_dsef_group');
         $this->connection->query('DELETE FROM person_schedule');
