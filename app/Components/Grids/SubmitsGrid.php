@@ -4,8 +4,7 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Exceptions\ModelException;
 use FKSDB\Exceptions\NotFoundException;
-use FKSDB\Logging\FlashMessageDump;
-use FKSDB\Logging\MemoryLogger;
+use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
@@ -15,7 +14,6 @@ use FKSDB\Submits\SubmitHandlerFactory;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
@@ -36,18 +34,14 @@ class SubmitsGrid extends BaseGrid {
 
     private SubmitHandlerFactory $submitHandlerFactory;
 
-    private int $academicYear;
-
     /**
      * SubmitsGrid constructor.
      * @param Container $container
      * @param ModelContestant $contestant
-     * @param int $academicYear
      */
-    public function __construct(Container $container, ModelContestant $contestant, int $academicYear) {
+    public function __construct(Container $container, ModelContestant $contestant) {
         parent::__construct($container);
         $this->contestant = $contestant;
-        $this->academicYear = $academicYear;
     }
 
     public function injectPrimary(ServiceSubmit $serviceSubmit, SubmitHandlerFactory $submitHandlerFactory): void {
@@ -111,24 +105,14 @@ class SubmitsGrid extends BaseGrid {
         $this->enableSorting = false;
     }
 
-    /**
-     * @param int $id
-     * @return void
-     * @throws InvalidLinkException
-     */
-    public function handleRevoke(int $id) {
-        $logger = new MemoryLogger();
+    public function handleRevoke(int $id): void {
         try {
-            $this->submitHandlerFactory->handleRevoke($this->getPresenter(), $logger, $id);
-            FlashMessageDump::dump($logger, $this);
-        } catch (ForbiddenRequestException$exception) {
+            $submit = $this->submitHandlerFactory->getSubmit($id);
+            $this->submitHandlerFactory->handleRevoke($submit);
+            $this->flashMessage(sprintf(_('Odevzdání úlohy %s zrušeno.'), $submit->getTask()->getFQName()), ILogger::WARNING);
+        } catch (ForbiddenRequestException|NotFoundException$exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
-        } catch (NotFoundException$exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
-        } catch (StorageException$exception) {
-            Debugger::log($exception);
-            $this->flashMessage(_('Během mazání úlohy %s došlo k chybě.'), Message::LVL_DANGER);
-        } catch (ModelException $exception) {
+        } catch (StorageException|ModelException$exception) {
             Debugger::log($exception);
             $this->flashMessage(_('Během mazání úlohy %s došlo k chybě.'), Message::LVL_DANGER);
         }
@@ -139,16 +123,11 @@ class SubmitsGrid extends BaseGrid {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function handleDownloadUploaded(int $id) {
-        $logger = new MemoryLogger();
+    public function handleDownloadUploaded(int $id): void {
         try {
-            $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $logger, $id);
-            FlashMessageDump::dump($logger, $this);
-        } catch (ForbiddenRequestException$exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
-        } catch (NotFoundException$exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
-        } catch (StorageException$exception) {
+            $submit = $this->submitHandlerFactory->getSubmit($id);
+            $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $submit);
+        } catch (ForbiddenRequestException|NotFoundException|StorageException $exception) {
             $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
         }
     }
@@ -158,16 +137,11 @@ class SubmitsGrid extends BaseGrid {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function handleDownloadCorrected(int $id) {
-        $logger = new MemoryLogger();
+    public function handleDownloadCorrected(int $id): void {
         try {
-            $this->submitHandlerFactory->handleDownloadCorrected($this->getPresenter(), $logger, $id);
-            FlashMessageDump::dump($logger, $this);
-        } catch (ForbiddenRequestException$exception) {
-            $this->flashMessage(new Message($exception->getMessage(), Message::LVL_DANGER));
-        } catch (NotFoundException$exception) {
-            $this->flashMessage(new Message($exception->getMessage(), Message::LVL_DANGER));
-        } catch (StorageException $exception) {
+            $submit = $this->submitHandlerFactory->getSubmit($id);
+            $this->submitHandlerFactory->handleDownloadCorrected($this->getPresenter(), $submit);
+        } catch (ForbiddenRequestException|NotFoundException|StorageException $exception) {
             $this->flashMessage(new Message($exception->getMessage(), Message::LVL_DANGER));
         }
     }

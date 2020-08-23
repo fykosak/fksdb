@@ -81,7 +81,7 @@ trait ReactComponentTrait {
      * @return string[]
      */
     protected function getResponseData(): array {
-        $data['messages'] = array_map(function (Message $value) {
+        $data['messages'] = array_map(function (Message $value): array {
             return $value->__toArray();
         }, $this->logger->getMessages());
         $data['data'] = json_encode($this->getData());

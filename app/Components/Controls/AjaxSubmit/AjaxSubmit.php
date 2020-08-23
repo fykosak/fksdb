@@ -99,8 +99,8 @@ class AjaxSubmit extends AjaxComponent {
      * @return mixed
      * @throws NotFoundException
      */
-    protected function getData() {
-        $studyYear = $this->submitHandlerFactory->getUserStudyYear($this->academicYear);
+    protected function getData(): array {
+        $studyYear = $this->submitHandlerFactory->getUserStudyYear($this->contestant, $this->academicYear);
         return ServiceSubmit::serializeSubmit($this->getSubmit(), $this->task, $studyYear);
     }
 
@@ -138,18 +138,16 @@ class AjaxSubmit extends AjaxComponent {
      */
     public function handleRevoke(): void {
         try {
-            $this->submitHandlerFactory->handleRevokeSubmit($this->getLogger(), $this->getSubmit(true), $this->academicYear);
-        } catch (ForbiddenRequestException$exception) {
+            $submit = $this->getSubmit(true);
+            $this->submitHandlerFactory->handleRevoke($submit);
+            $this->getLogger()->log(new Message(\sprintf(_('Odevzdání úlohy %s zrušeno.'), $submit->getTask()->getFQName()), ILogger::WARNING));
+        } catch (ForbiddenRequestException|NotFoundException$exception) {
             $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));
-        } catch (NotFoundException $exception) {
-            $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));
-        } catch (StorageException$exception) {
-            Debugger::log($exception);
-            $this->getLogger()->log(new Message(_('Během mazání úlohy došlo k chybě.'), Message::LVL_DANGER));
-        } catch (ModelException $exception) {
+        } catch (StorageException|ModelException$exception) {
             Debugger::log($exception);
             $this->getLogger()->log(new Message(_('Během mazání úlohy došlo k chybě.'), Message::LVL_DANGER));
         }
+
         $this->sendAjaxResponse();
     }
 
@@ -160,12 +158,8 @@ class AjaxSubmit extends AjaxComponent {
      */
     public function handleDownload(): void {
         try {
-            $this->submitHandlerFactory->handleDownloadUploadedSubmit($this->getPresenter(), $this->getSubmit(true));
-        } catch (ForbiddenRequestException$exception) {
-            $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));
-        } catch (NotFoundException $exception) {
-            $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));
-        } catch (StorageException$exception) {
+            $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $this->getSubmit(true));
+        } catch (ForbiddenRequestException|StorageException|NotFoundException$exception) {
             $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));
         }
         $this->sendAjaxResponse();

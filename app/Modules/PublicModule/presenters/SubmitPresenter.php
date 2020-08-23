@@ -231,7 +231,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     protected function createComponentSubmitsGrid(): SubmitsGrid {
-        return new SubmitsGrid($this->getContext(), $this->getContestant(), $this->getSelectedAcademicYear());
+        return new SubmitsGrid($this->getContext(), $this->getContestant());
     }
 
     /**
