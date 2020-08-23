@@ -81,7 +81,7 @@ class NoDSEFTest extends TsafTestCase {
 
         $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');
         Assert::equal(1, $eApplication->e_dsef_group_id);
-        Assert::equal(3, $eApplication->lunch_count);
+        Assert::equal(3, $application->lunch_count);
 
         Assert::equal($before + 2, $serviceEmail->getTable()->count());
     }

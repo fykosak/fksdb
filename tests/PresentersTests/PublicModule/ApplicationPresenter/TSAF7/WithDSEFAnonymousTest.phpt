@@ -24,12 +24,12 @@ class WithDSEFAnonymousTest extends TsafTestCase {
             'person_id' => $this->personId,
             'event_id' => $this->dsefEventId,
             'status' => 'applied',
+            'lunch_count' => 3,
         ]);
 
         $this->insert('e_dsef_participant', [
             'event_participant_id' => $dsefAppId,
             'e_dsef_group_id' => 1,
-            'lunch_count' => 3,
         ]);
     }
 
@@ -87,7 +87,7 @@ class WithDSEFAnonymousTest extends TsafTestCase {
 
         $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');
         Assert::equal(1, $eApplication->e_dsef_group_id);
-        Assert::equal(3, $eApplication->lunch_count);
+        Assert::equal(3, $application->lunch_count);
     }
 }
 

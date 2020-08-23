@@ -136,13 +136,13 @@ CREATE TABLE IF NOT EXISTS `event_participant` (
   `jumper_size`           VARCHAR(20)   NULL     DEFAULT NULL,
   `price`                 DECIMAL(6, 2) NULL     DEFAULT NULL
   COMMENT 'vypočtená cena',
-  `arrival_time`          VARCHAR(20)   NULL     DEFAULT NULL
+  `arrival_time`          TIME          NULL     DEFAULT NULL
   COMMENT 'Čas příjezdu',
   `arrival_destination`   VARCHAR(20)   NULL     DEFAULT NULL
   COMMENT 'Místo prijezdu\n',
   `arrival_ticket`        TINYINT(1)    NULL     DEFAULT NULL
   COMMENT 'společný lístek na cestu tam\n',
-  `departure_time`        VARCHAR(20)   NULL     DEFAULT NULL
+  `departure_time`        TIME          NULL     DEFAULT NULL
   COMMENT 'Čas odjezdu\n',
   `departure_destination` VARCHAR(20)   NULL     DEFAULT NULL
   COMMENT 'Místo odjezdu\n',
@@ -154,6 +154,7 @@ CREATE TABLE IF NOT EXISTS `event_participant` (
   COMMENT 'úžívané léky',
   `schedule`              TEXT          NULL     DEFAULT NULL
   COMMENT 'serializovaný program',
+  `lunch_count`          TINYINT(2)   NULL DEFAULT 0,
   PRIMARY KEY (`event_participant_id`),
   INDEX `action_id` (`event_id` ASC),
   INDEX `person_id` (`person_id` ASC),
@@ -1035,8 +1036,6 @@ CREATE TABLE IF NOT EXISTS `e_dsef_group` (
 CREATE TABLE IF NOT EXISTS `e_dsef_participant` (
   `event_participant_id` INT          NOT NULL,
   `e_dsef_group_id`      INT          NOT NULL,
-  `arrival_time`         TIME         NULL DEFAULT NULL,
-  `lunch_count`          TINYINT(2)   NULL DEFAULT 0,
   `message`              VARCHAR(255) NULL DEFAULT NULL,
   PRIMARY KEY (`event_participant_id`),
   INDEX `fk_e_dsef_participant_e_dsef_group1_idx` (`e_dsef_group_id` ASC),
