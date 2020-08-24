@@ -39,10 +39,9 @@ class GithubPresenter extends AuthenticatedPresenter {
     }
 
     public function actionApi(): void {
-        $type = $this->getFullHttpRequest()->getRequest()->getHeader(Event::HTTP_HEADER);
-        $payload = $this->getFullHttpRequest()->getPayload();
+        $type = $this->getHttpRequest()->getHeader(Event::HTTP_HEADER);
+        $payload = $this->getHttpRequest()->getRawBody();
         $data = json_decode($payload, true);
-
         $event = $this->eventFactory->createEvent($type, $data);
         if ($event instanceof PushEvent) {
             if (strncasecmp(PushEvent::REFS_HEADS, $event->ref, strlen(PushEvent::REFS_HEADS))) {

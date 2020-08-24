@@ -5,9 +5,9 @@ namespace FKSDB\Authentication;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\YearCalculator;
-use FKSDB\FullHttpRequest;
 use FKSDB\Github\Events\Event;
 use Nette\DI\Container;
+use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 use Nette\Security\AuthenticationException;
 
@@ -36,26 +36,26 @@ class GithubAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @param FullHttpRequest $request
+     * @param IRequest $request
      * @return ModelLogin
      * @throws AuthenticationException
      * @throws InactiveLoginException
      * @throws NoLoginException
      */
-    public function authenticate(FullHttpRequest $request) {
+    public function authenticate(IRequest $request) {
         $loginName = $this->container->getParameters()['github']['login'];
         $secret = $this->container->getParameters()['github']['secret'];
 
-        if (!$request->getRequest()->getHeader(Event::HTTP_HEADER)) {
+        if (!$request->getHeader(Event::HTTP_HEADER)) {
             throw new InvalidArgumentException(_('Očekávána hlavička X-Github-Event'));
         }
 
-        $signature = $request->getRequest()->getHeader(self::HTTP_AUTH_HEADER);
+        $signature = $request->getHeader(self::HTTP_AUTH_HEADER);
         if (!$signature) {
             throw new AuthenticationException(_('Očekávána hlavička X-Hub-Signature.'));
         }
 
-        $expectedHash = 'sha1=' . hash_hmac('sha1', $request->getPayload(), $secret, false);
+        $expectedHash = 'sha1=' . hash_hmac('sha1', $request->getRawBody(), $secret, false);
 
         if ($signature !== $expectedHash) {
             //throw new AuthenticationException(_('Nesprávný hash požadavku.'));
