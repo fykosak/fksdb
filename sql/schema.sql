@@ -664,8 +664,8 @@ CREATE TABLE IF NOT EXISTS `submit` (
   `task_id`      INT(11)                 NOT NULL
   COMMENT 'Task',
   `submitted_on` DATETIME                NULL     DEFAULT NULL,
-  `source`       ENUM ('post', 'upload') NOT NULL
-  COMMENT 'odkud přišlo řešení',
+  `source`       ENUM ('post', 'upload', 'quiz') NOT NULL
+  COMMENT 'Typ příjmu řešení',
   `note`         VARCHAR(255)            NULL     DEFAULT NULL
   COMMENT 'Pocet stranek a jine poznamky',
   `raw_points`   DECIMAL(4, 2)           NULL     DEFAULT NULL

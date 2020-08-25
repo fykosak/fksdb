@@ -15,18 +15,21 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class OrderRow extends AbstractOrgRowFactory {
-    public const ORDER_MAPPING = [
-        0 => 'pasivní org',
-        1 => 'org',
-        2 => 'aktivní org',
-        3 => '',
-        4 => 'vedení',
-        5 => '',
-        6 => 'zástupce hlavního organizátora',
-        7 => 'hlavní organizátor',
-        8 => '',
-        9 => 'vedoucí semináře',
-    ];
+
+    public function getOrderMapping(): array {
+        return [
+            0 => '0 - ' . _('pasivní org'),
+            1 => '1 - ' . _('org'),
+            2 => '2 - ' . _('aktivní org'),
+            3 => '3 - ',
+            4 => '4 - ' . _('vedení'),
+            5 => '5 - ',
+            6 => '6 - ' . _('zástupce hlavního organizátora'),
+            7 => '7 - ' . _('hlavní organizátor'),
+            8 => '8 - ',
+            9 => '9 - ' . _('vedoucí semináře'),
+        ];
+    }
 
     public function getDescription(): ?string {
         return _('Pro řazení v seznamu organizátorů');
@@ -41,8 +44,8 @@ class OrderRow extends AbstractOrgRowFactory {
      * @return Html
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        if (\array_key_exists($model->order, self::ORDER_MAPPING)) {
-            return (new StringPrinter())(self::ORDER_MAPPING[$model->order]);
+        if (\array_key_exists($model->order, $this->getOrderMapping())) {
+            return (new StringPrinter())($this->getOrderMapping()[$model->order]);
         }
         return (new StringPrinter())($model->order);
     }
@@ -50,7 +53,7 @@ class OrderRow extends AbstractOrgRowFactory {
     public function createField(...$args): BaseControl {
         $control = new SelectBox($this->getTitle());
         $control->setOption('description', $this->getDescription());
-        $control->setItems(self::ORDER_MAPPING);
+        $control->setItems($this->getOrderMapping());
         $control->setPrompt(_('Select rank'));
         $control->addRule(Form::FILLED, _('Please select rank.'));
         return $control;
