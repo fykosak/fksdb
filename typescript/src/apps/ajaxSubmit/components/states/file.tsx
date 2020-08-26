@@ -12,7 +12,6 @@ import {
 
 interface OwnProps {
     submit: Submit;
-    accessKey: string;
 }
 
 interface DispatchProps {
@@ -43,16 +42,14 @@ class File extends React.Component<OwnProps & DispatchProps & StateProps, {}> {
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: OwnProps): DispatchProps => {
-    const {accessKey} = ownProps;
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
-        onDeleteFile: (url: string) => dispatchFetch<Submit>(url, accessKey, dispatch, JSON.stringify({})),
+        onDeleteFile: (url: string) => dispatchFetch<Submit>(url,  dispatch, JSON.stringify({})),
     };
 };
-const mapStateToProps = (state: Store, ownProps: OwnProps): StateProps => {
-    const {accessKey} = ownProps;
+const mapStateToProps = (state: Store): StateProps => {
     return {
-        actions: state.fetchApi[accessKey].actions,
+        actions: state.fetchApi.actions,
     };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(File);

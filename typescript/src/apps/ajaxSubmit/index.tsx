@@ -13,18 +13,15 @@ interface IProps {
 export default class Index extends React.Component<IProps, {}> {
 
     public render() {
-        const accessKey = '@@submit-api/' + this.props.data.taskId;
         return <ActionsStoreCreator
             storeMap={{
-                [accessKey]: {
-                    actions: this.props.actions,
-                    data: this.props.data,
-                    messages: [],
-                },
+                actions: this.props.actions,
+                data: this.props.data,
+                messages: [],
             }}
             app={app}
         >
-            <UploadContainer accessKey={accessKey}/>
+            <UploadContainer/>
         </ActionsStoreCreator>;
     }
 }

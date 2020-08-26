@@ -13,7 +13,6 @@ import { Store } from '../../reducers';
 
 interface OwnProps {
     submit: Submit;
-    accessKey: string;
 }
 
 interface DispatchProps {
@@ -99,20 +98,19 @@ class Form extends React.Component<OwnProps & StateProps & DispatchProps, {}> {
     }
 }
 
-const mapStateToProps = (state: Store, ownProps: OwnProps): StateProps => {
-    const {accessKey} = ownProps;
+const mapStateToProps = (state: Store): StateProps => {
     return {
-        actions: state.fetchApi[accessKey].actions,
+        actions: state.fetchApi.actions,
         dragged: state.dragNDrop.dragged,
     };
 };
-const mapDispatchToProps = (dispatch: Dispatch<Action<string>>, ownProps: OwnProps): DispatchProps => {
+const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
         onAddError: (error) => dispatch(addError(error)),
         onDragEnd: () => dispatch(dragEnd()),
         onDragStart: () => dispatch(dragStart()),
         onDropItem: (item) => dispatch(dropItem<any>(item)),
-        onFileUpload: (values, url: string) => dispatchFetch(url, ownProps.accessKey, dispatch, values),
+        onFileUpload: (values, url: string) => dispatchFetch(url, dispatch, values),
     };
 };
 

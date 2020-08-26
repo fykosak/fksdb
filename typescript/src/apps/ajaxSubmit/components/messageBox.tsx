@@ -8,11 +8,7 @@ interface StateProps {
     messages: Message[];
 }
 
-interface OwnProps {
-    accessKey: string;
-}
-
-class MessageBox extends React.Component<StateProps & OwnProps, {}> {
+class MessageBox extends React.Component<StateProps, {}> {
     public render() {
         const {messages} = this.props;
         return <>{messages.map((message, index) => {
@@ -26,8 +22,8 @@ interface Store {
     errorLogger: ErrorLoggerState;
 }
 
-const mapStateToProps = (state: Store, ownProps: OwnProps): StateProps => {
-    const messages = state.fetchApi.hasOwnProperty(ownProps.accessKey) ? state.fetchApi[ownProps.accessKey].messages : [];
+const mapStateToProps = (state: Store): StateProps => {
+    const messages = state.fetchApi.messages;
     return {
         messages: [
             ...messages,

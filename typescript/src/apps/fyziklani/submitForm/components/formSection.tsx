@@ -24,7 +24,6 @@ import ErrorBlock from './outputs/errorBlock';
 import ValueDisplay from './outputs/valueDisplay';
 
 export interface OwnProps {
-    accessKey: string;
     tasks: Task[];
     teams: Team[];
     valid: boolean;
@@ -81,12 +80,11 @@ class FormSection extends React.Component<OwnProps & StateProps, {}> {
     }
 }
 
-const mapStateToProps = (state: SubmitStore, ownProps: OwnProps): StateProps => {
+const mapStateToProps = (state: SubmitStore): StateProps => {
     const selector = formValueSelector(FORM_NAME);
-    const {accessKey} = ownProps;
     return {
         code: selector(state, 'code'),
-        messages: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].messages : [],
+        messages: state.fetchApi.messages,
     };
 };
 
