@@ -34,7 +34,6 @@ navigation:
             Common.Validation.preview: []
             Common.Validation.list: []
         Public.Dashboard.default:
-            Public:Application:list: []
             Core.Dispatch.default: []
             Public.Submit.ajax:
                 visible: true

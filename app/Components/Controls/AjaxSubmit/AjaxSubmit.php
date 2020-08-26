@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Control\AjaxSubmit;
 
 use FKSDB\Components\React\AjaxComponent;
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\ILogger;
@@ -96,18 +95,17 @@ class AjaxSubmit extends AjaxComponent {
     }
 
     /**
-     * @return mixed
+     * @return array
      * @throws NotFoundException
      */
     protected function getData(): array {
         $studyYear = $this->submitHandlerFactory->getUserStudyYear($this->contestant, $this->academicYear);
-        return ServiceSubmit::serializeSubmit($this->getSubmit(), $this->task, $studyYear);
+        return ServiceSubmit::serializeSubmit($this->getSubmit(false), $this->task, $studyYear);
     }
 
     /**
      * @return void
      * @throws AbortException
-     * @throws BadTypeException
      */
     public function handleUpload(): void {
         $files = $this->getHttpRequest()->getFiles();

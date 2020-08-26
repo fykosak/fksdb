@@ -4,8 +4,6 @@ namespace FKSDB\Submits;
 
 use FKSDB\Authorization\ContestAuthorizator;
 use FKSDB\Exceptions\NotFoundException;
-use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
@@ -55,6 +53,14 @@ class SubmitHandlerFactory {
 
     public function getUploadedStorage(): UploadedStorage {
         return $this->uploadedStorage;
+    }
+
+    public function getCorrectedStorage(): CorrectedStorage {
+        return $this->correctedStorage;
+    }
+
+    public function getServiceSubmit(): ServiceSubmit {
+        return $this->serviceSubmit;
     }
 
     /**
@@ -113,20 +119,8 @@ class SubmitHandlerFactory {
         $this->serviceSubmit->dispose($submit);
     }
 
-    /**
-     * @param FileUpload $file
-     * @param ModelTask $task
-     * @param ModelContestant $contestant
-     * @return AbstractModelSingle|IModel|ModelSubmit
-     */
     public function handleSave(FileUpload $file, ModelTask $task, ModelContestant $contestant): ModelSubmit {
-        $submit = $this->serviceSubmit->findByContestant($contestant->ct_id, $task->task_id);
-        $submit = $this->serviceSubmit->store($submit, [
-            'task_id' => $task->task_id,
-            'ct_id' => $contestant->ct_id,
-            'submitted_on' => new DateTime(),
-            'source' => ModelSubmit::SOURCE_UPLOAD,
-        ]);
+        $submit = $this->storeSubmit($task, $contestant, ModelSubmit::SOURCE_UPLOAD);
         // store file
         $this->uploadedStorage->storeFile($file->getTemporaryFile(), $submit);
         return $submit;
@@ -138,14 +132,30 @@ class SubmitHandlerFactory {
         return ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
     }
 
+    public function handleQuizSubmit(ModelTask $task, ModelContestant $contestant): ModelSubmit {
+        return $this->storeSubmit($task, $contestant, ModelSubmit::SOURCE_QUIZ);
+    }
+
+    private function storeSubmit(ModelTask $task, ModelContestant $contestant, string $source): ModelSubmit {
+        $submit = $this->serviceSubmit->findByContestant($contestant->ct_id, $task->task_id);
+        $data = [
+            'submitted_on' => new DateTime(),
+            'source' => $source,
+            'task_id' => $task->task_id, // ugly is submit exists -- rewrite same by same value
+            'ct_id' => $contestant->ct_id,// ugly is submit exists -- rewrite same by same value
+        ];
+        return $this->serviceSubmit->store($submit, $data);
+    }
+
     /**
      * @param int $id
-     * @return ModelSubmit
+     * @param bool $throw
+     * @return ModelSubmit|null
      * @throws NotFoundException
      */
-    public function getSubmit(int $id): ModelSubmit {
+    public function getSubmit(int $id, bool $throw = true): ?ModelSubmit {
         $submit = $this->serviceSubmit->findByPrimary($id);
-        if (!$submit) {
+        if ($throw && !$submit) {
             throw new NotFoundException(_('Submit does not exists.'));
         }
         return $submit;

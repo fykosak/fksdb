@@ -8,7 +8,6 @@ use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
-use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\Submits\StorageException;
 use FKSDB\Submits\SubmitHandlerFactory;
 use Nette\Application\AbortException;
@@ -28,8 +27,6 @@ use Tracy\Debugger;
  */
 class SubmitsGrid extends BaseGrid {
 
-    private ServiceSubmit $serviceSubmit;
-
     private ModelContestant $contestant;
 
     private SubmitHandlerFactory $submitHandlerFactory;
@@ -44,13 +41,12 @@ class SubmitsGrid extends BaseGrid {
         $this->contestant = $contestant;
     }
 
-    public function injectPrimary(ServiceSubmit $serviceSubmit, SubmitHandlerFactory $submitHandlerFactory): void {
-        $this->serviceSubmit = $serviceSubmit;
+    public function injectPrimary(SubmitHandlerFactory $submitHandlerFactory): void {
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
     protected function getData(): IDataSource {
-        $submits = $this->serviceSubmit->getSubmits();
+        $submits = $this->submitHandlerFactory->getServiceSubmit()->getSubmits();
         $submits->where('ct_id = ?', $this->contestant->ct_id); //TODO year + contest?
         return new NDataSource($submits);
     }
@@ -93,12 +89,19 @@ class SubmitsGrid extends BaseGrid {
         $this->addButton('download_uploaded')
             ->setText(_('Download original'))->setLink(function (ModelSubmit $row): string {
                 return $this->link('downloadUploaded!', $row->submit_id);
+            })
+            ->setShow(function (ModelSubmit $row): bool {
+                return !$row->isQuiz();
             });
         $this->addButton('download_corrected')
             ->setText(_('Download corrected'))->setLink(function (ModelSubmit $row): string {
                 return $this->link('downloadCorrected!', $row->submit_id);
             })->setShow(function (ModelSubmit $row): bool {
-                return $row->corrected;
+                if (!$row->isQuiz()){
+                    return $row->corrected;
+                } else {
+                    return false;
+                }
             });
 
         $this->paginate = false;

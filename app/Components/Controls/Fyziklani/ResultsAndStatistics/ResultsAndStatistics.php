@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
 use FKSDB\Components\React\AjaxComponent;
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
@@ -68,8 +67,7 @@ class ResultsAndStatistics extends AjaxComponent {
     }
 
     /**
-     * @return mixed|array
-     * @throws BadTypeException
+     * @return array
      * @throws NotSetGameParametersException
      */
     protected function getData(): array {
