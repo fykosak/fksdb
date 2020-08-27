@@ -7,6 +7,9 @@
         {/if}
         <a n:href="invalidate!" class="btn btn-sm btn-danger">{_'Invalidovat cache bodů'}</a>
         <a n:href="recalculateAll!" class="btn btn-sm btn-secondary">{_'Přepočítat všechny body'}</a>
+        {if $hasQuizTask}
+            <a n:href="calculateQuizPoints!" class="btn btn-sm btn-info">{_'Spočítat body kvízových úloh'}</a>
+        {/if}
     </div>
     {control pointsForm}
 {/block}

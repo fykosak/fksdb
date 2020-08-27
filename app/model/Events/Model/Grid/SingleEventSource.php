@@ -32,8 +32,8 @@ class SingleEventSource implements IHolderSource {
     private Container $container;
 
     private EventDispatchFactory $eventDispatchFactory;
-
-    private TypedTableSelection $primarySelection;
+    /** @var \FKSDB\ORM\Tables\MultiTableSelection|TypedTableSelection|\Nette\Database\Table\Selection */
+    private $primarySelection;
 
     private Holder $dummyHolder;
 

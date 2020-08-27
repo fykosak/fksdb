@@ -105,12 +105,8 @@ events:
                         description: %events.dsef20.accomodation%
                         modifiable: %events.dsef20.appCond%
                     lunch_count:
-                        label: _('Počet baget k obědu')
                         modifiable: %events.dsef20.appCond%
                         description:  à 30 Kč
-                    message:
-                        label: _('Vzkaz ostatním')
-                        modifiable: true
 
 
         #

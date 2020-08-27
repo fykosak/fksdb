@@ -213,9 +213,9 @@ class Transition {
     /**
      * @param Holder $holder
      * @param Transition[] $inducedTransitions
-     * @return bool
+     * @return bool|array
      */
-    private function validateTarget(Holder $holder, array $inducedTransitions): bool {
+    private function validateTarget(Holder $holder, array $inducedTransitions) {
         foreach ($inducedTransitions as $inducedTransition) {
             if (($result = $inducedTransition->validateTarget($holder, [])) !== true) { // intentionally =
                 return $result;

@@ -99,12 +99,19 @@ class SubmitsGrid extends BaseGrid {
         $this->addButton('download_uploaded')
             ->setText(_('Download original'))->setLink(function (ModelSubmit $row): string {
                 return $this->link('downloadUploaded!', $row->submit_id);
+            })
+            ->setShow(function (ModelSubmit $row): bool {
+                return !$row->isQuiz();
             });
         $this->addButton('download_corrected')
             ->setText(_('Download corrected'))->setLink(function (ModelSubmit $row): string {
                 return $this->link('downloadCorrected!', $row->submit_id);
             })->setShow(function (ModelSubmit $row): bool {
-                return $row->corrected;
+                if (!$row->isQuiz()){
+                    return $row->corrected;
+                } else {
+                    return false;
+                }
             });
 
         $this->paginate = false;

@@ -15,9 +15,6 @@ use Nette\InvalidArgumentException;
  */
 abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdjustment {
 
-    public const DELIMITER = '.';
-    public const WILDCART = '*';
-
     /** @var mixed */
     private $rules;
 
@@ -29,7 +26,7 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
         $this->rules = $rules;
     }
 
-    protected function _adjust(Form $form, Machine $machine, Holder $holder): void {
+    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
         foreach ($this->rules as $target => $prerequisities) {
             if (is_scalar($prerequisities)) {
                 $prerequisities = [$prerequisities];

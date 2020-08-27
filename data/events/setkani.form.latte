@@ -8,7 +8,8 @@
     </li>
     <li n:if="!$control->getPresenter()->getUser()->isLoggedIn()">
         {var $backlink = $control->getPresenter()->application->storeRequest()}
-        Pokud máš vlastní účet, tak se před prosím vyplněním formuláře <a href="{plink :Authentication:login backlink => $backlink}">přihlas</a>.
+        Pokud máš vlastní účet, tak se před prosím vyplněním formuláře <a
+                href="{plink :Authentication:login backlink => $backlink}">přihlas</a>.
         Ušetříš si tím práci při vyplňování formuláře.
     </li>
     <li>
