@@ -55,7 +55,7 @@ events:
 
         baseMachines:
             PARTICIPANT_TSAF:
-                service: @event.ServiceMTsafParticipant
+                service: @event.ServiceEventParticipant
 
                 states:
                     - auto.invited
