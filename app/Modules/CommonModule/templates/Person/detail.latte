@@ -18,24 +18,29 @@
 {/define}
 
 {define contests}
+    <h3>{_'Contestants'}</h3>
+    {control contestantBasesGrid}
+    <h3>{_'Task contribution'}</h3>
+    {control taskContributionsGrid}
     <div class="card-columns mt-3">
-        {control stalkingComponent "contestant_base", $person, $userPermissions}
+
         {control stalkingComponent "org", $person, $userPermissions}
         {control role $person, $userPermissions}
-        {control stalkingComponent "task_contribution", $person, $userPermissions}
     </div>
 {/define}
 
 {define events}
     <h3>{_'Single events'}</h3>
-        {control singleApplicationsGrid}
+    {control singleApplicationsGrid}
     <h3>{_'Team events'}</h3>
-        {control teamApplicationsGrid}
+    {control teamApplicationsGrid}
     <h3>{_'Payments'}</h3>
-        {control paymentsGrid}
+    {control paymentsGrid}
+    <h3>{_'Event orgs'}</h3>
+    {control eventOrgsGrid}
+    <h3>{_'Event teachers'}</h3>
+    {control eventTeachersGrid}
     <div class="card-columns mt-3">
-        {control stalkingComponent "event_teacher", $person, $userPermissions}
-        {control stalkingComponent "event_org", $person, $userPermissions}
         {control schedule $person, $userPermissions}
     </div>
 

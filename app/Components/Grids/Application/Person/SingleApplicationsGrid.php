@@ -18,7 +18,7 @@ use NiftyGrid\DuplicateColumnException;
 class SingleApplicationsGrid extends PersonApplicationsGrid {
 
     protected function getData(): IDataSource {
-        $source = $this->person->getEventParticipant()
+        $source = $this->person->getEventParticipants()
             ->where('event.event_type_id NOT IN ?', ModelEvent::TEAM_EVENTS);
         return new NDataSource($source);
     }

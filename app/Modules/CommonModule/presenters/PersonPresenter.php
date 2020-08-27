@@ -2,15 +2,16 @@
 
 namespace FKSDB\Modules\CommonModule;
 
+use FKSDB\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Components\Controls\Entity\PersonFormComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Person\PizzaControl;
 use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
+use FKSDB\Components\Grids\PersonRelatedGrid;
 use FKSDB\Components\Grids\Application\Person\{
     TeamApplicationsGrid,
     SingleApplicationsGrid,
 };
-use FKSDB\Components\Grids\Payment\PersonPaymentsGrid;
 use FKSDB\DBReflection\FieldLevelPermission;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
@@ -362,11 +363,43 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @return PersonPaymentsGrid
+     * @return PersonRelatedGrid
      * @throws ModelNotFoundException
      */
-    protected function createComponentPaymentsGrid(): PersonPaymentsGrid {
-        return new PersonPaymentsGrid($this->getContext(), $this->getEntity());
+    protected function createComponentEventOrgsGrid(): PersonRelatedGrid {
+        return new PersonRelatedGrid('event_org', $this->getEntity(), $this->getUserPermissions(), $this->getContext());
+    }
+
+    /**
+     * @return PersonRelatedGrid
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentPaymentsGrid(): PersonRelatedGrid {
+        return new PersonRelatedGrid('payment', $this->getEntity(), $this->getUserPermissions(), $this->getContext());
+    }
+
+    /**
+     * @return PersonRelatedGrid
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentContestantBasesGrid(): PersonRelatedGrid {
+        return new PersonRelatedGrid('contestant_base', $this->getEntity(), $this->getUserPermissions(), $this->getContext());
+    }
+
+    /**
+     * @return PersonRelatedGrid
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentTaskContributionsGrid(): PersonRelatedGrid {
+        return new PersonRelatedGrid('task_contribution', $this->getEntity(), $this->getUserPermissions(), $this->getContext());
+    }
+
+    /**
+     * @return PersonRelatedGrid
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentEventTeachersGrid(): PersonRelatedGrid {
+        return new PersonRelatedGrid('event_teacher', $this->getEntity(), $this->getUserPermissions(), $this->getContext());
     }
 
     /**

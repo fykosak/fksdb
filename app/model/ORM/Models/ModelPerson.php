@@ -75,7 +75,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     }
 
     /**
-     * @param int|ModelContest $contest
+     * @param int|ModelContest|null $contest
      * @return GroupedSelection
      */
     public function getContestants($contest = null): GroupedSelection {
@@ -116,11 +116,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $result;
     }
 
-    /**
-     * @param int $fid
-     * @return ModelPersonHasFlag|null
-     */
-    public function getPersonHasFlag($fid): ?ModelPersonHasFlag {
+    public function getPersonHasFlag(string $fid): ?ModelPersonHasFlag {
         $flags = $this->getPersonHasFlags();
         foreach ($flags as $flag) {
             if ($flag->getFlag()->fid === $fid) {
@@ -196,29 +192,24 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         return $postContact ? ModelPostContact::createFromActiveRow($postContact)->getAddress() : null;
     }
 
-    public function getEventParticipant(): GroupedSelection {
+    public function getEventParticipants(): GroupedSelection {
         //return (new Selection($this->getTable()->data,bNames::TAB_EVENT_PARTICIPANT, $this->getTable()->getConnection()))->where('person_id', $this->person_id);
         return $this->related(DbNames::TAB_EVENT_PARTICIPANT, 'person_id');
     }
 
-    public function getEventTeacher(): GroupedSelection {
+    public function getEventTeachers(): GroupedSelection {
         return $this->related(DbNames::TAB_E_FYZIKLANI_TEAM, 'teacher_id');
     }
 
     public function isEventParticipant(?int $eventId = null): bool {
-        $tmp = $this->getEventParticipant();
+        $tmp = $this->getEventParticipants();
         if ($eventId) {
             $tmp->where('event_id = ?', $eventId);
         }
-
-        if ($tmp->count() > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return ($tmp->count() > 0);
     }
 
-    public function getEventOrg(): GroupedSelection {
+    public function getEventOrgs(): GroupedSelection {
         return $this->related(DbNames::TAB_EVENT_ORG, 'person_id');
     }
 
@@ -361,14 +352,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         }
     }
 
-    public function getPayments(): GroupedSelection {
-        return $this->related(DbNames::TAB_PAYMENT, 'person_id');
-    }
-
-    public function getPaymentsForEvent(ModelEvent $event): GroupedSelection {
-        return $this->getPayments()->where('event_id', $event->event_id);
-    }
-
     public function getScheduleForEvent(ModelEvent $event): GroupedSelection {
         return $this->getSchedule()->where('schedule_item.schedule_group.event_id', $event->event_id);
     }
@@ -405,7 +388,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
     public function getRolesForEvent(ModelEvent $event, YearCalculator $yearCalculator): array {
         $roles = [];
         $eventId = $event->event_id;
-        $teachers = $this->getEventTeacher()->where('event_id', $eventId);
+        $teachers = $this->getEventTeachers()->where('event_id', $eventId);
         foreach ($teachers as $row) {
             $team = ModelFyziklaniTeam::createFromActiveRow($row);
             $roles[] = [
@@ -413,7 +396,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
                 'team' => $team,
             ];
         }
-        $eventOrgs = $this->getEventOrg()->where('event_id', $eventId);
+        $eventOrgs = $this->getEventOrgs()->where('event_id', $eventId);
         foreach ($eventOrgs as $row) {
             $org = ModelEventOrg::createFromActiveRow($row);
             $roles[] = [
@@ -421,7 +404,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
                 'org' => $org,
             ];
         }
-        $eventParticipants = $this->getEventParticipant()->where('event_id', $eventId);
+        $eventParticipants = $this->getEventParticipants()->where('event_id', $eventId);
         foreach ($eventParticipants as $row) {
             $participant = ModelEventParticipant::createFromActiveRow($row);
             $roles[] = [

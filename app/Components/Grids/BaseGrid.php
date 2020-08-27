@@ -18,6 +18,7 @@ use Nette\DI\Container;
 use Nette\InvalidStateException;
 use FKSDB\Exceptions\NotImplementedException;
 use Nette\Localization\ITranslator;
+use Nette\Security\Permission;
 use Nette\Utils\Html;
 use NiftyGrid\Components\Button;
 use NiftyGrid\Components\Column;
@@ -209,7 +210,7 @@ abstract class BaseGrid extends Grid {
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    private function addReflectionColumn(string $field, int $userPermission = FieldLevelPermission::ALLOW_FULL): Column {
+    private function addReflectionColumn(string $field, int $userPermission): Column {
         $factory = $this->tableReflectionFactory->loadColumnFactory($field);
         return $this->addColumn(str_replace('.', '__', $field), $factory->getTitle())->setRenderer(function ($model) use ($factory, $userPermission) {
             if (!$model instanceof AbstractModelSingle) {
@@ -244,15 +245,17 @@ abstract class BaseGrid extends Grid {
 
     /**
      * @param array $fields
+     * @param int $userPermissions
      * @return void
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    protected function addColumns(array $fields): void {
+    protected function addColumns(array $fields, int $userPermissions = FieldLevelPermission::ALLOW_FULL): void {
         foreach ($fields as $name) {
-            $this->addReflectionColumn($name);
+            $this->addReflectionColumn($name, $userPermissions);
         }
     }
+
 
     /**
      * @param string $destination

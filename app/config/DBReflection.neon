@@ -384,6 +384,12 @@ DBReflection:
                         eventId: event_id
                         id: e_org_id
                     title: Edit
+                 detail:
+                     destination: ':Event:Eventorg:detail'
+                     params:
+                         eventId: event_id
+                         id: e_org_id
+                     title: Detail
          email_message:
              modelClassName: FKSDB\ORM\Models\ModelEmailMessage
              columnFactories:

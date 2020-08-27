@@ -95,14 +95,13 @@ stalking:
                 - person_history.study_year
                 - person_history.class
         task_contribution:
-            layout: multi
-            label: Task contribution
+            layout: grid
             minimalPermission: 1024
             table: task_contribution
             links: []
             model: FKSDB\ORM\Models\ModelTaskContribution
-            itemHeadline: task.fq_name
             rows:
+                - task.fq_name
                 - task_contribution.type
                 - contest.contest
                 - task.year
@@ -128,29 +127,27 @@ stalking:
                 - org.tex_signature
                 - org.domain_alias
         payment:
-            layout: multi
+            layout: grid
             label: Payment
             minimalPermission: 128
             table: payment
             model: FKSDB\ORM\Models\ModelPayment
             links:
                 - payment.detail
-            itemHeadline: payment.payment_uid
             rows:
                 - payment.payment_uid
                 - event.event
                 - payment.price
                 - payment.state
         contestant_base:
-            layout: multi
-            label: Contestant
+            layout: grid
             minimalPermission: 128
             table: contestant_base
             model: FKSDB\ORM\Models\ModelContestant
             links:
                 - contestant_base.edit
-            itemHeadline: contestant_base.ct_id
             rows:
+                - contestant_base.ct_id
                 - contestant_base.year
                 - contest.contest
         event_participant:
@@ -167,26 +164,26 @@ stalking:
                 - event_participant.team
                 - event.event_link
         event_org:
-            layout: multi
-            label: Event org
+            layout: grid
             minimalPermission: 128
             table: event_org
             model: FKSDB\ORM\Models\ModelEventOrg
             links:
                 - event_org.edit
-            itemHeadline: event_org.event_org_id
+                - event_org.detail
             rows:
-                - event.event_link
+                - event_org.event_org_id
+                - event.event
+                - contest.contest
                 - event_org.note
         event_teacher:
-            layout: multi
-            label: Event teacher
+            layout: grid
             minimalPermission: 16
             table: e_fyziklani_team
             model: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
             links:
                 - e_fyziklani_team.detail
-            itemHeadline: e_fyziklani_team.name
             rows:
-                - event.event_link
+                - e_fyziklani_team.name
+                - event.event
                 - e_fyziklani_team.status
