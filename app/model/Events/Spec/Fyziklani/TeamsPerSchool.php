@@ -62,7 +62,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         $this->teamsPerSchool = $teamsPerSchool;
     }
 
-    protected function _adjust(Form $form, Machine $machine, Holder $holder): void {
+    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $personControls = $this->getControl('p*.person_id');

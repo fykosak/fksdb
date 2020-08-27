@@ -18,7 +18,7 @@ abstract class AbstractDateInput extends TextInput {
      * @param null $label
      * @param null $maxLength
      */
-    public function __construct($label = NULL, $maxLength = NULL) {
+    public function __construct($label = null, $maxLength = null) {
         parent::__construct($label, $maxLength);
         $this->setType($this->getType());
     }
@@ -39,8 +39,10 @@ abstract class AbstractDateInput extends TextInput {
      * @return static
      */
     public function setValue($value) {
-        if ($value) {
+        if (is_string($value)) {
             $this->value = DateTime::from($value);
+        } elseif ($value instanceof \DateInterval) {
+            $this->value = (new DateTime())->setTime($value->h, $value->m, $value->s);
         } else {
             $this->value = null;
         }
