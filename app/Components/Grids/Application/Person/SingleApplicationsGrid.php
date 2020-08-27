@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Grids\Events\Application;
+namespace FKSDB\Components\Grids\Application\Person;
 
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
@@ -12,10 +12,10 @@ use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
 /**
- * Class ApplicationGrid
+ * Class AbstractSingleGrid
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class MySingleApplicationsGrid extends MyApplicationsGrid {
+class SingleApplicationsGrid extends PersonApplicationsGrid {
 
     protected function getData(): IDataSource {
         $source = $this->person->getEventParticipant()
@@ -26,9 +26,9 @@ class MySingleApplicationsGrid extends MyApplicationsGrid {
     /**
      * @param Presenter $presenter
      * @return void
-     * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws BadTypeException
+     * @throws DuplicateButtonException
      */
     protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
@@ -38,6 +38,8 @@ class MySingleApplicationsGrid extends MyApplicationsGrid {
             'contest.contest',
             'event_participant.status',
         ]);
+        $this->addLinkButton(':Public:Application:edit', 'edit', _('Edit'), false, ['eventId' => 'event_id', 'id' => 'event_participant_id']);
+        $this->addLinkButton(':Event:Application:detail', 'detail', _('Detail'), false, ['eventId' => 'event_id', 'id' => 'event_participant_id']);
     }
 
     protected function getModelClassName(): string {

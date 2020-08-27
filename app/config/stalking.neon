@@ -137,9 +137,10 @@ stalking:
                 - payment.detail
             itemHeadline: payment.payment_uid
             rows:
+                - payment.payment_uid
+                - event.event
                 - payment.price
                 - payment.state
-                - event.event_link
         contestant_base:
             layout: multi
             label: Contestant

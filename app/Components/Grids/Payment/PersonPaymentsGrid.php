@@ -2,18 +2,33 @@
 
 namespace FKSDB\Components\Grids\Payment;
 
+use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\UI\Presenter;
+use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
 /**
- * Class MyPaymentGrid
+ * Class PersonPaymentsGrid
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class MyPaymentGrid extends PaymentGrid {
+class PersonPaymentsGrid extends BaseGrid {
+
+    protected ModelPerson $person;
+
+    public function __construct(Container $container, ModelPerson $person) {
+        parent::__construct($container);
+        $this->person = $person;
+    }
+
+    protected function getData(): IDataSource {
+        return new NDataSource($this->person->getPayments());
+    }
 
     /**
      * @param Presenter $presenter
@@ -24,22 +39,17 @@ class MyPaymentGrid extends PaymentGrid {
      */
     protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
-
-        $payments = $this->servicePayment->getTable()->where('person_id', $presenter->getUser()->getIdentity()->person_id)->order('payment_id DESC');
-
-        $dataSource = new NDataSource($payments);
-        $this->setDataSource($dataSource);
-
         $this->addColumns([
             'payment.payment_uid',
             'event.event',
             'payment.price',
             'payment.state',
+            'payment.variable_symbol',
         ]);
+        $this->addLink('payment.detail', false);
+    }
 
-        $this->addColumn('event', _('Event'))->setRenderer(function (ModelPayment $payment) {
-            return $payment->getEvent()->name;
-        });
-        $this->addLink('payment.detail', true);
+    protected function getModelClassName(): string {
+        return ModelPayment::class;
     }
 }

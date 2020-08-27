@@ -2,8 +2,10 @@
 
 namespace FKSDB\Components\Grids\Payment;
 
+use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelPayment;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -17,7 +19,7 @@ use NiftyGrid\DuplicateGlobalButtonException;
  * Class OrgPaymentGrid
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class OrgPaymentGrid extends PaymentGrid {
+class EventPaymentGrid extends BaseGrid {
 
     private ModelEvent $event;
 
@@ -32,8 +34,7 @@ class OrgPaymentGrid extends PaymentGrid {
     }
 
     protected function getData(): IDataSource {
-        $schools = $this->servicePayment->getTable()->where('event_id', $this->event->event_id);
-        return new NDataSource($schools);
+        return new NDataSource($this->event->getPayments());
     }
 
     /**
@@ -51,7 +52,6 @@ class OrgPaymentGrid extends PaymentGrid {
         $this->addColumns([
             'payment.payment_uid',
             'person.full_name',
-            'event.event',
             'payment.price',
             'payment.state',
             'payment.variable_symbol',
@@ -59,5 +59,9 @@ class OrgPaymentGrid extends PaymentGrid {
         $this->addLink('payment.detail', false);
         $this->paginate = false;
         $this->addCSVDownloadButton();
+    }
+
+    protected function getModelClassName(): string {
+        return ModelPayment::class;
     }
 }

@@ -6,6 +6,11 @@ use FKSDB\Components\Controls\Entity\PersonFormComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Person\PizzaControl;
 use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
+use FKSDB\Components\Grids\Application\Person\{
+    TeamApplicationsGrid,
+    SingleApplicationsGrid,
+};
+use FKSDB\Components\Grids\Payment\PersonPaymentsGrid;
 use FKSDB\DBReflection\FieldLevelPermission;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
@@ -338,6 +343,30 @@ class PersonPresenter extends BasePresenter {
      */
     protected function createComponentGrid(): BaseGrid {
         throw new NotImplementedException();
+    }
+
+    /**
+     * @return SingleApplicationsGrid
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentSingleApplicationsGrid(): SingleApplicationsGrid {
+        return new SingleApplicationsGrid($this->getEntity(), $this->getContext());
+    }
+
+    /**
+     * @return TeamApplicationsGrid
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentTeamApplicationsGrid(): TeamApplicationsGrid {
+        return new TeamApplicationsGrid($this->getEntity(), $this->getContext());
+    }
+
+    /**
+     * @return PersonPaymentsGrid
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentPaymentsGrid(): PersonPaymentsGrid {
+        return new PersonPaymentsGrid($this->getContext(), $this->getEntity());
     }
 
     /**

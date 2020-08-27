@@ -27,13 +27,18 @@
 {/define}
 
 {define events}
+    <h3>{_'Single events'}</h3>
+        {control singleApplicationsGrid}
+    <h3>{_'Team events'}</h3>
+        {control teamApplicationsGrid}
+    <h3>{_'Payments'}</h3>
+        {control paymentsGrid}
     <div class="card-columns mt-3">
-        {control stalkingComponent "event_participant", $person, $userPermissions}
         {control stalkingComponent "event_teacher", $person, $userPermissions}
         {control stalkingComponent "event_org", $person, $userPermissions}
-        {control stalkingComponent "payment", $person, $userPermissions}
         {control schedule $person, $userPermissions}
     </div>
+
 {/define}
 
 {define validation}

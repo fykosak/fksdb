@@ -2,9 +2,11 @@
 
 namespace FKSDB\Modules\CoreModule;
 
-use FKSDB\Components\Grids\Events\Application\MySingleApplicationsGrid;
-use FKSDB\Components\Grids\Events\Application\MyTeamApplicationsGrid;
-use FKSDB\Components\Grids\Events\Application\NewApplicationsGrid;
+use FKSDB\Components\Grids\Application\Person\{
+    SingleApplicationsGrid,
+    TeamApplicationsGrid,
+    NewApplicationsGrid,
+};
 use FKSDB\UI\PageTitle;
 
 /**
@@ -21,12 +23,12 @@ class MyApplicationsPresenter extends BasePresenter {
         $this->setPageTitle(new PageTitle(_('My applications'), 'fa fa-calendar'));
     }
 
-    protected function createComponentMySingleApplicationsGrid(): MySingleApplicationsGrid {
-        return new MySingleApplicationsGrid($this->getUser()->getIdentity()->getPerson(), $this->getContext());
+    protected function createComponentMySingleApplicationsGrid(): SingleApplicationsGrid {
+        return new SingleApplicationsGrid($this->getUser()->getIdentity()->getPerson(), $this->getContext());
     }
 
-    protected function createComponentMyTeamApplicationsGrid(): MyTeamApplicationsGrid {
-        return new MyTeamApplicationsGrid($this->getUser()->getIdentity()->getPerson(), $this->getContext());
+    protected function createComponentMyTeamApplicationsGrid(): TeamApplicationsGrid {
+        return new TeamApplicationsGrid($this->getUser()->getIdentity()->getPerson(), $this->getContext());
     }
 
     protected function createComponentNewApplicationsGrid(): NewApplicationsGrid {

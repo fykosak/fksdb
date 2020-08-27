@@ -281,7 +281,7 @@ abstract class BaseGrid extends Grid {
                 return $this->getPresenter()->link($destination, $paramMapCallback($model));
             });
         if ($checkACL) {
-            $button->setShow(function ($model) use ($destination, $paramMapCallback) {
+            $button->setShow(function ($model) use ($destination, $paramMapCallback): bool {
                 if (!$model instanceof AbstractModelSingle) {
                     $model = $this->getModelClassName()::createFromActiveRow($model);
                 }

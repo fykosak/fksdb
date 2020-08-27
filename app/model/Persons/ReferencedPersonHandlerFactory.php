@@ -4,6 +4,7 @@ namespace FKSDB\Persons;
 
 use FKSDB\Components\Forms\Controls\Schedule\Handler;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\ServiceFlag;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonHasFlag;
 use FKSDB\ORM\Services\ServicePersonHistory;
@@ -31,6 +32,8 @@ class ReferencedPersonHandlerFactory {
 
     private Handler $eventScheduleHandler;
 
+    private ServiceFlag $serviceFlag;
+
     /**
      * ReferencedPersonHandlerFactory constructor.
      * @param ServicePerson $servicePerson
@@ -39,6 +42,7 @@ class ReferencedPersonHandlerFactory {
      * @param ServiceMPostContact $serviceMPostContact
      * @param ServicePersonHasFlag $servicePersonHasFlag
      * @param Handler $eventScheduleHandler
+     * @param ServiceFlag $serviceFlag
      */
     public function __construct(
         ServicePerson $servicePerson,
@@ -46,7 +50,8 @@ class ReferencedPersonHandlerFactory {
         ServicePersonHistory $servicePersonHistory,
         ServiceMPostContact $serviceMPostContact,
         ServicePersonHasFlag $servicePersonHasFlag,
-        Handler $eventScheduleHandler
+        Handler $eventScheduleHandler,
+        ServiceFlag $serviceFlag
     ) {
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
@@ -54,6 +59,7 @@ class ReferencedPersonHandlerFactory {
         $this->serviceMPostContact = $serviceMPostContact;
         $this->servicePersonHasFlag = $servicePersonHasFlag;
         $this->eventScheduleHandler = $eventScheduleHandler;
+        $this->serviceFlag = $serviceFlag;
     }
 
     /**
@@ -69,6 +75,7 @@ class ReferencedPersonHandlerFactory {
             $this->servicePersonHistory,
             $this->serviceMPostContact,
             $this->servicePersonHasFlag,
+            $this->serviceFlag,
             $this->eventScheduleHandler,
             $acYear,
             $resolution
