@@ -351,6 +351,7 @@ DBReflection:
                     title: _('Počet baget k obědu')
              linkFactories:
                    detail: FKSDB\DBReflection\LinkFactories\ParticipantDetailLink
+                   edit: FKSDB\DBReflection\LinkFactories\ApplicationEditLink
          contestant_base:
              modelClassName: FKSDB\ORM\Models\ModelContestant
              columnFactories:

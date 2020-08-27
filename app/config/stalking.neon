@@ -151,18 +151,18 @@ stalking:
                 - contestant_base.year
                 - contest.contest
         event_participant:
-            layout: multi
-            label: Event Participant
+            layout: grid
             minimalPermission: 128
             table: event_participant
             model: FKSDB\ORM\Models\ModelEventParticipant
             links:
                 - event_participant.detail
-            itemHeadline: event_participant.event_participant_id
+                - event_participant.edit
             rows:
-                - event_participant.status
+                - event_participant.event_participant_id
+                - event.event
                 - event_participant.team
-                - event.event_link
+                - event_participant.status
         event_org:
             layout: grid
             minimalPermission: 128
