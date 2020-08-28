@@ -55,7 +55,7 @@ WHERE ep.event_id = ?
 group by school_id', [$this->acYear, array_keys($this->getSchoolsFromTeam($currentTeam)), $this->event->getPrimary()]);
 
         foreach ($query as $row) {
-            $schools[$row->school_id] = array_map(function ($teamId) {
+            $schools[$row->school_id] = array_map(function ($teamId):?ModelFyziklaniTeam {
                 return $this->serviceFyziklaniTeam->findByPrimary($teamId);
             }, explode(',', $row->teams));
             $schools[$row->school_id]['school'] = $this->serviceSchool->findByPrimary($row->school_id);

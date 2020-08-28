@@ -15,9 +15,9 @@ use Nette\Database\Connection;
  */
 class TokenGSIDHolder implements IGSIDHolder {
 
-    const TABLE = 'auth_token';
-    const URL_PARAM = 'at';
-    const SESSION_KEY = '_sso';
+    public const TABLE = 'auth_token';
+    public const URL_PARAM = 'at';
+    public const SESSION_KEY = '_sso';
 
     private Connection $connection;
     /** @var bool */

@@ -30,10 +30,7 @@ class Not extends EvaluatedExpression {
         return !$this->evaluateArgument($this->expression, ...$args);
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return "!({$this->expression})";
     }
 

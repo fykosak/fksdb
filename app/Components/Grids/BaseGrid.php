@@ -212,7 +212,7 @@ abstract class BaseGrid extends Grid {
      */
     private function addReflectionColumn(string $field, int $userPermission): Column {
         $factory = $this->tableReflectionFactory->loadColumnFactory($field);
-        return $this->addColumn(str_replace('.', '__', $field), $factory->getTitle())->setRenderer(function ($model) use ($factory, $userPermission) {
+        return $this->addColumn(str_replace('.', '__', $field), $factory->getTitle())->setRenderer(function ($model) use ($factory, $userPermission): Html {
             if (!$model instanceof AbstractModelSingle) {
                 $model = $this->getModelClassName()::createFromActiveRow($model);
             }

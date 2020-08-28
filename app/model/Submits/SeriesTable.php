@@ -19,8 +19,8 @@ use FKSDB\ORM\Tables\TypedTableSelection;
  */
 class SeriesTable {
 
-    const FORM_SUBMIT = 'submit';
-    const FORM_CONTESTANT = 'contestant';
+    public const FORM_SUBMIT = 'submit';
+    public const FORM_CONTESTANT = 'contestant';
 
     private ServiceContestant $serviceContestant;
 
@@ -28,20 +28,17 @@ class SeriesTable {
 
     private ServiceSubmit $serviceSubmit;
 
-    /** @var ModelContest */
-    private $contest;
+    private ModelContest $contest;
 
-    /** @var int */
-    private $year;
+    private int $year;
 
-    /** @var int */
-    private $series;
+    private int $series;
 
     /**
      *
      * @var null|array of int IDs of allowed tasks or null for unrestricted
      */
-    private $taskFilter;
+    private ?array $taskFilter = null;
 
     /**
      * SeriesTable constructor.
@@ -83,10 +80,7 @@ class SeriesTable {
         return $this->taskFilter;
     }
 
-    /**
-     * @param array|null $taskFilter
-     */
-    public function setTaskFilter($taskFilter): void {
+    public function setTaskFilter(?array $taskFilter): void {
         $this->taskFilter = $taskFilter;
     }
 

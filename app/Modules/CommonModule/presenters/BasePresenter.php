@@ -11,7 +11,7 @@ use Nette\Security\IResource;
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
 
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         $this->getPageStyleContainer()->styleId = 'theme-light common';
         $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
         parent::beforeRender();

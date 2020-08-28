@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Controls\Chart;
 
-use FKSDB\Components\React\ReactComponent;
 use FKSDB\Components\React\ReactComponent2;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;

@@ -59,7 +59,7 @@ class SingleEventSource implements IHolderSource {
         $this->eventDispatchFactory = $eventDispatchFactory;
         $this->dummyHolder = $eventDispatchFactory->getDummyHolder($this->event);
         $primaryHolder = $this->dummyHolder->getPrimaryHolder();
-        $eventIdColumn = $primaryHolder->getEventId();
+        $eventIdColumn = $primaryHolder->getEventIdColumn();
         $this->primarySelection = $primaryHolder->getService()->getTable()->where($eventIdColumn, $this->event->getPrimary());
     }
 

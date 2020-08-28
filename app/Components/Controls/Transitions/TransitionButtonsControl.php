@@ -18,10 +18,9 @@ use Tracy\Debugger;
  */
 class TransitionButtonsControl extends BaseComponent {
 
-    /** @var Machine */
-    private $machine;
-    /** @var IStateModel */
-    private $model;
+    private Machine $machine;
+
+    private IStateModel $model;
 
     /**
      * TransitionButtonsControl constructor.
@@ -45,7 +44,7 @@ class TransitionButtonsControl extends BaseComponent {
      * @param string $name
      * @throws AbortException
      */
-    public function handleTransition($name): void {
+    public function handleTransition(string $name): void {
         try {
             $this->machine->executeTransition($name, $this->model);
         } catch (ForbiddenRequestException $exception) {

@@ -19,8 +19,7 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
 
     private ServicePersonHistory $servicePersonHistory;
 
-    /** @var Holder */
-    private $holder;
+    private Holder $holder;
 
     /**
      * SchoolCheck constructor.
@@ -43,7 +42,7 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
      * @param IControl[] $personControls
      * @return array
      */
-    final protected function getSchools($schoolControls, $personControls) {
+    final protected function getSchools(array $schoolControls, array $personControls): array {
         $personIds = array_filter(array_map(function (BaseControl $control) {
             try {
                 return $control->getValue();

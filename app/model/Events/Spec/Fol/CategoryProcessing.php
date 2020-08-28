@@ -25,11 +25,11 @@ use Nette\Utils\ArrayHash;
  */
 class CategoryProcessing extends AbstractProcessing implements IOptionsProvider {
 
-    const HIGH_SCHOOL_A = 'A';
-    const HIGH_SCHOOL_B = 'B';
-    const HIGH_SCHOOL_C = 'C';
-    const ABROAD = 'F';
-    const OPEN = 'O';
+    public const HIGH_SCHOOL_A = 'A';
+    public const HIGH_SCHOOL_B = 'B';
+    public const HIGH_SCHOOL_C = 'C';
+    public const ABROAD = 'F';
+    public const OPEN = 'O';
 
     private YearCalculator $yearCalculator;
 

@@ -18,9 +18,9 @@ use Nette\Security\AuthenticationException;
  */
 class GithubAuthenticator extends AbstractAuthenticator {
 
-    const PARAM_AUTH_TOKEN = 'at';
-    const SESSION_NS = 'auth';
-    const HTTP_AUTH_HEADER = 'X-Hub-Signature';
+    public const PARAM_AUTH_TOKEN = 'at';
+    public const SESSION_NS = 'auth';
+    public const HTTP_AUTH_HEADER = 'X-Hub-Signature';
 
     private Container $container;
 

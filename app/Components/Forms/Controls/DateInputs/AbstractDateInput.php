@@ -13,23 +13,25 @@ use Nette\Utils\Html;
  */
 abstract class AbstractDateInput extends TextInput {
 
+    protected string $format;
+
     /**
      * AbstractDateInput constructor.
+     * @param string $type
+     * @param string $format
      * @param null $label
      * @param null $maxLength
      */
-    public function __construct($label = null, $maxLength = null) {
+    public function __construct(string $type, string $format, $label = null, $maxLength = null) {
+        $this->format = $format;
         parent::__construct($label, $maxLength);
-        $this->setType($this->getType());
+        $this->setType($type);
     }
 
-    /**
-     * @return Html
-     */
-    public function getControl() {
+    public function getControl(): Html {
         $control = parent::getControl();
         if ($this->value) {
-            $control->value = $this->value->format($this->getFormat());
+            $control->value = $this->value->format($this->format);
         }
         return $control;
     }
@@ -48,11 +50,4 @@ abstract class AbstractDateInput extends TextInput {
         }
         return $this;
     }
-
-    /**
-     * @return string|"datetime-local"|"month"|time"|"date"|"week"
-     */
-    abstract protected function getType(): string;
-
-    abstract protected function getFormat(): string;
 }

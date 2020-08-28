@@ -40,7 +40,7 @@ class RegexpCheck extends AbstractAdjustment implements IFormAdjustment {
             return;
         }
         foreach ($controls as $control) {
-            $control->addRule(function (IControl $control) {
+            $control->addRule(function (IControl $control): bool {
                 return (bool)Strings::match($control->getValue(), $this->pattern);
             }, $this->message);
         }

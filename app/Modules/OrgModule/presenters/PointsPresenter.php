@@ -212,7 +212,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
         return array_values($gradedTasks);
     }
 
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         $this->getPageStyleContainer()->setWidePage();
         parent::beforeRender();
     }

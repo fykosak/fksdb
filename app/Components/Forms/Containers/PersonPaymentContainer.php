@@ -9,7 +9,6 @@ use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
 use Nette\ComponentModel\IContainer;
 use Nette\DI\Container;
-use Tracy\Debugger;
 
 class PersonPaymentContainer extends ContainerWithOptions {
 

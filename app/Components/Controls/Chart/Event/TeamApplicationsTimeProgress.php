@@ -3,7 +3,6 @@
 namespace FKSDB\Components\React\ReactComponent\Events;
 
 use FKSDB\Components\Controls\Chart\IChart;
-use FKSDB\Components\React\ReactComponent;
 use FKSDB\Components\React\ReactComponent2;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventType;

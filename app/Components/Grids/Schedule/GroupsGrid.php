@@ -59,13 +59,13 @@ class GroupsGrid extends BaseGrid {
             'schedule_group.end',
         ]);
 
-        $this->addColumn('items_count', _('Items count'))->setRenderer(function ($row) {
+        $this->addColumn('items_count', _('Items count'))->setRenderer(function ($row): int {
             $model = ModelScheduleGroup::createFromActiveRow($row);
             return $model->getItems()->count();
         });
 
         $this->addButton('detail', _('Detail'))->setText(_('Detail'))
-            ->setLink(function ($row) {
+            ->setLink(function ($row): string {
                 /** @var ModelScheduleGroup $row */
                 return $this->getPresenter()->link('ScheduleItem:list', ['groupId' => $row->schedule_group_id]);
             });

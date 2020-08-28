@@ -19,7 +19,7 @@ use NiftyGrid\DuplicateColumnException;
 class StoredQueriesGrid extends BaseGrid {
     /** @const No. of characters that are showed from query description. */
 
-    const DESCRIPTION_TRUNC = 80;
+    public const DESCRIPTION_TRUNC = 80;
 
     private ServiceStoredQuery $serviceStoredQuery;
 
@@ -65,19 +65,19 @@ class StoredQueriesGrid extends BaseGrid {
         ]);
         $this->addButton('edit', _('Edit'))
             ->setText(_('Edit'))
-            ->setLink(function (ModelStoredQuery $row) {
+            ->setLink(function (ModelStoredQuery $row): string {
                 return $this->getPresenter()->link('StoredQuery:edit', ['id' => $row->query_id]);
             });
         $this->addButton('detail', _('Detail'))
             ->setText(_('Detail'))
-            ->setLink(function (ModelStoredQuery $row) {
+            ->setLink(function (ModelStoredQuery $row): string {
                 return $this->getPresenter()->link('StoredQuery:detail', ['id' => $row->query_id]);
             });
 
         $this->addButton('execute', _('Execute'))
             ->setClass('btn btn-sm btn-primary')
             ->setText(_('Execute'))
-            ->setLink(function (ModelStoredQuery $row) {
+            ->setLink(function (ModelStoredQuery $row): string {
                 return $this->getPresenter()->link('Export:execute', ['id' => $row->query_id]);
             });
     }

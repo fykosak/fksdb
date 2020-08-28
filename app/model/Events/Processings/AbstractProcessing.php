@@ -21,8 +21,8 @@ use Nette\Utils\ArrayHash;
 abstract class AbstractProcessing implements IProcessing {
     use SmartObject;
 
-    const DELIMITER = '.';
-    const WILDCART = '*';
+    public const DELIMITER = '.';
+    public const WILDCART = '*';
 
     /** @var mixed */
     private $valuesPathCache;
@@ -42,8 +42,9 @@ abstract class AbstractProcessing implements IProcessing {
      * @param Holder $holder
      * @param ILogger $logger
      * @param Form|null $form
+     * @return array|void
      */
-    final public function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
+    final public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form = null) {
         $this->states = $states;
         $this->holder = $holder;
         $this->setValues($values);

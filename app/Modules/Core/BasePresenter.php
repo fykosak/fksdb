@@ -155,7 +155,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         } else {
             $provider = $component->getDataProvider();
             $data = null;
-            if ($provider instanceof IFilteredDataProvider) {
+            if ($provider && $provider instanceof IFilteredDataProvider) {
                 $data = $provider->getFilteredItems($acQ);
             }
 
@@ -183,7 +183,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @param string $view
      * @return static
      */
-    public function setView($view) {
+    public function setView($view): self {
         parent::setView($view);
         $this->pageTitle = null;
         return $this;
@@ -229,7 +229,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @throws UnsupportedLanguageException
      * @throws AbortException
      */
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         parent::beforeRender();
 
         $this->tryCall($this->formatTitleMethod($this->getView()), $this->params);
@@ -277,6 +277,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return new ThemeChooser($this->getContext());
     }
 
+    protected function createComponentValuePrinter(): ValuePrinterComponent {
+        return new ValuePrinterComponent($this->getContext());
+    }
+
     final protected function createComponentLanguageChooser(): LanguageChooser {
         return new LanguageChooser($this->getContext(), $this->lang);
     }
@@ -298,7 +302,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @throws BadTypeException
      * @throws ReflectionException
      */
-    final public function backLinkRedirect($need = false) {
+    final public function backLinkRedirect(bool $need = false): void {
         $this->putIntoBreadcrumbs();
         /** @var Breadcrumbs $component */
         $component = $this->getComponent('breadcrumbs');
@@ -333,12 +337,12 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * @param string $destination
-     * @param null $args
+     * @param array|null $args
      * @return bool
      * @throws BadRequestException
      * @throws InvalidLinkException
      */
-    public function authorized($destination, $args = null) {
+    public function authorized(string $destination, $args = null): bool {
         if (substr($destination, -1) === '!' || $destination === 'this') {
             $destination = $this->getAction(true);
         }
@@ -397,9 +401,5 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
             $this->fullRequest = new FullHttpRequest($this->getHttpRequest(), $payload);
         }
         return $this->fullRequest;
-    }
-
-    protected function createComponentValuePrinter(): ValuePrinterComponent {
-        return new ValuePrinterComponent($this->getContext());
     }
 }

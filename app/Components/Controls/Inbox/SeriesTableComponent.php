@@ -13,10 +13,10 @@ use Nette\DI\Container;
  * @author Michal Koutny
  */
 abstract class SeriesTableComponent extends BaseComponent {
-    /** @var SeriesTable */
-    private $seriesTable;
-    /** @var bool */
-    private $displayAll;
+
+    private SeriesTable $seriesTable;
+
+    private bool $displayAll;
 
     /**
      * CheckSubmitsControl constructor.

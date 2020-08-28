@@ -40,10 +40,10 @@ use Nette\Security\IResource;
  * @property-read string swift
  */
 class ModelPayment extends AbstractModelSingle implements IResource, IStateModel, IEventReferencedModel, IPaymentModel, IPersonReferencedModel {
-    const STATE_WAITING = 'waiting'; // waiting for confirm payment
-    const STATE_RECEIVED = 'received'; // payment received
-    const STATE_CANCELED = 'canceled'; // payment canceled
-    const STATE_NEW = 'new'; // new payment
+    public const STATE_WAITING = 'waiting'; // waiting for confirm payment
+    public const STATE_RECEIVED = 'received'; // payment received
+    public const STATE_CANCELED = 'canceled'; // payment canceled
+    public const STATE_NEW = 'new'; // new payment
 
     public const RESOURCE_ID = 'event.payment';
 

@@ -22,11 +22,11 @@ use Nette\Security\IResource;
  * @property-read \DateTimeInterface sent
  */
 class ModelEmailMessage extends AbstractModelSingle implements IResource {
-    const STATE_SAVED = 'saved'; // uložená, na ďalšiu úpravu
-    const STATE_WAITING = 'waiting'; //čaká na poslanie
-    const STATE_SENT = 'sent'; // úspešné poslané (môže sa napr. ešte odraziť)
-    const STATE_FAILED = 'failed'; // posielanie zlyhalo
-    const STATE_CANCELED = 'canceled'; // posielanie zrušené
+    public const STATE_SAVED = 'saved'; // uložená, na ďalšiu úpravu
+    public const STATE_WAITING = 'waiting'; //čaká na poslanie
+    public const STATE_SENT = 'sent'; // úspešné poslané (môže sa napr. ešte odraziť)
+    public const STATE_FAILED = 'failed'; // posielanie zlyhalo
+    public const STATE_CANCELED = 'canceled'; // posielanie zrušené
 
     public const RESOURCE_ID = 'email_message';
 

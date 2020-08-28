@@ -50,61 +50,61 @@ class PersonsGrid extends BaseGrid {
 
         /***** columns ****/
 
-        $this->addColumn('display_name_a', _('Person A'))->setRenderer(function (ModelPerson $row) {
+        $this->addColumn('display_name_a', _('Person A'))->setRenderer(function (ModelPerson $row): string {
             return $this->renderPerson($row);
         })
             ->setSortable(false);
-        $this->addColumn('display_name_b', _('Person B'))->setRenderer(function (ModelPerson $row) {
+        $this->addColumn('display_name_b', _('Person B'))->setRenderer(function (ModelPerson $row): string {
             return $this->renderPerson($this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]);
         })
             ->setSortable(false);
-        $this->addColumn('score', _('Podobnost'))->setRenderer(function (ModelPerson $row) {
-            return sprintf("%0.2f", $this->pairs[$row->person_id][DuplicateFinder::IDX_SCORE]);
+        $this->addColumn('score', _('Podobnost'))->setRenderer(function (ModelPerson $row): string {
+            return sprintf('%0.2f', $this->pairs[$row->person_id][DuplicateFinder::IDX_SCORE]);
         })
             ->setSortable(false);
 
         /**** operations *****/
 
-        $this->addButton("mergeAB", _('Sloučit A<-B'))
+        $this->addButton('mergeAB', _('Sloučit A<-B'))
             ->setText(_('Sloučit A<-B'))
-            ->setClass("btn btn-sm btn-primary")
-            ->setLink(function (ModelPerson $row) use ($presenter) {
-                return $presenter->link("Person:merge", [
+            ->setClass('btn btn-sm btn-primary')
+            ->setLink(function (ModelPerson $row): string {
+                return $this->getPresenter()->link('Person:merge', [
                     'trunkId' => $row->person_id,
                     'mergedId' => $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                 ]);
             })
-            ->setShow(function (ModelPerson $row) use ($presenter) {
-                return $presenter->authorized("Person:merge", [
+            ->setShow(function (ModelPerson $row): bool {
+                return $this->getPresenter()->authorized('Person:merge', [
                     'trunkId' => $row->person_id,
                     'mergedId' => $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                 ]);
             });
-        $this->addButton("mergeBA", _('Sloučit B<-A'))
+        $this->addButton('mergeBA', _('Sloučit B<-A'))
             ->setText(_('Sloučit B<-A'))
-            ->setLink(function (ModelPerson $row) use ($presenter) {
-                return $presenter->link("Person:merge", [
+            ->setLink(function (ModelPerson $row): string {
+                return $this->getPresenter()->link('Person:merge', [
                     'trunkId' => $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                     'mergedId' => $row->person_id,
                 ]);
             })
-            ->setShow(function (ModelPerson $row) use ($presenter) {
-                return $presenter->authorized("Person:merge", [
+            ->setShow(function (ModelPerson $row): bool {
+                return $this->getPresenter()->authorized('Person:merge', [
                     'trunkId' => $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                     'mergedId' => $row->person_id,
                 ]);
             });
-        $this->addButton("dontMerge", _('Nejde o duplicitu'))
+        $this->addButton('dontMerge', _('Nejde o duplicitu'))
             ->setText(_('Nejde o duplicitu'))
-            ->setClass("btn btn-sm btn-primary")
-            ->setLink(function (ModelPerson $row) use ($presenter) {
-                return $presenter->link("Person:dontMerge", [
+            ->setClass('btn btn-sm btn-primary')
+            ->setLink(function (ModelPerson $row): string {
+                return $this->getPresenter()->link('Person:dontMerge', [
                     'trunkId' => $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                     'mergedId' => $row->person_id,
                 ]);
             })
-            ->setShow(function (ModelPerson $row) use ($presenter) {
-                return $presenter->authorized("Person:dontMerge", [
+            ->setShow(function (ModelPerson $row): bool {
+                return $this->getPresenter()->authorized('Person:dontMerge', [
                     'trunkId' => $this->pairs[$row->person_id][DuplicateFinder::IDX_PERSON]->person_id,
                     'mergedId' => $row->person_id,
                 ]);

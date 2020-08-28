@@ -183,7 +183,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws UnsupportedLanguageException
      * @throws \ReflectionException
      */
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         $this->getPageStyleContainer()->styleId = 'event event-type-' . $this->getEvent()->event_type_id;
         switch ($this->getEvent()->event_type_id) {
             case 1:

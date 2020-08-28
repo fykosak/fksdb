@@ -7,12 +7,12 @@ namespace FKSDB\UI;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PageStyleContainer {
-    /** @var string */
-    public $styleId;
-    /** @var string */
-    private $navBarClassName;
-    /** @var string[] */
-    public $mainContainerClassNames = ['container', 'bg-white-container'];
+
+    public ?string $styleId;
+
+    private string $navBarClassName;
+
+    public array $mainContainerClassNames = ['container', 'bg-white-container'];
 
     /**
      * PageStyleContainer constructor.
@@ -21,10 +21,7 @@ class PageStyleContainer {
         $this->styleId = null;
     }
 
-    /**
-     * @return void
-     */
-    public function setWidePage() {
+    public function setWidePage(): void {
         foreach ($this->mainContainerClassNames as &$className) {
             if ($className === 'container') {
                 $className = 'container-fluid';
@@ -37,11 +34,7 @@ class PageStyleContainer {
         return join(' ', $this->mainContainerClassNames);
     }
 
-    /**
-     * @param string $className
-     * @return void
-     */
-    public function setNavBarClassName(string $className) {
+    public function setNavBarClassName(string $className): void {
         $this->navBarClassName = $className;
     }
 

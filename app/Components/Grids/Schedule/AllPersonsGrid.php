@@ -59,10 +59,10 @@ class AllPersonsGrid extends BaseGrid {
 
         $this->addColumns(['person.full_name']);
 
-        $this->addColumn('schedule_item', _('Schedule item'))->setRenderer(function (ModelPersonSchedule $model) {
+        $this->addColumn('schedule_item', _('Schedule item'))->setRenderer(function (ModelPersonSchedule $model): string {
             return $model->getScheduleItem()->getLabel();
         })->setSortable(false);
-        $this->addColumn('schedule_group', _('Schedule group'))->setRenderer(function (ModelPersonSchedule $model) {
+        $this->addColumn('schedule_group', _('Schedule group'))->setRenderer(function (ModelPersonSchedule $model): string {
             return $model->getScheduleItem()->getScheduleGroup()->getLabel();
         })->setSortable(false);
 
