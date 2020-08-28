@@ -57,7 +57,4 @@ services:
     event.ServiceFyziklaniParticipant:      FKSDB\ORM\Services\Events\ServiceFyziklaniParticipant
     event.ServiceMFyziklaniParticipant:     FKSDB\ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant
 
-    event.ServiceTsafParticipant:           FKSDB\ORM\Services\Events\ServiceTsafParticipant
-    event.ServiceMTsafParticipant:          FKSDB\ORM\ServicesMulti\Events\ServiceMTsafParticipant
-
     ServiceMPostContact:     FKSDB\ORM\ServicesMulti\ServiceMPostContact

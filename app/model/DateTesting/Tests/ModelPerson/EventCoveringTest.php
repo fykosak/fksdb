@@ -32,7 +32,7 @@ class EventCoveringTest extends PersonTest {
             ModelContest::ID_FYKOS => [],
             ModelContest::ID_VYFUK => [],
         ];
-        foreach ($person->getEventParticipant() as $row) {
+        foreach ($person->getEventParticipants() as $row) {
             $eventParticipant = ModelEventParticipant::createFromActiveRow($row);
             $year = $eventParticipant->getEvent()->year;
             $contestId = $eventParticipant->getEvent()->getContest()->contest_id;
@@ -84,7 +84,7 @@ class EventCoveringTest extends PersonTest {
             ModelContest::ID_FYKOS => [],
             ModelContest::ID_VYFUK => [],
         ];
-        foreach ($person->getEventOrg() as $row) {
+        foreach ($person->getEventOrgs() as $row) {
             $eventOrg = ModelEventOrg::createFromActiveRow($row);
             $year = $eventOrg->getEvent()->year;
             $contestId = $eventOrg->getEvent()->getContest()->contest_id;

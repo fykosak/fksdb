@@ -330,9 +330,15 @@ DBReflection:
                 arrival_ticket:
                     type: logic
                     title: _(Arrival ticket)
-                arrival_time: FKSDB\DBReflection\ColumnFactories\EventParticipant\ArrivalTimeRow
+                arrival_time:
+                    type: time
+                    title:  _(Arrival time)
+                    format: %H:%I
                 arrival_destination: FKSDB\DBReflection\ColumnFactories\EventParticipant\ArrivalDestinationRow
-                departure_time: FKSDB\DBReflection\ColumnFactories\EventParticipant\DepartureTimeRow
+                departure_time:
+                    type: time
+                    title: _(Departure time)
+                    format: %H:%I
                 departure_destination: FKSDB\DBReflection\ColumnFactories\EventParticipant\DepartureDestinationRow
                 departure_ticket:
                     type: logic
@@ -340,8 +346,12 @@ DBReflection:
                 event_participant_id:
                     type: primaryKey
                     title:  _(Event participant Id)
+                lunch_count:
+                    type: int
+                    title: _('Počet baget k obědu')
              linkFactories:
                    detail: FKSDB\DBReflection\LinkFactories\ParticipantDetailLink
+                   edit: FKSDB\DBReflection\LinkFactories\ApplicationEditLink
          contestant_base:
              modelClassName: FKSDB\ORM\Models\ModelContestant
              columnFactories:
@@ -375,6 +385,12 @@ DBReflection:
                         eventId: event_id
                         id: e_org_id
                     title: Edit
+                 detail:
+                     destination: ':Event:Eventorg:detail'
+                     params:
+                         eventId: event_id
+                         id: e_org_id
+                     title: Detail
          email_message:
              modelClassName: FKSDB\ORM\Models\ModelEmailMessage
              columnFactories:

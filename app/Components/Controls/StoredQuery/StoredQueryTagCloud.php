@@ -14,13 +14,10 @@ use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
  */
 class StoredQueryTagCloud extends BaseComponent {
 
-    const MODE_LIST = 'mode-list';
-    const MODE_DETAIL = 'mode-detail';
+    public const MODE_LIST = 'mode-list';
+    public const MODE_DETAIL = 'mode-detail';
 
     private ServiceStoredQueryTagType $serviceStoredQueryTagType;
-
-    /** @var string */
-    private $mode;
 
     /**
      * @persistent

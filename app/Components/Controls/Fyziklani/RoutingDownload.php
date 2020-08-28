@@ -14,8 +14,7 @@ use Nette\DI\Container;
  */
 class RoutingDownload extends BaseComponent {
 
-    /** @var bool */
-    private static $JSAttached = false;
+    private static bool $JSAttached = false;
 
     private ModelEvent $event;
 

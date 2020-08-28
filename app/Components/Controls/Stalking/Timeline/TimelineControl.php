@@ -98,19 +98,19 @@ class TimelineControl extends ReactComponent2 {
     private function calculateEvents(): array {
         $events = [];
         $eventParticipants = [];
-        foreach ($this->person->getEventParticipant() as $row) {
+        foreach ($this->person->getEventParticipants() as $row) {
             $participant = ModelEventParticipant::createFromActiveRow($row);
             $events[] = $participant->getEvent();
             $eventParticipants[] = ['event' => $this->eventToArray($participant->getEvent()), 'model' => null];
         }
         $eventOrgs = [];
-        foreach ($this->person->getEventOrg() as $row) {
+        foreach ($this->person->getEventOrgs() as $row) {
             $eventOrg = ModelEventOrg::createFromActiveRow($row);
             $events[] = $eventOrg->getEvent();
             $eventOrgs[] = ['event' => $this->eventToArray($eventOrg->getEvent()), 'model' => null];
         }
         $eventTeachers = [];
-        foreach ($this->person->getEventTeacher() as $row) {
+        foreach ($this->person->getEventTeachers() as $row) {
             $team = ModelFyziklaniTeam::createFromActiveRow($row);
             $eventTeachers[] = ['event' => $this->eventToArray($team->getEvent()), 'model' => null];
             $events[] = $team->getEvent();

@@ -12,12 +12,11 @@ use Nette\Localization\ITranslator;
 class GettextTranslator implements ITranslator {
 
     /** @var array[lang] => locale */
-    private $locales;
+    private array $locales;
 
-    /** @var string */
-    private $localeDir;
-    /** @var string */
-    private $lang;
+    private string $localeDir;
+
+    private ?string $lang = null;
 
     /**
      * GettextTranslator constructor.
@@ -63,7 +62,7 @@ class GettextTranslator implements ITranslator {
      * @param null $count
      * @return string
      */
-    public function translate($message, $count = null) {
+    public function translate($message, $count = null): string {
         if ($message === "" || $message === null) {
             return "";
         }

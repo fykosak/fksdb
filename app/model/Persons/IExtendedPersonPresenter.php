@@ -2,8 +2,6 @@
 
 namespace FKSDB\Persons;
 
-use FKSDB\ORM\AbstractModelMulti;
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 
 /**

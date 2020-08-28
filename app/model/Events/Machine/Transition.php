@@ -21,10 +21,10 @@ use Nette\SmartObject;
 class Transition {
     use SmartObject;
 
-    const TYPE_SUCCESS = ILogger::SUCCESS;
-    const TYPE_WARNING = ILogger::WARNING;
-    const TYPE_DANGEROUS = ILogger::ERROR;
-    const TYPE_DEFAULT = 'secondary';
+    public const TYPE_SUCCESS = ILogger::SUCCESS;
+    public const TYPE_WARNING = ILogger::WARNING;
+    public const TYPE_DANGEROUS = ILogger::ERROR;
+    public const TYPE_DEFAULT = 'secondary';
 
     private BaseMachine $baseMachine;
 
@@ -213,9 +213,9 @@ class Transition {
     /**
      * @param Holder $holder
      * @param Transition[] $inducedTransitions
-     * @return bool
+     * @return bool|array
      */
-    private function validateTarget(Holder $holder, array $inducedTransitions): bool {
+    private function validateTarget(Holder $holder, array $inducedTransitions) {
         foreach ($inducedTransitions as $inducedTransition) {
             if (($result = $inducedTransition->validateTarget($holder, [])) !== true) { // intentionally =
                 return $result;

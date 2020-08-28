@@ -22,12 +22,7 @@ class News {
         $this->container = $container;
     }
 
-    /**
-     * @param ModelContest $contest
-     * @param string $lang
-     * @return array
-     */
-    public function getNews(ModelContest $contest, $lang) {
+    public function getNews(ModelContest $contest, string $lang): array {
         $contestName = $this->container->getParameters()['contestMapping'][$contest->contest_id];
         if (!isset($this->container->getParameters()[$contestName]['news'][$lang])) {
             return [];

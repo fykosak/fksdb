@@ -1,6 +1,6 @@
 {snippet jsFiles}
 {foreach $files as $file}
-    {var $url => $file[$control::FILENAME]}
+    {var $url = $file[$control::FILENAME]}
     {if $control::isRelative($url)}
     <script src="{$basePath}/{$url}"></script>
     {else}

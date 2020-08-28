@@ -73,7 +73,7 @@ class RoutingEdit extends AjaxComponent {
      * @return ModelFyziklaniRoom[]
      * TODO fix getParameter
      */
-    protected function getRooms() {
+    protected function getRooms(): array {
         return $this->serviceFyziklaniRoom->getRoomsByIds([]/*$this->getEvent()->getParameter(null, 'gameSetup')['rooms']*/);
     }
 }

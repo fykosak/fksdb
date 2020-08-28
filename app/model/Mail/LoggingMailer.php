@@ -19,12 +19,11 @@ class LoggingMailer implements IMailer {
 
     private IMailer $mailer;
 
-    /** @var string */
-    private $logPath;
-    /** @var bool */
-    private $logging = true;
-    /** @var int */
-    private $sentMessages = 0;
+    private string $logPath;
+
+    private bool $logging = true;
+
+    private int $sentMessages = 0;
 
     private Container $container;
 

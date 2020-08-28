@@ -15,13 +15,13 @@ class NavigationExtension extends CompilerExtension {
 
     private array $createdNodes = [];
 
-    public function loadConfiguration() {
+    public function loadConfiguration(): void {
         parent::loadConfiguration();
 
         $builder = $this->getContainerBuilder();
         $config = $this->getConfig();
         $navbar = $builder->addDefinition('navbar')
-            ->setClass(NavigationFactory::class);
+            ->setFactory(NavigationFactory::class);
         $navbar->setAutowired(true);
 
 

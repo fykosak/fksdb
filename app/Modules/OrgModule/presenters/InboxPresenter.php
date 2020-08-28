@@ -174,7 +174,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
         return new SubmitsPreviewControl($this->getContext(), $this->seriesTable);
     }
 
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         switch ($this->getAction()) {
             case 'inbox':
                 $this->getPageStyleContainer()->setWidePage();

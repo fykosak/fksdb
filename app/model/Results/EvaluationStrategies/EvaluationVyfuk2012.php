@@ -24,11 +24,7 @@ class EvaluationVyfuk2012 extends EvaluationStrategy {
         ];
     }
 
-    /**
-     * @param ModelCategory $category
-     * @return array|int|null
-     */
-    public function categoryToStudyYears(ModelCategory $category) {
+    public function categoryToStudyYears(ModelCategory $category): array {
         switch ($category->id) {
             case ModelCategory::CAT_ES_6:
                 return [6];
@@ -39,7 +35,7 @@ class EvaluationVyfuk2012 extends EvaluationStrategy {
             case ModelCategory::CAT_ES_9:
                 return [9];
             case ModelCategory::CAT_UNK:
-                return null;
+                return [null];
             default:
                 throw new Nette\InvalidArgumentException('Invalid category ' . $category->id);
                 break;

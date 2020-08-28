@@ -49,7 +49,7 @@ class PhoneColumnFactory extends DefaultColumnFactory implements ITestedColumnFa
         $control->addRule(Form::MAX_LENGTH, null, 32);
         $control->setOption('description', _('Use an international format, starting with "+"'));
         $control->addCondition(Form::FILLED)
-            ->addRule(function (BaseControl $control) {
+            ->addRule(function (BaseControl $control): bool {
                 if ($control->getValue() === WriteOnlyInput::VALUE_ORIGINAL) {
                     return true;
                 }

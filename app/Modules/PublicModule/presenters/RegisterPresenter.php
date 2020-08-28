@@ -14,7 +14,6 @@ use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\ORM\Services\ServicePerson;
@@ -333,7 +332,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @throws UnsupportedLanguageException
      * @throws \ReflectionException
      */
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         $contest = $this->getSelectedContest();
         if ($contest) {
             $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');

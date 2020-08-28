@@ -89,12 +89,12 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /* ********************** TITLE **********************/
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Odevzdat řešení'), 'fa fa-cloud-upload'));
     }
 
-    public function titleAjax() {
-        return $this->titleDefault();
+    public function titleAjax(): void {
+        $this->titleDefault();
     }
 
     /**
@@ -172,7 +172,7 @@ class SubmitPresenter extends BasePresenter {
 
                 if ($submit && $this->uploadedSubmitStorage->fileExists($submit)) {
                     $overwrite = $container->addCheckbox('overwrite', _('Přepsat odeslané řešení.'));
-                    $conditionedUpload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(~Form::FILLED, _('Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.'));
+                    $conditionedUpload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(Form::BLANK, _('Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.'));
                 }
             } else {
                 //Implementaton of quiz questions

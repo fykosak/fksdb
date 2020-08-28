@@ -19,7 +19,7 @@ use Nette\Application\UI\Form;
 use Nette\DI\Container;
 
 class HandoutForm extends BaseComponent {
-    const TASK_PREFIX = 'task';
+    public const TASK_PREFIX = 'task';
 
     private ServicePerson $servicePerson;
 

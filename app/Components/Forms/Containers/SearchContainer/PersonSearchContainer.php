@@ -4,6 +4,7 @@ namespace FKSDB\Components\Forms\Containers\SearchContainer;
 
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
+use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
@@ -68,11 +69,11 @@ class PersonSearchContainer extends SearchContainer {
     protected function getSearchCallback(): callable {
         switch ($this->searchType) {
             case self::SEARCH_EMAIL:
-                return function ($term) {
+                return function ($term): ?ModelPerson {
                     return $this->servicePerson->findByEmail($term);
                 };
             case self::SEARCH_ID:
-                return function ($term) {
+                return function ($term): ?ModelPerson {
                     return $this->servicePerson->findByPrimary($term);
                 };
             default:
@@ -83,12 +84,12 @@ class PersonSearchContainer extends SearchContainer {
     protected function getTermToValuesCallback(): callable {
         switch ($this->searchType) {
             case self::SEARCH_EMAIL:
-                return function ($term) {
+                return function ($term): array {
                     return ['person_info' => ['email' => $term]];
                 };
                 break;
             case self::SEARCH_ID:
-                return function () {
+                return function (): array {
                     return [];
                 };
             default:

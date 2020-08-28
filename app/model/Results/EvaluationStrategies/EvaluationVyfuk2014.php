@@ -60,7 +60,7 @@ class EvaluationVyfuk2014 extends EvaluationStrategy {
      * @param ModelCategory $category
      * @return int|null
      */
-    public function getTaskPoints(ActiveRow $task, ModelCategory $category) {
+    public function getTaskPoints(ActiveRow $task, ModelCategory $category): ?int {
         if ($task->label == '1' && $task->series < 7) {
             if (in_array($category->id, [
                 ModelCategory::CAT_ES_6,

@@ -32,6 +32,7 @@ class PersonScheduleFactory {
      * @throws BadRequestException
      * @throws NotImplementedException
      * @throws BadRequestException
+     * @throws JsonException
      */
     public function createField(string $fieldName, ModelEvent $event): ScheduleField {
         return new ScheduleField($event, $fieldName, $this->serviceScheduleItem);
