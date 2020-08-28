@@ -52,7 +52,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     public const FLASH_ERROR = ILogger::ERROR;
 
-    /** @persistent  */
+    /** @persistent */
     public $tld;
 
     /**
