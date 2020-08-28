@@ -16,8 +16,8 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class SchoolIdRow extends AbstractColumnFactory {
-    /** @var SchoolFactory */
-    private $schoolFactory;
+
+    private SchoolFactory $schoolFactory;
 
     /***
      * SchoolIdRow constructor.

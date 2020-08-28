@@ -4,8 +4,8 @@ namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
 $container = require '../../bootstrap.php';
 
-use FKSDB\Events\Model\ApplicationHandler;
 use MockEnvironment\MockApplicationTrait;
+use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\DI\Config\Helpers;
@@ -16,10 +16,7 @@ class ClosePresenter extends FyziklaniTestCase {
 
     use MockApplicationTrait;
 
-    /**
-     * @var ClosePresenter
-     */
-    private $fixture;
+    private IPresenter $fixture;
     /** @var int */
     private $teamIds;
     /** @var int */
@@ -34,7 +31,7 @@ class ClosePresenter extends FyziklaniTestCase {
         $this->setContainer($container);
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->eventId = $this->createEvent([]);
@@ -105,7 +102,7 @@ class ClosePresenter extends FyziklaniTestCase {
         $this->authenticate($this->userPersonId);
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         parent::tearDown();
     }
 
@@ -167,7 +164,7 @@ class ClosePresenter extends FyziklaniTestCase {
     /**
      * Not a real test method.
      */
-    private function innertestCloseTeam(int $teamId, $pointsSum) {
+    private function innertestCloseTeam(int $teamId, int $pointsSum): void {
         $request = $this->createPostRequest([
             'id' => $teamId,
         ], [
@@ -185,9 +182,9 @@ class ClosePresenter extends FyziklaniTestCase {
     /**
      * @dataProvider getCategories
      */
-    public function testCloseCategory($category) {
+    public function testCloseCategory(string $category): void {
         foreach ($this->getTestTeams($category) as $teamData) {
-            list($teamId, $pointsSum,) = $teamData;
+            [$teamId, $pointsSum,] = $teamData;
             $this->innertestCloseTeam($teamId, $pointsSum);
         }
 
@@ -207,11 +204,11 @@ class ClosePresenter extends FyziklaniTestCase {
             }*/
     }
 
-    public function testCloseAll() {
+    public function testCloseAll(): void {
         foreach ($this->getCategories() as $catData) {
-            list($category) = $catData;
+            [$category] = $catData;
             foreach ($this->getTestTeams($category) as $teamData) {
-                list($teamId, $pointsSum, $cRank, $rank) = $teamData;
+                [$teamId, $pointsSum, $cRank, $rank] = $teamData;
                 $this->innertestCloseTeam($teamId, $pointsSum);
             }
         }

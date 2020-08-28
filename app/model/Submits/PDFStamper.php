@@ -13,20 +13,18 @@ use Nette\Utils\Strings;
  */
 class PDFStamper implements IStorageProcessing {
 
-    /** @var string */
-    private $inputFile;
+    private string $inputFile;
 
-    /** @var string */
-    private $outputFile;
+    private string $outputFile;
 
     /** @var int used font size in pt */
-    private $fontSize;
+    private int $fontSize;
 
     /**
      *
      * @var string printf mask for arguments: series, label, contestant's name
      */
-    const STAMP_MASK = 'S%dU%s, %s, %s';
+    private const STAMP_MASK = 'S%dU%s, %s, %s';
 
     /**
      * PDFStamper constructor.
@@ -86,11 +84,7 @@ class PDFStamper implements IStorageProcessing {
         }
     }
 
-    /**
-     * @param string $text
-     * @return void
-     */
-    private function stampText(string $text) {
+    private function stampText(string $text): void {
         $pdf = new \FPDI();
         $pageCount = $pdf->setSourceFile($this->getInputFile());
 

@@ -18,7 +18,7 @@ class SinceRow extends AbstractOrgRowFactory {
     }
 
     public function createField(...$args): BaseControl {
-        list($min, $max) = $args;
+        [$min, $max] = $args;
         if (\is_null($max) || \is_null($min)) {
             throw new \InvalidArgumentException();
         }

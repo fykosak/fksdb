@@ -4,7 +4,7 @@ namespace FKSDB\Tests\PresentersTests\OrgModule;
 
 $container = require '../../bootstrap.php';
 
-use FKSDB\Components\Controls\Entity\Event\EventFormComponent;
+use FKSDB\Components\Controls\Entity\EventFormComponent;
 use FKSDB\ORM\DbNames;
 use FKSDB\Tests\PresentersTests\EntityPresenterTestCase;
 use Nette\Application\Request;
@@ -21,7 +21,7 @@ class EventPresenterTest extends EntityPresenterTestCase {
     /** @var int */
     private $eventId;
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->loginUser();
         $this->insert(DbNames::TAB_ORG, ['person_id' => $this->cartesianPersonId, 'contest_id' => 1, 'since' => 1, 'order' => 1]);
@@ -36,7 +36,7 @@ class EventPresenterTest extends EntityPresenterTestCase {
         ]);
     }
 
-    public function testList() {
+    public function testList(): void {
         $request = $this->createGetRequest('list', []);
         $response = $this->fixture->run($request);
         $html = $this->assertPageDisplay($response);
@@ -45,7 +45,7 @@ class EventPresenterTest extends EntityPresenterTestCase {
         Assert::contains('#' . $this->eventId, $html);
     }
 
-    public function testCreate() {
+    public function testCreate(): void {
         $init = $this->countEvents();
         $response = $this->createFormRequest('create', [
             EventFormComponent::CONT_EVENT => [
@@ -62,7 +62,7 @@ class EventPresenterTest extends EntityPresenterTestCase {
         Assert::equal($init + 1, $after);
     }
 
-    public function testCreateDuplicate() {
+    public function testCreateDuplicate(): void {
         $init = $this->countEvents();
         $response = $this->createFormRequest('create', [
             EventFormComponent::CONT_EVENT => [
@@ -81,7 +81,7 @@ class EventPresenterTest extends EntityPresenterTestCase {
         Assert::equal($init, $after);
     }
 
-    public function testEdit() {
+    public function testEdit(): void {
         $response = $this->createFormRequest('edit', [
             EventFormComponent::CONT_EVENT => [
                 'event_type_id' => 1,
@@ -119,7 +119,7 @@ class EventPresenterTest extends EntityPresenterTestCase {
         return parent::createGetRequest($action, $params, $postData);
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM event');
         parent::tearDown();
     }

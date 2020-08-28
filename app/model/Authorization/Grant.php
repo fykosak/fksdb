@@ -11,7 +11,7 @@ use Nette\Security\IRole;
  */
 class Grant implements IRole {
 
-    const CONTEST_ALL = -1;
+    public const CONTEST_ALL = -1;
 
     private int $contestId;
 

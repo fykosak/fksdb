@@ -14,13 +14,13 @@ use Tester\Assert;
 
 class AuthTest extends DsefTestCase {
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->authenticate($this->personId);
     }
 
-    public function testDisplay() {
+    public function testDisplay(): void {
         Assert::equal(true, $this->fixture->getUser()->isLoggedIn());
 
         $request = new Request('Public:Application', 'GET', [
@@ -43,7 +43,7 @@ class AuthTest extends DsefTestCase {
         Assert::contains('Paní Bílá', $html);
     }
 
-    public function testAuthRegistration() {
+    public function testAuthRegistration(): void {
         Assert::equal(true, $this->fixture->getUser()->isLoggedIn());
 
         $request = $this->createPostRequest([
@@ -92,9 +92,8 @@ class AuthTest extends DsefTestCase {
 
         $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');
         Assert::equal(1, $eApplication->e_dsef_group_id);
-        Assert::equal(3, $eApplication->lunch_count);
+        Assert::equal(3, $application->lunch_count);
     }
-
 }
 
 $testCase = new AuthTest($container);

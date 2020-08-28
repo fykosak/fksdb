@@ -19,9 +19,9 @@ use FKSDB\Persons\ReferencedPersonHandler;
  */
 class AddressFactory {
 
-    const SHOW_EXTENDED_ROWS = 0x1;
-    const REQUIRED = 0x2;
-    const NOT_WRITEONLY = 0x4;
+    public const SHOW_EXTENDED_ROWS = 0x1;
+    public const REQUIRED = 0x2;
+    public const NOT_WRITEONLY = 0x4;
 
     private ServiceAddress $serviceAddress;
 
@@ -41,12 +41,7 @@ class AddressFactory {
         $this->container = $container;
     }
 
-    /**
-     * @param int $options
-     * @param IControl|null $conditioningField
-     * @return AddressContainer
-     */
-    public function createAddress(int $options = 0, IControl $conditioningField = null): AddressContainer {
+    public function createAddress(int $options = 0, ?IControl $conditioningField = null): AddressContainer {
         $container = new AddressContainer($this->container);
         $this->buildAddress($container, $options, $conditioningField);
         return $container;
@@ -74,7 +69,7 @@ class AddressFactory {
      * @param IControl $conditioningField
      * @param int $options
      */
-    public function buildAddress(AddressContainer $container, int $options = 0, IControl $conditioningField = null): void {
+    public function buildAddress(AddressContainer $container, int $options = 0, ?IControl $conditioningField = null): void {
         if ($options & self::SHOW_EXTENDED_ROWS) {
             $container->addText('first_row', _('První řádek'))
                 ->setOption('description', _('První volitelný řádek adresy (např. bytem u)'));
@@ -120,7 +115,7 @@ class AddressFactory {
         $target->addConditionOn($country, Form::FILLED)->addRule(Form::FILLED, _('Při vyplněném státu musí mít adresa vyplněno i místo.'));
 
         /* Country + postal code validation */
-        $validPostalCode = function (BaseControl $control) {
+        $validPostalCode = function (BaseControl $control): bool {
             return $this->serviceAddress->tryInferRegion($control->getValue());
         };
 

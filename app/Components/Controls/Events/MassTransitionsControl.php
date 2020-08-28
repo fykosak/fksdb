@@ -19,8 +19,7 @@ use Nette\DI\Container;
  */
 class MassTransitionsControl extends BaseComponent {
 
-    /** @var ModelEvent */
-    private $event;
+    private ModelEvent $event;
 
     private EventDispatchFactory $eventDispatchFactory;
 
@@ -45,7 +44,7 @@ class MassTransitionsControl extends BaseComponent {
         /** @var  $machine */
         $machine = $this->eventDispatchFactory->getEventMachine($this->event);
         $this->template->transitions = $machine->getPrimaryMachine()->getTransitions();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'MassTransitions.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.massTransitions.latte');
         $this->template->render();
     }
 

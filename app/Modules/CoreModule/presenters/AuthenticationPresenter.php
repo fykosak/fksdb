@@ -33,19 +33,19 @@ use FKSDB\Utils\Utils;
  */
 final class AuthenticationPresenter extends BasePresenter {
 
-    const PARAM_GSID = 'gsid';
+    public const PARAM_GSID = 'gsid';
     /** @const Indicates that page is accessed via dispatch from the login page. */
-    const PARAM_DISPATCH = 'dispatch';
+    public const PARAM_DISPATCH = 'dispatch';
     /** @const Reason why the user has been logged out. */
-    const PARAM_REASON = 'reason';
+    public const PARAM_REASON = 'reason';
     /** @const Various modes of authentication. */
-    const PARAM_FLAG = 'flag';
+    public const PARAM_FLAG = 'flag';
     /** @const User is shown the login form if he's not authenticated. */
-    const FLAG_SSO_LOGIN = Authentication::FLAG_SSO_LOGIN;
+    public const FLAG_SSO_LOGIN = Authentication::FLAG_SSO_LOGIN;
     /** @const Only check of authentication with subsequent backlink redirect. */
-    const FLAG_SSO_PROBE = 'ssop';
-    const REASON_TIMEOUT = '1';
-    const REASON_AUTH = '2';
+    public const FLAG_SSO_PROBE = 'ssop';
+    public const REASON_TIMEOUT = '1';
+    public const REASON_AUTH = '2';
 
     /** @persistent */
     public $backlink = '';
@@ -120,7 +120,7 @@ final class AuthenticationPresenter extends BasePresenter {
             $this->globalSession->start($this->getParameter(self::PARAM_GSID));
             $this->getUser()->logout(true);
         }
-        $this->flashMessage(_('Byl jste odhlášen.'), self::FLASH_SUCCESS);
+        $this->flashMessage(_('You were logged out.'), self::FLASH_SUCCESS);
         $this->loginBackLinkRedirect();
         $this->redirect('login');
     }
@@ -142,10 +142,10 @@ final class AuthenticationPresenter extends BasePresenter {
             if ($this->getParameter(self::PARAM_REASON)) {
                 switch ($this->getParameter(self::PARAM_REASON)) {
                     case self::REASON_TIMEOUT:
-                        $this->flashMessage(_('Byl(a) jste příliš dlouho neaktivní a pro jistotu Vás systém odhlásil.'), self::FLASH_INFO);
+                        $this->flashMessage(_('You\'ve been logged out due to inactivity.'), self::FLASH_INFO);
                         break;
                     case self::REASON_AUTH:
-                        $this->flashMessage(_('Stránka požaduje přihlášení.'), self::FLASH_ERROR);
+                        $this->flashMessage(_('You must be logged in to continue.'), self::FLASH_ERROR);
                         break;
                 }
             }
@@ -166,7 +166,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @throws AbortException
      */
-    public function actionRecover() {
+    public function actionRecover(): void {
         if ($this->isLoggedIn()) {
             $this->initialRedirect();
         }
@@ -192,7 +192,7 @@ final class AuthenticationPresenter extends BasePresenter {
     protected function createComponentLoginForm(): Form {
         $form = new Form($this, 'loginForm');
         $form->addText('id', _('Login or e-mail'))
-            ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'))
+            ->addRule(Form::FILLED, _('Insert login or email address.'))
             ->getControlPrototype()->addAttributes([
                 'class' => 'top form-control',
                 'autofocus' => true,
@@ -200,15 +200,15 @@ final class AuthenticationPresenter extends BasePresenter {
                 'autocomplete' => 'username',
             ]);
         $form->addPassword('password', _('Password'))
-            ->addRule(Form::FILLED, _('Zadejte heslo.'))->getControlPrototype()->addAttributes([
+            ->addRule(Form::FILLED, _('Type password.'))->getControlPrototype()->addAttributes([
                 'class' => 'bottom mb-3 form-control',
                 'placeholder' => _('Password'),
                 'autocomplete' => 'current-password',
             ]);
         $form->addSubmit('send', _('Log in'));
-        $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
+        $form->addProtection(_('The form has expired. Please send it again.'));
         $form->onSuccess[] = function (Form $form) {
-            return $this->loginFormSubmitted($form);
+            $this->loginFormSubmitted($form);
         };
         return $form;
     }
@@ -220,12 +220,12 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     protected function createComponentRecoverForm(): Form {
         $form = new Form();
-        $form->addText('id', _('Přihlašovací jméno nebo email'))
-            ->addRule(Form::FILLED, _('Zadejte přihlašovací jméno nebo emailovou adresu.'));
+        $form->addText('id', _('Login or e-mail address'))
+            ->addRule(Form::FILLED, _('Insert login or email address.'));
 
-        $form->addSubmit('send', _('Pokračovat'));
+        $form->addSubmit('send', _('Continue'));
 
-        $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
+        $form->addProtection(_('The form has expired. Please send it again.'));
 
         $form->onSuccess[] = function (Form $form) {
             $this->recoverFormSubmitted($form);
@@ -237,7 +237,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @param Form $form
      * @throws AbortException
      */
-    private function loginFormSubmitted(Form $form) {
+    private function loginFormSubmitted(Form $form): void {
         $values = $form->getValues();
         try {
             // TODO use form->getValues()
@@ -257,7 +257,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws UnsupportedLanguageException
      */
-    private function recoverFormSubmitted(Form $form) {
+    private function recoverFormSubmitted(Form $form): void {
         $connection = $this->serviceAuthToken->getConnection();
         try {
             $values = $form->getValues();
@@ -266,7 +266,7 @@ final class AuthenticationPresenter extends BasePresenter {
             $login = $this->passwordAuthenticator->findLogin($values['id']);
             $this->accountManager->sendRecovery($login, $login->getPerson()->getPreferredLang() ?: $this->getLang());
             $email = Utils::cryptEmail($login->getPerson()->getInfo()->email);
-            $this->flashMessage(sprintf(_('Na email %s byly poslány další instrukce k obnovení přístupu.'), $email), self::FLASH_SUCCESS);
+            $this->flashMessage(sprintf(_('Further instructions for the recovery have been sent to %s.'), $email), self::FLASH_SUCCESS);
             $connection->commit();
             $this->redirect('login');
         } catch (AuthenticationException $exception) {
@@ -286,7 +286,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @throws AbortException
      * @throws Exception
      */
-    private function loginBackLinkRedirect($login = null) {
+    private function loginBackLinkRedirect($login = null): void {
         if (!$this->backlink) {
             return;
         }
@@ -317,7 +317,7 @@ final class AuthenticationPresenter extends BasePresenter {
             if (in_array($url->getHost(), $this->getContext()->getParameters()['authentication']['backlinkHosts'])) {
                 $this->redirectUrl((string)$url, 303);
             } else {
-                $this->flashMessage(sprintf(_('Nedovolený backlink %s.'), (string)$url), self::FLASH_ERROR);
+                $this->flashMessage(sprintf(_('Backlink %s not allowed'), (string)$url), self::FLASH_ERROR);
             }
         }
     }
@@ -332,9 +332,9 @@ final class AuthenticationPresenter extends BasePresenter {
         $this->redirect(':Core:Dispatch:');
     }
 
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         $this->getPageStyleContainer()->styleId = 'login';
-        $this->getPageStyleContainer()->mainContainerClassName = '';
+        $this->getPageStyleContainer()->mainContainerClassNames = [];
         parent::beforeRender();
     }
 }

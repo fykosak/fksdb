@@ -4,6 +4,7 @@ namespace FKSDB\Authentication\SSO\ServiceSide;
 
 use FKSDB\Authentication\SSO\IGlobalSession;
 use FKSDB\Authentication\SSO\IGSIDHolder;
+use FKSDB\ORM\DbNames;
 use LogicException;
 use Nette\Database\Connection;
 
@@ -14,16 +15,13 @@ use Nette\Database\Connection;
  */
 class ReadonlyGlobalSession implements IGlobalSession {
 
-    const TABLE = 'global_session';
+    public const TABLE = DbNames::TAB_GLOBAL_SESSION;
 
-    /** @var Connection */
-    private $connection;
+    private Connection $connection;
 
-    /** @var IGSIDHolder */
-    private $gsidHolder;
+    private IGSIDHolder $gsidHolder;
 
-    /** @var array */
-    private $data = [];
+    private array $data = [];
 
     /**
      * ReadonlyGlobalSession constructor.
@@ -42,7 +40,7 @@ class ReadonlyGlobalSession implements IGlobalSession {
         return $this->gsidHolder->getGSID();
     }
 
-    public function start() {
+    public function start(): void {
         $gsid = $this->gsidHolder->getGSID();
         if (!$gsid) {
             return;
@@ -63,7 +61,7 @@ class ReadonlyGlobalSession implements IGlobalSession {
         }
     }
 
-    public function destroy() {
+    public function destroy(): void {
         // Note: This is read-only implementation, global session is not actually deleted.
         $this->gsidHolder->setGSID(null);
         $this->data = [];

@@ -2,10 +2,10 @@
 
 namespace FKSDB\Tests\PresentersTests;
 
-use FKSDB\Modules\OrgModule\OrgPresenter;
 use FKSDB\ORM\DbNames;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;
+use Nette\Application\IPresenter;
 use Nette\Application\IResponse;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
@@ -20,10 +20,9 @@ use Tester\Assert;
 abstract class EntityPresenterTestCase extends DatabaseTestCase {
     use MockApplicationTrait;
 
-    /** @var int */
-    protected $cartesianPersonId;
-    /** @var OrgPresenter */
-    protected $fixture;
+    protected int $cartesianPersonId;
+
+    protected IPresenter $fixture;
 
     /**
      * OrgPresenter constructor.
@@ -34,7 +33,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase {
         $this->setContainer($container);
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->fixture = $this->createPresenter($this->getPresenterName());
     }
@@ -51,7 +50,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase {
         return new Request($this->getPresenterName(), 'GET', $params, $postData);
     }
 
-    protected function loginUser(int $roleId = 1000) {
+    protected function loginUser(int $roleId = 1000): void {
         $this->cartesianPersonId = $this->insert(DbNames::TAB_PERSON, [
             'family_name' => 'Cartesian',
             'other_name' => 'Cartesiansky',
@@ -68,7 +67,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase {
         $source = $response->getSource();
         Assert::type(ITemplate::class, $source);
 
-        Assert::noError(function () use ($source) {
+        Assert::noError(function () use ($source) : string {
             return (string)$source;
         });
         return (string)$source;

@@ -7,8 +7,8 @@ use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Events\EventNotFoundException;
 use FKSDB\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Events\ImportComponent;
-use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
-use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
+use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
+use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelEventParticipant;
@@ -47,12 +47,12 @@ class ApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @return AbstractApplicationGrid
+     * @return AbstractApplicationsGrid
      * @throws EventNotFoundException
      * @throws NeonSchemaException
      */
-    protected function createComponentGrid(): AbstractApplicationGrid {
-        return new ApplicationGrid($this->getEvent(), $this->getHolder(), $this->getContext());
+    protected function createComponentGrid(): AbstractApplicationsGrid {
+        return new SingleApplicationsGrid($this->getEvent(), $this->getHolder(), $this->getContext());
     }
 
     /**

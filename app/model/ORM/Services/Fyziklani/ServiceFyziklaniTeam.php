@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Services\Fyziklani;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -12,6 +13,7 @@ use Nette\Database\IConventions;
 
 /**
  * @author Michal Červeňák <miso@fykos.cz>
+ * @method ModelFyziklaniTeam|null findByPrimary($key)
  */
 class ServiceFyziklaniTeam extends AbstractServiceSingle {
 

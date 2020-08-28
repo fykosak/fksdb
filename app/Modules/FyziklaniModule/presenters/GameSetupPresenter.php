@@ -49,7 +49,7 @@ class GameSetupPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     protected function getGameSetup(): ModelFyziklaniGameSetup {
-        if (!isset($this->gameSetup) || is_null($this->gameSetup)) {
+        if (!isset($this->gameSetup)) {
             $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
             if (!$gameSetup) {
                 throw new NotFoundException(_('Game is not set up!'));

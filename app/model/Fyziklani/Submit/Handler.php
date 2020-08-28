@@ -20,9 +20,9 @@ use Tracy\Debugger;
  */
 class Handler {
 
-    const DEBUGGER_LOG_PRIORITY = 'fyziklani-info';
+    public const DEBUGGER_LOG_PRIORITY = 'fyziklani-info';
 
-    const LOG_FORMAT = 'Submit %d was %s by %s';
+    public const LOG_FORMAT = 'Submit %d was %s by %s';
 
     private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
 
@@ -206,7 +206,7 @@ class Handler {
             /* ugly, force current timestamp in database
              * see https://dev.mysql.com/doc/refman/5.5/en/timestamp-initialization.html
              */
-            'created' => null,
+            //'created' => null, TODO!!!
         ]);
         $this->logEvent($submit, 'created', \sprintf(' points %d', $points));
 

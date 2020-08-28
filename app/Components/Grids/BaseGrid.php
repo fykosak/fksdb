@@ -17,6 +17,8 @@ use Nette\Bridges\ApplicationLatte\Template;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use FKSDB\Exceptions\NotImplementedException;
+use Nette\Localization\ITranslator;
+use Nette\Security\Permission;
 use Nette\Utils\Html;
 use NiftyGrid\Components\Button;
 use NiftyGrid\Components\Column;
@@ -57,6 +59,10 @@ abstract class BaseGrid extends Grid {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
+    public function injectTranslator(ITranslator $translator): void {
+        $this->setTranslator($translator);
+    }
+
     protected function configure(Presenter $presenter): void {
         try {
             $this->setDataSource($this->getData());
@@ -91,9 +97,9 @@ abstract class BaseGrid extends Grid {
          * @var Template $template
          */
         $paginator = $this->getComponent('paginator');
-        $paginator->getTemplate()->setTranslator($presenter->getTranslator());
+        $paginator->getTemplate()->setTranslator($this->getTranslator());
         $template = parent::createTemplate();
-        $template->setTranslator($presenter->getTranslator());
+        $template->setTranslator($this->getTranslator());
         return $template;
     }
 
@@ -204,9 +210,9 @@ abstract class BaseGrid extends Grid {
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    private function addReflectionColumn(string $field, int $userPermission = FieldLevelPermission::ALLOW_FULL): Column {
+    private function addReflectionColumn(string $field, int $userPermission): Column {
         $factory = $this->tableReflectionFactory->loadColumnFactory($field);
-        return $this->addColumn(str_replace('.', '__', $field), $factory->getTitle())->setRenderer(function ($model) use ($factory, $userPermission) {
+        return $this->addColumn(str_replace('.', '__', $field), $factory->getTitle())->setRenderer(function ($model) use ($factory, $userPermission): Html {
             if (!$model instanceof AbstractModelSingle) {
                 $model = $this->getModelClassName()::createFromActiveRow($model);
             }
@@ -239,15 +245,17 @@ abstract class BaseGrid extends Grid {
 
     /**
      * @param array $fields
+     * @param int $userPermissions
      * @return void
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    protected function addColumns(array $fields): void {
+    protected function addColumns(array $fields, int $userPermissions = FieldLevelPermission::ALLOW_FULL): void {
         foreach ($fields as $name) {
-            $this->addReflectionColumn($name);
+            $this->addReflectionColumn($name, $userPermissions);
         }
     }
+
 
     /**
      * @param string $destination
@@ -276,7 +284,7 @@ abstract class BaseGrid extends Grid {
                 return $this->getPresenter()->link($destination, $paramMapCallback($model));
             });
         if ($checkACL) {
-            $button->setShow(function ($model) use ($destination, $paramMapCallback) {
+            $button->setShow(function ($model) use ($destination, $paramMapCallback): bool {
                 if (!$model instanceof AbstractModelSingle) {
                     $model = $this->getModelClassName()::createFromActiveRow($model);
                 }

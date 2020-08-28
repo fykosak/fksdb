@@ -306,10 +306,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return $control;
     }
 
-    /**
-     * @return null|IModel
-     */
-    public function getModel() {
+    public function getModel(): ?IModel {
         return null; //we always create new contestant
     }
 
@@ -335,10 +332,10 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @throws UnsupportedLanguageException
      * @throws \ReflectionException
      */
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         $contest = $this->getSelectedContest();
         if ($contest) {
-            $this->getPageStyleContainer()->navBarClassName = 'bg-dark navbar-dark';
+            $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
             $this->getPageStyleContainer()->styleId = $contest->getContestSymbol();
         }
         parent::beforeRender();

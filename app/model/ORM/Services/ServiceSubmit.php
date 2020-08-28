@@ -31,6 +31,7 @@ class ServiceSubmit extends AbstractServiceSingle {
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_SUBMIT, ModelSubmit::class);
     }
+
     /**
      * Syntactic sugar.
      *
@@ -41,7 +42,7 @@ class ServiceSubmit extends AbstractServiceSingle {
      */
     public function findByContestant(int $ctId, int $taskId, bool $useCache = true): ?ModelSubmit {
         $key = $ctId . ':' . $taskId;
-        if (!isset($this->submitCache[$key]) || is_null($this->submitCache[$key]) || !$useCache) {
+        if (!isset($this->submitCache[$key]) || !$useCache) {
             $result = $this->getTable()->where([
                 'ct_id' => $ctId,
                 'task_id' => $taskId,
@@ -61,12 +62,7 @@ class ServiceSubmit extends AbstractServiceSingle {
             ->select(DbNames::TAB_TASK . '.*');
     }
 
-    /**
-     * @param ModelSubmit|null $submit
-     * @param array $data
-     * @return ModelSubmit
-     */
-    public function store($submit, array $data): ModelSubmit {
+    public function store(?ModelSubmit $submit, array $data): ModelSubmit {
         if (is_null($submit)) {
             return $this->createNewModel($data);
         } else {
@@ -75,13 +71,7 @@ class ServiceSubmit extends AbstractServiceSingle {
         }
     }
 
-    /**
-     * @param ModelSubmit|null $submit
-     * @param ModelTask $task
-     * @param int|null $studyYear
-     * @return array
-     */
-    public static function serializeSubmit($submit, ModelTask $task, $studyYear): array {
+    public static function serializeSubmit(?ModelSubmit $submit, ModelTask $task, ?int $studyYear): array {
         return [
             'submitId' => $submit ? $submit->submit_id : null,
             'name' => $task->getFQName(),

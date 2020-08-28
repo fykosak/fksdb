@@ -15,13 +15,11 @@ use FKSDB\YearCalculator;
  */
 class PersonProvider implements IFilteredDataProvider {
 
-    const PLACE = 'place';
+    private const PLACE = 'place';
 
-    /** @var ServicePerson */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
-    /** @var TypedTableSelection */
-    private $searchTable;
+    private TypedTableSelection $searchTable;
 
     /**
      * PersonProvider constructor.
@@ -95,7 +93,7 @@ class PersonProvider implements IFilteredDataProvider {
     /**
      * @param mixed $id
      */
-    public function setDefaultValue($id) {
+    public function setDefaultValue($id): void {
         /* intentionally blank */
     }
 

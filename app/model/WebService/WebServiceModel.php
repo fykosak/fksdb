@@ -5,6 +5,7 @@ namespace FKSDB\WebService;
 use FKSDB\Authorization\ContestAuthorizator;
 use DOMDocument;
 use DOMElement;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\StoredQuery\StoredQuery;
 use FKSDB\StoredQuery\StoredQueryFactory;
 use FKSDB\ORM\Models\ModelLogin;
@@ -254,7 +255,7 @@ class WebServiceModel {
 
         $this->checkAuthentication(__FUNCTION__, $qid);
 
-        // stupid PHP deserialization
+        // stupid PHP deserialization
         if (!is_array($args->parameter)) {
             $args->parameter = [$args->parameter];
         }
@@ -338,6 +339,7 @@ class WebServiceModel {
      * @param DOMDocument $doc
      * @return DOMElement
      * @throws SoapFault
+     * @throws BadTypeException
      */
     private function createDetailNode(AbstractResultsModel $resultsModel, DOMDocument $doc): DOMElement {
         $detailNode = $doc->createElement('detail');
@@ -352,6 +354,7 @@ class WebServiceModel {
      * @param DOMDocument $doc
      * @return DOMElement
      * @throws SoapFault
+     * @throws BadTypeException
      */
     private function createCumulativeNode(AbstractResultsModel $resultsModel, DOMDocument $doc): DOMElement {
         $cumulativeNode = $doc->createElement('cumulative');
@@ -366,6 +369,7 @@ class WebServiceModel {
      * @param DOMDocument $doc
      * @return DOMElement
      * @throws SoapFault
+     * @throws BadTypeException
      */
     private function createSchoolCumulativeNode(AbstractResultsModel $resultsModel, DOMDocument $doc): DOMElement {
         $schoolNode = $doc->createElement('school-cumulative');
@@ -380,6 +384,7 @@ class WebServiceModel {
      * @param DOMDocument $doc
      * @return DOMElement
      * @throws SoapFault
+     * @throws BadTypeException
      */
     private function createBrojureNode(AbstractResultsModel $resultsModel, DOMDocument $doc): DOMElement {
         $brojureNode = $doc->createElement('brojure');

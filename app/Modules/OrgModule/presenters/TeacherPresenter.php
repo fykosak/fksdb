@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Entity\Teacher\TeacherFormComponent;
+use FKSDB\Components\Controls\Entity\TeacherFormComponent;
 use FKSDB\Components\Grids\TeachersGrid;
 use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Exceptions\BadTypeException;
@@ -29,7 +29,6 @@ class TeacherPresenter extends BasePresenter {
 
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
@@ -47,7 +46,6 @@ class TeacherPresenter extends BasePresenter {
 
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      */
     public function titleDetail(): void {

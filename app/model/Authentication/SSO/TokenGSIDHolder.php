@@ -15,20 +15,14 @@ use Nette\Http\Session;
  */
 class TokenGSIDHolder implements IGSIDHolder {
 
-    const SESSION_NS = 'sso';
-    const GSID_KEY = 'gsid';
+    public const SESSION_NS = 'sso';
+    public const GSID_KEY = 'gsid';
 
-    /** @var Session */
-    private $session;
+    private Session $session;
 
-    /** @var ServiceAuthToken */
-    private $serviceAuthToken;
+    private ServiceAuthToken $serviceAuthToken;
 
-    /**
-     *
-     * @var Request
-     */
-    private $request;
+    private Request $request;
 
     /**
      * TokenGSIDHolder constructor.
@@ -69,7 +63,7 @@ class TokenGSIDHolder implements IGSIDHolder {
      * @param mixed $gsid
      * @return void
      */
-    public function setGSID($gsid) {
+    public function setGSID($gsid): void {
         $section = $this->session->getSection(self::SESSION_NS);
         $section[self::GSID_KEY] = $gsid;
     }

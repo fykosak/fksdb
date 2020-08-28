@@ -11,7 +11,7 @@ use Tester\Assert;
 
 class AnonymousExistingTest extends DsefTestCase {
 
-    public function testRegistration() {
+    public function testRegistration(): void {
         //Assert::equal(false, $this->fixture->getUser()->isLoggedIn()); (presnter not ready for redirect)
 
         $request = $this->createPostRequest([
@@ -60,9 +60,8 @@ class AnonymousExistingTest extends DsefTestCase {
 
         $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');
         Assert::equal(1, $eApplication->e_dsef_group_id);
-        Assert::equal(3, $eApplication->lunch_count);
+        Assert::equal(3, $application->lunch_count);
     }
-
 }
 
 $testCase = new AnonymousExistingTest($container);

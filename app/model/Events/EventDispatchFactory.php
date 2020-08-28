@@ -18,6 +18,8 @@ class EventDispatchFactory {
 
     private Container $container;
 
+    private string $templateDir;
+
     /**
      * EventDispatchFactory constructor.
      * @param Container $container
@@ -26,16 +28,16 @@ class EventDispatchFactory {
         $this->container = $container;
     }
 
-    /**
-     * @param array $key
-     * @param string $machineName
-     * @param string $holderMethodName
-     */
-    public function addEvent(array $key, string $holderMethodName, string $machineName) {
+    public function setTemplateDir(string $templateDir): void {
+        $this->templateDir = $templateDir;
+    }
+
+    public function addEvent(array $key, string $holderMethodName, string $machineName, string $formLayout): void {
         $this->definitions[] = [
             'keys' => $key,
             'holderMethod' => $holderMethodName,
             'machineName' => $machineName,
+            'formLayout' => $formLayout,
         ];
     }
 
@@ -47,6 +49,16 @@ class EventDispatchFactory {
     public function getEventMachine(ModelEvent $event): Machine {
         $definition = $this->findDefinition($event);
         return $this->container->getService($definition['machineName']);
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @return string
+     * @throws ConfigurationNotFoundException
+     */
+    public function getFormLayout(ModelEvent $event): string {
+        $definition = $this->findDefinition($event);
+        return $this->templateDir . DIRECTORY_SEPARATOR . $definition['formLayout'] . '.latte';
     }
 
     /**

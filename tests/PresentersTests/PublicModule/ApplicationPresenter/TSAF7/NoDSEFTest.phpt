@@ -10,10 +10,10 @@ use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
 class NoDSEFTest extends TsafTestCase {
-    /** @var int */
-    private $tsafAppId;
 
-    protected function setUp() {
+    private int $tsafAppId;
+
+    protected function setUp(): void {
         parent::setUp();
         $this->authenticate($this->personId);
 
@@ -22,13 +22,9 @@ class NoDSEFTest extends TsafTestCase {
             'event_id' => $this->tsafEventId,
             'status' => 'invited',
         ]);
-
-        $this->insert('e_tsaf_participant', [
-            'event_participant_id' => $this->tsafAppId,
-        ]);
     }
 
-    public function testRegistration() {
+    public function testRegistration(): void {
         $request = $this->createPostRequest([
             'participantTsaf' => [
                 'person_id' => $this->personId,
@@ -78,20 +74,17 @@ class NoDSEFTest extends TsafTestCase {
         $application = $this->assertApplication($this->tsafEventId, 'bila@hrad.cz');
         Assert::equal('applied', $application->status);
         Assert::equal('F_S', $application->tshirt_size);
-
-        $eApplication = $this->assertExtendedApplication($application, 'e_tsaf_participant');
-        Assert::equal('F_M', $eApplication->jumper_size);
+        Assert::equal('F_M', $application->jumper_size);
 
         $application = $this->assertApplication($this->dsefEventId, 'bila@hrad.cz');
         Assert::equal('applied.tsaf', $application->status);
 
         $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');
         Assert::equal(1, $eApplication->e_dsef_group_id);
-        Assert::equal(3, $eApplication->lunch_count);
+        Assert::equal(3, $application->lunch_count);
 
         Assert::equal($before + 2, $serviceEmail->getTable()->count());
     }
-
 }
 
 $testCase = new NoDSEFTest($container);

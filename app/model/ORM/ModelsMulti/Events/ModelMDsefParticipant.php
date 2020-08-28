@@ -14,10 +14,7 @@ use FKSDB\ORM\Models\ModelEventParticipant;
  */
 class ModelMDsefParticipant extends AbstractModelMulti implements IEventReferencedModel {
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         if (!$this->getMainModel()->getPerson()) {
             trigger_error("Missing person in '" . $this->getMainModel() . "'.");
             //throw new InvalidStateException("Missing person in '" . $this->getMainModel() . "'.");

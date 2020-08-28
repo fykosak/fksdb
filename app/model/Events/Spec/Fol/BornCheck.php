@@ -47,20 +47,20 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
         $this->holder = $holder;
     }
 
-    protected function _adjust(Form $form, Machine $machine, Holder $holder): void {
+    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $studyYearControls = $this->getControl("p*.person_id.person_history.study_year");
         $personControls = $this->getControl('p*.person_id');
         $bornControls = $this->getControl('p*.person_id.person_info.born');
 
-        $msg = _('Datum narození je povinné.');
+        $msg = _('Birthday is required field.');
         /** @var BaseControl $control */
         foreach ($bornControls as $i => $control) {
             $schoolControl = $schoolControls[$i];
             $personControl = $personControls[$i];
             $studyYearControl = $studyYearControls[$i];
-            $control->addCondition(~$form::FILLED)
+            $control->addCondition(Form::BLANK)
                 ->addRule(function () use ($schoolControl, $personControl, $studyYearControl, $form, $msg) {
                     if (!$personControl->getValue()) {
                         return true;

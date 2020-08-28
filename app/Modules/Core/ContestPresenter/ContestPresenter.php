@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\Core\ContestPresenter;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
-use FKSDB\Components\Controls\ContestChooser;
+use FKSDB\Components\Controls\Choosers\ContestChooser;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\UI\PageTitle;
@@ -29,12 +29,11 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
     public $year;
 
     /**
-     *
      * @throws AbortException
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    protected function startup() {
+    protected function startup(): void {
         parent::startup();
         $contestChooser = $this->getComponent('contestChooser');
         if (!$contestChooser instanceof ContestChooser) {
@@ -86,7 +85,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
         return $this->getYearCalculator()->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         try {
             $contest = $this->getSelectedContest();
         } catch (BadRequestException $exception) {
@@ -94,7 +93,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
         }
         if (isset($contest) && $contest) {
             $this->getPageStyleContainer()->styleId = $contest->getContestSymbol();
-            $this->getPageStyleContainer()->navBarClassName = 'navbar-dark bg-' . $contest->getContestSymbol();
+            $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-' . $contest->getContestSymbol());
         }
         parent::beforeRender();
     }

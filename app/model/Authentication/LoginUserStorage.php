@@ -26,31 +26,26 @@ use Nette\Security\IIdentity;
 class LoginUserStorage extends UserStorage {
     /** @const HTTP GET parameter holding control information for the SSO */
 
-    const PARAM_SSO = 'sso';
+    public const PARAM_SSO = 'sso';
 
     /** @const Value meaning the user is not centally authneticated. */
-    const SSO_AUTHENTICATED = 'a';
+    public const SSO_AUTHENTICATED = 'a';
 
     /** @const Value meaning the user is not centally authneticated. */
-    const SSO_UNAUTHENTICATED = 'ua';
+    public const SSO_UNAUTHENTICATED = 'ua';
 
-    /** @var ServiceLogin */
-    private $loginService;
+    private ServiceLogin $serviceLogin;
 
-    /** @var YearCalculator */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
-    /** @var GlobalSession */
-    private $globalSession;
+    private GlobalSession $globalSession;
 
-    /** @var Application */
-    private $application;
+    private Application $application;
 
     /** @var IPresenter */
     private $presenter;
 
-    /** @var Request */
-    private $request;
+    private Request $request;
 
     /**
      * LoginUserStorage constructor.
@@ -61,19 +56,23 @@ class LoginUserStorage extends UserStorage {
      * @param Application $application
      * @param Request $request
      */
-    public function __construct(Session $sessionHandler, ServiceLogin $loginService, YearCalculator $yearCalculator, GlobalSession $globalSession, Application $application, Request $request) {
+    public function __construct(
+        Session $sessionHandler,
+        ServiceLogin $loginService,
+        YearCalculator $yearCalculator,
+        GlobalSession $globalSession,
+        Application $application,
+        Request $request
+    ) {
         parent::__construct($sessionHandler);
-        $this->loginService = $loginService;
+        $this->serviceLogin = $loginService;
         $this->yearCalculator = $yearCalculator;
         $this->globalSession = $globalSession;
         $this->application = $application;
         $this->request = $request;
     }
 
-    /**
-     * @return IPresenter
-     */
-    public function getPresenter() {
+    public function getPresenter(): IPresenter {
         if ($this->application->getPresenter()) {
             return $this->application->getPresenter();
         } else {
@@ -86,7 +85,7 @@ class LoginUserStorage extends UserStorage {
      * @internal Used internally or for testing purposes only.
      *
      */
-    public function setPresenter(IPresenter $presenter) {
+    public function setPresenter(IPresenter $presenter): void {
         $this->presenter = $presenter;
     }
 
@@ -178,7 +177,7 @@ class LoginUserStorage extends UserStorage {
 
         // Find login
         /** @var ModelLogin $login */
-        $login = $this->loginService->findByPrimary($local->getId());
+        $login = $this->serviceLogin->findByPrimary($local->getId());
 
         if (!$login) {
             return null;

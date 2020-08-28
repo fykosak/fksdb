@@ -27,34 +27,24 @@ use Nette\SmartObject;
 class SingleEventSource implements IHolderSource {
     use SmartObject;
 
-    /** @var ModelEvent */
-    private $event;
+    private ModelEvent $event;
 
-    /** @var Container */
-    private $container;
+    private Container $container;
+
+    private EventDispatchFactory $eventDispatchFactory;
+    /** @var \FKSDB\ORM\Tables\MultiTableSelection|TypedTableSelection|\Nette\Database\Table\Selection */
+    private $primarySelection;
+
+    private Holder $dummyHolder;
 
     /** @var IModel[] */
     private $primaryModels = null;
 
-    /**
-     *
-     * @var IModel[][]
-     */
+    /** @var IModel[][] */
     private $secondaryModels = null;
 
-    /** @var TypedTableSelection */
-    private $primarySelection;
-
-    /** @var Holder */
-    private $dummyHolder;
-
-    /**
-     *
-     * @var Holder[]
-     */
+    /** @var Holder[] */
     private $holders = [];
-    /** @var EventDispatchFactory */
-    private $eventDispatchFactory;
 
     /**
      * SingleEventSource constructor.
@@ -69,25 +59,19 @@ class SingleEventSource implements IHolderSource {
         $this->eventDispatchFactory = $eventDispatchFactory;
         $this->dummyHolder = $eventDispatchFactory->getDummyHolder($this->event);
         $primaryHolder = $this->dummyHolder->getPrimaryHolder();
-        $eventIdColumn = $primaryHolder->getEventId();
+        $eventIdColumn = $primaryHolder->getEventIdColumn();
         $this->primarySelection = $primaryHolder->getService()->getTable()->where($eventIdColumn, $this->event->getPrimary());
     }
 
-    /**
-     * @return ModelEvent
-     */
-    public function getEvent() {
+    public function getEvent(): ModelEvent {
         return $this->event;
     }
 
-    /**
-     * @return Holder
-     */
-    public function getDummyHolder() {
+    public function getDummyHolder(): Holder {
         return $this->dummyHolder;
     }
 
-    private function loadData() {
+    private function loadData(): void {
         $joinToCheck = false;
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
             if ($joinToCheck === false) {
@@ -128,7 +112,7 @@ class SingleEventSource implements IHolderSource {
      * @return void
      * @throws NeonSchemaException
      */
-    private function createHolders() {
+    private function createHolders(): void {
         $cache = [];
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
             foreach ($this->secondaryModels[$key] as $secondaryPK => $secondaryModel) {
@@ -165,7 +149,7 @@ class SingleEventSource implements IHolderSource {
             'count' => true,
         ];
         $result = $this->primarySelection->{$name}(...$args);
-       // $result = call_user_func_array([$this->primarySelection, $name], $args);
+        // $result = call_user_func_array([$this->primarySelection, $name], $args);
         $this->primaryModels = null;
 
         if ($delegated[$name]) {

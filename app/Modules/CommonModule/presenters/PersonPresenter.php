@@ -2,10 +2,9 @@
 
 namespace FKSDB\Modules\CommonModule;
 
-use FKSDB\Components\Controls\Entity\Person\PersonFormComponent;
+use FKSDB\Components\Controls\Entity\PersonFormComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Person\PizzaControl;
-use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
 use FKSDB\DBReflection\FieldLevelPermission;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
@@ -34,7 +33,7 @@ use Nette\Security\IResource;
 use Nette\Utils\Html;
 use FKSDB\Persons\Deduplication\Merger;
 use ReflectionException;
-use FKSDB\Components\Controls\Stalking;
+use FKSDB\Components\Controls\Stalking\StalkingContainer;
 use Tracy\Debugger;
 
 /**
@@ -64,9 +63,7 @@ class PersonPresenter extends BasePresenter {
 
     private PersonFactory $personFactory;
 
-
-    /** @var FieldLevelPermission */
-    private $userPermissions;
+    private int $userPermissions;
 
     public function injectServicePerson(ServicePerson $servicePerson): void {
         $this->servicePerson = $servicePerson;
@@ -229,8 +226,6 @@ class PersonPresenter extends BasePresenter {
      */
     public function renderDetail(): void {
         $person = $this->getEntity();
-        $this->template->userPermissions = $this->getUserPermissions();
-        $this->template->person = $person;
         $this->template->isSelf = $this->getUser()->getIdentity()->getPerson()->person_id === $person->person_id;
         /** @var ModelPerson $userPerson */
         $userPerson = $this->getUser()->getIdentity()->getPerson();
@@ -240,35 +235,6 @@ class PersonPresenter extends BasePresenter {
     }
 
     /* ******************* COMPONENTS *******************/
-
-    protected function createComponentStalkingComponent(): StalkingComponent {
-        return new StalkingComponent($this->getContext());
-    }
-
-    protected function createComponentAddress(): Stalking\Address {
-        return new Stalking\Address($this->getContext());
-    }
-
-    protected function createComponentRole(): Stalking\Role {
-        return new Stalking\Role($this->getContext());
-    }
-
-    protected function createComponentFlag(): Stalking\Flag {
-        return new Stalking\Flag($this->getContext());
-    }
-
-    protected function createComponentSchedule(): Stalking\Schedule {
-        return new Stalking\Schedule($this->getContext());
-    }
-
-    protected function createComponentValidation(): Stalking\Validation {
-        return new Stalking\Validation($this->getContext());
-    }
-
-    protected function createComponentTimeline(): Stalking\Timeline\TimelineControl {
-        return new Stalking\Timeline\TimelineControl($this->getContext());
-    }
-
     /**
      * @return FormControl
      * @throws BadTypeException
@@ -339,11 +305,19 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
+     * @return StalkingContainer
+     * @throws ModelNotFoundException
+     */
+    public function createComponentStalkingContainer(): StalkingContainer {
+        return new StalkingContainer($this->getContext(), $this->getEntity(), $this->getUserPermissions());
+    }
+
+    /**
      * @return int
      * @throws ModelNotFoundException
      */
     private function getUserPermissions(): int {
-        if (!isset($this->userPermissions) || is_null($this->userPermissions)) {
+        if (!isset($this->userPermissions)) {
             $this->userPermissions = FieldLevelPermission::ALLOW_ANYBODY;
             try {
                 $person = $this->getEntity();
@@ -364,12 +338,8 @@ class PersonPresenter extends BasePresenter {
         return $this->userPermissions;
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     */
-    private function updateMergeForm(Form $form) {
-        if (false && !$form->isSubmitted()) { // new form is without any conflict, we use it to clear the session
+    private function updateMergeForm(Form $form): void {
+        if (!$form->isSubmitted()) { // new form is without any conflict, we use it to clear the session
             $this->setMergeConflicts(null);
             return;
         }
@@ -468,11 +438,7 @@ class PersonPresenter extends BasePresenter {
      * Storing conflicts in session
      * ****************************** */
 
-    /**
-     * @param iterable $conflicts
-     * @return void
-     */
-    private function setMergeConflicts($conflicts): void {
+    private function setMergeConflicts(array $conflicts): void {
         $section = $this->session->getSection('conflicts');
         if ($conflicts === null) {
             $section->remove();
@@ -481,10 +447,7 @@ class PersonPresenter extends BasePresenter {
         }
     }
 
-    /**
-     * @return array
-     */
-    private function getMergeConflicts() {
+    private function getMergeConflicts(): array {
         $section = $this->session->getSection('conflicts');
         if (isset($section->data)) {
             return $section->data;

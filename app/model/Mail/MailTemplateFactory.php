@@ -7,6 +7,7 @@ use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\Application;
 use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
+use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 use Nette\Localization\ITranslator;
@@ -19,7 +20,7 @@ use Nette\Localization\ITranslator;
  */
 class MailTemplateFactory {
 
-    /* without trailing slash */
+    /** without trailing slash */
     private string $templateDir;
     /** @var Application */
     private $application;
@@ -111,7 +112,11 @@ class MailTemplateFactory {
         }
         $template = $presenter->getTemplateFactory()->createTemplate();
         $template->setFile($file);
-        $template->control = $template->_control = $control;
+
+        if ($template instanceof Template) {
+            $template->getLatte()->addProvider('uiControl', $control);
+        }
+        $template->control = $control;
         $template->baseUri = $this->request->getUrl()->getBaseUrl();
         return $template;
     }

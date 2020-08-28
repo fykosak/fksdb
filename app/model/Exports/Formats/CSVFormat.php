@@ -4,7 +4,6 @@ namespace FKSDB\Exports\Formats;
 
 use FKSDB\Exports\IExportFormat;
 use FKSDB\StoredQuery\StoredQuery;
-use Nette\Application\IResponse;
 use Nette\SmartObject;
 use PePa\CSVResponse;
 
@@ -16,17 +15,16 @@ use PePa\CSVResponse;
 class CSVFormat implements IExportFormat {
     use SmartObject;
 
-    const DEFAULT_DELIMITER = ';';
-    const DEFAULT_QUOTE = false;
+    public const DEFAULT_DELIMITER = ';';
+    public const DEFAULT_QUOTE = false;
 
-    /** @var StoredQuery */
-    private $storedQuery;
-    /** @var string */
-    private $delimiter;
-    /** @var bool */
-    private $quote;
-    /** @var bool */
-    private $header;
+    private StoredQuery $storedQuery;
+
+    private string $delimiter;
+
+    private bool $quote;
+
+    private bool $header;
 
     /**
      * CSVFormat constructor.
@@ -42,10 +40,7 @@ class CSVFormat implements IExportFormat {
         $this->header = $header;
     }
 
-    /**
-     * @return CSVResponse
-     */
-    public function getResponse(): IResponse {
+    public function getResponse(): CSVResponse {
         $data = $this->storedQuery->getData();
         $name = $this->storedQuery->getName();
         $name .= '.csv';

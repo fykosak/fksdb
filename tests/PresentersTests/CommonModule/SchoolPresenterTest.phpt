@@ -4,7 +4,7 @@ namespace FKSDB\Tests\PresentersTests\OrgModule;
 
 $container = require '../../bootstrap.php';
 
-use FKSDB\Components\Controls\Entity\School\SchoolFormComponent;
+use FKSDB\Components\Controls\Entity\SchoolFormComponent;
 use FKSDB\ORM\DbNames;
 use FKSDB\Tests\PresentersTests\EntityPresenterTestCase;
 use Nette\Application\Responses\RedirectResponse;
@@ -17,10 +17,9 @@ use Tester\Assert;
  */
 class SchoolPresenterTest extends EntityPresenterTestCase {
 
-    /** @var int */
-    private $schoolId;
+    private int $schoolId;
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->loginUser();
         $addressId = $this->insert(DbNames::TAB_ADDRESS, [
@@ -38,7 +37,7 @@ class SchoolPresenterTest extends EntityPresenterTestCase {
         ]);
     }
 
-    public function testList() {
+    public function testList(): void {
         $request = $this->createGetRequest('list', []);
         $response = $this->fixture->run($request);
         $html = $this->assertPageDisplay($response);
@@ -47,7 +46,7 @@ class SchoolPresenterTest extends EntityPresenterTestCase {
     }
 
 
-    public function testCreate() {
+    public function testCreate(): void {
         $init = $this->countSchools();
         $response = $this->createFormRequest('create', [
                 SchoolFormComponent::CONT_ADDRESS => [
@@ -70,7 +69,7 @@ class SchoolPresenterTest extends EntityPresenterTestCase {
     }
 
 
-    public function testEdit() {
+    public function testEdit(): void {
         $init = $this->countSchools();
         $response = $this->createFormRequest('edit',
             [
@@ -109,7 +108,7 @@ class SchoolPresenterTest extends EntityPresenterTestCase {
         return 'Common:School';
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM school');
         $this->connection->query('DELETE FROM address');
         parent::tearDown();

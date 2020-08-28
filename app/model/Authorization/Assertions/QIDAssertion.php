@@ -18,8 +18,7 @@ class QIDAssertion {
 
     use SmartObject;
 
-    /** @var array */
-    private $qids;
+    private array $qIds;
 
     /**
      * QIDAssertion constructor.
@@ -29,7 +28,7 @@ class QIDAssertion {
         if (!is_array($qids)) {
             $qids = [$qids];
         }
-        $this->qids = $qids;
+        $this->qIds = $qids;
     }
 
     /**
@@ -45,7 +44,7 @@ class QIDAssertion {
             throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');
         }
         $qid = $storedQuery->getQId();
-        return (bool)$qid && in_array($qid, $this->qids);
+        return (bool)$qid && in_array($qid, $this->qIds);
     }
 
 }

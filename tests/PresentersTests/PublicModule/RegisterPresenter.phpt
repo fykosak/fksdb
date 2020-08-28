@@ -6,46 +6,28 @@ $container = require '../../bootstrap.php';
 
 use FKSDB\Authentication\LoginUserStorage;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
+use Nette\Application\IPresenter;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
-use Nette\DI\Container;
 use Nette\Application\UI\ITemplate;
-use FKSDB\Modules\PublicModule\RegisterPresenter;
 use Tester\Assert;
 
 class RegisterPresenterTest extends DatabaseTestCase {
 
-    /**
-     * @var Container
-     */
-    private $container;
+    private IPresenter $fixture;
 
-    /**
-     * @var RegisterPresenter
-     */
-    private $fixture;
-
-    /**
-     * RegisterPresenterTest constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->container = $container;
-    }
-
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
-        $presenterFactory = $this->container->getByType(IPresenterFactory::class);
+        $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);
         $this->fixture = $presenterFactory->createPresenter('Public:Register');
         $this->fixture->autoCanonicalize = false;
 
-        $this->container->getByType(LoginUserStorage::class)->setPresenter($this->fixture);
+        $this->getContainer()->getByType(LoginUserStorage::class)->setPresenter($this->fixture);
     }
 
-    public function testDispatch() {
+    public function testDispatch(): void {
         $request = new Request('Public:Register', 'GET', [
             'action' => 'contest',
             'lang' => 'en',

@@ -14,7 +14,6 @@ class MemoryLogger extends StackedLogger {
     private array $messages = [];
 
     /**
-     *
      * @return Message[]
      */
     public function getMessages(): array {

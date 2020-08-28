@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Entity\Org\OrgFormComponent;
+use FKSDB\Components\Controls\Entity\OrgFormComponent;
 use FKSDB\Components\Grids\OrgsGrid;
 use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Exceptions\BadTypeException;
@@ -11,7 +11,6 @@ use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
 use FKSDB\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 
 /**
@@ -104,20 +103,20 @@ class OrgPresenter extends BasePresenter {
     }
 
     /**
-     * @return Control
+     * @return OrgFormComponent
      * @throws ForbiddenRequestException
      * @throws BadTypeException
      */
-    protected function createComponentCreateForm(): Control {
+    protected function createComponentCreateForm(): OrgFormComponent {
         return new OrgFormComponent($this->getContext(), $this->getSelectedContest(), true);
     }
 
     /**
-     * @return Control
+     * @return OrgFormComponent
      * @throws ForbiddenRequestException
      * @throws BadTypeException
      */
-    protected function createComponentEditForm(): Control {
+    protected function createComponentEditForm(): OrgFormComponent {
         return new OrgFormComponent($this->getContext(), $this->getSelectedContest(), false);
     }
 

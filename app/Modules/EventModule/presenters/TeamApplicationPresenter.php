@@ -5,8 +5,8 @@ namespace FKSDB\Modules\EventModule;
 use FKSDB\Components\Controls\Fyziklani\SchoolCheckComponent;
 use FKSDB\Components\Controls\Fyziklani\SeatingControl;
 use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
-use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
-use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
+use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
+use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Events\EventNotFoundException;
@@ -24,7 +24,7 @@ use Nette\Application\ForbiddenRequestException;
 class TeamApplicationPresenter extends AbstractApplicationPresenter {
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
-    
+
     public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
@@ -70,12 +70,12 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
     }
 
     /**
-     * @return AbstractApplicationGrid
+     * @return AbstractApplicationsGrid
      * @throws EventNotFoundException
      * @throws NeonSchemaException
      */
-    protected function createComponentGrid(): AbstractApplicationGrid {
-        return new TeamApplicationGrid($this->getEvent(), $this->getHolder(), $this->getContext());
+    protected function createComponentGrid(): AbstractApplicationsGrid {
+        return new TeamApplicationsGrid($this->getEvent(), $this->getHolder(), $this->getContext());
     }
 
     protected function createComponentTeamRestsControl(): TeamRestsComponent {

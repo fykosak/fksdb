@@ -32,15 +32,12 @@ class Count {
     public function __invoke(...$args): int {
         $baseHolder = $this->getHolder($args[0])->getPrimaryHolder();
         $table = $baseHolder->getService()->getTable();
-        $table->where($baseHolder->getEventId(), $this->getEvent($args[0])->getPrimary());
+        $table->where($baseHolder->getEventIdColumn(), $this->getEvent($args[0])->getPrimary());
         $table->where(BaseHolder::STATE_COLUMN, $this->state);
         return $table->count('1');
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return "count({$this->state})";
     }
 

@@ -181,10 +181,11 @@ class ReferencedId extends HiddenField {
 
     /**
      * @param bool $value
-     * @return BaseControl|void
+     * @return static
      */
-    public function setDisabled($value = true) {
+    public function setDisabled($value = true): self {
         $this->getReferencedContainer()->setDisabled($value);
+        return $this;
     }
 
     private function createPromise(): void {

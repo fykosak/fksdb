@@ -2,7 +2,7 @@
 
 namespace FKSDB\Persons;
 
-use FKSDB\Components\Controls\Entity\Person\PersonFormComponent;
+use FKSDB\Components\Controls\Entity\PersonFormComponent;
 use FKSDB\Components\Forms\Controls\IReferencedHandler;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
@@ -13,6 +13,7 @@ use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
+use FKSDB\ORM\Services\ServiceFlag;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonHasFlag;
 use FKSDB\ORM\Services\ServicePersonHistory;
@@ -24,7 +25,6 @@ use FKSDB\ORM\ModelsMulti\ModelMPostContact;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
-use Nette\Utils\JsonException;
 use FKSDB\ORM\ServicesMulti\ServiceMPostContact;
 
 /**
@@ -35,26 +35,20 @@ use FKSDB\ORM\ServicesMulti\ServiceMPostContact;
 class ReferencedPersonHandler implements IReferencedHandler {
     use SmartObject;
 
-    const POST_CONTACT_DELIVERY = 'post_contact_d';
-    const POST_CONTACT_PERMANENT = 'post_contact_p';
+    public const POST_CONTACT_DELIVERY = 'post_contact_d';
+    public const POST_CONTACT_PERMANENT = 'post_contact_p';
 
-    /** @var ServicePerson */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
-    /** @var ServicePersonInfo */
-    private $servicePersonInfo;
+    private ServicePersonInfo $servicePersonInfo;
 
-    /** @var ServicePersonHistory */
-    private $servicePersonHistory;
+    private ServicePersonHistory $servicePersonHistory;
 
-    /** @var ServiceMPostContact */
-    private $serviceMPostContact;
+    private ServiceMPostContact $serviceMPostContact;
 
-    /** @var ServicePersonHasFlag */
-    private $servicePersonHasFlag;
+    private ServicePersonHasFlag $servicePersonHasFlag;
 
-    /** @var int */
-    private $acYear;
+    private int $acYear;
 
     /** @var ModelEvent */
     private $event;
@@ -62,8 +56,9 @@ class ReferencedPersonHandler implements IReferencedHandler {
     /** @var string */
     private $resolution;
 
-    /** @var Handler */
-    private $eventScheduleHandler;
+    private Handler $eventScheduleHandler;
+
+    protected ServiceFlag $serviceFlag;
 
     /**
      * ReferencedPersonHandler constructor.
@@ -72,6 +67,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param ServicePersonHistory $servicePersonHistory
      * @param ServiceMPostContact $serviceMPostContact
      * @param ServicePersonHasFlag $servicePersonHasFlag
+     * @param ServiceFlag $serviceFlag
      * @param Handler $eventScheduleHandler
      * @param int $acYear
      * @param string $resolution
@@ -82,6 +78,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
         ServicePersonHistory $servicePersonHistory,
         ServiceMPostContact $serviceMPostContact,
         ServicePersonHasFlag $servicePersonHasFlag,
+        ServiceFlag $serviceFlag,
         Handler $eventScheduleHandler,
         int $acYear,
         $resolution
@@ -91,6 +88,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
         $this->servicePersonHistory = $servicePersonHistory;
         $this->serviceMPostContact = $serviceMPostContact;
         $this->servicePersonHasFlag = $servicePersonHasFlag;
+        $this->serviceFlag = $serviceFlag;
         $this->acYear = $acYear;
         $this->resolution = $resolution;
         $this->eventScheduleHandler = $eventScheduleHandler;
@@ -109,7 +107,6 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @return ModelPerson
      * @throws ExistingPaymentException
      * @throws FullCapacityException
-     * @throws JsonException
      * @throws NotImplementedException
      */
     public function createFromValues(ArrayHash $values): ModelPerson {
@@ -126,7 +123,6 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @return void
      * @throws ExistingPaymentException
      * @throws FullCapacityException
-     * @throws JsonException
      * @throws NotImplementedException
      */
     public function update(IModel $model, ArrayHash $values): void {
@@ -134,11 +130,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
         $this->store($model, $values);
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return void
-     */
-    public function setEvent(ModelEvent $event) {
+    public function setEvent(ModelEvent $event): void {
         $this->event = $event;
     }
 
@@ -148,13 +140,12 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @return void
      * @throws ModelException
      * @throws ModelDataConflictException
-     * @throws JsonException
      * @throws ExistingPaymentException
      * @throws StorageException
      * @throws FullCapacityException
      * @throws NotImplementedException
      */
-    private function store(ModelPerson &$person, ArrayHash $data) {
+    private function store(ModelPerson &$person, ArrayHash $data): void {
         /*
          * Process data
          */
@@ -166,11 +157,11 @@ class ReferencedPersonHandler implements IReferencedHandler {
 
             $models = [
                 'person' => &$person,
-                'person_info' => $person->getInfo() ?: null,
-                'person_history' => $person->getHistory($this->acYear) ?: null,
+                'person_info' => $person->getInfo(),
+                'person_history' => $person->getHistory($this->acYear),
                 'person_schedule' => (($this->event && isset($data['person_schedule']) && $person->getSerializedSchedule($this->event->event_id, \array_keys((array)$data['person_schedule'])[0])) ?: null),
-                self::POST_CONTACT_DELIVERY => $person->getDeliveryAddress() ?: null,
-                self::POST_CONTACT_PERMANENT => $person->getPermanentAddress(true) ?: null,
+                self::POST_CONTACT_DELIVERY => $person->getDeliveryAddress(),
+                self::POST_CONTACT_PERMANENT => $person->getPermanentAddress(true),
             ];
             $originalModels = \array_keys(iterator_to_array($data));
 
@@ -220,9 +211,10 @@ class ReferencedPersonHandler implements IReferencedHandler {
                         continue 2;
                     case 'person_has_flag':
                         foreach ($data[$t] as $flagId => $flagValue) {
+                            $flag = $this->serviceFlag->findByFid($flagId);
                             $flagData = [
                                 'value' => $flagValue,
-                                'fid' => $flagId,
+                                'flag_id' => $flag->flag_id,
                             ];
                             if ($models[$t][$flagId]) {
                                 $this->servicePersonHasFlag->updateModel2($models[$t][$flagId], (array)$flagData);
@@ -234,7 +226,6 @@ class ReferencedPersonHandler implements IReferencedHandler {
                         continue 2;
                 }
             }
-
             $this->commit();
         } catch (ModelDataConflictException $exception) {
             $this->rollback();
@@ -248,14 +239,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
         }
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param ModelMPostContact|null $model
-     * @param array $data
-     * @param string $type
-     * @return void
-     */
-    private function storePostContact(ModelPerson $person, $model, array $data, string $type) {
+    private function storePostContact(ModelPerson $person, ?ModelMPostContact $model, array $data, string $type): void {
         if ($model) {
             $this->serviceMPostContact->updateModel2($model, $data);
         } else {
@@ -266,8 +250,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
         }
     }
 
-    /** @var bool */
-    private $outerTransaction = false;
+    private bool $outerTransaction = false;
 
     /**
      * @param mixed $models
@@ -305,21 +288,11 @@ class ReferencedPersonHandler implements IReferencedHandler {
         return $conflicts;
     }
 
-    /**
-     * @param array $data
-     * @param ModelPerson|null $person
-     * @return ModelPerson
-     */
-    private function storePerson($person, array $data): ModelPerson {
+    private function storePerson(?ModelPerson $person, array $data): ModelPerson {
         return $this->servicePerson->store($person, (array)$data['person']);
     }
 
-    /**
-     * @param ArrayHash $data
-     * @param ArrayHash|array $conflicts
-     * @return ArrayHash
-     */
-    private function removeConflicts($data, $conflicts) {
+    private function removeConflicts(iterable $data, iterable $conflicts): iterable {
         $result = $data;
         foreach ($conflicts as $key => $value) {
             if (isset($data[$key])) {
@@ -336,7 +309,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
     /**
      * @param ModelMPostContact[] $models
      */
-    private function preparePostContactModels(array &$models) {
+    private function preparePostContactModels(array &$models): void {
         if (!$models[self::POST_CONTACT_PERMANENT] && $models[self::POST_CONTACT_DELIVERY]) {
             $data = $models[self::POST_CONTACT_DELIVERY]->toArray();
             unset($data['post_contact_id']);
@@ -346,11 +319,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
         }
     }
 
-    /**
-     * @param ArrayHash $data
-     * @return void
-     */
-    private function resolvePostContacts(ArrayHash $data) {
+    private function resolvePostContacts(ArrayHash $data): void {
         foreach ([self::POST_CONTACT_DELIVERY, self::POST_CONTACT_PERMANENT] as $type) {
             if (!isset($data[$type])) {
                 continue;
@@ -378,7 +347,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param array $models
      * @throws ModelException
      */
-    private function prepareFlagModels(ModelPerson $person, ArrayHash &$data, array &$models) {
+    private function prepareFlagModels(ModelPerson $person, ArrayHash &$data, array &$models): void {
         if (!isset($data['person_has_flag'])) {
             return;
         }
@@ -392,7 +361,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
         }
     }
 
-    private function beginTransaction() {
+    private function beginTransaction(): void {
         $connection = $this->servicePerson->getConnection();
         if (!$connection->getPdo()->inTransaction()) {
             $connection->beginTransaction();
@@ -401,14 +370,14 @@ class ReferencedPersonHandler implements IReferencedHandler {
         }
     }
 
-    private function commit() {
+    private function commit(): void {
         $connection = $this->servicePerson->getConnection();
         if (!$this->outerTransaction) {
             $connection->commit();
         }
     }
 
-    private function rollback() {
+    private function rollback(): void {
         $connection = $this->servicePerson->getConnection();
         if (!$this->outerTransaction) {
             $connection->rollBack();

@@ -20,9 +20,9 @@ use Nette\Application\UI\Form;
  */
 class TaskPresenter extends BasePresenter {
 
-    const IMPORT_STATE_UPDATE_N_INSERT = 1;
-    const IMPORT_STATE_REMOVE_N_INSERT = 2;
-    const IMPORT_STATE_INSERT = 3;
+    public const IMPORT_STATE_UPDATE_N_INSERT = 1;
+    public const IMPORT_STATE_REMOVE_N_INSERT = 2;
+    public const IMPORT_STATE_INSERT = 3;
 
     /**
      * @return void

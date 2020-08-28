@@ -19,24 +19,23 @@ abstract class AbstractAdjustment implements IFormAdjustment {
 
     use SmartObject;
 
-    const DELIMITER = '.';
-    const WILDCART = '*';
-    /** @var array */
-    private $pathCache;
+    public const DELIMITER = '.';
+    public const WILDCART = '*';
+
+    private array $pathCache;
 
     final public function adjust(Form $form, Machine $machine, Holder $holder): void {
         $this->setForm($form);
-        $this->_adjust($form, $machine, $holder);
+        $this->innerAdjust($form, $machine, $holder);
     }
 
-    abstract protected function _adjust(Form $form, Machine $machine, Holder $holder): void;
+    abstract protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void;
 
     final protected function hasWildCart(string $mask): bool {
         return strpos($mask, self::WILDCART) !== false;
     }
 
     /**
-     *
      * @param string $mask
      * @return IControl[]
      */
@@ -60,10 +59,7 @@ abstract class AbstractAdjustment implements IFormAdjustment {
         return $result;
     }
 
-    /**
-     * @param Form $form
-     */
-    private function setForm($form): void {
+    private function setForm(Form $form): void {
         $this->pathCache = [];
         /** @var Control $control */
         // TODO not type safe

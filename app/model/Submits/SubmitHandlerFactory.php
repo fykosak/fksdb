@@ -8,8 +8,6 @@ use FKSDB\Exceptions\ModelException;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
-use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
@@ -111,10 +109,12 @@ class SubmitHandlerFactory {
      * @param ILogger $logger
      * @param int $submitId
      * @return array|null
+     * @throws ForbiddenRequestException
      * @throws InvalidLinkException
+     * @throws NotFoundException
      */
     public function handleRevoke(Presenter $presenter, ILogger $logger, int $submitId): ?array {
-        $submit = $this->serviceSubmit->findByPrimary($submitId);
+        $submit = $this->getSubmit($submitId, 'revoke');
         if (!$submit) {
             $logger->log(new Message(_('Neexistující submit.'), Message::LVL_DANGER));
             return null;
@@ -146,30 +146,26 @@ class SubmitHandlerFactory {
         }
     }
 
-    /**
-     * @param FileUpload $file
-     * @param ModelTask $task
-     * @param ModelContestant $contestant
-     * @return AbstractModelSingle|IModel|ModelSubmit
-     */
     public function handleSave(FileUpload $file, ModelTask $task, ModelContestant $contestant): ModelSubmit {
-        $submit = $this->serviceSubmit->findByContestant($contestant->ct_id, $task->task_id);
-        if (is_null($submit)) {
-            $submit = $this->serviceSubmit->createNewModel([
-                'task_id' => $task->task_id,
-                'ct_id' => $contestant->ct_id,
-                'submitted_on' => new DateTime(),
-                'source' => ModelSubmit::SOURCE_UPLOAD,
-            ]);
-        } else {
-            $this->serviceSubmit->updateModel2($submit, [
-                'submitted_on' => new DateTime(),
-                'source' => ModelSubmit::SOURCE_UPLOAD,
-            ]);
-        }
+        $submit = $this->handleStoreSubmit($task, $contestant, ModelSubmit::SOURCE_UPLOAD);
         // store file
         $this->uploadedStorage->storeFile($file->getTemporaryFile(), $submit);
         return $submit;
+    }
+
+    public function handleQuizSubmit(ModelTask $task, ModelContestant $contestant): ModelSubmit {
+        return $this->handleStoreSubmit($task, $contestant, ModelSubmit::SOURCE_QUIZ);
+    }
+
+    private function handleStoreSubmit(ModelTask $task, ModelContestant $contestant, string $source): ModelSubmit {
+        $submit = $this->serviceSubmit->findByContestant($contestant->ct_id, $task->task_id);
+        $data = [
+            'submitted_on' => new DateTime(),
+            'source' => $source,
+            'task_id' => $task->task_id, // ugly is submit exists -- rewrite same by same value
+            'ct_id' => $contestant->ct_id,// ugly is submit exists -- rewrite same by same value
+        ];
+        return $this->serviceSubmit->store($submit, $data);
     }
 
     /**

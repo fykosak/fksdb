@@ -10,7 +10,7 @@ use FKSDB\Fyziklani\Submit\HandlerFactory;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use FKSDB\Components\Controls\Entity\Fyziklani\Submit\EditComponent;
+use FKSDB\Components\Controls\Entity\FyziklaniSubmitEditComponent;
 use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
 use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
 use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
@@ -38,7 +38,6 @@ class SubmitPresenter extends BasePresenter {
     /* ***** Title methods *****/
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      */
     public function titleCreate(): void {
@@ -47,7 +46,6 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      */
     public function titleList(): void {
@@ -56,7 +54,6 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      */
     public function titleEdit(): void {
@@ -137,11 +134,11 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     * @return EditComponent
+     * @return FyziklaniSubmitEditComponent
      * @throws EventNotFoundException
      */
-    protected function createComponentEditForm(): EditComponent {
-        return new EditComponent($this->getContext(), $this->getEvent());
+    protected function createComponentEditForm(): FyziklaniSubmitEditComponent {
+        return new FyziklaniSubmitEditComponent($this->getContext(), $this->getEvent());
     }
 
     /**

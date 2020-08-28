@@ -13,7 +13,6 @@ use Nette\DI\Container;
 use Nette\DI\Helpers as DIHelpers;
 use Nette\DI\Statement;
 use Nette\Reflection\ClassType;
-use Traversable;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -22,7 +21,7 @@ use Traversable;
  */
 class Helpers {
     /** @var string[] */
-    private static $semanticMap = [
+    private static array $semanticMap = [
         'and' => LogicAnd::class,
         'or' => LogicOr::class,
         'neg' => Not::class,
@@ -32,11 +31,7 @@ class Helpers {
         'leq' => Leq::class,
     ];
 
-    /**
-     * @param array $semanticMap
-     * @return void
-     */
-    public static function registerSemantic(array $semanticMap) {
+    public static function registerSemantic(array $semanticMap): void {
         self::$semanticMap += $semanticMap;
     }
 
@@ -97,12 +92,12 @@ class Helpers {
     }
 
     /**
-     * @param iterable $expressionArray
+     * @param mixed $expressionArray
      * @param Container $container
-     * @return array|mixed
+     * @return mixed
      */
     public static function evalExpressionArray($expressionArray, Container $container) {
-        if ($expressionArray instanceof Traversable || is_array($expressionArray)) { // TODO replace with is_iterable
+        if (is_iterable($expressionArray)) {
             $result = [];
             foreach ($expressionArray as $key => $expression) {
                 $result[$key] = self::evalExpressionArray($expression, $container);

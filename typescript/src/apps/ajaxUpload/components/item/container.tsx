@@ -1,5 +1,5 @@
 import { UploadDataItem } from '@apps/ajaxUpload/middleware/uploadDataItem';
-import { NetteActions } from '@appsCollector';
+import { NetteActions } from '@appsCollector/netteActions';
 import Card from '@shared/components/card';
 import * as React from 'react';
 import { connect } from 'react-redux';

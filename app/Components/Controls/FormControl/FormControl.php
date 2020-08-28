@@ -14,7 +14,7 @@ use Nette\Application\UI\Form;
  */
 class FormControl extends Control {
 
-    const SNIPPET_MAIN = 'groupContainer';
+    public const SNIPPET_MAIN = 'groupContainer';
 
     protected function createComponentForm(): Form {
         return new Form();
@@ -36,7 +36,7 @@ class FormControl extends Control {
         if (!isset($this->template->mainContainer)) {
             $this->template->mainContainer = $this->getComponent('form');
         }
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'FormControl.containers.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.containers.latte');
         $this->template->render();
     }
 }

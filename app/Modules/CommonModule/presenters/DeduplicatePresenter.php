@@ -41,9 +41,8 @@ class DeduplicatePresenter extends BasePresenter {
     /**
      * @throws ForbiddenRequestException
      * @throws AbortException
-     *
      */
-    public function handleBatchMerge() {
+    public function handleBatchMerge(): void {
         if (!$this->getContestAuthorizator()->isAllowedForAnyContest('person', 'merge')) { //TODO generic authorizator
             throw new ForbiddenRequestException();
         }

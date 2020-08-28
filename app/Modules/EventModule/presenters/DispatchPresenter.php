@@ -28,9 +28,9 @@ class DispatchPresenter extends AuthenticatedPresenter {
         $this->setPageTitle(new PageTitle(_('List of events'), 'fa fa-calendar'));
     }
 
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         $this->getPageStyleContainer()->styleId = 'event';
-        $this->getPageStyleContainer()->navBarClassName = 'bg-dark navbar-dark';
+        $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
         parent::beforeRender();
     }
 }

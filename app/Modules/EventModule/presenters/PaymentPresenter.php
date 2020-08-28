@@ -4,7 +4,7 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Entity\PaymentFormComponent;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
-use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
+use FKSDB\Components\Grids\Payment\EventPaymentGrid;
 use FKSDB\Payment\PaymentExtension;
 use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Events\EventNotFoundException;
@@ -27,8 +27,7 @@ use Nette\Security\IResource;
 class PaymentPresenter extends BasePresenter {
     use EventEntityPresenterTrait;
 
-    /** @var Machine */
-    private $machine;
+    private Machine $machine;
 
     private ServicePayment $servicePayment;
 
@@ -160,11 +159,12 @@ class PaymentPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     private function getMachine(): PaymentMachine {
-        if (!$this->machine) {
-            $this->machine = $this->getContext()->getService('payment.' . PaymentExtension::MACHINE_PREFIX . $this->getEvent()->event_id);
-        }
-        if (!$this->machine instanceof PaymentMachine) {
-            throw new BadTypeException(PaymentMachine::class, $this->machine);
+        if (!isset($this->machine)) {
+            $machine = $this->getContext()->getService('payment.' . PaymentExtension::MACHINE_PREFIX . $this->getEvent()->event_id);
+            if (!$machine instanceof PaymentMachine) {
+                throw new BadTypeException(PaymentMachine::class, $this->machine);
+            }
+            $this->machine = $machine;
         }
         return $this->machine;
     }
@@ -194,11 +194,11 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @return OrgPaymentGrid
+     * @return EventPaymentGrid
      * @throws EventNotFoundException
      */
-    protected function createComponentGrid(): OrgPaymentGrid {
-        return new OrgPaymentGrid($this->getEvent(), $this->getContext());
+    protected function createComponentGrid(): EventPaymentGrid {
+        return new EventPaymentGrid($this->getEvent(), $this->getContext());
     }
 
     /**

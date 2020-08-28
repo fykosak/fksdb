@@ -15,8 +15,8 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventLink extends AbstractColumnFactory {
-    /** @var LinkGenerator */
-    private $linkGenerator;
+
+    private LinkGenerator $linkGenerator;
 
     /**
      * PersonLinkRow constructor.

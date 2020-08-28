@@ -19,7 +19,6 @@ use FKSDB\Components\Forms\Factories\Events\ArrayOptions;
 use FKSDB\Components\Forms\Factories\Events\CheckboxFactory;
 use FKSDB\Components\Forms\Factories\Events\ChooserFactory;
 use FKSDB\Components\Forms\Factories\Events\PersonFactory;
-use FKSDB\Components\Grids\Events\LayoutResolver;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;
@@ -41,20 +40,19 @@ use Nette\Utils\Strings;
  */
 class EventsExtension extends CompilerExtension {
 
-    const MAIN_RESOLVER = 'eventLayoutResolver';
-    const FIELD_FACTORY = 'Field_';
-    const MACHINE_PREFIX = 'Machine_';
-    const HOLDER_PREFIX = 'Holder_';
-    const BASE_MACHINE_PREFIX = 'BaseMachine_';
-    const BASE_HOLDER_PREFIX = 'BaseHolder_';
+    public const FIELD_FACTORY = 'Field_';
+    public const MACHINE_PREFIX = 'Machine_';
+    public const HOLDER_PREFIX = 'Holder_';
+    public const BASE_MACHINE_PREFIX = 'BaseMachine_';
+    public const BASE_HOLDER_PREFIX = 'BaseHolder_';
 
     /** @const Maximum length of state identifier. */
-    const STATE_SIZE = 20;
+    public const STATE_SIZE = 20;
 
     /** @const Regexp for configuration section names */
-    const NAME_PATTERN = '/[a-z0-9_]/i';
-    /** @var string[] */
-    public static $semanticMap = [
+    public const NAME_PATTERN = '/[a-z0-9_]/i';
+
+    public static array $semanticMap = [
         'RefPerson' => PersonFactory::class,
         'Chooser' => ChooserFactory::class,
         'Checkbox' => CheckboxFactory::class,
@@ -67,20 +65,13 @@ class EventsExtension extends CompilerExtension {
         'parameter' => Parameter::class,
         'count' => Count::class,
     ];
-    /** @var array */
-    private $scheme;
 
-    /**
-     * Global registry of available events definitions.
-     *
-     * @var array[definitionName] => definition[] where definition (eventTypes =>, years =>, tableLayout =>, formLayout =>)
-     */
-    private $definitionsMap = [];
+    private array $scheme;
 
     /** @var array[baseMachineFullName] => expanded configuration */
-    private $baseMachineConfig = [];
-    /** @var string */
-    private $schemeFile;
+    private array $baseMachineConfig = [];
+
+    private string $schemeFile;
 
     /**
      * EventsExtension constructor.
@@ -105,17 +96,11 @@ class EventsExtension extends CompilerExtension {
         $eventDispatchFactory = $this->getContainerBuilder()
             ->addDefinition('event.dispatch')->setFactory(EventDispatchFactory::class);
 
-
+        $eventDispatchFactory->addSetup('setTemplateDir', [$this->getContainerBuilder()->parameters['events']['templateDir']]);
         foreach ($config as $definitionName => $definition) {
             $this->validateConfigName($definitionName);
             $definition = NeonScheme::readSection($definition, $this->scheme['definition']);
             $eventTypeIds = is_array($definition['event_type_id']) ? $definition['event_type_id'] : [$definition['event_type_id']];
-
-            $this->definitionsMap[$definitionName] = [
-                'eventTypes' => $eventTypeIds,
-                'years' => $definition['eventYears'],
-                'formLayout' => $definition['formLayout'],
-            ];
             /*
              * Create base machine factories.
              */
@@ -128,16 +113,11 @@ class EventsExtension extends CompilerExtension {
             $holderName = $this->getHolderName($definitionName);
             $machineName = $this->getMachineName($definitionName);
             $holderMethodName = Container::getMethodName($holderName);
-            $eventDispatchFactory->addSetup('addEvent', [$keys, $holderMethodName, $machineName]);
+            $eventDispatchFactory->addSetup('addEvent', [$keys, $holderMethodName, $machineName, $definition['formLayout']]);
         }
-
-        $this->createLayoutResolverFactory();
     }
 
-    /**
-     * @return void
-     */
-    private function loadScheme() {
+    private function loadScheme(): void {
         $loader = new Loader();
         $this->getContainerBuilder()->addDependency($this->schemeFile);
         $this->scheme = $loader->load($this->schemeFile);
@@ -176,26 +156,10 @@ class EventsExtension extends CompilerExtension {
         return $this->baseMachineConfig[$key];
     }
 
-    /**
-     * @param string $name
-     * @return void
-     */
-    private function validateConfigName(string $name) {
+    private function validateConfigName(string $name): void {
         if (!preg_match(self::NAME_PATTERN, $name)) {
             throw new InvalidArgumentException("Section name '$name' in events configuration is invalid.");
         }
-    }
-
-    /**
-     * @return void
-     */
-    private function createLayoutResolverFactory() {
-        $def = $this->getContainerBuilder()->addDefinition(self::MAIN_RESOLVER);
-        $def->setFactory(LayoutResolver::class);
-
-        $parameters = $this->getContainerBuilder()->parameters;
-        $templateDir = $parameters['events']['templateDir'];
-        $def->setArguments([$templateDir, $this->definitionsMap]); //TODO!!
     }
 
     private function createTransitionService(string $baseName, array $states, string $mask, array $definition): ServiceDefinition {
@@ -366,7 +330,7 @@ class EventsExtension extends CompilerExtension {
      * @param array $definition
      * @throws NeonSchemaException
      */
-    private function createHolderFactory(string $name, array $definition) {
+    private function createHolderFactory(string $name, array $definition): void {
         $machineDef = NeonScheme::readSection($definition['machine'], $this->scheme['machine']);
         // Create factory definition.
         $factoryName = $this->getHolderName($name);
@@ -410,7 +374,7 @@ class EventsExtension extends CompilerExtension {
      * @return ServiceDefinition
      * @throws NeonSchemaException
      */
-    private function createBaseHolderFactory(string $eventName, string $baseName, string $instanceName, array $instanceDefinition) {
+    private function createBaseHolderFactory(string $eventName, string $baseName, string $instanceName, array $instanceDefinition): ServiceDefinition {
         $definition = $this->getBaseMachineConfig($eventName, $baseName);
         $factoryName = $this->getBaseHolderName($eventName, $baseName);
         $factory = $this->getContainerBuilder()->addDefinition(uniqid($factoryName));
@@ -436,8 +400,8 @@ class EventsExtension extends CompilerExtension {
         $factory->addSetup('setService', [$definition['service']]);
         $factory->addSetup('setJoinOn', [$definition['joinOn']]);
         $factory->addSetup('setJoinTo', [$definition['joinTo']]);
-        $factory->addSetup('setPersonIds', [$definition['personIds']]); // must be set after setService
-        $factory->addSetup('setEventId', [$definition['eventId']]); // must be set after setService
+        $factory->addSetup('setPersonIdColumns', [$definition['personIds']]); // must be set after setService
+        $factory->addSetup('setEventIdColumn', [$definition['eventId']]); // must be set after setService
         $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
         $factory->addSetup('setValidator', ['@events.dataValidator']);
         $factory->addSetup('setEventRelation', [$definition['eventRelation']]);

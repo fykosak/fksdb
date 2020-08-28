@@ -14,7 +14,7 @@ use FKSDB\Exceptions\NotImplementedException;
  */
 class SchoolProvider implements IFilteredDataProvider {
 
-    const LIMIT = 50;
+    private const LIMIT = 50;
 
     private ServiceSchool $serviceSchool;
 
@@ -96,7 +96,7 @@ class SchoolProvider implements IFilteredDataProvider {
      * @param mixed $id
      * @return void
      */
-    public function setDefaultValue($id) {
+    public function setDefaultValue($id): void {
         $this->defaultValue = $id;
     }
 }

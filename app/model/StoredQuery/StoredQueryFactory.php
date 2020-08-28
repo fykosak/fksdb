@@ -23,11 +23,11 @@ use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
  */
 class StoredQueryFactory implements IXMLNodeSerializer {
 
-    const PARAM_CONTEST_ID = 'contest_id';
-    const PARAM_CONTEST = 'contest';
-    const PARAM_YEAR = 'year';
-    const PARAM_SERIES = 'series';
-    const PARAM_AC_YEAR = 'ac_year';
+    public const PARAM_CONTEST_ID = 'contest_id';
+    public const PARAM_CONTEST = 'contest';
+    public const PARAM_YEAR = 'year';
+    public const PARAM_SERIES = 'series';
+    public const PARAM_AC_YEAR = 'ac_year';
 
     private Connection $connection;
 
@@ -45,34 +45,27 @@ class StoredQueryFactory implements IXMLNodeSerializer {
 
     /**
      * @param ISeriesPresenter $presenter
-     * @param ModelStoredQuery $patternQuery
-     * @return StoredQuery
-     * @throws BadRequestException
-     */
-    public function createQuery(ISeriesPresenter $presenter, ModelStoredQuery $patternQuery): StoredQuery {
-        $storedQuery = new StoredQuery($this->connection);
-        $storedQuery->setQueryPattern($patternQuery);
-        $storedQuery->setQueryParameters($patternQuery->getParameters());
-        $storedQuery->setContextParameters($this->presenterContextParameters($presenter));
-        return $storedQuery;
-    }
-
-    /**
-     * @param ISeriesPresenter $presenter
      * @param string $sql
      * @param ModelStoredQueryParameter[]|StoredQueryParameter[] $parameters
      * @param string $postProcessingClass
      * @return StoredQuery
      * @throws BadRequestException
      */
-    public function createQueryFromSQL(ISeriesPresenter $presenter, string $sql, array $parameters, string $postProcessingClass = null): StoredQuery {
-        $storedQuery = new StoredQuery($this->connection);
-        $storedQuery->setSQL($sql);
-        $storedQuery->setQueryParameters($parameters);
+    public function createQueryFromSQL(ISeriesPresenter $presenter, string $sql, array $parameters, ?string $postProcessingClass = null): StoredQuery {
+        $storedQuery = StoredQuery::createWithoutQueryPattern($this->connection, $sql, $parameters, $postProcessingClass);
         $storedQuery->setContextParameters($this->presenterContextParameters($presenter));
-        if ($postProcessingClass) {
-            $storedQuery->setPostProcessing($postProcessingClass);
-        }
+        return $storedQuery;
+    }
+
+    /**
+     * @param ISeriesPresenter $presenter
+     * @param ModelStoredQuery $patternQuery
+     * @return StoredQuery
+     * @throws BadRequestException
+     */
+    public function createQuery(ISeriesPresenter $presenter, ModelStoredQuery $patternQuery): StoredQuery {
+        $storedQuery = StoredQuery::createFromQueryPattern($this->connection, $patternQuery);
+        $storedQuery->setContextParameters($this->presenterContextParameters($presenter));
         return $storedQuery;
     }
 
@@ -81,9 +74,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         if (!$patternQuery) {
             throw new InvalidArgumentException("Unknown QID '$qid'.");
         }
-        $storedQuery = new StoredQuery($this->connection);
-        $storedQuery->setQueryPattern($patternQuery);
-        $storedQuery->setQueryParameters($patternQuery->getParameters());
+        $storedQuery = StoredQuery::createFromQueryPattern($this->connection, $patternQuery);
         $storedQuery->setContextParameters($parameters, false); // treat all parameters as implicit (better API for web service)
         return $storedQuery;
     }
@@ -104,7 +95,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
             ];
         } catch (BadRequestException $exception) {
             if ($exception->getCode() == Response::S500_INTERNAL_SERVER_ERROR) {
-                $presenter->flashMessage(_('Kontext pro dotazy není dostupný'), BasePresenter::FLASH_WARNING);
+                $presenter->flashMessage(_('Series context for queries is not available'), BasePresenter::FLASH_WARNING);
                 return [];
             } else {
                 throw $exception;

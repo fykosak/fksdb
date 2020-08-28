@@ -12,13 +12,9 @@ class Repository {
 
     use SmartObject;
 
-    /** @var string $name */
-    public $id;
+    public string $id;
 
-    /** @var string $name */
-    public $full_name;
+    public string $full_name;
 
-    /** @var User $user */
-    public $owner;
-
+    public User $owner;
 }

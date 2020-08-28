@@ -24,20 +24,11 @@ class ApplicationHandlerTest extends EventTestCase {
 
     use MockApplicationTrait;
 
-    /**
-     * @var ApplicationHandler
-     */
-    private $fixture;
+    private ApplicationHandler $fixture;
 
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceTeam;
+    private ServiceFyziklaniTeam $serviceTeam;
 
-    /**
-     * @var Holder
-     */
-    private $holder;
+    private Holder $holder;
 
     /**
      * ApplicationHandlerTest constructor.
@@ -46,19 +37,19 @@ class ApplicationHandlerTest extends EventTestCase {
     public function __construct(Container $container) {
         parent::__construct($container);
         $this->setContainer($container);
+        $this->serviceTeam = $this->getContainer()->getByType(ServiceFyziklaniTeam::class);
     }
 
     protected function getEventId(): int {
         throw new BadRequestException();
     }
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
 
         $this->connection->query("INSERT INTO event (event_id, event_type_id, year, event_year, begin, end, name)"
             . "                          VALUES (1, 1, 1, 1, '2001-01-02', '2001-01-02', 'Testovací Fyziklání')");
 
-        $this->serviceTeam = $this->getContainer()->getByType(ServiceFyziklaniTeam::class);
         /** @var ServiceEvent $serviceEvent */
         $serviceEvent = $this->getContainer()->getByType(ServiceEvent::class);
 
@@ -74,7 +65,7 @@ class ApplicationHandlerTest extends EventTestCase {
         $this->mockApplication();
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM e_fyziklani_participant');
         $this->connection->query('DELETE FROM e_fyziklani_team');
 
@@ -85,7 +76,7 @@ class ApplicationHandlerTest extends EventTestCase {
      * This test doesn't test much, at least it detects weird data passing in CategoryProcessing.
      * @throws \FKSDB\Events\Model\ApplicationHandlerException
      */
-    public function testNewApplication() {
+    public function testNewApplication(): void {
         $id1 = $this->createPerson('Karel', 'Kolář', ['email' => 'k.kolar@email.cz']);
 
         $id2 = $this->createPerson('Michal', 'Koutný', ['email' => 'michal@fykos.cz']);
@@ -213,7 +204,7 @@ class ApplicationHandlerTest extends EventTestCase {
             'privacy' => true,
         ];
         $data = ArrayHash::from($data);
-        $this->fixture->storeAndExecute($this->holder, $data);
+        $this->fixture->storeAndExecuteValues($this->holder, $data);
 
         /** @var ModelFyziklaniTeam $team */
         $team = $this->serviceTeam->getTable()->where('name', $teamName)->fetch();

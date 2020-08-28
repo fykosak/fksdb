@@ -12,6 +12,7 @@ use Nette\Database\IConventions;
 /**
  * Class ServiceScheduleGroup
  * @author Michal Červeňák <miso@fykos.cz>
+ * @method ModelScheduleGroup|null findByPrimary($key)
  */
 class ServiceScheduleGroup extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;

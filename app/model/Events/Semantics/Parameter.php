@@ -32,10 +32,7 @@ class Parameter {
         return $this->getHolder($args[0])->getParameter($this->parameter);
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return "param({$this->parameter})";
     }
 

@@ -2,7 +2,6 @@
 
 namespace FKSDB\Modules\CoreModule;
 
-use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
@@ -13,7 +12,7 @@ use Nette\Application\UI\InvalidLinkException;
  * Class DispatchPresenter
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class DispatchPresenter extends AuthenticatedPresenter {
+class DispatchPresenter extends BasePresenter {
 
     private array $contestsProperty;
 
@@ -33,8 +32,8 @@ class DispatchPresenter extends AuthenticatedPresenter {
         $this->template->contestsProperty = $this->getContestsProperty();
     }
 
-    protected function beforeRender() {
-        $this->getPageStyleContainer()->navBarClassName = 'bg-dark navbar-dark';
+    protected function beforeRender(): void {
+        $this->getPageStyleContainer()->setNavBarClassName('bg-dark navbar-dark');
         parent::beforeRender();
     }
 
@@ -61,7 +60,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     private function getContestsProperty(): array {
-        if (!isset($this->contestsProperty) || is_null($this->contestsProperty)) {
+        if (!isset($this->contestsProperty)) {
             $this->contestsProperty = [];
             $query = $this->getServiceContest()->getTable();
             /** @var ModelContest $contest */

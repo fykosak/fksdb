@@ -2,8 +2,8 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Entity\StoredQuery\StoredQueryFormComponent;
-use FKSDB\Components\Controls\StoredQueryTagCloud;
+use FKSDB\Components\Controls\Entity\StoredQueryFormComponent;
+use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
 use FKSDB\Entity\ModelNotFoundException;
@@ -72,7 +72,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
 
-    protected function startup() {
+    protected function startup(): void {
         switch ($this->getAction()) {
             case 'execute':
                 $this->redirect(':Org:Export:execute', $this->getParameters());
@@ -134,7 +134,6 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
     /**
      * @param PageTitle $pageTitle
      * @return void
-     *
      * @throws ForbiddenRequestException
      * @throws BadTypeException
      */

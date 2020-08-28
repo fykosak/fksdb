@@ -33,15 +33,15 @@ use FKSDB\Modules\PublicModule\ApplicationPresenter;
 class MailSender {
     use SmartObject;
 
-    const BCC_PARAM = 'notifyBcc';
-    const FROM_PARAM = 'notifyFrom';
+    public const BCC_PARAM = 'notifyBcc';
+    public const FROM_PARAM = 'notifyFrom';
 
     // Adressee
-    const ADDR_SELF = 'self';
-    const ADDR_PRIMARY = 'primary';
-    const ADDR_SECONDARY = 'secondary';
-    const ADDR_ALL = '*';
-    const BCC_PREFIX = '.';
+    public const ADDR_SELF = 'self';
+    public const ADDR_PRIMARY = 'primary';
+    public const ADDR_SECONDARY = 'secondary';
+    public const ADDR_ALL = '*';
+    public const BCC_PREFIX = '.';
 
     /** @var string */
     private $filename;
@@ -96,7 +96,7 @@ class MailSender {
      * @return void
      * @throws UnsupportedLanguageException
      */
-    public function __invoke(Transition $transition, Holder $holder) {
+    public function __invoke(Transition $transition, Holder $holder): void {
         $this->send($transition, $holder);
     }
 
@@ -237,7 +237,7 @@ class MailSender {
                 case self::ADDR_SECONDARY:
                     $names = [];
                     foreach ($holder->getGroupedSecondaryHolders() as $group) {
-                        $names = array_merge($names, array_map(function (BaseHolder $it) {
+                        $names = array_merge($names, array_map(function (BaseHolder $it): string {
                             return $it->getName();
                         }, $group['holders']));
                     }

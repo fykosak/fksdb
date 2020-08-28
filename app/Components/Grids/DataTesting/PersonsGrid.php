@@ -6,7 +6,6 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\DataTesting\DataTestingFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\DataTesting\TestLog;
 use FKSDB\Exceptions\NotImplementedException;
@@ -48,16 +47,12 @@ class PersonsGrid extends BaseGrid {
         $this->addColumns(['person.person_link']);
 
         foreach ($this->dataTestingFactory->getTests('person') as $test) {
-            $this->addColumn($test->getId(), $test->getTitle())->setRenderer(function ($person) use ($test) {
+            $this->addColumn($test->getId(), $test->getTitle())->setRenderer(function ($person) use ($test): Html {
                 $logger = new MemoryLogger();
                 $test->run($logger, $person);
                 return self::createHtmlLog($logger->getMessages());
             });
         }
-    }
-
-    protected function getModelClassName(): string {
-        return ModelPerson::class;
     }
 
     /**

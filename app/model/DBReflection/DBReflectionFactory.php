@@ -16,8 +16,7 @@ use Nette\SmartObject;
 final class DBReflectionFactory {
     use SmartObject;
 
-    /** @var Container */
-    private $container;
+    private Container $container;
 
     /**
      * PersonInfoFactory constructor.

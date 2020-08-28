@@ -16,7 +16,6 @@ use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Services\ServicePerson;
 use Nette\Application\BadRequestException;
 use Nette\ComponentModel\IComponent;
@@ -37,10 +36,10 @@ use FKSDB\Persons\ReferencedPersonHandler;
  */
 class ReferencedPersonContainer extends ReferencedContainer {
 
-    const TARGET_FORM = 0x1;
-    const TARGET_VALIDATION = 0x2;
-    const EXTRAPOLATE = 0x4;
-    const HAS_DELIVERY = 0x8;
+    public const TARGET_FORM = 0x1;
+    public const TARGET_VALIDATION = 0x2;
+    public const EXTRAPOLATE = 0x4;
+    public const HAS_DELIVERY = 0x8;
 
     public IModifiabilityResolver $modifiabilityResolver;
 
@@ -124,12 +123,12 @@ class ReferencedPersonContainer extends ReferencedContainer {
             $subContainer = new ContainerWithOptions();
             if ($sub == ReferencedPersonHandler::POST_CONTACT_DELIVERY) {
                 $subContainer->setOption('showGroup', true);
-                $subContainer->setOption('label', _('Doručovací adresa'));
+                $subContainer->setOption('label', _('Deliver address'));
             } elseif ($sub == ReferencedPersonHandler::POST_CONTACT_PERMANENT) {
                 $subContainer->setOption('showGroup', true);
-                $label = _('Trvalá adresa');
+                $label = _('Permanent address');
                 if (isset($this[ReferencedPersonHandler::POST_CONTACT_DELIVERY])) {
-                    $label .= ' ' . _('(je-li odlišná od doručovací)');
+                    $label .= ' ' . _('(when different from delivery address)');
                 }
                 $subContainer->setOption('label', $label);
             }
@@ -141,11 +140,11 @@ class ReferencedPersonContainer extends ReferencedContainer {
                         throw new InvalidStateException("Should define uniqueness validator for field $sub.$fieldName.");
                     }
 
-                    $control->addCondition(function () { // we use this workaround not to call getValue inside validation out of transaction
+                    $control->addCondition(function (): bool { // we use this workaround not to call getValue inside validation out of transaction
                         $personId = $this->getReferencedId()->getValue(false);
                         return $personId && $personId != ReferencedId::VALUE_PROMISE;
                     })
-                        ->addRule(function (BaseControl $control) use ($fullFieldName) {
+                        ->addRule(function (BaseControl $control) use ($fullFieldName) : bool {
                             $personId = $this->getReferencedId()->getValue(false);
 
                             $foundPerson = $this->getReferencedId()->getHandler()->findBySecondaryKey($fullFieldName, $control->getValue());
@@ -154,7 +153,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
                                 return false;
                             }
                             return true;
-                        }, _('S e-mailem %value byla nalezena (formálně) jiná (ale pravděpodobně duplicitní) osoba, a tak ve formuláři nahradila původní.'));
+                        }, _('There is (formally) different person with email %value. Probably it is a duplicate so it substituted original data in the form.'));
                 }
 
                 $subContainer->addComponent($control, $fieldName);
@@ -167,7 +166,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @param IModel|ModelPerson|null $model
      * @param string $mode
      * @return void
-     * @throws JsonException
      */
     public function setModel(IModel $model = null, string $mode = ReferencedId::MODE_NORMAL): void {
 
@@ -290,9 +288,9 @@ class ReferencedPersonContainer extends ReferencedContainer {
                         $conditioned = $control->addConditionOn($this->getReferencedId(), Form::FILLED);
 
                         if ($fieldName == 'agreed') { // NOTE: this may need refactoring when more customization requirements occurre
-                            $conditioned->addRule(Form::FILLED, _('Bez souhlasu nelze bohužel pokračovat.'));
+                            $conditioned->addRule(Form::FILLED, _('Confirmation is necessary to proceed.'));
                         } else {
-                            $conditioned->addRule(Form::FILLED, _('Pole %label je povinné.'));
+                            $conditioned->addRule(Form::FILLED, _('Field %label is required.'));
                         }
                     }
                     break;
@@ -332,13 +330,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
         return false;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param string $sub
-     * @param string $field
-     * @return bool
-     * @throws JsonException
-     */
     final public function isFilled(ModelPerson $person, string $sub, string $field): bool {
         $value = $this->getPersonValue($person, $sub, $field, ReferencedPersonContainer::TARGET_VALIDATION);
         return !($value === null || $value === '');
@@ -349,10 +340,9 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @param string $sub
      * @param string $field
      * @param int $options
-     * @return bool|ModelPostContact|mixed|null
-     * @throws JsonException
+     * @return mixed
      */
-    protected function getPersonValue($person, string $sub, string $field, int $options) {
+    protected function getPersonValue(?ModelPerson $person, string $sub, string $field, int $options) {
         return ReferencedPersonFactory::getPersonValue($person, $sub, $field, $this->acYear, $options, $this->event);
     }
 }

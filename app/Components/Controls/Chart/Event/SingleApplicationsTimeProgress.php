@@ -3,7 +3,7 @@
 namespace FKSDB\Components\React\ReactComponent\Events;
 
 use FKSDB\Components\Controls\Chart\IChart;
-use FKSDB\Components\React\ReactComponent;
+use FKSDB\Components\React\ReactComponent2;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelEventType;
@@ -11,19 +11,16 @@ use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
-use Nette\Utils\Json;
-use Nette\Utils\JsonException;
 
 /**
  * Class SingleApplicationsTimeProgress
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
+class SingleApplicationsTimeProgress extends ReactComponent2 implements IChart {
 
     private ServiceEventParticipant $serviceEventParticipant;
 
-    /** @var ModelEventType */
-    private $eventType;
+    private ModelEventType $eventType;
 
     private ServiceEvent $serviceEvent;
 
@@ -42,12 +39,7 @@ class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
         $this->serviceEvent = $serviceEvent;
     }
 
-    /**
-     * @param mixed ...$args
-     * @return string
-     * @throws JsonException
-     */
-    public function getData(...$args): string {
+    protected function getData(): array {
         $data = [
             'participants' => [],
             'events' => [],
@@ -66,7 +58,7 @@ class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
             $data['participants'][$event->event_id] = $participants;
             $data['events'][$event->event_id] = $event->__toArray();
         }
-        return Json::encode($data);
+        return $data;
     }
 
     public function getTitle(): string {

@@ -89,12 +89,12 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /* ********************** TITLE **********************/
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Odevzdat řešení'), 'fa fa-cloud-upload'));
     }
 
-    public function titleAjax() {
-        return $this->titleDefault();
+    public function titleAjax(): void {
+        $this->titleDefault();
     }
 
     /**
@@ -172,7 +172,7 @@ class SubmitPresenter extends BasePresenter {
 
                 if ($submit && $this->uploadedSubmitStorage->fileExists($submit)) {
                     $overwrite = $container->addCheckbox('overwrite', _('Přepsat odeslané řešení.'));
-                    $conditionedUpload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(~Form::FILLED, _('Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.'));
+                    $conditionedUpload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(Form::BLANK, _('Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.'));
                 }
             } else {
                 //Implementaton of quiz questions
@@ -228,7 +228,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     protected function createComponentSubmitsGrid(): SubmitsGrid {
-        return new SubmitsGrid($this->getContext(), $this->getContestant());
+        return new SubmitsGrid($this->getContext(), $this->getContestant(), $this->getSelectedAcademicYear());
     }
 
     /**
@@ -261,24 +261,26 @@ class SubmitPresenter extends BasePresenter {
 
                 $taskValues = $values['task' . $task->task_id];
 
-                //Implemetation of quiz questions
-                /** @var ModelQuizQuestion $question */
-                foreach ($questions as $question) {
-                    $name = 'question' . $question->question_id;
-                    $answer = $taskValues[$name];
-                    $this->submitQuizQuestionService->saveSubmittedQuestion($question, $this->getContestant(), $answer);
+                if (count($questions)) {
+                    /** @var ModelQuizQuestion $question */
+                    foreach ($questions as $question) {
+                        $name = 'question' . $question->question_id;
+                        $answer = $taskValues[$name];
+                        if($answer != null){
+                            $this->submitQuizQuestionService->saveSubmittedQuestion($question, $this->getContestant(), $answer);
+                        }
+                    }
+                    $this->submitHandlerFactory->handleQuizSubmit($task, $this->getContestant());
+                } else {
+                    if (!isset($taskValues['file'])) { // upload field was disabled
+                        continue;
+                    }
+                    if (!$taskValues['file']->isOk()) {
+                        Debugger::log(sprintf("Uploaded file error %s.", $taskValues['file']->getError()), Debugger::WARNING);
+                        continue;
+                    }
+                    $this->submitHandlerFactory->handleSave($taskValues['file'], $task, $this->getContestant());
                 }
-
-                if (!isset($taskValues['file'])) { // upload field was disabled
-                    continue;
-                }
-                if (!$taskValues['file']->isOk()) {
-                    Debugger::log(sprintf("Uploaded file error %s.", $taskValues['file']->getError()), Debugger::WARNING);
-                    continue;
-                }
-
-                $this->submitHandlerFactory->handleSave($taskValues['file'], $task, $this->getContestant());
-
                 $this->flashMessage(sprintf(_('Úloha %s odevzdána.'), $task->label), self::FLASH_SUCCESS);
             }
 

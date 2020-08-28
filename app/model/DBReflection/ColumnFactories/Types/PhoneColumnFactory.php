@@ -19,10 +19,10 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PhoneColumnFactory extends DefaultColumnFactory implements ITestedColumnFactory {
-    /** @var PhoneNumberFactory */
-    protected $phoneNumberFactory;
-    /** @var bool */
-    private $isWriteOnly = true;
+
+    protected PhoneNumberFactory $phoneNumberFactory;
+
+    private bool $isWriteOnly = true;
 
     /**
      * PhoneRow constructor.
@@ -34,11 +34,7 @@ class PhoneColumnFactory extends DefaultColumnFactory implements ITestedColumnFa
         parent::__construct($metaDataFactory);
     }
 
-    /**
-     * @param bool $isWriteOnly
-     * @return void
-     */
-    public function setWriteOnly(bool $isWriteOnly) {
+    public function setWriteOnly(bool $isWriteOnly): void {
         $this->isWriteOnly = $isWriteOnly;
     }
 
@@ -53,7 +49,7 @@ class PhoneColumnFactory extends DefaultColumnFactory implements ITestedColumnFa
         $control->addRule(Form::MAX_LENGTH, null, 32);
         $control->setOption('description', _('Use an international format, starting with "+"'));
         $control->addCondition(Form::FILLED)
-            ->addRule(function (BaseControl $control) {
+            ->addRule(function (BaseControl $control): bool {
                 if ($control->getValue() === WriteOnlyInput::VALUE_ORIGINAL) {
                     return true;
                 }

@@ -1,9 +1,7 @@
-import { mapRegister } from '@appsCollector';
 import { lang } from '@i18n/i18n';
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
 
-class Main extends React.Component<{}, { processing: boolean; messages: string[] }> {
+export default class Attendance extends React.Component<{}, { processing: boolean; messages: string[] }> {
     constructor(props) {
         super(props);
         this.state = {processing: false, messages: []};
@@ -74,11 +72,3 @@ class Main extends React.Component<{}, { processing: boolean; messages: string[]
         });
     }
 }
-
-export const attendance = () => {
-    mapRegister.register('attendance.qr-code', (element, reactId, rawData, actions) => {
-        const c = document.createElement('div');
-        element.appendChild(c);
-        ReactDOM.render(<Main/>, c);
-    });
-};

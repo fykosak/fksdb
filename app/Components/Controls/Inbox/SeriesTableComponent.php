@@ -13,10 +13,10 @@ use Nette\DI\Container;
  * @author Michal Koutny
  */
 abstract class SeriesTableComponent extends BaseComponent {
-    /** @var SeriesTable */
-    private $seriesTable;
-    /** @var bool */
-    private $displayAll;
+
+    private SeriesTable $seriesTable;
+
+    private bool $displayAll;
 
     /**
      * CheckSubmitsControl constructor.
@@ -30,10 +30,7 @@ abstract class SeriesTableComponent extends BaseComponent {
         $this->displayAll = $displayAll;
     }
 
-    /**
-     * @return ITemplate
-     */
-    protected function createTemplate() {
+    protected function createTemplate(): ITemplate {
         $template = parent::createTemplate();
         $template->seriesTable = $this->getSeriesTable();
         $template->displayAll = $this->displayAll;

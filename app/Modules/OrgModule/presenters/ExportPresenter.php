@@ -9,9 +9,9 @@ use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\StoredQuery\StoredQuery;
 use FKSDB\StoredQuery\StoredQueryFactory;
-use FKSDB\Components\Controls\ContestChooser;
-use FKSDB\Components\Controls\ResultsComponent;
-use FKSDB\Components\Controls\StoredQueryTagCloud;
+use FKSDB\Components\Controls\Choosers\ContestChooser;
+use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
+use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\UI\PageTitle;
 use FKSDB\Modules\Core\PresenterTraits\{EntityPresenterTrait, SeriesPresenterTrait};
@@ -34,7 +34,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     use SeriesPresenterTrait;
 
-    const PARAM_HTTP_AUTH = 'ha';
+    private const PARAM_HTTP_AUTH = 'ha';
 
     /**
      * @persistent
@@ -44,8 +44,8 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     private ServiceStoredQuery $serviceStoredQuery;
 
     private StoredQueryFactory $storedQueryFactory;
-    /** @var StoredQuery */
-    private $storedQuery;
+
+    private StoredQuery $storedQuery;
 
     public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery): void {
         $this->serviceStoredQuery = $serviceStoredQuery;
@@ -55,7 +55,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         $this->storedQueryFactory = $storedQueryFactory;
     }
 
-    protected function startup() {
+    protected function startup(): void {
         switch ($this->getAction()) {
             case 'edit':
                 $this->redirect(':Org:StoredQuery:edit', $this->getParameters());
@@ -94,8 +94,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     *
-     *
      * @throws BadRequestException
      * @throws ModelNotFoundException
      */
@@ -120,10 +118,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         $this->template->model = $this->getStoredQuery()->getQueryPattern();
     }
 
-    /**
-     * @return bool|int|string
-     */
-    public function getAllowedAuthMethods() {
+    public function getAllowedAuthMethods(): int {
         $methods = parent::getAllowedAuthMethods();
         if ($this->getParameter(self::PARAM_HTTP_AUTH, false)) {
             $methods = $methods | AuthenticatedPresenter::AUTH_ALLOW_HTTP;
@@ -131,9 +126,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         return $methods;
     }
 
-    /**
-     * @return string
-     */
     protected function getHttpRealm(): ?string {
         return 'FKSDB-export';
     }
@@ -144,7 +136,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ModelNotFoundException
      */
     public function getStoredQuery(): StoredQuery {
-        if (!isset($this->storedQuery) || is_null($this->storedQuery)) {
+        if (!isset($this->storedQuery)) {
             $model = $this->getQueryByQId();
             if (!$model) {
                 $model = $this->getEntity();
@@ -161,7 +153,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         }
         return null;
     }
-
 
     protected function createComponentContestChooser(): ContestChooser {
         $component = parent::createComponentContestChooser();
@@ -191,7 +182,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     /**
      * @param PageTitle $pageTitle
      * @return void
-     *
      * @throws ForbiddenRequestException
      * @throws BadTypeException
      */

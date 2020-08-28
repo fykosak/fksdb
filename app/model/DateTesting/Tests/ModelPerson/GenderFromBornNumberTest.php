@@ -42,5 +42,4 @@ class GenderFromBornNumberTest extends PersonTest {
             $logger->log(new TestLog($this->getTitle(), 'Gender match born number', TestLog::LVL_SUCCESS));
         }
     }
-
 }

@@ -15,6 +15,7 @@ use Nette\Database\IConventions;
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelEvent createNewModel(array $data)
+ * @method ModelEvent|null findByPrimary($key)
  */
 class ServiceEvent extends AbstractServiceSingle {
 

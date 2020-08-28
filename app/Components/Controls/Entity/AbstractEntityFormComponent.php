@@ -22,6 +22,7 @@ abstract class AbstractEntityFormComponent extends BaseComponent {
 
     protected bool $create;
 
+
     /**
      * AbstractEntityFormControl constructor.
      * @param Container $container
@@ -35,6 +36,7 @@ abstract class AbstractEntityFormComponent extends BaseComponent {
     protected function createFormControl(): FormControl {
         return new FormControl();
     }
+
 
     /**
      * @return Form
@@ -73,6 +75,7 @@ abstract class AbstractEntityFormComponent extends BaseComponent {
         } catch (ModelException $exception) {
             Debugger::log($exception);
             $previous = $exception->getPrevious();
+            // catch NotNull|ForeignKey|Unique
             if ($previous && $previous instanceof ConstraintViolationException) {
                 $this->flashMessage($previous->getMessage(), Message::LVL_DANGER);
             } else {

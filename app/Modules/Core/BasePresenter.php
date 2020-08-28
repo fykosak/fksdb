@@ -6,25 +6,25 @@ use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Application\IStylesheetCollector;
 use FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs;
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory;
+use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Components\Controls\Choosers\ThemeChooser;
-use FKSDB\Components\Controls\Navigation\INavigablePresenter;
-use FKSDB\Components\Controls\Navigation\Navigation;
-use FKSDB\Components\Controls\PresenterBuilder;
 use FKSDB\Components\Controls\DBReflection\DetailComponent;
+use FKSDB\Components\Controls\Navigation\INavigablePresenter;
+use FKSDB\Components\Controls\Navigation\NavigationChooser;
+use FKSDB\Components\Controls\PresenterBuilder;
 use FKSDB\Components\Controls\DBReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
 use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Localization\GettextTranslator;
 use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Logging\ILogger;
 use FKSDB\Modules\Core\PresenterTraits\CollectorPresenterTrait;
-use FKSDB\Modules\Core\PresenterTraits\LangPresenterTrait;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\UI\PageStyleContainer;
 use FKSDB\UI\PageTitle;
 use FKSDB\YearCalculator;
-use FKSDB\FullHttpRequest;
 use InvalidArgumentException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -43,17 +43,16 @@ use FKSDB\Utils\Utils;
 abstract class BasePresenter extends Presenter implements IJavaScriptCollector, IStylesheetCollector, IAutocompleteJSONProvider, INavigablePresenter {
 
     use CollectorPresenterTrait;
-    use LangPresenterTrait;
 
-    const FLASH_SUCCESS = ILogger::SUCCESS;
+    public const FLASH_SUCCESS = ILogger::SUCCESS;
 
-    const FLASH_INFO = ILogger::INFO;
+    public const FLASH_INFO = ILogger::INFO;
 
-    const FLASH_WARNING = ILogger::WARNING;
+    public const FLASH_WARNING = ILogger::WARNING;
 
-    const FLASH_ERROR = ILogger::ERROR;
+    public const FLASH_ERROR = ILogger::ERROR;
 
-    /** @persistent  */
+    /** @persistent */
     public $tld;
 
     /**
@@ -63,29 +62,29 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     public $bc;
 
+    /**
+     * @persistent
+     * @internal
+     */
+    public $lang;
+
     private YearCalculator $yearCalculator;
 
     private ServiceContest $serviceContest;
 
     private BreadcrumbsFactory $breadcrumbsFactory;
 
-    private Navigation $navigationControl;
-
     private PresenterBuilder $presenterBuilder;
 
-    /** @var PageTitle|null */
-    private $pageTitle;
+    private ?PageTitle $pageTitle;
 
-    /** @var bool */
-    private $authorized = true;
+    private bool $authorized = true;
 
-    /** @var bool[] */
-    private $authorizedCache = [];
+    private array $authorizedCache = [];
 
-    /** @var FullHttpRequest */
-    private $fullRequest;
-    /** @var PageStyleContainer */
-    private $pageStyleContainer;
+    private PageStyleContainer $pageStyleContainer;
+
+    private GettextTranslator $translator;
 
     public function getYearCalculator(): YearCalculator {
         return $this->yearCalculator;
@@ -107,29 +106,30 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->breadcrumbsFactory = $breadcrumbsFactory;
     }
 
-    public function injectNavigationControl(Navigation $navigationControl): void {
-        $this->navigationControl = $navigationControl;
-    }
-
     public function injectPresenterBuilder(PresenterBuilder $presenterBuilder): void {
         $this->presenterBuilder = $presenterBuilder;
+    }
+
+    final public function injectTranslator(GettextTranslator $translator): void {
+        $this->translator = $translator;
     }
 
     /**
      * @return void
      * @throws UnsupportedLanguageException
+     * @throws AbortException
      */
     protected function startup() {
         parent::startup();
-        $this->langTraitStartup();
+        /** @var LanguageChooser $control */
+        $control = $this->getComponent('languageChooser');
+        $control->init();
     }
 
-    /**
-     * @return ITemplate
-     */
-    protected function createTemplate() {
+
+    protected function createTemplate(): ITemplate {
         $template = parent::createTemplate();
-        $template->setTranslator($this->getTranslator());
+        $template->setTranslator($this->translator);
         return $template;
     }
 
@@ -141,11 +141,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @param mixed|string $acQ
      * @return void
      * @throws AbortException
-     * @throws BadRequestException
      */
     public function handleAutocomplete($acName, $acQ): void {
         if (!$this->isAjax()) {
-            throw new BadRequestException('Can be called only by AJAX.');
+            ['acQ' => $acQ] = (array)json_decode($this->getHttpRequest()->getRawBody());
         }
         $component = $this->getComponent($acName);
         if (!($component instanceof AutocompleteSelectBox)) {
@@ -153,7 +152,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         } else {
             $provider = $component->getDataProvider();
             $data = null;
-            if ($provider instanceof IFilteredDataProvider) {
+            if ($provider && $provider instanceof IFilteredDataProvider) {
                 $data = $provider->getFilteredItems($acQ);
             }
 
@@ -181,13 +180,13 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @param string $view
      * @return static
      */
-    public function setView($view) {
+    public function setView($view): self {
         parent::setView($view);
         $this->pageTitle = null;
         return $this;
     }
 
-    private function callTitleMethod() {
+    private function callTitleMethod(): void {
         $method = $this->formatTitleMethod($this->getView());
         if (method_exists($this, $method)) {
             $this->{$method}();
@@ -197,7 +196,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     public function getTitle(): PageTitle {
-        if (!isset($this->pageTitle) || is_null($this->pageTitle)) {
+        if (!isset($this->pageTitle)) {
             $this->callTitleMethod();
         }
         return $this->pageTitle ?? new PageTitle();
@@ -207,11 +206,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->pageTitle = $pageTitle;
     }
 
-    /**
-     * @param string $backLink
-     * @return null|string
-     */
-    public function setBackLink($backLink) {
+    public function setBackLink(string $backLink): ?string {
         $old = $this->bc;
         $this->bc = $backLink;
         return $old;
@@ -229,8 +224,9 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @throws BadTypeException
      * @throws ReflectionException
      * @throws UnsupportedLanguageException
+     * @throws AbortException
      */
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         parent::beforeRender();
 
         $this->tryCall($this->formatTitleMethod($this->getView()), $this->params);
@@ -243,9 +239,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         $this->putIntoBreadcrumbs();
     }
 
-    /**
-     * @return string[]
-     */
     protected function getNavRoots(): array {
         return [];
     }
@@ -269,9 +262,8 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return $this->breadcrumbsFactory->create();
     }
 
-    protected function createComponentNavigation(): Navigation {
-        $this->navigationControl->setParent();
-        return $this->navigationControl;
+    protected function createComponentNavigationChooser(): NavigationChooser {
+        return new NavigationChooser($this->getContext());
     }
 
     protected function createComponentDetail(): DetailComponent {
@@ -282,13 +274,32 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return new ThemeChooser($this->getContext());
     }
 
+    protected function createComponentValuePrinter(): ValuePrinterComponent {
+        return new ValuePrinterComponent($this->getContext());
+    }
+
+    final protected function createComponentLanguageChooser(): LanguageChooser {
+        return new LanguageChooser($this->getContext(), $this->lang);
+    }
+
+    /**
+     * @return string
+     * @throws UnsupportedLanguageException
+     * @throws AbortException
+     */
+    public function getLang(): string {
+        /** @var LanguageChooser $control */
+        $control = $this->getComponent('languageChooser');
+        return $control->getLang();
+    }
+
     /**
      * @param bool $need
      * @throws AbortException
      * @throws BadTypeException
      * @throws ReflectionException
      */
-    final public function backLinkRedirect($need = false) {
+    final public function backLinkRedirect(bool $need = false): void {
         $this->putIntoBreadcrumbs();
         /** @var Breadcrumbs $component */
         $component = $this->getComponent('breadcrumbs');
@@ -316,19 +327,19 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @param mixed $element
      * @throws ForbiddenRequestException
      */
-    public function checkRequirements($element) {
+    public function checkRequirements($element): void {
         parent::checkRequirements($element);
         $this->setAuthorized(true);
     }
 
     /**
      * @param string $destination
-     * @param null $args
-     * @return bool|mixed
+     * @param array|null $args
+     * @return bool
      * @throws BadRequestException
      * @throws InvalidLinkException
      */
-    public function authorized($destination, $args = null) {
+    public function authorized(string $destination, $args = null): bool {
         if (substr($destination, -1) === '!' || $destination === 'this') {
             $destination = $this->getAction(true);
         }
@@ -375,21 +386,5 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
             }
         }
         return $this->authorizedCache[$key];
-    }
-
-
-    /*	 * *******************************
-     * Nette workaround
-     *      * ****************************** */
-    public function getFullHttpRequest(): FullHttpRequest {
-        if ($this->fullRequest === null) {
-            $payload = file_get_contents('php://input');
-            $this->fullRequest = new FullHttpRequest($this->getHttpRequest(), $payload);
-        }
-        return $this->fullRequest;
-    }
-
-    protected function createComponentValuePrinter(): ValuePrinterComponent {
-        return new ValuePrinterComponent($this->getContext());
     }
 }

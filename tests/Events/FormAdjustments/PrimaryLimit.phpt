@@ -13,7 +13,7 @@ $container = require '../../bootstrap.php';
 
 class PrimaryLimit extends ResourceAvailabilityTestCase {
 
-    public function testDisplay() {
+    public function testDisplay(): void {
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',
@@ -33,7 +33,7 @@ class PrimaryLimit extends ResourceAvailabilityTestCase {
         Assert::true((bool)$dom->xpath('//input[@name="participant[accomodation]"][@disabled="disabled"]'));
     }
 
-    public function testRegistration() {
+    public function testRegistration(): void {
         $request = $this->createPostRequest([
             'participant' => [
                 'person_id' => "__promise",

@@ -14,10 +14,9 @@ use Nette\SmartObject;
 class PlainTextResponse implements IResponse {
     use SmartObject;
 
-    /** @var string */
-    private $content;
-    /** @var mixed */
-    private $name;
+    private string $content;
+
+    private string $name;
 
     /**
      * PlainTextResponse constructor.
@@ -32,20 +31,11 @@ class PlainTextResponse implements IResponse {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     * @return void
-     */
-    public function setName(string $name) {
+    public function setName(string $name): void {
         $this->name = $name;
     }
 
-    /**
-     * @param IRequest $httpRequest
-     * @param \Nette\Http\IResponse $httpResponse
-     * @return void
-     */
-    public function send(IRequest $httpRequest, \Nette\Http\IResponse $httpResponse) {
+    public function send(IRequest $httpRequest, \Nette\Http\IResponse $httpResponse): void {
         $httpResponse->setContentType('text/plain', 'utf-8');
 
         if ($this->name) {

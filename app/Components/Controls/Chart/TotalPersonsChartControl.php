@@ -2,19 +2,17 @@
 
 namespace FKSDB\Components\Controls\Chart;
 
-use FKSDB\Components\React\ReactComponent;
+use FKSDB\Components\React\ReactComponent2;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
-use Nette\Utils\Json;
-use Nette\Utils\JsonException;
 
 /**
  * Class TotalPersonsChartControl
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class TotalPersonsChartControl extends ReactComponent implements IChart {
+class TotalPersonsChartControl extends ReactComponent2 implements IChart {
 
     private ServicePerson $servicePerson;
 
@@ -30,12 +28,7 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
         $this->servicePerson = $servicePerson;
     }
 
-    /**
-     * @param mixed ...$args
-     * @return string
-     * @throws JsonException
-     */
-    public function getData(...$args): string {
+    public function getData(): array {
         $query = $this->servicePerson->getTable()->order('created');
         $data = [];
         /** @var ModelPerson $person */
@@ -46,7 +39,7 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
                 'personId' => $person->person_id,
             ];
         }
-        return Json::encode($data);
+        return $data;
     }
 
     public function getTitle(): string {

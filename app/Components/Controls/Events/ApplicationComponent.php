@@ -28,17 +28,14 @@ use Nette\Utils\JsonException;
  */
 class ApplicationComponent extends BaseComponent {
 
-    /** @var ApplicationHandler */
-    private $handler;
+    private ApplicationHandler $handler;
 
-    /** @var Holder */
-    private $holder;
+    private Holder $holder;
 
     /** @var callable ($primaryModelId, $eventId) */
     private $redirectCallback;
 
-    /** @var string */
-    private $templateFile;
+    private string $templateFile;
 
     /**
      * ApplicationComponent constructor.
@@ -59,14 +56,11 @@ class ApplicationComponent extends BaseComponent {
         if (stripos($template, '.latte') !== false) {
             $this->templateFile = $template;
         } else {
-            $this->templateFile = __DIR__ . DIRECTORY_SEPARATOR . "ApplicationComponent.$template.latte";
+            $this->templateFile = __DIR__ . DIRECTORY_SEPARATOR . "layout.application.$template.latte";
         }
     }
 
-    /**
-     * @return callable
-     */
-    public function getRedirectCallback() {
+    public function getRedirectCallback(): callable {
         return $this->redirectCallback;
     }
 
@@ -110,7 +104,7 @@ class ApplicationComponent extends BaseComponent {
         $this->template->primaryMachine = $this->getMachine()->getPrimaryMachine();
         $this->template->canEdit = $this->canEdit();
         $this->template->state = $this->holder->getPrimaryHolder()->getModelState();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ApplicationComponent.inline.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.application.inline.latte');
         $this->template->render();
     }
 
@@ -216,13 +210,13 @@ class ApplicationComponent extends BaseComponent {
 
     /**
      * @param Form|null $form
-     * @param null $explicitTransitionName
+     * @param string|null $explicitTransitionName
+     * @return void
      * @throws AbortException
-     * @throws JsonException
      */
-    private function execute(Form $form = null, $explicitTransitionName = null) {
+    private function execute(?Form $form, ?string $explicitTransitionName): void {
         try {
-            $this->handler->storeAndExecute($this->holder, $form, $explicitTransitionName);
+            $this->handler->storeAndExecuteForm($this->holder, $form, $explicitTransitionName);
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             $this->finalRedirect();
         } catch (ApplicationHandlerException $exception) {
@@ -234,25 +228,18 @@ class ApplicationComponent extends BaseComponent {
         }
     }
 
-    /**
-     * @return Machine
-     *
-     */
-    private function getMachine() {
+    private function getMachine(): Machine {
         return $this->handler->getMachine();
     }
 
-    /**
-     * @return bool
-     */
-    private function canEdit() {
+    private function canEdit(): bool {
         return $this->holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
     /**
      * @throws AbortException
      */
-    private function finalRedirect() {
+    private function finalRedirect(): void {
         if ($this->redirectCallback) {
             $id = $this->holder->getPrimaryHolder()->getModel()->getPrimary(false);
             ($this->redirectCallback)($id, $this->holder->getPrimaryHolder()->getEvent()->getPrimary());

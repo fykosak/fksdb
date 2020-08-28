@@ -60,7 +60,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
         $this->serviceTaskContribution = $serviceTaskContribution;
     }
 
-    protected function startup() {
+    protected function startup(): void {
         $this->seriesTraitStartup();
         parent::startup();
         $this->seriesTable->setContest($this->getSelectedContest());
@@ -110,6 +110,11 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
 
     public function renderEntry(): void {
         $this->template->showAll = (bool)$this->all;
+        if ($this->getSelectedContest()->contest_id === 2 && $this->getSelectedSeries() > 6) {
+            $this->template->hasQuizTask = true;
+        } else {
+            $this->template->hasQuizTask = false;
+        }
     }
 
     protected function createComponentPointsForm(): PointsFormControl {
@@ -167,6 +172,24 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
         $this->redirect('this');
     }
 
+    /**
+     * @return void
+     * @throws AbortException
+     */
+    public function handleCalculateQuizPoints(): void {
+        try{
+            $contest = $this->getSelectedContest();
+            $year = $this->getSelectedYear();
+            $series = $this->getSelectedSeries();
+
+            $this->SQLResultsCache->calculateQuizPoints($contest, $year, $series);
+            $this->flashMessage(_('Body kvízových úloh spočteny.'), self::FLASH_INFO);
+        } catch (Exception $exception) {
+            $this->flashMessage(_('Chyba při výpočtu.'), self::FLASH_ERROR);
+            Debugger::log($exception);
+        }
+    }
+
     private function getGradedTasks(): array {
         /**@var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
@@ -189,8 +212,8 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
         return array_values($gradedTasks);
     }
 
-    protected function beforeRender() {
-        $this->getPageStyleContainer()->mainContainerClassName = str_replace('container ', 'container-fluid ', $this->getPageStyleContainer()->mainContainerClassName) . ' px-3';
+    protected function beforeRender(): void {
+        $this->getPageStyleContainer()->setWidePage();
         parent::beforeRender();
     }
 

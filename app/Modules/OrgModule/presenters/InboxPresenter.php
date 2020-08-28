@@ -129,7 +129,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    protected function startup() {
+    protected function startup(): void {
         parent::startup();
         $this->seriesTraitStartup();
         $this->seriesTable->setContest($this->getSelectedContest());
@@ -174,10 +174,10 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
         return new SubmitsPreviewControl($this->getContext(), $this->seriesTable);
     }
 
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         switch ($this->getAction()) {
             case 'inbox':
-                $this->getPageStyleContainer()->mainContainerClassName = str_replace('container ', 'container-fluid ', $this->getPageStyleContainer()->mainContainerClassName) . ' px-3';
+                $this->getPageStyleContainer()->setWidePage();
         }
         parent::beforeRender();
     }
