@@ -10,10 +10,8 @@ use Nette\SmartObject;
  */
 class User {
     use SmartObject;
-    /** @var string $name */
-    public $id;
 
-    /** @var string $name */
-    public $login;
+    public string $id;
 
+    public string $login;
 }

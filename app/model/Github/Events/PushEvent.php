@@ -11,13 +11,9 @@ class PushEvent extends Event {
 
     public const REFS_HEADS = 'refs/heads/';
 
-	/** @var string */
-	public $ref;
+    public string $ref;
 
-	/** @var string */
-	public $after;
+    public string $after;
 
-	/** @var string */
-	public $before;
-
+    public string $before;
 }

@@ -249,7 +249,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         }
 
         try {
-            $login = $this->githubAuthenticator->authenticate($this->getFullHttpRequest());
+            $login = $this->githubAuthenticator->authenticate($this->getHttpRequest());
 
             Debugger::log("$login signed in using Github authentication.");
 

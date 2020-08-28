@@ -255,7 +255,7 @@ class WebServiceModel {
 
         $this->checkAuthentication(__FUNCTION__, $qid);
 
-        // stupid PHP deserialization
+        // stupid PHP deserialization
         if (!is_array($args->parameter)) {
             $args->parameter = [$args->parameter];
         }

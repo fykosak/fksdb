@@ -9,9 +9,7 @@ namespace FKSDB\Github\Events;
  */
 class PingEvent extends Event {
 
-	/** @var string */
-	public $zen;
+	public string $zen;
 
-	/** @var string */
-	public $hook_id;
+	public string $hook_id;
 }
