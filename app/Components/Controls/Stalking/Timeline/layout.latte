@@ -21,7 +21,6 @@
             </g>
             <g class="long-time-events">
                 {foreach $longTimeEvents as  $type=>$rows}
-                    {dump $rows}
                     {var $contestntsContests = []}
                     {foreach $rows as $row}
                         {var $contest =  $row['model']->getContest()}

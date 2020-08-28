@@ -5,7 +5,7 @@ namespace FKSDB\Modules\CoreModule;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Authentication\PasswordAuthenticator;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Forms\Controls\PreferredLangForm;
+use FKSDB\Components\Forms\Controls\PreferredLangFormComponent;
 use FKSDB\Components\Forms\Factories\LoginFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
@@ -60,7 +60,7 @@ class SettingsPresenter extends BasePresenter {
      * @return void
      * @throws BadTypeException
      */
-    public function renderDefault(): void {
+    public function actionDefault(): void {
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
 
@@ -70,7 +70,9 @@ class SettingsPresenter extends BasePresenter {
         /** @var FormControl $control */
         $control = $this->getComponent('settingsForm');
         $control->getForm()->setDefaults($defaults);
+    }
 
+    public function renderDefault(): void {
         if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN)) {
             $this->flashMessage(_('Nastavte si nové heslo.'), self::FLASH_WARNING);
         }
@@ -80,23 +82,8 @@ class SettingsPresenter extends BasePresenter {
         }
     }
 
-    /**
-     * @throws BadRequestException
-     */
-    public function actionLang() {
-        $control = $this->getComponent('preferredLangForm');
-        if (!$control instanceof FormControl) {
-            throw new BadRequestException();
-        }
-        $control->getForm()->setDefaults(['preferred_lang' => $this->getUserPreferredLang()]);
-    }
-
-    /**
-     * @return FormControl
-     * @throws BadRequestException
-     */
-    protected function createComponentPreferredLangForm(): FormControl {
-        return new PreferredLangForm($this->context, $this->getTranslator());
+    protected function createComponentPreferredLangForm(): PreferredLangFormComponent {
+        return new PreferredLangFormComponent($this->getContext(), $this->getUser()->getIdentity()->getPerson());
     }
 
     /**
