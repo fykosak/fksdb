@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Grids\Events\Application;
+namespace FKSDB\Components\Grids\Application;
 
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\DbNames;

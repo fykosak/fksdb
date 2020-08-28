@@ -2,9 +2,10 @@
 
 namespace FKSDB\Modules\CoreModule;
 
-use FKSDB\Components\Grids\Events\Application\MySingleApplicationsGrid;
-use FKSDB\Components\Grids\Events\Application\MyTeamApplicationsGrid;
-use FKSDB\Components\Grids\Events\Application\NewApplicationsGrid;
+use FKSDB\Components\Grids\PersonRelatedGrid;
+use FKSDB\DBReflection\FieldLevelPermission;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\Components\Grids\Application\Person\NewApplicationsGrid;
 use FKSDB\UI\PageTitle;
 
 /**
@@ -14,22 +15,26 @@ use FKSDB\UI\PageTitle;
 class MyApplicationsPresenter extends BasePresenter {
 
     public function authorizedDefault(): void {
-        $this->setAuthorized($this->getUser()->isLoggedIn() && $this->getUser()->getIdentity()->getPerson());
+        $this->setAuthorized($this->getUser()->isLoggedIn() && $this->getPerson());
     }
 
     public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('My applications'), 'fa fa-calendar'));
     }
 
-    protected function createComponentMySingleApplicationsGrid(): MySingleApplicationsGrid {
-        return new MySingleApplicationsGrid($this->getUser()->getIdentity()->getPerson(), $this->getContext());
-    }
-
-    protected function createComponentMyTeamApplicationsGrid(): MyTeamApplicationsGrid {
-        return new MyTeamApplicationsGrid($this->getUser()->getIdentity()->getPerson(), $this->getContext());
-    }
-
     protected function createComponentNewApplicationsGrid(): NewApplicationsGrid {
         return new NewApplicationsGrid($this->getContext());
+    }
+
+    protected function createComponentMyEventTeachersGrid(): PersonRelatedGrid {
+        return new PersonRelatedGrid('event_teacher', $this->getPerson(), FieldLevelPermission::ALLOW_FULL, $this->getContext());
+    }
+
+    protected function createComponentMyApplicationsGrid(): PersonRelatedGrid {
+        return new PersonRelatedGrid('event_participant', $this->getPerson(), FieldLevelPermission::ALLOW_FULL, $this->getContext());
+    }
+
+    private function getPerson(): ?ModelPerson {
+        return $this->getUser()->getIdentity()->getPerson();
     }
 }

@@ -351,6 +351,7 @@ DBReflection:
                     title: _('Počet baget k obědu')
              linkFactories:
                    detail: FKSDB\DBReflection\LinkFactories\ParticipantDetailLink
+                   edit: FKSDB\DBReflection\LinkFactories\ApplicationEditLink
          contestant_base:
              modelClassName: FKSDB\ORM\Models\ModelContestant
              columnFactories:
@@ -384,6 +385,12 @@ DBReflection:
                         eventId: event_id
                         id: e_org_id
                     title: Edit
+                 detail:
+                     destination: ':Event:Eventorg:detail'
+                     params:
+                         eventId: event_id
+                         id: e_org_id
+                     title: Detail
          email_message:
              modelClassName: FKSDB\ORM\Models\ModelEmailMessage
              columnFactories:
