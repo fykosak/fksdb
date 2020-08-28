@@ -16,10 +16,8 @@ abstract class Event {
 
     public const HTTP_HEADER = 'X-GitHub-Event';
 
-    /** @var Repository $repository */
-    public $repository;
+    public Repository $repository;
 
-    /** @var User $user */
-    public $sender;
+    public User $sender;
 
 }

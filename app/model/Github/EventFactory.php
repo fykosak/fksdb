@@ -5,7 +5,6 @@ namespace FKSDB\Github;
 use FKSDB\Github\Events\Event;
 use FKSDB\Github\Events\PingEvent;
 use FKSDB\Github\Events\PushEvent;
-use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 
 /**
@@ -16,12 +15,10 @@ use Nette\SmartObject;
 class EventFactory {
     use SmartObject;
 
-    public const HTTP_HEADER = 'X-GitHub-Event';
-
     /** @var Repository[] */
     private array $repositoryCache = [];
 
-    public function createEvent(string $type, ?array $data): Event {
+    public function createEvent(string $type, array $data): Event {
         switch ($type) {
             case 'ping':
                 return $this->createPing($data);
@@ -31,21 +28,21 @@ class EventFactory {
         throw new UnsupportedEventException('Unsupported event type.'); // is it XSS safe print the type?
     }
 
-    private function createPing(?array $data): PingEvent {
+    private function createPing(array $data): PingEvent {
         $event = new PingEvent();
         $this->fillBase($event, $data);
         self::fillHelper(['zen', 'hook_id'], $event, $data);
         return $event;
     }
 
-    private function createPush(?array $data): PushEvent {
+    private function createPush(array $data): PushEvent {
         $event = new PushEvent();
         $this->fillBase($event, $data);
         self::fillHelper(['before', 'after', 'ref'], $event, $data);
         return $event;
     }
 
-    private function createRepository(?array $data): Repository {
+    private function createRepository(array $data): Repository {
         if (!array_key_exists('id', $data)) {
             throw new MissingEventFieldException('id');
         }
@@ -75,7 +72,7 @@ class EventFactory {
         return $this->repositoryCache[$id];
     }
 
-    private function createUser(?array $data): User {
+    private function createUser(array $data): User {
         /* Github API is underspecified mess regarding users/their
          * attributes so just create a new User instance every time and fill it with
           * whatever we can store.
@@ -86,7 +83,7 @@ class EventFactory {
         return $user;
     }
 
-    private function fillBase(Event $event, ?array $data): void {
+    private function fillBase(Event $event, array $data): void {
         if (!array_key_exists('repository', $data)) {
             throw new MissingEventFieldException('repository');
         }
@@ -110,18 +107,4 @@ class EventFactory {
             $object->$key = $data[$key];
         }
     }
-}
-
-/**
- * Class UnsupportedEventException
- */
-class UnsupportedEventException extends InvalidArgumentException {
-
-}
-
-/**
- * Class MissingEventFieldException
- */
-class MissingEventFieldException extends InvalidArgumentException {
-
 }

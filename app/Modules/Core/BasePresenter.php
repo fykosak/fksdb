@@ -25,7 +25,6 @@ use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\UI\PageStyleContainer;
 use FKSDB\UI\PageTitle;
 use FKSDB\YearCalculator;
-use FKSDB\FullHttpRequest;
 use InvalidArgumentException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -53,7 +52,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     public const FLASH_ERROR = ILogger::ERROR;
 
-    /** @persistent  */
+    /** @persistent */
     public $tld;
 
     /**
@@ -82,8 +81,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     private bool $authorized = true;
 
     private array $authorizedCache = [];
-
-    private FullHttpRequest $fullRequest;
 
     private PageStyleContainer $pageStyleContainer;
 
@@ -389,17 +386,5 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
             }
         }
         return $this->authorizedCache[$key];
-    }
-
-
-    /*	 * *******************************
-     * Nette workaround
-     *      * ****************************** */
-    public function getFullHttpRequest(): FullHttpRequest {
-        if (!isset($this->fullRequest)) {
-            $payload = file_get_contents('php://input');
-            $this->fullRequest = new FullHttpRequest($this->getHttpRequest(), $payload);
-        }
-        return $this->fullRequest;
     }
 }
