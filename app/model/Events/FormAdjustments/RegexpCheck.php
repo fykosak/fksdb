@@ -34,7 +34,7 @@ class RegexpCheck extends AbstractAdjustment implements IFormAdjustment {
         $this->pattern = $pattern;
     }
 
-    protected function _adjust(Form $form, Machine $machine, Holder $holder): void {
+    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
         $controls = $this->getControl($this->field);
         if (!$controls) {
             return;

@@ -19,9 +19,9 @@ class EventFactory {
     public const HTTP_HEADER = 'X-GitHub-Event';
 
     /** @var Repository[] */
-    private $repositoryCache = [];
+    private array $repositoryCache = [];
 
-    public function createEvent(string $type, array $data): Event {
+    public function createEvent(string $type, ?array $data): Event {
         switch ($type) {
             case 'ping':
                 return $this->createPing($data);
@@ -31,21 +31,21 @@ class EventFactory {
         throw new UnsupportedEventException('Unsupported event type.'); // is it XSS safe print the type?
     }
 
-    private function createPing(array $data): PingEvent {
+    private function createPing(?array $data): PingEvent {
         $event = new PingEvent();
         $this->fillBase($event, $data);
         self::fillHelper(['zen', 'hook_id'], $event, $data);
         return $event;
     }
 
-    private function createPush(array $data): PushEvent {
+    private function createPush(?array $data): PushEvent {
         $event = new PushEvent();
         $this->fillBase($event, $data);
         self::fillHelper(['before', 'after', 'ref'], $event, $data);
         return $event;
     }
 
-    private function createRepository(array $data): Repository {
+    private function createRepository(?array $data): Repository {
         if (!array_key_exists('id', $data)) {
             throw new MissingEventFieldException('id');
         }
@@ -75,11 +75,7 @@ class EventFactory {
         return $this->repositoryCache[$id];
     }
 
-    /**
-     * @param mixed $data
-     * @return User
-     */
-    private function createUser(array $data): User {
+    private function createUser(?array $data): User {
         /* Github API is underspecified mess regarding users/their
          * attributes so just create a new User instance every time and fill it with
           * whatever we can store.
@@ -90,12 +86,7 @@ class EventFactory {
         return $user;
     }
 
-    /**
-     * @param Event $event
-     * @param array $data
-     * @return void
-     */
-    private function fillBase(Event $event, array $data) {
+    private function fillBase(Event $event, ?array $data): void {
         if (!array_key_exists('repository', $data)) {
             throw new MissingEventFieldException('repository');
         }
@@ -107,14 +98,7 @@ class EventFactory {
         $event->sender = $this->createUser($data['sender']);
     }
 
-    /**
-     * @param array $definition
-     * @param object $object
-     * @param array $data
-     * @param bool $strict
-     * @return void
-     */
-    private static function fillHelper(array $definition, $object, array $data, bool $strict = false) {
+    private static function fillHelper(array $definition, object $object, array $data, bool $strict = false): void {
         foreach ($definition as $key) {
             if (!array_key_exists($key, $data)) {
                 if ($strict) {
@@ -130,7 +114,6 @@ class EventFactory {
 
 /**
  * Class UnsupportedEventException
- * *
  */
 class UnsupportedEventException extends InvalidArgumentException {
 
@@ -138,7 +121,6 @@ class UnsupportedEventException extends InvalidArgumentException {
 
 /**
  * Class MissingEventFieldException
- * *
  */
 class MissingEventFieldException extends InvalidArgumentException {
 

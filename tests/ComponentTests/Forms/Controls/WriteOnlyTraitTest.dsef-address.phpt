@@ -38,12 +38,12 @@ class WriteOnlyTraitTest extends DsefTestCase {
             'person_id' => $this->personId,
             'event_id' => $this->eventId,
             'status' => 'applied',
+            'lunch_count' => 3,
         ]);
 
         $this->insert('e_dsef_participant', [
             'event_participant_id' => $this->dsefAppId,
             'e_dsef_group_id' => 1,
-            'lunch_count' => 3,
         ]);
 
         // create admin
@@ -141,7 +141,7 @@ class WriteOnlyTraitTest extends DsefTestCase {
 
         $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');
         Assert::equal(1, $eApplication->e_dsef_group_id);
-        Assert::equal(3, $eApplication->lunch_count);
+        Assert::equal(3, $application->lunch_count);
 
         $addressId = $this->connection->fetchField('SELECT address_id FROM post_contact WHERE person_id = ? AND type = ?', $this->personId, ModelPostContact::TYPE_PERMANENT);
         Assert::notEqual(false, $addressId);

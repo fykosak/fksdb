@@ -13,6 +13,7 @@ use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
+use FKSDB\ORM\Services\ServiceFlag;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonHasFlag;
 use FKSDB\ORM\Services\ServicePersonHistory;
@@ -57,6 +58,8 @@ class ReferencedPersonHandler implements IReferencedHandler {
 
     private Handler $eventScheduleHandler;
 
+    protected ServiceFlag $serviceFlag;
+
     /**
      * ReferencedPersonHandler constructor.
      * @param ServicePerson $servicePerson
@@ -64,6 +67,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
      * @param ServicePersonHistory $servicePersonHistory
      * @param ServiceMPostContact $serviceMPostContact
      * @param ServicePersonHasFlag $servicePersonHasFlag
+     * @param ServiceFlag $serviceFlag
      * @param Handler $eventScheduleHandler
      * @param int $acYear
      * @param string $resolution
@@ -74,6 +78,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
         ServicePersonHistory $servicePersonHistory,
         ServiceMPostContact $serviceMPostContact,
         ServicePersonHasFlag $servicePersonHasFlag,
+        ServiceFlag $serviceFlag,
         Handler $eventScheduleHandler,
         int $acYear,
         $resolution
@@ -83,6 +88,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
         $this->servicePersonHistory = $servicePersonHistory;
         $this->serviceMPostContact = $serviceMPostContact;
         $this->servicePersonHasFlag = $servicePersonHasFlag;
+        $this->serviceFlag = $serviceFlag;
         $this->acYear = $acYear;
         $this->resolution = $resolution;
         $this->eventScheduleHandler = $eventScheduleHandler;
@@ -205,9 +211,10 @@ class ReferencedPersonHandler implements IReferencedHandler {
                         continue 2;
                     case 'person_has_flag':
                         foreach ($data[$t] as $flagId => $flagValue) {
+                            $flag = $this->serviceFlag->findByFid($flagId);
                             $flagData = [
                                 'value' => $flagValue,
-                                'fid' => $flagId,
+                                'flag_id' => $flag->flag_id,
                             ];
                             if ($models[$t][$flagId]) {
                                 $this->servicePersonHasFlag->updateModel2($models[$t][$flagId], (array)$flagData);

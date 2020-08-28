@@ -53,7 +53,7 @@ class DbNames {
     public const TAB_E_DSEF_PARTICIPANT = 'e_dsef_participant';
     public const TAB_E_FYZIKLANI_TEAM = 'e_fyziklani_team';
     public const TAB_E_FYZIKLANI_PARTICIPANT = 'e_fyziklani_participant';
-    public const TAB_E_TSAF_PARTICIPANT = 'e_tsaf_participant';
+
     /* For fyziklani */
     public const TAB_FYZIKLANI_TASK = 'fyziklani_task';
     public const TAB_FYZIKLANI_SUBMIT = 'fyziklani_submit';
