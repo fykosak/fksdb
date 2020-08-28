@@ -47,7 +47,7 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
         $this->holder = $holder;
     }
 
-    protected function _adjust(Form $form, Machine $machine, Holder $holder): void {
+    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $studyYearControls = $this->getControl("p*.person_id.person_history.study_year");

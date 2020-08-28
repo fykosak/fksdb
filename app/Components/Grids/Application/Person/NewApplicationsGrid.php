@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Grids\Events\Application;
+namespace FKSDB\Components\Grids\Application\Person;
 
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Events\EventDispatchFactory;
@@ -21,6 +21,7 @@ use NiftyGrid\DuplicateColumnException;
 class NewApplicationsGrid extends BaseGrid {
 
     protected ServiceEvent $serviceEvent;
+
     protected EventDispatchFactory $eventDispatchFactory;
 
     public function injectPrimary(ServiceEvent $serviceEvent, EventDispatchFactory $eventDispatchFactory): void {

@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Controls\Stalking\StalkingComponent;
 
 use FKSDB\Components\Controls\Stalking\StalkingControl;
-use FKSDB\Components\Controls\Stalking\StalkingService;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\Exceptions\NotImplementedException;
@@ -14,11 +13,6 @@ use Nette\InvalidStateException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class StalkingComponent extends StalkingControl {
-    private StalkingService $stalkingService;
-
-    public function injectStalkingService(StalkingService $stalkingService): void {
-        $this->stalkingService = $stalkingService;
-    }
 
     /**
      * @param string $section
@@ -28,7 +22,7 @@ class StalkingComponent extends StalkingControl {
      * @throws NotImplementedException
      */
     public function render(string $section, ModelPerson $person, int $userPermission): void {
-        $definition = $this->stalkingService->getSection($section);
+        $definition = $this->getContext()->getParameters()['components'][$section];
         $this->beforeRender($person, _($definition['label']), $userPermission, $definition['minimalPermission']);
         $this->template->userPermission = $userPermission;
         switch ($definition['layout']) {
