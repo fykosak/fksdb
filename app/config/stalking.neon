@@ -1,4 +1,4 @@
-stalking:
+parameters:
     components:
         base_info:
             layout: single
@@ -83,14 +83,13 @@ stalking:
                  - login.last_login
 
         person_history:
-            layout: multi
-            label: Person history
+            layout: grid
             minimalPermission: 128
             table: person_history
             links: []
             model: FKSDB\ORM\Models\ModelPersonHistory
-            itemHeadline: person_history.ac_year
             rows:
+                - person_history.ac_year
                 - school.school
                 - person_history.study_year
                 - person_history.class

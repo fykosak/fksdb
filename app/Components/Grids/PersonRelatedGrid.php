@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Controls\Stalking\StalkingService;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelPerson;
@@ -21,21 +20,15 @@ class PersonRelatedGrid extends BaseGrid {
 
     protected ModelPerson $person;
 
-    protected string $section;
-
     protected array $definition;
 
     protected int $userPermissions;
 
     public function __construct(string $section, ModelPerson $person, int $userPermissions, Container $container) {
-        $this->section = $section;
+        $this->definition = $container->getParameters()['components'][$section];
         parent::__construct($container);
         $this->person = $person;
         $this->userPermissions = $userPermissions;
-    }
-
-    public function injectPrimary(StalkingService $stalkingService): void {
-        $this->definition = $stalkingService->getSection($this->section);
     }
 
     protected function getData(): IDataSource {

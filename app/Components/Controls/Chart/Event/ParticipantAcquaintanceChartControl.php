@@ -37,7 +37,7 @@ class ParticipantAcquaintanceChartControl extends ReactComponent2 implements ICh
             $participant = ModelEventParticipant::createFromActiveRow($row);
 
             $participants = [];
-            foreach ($participant->getPerson()->getEventParticipant()->where('status', ['participated']) as $item) {
+            foreach ($participant->getPerson()->getEventParticipants()->where('status', ['participated']) as $item) {
                 $personParticipation = ModelEventParticipant::createFromActiveRow($item);
                 $participants[] = $personParticipation->getEvent()->event_id;
             }

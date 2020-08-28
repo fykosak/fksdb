@@ -199,7 +199,6 @@ extensions:
     acl: FKSDB\Authorization\ACLExtension
     navigation: FKSDB\Components\Controls\Navigation\NavigationExtension
     events: FKSDB\Events\EventsExtension(%appDir%/../app/config/events.neon)
-    stalking: FKSDB\Config\Extensions\StalkingExtension
     payment: FKSDB\Payment\PaymentExtension
     DBReflection: FKSDB\DBReflection\DBReflectionExtension
 

@@ -5,8 +5,6 @@ namespace FKSDB\Modules\CommonModule;
 use FKSDB\Components\Controls\Entity\PersonFormComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Person\PizzaControl;
-use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
-use FKSDB\Components\Grids\PersonRelatedGrid;
 use FKSDB\DBReflection\FieldLevelPermission;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
@@ -35,7 +33,7 @@ use Nette\Security\IResource;
 use Nette\Utils\Html;
 use FKSDB\Persons\Deduplication\Merger;
 use ReflectionException;
-use FKSDB\Components\Controls\Stalking;
+use FKSDB\Components\Controls\Stalking\StalkingContainer;
 use Tracy\Debugger;
 
 /**
@@ -228,8 +226,6 @@ class PersonPresenter extends BasePresenter {
      */
     public function renderDetail(): void {
         $person = $this->getEntity();
-        $this->template->userPermissions = $this->getUserPermissions();
-        $this->template->person = $person;
         $this->template->isSelf = $this->getUser()->getIdentity()->getPerson()->person_id === $person->person_id;
         /** @var ModelPerson $userPerson */
         $userPerson = $this->getUser()->getIdentity()->getPerson();
@@ -239,39 +235,6 @@ class PersonPresenter extends BasePresenter {
     }
 
     /* ******************* COMPONENTS *******************/
-
-    protected function createComponentStalkingComponent(): StalkingComponent {
-        return new StalkingComponent($this->getContext());
-    }
-
-    protected function createComponentAddress(): Stalking\Address {
-        return new Stalking\Address($this->getContext());
-    }
-
-    protected function createComponentRole(): Stalking\Role {
-        return new Stalking\Role($this->getContext());
-    }
-
-    protected function createComponentFlag(): Stalking\Flag {
-        return new Stalking\Flag($this->getContext());
-    }
-
-    protected function createComponentSchedule(): Stalking\Schedule {
-        return new Stalking\Schedule($this->getContext());
-    }
-
-    protected function createComponentValidation(): Stalking\Validation {
-        return new Stalking\Validation($this->getContext());
-    }
-
-    /**
-     * @return Stalking\Timeline\TimelineControl
-     * @throws ModelNotFoundException
-     */
-    protected function createComponentTimeline(): Stalking\Timeline\TimelineControl {
-        return new Stalking\Timeline\TimelineControl($this->getContext(), $this->getEntity());
-    }
-
     /**
      * @return FormControl
      * @throws BadTypeException
@@ -342,51 +305,11 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @return PersonRelatedGrid
+     * @return StalkingContainer
      * @throws ModelNotFoundException
      */
-    protected function createComponentEventOrgsGrid(): PersonRelatedGrid {
-        return new PersonRelatedGrid('event_org', $this->getEntity(), $this->getUserPermissions(), $this->getContext());
-    }
-
-    /**
-     * @return PersonRelatedGrid
-     * @throws ModelNotFoundException
-     */
-    protected function createComponentPaymentsGrid(): PersonRelatedGrid {
-        return new PersonRelatedGrid('payment', $this->getEntity(), $this->getUserPermissions(), $this->getContext());
-    }
-
-    /**
-     * @return PersonRelatedGrid
-     * @throws ModelNotFoundException
-     */
-    protected function createComponentContestantBasesGrid(): PersonRelatedGrid {
-        return new PersonRelatedGrid('contestant_base', $this->getEntity(), $this->getUserPermissions(), $this->getContext());
-    }
-
-    /**
-     * @return PersonRelatedGrid
-     * @throws ModelNotFoundException
-     */
-    protected function createComponentTaskContributionsGrid(): PersonRelatedGrid {
-        return new PersonRelatedGrid('task_contribution', $this->getEntity(), $this->getUserPermissions(), $this->getContext());
-    }
-
-    /**
-     * @return PersonRelatedGrid
-     * @throws ModelNotFoundException
-     */
-    protected function createComponentEventTeachersGrid(): PersonRelatedGrid {
-        return new PersonRelatedGrid('event_teacher', $this->getEntity(), $this->getUserPermissions(), $this->getContext());
-    }
-
-    /**
-     * @return PersonRelatedGrid
-     * @throws ModelNotFoundException
-     */
-    protected function createComponentEventParticipantsGrid(): PersonRelatedGrid {
-        return new PersonRelatedGrid('event_participant', $this->getEntity(), $this->getUserPermissions(), $this->getContext());
+    public function createComponentStalkingContainer(): StalkingContainer {
+        return new StalkingContainer($this->getContext(), $this->getEntity(), $this->getUserPermissions());
     }
 
     /**
@@ -416,7 +339,7 @@ class PersonPresenter extends BasePresenter {
     }
 
     private function updateMergeForm(Form $form): void {
-        if (false && !$form->isSubmitted()) { // new form is without any conflict, we use it to clear the session
+        if (!$form->isSubmitted()) { // new form is without any conflict, we use it to clear the session
             $this->setMergeConflicts(null);
             return;
         }
@@ -515,11 +438,7 @@ class PersonPresenter extends BasePresenter {
      * Storing conflicts in session
      * ****************************** */
 
-    /**
-     * @param iterable $conflicts
-     * @return void
-     */
-    private function setMergeConflicts($conflicts): void {
+    private function setMergeConflicts(array $conflicts): void {
         $section = $this->session->getSection('conflicts');
         if ($conflicts === null) {
             $section->remove();
@@ -528,10 +447,7 @@ class PersonPresenter extends BasePresenter {
         }
     }
 
-    /**
-     * @return array
-     */
-    private function getMergeConflicts() {
+    private function getMergeConflicts(): array {
         $section = $this->session->getSection('conflicts');
         if (isset($section->data)) {
             return $section->data;
