@@ -10,17 +10,17 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class NumberPrinter extends AbstractValuePrinter {
-    const NULL_VALUE_NOT_SET = 'notSet';
-    const NULL_VALUE_INF = 'infinite';
-    const NULL_VALUE_ZERO = 'zero';
-    /** @var string */
-    private $nullValueMode;
-    /** @var string|null */
-    private $prefix;
-    /** @var string|null */
-    private $suffix;
-    /** @var int */
-    private $decimal;
+    public const NULL_VALUE_NOT_SET = 'notSet';
+    public const NULL_VALUE_INF = 'infinite';
+    public const NULL_VALUE_ZERO = 'zero';
+
+    private ?string $nullValueMode;
+
+    private ?string $prefix;
+
+    private ?string $suffix;
+
+    private int $decimal;
 
     /**
      * NumberPrinter constructor.
@@ -29,7 +29,7 @@ class NumberPrinter extends AbstractValuePrinter {
      * @param int $decimal
      * @param string $nullValueMode
      */
-    public function __construct($prefix, $suffix, int $decimal = 2, $nullValueMode = self::NULL_VALUE_NOT_SET) {
+    public function __construct(?string $prefix, ?string $suffix, int $decimal = 2, ?string $nullValueMode = self::NULL_VALUE_NOT_SET) {
         $this->nullValueMode = $nullValueMode;
         $this->prefix = $prefix;
         $this->suffix = $suffix;
@@ -45,9 +45,9 @@ class NumberPrinter extends AbstractValuePrinter {
     }
 
     private function format(int $number): string {
-        $text = $this->prefix ? ($this->prefix . '&#8287;') : '';
+        $text = isset($this->prefix) ? ($this->prefix . '&#8287;') : '';
         $text .= number_format($number, 0, ',', '&#8287;');
-        $text .= $this->suffix ? ('&#8287;' . $this->suffix) : '';
+        $text .= isset($this->suffix) ? ('&#8287;' . $this->suffix) : '';
         return $text;
     }
 

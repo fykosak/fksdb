@@ -15,16 +15,11 @@ use Nette\Forms\IControl;
  */
 class CheckboxFactory extends AbstractFactory {
 
-    /**
-     * @param Field $field
-     * @return Checkbox
-     */
-    public function createComponent(Field $field): IComponent {
+    public function createComponent(Field $field): Checkbox {
         $component = new Checkbox($field->getLabel());
         $component->setOption('description', $field->getDescription());
         return $component;
     }
-
 
     /**
      * @param BaseControl|IComponent $component

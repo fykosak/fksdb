@@ -15,6 +15,7 @@ use Nette\Forms\IControl;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @deprecated use person_schedule UC
  */
 class ResourceAvailability extends AbstractAdjustment {
 
@@ -34,7 +35,7 @@ class ResourceAvailability extends AbstractAdjustment {
      * @param array|string $fields
      * @return void
      */
-    private function setFields($fields) {
+    private function setFields($fields): void {
         if (!is_array($fields)) {
             $fields = [$fields];
         }
@@ -57,7 +58,7 @@ class ResourceAvailability extends AbstractAdjustment {
         $this->excludeStates = $excludeStates;
     }
 
-    protected function _adjust(Form $form, Machine $machine, Holder $holder): void {
+    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
         $groups = $holder->getGroupedSecondaryHolders();
         $groups[] = [
             'service' => $holder->getPrimaryHolder()->getService(),
@@ -106,7 +107,7 @@ class ResourceAvailability extends AbstractAdjustment {
             $event = $firstHolder->getEvent();
             /** @var GroupedSelection $table */
             $table = $serviceData['service']->getTable();
-            $table->where($firstHolder->getEventId(), $event->getPrimary());
+            $table->where($firstHolder->getEventIdColumn(), $event->getPrimary());
             if ($this->includeStates !== BaseMachine::STATE_ANY) {
                 $table->where(BaseHolder::STATE_COLUMN, $this->includeStates);
             }
@@ -120,7 +121,7 @@ class ResourceAvailability extends AbstractAdjustment {
             $primaries = array_map(function (BaseHolder $baseHolder) {
                 return $baseHolder->getModel()->getPrimary(false);
             }, $serviceData['holders']);
-            $primaries = array_filter($primaries, function ($primary) {
+            $primaries = array_filter($primaries, function ($primary): bool {
                 return (bool)$primary;
             });
 

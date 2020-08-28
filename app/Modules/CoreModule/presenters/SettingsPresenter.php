@@ -110,7 +110,7 @@ class SettingsPresenter extends BasePresenter {
         if ($oldPasswordControl) {
             $oldPasswordControl
                 ->addCondition(Form::FILLED)
-                ->addRule(function (BaseControl $control) use ($login) : bool {
+                ->addRule(function (BaseControl $control) use ($login): bool {
                     $hash = PasswordAuthenticator::calculateHash($control->getValue(), $login);
                     return $hash == $login->hash;
                 }, 'Špatně zadané staré heslo.');

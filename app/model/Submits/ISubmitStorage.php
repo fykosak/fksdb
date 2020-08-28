@@ -13,8 +13,8 @@ use FKSDB\ORM\Models\ModelSubmit;
  */
 interface ISubmitStorage {
 
-    const TYPE_ORIGINAL = 0;
-    const TYPE_PROCESSED = 1;
+    public const TYPE_ORIGINAL = 0;
+    public const TYPE_PROCESSED = 1;
 
     public function beginTransaction(): void;
 
@@ -35,7 +35,7 @@ interface ISubmitStorage {
      * @param ModelSubmit $submit
      * @return void
      */
-    public function storeFile($filename, ModelSubmit $submit): void;
+    public function storeFile(string $filename, ModelSubmit $submit): void;
 
     /**
      *
@@ -43,7 +43,7 @@ interface ISubmitStorage {
      * @param int $type
      * @return string filename with absolute path
      */
-    public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED): ?string;
+    public function retrieveFile(ModelSubmit $submit, int $type = self::TYPE_PROCESSED): ?string;
 
     public function fileExists(ModelSubmit $submit): bool;
 

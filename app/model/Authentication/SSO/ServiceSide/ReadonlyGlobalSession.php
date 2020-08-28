@@ -4,6 +4,7 @@ namespace FKSDB\Authentication\SSO\ServiceSide;
 
 use FKSDB\Authentication\SSO\IGlobalSession;
 use FKSDB\Authentication\SSO\IGSIDHolder;
+use FKSDB\ORM\DbNames;
 use LogicException;
 use Nette\Database\Connection;
 
@@ -14,14 +15,13 @@ use Nette\Database\Connection;
  */
 class ReadonlyGlobalSession implements IGlobalSession {
 
-    const TABLE = 'global_session';
+    public const TABLE = DbNames::TAB_GLOBAL_SESSION;
 
     private Connection $connection;
 
     private IGSIDHolder $gsidHolder;
 
-    /** @var array */
-    private $data = [];
+    private array $data = [];
 
     /**
      * ReadonlyGlobalSession constructor.

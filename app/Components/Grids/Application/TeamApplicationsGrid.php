@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Grids\Events\Application;
+namespace FKSDB\Components\Grids\Application;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Exceptions\BadTypeException;

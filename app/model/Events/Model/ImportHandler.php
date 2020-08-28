@@ -22,10 +22,10 @@ class ImportHandler {
 
     use SmartObject;
 
-    const STATELESS_IGNORE = 'ignore';
-    const STATELESS_KEEP = 'keep';
+    public const STATELESS_IGNORE = 'ignore';
+    public const STATELESS_KEEP = 'keep';
 
-    const KEY_NAME = 'person_id';
+    public const KEY_NAME = 'person_id';
 
     private Container $container;
 
@@ -36,6 +36,8 @@ class ImportHandler {
     /**
      * ImportHandler constructor.
      * @param Container $container
+     * @param CSVParser $parser
+     * @param SingleEventSource $source
      */
     public function __construct(Container $container, CSVParser $parser, SingleEventSource $source) {
         $this->container = $container;

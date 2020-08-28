@@ -14,7 +14,7 @@ use SimpleXMLElement;
  */
 class TasksFromXML extends Stage {
 
-    const XML_NAMESPACE = 'http://www.w3.org/XML/1998/namespace';
+    public const XML_NAMESPACE = 'http://www.w3.org/XML/1998/namespace';
 
     /** @var SeriesData */
     private $data;
@@ -58,7 +58,7 @@ class TasksFromXML extends Stage {
     }
 
     /**
-     * @return SeriesData
+     * @return mixed|SeriesData
      */
     public function getOutput() {
         return $this->data;

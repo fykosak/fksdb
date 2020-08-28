@@ -61,7 +61,7 @@ class EvaluationFykos2011 extends EvaluationStrategy {
      * @param ModelCategory $category
      * @return float|int
      */
-    public function getTaskPoints(ActiveRow $task, ModelCategory $category) {
+    public function getTaskPoints(ActiveRow $task, ModelCategory $category): int {
         switch ($category->id) {
             case ModelCategory::CAT_ES_6:
             case ModelCategory::CAT_ES_7:

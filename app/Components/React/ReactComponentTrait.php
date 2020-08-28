@@ -16,20 +16,13 @@ use Nette\Utils\Html;
  */
 trait ReactComponentTrait {
 
-    /** @var bool */
-    private static $attachedJS = false;
+    private MemoryLogger $logger;
 
-    /** @var MemoryLogger */
-    private $logger;
+    private static bool $attachedJS = false;
 
-    /** @var string */
-    protected $reactId;
+    protected string $reactId;
 
-    /**
-     * @param string $reactId
-     * @return void
-     */
-    protected function registerReact(string $reactId) {
+    protected function registerReact(string $reactId): void {
         $this->reactId = $reactId;
         $this->logger = new MemoryLogger();
         $this->registerMonitor();
@@ -38,18 +31,14 @@ trait ReactComponentTrait {
     /**
      * @throws BadRequestException
      */
-    protected function appendProperty() {
+    protected function appendProperty(): void {
         if (!$this instanceof BaseControl) {
             throw new BadRequestException('method appendProperty can be used only with BaseControl');
         }
         $this->appendPropertyTo($this->control);
     }
 
-    /**
-     * @param Html $html
-     * @return void
-     */
-    protected function appendPropertyTo(Html $html) {
+    protected function appendPropertyTo(Html $html): void {
         $html->setAttribute('data-react-root', true);
         $html->setAttribute('data-react-id', $this->reactId);
         foreach ($this->getResponseData() as $key => $value) {
@@ -57,7 +46,7 @@ trait ReactComponentTrait {
         }
     }
 
-    private function registerMonitor() {
+    private function registerMonitor(): void {
         $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
             if (!self::$attachedJS) {
                 self::$attachedJS = true;

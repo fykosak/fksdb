@@ -12,9 +12,9 @@ use Nette\InvalidArgumentException;
  */
 class BaseMachine {
 
-    const STATE_INIT = '__init';
-    const STATE_TERMINATED = '__terminated';
-    const STATE_ANY = '*';
+    public const STATE_INIT = '__init';
+    public const STATE_TERMINATED = '__terminated';
+    public const STATE_ANY = '*';
 
     public const EXECUTABLE = 0x1;
     public const VISIBLE = 0x2;

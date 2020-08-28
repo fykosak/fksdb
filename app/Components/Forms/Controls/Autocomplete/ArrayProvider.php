@@ -10,8 +10,8 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 class ArrayProvider implements IFilteredDataProvider {
 
     private array $data;
-    /** @var array */
-    private $labelById;
+
+    private array $labelById;
 
     /**
      * ArrayProvider constructor.
@@ -57,7 +57,7 @@ class ArrayProvider implements IFilteredDataProvider {
      * @param mixed $id
      * @return void
      */
-    public function setDefaultValue($id) {
+    public function setDefaultValue($id): void {
         /* intentionally blank */
     }
 }

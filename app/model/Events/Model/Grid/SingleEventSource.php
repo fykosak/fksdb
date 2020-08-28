@@ -32,8 +32,8 @@ class SingleEventSource implements IHolderSource {
     private Container $container;
 
     private EventDispatchFactory $eventDispatchFactory;
-
-    private TypedTableSelection $primarySelection;
+    /** @var \FKSDB\ORM\Tables\MultiTableSelection|TypedTableSelection|\Nette\Database\Table\Selection */
+    private $primarySelection;
 
     private Holder $dummyHolder;
 
@@ -59,7 +59,7 @@ class SingleEventSource implements IHolderSource {
         $this->eventDispatchFactory = $eventDispatchFactory;
         $this->dummyHolder = $eventDispatchFactory->getDummyHolder($this->event);
         $primaryHolder = $this->dummyHolder->getPrimaryHolder();
-        $eventIdColumn = $primaryHolder->getEventId();
+        $eventIdColumn = $primaryHolder->getEventIdColumn();
         $this->primarySelection = $primaryHolder->getService()->getTable()->where($eventIdColumn, $this->event->getPrimary());
     }
 

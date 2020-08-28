@@ -8,8 +8,8 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
  */
 interface IDataProvider {
 
-    const LABEL = 'label';
-    const VALUE = 'value';
+    public const LABEL = 'label';
+    public const VALUE = 'value';
 
     /**
      * @return array array of associative arrays with at least LABEL and VALUE keys
@@ -24,5 +24,5 @@ interface IDataProvider {
      * @param int id
      * @return void
      */
-    public function setDefaultValue($id);
+    public function setDefaultValue($id): void;
 }

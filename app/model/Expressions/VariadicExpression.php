@@ -8,8 +8,8 @@ namespace FKSDB\Expressions;
  * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class VariadicExpression extends EvaluatedExpression {
-    /** @var callable[]|bool[] */
-    protected $arguments;
+
+    protected array $arguments;
 
     /**
      * VariadicExpression constructor.
@@ -35,10 +35,7 @@ abstract class VariadicExpression extends EvaluatedExpression {
 
     abstract protected function getInfix(): string;
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         $terms = [];
         foreach ($this->arguments as $arg) {
             $terms[] = (string)$arg;

@@ -11,12 +11,12 @@ use LogicException;
  */
 class Price {
 
-    const CURRENCY_EUR = 'eur';
-    const CURRENCY_CZK = 'czk';
-    /** @var string */
-    private $currency;
-    /** @var float */
-    private $amount;
+    public const CURRENCY_EUR = 'eur';
+    public const CURRENCY_CZK = 'czk';
+
+    private string $currency;
+
+    private float $amount;
 
     /**
      * Price constructor.

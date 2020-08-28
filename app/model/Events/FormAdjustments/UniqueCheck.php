@@ -32,7 +32,7 @@ class UniqueCheck extends AbstractAdjustment {
         $this->message = $message;
     }
 
-    protected function _adjust(Form $form, Machine $machine, Holder $holder): void {
+    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
         $controls = $this->getControl($this->field);
         if (!$controls) {
             return;
@@ -41,7 +41,7 @@ class UniqueCheck extends AbstractAdjustment {
         foreach ($controls as $name => $control) {
             $name = $holder->hasBaseHolder($name) ? $name : substr($this->field, 0, strpos($this->field, self::DELIMITER));
             $baseHolder = $holder->getBaseHolder($name);
-            $control->addRule(function (IControl $control) use ($baseHolder) {
+            $control->addRule(function (IControl $control) use ($baseHolder) : bool {
                 $table = $baseHolder->getService()->getTable();
                 $column = BaseHolder::getBareColumn($this->field);
                 if ($control instanceof ReferencedId) {
@@ -56,7 +56,7 @@ class UniqueCheck extends AbstractAdjustment {
                 $pk = $table->getName() . '.' . $table->getPrimary();
 
                 $table->where($column, $value);
-                $table->where($baseHolder->getEventId(), $baseHolder->getHolder()->getPrimaryHolder()->getEvent()->getPrimary());
+                $table->where($baseHolder->getEventIdColumn(), $baseHolder->getHolder()->getPrimaryHolder()->getEvent()->getPrimary());
                 if ($model && !$model->isNew()) {
                     $table->where("NOT $pk = ?", $model->getPrimary());
                 }

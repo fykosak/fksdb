@@ -14,8 +14,8 @@ use Nette\Application\UI\Presenter;
 class PresenterBuilder {
 
     private IPresenterFactory $presenterFactory;
-    /** @var array */
-    private $presenterCache = [];
+
+    private array $presenterCache = [];
 
     /**
      * PresenterBuilder constructor.
@@ -30,13 +30,13 @@ class PresenterBuilder {
      *
      * @param string $presenterName
      * @param string $action
-     * @param string $params
+     * @param array|string $params
      * @param array $baseParams
      * @param bool $newInstance when false all instances of the same class will be the same and only initilization methods are called
      * @return Presenter
      * @throws BadRequestException
      */
-    public function preparePresenter($presenterName, $action, $params, $baseParams = [], $newInstance = false) {
+    public function preparePresenter($presenterName, $action, $params, $baseParams = [], $newInstance = false): Presenter {
         if ($newInstance) {
             $presenter = $this->presenterFactory->createPresenter($presenterName);
         } else {

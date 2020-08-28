@@ -13,7 +13,7 @@ use FKSDB\ORM\Tables\TypedTableSelection;
  */
 class StoredQueryTagTypeProvider implements IFilteredDataProvider {
 
-    const DESCRIPTION = 'description';
+    private const DESCRIPTION = 'description';
 
     private ServiceStoredQueryTagType $serviceStoredQueryTagType;
 
@@ -71,7 +71,7 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
      * @param mixed $id
      * @return void
      */
-    public function setDefaultValue($id) {
+    public function setDefaultValue($id): void {
         /* intentionally blank */
     }
 }

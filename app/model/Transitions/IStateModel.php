@@ -10,16 +10,10 @@ use Nette\Database\IConventions;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 interface IStateModel {
-    /**
-     * @param string $newState
-     * @return void
-     */
-    public function updateState(string $newState);
 
-    /**
-     * @return string|null
-     */
-    public function getState();
+    public function updateState(string $newState): void;
+
+    public function getState(): ?string;
 
     public function refresh(Context $connection, IConventions $conventions): self;
 }

@@ -84,10 +84,6 @@ events:
                         modifiable: %events.vikend.appCond%
                         default: fromLogin
                         factory: RefPerson(%events.vikend.person%, email, or(state('__init'),role('admin')), role('admin'), false)
-                    answer:
-                        label: _('Jakou barvu má Higgsův boson?')
-                        required: true
-                        modifiable: %events.vikend.appCond%
                     diet:
                         label: _('Jídlo')
                         description: "Máš nějaké speciální stravovací návyky – vegetariánství, veganství, diety, …? Pokud ano, máš zájem o speciální stravu nebo si (zejména v případě veganů) dovezeš jídlo vlastní?"

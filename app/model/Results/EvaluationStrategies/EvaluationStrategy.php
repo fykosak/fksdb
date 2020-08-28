@@ -19,7 +19,7 @@ abstract class EvaluationStrategy {
      * @param ActiveRow $task
      * @return string
      */
-    abstract public function getPointsColumn(ActiveRow $task);
+    abstract public function getPointsColumn(ActiveRow $task): string;
 
     /**
      * Should return SQL expression with points for given submit.
@@ -35,7 +35,7 @@ abstract class EvaluationStrategy {
      * @param ModelCategory $category
      * @return array of int (study years of students with category)
      */
-    abstract public function categoryToStudyYears(ModelCategory $category);
+    abstract public function categoryToStudyYears(ModelCategory $category): array;
 
     /**
      * @return ModelCategory[]
@@ -59,5 +59,5 @@ abstract class EvaluationStrategy {
      * @param ModelCategory $category
      * @return int
      */
-    abstract public function getTaskPoints(ActiveRow $task, ModelCategory $category);
+    abstract public function getTaskPoints(ActiveRow $task, ModelCategory $category): ?int;
 }

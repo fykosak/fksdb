@@ -70,11 +70,7 @@ class FormUtils {
         return $result;
     }
 
-    /**
-     * @param Form $form
-     * @return SubmitButton|null
-     */
-    public static function findFirstSubmit(Form $form) {
+    public static function findFirstSubmit(Form $form): ?SubmitButton {
         foreach ($form->getComponents() as $component) {
             if ($component instanceof SubmitButton) {
                 return $component;
