@@ -11,13 +11,14 @@ use FKSDB\Expressions\EvaluatedExpression;
  */
 class Not extends EvaluatedExpression {
 
+    /** @var mixed */
     private $expression;
 
     /**
      * Not constructor.
-     * @param $expression
+     * @param callable|mixed $expression
      */
-    function __construct($expression) {
+    public function __construct($expression) {
         $this->expression = $expression;
     }
 
@@ -25,14 +26,11 @@ class Not extends EvaluatedExpression {
      * @param array $args
      * @return bool
      */
-    public final function __invoke(...$args): bool {
+    final public function __invoke(...$args): bool {
         return !$this->evaluateArgument($this->expression, ...$args);
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return "!({$this->expression})";
     }
 

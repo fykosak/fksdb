@@ -1,6 +1,6 @@
 <?php
 
-namespace Events\Model\Holder;
+namespace FKSDB\Events\Model\Holder;
 
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
@@ -13,40 +13,33 @@ use Nette\InvalidArgumentException;
  */
 class SameYearEvent implements IEventRelation {
 
-    private $eventTypeId;
+    private int $eventTypeId;
 
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
+    private ServiceEvent $serviceEvent;
 
     /**
      * SameYearEvent constructor.
-     * @param $eventTypeId
-     * @param \FKSDB\ORM\Services\ServiceEvent $serviceEvent
+     * @param string|int $eventTypeId
+     * @param ServiceEvent $serviceEvent
      */
-    function __construct($eventTypeId, ServiceEvent $serviceEvent) {
+    public function __construct(int $eventTypeId, ServiceEvent $serviceEvent) {
         $this->eventTypeId = $eventTypeId;
         $this->serviceEvent = $serviceEvent;
     }
 
-    /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @return \FKSDB\ORM\Models\ModelEvent
-     */
-    public function getEvent(ModelEvent $event) {
+    public function getEvent(ModelEvent $event): ModelEvent {
         $result = $this->serviceEvent->getTable()->where([
             'event_type_id' => $this->eventTypeId,
             'year' => $event->year,
         ]);
-        $row = $result->fetch();
-        if ($row === false) {
+        /** @var ModelEvent|false $event */
+        $event = $result->fetch();
+        if ($event === false) {
             throw new InvalidArgumentException("No event with event_type_id " . $this->eventTypeId . " for the year " . $event->year . ".");
         } elseif ($result->fetch() !== false) {
             throw new InvalidArgumentException("Ambiguous events with event_type_id " . $this->eventTypeId . " for the year " . $event->year . ".");
         } else {
-            return ModelEvent::createFromActiveRow($row);
+            return $event;
         }
     }
-
 }

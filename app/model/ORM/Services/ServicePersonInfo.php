@@ -6,67 +6,43 @@ use DateTime;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPersonInfo;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @method ModelPersonInfo refresh(AbstractModelSingle $model)
+ * @method ModelPersonInfo findByPrimary($key)
  */
 class ServicePersonInfo extends AbstractServiceSingle {
+    use DeprecatedLazyDBTrait;
 
     /**
-     * @return string
+     * ServicePersonInfo constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
      */
-    public function getModelClassName(): string {
-        return ModelPersonInfo::class;
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_PERSON_INFO, ModelPersonInfo::class);
     }
 
-    /**
-     * @return string
-     */
-    protected function getTableName(): string {
-        return DbNames::TAB_PERSON_INFO;
-    }
-
-    /**
-     * @param null $data
-     * @return AbstractModelSingle
-     * @throws \Exception
-     */
-    public function createNew($data = null) {
-        if ($data && isset($data['agreed']) && $data['agreed'] == '1') {
+    public function createNewModel(array $data): ModelPersonInfo {
+        if (isset($data['agreed']) && $data['agreed'] == '1') {
             $data['agreed'] = new DateTime();
         }
-
-        return parent::createNew($data);
+        return parent::createNewModel($data);
     }
 
     /**
-     * @param \FKSDB\ORM\IModel $model
+     * @param IModel|AbstractModelSingle|ModelPersonInfo $model
      * @param array $data
-     * @param bool $alive
-     * @return mixed|void
-     * @throws \Exception
+     * @return bool
      */
-    public function updateModel(IModel $model, $data, $alive = true) {
-        if (isset($data['agreed'])) {
-            if ($data['agreed'] == '1') {
-                $data['agreed'] = new DateTime();
-            } elseif ($data['agreed'] == '0') {
-                unset($data['agreed']);
-            }
-        }
-        return parent::updateModel($model, $data);
-    }
-
-    /**
-     * @param \FKSDB\ORM\IModel|AbstractModelSingle|ModelPersonInfo $model
-     * @param array $data
-     * @param bool $alive
-     * @return mixed|void
-     * @throws \Exception
-     */
-    public function updateModel2(AbstractModelSingle $model, $data = null, $alive = true) {
+    public function updateModel2(IModel $model, array $data): bool {
         if (isset($data['agreed'])) {
             if ($data['agreed'] == '1') {
                 $data['agreed'] = new DateTime();
@@ -77,5 +53,13 @@ class ServicePersonInfo extends AbstractServiceSingle {
         return parent::updateModel2($model, $data);
     }
 
+    public function store(ModelPerson $person, ?ModelPersonInfo $info, array $data): ModelPersonInfo {
+        if ($info) {
+            $this->updateModel2($info, $data);
+            return $this->refresh($info);
+        } else {
+            $data['person_id'] = $person->person_id;
+            return $this->createNewModel($data);
+        }
+    }
 }
-

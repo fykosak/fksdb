@@ -1,10 +1,12 @@
 <?php
 
-namespace Authorization\Assertions;
+namespace FKSDB\Authorization\Assertions;
 
-use Exports\StoredQuery;
+use FKSDB\StoredQuery\StoredQuery;
 use FKSDB\ORM\DbNames;
 use Nette\Database\Context;
+use Nette\Security\IResource;
+use Nette\Security\IRole;
 use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
 use Nette\SmartObject;
@@ -13,33 +15,25 @@ use Nette\SmartObject;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @deprecated
  */
 abstract class AbstractEventOrgAssertion {
 
     use SmartObject;
-    /**
-     * @var string
-     */
-    private $parameterName;
 
-    /**
-     * @var IUserStorage
-     */
-    private $user;
+    private string $parameterName;
 
-    /**
-     * @var Context
-     */
-    private $connection;
+    private IUserStorage $user;
+
+    private Context $connection;
 
     /**
      * AbstractEventOrgAssertion constructor.
-     * @param $eventTypeId
-     * @param $parameterName
+     * @param string $parameterName
      * @param IUserStorage $user
      * @param Context $connection
      */
-    function __construct($eventTypeId, string $parameterName, IUserStorage $user, Context $connection) {
+    public function __construct(string $parameterName, IUserStorage $user, Context $connection) {
         $this->parameterName = $parameterName;
         $this->user = $user;
         $this->connection = $connection;
@@ -47,13 +41,13 @@ abstract class AbstractEventOrgAssertion {
 
     /**
      * @param Permission $acl
-     * @param $role
-     * @param $resourceId
-     * @param $privilege
+     * @param IRole $role
+     * @param IResource|string|null $resourceId
+     * @param string $privilege
      * @param null $parameterValue
      * @return bool
      */
-    public function __invoke(Permission $acl, $role, $resourceId, $privilege, $parameterValue = null) {
+    public function __invoke(Permission $acl, $role, $resourceId, $privilege, $parameterValue = null): bool {
         $storedQuery = $acl->getQueriedResource();
 
         if (!$storedQuery instanceof StoredQuery) {

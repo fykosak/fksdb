@@ -6,47 +6,31 @@ use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 use FKSDB\Payment\SymbolGenerator\Generators\AbstractSymbolGenerator;
 use FKSDB\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
+use Nette\Http\Response;
 use Nette\OutOfRangeException;
 
 /**
- * Class Fyziklani13Generator
- * @package FKSDB\Payment\SymbolGenerator\Generators
+ * Class DefaultGenerator
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DefaultGenerator extends AbstractSymbolGenerator {
-    /**
-     * @var int
-     */
-    private $variableSymbolStart;
-    /**
-     * @var int
-     */
-    private $variableSymbolEnd;
-    /**
-     * @var array
-     */
-    private $info;
 
-    /**
-     * @param int $variableSymbolStart
-     * @param int $variableSymbolEnd
-     * @param array $info
-     */
-    public function setUp(int $variableSymbolStart, int $variableSymbolEnd, array $info) {
+    private int $variableSymbolStart;
+
+    private int $variableSymbolEnd;
+
+    private array $info;
+
+    public function setUp(int $variableSymbolStart, int $variableSymbolEnd, array $info): void {
         $this->variableSymbolEnd = $variableSymbolEnd;
         $this->variableSymbolStart = $variableSymbolStart;
         $this->info = $info;
     }
 
-    /**
-     * @return int
-     */
     protected function getVariableSymbolStart(): int {
         return $this->variableSymbolStart;
     }
 
-    /**
-     * @return int
-     */
     protected function getVariableSymbolEnd(): int {
         return $this->variableSymbolEnd;
     }
@@ -63,7 +47,7 @@ class DefaultGenerator extends AbstractSymbolGenerator {
             $info['variable_symbol'] = $variableNumber;
             return $info;
         }
-        throw new UnsupportedCurrencyException($modelPayment->currency, 501);
+        throw new UnsupportedCurrencyException($modelPayment->currency, Response::S501_NOT_IMPLEMENTED);
     }
 
     /**
@@ -72,7 +56,7 @@ class DefaultGenerator extends AbstractSymbolGenerator {
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      */
-    protected function create(ModelPayment $modelPayment) {
+    protected function create(ModelPayment $modelPayment): array {
 
         if ($modelPayment->hasGeneratedSymbols()) {
             throw new AlreadyGeneratedSymbolsException(\sprintf(_('Payment #%s has already generated symbols.'), $modelPayment->getPaymentId()));

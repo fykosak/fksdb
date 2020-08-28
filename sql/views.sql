@@ -12,7 +12,7 @@ create or replace view v_school as (
 );
 
 CREATE OR REPLACE VIEW v_task_stats as
-(SELECT task.*, avg(raw_points) as task_avg, count(raw_points) as task_count from task 
+(SELECT task.*, avg(raw_points) as task_avg, count(raw_points) as task_count from task
   LEFT JOIN submit ON submit.task_id=task.task_id
   GROUP BY task_id
 );
@@ -30,7 +30,7 @@ CREATE OR REPLACE VIEW v_gooddata as (
 -- Reseni;Rocnik;Serie;CisloUlohy;Uloha;MaxBodu;Bodu;Resitel;Rokmaturity;Pohlavi;Skola;Mesto;Stat
 
 select s.submit_id AS Reseni, t.year AS Rocnik, t.series AS Serie, t.tasknr AS CisloUlohy, t.label AS Uloha, t.points AS MaxBodu, s.calc_points AS Bodu,
-IF(p.display_name is null, concat(p.other_name, ' ', p.family_name), p.display_name) AS Resitel, 
+IF(p.display_name is null, concat(p.other_name, ' ', p.family_name), p.display_name) AS Resitel,
 (IF(ct.contest_id = 1, 1991 + ct.year, 2015 + ct.year) - IF(ct.study_year between 1 and 4, ct.study_year, ct.study_year - 9) ) AS RokMaturity,
 p.gender AS Pohlavi, sch.name_abbrev AS Skola, scha.city AS Mesto, reg.country_iso AS Stat, cst.name AS Seminar
 
@@ -133,7 +133,7 @@ create or replace view v_aesop_points as (
 		sp.person_id,
 		sum(sp.points) as points,
                 sum(sp.points) / sum(sp.max_points) as points_ratio,
-		null as rank
+		null as `rank`
 	from v_series_points sp
 	left join contest_year cy on cy.year = sp.year and cy.contest_id = sp.contest_id
         where exists (
@@ -149,7 +149,7 @@ create or replace view v_aesop_contestant as (
 	select p.*, res.points, res.points_ratio as `x-points_ratio`, res.rank, res.contest_id as `x-contest_id`
 	from v_aesop_person p
 	right join v_aesop_points res on res.person_id = p.`x-person_id` and res.ac_year = p.`x-ac_year`
-);	
+);
 
 create or replace view v_dokuwiki_user as (
     select l.login_id, l.login, l.hash, p.name, p.email, p.name_lex
@@ -163,7 +163,7 @@ create or replace view v_dokuwiki_user as (
             and cy.ac_year = IF(month(NOW()) >= 9, year(NOW()), year(NOW()) - 1)
             and (o.until is null or cy.year between o.since and o.until)
         where o.person_id = l.person_id
-        
+
     ) or l.person_id is null
 );
 

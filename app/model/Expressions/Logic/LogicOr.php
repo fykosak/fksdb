@@ -24,11 +24,7 @@ class LogicOr extends VariadicExpression {
         return false;
     }
 
-    /**
-     * @return mixed|string
-     */
-    protected function getInfix() {
+    protected function getInfix(): string {
         return '||';
     }
-
 }

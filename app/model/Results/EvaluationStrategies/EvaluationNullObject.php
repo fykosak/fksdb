@@ -4,7 +4,7 @@ namespace FKSDB\Results\EvaluationStrategies;
 
 use FKSDB\Results\ModelCategory;
 use Nette\Database\Table\ActiveRow;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Null Object pattern for FKSDB\Results\EvaluationStrategies\IEvaluationStrategy.
@@ -18,7 +18,7 @@ class EvaluationNullObject extends EvaluationStrategy {
      * @throws NotImplementedException
      */
     public function getCategories(): array {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
@@ -27,24 +27,24 @@ class EvaluationNullObject extends EvaluationStrategy {
      * @throws NotImplementedException
      */
     public function categoryToStudyYears(ModelCategory $category): array {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
     /**
      * @param ActiveRow $task
-     * @return string|void
+     * @return string
      * @throws NotImplementedException
      */
-    public function getPointsColumn(ActiveRow $task) {
-        throw new NotImplementedException;
+    public function getPointsColumn(ActiveRow $task): string {
+        throw new NotImplementedException();
     }
 
     /**
-     * @return string|void
+     * @return string
      * @throws NotImplementedException
      */
-    public function getSumColumn() {
-        throw new NotImplementedException;
+    public function getSumColumn(): string {
+        throw new NotImplementedException();
     }
 
     /**
@@ -53,8 +53,8 @@ class EvaluationNullObject extends EvaluationStrategy {
      * @return int|void
      * @throws NotImplementedException
      */
-    public function getTaskPoints(ActiveRow $task, ModelCategory $category) {
-        throw new NotImplementedException;
+    public function getTaskPoints(ActiveRow $task, ModelCategory $category): ?int {
+        throw new NotImplementedException();
     }
 
     /**
@@ -63,7 +63,7 @@ class EvaluationNullObject extends EvaluationStrategy {
      * @throws NotImplementedException
      */
     public function getTaskPointsColumn(ModelCategory $category): string {
-        throw new NotImplementedException;
+        throw new NotImplementedException();
     }
 
 }

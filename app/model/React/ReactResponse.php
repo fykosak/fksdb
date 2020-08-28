@@ -10,46 +10,39 @@ use Nette\SmartObject;
 use Nette\Utils\JsonException;
 
 /**
- * Class FKSDB\React\ReactResponse
+ * Class ReactResponse
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 final class ReactResponse implements Nette\Application\IResponse {
 
     use SmartObject;
-    /**
-     * @var Message[]
-     */
+
+    /** @var Message[] */
     private $messages = [];
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $data;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $act;
-    /**
-     * @var int
-     */
+    /** @var int */
     private $code = 200;
 
-    /**
-     * @return string
-     */
     final public function getContentType(): string {
         return 'application/json';
     }
 
     /**
      * @param int $code
+     * @return void
      */
     public function setCode(int $code) {
         $this->code = $code;
     }
 
     /**
-     * @param $data
+     * @param mixed $data
+     * @return void
      */
     public function setData($data) {
         $this->data = $data;
@@ -57,6 +50,7 @@ final class ReactResponse implements Nette\Application\IResponse {
 
     /**
      * @param Message[] $messages
+     * @return void
      */
     public function setMessages(array $messages) {
         $this->messages = $messages;
@@ -64,6 +58,7 @@ final class ReactResponse implements Nette\Application\IResponse {
 
     /**
      * @param Message $message
+     * @return void
      */
     public function addMessage(Message $message) {
         $this->messages[] = $message;
@@ -71,6 +66,7 @@ final class ReactResponse implements Nette\Application\IResponse {
 
     /**
      * @param string $act
+     * @return void
      */
     public function setAct(string $act) {
         $this->act = $act;

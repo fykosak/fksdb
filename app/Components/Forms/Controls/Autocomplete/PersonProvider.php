@@ -5,8 +5,8 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\YearCalculator;
-use Nette\Database\Table\Selection;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -15,23 +15,17 @@ use Nette\Database\Table\Selection;
  */
 class PersonProvider implements IFilteredDataProvider {
 
-    const PLACE = 'place';
+    private const PLACE = 'place';
 
-    /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
-    /**
-     * @var Selection
-     */
-    private $searchTable;
+    private TypedTableSelection $searchTable;
 
     /**
      * PersonProvider constructor.
      * @param ServicePerson $servicePerson
      */
-    function __construct(ServicePerson $servicePerson) {
+    public function __construct(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
         $this->searchTable = $this->servicePerson->getTable();
     }
@@ -44,7 +38,7 @@ class PersonProvider implements IFilteredDataProvider {
     public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator) {
         $this->searchTable = $this->servicePerson->getTable()
             ->where([
-                ':org.contest_id' => $contest->contest_id
+                ':org.contest_id' => $contest->contest_id,
             ])
             ->where(':org.since <= ?', $yearCalculator->getCurrentYear($contest))
             ->where(':org.until IS NULL OR :org.until <= ?', $yearCalculator->getCurrentYear($contest));
@@ -57,7 +51,7 @@ class PersonProvider implements IFilteredDataProvider {
      * @param string $search
      * @return array
      */
-    public function getFilteredItems($search) {
+    public function getFilteredItems(string $search): array {
         $search = trim($search);
         $search = str_replace(' ', '', $search);
         $this->searchTable
@@ -65,35 +59,25 @@ class PersonProvider implements IFilteredDataProvider {
         return $this->getItems();
     }
 
-    /**
-     * @param mixed $id
-     * @return mixed
-     */
-    public function getItemLabel($id) {
+    public function getItemLabel(int $id): string {
         $person = $this->servicePerson->findByPrimary($id);
         return $person->getFullName();
     }
 
-    /**
-     * @return array
-     */
-    public function getItems() {
+    public function getItems(): array {
         $persons = $this->searchTable
             ->order('family_name, other_name');
 
 
         $result = [];
+        /** @var ModelPerson $person */
         foreach ($persons as $person) {
             $result[] = $this->getItem($person);
         }
         return $result;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return array
-     */
-    private function getItem(ModelPerson $person) {
+    private function getItem(ModelPerson $person): array {
         $place = null;
         $address = $person->getDeliveryAddress();
         if ($address) {
@@ -107,9 +91,9 @@ class PersonProvider implements IFilteredDataProvider {
     }
 
     /**
-     * @param $id
+     * @param mixed $id
      */
-    public function setDefaultValue($id) {
+    public function setDefaultValue($id): void {
         /* intentionally blank */
     }
 

@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Components\Forms\Containers\IWriteOnly;
-use JanTvrdik\Components\DatePicker;
+use FKSDB\Components\Forms\Controls\DateInputs\DateInput;
 use Nette\Utils\Html;
 
 /**
@@ -11,9 +11,8 @@ use Nette\Utils\Html;
  * Only FILLED validation works properly because there's used special value to distinguish unchanged input.
  *
  * @author Michal Koutný <michal@fykos.cz>
- * @deprecated like extends od DatePicker use HTML5 elements
  */
-class WriteOnlyDatePicker extends DatePicker implements IWriteOnly {
+class WriteOnlyDatePicker extends DateInput implements IWriteOnly {
 
     use WriteOnlyTrait;
 
@@ -21,44 +20,32 @@ class WriteOnlyDatePicker extends DatePicker implements IWriteOnly {
      * WriteOnlyDatePicker constructor.
      * @param null $label
      */
-    public function __construct($label = NULL) {
+    public function __construct($label = null) {
         parent::__construct($label);
         $this->writeOnlyAppendMonitors();
     }
 
-    /**
-     * @return Html
-     */
-    public function getControl() {
+    public function getControl(): Html {
         $control = parent::getControl();
         $control = $this->writeOnlyAdjustControl($control);
         return $control;
     }
 
     /**
-     * @param $value
-     * @return DatePicker|void
+     * @param mixed $value
+     * @return static
      */
-    public function setValue($value) {
+    public function setValue($value): self {
         if ($value == self::VALUE_ORIGINAL) {
             $this->value = $value;
-            $this->rawValue = $value;
         } else {
             parent::setValue($value);
         }
+        return $this;
     }
 
-    public function loadHttpData() {
+    public function loadHttpData(): void {
         parent::loadHttpData();
         $this->writeOnlyLoadHttpData();
     }
-
-    /**
-     * @param $obj
-     */
-    protected function attached($obj) {
-        parent::attached($obj);
-        $this->writeOnlyAttached($obj);
-    }
-
 }

@@ -5,89 +5,50 @@ namespace FKSDB\Components\Controls\Stalking;
 use FKSDB\Components\Controls\Badges\ContestBadge;
 use FKSDB\Components\Controls\Badges\NoRecordsBadge;
 use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
-use FKSDB\Components\DatabaseReflection\ValuePrinterComponent;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Components\Controls\DBReflection\LinkPrinterComponent;
+use FKSDB\Components\Controls\DBReflection\ValuePrinterComponent;
+use FKSDB\DBReflection\DBReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
-use Nette\Application\UI\Control;
-use Nette\DI\Container;
-use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 
 /**
  * Class StalkingControl
- * @package FKSDB\Components\Controls\Stalking
- * @property FileTemplate $template
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class StalkingControl extends Control {
+abstract class StalkingControl extends BaseComponent {
 
-    const PERMISSION_FULL = 1024;
-    const PERMISSION_RESTRICT = 128;
-    const PERMISSION_BASIC = 16;
-    const PERMISSION_USE_FIELD_LEVEL = 2048;
+    protected DBReflectionFactory $tableReflectionFactory;
 
-    /**
-     * @var int
-     */
-    protected $userPermissions;
-    /**
-     * @var ModelPerson;
-     */
-    protected $modelPerson;
-    /**
-     * @var ITranslator
-     */
-    protected $translator;
-
-    /**
-     * @var TableReflectionFactory
-     */
-    protected $tableReflectionFactory;
-
-    /**
-     * StalkingComponent constructor.
-     * @param Container $container
-     * @param ModelPerson $modelPerson
-     * @param int $userPermissions
-     */
-    public function __construct(Container $container, ModelPerson $modelPerson, int $userPermissions) {
-        parent::__construct();
-        $this->userPermissions = $userPermissions;
-        $this->modelPerson = $modelPerson;
-        $this->translator = $container->getByType(ITranslator::class);
-        $this->tableReflectionFactory = $container->getByType(TableReflectionFactory::class);
+    public function injectPrimary(DBReflectionFactory $tableReflectionFactory): void {
+        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    public function beforeRender() {
-        $this->template->setTranslator($this->translator);
-        $this->template->userPermissions = $this->userPermissions;
-        $this->template->gender = $this->modelPerson->gender;
+    public function beforeRender(ModelPerson $person, string $headline, int $userPermissions, int $minimalPermissions): void {
+        $this->template->gender = $person->gender;
+        $this->template->headline = $headline;
+        if ($userPermissions < $minimalPermissions) {
+            $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.permissionDenied.latte');
+            $this->template->render();
+        }
     }
 
-    /**
-     * @return ContestBadge
-     */
-    public function createComponentContestBadge(): ContestBadge {
-        return new ContestBadge($this->translator);
+    protected function createComponentContestBadge(): ContestBadge {
+        return new ContestBadge($this->getContext());
     }
 
-    /**
-     * @return PermissionDeniedBadge
-     */
-    public function createComponentPermissionDenied(): PermissionDeniedBadge {
-        return new PermissionDeniedBadge($this->translator);
+    protected function createComponentPermissionDenied(): PermissionDeniedBadge {
+        return new PermissionDeniedBadge($this->getContext());
     }
 
-    /**
-     * @return NoRecordsBadge
-     */
-    public function createComponentNoRecords(): NoRecordsBadge {
-        return new NoRecordsBadge($this->translator);
+    protected function createComponentNoRecords(): NoRecordsBadge {
+        return new NoRecordsBadge($this->getContext());
     }
 
-    /**
-     * @return ValuePrinterComponent
-     */
-    public function createComponentValuePrinter(): ValuePrinterComponent {
-        return new ValuePrinterComponent($this->translator, $this->tableReflectionFactory);
+    protected function createComponentValuePrinter(): ValuePrinterComponent {
+        return new ValuePrinterComponent($this->getContext());
+    }
+
+    protected function createComponentLinkPrinter(): LinkPrinterComponent {
+        return new LinkPrinterComponent($this->getContext());
     }
 }

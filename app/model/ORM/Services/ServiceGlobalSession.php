@@ -4,7 +4,6 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelGlobalSession;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
@@ -17,26 +16,9 @@ use Nette\Utils\Random;
  */
 class ServiceGlobalSession extends AbstractServiceSingle {
 
-    const SESSION_ID_LENGTH = 32;
+    private const SESSION_ID_LENGTH = 32;
 
-    /**
-     * @return string
-     */
-    public function getModelClassName(): string {
-        return ModelGlobalSession::class;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getTableName(): string {
-        return DbNames::TAB_GLOBAL_SESSION;
-    }
-
-    /**
-     * @var Request
-     */
-    private $request;
+    private Request $request;
 
     /**
      * FKSDB\ORM\Services\ServiceGlobalSession constructor.
@@ -44,20 +26,18 @@ class ServiceGlobalSession extends AbstractServiceSingle {
      * @param Context $context
      * @param IConventions $conventions
      */
-    function __construct(Request $request, Context $context, IConventions $conventions) {
-        parent::__construct($context, $conventions);
+    public function __construct(Request $request, Context $context, IConventions $conventions) {
+        parent::__construct($context, $conventions, DbNames::TAB_GLOBAL_SESSION, ModelGlobalSession::class);
         $this->request = $request;
     }
 
     /**
-     *
      * @param string $loginId
-     * @param DateTime $until
-     * @param DateTime $since
-     * @return ModelAuthToken
-     * @throws \Exception
+     * @param DateTime|null $until
+     * @param DateTime|null $since
+     * @return ModelGlobalSession
      */
-    public function createSession($loginId, DateTime $until = null, DateTime $since = null) {
+    public function createSession($loginId, DateTime $until = null, DateTime $since = null): ModelGlobalSession {
         if ($since === null) {
             $since = new DateTime();
         }
@@ -67,7 +47,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
         do {
             $sessionId = Random::generate(self::SESSION_ID_LENGTH, 'a-zA-Z0-9');
         } while ($this->findByPrimary($sessionId));
-
+        /** @var ModelGlobalSession $session */
         $session = $this->createNewModel([
             'session_id' => $sessionId,
             'login_id' => $loginId,
@@ -75,7 +55,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
             'until' => $until,
             'remote_ip' => $this->request->getRemoteAddress(),
         ]);
-       // $this->save($session);
+        // $this->save($session);
         $this->getConnection()->commit();
 
         return $session;
@@ -83,4 +63,3 @@ class ServiceGlobalSession extends AbstractServiceSingle {
 
     //TODO garbage collection
 }
-

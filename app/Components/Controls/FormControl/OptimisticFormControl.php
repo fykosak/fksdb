@@ -7,7 +7,7 @@ use Nette\Application\UI\Form;
 
 /**
  * Class OptimisticFormControl
- * @package FKSDB\Components\Controls\FormControl
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class OptimisticFormControl extends FormControl {
 
@@ -25,7 +25,6 @@ class OptimisticFormControl extends FormControl {
     public function __construct(callable $fingerprintCallback, callable $defaultsCallback) {
         $this->fingerprintCallback = $fingerprintCallback;
         $this->defaultsCallback = $defaultsCallback;
-
         parent::__construct();
     }
 

@@ -6,6 +6,7 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
@@ -15,21 +16,20 @@ use Nette\Database\Context;
 use Nette\Database\IConventions;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
-use Nette\Utils\DateTime;
 
 /**
  *
  * @author Michal Červeňák <miso@fykos.cz>
- * @property-read integer person_id
+ * @property-read int person_id
  * @property-read ActiveRow person
- * @property-read integer payment_id
+ * @property-read int payment_id
  * @property-read ActiveRow event
- * @property-read integer event_id
+ * @property-read int event_id
  * @property-read string state
  * @property-read float price
  * @property-read string currency
- * @property-read DateTime created
- * @property-read DateTime received
+ * @property-read \DateTimeInterface created
+ * @property-read \DateTimeInterface received
  * @property-read string constant_symbol
  * @property-read string variable_symbol
  * @property-read string specific_symbol
@@ -40,23 +40,17 @@ use Nette\Utils\DateTime;
  * @property-read string swift
  */
 class ModelPayment extends AbstractModelSingle implements IResource, IStateModel, IEventReferencedModel, IPaymentModel, IPersonReferencedModel {
-    const STATE_WAITING = 'waiting'; // waiting for confirm payment
-    const STATE_RECEIVED = 'received'; // payment received
-    const STATE_CANCELED = 'canceled'; // payment canceled
-    const STATE_NEW = 'new'; // new payment
+    public const STATE_WAITING = 'waiting'; // waiting for confirm payment
+    public const STATE_RECEIVED = 'received'; // payment received
+    public const STATE_CANCELED = 'canceled'; // payment canceled
+    public const STATE_NEW = 'new'; // new payment
 
-    const RESOURCE_ID = 'event.payment';
+    public const RESOURCE_ID = 'event.payment';
 
-    /**
-     * @return ModelPerson
-     */
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);
     }
 
-    /**
-     * @return ModelEvent
-     */
     public function getEvent(): ModelEvent {
         return ModelEvent::createFromActiveRow($this->event);
     }
@@ -67,58 +61,38 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     public function getRelatedPersonSchedule(): array {
         $query = $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id');
         $items = [];
+        /** @var ModelSchedulePayment $row */
         foreach ($query as $row) {
             $items[] = ModelPersonSchedule::createFromActiveRow($row->person_schedule);
         }
         return $items;
     }
 
-    /**
-     * @return string
-     */
     public function getResourceId(): string {
         return self::RESOURCE_ID;
     }
 
-    /**
-     * @return string
-     */
     public function getPaymentId(): string {
         return \sprintf('%d%04d', $this->event_id, $this->payment_id);
     }
 
-    /**
-     * @return bool
-     */
     public function canEdit(): bool {
         return \in_array($this->getState(), [Machine::STATE_INIT, self::STATE_NEW]);
     }
 
-    /**
-     * @return Price
-     */
     public function getPrice(): Price {
         return new Price($this->price, $this->currency);
     }
 
-    /**
-     * @return bool
-     */
     public function hasGeneratedSymbols(): bool {
         return $this->constant_symbol || $this->variable_symbol || $this->specific_symbol || $this->bank_account || $this->bank_name || $this->recipient;
     }
 
-    /**
-     * @param $newState
-     */
-    public function updateState($newState) {
+    public function updateState(?string $newState): void {
         $this->update(['state' => $newState]);
     }
 
-    /**
-     * @return null|string
-     */
-    public function getState() {
+    public function getState(): ?string {
         return $this->state;
     }
 

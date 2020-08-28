@@ -1,11 +1,10 @@
 <?php
 
-namespace Events\Semantics;
+namespace FKSDB\Events\Semantics;
 
-use Authorization\ContestAuthorizator;
-use Authorization\RelatedPersonAuthorizator;
+use FKSDB\Authorization\ContestAuthorizator;
+use FKSDB\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Expressions\EvaluatedExpression;
-use Nette\Application\BadRequestException;
 use Nette\Security\User;
 use Nette\SmartObject;
 
@@ -20,51 +19,33 @@ class Role extends EvaluatedExpression {
     use SmartObject;
     use WithEventTrait;
 
-    const GUEST = 'guest';
-    const REGISTERED = 'registered';
-    const RELATED = 'related';
-    const ADMIN = 'admin';
+    public const GUEST = 'guest';
+    public const REGISTERED = 'registered';
+    public const RELATED = 'related';
+    public const ADMIN = 'admin';
 
-    /**
-     * @var string
-     */
-    private $role;
+    private string $role;
 
-    /**
-     * @var User
-     */
-    private $user;
+    private User $user;
 
-    /**
-     * @var ContestAuthorizator
-     */
-    private $contestAuthorizator;
+    private ContestAuthorizator $contestAuthorizator;
 
-    /**
-     *
-     * @var RelatedPersonAuthorizator
-     */
-    private $relatedAuthorizator;
+    private RelatedPersonAuthorizator $relatedAuthorizator;
 
     /**
      * Role constructor.
-     * @param $role
+     * @param string $role
      * @param User $user
      * @param ContestAuthorizator $contestAuthorizator
      * @param RelatedPersonAuthorizator $relatedAuthorizator
      */
-    function __construct($role, User $user, ContestAuthorizator $contestAuthorizator, RelatedPersonAuthorizator $relatedAuthorizator) {
+    public function __construct(string $role, User $user, ContestAuthorizator $contestAuthorizator, RelatedPersonAuthorizator $relatedAuthorizator) {
         $this->role = $role;
         $this->user = $user;
         $this->contestAuthorizator = $contestAuthorizator;
         $this->relatedAuthorizator = $relatedAuthorizator;
     }
 
-    /**
-     * @param array $args
-     * @return bool
-     * @throws BadRequestException
-     */
     public function __invoke(...$args): bool {
         switch ($this->role) {
             case self::ADMIN:
@@ -81,10 +62,7 @@ class Role extends EvaluatedExpression {
         }
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return "role({$this->role})";
     }
 

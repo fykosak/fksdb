@@ -1,13 +1,17 @@
 <?php
 
-namespace Events\Model;
+namespace FKSDB\Events\Model;
 
-use Events\Model\Grid\SingleEventSource;
-use Events\Model\Holder\BaseHolder;
+use FKSDB\Config\NeonSchemaException;
+use FKSDB\Events\EventDispatchFactory;
+use FKSDB\Events\Model\Grid\SingleEventSource;
+use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Utils\CSVParser;
 use Nette\DI\Container;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
+use Nette\Utils\JsonException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -18,63 +22,38 @@ class ImportHandler {
 
     use SmartObject;
 
-    const STATELESS_IGNORE = 'ignore';
-    const STATELESS_KEEP = 'keep';
+    public const STATELESS_IGNORE = 'ignore';
+    public const STATELESS_KEEP = 'keep';
 
-    /**
-     * @var Container
-     */
-    private $container;
+    public const KEY_NAME = 'person_id';
 
-    /**
-     * @var SingleEventSource
-     */
-    private $source;
+    private Container $container;
 
-    /**
-     * @var CSVParser
-     */
-    private $parser;
+    private SingleEventSource $source;
 
-    /**
-     *
-     * @var string
-     */
-    private $keyName;
+    private CSVParser $parser;
 
     /**
      * ImportHandler constructor.
      * @param Container $container
-     */
-    function __construct(Container $container) {
-        $this->container = $container;
-    }
-
-    /**
      * @param CSVParser $parser
-     * @param $keyName
-     */
-    public function setInput(CSVParser $parser, $keyName) {
-        $this->parser = $parser;
-        $this->keyName = $keyName;
-    }
-
-    /**
      * @param SingleEventSource $source
      */
-    public function setSource(SingleEventSource $source) {
+    public function __construct(Container $container, CSVParser $parser, SingleEventSource $source) {
+        $this->container = $container;
+        $this->parser = $parser;
         $this->source = $source;
     }
 
     /**
      * @param ApplicationHandler $handler
-     * @param $transitions
-     * @param $errorMode
-     * @param $stateless
+     * @param string $errorMode
+     * @param string $stateless
      * @return bool
-     * @throws \Nette\Utils\JsonException
+     * @throws JsonException
+     * @throws NeonSchemaException
      */
-    public function import(ApplicationHandler $handler, $transitions, $errorMode, $stateless) {
+    public function import(ApplicationHandler $handler, string $errorMode, string $stateless): bool {
         set_time_limit(0);
         $holdersMap = $this->createHoldersMap();
         $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
@@ -84,9 +63,8 @@ class ImportHandler {
         $handler->beginTransaction();
         $hasError = false;
         foreach ($this->parser as $row) {
-            $values = $this->rowToValues($row);
-            $keyValue = $values[$baseHolderName][$this->keyName];
-
+            $values = ArrayHash::from($this->rowToValues($row));
+            $keyValue = $values[$baseHolderName][self::KEY_NAME];
             if (!isset($values[$baseHolderName][BaseHolder::STATE_COLUMN]) || !$values[$baseHolderName][BaseHolder::STATE_COLUMN]) {
                 if ($stateless == self::STATELESS_IGNORE) {
                     continue;
@@ -94,18 +72,15 @@ class ImportHandler {
                     unset($values[$baseHolderName][BaseHolder::STATE_COLUMN]);
                 }
             }
-
-            $holder = isset($holdersMap[$keyValue]) ? $holdersMap[$keyValue] : $this->container->createEventHolder($this->source->getEvent());
+            /** @var EventDispatchFactory $factory */
+            $factory = $this->container->getByType(EventDispatchFactory::class);
+            $holder = isset($holdersMap[$keyValue]) ? $holdersMap[$keyValue] : $factory->getDummyHolder($this->source->getEvent());
             try {
-                if ($transitions == ApplicationHandler::STATE_OVERWRITE) {
-                    $handler->store($holder, $values);
-                } elseif ($transitions == ApplicationHandler::STATE_TRANSITION) {
-                    $handler->storeAndExecute($holder, $values);
-                }
+                $handler->store($holder, $values);
             } catch (ApplicationHandlerException $exception) {
                 $hasError = true;
                 if ($errorMode == ApplicationHandler::ERROR_ROLLBACK) {
-                    throw new ImportHandlerException(_('Import se nepovedl.'), null, $exception);
+                    throw new ImportHandlerException(_('Import failed.'), null, $exception);
                 }
             }
         }
@@ -113,25 +88,32 @@ class ImportHandler {
         return !$hasError;
     }
 
+    private function prepareColumnName(string $columnName, BaseHolder $baseHolder): array {
+        $parts = explode('.', $columnName);
+        if (count($parts) == 1) {
+            return [$baseHolder->getName(), $parts[0]];
+        } else {
+            return $parts;
+        }
+    }
+
     /**
-     * @param $row
-     * @return ArrayHash
+     * @param mixed $row
+     * @return array
      */
-    private function rowToValues($row) {
+    private function rowToValues($row): array {
         $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
-        $values = new ArrayHash();
+        $values = [];
         $fieldExists = false;
         $fieldNames = array_keys($primaryBaseHolder->getFields());
         foreach ($row as $columnName => $value) {
-            $parts = explode('.', $columnName);
-            if (count($parts) == 1) {
-                $baseHolderName = $primaryBaseHolder->getName();
-                $fieldName = $parts[0];
-            } else {
-                list($baseHolderName, $fieldName) = $parts;
+            if (is_numeric($columnName)) { // hack for new PDO
+                continue;
             }
+            [$baseHolderName, $fieldName] = $this->prepareColumnName($columnName, $primaryBaseHolder);
+
             if (!isset($values[$baseHolderName])) {
-                $values[$baseHolderName] = new ArrayHash();
+                $values[$baseHolderName] = [];
             }
             $values[$baseHolderName][$fieldName] = $value;
             if (in_array($fieldName, $fieldNames)) {
@@ -139,30 +121,29 @@ class ImportHandler {
             }
         }
         if (!$fieldExists) {
-            throw new ImportHandlerException(_('CSV soubor neobsahuje platnou hlavičku.'));
+            throw new ImportHandlerException(_('CSV does not contain correct heading.'));
         }
-
         return $values;
     }
 
     /**
-     * @return array
+     * @return Holder[]
+     * @throws NeonSchemaException
      */
-    private function createHoldersMap() {
+    private function createHoldersMap(): array {
         $primaryBaseHolder = $this->source->getDummyHolder()->getPrimaryHolder();
         $pkName = $primaryBaseHolder->getService()->getTable()->getPrimary();
 
         $result = [];
-        foreach ($this->source as $pkValue => $holder) {
-            if ($this->keyName == $pkName) {
+        foreach ($this->source->getHolders() as $pkValue => $holder) {
+            if (self::KEY_NAME == $pkName) {
                 $keyValue = $pkValue;
             } else {
                 $fields = $holder->getPrimaryHolder()->getFields();
-                $keyValue = $fields[$this->keyName]->getValue();
+                $keyValue = $fields[self::KEY_NAME]->getValue();
             }
             $result[$keyValue] = $holder;
         }
         return $result;
     }
-
 }

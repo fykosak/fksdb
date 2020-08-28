@@ -2,17 +2,15 @@
 
 namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
-use FKSDB\Components\Controls\Fyziklani\FyziklaniReactControl;
-use FKSDB\model\Fyziklani\NotSetGameParametersException;
+use FKSDB\Components\React\AjaxComponent;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\React\ReactResponse;
-use FyziklaniModule\BasePresenter;
+use FKSDB\Modules\FyziklaniModule\BasePresenter;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\ArgumentOutOfRangeException;
 use Nette\DI\Container;
@@ -20,84 +18,69 @@ use Nette\Utils\DateTime;
 
 /**
  * Class ResultsAndStatistics
- * @package FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class ResultsAndStatistics extends FyziklaniReactControl {
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
+class ResultsAndStatistics extends AjaxComponent {
+
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
+
+    private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
+
+    private ModelEvent $event;
+
+    private ?string $lastUpdated = null;
 
     /**
-     * @var ServiceFyziklaniTask
-     */
-    private $serviceFyziklaniTask;
-    /**
-     * @var ServiceFyziklaniSubmit
-     */
-    private $serviceFyziklaniSubmit;
-    /**
-     * @var string
-     */
-    private $reactId;
-
-    /**
-     * ResultsAndStatistics constructor.
-     * @param string $reactId
+     * FyziklaniReactControl constructor.
      * @param Container $container
      * @param ModelEvent $event
+     * @param string $reactId
      */
     public function __construct(Container $container, ModelEvent $event, string $reactId) {
-        parent::__construct($container, $event);
-        $this->reactId = $reactId;
-        $this->serviceFyziklaniSubmit = $this->container->getByType(ServiceFyziklaniSubmit::class);
-        $this->serviceFyziklaniTask = $this->container->getByType(ServiceFyziklaniTask::class);
-        $this->serviceFyziklaniTeam = $this->container->getByType(ServiceFyziklaniTeam::class);
+        parent::__construct($container, $reactId);
+        $this->event = $event;
+    }
+
+    final protected function getEvent(): ModelEvent {
+        return $this->event;
+    }
+
+    public function injectPrimary(
+        ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
+        ServiceFyziklaniTask $serviceFyziklaniTask,
+        ServiceFyziklaniTeam $serviceFyziklaniTeam
+    ): void {
+        $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
     /**
-     * @return string
-     */
-    protected function getReactId(): string {
-        return $this->reactId;
-    }
-
-    /**
-     * @return string
-     */
-    public final function getData(): string {
-        return '';
-    }
-
-    /**
-     * @throws InvalidLinkException
-     */
-    protected function configure() {
-        $this->addAction('refresh', $this->link('refresh!'));
-        parent::configure();
-    }
-
-    /**
+     * @param string $lastUpdated
+     * @return void
      * @throws AbortException
-     * @throws ForbiddenRequestException
-     * @throws BadRequestException
      */
-    public function handleRefresh() {
+    public function handleRefresh(string $lastUpdated): void {
+        $this->lastUpdated = $lastUpdated;
+        $this->sendAjaxResponse();
+    }
+
+    /**
+     * @return array
+     * @throws BadTypeException
+     * @throws NotSetGameParametersException
+     */
+    protected function getData(): array {
+        $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
+
         $presenter = $this->getPresenter();
-        if (!$presenter->isAjax()) {
-            throw new ForbiddenRequestException();
-        }
         if (!$presenter instanceof BasePresenter) {
             throw new ArgumentOutOfRangeException();
         }
         $isOrg = $presenter->getEventAuthorizator()->isContestOrgAllowed('fyziklani.results', 'presentation', $this->getEvent());
 
-        $request = $this->getReactRequest();
-
-        $lastUpdated = $request->requestData ?: null;
-        $response = new ReactResponse();
-        $response->setAct('results-update');
-        $gameSetup = $this->getEvent()->getFyziklaniGameSetup();
         $result = [
             'availablePoints' => $gameSetup->getAvailablePoints(),
             'basePath' => $this->getHttpRequest()->getUrl()->getBasePath(),
@@ -108,7 +91,6 @@ class ResultsAndStatistics extends FyziklaniReactControl {
                 'toEnd' => strtotime($gameSetup->game_end) - time(),
                 'visible' => $this->isResultsVisible(),
             ],
-
             'lastUpdated' => (new DateTime())->format('c'),
             'isOrg' => $isOrg,
             'refreshDelay' => $gameSetup->refresh_delay,
@@ -117,16 +99,25 @@ class ResultsAndStatistics extends FyziklaniReactControl {
         ];
 
         if ($isOrg || $this->isResultsVisible()) {
-            $result['submits'] = $this->serviceFyziklaniSubmit->getSubmitsAsArray($this->getEvent(), $lastUpdated);
+            $result['submits'] = $this->serviceFyziklaniSubmit->getSubmitsAsArray($this->getEvent(), $this->lastUpdated);
         }
         // probably need refresh before competition started
-        if (!$lastUpdated) {
-            $result['teams'] = $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent());
-            $result['tasks'] = $this->serviceFyziklaniTask->getTasksAsArray($this->getEvent());
-            $result['categories'] = ['A', 'B', 'C'];
-        }
-        $response->setData($result);
-        $this->getPresenter()->sendResponse($response);
+        //if (!$this->lastUpdated) {
+        $result['teams'] = $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent());
+        $result['tasks'] = $this->serviceFyziklaniTask->getTasksAsArray($this->getEvent());
+        $result['categories'] = ['A', 'B', 'C'];
+        //  }
+        return $result;
+    }
+
+    /**
+     * @return array
+     * @throws InvalidLinkException
+     */
+    protected function getActions(): array {
+        return [
+            'refresh' => $this->link('refresh!', ['lastUpdated' => (new DateTime())->format('c')]),
+        ];
     }
 
     /**

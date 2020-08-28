@@ -10,18 +10,17 @@ use Nette\Application\UI\Form;
 
 /**
  * Class SeriesTableFormControl
- * @package FKSDB\Components\Controls\Inbox
+ * @author Michal Červeňák <miso@fykos.cz>
+ * @author Michal Koutny
  */
-abstract class SeriesTableFormControl extends SeriesTableControl {
-    /**
-     * @return OptimisticForm
-     */
-    public function createComponentForm(): OptimisticForm {
+abstract class SeriesTableFormControl extends SeriesTableComponent {
+
+    protected function createComponentForm(): OptimisticForm {
         $form = new OptimisticForm(
-            function () {
+            function (): string {
                 return $this->getSeriesTable()->getFingerprint();
             },
-            function () {
+            function (): array {
                 return $this->getSeriesTable()->formatAsFormValues();
             }
         );
@@ -42,5 +41,5 @@ abstract class SeriesTableFormControl extends SeriesTableControl {
      * @throws AbortException
      * @throws ForbiddenRequestException
      */
-    protected abstract function handleFormSuccess(Form $form);
+    abstract protected function handleFormSuccess(Form $form);
 }

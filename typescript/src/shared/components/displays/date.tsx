@@ -2,7 +2,6 @@ import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import DateTimeFormatOptions = Intl.DateTimeFormatOptions;
 
-// TODO
 interface OwnProps {
     date: string;
     options?: DateTimeFormatOptions;

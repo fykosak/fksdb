@@ -4,52 +4,38 @@ namespace FKSDB\ORM\Services\Fyziklani;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\Database\Table\Selection;
+use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
  */
 class ServiceFyziklaniTask extends AbstractServiceSingle {
-    /**
-     * @return string
-     */
-    public function getModelClassName(): string {
-        return ModelFyziklaniTask::class;
-    }
+    use DeprecatedLazyDBTrait;
 
     /**
-     * @return string
+     * ServiceFyziklaniTask constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
      */
-    protected function getTableName(): string {
-        return DbNames::TAB_FYZIKLANI_TASK;
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_FYZIKLANI_TASK, ModelFyziklaniTask::class);
     }
 
-    /**
-     * Syntactic sugar.
-     * @param string $label
-     * @param ModelEvent $event
-     * @return ModelFyziklaniTask|null
-     */
-    public function findByLabel(string $label, ModelEvent $event) {
-        /**
-         * @var ModelFyziklaniTask $result
-         */
+    public function findByLabel(string $label, ModelEvent $event): ?ModelFyziklaniTask {
+        /** @var ModelFyziklaniTask $result */
         $result = $this->getTable()->where([
             'label' => $label,
             'event_id' => $event->event_id,
         ])->fetch();
-
-        return $result ? ModelFyziklaniTask::createFromActiveRow($result) : null;
+        return $result ?: null;
     }
 
-    /**
-     * Syntactic sugar.
-     * @param ModelEvent $event
-     * @return Selection
-     */
-    public function findAll(ModelEvent $event): Selection {
+    public function findAll(ModelEvent $event): TypedTableSelection {
         return $this->getTable()->where('event_id', $event->event_id);
     }
 
@@ -67,5 +53,4 @@ class ServiceFyziklaniTask extends AbstractServiceSingle {
         }
         return $tasks;
     }
-
 }

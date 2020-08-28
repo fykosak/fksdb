@@ -1,9 +1,8 @@
 <?php
 
-namespace Events\Semantics;
+namespace FKSDB\Events\Semantics;
 
 use FKSDB\Expressions\EvaluatedExpression;
-use Nette\Application\BadRequestException;
 use Nette\SmartObject;
 
 /**
@@ -14,30 +13,26 @@ use Nette\SmartObject;
 class State extends EvaluatedExpression {
     use SmartObject;
     use WithEventTrait;
-    /** @var string */
-    private $state;
+
+    private string $state;
 
     /**
      * State constructor.
      * @param string $state
      */
-    function __construct(string $state) {
+    public function __construct(string $state) {
         $this->state = $state;
     }
 
     /**
      * @param array $args
      * @return bool
-     * @throws BadRequestException
      */
     public function __invoke(...$args): bool {
-        return $this->getHolder($args[0])->getMachine()->getPrimaryMachine()->getState() == $this->state;
+        return $this->getHolder($args[0])->getPrimaryHolder()->getModelState() == $this->state;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return "state == {$this->state}";
     }
 

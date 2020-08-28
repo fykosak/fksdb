@@ -1,4 +1,4 @@
-{layout '../../app/Components/Controls/Events/ApplicationComponent.form.latte'}
+{layout '../../app/Components/Controls/Events/layout.application.form.latte'}
 
 {block content}
 
@@ -8,8 +8,9 @@
     </li>
     <li n:if="!$control->getPresenter()->getUser()->isLoggedIn()">
         {var $backlink = $control->getPresenter()->application->storeRequest()}
-        Pokud máš vlastní účet, tak se před prosím vyplněním formuláře <a href="{plink :Authentication:login backlink => $backlink}">přihlas</a>.
-        Ušetříš si tím práci při vyplňování formuláře. 
+        Pokud máš vlastní účet, tak se před prosím vyplněním formuláře <a
+                href="{plink :Authentication:login backlink => $backlink}">přihlas</a>.
+        Ušetříš si tím práci při vyplňování formuláře.
     </li>
     <li>
         Registrace končí <strong>{$event->registration_end|date:'j. n. Y H:i:s'}</strong>.

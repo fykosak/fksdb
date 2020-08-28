@@ -1,14 +1,18 @@
 <?php
 
-namespace Events\Spec\Fol;
+namespace FKSDB\Events\Spec\Fol;
 
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Model\Holder\Field;
-use Events\Model\Holder\Holder;
-use Events\Processings\AbstractProcessing;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Field;
+use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Events\Processings\AbstractProcessing;
 use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
 use FKSDB\Logging\ILogger;
+use FKSDB\Messages\Message;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelPersonHistory;
+use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\YearCalculator;
 use Nette\Forms\Form;
@@ -17,27 +21,23 @@ use Nette\Utils\ArrayHash;
 
 /**
  * Class CategoryProcessing
- * @package Events\Spec\Fol
+ * *
  */
 class CategoryProcessing extends AbstractProcessing implements IOptionsProvider {
 
-    const HIGH_SCHOOL_A = 'A';
-    const HIGH_SCHOOL_B = 'B';
-    const HIGH_SCHOOL_C = 'C';
-    const ABROAD = 'F';
-    const OPEN = 'O';
+    public const HIGH_SCHOOL_A = 'A';
+    public const HIGH_SCHOOL_B = 'B';
+    public const HIGH_SCHOOL_C = 'C';
+    public const ABROAD = 'F';
+    public const OPEN = 'O';
 
-    /**
-     * @var YearCalculator
-     */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
-    /**
-     * @var ServiceSchool
-     */
-    private $serviceSchool;
+    private ServiceSchool $serviceSchool;
+    /** @var array */
     private $categoryNames;
 
+    /** @var int */
     private $rulesVersion;
 
     /**
@@ -46,81 +46,90 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
      * @param YearCalculator $yearCalculator
      * @param ServiceSchool $serviceSchool
      */
-    function __construct($rulesVersion, YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
+    public function __construct($rulesVersion, YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
 
         if (!in_array($rulesVersion, [1, 2])) {
-            throw new InvalidArgumentException(_("Neplatná hodnota \$rulesVersion."));
+            throw new InvalidArgumentException(_('Not valid $rulesVersion.'));
         }
         $this->rulesVersion = $rulesVersion;
 
         if ($this->rulesVersion == 1) {
             $this->categoryNames = [
-                self::HIGH_SCHOOL_A => _('Středoškoláci A'),
-                self::HIGH_SCHOOL_B => _('Středoškoláci B'),
-                self::HIGH_SCHOOL_C => _('Středoškoláci C'),
-                self::ABROAD => _('Zahraniční SŠ'),
+                self::HIGH_SCHOOL_A => sprintf(_('High school students %s'), 'A'),
+                self::HIGH_SCHOOL_B => sprintf(_('High school students %s'), 'B'),
+                self::HIGH_SCHOOL_C => sprintf(_('High school students %s'), 'C'),
+                self::ABROAD => _('High school outside of CR/SR'),
                 self::OPEN => _('Open'),
             ];
         } elseif ($this->rulesVersion == 2) {
             $this->categoryNames = [
-                self::HIGH_SCHOOL_A => _('Středoškoláci A'),
-                self::HIGH_SCHOOL_B => _('Středoškoláci B'),
-                self::HIGH_SCHOOL_C => _('Středoškoláci C'),
+                self::HIGH_SCHOOL_A => sprintf(_('High school students %s'), 'A'),
+                self::HIGH_SCHOOL_B => sprintf(_('High school students %s'), 'B'),
+                self::HIGH_SCHOOL_C => sprintf(_('High school students %s'), 'C'),
                 self::OPEN => _('Open'),
             ];
         }
     }
 
     /**
-     * @param $states
+     * @param array $states
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder
      * @param ILogger $logger
      * @param Form|null $form
-     * @return mixed|void
+     * @return void
      */
-    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
+    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null): void {
         if (!isset($values['team'])) {
             return;
         }
 
-        $event = $holder->getEvent();
+        $event = $holder->getPrimaryHolder()->getEvent();
         $contest = $event->getEventType()->contest;
         $year = $event->year;
         $acYear = $this->yearCalculator->getAcademicYear($contest, $year);
 
         $participants = [];
-        foreach ($holder as $name => $baseHolder) {
+        foreach ($holder->getBaseHolders() as $name => $baseHolder) {
             if ($name == 'team') {
                 continue;
             }
-            $formControls = [
-                'school_id' => $this->getControl("$name.person_id.person_history.school_id"),
-                'study_year' => $this->getControl("$name.person_id.person_history.study_year"),
-            ];
-            $formControls['school_id'] = reset($formControls['school_id']);
-            $formControls['study_year'] = reset($formControls['study_year']);
+            $schoolControls = $this->getControl("$name.person_id.person_history.school_id");
+            $schoolControl = reset($schoolControls);
+            $studyYearControls = $this->getControl("$name.person_id.person_history.study_year");
+            $studyYearControl = reset($studyYearControls);
 
-            $formValues = [
-                'school_id' => ($formControls['school_id'] ? $formControls['school_id']->getValue() : null),
-                'study_year' => ($formControls['study_year'] ? $formControls['study_year']->getValue() : null),
-            ];
+            $schoolValue = null;
+            if ($schoolControl) {
+                $schoolControl->loadHttpData();
+                $schoolValue = $schoolControl->getValue();
+            }
+            $studyYearValue = null;
+            if ($studyYearControl) {
+                $studyYearControl->loadHttpData();
+                $studyYearValue = $studyYearControl->getValue();
+            }
 
-            if (!$formValues['school_id']) {
+            if (!$schoolValue) {
                 if ($this->isBaseReallyEmpty($name)) {
                     continue;
                 }
+                /** @var ModelPerson $person */
                 $person = $baseHolder->getModel()->getMainModel()->person;
+                /** @var ModelPersonHistory $history TODO type safe */
                 $history = $person->related('person_history')->where('ac_year', $acYear)->fetch();
                 $participantData = [
                     'school_id' => $history->school_id,
                     'study_year' => $history->study_year,
                 ];
             } else {
-                $participantData = $formValues;
+                $participantData = [
+                    'school_id' => $schoolValue,
+                    'study_year' => $studyYearValue,
+                ];
             }
             $participants[] = $participantData;
         }
@@ -129,20 +138,18 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
 
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
         if ($original != $result) {
-            $logger->log(sprintf(_('Tým zařazen do kategorie %s.'), $this->categoryNames[$result]), ILogger::INFO);
+            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), $this->categoryNames[$result]), ILogger::INFO));
         }
     }
 
-    /**
+    /*
      *   Open (staří odkudkoliv - pokazí to i jeden člen týmu)
      *   Zahraniční
      *   ČR - A - (3,4]
      *   ČR - B - (2,3] - max. 2 ze 4. ročníku
      *   ČR - C - [0,2] - nikdo ze 4. ročníku, max. 2 z 3 ročníku
-     * @param $competitors
-     * @return string
      */
-    private function getCategory($competitors) {
+    private function getCategory(iterable $competitors): string {
         // init stats
         $olds = 0;
         $year = [0, 0, 0, 0, 0]; //0 - ZŠ, 1..4 - SŠ
@@ -152,6 +159,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
             if (!$competitor['school_id']) { // for future
                 $olds += 1;
             } else {
+                /** @var ModelRegion|false $country */
                 $country = $this->serviceSchool->getTable()->select('address.region.country_iso')->where(['school_id' => $competitor['school_id']])->fetch();
                 if (!in_array($country->country_iso, ['CZ', 'SK'])) {
                     $abroad += 1;
@@ -189,12 +197,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
         }
     }
 
-    /**
-     * @param Field $field
-     * @return array
-     */
-    public function getOptions(Field $field) {
+    public function getOptions(Field $field): array {
         return $this->categoryNames;
     }
-
 }

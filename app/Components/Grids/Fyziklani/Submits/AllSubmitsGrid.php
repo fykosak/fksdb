@@ -4,97 +4,99 @@ namespace FKSDB\Components\Grids\Fyziklani;
 
 use Closure;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\model\Fyziklani\TaskCodePreprocessor;
-use FKSDB\NotImplementedException;
-use FKSDB\ORM\DbNames;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Fyziklani\Submit\HandlerFactory;
+use FKSDB\Fyziklani\Submit\TaskCodePreprocessor;
+use FKSDB\Logging\FlashMessageDump;
+use FKSDB\Logging\MemoryLogger;
+use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FyziklaniModule\BasePresenter;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use SQL\SearchableDataSource;
+use FKSDB\SQL\SearchableDataSource;
 
 /**
- *
  * @author Michal Červeňák
  * @author Lukáš Timko
  */
 class AllSubmitsGrid extends SubmitsGrid {
 
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
-    /**
-     * @var ServiceFyziklaniTask
-     */
-    private $serviceFyziklaniTask;
+    private ModelEvent $event;
+
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
+
+    private HandlerFactory $handlerFactory;
 
     /**
      * FyziklaniSubmitsGrid constructor.
      * @param ModelEvent $event
      * @param Container $container
      */
-    public function __construct(
-        ModelEvent $event,
-        Container $container
-    ) {
+    public function __construct(ModelEvent $event, Container $container) {
         parent::__construct($container);
         $this->event = $event;
-        $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
-        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
+    }
 
+    public function injectPrimary(HandlerFactory $handlerFactory, ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask): void {
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->handlerFactory = $handlerFactory;
+    }
+
+    protected function getData(): IDataSource {
+        $submits = $this->serviceFyziklaniSubmit->findAll($this->event)/*->where('fyziklani_submit.points IS NOT NULL')*/
+        ->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name');
+        $dataSource = new SearchableDataSource($submits);
+        $dataSource->setFilterCallback($this->getFilterCallBack());
+        return $dataSource;
     }
 
     /**
-     * @param BasePresenter $presenter
+     * @param Presenter $presenter
+     * @return void
+     * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->addColumnTeam();
         $this->addColumnTask();
 
         $this->addColumns([
-            DbNames::TAB_FYZIKLANI_SUBMIT . '.state',
-            DbNames::TAB_FYZIKLANI_SUBMIT . '.points',
-            DbNames::TAB_FYZIKLANI_SUBMIT . '.created',
+            'fyziklani_submit.state',
+            'fyziklani_submit.points',
+            'fyziklani_submit.created',
         ]);
-        $this->addLinkButton( ':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
-        $this->addLinkButton( ':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
+        $this->addLinkButton(':Fyziklani:Submit:edit', 'edit', _('Edit'), false, ['id' => 'fyziklani_submit_id']);
+        $this->addLinkButton(':Fyziklani:Submit:detail', 'detail', _('Detail'), false, ['id' => 'fyziklani_submit_id']);
 
         $this->addButton('delete', null)
             ->setClass('btn btn-sm btn-danger')
-            ->setLink(function ($row) {
+            ->setLink(function (ModelFyziklaniSubmit $row): string {
                 return $this->link('delete!', $row->fyziklani_submit_id);
-            })->setConfirmationDialog(function () {
+            })->setConfirmationDialog(function (): string {
                 return _('Opravdu vzít submit úlohy zpět?');
             })->setText(_('Delete'))
-            ->setShow(function (ModelFyziklaniSubmit $row) {
+            ->setShow(function (ModelFyziklaniSubmit $row): bool {
                 return $row->canRevoke();
             });
-        $submits = $this->serviceFyziklaniSubmit->findAll($this->event)/*->where('fyziklani_submit.points IS NOT NULL')*/
-        ->select('fyziklani_submit.*,fyziklani_task.label,e_fyziklani_team_id.name');
-        $dataSource = new SearchableDataSource($submits);
-        $dataSource->setFilterCallback($this->getFilterCallBack());
-        $this->setDataSource($dataSource);
     }
 
     /**
@@ -117,7 +119,7 @@ class AllSubmitsGrid extends SubmitsGrid {
                             $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
                             $table->where('e_fyziklani_team_id.e_fyziklani_team_id =? AND fyziklani_task.label =? ', $teamId, $taskLabel);
                         } else {
-                            $this->flashMessage(_('Wrong task code'), \BasePresenter::FLASH_WARNING);
+                            $this->flashMessage(_('Wrong task code'), BasePresenter::FLASH_WARNING);
                         }
                         break;
                     case 'not_null':
@@ -133,32 +135,31 @@ class AllSubmitsGrid extends SubmitsGrid {
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @throws AbortException
      */
     public function handleDelete($id) {
-        /**
-         * @var ModelFyziklaniSubmit $submit
-         */
+        /** @var ModelFyziklaniSubmit $submit */
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
         if (!$submit) {
-            $this->flashMessage(_('Submit dos not exists.'), \BasePresenter::FLASH_ERROR);
+            $this->flashMessage(_('Submit dos not exists.'), BasePresenter::FLASH_ERROR);
             $this->redirect('this');
-            return;
         }
         try {
-            $log = $this->serviceFyziklaniSubmit->revokeSubmit($submit, $this->getPresenter()->getUser());
-            $this->flashMessage($log->getMessage(), \BasePresenter::FLASH_SUCCESS);
+            $logger = new MemoryLogger();
+            $handler = $this->handlerFactory->create($this->event);
+            $handler->revokeSubmit($logger, $submit);
+            FlashMessageDump::dump($logger, $this);
             $this->redirect('this');
         } catch (BadRequestException $exception) {
-            $this->flashMessage($exception->getMessage(), \BasePresenter::FLASH_ERROR);
+            $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             $this->redirect('this');
         }
     }
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function createComponentSearchForm(): FormControl {
         if (!$this->isSearchable()) {
@@ -170,16 +171,15 @@ class AllSubmitsGrid extends SubmitsGrid {
 
         $rows = $this->serviceFyziklaniTeam->findPossiblyAttending($this->event);
         $teams = [];
-
-        foreach ($rows as $row) {
-            $team = ModelFyziklaniTeam::createFromActiveRow($row);
+        /** @var ModelFyziklaniTeam $team */
+        foreach ($rows as $team) {
             $teams[$team->e_fyziklani_team_id] = $team->name;
         }
 
         $rows = $this->serviceFyziklaniTask->findAll($this->event);
         $tasks = [];
-        foreach ($rows as $row) {
-            $task = ModelFyziklaniTask::createFromActiveRow($row);
+        /** @var ModelFyziklaniTask $task */
+        foreach ($rows as $task) {
             $tasks[$task->fyziklani_task_id] = '(' . $task->label . ') ' . $task->name;
         }
 

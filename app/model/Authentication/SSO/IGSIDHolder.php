@@ -8,12 +8,14 @@ namespace FKSDB\Authentication\SSO;
  * @author Michal Koutný <michal@fykos.cz>
  */
 interface IGSIDHolder {
-
+    /**
+     * @return mixed
+     */
     public function getGSID();
 
     /**
-     * @param $gsid
-     * @return mixed
+     * @param mixed $gsid
+     * @return void
      */
-    public function setGSID($gsid);
+    public function setGSID($gsid): void;
 }

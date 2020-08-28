@@ -2,26 +2,20 @@
 
 namespace FKSDB\Components\Controls\PhoneNumber;
 
-use Closure;
 use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Services\ServiceRegion;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
 /**
  * Class PhoneNumberFactory
- * @package FKSDB\Components\Controls
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PhoneNumberFactory {
-    /**
-     * @var ServiceRegion
-     */
-    private $serviceRegion;
-    /**
-     * @var TypedTableSelection
-     */
-    private $table;
+
+    private ServiceRegion $serviceRegion;
+
+    private TypedTableSelection $table;
 
     /**
      * PhoneNumberFactory constructor.
@@ -32,17 +26,10 @@ class PhoneNumberFactory {
         $this->table = $this->serviceRegion->getTable();
     }
 
-    /**
-     * @return TypedTableSelection
-     */
     private function getAllRegions(): TypedTableSelection {
         return $this->table;
     }
 
-    /**
-     * @param string $number
-     * @return Html
-     */
     public function formatPhone(string $number): Html {
         try {
             $region = $this->getRegion($number);
@@ -58,14 +45,8 @@ class PhoneNumberFactory {
         return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText($number);
     }
 
-    /**
-     * @param string $number
-     * @return ModelRegion|null
-     */
-    private function getRegion(string $number) {
-        /**
-         * @var ModelRegion $region
-         */
+    private function getRegion(string $number): ?ModelRegion {
+        /** @var ModelRegion $region */
         foreach ($this->getAllRegions() as $region) {
             if ($region->matchPhone($number)) {
                 return $region;
@@ -74,21 +55,7 @@ class PhoneNumberFactory {
         return null;
     }
 
-    /**
-     * @param string $number
-     * @return bool
-     */
     public function isValid(string $number): bool {
         return !!$this->getRegion($number);
-    }
-
-    /**
-     * @return Closure
-     */
-    public function getFormValidationCallback(): Closure {
-        return function (BaseControl $control): bool {
-            $value = $control->getValue();
-            return $this->isValid($value);
-        };
     }
 }

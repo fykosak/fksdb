@@ -2,28 +2,36 @@
 
 namespace FKSDB\DataTesting\Tests\Person;
 
-use FKSDB\DataTesting\TestsLogger;
+use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelPerson;
 
 /**
  * Class PersonTest
- * @package FKSDB\DataTesting\Tests\Person
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class PersonTest {
-    /**
-     * @param TestsLogger $logger
-     * @param ModelPerson $person
-     * @return void
-     */
-    abstract public function run(TestsLogger $logger, ModelPerson $person);
+
+    private string $id;
+
+    private string $title;
 
     /**
-     * @return string
+     * PersonTest constructor.
+     * @param string $id
+     * @param string $title
      */
-    abstract public function getTitle(): string;
+    public function __construct(string $id, string $title) {
+        $this->id = $id;
+        $this->title = $title;
+    }
 
-    /**
-     * @return string
-     */
-    abstract public function getAction(): string;
+    abstract public function run(ILogger $logger, ModelPerson $person): void;
+
+    public function getTitle(): string {
+        return $this->title;
+    }
+
+    public function getId(): string {
+        return $this->id;
+    }
 }

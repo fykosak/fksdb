@@ -4,9 +4,6 @@
 [submodule "libs/Nette-ajax"]
 	path = libs/Nette-ajax
 	url = https://github.com/vojtech-dobes/nette.ajax.js.git
-[submodule "libs/jquery.confirm"]
-	path = libs/jquery.confirm
-	url = https://github.com/myclabs/jquery.confirm.git
 [submodule "libs/graph-dracula"]
 	path = libs/graph-dracula
 	url = https://github.com/strathausen/dracula.git

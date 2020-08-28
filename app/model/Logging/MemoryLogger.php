@@ -2,6 +2,8 @@
 
 namespace FKSDB\Logging;
 
+use FKSDB\Messages\Message;
+
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
@@ -9,33 +11,21 @@ namespace FKSDB\Logging;
  */
 class MemoryLogger extends StackedLogger {
 
-    const IDX_MESSAGE = 'msg';
-    const IDX_LEVEL = 'lvl';
-
-    private $messages = [];
+    private array $messages = [];
 
     /**
-     *
-     * @return array[]  IDX_MESSAGE => message, IDX_LEVEL => level
+     * @return Message[]
      */
-    public function getMessages() {
+    public function getMessages(): array {
         return $this->messages;
     }
 
-    public function clear() {
+    public function clear(): void {
         $this->messages = [];
     }
 
-    /**
-     * @param $message
-     * @param $level
-     * @return mixed|void
-     */
-    protected function doLog($message, $level) {
-        $this->messages[] = [
-            self::IDX_MESSAGE => $message,
-            self::IDX_LEVEL => $level,
-        ];
+    protected function doLog(Message $message): void {
+        $this->messages[] = $message;
     }
 
 }

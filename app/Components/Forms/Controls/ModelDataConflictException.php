@@ -2,51 +2,38 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
-use Nette\Utils\ArrayHash;
+use Nette\Http\Response;
 use RuntimeException;
 
 /**
  * Class ModelDataConflictException
- * @package FKSDB\Components\Forms\Controls
+ * *
  */
 class ModelDataConflictException extends RuntimeException {
 
-    /** @var ArrayHash */
-    private $conflicts;
+    private iterable $conflicts;
 
-    /** @var ReferencedId */
-    private $referencedId;
+    private ReferencedId $referencedId;
 
     /**
      * ModelDataConflictException constructor.
-     * @param $conflicts
-     * @param null $code
-     * @param null $previous
+     * @param iterable $conflicts
+     * @param \Throwable|null $previous
      */
-    public function __construct($conflicts, $code = null, $previous = null) {
-        parent::__construct(null, $code, $previous);
+    public function __construct(iterable $conflicts, $previous = null) {
+        parent::__construct(null, Response::S409_CONFLICT, $previous);
         $this->conflicts = $conflicts;
     }
 
-    /**
-     * @return ArrayHash
-     */
-    public function getConflicts() {
+    public function getConflicts(): iterable {
         return $this->conflicts;
     }
 
-    /**
-     * @return ReferencedId
-     */
-    public function getReferencedId() {
+    public function getReferencedId(): ReferencedId {
         return $this->referencedId;
     }
 
-    /**
-     * @param ReferencedId $referencedId
-     */
-    public function setReferencedId(ReferencedId $referencedId) {
+    public function setReferencedId(ReferencedId $referencedId): void {
         $this->referencedId = $referencedId;
     }
-
 }

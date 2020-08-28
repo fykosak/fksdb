@@ -2,12 +2,10 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use Events\Machine\BaseMachine;
-use Events\Model\Holder\DataValidator;
-use Events\Model\Holder\Field;
-use Nette\Forms\Container;
+use FKSDB\Events\Model\Holder\DataValidator;
+use FKSDB\Events\Model\Holder\Field;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Form;
-use Nette\Forms\IControl;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -16,38 +14,22 @@ use Nette\Forms\IControl;
  */
 abstract class AbstractFactory implements IFieldFactory {
 
-    /**
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return array|mixed
-     */
-    public function create(Field $field, BaseMachine $machine, Container $container) {
-        $component = $this->createComponent($field, $machine, $container);
-
+    public function setFieldDefaultValue(IComponent $component, Field $field): void {
         if (!$field->isModifiable()) {
-            $this->setDisabled($component, $field, $machine, $container);
+            $this->setDisabled($component);
         }
-        $this->setDefaultValue($component, $field, $machine, $container);
-
-        $control = $this->getMainControl(is_array($component) ? reset($component) : $component);
-        $this->appendRequiredRule($control, $field, $machine, $container);
-
-        return $component;
+        $this->setDefaultValue($component, $field);
+        $this->appendRequiredRule($component, $field);
     }
 
-    /**
-     * @param IControl $element
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     */
-    protected final function appendRequiredRule(IControl $element, Field $field, BaseMachine $machine, Container $container) {
+    final protected function appendRequiredRule(IComponent $component, Field $field): void {
+        $container = $component->getParent();
+        $control = $this->getMainControl($component);
         if ($field->isRequired()) {
-            $conditioned = $element;
+            $conditioned = $control;
             foreach ($field->getBaseHolder()->getDeterminingFields() as $name => $determiningField) {
                 if ($determiningField === $field) {
-                    $conditioned = $element;
+                    $conditioned = $control;
                     break;
                 }
                 /*
@@ -58,44 +40,22 @@ abstract class AbstractFactory implements IFieldFactory {
                     $conditioned = $conditioned->addConditionOn($control, Form::FILLED);
                 }
             }
-            $conditioned->addRule(Form::FILLED, sprintf(_('%s je povinná položka.'), $field->getLabel()));
+            $conditioned->addRule(Form::FILLED, sprintf(_('%s is required.'), $field->getLabel()));
         }
     }
 
     /**
      * @param Field $field
      * @param DataValidator $validator
-     * @return bool|void
+     * @return bool|void TODO what is the return type?
      */
     public function validate(Field $field, DataValidator $validator) {
         if ($field->isRequired() && ($field->getValue() === '' || $field->getValue() === null)) {
-            $validator->addError(sprintf(_('%s je povinná položka.'), $field->getLabel()));
+            $validator->addError(sprintf(_('%s is required'), $field->getLabel()));
         }
     }
 
-    /**
-     * @param $component
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return mixed
-     */
-    abstract protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container);
+    abstract protected function setDisabled(IComponent $component): void;
 
-    /**
-     * @param $component
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return mixed
-     */
-    abstract protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container);
-
-    /**
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return mixed
-     */
-    abstract protected function createComponent(Field $field, BaseMachine $machine, Container $container);
+    abstract protected function setDefaultValue(IComponent $component, Field $field): void;
 }

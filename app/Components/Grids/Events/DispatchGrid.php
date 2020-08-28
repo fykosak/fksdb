@@ -2,75 +2,56 @@
 
 namespace FKSDB\Components\Grids\Events;
 
-use FKSDB\Components\DatabaseReflection\ValuePrinters\EventRole;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\NotImplementedException;
-use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceEvent;
-use FKSDB\YearCalculator;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class DispatchGrid
- * @package FKSDB\Components\Grids\Events
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DispatchGrid extends BaseGrid {
 
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
-    /**
-     * @var ModelPerson
-     */
-    private $person;
-    /**
-     * @var YearCalculator
-     */
-    private $yearCalculator;
+    private ServiceEvent $serviceEvent;
+
+    private ModelPerson $person;
 
     /**
      * DispatchGrid constructor.
      * @param ModelPerson $person
      * @param Container $container
      */
-    function __construct(ModelPerson $person, Container $container) {
+    public function __construct(ModelPerson $person, Container $container) {
         parent::__construct($container);
         $this->person = $person;
-        $this->serviceEvent = $container->getByType(ServiceEvent::class);
-        $this->yearCalculator = $container->getByType(YearCalculator::class);
+    }
+
+    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
+        $this->serviceEvent = $serviceEvent;
+    }
+
+    protected function getData(): IDataSource {
+        $events = $this->serviceEvent->getTable()->order('begin DESC');
+        return new NDataSource($events);
     }
 
     /**
-     * @param $presenter
+     * @param Presenter $presenter
+     * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
+     * @throws BadTypeException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
-
-        $events = $this->serviceEvent->getTable()->order('begin DESC');
-        $this->setDataSource(new NDataSource($events));
-
-        $this->addColumns(['event.event_id', 'event.name', 'referenced.contest', 'event.year']);
-
-        $this->addColumn('roles', _('Roles'))->setRenderer(function (ModelEvent $event) {
-            $roles = $this->person->getRolesForEvent($event, $this->yearCalculator);
-            return EventRole::getHtml($roles);
-        })->setSortable(false);
-
+        $this->addColumns(['event.event_id', 'event.name', 'contest.contest', 'event.year', 'event.role']);
         $this->addLinkButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);
-    }
-
-    /**
-     * @return string
-     */
-    protected function getModelClassName(): string {
-        return ModelEvent::class;
     }
 }

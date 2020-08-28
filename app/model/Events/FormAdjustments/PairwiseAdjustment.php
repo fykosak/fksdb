@@ -1,9 +1,9 @@
 <?php
 
-namespace Events\FormAdjustments;
+namespace FKSDB\Events\FormAdjustments;
 
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\InvalidArgumentException;
@@ -15,26 +15,18 @@ use Nette\InvalidArgumentException;
  */
 abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdjustment {
 
-    const DELIMITER = '.';
-    const WILDCART = '*';
-
+    /** @var mixed */
     private $rules;
 
     /**
      * PairwiseAdjustment constructor.
-     * @param $rules
+     * @param mixed $rules
      */
-    function __construct($rules) {
+    public function __construct($rules) {
         $this->rules = $rules;
     }
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return mixed|void
-     */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder) {
+    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
         foreach ($this->rules as $target => $prerequisities) {
             if (is_scalar($prerequisities)) {
                 $prerequisities = [$prerequisities];
@@ -47,7 +39,7 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
                 if (!$cTarget || !$cPrerequisity) {
                     break;
                 }
-                if ($this->hasWildcart($target) && $this->hasWildcart($prerequisity)) {
+                if ($this->hasWildCart($target) && $this->hasWildCart($prerequisity)) {
                     foreach ($cTarget as $key => $control) {
                         if (isset($cPrerequisity[$key])) {
                             $this->processPair($control, $cPrerequisity[$key]);
@@ -70,11 +62,5 @@ abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdj
         }
     }
 
-    /**
-     * @param IControl $target
-     * @param IControl $prerequisity
-     * @return mixed
-     */
-    abstract protected function processPair(IControl $target, IControl $prerequisity);
+    abstract protected function processPair(IControl $target, IControl $prerequisity): void;
 }
-

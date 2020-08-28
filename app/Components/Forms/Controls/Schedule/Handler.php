@@ -2,7 +2,8 @@
 
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
@@ -14,21 +15,15 @@ use PDOException;
 
 /**
  * Class Handler
- * @package FKSDB\Components\Forms\Controls\Schedule
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Handler {
-    /**
-     * @var ServiceScheduleGroup
-     */
-    private $serviceScheduleGroup;
-    /**
-     * @var ServicePersonSchedule
-     */
-    private $servicePersonSchedule;
-    /**
-     * @var ServiceScheduleItem
-     */
-    private $serviceScheduleItem;
+
+    private ServiceScheduleGroup $serviceScheduleGroup;
+
+    private ServicePersonSchedule $servicePersonSchedule;
+
+    private ServiceScheduleItem $serviceScheduleItem;
 
     /**
      * Handler constructor.
@@ -49,14 +44,15 @@ class Handler {
     /**
      * @param ArrayHash $data
      * @param ModelPerson $person
-     * @param int $eventId
+     * @param ModelEvent $event
+     * @return void
      * @throws ExistingPaymentException
      * @throws FullCapacityException
      * @throws NotImplementedException
      */
-    public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, int $eventId) {
+    public function prepareAndUpdate(ArrayHash $data, ModelPerson $person, ModelEvent $event): void {
         foreach ($this->prepareData($data) as $type => $newScheduleData) {
-            $this->updateDataType($newScheduleData, $type, $person, $eventId);
+            $this->updateDataType($newScheduleData, $type, $person, $event);
         }
     }
 
@@ -64,19 +60,19 @@ class Handler {
      * @param array $newScheduleData
      * @param string $type
      * @param ModelPerson $person
-     * @param int $eventId
+     * @param ModelEvent $event
+     * @return void
      * @throws ExistingPaymentException
      * @throws FullCapacityException
      * @throws NotImplementedException
      */
-    private function updateDataType(array $newScheduleData, string $type, ModelPerson $person, int $eventId) {
+    private function updateDataType(array $newScheduleData, string $type, ModelPerson $person, ModelEvent $event): void {
         $oldRows = $this->servicePersonSchedule->getTable()
             ->where('person_id', $person->person_id)
-            ->where('schedule_item.schedule_group.event_id', $eventId)->where('schedule_item.schedule_group.schedule_group_type', $type);
+            ->where('schedule_item.schedule_group.event_id', $event->event_id)->where('schedule_item.schedule_group.schedule_group_type', $type);
 
-        foreach ($oldRows as $row) {
-
-            $modelPersonSchedule = ModelPersonSchedule::createFromActiveRow($row);
+        /** @var ModelPersonSchedule $modelPersonSchedule */
+        foreach ($oldRows as $modelPersonSchedule) {
             if (\in_array($modelPersonSchedule->schedule_item_id, $newScheduleData)) {
                 // do nothing
                 $index = \array_search($modelPersonSchedule->schedule_item_id, $newScheduleData);
@@ -97,8 +93,8 @@ class Handler {
         }
 
         foreach ($newScheduleData as $id) {
-            $query = $this->serviceScheduleItem->findByPrimary($id);
-            $modelScheduleItem = ModelScheduleItem::createFromActiveRow($query);
+            /** @var ModelScheduleItem $modelScheduleItem */
+            $modelScheduleItem = $this->serviceScheduleItem->findByPrimary($id);
             if ($modelScheduleItem->hasFreeCapacity()) {
                 $this->servicePersonSchedule->createNewModel(['person_id' => $person->person_id, 'schedule_item_id' => $id]);
             } else {
@@ -111,10 +107,6 @@ class Handler {
         }
     }
 
-    /**
-     * @param ArrayHash $data
-     * @return integer[]
-     */
     private function prepareData(ArrayHash $data): array {
         $newData = [];
         foreach ($data as $type => $datum) {
@@ -123,4 +115,3 @@ class Handler {
         return $newData;
     }
 }
-

@@ -1,12 +1,11 @@
-import { lang } from '@i18n/i18n';
-import * as React from 'react';
-import { findDOMNode } from 'react-dom';
-import { connect } from 'react-redux';
 import {
     Submits,
     Task,
     Team,
-} from '../../../fyziklani/helpers/interfaces';
+} from '@apps/fyziklani/helpers/interfaces';
+import { lang } from '@i18n/i18n';
+import * as React from 'react';
+import { connect } from 'react-redux';
 import { Filter } from '../middleware/filters/filter';
 import { FyziklaniResultsTableStore } from '../reducers';
 import Row from './row';
@@ -19,27 +18,6 @@ interface StateProps {
 }
 
 class App extends React.Component<StateProps, {}> {
-    private table;
-
-    public constructor(props) {
-        super(props);
-        this.table = null;
-    }
-
-    public componentDidUpdate() {
-        const table = $(findDOMNode(this.table));
-        try {
-            table.trigger('update');
-            table.trigger('sorton', [[[2, 1], [4, 1]]]);
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    public componentDidMount() {
-        const table: any = $(findDOMNode(this.table));
-        table.tablesorter();
-    }
 
     public render() {
         const {submits, teams, tasks, filter} = this.props;
@@ -60,9 +38,7 @@ class App extends React.Component<StateProps, {}> {
         return (
             <div className="mb-3">
                 <h1>{filter ? filter.getHeadline() : lang.getText('Results of Fyziklani')}</h1>
-                <table ref={(table) => {
-                    this.table = table;
-                }} className="tablesorter table-striped table-hover table table-sm bg-white">
+                <table className="table-striped table-hover table table-sm bg-white">
                     <thead>
                     <tr>
                         <th/>

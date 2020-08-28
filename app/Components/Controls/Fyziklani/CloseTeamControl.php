@@ -2,67 +2,52 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
-use BasePresenter;
-use FKSDB\model\Fyziklani\NotSetGameParametersException;
+use FKSDB\Modules\Core\BasePresenter;
+use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use Nette\Application\AbortException;
-use Nette\Application\UI\Control;
 use Nette\DI\Container;
-use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 
 /**
  * Class CloseTeamControl
- * @package FKSDB\Components\Controls\Fyziklani
- * @property FileTemplate $template
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class CloseTeamControl extends Control {
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /**
-     * @var ITranslator
-     */
-    private $translator;
-    /**
-     * @var ModelFyziklaniTeam
-     */
+class CloseTeamControl extends BaseComponent {
+
+    private ModelEvent $event;
+
+    /** @var ModelFyziklaniTeam */
     private $team;
-    /**
-     * @var ServiceFyziklaniTask
-     */
-    private $serviceFyziklaniTask;
+
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
 
     /**
      * CloseTeamControl constructor.
      * @param Container $container
      * @param ModelEvent $event
      */
-    public function __construct(
-        Container $container,
-        ModelEvent $event
-    ) {
-        parent::__construct();
+    public function __construct(Container $container, ModelEvent $event) {
+        parent::__construct($container);
         $this->event = $event;
-        $this->translator = $container->getByType(ITranslator::class);
-        $this->serviceFyziklaniTask = $container->getByType(ServiceFyziklaniTask::class);
     }
 
-    /**
-     * @param ModelFyziklaniTeam $team
-     */
-    public function setTeam(ModelFyziklaniTeam $team) {
+    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask): void {
+        $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+    }
+
+    public function setTeam(ModelFyziklaniTeam $team): void {
         $this->team = $team;
     }
 
     /**
+     * @return void
      * @throws AbortException
      */
-    public function handleClose() {
+    public function handleClose(): void {
         $connection = $this->serviceFyziklaniTask->getConnection();
         $connection->beginTransaction();
         $sum = (int)$this->team->getNonRevokedSubmits()->sum('points');
@@ -75,11 +60,11 @@ class CloseTeamControl extends Control {
     }
 
     /**
+     * @return void
      * @throws NotSetGameParametersException
      */
-    public function render() {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'CloseTeamControl.latte');
-        $this->template->setTranslator($this->translator);
+    public function render(): void {
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.closeTeam.latte');
         $this->template->task = $this->getNextTask();
         $this->template->render();
     }
@@ -91,7 +76,7 @@ class CloseTeamControl extends Control {
     private function getNextTask(): string {
         $submits = count($this->team->getNonRevokedSubmits());
         $tasksOnBoard = $this->event->getFyziklaniGameSetup()->tasks_on_board;
-        /** @var ModelFyziklaniTask $nextTask */
+        /** @var ModelFyziklaniTask|null $nextTask */
         $nextTask = $this->serviceFyziklaniTask->findAll($this->event)->order('label')->limit(1, $submits + $tasksOnBoard)->fetch();
         return ($nextTask) ? $nextTask->label : '';
     }

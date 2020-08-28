@@ -12,7 +12,7 @@ namespace NiftyGrid\Components;
 use Nette\Utils\Html;
 use NiftyGrid\Grid; // For constant only
 
-class Button extends \Nette\Application\UI\PresenterComponent
+class Button extends \Nette\Application\UI\Component
 {
 	/** @var callback|string */
 	private $label;

@@ -8,7 +8,7 @@ import {
     dropItem,
 } from '../../../actions';
 
-import { NetteActions } from '@appsCollector';
+import { NetteActions } from '@appsCollector/netteActions';
 import {
     Action,
     Dispatch,

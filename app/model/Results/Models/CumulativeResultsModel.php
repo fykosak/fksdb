@@ -12,9 +12,7 @@ use Nette\InvalidStateException;
  */
 class CumulativeResultsModel extends AbstractResultsModel {
 
-    /**
-     * @var array of int
-     */
+    /** @var array of int */
     protected $series;
 
     /**
@@ -29,7 +27,7 @@ class CumulativeResultsModel extends AbstractResultsModel {
      * @param ModelCategory $category
      * @return array
      */
-    public function getDataColumns(ModelCategory $category) {
+    public function getDataColumns(ModelCategory $category): array {
         if ($this->series === null) {
             throw new InvalidStateException('Series not specified.');
         }
@@ -81,7 +79,7 @@ class CumulativeResultsModel extends AbstractResultsModel {
     /**
      * @param mixed $series
      */
-    public function setSeries($series) {
+    public function setSeries($series): void {
         $this->dataColumns = null;
         $this->series = $series;
         // invalidate cache of columns
@@ -89,18 +87,18 @@ class CumulativeResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @return array
+     * @return ModelCategory[]
      */
-    public function getCategories() {
+    public function getCategories(): array {
         return $this->evaluationStrategy->getCategories();
     }
 
     /**
      * @param ModelCategory $category
-     * @return mixed|string
+     * @return string
      * @throws InvalidStateException
      */
-    protected function composeQuery(ModelCategory $category) {
+    protected function composeQuery(ModelCategory $category): string {
         if (!$this->series) {
             throw new InvalidStateException('Series not set.');
         }
@@ -156,7 +154,7 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
      *
      * @return int sum of Student Pilny points
      */
-    private function getSumLimitForStudentPilny() : int {
+    private function getSumLimitForStudentPilny(): int {
         return $this->getSumLimit(new ModelCategory(ModelCategory::CAT_HS_4));
     }
 
@@ -166,7 +164,7 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
      * @param ModelCategory $category
      * @return int sum of points
      */
-    private function getSumLimit(ModelCategory $category) : int {
+    private function getSumLimit(ModelCategory $category): int {
         $sum = 0;
         foreach ($this->getSeries() as $series) {
             // sum points as sum of tasks
@@ -179,4 +177,3 @@ left join submit s ON s.task_id = t.task_id AND s.ct_id = ct.ct_id";
         return $sum;
     }
 }
-

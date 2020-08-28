@@ -133,15 +133,16 @@ CREATE TABLE IF NOT EXISTS `event_participant` (
   COMMENT 'alergie, léky, úrazy,...',
   `tshirt_size`           TEXT          NULL     DEFAULT NULL,
   `tshirt_color`          VARCHAR(20)   NULL     DEFAULT NULL,
+  `jumper_size`           VARCHAR(20)   NULL     DEFAULT NULL,
   `price`                 DECIMAL(6, 2) NULL     DEFAULT NULL
   COMMENT 'vypočtená cena',
-  `arrival_time`          VARCHAR(20)   NULL     DEFAULT NULL
+  `arrival_time`          TIME          NULL     DEFAULT NULL
   COMMENT 'Čas příjezdu',
   `arrival_destination`   VARCHAR(20)   NULL     DEFAULT NULL
   COMMENT 'Místo prijezdu\n',
   `arrival_ticket`        TINYINT(1)    NULL     DEFAULT NULL
   COMMENT 'společný lístek na cestu tam\n',
-  `departure_time`        VARCHAR(20)   NULL     DEFAULT NULL
+  `departure_time`        TIME          NULL     DEFAULT NULL
   COMMENT 'Čas odjezdu\n',
   `departure_destination` VARCHAR(20)   NULL     DEFAULT NULL
   COMMENT 'Místo odjezdu\n',
@@ -153,6 +154,7 @@ CREATE TABLE IF NOT EXISTS `event_participant` (
   COMMENT 'úžívané léky',
   `schedule`              TEXT          NULL     DEFAULT NULL
   COMMENT 'serializovaný program',
+  `lunch_count`          TINYINT(2)   NULL DEFAULT 0,
   PRIMARY KEY (`event_participant_id`),
   INDEX `action_id` (`event_id` ASC),
   INDEX `person_id` (`person_id` ASC),
@@ -664,8 +666,8 @@ CREATE TABLE IF NOT EXISTS `submit` (
   `task_id`      INT(11)                 NOT NULL
   COMMENT 'Task',
   `submitted_on` DATETIME                NULL     DEFAULT NULL,
-  `source`       ENUM ('post', 'upload') NOT NULL
-  COMMENT 'odkud přišlo řešení',
+  `source`       ENUM ('post', 'upload', 'quiz') NOT NULL
+  COMMENT 'Typ příjmu řešení',
   `note`         VARCHAR(255)            NULL     DEFAULT NULL
   COMMENT 'Pocet stranek a jine poznamky',
   `raw_points`   DECIMAL(4, 2)           NULL     DEFAULT NULL
@@ -746,7 +748,7 @@ CREATE TABLE IF NOT EXISTS `e_fyziklani_team` (
   `teacher_accomodation` TINYINT(1)  NOT NULL DEFAULT 0,
   `teacher_present`      TINYINT(1)  NOT NULL DEFAULT 0,
   `teacher_schedule`     TEXT        NULL     DEFAULT NULL
-  COMMENT 'serializovaný program',
+      COMMENT 'serializovaný program',
   `category`             CHAR(1)     NOT NULL,
   `created`              TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `phone`                VARCHAR(30) NULL     DEFAULT NULL,
@@ -755,8 +757,8 @@ CREATE TABLE IF NOT EXISTS `e_fyziklani_team` (
   `points`               INT(11)     NULL     DEFAULT NULL,
   `rank_category`        INT(11)     NULL     DEFAULT NULL,
   `rank_total`           INT(11)     NULL     DEFAULT NULL,
-  `room`                 VARCHAR(3)  NULL     DEFAULT NULL
-  COMMENT '@DEPRECATED',
+  `room`                 VARCHAR(3)  NULL     DEFAULT NULL COMMENT '@DEPRECATED',
+  `force_a`              TINYINT(1)  NULL     DEFAULT NULL,
   `game_lang`            VARCHAR(2)  NULL     DEFAULT NULL
   COMMENT 'Game lang',
   PRIMARY KEY (`e_fyziklani_team_id`),
@@ -1034,8 +1036,6 @@ CREATE TABLE IF NOT EXISTS `e_dsef_group` (
 CREATE TABLE IF NOT EXISTS `e_dsef_participant` (
   `event_participant_id` INT          NOT NULL,
   `e_dsef_group_id`      INT          NOT NULL,
-  `arrival_time`         TIME         NULL DEFAULT NULL,
-  `lunch_count`          TINYINT(2)   NULL DEFAULT 0,
   `message`              VARCHAR(255) NULL DEFAULT NULL,
   PRIMARY KEY (`event_participant_id`),
   INDEX `fk_e_dsef_participant_e_dsef_group1_idx` (`e_dsef_group_id` ASC),
@@ -1047,53 +1047,6 @@ CREATE TABLE IF NOT EXISTS `e_dsef_participant` (
   CONSTRAINT `fk_e_dsef_participant_e_dsef_group1`
   FOREIGN KEY (`e_dsef_group_id`)
   REFERENCES `e_dsef_group` (`e_dsef_group_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-)
-  ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Table `e_vikend_participant`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `e_vikend_participant` (
-  `event_participant_id` INT         NOT NULL,
-  `answer`               VARCHAR(64) NULL DEFAULT NULL,
-  `gives_lecture`        VARCHAR(64) NULL DEFAULT NULL,
-  `gives_lecture_desc`   TEXT        NULL DEFAULT NULL,
-  `wants_lecture`        VARCHAR(64) NULL DEFAULT NULL,
-  PRIMARY KEY (`event_participant_id`),
-  CONSTRAINT `fk_e_vikend_participant_event_participant1`
-  FOREIGN KEY (`event_participant_id`)
-  REFERENCES `event_participant` (`event_participant_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-)
-  ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Table `e_sous_participant`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `e_sous_participant` (
-  `event_participant_id` INT NOT NULL,
-  PRIMARY KEY (`event_participant_id`),
-  CONSTRAINT `fk_e_sous_participant_event_participant1`
-  FOREIGN KEY (`event_participant_id`)
-  REFERENCES `event_participant` (`event_participant_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-)
-  ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Table `e_tsaf_participant`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `e_tsaf_participant` (
-  `event_participant_id` INT         NOT NULL,
-  `jumper_size`          VARCHAR(20) NULL DEFAULT NULL,
-  PRIMARY KEY (`event_participant_id`),
-  CONSTRAINT `fk_e_tsaf_participant_event_participant1`
-  FOREIGN KEY (`event_participant_id`)
-  REFERENCES `event_participant` (`event_participant_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 )
@@ -1163,11 +1116,10 @@ CREATE TABLE IF NOT EXISTS `stored_query_tag` (
 -- Table `event_org`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `event_org` (
-  `e_org_id`  INT(11)  NOT NULL,
+  `e_org_id`  INT(11)  NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `note`      TEXT(32) NULL DEFAULT NULL,
   `event_id`  INT(11)  NOT NULL,
   `person_id` INT(11)  NOT NULL,
-  PRIMARY KEY (`e_org_id`),
   INDEX `event_id_idx` (`event_id` ASC),
   INDEX `fk_event_org_1_idx` (`person_id` ASC),
   UNIQUE INDEX `uq_event_id_person_id` (`event_id` ASC, `person_id` ASC),
@@ -1460,6 +1412,47 @@ CREATE TABLE IF NOT EXISTS `email_message`
     `sent`             DATETIME     NULL DEFAULT NULL
 )
     ENGINE = 'InnoDB';
+-- -----------------------------------------------------
+-- Table `quiz`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `quiz` (
+	`question_id`   INT(11)     NOT NULL  AUTO_INCREMENT,
+	`task_id`       INT(11)     NOT NULL,
+	`question_nr`   TINYINT(4)  NULL      DEFAULT NULL
+	COMMENT 'Cislo otazky',
+	`points`        TINYINT(4)  NULL      DEFAULT NULL
+	COMMENT 'Pocet bodu',
+	`answer`        VARCHAR(1)  NULL      DEFAULT NULL
+	COMMENT 'Spravna odpoved',
+	PRIMARY KEY (`question_id`),
+	INDEX `quiz_task_ui` (`task_id` ASC),
+	CONSTRAINT `quiz_ibfk_1`
+	FOREIGN KEY (`task_id`)
+	REFERENCES `task` (`task_id`)
+)
+	ENGINE = InnoDB;
+-- -----------------------------------------------------
+-- Table `submit_quiz`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `submit_quiz` (
+	`submit_question_id`  INT(11)    NOT NULL AUTO_INCREMENT,
+	`ct_id`               INT(11)    NOT NULL
+	COMMENT 'Resitel',
+	`question_id`         INT(11)    NOT NULL
+	COMMENT 'Otazka',
+	`submitted_on`        DATETIME   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	`answer`              VARCHAR(1) NULL,
+	PRIMARY KEY (`submit_question_id`),
+	UNIQUE INDEX `submit_qstn` (`ct_id` ASC, `question_id` ASC),
+	INDEX `question_id` (`question_id` ASC),
+	CONSTRAINT `submit_qstn_ibfk_1`
+	FOREIGN KEY (`ct_id`)
+	REFERENCES `contestant_base` (`ct_id`),
+	CONSTRAINT `submit_qstn_ibfk_2`
+	FOREIGN KEY (`question_id`)
+	REFERENCES `quiz` (`question_id`)
+)
+	ENGINE = InnoDB;
 
 SET SQL_MODE = @OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;

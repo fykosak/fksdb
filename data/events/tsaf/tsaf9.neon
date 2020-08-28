@@ -41,7 +41,6 @@ events:
     tsaf9:
         event_type_id: 7
         eventYears: [9]
-        tableLayout: event.grid
         formLayout: tsaf.form
         paramScheme:
             notifyBcc:
@@ -53,95 +52,95 @@ events:
 
         baseMachines:
             PARTICIPANT_TSAF:
-                service: @event.ServiceMTsafParticipant
+                service: @event.ServiceEventParticipant
 
                 states:
-                    auto.invited: "Pozvaný (auto)"
-                    invited: Pozvaný
-                    applied: Přihlášen
-                    applied.nodsef: "Přihlášen (bez DSEFu)" # is not accessible via transitions, only state rewriting
-                    spare: Náhradník
-                    participated: Účastnil se
-                    rejected: Odmítl
-                    missed: Nepřijel
-                    cancelled: Zrušen
+                    - auto.invited
+                    - invited
+                    - applied
+                    - applied.nodsef
+                    - spare
+                    - participated
+                    - rejected
+                    - missed
+                    - cancelled
 
                 transitions:
                     # to invited
                     __init->invited:
                         condition: role('admin')
-                        label: Pozvat účastníka
+                        label: _('Pozvat účastníka')
                         onExecuted:
-                            - Events\Transitions\MailSender(tsaf/invited, .self)
+                            - FKSDB\Events\Transitions\MailSender(tsaf/invited, .self)
                     auto.invited->invited: # this must be duplicate of __init->invited
                         condition: role('admin')
-                        label: Pozvat účastníka
+                        label: _('Pozvat účastníka')
                         onExecuted:
-                            - Events\Transitions\MailSender(tsaf/invited, .self)
+                            - FKSDB\Events\Transitions\MailSender(tsaf/invited, .self)
                     # to spare
                     __init->spare:
                         condition: %events.tsaf9.appCond%
-                        label: Přihlásit náhradníka
+                        label: _('Přihlásit náhradníka')
                         onExecuted:
-                            - Events\Transitions\MailSender(confirmation, .self)
+                            - FKSDB\Events\Transitions\MailSender(confirmation, .self)
                     # to applied
                     __init->applied:
                         condition: and(role('admin'),le(count('applied'),parameter('capacity')))
-                        label: Přihlásit účastníka
+                        label: _('Přihlásit účastníka')
                         onExecuted:
-                            - Events\Transitions\MailSender(confirmation, .self)
+                            - FKSDB\Events\Transitions\MailSender(confirmation, .self)
                     spare->applied:
                         condition: and(role('admin'),le(count('applied'),parameter('capacity')))
-                        label: Potvrdit účastníka
+                        label: _('Potvrdit účastníka')
                         onExecuted:
-                            - Events\Transitions\MailSender(transition, self)
+                            - FKSDB\Events\Transitions\MailSender(transition, self)
                     invited->applied:
                         condition: and(or(regOpen(),role('admin')),le(count('applied'),parameter('capacity')))
-                        label: Potvrdit účast
+                        label: _('Potvrdit účast')
                         onExecuted:
-                            - Events\Transitions\MailSender(transition, self)
+                            - FKSDB\Events\Transitions\MailSender(transition, self)
                     # to end-states
                     applied|applied.nodsef->participated:
                         condition: and(role('admin'),eventWas())
-                        label: Prezentovat
+                        label: _('Prezentovat')
                     applied|applied.nodsef->missed:
                         condition: and(role('admin'),eventWas())
-                        label: Nepřijel
-                        dangerous: true
+                        label: _('Nepřijel')
+                        behaviorType: danger
                     invited->rejected:
                         condition: %events.tsaf9.appCond%
-                        label: Odmítnout účast
-                        dangerous: true
+                        label: _('Odmítnout účast')
+                        behaviorType: danger
                     # to cancelled/termination
                     auto.invited|invited|applied|applied.nodsef->cancelled:
                         condition: role('admin')
-                        label: Zrušit přihlášku
-                        dangerous: true
+                        label: _('Zrušit přihlášku')
+                        behaviorType: danger
                     spare->cancelled:
                         condition: role('admin')
-                        label: Zrušit přihlášku
-                        dangerous: true
+                        label: _('Zrušit přihlášku')
+                        behaviorType: danger
                     cancelled->__terminated:
                         condition: role('admin')
-                        label: Smazat přihlášku
+                        label: _('Smazat přihlášku')
 
                 fields:
                     person_id:
-                        label: Osoba
+                        label: _('Person')
                         required: true
                         modifiable: %events.tsaf9.appCond%
                         default: fromLogin
                         factory: RefPerson(%events.tsaf9.person%, email, or(state('__init'),role('admin')), role('admin'), false)
                     tshirt_size:
-                        label: "Jaké triko nosíš?"
+                        label: _('Jaké triko nosíš?')
                         required: %events.tsaf9.requiredCond%
                         factory: Chooser("Zvolit velikost", Options(%events.tsaf9.clothes%))
                     jumper_size:
-                        label: "Jakou mikinu nosíš?"
+                        label: _('Jakou mikinu nosíš?')
                         required: %events.tsaf9.requiredCond%
                         factory: Chooser("Zvolit velikost", Options(%events.tsaf9.clothes%))
                     health_restrictions:
-                        label: Zdravotní omezení
+                        label: _('Zdravotní omezení')
                         description: "Máš nějaká zdravotní omezení, která by tě mohla omezovat v průběhu akce nebo kvůli kterým by ses např. nemohl/a účastnit fyzicky náročných aktivit? Například různé alergie (a jejich projevy), cukrovka, epilepsie, dlouhodobější obtíže, … Bereš nějaké léky, ať už pravidelně, nebo v případě obtíží? Jaké to jsou? Jsou nějaké další informace ohledně tvého zdravotního stavu, co bychom měli vědět?"
 
 
@@ -164,19 +163,19 @@ events:
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            secondaryModelStrategy: Events\Model\Holder\SecondaryModelStrategies\CarefulRewrite(['status'])
+            secondaryModelStrategy: FKSDB\Events\Model\Holder\SecondaryModelStrategies\CarefulRewrite(['status'])
             baseMachines:
                 participantTsaf:
                     bmName: PARTICIPANT_TSAF
-                    label: TSAF
+                    label: _('TSAF')
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine
                 participantDsef:
                     bmName: PARTICIPANT_DSEF
-                    label: DSEF
+                    label: _('DSEF')
 
             formAdjustments:
-                - Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                - FKSDB\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
                 - @events.captcha
 

@@ -6,12 +6,8 @@ use FKSDB\ORM\AbstractModelSingle;
 
 /**
  * Interface IEditEntityForm
- * @package FKSDB\Components\Controls\Entity
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 interface IEditEntityForm {
-    /**
-     * @param AbstractModelSingle $model
-     * @return void
-     */
-    public function setModel(AbstractModelSingle $model);
+    public function setModel(AbstractModelSingle $model): void;
 }

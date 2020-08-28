@@ -3,8 +3,7 @@
 namespace FKSDB\Transitions;
 /**
  * Class UnavailableTransitionsException
- * @package FKSDB\Transitions
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class UnavailableTransitionsException extends \Exception {
-
 }

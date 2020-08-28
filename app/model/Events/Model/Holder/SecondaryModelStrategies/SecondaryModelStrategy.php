@@ -1,8 +1,8 @@
 <?php
 
-namespace Events\Model\Holder\SecondaryModelStrategies;
+namespace FKSDB\Events\Model\Holder\SecondaryModelStrategies;
 
-use Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use Nette\InvalidStateException;
@@ -15,10 +15,11 @@ use Nette\InvalidStateException;
 abstract class SecondaryModelStrategy {
 
     /**
-     * @param $holders
-     * @param $models
+     * @param BaseHolder[] $holders
+     * @param IModel[] $models
+     * @return void
      */
-    public function setSecondaryModels($holders, $models) {
+    public function setSecondaryModels(array $holders, $models): void {
         $filledHolders = 0;
         foreach ($models as $secondaryModel) {
             $holders[$filledHolders]->setModel($secondaryModel);
@@ -33,12 +34,13 @@ abstract class SecondaryModelStrategy {
 
     /**
      * @param IService $service
-     * @param $joinOn
-     * @param $joinTo
-     * @param $holders
-     * @param \FKSDB\ORM\IModel|null $primaryModel
+     * @param string|null $joinOn
+     * @param string|null $joinTo
+     * @param BaseHolder[] $holders
+     * @param IModel|null $primaryModel
+     * @return void
      */
-    public function loadSecondaryModels(IService $service, $joinOn, $joinTo, $holders, IModel $primaryModel = null) {
+    public function loadSecondaryModels(IService $service, $joinOn, $joinTo, array $holders, IModel $primaryModel = null): void {
         $table = $service->getTable();
         if ($primaryModel) {
             $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
@@ -55,12 +57,13 @@ abstract class SecondaryModelStrategy {
 
     /**
      * @param IService $service
-     * @param $joinOn
-     * @param $joinTo
-     * @param $holders
+     * @param string|null $joinOn
+     * @param string|null $joinTo
+     * @param BaseHolder[] $holders
      * @param IModel $primaryModel
+     * @return void
      */
-    public function updateSecondaryModels(IService $service, $joinOn, $joinTo, $holders, IModel $primaryModel) {
+    public function updateSecondaryModels(IService $service, $joinOn, $joinTo, array $holders, IModel $primaryModel): void {
         $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();
         foreach ($holders as $baseHolder) {
             $joinData = [$joinOn => $joinValue];
@@ -81,11 +84,5 @@ abstract class SecondaryModelStrategy {
         }
     }
 
-    /**
-     * @param BaseHolder $holder
-     * @param $secondaries
-     * @param $joinData
-     * @return mixed
-     */
-    abstract protected function resolveMultipleSecondaries(BaseHolder $holder, $secondaries, $joinData);
+    abstract protected function resolveMultipleSecondaries(BaseHolder $holder, array $secondaries, array $joinData): void;
 }

@@ -2,37 +2,22 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Grids\Fyziklani\ResultsCategoryGrid;
 use FKSDB\Components\Grids\Fyziklani\ResultsTotalGrid;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use Nette\Application\UI\Control;
 use Nette\DI\Container;
-use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 
 /**
- * Class OrgResults
- * @package FKSDB\Components\Controls\Fyziklani
- * @property FileTemplate $template
+ * Class FinalResults
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class FinalResults extends Control {
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /**
-     * @var ITranslator
-     */
-    private $translator;
-    /**
-     * @var Container
-     */
-    private $container;
+class FinalResults extends BaseComponent {
+
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+
+    private ModelEvent$event;
 
     /**
      * FinalResults constructor.
@@ -40,17 +25,14 @@ class FinalResults extends Control {
      * @param Container $container
      */
     public function __construct(Container $container, ModelEvent $event) {
-        parent::__construct();
-        $this->serviceFyziklaniTeam = $container->getByType(ServiceFyziklaniTeam::class);
+        parent::__construct($container);
         $this->event = $event;
-        $this->translator = $container->getByType(ITranslator::class);
-        $this->container = $container;
     }
 
-    /**
-     * @param string $category
-     * @return bool
-     */
+    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+    }
+
     public function isClosedCategory(string $category): bool {
         $count = (int)$this->serviceFyziklaniTeam->findParticipating($this->event)
             ->where('category', $category)
@@ -59,9 +41,6 @@ class FinalResults extends Control {
         return $count === 0;
     }
 
-    /**
-     * @return bool
-     */
     public function isClosedTotal(): bool {
         $count = (int)$this->serviceFyziklaniTeam->findParticipating($this->event)
             ->where('rank_total IS NULL')
@@ -69,42 +48,25 @@ class FinalResults extends Control {
         return $count === 0;
     }
 
-    /**
-     * @return ResultsCategoryGrid
-     */
-    public function createComponentResultsCategoryAGrid(): ResultsCategoryGrid {
-        return new ResultsCategoryGrid($this->event, 'A', $this->container);
+    protected function createComponentResultsCategoryAGrid(): ResultsCategoryGrid {
+        return new ResultsCategoryGrid($this->event, 'A', $this->getContext());
     }
 
-    /**
-     * @return ResultsCategoryGrid
-     */
-    public function createComponentResultsCategoryBGrid(): ResultsCategoryGrid {
-        return new ResultsCategoryGrid($this->event, 'B', $this->container);
+    protected function createComponentResultsCategoryBGrid(): ResultsCategoryGrid {
+        return new ResultsCategoryGrid($this->event, 'B', $this->getContext());
     }
 
-    /**
-     * @return ResultsCategoryGrid
-     */
-    public function createComponentResultsCategoryCGrid(): ResultsCategoryGrid {
-        return new ResultsCategoryGrid($this->event, 'C', $this->container);
+    protected function createComponentResultsCategoryCGrid(): ResultsCategoryGrid {
+        return new ResultsCategoryGrid($this->event, 'C', $this->getContext());
     }
 
-    /**
-     * @return ResultsTotalGrid
-     */
-    public function createComponentResultsTotalGrid(): ResultsTotalGrid {
-        return new ResultsTotalGrid($this->event, $this->container);
+    protected function createComponentResultsTotalGrid(): ResultsTotalGrid {
+        return new ResultsTotalGrid($this->event, $this->getContext());
     }
 
-    /**
-     * @return void
-     */
-    public function render() {
+    public function render(): void {
         $this->template->that = $this;
-
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'FinalResults.latte');
-        $this->template->setTranslator($this->translator);
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.finalResults.latte');
         $this->template->render();
     }
 }

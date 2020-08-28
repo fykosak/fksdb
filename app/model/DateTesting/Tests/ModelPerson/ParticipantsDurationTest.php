@@ -2,43 +2,35 @@
 
 namespace FKSDB\DataTesting\Tests\Person;
 
+use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\DataTesting\TestsLogger;
 use FKSDB\DataTesting\TestLog;
-use Nette\Database\Table\GroupedSelection;
-use Nette\Database\Table\Selection;
 
 /**
  * Class ParticipantsDurationTest
- * @package FKSDB\DataTesting\Tests\Person
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ParticipantsDurationTest extends PersonTest {
 
+    private const CONTESTS = [
+        ModelContest::ID_FYKOS => ['thresholds' => [4, 6]],
+        ModelContest::ID_VYFUK => ['thresholds' => [4, 6]],
+    ];
+
     /**
-     * @param ModelPerson $person
-     * @return GroupedSelection
+     * ParticipantsDurationTest constructor.
      */
-    protected function getEventParticipant(ModelPerson $person): Selection {
-        return $person->getEventParticipant();
+    public function __construct() {
+        parent::__construct('participants_duration', _('Participate events'));
     }
 
-    /**
-     * @param TestsLogger $logger
-     * @param ModelPerson $person
-     * @return void
-     */
-    public function run(TestsLogger $logger, ModelPerson $person) {
-        $contestsDefs = [
-            ModelContest::ID_FYKOS => ['thresholds' => [4, 6]],
-            ModelContest::ID_VYFUK => ['thresholds' => [4, 6]]
-        ];
-
-        foreach ($contestsDefs as $contestId => $contestsDef) {
+    public function run(ILogger $logger, ModelPerson $person): void {
+        foreach (self::CONTESTS as $contestId => $contestDef) {
             $max = null;
             $min = null;
-            foreach ($this->getEventParticipant($person) as $row) {
+            foreach ($person->getEventParticipants() as $row) {
                 $model = ModelEventParticipant::createFromActiveRow($row);
                 $event = $model->getEvent();
                 if ($event->getEventType()->contest_id !== $contestId) {
@@ -54,18 +46,12 @@ class ParticipantsDurationTest extends PersonTest {
             $logger->log(new TestLog(
                 $this->getTitle(),
                 \sprintf('Person participate %d years in the events of contestId %d', $delta, $contestId),
-                $this->evaluateThresholds($delta, $contestsDef['thresholds'])
+                $this->evaluateThresholds($delta, $contestDef['thresholds'])
             ));
         }
-
     }
 
-    /**
-     * @param int $delta
-     * @param array $thresholds
-     * @return string
-     */
-    private final function evaluateThresholds(int $delta, array $thresholds): string {
+    final private function evaluateThresholds(int $delta, array $thresholds): string {
         if ($delta < $thresholds[0]) {
             return TestLog::LVL_SUCCESS;
         }
@@ -73,19 +59,5 @@ class ParticipantsDurationTest extends PersonTest {
             return TestLog::LVL_WARNING;
         }
         return TestLog::LVL_DANGER;
-    }
-
-    /**
-     * @return string
-     */
-    public function getAction(): string {
-        return 'participants_duration';
-    }
-
-    /**
-     * @return string
-     */
-    public function getTitle(): string {
-        return _('Participate events');
     }
 }

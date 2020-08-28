@@ -1,0 +1,17 @@
+{block content}
+
+    <h2>{_'Info'}</h2>
+    <p>{$event->report}</p>
+    <ul class="list-group mb-3">
+        {foreach ['event.event_type', 'event.year', 'event.event_year', 'event.begin', 'event.end'] as $fieldName}
+            {control valuePrinter:listItem $fieldName, $event}
+        {/foreach}
+        <li class="list-group-item">
+            <a class="col-12 row" href="{$webUrl}">{_'Event web-site'}</a>
+        </li>
+    </ul>
+    <a class="btn btn-secondary"
+       href="{plink :Org:Event:edit id=>$event->event_id ,contestId => $event->getEventType()->contest_id, year=>$event->year}">{_'Edit'}</a>
+    <h2>{_'Actions'}</h2>
+    {control navigationChooser:board 'Event.Dashboard.default'}
+{/block}

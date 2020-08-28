@@ -10,7 +10,7 @@ use Nette\Database\Table\Selection;
  */
 abstract class AbstractModelSingle extends ActiveRow implements IModel {
 
-    private $tmpData = [];
+    private array $tmpData;
 
     /**
      * AbstractModelSingle constructor.
@@ -21,7 +21,6 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
         parent::__construct($data, $table);
         $this->tmpData = $data;
     }
-
 
     /**
      * @var bool
@@ -45,10 +44,6 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
         $this->stored = !$value;
     }
 
-    /**
-     * @param ActiveRow $row
-     * @return static
-     */
     public static function createFromActiveRow(ActiveRow $row): self {
         if ($row instanceof static) {
             return $row;
@@ -61,16 +56,16 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
     }
 
     /**
-     * @param $key
-     * @param $value
+     * @param string|int $key
+     * @param mixed $value
      */
     public function __set($key, $value) {
         $this->tmpData[$key] = $value;
     }
 
     /**
-     * @param $key
-     * @return bool|mixed|ActiveRow|\Nette\Database\Table\Selection|null
+     * @param int|string $key
+     * @return bool|mixed|ActiveRow|Selection|null
      */
     public function &__get($key) {
         if (array_key_exists($key, $this->tmpData)) {
@@ -80,7 +75,7 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
     }
 
     /**
-     * @param $key
+     * @param string|int $key
      * @return bool
      */
     public function __isset($key): bool {
@@ -90,25 +85,19 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
         return parent::__isset($key);
     }
 
-    /**
-     * @return array
-     */
-    public function getTmpData() {
+    public function getTmpData(): array {
         return $this->tmpData;
     }
 
     /**
-     * @param $key
+     * @param string|int $key
      */
     public function __unset($key) {
         unset($this->tmpData[$key]);
         return parent::__unset($key);
     }
 
-    /**
-     * @return array|mixed
-     */
-    public function toArray() {
+    public function toArray(): array {
         $data = parent::toArray();
         return array_merge($data, $this->tmpData);
     }

@@ -57,7 +57,7 @@ parameters:
             tokenExpiration: '+1 minute'
 
 
-    # Settings for global session used for SSO (single sign on)
+    # Settings for global session used for SSO (single sign on)
     globalSession:
         # How long inactivity is allowed until globalSession expires.
         expiration: '+120 minutes'
@@ -113,15 +113,9 @@ parameters:
             # Výfuk
             2: [6,7,8,9]
 
-        # Paths for search of XML files, including trailing slash.
-        # Arguments: contestName, year, series
-        paths:
-            cs: '/%1$s%2$d/batch%3$d/out/zadaniWeb%3$d-cs.xml'
-            en: '/%1$s%2$d/batch%3$d/out/zadaniWeb%3$d-en.xml'
-
         # Paths for search of new XML files, including trailing slash.
         # Arguments: contestName, year, series
-        paths2: '/%1$s%2$d/batch%3$d/out/zadaniWeb%3$d-new.xml'
+        paths: '/%1$s%2$d/batch%3$d/out/zadaniWeb%3$d-new.xml'
 
     # Generic parameters for Fyziklani
     fyziklani:
@@ -191,16 +185,22 @@ php:
     session.gc_maxlifetime: 1213200
     # zlib.output_compression: yes
 
-nette:
-    database:
-        reflection: discovered
-    application:
-        errorPresenter: Error
-
-    session:
-        expiration: 14 days
-        autoStart: true
-
+database:
+    reflection: discovered
+application:
+    errorPresenter: Core:Error
+    mapping:
+        *: FKSDB\Modules\*Module\*Presenter
+session:
+   expiration: 14 days
+   autoStart: true
+extensions:
+    fksrouter: FKSDB\Config\Extensions\RouterExtension
+    acl: FKSDB\Authorization\ACLExtension
+    navigation: FKSDB\Components\Controls\Navigation\NavigationExtension
+    events: FKSDB\Events\EventsExtension(%appDir%/../app/config/events.neon)
+    payment: FKSDB\Payment\PaymentExtension
+    DBReflection: FKSDB\DBReflection\DBReflectionExtension
 
 includes:
     - router.neon

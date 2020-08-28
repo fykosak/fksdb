@@ -15,21 +15,19 @@ use Nette\Database\Connection;
  */
 class TokenGSIDHolder implements IGSIDHolder {
 
-    const TABLE = 'auth_token';
-    const URL_PARAM = 'at';
-    const SESSION_KEY = '_sso';
+    public const TABLE = 'auth_token';
+    public const URL_PARAM = 'at';
+    public const SESSION_KEY = '_sso';
 
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
+    /** @var bool */
     private $cachedGSID = false;
 
     /**
      * TokenGSIDHolder constructor.
      * @param Connection $connection
      */
-    function __construct(Connection $connection) {
+    public function __construct(Connection $connection) {
         $this->connection = $connection;
     }
 
@@ -53,9 +51,10 @@ class TokenGSIDHolder implements IGSIDHolder {
     }
 
     /**
-     * @param $gsid
+     * @param mixed $gsid
+     * @return void
      */
-    public function setGSID($gsid) {
+    public function setGSID($gsid): void {
         if ($gsid) {
             $_SESSION[self::SESSION_KEY] = $gsid;
             $this->cachedGSID = $gsid;
@@ -66,7 +65,7 @@ class TokenGSIDHolder implements IGSIDHolder {
     }
 
     /**
-     * @param $token
+     * @param string $token
      * @return null
      */
     private function getGSIDFromDB($token) {
@@ -86,5 +85,4 @@ class TokenGSIDHolder implements IGSIDHolder {
             return $row['data'];
         }
     }
-
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons\Deduplication\MergeStrategy;
+namespace FKSDB\Persons\Deduplication\MergeStrategy;
 
 use DateTime;
 use Nette\InvalidArgumentException;
@@ -12,13 +12,13 @@ use Nette\InvalidArgumentException;
  */
 class CompareStrategy implements IMergeStrategy {
 
-    private $sign;
+    private int $sign;
 
     /**
      *
      * @param mixed $compare greater|less
      */
-    function __construct($compare) {
+    public function __construct($compare) {
         if ($compare == 'greater') {
             $this->sign = 1;
         } elseif ($compare == 'less') {
@@ -48,8 +48,8 @@ class CompareStrategy implements IMergeStrategy {
     }
 
     /**
-     * @param $trunk
-     * @param $merged
+     * @param mixed $trunk
+     * @param mixed $merged
      * @return int|string
      */
     private function compare($trunk, $merged) {

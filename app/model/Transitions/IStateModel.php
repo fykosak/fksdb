@@ -7,24 +7,13 @@ use Nette\Database\IConventions;
 
 /**
  * Interface IStateModel
- * @package FKSDB\Transitions
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 interface IStateModel {
-    /**
-     * @param $newState
-     * @return mixed
-     */
-    public function updateState($newState);
 
-    /**
-     * @return string|null
-     */
-    public function getState();
+    public function updateState(string $newState): void;
 
-    /**
-     * @param Context $connection
-     * @param IConventions $conventions
-     * @return IStateModel
-     */
+    public function getState(): ?string;
+
     public function refresh(Context $connection, IConventions $conventions): self;
 }

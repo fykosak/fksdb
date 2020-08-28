@@ -1,22 +1,19 @@
-{layout '../../app/Components/Controls/Events/ApplicationComponent.form.latte'}
+{layout '../../app/Components/Controls/Events/layout.application.form.latte'}
 
 {block content}
-{if $primaryMachine->getState() == '__init' && !$control->isEventAdmin()}
 <ul>
     <li>
         Podrobné informace jsou k nalezení na stránce <a href="http://dsef.cz/">Dne s experimentální fyzikou</a>.
     </li>
     <li n:if="!$control->getPresenter()->getUser()->isLoggedIn()">
         {var $backlink = $control->getPresenter()->storeRequest()}
-        Pokud máš vlastní účet, tak se před prosím vyplněním formuláře <a href="{plink :Authentication:login backlink => $backlink}">přihlas</a>.
-        Ušetříš si tím práci při vyplňování formuláře. 
+        Pokud máš vlastní účet, tak se před prosím vyplněním formuláře <a
+                href="{plink :Authentication:login backlink => $backlink}">přihlas</a>.
+        Ušetříš si tím práci při vyplňování formuláře.
     </li>
     <li>
         Registrace končí <strong>{$event->registration_end|date:'j. n. Y H:i:s'}</strong>.
     </li>
 </ul>
-
-{/if}
-
 
 {control form}

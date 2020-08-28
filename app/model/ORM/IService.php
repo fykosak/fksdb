@@ -3,7 +3,6 @@
 namespace FKSDB\ORM;
 
 use Nette\Database\Table\Selection;
-use Traversable;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -13,21 +12,18 @@ use Traversable;
 interface IService {
 
     /**
-     * @param array|Traversable $data
+     * @param iterable $data
+     * @deprecated
      */
     public function createNew($data = null);
 
-    /**
-     * @param array|Traversable $data
-     * @return IModel
-     */
-    public function createNewModel($data);
+    public function createNewModel(array $data): IModel;
 
     /**
      * @param int $key
-     * @return AbstractModelSingle|AbstractModelMulti|IModel
+     * @return IModel|null
      */
-    public function findByPrimary($key);
+    public function findByPrimary($key): ?IModel;
 
     /**
      * @param IModel $model
@@ -36,28 +32,22 @@ interface IService {
      */
     public function save(IModel &$model);
 
-    /**
-     * @param IModel $model
-     * @return mixed
-     */
-    public function dispose(IModel $model);
+    public function dispose(IModel $model): void;
 
-    /**
-     * @return Selection
-     */
-    public function getTable();
+    public function getTable(): Selection;
 
     /**
      * @param IModel $model
-     * @param $data
+     * @param iterable $data
      * @return mixed
      * @deprecated
      */
     public function updateModel(IModel $model, $data);
 
+    public function updateModel2(IModel $model, array $data): bool;
+
     /**
-     * @return string
-     * @return string|AbstractModelSingle
+     * @return string|AbstractModelSingle|AbstractModelMulti
      */
     public function getModelClassName(): string;
 }

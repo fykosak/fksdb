@@ -1,12 +1,12 @@
 <?php
 
-namespace Events\FormAdjustments;
+namespace FKSDB\Events\FormAdjustments;
 
-use Events\Machine\BaseMachine;
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
-use FormUtils;
+use FKSDB\Utils\FormUtils;
 use Nette\Forms\Form;
 use Nette\Security\User;
 use Nette\SmartObject;
@@ -18,38 +18,27 @@ use Nette\SmartObject;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class Captcha implements IFormAdjustment {
-
     use SmartObject;
 
-    const CONTROL_NAME = 'c_a_p_t_cha';
+    protected const CONTROL_NAME = 'c_a_p_t_cha';
 
-    /**
-     * @var User
-     */
-    private $user;
+    private User $user;
 
     /**
      * Captcha constructor.
      * @param User $user
      */
-    function __construct(User $user) {
+    public function __construct(User $user) {
         $this->user = $user;
     }
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     */
-    public function adjust(Form $form, Machine $machine, Holder $holder) {
-        if ($machine->getPrimaryMachine()->getState() != BaseMachine::STATE_INIT || $this->user->isLoggedIn()) {
+    public function adjust(Form $form, Machine $machine, Holder $holder): void {
+        if ($holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT || $this->user->isLoggedIn()) {
             return;
         }
-
         $control = new CaptchaBox();
 
         $firstSubmit = FormUtils::findFirstSubmit($form);
         $form->addComponent($control, self::CONTROL_NAME, $firstSubmit->getName());
     }
-
 }

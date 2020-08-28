@@ -3,22 +3,18 @@
 namespace FKSDB\DataTesting;
 
 use FKSDB\Messages\Message;
-use FKSDB\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 use Nette\Utils\Html;
 
 /**
  * Class TestLog
- * @package FKSDB\DataTesting
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TestLog extends Message {
-    /**
-     * @var Html
-     */
-    public $detail;
-    /**
-     * @var string
-     */
-    public $testName;
+
+    public ?Html $detail;
+
+    public string $testName;
 
     /**
      * TestLog constructor.
@@ -34,7 +30,7 @@ class TestLog extends Message {
     }
 
     /**
-     * @return array
+     * @return string[]
      */
     public static function getAvailableLevels(): array {
         return [self::LVL_DANGER, self::LVL_WARNING, self::LVL_SUCCESS, self::LVL_INFO];
@@ -55,7 +51,7 @@ class TestLog extends Message {
             case self::LVL_SUCCESS:
                 return 'fa fa-check';
             default:
-                throw new NotImplementedException(\sprintf('%s is not supported', $this->getLevel()));
+                throw new NotImplementedException(\sprintf('Level "%s" is not supported', $this->getLevel()));
         }
     }
 

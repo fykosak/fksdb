@@ -1,8 +1,7 @@
 <?php
 
-namespace Events\Semantics;
+namespace FKSDB\Events\Semantics;
 
-use Nette\Application\BadRequestException;
 use Nette\SmartObject;
 
 /**
@@ -14,29 +13,26 @@ class Parameter {
     use SmartObject;
     use WithEventTrait;
 
+    /** @var mixed */
     private $parameter;
 
     /**
      * Parameter constructor.
-     * @param $parameter
+     * @param string $parameter
      */
-    function __construct($parameter) {
+    public function __construct($parameter) {
         $this->parameter = $parameter;
     }
 
     /**
      * @param array $args
      * @return mixed
-     * @throws BadRequestException
      */
     public function __invoke(...$args) {
         return $this->getHolder($args[0])->getParameter($this->parameter);
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return "param({$this->parameter})";
     }
 

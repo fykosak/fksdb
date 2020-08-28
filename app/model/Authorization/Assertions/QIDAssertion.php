@@ -1,9 +1,11 @@
 <?php
 
-namespace Authorization\Assertions;
+namespace FKSDB\Authorization\Assertions;
 
-use Exports\StoredQuery;
+use FKSDB\StoredQuery\StoredQuery;
 use Nette\InvalidArgumentException;
+use Nette\Security\IResource;
+use Nette\Security\IRole;
 use Nette\Security\Permission;
 use Nette\SmartObject;
 
@@ -16,34 +18,33 @@ class QIDAssertion {
 
     use SmartObject;
 
-    private $qids;
+    private array $qIds;
 
     /**
      * QIDAssertion constructor.
-     * @param $qids
+     * @param array|string $qids
      */
-    function __construct($qids) {
+    public function __construct($qids) {
         if (!is_array($qids)) {
             $qids = [$qids];
         }
-        $this->qids = $qids;
+        $this->qIds = $qids;
     }
 
     /**
      * @param Permission $acl
-     * @param $role
-     * @param $resourceId
-     * @param $privilege
+     * @param IRole $role
+     * @param IResource|string|null $resourceId
+     * @param string|null $privilege
      * @return bool
      */
-    public function __invoke(Permission $acl, $role, $resourceId, $privilege) {
+    public function __invoke(Permission $acl, $role, $resourceId, $privilege): bool {
         $storedQuery = $acl->getQueriedResource();
         if (!$storedQuery instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got \'' . get_class($storedQuery) . '\'.');
         }
-        $qid = isset($storedQuery->getQueryPattern()->qid) ? $storedQuery->getQueryPattern()->qid : null;
-
-        return (bool)$qid && in_array($qid, $this->qids);
+        $qid = $storedQuery->getQId();
+        return (bool)$qid && in_array($qid, $this->qIds);
     }
 
 }

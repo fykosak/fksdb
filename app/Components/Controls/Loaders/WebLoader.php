@@ -11,64 +11,42 @@ use Nette\Application\UI\Control;
  */
 abstract class WebLoader extends Control {
 
-    const FILENAME = 'file';
-    const ATTRIBUTES = 'attr';
-    const UNTAGGED = '__untagged';
-    /**
-     * @var string[]
-     */
-    private $files = [];
-    /**
-     * @var string[]
-     */
-    private $inlines = [];
+    public const FILENAME = 'file';
+    public const ATTRIBUTES = 'attr';
+    public const UNTAGGED = '__untagged';
 
-    /**
-     * @param $file
-     * @param array $attributes
-     */
-    public function addFile(string $file, array $attributes = []) {
+    private array $files = [];
+
+    private array $inlines = [];
+
+    public function addFile(string $file, array $attributes = []): void {
         $hash = $file . join(':', $attributes);
         $this->files[$hash] = [
             self::FILENAME => $file,
             self::ATTRIBUTES => $attributes,
         ];
-        $this->invalidateControl();
+        $this->redrawControl();
     }
 
-    /**
-     * @param $file
-     * @param array $attributes
-     */
-    public function removeFile(string $file, array $attributes = []) {
+    public function removeFile(string $file, array $attributes = []): void {
         $hash = $file . join(':', $attributes);
         unset($this->files[$hash]);
-        $this->invalidateControl();
+        $this->redrawControl();
     }
 
-    /**
-     * @param $inline
-     * @param string $tag
-     */
-    public function addInline(string $inline, string $tag = self::UNTAGGED) {
+    public function addInline(string $inline, string $tag = self::UNTAGGED): void {
         $this->inlines[$tag] = $inline;
-        $this->invalidateControl();
+        $this->redrawControl();
     }
 
-    /**
-     * @param $tag
-     */
-    public function removeInline(string $tag) {
+    public function removeInline(string $tag): void {
         if ($tag != self::UNTAGGED) {
             unset($this->inlines[$tag]);
         }
-        $this->invalidateControl();
+        $this->redrawControl();
     }
 
-    /**
-     * @param mixed ...$args
-     */
-    public function render(...$args) {
+    public function render(...$args): void {
         $files = [];
         if (count($args) == 1 && is_array($args[0])) {
             foreach ($args[0] as $file => $attributes) {
@@ -87,43 +65,29 @@ abstract class WebLoader extends Control {
         }
 
         $template = $this->createTemplate();
-        $template->setFile($this->getTemplateFilePrefix() . '.files.latte');
+        $template->setFile($this->getDir() . 'layout.files.latte');
         $template->files = array_merge($files, $this->getFiles());
         $template->render();
     }
 
-    public function renderInline() {
+    public function renderInline(): void {
         $template = $this->createTemplate();
-        $template->setFile($this->getTemplateFilePrefix() . '.inlines.latte');
+        $template->setFile($this->getDir() . 'layout.inlines.latte');
         $template->inlines = $this->getInLines();
         $template->render();
     }
 
-    /**
-     * @param $file
-     * @return bool
-     */
     public static function isRelative(string $file): bool {
         return !preg_match('@https?://|/@Ai', $file);
     }
 
-    /**
-     * @return string
-     */
-    abstract protected function getTemplateFilePrefix(): string;
-
-    /**
-     * @return array
-     */
     protected function getFiles(): array {
         return $this->files;
     }
 
-    /**
-     * @return array
-     */
     protected function getInLines(): array {
         return $this->inlines;
     }
 
+    abstract protected function getDir(): string;
 }

@@ -2,70 +2,46 @@
 
 namespace FKSDB\DataTesting\Tests\Person;
 
-use FKSDB\Components\DatabaseReflection\AbstractRow;
-use FKSDB\Components\Forms\Factories\ITestedRowFactory;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
-use Nette\Application\BadRequestException;
+use FKSDB\DBReflection\ColumnFactories\ITestedColumnFactory;
+use FKSDB\DBReflection\DBReflectionFactory;
+use FKSDB\Exceptions\BadTypeException;
 
 /**
  * Class PersonFileLevelTest
- * @package FKSDB\DataTesting\Tests\Person
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class PersonFileLevelTest extends PersonTest {
-    /**
-     * @var AbstractRow|ITestedRowFactory
-     */
-    private $rowFactory;
-    /**
-     * @var string
-     */
-    private $actionName;
+
+    private ITestedColumnFactory $rowFactory;
+
+    private string $fieldName;
+
+    private DBReflectionFactory $tableReflectionFactory;
 
     /**
-     * AbstractPhoneNumber constructor.
-     * @param TableReflectionFactory $tableReflectionFactory
-     * @param string $factoryTableName
-     * @param string $factoryFieldName
-     * @throws BadRequestException
+     * PersonFileLevelTest constructor.
+     * @param DBReflectionFactory $tableReflectionFactory
+     * @param string $fieldName
+     * @throws BadTypeException
      */
-    public function __construct(TableReflectionFactory $tableReflectionFactory, string $factoryTableName, string $factoryFieldName) {
-        $this->actionName = $factoryTableName . '__' . $factoryFieldName;
-        $this->loadFactory($tableReflectionFactory, $factoryTableName, $factoryFieldName);
+    public function __construct(DBReflectionFactory $tableReflectionFactory, string $fieldName) {
+        $this->fieldName = $fieldName;
+        $this->tableReflectionFactory = $tableReflectionFactory;
+        parent::__construct(str_replace('.', '__', $fieldName), $this->getRowFactory()->getTitle());
     }
 
     /**
-     * @param TableReflectionFactory $tableReflectionFactory
-     * @param string $factoryTableName
-     * @param string $factoryFieldName
-     * @throws BadRequestException
-     * @throws \Exception
+     * @return ITestedColumnFactory
+     * @throws BadTypeException
      */
-    private final function loadFactory(TableReflectionFactory $tableReflectionFactory, string $factoryTableName, string $factoryFieldName) {
-        $rowFactory = $tableReflectionFactory->loadService($factoryTableName, $factoryFieldName);
-        if (!$rowFactory instanceof ITestedRowFactory) {
-            throw new BadRequestException();
+    final protected function getRowFactory(): ITestedColumnFactory {
+        if (!isset($this->rowFactory)) {
+            $rowFactory = $this->tableReflectionFactory->loadColumnFactory($this->fieldName);
+            if (!$rowFactory instanceof ITestedColumnFactory) {
+                throw new BadTypeException(ITestedColumnFactory::class, $this->rowFactory);
+            }
+            $this->rowFactory = $rowFactory;
         }
-        $this->rowFactory = $rowFactory;
-    }
-
-    /**
-     * @return AbstractRow|ITestedRowFactory
-     */
-    protected final function getRowFactory(): AbstractRow {
         return $this->rowFactory;
-    }
-
-    /**
-     * @return string
-     */
-    public final function getTitle(): string {
-        return $this->getRowFactory()->getTitle();
-    }
-
-    /**
-     * @return string
-     */
-    public final function getAction(): string {
-        return $this->actionName;
     }
 }

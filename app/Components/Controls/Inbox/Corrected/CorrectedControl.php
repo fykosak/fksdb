@@ -3,33 +3,35 @@
 namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\ILogger;
-use FKSDB\Submits\FilesystemCorrectedSubmitStorage;
+use FKSDB\Submits\FileSystemStorage\CorrectedStorage;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 
 /**
- * Class CorrectedFormControl
- * @package FKSDB\Components\Controls\Upload
+ * Class CorrectedControl
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class CorrectedControl extends SeriesTableControl {
+class CorrectedControl extends SeriesTableComponent {
 
-    /**
-     * @inheritDoc
-     */
-    public function render() {
-        $correctedSubmitStorage = $this->getContext()->getByType(FilesystemCorrectedSubmitStorage::class);
-        $this->template->correctedSubmitStorage = $correctedSubmitStorage;
+    private CorrectedStorage $correctedStorage;
+
+    public function injectCorrectedStorage(CorrectedStorage $correctedStorage): void {
+        $this->correctedStorage = $correctedStorage;
+    }
+
+    public function render(): void {
+        $this->template->correctedSubmitStorage = $this->correctedStorage;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
     }
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
-    public function createComponentForm(): FormControl {
+    protected function createComponentForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
         $form->addTextArea('submits', _('Submits'))->setOption('description', _('Comma separated submitIDs'));
@@ -44,7 +46,7 @@ class CorrectedControl extends SeriesTableControl {
      * @param Form $form
      * @throws AbortException
      */
-    private function handleSuccess(Form $form) {
+    private function handleSuccess(Form $form): void {
         $values = $form->getValues();
         $ids = [];
         foreach (\explode(',', $values['submits']) as $value) {

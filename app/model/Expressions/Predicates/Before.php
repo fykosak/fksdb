@@ -19,7 +19,7 @@ class Before extends EvaluatedExpression {
      * Before constructor.
      * @param \DateTimeInterface|callable $datetime
      */
-    function __construct($datetime) {
+    public function __construct($datetime) {
         $this->datetime = $datetime;
     }
 
@@ -35,10 +35,7 @@ class Before extends EvaluatedExpression {
         return $datetime->getTimestamp() >= time();
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return "now <= {$this->datetime}";
     }
 

@@ -10,13 +10,9 @@ namespace FKSDB\Components\Forms\Containers;
  */
 interface IWriteOnly {
 
-    const VALUE_ORIGINAL = '__original';
+    public const VALUE_ORIGINAL = '__original';
 
-    /**
-     * @param bool $value
-     * @return mixed
-     */
-    public function setWriteOnly($value = true);
+    public function setWriteOnly(bool $value = true): void;
 
-    public function getWriteOnly();
+    public function getWriteOnly(): bool;
 }

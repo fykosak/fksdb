@@ -8,13 +8,11 @@ use FKSDB\Payment\Price;
 
 /**
  * Class EventPrice
- * @package FKSDB\Payment\PriceCalculator\PreProcess
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class EventPrice extends AbstractPreProcess {
-    /**
-     * @var ServiceEventParticipant
-     */
-    private $serviceEventParticipant;
+class EventPrice implements IPreprocess {
+
+    private ServiceEventParticipant $serviceEventParticipant;
 
     /**
      * EventPrice constructor.
@@ -24,10 +22,6 @@ class EventPrice extends AbstractPreProcess {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
-    /**
-     * @param ModelPayment $modelPayment
-     * @return Price
-     */
     public static function calculate(ModelPayment $modelPayment): Price {
         /* $price = new Price(0, $modelPayment->currency);
          $ids = $this->getData($modelPayment);
@@ -39,10 +33,6 @@ class EventPrice extends AbstractPreProcess {
         return new Price(0, $modelPayment->currency);
     }
 
-    /**
-     * @param ModelPayment $modelPayment
-     * @return array
-     */
     public static function getGridItems(ModelPayment $modelPayment): array {
         /*$price = new Price(0, $modelPayment->currency);
         $items = [];

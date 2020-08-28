@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Components\Forms\OptimisticForm;
-use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\Submits\SeriesTable;
 use Nette\Application\AbortException;
@@ -13,13 +12,14 @@ use Nette\DI\Container;
 
 /**
  * Class PointsFormControl
- * @package FKSDB\Components\Controls\Inbox
+ * *
  */
 class PointsFormControl extends SeriesTableFormControl {
-    /**
-     * @var callable
-     */
+
+    /** @var callable */
     private $invalidCacheCallback;
+
+    private ServiceSubmit $serviceSubmit;
 
     /**
      * PointsFormControl constructor.
@@ -33,33 +33,34 @@ class PointsFormControl extends SeriesTableFormControl {
         $this->invalidCacheCallback = $invalidCacheCallback;
     }
 
+    public function injectServiceSubmit(ServiceSubmit $serviceSubmit): void {
+        $this->serviceSubmit = $serviceSubmit;
+    }
+
     /**
      * @param Form $form
      * @throws AbortException
      * @throws ForbiddenRequestException
      */
-    protected function handleFormSuccess(Form $form) {
-        /** @var ServiceSubmit $serviceSubmit */
-        $serviceSubmit = $this->getContext()->getByType(ServiceSubmit::class);
+    protected function handleFormSuccess(Form $form): void {
         foreach ($form->getHttpData()['submits'] as $submitId => $points) {
             if (!$this->getSeriesTable()->getSubmits()->where('submit_id', $submitId)->fetch()) {
                 // secure check for rewrite submitId.
                 throw new ForbiddenRequestException();
             }
-            /** @var ModelSubmit $submit */
-            $submit = $serviceSubmit->findByPrimary($submitId);
+            $submit = $this->serviceSubmit->findByPrimary($submitId);
             if ($points !== "" && $points !== $submit->raw_points) {
-                $serviceSubmit->updateModel2($submit, ['raw_points' => +$points]);
+                $this->serviceSubmit->updateModel2($submit, ['raw_points' => +$points]);
             } elseif (!is_null($submit->raw_points) && $points === "") {
-                $serviceSubmit->updateModel2($submit, ['raw_points' => null]);
+                $this->serviceSubmit->updateModel2($submit, ['raw_points' => null]);
             }
         }
         ($this->invalidCacheCallback)();
-        $this->invalidateControl();
+        $this->redrawControl();
         $this->getPresenter()->redirect('this');
     }
 
-    public function render() {
+    public function render(): void {
         $form = $this->getComponent('form');
         if ($form instanceof OptimisticForm) {
             $form->setDefaults();

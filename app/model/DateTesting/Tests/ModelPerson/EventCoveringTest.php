@@ -3,26 +3,27 @@
 namespace FKSDB\DataTesting\Tests\Person;
 
 use FKSDB\DataTesting\TestLog;
+use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\DataTesting\TestsLogger;
 
 /**
  * Class EventCoveringTest
- * @package FKSDB\DataTesting\Tests\Person
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventCoveringTest extends PersonTest {
-
     /**
-     * @param TestsLogger $logger
-     * @param ModelPerson $person
-     * @return void
+     * EventCoveringTest constructor.
      */
-    public function run(TestsLogger $logger, ModelPerson $person) {
+    public function __construct() {
+        parent::__construct('organization_participation_same_year', _('Organization and participation at same year'));
+    }
+
+    public function run(ILogger $logger, ModelPerson $person): void {
         $contestantYears = [
             ModelContest::ID_FYKOS => [],
             ModelContest::ID_VYFUK => [],
@@ -31,7 +32,7 @@ class EventCoveringTest extends PersonTest {
             ModelContest::ID_FYKOS => [],
             ModelContest::ID_VYFUK => [],
         ];
-        foreach ($person->getEventParticipant() as $row) {
+        foreach ($person->getEventParticipants() as $row) {
             $eventParticipant = ModelEventParticipant::createFromActiveRow($row);
             $year = $eventParticipant->getEvent()->year;
             $contestId = $eventParticipant->getEvent()->getContest()->contest_id;
@@ -53,14 +54,7 @@ class EventCoveringTest extends PersonTest {
         $this->check($logger, $contestantYears, $eventOrgYears, 'contestant', $person);
     }
 
-    /**
-     * @param TestsLogger $logger
-     * @param int[][] $data
-     * @param array $orgs
-     * @param string $type
-     * @param ModelPerson $person
-     */
-    private function check(TestsLogger $logger, array $data, array $orgs, string $type, ModelPerson $person) {
+    private function check(ILogger $logger, array $data, array $orgs, string $type, ModelPerson $person): void {
         foreach ($data as $contestId => $contestYears) {
             foreach ($contestYears as $year) {
                 if (\in_array($year, $orgs[$contestId])) {
@@ -73,37 +67,24 @@ class EventCoveringTest extends PersonTest {
                         if ($org->until >= $year && $org->since <= $year) {
                             $logger->log($this->createLog($year, $contestId, $type, 'org'));
                         }
-                    } else {
-                        if ($org->since <= $year) {
-                            $logger->log($this->createLog($year, $contestId, $type, 'org'));
-                        }
+                    } elseif ($org->since <= $year) {
+                        $logger->log($this->createLog($year, $contestId, $type, 'org'));
                     }
                 }
             }
         }
     }
 
-    /**
-     * @param int $year
-     * @param int $contestId
-     * @param string $typeP
-     * @param string $typeO
-     * @return TestLog
-     */
-    private function createLog(int $year, int $contestId, string $typeP, string $typeO) {
+    private function createLog(int $year, int $contestId, string $typeP, string $typeO): TestLog {
         return new TestLog($this->getTitle(), \sprintf(_('Organization and participation at same year %d and contestId %d %s<->%s. '), $year, $contestId, $typeP, $typeO), TestLog::LVL_DANGER);
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return array
-     */
     private function getEventOrgYears(ModelPerson $person): array {
         $eventOrgYears = [
             ModelContest::ID_FYKOS => [],
             ModelContest::ID_VYFUK => [],
         ];
-        foreach ($person->getEventOrg() as $row) {
+        foreach ($person->getEventOrgs() as $row) {
             $eventOrg = ModelEventOrg::createFromActiveRow($row);
             $year = $eventOrg->getEvent()->year;
             $contestId = $eventOrg->getEvent()->getContest()->contest_id;
@@ -112,19 +93,5 @@ class EventCoveringTest extends PersonTest {
             }
         }
         return $eventOrgYears;
-    }
-
-    /**
-     * @return string
-     */
-    public function getTitle(): string {
-        return _('Organization and participation at same year');
-    }
-
-    /**
-     * @return string
-     */
-    public function getAction(): string {
-        return 'organization_participation_same_year';
     }
 }
