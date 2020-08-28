@@ -1,10 +1,12 @@
 <?php
 
-namespace Persons\Deduplication;
+namespace FKSDB\Persons\Deduplication;
 
-use FKSDB\Config\GlobalParameters;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelPersonInfo;
 use FKSDB\ORM\Services\ServicePerson;
 use Nette\Database\Table\ActiveRow;
+use Nette\DI\Container;
 use Nette\Utils\Strings;
 
 /**
@@ -14,37 +16,30 @@ use Nette\Utils\Strings;
  */
 class DuplicateFinder {
 
-    const IDX_PERSON = 'person';
-    const IDX_SCORE = 'score';
-    const DIFFERENT_PATTERN = 'not-same';
+    public const IDX_PERSON = 'person';
+    public const IDX_SCORE = 'score';
+    public const DIFFERENT_PATTERN = 'not-same';
 
-    /**
-     * @var \FKSDB\ORM\Services\ServicePerson
-     */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $parameters;
 
     /**
      * DuplicateFinder constructor.
-     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
-     * @param GlobalParameters $parameters
+     * @param ServicePerson $servicePerson
+     * @param Container $container
      */
-    function __construct(ServicePerson $servicePerson, GlobalParameters $parameters) {
+    public function __construct(ServicePerson $servicePerson, Container $container) {
         $this->servicePerson = $servicePerson;
-        $this->parameters = $parameters['deduplication']['finder'];
+        $this->parameters = $container->getParameters()['deduplication']['finder'];
     }
 
-    /**
-     * @return array
-     */
-    public function getPairs() {
+    public function getPairs(): array {
         $buckets = [];
         /* Create buckets for quadratic search. */
-        foreach ($this->servicePerson->getTable()->select("person.*, person_info:email, person_info:duplicates, person_info:person_id AS 'PI'") as $person) {
+        /** @var ModelPerson $person */
+        foreach ($this->servicePerson->getTable()->select("person.*, :person_info.email, :person_info.duplicates, :person_info.person_id AS 'PI'") as $person) {
             $bucketKey = $this->getBucketKey($person);
             if (!isset($buckets[$bucketKey])) {
                 $buckets[$bucketKey] = [];
@@ -74,24 +69,20 @@ class DuplicateFinder {
         return $pairs;
     }
 
-    /**
-     * @param ActiveRow $row
-     * @return string
-     */
-    private function getBucketKey(ActiveRow $row) {
+    private function getBucketKey(ModelPerson $row): string {
         $fam = Strings::webalize($row->family_name);
         return substr($fam, 0, 3) . substr($fam, -1);
         //return $row->gender . mb_substr($row->family_name, 0, 2);
     }
 
     /**
+     * @param ModelPerson|ModelPersonInfo $a
+     * @param ModelPerson|ModelPersonInfo $b
+     * @return float
      * @todo Implement more than binary score.
      *
-     * @param ActiveRow $a
-     * @param ActiveRow $b
-     * @return float
      */
-    private function getSimilarityScore(ActiveRow $a, ActiveRow $b) {
+    private function getSimilarityScore(ModelPerson $a, ModelPerson $b) {
         /*
          * Check explixit difference
          */
@@ -107,7 +98,7 @@ class DuplicateFinder {
          */
         if (!$a->PI || !$b->PI) { // if person_info records don't exist
             $emailScore = 0.5; // cannot say anything
-        } else if (!$a->email || !$b->email) {
+        } elseif (!$a->email || !$b->email) {
             $emailScore = 0.8; // a little bit more
         } else {
             $emailScore = 1 - $this->relativeDistance($a->email, $b->email);
@@ -121,10 +112,10 @@ class DuplicateFinder {
     }
 
     /**
-     * @param ActiveRow $person
+     * @param ActiveRow|ModelPersonInfo $person
      * @return array
      */
-    private function getDifferentPersons(ActiveRow $person) {
+    private function getDifferentPersons(ActiveRow $person): array {
         if (!isset($person->duplicates)) {
             return [];
         }
@@ -138,8 +129,8 @@ class DuplicateFinder {
     }
 
     /**
-     * @param $a
-     * @param $b
+     * @param string $a
+     * @param string $b
      * @return float|int
      */
     private function stringScore($a, $b) {
@@ -147,8 +138,8 @@ class DuplicateFinder {
     }
 
     /**
-     * @param $a
-     * @param $b
+     * @param string $a
+     * @param string $b
      * @return float|int
      */
     private function relativeDistance($a, $b) {
@@ -160,4 +151,3 @@ class DuplicateFinder {
     }
 
 }
-

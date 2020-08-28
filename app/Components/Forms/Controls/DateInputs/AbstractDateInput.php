@@ -4,55 +4,50 @@ namespace FKSDB\Components\Forms\Controls\DateInputs;
 
 use Nette\Utils\DateTime;
 use Nette\Forms\Controls\TextInput;
+use Nette\Utils\Html;
 
 /**
  * Class AbstractDateInput
- * @package FKSDB\Components\Forms\Controls\DateInputs
+ * @author Michal Červeňák <miso@fykos.cz>
+ * @property \DateTimeInterface $value
  */
 abstract class AbstractDateInput extends TextInput {
 
+    protected string $format;
+
     /**
      * AbstractDateInput constructor.
+     * @param string $type
+     * @param string $format
      * @param null $label
-     * @param null $cols
      * @param null $maxLength
      */
-    public function __construct($label = NULL, $cols = NULL, $maxLength = NULL) {
-        parent::__construct($label, $cols, $maxLength);
-        $this->setType($this->getType());
+    public function __construct(string $type, string $format, $label = null, $maxLength = null) {
+        $this->format = $format;
+        parent::__construct($label, $maxLength);
+        $this->setType($type);
     }
 
-    /**
-     * @return \Nette\Utils\Html
-     */
-    public function getControl() {
+    public function getControl(): Html {
         $control = parent::getControl();
         if ($this->value) {
-            $control->value = $this->value->format($this->getFormat());
+            $control->value = $this->value->format($this->format);
         }
-
         return $control;
     }
 
     /**
-     * @param $value
-     * @return \Nette\Forms\Controls\TextBase|void
+     * @param string|DateTime $value
+     * @return static
      */
     public function setValue($value) {
-        if ($value) {
+        if (is_string($value)) {
             $this->value = DateTime::from($value);
+        } elseif ($value instanceof \DateInterval) {
+            $this->value = (new DateTime())->setTime($value->h, $value->m, $value->s);
         } else {
             $this->value = null;
         }
+        return $this;
     }
-
-    /**
-     * @return string|"datetime-local"|"month"|time"|"date"|"week"
-     */
-    abstract protected function getType(): string;
-
-    /**
-     * @return string
-     */
-    abstract protected function getFormat(): string;
 }

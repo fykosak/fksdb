@@ -1,5 +1,5 @@
-import { CurveFactory } from 'd3-shape';
 import { PointData } from '@apps/fyziklaniResults/statistics/middleware/charts/lines';
+import { CurveFactory } from 'd3-shape';
 
 export type LineChartData = Array<{
     name: string;

@@ -6,6 +6,8 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelTask;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -13,41 +15,22 @@ use FKSDB\ORM\Models\ModelTask;
 class ServiceTask extends AbstractServiceSingle {
 
     /**
-     * @return string
+     * ServiceTask constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
      */
-    public function getModelClassName(): string {
-        return ModelTask::class;
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_TASK, ModelTask::class);
     }
 
-    /**
-     * @return string
-     */
-    protected function getTableName(): string {
-        return DbNames::TAB_TASK;
-    }
-
-    /**
-     * Syntactic sugar.
-     *
-     * @param \FKSDB\ORM\Models\ModelContest $contest
-     * @param int $year
-     * @param int $series
-     * @param int $tasknr
-     * @return \FKSDB\ORM\Models\ModelTask|null
-     */
-    public function findBySeries(ModelContest $contest, $year, $series, $tasknr) {
+    public function findBySeries(ModelContest $contest, int $year, int $series, int $tasknr): ?ModelTask {
+        /** @var ModelTask $result */
         $result = $this->getTable()->where([
             'contest_id' => $contest->contest_id,
             'year' => $year,
             'series' => $series,
             'tasknr' => $tasknr,
         ])->fetch();
-
-        if ($result !== false) {
-            return ModelTask::createFromActiveRow($result);
-        } else {
-            return null;
-        }
+        return $result ?: null;
     }
-
 }

@@ -9,22 +9,17 @@ use Nette\Database\Table\ActiveRow;
 
 /**
  * Class ModelSchedulePayment
- * @package FKSDB\ORM\Models\Schedule
+ * *
  * @property-read ActiveRow payment
  * @property-read ActiveRow person_schedule
  * @property-read int person_schedule_id
  */
 class ModelSchedulePayment extends AbstractModelSingle implements IPaymentReferencedModel {
-    /**
-     * @return ModelPayment
-     */
+
     public function getPayment(): ModelPayment {
         return ModelPayment::createFromActiveRow($this->payment);
     }
 
-    /**
-     * @return ModelPersonSchedule
-     */
     public function getPersonSchedule(): ModelPersonSchedule {
         return ModelPersonSchedule::createFromActiveRow($this->person_schedule);
     }

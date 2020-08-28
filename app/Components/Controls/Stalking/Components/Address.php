@@ -2,30 +2,18 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
+use FKSDB\DBReflection\FieldLevelPermission;
+use FKSDB\ORM\Models\ModelPerson;
+
 /**
  * Class Address
- * @package FKSDB\Components\Controls\Stalking
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class Address extends AbstractStalkingComponent {
-
-    public function render() {
-        $this->beforeRender();
-        $this->template->MAddress = $this->modelPerson->getMPostContacts();
-        $this->template->setFile(__DIR__ . '/Address.latte');
+class Address extends StalkingControl {
+    public function render(ModelPerson $person, int $userPermissions): void {
+        $this->beforeRender($person, _('Addresses'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
+        $this->template->MAddress = $person->getMPostContacts();
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.address.latte');
         $this->template->render();
-    }
-
-    /**
-     * @return string
-     */
-    protected function getHeadline(): string {
-        return _('Address');
-    }
-
-    /**
-     * @return string[]
-     */
-    protected function getAllowedPermissions(): array {
-        return [AbstractStalkingComponent::PERMISSION_FULL ,AbstractStalkingComponent::PERMISSION_RESTRICT];
     }
 }

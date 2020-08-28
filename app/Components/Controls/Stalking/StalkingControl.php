@@ -2,105 +2,53 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
-use FKSDB\Components\Controls\Helpers\Badges\ContestBadge;
-use FKSDB\Components\Controls\Helpers\Badges\NoRecordsBadge;
-use FKSDB\Components\Controls\Helpers\Badges\PermissionDeniedBadge;
-use FKSDB\Components\Controls\Stalking\Helpers\EventLabelControl;
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\Components\Controls\Badges\ContestBadge;
+use FKSDB\Components\Controls\Badges\NoRecordsBadge;
+use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
+use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Components\Controls\DBReflection\LinkPrinterComponent;
+use FKSDB\Components\Controls\DBReflection\ValuePrinterComponent;
+use FKSDB\DBReflection\DBReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
-use Nette\Application\UI\Control;
-use Nette\Localization\ITranslator;
-use Nette\Templating\FileTemplate;
 
 /**
  * Class StalkingControl
- * @package FKSDB\Components\Controls\Stalking
- * @property FileTemplate $template
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class StalkingControl extends Control {
+abstract class StalkingControl extends BaseComponent {
 
-    const PERMISSION_FULL = 1024;
-    const PERMISSION_RESTRICT = 128;
-    const PERMISSION_BASIC = 16;
-    const PERMISSION_USE_FIELD_LEVEL = 2048;
+    protected DBReflectionFactory $tableReflectionFactory;
 
-    /**
-     * @var int
-     */
-    protected $userPermissions;
-    /**
-     * @var ModelPerson;
-     */
-    protected $modelPerson;
-    /**
-     * @var ITranslator
-     */
-    protected $translator;
-
-    /**
-     * @var TableReflectionFactory
-     */
-    protected $tableReflectionFactory;
-
-    /**
-     * StalkingComponent constructor.
-     * @param ModelPerson $modelPerson
-     * @param TableReflectionFactory $tableReflectionFactory
-     * @param ITranslator $translator
-     * @param int $userPermissions
-     */
-    public function __construct(ModelPerson $modelPerson, TableReflectionFactory $tableReflectionFactory, ITranslator $translator, int $userPermissions) {
-        parent::__construct();
-        $this->userPermissions = $userPermissions;
-        $this->modelPerson = $modelPerson;
-        $this->translator = $translator;
+    public function injectPrimary(DBReflectionFactory $tableReflectionFactory): void {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    public function beforeRender() {
-        $this->template->setTranslator($this->translator);
-        $this->template->userPermissions = $this->userPermissions;
-        $this->template->gender = $this->modelPerson->gender;
-    }
-
-    /**
-     * @return ContestBadge
-     */
-    public function createComponentContestBadge(): ContestBadge {
-        return new ContestBadge();
-    }
-
-    /**
-     * @return PermissionDeniedBadge
-     */
-    public function createComponentPermissionDenied(): PermissionDeniedBadge {
-        return new PermissionDeniedBadge($this->translator);
-    }
-
-    /**
-     * @return EventLabelControl
-     */
-    public function createComponentEventLabel(): EventLabelControl {
-        return new EventLabelControl();
-    }
-
-    /**
-     * @return \FKSDB\Components\Controls\Helpers\Badges\NoRecordsBadge
-     */
-    public function createComponentNoRecords(): NoRecordsBadge {
-        return new NoRecordsBadge($this->translator);
-    }
-
-    /**
-     * @param string $name
-     * @return \Nette\ComponentModel\IComponent|null
-     * @throws \Exception
-     */
-    public function createComponent($name) {
-        $printerComponent = $this->tableReflectionFactory->createComponent($name, $this->userPermissions);
-        if ($printerComponent) {
-            return $printerComponent;
+    public function beforeRender(ModelPerson $person, string $headline, int $userPermissions, int $minimalPermissions): void {
+        $this->template->gender = $person->gender;
+        $this->template->headline = $headline;
+        if ($userPermissions < $minimalPermissions) {
+            $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.permissionDenied.latte');
+            $this->template->render();
         }
-        return parent::createComponent($name);
+    }
+
+    protected function createComponentContestBadge(): ContestBadge {
+        return new ContestBadge($this->getContext());
+    }
+
+    protected function createComponentPermissionDenied(): PermissionDeniedBadge {
+        return new PermissionDeniedBadge($this->getContext());
+    }
+
+    protected function createComponentNoRecords(): NoRecordsBadge {
+        return new NoRecordsBadge($this->getContext());
+    }
+
+    protected function createComponentValuePrinter(): ValuePrinterComponent {
+        return new ValuePrinterComponent($this->getContext());
+    }
+
+    protected function createComponentLinkPrinter(): LinkPrinterComponent {
+        return new LinkPrinterComponent($this->getContext());
     }
 }

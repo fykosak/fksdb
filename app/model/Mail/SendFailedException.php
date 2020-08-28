@@ -1,6 +1,6 @@
 <?php
 
-namespace Mail;
+namespace FKSDB\Mail;
 
 use Nette\Mail\Message;
 use RuntimeException;
@@ -12,9 +12,7 @@ use RuntimeException;
  */
 class SendFailedException extends RuntimeException {
 
-    /**
-     * @var Message
-     */
+    /** @var Message */
     public $message;
 
     /**

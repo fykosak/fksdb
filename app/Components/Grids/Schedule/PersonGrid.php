@@ -3,25 +3,26 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\NotImplementedException;
-use FKSDB\ORM\DbNames;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
-use Nette\Application\BadRequestException;
+use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
+use Nette\Application\UI\Presenter;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\GridException;
 
 /**
- * Class PersonsGrid
- * @package FKSDB\Components\Grids\Schedule
+ * Class PersonGrid
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonGrid extends BaseGrid {
 
     /**
      * @param ModelEvent $event
      * @param ModelPerson $person
+     * @return void
      */
     public function setData(ModelEvent $event, ModelPerson $person) {
         $query = $person->getScheduleForEvent($event);
@@ -32,45 +33,46 @@ class PersonGrid extends BaseGrid {
     /**
      * @param ModelPerson|null $person
      * @param ModelEvent|null $event
-     * @throws BadRequestException
+     * @throws \InvalidArgumentException
      * @throws GridException
      */
-    public function render(ModelPerson $person = null, ModelEvent $event = null) {
+    public function render(ModelPerson $person = null, ModelEvent $event = null): void {
         if (!$event || !$person) {
-            throw new BadRequestException();
+            throw new \InvalidArgumentException();
         }
         $this->setData($event, $person);
         parent::render();
     }
 
     /**
-     * @param $presenter
+     * @param Presenter $presenter
+     * @return void
      * @throws DuplicateColumnException
-     * @throws NotImplementedException
+     * @throws BadTypeException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
 
         $this->addColumn('person_schedule_id', _('#'));
-        $this->addColumn('group_label', _('Group'))->setRenderer(function ($row) {
+        $this->addColumn('group_label', _('Group'))->setRenderer(function ($row): string {
             $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->getScheduleItem()->getScheduleGroup()->getLabel();
         });
-        $this->addColumn('item_label', _('Item'))->setRenderer(function ($row) {
+        $this->addColumn('item_label', _('Item'))->setRenderer(function ($row): string {
             $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->getScheduleItem()->getLabel();
         });
-        $this->addJoinedColumn(DbNames::TAB_SCHEDULE_ITEM, 'price_czk', function ($row) {
+        $this->addJoinedColumn('schedule_item.price_czk', function ($row): ModelScheduleItem {
             $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->getScheduleItem();
         });
-        $this->addJoinedColumn(DbNames::TAB_SCHEDULE_ITEM, 'price_eur', function ($row) {
+        $this->addJoinedColumn('schedule_item.price_eur', function ($row): ModelScheduleItem {
             $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->getScheduleItem();
         });
 
-        $this->addColumns(['referenced.payment_id']);
+        $this->addColumns(['payment.payment']);
 
         $this->addColumn('state', _('State'))->setRenderer(function ($row) {
             $model = ModelPersonSchedule::createFromActiveRow($row);
@@ -78,9 +80,6 @@ class PersonGrid extends BaseGrid {
         });
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelPersonSchedule::class;
     }

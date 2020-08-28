@@ -13,16 +13,22 @@ abstract class EvaluatedExpression {
     use SmartObject;
 
     /**
-     * @param $evaluated
-     * @param $args
+     * @param mixed $evaluated
+     * @param mixed $args
      * @return mixed
      */
-    protected function evalArg($evaluated, $args) {
+    final protected function evaluateArgument($evaluated, ...$args) {
         if (is_callable($evaluated)) {
-            return call_user_func_array($evaluated, $args);
+            return $evaluated(...$args);
         } else {
             return $evaluated;
         }
     }
+
+    /**
+     * @param array ...$args
+     * @return mixed
+     */
+    abstract public function __invoke(...$args);
 
 }

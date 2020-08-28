@@ -4,6 +4,8 @@ namespace FKSDB\Components\Forms;
 
 use LogicException;
 use Nette\Application\UI\Form;
+use Nette\ComponentModel\IComponent;
+use Nette\Forms\Controls\HiddenField;
 
 /**
  * Form that uses optimistic locking to control multiple user access.
@@ -12,27 +14,13 @@ use Nette\Application\UI\Form;
  */
 class OptimisticForm extends Form {
 
-    const FINGERPRINT = '__fp';
+    private const FINGERPRINT = '__fp';
 
-    /**
-     * @var callable
-     */
+    /** @var callable */
     private $fingerprintCallback;
 
-    /**
-     * @var callable
-     */
+    /** @var callable */
     private $defaultsCallback;
-
-    /**
-     * @var string
-     */
-    private $customError;
-
-    /**
-     * @var boolean
-     */
-    private $refreshOnConflict = true;
 
     /**
      *
@@ -41,49 +29,17 @@ class OptimisticForm extends Form {
      */
     public function __construct(callable $fingerprintCallback, callable $defaultsCallback) {
         parent::__construct();
-
         $this->fingerprintCallback = $fingerprintCallback;
         $this->defaultsCallback = $defaultsCallback;
-
         $this->addHidden(self::FINGERPRINT);
     }
 
     /**
-     * @return string
-     */
-    public function getCustomError() {
-        return $this->customError;
-    }
-
-    /**
-     * @param $customError
-     */
-    public function setCustomError($customError) {
-        $this->customError = $customError;
-    }
-
-    /**
-     * @return bool
-     */
-    public function getRefreshOnConflict() {
-        return $this->refreshOnConflict;
-    }
-
-    /**
-     * Sets whether form values are refreshed when conflict occured.
-     *
-     * @param boolean $refreshOnConflict
-     */
-    public function setRefreshOnConflict($refreshOnConflict) {
-        $this->refreshOnConflict = $refreshOnConflict;
-    }
-
-    /**
      * @param null $values Must be always null! Defaults callback is used to produce the values.
-     * @param boolean $erase
+     * @param bool $erase
      * @throws LogicException
      */
-    public function setDefaults($values = null, $erase = FALSE) {
+    public function setDefaults($values = null, $erase = false) {
         if ($values !== null) {
             throw new LogicException('Default values in ' . __CLASS__ . ' are set by the callback.');
         }
@@ -98,32 +54,29 @@ class OptimisticForm extends Form {
     }
 
     /**
-     * @return bool
+     * @return HiddenField|IComponent
      */
-    public function isValid() {
-        $receivedFingerprint = $this[self::FINGERPRINT]->getValue();
-        $currentFingerprint = ($this->fingerprintCallback)();
-
-        if ($receivedFingerprint != $currentFingerprint) {
-            $this->addError(_('Od zobrazení formuláře byla změněna jeho data.')); //TODO customize message accordint to refreshOnConflict value
-            $this->setFingerprint($currentFingerprint);
-
-
-            if ($this->getRefreshOnConflict()) {
-                parent::setValues(($this->defaultsCallback)());
-            }
-
-            return false;
-        }
-
-        return parent::isValid();
+    private function getFingerprintInput(): HiddenField {
+        return $this[self::FINGERPRINT];
     }
 
     /**
-     * @param $fingerprint
+     * @return bool
      */
-    private function setFingerprint($fingerprint) {
-        $this[self::FINGERPRINT]->setValue($fingerprint);
+    public function isValid() {
+        $receivedFingerprint = $this->getFingerprintInput()->getValue();
+        $currentFingerprint = ($this->fingerprintCallback)();
+
+        if ($receivedFingerprint != $currentFingerprint) {
+            $this->addError(_('Od zobrazení formuláře byla změněna jeho data.'));
+            $this->setFingerprint($currentFingerprint);
+            parent::setValues(($this->defaultsCallback)());
+            return false;
+        }
+        return parent::isValid();
     }
 
+    private function setFingerprint(string $fingerprint): void {
+        $this->getFingerprintInput()->setValue($fingerprint);
+    }
 }

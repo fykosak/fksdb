@@ -2,76 +2,61 @@
 
 namespace FKSDB\Components\React;
 
-use Nette\Application\BadRequestException;
-use Nette\Application\UI\Control;
-use Nette\ComponentModel\IComponent;
+use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Exceptions\BadTypeException;
 use Nette\DI\Container;
 use Nette\Http\IRequest;
-use Nette\Templating\FileTemplate;
-use Nette\Utils\Json;
+use Nette\Utils\Html;
 use Nette\Utils\JsonException;
 
 /**
  * Class ReactComponent
- * @property FileTemplate template
- *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class ReactComponent extends Control {
+abstract class ReactComponent extends BaseComponent {
 
-    use ReactField;
-    /**
-     * @var Container
-     */
-    protected $container;
+    use ReactComponentTrait;
 
     /**
      * ReactComponent constructor.
-     * @param Container $context
+     * @param Container $container
+     * @param string $reactId
      */
-    public function __construct(Container $context) {
-        parent::__construct();
-        $this->container = $context;
+    public function __construct(Container $container, string $reactId) {
+        parent::__construct($container);
+        $this->registerReact($reactId);
     }
 
     /**
-     * @param IComponent $obj
-     */
-    protected function attached($obj) {
-        $this->attachedReact($obj);
-        parent::attached($obj);
-    }
-
-    /**
+     * @param mixed ...$args
+     * @return void
      * @throws JsonException
      */
-    public final function render() {
-        $this->configure();
-        $this->template->reactId = $this->getReactId();
-        $this->template->actions = Json::encode($this->actions);
-        $this->template->data = $this->getData();
-
+    final public function render(...$args) {
+        $html = Html::el('div');
+        $this->appendPropertyTo($html, ...$args);
+        $this->template->html = $html;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ReactComponent.latte');
         $this->template->render();
     }
 
     /**
      * @return IRequest
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function getHttpRequest(): IRequest {
-        $service = $this->container->getByType(IRequest::class);
+        $service = $this->getContext()->getByType(IRequest::class);
         if ($service instanceof IRequest) {
             return $service;
         }
-        throw new BadRequestException();
+        throw new BadTypeException(IRequest::class, $service);
     }
 
     /**
      * @return object
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function getReactRequest() {
-
         $requestData = $this->getHttpRequest()->getPost('requestData');
         $act = $this->getHttpRequest()->getPost('act');
         return (object)['requestData' => $requestData, 'act' => $act];

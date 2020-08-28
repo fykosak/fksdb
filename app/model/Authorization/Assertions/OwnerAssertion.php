@@ -1,7 +1,13 @@
 <?php
 
-namespace Authorization\Assertions;
+namespace FKSDB\Authorization\Assertions;
 
+use FKSDB\Authorization\Grant;
+use FKSDB\ORM\Models\IContestReferencedModel;
+use FKSDB\ORM\Models\IPersonReferencedModel;
+use FKSDB\ORM\Models\ModelContestant;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Models\ModelSubmit;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
 use Nette\Security\IUserStorage;
@@ -14,10 +20,7 @@ use Nette\Security\Permission;
  */
 class OwnerAssertion {
 
-    /**
-     * @var IUserStorage
-     */
-    private $user;
+    private IUserStorage $user;
 
     /**
      * OwnerAssertion constructor.
@@ -33,15 +36,15 @@ class OwnerAssertion {
      * @param string $role
      * @param string $resourceId
      * @param string $privilege
-     * @return boolean
+     * @return bool
      * @throws InvalidStateException
      */
-    public function isSubmitUploader(Permission $acl, $role, $resourceId, $privilege) {
+    public function isSubmitUploader(Permission $acl, $role, $resourceId, $privilege): bool {
 
         if (!$this->user->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
-
+        /** @var ModelSubmit $submit */
         $submit = $acl->getQueriedResource();
 
         if (!$submit instanceof IResource) {
@@ -58,15 +61,16 @@ class OwnerAssertion {
      * @param string $role
      * @param string $resourceId
      * @param string $privilege
-     * @return boolean
+     * @return bool
      * @throws InvalidStateException
      */
-    public function isOwnContestant(Permission $acl, $role, $resourceId, $privilege) {
+    public function isOwnContestant(Permission $acl, $role, $resourceId, $privilege): bool {
         if (!$this->user->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
-
+        /** @var ModelContestant $contestant */
         $contestant = $acl->getQueriedResource();
+        /** @var Grant $grant */
         $grant = $acl->getQueriedRole();
 
         return $contestant->contest_id == $grant->getContestId();
@@ -79,15 +83,16 @@ class OwnerAssertion {
      * @param string $role
      * @param string $resourceId
      * @param string $privilege
-     * @return boolean
+     * @return bool
      * @throws InvalidStateException
      */
-    public function existsOwnContestant(Permission $acl, $role, $resourceId, $privilege) {
+    public function existsOwnContestant(Permission $acl, $role, $resourceId, $privilege): bool {
         if (!$this->user->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
-
+        /** @var ModelPerson $person */
         $person = $acl->getQueriedResource();
+        /** @var Grant $grant */
         $grant = $acl->getQueriedRole();
 
         //TODO restrict also to the current year? Probably another assertion.
@@ -96,67 +101,36 @@ class OwnerAssertion {
     }
 
     /**
-     * @param Permission $acl
-     * @param $role
-     * @param $resourceId
-     * @param $privilege
-     * @return bool
-     */
-    public function isOwnPayment(Permission $acl, $role, $resourceId, $privilege) {
-        if (!$this->user->isAuthenticated()) {
-            throw new InvalidStateException('Expecting logged user.');
-        }
-        /**
-         * @var \FKSDB\ORM\Models\ModelPerson $loggedPerson
-         * $payment
-         */
-        $loggedPerson = $this->user->getIdentity()->getPerson();
-        $payment = $acl->getQueriedResource();
-        return $loggedPerson->person_id === $payment->getPerson()->person_id;
-    }
-
-    /**
-     * Checks the user is the org in queried contest.
-     * @param \Nette\Security\Permission $acl
-     * @param mixed $role
-     * @param mixed $resourceId
-     * @param mixed $privilege
-     * @return bool
-     * @throws InvalidStateException
-     */
-    public function isOrgSelf(Permission $acl, $role, $resourceId, $privilege) {
-        if (!$this->user->isAuthenticated()) {
-            throw new InvalidStateException('Expecting logged user.');
-        }
-
-        $org = $acl->getQueriedResource();
-        $orgLogin = $org->getPerson()->getLogin();
-        $grant = $acl->getQueriedRole();
-
-        return ($org->contest_id == $grant->getContestId()) && ($orgLogin->login_id == $this->user->getIdentity()->getId());
-    }
-
-    /**
      * Check that the person is the person of logged user.
      *
      * @note Grant contest is ignored in this context (i.e. person is context-less).
      *
-     * @param \Nette\Security\Permission $acl
-     * @param mixed $role
-     * @param mixed $resourceId
-     * @param mixed $privilege
+     * @param Permission $acl
+     * @param string $role
+     * @param string $resourceId
+     * @param string $privilege
      * @return bool
      * @throws InvalidStateException
      */
-    public function isSelf(Permission $acl, $role, $resourceId, $privilege) {
+    public function isSelf(Permission $acl, $role, $resourceId, $privilege): bool {
         if (!$this->user->isAuthenticated()) {
             throw new InvalidStateException('Expecting logged user.');
         }
 
         $loggedPerson = $this->user->getIdentity()->getPerson();
-        $person = $acl->getQueriedResource();
+        $model = $acl->getQueriedResource();
+        if ($model instanceof IContestReferencedModel) {
+            if ($model->getContest()->contest_id !== $acl->getQueriedRole()->getContestId()) {
+                return false;
+            }
+        }
+        if ($model instanceof IPersonReferencedModel) {
+            $model = $model->getPerson();
+        }
 
-        return ($loggedPerson && $loggedPerson->person_id == $person->person_id);
+        if (!$model instanceof ModelPerson) {
+            return false;
+        }
+        return ($loggedPerson && $loggedPerson->person_id == $model->person_id);
     }
-
 }

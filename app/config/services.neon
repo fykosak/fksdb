@@ -9,42 +9,42 @@ services:
             - setInvitationExpiration(%invitation.expiration%)
             - setRecoveryExpiration(%recovery.expiration%)
             - setEmailFrom(%email.from%)
-    - Authentication\FacebookAuthenticator
-    - Authentication\GithubAuthenticator
-    - Authentication\PasswordAuthenticator
-    - Authentication\TokenAuthenticator
-    - Authorization\ContestAuthorizator
-    - Authorization\EventAuthorizator
-    - Authorization\RelatedPersonAuthorizator
+    - FKSDB\Authentication\FacebookAuthenticator
+    - FKSDB\Authentication\GithubAuthenticator
+    - FKSDB\Authentication\PasswordAuthenticator
+    - FKSDB\Authentication\TokenAuthenticator
+    - FKSDB\Authorization\ContestAuthorizator
+    - FKSDB\Authorization\EventAuthorizator
+    - FKSDB\Authorization\RelatedPersonAuthorizator
     - FKSDB\Components\Events\ExpressionPrinter
-    downloader: Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
-    Facebook: self({appId: %facebook.appId%, secret: %facebook.secret%})
-    globalParameters: FKSDB\Config\GlobalParameters
+    downloader: FKSDB\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
+    - Facebook({appId: %facebook.appId%, secret: %facebook.secret%})
     yearCalculator: FKSDB\YearCalculator
-    news: News
+    news: FKSDB\News\News
     seriesCalculator: FKSDB\SeriesCalculator
     SQLResultsCache: FKSDB\Results\SQLResultsCache
     seriesTable: FKSDB\Submits\SeriesTable
-    - Persons\ExtendedPersonHandlerFactory
-    - Persons\SelfResolver
+    - FKSDB\Persons\ExtendedPersonHandlerFactory
+    - FKSDB\Persons\SelfResolver
     merger:
-        class: Persons\Deduplication\Merger(%merger%, ...)
+        class: FKSDB\Persons\Deduplication\Merger(%merger%, ...)
     - FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider
     - FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider
     - FKSDB\Components\Controls\PresenterBuilder
-    - Github\EventFactory
-    - Maintenance\Updater
+    - FKSDB\Github\EventFactory
+    - FKSDB\Maintenance\Updater
     globalSession:
-        class: Authentication\SSO\GlobalSession(%globalSession.expiration%, ...)
+        class: FKSDB\Authentication\SSO\GlobalSession(%globalSession.expiration%, ...)
         setup:
             - start()
-    - Authentication\SSO\TokenGSIDHolder
+    - FKSDB\Authentication\SSO\TokenGSIDHolder
     submitUploatedStorage:
-        class: FKSDB\Submits\FilesystemUploadedSubmitStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
+        class: FKSDB\Submits\FileSystemStorage\UploadedStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
         setup:
             - addProcessing(@PDFStamper)
     submitCorrectedStorage:
-                    class: FKSDB\Submits\FilesystemCorrectedSubmitStorage(%corrected.root%, %corrected.directoryMask%, %corrected.filenameMask%, %contestMapping%)
+                    class: FKSDB\Submits\FileSystemStorage\CorrectedStorage(%corrected.root%, %corrected.directoryMask%, %corrected.filenameMask%, %contestMapping%)
+    - FKSDB\Submits\SubmitHandlerFactory
     - FKSDB\Components\Forms\Controls\Schedule\Handler
     PDFStamper: FKSDB\Submits\PDFStamper(%stamper.fontSize%)
     readOnlyConnection:
@@ -60,28 +60,26 @@ services:
 
     webServiceModel: FKSDB\WebService\WebServiceModel(%inverseContestMapping%, ...)
 
-    nette.userStorage: Authentication\LoginUserStorage
+    nette.userStorage: FKSDB\Authentication\LoginUserStorage
     nette.mailer:
-        class: LoggingMailer(Nette\Mail\SendmailMailer())
+        class: FKSDB\Mail\LoggingMailer(Nette\Mail\SendmailMailer())
         setup:
             - setLogPath(%logDir%/mail)
-    - FKSDB\ValidationTest\ValidationFactory
 
+    - FKSDB\DataTesting\DataTestingFactory
 
     #
     # Events
     #
-    events.dataValidator: Events\Model\Holder\DataValidator
-    events.expressionEvaluator: Events\Model\ExpressionEvaluator
-    events.privacyPolicy: Events\FormAdjustments\PrivacyPolicy
-    events.captcha: Events\FormAdjustments\Captcha
+    events.dataValidator: FKSDB\Events\Model\Holder\DataValidator
+    events.expressionEvaluator: FKSDB\Events\Model\ExpressionEvaluator
+    events.privacyPolicy: FKSDB\Events\FormAdjustments\PrivacyPolicy
+    events.captcha: FKSDB\Events\FormAdjustments\Captcha
 
-    #
-    # Fyziklani
-    #
-    - FKSDB\Components\Forms\Factories\TableReflectionFactory
+    - FKSDB\DBReflection\DBReflectionFactory
     - FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory
-    - FKSDB\Components\DatabaseReflection\MetaDataFactory
+    - FKSDB\DBReflection\MetaDataFactory
+    - FKSDB\Fyziklani\Submit\HandlerFactory
 
 includes:
     - merger.neon

@@ -2,23 +2,23 @@
 
 namespace FKSDB\Components\Controls\Breadcrumbs;
 
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\Breadcrumbs\Request as NaviRequest;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
+use FKSDB\Exceptions\BadTypeException;
+use Nette\Application\IPresenterFactory;
 use Nette\Application\IRouter;
-use Nette\Application\PresenterFactory;
 use Nette\Application\Request as AppRequest;
-use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
-use Nette\Application\UI\PresenterComponentReflection;
+use Nette\Application\UI\ComponentReflection;
+use Nette\DI\Container;
 use Tracy\Debugger;
 use Nette\Http\Request as HttpRequest;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\InvalidArgumentException;
-use Nette\InvalidStateException;
-use Nette\Templating\FileTemplate;
 use Nette\Utils\Random;
-use Utils;
+use FKSDB\Utils\Utils;
 
 /**
  * Monitors user's traversal through the web and build the tree,
@@ -31,60 +31,49 @@ use Utils;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Breadcrumbs extends Control {
+class Breadcrumbs extends BaseComponent {
 
-    const SECTION_REQUESTS = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.main';
-    const SECTION_BACKIDS = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.backids';
-    const SECTION_REVERSE = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.reverse';
-    const SECTION_PATH_REVERSE = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.pathReverse';
-    const EXPIRATION = '+ 10 minutes';
-    const BACKID_LEN = 4;
-    const BACKID_DOMAIN = '0-9a-zA-Z';
+    public const SECTION_REQUESTS = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.main';
+    public const SECTION_BACKIDS = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.backids';
+    public const SECTION_REVERSE = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.reverse';
+    public const SECTION_PATH_REVERSE = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.pathReverse';
+    // const EXPIRATION = '+ 10 minutes';
+    public const BACKID_LEN = 4;
+    public const BACKID_DOMAIN = '0-9a-zA-Z';
 
-    /** @var Session */
-    private $session;
+    private Session $session;
 
-    /**
-     * @var IRouter
-     */
-    private $router;
+    private IRouter $router;
 
-    /**
-     * @var HttpRequest
-     */
-    private $httpRequest;
+    private HttpRequest $httpRequest;
 
-    /**
-     * @var PresenterFactory
-     */
-    private $presenterFactory;
+    private IPresenterFactory $presenterFactory;
 
     /**
      * Prevents multiple storing the current request.
      *
      * @var bool
      */
-    private $storedRequest = false;
+    private bool $storedRequest = false;
 
     /**
      * Breadcrumbs constructor.
-     * @param $expiration
-     * @param Session $session
-     * @param IRouter $router
-     * @param HttpRequest $httpRequest
-     * @param PresenterFactory $presenterFactory
+     * @param string $expiration
+     * @param Container $container
      */
-    function __construct($expiration, Session $session, IRouter $router, HttpRequest $httpRequest, PresenterFactory $presenterFactory) {
-        parent::__construct();
-        $this->session = $session;
-        $this->router = $router;
-        $this->httpRequest = $httpRequest;
-        $this->presenterFactory = $presenterFactory;
-
+    public function __construct($expiration, Container $container) {
+        parent::__construct($container);
         $this->getRequests()->setExpiration($expiration);
         $this->getPathKeyCache()->setExpiration($expiration);
         $this->getBackLinkMap()->setExpiration($expiration);
         $this->getReverseBackLinkMap()->setExpiration($expiration);
+    }
+
+    public function injectPrimary(Session $session, IRouter $router, HttpRequest $httpRequest, IPresenterFactory $presenterFactory): void {
+        $this->session = $session;
+        $this->router = $router;
+        $this->httpRequest = $httpRequest;
+        $this->presenterFactory = $presenterFactory;
     }
 
     /*     * **********************
@@ -94,21 +83,21 @@ class Breadcrumbs extends Control {
     /**
      * @param AppRequest $request
      * @throws \ReflectionException
+     * @throws BadTypeException
      */
     public function setBackLink(AppRequest $request) {
         $presenter = $this->getPresenter();
         if (!$presenter instanceof INavigablePresenter) {
-            $class = get_class($presenter);
-            throw new InvalidStateException("Expected presenter of INavigablePresenter type, got '$class'.");
+            throw new BadTypeException(INavigablePresenter::class, $presenter);
         }
 
         $requestKey = $this->getRequestKey($request);
         $backLinkId = $this->getBackLinkId($requestKey);
-        $originalBackLink = $presenter->setBacklink($backLinkId);
+        $originalBackLink = $presenter->setBackLink($backLinkId);
         $this->storeRequest($originalBackLink);
     }
 
-    public function reset() {
+    public function reset(): void {
         foreach ([
                      self::SECTION_BACKIDS,
                      self::SECTION_REQUESTS,
@@ -119,11 +108,11 @@ class Breadcrumbs extends Control {
         }
     }
 
-    /*     * **********************
+    /* ***********************
      * Rendering
      * ********************** */
 
-    public function render() {
+    public function render(): void {
         $request = $this->getPresenter()->getRequest();
 
         $path = [];
@@ -134,24 +123,16 @@ class Breadcrumbs extends Control {
                 'title' => $naviRequest->title,
             ];
         }
-        /**
-         * @var FileTemplate $template
-         */
-        $template = $this->getTemplate();
-        $template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Breadcrumbs.latte');
-        $template->path = $path;
-        $template->render();
-        //$this->reset();
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.breadcrumbs.latte');
+        $this->template->path = $path;
+        $this->template->render();
     }
 
     /*     * **********************
      * Path traversal
      * ********************** */
 
-    /**
-     * @return NULL|string
-     */
-    public function getBackLinkUrl() {
+    public function getBackLinkUrl(): ?string {
         $presenter = $this->getPresenter();
         $request = $presenter->getRequest();
 
@@ -177,10 +158,10 @@ class Breadcrumbs extends Control {
 
     /**
      * @param AppRequest $request
-     * @param null $maxLen
+     * @param int|null $maxLen
      * @return NaviRequest[]
      */
-    private function getTraversePath(AppRequest $request, $maxLen = null) {
+    private function getTraversePath(AppRequest $request, ?int $maxLen = null): array {
         $requests = $this->getRequests();
         $backLinkMap = $this->getBackLinkMap();
 
@@ -189,6 +170,7 @@ class Breadcrumbs extends Control {
         if (!isset($requests[$requestKey])) {
             return [];
         }
+        /** @var NaviRequest $naviRequest */
         $naviRequest = $requests[$requestKey];
 
         $prevPathKey = null;
@@ -220,27 +202,27 @@ class Breadcrumbs extends Control {
      * @return string
      * @throws \ReflectionException
      */
-    private function getPathKey($request) {
+    private function getPathKey($request): string {
         if ($request instanceof AppRequest) {
             $parameters = $request->getParameters();
             $presenterName = $request->getPresenterName();
+            /** @var Presenter $presenterClassName */
             $presenterClassName = $this->presenterFactory->formatPresenterClass($presenterName);
             $action = $parameters[Presenter::ACTION_KEY];
-            $methodName = call_user_func("$presenterClassName::publicFormatActionMethod", $action);
-            $identifyingParameters = array(Presenter::ACTION_KEY);
-
-            $rc = call_user_func("$presenterClassName::getReflection");
+            $methodName = ($presenterClassName)::publicFormatActionMethod($action);
+            $identifyingParameters = [Presenter::ACTION_KEY];
+            $rc = ($presenterClassName)::getReflection();
             if ($rc->hasMethod($methodName)) {
                 $rm = $rc->getMethod($methodName);
                 foreach ($rm->getParameters() as $param) {
                     $identifyingParameters[] = $param->name;
                 }
             }
-            $reflection = new PresenterComponentReflection($presenterClassName);
+            $reflection = new ComponentReflection($presenterClassName);
             $identifyingParameters += array_keys($reflection->getPersistentParams());
 
             $filteredParameters = [];
-            $backLinkParameter = call_user_func("$presenterClassName::getBackLinkParamName");
+            $backLinkParameter = ($presenterClassName)::getBackLinkParamName();
             foreach ($identifyingParameters as $param) {
                 if ($param == $backLinkParameter) {
                     continue; // this parameter can be persistent but never is identifying!
@@ -249,11 +231,10 @@ class Breadcrumbs extends Control {
             }
 
             $paramKey = Utils::getFingerprint($filteredParameters);
-            $key = $presenterName . ':' . $paramKey;
-            return $key;
-        } else if ($request instanceof NaviRequest) {
+            return $presenterName . ':' . $paramKey;
+        } elseif ($request instanceof NaviRequest) {
             return $request->pathKey;
-        } else if (is_string($request)) { // caching + recursion
+        } elseif (is_string($request)) { // caching + recursion
             $pathKeyCache = $this->getPathKeyCache();
             $requests = $this->getRequests();
             $requestKey = $request;
@@ -273,8 +254,9 @@ class Breadcrumbs extends Control {
      * ********************** */
 
     /**
-     * @param $backLink
+     * @param string $backLink
      * @throws \ReflectionException
+     * @throws BadTypeException
      */
     private function storeRequest($backLink) {
         if ($this->storedRequest) {
@@ -298,34 +280,29 @@ class Breadcrumbs extends Control {
     }
 
     /**
-     * @param INavigablePresenter $presenter
+     * @param INavigablePresenter|Presenter $presenter
      * @param AppRequest $request
-     * @param $backLink
+     * @param string $backLink
      * @return Request
      * @throws \ReflectionException
+     * @throws BadTypeException
      */
-    protected function createNaviRequest(INavigablePresenter $presenter, AppRequest $request, $backLink) {
+    protected function createNaviRequest(Presenter $presenter, AppRequest $request, $backLink): NaviRequest {
         $pathKey = $this->getPathKey($request);
+        if (!$presenter instanceof INavigablePresenter) {
+            throw new BadTypeException(INavigablePresenter::class, $presenter);
+        }
         return new NaviRequest($presenter->getUser()->getId(), $request, $presenter->getTitle(), $backLink, $pathKey);
     }
 
-    /**
-     * @param AppRequest $request
-     * @return string
-     */
-    protected function getRequestKey(AppRequest $request) {
+    protected function getRequestKey(AppRequest $request): string {
         $presenterName = $request->getPresenterName();
         $parameters = $this->filterParameters($request->getParameters());
         $paramKey = Utils::getFingerprint($parameters);
-        $key = $presenterName . ':' . $paramKey;
-        return $key;
+        return $presenterName . ':' . $paramKey;
     }
 
-    /**
-     * @param $requestKey
-     * @return mixed|string
-     */
-    private function getBackLinkId($requestKey) {
+    private function getBackLinkId(string $requestKey): string {
         $reverseBackLinkMap = $this->getReverseBackLinkMap();
 
         if (isset($reverseBackLinkMap[$requestKey])) {
@@ -349,7 +326,7 @@ class Breadcrumbs extends Control {
      * @param array $parameters
      * @return array
      */
-    protected function filterParameters($parameters) {
+    protected function filterParameters(iterable $parameters): array {
         $result = [];
         foreach ($parameters as $key => $value) {
             if ($key == Presenter::FLASH_KEY) {
@@ -364,31 +341,19 @@ class Breadcrumbs extends Control {
      * Cache stored in session    *
      * ********************** */
 
-    /**
-     * @return SessionSection
-     */
-    protected function getRequests() {
+    protected function getRequests(): SessionSection {
         return $this->session->getSection(self::SECTION_REQUESTS);
     }
 
-    /**
-     * @return SessionSection
-     */
-    protected function getPathKeyCache() {
+    protected function getPathKeyCache(): SessionSection {
         return $this->session->getSection(self::SECTION_PATH_REVERSE);
     }
 
-    /**
-     * @return SessionSection
-     */
-    protected function getBackLinkMap() {
+    protected function getBackLinkMap(): SessionSection {
         return $this->session->getSection(self::SECTION_BACKIDS);
     }
 
-    /**
-     * @return SessionSection
-     */
-    protected function getReverseBackLinkMap() {
+    protected function getReverseBackLinkMap(): SessionSection {
         return $this->session->getSection(self::SECTION_REVERSE);
     }
 

@@ -8,7 +8,7 @@ use Nette\Forms\Controls\SelectBox;
 
 /**
  * Class CurrencyField
- * @package FKSDB\Components\Forms\Controls\Payment
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class CurrencyField extends SelectBox {
     /**

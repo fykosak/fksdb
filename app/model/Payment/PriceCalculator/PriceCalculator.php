@@ -3,38 +3,39 @@
 namespace FKSDB\Payment\PriceCalculator;
 
 use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Price;
-use FKSDB\Payment\PriceCalculator\PreProcess\AbstractPreProcess;
-use function array_merge;
+use FKSDB\Payment\PriceCalculator\PreProcess\IPreprocess;
 
 /**
  * Class PriceCalculator
- * @package FKSDB\Payment\PriceCalculator
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PriceCalculator {
-    /**
-     * @var AbstractPreProcess[]
-     */
-    private $preProcess = [];
+
+    private ServicePayment $servicePayment;
+    /** @var IPreprocess[] */
+    private array $preProcess = [];
 
     /**
-     * @param AbstractPreProcess $preProcess
+     * PriceCalculator constructor.
+     * @param ServicePayment $servicePayment
      */
-    public function addPreProcess(AbstractPreProcess $preProcess) {
+    public function __construct(ServicePayment $servicePayment) {
+        $this->servicePayment = $servicePayment;
+    }
+
+    public function addPreProcess(IPreprocess $preProcess): void {
         $this->preProcess[] = $preProcess;
     }
 
-    /**
-     * @param ModelPayment $modelPayment
-     * @return void
-     */
-    public final function __invoke(ModelPayment $modelPayment) {
+    final public function __invoke(ModelPayment $modelPayment): void {
         $price = new Price(0, $modelPayment->currency);
         foreach ($this->preProcess as $preProcess) {
             $subPrice = $preProcess->calculate($modelPayment);
             $price->add($subPrice);
         }
-        $modelPayment->update(['price' => $price->getAmount(), 'currency' => $price->getCurrency()]);
+        $this->servicePayment->updateModel2($modelPayment, ['price' => $price->getAmount(), 'currency' => $price->getCurrency()]);
     }
 
     /**
@@ -44,7 +45,7 @@ class PriceCalculator {
     public function getGridItems(ModelPayment $modelPayment): array {
         $items = [];
         foreach ($this->preProcess as $preProcess) {
-            $items = array_merge($items, $preProcess->getGridItems($modelPayment));
+            $items = \array_merge($items, $preProcess->getGridItems($modelPayment));
         }
         return $items;
     }

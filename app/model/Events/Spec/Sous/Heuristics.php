@@ -1,52 +1,48 @@
 <?php
 
-namespace Events\Spec\Sous;
+namespace FKSDB\Events\Spec\Sous;
 
-use ORM\ModelsMulti\Events\ModelMSousParticipant;
-use Exports\StoredQueryPostProcessing;
+use FKSDB\ORM\Models\ModelEventParticipant;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @deprecated since 34 year is not supported
  */
-class Heuristics extends StoredQueryPostProcessing {
+class Heuristics /*extends StoredQueryPostProcessing */{ /* uncomment to use */
 
-    const RESERVE_1 = 8;
-    const ABS_INV = 3;
-    const CAT_COUNT = 4;
-    const P_4 = 1; // o kolik méně se pozývá čtvrťáků než ostatních
-    const RULE_1 = 1;
-    const RULE_2 = 2;
-    const RULE_3M = '3M';
-    const RULE_3F = '3F';
-    const RULE_3I = '3*';
-    const RULE4M2 = '42M';
-    const RULE4F2 = '42F';
-    const RULE4MW = '4WM';
-    const RULE4FW = '4WF';
+    public const RESERVE_1 = 8;
+    public const ABS_INV = 3;
+    public const CAT_COUNT = 4;
+    public const P_4 = 1; // o kolik méně se pozývá čtvrťáků než ostatních
+    public const RULE_1 = 1;
+    public const RULE_2 = 2;
+    public const RULE_3M = '3M';
+    public const RULE_3F = '3F';
+    public const RULE_3I = '3*';
+    public const RULE4M2 = '42M';
+    public const RULE4F2 = '42F';
+    public const RULE4MW = '4WM';
+    public const RULE4FW = '4WF';
 
-    /**
-     * @return mixed|string
-     */
-    public function getDescription() {
+    public function getDescription(): string {
         return 'Z výsledkovky vybere zvance a náhradníky na soustředění (http://wiki.fykos.cz/fykos:soustredeni:zasady:heuristikazvani).
-            Hierarchický kód určuje pravidlo a případně podpravidlo, dle nějž je osoba zvaná/náhradníkovaná.
-';
+            Hierarchický kód určuje pravidlo a případně podpravidlo, dle nějž je osoba zvaná/náhradníkovaná.';
     }
 
     /**
-     * @param $data
-     * @return array|mixed
+     * @param \PDOStatement $data
+     * @return iterable
      */
-    public function processData($data) {
+    public function processData(\PDOStatement $data) {
+
         $result = iterator_to_array($data);
-        $P = $this->findP($result);
+        $p = $this->findP($result);
 
-        $Y = $K = $H = 0;
-        $Z = $this->parameters['par_z'];
-        $N = $this->parameters['par_n'];
-
+        $y = $k = $h = 0;
+        $z = $this->parameters['par_z'];
+        $n = $this->parameters['par_n'];
         /*
          * Rule no. 1
          */
@@ -54,11 +50,10 @@ class Heuristics extends StoredQueryPostProcessing {
             if (!$this->checkInvMin($row)) {
                 break;
             }
-            if ($this->inviting($row, $P)) {
+            if ($this->inviting($row, $p)) {
                 $row['invited'] = self::RULE_1;
-                $Y += 1;
-                $K += ($row['gender'] == 'M') ? 1 : 0;
-                $H += ($row['gender'] == 'F') ? 1 : 0;
+                $y++;
+                ($row['gender'] == 'M') ? $k++ : $h++;
             }
         }
 
@@ -73,9 +68,9 @@ class Heuristics extends StoredQueryPostProcessing {
             }
             if (!$row['invited']) {
                 $row['invited'] = self::RULE_2;
-                $Y += 1;
-                $K += ($row['gender'] == 'M') ? 1 : 0;
-                $H += ($row['gender'] == 'F') ? 1 : 0;
+                $y += 1;
+                $k += ($row['gender'] == 'M') ? 1 : 0;
+                $h += ($row['gender'] == 'F') ? 1 : 0;
                 $absInv++;
             }
             if ($absInv >= self::ABS_INV) {
@@ -87,11 +82,11 @@ class Heuristics extends StoredQueryPostProcessing {
          * Rule no. 3
          */
         $success = true; // this avoids infinite loops
-        while ($Y < $Z && $success) {
-            if ($K / $H > 2) { // too many boys
+        while ($y < $z && $success) {
+            if ($k / $h > 2) { // too many boys
                 $searchFor = 'F';
                 $rule = self::RULE_3F;
-            } else if ($K / ($H - 1) < 1) { // too many girls
+            } elseif ($k / ($h - 1) < 1) { // too many girls
                 $searchFor = 'M';
                 $rule = self::RULE_3M;
             } else {
@@ -105,9 +100,9 @@ class Heuristics extends StoredQueryPostProcessing {
                 }
                 if (!$row['invited'] && ($searchFor == '*' || $row['gender'] == $searchFor)) {
                     $row['invited'] = $rule;
-                    $Y += 1;
-                    $K += ($row['gender'] == 'M') ? 1 : 0;
-                    $H += ($row['gender'] == 'F') ? 1 : 0;
+                    $y += 1;
+                    $k += ($row['gender'] == 'M') ? 1 : 0;
+                    $h += ($row['gender'] == 'F') ? 1 : 0;
                     $success = true;
                     break;
                 }
@@ -117,7 +112,7 @@ class Heuristics extends StoredQueryPostProcessing {
         /*
          * Rule no. 4
          */
-        $W = 0;
+        $w = 0;
         foreach ($result as $row) {
             if (!$this->checkSpMin($row)) {
                 break;
@@ -126,10 +121,10 @@ class Heuristics extends StoredQueryPostProcessing {
                 continue;
             }
             if ($row['gender'] == 'F') {
-                $W+=1;
+                $w += 1;
             }
         }
-        if ($W < ceil($N / 2)) { // not enough girls (the code assumes reverse is never true)
+        if ($w < ceil($n / 2)) { // not enough girls (the code assumes reverse is never true)
             $spareGirls = 0;
             foreach ($result as $row) {
                 if ($row['invited']) {
@@ -140,9 +135,9 @@ class Heuristics extends StoredQueryPostProcessing {
                 }
                 if ($row['gender'] == 'F') {
                     $row['spare'] = self::RULE4FW;
-                    $spareGirls+=1;
+                    $spareGirls += 1;
                 }
-                if ($spareGirls >= $W) {
+                if ($spareGirls >= $w) {
                     break;
                 }
             }
@@ -157,15 +152,15 @@ class Heuristics extends StoredQueryPostProcessing {
                 }
                 if ($row['gender'] == 'M') {
                     $row['spare'] = self::RULE4MW;
-                    $spareAll+=1;
+                    $spareAll += 1;
                 }
-                if ($spareAll >= $N) {
+                if ($spareAll >= $n) {
                     break;
                 }
             }
         } else {
-            $NK = floor($N / 2);
-            $NH = ceil($N / 2);
+            $nK = floor($n / 2);
+            $nH = ceil($n / 2);
             $spareK = $spareH = 0;
             foreach ($result as $row) {
                 if ($row['invited']) {
@@ -174,77 +169,57 @@ class Heuristics extends StoredQueryPostProcessing {
                 if (!$this->checkSpMin($row)) {
                     break;
                 }
-                if ($row['gender'] == 'M' && $spareK < $NK) {
+                if ($row['gender'] == 'M' && $spareK < $nK) {
                     $row['spare'] = self::RULE4M2;
-                    $spareK+=1;
-                } else if ($row['gender'] == 'F' && $spareH < $NH) {
+                    $spareK += 1;
+                } elseif ($row['gender'] == 'F' && $spareH < $nH) {
+
                     $row['spare'] = self::RULE4F2;
-                    $spareH+=1;
+                    $spareH += 1;
                 }
-                if ($spareH + $spareK >= $N) {
+                if ($spareH + $spareK >= $n) {
                     break;
                 }
             }
         }
-
         /*
          * Prepare application states
          */
         foreach ($result as $row) {
             if ($row['invited']) {
-                $row['status'] = ModelMSousParticipant::STATE_AUTO_INVITED;
-            } else if ($row['spare']) {
-                $row['status'] = ModelMSousParticipant::STATE_AUTO_SPARE;
+                $row['status'] = ModelEventParticipant::STATE_AUTO_INVITED;
+            } elseif ($row['spare']) {
+                $row['status'] = ModelEventParticipant::STATE_AUTO_SPARE;
             }
         }
 
         return $result;
     }
 
-    /**
-     * @param $data
-     * @return float|int
-     */
-    private function findP($data) {
-        $Z = $this->parameters['par_z'];
-        $P = ceil(($Z - self::RESERVE_1) / self::CAT_COUNT) + 1;
-
-        $Y = 0;
+    private function findP(array $data): float {
+        $parameterZ = $this->parameters['par_z'];
+        $parameterP = ceil(($parameterZ - self::RESERVE_1) / self::CAT_COUNT) + 1;
         do {
-            $Y = 0;
-            $P -= 1;
+            $parameterY = 0;
+            $parameterP -= 1;
             foreach ($data as $row) {
-                if ($this->inviting($row, $P) && $this->checkInvMin($row)) {
-                    $Y += 1;
+                if ($this->inviting($row, $parameterP) && $this->checkInvMin($row)) {
+                    $parameterY += 1;
                 }
             }
-        } while ($Y > $Z - self::RESERVE_1);
-        return $P;
+        } while ($parameterY > $parameterZ - self::RESERVE_1);
+        return $parameterP;
     }
 
-    /**
-     * @param $row
-     * @param $P
-     * @return bool
-     */
-    private function inviting($row, $P) {
-        return $row['category'] == 4 ? ($row['cat_rank'] <= $P - self::P_4) : ($row['cat_rank'] <= $P);
+    private function inviting(array $row, float $parameterP): bool {
+        return $row['category'] == 4 ? ($row['cat_rank'] <= $parameterP - self::P_4) : ($row['cat_rank'] <= $parameterP);
     }
 
-    /**
-     * @param $row
-     * @return bool
-     */
-    private function checkInvMin($row) {
+    private function checkInvMin(array $row): bool {
         return $row['points'] >= $this->parameters['min_z'];
     }
 
-    /**
-     * @param $row
-     * @return bool
-     */
-    private function checkSpMin($row) {
+    private function checkSpMin(array $row): bool {
         return $row['points'] >= $this->parameters['min_n'];
     }
-
 }

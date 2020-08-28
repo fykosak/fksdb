@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons;
+namespace FKSDB\Persons;
 
 use FKSDB\ORM\IModel;
 
@@ -10,30 +10,28 @@ use FKSDB\ORM\IModel;
  */
 interface IExtendedPersonPresenter {
 
-    /**
-     * @return IModel
-     */
-    public function getModel();
+    public function getModel(): ?IModel;
 
     /**
      * @note First '%s' is replaced with referenced person's name.
+     * @return string
      */
-    public function messageCreate();
+    public function messageCreate(): string;
 
     /**
      * @note First '%s' is replaced with referenced person's name.
+     * @return string
      */
-    public function messageEdit();
+    public function messageEdit(): string;
 
-    public function messageError();
+    public function messageError(): string;
 
-    public function messageExists();
+    public function messageExists(): string;
 
     /**
-     * @param $message
+     * @param string $message
      * @param string $type
-     * @return mixed
+     * @return void
      */
     public function flashMessage($message, $type = 'info');
 }
-

@@ -9,10 +9,8 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 interface IFilteredDataProvider extends IDataProvider {
 
     /**
-     * @param $search
-     * @return mixed see parent + filtered by the user input
+     * @param string $search
+     * @return array see parent + filtered by the user input
      */
-    public function getFilteredItems($search);
+    public function getFilteredItems(string $search): array;
 }
-
-

@@ -13,21 +13,15 @@ use Nette\Forms\ControlGroup;
  */
 class LoginFactory {
 
-    const SHOW_ACTIVE = 0x1;
+    public const SHOW_ACTIVE = 0x1;
     /** show field pair for setting a password */
-    const SHOW_PASSWORD = 0x2;
+    public const SHOW_PASSWORD = 0x2;
     /** show field for the old password */
-    const VERIFY_OLD_PASSWORD = 0x4;
+    public const VERIFY_OLD_PASSWORD = 0x4;
     /** require nonempty (new) password */
-    const REQUIRE_PASSWORD = 0x8;
+    public const REQUIRE_PASSWORD = 0x8;
 
-    /**
-     * @param int $options
-     * @param ControlGroup|null $group
-     * @param null $loginRule
-     * @return ModelContainer
-     */
-    public function createLogin($options = 0, ControlGroup $group = null, $loginRule = null): ModelContainer {
+    public function createLogin(int $options = 0, ?ControlGroup $group = null, ?callable $loginRule = null): ModelContainer {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
@@ -47,9 +41,9 @@ class LoginFactory {
             $newPwd->addCondition(Form::FILLED)->addRule(Form::MIN_LENGTH, _('Heslo musí mít alespoň %d znaků.'), 6);
 
             if ($options & self::VERIFY_OLD_PASSWORD) {
-                $newPwd->addConditionOn($container['old_password'], Form::FILLED)
+                $newPwd->addConditionOn($container->getComponent('old_password'), Form::FILLED)
                     ->addRule(Form::FILLED, _('Je třeba nastavit nové heslo.'));
-            } else if ($options & self::REQUIRE_PASSWORD) {
+            } elseif ($options & self::REQUIRE_PASSWORD) {
                 $newPwd->addRule(Form::FILLED, _('Heslo nemůže být prázdné.'));
             }
 
@@ -61,5 +55,4 @@ class LoginFactory {
 
         return $container;
     }
-
 }

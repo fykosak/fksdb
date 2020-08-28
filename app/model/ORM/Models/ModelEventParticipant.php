@@ -9,69 +9,73 @@ use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
+use Nette\InvalidStateException;
 use Nette\Security\IResource;
-use Nette\Utils\DateTime;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read ActiveRow person
- * @property-read integer event_participant_id
- * @property-read integer event_id
+ * @property-read int event_participant_id
+ * @property-read int event_id
  * @property-read ActiveRow event
- * @property-read integer person_id
+ * @property-read int person_id
  * @property-read string note poznámka
  * @property-read string status
- * @property-read DateTime created čas vytvoření přihlášky
- * @property-read integer accomodation
+ * @property-read \DateTimeInterface created čas vytvoření přihlášky
+ * @property-read int accomodation
  * @property-read string diet speciální stravování
  * @property-read string health_restrictions alergie, léky, úrazy
  * @property-read string tshirt_size
  * @property-read string tshirt_color
+ * @property-read string jumper_size
  * @property-read float price DECIMAL(6,2) vypočtená cena
- * @property-read string arrival_time Čas příjezdu
+ * @property-read \DateInterval arrival_time Čas příjezdu
  * @property-read string arrival_destination Místo prijezdu
- * @property-read boolean arrival_ticket společný lístek na cestu tam
- * @property-read string departure_time Čas odjezdu
+ * @property-read bool arrival_ticket společný lístek na cestu tam
+ * @property-read \DateInterval departure_time Čas odjezdu
  * @property-read string departure_destination Místo odjezdu
- * @property-read boolean departure_ticket společný lístek na cestu zpět
- * @property-read boolean swimmer plavec?
+ * @property-read bool departure_ticket společný lístek na cestu zpět
+ * @property-read bool swimmer plavec?
  * @property-read string used_drugs užívané léky
  * @property-read string schedule
+ * @property-read int lunch_count
  */
-class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel, IPaymentModel, IPersonReferencedModel, IResource {
-    const RESOURCE_ID = 'event.participant';
+class ModelEventParticipant extends AbstractModelSingle implements
+    IEventReferencedModel,
+    IPaymentModel,
+    IPersonReferencedModel,
+    IResource,
+    IContestReferencedModel {
 
-    /**
-     * @return ModelPerson|null
-     */
-    public function getPerson() {
-        if (!$this->person) {
-            return null;
-        }
-        return ModelPerson::createFromActiveRow($this->person);
+    public const RESOURCE_ID = 'event.participant';
+
+    public const STATE_AUTO_INVITED = 'auto.invited';
+    public const STATE_AUTO_SPARE = 'auto.spare';
+
+    public function getPerson(): ?ModelPerson {
+        return $this->person ? ModelPerson::createFromActiveRow($this->person) : null;
+    }
+
+    public function getContest(): ModelContest {
+        return $this->getEvent()->getContest();
     }
 
     /**
      * @return string
+     * @throws InvalidStateException
      */
     public function __toString(): string {
         if (!$this->getPerson()) {
-            // throw new InvalidStateException(\sprintf(_('Missing person in application Id %s.'), $this->getPrimary(false)));
+            throw new InvalidStateException(\sprintf(_('Missing person in application Id %s.'), $this->getPrimary(false)));
         }
         return $this->getPerson()->__toString();
     }
 
-    /**
-     * @return ModelEvent
-     */
     public function getEvent(): ModelEvent {
         return ModelEvent::createFromActiveRow($this->event);
     }
 
-    /**
-     * @return Price
-     */
     public function getPrice(): Price {
         return new Price($this->price, Price::CURRENCY_CZK);
     }
@@ -83,15 +87,12 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
     public function getFyziklaniTeam(): ModelFyziklaniTeam {
         $row = $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'event_participant_id')->select('e_fyziklani_team.*')->fetch();
         if (!$row) {
-            throw new BadRequestException('Event is not fyziklani');
+            throw new BadRequestException('Event is not fyziklani!');
         }
         return ModelFyziklaniTeam::createFromActiveRow($row);
     }
 
-    /**
-     * @inheritDoc
-     */
-    function getResourceId() {
+    public function getResourceId(): string {
         return self::RESOURCE_ID;
     }
 }

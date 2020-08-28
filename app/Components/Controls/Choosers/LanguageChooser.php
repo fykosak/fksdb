@@ -2,199 +2,158 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
-
-use Nette\Application\UI\Control;
-use Nette\Http\Session;
-use Nette\Templating\FileTemplate;
-use Nette\Templating\Template;
-
+use FKSDB\Localization\UnsupportedLanguageException;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\UI\Title;
+use Nette\Application\AbortException;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\DI\Container;
+use Nette\Http\IRequest;
+use Nette\Security\User;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Jakub Šafin <xellos@fykos.cz>
- * @property FileTemplate $template
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class LanguageChooser extends Control {
+class LanguageChooser extends Chooser {
 
-    const DEFAULT_FIRST = 'cs';
+    private array $supportedLanguages = [];
+
+    private string $language;
+
+    public static array $languageNames = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
+
+    private ?string $urlLang;
+
+    private User $user;
+
+    private IRequest $request;
 
     /**
-     * @var mixed
+     * LanguageChooser constructor.
+     * @param Container $container
+     * @param string|null $urlLang
      */
-    private $languages;
+    public function __construct(Container $container, ?string $urlLang) {
+        parent::__construct($container);
+        $this->urlLang = $urlLang;
+    }
+
+    public function injectPrimary(User $user, IRequest $request): void {
+        $this->user = $user;
+        $this->request = $request;
+    }
 
     /**
-     * @var Session
-     */
-    private $session;
-
-    /**
-     * @var mixed
-     */
-    private $language;
-    /**
-     * @var array
-     */
-    private $languageNames = ['cs' => 'Čeština', 'en' => 'English', 'sk' => 'Slovenčina'];
-
-    private $initialized = false;
-
-    /**
-     * @var mixed DEFAULT_*
-     */
-    private $defaultLanguage = self::DEFAULT_FIRST;
-
-    /**
+     * Preferred language of the page
      *
-     * @param Session $session
+     * Should be final
+     * @param bool $redirect
+     * @throws AbortException
+     * @throws UnsupportedLanguageException
+     * @note do not call in constructor, call after component is attached
      */
-    function __construct(Session $session) {
-        parent::__construct();
-        $this->session = $session;
-    }
-
-    /**
-     * @param mixed $languages role enum|ALL_LANGUAGES|array of languages
-     */
-    public function setLanguages($languages) {
-        $this->languages = $languages;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getLanguages() {
-        return $this->languages;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function getDefaultLanguage() {
-        return $this->defaultLanguage;
-    }
-
-    /**
-     * @param $defaultLanguage
-     */
-    public function setDefaultLanguage($defaultLanguage) {
-        $this->defaultLanguage = $defaultLanguage;
-    }
-
-    /**
-     * @param $language
-     * @return bool
-     */
-    public function isLanguage($language) {
-        return in_array($language, $this->languages);
-    }
-
-    /**
-     * @param object $params
-     * @return boolean
-     * Redirect to correct address accorging to the resolved values.
-     * @throws \Exception
-     */
-    public function syncRedirect(&$params) {
-        $this->init($params);
-
-        if ($this->language !== $params->lang) {
-            $params->lang = $this->language;
-
-            return true;
+    public function init(bool $redirect = true): void {
+        if (!isset($this->language)) {
+            $this->language = $this->selectLang();
+            $this->getTranslator()->setLang($this->language);
         }
-        return false;
+        if ($redirect && $this->urlLang !== $this->language) {
+            $this->getPresenter()->redirect('this', ['lang' => $this->language]);
+        }
     }
 
     /**
-     * @return mixed
+     * Preferred language of the page
+     *
+     * @param bool $redirect
+     * @return string ISO 639-1
+     * Should be final
+     * @throws AbortException
+     * @throws UnsupportedLanguageException
      */
-    public function getLanguage() {
+    final public function getLang(bool $redirect = true): string {
+        $this->init($redirect);
         return $this->language;
     }
 
     /**
-     * @param $params
-     * @throws \Exception
+     * @return string
+     * @throws UnsupportedLanguageException
      */
-    private function init($params) {
-        if ($this->initialized) {
-            return;
+    private function selectLang(): string {
+        $candidate = $this->getUserPreferredLang() ?? $this->urlLang;
+        $supportedLanguages = $this->getTranslator()->getSupportedLanguages();
+        if (!$candidate || !in_array($candidate, $supportedLanguages)) {
+            $candidate = $this->request->detectLanguage($supportedLanguages);
         }
-        $this->initialized = true;
-
-        $this->setLanguages($this->getSupportedLanguages());
-
-        if (count($this->getLanguages()) == 0) {
-            return;
+        if (!$candidate) {
+            $candidate = $this->getContext()->getParameters()['localization']['defaultLanguage'];
         }
-
-        /* LANGUAGE */
-        $this->language = $this->getDefaultLanguage();
-
-        if ($params->lang !== null) {
-
-            if (!$this->isLanguage($params->lang)) {
-                $this->language = $this->getDefaultLanguage();
-            } else {
-                $this->language = $params->lang;
-            }
-
+        // final check
+        if (!in_array($candidate, $supportedLanguages)) {
+            throw new UnsupportedLanguageException($candidate);
         }
+        return $candidate;
     }
 
-    /**
-     * @return array of existing languages
-     * @throws \Exception
-     */
-    private function getSupportedLanguages() {
-        $presenter = $this->getPresenter();
-        if (!($presenter instanceof \BasePresenter)) {
-            throw new \Exception('Wrong presenter');
-        }
-        return $presenter->getTranslator()->getSupportedLanguages();
-
-    }
-
-    /**
-     * @param null $class
-     * @return \Nette\Templating\ITemplate|Template
-     */
-    protected function createTemplate($class = NULL) {
-        /**
-         * @var Template $template
-         */
-        $presenter = $this->getPresenter();
-
-        $template = parent::createTemplate($class);
-        if ($presenter instanceof \BasePresenter) {
-            $template->setTranslator($presenter->getTranslator());
-        }
-        return $template;
-    }
-
-    public function render() {
-
-        $this->template->languages = $this->getLanguages();
-        $this->template->languageNames = $this->languageNames;
-        $this->template->currentLanguage = $this->getLanguage() ? $this->getLanguage() : null;
-
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'LanguageChooser.latte');
+    public function render(): void {
+        $this->beforeRender();
+        $this->template->modifiable = $this->isModifiable();
+        $this->template->currentLanguageName = self::$languageNames[$this->language] ?: null;
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.language.latte');
         $this->template->render();
     }
 
+    private function getUserPreferredLang(): ?string {
+        /**@var ModelLogin $login */
+        $login = $this->user->getIdentity();
+        if ($login && $login->getPerson()) {
+            return $login->getPerson()->getPreferredLang();
+        }
+        return null;
+    }
+
+    private function isModifiable(): bool {
+        return !$this->getUserPreferredLang();
+    }
+
+    /* ************ CHOOSER METHODS *************** */
+    protected function getTitle(): Title {
+        return new Title(isset(self::$languageNames[$this->language]) ? self::$languageNames[$this->language] : _('Language'), 'fa fa-language');
+    }
+
+    protected function getItems(): array {
+        if (!count($this->supportedLanguages)) {
+            $this->supportedLanguages = $this->getTranslator()->getSupportedLanguages();
+        }
+        return $this->supportedLanguages;
+    }
+
     /**
-     * @param $language
-     * @throws \Nette\Application\AbortException
+     * @param string $item
+     * @return bool
      */
-    public function handleChangeLang($language) {
-        /**
-         * @var \BasePresenter $presenter
-         */
-        $presenter = $this->getPresenter();
-        $translator = $presenter->getTranslator();
-        $translator->setLang($language);
-        $presenter->redirect('this', ['lang' => $language]);
+    public function isItemActive($item): bool {
+        return $this->language === $item;
+    }
+
+    /**
+     * @param string $item
+     * @return Title
+     */
+    public function getItemTitle($item): Title {
+        return new Title(self::$languageNames[$item]);
+    }
+
+    /**
+     * @param string $item
+     * @return string
+     * @throws InvalidLinkException
+     */
+    public function getItemLink($item): string {
+        return $this->getPresenter()->link('this', ['lang' => $item]);
     }
 }

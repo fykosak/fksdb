@@ -2,11 +2,9 @@
 
 namespace FKSDB\Transitions;
 
-use Mail\MailTemplateFactory;
-
 /**
  * Class TransitionsFactory
- * @package FKSDB\Transitions
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TransitionsFactory {
     /**

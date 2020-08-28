@@ -1,226 +1,172 @@
 <?php
 
-namespace Events\Machine;
+namespace FKSDB\Events\Machine;
 
-use Events\Model\ExpressionEvaluator;
-use Events\TransitionConditionFailedException;
-use Events\TransitionOnExecutedException;
-use Events\TransitionUnsatisfiedTargetException;
-use Nette\FreezableObject;
+use FKSDB\Events\Model\ExpressionEvaluator;
+use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Events\TransitionConditionFailedException;
+use FKSDB\Events\TransitionOnExecutedException;
+use FKSDB\Events\TransitionUnsatisfiedTargetException;
+use FKSDB\Logging\ILogger;
 use Nette\InvalidArgumentException;
+use Nette\SmartObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @property array onExecuted
  */
-class Transition extends FreezableObject {
+class Transition {
+    use SmartObject;
 
-    /**
-     * @var BaseMachine
-     */
-    private $baseMachine;
+    public const TYPE_SUCCESS = ILogger::SUCCESS;
+    public const TYPE_WARNING = ILogger::WARNING;
+    public const TYPE_DANGEROUS = ILogger::ERROR;
+    public const TYPE_DEFAULT = 'secondary';
 
-    /**
-     * @var Transition[]
-     */
-    private $inducedTransitions = [];
+    private BaseMachine $baseMachine;
 
-    /**
-     * @var string
-     */
-    private $mask;
+    private array $inducedTransitions = [];
 
-    /**
-     * @var string
-     */
-    private $name;
+    private string $mask;
 
-    /**
-     * @var string
-     */
-    private $target;
+    private string $name;
 
-    /**
-     * @var string
-     */
-    private $source;
+    private string $target;
 
-    /**
-     * @var string
-     */
-    private $label;
+    private string $source;
 
-    /**
-     * @var boolean|callable
-     */
+    private ?string $label;
+
+    /** @var bool|callable */
     private $condition;
 
-    /**
-     * @var boolean|callable
-     */
-    private $dangerous;
-
-    /**
-     * @var boolean|callable
-     */
+    /** @var bool|callable */
     private $visible;
 
-    /**
-     * @var ExpressionEvaluator
-     */
-    private $evaluator;
+    private ExpressionEvaluator $evaluator;
 
-    /**
-     * @var array
-     */
-    public $onExecuted = [];
+    public array $onExecuted = [];
+
+    private string $type;
 
     /**
      * Transition constructor.
-     * @param $mask
-     * @param $label
+     * @param string $mask
+     * @param string $label
+     * @param string $type
      */
-    function __construct($mask, $label) {
+    public function __construct(string $mask, ?string $label = null, string $type = self::TYPE_DEFAULT) {
         $this->setMask($mask);
         $this->label = $label;
+        if (!in_array($type, $this->getAllowedBehaviorTypes())) {
+            throw new InvalidArgumentException(sprintf('Behavior type %s not allowed', $type));
+        }
+        $this->type = $type;
+    }
+
+    private function getAllowedBehaviorTypes(): array {
+        return [
+            self::TYPE_SUCCESS,
+            self::TYPE_WARNING,
+            self::TYPE_DANGEROUS,
+            self::TYPE_DEFAULT,
+        ];
     }
 
     /**
      * Meaningless idenifier.
-     *
-     * @return string
      */
-    public function getName() {
+    public function getName(): string {
         return $this->name;
     }
 
-    /**
-     * @param $name
-     */
-    private function setName($name) {
+    public function getType(): string {
+        if ($this->isTerminating()) {
+            return self::TYPE_DANGEROUS;
+        }
+        if ($this->isCreating()) {
+            return self::TYPE_SUCCESS;
+        }
+        return $this->type;
+    }
+
+    private function setName(string $name): void {
         // it's used for component naming
         $name = str_replace('*', '_any_', $name);
         $name = str_replace('|', '_or_', $name);
         $this->name = preg_replace('/[^a-z0-9_]/i', '_', $name);
     }
 
-    /**
-     * @return string
-     */
-    public function getLabel() {
+    public function getLabel(): ?string {
         return $this->label;
     }
 
-    /**
-     * @return string
-     */
-    public function getMask() {
+    public function getMask(): string {
         return $this->mask;
     }
 
-    /**
-     * @param $mask
-     */
-    public function setMask($mask) {
+    public function setMask(string $mask): void {
         $this->mask = $mask;
-        list($this->source, $this->target) = self::parseMask($mask);
+        [$this->source, $this->target] = self::parseMask($mask);
         $this->setName($mask);
     }
 
-    /**
-     * @return BaseMachine
-     */
-    public function getBaseMachine() {
+    public function getBaseMachine(): BaseMachine {
         return $this->baseMachine;
     }
 
-    /**
-     * @param BaseMachine $baseMachine
-     */
-    public function setBaseMachine(BaseMachine $baseMachine) {
-        $this->updating();
+    public function setBaseMachine(BaseMachine $baseMachine): void {
         $this->baseMachine = $baseMachine;
     }
 
-    /**
-     * @return string
-     */
-    public function getTarget() {
+    public function getTarget(): string {
         return $this->target;
     }
 
-    /**
-     * @return bool
-     */
-    public function isCreating() {
+    public function getSource(): string {
+        return $this->source;
+    }
+
+    public function isCreating(): bool {
         return strpos($this->source, BaseMachine::STATE_INIT) !== false;
     }
 
-    /**
-     * @return bool
-     */
-    public function isTerminating() {
+    public function isTerminating(): bool {
         return $this->target == BaseMachine::STATE_TERMINATED;
     }
 
-    /**
-     * @return bool
-     */
-    public function isDangerous() {
-        return $this->isTerminating() || $this->evaluator->evaluate($this->dangerous, $this);
+    public function isVisible(Holder $holder): bool {
+        return $this->getEvaluator()->evaluate($this->visible, $holder);
     }
 
     /**
-     * @return mixed
+     * @param callable|bool $condition
+     * @return void
      */
-    public function isVisible() {
-        return $this->evaluator->evaluate($this->visible, $this);
-    }
-
-    /**
-     * @param $condition
-     */
-    public function setCondition($condition) {
-        $this->updating();
+    public function setCondition($condition): void {
         $this->condition = $condition;
     }
 
     /**
-     * @param $dangerous
+     * @param callable|bool $visible
+     * @return void
      */
-    public function setDangerous($dangerous) {
-        $this->updating();
-        $this->dangerous = $dangerous;
-    }
-
-    /**
-     * @param $visible
-     */
-    public function setVisible($visible) {
-        $this->updating();
+    public function setVisible($visible): void {
         $this->visible = $visible;
     }
 
-    /**
-     * @return ExpressionEvaluator
-     */
-    public function getEvaluator() {
+    private function getEvaluator(): ExpressionEvaluator {
         return $this->evaluator;
     }
 
-    /**
-     * @param ExpressionEvaluator $evaluator
-     */
-    public function setEvaluator(ExpressionEvaluator $evaluator) {
+    public function setEvaluator(ExpressionEvaluator $evaluator): void {
         $this->evaluator = $evaluator;
     }
 
-    /**
-     * @param BaseMachine $targetMachine
-     * @param $targetState
-     */
-    public function addInducedTransition(BaseMachine $targetMachine, $targetState) {
+    public function addInducedTransition(BaseMachine $targetMachine, string $targetState): void {
         if ($targetMachine === $this->getBaseMachine()) {
             throw new InvalidArgumentException("Cannot induce transition in the same machine.");
         }
@@ -232,65 +178,58 @@ class Transition extends FreezableObject {
     }
 
     /**
-     * @return array
+     * @param Holder $holder
+     * @return Transition[]
      */
-    private function getInducedTransitions() {
+    private function getInducedTransitions(Holder $holder): array {
         $result = [];
         foreach ($this->inducedTransitions as $baseMachineName => $targetState) {
             $targetMachine = $this->getBaseMachine()->getMachine()->getBaseMachine($baseMachineName);
-            $inducedTransition = $targetMachine->getTransitionByTarget($targetState);
+            $oldState = $holder->getBaseHolder($baseMachineName)->getModelState();
+            $inducedTransition = $targetMachine->getTransitionByTarget($oldState, $targetState);
             if ($inducedTransition) {
-                $result[] = $inducedTransition;
+                $result[$baseMachineName] = $inducedTransition;
             }
         }
         return $result;
     }
 
-    /**
-     *
-     * @return null|Transition
-     */
-    private function getBlockingTransition() {
-        foreach ($this->getInducedTransitions() as $inducedTransition) {
-            if ($inducedTransition->getBlockingTransition()) {
+    private function getBlockingTransition(Holder $holder): ?Transition {
+        foreach ($this->getInducedTransitions($holder) as $inducedTransition) {
+            if ($inducedTransition->getBlockingTransition($holder)) {
                 return $inducedTransition;
             }
         }
-        if (!$this->isConditionFulfilled()) {
+        if (!$this->isConditionFulfilled($holder)) {
             return $this;
         }
         return null;
     }
 
-    /**
-     * @return mixed
-     */
-    private function isConditionFulfilled() {
-        return $this->evaluator->evaluate($this->condition, $this);
+    private function isConditionFulfilled(Holder $holder): bool {
+        return (bool)$this->getEvaluator()->evaluate($this->condition, $holder);
     }
 
     /**
-     * @param $inducedTransitions
-     * @return bool
+     * @param Holder $holder
+     * @param Transition[] $inducedTransitions
+     * @return bool|array
      */
-    private function validateTarget($inducedTransitions) {
+    private function validateTarget(Holder $holder, array $inducedTransitions) {
         foreach ($inducedTransitions as $inducedTransition) {
-            if (($result = $inducedTransition->validateTarget([])) !== true) { // intentionally =
+            if (($result = $inducedTransition->validateTarget($holder, [])) !== true) { // intentionally =
                 return $result;
             }
         }
 
-        $baseHolder = $this->getBaseHolder();
+        $baseHolder = $holder->getBaseHolder($this->getBaseMachine()->getName());
         $validator = $baseHolder->getValidator();
-        $validator->validate($baseHolder, $this->getTarget());
+        $validator->validate($baseHolder);
         return $validator->getValidationResult();
     }
 
-    /**
-     * @return bool
-     */
-    public final function canExecute() {
-        return !$this->getBlockingTransition();
+    final public function canExecute(Holder $holder): bool {
+        return !$this->getBlockingTransition($holder);
     }
 
     /**
@@ -303,24 +242,25 @@ class Transition extends FreezableObject {
     /**
      * Launch induced transitions and sets new state.
      *
-     * @throws TransitionConditionFailedException
-     * @todo Induction work only for one level.     *
+     * @param Holder $holder
+     * @return array
+     * @todo Induction work only for one level.
      */
-    public final function execute() {
-        if ($blockingTransition = $this->getBlockingTransition()) { // intentionally =
+    final public function execute(Holder $holder): array {
+        $blockingTransition = $this->getBlockingTransition($holder);
+        if ($blockingTransition) {
             throw new TransitionConditionFailedException($blockingTransition);
         }
 
-
         $inducedTransitions = [];
-        foreach ($this->getInducedTransitions() as $inducedTransition) {
-            $inducedTransition->_execute();
+        foreach ($this->getInducedTransitions($holder) as $holderName => $inducedTransition) {
+            $inducedTransition->changeState($holder->getBaseHolder($holderName));
             $inducedTransitions[] = $inducedTransition;
         }
 
-        $this->_execute();
+        $this->changeState($holder->getBaseHolder($this->getBaseMachine()->getName()));
 
-        $validationResult = $this->validateTarget($inducedTransitions);
+        $validationResult = $this->validateTarget($holder, $inducedTransitions);
         if ($validationResult !== true) {
             throw new TransitionUnsatisfiedTargetException($validationResult);
         }
@@ -331,14 +271,17 @@ class Transition extends FreezableObject {
     /**
      * Triggers onExecuted event.
      *
-     * @param $inducedTransitions
+     * @param Holder $holder
+     * @param Transition[] $inducedTransitions
      */
-    public final function executed($inducedTransitions) {
+    final public function executed(Holder $holder, array $inducedTransitions): void {
         foreach ($inducedTransitions as $inducedTransition) {
-            $inducedTransition->executed([]);
+            $inducedTransition->executed($holder, []);
         }
         try {
-            $this->onExecuted($this);
+            foreach ($this->onExecuted as $cb) {
+                $cb($this, $holder);
+            }
         } catch (\Exception $exception) {
             throw new TransitionOnExecutedException($this->getName(), null, $exception);
         }
@@ -346,24 +289,17 @@ class Transition extends FreezableObject {
 
     /**
      * @note Assumes the condition is fullfilled.
+     * @param BaseHolder $holder
      */
-    private function _execute() {
-        $this->getBaseMachine()->setState($this->getTarget());
-        $this->getBaseHolder()->setModelState($this->getTarget());
-    }
-
-    /**
-     * @return \Events\Model\Holder\BaseHolder
-     */
-    public function getBaseHolder() {
-        return $this->getBaseMachine()->getMachine()->getHolder()->getBaseHolder($this->getBaseMachine()->getName());
+    private function changeState(BaseHolder $holder): void {
+        $holder->setModelState($this->getTarget());
     }
 
     /**
      * @param string $mask It may be either mask of initial state or mask of whole transition.
-     * @return boolean
+     * @return bool
      */
-    public function matches($mask) {
+    public function matches(string $mask): bool {
         $parts = self::parseMask($mask);
 
         if (count($parts) == 2 && $parts[1] != $this->getTarget()) {
@@ -388,36 +324,27 @@ class Transition extends FreezableObject {
      * @param string $mask
      * @return array
      */
-    private static function parseMask($mask) {
+    private static function parseMask(string $mask): array {
         return explode('->', $mask);
     }
 
-    /**
-     * @param $mask
-     * @param $states
-     * @return bool
-     */
-    public static function validateTransition($mask, $states) {
+    public static function validateTransition(string $mask, array $states): bool {
         $parts = self::parseMask($mask);
         if (count($parts) != 2) {
             return false;
         }
-        list($sources, $target) = $parts;
+        [$sources, $target] = $parts;
 
         $sources = explode('|', $sources);
 
         foreach ($sources as $source) {
-            if (!in_array($source, array_merge($states, array(BaseMachine::STATE_ANY, BaseMachine::STATE_INIT)))) {
+            if (!in_array($source, array_merge($states, [BaseMachine::STATE_ANY, BaseMachine::STATE_INIT]))) {
                 return false;
             }
         }
-
-        if (!in_array($target, array_merge($states, array(BaseMachine::STATE_TERMINATED)))) {
+        if (!in_array($target, array_merge($states, [BaseMachine::STATE_TERMINATED]))) {
             return false;
         }
-
         return true;
     }
-
 }
-

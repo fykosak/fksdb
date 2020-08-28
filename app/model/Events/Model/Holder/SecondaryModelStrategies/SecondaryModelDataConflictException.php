@@ -1,36 +1,32 @@
 <?php
 
-namespace Events\Model\Holder\SecondaryModelStrategies;
+namespace FKSDB\Events\Model\Holder\SecondaryModelStrategies;
 
-use Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\BaseHolder;
 
 /**
  * Class SecondaryModelDataConflictException
- * @package Events\Model\Holder\SecondaryModelStrategies
+ * *
  */
 class SecondaryModelDataConflictException extends SecondaryModelConflictException {
 
-    private $conflictData;
+    private array $conflictData;
 
     /**
      * SecondaryModelDataConflictException constructor.
-     * @param $conflictData
+     * @param array $conflictData
      * @param BaseHolder $baseHolder
-     * @param $conflicts
+     * @param iterable $conflicts
      * @param null $code
      * @param null $previous
      */
-    function __construct($conflictData, BaseHolder $baseHolder, $conflicts, $code = null, $previous = null) {
+    public function __construct(array $conflictData, BaseHolder $baseHolder, iterable $conflicts, $code = null, $previous = null) {
         parent::__construct($baseHolder, $conflicts, $code, $previous);
         $this->conflictData = $conflictData;
         $this->message .= sprintf(' (%s)', implode(', ', $this->conflictData));
     }
 
-    /**
-     * @return mixed
-     */
-    public function getConflictData() {
-        return $this->getConflictData();
+    public function getConflictData(): array {
+        return $this->conflictData;
     }
-
 }

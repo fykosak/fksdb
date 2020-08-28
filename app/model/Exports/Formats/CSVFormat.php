@@ -1,7 +1,9 @@
 <?php
 
-use Exports\IExportFormat;
-use Exports\StoredQuery;
+namespace FKSDB\Exports\Formats;
+
+use FKSDB\Exports\IExportFormat;
+use FKSDB\StoredQuery\StoredQuery;
 use Nette\SmartObject;
 use PePa\CSVResponse;
 
@@ -12,45 +14,40 @@ use PePa\CSVResponse;
  */
 class CSVFormat implements IExportFormat {
     use SmartObject;
-    const DEFAULT_DELIMITER = ';';
-    const DEFAULT_QUOTE = false;
 
-    /**
-     * @var StoredQuery
-     */
-    private $storedQuery;
-    private $delimiter;
-    private $quote;
-    private $header;
+    public const DEFAULT_DELIMITER = ';';
+    public const DEFAULT_QUOTE = false;
+
+    private StoredQuery $storedQuery;
+
+    private string $delimiter;
+
+    private bool $quote;
+
+    private bool $header;
 
     /**
      * CSVFormat constructor.
      * @param StoredQuery $storedQuery
-     * @param $header
+     * @param bool $header
      * @param string $delimiter
      * @param bool $quote
      */
-    function __construct(StoredQuery $storedQuery, $header, $delimiter = self::DEFAULT_DELIMITER, $quote = self::DEFAULT_QUOTE) {
+    public function __construct(StoredQuery $storedQuery, bool $header, string $delimiter = self::DEFAULT_DELIMITER, bool $quote = self::DEFAULT_QUOTE) {
         $this->storedQuery = $storedQuery;
         $this->delimiter = $delimiter;
         $this->quote = $quote;
         $this->header = $header;
     }
 
-    /**
-     * @return \Nette\Application\IResponse|CSVResponse
-     */
-    public function getResponse() {
+    public function getResponse(): CSVResponse {
         $data = $this->storedQuery->getData();
-        $name = isset($this->storedQuery->getQueryPattern()->name) ? $this->storedQuery->getQueryPattern()->name : 'adhoc';
+        $name = $this->storedQuery->getName();
         $name .= '.csv';
-
         $response = new CSVResponse($data, $name);
         $response->setAddHeading($this->header);
         $response->setQuotes($this->quote);
         $response->setGlue($this->delimiter);
-
         return $response;
     }
-
 }

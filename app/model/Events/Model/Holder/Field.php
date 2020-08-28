@@ -1,263 +1,162 @@
 <?php
 
-namespace Events\Model\Holder;
+namespace FKSDB\Events\Model\Holder;
 
-use Events\Machine\BaseMachine;
-use Events\Model\ExpressionEvaluator;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Factories\Events\IFieldFactory;
-use Nette\ComponentModel\Component;
-use Nette\Forms\Container;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\IControl;
-use Nette\FreezableObject;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Field extends FreezableObject {
+class Field {
 
-    /**
-     * @var BaseHolder
-     */
-    private $baseHolder;
+    private string $name;
 
-    /**
-     * @var string
-     */
-    private $name;
+    private bool $determining;
 
-    /**
-     * @var string
-     */
-    private $label;
+    private ?string $label;
 
-    /**
-     * @var string
-     */
-    private $description;
+    private ?string $description;
 
-    /**
-     * @var boolean
-     */
-    private $determining;
+    private BaseHolder $baseHolder;
 
-    /**
-     * @var boolean|callable
-     */
-    private $required;
+    private ExpressionEvaluator $evaluator;
 
-    /**
-     * @var boolean|callable
-     */
-    private $modifiable;
+    private IFieldFactory $factory;
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $default;
 
-    /**
-     * @var ExpressionEvaluator
-     */
-    private $evaluator;
+    /** @var bool|callable */
+    private $required;
 
-    /**
-     * @var boolean|callable
-     */
+    /** @var bool|callable */
+    private $modifiable;
+
+    /** @var bool|callable */
     private $visible;
 
     /**
-     * @var IFieldFactory
-     */
-    private $factory;
-
-    /**
      * Field constructor.
-     * @param $name
-     * @param $label
+     * @param string $name
+     * @param string|null $label
      */
-    function __construct($name, $label) {
+    public function __construct(string $name, string $label = null) {
         $this->name = $name;
         $this->label = $label;
     }
 
-    /*
-     * Accessors
-     */
-
-    /**
-     * @return BaseHolder
-     */
-    public function getBaseHolder() {
-        return $this->baseHolder;
-    }
-
-    /**
-     * @param BaseHolder $baseHolder
-     */
-    public function setBaseHolder(BaseHolder $baseHolder) {
-        $this->updating();
-        $this->baseHolder = $baseHolder;
-    }
-
-    /**
-     * @return string
-     */
-    public function getName() {
+    public function getName(): string {
         return $this->name;
     }
 
-    /**
-     * @return string
-     */
-    public function getLabel() {
+    public function getLabel(): ?string {
         return $this->label;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription() {
+    public function getBaseHolder(): BaseHolder {
+        return $this->baseHolder;
+    }
+
+    public function setBaseHolder(BaseHolder $baseHolder): void {
+        $this->baseHolder = $baseHolder;
+    }
+
+    public function getDescription(): ?string {
         return $this->description;
     }
 
-    /**
-     * @param $description
-     */
-    public function setDescription($description) {
-        $this->updating();
+    public function setDescription(?string $description): void {
         $this->description = $description;
     }
 
-    /**
-     * @return bool
-     */
-    public function isDetermining() {
+    public function isDetermining(): bool {
         return $this->determining;
     }
 
-    /**
-     * @param $determining
-     */
-    public function setDetermining($determining) {
-        $this->updating();
+    public function setDetermining(bool $determining): void {
         $this->determining = $determining;
     }
 
-    /**
-     * @param $required
-     */
-    public function setRequired($required) {
-        $this->updating();
-        $this->required = $required;
-    }
-
-    /**
-     * @param $modifiable
-     */
-    public function setModifiable($modifiable) {
-        $this->updating();
-        $this->modifiable = $modifiable;
-    }
-
-    /**
-     * @param $visible
-     */
-    public function setVisible($visible) {
-        $this->updating();
-        $this->visible = $visible;
-    }
-
-    /**
-     * @return mixed
-     */
+    /** @return mixed */
     public function getDefault() {
         return $this->default;
     }
 
     /**
-     * @param $default
+     * @param mixed $default
+     * @return void
      */
-    public function setDefault($default) {
-        $this->updating();
+    public function setDefault($default): void {
         $this->default = $default;
     }
 
-    /**
-     * @return ExpressionEvaluator
-     */
-    public function getEvaluator() {
-        return $this->evaluator;
-    }
-
-    /**
-     * @param ExpressionEvaluator $evaluator
-     */
-    public function setEvaluator(ExpressionEvaluator $evaluator) {
+    public function setEvaluator(ExpressionEvaluator $evaluator): void {
         $this->evaluator = $evaluator;
     }
 
-    /**
-     * @param IFieldFactory $factory
-     */
-    public function setFactory(IFieldFactory $factory) {
-        $this->updating();
+    public function setFactory(IFieldFactory $factory): void {
         $this->factory = $factory;
     }
 
     /*
      * Forms
      */
-
-    /**
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return mixed
-     */
-    public function createFormComponent(BaseMachine $machine, Container $container) {
-        return $this->factory->create($this, $machine, $container);
+    public function createFormComponent(): IComponent {
+        return $this->factory->createComponent($this);
     }
 
-    /**
-     * @param Component $component
-     * @return IControl
-     */
-    public function getMainControl(Component $component) {
+    public function setFieldDefaultValue(IComponent $component): void {
+        $this->factory->setFieldDefaultValue($component, $this);
+    }
+
+    public function getMainControl(IComponent $component): IControl {
         return $this->factory->getMainControl($component);
     }
 
-    /*
-     * "Runtime" operations
-     */
+    /* ********* "Runtime" operations *********     */
 
-    /**
-     * @return mixed
-     */
-    public function isVisible() {
-        return $this->evaluator->evaluate($this->visible, $this);
-    }
-
-    /**
-     * @return mixed
-     */
-    public function isRequired() {
+    public function isRequired(): bool {
         return $this->evaluator->evaluate($this->required, $this);
     }
 
-    /**
-     * @return bool
-     */
-    public function isModifiable() {
-        return $this->getBaseHolder()->isModifiable() && $this->evaluator->evaluate($this->modifiable, $this);
+    /** @param bool|callable $required */
+    public function setRequired($required): void {
+        $this->required = $required;
+    }
+
+    /* ** MODIFIABLE ** */
+
+    public function isModifiable(): bool {
+        return $this->getBaseHolder()->isModifiable() && (bool)$this->evaluator->evaluate($this->modifiable, $this);
+    }
+
+    /** @param bool|callable $modifiable */
+    public function setModifiable($modifiable): void {
+        $this->modifiable = $modifiable;
+    }
+
+    /* ** VISIBLE ** */
+
+    public function isVisible(): bool {
+        return (bool)$this->evaluator->evaluate($this->visible, $this);
     }
 
     /**
-     * @param DataValidator $validator
-     * @return bool
+     * @param callable|bool $visible
+     * @return void
      */
-    public function validate(DataValidator $validator) {
-        return $this->factory->validate($this, $validator);
+    public function setVisible($visible): void {
+        $this->visible = $visible;
+    }
+
+    public function validate(DataValidator $validator): bool {
+        return (bool)$this->factory->validate($this, $validator);
     }
 
     /**
@@ -265,22 +164,16 @@ class Field extends FreezableObject {
      */
     public function getValue() {
         $model = $this->getBaseHolder()->getModel();
-        if (!isset($model[$this->name])) {
-            if ($this->getBaseHolder()->getModelState() == BaseMachine::STATE_INIT) {
-                return $this->getDefault();
-            } else {
-                return null;
-            }
-        } else {
+        if (isset($model[$this->name])) {
             return $model[$this->name];
         }
+        if ($this->getBaseHolder()->getModelState() == BaseMachine::STATE_INIT) {
+            return $this->getDefault();
+        }
+        return null;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return "{$this->baseHolder}.{$this->name}";
     }
-
 }

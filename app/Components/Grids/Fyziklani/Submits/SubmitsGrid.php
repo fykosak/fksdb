@@ -2,10 +2,10 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\DbNames;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use NiftyGrid\DuplicateColumnException;
 
@@ -16,47 +16,36 @@ use NiftyGrid\DuplicateColumnException;
  */
 abstract class SubmitsGrid extends BaseGrid {
 
-    /**
-     *
-     * @var ServiceFyziklaniSubmit
-     */
-    protected $serviceFyziklaniSubmit;
+    protected ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
 
-    /**
-     * FyziklaniSubmitsGrid constructor.
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
-     * @param TableReflectionFactory|null $tableReflectionFactory
-     */
-    public function __construct(ServiceFyziklaniSubmit $serviceFyziklaniSubmit, TableReflectionFactory $tableReflectionFactory) {
+    public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit): void {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
-        parent::__construct($tableReflectionFactory);
     }
 
     /**
      * @throws DuplicateColumnException
      */
-    protected function addColumnTask() {
-        $this->addColumn('label', _('Task'))->setRenderer(function ($row) {
-            $model = ModelFyziklaniSubmit::createFromActiveRow($row);
+    protected function addColumnTask(): void {
+        $this->addColumn('label', _('Task'))->setRenderer(function ($row): string {
+            $model = ModelFyziklaniSubmit::createFromActiveRow($row); // TODO is needed?
             return $model->getFyziklaniTask()->label;
         })->setSortable(false);
     }
 
     /**
+     * @return void
      * @throws DuplicateColumnException
+     * @throws BadTypeException
      */
-    protected function addColumnTeam() {
-        $this->addJoinedColumn(DbNames::TAB_E_FYZIKLANI_TEAM, 'name_n_id', function ($row) {
+    protected function addColumnTeam(): void {
+        $this->addJoinedColumn('e_fyziklani_team.name_n_id', function ($row): ModelFyziklaniTeam {
             if (!$row instanceof ModelFyziklaniSubmit) {
-                $row = ModelFyziklaniSubmit::createFromActiveRow($row);
+                $row = ModelFyziklaniSubmit::createFromActiveRow($row);  // TODO is needed?
             }
             return $row->getFyziklaniTeam();
         });
     }
 
-    /**
-     * @return string
-     */
     protected function getModelClassName(): string {
         return ModelFyziklaniSubmit::class;
     }

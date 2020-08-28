@@ -5,36 +5,34 @@ namespace FKSDB\ORM\Services;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelFlag;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
  */
 class ServiceFlag extends AbstractServiceSingle {
     /**
-     * @return string
+     * ServiceFlag constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
      */
-    public function getModelClassName(): string {
-        return ModelFlag::class;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getTableName(): string {
-        return DbNames::TAB_FLAG;
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_FLAG, ModelFlag::class);
     }
 
     /**
      * Syntactic sugar.
      *
-     * @param integer $fid
-     * @return \FKSDB\ORM\Models\ModelFlag|null
+     * @param string $fid
+     * @return ModelFlag|null
      */
-    public function findByFid($fid) {
+    public function findByFid($fid): ?ModelFlag {
         if (!$fid) {
             return null;
         }
+        /** @var ModelFlag $result */
         $result = $this->getTable()->where('fid', $fid)->fetch();
-        return $result ? ModelFlag::createFromActiveRow($result) : null;
+        return $result ?: null;
     }
 }

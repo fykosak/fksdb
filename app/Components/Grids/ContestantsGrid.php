@@ -2,10 +2,17 @@
 
 namespace FKSDB\Components\Grids;
 
-
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Services\ServiceContestant;
-use OrgModule\BasePresenter;
-use SQL\ViewDataSource;
+use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
+use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
+use FKSDB\SQL\ViewDataSource;
 
 /**
  *
@@ -13,67 +20,62 @@ use SQL\ViewDataSource;
  */
 class ContestantsGrid extends BaseGrid {
 
-    /**
-     * @var \FKSDB\ORM\Services\ServiceContestant
-     */
-    private $serviceContestant;
+    private ServiceContestant $serviceContestant;
+
+    private int $year;
+
+    private ModelContest $contest;
 
     /**
      * ContestantsGrid constructor.
-     * @param ServiceContestant $serviceContestant
+     * @param Container $container
+     * @param ModelContest $contest
+     * @param int $year
      */
-    function __construct(ServiceContestant $serviceContestant) {
-        parent::__construct();
+    public function __construct(Container $container, ModelContest $contest, int $year) {
+        parent::__construct($container);
+        $this->contest = $contest;
+        $this->year = $year;
+    }
 
+    public function injectServiceContestant(ServiceContestant $serviceContestant): void {
         $this->serviceContestant = $serviceContestant;
     }
 
+    protected function getData(): IDataSource {
+        $contestants = $this->serviceContestant->getCurrentContestants($this->contest, $this->year);
+        return new ViewDataSource('ct_id', $contestants);
+    }
+
     /**
-     * @param BasePresenter $presenter
-     * @throws \Nette\Application\BadRequestException
-     * @throws \Nette\Application\UI\InvalidLinkException
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
+     * @param Presenter $presenter
+     * @return void
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws DuplicateGlobalButtonException
+     * @throws InvalidLinkException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
-        //
-        // data
-        //
-        $contestants = $this->serviceContestant->getCurrentContestants($presenter->getSelectedContest()->contest_id, $presenter->getSelectedYear());
 
-
-        $this->setDataSource(new ViewDataSource('ct_id', $contestants));
         $this->setDefaultOrder('name_lex ASC');
 
-        //
-        // columns
-        //
         $this->addColumn('name', _('Name'));
-        $this->addColumn('study_year', _('Ročník'));
-        $this->addColumn('school_name', _('Škola'));
+        $this->addColumn('study_year', _('Study year'));
+        $this->addColumn('school_name', _('School'));
 
-        //
-        // operations
-        //
-        $this->addButton('editPerson', _('Edit'))
-            ->setText(_('Edit'))
-            ->setLink(function ($row) use ($presenter) {
-                return $presenter->link('Contestant:edit', array(
-                    'id' => $row->ct_id,
-                ));
-            });
+
+        $this->addLinkButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'ct_id']);
+        // $this->addLinkButton('Contestant:detail', 'detail', _('Detail'), false, ['id' => 'ct_id']);
 
         $this->addGlobalButton('add')
-            ->setLabel(_('Založit řešitele'))
+            ->setLabel(_('Create contestant'))
             ->setLink($this->getPresenter()->link('create'));
 
-
-        //
-        // appeareance
-        //
         $this->paginate = false;
     }
 
+    protected function getModelClassName(): string {
+        return ModelContestant::class;
+    }
 }

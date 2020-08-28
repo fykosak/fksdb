@@ -14,32 +14,28 @@ use Nette\Security\IResource;
  * @property-read string note
  * @property-read int e_org_id
  */
-class ModelEventOrg extends AbstractModelSingle implements IResource, IEventReferencedModel, IPersonReferencedModel {
-    const RESOURCE_ID = 'eventOrg';
+class ModelEventOrg extends AbstractModelSingle implements IResource, IEventReferencedModel, IContestReferencedModel, IPersonReferencedModel {
+    public const RESOURCE_ID = 'eventOrg';
 
-    /**
-     * @return ModelPerson
-     */
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);
     }
 
-    /**
-     * @return ModelEvent
-     */
     public function getEvent(): ModelEvent {
         return ModelEvent::createFromActiveRow($this->event);
     }
 
-    /**
-     * @return string
-     */
+    public function getContest(): ModelContest {
+        return $this->getEvent()->getContest();
+    }
+
     public function getResourceId(): string {
         return self::RESOURCE_ID;
     }
 
     /**
      * @return string
+     * @throws InvalidStateException
      */
     public function __toString(): string {
         if (!$this->getPerson()) {

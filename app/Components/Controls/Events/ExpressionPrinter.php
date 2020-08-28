@@ -13,17 +13,16 @@ class ExpressionPrinter {
     use SmartObject;
 
     /**
-     * @param $expression
+     * @param callable|mixed $expression
      * @return string
      */
-    public function printExpression($expression) {
+    public function printExpression($expression): string {
         if (is_scalar($expression)) {
             return (string)$expression;
-        } else if (is_callable($expression)) {
+        } elseif (is_callable($expression)) {
             return (string)$expression;
         } else {
             throw new InvalidArgumentException("Cannot evaluate condition $expression.");
         }
     }
-
 }

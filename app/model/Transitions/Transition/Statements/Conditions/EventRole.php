@@ -1,25 +1,19 @@
 <?php
 
-
 namespace FKSDB\Transitions\Statements\Conditions;
 
-
-use Authorization\EventAuthorizator;
+use FKSDB\Authorization\EventAuthorizator;
 use FKSDB\Transitions\Statements\Statement;
 
 /**
  * Class EventRole
- * @package FKSDB\Transitions\Statements\Conditions
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class EventRole extends Statement {
-    /**
-     * @var EventAuthorizator
-     */
-    protected $eventAuthorizator;
-    /**
-     * @var string
-     */
-    protected $privilege;
+
+    protected EventAuthorizator $eventAuthorizator;
+
+    protected string $privilege;
 
     /**
      * EventRole constructor.

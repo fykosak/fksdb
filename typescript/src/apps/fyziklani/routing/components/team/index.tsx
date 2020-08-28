@@ -1,16 +1,12 @@
+import { dragEnd, dragStart } from '@shared/dragndrop';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
     Action,
     Dispatch,
 } from 'redux';
-import { Team } from '../../../helpers/interfaces/';
-import {
-    dragEnd,
-    dragStart,
-} from '../../actions/dragndrop';
+import { Team } from '../../../helpers/interfaces';
 import { removeTeamPlace } from '../../actions/teams';
-import { DragNDropData } from '../../middleware/interfaces';
 import { Store as RoutingStore } from '../../reducers/';
 
 interface StateProps {
@@ -19,7 +15,7 @@ interface StateProps {
 }
 
 interface DispatchProps {
-    onDragStart(teamId: number): void;
+    onDragStart(): void;
 
     onDragEnd(): void;
 
@@ -41,11 +37,11 @@ class TeamComponent extends React.Component<OwnProps & StateProps & DispatchProp
             <div className={'mb-3 ' + (hasPlace ? 'col-12' : 'col-6')}
                  draggable={true}
                  onDragStart={(event) => {
-                     event.dataTransfer.setData('text/plain', '');
+                     event.dataTransfer.setData('text/plain', team.teamId.toString());
                      event.dataTransfer.dropEffect = 'copy';
-                     onDragStart(team.teamId);
+                     onDragStart();
                  }}
-                 onClick={() => isDragged ? onDragEnd() : onDragStart(team.teamId)}
+                 onClick={() => isDragged ? onDragEnd() : onDragStart()}
                  onDragEnd={onDragEnd}
                  id={'team' + team.teamId}>
                 <div className={'card ' + (isDragged ? 'text-white bg-primary' : '')}>
@@ -79,7 +75,7 @@ const mapStateToProps = (state: RoutingStore, ownProps: OwnProps): StateProps =>
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
         onDragEnd: () => dispatch(dragEnd()),
-        onDragStart: (teamId) => dispatch(dragStart<DragNDropData>({teamId})),
+        onDragStart: () => dispatch(dragStart()),
         onRemovePlace: (teamId) => dispatch(removeTeamPlace(teamId)),
     };
 };

@@ -1,48 +1,39 @@
 <?php
 
 
-namespace Events\Model\Holder\SecondaryModelStrategies;
+namespace FKSDB\Events\Model\Holder\SecondaryModelStrategies;
 
-use Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\ORM\IModel;
+use Nette\Database\Table\ActiveRow;
 use RuntimeException;
 
 /**
  * Class SecondaryModelConflictException
- * @package Events\Model\Holder\SecondaryModelStrategies
+ * *
  */
 class SecondaryModelConflictException extends RuntimeException {
 
-    /**
-     * @var BaseHolder
-     */
-    private $baseHolder;
+    private BaseHolder $baseHolder;
 
-    /**
-     * @var \FKSDB\ORM\IModel[]
-     */
-    private $conflicts;
+    private iterable $conflicts;
 
     /**
      * SecondaryModelConflictException constructor.
      * @param BaseHolder $baseHolder
-     * @param $conflicts
+     * @param iterable $conflicts
      * @param null $code
      * @param null $previous
      */
-    function __construct(BaseHolder $baseHolder, $conflicts, $code = null, $previous = null) {
+    public function __construct(BaseHolder $baseHolder, iterable $conflicts, $code = null, $previous = null) {
         parent::__construct($this->createMessage($baseHolder->getModel(), $conflicts), $code, $previous);
         $this->baseHolder = $baseHolder;
         $this->conflicts = $conflicts;
     }
 
-    /**
-     * @param \FKSDB\ORM\IModel $model
-     * @param $conflicts
-     * @return string
-     */
-    private function createMessage(IModel $model, $conflicts) {
+    private function createMessage(IModel $model, iterable $conflicts): string {
         $ids = null;
+        /** @var ActiveRow $conflict */
         foreach ($conflicts as $conflict) {
             $ids = $conflict->getPrimary();
         }
@@ -50,17 +41,11 @@ class SecondaryModelConflictException extends RuntimeException {
         return sprintf('Model with PK %s conflicts with other models: %s.', $id, $ids);
     }
 
-    /**
-     * @return BaseHolder
-     */
-    public function getBaseHolder() {
+    public function getBaseHolder(): BaseHolder {
         return $this->baseHolder;
     }
 
-    /**
-     * @return IModel[]
-     */
-    public function getConflicts() {
+    public function getConflicts(): iterable {
         return $this->conflicts;
     }
 

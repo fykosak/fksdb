@@ -2,40 +2,34 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
+use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Config\NeonSchemaException;
+use FKSDB\Events\EventDispatchFactory;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
-use Nette\Application\UI\Control;
-use Nette\Localization\ITranslator;
+use Nette\Application\BadRequestException;
 
 /**
- * Class SittingControl
- * @package FKSDB\Components\Controls\Fyziklani
+ * Class SeatingControl
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class SeatingControl extends Control {
-    /**
-     * @var ServiceFyziklaniTeamPosition
-     */
-    private $serviceFyziklaniTeamPosition;
-    /**
-     * @var ITranslator
-     */
-    private $translator;
+class SeatingControl extends BaseComponent {
 
-    /**
-     * SeatingControl constructor.
-     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
-     * @param ITranslator $translator
-     */
-    public function __construct(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, ITranslator $translator) {
-        parent::__construct();
+    private ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition;
+
+    private EventDispatchFactory $eventDispatchFactory;
+
+    public function injectServicePrimary(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, EventDispatchFactory $eventDispatchFactory): void {
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
-        $this->translator = $translator;
+        $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
     /**
      * @param ModelEvent $event
+     * @return void
+     * @throws NeonSchemaException
      */
-    public function renderAll(ModelEvent $event) {
+    public function renderAll(ModelEvent $event): void {
         $this->render($event, 'all');
     }
 
@@ -43,16 +37,20 @@ class SeatingControl extends Control {
      * @param ModelEvent $event
      * @param int $teamId
      * @param string $lang
+     * @return void
+     * @throws NeonSchemaException
      */
-    public function renderTeam(ModelEvent $event, int $teamId, string $lang) {
+    public function renderTeam(ModelEvent $event, int $teamId, string $lang): void {
         $this->template->teamId = $teamId;
         $this->render($event, 'single', $lang);
     }
 
     /**
      * @param ModelEvent $event
+     * @return void
+     * @throws NeonSchemaException
      */
-    public function renderDev(ModelEvent $event) {
+    public function renderDev(ModelEvent $event): void {
         $this->template->teams = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms($event))
             ->where('e_fyziklani_team_id IS NOT NULL');
         $this->render($event, 'dev');
@@ -62,24 +60,26 @@ class SeatingControl extends Control {
      * @param ModelEvent $event
      * @param string $mode
      * @param string $lang
+     * @return void
+     * @throws NeonSchemaException
      */
-    public function render(ModelEvent $event, string $mode, string $lang = 'cs') {
+    public function render(ModelEvent $event, string $mode, string $lang = 'cs'): void {
         $this->template->places = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms($event));
         $this->template->mode = $mode;
         $this->template->lang = $lang;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Seating.' . $mode . '.latte');
-        $this->template->setTranslator($this->translator);
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.' . $mode . '.latte');
         $this->template->render();
     }
 
     /**
      * @param ModelEvent $event
      * @return int[]
+     * @throws NeonSchemaException
      */
     private function getRooms(ModelEvent $event): array {
         try {
-            return $event->getParameter('rooms');
-        } catch (\Exception $exception) {
+            return $this->eventDispatchFactory->getDummyHolder($event)->getParameter('rooms') ?: [];
+        } catch (BadRequestException $exception) {
             return [];
         }
     }
