@@ -64,7 +64,7 @@ class Holder {
 
     public function setPrimaryHolder(string $name): void {
         $this->primaryHolder = $this->getBaseHolder($name);
-        $this->secondaryBaseHolders = array_filter($this->baseHolders, function (BaseHolder $baseHolder) {
+        $this->secondaryBaseHolders = array_filter($this->baseHolders, function (BaseHolder $baseHolder): bool {
             return $baseHolder !== $this->primaryHolder;
         });
     }
@@ -225,7 +225,7 @@ class Holder {
                         'joinOn' => $baseHolder->getJoinOn(),
                         'joinTo' => $baseHolder->getJoinTo(),
                         'service' => $baseHolder->getService(),
-                        'personIds' => $baseHolder->getPersonIds(),
+                        'personIds' => $baseHolder->getPersonIdColumns(),
                         'holders' => [],
                     ];
                 }

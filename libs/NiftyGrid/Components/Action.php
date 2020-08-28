@@ -12,7 +12,7 @@ namespace NiftyGrid\Components;
 use Nette;
 use NiftyGrid;
 
-class Action extends \Nette\Application\UI\PresenterComponent
+class Action extends \Nette\Application\UI\Component
 {
 	/** @var string */
 	public $name;

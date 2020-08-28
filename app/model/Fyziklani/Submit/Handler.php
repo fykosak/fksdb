@@ -20,9 +20,9 @@ use Tracy\Debugger;
  */
 class Handler {
 
-    const DEBUGGER_LOG_PRIORITY = 'fyziklani-info';
+    public const DEBUGGER_LOG_PRIORITY = 'fyziklani-info';
 
-    const LOG_FORMAT = 'Submit %d was %s by %s';
+    public const LOG_FORMAT = 'Submit %d was %s by %s';
 
     private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
 

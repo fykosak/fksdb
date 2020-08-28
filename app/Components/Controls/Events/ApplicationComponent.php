@@ -224,11 +224,7 @@ class ApplicationComponent extends BaseComponent {
         }
     }
 
-    /**
-     * @return Machine
-     *
-     */
-    private function getMachine() {
+    private function getMachine(): Machine {
         return $this->handler->getMachine();
     }
 

@@ -28,7 +28,7 @@ class DashboardPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     protected function unauthorizedAccess(): void {
-        if ($this->getParam(AuthenticationPresenter::PARAM_DISPATCH)) {
+        if ($this->getParameter(AuthenticationPresenter::PARAM_DISPATCH)) {
             parent::unauthorizedAccess();
         } else {
             $this->redirect(':Core:Authentication:login'); // ask for a central dispatch

@@ -7,7 +7,6 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use FKSDB\Modules\FyziklaniModule\BasePresenter;
 use Nette\Utils\Html;
 
 /**
@@ -16,11 +15,6 @@ use Nette\Utils\Html;
  * @author Lukáš Timko
  */
 class RankingStrategy {
-    /**
-     * @var BasePresenter
-     * @deprecated
-     */
-    protected $presenter;
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
@@ -43,7 +37,7 @@ class RankingStrategy {
      * @throws NotClosedTeamException
      * @internal
      */
-    public function close(string $category = null): Html {
+    public function close(?string $category = null): Html {
         $connection = $this->serviceFyziklaniTeam->getConnection();
         $connection->beginTransaction();
         $teams = $this->getAllTeams($category);
@@ -59,7 +53,7 @@ class RankingStrategy {
      * @return Html
      * @throws NotClosedTeamException
      */
-    public function __invoke(string $category = null): Html {
+    public function __invoke(?string $category = null): Html {
         return $this->close($category);
     }
 
@@ -119,11 +113,7 @@ class RankingStrategy {
         };
     }
 
-    /**
-     * @param string|null $category
-     * @return TypedTableSelection
-     */
-    private function getAllTeams(string $category = null): TypedTableSelection {
+    private function getAllTeams(?string $category = null): TypedTableSelection {
         $query = $this->serviceFyziklaniTeam->findParticipating($this->event);
         if ($category) {
             $query->where('category', $category);

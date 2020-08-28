@@ -10,12 +10,10 @@ use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Services\ServicePerson;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
-use Nette\Utils\JsonException;
 use FKSDB\Persons\IModifiabilityResolver;
 use FKSDB\Persons\IVisibilityResolver;
 use FKSDB\Persons\ReferencedPersonHandlerFactory;
@@ -65,16 +63,6 @@ class ReferencedPersonFactory {
         $this->context = $context;
     }
 
-    /**
-     * @param array $fieldsDefinition
-     * @param int $acYear
-     * @param string $searchType
-     * @param bool $allowClear
-     * @param IModifiabilityResolver $modifiabilityResolver
-     * @param IVisibilityResolver $visibilityResolver
-     * @param ModelEvent|null $event
-     * @return ReferencedId
-     */
     public function createReferencedPerson(
         array $fieldsDefinition,
         int $acYear,
@@ -82,7 +70,7 @@ class ReferencedPersonFactory {
         bool $allowClear,
         IModifiabilityResolver $modifiabilityResolver,
         IVisibilityResolver $visibilityResolver,
-        $event = null
+        ?ModelEvent $event = null
     ): ReferencedId {
 
         $handler = $this->referencedPersonHandlerFactory->create($acYear, null, $event);
@@ -94,16 +82,7 @@ class ReferencedPersonFactory {
         );
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param string $sub
-     * @param string $field
-     * @param int $acYear
-     * @param null $event
-     * @return bool
-     * @throws JsonException
-     */
-    final public static function isFilled(ModelPerson $person, string $sub, string $field, int $acYear, $event = null): bool {
+    final public static function isFilled(ModelPerson $person, string $sub, string $field, int $acYear, ?ModelEvent $event = null): bool {
         $value = self::getPersonValue($person, $sub, $field, $acYear, ReferencedPersonContainer::TARGET_VALIDATION, $event);
         return !($value === null || $value === '');
     }
@@ -115,10 +94,9 @@ class ReferencedPersonFactory {
      * @param int $acYear
      * @param int $options
      * @param ModelEvent|null $event
-     * @return bool|ModelPostContact|mixed|null
-     * @throws JsonException
+     * @return mixed
      */
-    public static function getPersonValue($person, string $sub, string $field, int $acYear, $options, $event = null) {
+    public static function getPersonValue($person, string $sub, string $field, int $acYear, ?int $options, ?ModelEvent $event = null) {
         if (!$person) {
             return null;
         }

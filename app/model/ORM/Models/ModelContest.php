@@ -15,8 +15,8 @@ use Nette\Utils\Strings;
 class ModelContest extends AbstractModelSingle {
     use DeprecatedLazyModel;
 
-    const ID_FYKOS = 1;
-    const ID_VYFUK = 2;
+    public const ID_FYKOS = 1;
+    public const ID_VYFUK = 2;
 
     public function getContestSymbol(): string {
         return strtolower(Strings::webalize($this->name));

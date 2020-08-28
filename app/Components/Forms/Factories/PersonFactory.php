@@ -12,7 +12,7 @@ use FKSDB\Components\Forms\Controls\Autocomplete\IDataProvider;
  */
 class PersonFactory {
 
-    public function createPersonSelect(bool $ajax, string $label, IDataProvider $dataProvider, string $renderMethod = null): AutocompleteSelectBox {
+    public function createPersonSelect(bool $ajax, string $label, IDataProvider $dataProvider, ?string $renderMethod = null): AutocompleteSelectBox {
         if ($renderMethod === null) {
             $renderMethod = '$("<li>")
                         .append("<a>" + item.label + "<br>" + item.place + ", ID: " + item.value + "</a>")

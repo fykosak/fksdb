@@ -1,12 +1,14 @@
 <?php
 
-namespace FKSDB\Components\Grids\Events\Application;
+namespace FKSDB\Components\Grids\Payment;
 
+use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelPayment;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
+use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
@@ -14,16 +16,25 @@ use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
 
 /**
- * Class TeamApplicationGrid
+ * Class OrgPaymentGrid
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class MyTeamApplicationsGrid extends MyApplicationsGrid {
+class EventPaymentGrid extends BaseGrid {
+
+    private ModelEvent $event;
+
+    /**
+     * OrgPaymentGrid constructor.
+     * @param ModelEvent $event
+     * @param Container $container
+     */
+    public function __construct(ModelEvent $event, Container $container) {
+        parent::__construct($container);
+        $this->event = $event;
+    }
 
     protected function getData(): IDataSource {
-        $source = $this->person->getEventParticipant()
-            ->where('event.event_type_id IN ?', ModelEvent::TEAM_EVENTS)
-            ->select('event_participant.*, :e_fyziklani_participant.e_fyziklani_team.*');
-        return new NDataSource($source);
+        return new NDataSource($this->event->getPayments());
     }
 
     /**
@@ -39,14 +50,18 @@ class MyTeamApplicationsGrid extends MyApplicationsGrid {
         parent::configure($presenter);
 
         $this->addColumns([
-            'event.name',
-            'e_fyziklani_team.name',
-            'contest.contest',
-            'e_fyziklani_team.status',
+            'payment.payment_uid',
+            'person.full_name',
+            'payment.price',
+            'payment.state',
+            'payment.variable_symbol',
         ]);
+        $this->addLink('payment.detail', false);
+        $this->paginate = false;
+        $this->addCSVDownloadButton();
     }
 
     protected function getModelClassName(): string {
-        return ModelFyziklaniTeam::class;
+        return ModelPayment::class;
     }
 }

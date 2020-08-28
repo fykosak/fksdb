@@ -21,7 +21,7 @@ use Nette\Reflection\ClassType;
  */
 class Helpers {
     /** @var string[] */
-    private static $semanticMap = [
+    private static array $semanticMap = [
         'and' => LogicAnd::class,
         'or' => LogicOr::class,
         'neg' => Not::class,
@@ -31,11 +31,7 @@ class Helpers {
         'leq' => Leq::class,
     ];
 
-    /**
-     * @param array $semanticMap
-     * @return void
-     */
-    public static function registerSemantic(array $semanticMap) {
+    public static function registerSemantic(array $semanticMap): void {
         self::$semanticMap += $semanticMap;
     }
 
@@ -96,9 +92,9 @@ class Helpers {
     }
 
     /**
-     * @param iterable $expressionArray
+     * @param mixed $expressionArray
      * @param Container $container
-     * @return array|mixed
+     * @return mixed
      */
     public static function evalExpressionArray($expressionArray, Container $container) {
         if (is_iterable($expressionArray)) {

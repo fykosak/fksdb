@@ -10,7 +10,7 @@ namespace FKSDB\Components\Forms\Containers;
  */
 interface IWriteOnly {
 
-    const VALUE_ORIGINAL = '__original';
+    public const VALUE_ORIGINAL = '__original';
 
     public function setWriteOnly(bool $value = true): void;
 

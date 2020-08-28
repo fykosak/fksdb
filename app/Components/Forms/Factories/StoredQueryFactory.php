@@ -31,11 +31,7 @@ class StoredQueryFactory {
         $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
     }
 
-    /**
-     * @param ControlGroup|null $group
-     * @return ModelContainer
-     */
-    public function createConsole(ControlGroup $group = null): ModelContainer {
+    public function createConsole(?ControlGroup $group = null): ModelContainer {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
         $control = new SQLConsole(_('SQL'));
@@ -44,11 +40,7 @@ class StoredQueryFactory {
         return $container;
     }
 
-    /**
-     * @param ControlGroup|null $group
-     * @return ModelContainer
-     */
-    public function createMetadata(ControlGroup $group = null): ModelContainer {
+    public function createMetadata(?ControlGroup $group = null): ModelContainer {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
@@ -74,11 +66,7 @@ class StoredQueryFactory {
         return $container;
     }
 
-    /**
-     * @param ControlGroup|null $group
-     * @return Replicator
-     */
-    public function createParametersMetadata(ControlGroup $group = null): Replicator {
+    public function createParametersMetadata(?ControlGroup $group = null): Replicator {
         $replicator = new Replicator(function (Container $replContainer) use ($group) {
             $this->buildParameterMetadata($replContainer, $group);
 
@@ -97,12 +85,7 @@ class StoredQueryFactory {
         return $replicator;
     }
 
-    /**
-     * @param Container $container
-     * @param ControlGroup $group
-     * @internal
-     */
-    public function buildParameterMetadata(Container $container, ControlGroup $group): void {
+    private function buildParameterMetadata(Container $container, ControlGroup $group): void {
         $container->setCurrentGroup($group);
 
         $container->addText('name', _('Parameter name'))
@@ -128,7 +111,7 @@ class StoredQueryFactory {
      * @return ModelContainer
      * TODO
      */
-    public function createParametersValues(array $queryParameters, ControlGroup $group = null): ModelContainer {
+    public function createParametersValues(array $queryParameters, ?ControlGroup $group = null): ModelContainer {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
 
@@ -160,7 +143,7 @@ class StoredQueryFactory {
         return $container;
     }
 
-    private function createTagSelect(bool $ajax, string $label, IDataProvider $dataProvider, string $renderMethod = null): AutocompleteSelectBox {
+    private function createTagSelect(bool $ajax, string $label, IDataProvider $dataProvider, ?string $renderMethod = null): AutocompleteSelectBox {
         if ($renderMethod === null) {
             $renderMethod = '$("<li>")
                         .append("<a>" + item.label + "<br>" + item.description + ", ID: " + item.value + "</a>")

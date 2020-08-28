@@ -4,7 +4,7 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Entity\PaymentFormComponent;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
-use FKSDB\Components\Grids\Payment\OrgPaymentGrid;
+use FKSDB\Components\Grids\Payment\EventPaymentGrid;
 use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Events\EventNotFoundException;
 use FKSDB\Exceptions\BadTypeException;
@@ -194,11 +194,11 @@ class PaymentPresenter extends BasePresenter {
     }
 
     /**
-     * @return OrgPaymentGrid
+     * @return EventPaymentGrid
      * @throws EventNotFoundException
      */
-    protected function createComponentGrid(): OrgPaymentGrid {
-        return new OrgPaymentGrid($this->getEvent(), $this->getContext());
+    protected function createComponentGrid(): EventPaymentGrid {
+        return new EventPaymentGrid($this->getEvent(), $this->getContext());
     }
 
     /**

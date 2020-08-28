@@ -31,12 +31,12 @@ use Tracy\Debugger;
 class ExtendedPersonHandler {
     use SmartObject;
 
-    const CONT_AGGR = 'aggr';
-    const CONT_MODEL = 'model';
-    const EL_PERSON = 'person_id';
-    const RESULT_OK_EXISTING_LOGIN = 1;
-    const RESULT_OK_NEW_LOGIN = 2;
-    const RESULT_ERROR = 0;
+    public const CONT_AGGR = 'aggr';
+    public const CONT_MODEL = 'model';
+    public const EL_PERSON = 'person_id';
+    public const RESULT_OK_EXISTING_LOGIN = 1;
+    public const RESULT_OK_NEW_LOGIN = 2;
+    public const RESULT_ERROR = 0;
 
     protected IService $service;
 

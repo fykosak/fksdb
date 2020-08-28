@@ -40,17 +40,17 @@ use Nette\Utils\Strings;
  */
 class EventsExtension extends CompilerExtension {
 
-    const FIELD_FACTORY = 'Field_';
-    const MACHINE_PREFIX = 'Machine_';
-    const HOLDER_PREFIX = 'Holder_';
-    const BASE_MACHINE_PREFIX = 'BaseMachine_';
-    const BASE_HOLDER_PREFIX = 'BaseHolder_';
+    public const FIELD_FACTORY = 'Field_';
+    public const MACHINE_PREFIX = 'Machine_';
+    public const HOLDER_PREFIX = 'Holder_';
+    public const BASE_MACHINE_PREFIX = 'BaseMachine_';
+    public const BASE_HOLDER_PREFIX = 'BaseHolder_';
 
     /** @const Maximum length of state identifier. */
-    const STATE_SIZE = 20;
+    public const STATE_SIZE = 20;
 
     /** @const Regexp for configuration section names */
-    const NAME_PATTERN = '/[a-z0-9_]/i';
+    public const NAME_PATTERN = '/[a-z0-9_]/i';
 
     public static array $semanticMap = [
         'RefPerson' => PersonFactory::class,
@@ -403,8 +403,8 @@ class EventsExtension extends CompilerExtension {
         $factory->addSetup('setService', [$definition['service']]);
         $factory->addSetup('setJoinOn', [$definition['joinOn']]);
         $factory->addSetup('setJoinTo', [$definition['joinTo']]);
-        $factory->addSetup('setPersonIds', [$definition['personIds']]); // must be set after setService
-        $factory->addSetup('setEventId', [$definition['eventId']]); // must be set after setService
+        $factory->addSetup('setPersonIdColumns', [$definition['personIds']]); // must be set after setService
+        $factory->addSetup('setEventIdColumn', [$definition['eventId']]); // must be set after setService
         $factory->addSetup('setEvaluator', ['@events.expressionEvaluator']);
         $factory->addSetup('setValidator', ['@events.dataValidator']);
         $factory->addSetup('setEventRelation', [$definition['eventRelation']]);

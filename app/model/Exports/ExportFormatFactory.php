@@ -22,24 +22,20 @@ use Nette\SmartObject;
 class ExportFormatFactory {
     use SmartObject;
 
-    const AESOP = 'aesop';
-    const CSV_HEADLESS = 'csv';
-    const CSV_HEAD = 'csvh';
-    const CSV_QUOTE_HEAD = 'csvqh';
+    public const AESOP = 'aesop';
+    public const CSV_HEADLESS = 'csv';
+    public const CSV_HEAD = 'csvh';
+    public const CSV_QUOTE_HEAD = 'csvqh';
 
-    /** @var Container */
-    private $container;
+    private Container $container;
 
-    /** @var StoredQueryFactory */
-    private $storedQueryFactory;
+    private StoredQueryFactory $storedQueryFactory;
 
-    /** @var ServiceEvent */
-    private $serviceEvent;
+    private ServiceEvent $serviceEvent;
 
-    /** @var ServiceContest */
-    private $serviceContest;
-    /** @var array */
-    private $defaultFormats;
+    private ServiceContest $serviceContest;
+
+    private array $defaultFormats;
 
     /**
      * ExportFormatFactory constructor.
@@ -48,7 +44,7 @@ class ExportFormatFactory {
      * @param ServiceEvent $serviceEvent
      * @param ServiceContest $serviceContest
      */
-    public function __construct( Container $container, StoredQueryFactory $storedQueryFactory, ServiceEvent $serviceEvent, ServiceContest $serviceContest) {
+    public function __construct(Container $container, StoredQueryFactory $storedQueryFactory, ServiceEvent $serviceEvent, ServiceContest $serviceContest) {
         $this->container = $container;
         $this->storedQueryFactory = $storedQueryFactory;
         $this->serviceEvent = $serviceEvent;
@@ -60,13 +56,7 @@ class ExportFormatFactory {
         ];
     }
 
-    /**
-     *
-     * @param mixed $name
-     * @param StoredQuery $storedQuery
-     * @return IExportFormat
-     */
-    public function createFormat($name, StoredQuery $storedQuery) {
+    public function createFormat(string $name, StoredQuery $storedQuery): IExportFormat {
         switch (strtolower($name)) {
             case self::AESOP:
                 return $this->createAesop($name, $storedQuery);
@@ -81,11 +71,7 @@ class ExportFormatFactory {
         }
     }
 
-    /**
-     * @param StoredQuery $storedQuery
-     * @return array|mixed
-     */
-    public function getFormats(StoredQuery $storedQuery) {
+    public function getFormats(StoredQuery $storedQuery): array {
         $qid = $storedQuery->getQId();
         if (!$qid) {
             return $this->defaultFormats;
@@ -95,12 +81,7 @@ class ExportFormatFactory {
         }
     }
 
-    /**
-     * @param string $name
-     * @param StoredQuery $storedQuery
-     * @return AESOPFormat
-     */
-    private function createAesop($name, StoredQuery $storedQuery) {
+    private function createAesop(string $name, StoredQuery $storedQuery): AESOPFormat {
         $parameters = $this->container->getParameters()['exports']['formats'][$name];
         $queryParameters = $storedQuery->getParameters(true);
 

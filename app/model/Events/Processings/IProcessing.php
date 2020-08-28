@@ -14,7 +14,6 @@ use Nette\Utils\ArrayHash;
  * @author Michal Koutný <michal@fykos.cz>
  */
 interface IProcessing {
-
     /**
      * @param array $states
      * @param ArrayHash $values
@@ -22,6 +21,7 @@ interface IProcessing {
      * @param Holder $holder
      * @param ILogger $logger
      * @param Form|null $form
+     * @return array|void
      */
-    public function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null);
+    public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form = null);
 }

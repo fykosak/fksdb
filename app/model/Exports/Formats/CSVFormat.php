@@ -15,8 +15,8 @@ use PePa\CSVResponse;
 class CSVFormat implements IExportFormat {
     use SmartObject;
 
-    const DEFAULT_DELIMITER = ';';
-    const DEFAULT_QUOTE = false;
+    public const DEFAULT_DELIMITER = ';';
+    public const DEFAULT_QUOTE = false;
 
     private StoredQuery $storedQuery;
 

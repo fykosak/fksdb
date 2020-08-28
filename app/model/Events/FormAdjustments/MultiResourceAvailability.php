@@ -17,6 +17,7 @@ use Nette\Utils\Html;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @deprecated use person_schedule UC
  */
 class MultiResourceAvailability extends AbstractAdjustment {
 
@@ -63,7 +64,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
         $this->excludeStates = $excludeStates;
     }
 
-    protected function _adjust(Form $form, Machine $machine, Holder $holder): void {
+    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
         $groups = $holder->getGroupedSecondaryHolders();
         $groups[] = [
             'service' => $holder->getPrimaryHolder()->getService(),
@@ -110,8 +111,10 @@ class MultiResourceAvailability extends AbstractAdjustment {
             $event = $firstHolder->getEvent();
             $tableName = $serviceData['service']->getTable()->getName();
             $table = $this->database->table($tableName);
-            $table->where($firstHolder->getEventId(), $event->getPrimary());
+
+            $table->where($firstHolder->getEventIdColumn(), $event->getPrimary());
             if ($this->includeStates !== \FKSDB\Transitions\Machine::STATE_ANY) {
+
                 $table->where(BaseHolder::STATE_COLUMN, $this->includeStates);
             }
             if ($this->excludeStates !== \FKSDB\Transitions\Machine::STATE_ANY) {
@@ -124,7 +127,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
             $primaries = array_map(function (BaseHolder $baseHolder) {
                 return $baseHolder->getModel()->getPrimary(false);
             }, $serviceData['holders']);
-            $primaries = array_filter($primaries, function ($primary) {
+            $primaries = array_filter($primaries, function ($primary): bool {
                 return (bool)$primary;
             });
 

@@ -16,10 +16,10 @@ use Nette\Application\BadRequestException;
  */
 class AESOPContestant extends StoredQueryPostProcessing {
 
-    const END_YEAR = 'end-year';
-    const RANK = 'rank';
-    const POINTS = 'points';
-    const SPAM_DATE = 'spam-date';
+    public const END_YEAR = 'end-year';
+    public const RANK = 'rank';
+    public const POINTS = 'points';
+    public const SPAM_DATE = 'spam-date';
 
     public function getDescription(): string {
         return 'Profiltruje jenom na kategorii zadanou v parametru "category" a spočítá rank v rámci kategorie.';

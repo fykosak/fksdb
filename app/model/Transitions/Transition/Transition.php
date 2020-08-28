@@ -34,6 +34,7 @@ class Transition {
     private string $behaviorType = self::TYPE_DEFAULT;
 
     private string $label;
+
     /** @var callable[] */
     public array $beforeExecuteCallbacks = [];
     /** @var callable[] */
@@ -71,6 +72,14 @@ class Transition {
 
     public function isTerminating(): bool {
         return $this->getTargetState() === Machine::STATE_TERMINATED;
+    }
+
+    public function getFromState(): string {
+        return $this->fromState;
+    }
+
+    public function getToState(): string {
+        return $this->toState;
     }
 
     public function getId(): string {

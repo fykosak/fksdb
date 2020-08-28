@@ -1,7 +1,6 @@
 parameters:
     events:
         dsef2_1:
-            appCond: or(regOpen(), role('admin'))
             accomodation: 'Noc před akcí (tj. z 12. 5. na 13. 5.).'
             person:
                 person:
@@ -45,50 +44,27 @@ events:
 
                 states: %events.defaultDsef.states%
 
-                transitions:
-                    __init->applied:
-                        condition: %events.dsef2_1.appCond%
-                        label: _('Přihlásit účastníka')
-                        onExecuted:
-                            - FKSDB\Events\Transitions\MailSender(confirmation, .self)
-                    applied->participated:
-                        condition: and(role('admin'),eventWas())
-                        label: _('Prezentovat')
-                    applied->missed:
-                        condition: and(role('admin'),eventWas())
-                        label: _('Nepřijel')
-                        behaviorType: danger
-                    applied->cancelled:
-                        condition: role('admin')
-                        label: _('Zrušit přihlášku')
-                        behaviorType: danger
-                    cancelled->__terminated:
-                        condition: role('admin')
-                        label: _('Smazat přihlášku')
+                transitions: %events.defaultDsef.transitions%
 
                 fields:
                     person_id:
                         label: _('Person')
                         required: true
-                        modifiable: %events.dsef2_1.appCond%
+                        modifiable: %events.defaultDsef.appCond%
                         default: fromLogin
                         factory: RefPerson(%events.dsef2_1.person%, email, or(state('__init'),role('admin')), role('admin'), false)
                     e_dsef_group_id:
                         label: _('Preferovaná skupina')
                         required: true
-                        modifiable: %events.dsef2_1.appCond%
+                        modifiable: %events.defaultDsef.appCond%
                         factory: Chooser(Zvolit skupinu, FKSDB\Events\Spec\Dsef\GroupOptions())
                     accomodation:
                         label: _('Ubytování')
                         description: %events.dsef2_1.accomodation%
-                        modifiable: %events.dsef2_1.appCond%
+                        modifiable: %events.defaultDsef.appCond%
                     lunch_count:
-                        label: _('Počet baget k obědu')
-                        modifiable: %events.dsef2_1.appCond%
+                        modifiable: %events.defaultDsef.appCond%
                         description:  "2 zdarma, další à 40 Kč"
-                    message:
-                        label: _('Vzkaz ostatním')
-                        modifiable: true
                     note:
                         label: _('Jaké další semináře a olympiády řešíš?')
                         description: "Uveď další fyzikální, matematické či informatické vzdělávací či soutěžní akce, kterých se účastníš (stačí zkratky)."

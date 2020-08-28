@@ -15,7 +15,7 @@ use Nette\Security\IResource;
  * @property-read string note
  * @property-read int e_org_id
  */
-class ModelEventOrg extends AbstractModelSingle implements IResource, IEventReferencedModel, IPersonReferencedModel {
+class ModelEventOrg extends AbstractModelSingle implements IResource, IEventReferencedModel, IContestReferencedModel, IPersonReferencedModel {
     use DeprecatedLazyModel;
 
     public const RESOURCE_ID = 'eventOrg';
@@ -26,6 +26,10 @@ class ModelEventOrg extends AbstractModelSingle implements IResource, IEventRefe
 
     public function getEvent(): ModelEvent {
         return ModelEvent::createFromActiveRow($this->event);
+    }
+
+    public function getContest(): ModelContest {
+        return $this->getEvent()->getContest();
     }
 
     public function getResourceId(): string {

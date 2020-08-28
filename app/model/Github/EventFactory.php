@@ -5,7 +5,6 @@ namespace FKSDB\Github;
 use FKSDB\Github\Events\Event;
 use FKSDB\Github\Events\PingEvent;
 use FKSDB\Github\Events\PushEvent;
-use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 
 /**
@@ -16,10 +15,8 @@ use Nette\SmartObject;
 class EventFactory {
     use SmartObject;
 
-    const HTTP_HEADER = 'X-GitHub-Event';
-
     /** @var Repository[] */
-    private $repositoryCache = [];
+    private array $repositoryCache = [];
 
     public function createEvent(string $type, array $data): Event {
         switch ($type) {
@@ -75,10 +72,6 @@ class EventFactory {
         return $this->repositoryCache[$id];
     }
 
-    /**
-     * @param mixed $data
-     * @return User
-     */
     private function createUser(array $data): User {
         /* Github API is underspecified mess regarding users/their
          * attributes so just create a new User instance every time and fill it with
@@ -90,12 +83,7 @@ class EventFactory {
         return $user;
     }
 
-    /**
-     * @param Event $event
-     * @param array $data
-     * @return void
-     */
-    private function fillBase(Event $event, array $data) {
+    private function fillBase(Event $event, array $data): void {
         if (!array_key_exists('repository', $data)) {
             throw new MissingEventFieldException('repository');
         }
@@ -107,14 +95,7 @@ class EventFactory {
         $event->sender = $this->createUser($data['sender']);
     }
 
-    /**
-     * @param array $definition
-     * @param object $object
-     * @param array $data
-     * @param bool $strict
-     * @return void
-     */
-    private static function fillHelper(array $definition, $object, array $data, bool $strict = false) {
+    private static function fillHelper(array $definition, object $object, array $data, bool $strict = false): void {
         foreach ($definition as $key) {
             if (!array_key_exists($key, $data)) {
                 if ($strict) {
@@ -126,20 +107,4 @@ class EventFactory {
             $object->$key = $data[$key];
         }
     }
-}
-
-/**
- * Class UnsupportedEventException
- * *
- */
-class UnsupportedEventException extends InvalidArgumentException {
-
-}
-
-/**
- * Class MissingEventFieldException
- * *
- */
-class MissingEventFieldException extends InvalidArgumentException {
-
 }

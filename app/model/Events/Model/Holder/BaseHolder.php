@@ -15,6 +15,7 @@ use FKSDB\Transitions\Machine;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Neon\Neon;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -47,11 +48,9 @@ class BaseHolder {
 
     private ?string $joinTo = null;
 
-    /** @var string[] */
-    private $personIds;
+    private array $personIdColumns;
 
-    /** @var string */
-    private $eventId;
+    private string $eventIdColumn;
 
     private Holder $holder;
 
@@ -61,11 +60,9 @@ class BaseHolder {
     /** @var IModel */
     private $model;
 
-    /** @var array */
-    private $paramScheme;
+    private array $paramScheme;
 
-    /** @var array */
-    private $parameters;
+    private array $parameters;
 
 
     /** @var bool|callable */
@@ -148,18 +145,11 @@ class BaseHolder {
         }
     }
 
-    /**
-     * @return array
-     */
-    public function getParamScheme() {
+    public function getParamScheme(): array {
         return $this->paramScheme;
     }
 
-    /**
-     * @param array $paramScheme
-     * @return void
-     */
-    public function setParamScheme($paramScheme): void {
+    public function setParamScheme(array $paramScheme): void {
         $this->paramScheme = $paramScheme;
     }
 
@@ -228,11 +218,7 @@ class BaseHolder {
         $this->getService()->updateModel($this->getModel(), [self::STATE_COLUMN => $state]);
     }
 
-    /**
-     * @param iterable $values
-     * @param bool $alive
-     */
-    public function updateModel($values, $alive = true): void {
+    public function updateModel(iterable $values, bool $alive = true): void {
         $values[self::EVENT_COLUMN] = $this->getEvent()->getPrimary();
         $this->getService()->updateModel($this->getModel(), $values, $alive);
     }
@@ -288,38 +274,27 @@ class BaseHolder {
     /**
      * @return string[]
      */
-    public function getPersonIds() {
-        return $this->personIds;
+    public function getPersonIdColumns(): array {
+        return $this->personIdColumns;
     }
 
-    /**
-     * @param array $personIds
-     * @return void
-     */
-    public function setPersonIds($personIds): void {
+    public function setPersonIdColumns(array $personIds): void {
         if (!$this->getService()) {
-            throw new InvalidStateException('Call serService prior setting person IDs.');
+            throw new InvalidStateException('Call setService prior setting person IDs.');
         }
 
-        $this->personIds = [];
+        $this->personIdColumns = [];
         foreach ($personIds as $personId) {
-            $this->personIds[] = $this->resolveColumnJoins($personId);
+            $this->personIdColumns[] = $this->resolveColumnJoins($personId);
         }
     }
 
-    /**
-     * @return string
-     */
-    public function getEventId() {
-        return $this->eventId;
+    public function getEventIdColumn(): string {
+        return $this->eventIdColumn;
     }
 
-    /**
-     * @param int $eventId
-     * @return void
-     */
-    public function setEventId($eventId): void {
-        $this->eventId = $this->resolveColumnJoins($eventId);
+    public function setEventIdColumn(string $eventId): void {
+        $this->eventIdColumn = $this->resolveColumnJoins($eventId);
     }
 
     private function resolveColumnJoins(string $column): string {
@@ -343,7 +318,7 @@ class BaseHolder {
      * @return Field[]
      */
     public function getDeterminingFields(): array {
-        return array_filter($this->fields, function (Field $field) {
+        return array_filter($this->fields, function (Field $field): bool {
             return $field->isDetermining();
         });
     }
@@ -367,8 +342,8 @@ class BaseHolder {
     /**
      * @return int|null  ID of a person associated with the application
      */
-    public function getPersonId() {
-        $personColumns = $this->getPersonIds();
+    public function getPersonId(): ?int {
+        $personColumns = $this->getPersonIdColumns();
         if (!$personColumns) {
             return null;
         }

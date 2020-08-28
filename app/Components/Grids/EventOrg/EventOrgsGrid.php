@@ -4,7 +4,7 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\ServiceEventOrg;
+use FKSDB\ORM\Models\ModelEventOrg;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
@@ -18,8 +18,6 @@ use NiftyGrid\DuplicateColumnException;
  */
 class EventOrgsGrid extends BaseGrid {
 
-    private ServiceEventOrg $serviceEventOrg;
-
     private ModelEvent $event;
 
     /**
@@ -32,13 +30,8 @@ class EventOrgsGrid extends BaseGrid {
         $this->event = $event;
     }
 
-    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg): void {
-        $this->serviceEventOrg = $serviceEventOrg;
-    }
-
     protected function getData(): IDataSource {
-        $orgs = $this->serviceEventOrg->findByEvent($this->event);
-        return new NDataSource($orgs);
+        return new NDataSource($this->event->getEventOrgs());
     }
 
     /**
@@ -55,5 +48,9 @@ class EventOrgsGrid extends BaseGrid {
         //  $this->addLinkButton('edit', 'edit', _('Edit'), false, ['id' => 'e_org_id']);
         // $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'e_org_id']);
         //  $this->addLinkButton('delete','delete',_('Delete'),false,['id' => 'e_org_id']);
+    }
+
+    protected function getModelClassName(): string {
+        return ModelEventOrg::class;
     }
 }

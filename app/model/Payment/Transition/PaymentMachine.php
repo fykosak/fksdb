@@ -41,7 +41,10 @@ class PaymentMachine extends Machine {
     }
 
     public function setEventId(int $eventId): void {
-        $this->event = $this->serviceEvent->findByPrimary($eventId);
+        $event = $this->serviceEvent->findByPrimary($eventId);
+        if (!is_null($event)) {
+            $this->event = $event;
+        }
     }
 
     public function setScheduleGroupTypes(array $types): void {

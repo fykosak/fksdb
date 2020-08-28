@@ -40,5 +40,4 @@ class Captcha implements IFormAdjustment {
         $firstSubmit = FormUtils::findFirstSubmit($form);
         $form->addComponent($control, self::CONTROL_NAME, $firstSubmit->getName());
     }
-
 }

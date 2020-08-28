@@ -50,7 +50,7 @@ class CummulativeStrategy implements IMergeStrategy {
      * @param mixed $merged
      * @return bool
      */
-    private function equals($trunk, $merged) {
+    private function equals($trunk, $merged): bool {
         if ($trunk instanceof \DateTime && $merged instanceof \DateTime) {
             return $trunk->getTimestamp() == $merged->getTimestamp();
         } else {

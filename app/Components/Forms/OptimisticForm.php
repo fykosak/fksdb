@@ -14,7 +14,7 @@ use Nette\Forms\Controls\HiddenField;
  */
 class OptimisticForm extends Form {
 
-    const FINGERPRINT = '__fp';
+    private const FINGERPRINT = '__fp';
 
     /** @var callable */
     private $fingerprintCallback;

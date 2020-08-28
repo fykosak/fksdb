@@ -12,12 +12,12 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 trait ReactComponentTrait {
-    /** @var string[] */
-    private $actions = [];
-    /** @var bool */
-    private static $attachedJS = false;
-    /** @var string */
-    protected $reactId;
+
+    private array $actions = [];
+
+    private static bool $attachedJS = false;
+
+    protected string $reactId;
 
     /**
      * @param string $reactId

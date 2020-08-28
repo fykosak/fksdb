@@ -2,6 +2,7 @@
 
 namespace FKSDB\Payment\Transition\Transitions;
 
+use FKSDB\Authorization\EventAuthorizator;
 use Exception;
 use FKSDB\Transitions\Statements\Conditions\DateBetween;
 

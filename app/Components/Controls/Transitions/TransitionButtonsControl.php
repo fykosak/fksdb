@@ -18,10 +18,9 @@ use Tracy\Debugger;
  */
 class TransitionButtonsControl extends BaseComponent {
 
-    /** @var Machine */
-    private $machine;
-    /** @var IStateModel */
-    private $model;
+    private Machine $machine;
+
+    private IStateModel $model;
 
     /**
      * TransitionButtonsControl constructor.

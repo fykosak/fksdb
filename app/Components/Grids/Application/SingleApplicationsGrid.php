@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Grids\Events\Application;
+namespace FKSDB\Components\Grids\Application;
 
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\DbNames;
@@ -48,20 +48,22 @@ class SingleApplicationsGrid extends AbstractApplicationsGrid {
      */
     protected function getHoldersColumns(): array {
         return [
-            'note',
-            'swimmer',
-            'arrival_ticket',
+            'price',
+            'lunch_count',
             'tshirt_color',
+            'tshirt_size',
+            //'jumper_size',
+            'arrival_ticket',
+            'arrival_time',
+            'arrival_destination',
             'departure_time',
             'departure_ticket',
             'departure_destination',
-            'arrival_time',
-            'arrival_destination',
             'health_restrictions',
             'diet',
             'used_drugs',
-            'tshirt_size',
-            'price',
+            'note',
+            'swimmer',
         ];
     }
 

@@ -16,9 +16,9 @@ use SimpleXMLElement;
  */
 class StudyYearsFromXML extends Stage {
 
-    const XML_ELEMENT_PARENT = 'study-years';
+    public const XML_ELEMENT_PARENT = 'study-years';
 
-    const XML_ELEMENT_CHILD = 'study-year';
+    public const XML_ELEMENT_CHILD = 'study-year';
 
     /** @var SeriesData */
     private $data;

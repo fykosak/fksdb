@@ -13,12 +13,11 @@ use Nette\SmartObject;
  */
 abstract class Event {
     use SmartObject;
-    const HTTP_HEADER = 'X-GitHub-Event';
 
-    /** @var Repository $repository */
-    public $repository;
+    public const HTTP_HEADER = 'X-GitHub-Event';
 
-    /** @var User $user */
-    public $sender;
+    public Repository $repository;
+
+    public User $sender;
 
 }

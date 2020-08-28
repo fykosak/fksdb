@@ -34,19 +34,19 @@ use FKSDB\Utils\Utils;
  */
 final class AuthenticationPresenter extends BasePresenter {
 
-    const PARAM_GSID = 'gsid';
+    public const PARAM_GSID = 'gsid';
     /** @const Indicates that page is accessed via dispatch from the login page. */
-    const PARAM_DISPATCH = 'dispatch';
+    public const PARAM_DISPATCH = 'dispatch';
     /** @const Reason why the user has been logged out. */
-    const PARAM_REASON = 'reason';
+    public const PARAM_REASON = 'reason';
     /** @const Various modes of authentication. */
-    const PARAM_FLAG = 'flag';
+    public const PARAM_FLAG = 'flag';
     /** @const User is shown the login form if he's not authenticated. */
-    const FLAG_SSO_LOGIN = Authentication::FLAG_SSO_LOGIN;
+    public const FLAG_SSO_LOGIN = Authentication::FLAG_SSO_LOGIN;
     /** @const Only check of authentication with subsequent backlink redirect. */
-    const FLAG_SSO_PROBE = 'ssop';
-    const REASON_TIMEOUT = '1';
-    const REASON_AUTH = '2';
+    public const FLAG_SSO_PROBE = 'ssop';
+    public const REASON_TIMEOUT = '1';
+    public const REASON_AUTH = '2';
 
     /** @persistent */
     public $backlink = '';
