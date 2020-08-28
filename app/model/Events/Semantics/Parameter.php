@@ -13,14 +13,12 @@ class Parameter {
     use SmartObject;
     use WithEventTrait;
 
-    /**
-     * @var
-     */
+    /** @var mixed */
     private $parameter;
 
     /**
      * Parameter constructor.
-     * @param $parameter
+     * @param string $parameter
      */
     public function __construct($parameter) {
         $this->parameter = $parameter;
@@ -34,10 +32,7 @@ class Parameter {
         return $this->getHolder($args[0])->getParameter($this->parameter);
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return "param({$this->parameter})";
     }
 

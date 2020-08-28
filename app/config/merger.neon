@@ -16,10 +16,7 @@ parameters:
             post_contact: [person_id, type]
             event_participant: [person_id, event_id]
             e_dsef_participant: [event_participant_id]
-            e_tsaf_participant: [event_participant_id]
             e_fyziklani_participant: [event_participant_id]
-            e_sous_participant: [event_participant_id]
-            e_vikend_participant: [event_participant_id]
 
         # Default merge strategy for columns.
         defaultStrategy: @merge.cummulative
@@ -43,7 +40,7 @@ parameters:
 
             contestant_base:
                 created: @merge.less
-            
+
             submit:
                 submitted_on: @merge.trunk
                 source: @merge.trunk
@@ -51,12 +48,22 @@ parameters:
 
 # Instantces of merge strategies.
 services:
-    merge.cummulative: Persons\Deduplication\MergeStrategy\CummulativeStrategy
-    merge.cummTrunk: Persons\Deduplication\MergeStrategy\CummulativeStrategy(trunk)
-    merge.cummMerged: Persons\Deduplication\MergeStrategy\CummulativeStrategy(merged)
-    merge.trunk: Persons\Deduplication\MergeStrategy\TrunkStrategy
-    merge.merged: Persons\Deduplication\MergeStrategy\MergedStrategy
-    merge.fail: Persons\Deduplication\MergeStrategy\FailStrategy
-    merge.greater: Persons\Deduplication\MergeStrategy\CompareStrategy(greater)
-    merge.less: Persons\Deduplication\MergeStrategy\CompareStrategy(less)
-    merge.null: Persons\Deduplication\MergeStrategy\ConstantStrategy(null)
+    merge.cummulative: FKSDB\Persons\Deduplication\MergeStrategy\CummulativeStrategy
+    merge.cummTrunk:
+        class: FKSDB\Persons\Deduplication\MergeStrategy\CummulativeStrategy
+        arguments: [trunk]
+    merge.cummMerged:
+        class: FKSDB\Persons\Deduplication\MergeStrategy\CummulativeStrategy
+        arguments: [merged]
+    merge.trunk: FKSDB\Persons\Deduplication\MergeStrategy\TrunkStrategy
+    merge.merged: FKSDB\Persons\Deduplication\MergeStrategy\MergedStrategy
+    merge.fail: FKSDB\Persons\Deduplication\MergeStrategy\FailStrategy
+    merge.greater:
+        class: FKSDB\Persons\Deduplication\MergeStrategy\CompareStrategy
+        arguments: [greater]
+    merge.less:
+        class: FKSDB\Persons\Deduplication\MergeStrategy\CompareStrategy
+        arguments: [less]
+    merge.null:
+        class: FKSDB\Persons\Deduplication\MergeStrategy\ConstantStrategy
+        arguments: [null]

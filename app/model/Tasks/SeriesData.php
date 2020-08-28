@@ -12,25 +12,13 @@ use FKSDB\ORM\Models\ModelTask;
  */
 class SeriesData {
 
-    /**
-     * @var ModelContest
-     */
-    private $contest;
+    private ModelContest $contest;
 
-    /**
-     * @var int
-     */
-    private $year;
+    private int $year;
 
-    /**
-     * @var int
-     */
-    private $series;
+    private int $series;
 
-    /**
-     * @var \SimpleXMLElement
-     */
-    private $data;
+    private \SimpleXMLElement $data;
 
     /**
      * array[tasknr] of FKSDB\ORM\Models\ModelTask
@@ -75,12 +63,7 @@ class SeriesData {
         return $this->tasks;
     }
 
-    /**
-     * @param int $taskNr
-     * @param ModelTask $task
-     * @return void
-     */
-    public function addTask(int $taskNr, ModelTask $task) {
+    public function addTask(int $taskNr, ModelTask $task): void {
         $this->tasks[$taskNr] = $task;
     }
 }

@@ -16,11 +16,11 @@ use Nette\Forms\Controls\BaseControl;
 class ModelContainer extends ContainerWithOptions {
 
     /**
-     * @param $values
+     * @param mixed|iterable $values
      * @param bool $erase
      * @return Container|void
      */
-    public function setValues($values, $erase = FALSE) {
+    public function setValues($values, $erase = false) {
         if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) {
             $values = $values->toArray();
         }
@@ -30,11 +30,10 @@ class ModelContainer extends ContainerWithOptions {
     /**
      * @param bool $value
      */
-    public function setDisabled($value = true) {
+    public function setDisabled($value = true): void {
         /** @var BaseControl $component */
         foreach ($this->getComponents() as $component) {
             $component->setDisabled($value);
         }
     }
-
 }

@@ -4,6 +4,8 @@ namespace FKSDB\Components\Forms;
 
 use LogicException;
 use Nette\Application\UI\Form;
+use Nette\ComponentModel\IComponent;
+use Nette\Forms\Controls\HiddenField;
 
 /**
  * Form that uses optimistic locking to control multiple user access.
@@ -12,16 +14,12 @@ use Nette\Application\UI\Form;
  */
 class OptimisticForm extends Form {
 
-    const FINGERPRINT = '__fp';
+    private const FINGERPRINT = '__fp';
 
-    /**
-     * @var callable
-     */
+    /** @var callable */
     private $fingerprintCallback;
 
-    /**
-     * @var callable
-     */
+    /** @var callable */
     private $defaultsCallback;
 
     /**
@@ -41,7 +39,7 @@ class OptimisticForm extends Form {
      * @param bool $erase
      * @throws LogicException
      */
-    public function setDefaults($values = null, $erase = FALSE) {
+    public function setDefaults($values = null, $erase = false) {
         if ($values !== null) {
             throw new LogicException('Default values in ' . __CLASS__ . ' are set by the callback.');
         }
@@ -56,10 +54,17 @@ class OptimisticForm extends Form {
     }
 
     /**
+     * @return HiddenField|IComponent
+     */
+    private function getFingerprintInput(): HiddenField {
+        return $this[self::FINGERPRINT];
+    }
+
+    /**
      * @return bool
      */
     public function isValid() {
-        $receivedFingerprint = $this[self::FINGERPRINT]->getValue();
+        $receivedFingerprint = $this->getFingerprintInput()->getValue();
         $currentFingerprint = ($this->fingerprintCallback)();
 
         if ($receivedFingerprint != $currentFingerprint) {
@@ -71,10 +76,7 @@ class OptimisticForm extends Form {
         return parent::isValid();
     }
 
-    /**
-     * @param $fingerprint
-     */
-    private function setFingerprint($fingerprint) {
-        $this[self::FINGERPRINT]->setValue($fingerprint);
+    private function setFingerprint(string $fingerprint): void {
+        $this->getFingerprintInput()->setValue($fingerprint);
     }
 }

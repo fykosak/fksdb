@@ -18,22 +18,15 @@ use Nette\NotSupportedException;
  */
 class SchoolCumulativeResultsModel extends AbstractResultsModel {
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $series;
 
     /**
      * Cache
-     * @var array
      */
-    private $dataColumns = [];
+    private array $dataColumns = [];
 
-    /**
-     *
-     * @var CumulativeResultsModel
-     */
-    private $cumulativeResultsModel;
+    private CumulativeResultsModel $cumulativeResultsModel;
 
     /**
      * FKSDB\Results\Models\SchoolCumulativeResultsModel constructor.
@@ -41,9 +34,9 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
      * @param ModelContest $contest
      * @param ServiceTask $serviceTask
      * @param Connection $connection
-     * @param $year
+     * @param int $year
      */
-    public function __construct(CumulativeResultsModel $cumulativeResultsModel, ModelContest $contest, ServiceTask $serviceTask, Connection $connection, $year) {
+    public function __construct(CumulativeResultsModel $cumulativeResultsModel, ModelContest $contest, ServiceTask $serviceTask, Connection $connection, int $year) {
         parent::__construct($contest, $serviceTask, $connection, $year, new EvaluationNullObject());
         $this->cumulativeResultsModel = $cumulativeResultsModel;
     }
@@ -102,7 +95,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
     /**
      * @param mixed $series
      */
-    public function setSeries($series) {
+    public function setSeries($series): void {
         $this->series = $series;
         $this->cumulativeResultsModel->setSeries($series);
         // invalidate cache of columns
@@ -115,7 +108,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
     public function getCategories(): array {
         //return $this->evaluationStrategy->getCategories();
         return [
-            new ModelCategory(ModelCategory::CAT_ALL)
+            new ModelCategory(ModelCategory::CAT_ALL),
         ];
     }
 
@@ -185,22 +178,11 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
         return $result;
     }
 
-    //TODO better have somehow in evaluation strategy
-
-    /**
-     * @param $i
-     * @return mixed
-     */
-    private function weightVector($i) {
+    private function weightVector(int $i): float {
         return max([1.0 - 0.1 * $i, 0.1]);
     }
 
-    /**
-     * @param $schoolContestants
-     * @param ModelCategory $category
-     * @return array
-     */
-    private function createResultRow($schoolContestants, ModelCategory $category) {
+    private function createResultRow(array $schoolContestants, ModelCategory $category): array {
         $resultRow = [];
         foreach ($this->getDataColumns($category) as $column) {
             $resultRow[$column[self::COL_ALIAS]] = 0;

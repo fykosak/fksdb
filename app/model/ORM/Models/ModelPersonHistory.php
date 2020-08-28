@@ -13,7 +13,7 @@ use FKSDB\ORM\DbNames;
  * @property-read string class
  * @property-read int study_year
  */
-class ModelPersonHistory extends AbstractModelSingle {
+class ModelPersonHistory extends AbstractModelSingle implements ISchoolReferencedModel {
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->ref(DbNames::TAB_PERSON, 'person_id'));
@@ -29,7 +29,7 @@ class ModelPersonHistory extends AbstractModelSingle {
             'ac_year' => $acYear,
             'school_id' => $this->school_id,
             'class' => $this->extrapolateClass($this->class, $diff),
-            'study_year' => $this->extrapolateStudyYear($this->study_year, $diff)
+            'study_year' => $this->extrapolateStudyYear($this->study_year, $diff),
         ];
         $result = new self([], $this->getTable());
         foreach ($data as $key => $value) {
@@ -38,19 +38,17 @@ class ModelPersonHistory extends AbstractModelSingle {
         return $result;
     }
 
-    /**
-     * @var string[][]
-     */
-    private static $classProgress = [
+    /** @var string[][] */
+    private static array $classProgress = [
         ['prima', 'sekunda', 'tercie', 'kvarta', 'kvinta', 'sexta', 'septima', 'oktáva'],
         ['I.', 'II.', 'III.', 'IV.', 'V.', 'VI.', 'VII.', 'VIII.'],
         ['1.', '2.', '3.', '4.', '5.', '6.', '7.', '8.'],
     ];
 
     /**
-     * @param $class
-     * @param $diff
-     * @return null|string|string[]
+     * @param string|null $class
+     * @param int $diff
+     * @return string|string[]|null
      */
     private function extrapolateClass(string $class = null, int $diff = 0) {
         if (!$class) {
@@ -71,12 +69,7 @@ class ModelPersonHistory extends AbstractModelSingle {
         return $class;
     }
 
-    /**
-     * @param $studyYear
-     * @param $diff
-     * @return int|null
-     */
-    private function extrapolateStudyYear(int $studyYear = null, int $diff = 0) {
+    private function extrapolateStudyYear(?int $studyYear = null, int $diff = 0): ?int {
         if (!$studyYear) {
             return null;
         }
@@ -95,8 +88,6 @@ class ModelPersonHistory extends AbstractModelSingle {
                 $result = null;
             }
         }
-
         return $result;
     }
-
 }

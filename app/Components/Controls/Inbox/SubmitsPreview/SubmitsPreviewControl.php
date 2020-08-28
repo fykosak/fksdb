@@ -2,44 +2,51 @@
 
 namespace FKSDB\Components\Controls\Inbox;
 
-use FKSDB\Components\Control\AjaxUpload\SubmitDownloadTrait;
+use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\Services\ServiceSubmit;
-use FKSDB\Submits\FileSystemStorage\CorrectedStorage;
-use FKSDB\Submits\FileSystemStorage\UploadedStorage;
+use FKSDB\Messages\Message;
+use FKSDB\Submits\StorageException;
+use FKSDB\Submits\SubmitHandlerFactory;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 
 /**
- * Class SubmitsTableControl
- * *
+ * Class SubmitsPreviewControl
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class SubmitsPreviewControl extends SeriesTableComponent {
-    use SubmitDownloadTrait;
 
-    /** @var UploadedStorage */
-    private $uploadedStorage;
-    /** @var CorrectedStorage */
-    private $correctedStorage;
-    /** @var ServiceSubmit $serviceSubmit */
-    private $serviceSubmit;
+    private SubmitHandlerFactory $submitDownloadFactory;
 
-    public function render() {
+    public function injectSubmitDownloadFactory(SubmitHandlerFactory $submitDownloadFactory): void {
+        $this->submitDownloadFactory = $submitDownloadFactory;
+    }
+
+    public function render(): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
     }
 
     /**
-     * @param UploadedStorage $uploadedStorage
-     * @param CorrectedStorage $correctedStorage
-     * @param ServiceSubmit $serviceSubmit
+     * @param int $id
      * @return void
+     * @throws AbortException
+     * @throws BadRequestException
      */
-    public function injectPrimary(UploadedStorage $uploadedStorage, CorrectedStorage $correctedStorage, ServiceSubmit $serviceSubmit) {
-        $this->uploadedStorage = $uploadedStorage;
-        $this->correctedStorage = $correctedStorage;
-        $this->serviceSubmit = $serviceSubmit;
+    public function handleDownloadUploaded(int $id): void {
+        $logger = new MemoryLogger();
+        try {
+            $this->submitDownloadFactory->handleDownloadUploaded($this->getPresenter(), $logger, $id);
+            FlashMessageDump::dump($logger, $this);
+        } catch (ForbiddenRequestException$exception) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+        } catch (NotFoundException$exception) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+        } catch (StorageException$exception) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+        }
     }
 
     /**
@@ -47,32 +54,17 @@ class SubmitsPreviewControl extends SeriesTableComponent {
      * @throws AbortException
      * @throws BadRequestException
      */
-    public function handleDownloadUploaded(int $id) {
+    public function handleDownloadCorrected(int $id): void {
         $logger = new MemoryLogger();
-        $this->traitHandleDownloadUploaded($logger, $id);
-        FlashMessageDump::dump($logger, $this);
-    }
-
-    /**
-     * @param int $id
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    public function handleDownloadCorrected(int $id) {
-        $logger = new MemoryLogger();
-        $this->traitHandleDownloadCorrected($logger, $id);
-        FlashMessageDump::dump($logger, $this);
-    }
-
-    protected function getCorrectedStorage(): CorrectedStorage {
-        return $this->correctedStorage;
-    }
-
-    protected function getUploadedStorage(): UploadedStorage {
-        return $this->uploadedStorage;
-    }
-
-    protected function getServiceSubmit(): ServiceSubmit {
-        return $this->serviceSubmit;
+        try {
+            $this->submitDownloadFactory->handleDownloadCorrected($this->getPresenter(), $logger, $id);
+            FlashMessageDump::dump($logger, $this);
+        } catch (ForbiddenRequestException$exception) {
+            $this->flashMessage(new Message($exception->getMessage(), Message::LVL_DANGER));
+        } catch (NotFoundException$exception) {
+            $this->flashMessage(new Message($exception->getMessage(), Message::LVL_DANGER));
+        } catch (StorageException $exception) {
+            $this->flashMessage(new Message($exception->getMessage(), Message::LVL_DANGER));
+        }
     }
 }

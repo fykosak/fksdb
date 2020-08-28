@@ -11,11 +11,17 @@ use FKSDB\Submits\SeriesTable;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 
+/**
+ * Class SubmitCheckComponent
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class SubmitCheckComponent extends BaseComponent {
-    /**
-     * @var SeriesTable
-     */
-    private $seriesTable;
+
+    private SeriesTable $seriesTable;
+
+    private CorrectedStorage $correctedStorage;
+
+    private UploadedStorage $uploadedStorage;
 
     /**
      * CheckSubmitsControl constructor.
@@ -27,7 +33,12 @@ class SubmitCheckComponent extends BaseComponent {
         $this->seriesTable = $seriesTable;
     }
 
-    public function render() {
+    public function injectPrimary(UploadedStorage $uploadedStorage, CorrectedStorage $correctedStorage): void {
+        $this->uploadedStorage = $uploadedStorage;
+        $this->correctedStorage = $correctedStorage;
+    }
+
+    public function render(): void {
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
     }
@@ -35,24 +46,20 @@ class SubmitCheckComponent extends BaseComponent {
     /**
      * @throws AbortException
      */
-    public function handleCheck() {
-        /** @var UploadedStorage $submitUploadedStorage */
-        $submitUploadedStorage = $this->getContext()->getByType(UploadedStorage::class);
-        /** @var CorrectedStorage $submitCorrectedStorage */
-        $submitCorrectedStorage = $this->getContext()->getByType(CorrectedStorage::class);
+    public function handleCheck(): void {
         /** @var ModelSubmit $submit */
         $errors = 0;
         foreach ($this->seriesTable->getSubmits() as $submit) {
-            if ($submit->source === ModelSubmit::SOURCE_UPLOAD && !$submitUploadedStorage->fileExists($submit)) {
+            if ($submit->source === ModelSubmit::SOURCE_UPLOAD && !$this->uploadedStorage->fileExists($submit)) {
                 $errors++;
                 $this->flashMessage(sprintf(_('Uploaded submit #%d is broken'), $submit->submit_id), ILogger::ERROR);
             }
 
-            if ($submit->corrected && !$submitCorrectedStorage->fileExists($submit)) {
+            if ($submit->corrected && !$this->correctedStorage->fileExists($submit)) {
                 $errors++;
                 $this->flashMessage(sprintf(_('Corrected submit #%d is broken'), $submit->submit_id), ILogger::ERROR);
             }
-            if (!$submit->corrected && $submitCorrectedStorage->fileExists($submit)) {
+            if (!$submit->corrected && $this->correctedStorage->fileExists($submit)) {
                 $errors++;
                 $this->flashMessage(sprintf(_('Uploaded unregister corrected submit #%d'), $submit->submit_id), ILogger::ERROR);
             }

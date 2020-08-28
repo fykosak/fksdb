@@ -13,11 +13,9 @@ use Nette\InvalidStateException;
  */
 class BrojureResultsModel extends AbstractResultsModel {
 
-    const COL_SERIES_PREFIX = 's';
+    public const COL_SERIES_PREFIX = 's';
 
-    /**
-     * @var array of int
-     */
+    /** @var array of int */
     protected $series;
 
     /**
@@ -30,7 +28,7 @@ class BrojureResultsModel extends AbstractResultsModel {
      * Cache
      * @var array
      */
-    private $dataColumns = [];
+    private array $dataColumns = [];
 
     /**
      * Definition of header.
@@ -98,7 +96,6 @@ class BrojureResultsModel extends AbstractResultsModel {
      * @param mixed $series
      */
     public function setSeries($series) {
-        $this->dataColumns = null;
         $this->series = $series;
         // invalidate cache of columns
         $this->dataColumns = [];
@@ -112,7 +109,7 @@ class BrojureResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @param $listedSeries
+     * @param array $listedSeries
      * @return void
      */
     public function setListedSeries($listedSeries) {

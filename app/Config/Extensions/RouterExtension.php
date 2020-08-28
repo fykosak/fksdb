@@ -2,7 +2,6 @@
 
 namespace FKSDB\Config\Extensions;
 
-use Nette\Application\Routers\Route;
 use Nette\DI\CompilerExtension;
 
 /**
@@ -12,7 +11,7 @@ use Nette\DI\CompilerExtension;
  */
 class RouterExtension extends CompilerExtension {
 
-    public function loadConfiguration() {
+    public function loadConfiguration(): void {
         parent::loadConfiguration();
 
         $container = $this->getContainerBuilder();
@@ -20,9 +19,7 @@ class RouterExtension extends CompilerExtension {
             'routes' => [],
             'disableSecured' => false,
         ]);
-
         $router = $container->getDefinition('router');
-        $disableSecured = $config['disableSecured'];
 
         foreach ($config['routes'] as $action) {
             $mask = $action['mask'];
@@ -35,14 +32,10 @@ class RouterExtension extends CompilerExtension {
                 }
                 foreach ($flags as $flag) {
                     $binFlag = constant("Nette\Application\Routers\Route::$flag");
-                    if ($disableSecured && $binFlag === Route::SECURED) {
-                        continue;
-                    }
                     $flagsBin |= $binFlag;
                 }
                 unset($action['flags']);
             }
-
             $router->addSetup('$service[] = new Nette\Application\Routers\Route(?, ?, ?);', [$mask, $action, $flagsBin]);
         }
     }

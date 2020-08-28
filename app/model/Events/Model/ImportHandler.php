@@ -8,7 +8,6 @@ use FKSDB\Events\Model\Grid\SingleEventSource;
 use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Utils\CSVParser;
-use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
@@ -23,47 +22,26 @@ class ImportHandler {
 
     use SmartObject;
 
-    const STATELESS_IGNORE = 'ignore';
-    const STATELESS_KEEP = 'keep';
+    public const STATELESS_IGNORE = 'ignore';
+    public const STATELESS_KEEP = 'keep';
 
-    const KEY_NAME = 'person_id';
+    public const KEY_NAME = 'person_id';
 
-    /**
-     * @var Container
-     */
-    private $container;
+    private Container $container;
 
-    /**
-     * @var SingleEventSource
-     */
-    private $source;
+    private SingleEventSource $source;
 
-    /**
-     * @var CSVParser
-     */
-    private $parser;
+    private CSVParser $parser;
 
     /**
      * ImportHandler constructor.
      * @param Container $container
-     */
-    public function __construct(Container $container) {
-        $this->container = $container;
-    }
-
-    /**
      * @param CSVParser $parser
-     * @return void
-     */
-    public function setInput(CSVParser $parser) {
-        $this->parser = $parser;
-    }
-
-    /**
      * @param SingleEventSource $source
-     * @return void
      */
-    public function setSource(SingleEventSource $source) {
+    public function __construct(Container $container, CSVParser $parser, SingleEventSource $source) {
+        $this->container = $container;
+        $this->parser = $parser;
         $this->source = $source;
     }
 
@@ -72,9 +50,8 @@ class ImportHandler {
      * @param string $errorMode
      * @param string $stateless
      * @return bool
-     * @throws NeonSchemaException
-     * @throws BadRequestException
      * @throws JsonException
+     * @throws NeonSchemaException
      */
     public function import(ApplicationHandler $handler, string $errorMode, string $stateless): bool {
         set_time_limit(0);
@@ -103,7 +80,7 @@ class ImportHandler {
             } catch (ApplicationHandlerException $exception) {
                 $hasError = true;
                 if ($errorMode == ApplicationHandler::ERROR_ROLLBACK) {
-                    throw new ImportHandlerException(_('Import se nepovedl.'), null, $exception);
+                    throw new ImportHandlerException(_('Import failed.'), null, $exception);
                 }
             }
         }
@@ -133,7 +110,7 @@ class ImportHandler {
             if (is_numeric($columnName)) { // hack for new PDO
                 continue;
             }
-            list($baseHolderName, $fieldName) = $this->prepareColumnName($columnName, $primaryBaseHolder);
+            [$baseHolderName, $fieldName] = $this->prepareColumnName($columnName, $primaryBaseHolder);
 
             if (!isset($values[$baseHolderName])) {
                 $values[$baseHolderName] = [];
@@ -144,14 +121,13 @@ class ImportHandler {
             }
         }
         if (!$fieldExists) {
-            throw new ImportHandlerException(_('CSV soubor neobsahuje platnou hlavičku.'));
+            throw new ImportHandlerException(_('CSV does not contain correct heading.'));
         }
         return $values;
     }
 
     /**
      * @return Holder[]
-     * @throws BadRequestException
      * @throws NeonSchemaException
      */
     private function createHoldersMap(): array {

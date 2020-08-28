@@ -13,19 +13,16 @@ use Nette\Database\Table\Selection;
  */
 class MultiTableSelection extends Selection {
 
-    /**
-     * @var AbstractServiceMulti
-     */
-    private $service;
+    private AbstractServiceMulti $service;
 
     /**
      * MultiTableSelection constructor.
      * @param AbstractServiceMulti $service
-     * @param $table
+     * @param string $table
      * @param Context $connection
      * @param IConventions $conventions
      */
-    public function __construct(AbstractServiceMulti $service, $table, Context $connection, IConventions $conventions) {
+    public function __construct(AbstractServiceMulti $service, string $table, Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, $table);
         $this->service = $service;
     }

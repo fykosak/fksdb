@@ -13,9 +13,7 @@ use Nette\Database\Table\ActiveRow;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class EvaluationVyfuk2011 extends EvaluationStrategy {
-    /**
-     * @return array|null
-     */
+
     public function getCategories(): array {
         return [
             new ModelCategory(ModelCategory::CAT_ES_6),
@@ -46,11 +44,11 @@ class EvaluationVyfuk2011 extends EvaluationStrategy {
     }
 
     public function getPointsColumn(ActiveRow $task): string {
-        return "s.raw_points";
+        return 's.raw_points';
     }
 
     public function getSumColumn(): string {
-        return "s.raw_points";
+        return 's.raw_points';
     }
 
     /**

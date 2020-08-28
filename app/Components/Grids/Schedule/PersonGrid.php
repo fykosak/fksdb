@@ -3,10 +3,12 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\DbNames;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
+use Nette\Application\UI\Presenter;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\GridException;
@@ -34,7 +36,7 @@ class PersonGrid extends BaseGrid {
      * @throws \InvalidArgumentException
      * @throws GridException
      */
-    public function render(ModelPerson $person = null, ModelEvent $event = null) {
+    public function render(ModelPerson $person = null, ModelEvent $event = null): void {
         if (!$event || !$person) {
             throw new \InvalidArgumentException();
         }
@@ -43,32 +45,34 @@ class PersonGrid extends BaseGrid {
     }
 
     /**
-     * @param $presenter
+     * @param Presenter $presenter
+     * @return void
      * @throws DuplicateColumnException
+     * @throws BadTypeException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
 
         $this->addColumn('person_schedule_id', _('#'));
-        $this->addColumn('group_label', _('Group'))->setRenderer(function ($row) {
+        $this->addColumn('group_label', _('Group'))->setRenderer(function ($row): string {
             $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->getScheduleItem()->getScheduleGroup()->getLabel();
         });
-        $this->addColumn('item_label', _('Item'))->setRenderer(function ($row) {
+        $this->addColumn('item_label', _('Item'))->setRenderer(function ($row): string {
             $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->getScheduleItem()->getLabel();
         });
-        $this->addJoinedColumn(DbNames::TAB_SCHEDULE_ITEM, 'price_czk', function ($row) {
+        $this->addJoinedColumn('schedule_item.price_czk', function ($row): ModelScheduleItem {
             $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->getScheduleItem();
         });
-        $this->addJoinedColumn(DbNames::TAB_SCHEDULE_ITEM, 'price_eur', function ($row) {
+        $this->addJoinedColumn('schedule_item.price_eur', function ($row): ModelScheduleItem {
             $model = ModelPersonSchedule::createFromActiveRow($row);
             return $model->getScheduleItem();
         });
 
-        $this->addColumns(['referenced.payment_id']);
+        $this->addColumns(['payment.payment']);
 
         $this->addColumn('state', _('State'))->setRenderer(function ($row) {
             $model = ModelPersonSchedule::createFromActiveRow($row);

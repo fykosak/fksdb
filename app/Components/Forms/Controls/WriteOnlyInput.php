@@ -21,31 +21,19 @@ class WriteOnlyInput extends TextInput implements IWriteOnly {
      * @param null $label
      * @param null $maxLength
      */
-    public function __construct($label = NULL, $maxLength = NULL) {
-        parent::__construct($label, null, $maxLength);
+    public function __construct($label = null, $maxLength = null) {
+        parent::__construct($label, $maxLength);
         $this->writeOnlyAppendMonitors();
     }
 
-    /**
-     * @return Html
-     */
-    public function getControl() {
+    public function getControl(): Html {
         $control = parent::getControl();
         $control = $this->writeOnlyAdjustControl($control);
         return $control;
     }
 
-    public function loadHttpData() {
+    public function loadHttpData(): void {
         parent::loadHttpData();
         $this->writeOnlyLoadHttpData();
     }
-
-    /**
-     * @param $obj
-     */
-    protected function attached($obj) {
-        parent::attached($obj);
-        $this->writeOnlyAttached($obj);
-    }
-
 }

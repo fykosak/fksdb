@@ -3,62 +3,33 @@
 namespace FKSDB\Transitions;
 
 use FKSDB\Logging\ILogger;
-use FKSDB\Transitions\Statements\Statement;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
+ * Class Transition
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 final class Transition {
-    const TYPE_SUCCESS = ILogger::SUCCESS;
-    const TYPE_WARNING = ILogger::WARNING;
-    const TYPE_DANGER = ILogger::ERROR;
-    const TYPE_PRIMARY = ILogger::PRIMARY;
-    /**
-     * @var Callable
-     */
+    public const TYPE_SUCCESS = ILogger::SUCCESS;
+    public const TYPE_WARNING = ILogger::WARNING;
+    public const TYPE_DANGER = ILogger::ERROR;
+    public const TYPE_PRIMARY = ILogger::PRIMARY;
+
+    /** @var callable */
     private $condition;
 
-    /**
-     * @var string
-     */
-    private $type = self::TYPE_PRIMARY;
-    /**
-     * @var string
-     */
-    private $label;
-    /**
-     * @var callable[]
-     */
-    public $beforeExecuteCallbacks = [];
-    /**
-     * @var callable[]
-     */
-    public $afterExecuteCallbacks = [];
+    private string $type = self::TYPE_PRIMARY;
 
-    /**
-     * @var string
-     */
-    private $fromState;
-    /**
-     * @var string
-     */
-    private $toState;
+    private string $label;
 
-    /**
-     * @return string
-     */
-    public function getFromState() {
-        return $this->fromState;
-    }
+    /** @var callable[] */
+    public array $beforeExecuteCallbacks = [];
+    /** @var callable[] */
+    public array $afterExecuteCallbacks = [];
 
-    /**
-     * @return string
-     */
-    public function getToState(): string {
-        return $this->toState;
-    }
+
+    private string $fromState;
+
+    private string $toState;
 
     /**
      * Transition constructor.
@@ -72,69 +43,49 @@ final class Transition {
         $this->label = $label;
     }
 
-    /**
-     * @return string
-     */
+    public function getFromState(): string {
+        return $this->fromState;
+    }
+
+    public function getToState(): string {
+        return $this->toState;
+    }
+
     public function getId(): string {
         return $this->fromState . '__' . $this->toState;
     }
 
-    /**
-     * @return string
-     */
-    public function getType() {
+    public function getType(): string {
         return $this->type;
     }
 
-    /**
-     * @param string $type
-     */
-    public function setType(string $type) {
+    public function setType(string $type): void {
         $this->type = $type;
     }
 
-    /**
-     * @return string
-     */
     public function getLabel(): string {
         return _($this->label);
     }
 
-    /**
-     * @param callable|Statement $callback
-     */
-    public function setCondition(callable $callback) {
+    public function setCondition(callable $callback): void {
         $this->condition = $callback;
     }
 
-    /**
-     * @return bool
-     */
     public function isCreating(): bool {
         return $this->fromState === Machine::STATE_INIT;
     }
 
-    /**
-     * @param IStateModel $model
-     * @return bool
-     */
-    public function canExecute($model): bool {
+    public function canExecute(?IStateModel $model): bool {
         return ($this->condition)($model);
     }
 
-    /**
-     * @param IStateModel $model
-     */
-    final public function beforeExecute(IStateModel &$model) {
+    final public function beforeExecute(IStateModel &$model): void {
         foreach ($this->beforeExecuteCallbacks as $callback) {
             $callback($model);
         }
     }
 
-    /**
-     * @param IStateModel $model
-     */
-    final public function afterExecute(IStateModel &$model) {
+    final public function afterExecute(IStateModel &$model): void {
         foreach ($this->afterExecuteCallbacks as $callback) {
             $callback($model);
         }

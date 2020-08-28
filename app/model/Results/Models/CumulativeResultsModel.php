@@ -12,9 +12,7 @@ use Nette\InvalidStateException;
  */
 class CumulativeResultsModel extends AbstractResultsModel {
 
-    /**
-     * @var array of int
-     */
+    /** @var array of int */
     protected $series;
 
     /**
@@ -81,7 +79,7 @@ class CumulativeResultsModel extends AbstractResultsModel {
     /**
      * @param mixed $series
      */
-    public function setSeries($series) {
+    public function setSeries($series): void {
         $this->dataColumns = null;
         $this->series = $series;
         // invalidate cache of columns

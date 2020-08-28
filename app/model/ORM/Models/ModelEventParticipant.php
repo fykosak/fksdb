@@ -28,28 +28,37 @@ use Nette\Security\IResource;
  * @property-read string health_restrictions alergie, léky, úrazy
  * @property-read string tshirt_size
  * @property-read string tshirt_color
+ * @property-read string jumper_size
  * @property-read float price DECIMAL(6,2) vypočtená cena
- * @property-read string arrival_time Čas příjezdu
+ * @property-read \DateInterval arrival_time Čas příjezdu
  * @property-read string arrival_destination Místo prijezdu
  * @property-read bool arrival_ticket společný lístek na cestu tam
- * @property-read string departure_time Čas odjezdu
+ * @property-read \DateInterval departure_time Čas odjezdu
  * @property-read string departure_destination Místo odjezdu
  * @property-read bool departure_ticket společný lístek na cestu zpět
  * @property-read bool swimmer plavec?
  * @property-read string used_drugs užívané léky
  * @property-read string schedule
+ * @property-read int lunch_count
  */
-class ModelEventParticipant extends AbstractModelSingle implements IEventReferencedModel, IPaymentModel, IPersonReferencedModel, IResource {
-    const RESOURCE_ID = 'event.participant';
+class ModelEventParticipant extends AbstractModelSingle implements
+    IEventReferencedModel,
+    IPaymentModel,
+    IPersonReferencedModel,
+    IResource,
+    IContestReferencedModel {
 
-    /**
-     * @return ModelPerson|null
-     */
-    public function getPerson() {
-        if (!$this->person) {
-            return null;
-        }
-        return ModelPerson::createFromActiveRow($this->person);
+    public const RESOURCE_ID = 'event.participant';
+
+    public const STATE_AUTO_INVITED = 'auto.invited';
+    public const STATE_AUTO_SPARE = 'auto.spare';
+
+    public function getPerson(): ?ModelPerson {
+        return $this->person ? ModelPerson::createFromActiveRow($this->person) : null;
+    }
+
+    public function getContest(): ModelContest {
+        return $this->getEvent()->getContest();
     }
 
     /**
@@ -78,7 +87,7 @@ class ModelEventParticipant extends AbstractModelSingle implements IEventReferen
     public function getFyziklaniTeam(): ModelFyziklaniTeam {
         $row = $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'event_participant_id')->select('e_fyziklani_team.*')->fetch();
         if (!$row) {
-            throw new BadRequestException('Event is not fyziklani');
+            throw new BadRequestException('Event is not fyziklani!');
         }
         return ModelFyziklaniTeam::createFromActiveRow($row);
     }

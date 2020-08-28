@@ -13,15 +13,12 @@ use Nette\Database\Table\Selection;
  */
 class TypedTableSelection extends Selection {
 
-    /**
-     * @var string
-     */
-    protected $modelClassName;
+    protected string $modelClassName;
 
     /**
      * TypedTableSelection constructor.
-     * @param $modelClassName
-     * @param $table
+     * @param string $modelClassName
+     * @param string $table
      * @param Context $connection
      * @param IConventions $conventions
      */

@@ -11,13 +11,9 @@ use FKSDB\Expressions\EvaluatedExpression;
  */
 class Le extends EvaluatedExpression {
 
-    /**
-     * @var callable|mixed
-     */
+    /** @var callable|mixed */
     private $aValue;
-    /**
-     * @var callable|mixed
-     */
+    /** @var callable|mixed */
     private $bValue;
 
     /**
@@ -30,18 +26,11 @@ class Le extends EvaluatedExpression {
         $this->bValue = $bValue;
     }
 
-    /**
-     * @param array $args
-     * @return bool
-     */
     public function __invoke(...$args): bool {
         return $this->evaluateArgument($this->aValue, ...$args) < $this->evaluateArgument($this->bValue, ...$args);
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return "{$this->aValue} < {$this->bValue}";
     }
 

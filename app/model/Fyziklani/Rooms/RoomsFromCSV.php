@@ -7,8 +7,8 @@ use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\Utils\CSVParser;
-use Pipeline\PipelineException;
-use Pipeline\Stage;
+use FKSDB\Pipeline\PipelineException;
+use FKSDB\Pipeline\Stage;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -17,20 +17,12 @@ use Pipeline\Stage;
  */
 class RoomsFromCSV extends Stage {
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $data;
 
-    /**
-     * @var ModelEvent
-     */
-    private $event;
+    private ModelEvent $event;
 
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceTeam;
+    private ServiceFyziklaniTeam $serviceTeam;
 
     /**
      * RoomsFromCSV constructor.
@@ -45,11 +37,11 @@ class RoomsFromCSV extends Stage {
     /**
      * @param mixed $data
      */
-    public function setInput($data) {
+    public function setInput($data): void {
         $this->data = $data;
     }
 
-    public function process() {
+    public function process(): void {
         if (!file_exists($this->data)) {
             throw new PipelineException(sprintf('File %s doesn\'t exist.', $this->data));
         }

@@ -4,8 +4,8 @@ namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Submits\SeriesTable;
+use Nette\Application\UI\ITemplate;
 use Nette\DI\Container;
-use Nette\Templating\ITemplate;
 
 /**
  * Class SeriesTableComponent
@@ -13,10 +13,10 @@ use Nette\Templating\ITemplate;
  * @author Michal Koutny
  */
 abstract class SeriesTableComponent extends BaseComponent {
-    /** @var SeriesTable */
-    private $seriesTable;
-    /** @var bool */
-    private $displayAll;
+
+    private SeriesTable $seriesTable;
+
+    private bool $displayAll;
 
     /**
      * CheckSubmitsControl constructor.
@@ -30,12 +30,8 @@ abstract class SeriesTableComponent extends BaseComponent {
         $this->displayAll = $displayAll;
     }
 
-    /**
-     * @param null $class
-     * @return ITemplate
-     */
-    protected function createTemplate($class = NULL) {
-        $template = parent::createTemplate($class);
+    protected function createTemplate(): ITemplate {
+        $template = parent::createTemplate();
         $template->seriesTable = $this->getSeriesTable();
         $template->displayAll = $this->displayAll;
         return $template;

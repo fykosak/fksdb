@@ -14,14 +14,12 @@ class Count {
     use SmartObject;
     use WithEventTrait;
 
-    /**
-     * @var
-     */
+    /** @var mixed */
     private $state;
 
     /**
      * Count constructor.
-     * @param $state
+     * @param string $state
      */
     public function __construct($state) {
         $this->state = $state;
@@ -34,15 +32,12 @@ class Count {
     public function __invoke(...$args): int {
         $baseHolder = $this->getHolder($args[0])->getPrimaryHolder();
         $table = $baseHolder->getService()->getTable();
-        $table->where($baseHolder->getEventId(), $this->getEvent($args[0])->getPrimary());
+        $table->where($baseHolder->getEventIdColumn(), $this->getEvent($args[0])->getPrimary());
         $table->where(BaseHolder::STATE_COLUMN, $this->state);
         return $table->count('1');
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return "count({$this->state})";
     }
 

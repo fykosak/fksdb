@@ -2,6 +2,7 @@
 
 namespace FKSDB\Events\Spec\Fol;
 
+use FKSDB\ORM\Models\ModelPersonHistory;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\Events\FormAdjustments\AbstractAdjustment;
 use FKSDB\Events\FormAdjustments\IFormAdjustment;
@@ -22,34 +23,13 @@ use Nette\Forms\IControl;
  */
 class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
 
-    /**
-     * @var ServiceSchool
-     */
-    private $serviceSchool;
+    private ServiceSchool $serviceSchool;
 
-    /**
-     * @var ServicePersonHistory
-     */
-    private $servicePersonHistory;
+    private ServicePersonHistory $servicePersonHistory;
 
-    /**
-     * @var Holder
-     */
+    /** @var Holder */
     private $holder;
 
-    /**
-     * @return Holder
-     */
-    public function getHolder() {
-        return $this->holder;
-    }
-
-    /**
-     * @param Holder $holder
-     */
-    public function setHolder(Holder $holder) {
-        $this->holder = $holder;
-    }
 
     /**
      * FlagCheck constructor.
@@ -61,21 +41,23 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
         $this->servicePersonHistory = $servicePersonHistory;
     }
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return void
-     */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder) {
+    public function getHolder(): Holder {
+        return $this->holder;
+    }
+
+    public function setHolder(Holder $holder): void {
+        $this->holder = $holder;
+    }
+
+    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $studyYearControls = $this->getControl("p*.person_id.person_history.study_year");
         $personControls = $this->getControl('p*.person_id');
         $spamControls = $this->getControl('p*.person_id.person_has_flag.spam_mff');
 
-        $msgForeign = _('Zasílání informačních materiálů je dostupné pouze českým a slovenským studentům.');
-        $msgOld = _('Zasílání informačních materiálů je dostupné pouze SŠ studentům.');
+        $msgForeign = _('This option is only available to Czech and Slovak students.');
+        $msgOld = _('This option is only available to secondary school students.');
         /**
          * @var  $i
          * @var BaseControl $control
@@ -85,7 +67,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
             $personControl = $personControls[$i];
             $studyYearControl = $studyYearControls[$i];
             $control->addCondition($form::FILLED)
-                ->addRule(function (IControl $control) use ($schoolControl, $personControl, $form, $msgForeign) {
+                ->addRule(function () use ($schoolControl, $personControl, $form, $msgForeign) : bool {
                     $schoolId = $this->getSchoolId($schoolControl, $personControl);
                     if (!$this->serviceSchool->isCzSkSchool($schoolId)) {
                         $form->addError($msgForeign);
@@ -93,7 +75,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
                     }
                     return true;
                 }, $msgForeign)
-                ->addRule(function (IControl $control) use ($studyYearControl, $personControl, $form, $msgOld) {
+                ->addRule(function () use ($studyYearControl, $personControl, $form, $msgOld): bool {
                     $studyYear = $this->getStudyYear($studyYearControl, $personControl);
                     if (!$this->isStudent($studyYear)) {
                         $form->addError($msgOld);
@@ -117,8 +99,8 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
     }
 
     /**
-     * @param $studyYearControl
-     * @param $personControl
+     * @param IControl $studyYearControl
+     * @param IControl $personControl
      * @return bool|mixed|ActiveRow|Selection|null
      */
     private function getStudyYear($studyYearControl, $personControl) {
@@ -126,7 +108,8 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
             return $studyYearControl->getValue();
         }
 
-        $personId = $personControl->getValue(false);
+        $personId = $personControl->getValue();
+        /** @var ModelPersonHistory $personHistory */
         $personHistory = $this->servicePersonHistory->getTable()
             ->where('person_id', $personId)
             ->where('ac_year', $this->getHolder()->getPrimaryHolder()->getEvent()->getAcYear())->fetch();
@@ -134,8 +117,8 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
     }
 
     /**
-     * @param $schoolControl
-     * @param $personControl
+     * @param IControl $schoolControl
+     * @param IControl $personControl
      * @return bool|mixed|ActiveRow|Selection|null
      */
     private function getSchoolId($schoolControl, $personControl) {
@@ -143,7 +126,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
             return $schoolControl->getValue();
         }
 
-        $personId = $personControl->getValue(false);
+        $personId = $personControl->getValue();
         /** @var ModelSchool|false $school */
         $school = $this->servicePersonHistory->getTable()
             ->where('person_id', $personId)
@@ -152,10 +135,10 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
     }
 
     /**
-     * @param $studyYear
+     * @param int|null $studyYear
      * @return bool
      */
-    private function isStudent($studyYear) {
+    private function isStudent($studyYear): bool {
         return ($studyYear === null) ? false : true;
     }
 }

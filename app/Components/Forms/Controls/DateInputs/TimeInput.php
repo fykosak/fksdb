@@ -4,21 +4,15 @@ namespace FKSDB\Components\Forms\Controls\DateInputs;
 
 /**
  * Class TimeInput
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class TimeInput extends AbstractDateInput {
-
     /**
-     * @return string
+     * TimeInput constructor.
+     * @param null $label
+     * @param null $maxLength
      */
-    protected function getFormat(): string {
-        return 'H:i:s';
-    }
-
-    /**
-     * @return string
-     */
-    protected function getType(): string {
-        return 'time';
+    public function __construct($label = null, $maxLength = null) {
+        parent::__construct('time', 'H:i:s', $label, $maxLength);
     }
 }

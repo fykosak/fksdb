@@ -4,20 +4,15 @@ namespace FKSDB\Components\Forms\Controls\DateInputs;
 
 /**
  * Class MonthInput
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class MonthInput extends AbstractDateInput {
     /**
-     * @return string
+     * MonthInput constructor.
+     * @param null $label
+     * @param null $maxLength
      */
-    protected function getFormat(): string {
-        return 'Y-m';
-    }
-
-    /**
-     * @return string
-     */
-    protected function getType(): string {
-        return 'month';
+    public function __construct($label = null, $maxLength = null) {
+        parent::__construct('month', 'Y-m', $label, $maxLength);
     }
 }

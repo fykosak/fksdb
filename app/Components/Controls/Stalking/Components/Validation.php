@@ -2,55 +2,32 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
+use FKSDB\DBReflection\FieldLevelPermission;
+use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\DataTesting\TestsLogger;
 use FKSDB\DataTesting\DataTestingFactory;
-use Nette\DI\Container;
 
 /**
- * Class StalkingValidation
- * *
+ * Class Validation
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class Validation extends AbstractStalkingComponent {
-    /**
-     * @var DataTestingFactory
-     */
-    private $validationFactory;
+class Validation extends StalkingControl {
 
-    /**
-     * Validation constructor.
-     * @param Container $container
-     */
-    public function __construct(Container $container) {
-        parent::__construct($container);
-        $this->validationFactory = $container->getByType(DataTestingFactory::class);
+    private DataTestingFactory $validationFactory;
+
+    public function injectDataTestingFactory(DataTestingFactory $factory): void {
+        $this->validationFactory = $factory;
     }
 
-    protected function getHeadline(): string {
-        return _('Validation');
-    }
-
-    /**
-     * @return int[]
-     */
-    protected function getAllowedPermissions(): array {
-        return [self::PERMISSION_RESTRICT, self::PERMISSION_FULL, self::PERMISSION_FULL];
-    }
-
-    /**
-     * @param ModelPerson $person
-     * @param int $userPermissions
-     * @return void
-     */
-    public function render(ModelPerson $person, int $userPermissions) {
-        $this->beforeRender($person, $userPermissions);
-        $logger = new TestsLogger();
+    public function render(ModelPerson $person, int $userPermissions): void {
+        $this->beforeRender($person, _('Validation'), $userPermissions, FieldLevelPermission::ALLOW_RESTRICT);
+        $logger = new MemoryLogger();
         foreach ($this->validationFactory->getTests('person') as $test) {
             $test->run($logger, $person);
         }
 
-        $this->template->logs = $logger->getLogs();
-        $this->template->setFile(__DIR__ . '/Validation.latte');
+        $this->template->logs = $logger->getMessages();
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.validation.latte');
         $this->template->render();
     }
 }

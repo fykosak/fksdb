@@ -3,30 +3,23 @@
 namespace FKSDB\DataTesting\Tests\Person;
 
 use FKSDB\Components\Forms\Rules\BornNumber;
+use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\DataTesting\TestsLogger;
 use FKSDB\DataTesting\TestLog;
 
 /**
  * Class GenderFromBornNumberTest
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class GenderFromBornNumberTest extends PersonTest {
-
-    public function getTitle(): string {
-        return _('Gender from born number');
-    }
-
-    public function getAction(): string {
-        return 'gender_from_born_number';
-    }
-
     /**
-     * @param TestsLogger $logger
-     * @param ModelPerson $person
-     * @return void
+     * GenderFromBornNumberTest constructor.
      */
-    public function run(TestsLogger $logger, ModelPerson $person) {
+    public function __construct() {
+        parent::__construct('gender_from_born_number', _('Gender from born number'));
+    }
+
+    public function run(ILogger $logger, ModelPerson $person): void {
         $info = $person->getInfo();
 
         if (!$info) {
@@ -49,5 +42,4 @@ class GenderFromBornNumberTest extends PersonTest {
             $logger->log(new TestLog($this->getTitle(), 'Gender match born number', TestLog::LVL_SUCCESS));
         }
     }
-
 }

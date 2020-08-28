@@ -3,39 +3,39 @@
 namespace FKSDB\Payment\PriceCalculator;
 
 use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Price;
 use FKSDB\Payment\PriceCalculator\PreProcess\IPreprocess;
 
 /**
  * Class PriceCalculator
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PriceCalculator {
-    /**
-     * @var IPreprocess[]
-     */
-    private $preProcess = [];
+
+    private ServicePayment $servicePayment;
+    /** @var IPreprocess[] */
+    private array $preProcess = [];
 
     /**
-     * @param IPreprocess $preProcess
-     * @return void
+     * PriceCalculator constructor.
+     * @param ServicePayment $servicePayment
      */
-    public function addPreProcess(IPreprocess $preProcess) {
+    public function __construct(ServicePayment $servicePayment) {
+        $this->servicePayment = $servicePayment;
+    }
+
+    public function addPreProcess(IPreprocess $preProcess): void {
         $this->preProcess[] = $preProcess;
     }
 
-    /**
-     * @param ModelPayment $modelPayment
-     * @return void
-     */
-    final public function __invoke(ModelPayment $modelPayment) {
+    final public function __invoke(ModelPayment $modelPayment): void {
         $price = new Price(0, $modelPayment->currency);
         foreach ($this->preProcess as $preProcess) {
             $subPrice = $preProcess->calculate($modelPayment);
             $price->add($subPrice);
         }
-        // TODO to service
-        $modelPayment->update(['price' => $price->getAmount(), 'currency' => $price->getCurrency()]);
+        $this->servicePayment->updateModel2($modelPayment, ['price' => $price->getAmount(), 'currency' => $price->getCurrency()]);
     }
 
     /**

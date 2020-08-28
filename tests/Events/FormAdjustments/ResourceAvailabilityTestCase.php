@@ -1,23 +1,26 @@
 <?php
 
-namespace FKSDB\Events\Model;
+namespace FKSDB\Tests\Events\FormAdjustments;
 
-use FKSDB\Events\EventTestCase;
-use Nette\DI\Container;
+use FKSDB\Tests\Events\EventTestCase;
+use Nette\Application\IPresenter;
 use Nette\Utils\DateTime;
-use PublicModule\ApplicationPresenter;
 
 abstract class ResourceAvailabilityTestCase extends EventTestCase {
 
-    /**
-     * @var ApplicationPresenter
-     */
-    protected $fixture;
-    protected $persons;
+    protected IPresenter $fixture;
 
-    abstract function getCapacity();
+    protected array $persons = [];
 
-    protected function setUp() {
+    protected int $eventId;
+
+    abstract protected function getCapacity(): int;
+
+    protected function getEventId(): int {
+        return $this->eventId;
+    }
+
+    protected function setUp(): void {
         parent::setUp();
 
         $capacity = $this->getCapacity();
@@ -28,13 +31,14 @@ abstract class ResourceAvailabilityTestCase extends EventTestCase {
             'parameters' => <<<EOT
 accomodationCapacity: $capacity
 EOT
+            ,
         ]);
 
         $this->insert('e_dsef_group', [
             'e_dsef_group_id' => 1,
             'event_id' => $this->eventId,
             'name' => 'Alpha',
-            'capacity' => 4
+            'capacity' => 4,
         ]);
 
 
@@ -67,11 +71,10 @@ EOT
         ]);
     }
 
-    protected function tearDown() {
-        $this->connection->query("DELETE FROM e_dsef_participant");
-        $this->connection->query("DELETE FROM e_dsef_group");
+    protected function tearDown(): void {
+        $this->connection->query('DELETE FROM e_dsef_participant');
+        $this->connection->query('DELETE FROM e_dsef_group');
         parent::tearDown();
     }
-
 }
 

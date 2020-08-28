@@ -2,51 +2,46 @@
 
 namespace FKSDB\DataTesting;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
+use FKSDB\DBReflection\DBReflectionFactory;
 use FKSDB\DataTesting\Tests\Person\PersonTest;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Services\ServiceContest;
-use Nette\Application\BadRequestException;
 
 /**
  * Class DataTestingFactory
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DataTestingFactory {
-    /**
-     * @var PersonTest[][]
-     */
-    private $tests = [];
-    /**
-     * @var ServiceContest
-     */
-    private $serviceContest;
-    /**
-     * @var TableReflectionFactory
-     */
-    private $tableReflectionFactory;
+    /** @var PersonTest[][] */
+    private array $tests = [];
+
+    private ServiceContest $serviceContest;
+
+    private DBReflectionFactory $tableReflectionFactory;
 
     /**
      * DataTestingFactory constructor.
      * @param ServiceContest $serviceContest
-     * @param TableReflectionFactory $tableReflectionFactory
-     * @throws BadRequestException
+     * @param DBReflectionFactory $tableReflectionFactory
+     * @throws BadTypeException
      */
-    public function __construct(ServiceContest $serviceContest, TableReflectionFactory $tableReflectionFactory) {
+    public function __construct(ServiceContest $serviceContest, DBReflectionFactory $tableReflectionFactory) {
         $this->serviceContest = $serviceContest;
         $this->tableReflectionFactory = $tableReflectionFactory;
         $this->registersTests();
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
+     * @throws BadTypeException
      */
-    private function registersTests() {
+    private function registersTests(): void {
         $tests = [
             new Tests\Person\GenderFromBornNumberTest(),
             new Tests\Person\ParticipantsDurationTest(),
             new Tests\Person\EventCoveringTest(),
         ];
-        foreach (['phone', 'phone_parent_d', 'phone_parent_m'] as $fieldName) {
+        foreach (['person_info.phone', 'person_info.phone_parent_d', 'person_info.phone_parent_m'] as $fieldName) {
             $tests[] = new Tests\Person\PersonInfoFieldTest($this->tableReflectionFactory, $fieldName);
         }
         $this->tests['person'] = $tests;
@@ -57,9 +52,6 @@ class DataTestingFactory {
      * @return PersonTest[]
      */
     public function getTests(string $section): array {
-        if (isset($this->tests[$section])) {
-            return $this->tests[$section];
-        }
-        return [];
+        return $this->tests[$section] ?? [];
     }
 }

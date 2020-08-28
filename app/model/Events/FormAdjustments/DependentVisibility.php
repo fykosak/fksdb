@@ -2,6 +2,7 @@
 
 namespace FKSDB\Events\FormAdjustments;
 
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 
@@ -12,12 +13,11 @@ use Nette\Forms\IControl;
  */
 class DependentVisibility extends PairwiseAdjustment {
     /**
-     * @param IControl $target
+     * @param IControl|BaseControl $target
      * @param IControl $prerequisite
      * @return void
      */
-    protected function processPair(IControl $target, IControl $prerequisite) {
+    protected function processPair(IControl $target, IControl $prerequisite): void {
         $target->getRules()->addConditionOn($prerequisite, Form::FILLED)->toggle($target->getHtmlId() . '-pair');
     }
-
 }

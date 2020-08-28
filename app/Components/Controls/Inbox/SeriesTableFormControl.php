@@ -15,12 +15,12 @@ use Nette\Application\UI\Form;
  */
 abstract class SeriesTableFormControl extends SeriesTableComponent {
 
-    public function createComponentForm(): OptimisticForm {
+    protected function createComponentForm(): OptimisticForm {
         $form = new OptimisticForm(
-            function () {
+            function (): string {
                 return $this->getSeriesTable()->getFingerprint();
             },
-            function () {
+            function (): array {
                 return $this->getSeriesTable()->formatAsFormValues();
             }
         );

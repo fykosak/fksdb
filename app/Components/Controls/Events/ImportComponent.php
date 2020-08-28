@@ -2,7 +2,8 @@
 
 namespace FKSDB\Components\Events;
 
-use BasePresenter;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\Machine\Machine;
@@ -14,7 +15,6 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Utils\CSVParser;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Utils\JsonException;
@@ -27,20 +27,11 @@ use Tracy\Debugger;
  */
 class ImportComponent extends BaseComponent {
 
-    /**
-     * @var Machine
-     */
-    private $machine;
+    private Machine $machine;
 
-    /**
-     * @var SingleEventSource
-     */
-    private $source;
+    private SingleEventSource $source;
 
-    /**
-     * @var ApplicationHandler
-     */
-    private $handler;
+    private ApplicationHandler $handler;
 
     /**
      * ImportComponent constructor.
@@ -58,15 +49,15 @@ class ImportComponent extends BaseComponent {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
-    protected function createComponentFormImport() {
+    protected function createComponentFormImport(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
 
         $form->addUpload('file', _('Soubor s přihláškami'))
             ->addRule(Form::FILLED)
-            ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze CSV soubory.'), 'text/plain'); //TODO verify this check at production server
+            ->addRule(Form::MIME_TYPE, _('Only CSV files are accepted.'), 'text/plain'); //TODO verify this check at production server
 
         $form->addRadioList('errorMode', _('Chování při chybě'))
             ->setItems([
@@ -77,13 +68,13 @@ class ImportComponent extends BaseComponent {
 
         $form->addRadioList('stateless', _('Přihlášky bez uvedeného stavu'))
             ->setItems([
-                ImportHandler::STATELESS_IGNORE => _('Ignorovat.'),
+                ImportHandler::STATELESS_IGNORE => _('Ignore.'),
                 ImportHandler::STATELESS_KEEP => _('Ponechat původní stav.'),
             ])
             ->setDefaultValue(ImportHandler::STATELESS_IGNORE);
 
 
-        $form->addSubmit('import', _('Importovat'));
+        $form->addSubmit('import', _('Import'));
 
         $form->onSuccess[] = function (Form $form) {
             $this->handleFormImport($form);
@@ -92,22 +83,18 @@ class ImportComponent extends BaseComponent {
         return $control;
     }
 
-    /**
-     * @return void
-     */
-    public function render() {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ImportComponent.latte');
+    public function render(): void {
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.import.latte');
         $this->template->render();
     }
 
     /**
      * @param Form $form
      * @throws AbortException
-     * @throws NeonSchemaException
-     * @throws BadRequestException
      * @throws JsonException
+     * @throws NeonSchemaException
      */
-    private function handleFormImport(Form $form) {
+    private function handleFormImport(Form $form): void {
         $values = $form->getValues();
         try {
             // process form values
@@ -119,9 +106,7 @@ class ImportComponent extends BaseComponent {
             $stateless = $values['stateless'];
 
             // initialize import handler
-            $importHandler = new ImportHandler($this->getContext());
-            $importHandler->setInput($parser);
-            $importHandler->setSource($this->source);
+            $importHandler = new ImportHandler($this->getContext(), $parser, $this->source);
 
             Debugger::timer();
             $result = $importHandler->import($this->handler, $errorMode, $stateless);

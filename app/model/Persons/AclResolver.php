@@ -1,8 +1,8 @@
 <?php
 
-namespace Persons;
+namespace FKSDB\Persons;
 
-use Authorization\ContestAuthorizator;
+use FKSDB\Authorization\ContestAuthorizator;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Security\IResource;
@@ -16,15 +16,9 @@ use Nette\SmartObject;
 class AclResolver implements IVisibilityResolver, IModifiabilityResolver {
     use SmartObject;
 
-    /**
-     * @var ContestAuthorizator
-     */
-    private $contestAuthorizator;
+    private ContestAuthorizator $contestAuthorizator;
 
-    /**
-     * @var ModelContest
-     */
-    private $contest;
+    private ModelContest $contest;
 
 
     /**

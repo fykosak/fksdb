@@ -17,41 +17,16 @@ use Nette\Forms\IControl;
  */
 class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $schoolsInTeam;
 
-    /**
-     * @var int
-     */
-    private $schoolsInTeamValue;
+    private int $schoolsInTeamValue;
 
-    /**
-     * @var ExpressionEvaluator
-     */
-    private $evaluator;
-
-    /**
-     * @return int|mixed
-     */
-    public function getSchoolsInTeam() {
-        if ($this->schoolsInTeamValue === null) {
-            $this->schoolsInTeamValue = $this->evaluator->evaluate($this->schoolsInTeam, $this->getHolder());
-        }
-        return $this->schoolsInTeamValue;
-    }
-
-    /**
-     * @param $schoolsInTeam
-     */
-    public function setSchoolsInTeam($schoolsInTeam) {
-        $this->schoolsInTeam = $schoolsInTeam;
-    }
+    private ExpressionEvaluator $evaluator;
 
     /**
      * SchoolsInTeam constructor.
-     * @param $schoolsInTeam
+     * @param mixed $schoolsInTeam
      * @param ExpressionEvaluator $evaluator
      * @param ServicePersonHistory $servicePersonHistory
      */
@@ -61,20 +36,29 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
         $this->setSchoolsInTeam($schoolsInTeam);
     }
 
+    public function getSchoolsInTeam(): int {
+        if (!isset($this->schoolsInTeamValue)) {
+            $this->schoolsInTeamValue = $this->evaluator->evaluate($this->schoolsInTeam, $this->getHolder());
+        }
+        return $this->schoolsInTeamValue;
+    }
+
     /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
+     * @param int $schoolsInTeam
      * @return void
      */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder) {
+    public function setSchoolsInTeam($schoolsInTeam) {
+        $this->schoolsInTeam = $schoolsInTeam;
+    }
+
+    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $personControls = $this->getControl('p*.person_id');
 
-        $msgMixture = sprintf(_('V týmu můžou být soutežící nejvýše z %d škol.'), $this->getSchoolsInTeam());
+        $msgMixture = sprintf(_('Only %d different schools can be represented in the team.'), $this->getSchoolsInTeam());
         foreach ($schoolControls as $control) {
-            $control->addRule(function (IControl $control) use ($schoolControls, $personControls, $form, $msgMixture) {
+            $control->addRule(function (IControl $control) use ($schoolControls, $personControls, $form, $msgMixture): bool {
                 $schools = $this->getSchools($schoolControls, $personControls);
                 if (!$this->checkMixture($schools)) {
                     $form->addError($msgMixture);
@@ -83,7 +67,7 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
                 return true;
             }, $msgMixture);
         }
-        $form->onValidate[] = function (Form $form) use ($schoolControls, $personControls, $msgMixture) {
+        $form->onValidate[] = function (Form $form) use ($schoolControls, $personControls, $msgMixture) : void {
             if ($form->isValid()) { // it means that all schools may have been disabled
                 $schools = $this->getSchools($schoolControls, $personControls);
                 if (!$this->checkMixture($schools)) {
@@ -94,7 +78,7 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
     }
 
     /**
-     * @param $schools
+     * @param array $schools
      * @return bool
      */
     private function checkMixture($schools) {

@@ -21,39 +21,30 @@ use Nette\Utils\ArrayHash;
 abstract class AbstractProcessing implements IProcessing {
     use SmartObject;
 
-    const DELIMITER = '.';
-    const WILDCART = '*';
+    public const DELIMITER = '.';
+    public const WILDCART = '*';
 
-    /**
-     * @var
-     */
+    /** @var mixed */
     private $valuesPathCache;
-    /**
-     * @var
-     */
+    /** @var mixed */
     private $formPathCache;
-    /**
-     * @var
-     */
+    /** @var mixed */
     private $states;
-    /**
-     * @var Holder
-     */
-    private $holder;
-    /**
-     * @var
-     */
+
+    private Holder $holder;
+    /** @var mixed */
     private $values;
 
     /**
-     * @param $states
+     * @param array $states
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder
      * @param ILogger $logger
      * @param Form|null $form
+     * @return array|void
      */
-    final public function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
+    final public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form = null) {
         $this->states = $states;
         $this->holder = $holder;
         $this->setValues($values);
@@ -62,7 +53,7 @@ abstract class AbstractProcessing implements IProcessing {
     }
 
     /**
-     * @param $states
+     * @param array $states
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder
@@ -70,13 +61,13 @@ abstract class AbstractProcessing implements IProcessing {
      * @param Form|null $form
      * @return void
      */
-    abstract protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null);
+    abstract protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null): void;
 
     /**
-     * @param $mask
+     * @param string $mask
      * @return bool
      */
-    final protected function hasWildcart($mask) {
+    final protected function hasWildCart($mask): bool {
         return strpos($mask, self::WILDCART) !== false;
     }
 
@@ -126,13 +117,13 @@ abstract class AbstractProcessing implements IProcessing {
      * When it returns false, correct value can be loaded from the model
      * (which is not updated yet).
      *
-     * @param $name
+     * @param string $name
      * @return bool
      */
     final protected function isBaseReallyEmpty($name) {
         $baseHolder = $this->holder->getBaseHolder($name);
         if ($baseHolder->getModelState() == BaseMachine::STATE_INIT) {
-            return true; // it was empty since begining
+            return true; // it was empty since beginning
         }
         if (isset($this->states[$name]) && $this->states[$name] == BaseMachine::STATE_TERMINATED) {
             return true; // it has been deleted by user
@@ -163,7 +154,7 @@ abstract class AbstractProcessing implements IProcessing {
     /**
      * @param Form $form
      */
-    private function setForm($form) {
+    private function setForm($form): void {
         $this->formPathCache = [];
         if (!$form) {
             return;

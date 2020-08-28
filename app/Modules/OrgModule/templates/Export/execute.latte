@@ -1,0 +1,9 @@
+{block nav-right}
+    {control seriesChooser}
+    {include #parent}
+{/block}
+
+{block content}
+    {control tagCloud:detail $model}
+    {control resultsComponent}
+{/block}

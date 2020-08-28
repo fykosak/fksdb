@@ -6,7 +6,7 @@ use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Services\ServiceOrg;
 use FKSDB\ORM\Services\ServiceTaskContribution;
-use Pipeline\Stage;
+use FKSDB\Pipeline\Stage;
 use SimpleXMLElement;
 
 
@@ -17,28 +17,18 @@ use SimpleXMLElement;
  */
 class ContributionsFromXML extends Stage {
 
-    /**
-     * @var SeriesData
-     */
+    /** @var SeriesData */
     private $data;
 
-    /**
-     * @var array   contribution type => xml element
-     */
+    /** @var array   contribution type => xml element */
     private static $contributionFromXML = [
         'author' => 'authors/author',
         'solution' => 'solution-authors/solution-author',
     ];
 
-    /**
-     * @var ServiceTaskContribution
-     */
-    private $taskContributionService;
+    private ServiceTaskContribution $taskContributionService;
 
-    /**
-     * @var ServiceOrg
-     */
-    private $serviceOrg;
+    private ServiceOrg $serviceOrg;
 
     /**
      * ContributionsFromXML2 constructor.
@@ -53,11 +43,11 @@ class ContributionsFromXML extends Stage {
     /**
      * @param SeriesData $data
      */
-    public function setInput($data) {
+    public function setInput($data): void {
         $this->data = $data;
     }
 
-    public function process() {
+    public function process(): void {
         $xml = $this->data->getData();
         foreach ($xml->problems[0]->problem as $task) {
             $this->processTask($task);
@@ -83,7 +73,7 @@ class ContributionsFromXML extends Stage {
         $this->taskContributionService->getConnection()->beginTransaction();
 
         foreach (self::$contributionFromXML as $type => $xmlElement) {
-            list($parent, $child) = explode('/', $xmlElement);
+            [$parent, $child] = explode('/', $xmlElement);
             $parentEl = $XMLTask->{$parent}[0];
             // parse contributors
             $contributors = [];

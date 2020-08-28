@@ -4,30 +4,29 @@ namespace FKSDB\ORM\Services\Fyziklani;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
  */
 class ServiceFyziklaniTask extends AbstractServiceSingle {
-
-    public function getModelClassName(): string {
-        return ModelFyziklaniTask::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_FYZIKLANI_TASK;
-    }
+    use DeprecatedLazyDBTrait;
 
     /**
-     * Syntactic sugar.
-     * @param string $label
-     * @param ModelEvent $event
-     * @return ModelFyziklaniTask|null
+     * ServiceFyziklaniTask constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
      */
-    public function findByLabel(string $label, ModelEvent $event) {
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_FYZIKLANI_TASK, ModelFyziklaniTask::class);
+    }
+
+    public function findByLabel(string $label, ModelEvent $event): ?ModelFyziklaniTask {
         /** @var ModelFyziklaniTask $result */
         $result = $this->getTable()->where([
             'label' => $label,

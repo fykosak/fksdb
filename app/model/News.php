@@ -1,7 +1,9 @@
 <?php
 
-use FKSDB\Config\GlobalParameters;
+namespace FKSDB\News;
+
 use FKSDB\ORM\Models\ModelContest;
+use Nette\DI\Container;
 use Nette\SmartObject;
 
 /**
@@ -10,30 +12,22 @@ use Nette\SmartObject;
 class News {
     use SmartObject;
 
-    /**
-     * @var GlobalParameters
-     */
-    private $globalParameters;
+    private Container $container;
 
     /**
      * News constructor.
-     * @param GlobalParameters $globalParameters
+     * @param Container $container
      */
-    public function __construct(GlobalParameters $globalParameters) {
-        $this->globalParameters = $globalParameters;
+    public function __construct(Container $container) {
+        $this->container = $container;
     }
 
-    /**
-     * @param ModelContest $contest
-     * @param $lang
-     * @return array
-     */
-    public function getNews(ModelContest $contest, $lang) {
-        $contestName = $this->globalParameters['contestMapping'][$contest->contest_id];
-        if (!isset($this->globalParameters[$contestName]['news'][$lang])) {
+    public function getNews(ModelContest $contest, string $lang): array {
+        $contestName = $this->container->getParameters()['contestMapping'][$contest->contest_id];
+        if (!isset($this->container->getParameters()[$contestName]['news'][$lang])) {
             return [];
         }
-        $news = $this->globalParameters[$contestName]['news'][$lang];
+        $news = $this->container->getParameters()[$contestName]['news'][$lang];
         if ($news) {
             return $news;
         } else {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Authorization;
+namespace FKSDB\Authorization;
 
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\Holder\Holder;
@@ -16,10 +16,7 @@ class RelatedPersonAuthorizator {
 
     use SmartObject;
 
-    /**
-     * @var IUserStorage
-     */
-    private $user;
+    private IUserStorage $user;
 
     /**
      * RelatedPersonAuthorizator constructor.
@@ -29,9 +26,6 @@ class RelatedPersonAuthorizator {
         $this->user = $user;
     }
 
-    /**
-     * @return IUserStorage
-     */
     public function getUser(): IUserStorage {
         return $this->user;
     }
@@ -43,7 +37,7 @@ class RelatedPersonAuthorizator {
      * @param Holder $holder
      * @return bool
      */
-    public function isRelatedPerson(Holder $holder) {
+    public function isRelatedPerson(Holder $holder): bool {
         // everyone is related
         if ($holder->getPrimaryHolder()->getModelState() == BaseMachine::STATE_INIT) {
             return true;
@@ -67,5 +61,4 @@ class RelatedPersonAuthorizator {
 
         return false;
     }
-
 }

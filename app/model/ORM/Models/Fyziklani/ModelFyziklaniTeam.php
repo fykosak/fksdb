@@ -2,11 +2,14 @@
 
 namespace FKSDB\ORM\Models\Fyziklani;
 
-use FKSDB\Fyziklani\ClosedSubmittingException;
-use FKSDB\Fyziklani\NotCheckedSubmitsException;
+use FKSDB\Fyziklani\Closing\AlreadyClosedException;
+use FKSDB\Fyziklani\Closing\NotCheckedSubmitsException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\Events\ModelFyziklaniParticipant;
+use FKSDB\ORM\Models\IContestReferencedModel;
 use FKSDB\ORM\Models\IEventReferencedModel;
+use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
@@ -32,17 +35,18 @@ use Nette\Security\IResource;
  * @author Michal Červeňák <miso@fykos.cz>
  *
  */
-class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferencedModel, IResource {
-    const RESOURCE_ID = 'fyziklani.team';
+class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferencedModel, IResource, IContestReferencedModel {
+    public const RESOURCE_ID = 'fyziklani.team';
 
     public function __toString(): string {
         return $this->name;
     }
 
-    /**
-     * @return ModelPerson|NULL
-     */
-    public function getTeacher() {
+    public function getContest(): ModelContest {
+        return $this->getEvent()->getContest();
+    }
+
+    public function getTeacher(): ?ModelPerson {
         $row = $this->ref(DbNames::TAB_PERSON, 'teacher_id');
         if ($row) {
             return ModelPerson::createFromActiveRow($row);
@@ -58,10 +62,7 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
         return $this->related(DbNames::TAB_E_FYZIKLANI_PARTICIPANT, 'e_fyziklani_team_id');
     }
 
-    /**
-     * @return null|ModelFyziklaniTeamPosition
-     */
-    public function getPosition() {
+    public function getPosition(): ?ModelFyziklaniTeamPosition {
         $row = $this->related(DbNames::TAB_FYZIKLANI_TEAM_POSITION, 'e_fyziklani_team_id')->fetch();
         if ($row) {
             return ModelFyziklaniTeamPosition::createFromActiveRow($row);
@@ -88,25 +89,27 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
     }
 
     public function hasOpenSubmitting(): bool {
-        $points = $this->points;
-        return !is_numeric($points);
-    }
-
-    public function isReadyForClosing(): bool {
-        return $this->hasAllSubmitsChecked() && $this->hasOpenSubmitting();
+        return !is_numeric($this->points);
     }
 
     /**
+     * @param bool $throws
      * @return bool
-     * @throws ClosedSubmittingException
+     * @throws AlreadyClosedException
      * @throws NotCheckedSubmitsException
      */
-    public function canClose(): bool {
+    public function canClose(bool $throws = true): bool {
         if (!$this->hasOpenSubmitting()) {
-            throw new ClosedSubmittingException($this);
+            if (!$throws) {
+                return false;
+            }
+            throw new AlreadyClosedException($this);
         }
         if (!$this->hasAllSubmitsChecked()) {
-            throw new NotCheckedSubmitsException();
+            if (!$throws) {
+                return false;
+            }
+            throw new NotCheckedSubmitsException($this);
         }
         return true;
     }
@@ -128,6 +131,7 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
      */
     public function getPersons(): array {
         $persons = [];
+        /** @var ModelFyziklaniParticipant $pRow */
         foreach ($this->getParticipants() as $pRow) {
             $persons[] = ModelPerson::createFromActiveRow($pRow->event_participant->person);
         }
@@ -138,10 +142,6 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
         return $persons;
     }
 
-    /**
-     * @param bool $includePosition
-     * @return array
-     */
     public function __toArray(bool $includePosition = false): array {
         $data = [
             'created' => $this->created->format('c'),

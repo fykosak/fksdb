@@ -2,40 +2,33 @@
 
 namespace FKSDB\Components\Controls\Chart;
 
-use FKSDB\Components\React\ReactComponent;
+use FKSDB\Components\React\ReactComponent2;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use Nette\Application\UI\Control;
-use Nette\Utils\Json;
-use Nette\Utils\JsonException;
+use Nette\DI\Container;
 
 /**
  * Class TotalPersonsChartControl
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class TotalPersonsChartControl extends ReactComponent implements IChart {
-    /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
+class TotalPersonsChartControl extends ReactComponent2 implements IChart {
+
+    private ServicePerson $servicePerson;
 
     /**
-     * @param ServicePerson $servicePerson
-     * @return void
+     * TotalPersonsChartControl constructor.
+     * @param Container $container
      */
-    public function injectServicePerson(ServicePerson $servicePerson) {
+    public function __construct(Container $container) {
+        parent::__construct($container, 'chart.total-person');
+    }
+
+    public function injectServicePerson(ServicePerson $servicePerson): void {
         $this->servicePerson = $servicePerson;
     }
 
-    public function getAction(): string {
-        return 'totalPersons';
-    }
-
-    /**
-     * @return string
-     * @throws JsonException
-     */
-    public function getData(): string {
+    public function getData(): array {
         $query = $this->servicePerson->getTable()->order('created');
         $data = [];
         /** @var ModelPerson $person */
@@ -46,7 +39,7 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
                 'personId' => $person->person_id,
             ];
         }
-        return Json::encode($data);
+        return $data;
     }
 
     public function getTitle(): string {
@@ -57,14 +50,7 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
         return $this;
     }
 
-    protected function getReactId(): string {
-        return 'chart.total-person';
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return _('Graf zobrazuje vývoj počtu osôb vo FKSDB a priradené person_id v daný čas.');
     }
 }

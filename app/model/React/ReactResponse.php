@@ -10,29 +10,22 @@ use Nette\SmartObject;
 use Nette\Utils\JsonException;
 
 /**
- * Class FKSDB\React\ReactResponse
+ * Class ReactResponse
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 final class ReactResponse implements Nette\Application\IResponse {
 
     use SmartObject;
 
-    /**
-     * @var Message[]
-     */
+    /** @var Message[] */
     private $messages = [];
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $data;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $act;
-    /**
-     * @var int
-     */
+    /** @var int */
     private $code = 200;
 
     final public function getContentType(): string {
@@ -48,7 +41,7 @@ final class ReactResponse implements Nette\Application\IResponse {
     }
 
     /**
-     * @param $data
+     * @param mixed $data
      * @return void
      */
     public function setData($data) {

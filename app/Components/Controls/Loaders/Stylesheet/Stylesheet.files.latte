@@ -1,9 +1,0 @@
-{foreach $files as $file}
-    {var $url => $file[$control::FILENAME]}
-    {var $media => implode(',', $file[$control::ATTRIBUTES])}
-    {if $control::isRelative($url)}
-    <link rel="stylesheet" media="{$media}" href="{$basePath}/{$url}"/>
-    {else}
-    <link rel="stylesheet" media="{$media}" href="{$url}"/>
-    {/if}
-{/foreach}

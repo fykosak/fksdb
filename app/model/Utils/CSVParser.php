@@ -14,41 +14,29 @@ use Nette\SmartObject;
 class CSVParser implements Iterator {
     use SmartObject;
 
-    const INDEX_NUMERIC = 0;
-    const INDEX_FROM_HEADER = 1;
-    const BOM = '\xEF\xBB\xBF';
-    /**
-     * @var resource
-     */
+    public const INDEX_NUMERIC = 0;
+    public const INDEX_FROM_HEADER = 1;
+    public const BOM = '\xEF\xBB\xBF';
+    /** @var resource */
     private $file;
-    /**
-     * @var string
-     */
-    private $delimiter;
-    /**
-     * @var int
-     */
-    private $indexType;
-    /**
-     * @var int
-     */
+
+    private string $delimiter;
+
+    private int $indexType;
+    /** @var int */
     private $rowNumber;
-    /**
-     * @var int
-     */
+    /** @var int */
     private $currentRow;
-    /**
-     * @var
-     */
+    /** @var mixed */
     private $header;
 
     /**
      * CSVParser constructor.
-     * @param $filename
+     * @param string $filename
      * @param int $indexType
      * @param string $delimiter
      */
-    public function __construct($filename, $indexType = self::INDEX_NUMERIC, $delimiter = ';') {
+    public function __construct(string $filename, int $indexType = self::INDEX_NUMERIC, string $delimiter = ';') {
         $this->indexType = $indexType;
         $this->delimiter = $delimiter;
         $this->file = fopen($filename, 'r');
@@ -71,6 +59,9 @@ class CSVParser implements Iterator {
         return $this->rowNumber;
     }
 
+    /**
+     * @return void
+     */
     public function next() {
         $this->currentRow = fgetcsv($this->file, 0, $this->delimiter);
         if ($this->indexType == self::INDEX_FROM_HEADER) {
@@ -83,6 +74,9 @@ class CSVParser implements Iterator {
         $this->rowNumber++;
     }
 
+    /**
+     * @return void
+     */
     public function rewind() {
         rewind($this->file);
         $this->rowNumber = 0;

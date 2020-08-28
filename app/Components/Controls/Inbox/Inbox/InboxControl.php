@@ -18,6 +18,9 @@ use Nette\DI\Container;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class InboxControl extends SeriesTableFormControl {
+
+    private ServiceSubmit $serviceSubmit;
+
     /**
      * InboxControl constructor.
      * @param Container $context
@@ -27,21 +30,23 @@ class InboxControl extends SeriesTableFormControl {
         parent::__construct($context, $seriesTable, true);
     }
 
+    public function injectServiceSubmit(ServiceSubmit $serviceSubmit): void {
+        $this->serviceSubmit = $serviceSubmit;
+    }
+
     /**
      * @param Form $form
      * @throws AbortException
      * @throws ForbiddenRequestException
      */
-    protected function handleFormSuccess(Form $form) {
-        /** @var ServiceSubmit $serviceSubmit */
-        $serviceSubmit = $this->getContext()->getByType(ServiceSubmit::class);
+    protected function handleFormSuccess(Form $form): void {
         foreach ($form->getHttpData()['submits'] as $ctId => $tasks) {
             foreach ($tasks as $taskNo => $submittedOn) {
                 if (!$this->getSeriesTable()->getContestants()->where('ct_id', $ctId)->fetch()) {
                     // secure check for rewrite ct_id.
                     throw new ForbiddenRequestException();
                 }
-                $submit = $serviceSubmit->findByContestant($ctId, $taskNo);
+                $submit = $this->serviceSubmit->findByContestant($ctId, $taskNo);
                 if ($submittedOn && $submit) {
                     //   $serviceSubmit->updateModel2($submit, ['submitted_on' => $submittedOn]);
                     //    $this->flashMessage(sprintf(_('Submit #%d updated'), $submit->submit_id), ILogger::INFO);
@@ -49,7 +54,7 @@ class InboxControl extends SeriesTableFormControl {
                     $this->flashMessage(\sprintf(_('Submit #%d deleted'), $submit->submit_id), ILogger::WARNING);
                     $submit->delete();
                 } elseif ($submittedOn && !$submit) {
-                    $serviceSubmit->createNewModel([
+                    $this->serviceSubmit->createNewModel([
                         'task_id' => $taskNo,
                         'ct_id' => $ctId,
                         'submitted_on' => $submittedOn,
@@ -61,11 +66,11 @@ class InboxControl extends SeriesTableFormControl {
                 }
             }
         }
-        $this->invalidateControl();
+        $this->redrawControl();
         $this->getPresenter()->redirect('this');
     }
 
-    public function render() {
+    public function render(): void {
         $form = $this->getComponent('form');
         if ($form instanceof OptimisticForm) {
             $form->setDefaults();

@@ -14,22 +14,24 @@ use Nette\Utils\Arrays;
  */
 class NeonScheme {
 
-    const TYPE_NEON = 'neon';
-    const TYPE_EXPRESSION = 'expression';
-    const QUALIFIER_ARRAY = 'array';
+    public const TYPE_NEON = 'neon';
+    public const TYPE_EXPRESSION = 'expression';
+    public const QUALIFIER_ARRAY = 'array';
 
     /**
-     * @param $section
-     * @param $sectionScheme
+     * @param array $section
+     * @param array $sectionScheme
      * @return array
      * @throws NeonSchemaException
      */
-    public static function readSection($section, $sectionScheme) {
+    public static function readSection(array $section, array $sectionScheme): array {
         if (!is_array($section)) {
-            throw new NeonSchemaException('Expected array got \'' . (string) $section . '\'.');
+            throw new NeonSchemaException('Expected array got \'' . (string)$section . '\'.');
         }
         $result = [];
         foreach ($sectionScheme as $key => $metadata) {
+
+
             if ($metadata === null || !array_key_exists('default', $metadata)) {
                 try {
                     $result[$key] = Arrays::get($section, $key);
@@ -40,19 +42,19 @@ class NeonScheme {
                     continue;
                 }
             } else {
-                $result[$key] = Arrays::get($section, $key, $metadata['default']);
+                $result[$key] = isset($section[$key]) ? $section[$key] : $metadata['default'];
             }
 
-            $typeDef = Arrays::get($metadata, 'type', self::TYPE_NEON);
+            $typeDef = $metadata['type'] ?? self::TYPE_NEON;
             $typeDef = explode(' ', $typeDef);
             $type = $typeDef[0];
-            $qualifier = Arrays::get($typeDef, 1, null);
+            $qualifier = $typeDef[1] ?? null;
 
             if ($type == self::TYPE_EXPRESSION) {
                 if ($qualifier == self::QUALIFIER_ARRAY) {
-                    $result[$key] = array_map(function($it) {
-                                return Helpers::statementFromExpression($it);
-                            }, $result[$key]);
+                    $result[$key] = array_map(function ($it) {
+                        return Helpers::statementFromExpression($it);
+                    }, $result[$key]);
                 } elseif ($qualifier === null) {
                     $result[$key] = Helpers::statementFromExpression($result[$key]);
                 } else {
@@ -68,5 +70,4 @@ class NeonScheme {
         }
         return $result;
     }
-
 }

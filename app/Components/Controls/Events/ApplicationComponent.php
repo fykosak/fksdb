@@ -9,11 +9,13 @@ use FKSDB\Events\Model\ApplicationHandler;
 use FKSDB\Events\Model\ApplicationHandlerException;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\FlashMessageDump;
+use FKSDB\Modules\Core\AuthenticatedPresenter;
+use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\DI\Container;
-use \Nette\Forms\Form;
+use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 use Nette\Utils\JsonException;
@@ -22,29 +24,18 @@ use Nette\Utils\JsonException;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
- * @method \AuthenticatedPresenter|\BasePresenter getPresenter($need = TRUE)
+ * @method AuthenticatedPresenter|BasePresenter getPresenter($need = true)
  */
 class ApplicationComponent extends BaseComponent {
 
-    /**
-     * @var ApplicationHandler
-     */
-    private $handler;
+    private ApplicationHandler $handler;
 
-    /**
-     * @var Holder
-     */
-    private $holder;
+    private Holder $holder;
 
-    /**
-     * @var callable ($primaryModelId, $eventId)
-     */
+    /** @var callable ($primaryModelId, $eventId) */
     private $redirectCallback;
 
-    /**
-     * @var string
-     */
-    private $templateFile;
+    private string $templateFile;
 
     /**
      * ApplicationComponent constructor.
@@ -61,26 +52,19 @@ class ApplicationComponent extends BaseComponent {
     /**
      * @param string $template name of the standard template or whole path
      */
-    public function setTemplate($template) {
+    public function setTemplate(string $template): void {
         if (stripos($template, '.latte') !== false) {
             $this->templateFile = $template;
         } else {
-            $this->templateFile = __DIR__ . DIRECTORY_SEPARATOR . "ApplicationComponent.$template.latte";
+            $this->templateFile = __DIR__ . DIRECTORY_SEPARATOR . "layout.application.$template.latte";
         }
     }
 
-    /**
-     * @return callable
-     */
-    public function getRedirectCallback() {
+    public function getRedirectCallback(): callable {
         return $this->redirectCallback;
     }
 
-    /**
-     * @param callable $redirectCallback
-     * @return void
-     */
-    public function setRedirectCallback(callable $redirectCallback) {
+    public function setRedirectCallback(callable $redirectCallback): void {
         $this->redirectCallback = $redirectCallback;
     }
 
@@ -92,19 +76,11 @@ class ApplicationComponent extends BaseComponent {
         return $this->getPresenter()->getContestAuthorizator()->isAllowed($event, 'application', $event->getContest());
     }
 
-    /**
-     * @return void
-     * @throws BadRequestException
-     */
-    public function render() {
+    public function render(): void {
         $this->renderForm();
     }
 
-    /**
-     * @return void
-     * @throws BadRequestException
-     */
-    public function renderForm() {
+    public function renderForm(): void {
         if (!$this->templateFile) {
             throw new InvalidStateException('Must set template for the application form.');
         }
@@ -118,26 +94,26 @@ class ApplicationComponent extends BaseComponent {
     }
 
     /**
-     * @param $mode
+     * @param string $mode
      * @return void
-     * @throws BadRequestException
      */
-    public function renderInline($mode) {
+    public function renderInline($mode): void {
         $this->template->mode = $mode;
         $this->template->holder = $this->holder;
         $this->template->primaryModel = $this->holder->getPrimaryHolder()->getModel();
         $this->template->primaryMachine = $this->getMachine()->getPrimaryMachine();
         $this->template->canEdit = $this->canEdit();
-
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'ApplicationComponent.inline.latte');
+        $this->template->state = $this->holder->getPrimaryHolder()->getModelState();
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.application.inline.latte');
         $this->template->render();
     }
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
+     *
      */
-    protected function createComponentForm() {
+    protected function createComponentForm(): FormControl {
         $result = new FormControl();
         $form = $result->getForm();
 
@@ -145,11 +121,10 @@ class ApplicationComponent extends BaseComponent {
          * Create containers
          */
         foreach ($this->holder->getBaseHolders() as $name => $baseHolder) {
-            $baseMachine = $this->getMachine()->getBaseMachine($name);
             if (!$baseHolder->isVisible()) {
                 continue;
             }
-            $container = $baseHolder->createFormContainer($baseMachine);
+            $container = $baseHolder->createFormContainer();
             $form->addComponent($container, $name);
         }
 
@@ -159,7 +134,6 @@ class ApplicationComponent extends BaseComponent {
         $saveSubmit = null;
         if ($this->canEdit()) {
             $saveSubmit = $form->addSubmit('save', _('Save'));
-            $saveSubmit->setOption('row', 1);
             $saveSubmit->onClick[] = function (SubmitButton $button) {
                 $buttonForm = $button->getForm();
                 $this->handleSubmit($buttonForm);
@@ -170,8 +144,8 @@ class ApplicationComponent extends BaseComponent {
          */
         $primaryMachine = $this->getMachine()->getPrimaryMachine();
         $transitionSubmit = null;
-        foreach ($primaryMachine->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), BaseMachine::EXECUTABLE | BaseMachine::VISIBLE) as $transition) {
 
+        foreach ($primaryMachine->getAvailableTransitions($this->holder, $this->holder->getPrimaryHolder()->getModelState(), BaseMachine::EXECUTABLE | BaseMachine::VISIBLE) as $transition) {
             $transitionName = $transition->getName();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
 
@@ -193,8 +167,7 @@ class ApplicationComponent extends BaseComponent {
         /*
          * Create cancel button
          */
-        $submit = $form->addSubmit('cancel', _('Storno'));
-        $submit->setOption('row', 1);
+        $submit = $form->addSubmit('cancel', _('Cancel'));
         $submit->setValidationScope(false);
         $submit->getControlPrototype()->addAttributes(['class' => 'btn-warning']);
         $submit->onClick[] = function (SubmitButton $button) {
@@ -219,33 +192,31 @@ class ApplicationComponent extends BaseComponent {
      * @param Form $form
      * @param null $explicitTransitionName
      * @throws AbortException
+     *
      * @throws JsonException
-     * @throws BadRequestException
      */
-    public function handleSubmit(Form $form, $explicitTransitionName = null) {
+    public function handleSubmit(Form $form, $explicitTransitionName = null): void {
         $this->execute($form, $explicitTransitionName);
     }
 
     /**
-     * @param $transitionName
+     * @param string $transitionName
      * @throws AbortException
      * @throws JsonException
-     * @throws BadRequestException
      */
-    public function handleTransition($transitionName) {
+    public function handleTransition($transitionName): void {
         $this->execute(null, $transitionName);
     }
 
     /**
      * @param Form|null $form
-     * @param null $explicitTransitionName
+     * @param string|null $explicitTransitionName
+     * @return void
      * @throws AbortException
-     * @throws JsonException
-     * @throws BadRequestException
      */
-    private function execute(Form $form = null, $explicitTransitionName = null) {
+    private function execute(?Form $form, ?string $explicitTransitionName): void {
         try {
-            $this->handler->storeAndExecute($this->holder, $form, $explicitTransitionName);
+            $this->handler->storeAndExecuteForm($this->holder, $form, $explicitTransitionName);
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             $this->finalRedirect();
         } catch (ApplicationHandlerException $exception) {
@@ -257,25 +228,18 @@ class ApplicationComponent extends BaseComponent {
         }
     }
 
-    /**
-     * @return Machine
-     * @throws BadRequestException
-     */
-    private function getMachine() {
-        return $this->handler->getMachine($this->holder);
+    private function getMachine(): Machine {
+        return $this->handler->getMachine();
     }
 
-    /**
-     * @return bool
-     */
-    private function canEdit() {
+    private function canEdit(): bool {
         return $this->holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT && $this->holder->getPrimaryHolder()->isModifiable();
     }
 
     /**
      * @throws AbortException
      */
-    private function finalRedirect() {
+    private function finalRedirect(): void {
         if ($this->redirectCallback) {
             $id = $this->holder->getPrimaryHolder()->getModel()->getPrimary(false);
             ($this->redirectCallback)($id, $this->holder->getPrimaryHolder()->getEvent()->getPrimary());

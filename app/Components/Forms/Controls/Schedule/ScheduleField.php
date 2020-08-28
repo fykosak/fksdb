@@ -2,61 +2,46 @@
 
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
-use Exception;
-use FKSDB\Components\React\ReactField;
+use FKSDB\Components\React\ReactComponentTrait;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
-use Nette\ComponentModel\IComponent;
+use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\TextInput;
 use FKSDB\Exceptions\NotImplementedException;
 use Nette\Utils\JsonException;
 
 /**
  * Class ScheduleField
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ScheduleField extends TextInput {
 
-    use ReactField;
+    use ReactComponentTrait;
 
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /**
-     * @var string
-     */
-    private $type;
-    /**
-     * @var ServiceScheduleItem
-     */
-    private $serviceScheduleItem;
+    private ModelEvent $event;
+
+    private string $type;
+
+    private ServiceScheduleItem $serviceScheduleItem;
 
     /**
      * ScheduleField constructor.
      * @param ModelEvent $event
      * @param string $type
      * @param ServiceScheduleItem $serviceScheduleItem
-     * @throws JsonException
+     * @throws BadRequestException
      * @throws NotImplementedException
+     * @throws JsonException
      */
     public function __construct(ModelEvent $event, string $type, ServiceScheduleItem $serviceScheduleItem) {
         parent::__construct($this->getLabelByType($type));
         $this->event = $event;
         $this->type = $type;
         $this->serviceScheduleItem = $serviceScheduleItem;
+        $this->registerReact('event.schedule.' . $type);
         $this->appendProperty();
-        $this->registerMonitor();
-    }
-
-    /**
-     * @param IComponent $obj
-     */
-    public function attached($obj) {
-        parent::attached($obj);
-        $this->attachedReact($obj);
     }
 
     /**
@@ -83,14 +68,6 @@ class ScheduleField extends TextInput {
         }
     }
 
-    protected function getReactId(): string {
-        return 'event.schedule.' . $this->type;
-    }
-
-    /**
-     * @return string
-     * @throws Exception
-     */
     public function getData(): string {
         $groups = $this->event->getScheduleGroups()->where('schedule_group_type', $this->type);
         $groupList = [];

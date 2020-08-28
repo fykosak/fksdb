@@ -27,40 +27,23 @@ use Nette\Utils\ArrayHash;
  */
 class Holder {
 
-    /**
-     * @var IFormAdjustment[]
-     */
-    private $formAdjustments = [];
+    /** @var IFormAdjustment[] */
+    private array $formAdjustments = [];
 
-    /**
-     * @var IProcessing[]
-     */
-    private $processings = [];
+    /** @var IProcessing[] */
+    private array $processings = [];
 
-    /**
-     * @var BaseHolder[]
-     */
-    private $baseHolders = [];
+    /** @var BaseHolder[] */
+    private array $baseHolders = [];
 
-    /**
-     * @var BaseHolder[]
-     */
-    private $secondaryBaseHolders = [];
+    /** @var BaseHolder[] */
+    private array $secondaryBaseHolders = [];
 
-    /**
-     * @var BaseHolder
-     */
-    private $primaryHolder;
+    private BaseHolder $primaryHolder;
 
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
-    /**
-     * @var SecondaryModelStrategy
-     */
-    private $secondaryModelStrategy;
+    private SecondaryModelStrategy $secondaryModelStrategy;
 
     /**
      * Holder constructor.
@@ -80,14 +63,10 @@ class Holder {
         return $this->connection;
     }
 
-    /**
-     * @param string $name
-     * @return void
-     */
-    public function setPrimaryHolder(string $name) {
-        $primaryHolder = $this->primaryHolder = $this->getBaseHolder($name);
-        $this->secondaryBaseHolders = array_filter($this->baseHolders, function (BaseHolder $baseHolder) use ($primaryHolder) {
-            return $baseHolder !== $primaryHolder;
+    public function setPrimaryHolder(string $name): void {
+        $this->primaryHolder = $this->getBaseHolder($name);
+        $this->secondaryBaseHolders = array_filter($this->baseHolders, function (BaseHolder $baseHolder): bool {
+            return $baseHolder !== $this->primaryHolder;
         });
     }
 
@@ -95,29 +74,17 @@ class Holder {
         return $this->primaryHolder;
     }
 
-    /**
-     * @param BaseHolder $baseHolder
-     * @return void
-     */
-    public function addBaseHolder(BaseHolder $baseHolder) {
+    public function addBaseHolder(BaseHolder $baseHolder): void {
         $baseHolder->setHolder($this);
         $name = $baseHolder->getName();
         $this->baseHolders[$name] = $baseHolder;
     }
 
-    /**
-     * @param IFormAdjustment $formAdjusment
-     * @return void
-     */
-    public function addFormAdjustment(IFormAdjustment $formAdjusment) {
+    public function addFormAdjustment(IFormAdjustment $formAdjusment): void {
         $this->formAdjustments[] = $formAdjusment;
     }
 
-    /**
-     * @param IProcessing $processing
-     * @return void
-     */
-    public function addProcessing(IProcessing $processing) {
+    public function addProcessing(IProcessing $processing): void {
         $this->processings[] = $processing;
     }
 
@@ -135,11 +102,7 @@ class Holder {
         return $this->baseHolders;
     }
 
-    /**
-     * @param string $name
-     * @return bool
-     */
-    public function hasBaseHolder($name): bool {
+    public function hasBaseHolder(string $name): bool {
         return isset($this->baseHolders[$name]);
     }
 
@@ -147,29 +110,23 @@ class Holder {
         return $this->secondaryModelStrategy;
     }
 
-    /**
-     * @param SecondaryModelStrategy $secondaryModelStrategy
-     * @return void
-     */
-    public function setSecondaryModelStrategy(SecondaryModelStrategy $secondaryModelStrategy) {
+    public function setSecondaryModelStrategy(SecondaryModelStrategy $secondaryModelStrategy): void {
         $this->secondaryModelStrategy = $secondaryModelStrategy;
     }
 
     /**
      * @param ModelEvent $event
+     * @return static
      * @throws NeonSchemaException
      */
-    public function inferEvent(ModelEvent $event) {
+    public function inferEvent(ModelEvent $event): self {
         foreach ($this->getBaseHolders() as $baseHolder) {
             $baseHolder->inferEvent($event);
         }
+        return $this;
     }
 
-    /**
-     * @param IModel|null $primaryModel
-     * @param array|null $secondaryModels
-     */
-    public function setModel(IModel $primaryModel = null, array $secondaryModels = null) {
+    public function setModel(?IModel $primaryModel = null, ?array $secondaryModels = null): void {
         foreach ($this->getGroupedSecondaryHolders() as $key => $group) {
             if ($secondaryModels) {
                 $this->secondaryModelStrategy->setSecondaryModels($group['holders'], $secondaryModels[$key]);
@@ -180,7 +137,7 @@ class Holder {
         $this->primaryHolder->setModel($primaryModel);
     }
 
-    public function saveModels() {
+    public function saveModels(): void {
         /*
          * When deleting, first delete children, then parent.
          */
@@ -216,7 +173,7 @@ class Holder {
      * @param Form $form
      * @return string[] machineName => new state
      */
-    public function processFormValues(ArrayHash $values, Machine $machine, $transitions, ILogger $logger, Form $form = null): array {
+    public function processFormValues(ArrayHash $values, Machine $machine, array $transitions, ILogger $logger, ?Form $form): array {
         $newStates = [];
         foreach ($transitions as $name => $transition) {
             $newStates[$name] = $transition->getTarget();
@@ -242,12 +199,7 @@ class Holder {
         return $newStates;
     }
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @return void
-     */
-    public function adjustForm(Form $form, Machine $machine) {
+    public function adjustForm(Form $form, Machine $machine): void {
         foreach ($this->formAdjustments as $adjustment) {
             $adjustment->adjust($form, $machine, $this);
         }
@@ -256,9 +208,7 @@ class Holder {
     /*
      * Joined data manipulation
      */
-    /**
-     * @var
-     */
+    /** @var mixed */
     private $groupedHolders;
 
     /**
@@ -276,7 +226,7 @@ class Holder {
                         'joinOn' => $baseHolder->getJoinOn(),
                         'joinTo' => $baseHolder->getJoinTo(),
                         'service' => $baseHolder->getService(),
-                        'personIds' => $baseHolder->getPersonIds(),
+                        'personIds' => $baseHolder->getPersonIdColumns(),
                         'holders' => [],
                     ];
                 }

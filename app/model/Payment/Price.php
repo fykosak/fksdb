@@ -7,20 +7,16 @@ use LogicException;
 
 /**
  * Class Price
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Price {
 
-    const CURRENCY_EUR = 'eur';
-    const CURRENCY_CZK = 'czk';
-    /**
-     * @var string
-     */
-    private $currency;
-    /**
-     * @var float
-     */
-    private $amount;
+    public const CURRENCY_EUR = 'eur';
+    public const CURRENCY_CZK = 'czk';
+
+    private string $currency;
+
+    private float $amount;
 
     /**
      * Price constructor.
@@ -36,7 +32,7 @@ class Price {
      * @param Price $price
      * @throws LogicException
      */
-    public function add(Price $price) {
+    public function add(Price $price): void {
         if ($this->currency !== $price->getCurrency()) {
             throw new LogicException('Currencies are not a same');
         }
@@ -51,11 +47,7 @@ class Price {
         return $this->amount;
     }
 
-    /**
-     * @param float $amount
-     * @return void
-     */
-    public function addAmount(float $amount) {
+    public function addAmount(float $amount): void {
         $this->amount += $amount;
     }
 
@@ -67,11 +59,11 @@ class Price {
     }
 
     /**
-     * @param $currency
+     * @param string $currency
      * @return string
      * @throws UnsupportedCurrencyException
      */
-    public static function getLabel($currency): string {
+    public static function getLabel(string $currency): string {
         switch ($currency) {
             case self::CURRENCY_EUR:
                 return '€';

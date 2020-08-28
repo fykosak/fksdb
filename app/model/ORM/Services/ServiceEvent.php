@@ -4,22 +4,30 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventType;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @method ModelEvent createNewModel(array $data)
+ * @method ModelEvent|null findByPrimary($key)
  */
 class ServiceEvent extends AbstractServiceSingle {
 
-    public function getModelClassName(): string {
-        return ModelEvent::class;
-    }
+    use DeprecatedLazyDBTrait;
 
-    protected function getTableName(): string {
-        return DbNames::TAB_EVENT;
+    /**
+     * ServiceEvent constructor.
+     * @param Context $connection
+     * @param IConventions $conventions
+     */
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_EVENT, ModelEvent::class);
     }
 
     public function getEvents(ModelContest $contest, int $year): TypedTableSelection {
@@ -30,14 +38,7 @@ class ServiceEvent extends AbstractServiceSingle {
             ->where(DbNames::TAB_EVENT . '.year', $year);
     }
 
-    /**
-     * @param ModelContest $contest
-     * @param int $year
-     * @param int $eventTypeId
-     * @return ModelEvent|null
-     * TODO
-     */
-    public function getByEventTypeId(ModelContest $contest, int $year, int $eventTypeId) {
+    public function getByEventTypeId(ModelContest $contest, int $year, int $eventTypeId): ?ModelEvent {
         /** @var ModelEvent $event */
         $event = $this->getEvents($contest, $year)->where(DbNames::TAB_EVENT . '.event_type_id', $eventTypeId)->fetch();
         return $event ?: null;

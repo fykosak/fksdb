@@ -21,35 +21,13 @@ use Nette\Forms\IControl;
  */
 class BornCheck extends AbstractAdjustment implements IFormAdjustment {
 
-    /**
-     * @var ServiceSchool
-     */
-    private $serviceSchool;
+    private ServiceSchool $serviceSchool;
 
-    /**
-     * @var ServicePersonHistory
-     */
-    private $servicePersonHistory;
+    private ServicePersonHistory $servicePersonHistory;
 
-    /**
-     * @var Holder
-     */
+    /** @var Holder */
     private $holder;
 
-    /**
-     * @return Holder
-     */
-    public function getHolder() {
-        return $this->holder;
-    }
-
-    /**
-     * @param Holder $holder
-     * @return void
-     */
-    public function setHolder(Holder $holder) {
-        $this->holder = $holder;
-    }
 
     /**
      * BornCheck constructor.
@@ -61,27 +39,29 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
         $this->servicePersonHistory = $servicePersonHistory;
     }
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return void
-     */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder) {
+    public function getHolder(): Holder {
+        return $this->holder;
+    }
+
+    public function setHolder(Holder $holder): void {
+        $this->holder = $holder;
+    }
+
+    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $studyYearControls = $this->getControl("p*.person_id.person_history.study_year");
         $personControls = $this->getControl('p*.person_id');
         $bornControls = $this->getControl('p*.person_id.person_info.born');
 
-        $msg = _('Datum narození je povinné.');
+        $msg = _('Birthday is required field.');
         /** @var BaseControl $control */
         foreach ($bornControls as $i => $control) {
             $schoolControl = $schoolControls[$i];
             $personControl = $personControls[$i];
             $studyYearControl = $studyYearControls[$i];
-            $control->addCondition(~$form::FILLED)
-                ->addRule(function (IControl $control) use ($schoolControl, $personControl, $studyYearControl, $form, $msg) {
+            $control->addCondition(Form::BLANK)
+                ->addRule(function () use ($schoolControl, $personControl, $studyYearControl, $form, $msg) {
                     if (!$personControl->getValue()) {
                         return true;
                     }
@@ -144,10 +124,10 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
     }
 
     /**
-     * @param $studyYear
+     * @param int|null $studyYear
      * @return bool
      */
-    private function isStudent($studyYear) {
+    private function isStudent($studyYear): bool {
         return ($studyYear === null) ? false : true;
     }
 }

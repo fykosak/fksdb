@@ -4,22 +4,21 @@ namespace FKSDB\Transitions\Statements\Conditions;
 
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\IEventReferencedModel;
-use Nette\Application\BadRequestException;
 use Nette\Security\IResource;
 
 /**
  * Class ImplicitEventRole
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ImplicitEventRole extends EventRole {
 
     /**
      * @param array $args
      * @return bool
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function evaluate(...$args): bool {
-        list($model) = $args;
+        [$model] = $args;
         if (!($model instanceof IEventReferencedModel) || !($model instanceof IResource)) {
             throw new BadTypeException(IResource::class, $model);
         }

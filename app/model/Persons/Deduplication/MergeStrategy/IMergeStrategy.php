@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons\Deduplication\MergeStrategy;
+namespace FKSDB\Persons\Deduplication\MergeStrategy;
 
 use Nette\InvalidArgumentException;
 

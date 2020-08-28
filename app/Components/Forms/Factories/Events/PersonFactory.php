@@ -2,22 +2,21 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Events\EventsExtension;
-use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Events\Model\Holder\DataValidator;
 use FKSDB\Events\Model\Holder\Field;
 use FKSDB\Events\Model\PersonContainerResolver;
-use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedEventPersonFactory;
+use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\ORM\Services\ServicePerson;
 use Nette\ComponentModel\Component;
+use Nette\ComponentModel\IComponent;
 use Nette\DI\Container as DIContainer;
-use Nette\Forms\Container;
-use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\IControl;
 use Nette\Security\User;
-use Persons\SelfResolver;
+use FKSDB\Persons\SelfResolver;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -26,80 +25,64 @@ use Persons\SelfResolver;
  */
 class PersonFactory extends AbstractFactory {
 
-    const VALUE_LOGIN = 'fromLogin';
+    private const VALUE_LOGIN = 'fromLogin';
 
-    /**
-     * @var
-     */
+    /** @var mixed */
     private $fieldsDefinition;
-    /**
-     * @var
-     */
+    /** @var mixed */
     private $searchType;
-    /**
-     * @var
-     */
+    /** @var mixed */
     private $allowClear;
-    /**
-     * @var
-     */
+    /** @var mixed */
     private $modifiable;
-    /**
-     * @var
-     */
+    /** @var mixed */
     private $visible;
 
-    /**
-     * @var ReferencedEventPersonFactory
-     */
-    private $referencedEventPersonFactory;
+    private ReferencedPersonFactory $referencedPersonFactory;
 
-    /**
-     * @var SelfResolver
-     */
-    private $selfResolver;
+    private SelfResolver $selfResolver;
 
-    /**
-     * @var ExpressionEvaluator
-     */
-    private $evaluator;
+    private ExpressionEvaluator $evaluator;
 
-    /**
-     * @var User
-     */
-    private $user;
+    private User $user;
 
-    /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
-    /**
-     * @var DIContainer
-     */
-    private $container;
+    private DIContainer $container;
 
     /**
      * PersonFactory constructor.
-     * @param $fieldsDefinition
-     * @param $searchType
-     * @param $allowClear
-     * @param $modifiable
-     * @param $visible
-     * @param ReferencedEventPersonFactory $referencedEventPersonFactory
+     * @param array $fieldsDefinition
+     * @param string $searchType
+     * @param bool $allowClear
+     * @param bool $modifiable
+     * @param bool $visible
+     * @param ReferencedPersonFactory $referencedPersonFactory
      * @param SelfResolver $selfResolver
      * @param ExpressionEvaluator $evaluator
      * @param User $user
      * @param ServicePerson $servicePerson
      * @param DIContainer $container
      */
-    public function __construct($fieldsDefinition, $searchType, $allowClear, $modifiable, $visible, ReferencedEventPersonFactory $referencedEventPersonFactory, SelfResolver $selfResolver, ExpressionEvaluator $evaluator, User $user, ServicePerson $servicePerson, DIContainer $container) {
+    public function __construct(
+        $fieldsDefinition,
+        $searchType,
+        $allowClear,
+        $modifiable,
+        $visible,
+        ReferencedPersonFactory $referencedPersonFactory,
+        SelfResolver $selfResolver,
+        ExpressionEvaluator $evaluator,
+        User $user,
+        ServicePerson $servicePerson,
+        DIContainer $container
+    ) {
         $this->fieldsDefinition = $fieldsDefinition;
         $this->searchType = $searchType;
         $this->allowClear = $allowClear;
         $this->modifiable = $modifiable;
         $this->visible = $visible;
-        $this->referencedEventPersonFactory = $referencedEventPersonFactory;
+        $this->referencedPersonFactory = $referencedPersonFactory;
         $this->selfResolver = $selfResolver;
         $this->evaluator = $evaluator;
         $this->user = $user;
@@ -107,38 +90,26 @@ class PersonFactory extends AbstractFactory {
         $this->container = $container;
     }
 
-    /**
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return array|mixed
-     * @throws \Exception
-     */
-    protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
+    public function createComponent(Field $field): ReferencedId {
         $searchType = $this->evaluator->evaluate($this->searchType, $field);
         $allowClear = $this->evaluator->evaluate($this->allowClear, $field);
 
         $event = $field->getBaseHolder()->getEvent();
-        $this->referencedEventPersonFactory->setEvent($event);
-        $acYear = $event->getAcYear();
 
         $modifiableResolver = new PersonContainerResolver($field, $this->modifiable, $this->selfResolver, $this->evaluator);
         $visibleResolver = new PersonContainerResolver($field, $this->visible, $this->selfResolver, $this->evaluator);
         $fieldsDefinition = $this->evaluateFieldsDefinition($field);
-        $components = $this->referencedEventPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiableResolver, $visibleResolver);
-        $components[1]->setOption('label', $field->getLabel());
-        $components[1]->setOption('description', $field->getDescription());
-        return $components;
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $event->getAcYear(), $searchType, $allowClear, $modifiableResolver, $visibleResolver, $event);
+        $referencedId->getReferencedContainer()->setOption('label', $field->getLabel());
+        $referencedId->getReferencedContainer()->setOption('description', $field->getDescription());
+        return $referencedId;
     }
 
     /**
-     * @param HiddenField[] $component
+     * @param ReferencedId|IComponent $component
      * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
      */
-    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
-        $hiddenField = reset($component);
+    protected function setDefaultValue(IComponent $component, Field $field): void {
         $default = $field->getValue();
         if ($default == self::VALUE_LOGIN) {
             if ($this->user->isLoggedIn() && $this->user->getIdentity()->getPerson()) {
@@ -147,27 +118,22 @@ class PersonFactory extends AbstractFactory {
                 $default = null;
             }
         }
-
-        $hiddenField->setDefaultValue($default);
+        $component->setDefaultValue($default);
     }
 
     /**
-     * @param $component
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
+     * @param ReferencedId|IComponent $component
      * @return void
      */
-    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
-        $hiddenField = reset($component);
-        $hiddenField->setDisabled();
+    protected function setDisabled(IComponent $component): void {
+        $component->setDisabled();
     }
 
     /**
-     * @param Component $component
+     * @param ReferencedId|IComponent $component
      * @return Component|IControl
      */
-    public function getMainControl(Component $component) {
+    public function getMainControl(IComponent $component): IControl {
         return $component;
     }
 
@@ -195,7 +161,7 @@ class PersonFactory extends AbstractFactory {
                 if (!is_array($metadata)) {
                     $metadata = ['required' => $metadata];
                 }
-                if ($metadata['required'] && !$this->referencedEventPersonFactory->isFilled($person, $subName, $fieldName, $acYear)) {
+                if ($metadata['required'] && !ReferencedPersonFactory::isFilled($person, $subName, $fieldName, $acYear)) {
                     $validator->addError(sprintf(_('%s: %s je povinná položka.'), $field->getBaseHolder()->getLabel(), $field->getLabel() . '.' . $subName . '.' . $fieldName)); //TODO better GUI name than DB identifier
                 }
             }
@@ -220,8 +186,6 @@ class PersonFactory extends AbstractFactory {
                 }
             }
         }
-
         return $fieldsDefinition;
     }
-
 }

@@ -3,7 +3,6 @@
 namespace FKSDB\ORM\Models;
 
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\Models\StoredQuery\ISchoolReferencedModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 
@@ -22,7 +21,7 @@ use Nette\Security\IResource;
  * @property-read int teacher_id
  */
 class ModelTeacher extends AbstractModelSingle implements IResource, IPersonReferencedModel, ISchoolReferencedModel {
-    const RESOURCE_ID = 'teacher';
+    public const RESOURCE_ID = 'teacher';
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);

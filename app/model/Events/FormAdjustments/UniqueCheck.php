@@ -18,44 +18,32 @@ use Nette\Forms\IControl;
  */
 class UniqueCheck extends AbstractAdjustment {
 
-    /**
-     * @var
-     */
-    private $field;
-    /**
-     * @var
-     */
-    private $message;
+    private string $field;
+
+    private string $message;
 
     /**
      * UniqueCheck constructor.
-     * @param $field
-     * @param $message
+     * @param string $field
+     * @param string $message
      */
-    public function __construct($field, $message) {
+    public function __construct(string $field, string $message) {
         $this->field = $field;
         $this->message = $message;
     }
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return void
-     */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder) {
+    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
         $controls = $this->getControl($this->field);
         if (!$controls) {
             return;
         }
 
         foreach ($controls as $name => $control) {
-            $field = $this->field;
             $name = $holder->hasBaseHolder($name) ? $name : substr($this->field, 0, strpos($this->field, self::DELIMITER));
             $baseHolder = $holder->getBaseHolder($name);
-            $control->addRule(function (IControl $control) use ($baseHolder, $field) {
+            $control->addRule(function (IControl $control) use ($baseHolder) : bool {
                 $table = $baseHolder->getService()->getTable();
-                $column = BaseHolder::getBareColumn($field);
+                $column = BaseHolder::getBareColumn($this->field);
                 if ($control instanceof ReferencedId) {
                     /* We don't want to fullfil potential promise
                      * as it would be out of transaction here.
@@ -68,7 +56,7 @@ class UniqueCheck extends AbstractAdjustment {
                 $pk = $table->getName() . '.' . $table->getPrimary();
 
                 $table->where($column, $value);
-                $table->where($baseHolder->getEventId(), $baseHolder->getHolder()->getPrimaryHolder()->getEvent()->getPrimary());
+                $table->where($baseHolder->getEventIdColumn(), $baseHolder->getHolder()->getPrimaryHolder()->getEvent()->getPrimary());
                 if ($model && !$model->isNew()) {
                     $table->where("NOT $pk = ?", $model->getPrimary());
                 }
@@ -76,5 +64,4 @@ class UniqueCheck extends AbstractAdjustment {
             }, $this->message);
         }
     }
-
 }

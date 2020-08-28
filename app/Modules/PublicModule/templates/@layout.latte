@@ -1,0 +1,8 @@
+{layout '../../Core/templates/@layout.latte'}
+
+{block nav-right}
+    {if $control['contestChooser']->isValid()}
+        {control contestChooser}
+    {/if}
+    {include #parent}
+{/block}

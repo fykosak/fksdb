@@ -12,13 +12,13 @@ use Nette\Forms\Container;
 class PersonInfoContainer extends ModelContainer {
 
     /**
-     * @param $values
+     * @param mixed|iterable $values
      * @param bool $erase
      * @return Container|void
      */
-    public function setValues($values, $erase = FALSE) {
+    public function setValues($values, $erase = false) {
         if ($values instanceof ActiveRow) { //assert its from person info table
-            $values['agreed'] = (bool) $values['agreed'];
+            $values['agreed'] = (bool)$values['agreed'];
         }
 
         parent::setValues($values, $erase);

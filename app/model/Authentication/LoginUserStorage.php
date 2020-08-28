@@ -1,10 +1,10 @@
 <?php
 
-namespace Authentication;
+namespace FKSDB\Authentication;
 
-use AuthenticatedPresenter;
-use Authentication\SSO\GlobalSession;
-use AuthenticationPresenter;
+use FKSDB\Modules\Core\AuthenticatedPresenter;
+use FKSDB\Authentication\SSO\GlobalSession;
+use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\YearCalculator;
@@ -26,39 +26,26 @@ use Nette\Security\IIdentity;
 class LoginUserStorage extends UserStorage {
     /** @const HTTP GET parameter holding control information for the SSO */
 
-    const PARAM_SSO = 'sso';
+    public const PARAM_SSO = 'sso';
 
     /** @const Value meaning the user is not centally authneticated. */
-    const SSO_AUTHENTICATED = 'a';
+    public const SSO_AUTHENTICATED = 'a';
 
     /** @const Value meaning the user is not centally authneticated. */
-    const SSO_UNAUTHENTICATED = 'ua';
+    public const SSO_UNAUTHENTICATED = 'ua';
 
-    /** @var ServiceLogin */
-    private $loginService;
+    private ServiceLogin $serviceLogin;
 
-    /** @var YearCalculator */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
-    /**
-     * @var GlobalSession
-     */
-    private $globalSession;
+    private GlobalSession $globalSession;
 
-    /**
-     * @var Application
-     */
-    private $application;
+    private Application $application;
 
-    /**
-     * @var IPresenter
-     */
+    /** @var IPresenter */
     private $presenter;
 
-    /**
-     * @var Request
-     */
-    private $request;
+    private Request $request;
 
     /**
      * LoginUserStorage constructor.
@@ -69,19 +56,23 @@ class LoginUserStorage extends UserStorage {
      * @param Application $application
      * @param Request $request
      */
-    public function __construct(Session $sessionHandler, ServiceLogin $loginService, YearCalculator $yearCalculator, GlobalSession $globalSession, Application $application, Request $request) {
+    public function __construct(
+        Session $sessionHandler,
+        ServiceLogin $loginService,
+        YearCalculator $yearCalculator,
+        GlobalSession $globalSession,
+        Application $application,
+        Request $request
+    ) {
         parent::__construct($sessionHandler);
-        $this->loginService = $loginService;
+        $this->serviceLogin = $loginService;
         $this->yearCalculator = $yearCalculator;
         $this->globalSession = $globalSession;
         $this->application = $application;
         $this->request = $request;
     }
 
-    /**
-     * @return IPresenter
-     */
-    public function getPresenter() {
+    public function getPresenter(): IPresenter {
         if ($this->application->getPresenter()) {
             return $this->application->getPresenter();
         } else {
@@ -94,12 +85,12 @@ class LoginUserStorage extends UserStorage {
      * @internal Used internally or for testing purposes only.
      *
      */
-    public function setPresenter(IPresenter $presenter) {
+    public function setPresenter(IPresenter $presenter): void {
         $this->presenter = $presenter;
     }
 
     /**
-     * @param $state
+     * @param mixed $state
      * @return UserStorage|void
      */
     public function setAuthenticated($state) {
@@ -135,9 +126,7 @@ class LoginUserStorage extends UserStorage {
              * probably is not needed anymore.
              */
             //parent::setAuthenticated(false);
-            /**
-             * @var AuthenticatedPresenter $presenter
-             */
+            /** @var AuthenticatedPresenter $presenter */
             $presenter = $this->getPresenter();
             $ssoData = $presenter->getParameter(self::PARAM_SSO);
 
@@ -155,7 +144,7 @@ class LoginUserStorage extends UserStorage {
                         AuthenticationPresenter::PARAM_REASON => AuthenticationPresenter::REASON_AUTH,
                     ];
 
-                    $presenter->redirect(':Authentication:login', $params);
+                    $presenter->redirect(':Core:Authentication:login', $params);
                 }
             }
             return false;
@@ -166,7 +155,7 @@ class LoginUserStorage extends UserStorage {
      * @param IIdentity|NULL $identity
      * @return UserStorage
      */
-    public function setIdentity(IIdentity $identity = NULL) {
+    public function setIdentity(IIdentity $identity = null) {
         $this->identity = $identity;
         if ($identity instanceof ModelLogin) {
             $identity = new Identity($identity->getID());
@@ -174,10 +163,7 @@ class LoginUserStorage extends UserStorage {
         return parent::setIdentity($identity);
     }
 
-    /**
-     * @return ModelLogin|NULL
-     */
-    public function getIdentity() {
+    public function getIdentity(): ?ModelLogin {
         $local = parent::getIdentity();
         $global = isset($this->globalSession[GlobalSession::UID]) ? $this->globalSession[GlobalSession::UID] : null;
         /*
@@ -186,12 +172,12 @@ class LoginUserStorage extends UserStorage {
          * int isAuthenticated method. Thus we can omit this case here.
          */
         if (!$local || !$global) {
-            return NULL;
+            return null;
         }
 
         // Find login
         /** @var ModelLogin $login */
-        $login = $this->loginService->findByPrimary($local->getId());
+        $login = $this->serviceLogin->findByPrimary($local->getId());
 
         if (!$login) {
             return null;

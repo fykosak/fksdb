@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
-use BasePresenter;
+use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
@@ -12,19 +12,18 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 
+/**
+ * Class CloseTeamControl
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 class CloseTeamControl extends BaseComponent {
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /**
-     * @var ModelFyziklaniTeam
-     */
+
+    private ModelEvent $event;
+
+    /** @var ModelFyziklaniTeam */
     private $team;
-    /**
-     * @var ServiceFyziklaniTask
-     */
-    private $serviceFyziklaniTask;
+
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
 
     /**
      * CloseTeamControl constructor.
@@ -36,27 +35,19 @@ class CloseTeamControl extends BaseComponent {
         $this->event = $event;
     }
 
-    /**
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @return void
-     */
-    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask) {
+    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask): void {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 
-    /**
-     * @param ModelFyziklaniTeam $team
-     * @return void
-     */
-    public function setTeam(ModelFyziklaniTeam $team) {
+    public function setTeam(ModelFyziklaniTeam $team): void {
         $this->team = $team;
     }
 
     /**
-     * @throws AbortException
      * @return void
+     * @throws AbortException
      */
-    public function handleClose() {
+    public function handleClose(): void {
         $connection = $this->serviceFyziklaniTask->getConnection();
         $connection->beginTransaction();
         $sum = (int)$this->team->getNonRevokedSubmits()->sum('points');
@@ -69,11 +60,11 @@ class CloseTeamControl extends BaseComponent {
     }
 
     /**
-     * @throws NotSetGameParametersException
      * @return void
+     * @throws NotSetGameParametersException
      */
-    public function render() {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'CloseTeamControl.latte');
+    public function render(): void {
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.closeTeam.latte');
         $this->template->task = $this->getNextTask();
         $this->template->render();
     }

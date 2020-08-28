@@ -15,7 +15,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Neon\Neon;
-use Nette\Utils\Arrays;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -24,119 +24,62 @@ use Nette\Utils\Arrays;
  */
 class BaseHolder {
 
-    const STATE_COLUMN = 'status';
-    const EVENT_COLUMN = 'event_id';
+    public const STATE_COLUMN = 'status';
+    public const EVENT_COLUMN = 'event_id';
 
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
-    /**
-     * @var string
-     */
-    private $label;
+    private ?string $description;
 
-    /**
-     * @var string
-     */
-    private $description;
+    private ExpressionEvaluator $evaluator;
 
-    /**
-     * @var IService
-     */
-    private $service;
+    private DataValidator $validator;
 
-    /**
-     * @var string
-     */
-    private $joinOn;
+    /** Relation to the primary holder's event.     */
+    private ?IEventRelation $eventRelation;
 
-    /**
-     * @var string
-     */
-    private $joinTo;
+    private ModelEvent $event;
 
-    /**
-     * @var string[]
-     */
-    private $personIds;
+    private string $label;
 
-    /**
-     * @var string
-     */
-    private $eventId;
+    private IService $service;
 
-    /**
-     * @var Holder
-     */
-    private $holder;
+    private ?string $joinOn = null;
 
-    /**
-     * @var bool|callable
-     */
+    private ?string $joinTo = null;
+
+    private array $personIdColumns;
+
+    private string $eventIdColumn;
+
+    private Holder $holder;
+
+    /** @var Field[] */
+    private array $fields = [];
+
+    /** @var IModel */
+    private $model;
+
+    private array $paramScheme;
+
+    private array $parameters;
+
+
+    /** @var bool|callable */
     private $modifiable;
 
-    /**
-     * @var bool|callable
-     */
+    /** @var bool|callable */
     private $visible;
 
     /**
-     * @var Field[]
-     */
-    private $fields = [];
-
-    /**
-     * @var IModel
-     */
-    private $model;
-
-    /**
-     * Relation to the primary holder's event.
-     *
-     * @var IEventRelation|null
-     */
-    private $eventRelation;
-
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-
-    /**
-     * @var array
-     */
-    private $paramScheme;
-
-    /**
-     * @var array
-     */
-    private $parameters;
-
-    /**
-     * @var ExpressionEvaluator
-     */
-    private $evaluator;
-
-    /**
-     * @var DataValidator
-     */
-    private $validator;
-
-    /**
      * BaseHolder constructor.
-     * @param $name
+     * @param string $name
      */
     public function __construct(string $name) {
         $this->name = $name;
     }
 
-    /**
-     * @param Field $field
-     * @return void
-     */
-    public function addField(Field $field) {
+    public function addField(Field $field): void {
         $field->setBaseHolder($this);
         $name = $field->getName();
         $this->fields[$name] = $field;
@@ -153,32 +96,27 @@ class BaseHolder {
         return $this->holder;
     }
 
-    /**
-     * @param Holder $holder
-     * @return void
-     */
-    public function setHolder(Holder $holder) {
+    public function setHolder(Holder $holder): void {
         $this->holder = $holder;
     }
 
     /**
-     * @param $modifiable
+     * @param bool|callable $modifiable
+     * @return void
      */
-    public function setModifiable($modifiable) {
+    public function setModifiable($modifiable): void {
         $this->modifiable = $modifiable;
     }
 
     /**
-     * @param $visible
+     * @param bool|callable $visible
+     * @return void
      */
-    public function setVisible($visible) {
+    public function setVisible($visible): void {
         $this->visible = $visible;
     }
 
-    /**
-     * @param IEventRelation|null $eventRelation
-     */
-    public function setEventRelation(IEventRelation $eventRelation = null) {
+    public function setEventRelation(?IEventRelation $eventRelation): void {
         $this->eventRelation = $eventRelation;
     }
 
@@ -190,7 +128,7 @@ class BaseHolder {
      * @param ModelEvent $event
      * @throws NeonSchemaException
      */
-    private function setEvent(ModelEvent $event) {
+    private function setEvent(ModelEvent $event): void {
         $this->event = $event;
         $this->cacheParameters();
     }
@@ -199,7 +137,7 @@ class BaseHolder {
      * @param ModelEvent $event
      * @throws NeonSchemaException
      */
-    public function inferEvent(ModelEvent $event) {
+    public function inferEvent(ModelEvent $event): void {
         if ($this->eventRelation instanceof IEventRelation) {
             $this->setEvent($this->eventRelation->getEvent($event));
         } else {
@@ -207,33 +145,19 @@ class BaseHolder {
         }
     }
 
-    /**
-     * @return array
-     */
-    public function getParamScheme() {
+    public function getParamScheme(): array {
         return $this->paramScheme;
     }
 
-    /**
-     * @param $paramScheme
-     * @return void
-     */
-    public function setParamScheme($paramScheme) {
+    public function setParamScheme(array $paramScheme): void {
         $this->paramScheme = $paramScheme;
     }
 
-    /**
-     * @return ExpressionEvaluator
-     */
-    public function getEvaluator() {
+    public function getEvaluator(): ExpressionEvaluator {
         return $this->evaluator;
     }
 
-    /**
-     * @param ExpressionEvaluator $evaluator
-     * @return void
-     */
-    public function setEvaluator(ExpressionEvaluator $evaluator) {
+    public function setEvaluator(ExpressionEvaluator $evaluator): void {
         $this->evaluator = $evaluator;
     }
 
@@ -241,11 +165,7 @@ class BaseHolder {
         return $this->validator;
     }
 
-    /**
-     * @param DataValidator $validator
-     * @return void
-     */
-    public function setValidator(DataValidator $validator) {
+    public function setValidator(DataValidator $validator): void {
         $this->validator = $validator;
     }
 
@@ -257,12 +177,9 @@ class BaseHolder {
         return $this->getEvaluator()->evaluate($this->modifiable, $this);
     }
 
-    /**
-     * @return IModel
-     */
-    public function &getModel() {
+    public function &getModel(): IModel {
         if (!$this->model) {
-            $this->model = $this->getService()->createNew();
+            $this->model = $this->getService()->createNew(); // TODO!!!
         }
         return $this->model;
     }
@@ -270,7 +187,7 @@ class BaseHolder {
     /**
      * @param int|IModel $model
      */
-    public function setModel($model) {
+    public function setModel($model): void {
         if ($model instanceof IModel) {
             $this->model = $model;
         } elseif ($model) {
@@ -280,10 +197,7 @@ class BaseHolder {
         }
     }
 
-    /**
-     * @return void
-     */
-    public function saveModel() {
+    public function saveModel(): void {
         if ($this->getModelState() == BaseMachine::STATE_TERMINATED) {
             $this->service->dispose($this->getModel());
         } elseif ($this->getModelState() != BaseMachine::STATE_INIT) {
@@ -300,19 +214,11 @@ class BaseHolder {
         }
     }
 
-    /**
-     * @param string $state
-     * @return void
-     */
-    public function setModelState(string $state) {
+    public function setModelState(string $state): void {
         $this->getService()->updateModel($this->getModel(), [self::STATE_COLUMN => $state]);
     }
 
-    /**
-     * @param $values
-     * @param bool $alive
-     */
-    public function updateModel($values, $alive = true) {
+    public function updateModel(iterable $values, bool $alive = true): void {
         $values[self::EVENT_COLUMN] = $this->getEvent()->getPrimary();
         $this->getService()->updateModel($this->getModel(), $values, $alive);
     }
@@ -328,105 +234,67 @@ class BaseHolder {
         return $this->service;
     }
 
-    /**
-     * @param IService $service
-     * @return void
-     */
-    public function setService(IService $service) {
+    public function setService(IService $service): void {
         $this->service = $service;
     }
 
-    /**
-     * @return string
-     */
-    public function getLabel() {
+    public function getLabel(): string {
         return $this->label;
     }
 
-    /**
-     * @param string $label
-     */
-    public function setLabel($label) {
+    public function setLabel(string $label): void {
         $this->label = $label;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription() {
+
+    public function getDescription(): ?string {
         return $this->description;
     }
 
-    /**
-     * @param string $description
-     */
-    public function setDescription($description) {
+    public function setDescription(?string $description): void {
         $this->description = $description;
     }
 
-    /**
-     * @return string
-     */
-    public function getJoinOn() {
+    public function getJoinOn(): ?string {
         return $this->joinOn;
     }
 
-    /**
-     * @param string $joinOn
-     */
-    public function setJoinOn($joinOn) {
+    public function setJoinOn(?string $joinOn): void {
         $this->joinOn = $joinOn;
     }
 
-    /**
-     * @return string
-     */
-    public function getJoinTo() {
+    public function getJoinTo(): ?string {
         return $this->joinTo;
     }
 
-    /**
-     * @param string $joinTo
-     */
-    public function setJoinTo($joinTo) {
+    public function setJoinTo(?string $joinTo): void {
         $this->joinTo = $joinTo;
     }
 
     /**
      * @return string[]
      */
-    public function getPersonIds() {
-        return $this->personIds;
+    public function getPersonIdColumns(): array {
+        return $this->personIdColumns;
     }
 
-    /**
-     * @param $personIds
-     * @return void
-     */
-    public function setPersonIds($personIds) {
+    public function setPersonIdColumns(array $personIds): void {
         if (!$this->getService()) {
-            throw new InvalidStateException('Call serService prior setting person IDs.');
+            throw new InvalidStateException('Call setService prior setting person IDs.');
         }
 
-        $this->personIds = [];
+        $this->personIdColumns = [];
         foreach ($personIds as $personId) {
-            $this->personIds[] = $this->resolveColumnJoins($personId);
+            $this->personIdColumns[] = $this->resolveColumnJoins($personId);
         }
     }
 
-    /**
-     * @return string
-     */
-    public function getEventId() {
-        return $this->eventId;
+    public function getEventIdColumn(): string {
+        return $this->eventIdColumn;
     }
 
-    /**
-     * @param $eventId
-     * @return void
-     */
-    public function setEventId($eventId) {
-        $this->eventId = $this->resolveColumnJoins($eventId);
+    public function setEventIdColumn(string $eventId): void {
+        $this->eventIdColumn = $this->resolveColumnJoins($eventId);
     }
 
     private function resolveColumnJoins(string $column): string {
@@ -437,7 +305,7 @@ class BaseHolder {
     }
 
     /**
-     * @param $column
+     * @param string $column
      * @return bool|mixed|string
      */
     public static function getBareColumn($column) {
@@ -450,12 +318,12 @@ class BaseHolder {
      * @return Field[]
      */
     public function getDeterminingFields(): array {
-        return array_filter($this->fields, function (Field $field) {
+        return array_filter($this->fields, function (Field $field): bool {
             return $field->isDetermining();
         });
     }
 
-    public function createFormContainer(BaseMachine $machine): ContainerWithOptions {
+    public function createFormContainer(): ContainerWithOptions {
         $container = new ContainerWithOptions();
         $container->setOption('label', $this->getLabel());
         $container->setOption('description', $this->getDescription());
@@ -464,26 +332,18 @@ class BaseHolder {
             if (!$field->isVisible()) {
                 continue;
             }
-            $components = $field->createFormComponent($machine, $container);
-            if (!is_array($components)) {
-                $components = [$components];
-            }
-            $i = 0;
-            foreach ($components as $component) {
-                $componentName = ($i == 0) ? $name : "{$name}_{$i}";
-                $container->addComponent($component, $componentName);
-                ++$i;
-            }
+            $component = $field->createFormComponent();
+            $container->addComponent($component, $name);
+            $field->setFieldDefaultValue($component);
         }
-
         return $container;
     }
 
     /**
      * @return int|null  ID of a person associated with the application
      */
-    public function getPersonId() {
-        $personColumns = $this->getPersonIds();
+    public function getPersonId(): ?int {
+        $personColumns = $this->getPersonIdColumns();
         if (!$personColumns) {
             return null;
         }
@@ -493,10 +353,7 @@ class BaseHolder {
         return $model[$personColumn];
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return $this->name;
     }
 
@@ -506,7 +363,7 @@ class BaseHolder {
     /**
      * @throws NeonSchemaException
      */
-    private function cacheParameters() {
+    private function cacheParameters(): void {
         $parameters = isset($this->getEvent()->parameters) ? $this->getEvent()->parameters : '';
         $parameters = $parameters ? Neon::decode($parameters) : [];
         $this->parameters = NeonScheme::readSection($parameters, $this->getParamScheme());
@@ -519,7 +376,7 @@ class BaseHolder {
      */
     public function getParameter($name, $default = null) {
         try {
-            return Arrays::get($this->parameters, $name, $default);
+            return $this->parameters[$name] ?? $default;
         } catch (InvalidArgumentException $exception) {
             throw new InvalidArgumentException("No parameter '$name' for event " . $this->getEvent() . ".", null, $exception);
         }

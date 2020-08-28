@@ -18,7 +18,7 @@ use Nette\Utils\ArrayHash;
 class PasswordProcessing extends AbstractProcessing {
 
     /**
-     * @param $states
+     * @param array $states
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder
@@ -26,7 +26,7 @@ class PasswordProcessing extends AbstractProcessing {
      * @param Form|null $form
      * @return void
      */
-    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
+    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null): void {
         if (!isset($values['team'])) {
             return;
         }
@@ -40,15 +40,15 @@ class PasswordProcessing extends AbstractProcessing {
         }
 
         if ($original !== null && $original != $result) {
-            $logger->log(new Message(_('Nastaveno nové herní heslo.'), ILogger::INFO));
+            $logger->log(new Message(_('Set new game password.'), ILogger::INFO));
         }
     }
 
     /**
-     * @param $string
+     * @param string $string
      * @return string
      */
-    private function hash($string) {
+    private function hash($string): string {
         return sha1($string);
     }
 

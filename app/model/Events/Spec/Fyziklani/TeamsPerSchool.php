@@ -20,46 +20,18 @@ use Nette\Forms\IControl;
  */
 class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
 
-    /**
-     * @var Context
-     */
-    private $context;
+    private Context $context;
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $teamsPerSchool;
 
-    /**
-     * @var int
-     */
-    private $teamsPerSchoolValue;
+    private int $teamsPerSchoolValue;
 
-    /**
-     * @var ExpressionEvaluator
-     */
-    private $evaluator;
-
-    /**
-     * @return int|mixed
-     */
-    public function getTeamsPerSchool() {
-        if ($this->teamsPerSchoolValue === null) {
-            $this->teamsPerSchoolValue = $this->evaluator->evaluate($this->teamsPerSchool, $this->getHolder());
-        }
-        return $this->teamsPerSchoolValue;
-    }
-
-    /**
-     * @param $teamsPerSchool
-     */
-    public function setTeamsPerSchool($teamsPerSchool) {
-        $this->teamsPerSchool = $teamsPerSchool;
-    }
+    private ExpressionEvaluator $evaluator;
 
     /**
      * TeamsPerSchool constructor.
-     * @param $teamsPerSchool
+     * @param int $teamsPerSchool
      * @param ExpressionEvaluator $evaluator
      * @param Context $context
      * @param ServicePersonHistory $servicePersonHistory
@@ -71,48 +43,49 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         $this->setTeamsPerSchool($teamsPerSchool);
     }
 
+    public function getTeamsPerSchool(): int {
+        if (!isset($this->teamsPerSchoolValue)) {
+            $this->teamsPerSchoolValue = $this->evaluator->evaluate($this->teamsPerSchool, $this->getHolder());
+        }
+        return $this->teamsPerSchoolValue;
+    }
+
     /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
+     * @param int $teamsPerSchool
      * @return void
      */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder) {
+    public function setTeamsPerSchool($teamsPerSchool): void {
+        $this->teamsPerSchool = $teamsPerSchool;
+    }
+
+    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $personControls = $this->getControl('p*.person_id');
 
         $first = true;
-        $msgMulti = sprintf(_('Škola nemůže mít v soutěži více týmů než %d.'), $this->getTeamsPerSchool());
+        $msgMulti = sprintf(_('A school cannot have more than %d teams in the contest.'), $this->getTeamsPerSchool());
         foreach ($schoolControls as $control) {
-            $control->addRule(function (IControl $control) use ($first, $schoolControls, $personControls) {
+            $control->addRule(function (IControl $control) use ($first, $schoolControls, $personControls) : bool {
                 $schools = $this->getSchools($schoolControls, $personControls);
                 return $this->checkMulti($first, $control, $schools);
             }, $msgMulti);
             $first = false;
         }
-        $form->onValidate[] = function (Form $form) use ($schoolControls, $personControls, $msgMulti) {
+        $form->onValidate[] = function (Form $form) use ($schoolControls, $personControls, $msgMulti) : void {
             if ($form->isValid()) { // it means that all schools may have been disabled
                 $schools = $this->getSchools($schoolControls, $personControls);
-                if (!$this->checkMulti(true, NULL, $schools)) {
+                if (!$this->checkMulti(true, null, $schools)) {
                     $form->addError($msgMulti);
                 }
             }
         };
     }
 
-    /**
-     * @var
-     */
+    /** @var mixed */
     private $cache;
 
-    /**
-     * @param $first
-     * @param IControl $control
-     * @param $schools
-     * @return bool
-     */
-    private function checkMulti($first, $control, $schools) {
+    private function checkMulti(bool $first, ?IControl $control, array $schools): bool {
 
         $team = $this->getHolder()->getPrimaryHolder()->getModel();
         $event = $this->getHolder()->getPrimaryHolder()->getEvent();
@@ -130,7 +103,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
             $result = $this->context->table(DbNames::TAB_EVENT_PARTICIPANT)
                 ->select('person.person_history:school_id')
                 ->select("GROUP_CONCAT(DISTINCT e_fyziklani_participant:e_fyziklani_team.name ORDER BY e_fyziklani_participant:e_fyziklani_team.created SEPARATOR ', ') AS teams")
-                ->where($baseHolder->getEventId(), $event->getPrimary())
+                ->where($baseHolder->getEventIdColumn(), $event->getPrimary())
                 ->where('person.person_history:ac_year', $acYear)
                 ->where('person.person_history:school_id', $schools);
 
@@ -146,7 +119,7 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         if ($control) {
             $school = $control->getValue();
             if (isset($this->cache[$school])) {
-                $control->addError(\sprintf(_('Přihlásené týmy z rovnaké školy %s.'), $this->cache[$school]));
+                $control->addError(\sprintf(_('Registered teams from the same school %s.'), $this->cache[$school]));
             }
         }
         return count($this->cache) == 0;

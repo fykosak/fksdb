@@ -57,20 +57,12 @@ parameters:
         enabled: true
         defaultLimit: 100
 
-nette:
-    session:
-        cookie_secure: true
-    database:
-        dsn: 'mysql:host=127.0.0.1;dbname=newfks'
-        user:
-        password:
-
-    debugger:
-        bar:
-             - Nette\Bridges\HttpTracy\SessionPanel
-             - Nette\Bridges\SecurityTracy\UserPanel
-             #- Nette\Bridges\DatabaseTracy\ConnectionPanel
-    #        - Nextras\MailPanel\MailPanel()
+session:
+    cookie_secure: true
+database:
+    dsn: 'mysql:host=127.0.0.1;dbname=newfks'
+    user:
+    password:
 
 # DO NOT UNCOMMENT ON PRODUCTION ENVIRONMENT -- SECURITY RISK!
 #fksrouter:
