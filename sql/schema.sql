@@ -133,15 +133,16 @@ CREATE TABLE IF NOT EXISTS `event_participant` (
   COMMENT 'alergie, léky, úrazy,...',
   `tshirt_size`           TEXT          NULL     DEFAULT NULL,
   `tshirt_color`          VARCHAR(20)   NULL     DEFAULT NULL,
+  `jumper_size`           VARCHAR(20)   NULL     DEFAULT NULL,
   `price`                 DECIMAL(6, 2) NULL     DEFAULT NULL
   COMMENT 'vypočtená cena',
-  `arrival_time`          VARCHAR(20)   NULL     DEFAULT NULL
+  `arrival_time`          TIME          NULL     DEFAULT NULL
   COMMENT 'Čas příjezdu',
   `arrival_destination`   VARCHAR(20)   NULL     DEFAULT NULL
   COMMENT 'Místo prijezdu\n',
   `arrival_ticket`        TINYINT(1)    NULL     DEFAULT NULL
   COMMENT 'společný lístek na cestu tam\n',
-  `departure_time`        VARCHAR(20)   NULL     DEFAULT NULL
+  `departure_time`        TIME          NULL     DEFAULT NULL
   COMMENT 'Čas odjezdu\n',
   `departure_destination` VARCHAR(20)   NULL     DEFAULT NULL
   COMMENT 'Místo odjezdu\n',
@@ -153,6 +154,7 @@ CREATE TABLE IF NOT EXISTS `event_participant` (
   COMMENT 'úžívané léky',
   `schedule`              TEXT          NULL     DEFAULT NULL
   COMMENT 'serializovaný program',
+  `lunch_count`          TINYINT(2)   NULL DEFAULT 0,
   PRIMARY KEY (`event_participant_id`),
   INDEX `action_id` (`event_id` ASC),
   INDEX `person_id` (`person_id` ASC),
@@ -1034,8 +1036,6 @@ CREATE TABLE IF NOT EXISTS `e_dsef_group` (
 CREATE TABLE IF NOT EXISTS `e_dsef_participant` (
   `event_participant_id` INT          NOT NULL,
   `e_dsef_group_id`      INT          NOT NULL,
-  `arrival_time`         TIME         NULL DEFAULT NULL,
-  `lunch_count`          TINYINT(2)   NULL DEFAULT 0,
   `message`              VARCHAR(255) NULL DEFAULT NULL,
   PRIMARY KEY (`event_participant_id`),
   INDEX `fk_e_dsef_participant_e_dsef_group1_idx` (`e_dsef_group_id` ASC),
@@ -1047,53 +1047,6 @@ CREATE TABLE IF NOT EXISTS `e_dsef_participant` (
   CONSTRAINT `fk_e_dsef_participant_e_dsef_group1`
   FOREIGN KEY (`e_dsef_group_id`)
   REFERENCES `e_dsef_group` (`e_dsef_group_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-)
-  ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Table `e_vikend_participant`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `e_vikend_participant` (
-  `event_participant_id` INT         NOT NULL,
-  `answer`               VARCHAR(64) NULL DEFAULT NULL,
-  `gives_lecture`        VARCHAR(64) NULL DEFAULT NULL,
-  `gives_lecture_desc`   TEXT        NULL DEFAULT NULL,
-  `wants_lecture`        VARCHAR(64) NULL DEFAULT NULL,
-  PRIMARY KEY (`event_participant_id`),
-  CONSTRAINT `fk_e_vikend_participant_event_participant1`
-  FOREIGN KEY (`event_participant_id`)
-  REFERENCES `event_participant` (`event_participant_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-)
-  ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Table `e_sous_participant`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `e_sous_participant` (
-  `event_participant_id` INT NOT NULL,
-  PRIMARY KEY (`event_participant_id`),
-  CONSTRAINT `fk_e_sous_participant_event_participant1`
-  FOREIGN KEY (`event_participant_id`)
-  REFERENCES `event_participant` (`event_participant_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION
-)
-  ENGINE = InnoDB;
-
--- -----------------------------------------------------
--- Table `e_tsaf_participant`
--- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `e_tsaf_participant` (
-  `event_participant_id` INT         NOT NULL,
-  `jumper_size`          VARCHAR(20) NULL DEFAULT NULL,
-  PRIMARY KEY (`event_participant_id`),
-  CONSTRAINT `fk_e_tsaf_participant_event_participant1`
-  FOREIGN KEY (`event_participant_id`)
-  REFERENCES `event_participant` (`event_participant_id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
 )

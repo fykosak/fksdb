@@ -34,15 +34,7 @@ EOT
                 'status' => 'applied',
                 'accomodation' => 1,
             ]);
-            $this->insert('e_tsaf_participant', [
-                'event_participant_id' => $eid,
-            ]);
         }
-    }
-
-    protected function tearDown(): void {
-        $this->connection->query('DELETE FROM e_tsaf_participant');
-        parent::tearDown();
     }
 
     public function getTestData(): array {

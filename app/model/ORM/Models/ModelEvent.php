@@ -79,6 +79,14 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
         return $this->related(DbNames::TAB_E_FYZIKLANI_TEAM, 'event_id');
     }
 
+    public function getEventOrgs(): GroupedSelection {
+        return $this->related(DbNames::TAB_EVENT_ORG, 'event_id');
+    }
+
+    public function getPayments(): GroupedSelection {
+        return $this->related(DbNames::TAB_PAYMENT, 'event_id');
+    }
+
     public function __toArray(): array {
         return [
             'eventId' => $this->event_id,

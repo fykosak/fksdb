@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Grids\Events\Application;
+namespace FKSDB\Components\Grids\Application;
 
 use Closure;
 use FKSDB\Events\Model\Holder\Holder;

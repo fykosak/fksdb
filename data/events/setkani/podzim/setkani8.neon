@@ -49,10 +49,6 @@ events:
                         modifiable: %events.setkani.appCond%
                         default: fromLogin
                         factory: RefPerson(%events.setkani.person%, email, or(state('__init'),role('admin')), role('admin'), false)
-                    answer:
-                        label: _('Jakou barvu má Výfuček?')
-                        required: true
-                        modifiable: %events.setkani.appCond%
                     arrival_time:
                        label: _('Předpokládaný příjezd')
                        description: _('Čas příjezdu')
