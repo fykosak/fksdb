@@ -387,8 +387,4 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         }
         return $this->authorizedCache[$key];
     }
-
-    protected function createComponentValuePrinter(): ValuePrinterComponent {
-        return new ValuePrinterComponent($this->getContext());
-    }
 }
