@@ -41,7 +41,7 @@ abstract class AbstractServiceMulti implements IService {
     /**
      * Use this method to create new models!
      *
-     * @param array $data
+     * @param array|null $data
      * @return AbstractModelMulti
      * @deprecated
      */

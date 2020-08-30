@@ -53,7 +53,7 @@ abstract class Machine {
     }
 
     /**
-     * @param IStateModel $model
+     * @param IStateModel|null $model
      * @return Transition[]
      */
     public function getAvailableTransitions(?IStateModel $model = null): array {

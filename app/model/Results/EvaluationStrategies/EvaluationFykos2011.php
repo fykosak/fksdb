@@ -36,7 +36,6 @@ class EvaluationFykos2011 extends EvaluationStrategy {
                 return [null, 4];
             default:
                 throw new Nette\InvalidArgumentException('Invalid category ' . $category->id);
-                break;
         }
     }
 
@@ -74,7 +73,6 @@ class EvaluationFykos2011 extends EvaluationStrategy {
                 } else {
                     return $task->points;
                 }
-                break;
             default:
                 return $task->points;
         }
@@ -89,7 +87,6 @@ class EvaluationFykos2011 extends EvaluationStrategy {
             case ModelCategory::CAT_HS_1:
             case ModelCategory::CAT_HS_2:
                 return "IF(s.raw_points IS NOT NULL, IF(t.label IN ('1', '2'), 2 * t.points, t.points), NULL)";
-                break;
             default:
                 return 'IF(s.raw_points IS NOT NULL, t.points, NULL)';
         }

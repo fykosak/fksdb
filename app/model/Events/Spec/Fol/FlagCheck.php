@@ -98,12 +98,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
 //                };
     }
 
-    /**
-     * @param IControl $studyYearControl
-     * @param IControl $personControl
-     * @return bool|mixed|ActiveRow|Selection|null
-     */
-    private function getStudyYear($studyYearControl, $personControl) {
+    private function getStudyYear(IControl $studyYearControl, IControl $personControl): int {
         if ($studyYearControl->getValue()) {
             return $studyYearControl->getValue();
         }
@@ -116,12 +111,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
         return $personHistory->study_year;
     }
 
-    /**
-     * @param IControl $schoolControl
-     * @param IControl $personControl
-     * @return bool|mixed|ActiveRow|Selection|null
-     */
-    private function getSchoolId($schoolControl, $personControl) {
+    private function getSchoolId(IControl $schoolControl, IControl $personControl): int {
         if ($schoolControl->getValue()) {
             return $schoolControl->getValue();
         }
@@ -134,11 +124,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
         return $school->school_id;
     }
 
-    /**
-     * @param int|null $studyYear
-     * @return bool
-     */
-    private function isStudent($studyYear): bool {
+    private function isStudent(?int $studyYear): bool {
         return ($studyYear === null) ? false : true;
     }
 }

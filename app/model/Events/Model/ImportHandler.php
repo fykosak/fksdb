@@ -11,7 +11,6 @@ use FKSDB\Utils\CSVParser;
 use Nette\DI\Container;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
-use Nette\Utils\JsonException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -50,7 +49,6 @@ class ImportHandler {
      * @param string $errorMode
      * @param string $stateless
      * @return bool
-     * @throws JsonException
      * @throws NeonSchemaException
      */
     public function import(ApplicationHandler $handler, string $errorMode, string $stateless): bool {

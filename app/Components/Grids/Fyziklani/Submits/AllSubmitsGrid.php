@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
-use Closure;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Fyziklani\Submit\HandlerFactory;
@@ -99,9 +98,6 @@ class AllSubmitsGrid extends SubmitsGrid {
             });
     }
 
-    /**
-     * @return Closure
-     */
     private function getFilterCallBack(): callable {
         return function (Selection $table, $value) {
             foreach ($value as $key => $condition) {
@@ -130,7 +126,6 @@ class AllSubmitsGrid extends SubmitsGrid {
                         break;
                 }
             }
-            return;
         };
     }
 
@@ -138,7 +133,7 @@ class AllSubmitsGrid extends SubmitsGrid {
      * @param int $id
      * @throws AbortException
      */
-    public function handleDelete($id) {
+    public function handleDelete(int $id): void {
         /** @var ModelFyziklaniSubmit $submit */
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
         if (!$submit) {

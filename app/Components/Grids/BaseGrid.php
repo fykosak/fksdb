@@ -18,7 +18,6 @@ use Nette\DI\Container;
 use Nette\InvalidStateException;
 use FKSDB\Exceptions\NotImplementedException;
 use Nette\Localization\ITranslator;
-use Nette\Security\Permission;
 use Nette\Utils\Html;
 use NiftyGrid\Components\Button;
 use NiftyGrid\Components\Column;
@@ -180,11 +179,11 @@ abstract class BaseGrid extends Grid {
     /**
      * Adds button with Bootstrap CSS classes (default is 'default').
      * @param string $name
-     * @param string $label
+     * @param string|null $label
      * @return Button
      * @throws DuplicateButtonException
      */
-    protected function addButton($name, $label = null): Button {
+    protected function addButton(string $name, ?string $label = null): Button {
         $button = parent::addButton($name, $label);
         $button->setClass('btn btn-sm btn-secondary');
         return $button;
@@ -192,12 +191,12 @@ abstract class BaseGrid extends Grid {
 
     /**
      * @param string $name
-     * @param null $label
+     * @param string|null $label
      * @return GlobalButton
      * @throws DuplicateGlobalButtonException
      * @deprecated do not use for links!
      */
-    public function addGlobalButton($name, $label = null): GlobalButton {
+    public function addGlobalButton($name, ?string $label = null): GlobalButton {
         $button = parent::addGlobalButton($name, $label);
         $button->setClass('btn btn-sm btn-primary');
         return $button;

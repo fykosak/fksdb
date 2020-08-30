@@ -105,7 +105,7 @@ class EventFormComponent extends EditEntityFormComponent {
     }
 
     /**
-     * @param AbstractModelSingle|ModelEvent $model
+     * @param AbstractModelSingle|ModelEvent|null $model
      * @return void
      * @throws BadTypeException
      * @throws NeonSchemaException

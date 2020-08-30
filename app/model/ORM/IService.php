@@ -12,7 +12,7 @@ use Nette\Database\Table\Selection;
 interface IService {
 
     /**
-     * @param iterable $data
+     * @param iterable|null $data
      * @deprecated
      */
     public function createNew($data = null);

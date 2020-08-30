@@ -189,7 +189,7 @@ class StoredQueryFormComponent extends EditEntityFormComponent {
     }
 
     public function render(): void {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.form.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.storedQuery.latte');
         $this->template->render();
     }
 }

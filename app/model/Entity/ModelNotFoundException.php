@@ -11,7 +11,7 @@ use FKSDB\Exceptions\NotFoundException;
 class ModelNotFoundException extends NotFoundException {
     /**
      * ModelNotFoundException constructor.
-     * @param string $message
+     * @param string|null $message
      * @param \Exception|null $previous
      */
     public function __construct($message = null, \Exception $previous = null) {

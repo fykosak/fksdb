@@ -135,7 +135,7 @@ class PaymentFormComponent extends EditEntityFormComponent {
     }
 
     /**
-     * @param ModelPayment|AbstractModelSingle $model
+     * @param ModelPayment|AbstractModelSingle|null $model
      * @return void
      * @throws BadTypeException
      */

@@ -22,8 +22,7 @@ use Nette\Security\IResource;
 
 /**
  * Class ScheduleItemPresenter
- * *
- * @method ModelScheduleItem traitGetEntity()
+ *
  */
 class ScheduleItemPresenter extends BasePresenter {
     use EventEntityPresenterTrait {
@@ -98,13 +97,13 @@ class ScheduleItemPresenter extends BasePresenter {
 
     /**
      * @return ModelScheduleItem
-     *
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws EventNotFoundException
      * @throws BadTypeException
      */
     protected function getEntity(): ModelScheduleItem {
+        /** @var ModelScheduleItem $entity */
         $entity = $this->traitGetEntity();
         if ($entity->schedule_group_id !== $this->getGroup()->schedule_group_id) {
             throw new ForbiddenRequestException();

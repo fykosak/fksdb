@@ -7,6 +7,7 @@ use FKSDB\Components\Controls\Inbox\PointsFormControl;
 use FKSDB\Components\Controls\Inbox\PointsPreviewControl;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
+use FKSDB\ORM\Models\ModelContest;
 use FKSDB\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use FKSDB\Modules\Core\PresenterTraits\{SeriesPresenterTrait};
@@ -108,9 +109,14 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
         $this->seriesTable->setTaskFilter($this->all ? null : $this->getGradedTasks());
     }
 
+    /**
+     * @return void
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
+     */
     public function renderEntry(): void {
         $this->template->showAll = (bool)$this->all;
-        if ($this->getSelectedContest()->contest_id === 2 && $this->getSelectedSeries() > 6) {
+        if ($this->getSelectedContest()->contest_id === ModelContest::ID_VYFUK && $this->getSelectedSeries() > 6) {
             $this->template->hasQuizTask = true;
         } else {
             $this->template->hasQuizTask = false;
@@ -177,7 +183,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws AbortException
      */
     public function handleCalculateQuizPoints(): void {
-        try{
+        try {
             $contest = $this->getSelectedContest();
             $year = $this->getSelectedYear();
             $series = $this->getSelectedSeries();
