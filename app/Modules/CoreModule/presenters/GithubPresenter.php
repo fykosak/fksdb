@@ -30,12 +30,6 @@ class GithubPresenter extends AuthenticatedPresenter {
         $this->updater = $updater;
     }
 
-    protected function startupLangChooser(): void {
-        /** @var LanguageChooser $control */
-        $control = $this->getComponent('languageChooser');
-        $control->init(false);
-    }
-
     public function getAllowedAuthMethods(): int {
         return AuthenticatedPresenter::AUTH_ALLOW_GITHUB;
     }
