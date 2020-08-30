@@ -59,9 +59,9 @@ class LanguageChooser extends Chooser {
             $this->language = $this->selectLang();
             $this->getTranslator()->setLang($this->language);
         }
-      /*if ($redirect && $this->urlLang !== $this->language) {
-            $this->getPresenter()->forward('this', ['lang' => $this->language]);
-        }*/
+        /*if ($redirect && $this->urlLang !== $this->language) {
+              $this->getPresenter()->forward('this', ['lang' => $this->language]);
+          }*/
     }
 
     /**
@@ -100,7 +100,7 @@ class LanguageChooser extends Chooser {
     public function render(): void {
         $this->beforeRender();
         $this->template->modifiable = $this->isModifiable();
-        $this->template->currentLanguageName = self::$languageNames[$this->language] ?: null;
+        $this->template->currentLanguageName = self::$languageNames[$this->language] ?? null;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.language.latte');
         $this->template->render();
     }
