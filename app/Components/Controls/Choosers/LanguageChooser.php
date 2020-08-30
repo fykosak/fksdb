@@ -10,7 +10,6 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Http\IRequest;
 use Nette\Security\User;
-use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -60,9 +59,9 @@ class LanguageChooser extends Chooser {
             $this->language = $this->selectLang();
             $this->getTranslator()->setLang($this->language);
         }
-      /*if ($redirect && $this->urlLang !== $this->language) {
-            $this->getPresenter()->forward('this', ['lang' => $this->language]);
-        }*/
+        /*if ($redirect && $this->urlLang !== $this->language) {
+              $this->getPresenter()->forward('this', ['lang' => $this->language]);
+          }*/
     }
 
     /**
@@ -101,7 +100,7 @@ class LanguageChooser extends Chooser {
     public function render(): void {
         $this->beforeRender();
         $this->template->modifiable = $this->isModifiable();
-        $this->template->currentLanguageName = self::$languageNames[$this->getLang()] ?: null;
+        $this->template->currentLanguageName = self::$languageNames[$this->language] ?? null;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.language.latte');
         $this->template->render();
     }
