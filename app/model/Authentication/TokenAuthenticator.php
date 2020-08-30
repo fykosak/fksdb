@@ -16,8 +16,8 @@ use Nette\Security\AuthenticationException;
  */
 class TokenAuthenticator extends AbstractAuthenticator {
 
-    const PARAM_AUTH_TOKEN = 'at';
-    const SESSION_NS = 'auth';
+    public const PARAM_AUTH_TOKEN = 'at';
+    public const SESSION_NS = 'auth';
 
     private ServiceAuthToken $authTokenService;
 
@@ -73,7 +73,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @param string $tokenType require specific token type
+     * @param string|null $tokenType require specific token type
      * @return bool true iff user has been authenticated by the authentication token
      */
     public function isAuthenticatedByToken($tokenType = null): bool {

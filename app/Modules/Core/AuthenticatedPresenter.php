@@ -29,10 +29,10 @@ use Nette\Security\AuthenticationException;
  */
 abstract class AuthenticatedPresenter extends BasePresenter {
 
-    const AUTH_ALLOW_LOGIN = 0x1;
-    const AUTH_ALLOW_HTTP = 0x2;
-    const AUTH_ALLOW_TOKEN = 0x4;
-    const AUTH_ALLOW_GITHUB = 0x8;
+    public const AUTH_ALLOW_LOGIN = 0x1;
+    public const AUTH_ALLOW_HTTP = 0x2;
+    public const AUTH_ALLOW_TOKEN = 0x4;
+    public const AUTH_ALLOW_GITHUB = 0x8;
 
     private TokenAuthenticator $tokenAuthenticator;
 
@@ -185,7 +185,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
      * @throws AbortException
      */
     private function tryAuthToken(): void {
-        $tokenData = $this->getParam(TokenAuthenticator::PARAM_AUTH_TOKEN);
+        $tokenData = $this->getParameter(TokenAuthenticator::PARAM_AUTH_TOKEN);
 
         if (!$tokenData) {
             return;
@@ -249,7 +249,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         }
 
         try {
-            $login = $this->githubAuthenticator->authenticate($this->getFullHttpRequest());
+            $login = $this->githubAuthenticator->authenticate($this->getHttpRequest());
 
             Debugger::log("$login signed in using Github authentication.");
 

@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
-use Closure;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Fyziklani\Submit\HandlerFactory;
@@ -89,19 +88,16 @@ class AllSubmitsGrid extends SubmitsGrid {
 
         $this->addButton('delete', null)
             ->setClass('btn btn-sm btn-danger')
-            ->setLink(function (ModelFyziklaniSubmit $row) {
+            ->setLink(function (ModelFyziklaniSubmit $row): string {
                 return $this->link('delete!', $row->fyziklani_submit_id);
-            })->setConfirmationDialog(function () {
+            })->setConfirmationDialog(function (): string {
                 return _('Opravdu vzít submit úlohy zpět?');
             })->setText(_('Delete'))
-            ->setShow(function (ModelFyziklaniSubmit $row) {
+            ->setShow(function (ModelFyziklaniSubmit $row): bool {
                 return $row->canRevoke();
             });
     }
 
-    /**
-     * @return Closure
-     */
     private function getFilterCallBack(): callable {
         return function (Selection $table, $value) {
             foreach ($value as $key => $condition) {
@@ -130,7 +126,6 @@ class AllSubmitsGrid extends SubmitsGrid {
                         break;
                 }
             }
-            return;
         };
     }
 
@@ -138,7 +133,7 @@ class AllSubmitsGrid extends SubmitsGrid {
      * @param int $id
      * @throws AbortException
      */
-    public function handleDelete($id) {
+    public function handleDelete(int $id): void {
         /** @var ModelFyziklaniSubmit $submit */
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
         if (!$submit) {

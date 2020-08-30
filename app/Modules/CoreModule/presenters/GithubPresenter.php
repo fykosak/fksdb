@@ -2,6 +2,7 @@
 
 namespace FKSDB\Modules\CoreModule;
 
+use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Github\EventFactory;
 use FKSDB\Github\Events\Event;
@@ -29,6 +30,12 @@ class GithubPresenter extends AuthenticatedPresenter {
         $this->updater = $updater;
     }
 
+    protected function startupLangChooser(): void {
+        /** @var LanguageChooser $control */
+        $control = $this->getComponent('languageChooser');
+        $control->init(false);
+    }
+
     public function getAllowedAuthMethods(): int {
         return AuthenticatedPresenter::AUTH_ALLOW_GITHUB;
     }
@@ -39,10 +46,9 @@ class GithubPresenter extends AuthenticatedPresenter {
     }
 
     public function actionApi(): void {
-        $type = $this->getFullHttpRequest()->getRequest()->getHeader(Event::HTTP_HEADER);
-        $payload = $this->getFullHttpRequest()->getPayload();
+        $type = $this->getHttpRequest()->getHeader(Event::HTTP_HEADER);
+        $payload = $this->getHttpRequest()->getRawBody();
         $data = json_decode($payload, true);
-
         $event = $this->eventFactory->createEvent($type, $data);
         if ($event instanceof PushEvent) {
             if (strncasecmp(PushEvent::REFS_HEADS, $event->ref, strlen(PushEvent::REFS_HEADS))) {

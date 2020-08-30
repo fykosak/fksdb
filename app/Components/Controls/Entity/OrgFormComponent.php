@@ -90,7 +90,7 @@ class OrgFormComponent extends EditEntityFormComponent {
     }
 
     /**
-     * @param AbstractModelSingle|ModelOrg $model
+     * @param AbstractModelSingle|ModelOrg|null $model
      * @return void
      * @throws BadTypeException
      */

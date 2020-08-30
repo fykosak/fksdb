@@ -41,13 +41,9 @@ class SQLConsole extends TextArea {
         });
     }
 
-    /**
-     * @return Html
-     */
-    public function getControl() {
+    public function getControl(): Html {
         $control = parent::getControl();
         $control->class = self::CSS_CLASS;
-
         return $control;
     }
 

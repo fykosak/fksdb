@@ -11,8 +11,6 @@ use FKSDB\YearCalculator;
 use FKSDB\ORM\ModelsMulti\ModelMPostContact;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
-use Nette\Utils\Json;
-use Nette\Utils\JsonException;
 
 /**
  *
@@ -317,7 +315,6 @@ class ModelPerson extends AbstractModelSingle implements IResource {
      * @param int eventId
      * @param string $type
      * @return string|null
-     * @throws JsonException
      */
     public function getSerializedSchedule(int $eventId, string $type): ?string {
         if (!$eventId) {
@@ -336,7 +333,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
             return null;
         }
 
-        return Json::encode($items);
+        return json_encode($items);
     }
 
     /**

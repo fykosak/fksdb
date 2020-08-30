@@ -2,6 +2,7 @@
 
 namespace FKSDB\Modules\CoreModule;
 
+use FKSDB\Authentication\SSO\GlobalSession;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Localization\UnsupportedLanguageException;
@@ -33,19 +34,19 @@ use FKSDB\Utils\Utils;
  */
 final class AuthenticationPresenter extends BasePresenter {
 
-    const PARAM_GSID = 'gsid';
+    public const PARAM_GSID = 'gsid';
     /** @const Indicates that page is accessed via dispatch from the login page. */
-    const PARAM_DISPATCH = 'dispatch';
+    public const PARAM_DISPATCH = 'dispatch';
     /** @const Reason why the user has been logged out. */
-    const PARAM_REASON = 'reason';
+    public const PARAM_REASON = 'reason';
     /** @const Various modes of authentication. */
-    const PARAM_FLAG = 'flag';
+    public const PARAM_FLAG = 'flag';
     /** @const User is shown the login form if he's not authenticated. */
-    const FLAG_SSO_LOGIN = Authentication::FLAG_SSO_LOGIN;
+    public const FLAG_SSO_LOGIN = Authentication::FLAG_SSO_LOGIN;
     /** @const Only check of authentication with subsequent backlink redirect. */
-    const FLAG_SSO_PROBE = 'ssop';
-    const REASON_TIMEOUT = '1';
-    const REASON_AUTH = '2';
+    public const FLAG_SSO_PROBE = 'ssop';
+    public const REASON_TIMEOUT = '1';
+    public const REASON_AUTH = '2';
 
     /** @persistent */
     public $backlink = '';
@@ -54,7 +55,7 @@ final class AuthenticationPresenter extends BasePresenter {
     public $flag;
 
     private ServiceAuthToken $serviceAuthToken;
-
+    /** @var GlobalSession */
     private IGlobalSession $globalSession;
 
     private PasswordAuthenticator $passwordAuthenticator;
@@ -236,6 +237,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @param Form $form
      * @throws AbortException
+     * @throws Exception
      */
     private function loginFormSubmitted(Form $form): void {
         $values = $form->getValues();
@@ -283,8 +285,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * @param ModelLogin|null $login
-     * @throws AbortException
-     * @throws Exception
+     * @return void
      */
     private function loginBackLinkRedirect($login = null): void {
         if (!$this->backlink) {
@@ -332,7 +333,7 @@ final class AuthenticationPresenter extends BasePresenter {
         $this->redirect(':Core:Dispatch:');
     }
 
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         $this->getPageStyleContainer()->styleId = 'login';
         $this->getPageStyleContainer()->mainContainerClassNames = [];
         parent::beforeRender();

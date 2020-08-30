@@ -52,7 +52,7 @@ class FyziklaniSubmitEditComponent extends EditEntityFormComponent {
     }
 
     /**
-     * @param AbstractModelSingle|ModelFyziklaniSubmit $model
+     * @param AbstractModelSingle|ModelFyziklaniSubmit|null $model
      * @return void
      * @throws BadTypeException
      */

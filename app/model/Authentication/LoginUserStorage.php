@@ -26,13 +26,13 @@ use Nette\Security\IIdentity;
 class LoginUserStorage extends UserStorage {
     /** @const HTTP GET parameter holding control information for the SSO */
 
-    const PARAM_SSO = 'sso';
+    public const PARAM_SSO = 'sso';
 
     /** @const Value meaning the user is not centally authneticated. */
-    const SSO_AUTHENTICATED = 'a';
+    public const SSO_AUTHENTICATED = 'a';
 
     /** @const Value meaning the user is not centally authneticated. */
-    const SSO_UNAUTHENTICATED = 'ua';
+    public const SSO_UNAUTHENTICATED = 'ua';
 
     private ServiceLogin $serviceLogin;
 
@@ -158,7 +158,7 @@ class LoginUserStorage extends UserStorage {
     public function setIdentity(IIdentity $identity = null) {
         $this->identity = $identity;
         if ($identity instanceof ModelLogin) {
-            $identity = new Identity($identity->getID());
+            $identity = new Identity($identity->getId());
         }
         return parent::setIdentity($identity);
     }

@@ -13,13 +13,11 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
-use Nette\Utils\JsonException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -193,8 +191,6 @@ class ApplicationComponent extends BaseComponent {
      * @param Form $form
      * @param null $explicitTransitionName
      * @throws AbortException
-     *
-     * @throws JsonException
      */
     public function handleSubmit(Form $form, $explicitTransitionName = null): void {
         $this->execute($form, $explicitTransitionName);
@@ -203,7 +199,6 @@ class ApplicationComponent extends BaseComponent {
     /**
      * @param string $transitionName
      * @throws AbortException
-     * @throws JsonException
      */
     public function handleTransition($transitionName): void {
         $this->execute(null, $transitionName);
@@ -229,11 +224,7 @@ class ApplicationComponent extends BaseComponent {
         }
     }
 
-    /**
-     * @return Machine
-     *
-     */
-    private function getMachine() {
+    private function getMachine(): Machine {
         return $this->handler->getMachine();
     }
 

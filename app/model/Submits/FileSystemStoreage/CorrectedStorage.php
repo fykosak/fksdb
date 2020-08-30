@@ -17,21 +17,16 @@ use UnexpectedValueException;
  */
 class CorrectedStorage implements ISubmitStorage {
     /** Characters delimiting name and metadata in filename. */
-    const DELIMITER = '__';
-
-    /** @const File extension that marks final file extension.
-     *         It's a bit dangerous that only supported filetype is hard-coded in this class
-     */
-    const EXTENSION = '.pdf';
+    public const DELIMITER = '__';
 
     /** @var string  Absolute path to (existing) directory of the storage. */
-    private $root;
+    private string $root;
 
     /**
      * Sprintf string for arguments (in order): contestName, year, series, label
      * @var string
      */
-    private $directoryMask;
+    private string $directoryMask;
 
     /**
      * Sprintf string for arguments (in order): contestantName, contestName, year, series, label.
@@ -39,13 +34,10 @@ class CorrectedStorage implements ISubmitStorage {
      *
      * @var string
      */
-    private $filenameMask;
+    private string $filenameMask;
 
     /** @var array   contestId => contest name */
-    private $contestMap;
-
-    /** @var array of IStorageProcessing */
-    private $processings = [];
+    private array $contestMap;
 
     /**
      * FilesystemSubmitStorage constructor.
@@ -54,15 +46,19 @@ class CorrectedStorage implements ISubmitStorage {
      * @param string $filenameMask
      * @param array $contestMap
      */
-    public function __construct($root, $directoryMask, $filenameMask, $contestMap) {
+    public function __construct(string $root, string $directoryMask, string $filenameMask, array $contestMap) {
         $this->root = $root;
         $this->directoryMask = $directoryMask;
         $this->filenameMask = $filenameMask;
         $this->contestMap = $contestMap;
     }
 
+    /**
+     * @param IStorageProcessing $processing
+     * @throws NotImplementedException
+     */
     public function addProcessing(IStorageProcessing $processing): void {
-        $this->processings[] = $processing;
+        throw new NotImplementedException();
     }
 
     /**
@@ -91,16 +87,11 @@ class CorrectedStorage implements ISubmitStorage {
      * @param ModelSubmit $submit
      * @throws NotImplementedException
      */
-    public function storeFile($filename, ModelSubmit $submit): void {
+    public function storeFile(string $filename, ModelSubmit $submit): void {
         throw new NotImplementedException();
     }
 
-    /**
-     * @param ModelSubmit $submit
-     * @param int $type
-     * @return null|string
-     */
-    public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED): ?string {
+    public function retrieveFile(ModelSubmit $submit, int $type = self::TYPE_PROCESSED): ?string {
         $dir = $this->root . DIRECTORY_SEPARATOR . $this->createDirname($submit);
 
         try {

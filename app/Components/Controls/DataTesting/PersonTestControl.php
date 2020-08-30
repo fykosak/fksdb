@@ -122,7 +122,7 @@ class PersonTestControl extends BaseComponent {
             foreach ($this->tests as $test) {
                 $test->run($logger, $model);
             }
-            $personLog = \array_filter($logger->getMessages(), function (TestLog $simpleLog) {
+            $personLog = \array_filter($logger->getMessages(), function (TestLog $simpleLog): bool {
                 return \in_array($simpleLog->getLevel(), $this->levels);
             });
             if (\count($personLog)) {

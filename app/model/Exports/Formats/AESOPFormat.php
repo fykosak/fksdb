@@ -3,7 +3,6 @@
 namespace FKSDB\Exports\Formats;
 
 use FKSDB\StoredQuery\StoredQuery;
-use Nette\Application\IResponse;
 use FKSDB\WebService\IXMLNodeSerializer;
 
 /**
@@ -13,7 +12,7 @@ use FKSDB\WebService\IXMLNodeSerializer;
  */
 class AESOPFormat extends XSLFormat {
 
-    const ID_SCOPE = 'fksdb.person_id';
+    public const ID_SCOPE = 'fksdb.person_id';
 
     /**
      * AESOPFormat constructor.
@@ -21,7 +20,7 @@ class AESOPFormat extends XSLFormat {
      * @param string $xslFile
      * @param IXMLNodeSerializer $xmlSerializer
      */
-    public function __construct(StoredQuery $storedQuery, $xslFile, IXMLNodeSerializer $xmlSerializer) {
+    public function __construct(StoredQuery $storedQuery, string $xslFile, IXMLNodeSerializer $xmlSerializer) {
         parent::__construct($storedQuery, $xslFile, $xmlSerializer);
 
         $this->setParameters([
@@ -31,10 +30,7 @@ class AESOPFormat extends XSLFormat {
         ]);
     }
 
-    /**
-     * @return PlainTextResponse
-     */
-    public function getResponse(): IResponse {
+    public function getResponse(): PlainTextResponse {
         $response = parent::getResponse();
 
         $parameters = $this->getParameters();

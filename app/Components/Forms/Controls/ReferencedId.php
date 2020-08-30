@@ -14,7 +14,6 @@ use FKSDB\Utils\Promise;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IContainer;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 
@@ -181,10 +180,11 @@ class ReferencedId extends HiddenField {
 
     /**
      * @param bool $value
-     * @return BaseControl|void
+     * @return static
      */
-    public function setDisabled($value = true) {
+    public function setDisabled($value = true): self {
         $this->getReferencedContainer()->setDisabled($value);
+        return $this;
     }
 
     private function createPromise(): void {

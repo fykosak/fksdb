@@ -27,7 +27,7 @@ abstract class EvaluatedExpression {
 
     /**
      * @param array ...$args
-     * @return bool
+     * @return mixed
      */
     abstract public function __invoke(...$args);
 

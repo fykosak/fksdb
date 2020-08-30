@@ -28,7 +28,6 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
     /** @var Holder */
     private $holder;
 
-
     /**
      * BornCheck constructor.
      * @param ServiceSchool $serviceSchool
@@ -60,7 +59,7 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
             $schoolControl = $schoolControls[$i];
             $personControl = $personControls[$i];
             $studyYearControl = $studyYearControls[$i];
-            $control->addCondition(~$form::FILLED)
+            $control->addCondition(Form::BLANK)
                 ->addRule(function () use ($schoolControl, $personControl, $studyYearControl, $form, $msg) {
                     if (!$personControl->getValue()) {
                         return true;
@@ -88,12 +87,7 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
 //                };
     }
 
-    /**
-     * @param IControl $studyYearControl
-     * @param IControl $personControl
-     * @return int|null
-     */
-    private function getStudyYear($studyYearControl, $personControl) {
+    private function getStudyYear(IControl $studyYearControl, IControl $personControl): ?int {
         if ($studyYearControl->getValue()) {
             return $studyYearControl->getValue();
         }
@@ -106,12 +100,7 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
         return $personHistory ? $personHistory->study_year : null;
     }
 
-    /**
-     * @param IControl $schoolControl
-     * @param IControl $personControl
-     * @return int
-     */
-    private function getSchoolId($schoolControl, $personControl) {
+    private function getSchoolId(IControl $schoolControl, IControl $personControl): int {
         if ($schoolControl->getValue()) {
             return $schoolControl->getValue();
         }
@@ -123,11 +112,7 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
         return $school->school_id;
     }
 
-    /**
-     * @param int|null $studyYear
-     * @return bool
-     */
-    private function isStudent($studyYear): bool {
+    private function isStudent(?int $studyYear): bool {
         return ($studyYear === null) ? false : true;
     }
 }

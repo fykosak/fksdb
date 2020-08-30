@@ -2,6 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
+use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\AbortException;
 use Tracy\Debugger;
@@ -18,6 +19,12 @@ class WebServicePresenter extends BasePresenter {
 
     public function injectSoapServer(\SoapServer $server): void {
         $this->server = $server;
+    }
+
+    protected function startupLangChooser(): void {
+        /** @var LanguageChooser $control */
+        $control = $this->getComponent('languageChooser');
+        $control->init(false);
     }
 
     /**

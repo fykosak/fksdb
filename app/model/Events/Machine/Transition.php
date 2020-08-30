@@ -21,10 +21,10 @@ use Nette\SmartObject;
 class Transition {
     use SmartObject;
 
-    const TYPE_SUCCESS = ILogger::SUCCESS;
-    const TYPE_WARNING = ILogger::WARNING;
-    const TYPE_DANGEROUS = ILogger::ERROR;
-    const TYPE_DEFAULT = 'secondary';
+    public const TYPE_SUCCESS = ILogger::SUCCESS;
+    public const TYPE_WARNING = ILogger::WARNING;
+    public const TYPE_DANGEROUS = ILogger::ERROR;
+    public const TYPE_DEFAULT = 'secondary';
 
     private BaseMachine $baseMachine;
 
@@ -55,7 +55,7 @@ class Transition {
     /**
      * Transition constructor.
      * @param string $mask
-     * @param string $label
+     * @param string|null $label
      * @param string $type
      */
     public function __construct(string $mask, ?string $label = null, string $type = self::TYPE_DEFAULT) {

@@ -12,6 +12,7 @@ use Nette\Database\IConventions;
 
 /**
  * @author Michal Červeňák <miso@fykos.cz>
+ * @method ModelFyziklaniTeam|null findByPrimary($key)
  */
 class ServiceFyziklaniTeam extends AbstractServiceSingle {
 

@@ -23,11 +23,11 @@ use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
  */
 class StoredQueryFactory implements IXMLNodeSerializer {
 
-    const PARAM_CONTEST_ID = 'contest_id';
-    const PARAM_CONTEST = 'contest';
-    const PARAM_YEAR = 'year';
-    const PARAM_SERIES = 'series';
-    const PARAM_AC_YEAR = 'ac_year';
+    public const PARAM_CONTEST_ID = 'contest_id';
+    public const PARAM_CONTEST = 'contest';
+    public const PARAM_YEAR = 'year';
+    public const PARAM_SERIES = 'series';
+    public const PARAM_AC_YEAR = 'ac_year';
 
     private Connection $connection;
 
@@ -47,7 +47,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
      * @param ISeriesPresenter $presenter
      * @param string $sql
      * @param ModelStoredQueryParameter[]|StoredQueryParameter[] $parameters
-     * @param string $postProcessingClass
+     * @param string|null $postProcessingClass
      * @return StoredQuery
      * @throws BadRequestException
      */

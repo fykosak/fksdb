@@ -15,11 +15,7 @@ use Nette\Forms\IControl;
  */
 class PasswordFactory extends AbstractFactory {
 
-    /**
-     * @param Field $field
-     * @return TextInput
-     */
-    public function createComponent(Field $field): IComponent {
+    public function createComponent(Field $field): TextInput {
         $element = new TextInput($field->getLabel());
         $element->setType('password');
         $element->setOption('description', $field->getDescription());

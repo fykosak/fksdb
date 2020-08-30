@@ -20,9 +20,9 @@ use Tracy\Debugger;
  */
 class Handler {
 
-    const DEBUGGER_LOG_PRIORITY = 'fyziklani-info';
+    public const DEBUGGER_LOG_PRIORITY = 'fyziklani-info';
 
-    const LOG_FORMAT = 'Submit %d was %s by %s';
+    public const LOG_FORMAT = 'Submit %d was %s by %s';
 
     private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
 
@@ -80,13 +80,10 @@ class Handler {
         $submit = $this->serviceFyziklaniSubmit->findByTaskAndTeam($task, $team);
         if (is_null($submit)) { // novo zadaný
             $this->createSubmit($logger, $task, $team, $points);
-            return;
         } elseif (!$submit->isChecked()) { // check bodovania
             $this->checkSubmit($logger, $submit, $points);
-            return;
         } elseif (is_null($submit->points)) { // ak bol zmazaný
             $this->changePoints($logger, $submit, $points);
-            return;
         } else {
             throw new TaskCodeException(\sprintf(_('Úloha je zadaná a overená.')));
         }

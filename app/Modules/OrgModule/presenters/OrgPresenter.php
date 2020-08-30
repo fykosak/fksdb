@@ -11,13 +11,11 @@ use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
 use FKSDB\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 
 /**
  * Class OrgPresenter
- * *
- * @method ModelOrg traitGetEntity()
+ *
  */
 class OrgPresenter extends BasePresenter {
     use EntityPresenterTrait {
@@ -32,7 +30,6 @@ class OrgPresenter extends BasePresenter {
 
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws BadTypeException
@@ -43,7 +40,6 @@ class OrgPresenter extends BasePresenter {
 
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws BadTypeException
@@ -71,12 +67,12 @@ class OrgPresenter extends BasePresenter {
 
     /**
      * @return ModelOrg
-     *
      * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
      * @throws BadTypeException
+     * @throws ModelNotFoundException
      */
     public function getEntity(): ModelOrg {
+        /** @var ModelOrg $entity */
         $entity = $this->traitGetEntity();
         if ($entity->contest_id != $this->getSelectedContest()->contest_id) {
             throw new ForbiddenRequestException(_('Editace organizátora mimo zvolený seminář.'));
@@ -86,7 +82,6 @@ class OrgPresenter extends BasePresenter {
 
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws BadTypeException

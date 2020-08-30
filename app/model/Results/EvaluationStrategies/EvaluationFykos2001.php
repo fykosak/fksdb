@@ -42,7 +42,6 @@ class EvaluationFykos2001 extends EvaluationStrategy {
                 return [null, 4];
             default:
                 throw new Nette\InvalidArgumentException('Invalid category ' . $category->id);
-                break;
         }
     }
 

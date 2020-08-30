@@ -19,35 +19,30 @@ use Nette\Utils\Html;
  */
 class AutocompleteSelectBox extends TextBase {
 
-    const SELECTOR_CLASS = 'autocomplete-select';
-    const PARAM_SEARCH = 'acQ';
-    const PARAM_NAME = 'acName';
-    const INTERNAL_DELIMITER = ',';
-    const META_ELEMENT_SUFFIX = '__meta'; // must be same with constant in autocompleteSelect.js
+    private const SELECTOR_CLASS = 'autocomplete-select';
+    private const PARAM_NAME = 'acName';
+    private const INTERNAL_DELIMITER = ',';
+    private const META_ELEMENT_SUFFIX = '__meta'; // must be same with constant in autocompleteSelect.js
 
-    /** @var IDataProvider */
-
-    private $dataProvider;
+    private IDataProvider $dataProvider;
 
     private bool $ajax;
 
-    /** @var bool */
-    private $multiSelect = false;
+    private bool $multiSelect = false;
 
-    /** @var string */
-    private $ajaxUrl;
+    private string $ajaxUrl;
 
     /**
      * Body of JS function(ul, item) returning jQuery element.
      *
      * @see http://api.jqueryui.com/autocomplete/#method-_renderItem
-     * @var string
+     * @var string|null
      */
     private ?string $renderMethod;
-    /** @var bool */
-    private $attachedJSON = false;
-    /** @var bool */
-    private $attachedJS = false;
+
+    private bool $attachedJSON = false;
+
+    private bool $attachedJS = false;
 
     /**
      * AutocompleteSelectBox constructor.
@@ -78,8 +73,8 @@ class AutocompleteSelectBox extends TextBase {
         $this->renderMethod = $renderMethod;
     }
 
-    public function getDataProvider(): IDataProvider {
-        return $this->dataProvider;
+    public function getDataProvider(): ?IDataProvider {
+        return $this->dataProvider ?? null;
     }
 
     public function getRenderMethod(): ?string {
@@ -102,10 +97,7 @@ class AutocompleteSelectBox extends TextBase {
         $this->dataProvider->setDefaultValue($this->getValue());
     }
 
-    /**
-     * @return Html
-     */
-    public function getControl() {
+    public function getControl(): Html {
         $control = parent::getControl();
         $control->addAttributes([
             'data-ac' => (int)true,
@@ -147,7 +139,7 @@ class AutocompleteSelectBox extends TextBase {
         return $control;
     }
 
-    public function loadHttpData() {
+    public function loadHttpData(): void {
         $path = explode('[', strtr(str_replace(['[]', ']'], '', $this->getHtmlName()), '.', '_'));
         $metaPath = $path;
         $metaPath[count($metaPath) - 1] .= self::META_ELEMENT_SUFFIX;
@@ -182,7 +174,7 @@ class AutocompleteSelectBox extends TextBase {
         } else {
             $this->value = $value;
         }
-        if ($this->dataProvider) {
+        if (isset($this->dataProvider)) {
             $this->dataProvider->setDefaultValue($this->value);
         }
         return $this;
@@ -193,7 +185,7 @@ class AutocompleteSelectBox extends TextBase {
      * @return BaseControl
      */
     public function setDefaultValue($value) {
-        if ($this->dataProvider) {
+        if (isset($this->dataProvider)) {
             $this->dataProvider->setDefaultValue($value);
         }
         return parent::setDefaultValue($value);
@@ -206,11 +198,7 @@ class AutocompleteSelectBox extends TextBase {
         return $this->value;
     }
 
-    /**
-     * @param bool $multiSelect
-     * @return void
-     */
-    public function setMultiSelect(bool $multiSelect) {
+    public function setMultiSelect(bool $multiSelect): void {
         $this->multiSelect = $multiSelect;
     }
 }

@@ -7,6 +7,7 @@ use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\Application;
 use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
+use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 use Nette\Localization\ITranslator;
@@ -53,33 +54,33 @@ class MailTemplateFactory {
     }
 
     /**
-     * @param string $lang ISO 639-1
+     * @param string|null $lang ISO 639-1
      * @param array $data
      * @return ITemplate
      * @throws UnsupportedLanguageException
      */
-    public function createLoginInvitation(string $lang = null, array $data = []): ITemplate {
+    public function createLoginInvitation(?string $lang, array $data): ITemplate {
         return $this->createWithParameters('loginInvitation', $lang, $data);
     }
 
     /**
-     * @param string $lang ISO 639-1
+     * @param string|null $lang ISO 639-1
      * @param array $data
      * @return ITemplate
      * @throws UnsupportedLanguageException
      */
-    public function createPasswordRecovery(string $lang = null, array $data = []): ITemplate {
+    public function createPasswordRecovery(?string $lang, array $data): ITemplate {
         return $this->createWithParameters('passwordRecovery', $lang, $data);
     }
 
     /**
      * @param string $templateFile
-     * @param string $lang ISO 639-1
+     * @param string|null $lang ISO 639-1
      * @param array $data
      * @return ITemplate
      * @throws UnsupportedLanguageException
      */
-    public function createWithParameters(string $templateFile, string $lang = null, array $data = []): ITemplate {
+    public function createWithParameters(string $templateFile, ?string $lang, array $data = []): ITemplate {
         $template = $this->createFromFile($templateFile, $lang);
         $template->setTranslator($this->translator);
         foreach ($data as $key => $value) {
@@ -90,11 +91,11 @@ class MailTemplateFactory {
 
     /**
      * @param string $filename
-     * @param string $lang ISO 639-1
+     * @param string|null $lang ISO 639-1
      * @return ITemplate
      * @throws UnsupportedLanguageException
      */
-    final public function createFromFile(string $filename, string $lang = null): ITemplate {
+    final public function createFromFile(string $filename, ?string $lang): ITemplate {
         /** @var Presenter $presenter */
         $presenter = $this->application->getPresenter();
         if (($lang === null) && !$presenter instanceof BasePresenter) {
@@ -111,7 +112,11 @@ class MailTemplateFactory {
         }
         $template = $presenter->getTemplateFactory()->createTemplate();
         $template->setFile($file);
-        $template->control = $template->_control = $control;
+
+        if ($template instanceof Template) {
+            $template->getLatte()->addProvider('uiControl', $control);
+        }
+        $template->control = $control;
         $template->baseUri = $this->request->getUrl()->getBaseUrl();
         return $template;
     }

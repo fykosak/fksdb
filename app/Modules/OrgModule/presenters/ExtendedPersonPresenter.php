@@ -9,9 +9,8 @@ use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\AbstractServiceMulti;
-use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelContestant;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -28,8 +27,8 @@ use FKSDB\Persons\IExtendedPersonPresenter;
  *
  */
 abstract class ExtendedPersonPresenter extends EntityPresenter implements IExtendedPersonPresenter {
-    /** @var bool */
-    protected $sendEmail = true;
+
+    protected bool $sendEmail = true;
 
     private ReferencedPersonFactory $referencedPersonFactory;
 
@@ -68,21 +67,11 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         return Helpers::evalExpressionArray($this->getContext()->getParameters()[$contestName][$this->fieldsDefinition], $this->getContext());
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     */
-    abstract protected function appendExtendedContainer(Form $form);
+    abstract protected function appendExtendedContainer(Form $form): void;
 
-    /**
-     * @return AbstractServiceMulti|AbstractServiceSingle
-     */
-    abstract protected function getORMService();
+    abstract protected function getORMService(): IService;
 
-    /**
-     * @return null
-     */
-    protected function getAcYearFromModel() {
+    protected function getAcYearFromModel(): ?int {
         return null;
     }
 
@@ -151,7 +140,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @param int $id
      * @return AbstractModelSingle
      */
-    protected function loadModel($id) {
+    protected function loadModel($id): ?IModel {
         return $this->getORMService()->findByPrimary($id);
     }
 }

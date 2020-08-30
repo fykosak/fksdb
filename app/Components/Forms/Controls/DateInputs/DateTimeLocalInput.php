@@ -7,12 +7,12 @@ namespace FKSDB\Components\Forms\Controls\DateInputs;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class DateTimeLocalInput extends AbstractDateInput {
-
-    protected function getFormat(): string {
-        return 'Y-m-d\TH:i:s';
-    }
-
-    protected function getType(): string {
-        return 'datetime-local';
+    /**
+     * DateTimeLocalInput constructor.
+     * @param null $label
+     * @param null $maxLength
+     */
+    public function __construct($label = null, $maxLength = null) {
+        parent::__construct('datetime-local', 'Y-m-d\TH:i:s', $label, $maxLength);
     }
 }

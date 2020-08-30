@@ -35,7 +35,6 @@ class EvaluationVyfuk2014 extends EvaluationStrategy {
                 return [null, 9];
             default:
                 throw new InvalidArgumentException('Invalid category ' . $category->id);
-                break;
         }
     }
 
@@ -60,7 +59,7 @@ class EvaluationVyfuk2014 extends EvaluationStrategy {
      * @param ModelCategory $category
      * @return int|null
      */
-    public function getTaskPoints(ActiveRow $task, ModelCategory $category) {
+    public function getTaskPoints(ActiveRow $task, ModelCategory $category): ?int {
         if ($task->label == '1' && $task->series < 7) {
             if (in_array($category->id, [
                 ModelCategory::CAT_ES_6,
@@ -80,7 +79,6 @@ class EvaluationVyfuk2014 extends EvaluationStrategy {
             case ModelCategory::CAT_ES_6:
             case ModelCategory::CAT_ES_7:
                 return "IF (s.raw_points IS NOT NULL, t.points, NULL)";
-                break;
             default:
                 return "IF (s.raw_points IS NOT NULL, IF (t.series < 7, IF (t.label IN ('1'), NULL, t.points), NULL), NULL)";
         }

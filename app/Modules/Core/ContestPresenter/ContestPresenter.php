@@ -85,7 +85,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
         return $this->getYearCalculator()->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         try {
             $contest = $this->getSelectedContest();
         } catch (BadRequestException $exception) {

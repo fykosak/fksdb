@@ -16,9 +16,9 @@ use Nette\Utils\Strings;
  */
 class DuplicateFinder {
 
-    const IDX_PERSON = 'person';
-    const IDX_SCORE = 'score';
-    const DIFFERENT_PATTERN = 'not-same';
+    public const IDX_PERSON = 'person';
+    public const IDX_SCORE = 'score';
+    public const DIFFERENT_PATTERN = 'not-same';
 
     private ServicePerson $servicePerson;
 
@@ -115,7 +115,7 @@ class DuplicateFinder {
      * @param ActiveRow|ModelPersonInfo $person
      * @return array
      */
-    private function getDifferentPersons(ActiveRow $person) {
+    private function getDifferentPersons(ActiveRow $person): array {
         if (!isset($person->duplicates)) {
             return [];
         }

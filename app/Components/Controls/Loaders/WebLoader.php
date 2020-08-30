@@ -11,9 +11,9 @@ use Nette\Application\UI\Control;
  */
 abstract class WebLoader extends Control {
 
-    const FILENAME = 'file';
-    const ATTRIBUTES = 'attr';
-    const UNTAGGED = '__untagged';
+    public const FILENAME = 'file';
+    public const ATTRIBUTES = 'attr';
+    public const UNTAGGED = '__untagged';
 
     private array $files = [];
 
