@@ -37,8 +37,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
     /** @var array */
     private $categoryNames;
 
-    /** @var int */
-    private $rulesVersion;
+    private int $rulesVersion;
 
     /**
      *
@@ -46,7 +45,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
      * @param YearCalculator $yearCalculator
      * @param ServiceSchool $serviceSchool
      */
-    public function __construct($rulesVersion, YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
+    public function __construct(int $rulesVersion, YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
 
@@ -73,16 +72,7 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
         }
     }
 
-    /**
-     * @param array $states
-     * @param ArrayHash $values
-     * @param Machine $machine
-     * @param Holder $holder
-     * @param ILogger $logger
-     * @param Form|null $form
-     * @return void
-     */
-    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null): void {
+    protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void {
         if (!isset($values['team'])) {
             return;
         }

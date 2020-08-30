@@ -73,7 +73,7 @@ class EventOrgFormComponent extends EditEntityFormComponent {
     }
 
     /**
-     * @param AbstractModelSingle|ModelEventOrg $model
+     * @param AbstractModelSingle|ModelEventOrg|null $model
      * @return void
      * @throws BadTypeException
      */

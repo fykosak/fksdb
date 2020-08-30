@@ -38,7 +38,7 @@ class NavigationFactory {
      * @param Presenter $ownPresenter
      * @param string $presenterName
      * @param string $action
-     * @param array $providedParams
+     * @param array|null $providedParams
      * @return Presenter|INavigablePresenter
      * @throws BadRequestException
      * @throws BadTypeException
@@ -54,7 +54,7 @@ class NavigationFactory {
     /**
      * @param Presenter $presenter
      * @param string $actionParams
-     * @param array $params
+     * @param array|null $params
      * @return array
      * @throws \ReflectionException
      */

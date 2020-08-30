@@ -3,7 +3,6 @@
 namespace FKSDB\Payment\Transition\Transitions;
 
 use FKSDB\Authorization\EventAuthorizator;
-use Closure;
 use Exception;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\DbNames;
@@ -101,7 +100,7 @@ class Fyziklani14Payment extends AbstractTransitionsGenerator {
         $transition->beforeExecuteCallbacks[] = $machine->getSymbolGenerator();
         $transition->beforeExecuteCallbacks[] = $machine->getPriceCalculator();
         /**
-         * @param IStateModel|ModelPayment $model
+         * @param IStateModel|ModelPayment|null $model
          */
         $transition->afterExecuteCallbacks[] = function (IStateModel $model = null) {
             $data = $this->emailData;
@@ -150,7 +149,7 @@ class Fyziklani14Payment extends AbstractTransitionsGenerator {
             }
         };
         /**
-         * @param IStateModel|ModelPayment $model
+         * @param IStateModel|ModelPayment|null $model
          */
         $transition->afterExecuteCallbacks[] = function (IStateModel $model = null) {
             $data = $this->emailData;

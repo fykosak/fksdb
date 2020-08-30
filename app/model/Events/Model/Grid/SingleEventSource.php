@@ -7,9 +7,11 @@ use FKSDB\Events\EventDispatchFactory;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Tables\MultiTableSelection;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Events\Model\Holder\Holder;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
@@ -32,7 +34,7 @@ class SingleEventSource implements IHolderSource {
     private Container $container;
 
     private EventDispatchFactory $eventDispatchFactory;
-    /** @var \FKSDB\ORM\Tables\MultiTableSelection|TypedTableSelection|\Nette\Database\Table\Selection */
+    /** @var MultiTableSelection|TypedTableSelection|Selection */
     private $primarySelection;
 
     private Holder $dummyHolder;

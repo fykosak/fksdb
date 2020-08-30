@@ -47,7 +47,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
      * @param ISeriesPresenter $presenter
      * @param string $sql
      * @param ModelStoredQueryParameter[]|StoredQueryParameter[] $parameters
-     * @param string $postProcessingClass
+     * @param string|null $postProcessingClass
      * @return StoredQuery
      * @throws BadRequestException
      */

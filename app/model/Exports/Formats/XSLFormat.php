@@ -18,17 +18,13 @@ use XSLTProcessor;
 class XSLFormat implements IExportFormat {
     use SmartObject;
 
-    /** @var StoredQuery */
-    private $storedQuery;
+    private StoredQuery $storedQuery;
 
-    /** @var array */
-    private $parameters = [];
+    private array $parameters = [];
 
-    /** @var string */
-    private $xslFile;
+    private string $xslFile;
 
-    /** @var IXMLNodeSerializer */
-    private $xmlSerializer;
+    private IXMLNodeSerializer $xmlSerializer;
 
     /**
      * XSLFormat constructor.
@@ -36,7 +32,7 @@ class XSLFormat implements IExportFormat {
      * @param string $xslFile
      * @param IXMLNodeSerializer $xmlSerializer
      */
-    public function __construct(StoredQuery $storedQuery, $xslFile, IXMLNodeSerializer $xmlSerializer) {
+    public function __construct(StoredQuery $storedQuery, string $xslFile, IXMLNodeSerializer $xmlSerializer) {
         $this->storedQuery = $storedQuery;
         $this->xslFile = $xslFile;
         $this->xmlSerializer = $xmlSerializer;
@@ -46,26 +42,15 @@ class XSLFormat implements IExportFormat {
         return $this->parameters;
     }
 
-    /**
-     * @param array $parameters
-     * @return void
-     */
-    public function setParameters(array $parameters) {
+    public function setParameters(array $parameters): void {
         $this->parameters = $parameters;
     }
 
-    /**
-     * @param array $parameters
-     * @return void
-     */
-    public function addParameters(array $parameters) {
+    public function addParameters(array $parameters): void {
         $this->parameters = array_merge($this->parameters, $parameters);
     }
 
-    /**
-     * @return PlainTextResponse
-     */
-    public function getResponse(): IResponse {
+    public function getResponse(): PlainTextResponse {
         // Prepare XSLT processor
         $xsl = new DOMDocument();
         $xsl->load($this->xslFile);

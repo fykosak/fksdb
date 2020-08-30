@@ -50,7 +50,7 @@ class EvaluationNullObject extends EvaluationStrategy {
     /**
      * @param ActiveRow $task
      * @param ModelCategory $category
-     * @return int|void
+     * @return int|null
      * @throws NotImplementedException
      */
     public function getTaskPoints(ActiveRow $task, ModelCategory $category): ?int {

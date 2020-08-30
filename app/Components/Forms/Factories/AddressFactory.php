@@ -66,7 +66,7 @@ class AddressFactory {
      * (Created because of KdybyReplicator.)
      *
      * @param AddressContainer $container
-     * @param IControl $conditioningField
+     * @param IControl|null $conditioningField
      * @param int $options
      */
     public function buildAddress(AddressContainer $container, int $options = 0, ?IControl $conditioningField = null): void {

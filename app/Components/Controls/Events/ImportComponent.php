@@ -17,7 +17,6 @@ use FKSDB\Utils\CSVParser;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
-use Nette\Utils\JsonException;
 use Tracy\Debugger;
 
 /**
@@ -91,7 +90,6 @@ class ImportComponent extends BaseComponent {
     /**
      * @param Form $form
      * @throws AbortException
-     * @throws JsonException
      * @throws NeonSchemaException
      */
     private function handleFormImport(Form $form): void {

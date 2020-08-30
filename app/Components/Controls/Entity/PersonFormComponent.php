@@ -141,7 +141,7 @@ class PersonFormComponent extends EditEntityFormComponent {
     }
 
     /**
-     * @param AbstractModelSingle|ModelPerson $model
+     * @param AbstractModelSingle|ModelPerson|null $model
      * @return void
      * @throws BadTypeException
      */

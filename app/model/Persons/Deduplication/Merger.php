@@ -89,10 +89,6 @@ class Merger {
         }
     }
 
-    /**
-     * @param bool $commit
-     * @return bool
-     */
     public function merge(?bool $commit = null): bool {
         // This workaround fixes inproper caching of referenced tables.
         $this->context->getConnection()->getCache()->clean([Cache::ALL => true]);

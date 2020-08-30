@@ -2,6 +2,7 @@
 
 namespace FKSDB\Modules\CoreModule;
 
+use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Github\EventFactory;
 use FKSDB\Github\Events\Event;
@@ -27,6 +28,12 @@ class GithubPresenter extends AuthenticatedPresenter {
 
     public function injectUpdater(Updater $updater): void {
         $this->updater = $updater;
+    }
+
+    protected function startupLangChooser(): void {
+        /** @var LanguageChooser $control */
+        $control = $this->getComponent('languageChooser');
+        $control->init(false);
     }
 
     public function getAllowedAuthMethods(): int {

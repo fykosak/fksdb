@@ -32,10 +32,10 @@ class ServiceAuthToken extends AbstractServiceSingle {
      *
      * @param ModelLogin $login
      * @param string $type
-     * @param \DateTimeInterface $until
+     * @param \DateTimeInterface|null $until
      * @param null $data
      * @param bool $refresh
-     * @param DateTime $since
+     * @param DateTime|null $since
      * @return ModelAuthToken
      * @throws ModelException
      */

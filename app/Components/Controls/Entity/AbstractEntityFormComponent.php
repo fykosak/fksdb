@@ -2,10 +2,7 @@
 
 namespace FKSDB\Components\Controls\Entity;
 
-use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\FormComponent;
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\Messages\Message;
 use Nette\Application\AbortException;

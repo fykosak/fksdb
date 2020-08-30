@@ -100,7 +100,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         $transition->beforeExecuteCallbacks[] = $machine->getSymbolGenerator();
         $transition->beforeExecuteCallbacks[] = $machine->getPriceCalculator();
         /**
-         * @param IStateModel|ModelPayment $model
+         * @param IStateModel|ModelPayment|null $model
          */
         $transition->afterExecuteCallbacks[] = function (IStateModel $model = null) {
             $data = $this->emailData;
@@ -149,7 +149,7 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
             }
         };
         /**
-         * @param IStateModel|ModelPayment $model
+         * @param IStateModel|ModelPayment|null $model
          */
         $transition->afterExecuteCallbacks[] = function (IStateModel $model = null) {
             $data = $this->emailData;
