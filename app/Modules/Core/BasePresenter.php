@@ -121,14 +121,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     protected function startup(): void {
         parent::startup();
-        $this->startupLangChooser();
-    }
-
-    /**
-     * @return void
-     * @throws UnsupportedLanguageException
-     */
-    protected function startupLangChooser(): void {
         /** @var LanguageChooser $control */
         $control = $this->getComponent('languageChooser');
         $control->init();
@@ -179,7 +171,7 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * @param string
      * @return string
      */
-    protected static function formatTitleMethod($view): string {
+    protected static function formatTitleMethod(string $view): string {
         return 'title' . $view;
     }
 

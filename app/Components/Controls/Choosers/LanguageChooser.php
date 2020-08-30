@@ -10,6 +10,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Http\IRequest;
 use Nette\Security\User;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -50,32 +51,30 @@ class LanguageChooser extends Chooser {
      * Preferred language of the page
      *
      * Should be final
-     * @param bool $redirect
      * @throws AbortException
      * @throws UnsupportedLanguageException
      * @note do not call in constructor, call after component is attached
      */
-    public function init(bool $redirect = true): void {
+    public function init(): void {
         if (!isset($this->language)) {
             $this->language = $this->selectLang();
             $this->getTranslator()->setLang($this->language);
         }
-        if ($redirect && $this->urlLang !== $this->language) {
-            $this->getPresenter()->redirect('this', ['lang' => $this->language]);
-        }
+      /*if ($redirect && $this->urlLang !== $this->language) {
+            $this->getPresenter()->forward('this', ['lang' => $this->language]);
+        }*/
     }
 
     /**
      * Preferred language of the page
      *
-     * @param bool $redirect
      * @return string ISO 639-1
      * Should be final
      * @throws AbortException
      * @throws UnsupportedLanguageException
      */
-    final public function getLang(bool $redirect = true): string {
-        $this->init($redirect);
+    final public function getLang(): string {
+        $this->init();
         return $this->language;
     }
 
@@ -102,7 +101,7 @@ class LanguageChooser extends Chooser {
     public function render(): void {
         $this->beforeRender();
         $this->template->modifiable = $this->isModifiable();
-        $this->template->currentLanguageName = self::$languageNames[$this->language] ?: null;
+        $this->template->currentLanguageName = self::$languageNames[$this->getLang()] ?: null;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.language.latte');
         $this->template->render();
     }
