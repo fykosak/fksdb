@@ -2,6 +2,7 @@
 
 namespace FKSDB\Modules\CoreModule;
 
+use FKSDB\Authentication\SSO\GlobalSession;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Localization\UnsupportedLanguageException;
@@ -54,7 +55,7 @@ final class AuthenticationPresenter extends BasePresenter {
     public $flag;
 
     private ServiceAuthToken $serviceAuthToken;
-
+    /** @var GlobalSession */
     private IGlobalSession $globalSession;
 
     private PasswordAuthenticator $passwordAuthenticator;
@@ -236,6 +237,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @param Form $form
      * @throws AbortException
+     * @throws Exception
      */
     private function loginFormSubmitted(Form $form): void {
         $values = $form->getValues();
@@ -283,8 +285,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * @param ModelLogin|null $login
-     * @throws AbortException
-     * @throws Exception
+     * @return void
      */
     private function loginBackLinkRedirect($login = null): void {
         if (!$this->backlink) {

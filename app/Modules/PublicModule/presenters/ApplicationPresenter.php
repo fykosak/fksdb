@@ -13,7 +13,6 @@ use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\GoneException;
 use FKSDB\Exceptions\NotFoundException;
-use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\AbstractModelMulti;
@@ -79,10 +78,8 @@ class ApplicationPresenter extends BasePresenter {
         switch ($this->getAction()) {
             case 'edit':
                 $this->forward('default', $this->getParameters());
-                break;
             case 'list':
                 $this->forward(':Core:MyApplications:default', $this->getParameters());
-                break;
         }
 
         parent::startup();
@@ -223,7 +220,6 @@ class ApplicationPresenter extends BasePresenter {
     /**
      * @return ApplicationComponent
      * @throws NeonSchemaException
-     * @throws NotImplementedException
      */
     protected function createComponentApplication(): ApplicationComponent {
         $logger = new MemoryLogger();

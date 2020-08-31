@@ -35,7 +35,6 @@ class EvaluationVyfuk2014 extends EvaluationStrategy {
                 return [null, 9];
             default:
                 throw new InvalidArgumentException('Invalid category ' . $category->id);
-                break;
         }
     }
 
@@ -80,7 +79,6 @@ class EvaluationVyfuk2014 extends EvaluationStrategy {
             case ModelCategory::CAT_ES_6:
             case ModelCategory::CAT_ES_7:
                 return "IF (s.raw_points IS NOT NULL, t.points, NULL)";
-                break;
             default:
                 return "IF (s.raw_points IS NOT NULL, IF (t.series < 7, IF (t.label IN ('1'), NULL, t.points), NULL), NULL)";
         }

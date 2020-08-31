@@ -54,7 +54,7 @@ class YearCalculator {
 
     /**
      * @param ActiveRow|ModelContest $contest
-     * @param int $year
+     * @param int|null $year
      * @return int
      * @throws InvalidArgumentException
      */

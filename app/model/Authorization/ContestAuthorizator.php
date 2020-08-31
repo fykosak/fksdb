@@ -88,7 +88,7 @@ class ContestAuthorizator {
     /**
      * @param ModelLogin $login
      * @param IResource|string $resource
-     * @param string $privilege
+     * @param string|null $privilege
      * @param ModelContest|int $contest
      * @return bool
      */

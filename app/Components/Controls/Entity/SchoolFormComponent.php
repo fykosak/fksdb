@@ -83,7 +83,7 @@ class SchoolFormComponent extends EditEntityFormComponent {
     }
 
     /**
-     * @param AbstractModelSingle|ModelSchool $model
+     * @param AbstractModelSingle|ModelSchool|null $model
      * @return void
      * @throws BadTypeException
      */

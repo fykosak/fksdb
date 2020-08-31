@@ -14,7 +14,6 @@ use FKSDB\Utils\Promise;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\IContainer;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\HiddenField;
 use Nette\Forms\Form;
 

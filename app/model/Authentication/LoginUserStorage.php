@@ -158,7 +158,7 @@ class LoginUserStorage extends UserStorage {
     public function setIdentity(IIdentity $identity = null) {
         $this->identity = $identity;
         if ($identity instanceof ModelLogin) {
-            $identity = new Identity($identity->getID());
+            $identity = new Identity($identity->getId());
         }
         return parent::setIdentity($identity);
     }

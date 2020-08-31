@@ -87,7 +87,6 @@ class PersonSearchContainer extends SearchContainer {
                 return function ($term): array {
                     return ['person_info' => ['email' => $term]];
                 };
-                break;
             case self::SEARCH_ID:
                 return function (): array {
                     return [];

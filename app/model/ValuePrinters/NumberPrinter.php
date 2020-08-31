@@ -27,7 +27,7 @@ class NumberPrinter extends AbstractValuePrinter {
      * @param string|null $prefix
      * @param string|null $suffix
      * @param int $decimal
-     * @param string $nullValueMode
+     * @param string|null $nullValueMode
      */
     public function __construct(?string $prefix, ?string $suffix, int $decimal = 2, ?string $nullValueMode = self::NULL_VALUE_NOT_SET) {
         $this->nullValueMode = $nullValueMode;

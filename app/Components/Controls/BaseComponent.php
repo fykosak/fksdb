@@ -7,7 +7,6 @@ use Nette\Application\UI\Control;
 use Nette\Application\UI\ITemplate;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\DI\Container;
-use Nette\Localization\ITranslator;
 
 /**
  * Class BaseComponent
