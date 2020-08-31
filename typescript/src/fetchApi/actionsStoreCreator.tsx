@@ -1,4 +1,4 @@
-import {  Response2 } from '@fetchApi/interfaces';
+import { Response2 } from '@fetchApi/interfaces';
 import StoreCreator from '@shared/components/storeCreator';
 import StoreLoader from '@shared/components/storeLoader';
 import * as React from 'react';
@@ -8,9 +8,7 @@ import {
 } from 'redux';
 
 interface OwnProps {
-    storeMap: {
-        [accessKey: string]: Response2<any>;
-    };
+    storeMap: Response2<any>;
     preloadState?: PreloadedState<any>;
     app: Reducer<any, any>;
 }

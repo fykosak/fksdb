@@ -19,7 +19,7 @@ export const submitStart = (dispatch: Dispatch<Action<string>>, values: SubmitFo
         ...values,
         code: getFullCode(values.code),
     };
-    return dispatchFetch<SubmitFormRequest>(url, ACCESS_KEY, dispatch, JSON.stringify(data), () => {
+    return dispatchFetch<SubmitFormRequest>(url, dispatch, JSON.stringify(data), () => {
         dispatch(reset(FORM_NAME));
     });
 };
