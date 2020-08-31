@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
 use FKSDB\Components\React\AjaxComponent;
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Fyziklani\Submit\HandlerFactory;
 use FKSDB\Modules\Core\BasePresenter;
@@ -75,7 +74,6 @@ class TaskCodeInput extends AjaxComponent {
 
     /**
      * @return void
-     * @throws BadTypeException
      * @throws AbortException
      */
     public function handleSave(): void {

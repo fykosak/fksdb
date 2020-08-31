@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Components\Control\AjaxUpload\AjaxUpload;
+use FKSDB\Components\Control\AjaxSubmit\SubmitContainer;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
@@ -37,35 +37,35 @@ class SubmitPresenter extends BasePresenter {
 
     private ServiceSubmit $submitService;
 
+    private ServiceSubmitQuizQuestion $submitQuizQuestionService;
+
+    private UploadedStorage $uploadedSubmitStorage;
+
+    private ServiceTask $taskService;
+
+    private ServiceQuizQuestion $quizQuestionService;
+
+    private SubmitHandlerFactory $submitHandlerFactory;
+
     public function injectSubmitService(ServiceSubmit $submitService): void {
         $this->submitService = $submitService;
     }
-
-    private ServiceSubmitQuizQuestion $submitQuizQuestionService;
 
     public function injectSubmitQuizQuestionService(ServiceSubmitQuizQuestion $submitQuizQuestionService): void {
         $this->submitQuizQuestionService = $submitQuizQuestionService;
     }
 
-    private UploadedStorage $uploadedSubmitStorage;
-
     public function injectSubmitUploadedStorage(UploadedStorage $filesystemUploadedSubmitStorage): void {
         $this->uploadedSubmitStorage = $filesystemUploadedSubmitStorage;
     }
-
-    private ServiceTask $taskService;
 
     public function injectTaskService(ServiceTask $taskService): void {
         $this->taskService = $taskService;
     }
 
-    private ServiceQuizQuestion $quizQuestionService;
-
     public function injectQuizQuestionService(ServiceQuizQuestion $quizQuestionService): void {
         $this->quizQuestionService = $quizQuestionService;
     }
-
-    private SubmitHandlerFactory $submitHandlerFactory;
 
     public function injectSubmitHandlerFactory(SubmitHandlerFactory $submitHandlerFactory): void {
         $this->submitHandlerFactory = $submitHandlerFactory;
@@ -76,7 +76,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function authorizedDefault() {
+    public function authorizedDefault(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest()));
     }
 
@@ -84,13 +84,17 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function authorizedAjax() {
+    public function authorizedAjax(): void {
         $this->authorizedDefault();
     }
 
     /* ********************** TITLE **********************/
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Odevzdat řešení'), 'fa fa-cloud-upload'));
+        $this->setPageTitle(new PageTitle(_('Submit a solution'), 'fa fa-cloud-upload'));
+    }
+
+    public function titleList(): void {
+        $this->setPageTitle(new PageTitle(_('Submitted solutions'), 'fa fa-cloud-upload'));
     }
 
     public function titleAjax(): void {
@@ -102,7 +106,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws GoneException
      * @deprecated
      */
-    public function actionDownload() {
+    public function actionDownload(): void {
         throw new GoneException('');
     }
 
@@ -110,7 +114,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function renderDefault() {
+    public function renderDefault(): void {
         $this->template->hasTasks = count($this->getAvailableTasks()) > 0;
         $this->template->canRegister = false;
         $this->template->hasForward = false;
@@ -127,6 +131,14 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
+     */
+    public function renderAjax(): void {
+        $this->template->availableTasks = $this->getAvailableTasks();
+    }
+
+    /**
      * @return FormControl
      * @throws BadTypeException
      * @throws ForbiddenRequestException
@@ -135,22 +147,21 @@ class SubmitPresenter extends BasePresenter {
         $control = new FormControl();
         $form = $control->getForm();
 
-        $prevDeadline = null;
         $taskIds = [];
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         $personHistory = $login->getPerson()->getHistory($this->getSelectedAcademicYear());
         $studyYear = ($personHistory && isset($personHistory->study_year)) ? $personHistory->study_year : null;
         if ($studyYear === null) {
-            $this->flashMessage(_('Řešitel nemá vyplněn ročník, nebudou dostupné všechny úlohy.'));
+            $this->flashMessage(_('Contestant is missing study year. Not all tasks are thus available.'));
         }
+        $prevDeadline = null;
         /** @var ModelTask $task */
         foreach ($this->getAvailableTasks() as $task) {
-            $questions = $this->quizQuestionService->getTable();
-            $questions->where('task_id', $task->task_id);
+            $questions = $this->quizQuestionService->getTable()->where('task_id', $task->task_id);
 
-            if ($task->submit_deadline != $prevDeadline) {
-                $form->addGroup(sprintf(_('Termín %s'), $task->submit_deadline));
+            if ($task->submit_deadline !== $prevDeadline) {
+                $form->addGroup(sprintf(_('Deadline %s'), $task->submit_deadline));
             }
             $submit = $this->submitService->findByContestant($this->getContestant()->ct_id, $task->task_id);
             if ($submit && $submit->source == ModelSubmit::SOURCE_POST) {
@@ -163,15 +174,15 @@ class SubmitPresenter extends BasePresenter {
                 $upload = $container->addUpload('file', $task->getFQName());
                 $conditionedUpload = $upload
                     ->addCondition(Form::FILLED)
-                    ->addRule(Form::MIME_TYPE, _('Lze nahrávat pouze PDF soubory.'), 'application/pdf'); //TODO verify this check at production server
+                    ->addRule(Form::MIME_TYPE, _('Only PDF files are accepted.'), 'application/pdf'); //TODO verify this check at production server
 
                 if (!in_array($studyYear, array_keys($task->getStudyYears()))) {
-                    $upload->setOption('description', _('Úloha není určena pro Tvou kategorii.'));
+                    $upload->setOption('description', _('Task is not for your category.'));
                     $upload->setDisabled();
                 }
 
                 if ($submit && $this->uploadedSubmitStorage->fileExists($submit)) {
-                    $overwrite = $container->addCheckbox('overwrite', _('Přepsat odeslané řešení.'));
+                    $overwrite = $container->addCheckbox('overwrite', _('Overwrite submitted solutions.'));
                     $conditionedUpload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(Form::BLANK, _('Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.'));
                 }
             } else {
@@ -202,7 +213,7 @@ class SubmitPresenter extends BasePresenter {
             $form->addHidden('tasks', implode(',', $taskIds));
 
             $form->setCurrentGroup();
-            $form->addSubmit('upload', _('Odeslat'));
+            $form->addSubmit('upload', _('Submit'));
             $form->onSuccess[] = function (Form $form) {
                 $this->handleUploadFormSuccess($form);
             };
@@ -213,14 +224,6 @@ class SubmitPresenter extends BasePresenter {
         return $control;
     }
 
-    /**
-     * @return AjaxUpload
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
-    protected function createComponentAjaxUpload(): AjaxUpload {
-        return new AjaxUpload($this->getContext(), $this->getAvailableTasks(), $this->getContestant());
-    }
 
     /**
      * @return SubmitsGrid
@@ -228,7 +231,16 @@ class SubmitPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     protected function createComponentSubmitsGrid(): SubmitsGrid {
-        return new SubmitsGrid($this->getContext(), $this->getContestant(), $this->getSelectedAcademicYear());
+        return new SubmitsGrid($this->getContext(), $this->getContestant());
+    }
+
+    /**
+     * @return SubmitContainer
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
+     */
+    protected function createComponentSubmitContainer(): SubmitContainer {
+        return new SubmitContainer($this->getContext(), $this->getContestant(), $this->getSelectedContest(), $this->getSelectedAcademicYear(), $this->getSelectedYear());
     }
 
     /**
@@ -240,6 +252,8 @@ class SubmitPresenter extends BasePresenter {
      */
     private function handleUploadFormSuccess(Form $form): void {
         $values = $form->getValues();
+
+        Debugger::log(\sprintf('Contestant %d upload %s', $this->getContestant()->ct_id, $values['tasks']), 'old-submit');
 
         $taskIds = explode(',', $values['tasks']);
         $validIds = $this->getAvailableTasks()->fetchPairs('task_id', 'task_id');
@@ -255,7 +269,7 @@ class SubmitPresenter extends BasePresenter {
                 $task = $this->taskService->findByPrimary($taskId);
 
                 if (!isset($validIds[$taskId])) {
-                    $this->flashMessage(sprintf(_('Úlohu %s již není možno odevzdávat.'), $task->label), self::FLASH_ERROR);
+                    $this->flashMessage(sprintf(_('Task %s cannot be submitted anymore.'), $task->label), self::FLASH_ERROR);
                     continue;
                 }
 
@@ -290,15 +304,13 @@ class SubmitPresenter extends BasePresenter {
         } catch (ModelException $exception) {
             $this->uploadedSubmitStorage->rollback();
             $this->submitService->getConnection()->rollBack();
-
             Debugger::log($exception);
-            $this->flashMessage(_('Došlo k chybě při ukládání úloh.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Task storing error.'), self::FLASH_ERROR);
         } catch (ProcessingException $exception) {
             $this->uploadedSubmitStorage->rollback();
             $this->submitService->getConnection()->rollBack();
-
             Debugger::log($exception);
-            $this->flashMessage(_('Došlo k chybě při ukládání úloh.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Task storing error.'), self::FLASH_ERROR);
         }
     }
 

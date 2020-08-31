@@ -22,8 +22,4 @@ export interface ScheduleGroupDef {
     end: string;
 }
 
-export interface PersonAccommodation {
-    [groupId: string]: number;
-}
-
 export type ScheduleGroupType = 'accommodation' | 'dsef-group';

@@ -3,11 +3,12 @@
 namespace FKSDB\Components\React;
 
 use FKSDB\Application\IJavaScriptCollector;
+use FKSDB\Logging\ILogger;
+use FKSDB\Logging\MemoryLogger;
+use FKSDB\Messages\Message;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
-use Nette\Utils\Json;
-use Nette\Utils\JsonException;
 
 /**
  * Trait ReactField
@@ -15,45 +16,34 @@ use Nette\Utils\JsonException;
  */
 trait ReactComponentTrait {
 
-    private array $actions = [];
+    private MemoryLogger $logger;
 
     private static bool $attachedJS = false;
 
     protected string $reactId;
 
-    /**
-     * @param string $reactId
-     * @return void
-     */
-    protected function registerReact(string $reactId) {
+    protected function registerReact(string $reactId): void {
         $this->reactId = $reactId;
+        $this->logger = new MemoryLogger();
         $this->registerMonitor();
     }
 
     /**
-     * @param mixed ...$args
      * @throws BadRequestException
-     * @throws JsonException Can be used only with BaseControl
      */
-    protected function appendProperty(...$args) {
+    protected function appendProperty(): void {
         if (!$this instanceof BaseControl) {
             throw new BadRequestException('method appendProperty can be used only with BaseControl');
         }
-        $this->appendPropertyTo($this->control, ...$args);
+        $this->appendPropertyTo($this->control);
     }
 
-    /**
-     * @param Html $html
-     * @param mixed ...$args
-     * @return void
-     * @throws JsonException
-     */
-    protected function appendPropertyTo(Html $html, ...$args) {
-        $this->configure();
+    protected function appendPropertyTo(Html $html): void {
         $html->setAttribute('data-react-root', true);
         $html->setAttribute('data-react-id', $this->reactId);
-        $html->setAttribute('data-data', $this->getData(...$args));
-        $html->setAttribute('data-actions', Json::encode($this->actions));
+        foreach ($this->getResponseData() as $key => $value) {
+            $html->setAttribute('data-' . $key, $value);
+        }
     }
 
     private function registerMonitor(): void {
@@ -65,20 +55,26 @@ trait ReactComponentTrait {
         });
     }
 
-    /**
-     * @return void
-     */
-    protected function configure() {
+    protected function getLogger(): ILogger {
+        return $this->logger;
     }
 
     /**
-     * @param string $key
-     * @param string $destination
-     * @return void
+     * @return mixed|null
      */
-    public function addAction(string $key, string $destination) {
-        $this->actions[$key] = $destination;
+    protected function getData() {
+        return null;
     }
 
-    abstract public function getData(...$args): string;
+    /**
+     * @return string[]
+     */
+    protected function getResponseData(): array {
+        $data['messages'] = array_map(function (Message $value): array {
+            return $value->__toArray();
+        }, $this->logger->getMessages());
+        $data['data'] = json_encode($this->getData());
+        $this->logger->clear();
+        return $data;
+    }
 }

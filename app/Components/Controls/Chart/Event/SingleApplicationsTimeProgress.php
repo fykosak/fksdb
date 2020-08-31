@@ -3,7 +3,7 @@
 namespace FKSDB\Components\React\ReactComponent\Events;
 
 use FKSDB\Components\Controls\Chart\IChart;
-use FKSDB\Components\React\ReactComponent2;
+use FKSDB\Components\React\ReactComponent;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelEventType;
@@ -16,7 +16,7 @@ use Nette\DI\Container;
  * Class SingleApplicationsTimeProgress
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class SingleApplicationsTimeProgress extends ReactComponent2 implements IChart {
+class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
 
     private ServiceEventParticipant $serviceEventParticipant;
 

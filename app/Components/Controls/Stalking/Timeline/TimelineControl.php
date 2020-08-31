@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Stalking\Timeline;
 
-use FKSDB\Components\React\ReactComponent2;
+use FKSDB\Components\React\ReactComponent;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelEvent;
@@ -17,7 +17,7 @@ use Nette\DI\Container;
  * Class TimelineControl
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class TimelineControl extends ReactComponent2 {
+class TimelineControl extends ReactComponent {
 
     private ModelPerson $person;
 

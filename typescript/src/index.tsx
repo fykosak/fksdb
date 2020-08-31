@@ -1,3 +1,4 @@
+import AjaxSubmit from '@apps/ajaxSubmit';
 import ApplicationsTimeProgressChart from '@apps/chart/applicationsTimeProgress';
 import ParticipantAcquaintance from '@apps/chart/participantAcquaintance';
 import PersonTimeline from '@apps/chart/personTimeLine';
@@ -14,6 +15,7 @@ import * as React from 'react';
 
 appsCollector.register(eventSchedule);
 
+mapRegister.registerActionsComponent('public.ajax-submit', AjaxSubmit);
 mapRegister.registerActionsComponent('fyziklani.results.table', FyziklaniResultsTable);
 mapRegister.registerActionsComponent('fyziklani.statistics.team', FyziklaniResultsStatistics, {mode: 'team'});
 mapRegister.registerActionsComponent('fyziklani.statistics.task', FyziklaniResultsStatistics, {mode: 'task'});
