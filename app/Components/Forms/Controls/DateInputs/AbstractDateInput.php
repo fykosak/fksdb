@@ -37,14 +37,16 @@ abstract class AbstractDateInput extends TextInput {
     }
 
     /**
-     * @param string|DateTime $value
+     * @param string|\DateTimeInterface|\DateInterval $value
      * @return static
      */
-    public function setValue($value) {
-        if (is_string($value)) {
-            $this->value = DateTime::from($value);
+    public function setValue($value): self {
+        if ($value instanceof \DateTimeInterface) {
+            $this->value = $value;
         } elseif ($value instanceof \DateInterval) {
             $this->value = (new DateTime())->setTime($value->h, $value->m, $value->s);
+        } elseif (is_string($value)) {
+            $this->value = DateTime::from($value);
         } else {
             $this->value = null;
         }
