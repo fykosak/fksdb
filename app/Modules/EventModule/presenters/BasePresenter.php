@@ -144,7 +144,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     /**
      * @param IResource|string|null $resource
-     * @param string $privilege
+     * @param string|null $privilege
      * @return bool
      * Check if is contest and event org
      * TODO vyfakuje to aj cartesianov

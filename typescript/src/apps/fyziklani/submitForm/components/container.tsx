@@ -12,7 +12,6 @@ import {
     Team,
 } from '../../helpers/interfaces';
 import {
-    ACCESS_KEY,
     SubmitFormRequest, submitStart,
 } from '../actions';
 import { validate } from '../middleware';
@@ -38,7 +37,6 @@ class Container extends React.Component<OwnProps & DispatchProps & InjectedFormP
             <Form onSubmit={handleSubmit(onSubmit)}>
                 <FormSection
                     availablePoints={availablePoints}
-                    accessKey={ACCESS_KEY}
                     tasks={tasks}
                     teams={teams}
                     onSubmit={onSubmit}

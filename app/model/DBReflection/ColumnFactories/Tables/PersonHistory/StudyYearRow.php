@@ -42,6 +42,7 @@ class StudyYearRow extends AbstractColumnFactory {
     /**
      * @param array $args
      * @return BaseControl
+     * @throws \InvalidArgumentException
      */
     public function createField(...$args): BaseControl {
         [$acYear] = $args;

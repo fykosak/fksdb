@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls\Chart\Event;
 
 use FKSDB\Components\Controls\Chart\IChart;
-use FKSDB\Components\React\ReactComponent2;
+use FKSDB\Components\React\ReactComponent;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Application\UI\Control;
@@ -13,7 +13,7 @@ use Nette\DI\Container;
  * Class ParticipantAcquaintanceChartControl
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class ParticipantAcquaintanceChartControl extends ReactComponent2 implements IChart {
+class ParticipantAcquaintanceChartControl extends ReactComponent implements IChart {
 
     private ModelEvent $event;
 
@@ -27,9 +27,6 @@ class ParticipantAcquaintanceChartControl extends ReactComponent2 implements ICh
         $this->event = $event;
     }
 
-    /**
-     * @return array|mixed|null
-     */
     public function getData(): array {
         $data = [];
         foreach ($this->event->getParticipants()->where('status', ['participated', 'applied']) as $row) {

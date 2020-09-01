@@ -92,11 +92,11 @@ class ReferencedPersonFactory {
      * @param string $sub
      * @param string $field
      * @param int $acYear
-     * @param int $options
+     * @param int|null $options
      * @param ModelEvent|null $event
      * @return mixed
      */
-    public static function getPersonValue($person, string $sub, string $field, int $acYear, ?int $options, ?ModelEvent $event = null) {
+    public static function getPersonValue(?ModelPerson $person, string $sub, string $field, int $acYear, ?int $options, ?ModelEvent $event = null) {
         if (!$person) {
             return null;
         }

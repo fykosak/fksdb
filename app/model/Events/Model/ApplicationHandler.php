@@ -87,15 +87,15 @@ class ApplicationHandler {
     }
 
     final public function store(Holder $holder, ArrayHash $data): void {
-        $this->_storeAndExecute($holder, $data, null, null, self::STATE_OVERWRITE);
+        $this->innerStoreAndExecute($holder, $data, null, null, self::STATE_OVERWRITE);
     }
 
     final public function storeAndExecuteValues(Holder $holder, ArrayHash $data): void {
-        $this->_storeAndExecute($holder, $data, null, null, self::STATE_TRANSITION);
+        $this->innerStoreAndExecute($holder, $data, null, null, self::STATE_TRANSITION);
     }
 
     final public function storeAndExecuteForm(Holder $holder, Form $form, ?string $explicitTransitionName = null): void {
-        $this->_storeAndExecute($holder, null, $form, $explicitTransitionName, self::STATE_TRANSITION);
+        $this->innerStoreAndExecute($holder, null, $form, $explicitTransitionName, self::STATE_TRANSITION);
     }
 
     final public function onlyExecute(Holder $holder, string $explicitTransitionName): void {
@@ -140,7 +140,7 @@ class ApplicationHandler {
         }
     }
 
-    private function _storeAndExecute(Holder $holder, ?ArrayHash $data, ?Form $form, ?string $explicitTransitionName, ?string $execute): void {
+    private function innerStoreAndExecute(Holder $holder, ?ArrayHash $data, ?Form $form, ?string $explicitTransitionName, ?string $execute): void {
         $this->initializeMachine();
 
         try {

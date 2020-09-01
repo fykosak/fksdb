@@ -12,22 +12,18 @@ interface OwnProps {
     app: any;
 }
 
-export const ACCESS_KEY = '@@fyziklani-results';
-
 export default class MainComponent extends React.Component<OwnProps, {}> {
     public render() {
         const storeMap = {
-            [ACCESS_KEY]: {
-                actions: this.props.actions,
-                data: this.props.data,
-                messages: [],
-            },
+            actions: this.props.actions,
+            data: this.props.data,
+            messages: [],
         };
         return (
             <ActionsStoreCreator storeMap={storeMap} app={this.props.app}>
                 <div className={'fyziklani-results'}>
-                    <Downloader accessKey={ACCESS_KEY} data={this.props.data}/>
-                    <LoadingSwitch accessKey={ACCESS_KEY}>
+                    <Downloader data={this.props.data}/>
+                    <LoadingSwitch>
                         <>
                             {...this.props.children}
                         </>

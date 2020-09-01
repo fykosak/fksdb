@@ -51,7 +51,7 @@ class ServiceAddress extends AbstractServiceSingle {
 
     /**
      *
-     * @param string $postalCode
+     * @param string|null $postalCode
      * @return int
      * @throws InvalidPostalCode
      */

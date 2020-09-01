@@ -36,7 +36,7 @@ class AutocompleteSelectBox extends TextBase {
      * Body of JS function(ul, item) returning jQuery element.
      *
      * @see http://api.jqueryui.com/autocomplete/#method-_renderItem
-     * @var string
+     * @var string|null
      */
     private ?string $renderMethod;
 

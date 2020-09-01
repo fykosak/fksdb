@@ -35,7 +35,7 @@ navigation:
             Common.Validation.list: []
         Public.Dashboard.default:
             Core.Dispatch.default: []
-            Public.Submit.default:
+            Public.Submit.ajax:
                 visible: true
             Core.MyApplications.default: []
         Fyziklani.Dashboard.default:

@@ -69,7 +69,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     /**
      * Use this method to create new models!
      *
-     * @param iterable $data
+     * @param iterable|null $data
      * @return AbstractModelSingle
      * @throws ModelException
      * @deprecated use createNewModel

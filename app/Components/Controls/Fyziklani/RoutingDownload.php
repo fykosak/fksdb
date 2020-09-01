@@ -14,7 +14,7 @@ use Nette\DI\Container;
  */
 class RoutingDownload extends BaseComponent {
 
-    private static bool $JSAttached = false;
+    private static bool $attachedJS = false;
 
     private ModelEvent $event;
 
@@ -29,8 +29,8 @@ class RoutingDownload extends BaseComponent {
         parent::__construct($container);
         $this->event = $event;
         $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
-            if (!self::$JSAttached) {
-                self::$JSAttached = true;
+            if (!self::$attachedJS) {
+                self::$attachedJS = true;
                 $collector->registerJSFile('js/routingPdf.js');
                 $collector->registerJSFile('https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.33/pdfmake.min.js');
                 $collector->registerJSFile('https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.33/vfs_fonts.js');

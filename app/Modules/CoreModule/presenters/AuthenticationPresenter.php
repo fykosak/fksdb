@@ -56,8 +56,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     private ServiceAuthToken $serviceAuthToken;
 
-    /** @var IGlobalSession|GlobalSession */
-    private IGlobalSession $globalSession;
+    private GlobalSession $globalSession;
 
     private PasswordAuthenticator $passwordAuthenticator;
 
@@ -67,7 +66,7 @@ final class AuthenticationPresenter extends BasePresenter {
         $this->serviceAuthToken = $serviceAuthToken;
     }
 
-    public function injectGlobalSession(IGlobalSession $globalSession): void {
+    public function injectGlobalSession(GlobalSession $globalSession): void {
         $this->globalSession = $globalSession;
     }
 
@@ -238,6 +237,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @param Form $form
      * @throws AbortException
+     * @throws Exception
      */
     private function loginFormSubmitted(Form $form): void {
         $values = $form->getValues();
@@ -285,8 +285,7 @@ final class AuthenticationPresenter extends BasePresenter {
 
     /**
      * @param ModelLogin|null $login
-     * @throws AbortException
-     * @throws Exception
+     * @return void
      */
     private function loginBackLinkRedirect($login = null): void {
         if (!$this->backlink) {

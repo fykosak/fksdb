@@ -48,19 +48,10 @@ abstract class AbstractProcessing implements IProcessing {
         $this->holder = $holder;
         $this->setValues($values);
         $this->setForm($form);
-        $this->_process($states, $values, $machine, $holder, $logger, $form);
+        $this->innerProcess($states, $values, $machine, $holder, $logger, $form);
     }
 
-    /**
-     * @param array $states
-     * @param ArrayHash $values
-     * @param Machine $machine
-     * @param Holder $holder
-     * @param ILogger $logger
-     * @param Form|null $form
-     * @return void
-     */
-    abstract protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null): void;
+    abstract protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void;
 
     /**
      * @param string $mask
@@ -150,10 +141,7 @@ abstract class AbstractProcessing implements IProcessing {
         }
     }
 
-    /**
-     * @param Form $form
-     */
-    private function setForm($form): void {
+    private function setForm(?Form $form): void {
         $this->formPathCache = [];
         if (!$form) {
             return;

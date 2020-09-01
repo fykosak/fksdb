@@ -6,7 +6,7 @@ import {
 import { Team } from '../../helpers/interfaces';
 import { ResponseData } from '../middleware/interfaces';
 
-export const saveTeams = (accessKey: string, dispatch: Dispatch<Action>, teams: Team[]): Promise<any> => {
+export const saveTeams = (dispatch: Dispatch<Action>, teams: Team[]): Promise<any> => {
     const data = {act: 'routing-save', requestData: teams};
-    return dispatchFetch<ResponseData>('#', accessKey, dispatch, JSON.stringify(data));
+    return dispatchFetch<ResponseData>('#', dispatch, JSON.stringify(data));
 };

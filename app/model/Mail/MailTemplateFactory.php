@@ -54,33 +54,33 @@ class MailTemplateFactory {
     }
 
     /**
-     * @param string $lang ISO 639-1
+     * @param string|null $lang ISO 639-1
      * @param array $data
      * @return ITemplate
      * @throws UnsupportedLanguageException
      */
-    public function createLoginInvitation(string $lang = null, array $data = []): ITemplate {
+    public function createLoginInvitation(?string $lang, array $data): ITemplate {
         return $this->createWithParameters('loginInvitation', $lang, $data);
     }
 
     /**
-     * @param string $lang ISO 639-1
+     * @param string|null $lang ISO 639-1
      * @param array $data
      * @return ITemplate
      * @throws UnsupportedLanguageException
      */
-    public function createPasswordRecovery(string $lang = null, array $data = []): ITemplate {
+    public function createPasswordRecovery(?string $lang, array $data): ITemplate {
         return $this->createWithParameters('passwordRecovery', $lang, $data);
     }
 
     /**
      * @param string $templateFile
-     * @param string $lang ISO 639-1
+     * @param string|null $lang ISO 639-1
      * @param array $data
      * @return ITemplate
      * @throws UnsupportedLanguageException
      */
-    public function createWithParameters(string $templateFile, string $lang = null, array $data = []): ITemplate {
+    public function createWithParameters(string $templateFile, ?string $lang, array $data = []): ITemplate {
         $template = $this->createFromFile($templateFile, $lang);
         $template->setTranslator($this->translator);
         foreach ($data as $key => $value) {
@@ -91,12 +91,12 @@ class MailTemplateFactory {
 
     /**
      * @param string $filename
-     * @param string $lang ISO 639-1
+     * @param string|null $lang ISO 639-1
      * @return ITemplate
      * @throws UnsupportedLanguageException
      * @throws \Nette\Application\AbortException
      */
-    final public function createFromFile(string $filename, string $lang = null): ITemplate {
+    final public function createFromFile(string $filename, ?string $lang): ITemplate {
         /** @var Presenter $presenter */
         $presenter = $this->application->getPresenter();
         if (($lang === null) && !$presenter instanceof BasePresenter) {
