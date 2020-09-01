@@ -16,8 +16,12 @@ use Nette\Forms\Form;
 abstract class FormComponent extends BaseComponent {
 
     public function render(): void {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
+        $this->template->setFile($this->getTemplatePath());
         $this->template->render();
+    }
+
+    protected function getTemplatePath(): string {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'layout.latte';
     }
 
     protected function createFormControl(): FormControl {

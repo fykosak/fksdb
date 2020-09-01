@@ -44,6 +44,20 @@ class StoredQueryFormComponent extends EditEntityFormComponent {
 
     private StoredQueryFactory $storedQueryFactory;
 
+    public function injectPrimary(
+        StoredQueryFormFactory $storedQueryFormFactory,
+        ServiceStoredQuery $serviceStoredQuery,
+        ServiceStoredQueryTag $serviceStoredQueryTag,
+        ServiceStoredQueryParameter $serviceStoredQueryParameter,
+        StoredQueryFactory $storedQueryFactory
+    ): void {
+        $this->storedQueryFormFactory = $storedQueryFormFactory;
+        $this->serviceStoredQuery = $serviceStoredQuery;
+        $this->serviceStoredQueryTag = $serviceStoredQueryTag;
+        $this->serviceStoredQueryParameter = $serviceStoredQueryParameter;
+        $this->storedQueryFactory = $storedQueryFactory;
+    }
+
     /**
      * @param Form $form
      * @return void
@@ -71,20 +85,6 @@ class StoredQueryFormComponent extends EditEntityFormComponent {
         $connection->commit();
         $this->getPresenter()->flashMessage($this->create ? _('Query has been created') : _('Query has been edited'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
-    }
-
-    public function injectPrimary(
-        StoredQueryFormFactory $storedQueryFormFactory,
-        ServiceStoredQuery $serviceStoredQuery,
-        ServiceStoredQueryTag $serviceStoredQueryTag,
-        ServiceStoredQueryParameter $serviceStoredQueryParameter,
-        StoredQueryFactory $storedQueryFactory
-    ): void {
-        $this->storedQueryFormFactory = $storedQueryFormFactory;
-        $this->serviceStoredQuery = $serviceStoredQuery;
-        $this->serviceStoredQueryTag = $serviceStoredQueryTag;
-        $this->serviceStoredQueryParameter = $serviceStoredQueryParameter;
-        $this->storedQueryFactory = $storedQueryFactory;
     }
 
     protected function configureForm(Form $form): void {
@@ -188,8 +188,7 @@ class StoredQueryFormComponent extends EditEntityFormComponent {
         $control->setStoredQuery($query);
     }
 
-    public function render(): void {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.storedQuery.latte');
-        $this->template->render();
+    protected function getTemplatePath(): string {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'layout.storedQuery.latte';
     }
 }
