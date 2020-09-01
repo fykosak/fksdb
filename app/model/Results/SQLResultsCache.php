@@ -32,8 +32,8 @@ class SQLResultsCache {
 
     /**
      *
-     * @param ModelContest $contest
-     * @param int $year
+     * @param ModelContest|null $contest
+     * @param int|null $year
      */
     public function invalidate(ModelContest $contest = null, $year = null): void {
         $data = [

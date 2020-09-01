@@ -38,7 +38,6 @@ class EvaluationVyfuk2012 extends EvaluationStrategy {
                 return [null];
             default:
                 throw new Nette\InvalidArgumentException('Invalid category ' . $category->id);
-                break;
         }
     }
 

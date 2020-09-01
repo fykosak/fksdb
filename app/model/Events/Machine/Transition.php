@@ -55,7 +55,7 @@ class Transition {
     /**
      * Transition constructor.
      * @param string $mask
-     * @param string $label
+     * @param string|null $label
      * @param string $type
      */
     public function __construct(string $mask, ?string $label = null, string $type = self::TYPE_DEFAULT) {

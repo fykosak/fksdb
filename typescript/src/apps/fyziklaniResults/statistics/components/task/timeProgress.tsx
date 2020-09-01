@@ -1,14 +1,14 @@
+import {
+    Submit,
+    Submits,
+    Task,
+} from '@apps/fyziklani/helpers/interfaces';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
     Action,
     Dispatch,
 } from 'redux';
-import {
-    Submit,
-    Submits,
-    Task,
-} from '@apps/fyziklani/helpers/interfaces';
 import { setTaskId } from '../../actions';
 import { getColorByPoints } from '../../middleware/charts/colors';
 import { Store as StatisticsStore } from '../../reducers';

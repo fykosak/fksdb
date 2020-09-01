@@ -43,7 +43,7 @@ class RoutingApp extends React.Component<DispatchProps & OwnProps, {}> {
                 </div>
             </div>
             <div>
-                <Form accessKey={'@@fyziklani/routing'}/>
+                <Form/>
             </div>
             <Powered/>
         </>);

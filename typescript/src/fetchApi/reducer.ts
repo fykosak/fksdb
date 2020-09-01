@@ -4,7 +4,6 @@ import {
     ACTION_FETCH_START,
     ACTION_FETCH_SUCCESS,
     ActionFetchFail,
-    ActionFetchStart,
     ActionFetchSuccess,
 } from './actions';
 import {
@@ -12,63 +11,53 @@ import {
     Response2,
 } from './interfaces';
 
-export interface FetchApiState<T = any> {
-    [accessKey: string]: {
-        submitting?: boolean;
-        error?: Error | any;
-        messages?: Message[];
-        actions?: NetteActions;
-        initialLoaded: boolean;
-    };
+export interface FetchApiState<> {
+    submitting?: boolean;
+    error?: Error | any;
+    messages: Message[];
+    actions?: NetteActions;
+    initialLoaded: boolean;
 }
 
-const fetchStart = (state: FetchApiState, action: ActionFetchStart): FetchApiState => {
-    const {accessKey} = action;
+const fetchStart = (state: FetchApiState): FetchApiState => {
     return {
         ...state,
-        [accessKey]: {
-            ...state[accessKey],
-            error: null,
-            messages: [],
-            submitting: true,
-        },
+        error: null,
+        messages: [],
+        submitting: true,
     };
 };
 const fetchFail = (state: FetchApiState, action: ActionFetchFail): FetchApiState => {
-    const {accessKey} = action;
     return {
         ...state,
-        [accessKey]: {
-            ...state[accessKey],
-            error: action.error,
-            messages: [{
-                level: 'danger',
-                text: action.error.toString(),
-            }],
-            submitting: false,
-        },
+        error: action.error,
+        messages: [{
+            level: 'danger',
+            text: action.error.toString(),
+        }],
+        submitting: false,
     };
 };
 
 function fetchSuccess<D = any>(state: FetchApiState, action: ActionFetchSuccess<Response2<D>>): FetchApiState {
-    const {accessKey} = action;
     return {
         ...state,
-        [accessKey]: {
-            ...state[accessKey],
-            actions: action.data.actions,
-            messages: action.data.messages,
-            submitting: false,
-        },
+        actions: action.data.actions,
+        initialLoaded: true,
+        messages: action.data.messages,
+        submitting: false,
     };
 }
 
-const initState: FetchApiState = {};
+const initState: FetchApiState = {
+    initialLoaded: false,
+    messages: [],
+};
 
 export function fetchApi<D = any>(state: FetchApiState = initState, action: any): FetchApiState {
     switch (action.type) {
         case ACTION_FETCH_START:
-            return fetchStart(state, action);
+            return fetchStart(state);
         case ACTION_FETCH_FAIL:
             return fetchFail(state, action);
         case ACTION_FETCH_SUCCESS:

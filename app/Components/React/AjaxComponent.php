@@ -12,7 +12,13 @@ use Nette\Http\Response;
  * Class AjaxComponent
  * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class AjaxComponent extends ReactComponent2 {
+abstract class AjaxComponent extends ReactComponent {
+
+    private IRequest $request;
+
+    public function injectRequest(IRequest $request): void {
+        $this->request = $request;
+    }
 
     protected function getActions(): array {
         return [];
@@ -30,16 +36,8 @@ abstract class AjaxComponent extends ReactComponent2 {
         $this->getPresenter()->sendResponse($response);
     }
 
-    /**
-     * @return IRequest
-     * @throws BadTypeException
-     */
     protected function getHttpRequest(): IRequest {
-        $service = $this->getContext()->getByType(IRequest::class);
-        if ($service instanceof IRequest) {
-            return $service;
-        }
-        throw new BadTypeException(IRequest::class, $service);
+        return $this->request;
     }
 
     protected function getResponseData(): array {

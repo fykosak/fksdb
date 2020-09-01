@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 import { FyziklaniResultsCoreStore } from '../reducers/coreStore';
 
 interface OwnProps {
-    accessKey: string;
     children: any;
 }
 
@@ -24,9 +23,9 @@ class LoadingSwitch extends React.Component<StateProps & OwnProps, {}> {
     }
 }
 
-const mapStateToProps = (state: FyziklaniResultsCoreStore, ownProps: OwnProps): StateProps => {
+const mapStateToProps = (state: FyziklaniResultsCoreStore): StateProps => {
     return {
-        isReady: state.fetchApi.hasOwnProperty(ownProps.accessKey),
+        isReady: state.fetchApi.initialLoaded,
     };
 };
 

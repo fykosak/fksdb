@@ -12,7 +12,7 @@ class DuplicateOrgException extends ModelException {
 
     /**
      * DuplicateOrgException constructor.
-     * @param ModelPerson $person
+     * @param ModelPerson|null $person
      * @param null $previous
      */
     public function __construct(ModelPerson $person = null, $previous = null) {

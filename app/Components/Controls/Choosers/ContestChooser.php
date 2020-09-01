@@ -354,7 +354,8 @@ class ContestChooser extends BaseComponent {
         $presenter = $this->getPresenter();
         $presenter->redirect('this', [
             'contestId' => $contest, //WHY? contestId should be persistent
-            'year' => $year]);
+            'year' => $year,
+        ]);
     }
 
     /**

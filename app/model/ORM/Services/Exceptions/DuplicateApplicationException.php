@@ -12,7 +12,7 @@ class DuplicateApplicationException extends ModelException {
 
     /**
      * DuplicateApplicationException constructor.
-     * @param ModelPerson $person
+     * @param ModelPerson|null $person
      * @param null $previous
      */
     public function __construct(ModelPerson $person = null, $previous = null) {

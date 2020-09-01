@@ -73,7 +73,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @param string $tokenType require specific token type
+     * @param string|null $tokenType require specific token type
      * @return bool true iff user has been authenticated by the authentication token
      */
     public function isAuthenticatedByToken($tokenType = null): bool {

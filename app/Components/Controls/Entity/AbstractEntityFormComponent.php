@@ -2,9 +2,7 @@
 
 namespace FKSDB\Components\Controls\Entity;
 
-use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Components\Forms\FormComponent;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\Messages\Message;
 use Nette\Application\AbortException;
@@ -18,10 +16,9 @@ use Tracy\Debugger;
  * Class AbstractEntityFormControl
  * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class AbstractEntityFormComponent extends BaseComponent {
+abstract class AbstractEntityFormComponent extends FormComponent {
 
     protected bool $create;
-
 
     /**
      * AbstractEntityFormControl constructor.
@@ -33,43 +30,12 @@ abstract class AbstractEntityFormComponent extends BaseComponent {
         $this->create = $create;
     }
 
-    protected function createFormControl(): FormControl {
-        return new FormControl();
-    }
-
-
-    /**
-     * @return Form
-     * @throws BadTypeException
-     */
-    protected function getForm(): Form {
-        $control = $this->getComponent('formControl');
-        if (!$control instanceof FormControl) {
-            throw new BadTypeException(FormControl::class, $control);
-        }
-        return $control->getForm();
-    }
-
-    /**
-     * @return FormControl
-     * @throws BadTypeException
-     */
-    final protected function createComponentFormControl(): FormControl {
-        $control = $this->createFormControl();
-        $this->configureForm($control->getForm());
-        $this->appendSubmitButton($control->getForm())
-            ->onClick[] = function (SubmitButton $button) {
-            $this->handleSuccess($button);
-        };
-        return $control;
-    }
-
     /**
      * @param SubmitButton $button
      * @return void
      * @throws AbortException
      */
-    private function handleSuccess(SubmitButton $button): void {
+    final protected function handleSuccess(SubmitButton $button): void {
         try {
             $this->handleFormSuccess($button->getForm());
         } catch (ModelException $exception) {
@@ -99,11 +65,6 @@ abstract class AbstractEntityFormComponent extends BaseComponent {
      * @throws ModelException
      */
     abstract protected function handleFormSuccess(Form $form): void;
-
-    public function render(): void {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . '@layout.latte');
-        $this->template->render();
-    }
 
     protected function configureForm(Form $form): void {
     }

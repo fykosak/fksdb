@@ -17,7 +17,7 @@ navigation:
             Common.Spam.list: []
             Common.Chart.list: []
         Core.Dispatch.default:
-            #Core.MyApplications.default: []
+            Core.MyApplications.default: []
             Core.MyPayments.default: []
             Event.Payment.create:
                 params:
@@ -35,7 +35,7 @@ navigation:
             Common.Validation.list: []
         Public.Dashboard.default:
             Core.Dispatch.default: []
-            Public.Submit.default:
+            Public.Submit.ajax:
                 visible: true
             Core.MyApplications.default: []
         Fyziklani.Dashboard.default:
