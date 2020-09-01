@@ -95,7 +95,7 @@ class StoredQueryFormComponent extends EditEntityFormComponent {
         $form->addComponent($params, self::CONT_PARAMS_META);
 
         $group = $form->addGroup(_('Metadata'));
-        $metadata = $this->createMetadata($group);
+        $metadata = $this->storedQueryFormFactory->createMetadata($group);
         $form->addComponent($metadata, self::CONT_META);
 
         $form->setCurrentGroup();
