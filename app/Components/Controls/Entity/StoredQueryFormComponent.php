@@ -44,6 +44,20 @@ class StoredQueryFormComponent extends EditEntityFormComponent {
 
     private StoredQueryFactory $storedQueryFactory;
 
+    public function injectPrimary(
+        StoredQueryFormFactory $storedQueryFormFactory,
+        ServiceStoredQuery $serviceStoredQuery,
+        ServiceStoredQueryTag $serviceStoredQueryTag,
+        ServiceStoredQueryParameter $serviceStoredQueryParameter,
+        StoredQueryFactory $storedQueryFactory
+    ): void {
+        $this->storedQueryFormFactory = $storedQueryFormFactory;
+        $this->serviceStoredQuery = $serviceStoredQuery;
+        $this->serviceStoredQueryTag = $serviceStoredQueryTag;
+        $this->serviceStoredQueryParameter = $serviceStoredQueryParameter;
+        $this->storedQueryFactory = $storedQueryFactory;
+    }
+
     /**
      * @param Form $form
      * @return void
@@ -73,20 +87,6 @@ class StoredQueryFormComponent extends EditEntityFormComponent {
         $this->getPresenter()->redirect('list');
     }
 
-    public function injectPrimary(
-        StoredQueryFormFactory $storedQueryFormFactory,
-        ServiceStoredQuery $serviceStoredQuery,
-        ServiceStoredQueryTag $serviceStoredQueryTag,
-        ServiceStoredQueryParameter $serviceStoredQueryParameter,
-        StoredQueryFactory $storedQueryFactory
-    ): void {
-        $this->storedQueryFormFactory = $storedQueryFormFactory;
-        $this->serviceStoredQuery = $serviceStoredQuery;
-        $this->serviceStoredQueryTag = $serviceStoredQueryTag;
-        $this->serviceStoredQueryParameter = $serviceStoredQueryParameter;
-        $this->storedQueryFactory = $storedQueryFactory;
-    }
-
     protected function configureForm(Form $form): void {
         $group = $form->addGroup(_('SQL'));
         $console = $this->storedQueryFormFactory->createConsole($group);
@@ -95,7 +95,7 @@ class StoredQueryFormComponent extends EditEntityFormComponent {
         $form->addComponent($params, self::CONT_PARAMS_META);
 
         $group = $form->addGroup(_('Metadata'));
-        $metadata = $this->storedQueryFormFactory->createMetadata($group);
+        $metadata = $this->createMetadata($group);
         $form->addComponent($metadata, self::CONT_META);
 
         $form->setCurrentGroup();
@@ -188,8 +188,7 @@ class StoredQueryFormComponent extends EditEntityFormComponent {
         $control->setStoredQuery($query);
     }
 
-    public function render(): void {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.storedQuery.latte');
-        $this->template->render();
+    protected function getTemplatePath(): string {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'layout.storedQuery.latte';
     }
 }

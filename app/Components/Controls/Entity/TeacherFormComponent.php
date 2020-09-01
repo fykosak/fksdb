@@ -66,9 +66,9 @@ class TeacherFormComponent extends EditEntityFormComponent {
     protected function handleFormSuccess(Form $form): void {
         $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
         if ($this->create) {
-            $this->getORMService()->createNewModel($data);
+            $this->serviceTeacher->createNewModel($data);
         } else {
-            $this->getORMService()->updateModel2($this->model, $data);
+            $this->serviceTeacher->updateModel2($this->model, $data);
         }
         $this->getPresenter()->flashMessage($this->create ? _('Teacher has been created') : _('Teacher has been updated'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
@@ -85,17 +85,13 @@ class TeacherFormComponent extends EditEntityFormComponent {
         }
     }
 
-    protected function getORMService(): ServiceTeacher {
-        return $this->serviceTeacher;
-    }
-
     /**
      * @return ModelContainer
      * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    public function createTeacherContainer(): ModelContainer {
+    private function createTeacherContainer(): ModelContainer {
         return $this->singleReflectionFormFactory->createContainer('teacher', ['state', 'since', 'until', 'number_brochures', 'note']);
     }
 }
