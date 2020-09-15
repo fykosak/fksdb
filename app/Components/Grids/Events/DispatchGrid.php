@@ -6,7 +6,7 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceEvent;
-use Nette\Application\UI\Presenter;
+use Nette\Application\IPresenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -43,13 +43,13 @@ class DispatchGrid extends BaseGrid {
     }
 
     /**
-     * @param Presenter $presenter
+     * @param IPresenter $presenter
      * @return void
+     * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
         $this->addColumns(['event.event_id', 'event.name', 'contest.contest', 'event.year', 'event.role']);
         $this->addLinkButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);

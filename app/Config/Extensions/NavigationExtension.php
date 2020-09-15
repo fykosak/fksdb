@@ -4,7 +4,7 @@ namespace FKSDB\Config\Extensions;
 
 use FKSDB\Components\Controls\Navigation\NavigationFactory;
 use Nette\DI\CompilerExtension;
-use Nette\DI\ServiceDefinition;
+use Nette\DI\Definitions\ServiceDefinition;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

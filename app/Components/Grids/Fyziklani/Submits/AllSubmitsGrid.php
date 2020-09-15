@@ -17,7 +17,7 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
-use Nette\Application\UI\Presenter;
+use Nette\Application\IPresenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -66,13 +66,13 @@ class AllSubmitsGrid extends SubmitsGrid {
     }
 
     /**
-     * @param Presenter $presenter
+     * @param IPresenter $presenter
      * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
 
         $this->addColumnTeam();

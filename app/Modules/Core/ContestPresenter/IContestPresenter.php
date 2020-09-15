@@ -24,7 +24,7 @@ interface IContestPresenter {
     /**
      * @param string $message
      * @param string $type
-     * @return void
+     * @return \stdClass
      */
-    public function flashMessage($message, $type = 'info');
+    public function flashMessage($message, string $type = 'info'): \stdClass;
 }

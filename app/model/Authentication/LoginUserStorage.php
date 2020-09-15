@@ -107,7 +107,7 @@ class LoginUserStorage extends UserStorage {
      * @return bool
      * @throws AbortException
      */
-    public function isAuthenticated() {
+    public function isAuthenticated(): bool {
         $local = parent::isAuthenticated();
         $global = isset($this->globalSession[GlobalSession::UID]) ? $this->globalSession[GlobalSession::UID] : null;
 
@@ -155,7 +155,7 @@ class LoginUserStorage extends UserStorage {
      * @param IIdentity|NULL $identity
      * @return UserStorage
      */
-    public function setIdentity(IIdentity $identity = null) {
+    public function setIdentity(?IIdentity $identity = null) {
         $this->identity = $identity;
         if ($identity instanceof ModelLogin) {
             $identity = new Identity($identity->getId());

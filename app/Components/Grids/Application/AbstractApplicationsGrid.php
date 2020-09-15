@@ -9,7 +9,7 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\Application\UI\Presenter;
+use Nette\Application\IPresenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -90,12 +90,12 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
     }
 
     /**
-     * @param Presenter $presenter
+     * @param IPresenter $presenter
      * @return void
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
         $this->addHolderColumns();
     }

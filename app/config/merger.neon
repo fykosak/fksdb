@@ -50,20 +50,20 @@ parameters:
 services:
     merge.cummulative: FKSDB\Persons\Deduplication\MergeStrategy\CummulativeStrategy
     merge.cummTrunk:
-        class: FKSDB\Persons\Deduplication\MergeStrategy\CummulativeStrategy
+        factory: FKSDB\Persons\Deduplication\MergeStrategy\CummulativeStrategy
         arguments: [trunk]
     merge.cummMerged:
-        class: FKSDB\Persons\Deduplication\MergeStrategy\CummulativeStrategy
+        factory: FKSDB\Persons\Deduplication\MergeStrategy\CummulativeStrategy
         arguments: [merged]
     merge.trunk: FKSDB\Persons\Deduplication\MergeStrategy\TrunkStrategy
     merge.merged: FKSDB\Persons\Deduplication\MergeStrategy\MergedStrategy
     merge.fail: FKSDB\Persons\Deduplication\MergeStrategy\FailStrategy
     merge.greater:
-        class: FKSDB\Persons\Deduplication\MergeStrategy\CompareStrategy
+        factory: FKSDB\Persons\Deduplication\MergeStrategy\CompareStrategy
         arguments: [greater]
     merge.less:
-        class: FKSDB\Persons\Deduplication\MergeStrategy\CompareStrategy
+        factory: FKSDB\Persons\Deduplication\MergeStrategy\CompareStrategy
         arguments: [less]
     merge.null:
-        class: FKSDB\Persons\Deduplication\MergeStrategy\ConstantStrategy
+        factory: FKSDB\Persons\Deduplication\MergeStrategy\ConstantStrategy
         arguments: [null]

@@ -148,7 +148,7 @@ class ApplicationComponent extends BaseComponent {
          * Create cancel button
          */
         $submit = $form->addSubmit('cancel', _('Cancel'));
-        $submit->setValidationScope(false);
+        $submit->setValidationScope(null);
         $submit->getControlPrototype()->addAttributes(['class' => 'btn-warning']);
         $submit->onClick[] = function (SubmitButton $button) {
             $this->finalRedirect();

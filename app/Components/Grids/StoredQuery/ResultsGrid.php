@@ -6,7 +6,7 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\StoredQuery\StoredQuery;
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\Presenter;
+use Nette\Application\IPresenter;
 use Nette\DI\Container;
 use Nette\Utils\Strings;
 use NiftyGrid\DataSource\IDataSource;
@@ -37,12 +37,12 @@ class ResultsGrid extends BaseGrid {
     }
 
     /**
-     * @param Presenter $presenter
-     * @throws InvalidLinkException
+     * @param IPresenter $presenter
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
+     * @throws InvalidLinkException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
         try {

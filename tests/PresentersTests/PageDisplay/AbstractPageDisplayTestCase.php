@@ -10,6 +10,7 @@ use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;
 use Nette\DI\Container;
 use Tester\Assert;
+use Tester\Environment;
 
 /**
  * Class PageDisplayTest
@@ -40,7 +41,6 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
         ]);
 
         $loginId = $this->insert(DbNames::TAB_LOGIN, ['person_id' => $this->personId, 'active' => 1]);
-
 
         $this->insert(DbNames::TAB_GRANT, ['login_id' => $loginId, 'role_id' => 1000, 'contest_id' => 1]);
         $this->authenticate($loginId);

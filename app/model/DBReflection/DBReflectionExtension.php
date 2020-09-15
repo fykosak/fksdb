@@ -16,8 +16,8 @@ use FKSDB\DBReflection\ColumnFactories\{DateRow,
 };
 use FKSDB\DBReflection\LinkFactories\Link;
 use Nette\DI\CompilerExtension;
-use Nette\DI\ServiceDefinition;
-use Nette\DI\Statement;
+use Nette\DI\Definitions\ServiceDefinition;
+use Nette\DI\Definitions\Statement;
 use FKSDB\Exceptions\NotImplementedException;
 
 /**

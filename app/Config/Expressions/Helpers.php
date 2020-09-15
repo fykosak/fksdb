@@ -10,8 +10,8 @@ use FKSDB\Expressions\Logic\LogicOr;
 use FKSDB\Expressions\Predicates\After;
 use FKSDB\Expressions\Predicates\Before;
 use Nette\DI\Container;
-use Nette\DI\Helpers as DIHelpers;
-use Nette\DI\Statement;
+use Nette\DI\Definitions\Helpers as DIHelpers;
+use Nette\DI\Definitions\Statement;
 use Nette\Reflection\ClassType;
 
 /**

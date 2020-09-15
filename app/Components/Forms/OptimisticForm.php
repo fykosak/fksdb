@@ -60,10 +60,7 @@ class OptimisticForm extends Form {
         return $this[self::FINGERPRINT];
     }
 
-    /**
-     * @return bool
-     */
-    public function isValid() {
+    public function isValid(): bool {
         $receivedFingerprint = $this->getFingerprintInput()->getValue();
         $currentFingerprint = ($this->fingerprintCallback)();
 

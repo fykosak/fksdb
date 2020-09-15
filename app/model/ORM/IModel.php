@@ -22,7 +22,7 @@ interface IModel extends ArrayAccess {
      * @param bool $need
      * @return string|int
      */
-    public function getPrimary($need = true);
+    public function getPrimary(bool $need = true);
 
     /**
      * @note This is here to straddle duck-typing of ActiveRow.
@@ -31,5 +31,5 @@ interface IModel extends ArrayAccess {
      * @param bool
      * @return string
      */
-    public function getSignature($need = true);
+    public function getSignature(bool $need = true): string;
 }

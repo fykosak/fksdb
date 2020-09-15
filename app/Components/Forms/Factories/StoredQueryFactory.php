@@ -78,7 +78,7 @@ class StoredQueryFactory {
         $submit = $replicator->addSubmit('addParam', _('Add parameter'));
         $submit->getControlPrototype()->addAttributes(['class' => 'btn-sm btn-success']);
 
-        $submit->setValidationScope(false)
+        $submit->setValidationScope(null)
             ->addCreateOnClick();
 
         return $replicator;

@@ -4,7 +4,7 @@ namespace FKSDB\Components\Grids;
 
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Services\ServiceEmailMessage;
-use Nette\Application\UI\Presenter;
+use Nette\Application\IPresenter;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
@@ -29,13 +29,13 @@ class EmailsGrid extends BaseGrid {
     }
 
     /**
-     * @param Presenter $presenter
+     * @param IPresenter $presenter
      * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
 
         $this->addColumns([

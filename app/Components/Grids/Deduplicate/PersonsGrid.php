@@ -5,7 +5,7 @@ namespace FKSDB\Components\Grids\Deduplicate;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use Nette\Application\UI\Presenter;
+use Nette\Application\IPresenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -41,11 +41,11 @@ class PersonsGrid extends BaseGrid {
     }
 
     /**
-     * @param Presenter $presenter
+     * @param IPresenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
 
         /***** columns ****/

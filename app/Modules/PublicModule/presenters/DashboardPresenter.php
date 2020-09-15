@@ -37,8 +37,7 @@ class DashboardPresenter extends BasePresenter {
 
     public function authorizedDefault(): void {
         $login = $this->getUser()->getIdentity();
-        $access = (bool)$login;
-        $this->setAuthorized($access);
+        $this->setAuthorized((bool)$login);
     }
 
     public function titleDefault(): void {

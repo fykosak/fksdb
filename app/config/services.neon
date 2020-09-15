@@ -4,7 +4,7 @@
 
 services:
     accountManager:
-        class: FKSDB\Authentication\AccountManager
+        factory: FKSDB\Authentication\AccountManager
         setup:
             - setInvitationExpiration(%invitation.expiration%)
             - setRecoveryExpiration(%recovery.expiration%)
@@ -27,34 +27,34 @@ services:
     - FKSDB\Persons\ExtendedPersonHandlerFactory
     - FKSDB\Persons\SelfResolver
     merger:
-        class: FKSDB\Persons\Deduplication\Merger(%merger%, ...)
+        factory: FKSDB\Persons\Deduplication\Merger(%merger%, ...)
     - FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider
     - FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider
     - FKSDB\Components\Controls\PresenterBuilder
     - FKSDB\Github\EventFactory
     - FKSDB\Maintenance\Updater
     globalSession:
-        class: FKSDB\Authentication\SSO\GlobalSession(%globalSession.expiration%, ...)
+        factory: FKSDB\Authentication\SSO\GlobalSession(%globalSession.expiration%, ...)
         setup:
             - start()
     - FKSDB\Authentication\SSO\TokenGSIDHolder
     submitUploatedStorage:
-        class: FKSDB\Submits\FileSystemStorage\UploadedStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
+        factory: FKSDB\Submits\FileSystemStorage\UploadedStorage(%upload.root%, %upload.directoryMask%, %upload.filenameMask%, %contestMapping%)
         setup:
             - addProcessing(@PDFStamper)
     submitCorrectedStorage:
-                    class: FKSDB\Submits\FileSystemStorage\CorrectedStorage(%corrected.root%, %corrected.directoryMask%, %corrected.filenameMask%, %contestMapping%)
+                    factory: FKSDB\Submits\FileSystemStorage\CorrectedStorage(%corrected.root%, %corrected.directoryMask%, %corrected.filenameMask%, %contestMapping%)
     - FKSDB\Submits\SubmitHandlerFactory
     - FKSDB\Components\Forms\Controls\Schedule\Handler
     PDFStamper: FKSDB\Submits\PDFStamper(%stamper.fontSize%)
     readOnlyConnection:
-        class: Nette\Database\Connection(%ro-database.dsn%, %ro-database.user%, %ro-database.password%)
+        factory: Nette\Database\Connection(%ro-database.dsn%, %ro-database.user%, %ro-database.password%)
         autowired: false
     translator: FKSDB\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
 
     # web services
     soapServer:
-        class: SoapServer(%wsdlUrl%)
+        factory: SoapServer(%wsdlUrl%)
         setup:
             - setObject(@webServiceModel)
 
@@ -62,7 +62,7 @@ services:
 
     nette.userStorage: FKSDB\Authentication\LoginUserStorage
     nette.mailer:
-        class: FKSDB\Mail\LoggingMailer(Nette\Mail\SendmailMailer())
+        factory: FKSDB\Mail\LoggingMailer(Nette\Mail\SendmailMailer())
         setup:
             - setLogPath(%logDir%/mail)
 

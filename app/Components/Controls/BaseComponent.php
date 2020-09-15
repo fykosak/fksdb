@@ -24,7 +24,6 @@ abstract class BaseComponent extends Control {
      * @param Container $container
      */
     public function __construct(Container $container) {
-        parent::__construct();
         $container->callInjects($this);
         $this->context = $container;
     }

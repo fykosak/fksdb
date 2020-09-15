@@ -7,7 +7,7 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\UI\InvalidLinkException;
-use Nette\Application\UI\Presenter;
+use Nette\Application\IPresenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -49,15 +49,15 @@ class EventsGrid extends BaseGrid {
     }
 
     /**
-     * @param Presenter $presenter
+     * @param IPresenter $presenter
      *
+     * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
-     * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
         $this->setDefaultOrder('event.begin ASC');
 

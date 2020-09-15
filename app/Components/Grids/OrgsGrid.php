@@ -5,7 +5,7 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceOrg;
-use Nette\Application\UI\Presenter;
+use Nette\Application\IPresenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
@@ -53,13 +53,13 @@ class OrgsGrid extends BaseGrid {
     }
 
     /**
-     * @param Presenter $presenter
+     * @param IPresenter $presenter
      * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
 
         $this->setDefaultOrder('since DESC');

@@ -59,10 +59,11 @@ class GettextTranslator implements ITranslator {
 
     /**
      * @param string $message
-     * @param null $count
+     * @param mixed ...$parameters
      * @return string
      */
-    public function translate($message, $count = null): string {
+    public function translate($message, ...$parameters): string {
+        [$count] = $parameters;
         if ($message === "" || $message === null) {
             return "";
         }

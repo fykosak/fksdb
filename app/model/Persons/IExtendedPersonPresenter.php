@@ -33,5 +33,5 @@ interface IExtendedPersonPresenter {
      * @param string $type
      * @return void
      */
-    public function flashMessage($message, $type = 'info');
+    public function flashMessage($message, string $type = 'info'): \stdClass;
 }

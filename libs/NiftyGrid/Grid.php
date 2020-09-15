@@ -10,8 +10,10 @@
 
 namespace NiftyGrid;
 
+use Nette\Application\IPresenter;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\Container;
+use Nette\ComponentModel\IComponent;
 
 abstract class Grid extends \Nette\Application\UI\Control {
     const ROW_FORM = "rowForm";
@@ -83,71 +85,67 @@ abstract class Grid extends \Nette\Application\UI\Control {
     /** @var \Nette\Localization\ITranslator */
     protected $translator;
 
-    /**
-     * @param \Nette\Application\UI\Presenter $presenter
-     */
-    protected function attached($presenter) {
-        parent::attached($presenter);
-        if (!$presenter instanceof Presenter) {
-            return;
-        }
+    public function __construct() {
+        $this->monitor(IPresenter::class, function (IPresenter $presenter) {
 
-        $this->addComponent(new Container(), "columns");
-        $this->addComponent(new Container(), "buttons");
-        $this->addComponent(new Container(), "globalButtons");
-        $this->addComponent(new Container(), "actions");
-        $this->addComponent(new Container(), "subGrids");
+            $this->addComponent(new Container(), "columns");
+            $this->addComponent(new Container(), "buttons");
+            $this->addComponent(new Container(), "globalButtons");
+            $this->addComponent(new Container(), "actions");
+            $this->addComponent(new Container(), "subGrids");
 
-        if ($presenter->isAjax()) {
-            $this->redrawControl();
-        }
-
-        $this->configure($presenter);
-
-        if ($this->isSubGrid && !empty($this->afterConfigureSettings)) {
-            call_user_func($this->afterConfigureSettings, $this);
-        }
-
-        if ($this->hasActiveSubGrid()) {
-            $subGrid = $this->addComponent($this['subGrids']->components[$this->activeSubGridName]->getGrid(), "subGrid" . $this->activeSubGridName);
-            $subGrid->registerSubGrid("subGrid" . $this->activeSubGridName);
-        }
-
-        if ($this->hasActionForm()) {
-            $actions = [];
-            foreach ($this['actions']->components as $name => $action) {
-                $actions[$name] = $action->getAction();
+            if ($presenter->isAjax()) {
+                $this->redrawControl();
             }
-            $this['gridForm'][$this->name]['action']['action_name']->setItems($actions);
-        }
-        if ($this->paginate) {
-            if ($this->hasActiveItemPerPage()) {
-                if (in_array($this->perPage, $this['gridForm'][$this->name]['perPage']['perPage']->items)) {
-                    $this['gridForm'][$this->name]['perPage']->setDefaults(["perPage" => $this->perPage]);
+
+            $this->configure($presenter);
+
+            if ($this->isSubGrid && !empty($this->afterConfigureSettings)) {
+                call_user_func($this->afterConfigureSettings, $this);
+            }
+
+            if ($this->hasActiveSubGrid()) {
+                $subGrid = $this->addComponent($this['subGrids']->components[$this->activeSubGridName]->getGrid(), "subGrid" . $this->activeSubGridName);
+                $subGrid->registerSubGrid("subGrid" . $this->activeSubGridName);
+            }
+
+            if ($this->hasActionForm()) {
+                $actions = [];
+                foreach ($this['actions']->components as $name => $action) {
+                    $actions[$name] = $action->getAction();
+                }
+                $this['gridForm'][$this->name]['action']['action_name']->setItems($actions);
+            }
+            if ($this->paginate) {
+                if ($this->hasActiveItemPerPage()) {
+                    if (in_array($this->perPage, $this['gridForm'][$this->name]['perPage']['perPage']->items)) {
+                        $this['gridForm'][$this->name]['perPage']->setDefaults(["perPage" => $this->perPage]);
+                    } else {
+                        $items = $this['gridForm'][$this->name]['perPage']['perPage']->getItems();
+                        $this->perPage = reset($items);
+                    }
                 } else {
                     $items = $this['gridForm'][$this->name]['perPage']['perPage']->getItems();
                     $this->perPage = reset($items);
                 }
-            } else {
-                $items = $this['gridForm'][$this->name]['perPage']['perPage']->getItems();
-                $this->perPage = reset($items);
+                $this->getPaginator()->itemsPerPage = $this->perPage;
             }
-            $this->getPaginator()->itemsPerPage = $this->perPage;
-        }
-        if ($this->hasActiveFilter()) {
-            $this->filterData();
-            $this['gridForm'][$this->name]['filter']->setDefaults($this->filter);
-        }
-        if ($this->hasActiveOrder() && $this->hasEnabledSorting()) {
-            $this->orderData($this->order);
-        }
-        if (!$this->hasActiveOrder() && $this->hasDefaultOrder() && $this->hasEnabledSorting()) {
-            $order = explode(" ", $this->defaultOrder);
-            $this->dataSource->orderData($order[0], $order[1]);
-        }
+            if ($this->hasActiveFilter()) {
+                $this->filterData();
+                $this['gridForm'][$this->name]['filter']->setDefaults($this->filter);
+            }
+            if ($this->hasActiveOrder() && $this->hasEnabledSorting()) {
+                $this->orderData($this->order);
+            }
+            if (!$this->hasActiveOrder() && $this->hasDefaultOrder() && $this->hasEnabledSorting()) {
+                $order = explode(" ", $this->defaultOrder);
+                $this->dataSource->orderData($order[0], $order[1]);
+            }
+        });
     }
 
-    abstract protected function configure(\Nette\Application\UI\Presenter $presenter): void;
+
+    abstract protected function configure(IPresenter $presenter): void;
 
     /**
      * @param string $subGrid
@@ -695,12 +693,12 @@ abstract class Grid extends \Nette\Application\UI\Control {
 
         $form[$this->name]->addContainer("filter");
         $form[$this->name]['filter']->addSubmit("send", "Filtrovat")
-            ->setValidationScope(false);
+            ->setValidationScope(null);
 
         $form[$this->name]->addContainer("action");
         $form[$this->name]['action']->addSelect("action_name", "Označené:");
         $form[$this->name]['action']->addSubmit("send", "Potvrdit")
-            ->setValidationScope(false)
+            ->setValidationScope(null)
             ->getControlPrototype()
             ->addData("select", $form[$this->name]["action"]["action_name"]->getControl()->name);
 
@@ -711,7 +709,7 @@ abstract class Grid extends \Nette\Application\UI\Control {
             ->addData("gridname", $this->getGridPath())
             ->addData("link", $this->link("changePerPage!"));
         $form[$this->name]['perPage']->addSubmit("send", "Ok")
-            ->setValidationScope(false)
+            ->setValidationScope(null)
             ->getControlPrototype()
             ->addClass("grid-perpagesubmit");
 

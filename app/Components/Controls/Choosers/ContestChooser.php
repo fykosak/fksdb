@@ -4,6 +4,7 @@ namespace FKSDB\Components\Controls\Choosers;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Modules\Core\ContestPresenter\ContestPresenter;
+use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelLogin;
@@ -15,6 +16,8 @@ use Nette\Application\ForbiddenRequestException;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\Security\IIdentity;
+use Nette\Security\IUserStorage;
+use Nette\Security\User;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -49,6 +52,8 @@ class ContestChooser extends BaseComponent {
 
     private ServiceContest $serviceContest;
 
+    protected IUserStorage $user;
+
     /** @var ModelContest */
     private $contest;
 
@@ -67,10 +72,11 @@ class ContestChooser extends BaseComponent {
     /** @var int bitmask of what "sources" are used to infer selected contest */
     private $contestSource = 0xffffffff;
 
-    public function injectPrimary(Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest): void {
+    public function injectPrimary(Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest, IUserStorage $user): void {
         $this->session = $session;
         $this->yearCalculator = $yearCalculator;
         $this->serviceContest = $serviceContest;
+        $this->user = $user;
     }
 
     /**
@@ -230,7 +236,7 @@ class ContestChooser extends BaseComponent {
     /**
      * @return array of contests where user is either ORG or CONTESTANT
      */
-    private function getContests() {
+    private function getContests(): array {
         if ($this->contests === null) {
             if (is_array($this->contestsDefinition)) { // explicit
                 $contests = array_map(function ($contest) {
@@ -296,10 +302,10 @@ class ContestChooser extends BaseComponent {
     }
 
     /**
-     * @return IIdentity|ModelLogin|NULL
+     * @return IIdentity|ModelLogin|null
      */
-    private function getLogin() {
-        return $this->getPresenter()->getUser()->getIdentity();
+    private function getLogin(): ?ModelLogin {
+        return $this->user->getIdentity();
     }
 
     /**

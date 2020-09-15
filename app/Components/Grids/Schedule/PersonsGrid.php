@@ -6,7 +6,7 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
-use Nette\Application\UI\Presenter;
+use Nette\Application\IPresenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -35,12 +35,12 @@ class PersonsGrid extends BaseGrid {
     }
 
     /**
-     * @param Presenter $presenter
+     * @param IPresenter $presenter
      * @return void
-     * @throws DuplicateColumnException
      * @throws BadTypeException
+     * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
         $this->addColumn('person_schedule_id', _('#'));

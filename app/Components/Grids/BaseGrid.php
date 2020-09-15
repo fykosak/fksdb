@@ -9,10 +9,10 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\AbortException;
+use Nette\Application\IPresenter;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\ITemplate;
-use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
@@ -62,7 +62,7 @@ abstract class BaseGrid extends Grid {
         $this->setTranslator($translator);
     }
 
-    protected function configure(Presenter $presenter): void {
+    protected function configure(IPresenter $presenter): void {
         try {
             $this->setDataSource($this->getData());
         } catch (NotImplementedException $exception) {

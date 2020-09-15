@@ -5,7 +5,7 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceContestant;
-use Nette\Application\UI\Presenter;
+use Nette\Application\IPresenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
@@ -44,13 +44,13 @@ class ContestantsFromSchoolGrid extends BaseGrid {
     }
 
     /**
-     * @param Presenter $presenter
+     * @param IPresenter $presenter
      * @return void
+     * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
         $this->addColumns(['person.full_name', 'contestant_base.year', /*'person_history.study_year',*/ 'contest.contest']);
 

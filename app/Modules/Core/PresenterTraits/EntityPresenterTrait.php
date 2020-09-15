@@ -206,7 +206,7 @@ trait EntityPresenterTrait {
      * @param null $default
      * @return mixed
      */
-    abstract public function getParameter($name, $default = null);
+    abstract public function getParameter(string $name, $default = null);
 
     /**
      * @param bool $access
