@@ -75,5 +75,4 @@ class ResultsGrid extends BaseGrid {
             }
         }
     }
-
 }

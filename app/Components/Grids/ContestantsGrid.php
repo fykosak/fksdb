@@ -64,7 +64,6 @@ class ContestantsGrid extends BaseGrid {
         $this->addColumn('study_year', _('Study year'));
         $this->addColumn('school_name', _('School'));
 
-
         $this->addLinkButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'ct_id']);
         // $this->addLinkButton('Contestant:detail', 'detail', _('Detail'), false, ['id' => 'ct_id']);
 

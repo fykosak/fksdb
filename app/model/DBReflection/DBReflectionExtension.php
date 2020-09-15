@@ -30,14 +30,6 @@ class DBReflectionExtension extends CompilerExtension {
      */
     public function loadConfiguration() {
         $this->registerFactories($this->config['tables']);
-        $this->registerDetails($this->config['details']);
-    }
-
-    private function registerDetails(array $details): void {
-        $builder = $this->getContainerBuilder();
-        $builder->addDefinition($this->prefix('detailFactory'))
-            ->setFactory(DetailFactory::class)
-            ->addSetup('setNodes', [$details]);
     }
 
     /**

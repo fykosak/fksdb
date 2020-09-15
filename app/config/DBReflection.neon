@@ -552,9 +552,28 @@ DBReflection:
              columnFactories:
                 qid: FKSDB\DBReflection\ColumnFactories\StoredQuery\StoredQuery\QIDRow
                 tags: FKSDB\DBReflection\ColumnFactories\StoredQuery\StoredQuery\TagsRow
+                sql: FKSDB\DBReflection\ColumnFactories\StoredQuery\StoredQuery\SQLColumnFactory
+                name: FKSDB\DBReflection\ColumnFactories\StoredQuery\StoredQuery\NameColumnFactory
+                query_id:
+                    type: primaryKey
+                    title: _(Query Id)
+                description:
+                    type: text
+                    title: _(Description)
+                php_post_proc:
+                    type: string
+                    title: _(PHP post processing)
+                    description: _('Název třídy pro zpracování výsledku v PHP. Lze upravit jen v databázi.')
+
          schedule_group:
+             referencedAccess:
+                modelClassName: FKSDB\ORM\Models\IScheduleGroupReferencedModel
+                method: getScheduleGroup
              modelClassName: FKSDB\ORM\Models\Schedule\ModelScheduleGroup
              columnFactories:
+                schedule_group_id:
+                    type: primaryKey
+                    title: _(Schedule group Id)
                 schedule_group_type: FKSDB\DBReflection\ColumnFactories\Schedule\ScheduleGroup\ScheduleGroupTypeRow
                 start:
                     type: dateTime
@@ -568,12 +587,16 @@ DBReflection:
                 name_en:
                     type: string
                     title: _(Name en)
+                name: FKSDB\DBReflection\ColumnFactories\Schedule\ScheduleGroup\NameColumnFactory
          schedule_item:
              modelClassName: FKSDB\ORM\Models\Schedule\ModelScheduleItem
              referencedAccess:
                 modelClassName: FKSDB\ORM\Models\IScheduleItemReferencedModel
                 method: getScheduleItem
              columnFactories:
+                schedule_item_id:
+                    type: primaryKey
+                    title: _(Schedule item Id)
                 require_id_number:
                     type: logic
                     title: _(Require Id number)
@@ -585,6 +608,7 @@ DBReflection:
                 name_cs:
                     type: string
                     title: _(Name cs)
+                name: FKSDB\DBReflection\ColumnFactories\Schedule\ScheduleItem\NameColumnFactory
                 description_en:
                     type: string
                     title: _(Description en)
@@ -600,16 +624,27 @@ DBReflection:
          teacher:
              modelClassName: FKSDB\ORM\Models\ModelTeacher
              columnFactories:
-                state: FKSDB\DBReflection\ColumnFactories\Teacher\StateRow
-                since: FKSDB\DBReflection\ColumnFactories\Teacher\SinceRow
-                until: FKSDB\DBReflection\ColumnFactories\Teacher\UntilRow
-                number_brochures:
+                 state: FKSDB\DBReflection\ColumnFactories\Teacher\StateRow
+                 since: FKSDB\DBReflection\ColumnFactories\Teacher\SinceRow
+                 until: FKSDB\DBReflection\ColumnFactories\Teacher\UntilRow
+                 number_brochures:
                     type: int
                     title: _(Number of brochures)
                     description: _('Number of brochures/propagation items, that he wants to send.')
-                note:
+                 note:
                     type: text
                     title: _(Note)
+             linkFactories:
+                 edit:
+                     destination: :Org:Teacher:edit
+                     params:
+                         id: teacher_id
+                     title: Edit
+                 detail:
+                     destination: :Org:Teacher:detail
+                     params:
+                         id: teacher_id
+                     title: Detail
          task_contribution:
              modelClassName: FKSDB\ORM\Models\ModelTaskContribution
              columnFactories:
@@ -658,25 +693,14 @@ DBReflection:
                      type: string
                      title: _(School)
                      accessKey: name_abbrev
-    details:
-        fyziklani.submit:
-            -
-                fields:
-                   - fyziklani_submit.fyziklani_submit_id
-                   - e_fyziklani_team.opened_submitting
-                   - e_fyziklani_team.name
-                   - e_fyziklani_team.e_fyziklani_team_id
-            -
-                headline: Task
-                fields:
-                   - fyziklani_task.fyziklani_task_id
-                   - fyziklani_task.name
-                   - fyziklani_task.label
-            -
-                fields:
-                   - fyziklani_submit.points
-                   - fyziklani_submit.state
-            -
-                fields:
-                   - fyziklani_submit.created
-                   - fyziklani_submit.modified
+             linkFactories:
+                 edit:
+                     destination: :Common:School:edit
+                     params:
+                         id: school_id
+                     title: Edit
+                 detail:
+                     destination: :Common:School:detail
+                     params:
+                         id: school_id
+                     title: Detail

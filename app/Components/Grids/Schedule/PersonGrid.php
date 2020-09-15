@@ -36,7 +36,7 @@ class PersonGrid extends BaseGrid {
      * @throws \InvalidArgumentException
      * @throws GridException
      */
-    public function render(ModelPerson $person = null, ModelEvent $event = null): void {
+    public function render(?ModelPerson $person = null, ?ModelEvent $event = null): void {
         if (!$event || !$person) {
             throw new \InvalidArgumentException();
         }
@@ -55,29 +55,7 @@ class PersonGrid extends BaseGrid {
         $this->paginate = false;
 
         $this->addColumn('person_schedule_id', _('#'));
-        $this->addColumn('group_label', _('Group'))->setRenderer(function ($row): string {
-            $model = ModelPersonSchedule::createFromActiveRow($row);
-            return $model->getScheduleItem()->getScheduleGroup()->getLabel();
-        });
-        $this->addColumn('item_label', _('Item'))->setRenderer(function ($row): string {
-            $model = ModelPersonSchedule::createFromActiveRow($row);
-            return $model->getScheduleItem()->getLabel();
-        });
-        $this->addJoinedColumn('schedule_item.price_czk', function ($row): ModelScheduleItem {
-            $model = ModelPersonSchedule::createFromActiveRow($row);
-            return $model->getScheduleItem();
-        });
-        $this->addJoinedColumn('schedule_item.price_eur', function ($row): ModelScheduleItem {
-            $model = ModelPersonSchedule::createFromActiveRow($row);
-            return $model->getScheduleItem();
-        });
-
-        $this->addColumns(['payment.payment']);
-
-        $this->addColumn('state', _('State'))->setRenderer(function ($row) {
-            $model = ModelPersonSchedule::createFromActiveRow($row);
-            return $model->state;
-        });
+        $this->addColumns(['schedule_group.name', 'schedule_item.name', 'schedule_item.price_czk', 'schedule_item.price_eur', 'payment.payment']);
     }
 
     protected function getModelClassName(): string {
