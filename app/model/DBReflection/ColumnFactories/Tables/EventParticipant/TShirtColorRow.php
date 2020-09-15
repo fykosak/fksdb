@@ -3,6 +3,7 @@
 namespace FKSDB\DBReflection\ColumnFactories\EventParticipant;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use Nette\Utils\Html;
@@ -11,12 +12,7 @@ use Nette\Utils\Html;
  * Class TShirtColorRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class TShirtColorRow extends AbstractParticipantRow {
-
-    public function getTitle(): string {
-        return _('T-shirt color');
-    }
-
+class TShirtColorRow extends DefaultColumnFactory {
     /**
      * @param AbstractModelSingle|ModelEventParticipant $model
      * @return Html

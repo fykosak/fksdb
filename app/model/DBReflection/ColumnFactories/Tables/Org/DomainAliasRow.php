@@ -2,6 +2,7 @@
 
 namespace FKSDB\DBReflection\ColumnFactories\Org;
 
+use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
 use FKSDB\ValuePrinters\EmailPrinter;
 use FKSDB\Exceptions\ContestNotFoundException;
 use FKSDB\ORM\AbstractModelSingle;
@@ -16,10 +17,7 @@ use Nette\Utils\Html;
  * Class DomainAliasRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class DomainAliasRow extends AbstractOrgRowFactory {
-    public function getTitle(): string {
-        return _('Domain alias');
-    }
+class DomainAliasRow extends DefaultColumnFactory {
 
     /**
      * @param AbstractModelSingle|ModelOrg $model
@@ -41,7 +39,7 @@ class DomainAliasRow extends AbstractOrgRowFactory {
      * @param array $args
      * @return BaseControl
      */
-    public function createField(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         $control = new TextInput($this->getTitle());
         $control->addRule(Form::MAX_LENGTH, null, 32);
         $control->addCondition(Form::FILLED);

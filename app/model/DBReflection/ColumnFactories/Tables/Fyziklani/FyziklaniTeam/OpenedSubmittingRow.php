@@ -2,17 +2,16 @@
 
 namespace FKSDB\DBReflection\ColumnFactories\Fyziklani\FyziklaniTeam;
 
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
 /**
  * Class OpenedSubmittingRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class OpenedSubmittingRow extends AbstractFyziklaniTeamRow {
+class OpenedSubmittingRow extends DefaultColumnFactory {
 
     /**
      * @param AbstractModelSingle|ModelFyziklaniTeam $model
@@ -28,13 +27,5 @@ class OpenedSubmittingRow extends AbstractFyziklaniTeamRow {
                 ->addText(_('Closed'));
         }
         return $html;
-    }
-
-    public function createField(...$args): BaseControl {
-        throw new AbstractColumnException();
-    }
-
-    public function getTitle(): string {
-        return _('Submit opened?');
     }
 }

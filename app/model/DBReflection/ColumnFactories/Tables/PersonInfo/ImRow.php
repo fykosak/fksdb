@@ -2,40 +2,20 @@
 
 namespace FKSDB\DBReflection\ColumnFactories\PersonInfo;
 
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnFactory;
-use FKSDB\DBReflection\FieldLevelPermission;
-use FKSDB\ValuePrinters\StringPrinter;
+use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
-use FKSDB\ORM\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
-use Nette\Utils\Html;
 
 /**
  * Class ImRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class ImRow extends AbstractColumnFactory {
+class ImRow extends DefaultColumnFactory {
 
-    public function getTitle(): string {
-        return _('ICQ, Jabber, apod.');
-    }
-
-    public function createField(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         $control = new  WriteOnlyInput($this->getTitle());
         $control->addRule(Form::MAX_LENGTH, null, 32);
         return $control;
-    }
-
-    public function getPermission(): FieldLevelPermission {
-        return new FieldLevelPermission(self::PERMISSION_ALLOW_RESTRICT, self::PERMISSION_ALLOW_RESTRICT);
-    }
-
-    protected function getModelAccessKey(): string {
-        return 'im';
-    }
-
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new StringPrinter())($model->{$this->getModelAccessKey()});
     }
 }

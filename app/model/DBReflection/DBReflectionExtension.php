@@ -120,6 +120,9 @@ class DBReflectionExtension extends CompilerExtension {
                 case 'logic':
                     $this->registerLogicRow($factory, $tableName, $fieldName, $field);
                     break;
+                case 'class':
+                    $this->registerClassColumnFactory($factory, $tableName, $fieldName, $field);
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -127,6 +130,10 @@ class DBReflectionExtension extends CompilerExtension {
             $factory->setFactory($field);
         }
         return $factory;
+    }
+
+    private function registerClassColumnFactory(ServiceDefinition $factory, string $tableName, string $fieldName, array $field): void {
+        $this->setUpDefaultFactory($factory, $tableName, $fieldName, $field['class'], $field);
     }
 
     private function registerStateRow(ServiceDefinition $factory, string $tableName, string $fieldName, array $field): void {
