@@ -59,10 +59,6 @@ class ApplicationComponent extends BaseComponent {
         }
     }
 
-    public function getRedirectCallback(): callable {
-        return $this->redirectCallback;
-    }
-
     public function setRedirectCallback(callable $redirectCallback): void {
         $this->redirectCallback = $redirectCallback;
     }
@@ -89,21 +85,6 @@ class ApplicationComponent extends BaseComponent {
         $this->template->event = $this->holder->getPrimaryHolder()->getEvent();
         $this->template->primaryModel = $this->holder->getPrimaryHolder()->getModel();
         $this->template->primaryMachine = $this->getMachine()->getPrimaryMachine();
-        $this->template->render();
-    }
-
-    /**
-     * @param string $mode
-     * @return void
-     */
-    public function renderInline($mode): void {
-        $this->template->mode = $mode;
-        $this->template->holder = $this->holder;
-        $this->template->primaryModel = $this->holder->getPrimaryHolder()->getModel();
-        $this->template->primaryMachine = $this->getMachine()->getPrimaryMachine();
-        $this->template->canEdit = $this->canEdit();
-        $this->template->state = $this->holder->getPrimaryHolder()->getModelState();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.application.inline.latte');
         $this->template->render();
     }
 
@@ -189,28 +170,10 @@ class ApplicationComponent extends BaseComponent {
 
     /**
      * @param Form $form
-     * @param null $explicitTransitionName
-     * @throws AbortException
-     */
-    public function handleSubmit(Form $form, $explicitTransitionName = null): void {
-        $this->execute($form, $explicitTransitionName);
-    }
-
-    /**
-     * @param string $transitionName
-     * @throws AbortException
-     */
-    public function handleTransition($transitionName): void {
-        $this->execute(null, $transitionName);
-    }
-
-    /**
-     * @param Form|null $form
      * @param string|null $explicitTransitionName
-     * @return void
      * @throws AbortException
      */
-    private function execute(?Form $form, ?string $explicitTransitionName): void {
+    public function handleSubmit(Form $form, ?string $explicitTransitionName = null): void {
         try {
             $this->handler->storeAndExecuteForm($this->holder, $form, $explicitTransitionName);
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());

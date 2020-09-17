@@ -2,8 +2,7 @@
 
 namespace FKSDB\DBReflection\ColumnFactories\PersonInfo;
 
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnFactory;
-use FKSDB\DBReflection\FieldLevelPermission;
+use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPersonInfo;
 use Nette\Forms\Controls\BaseControl;
@@ -14,7 +13,7 @@ use Nette\Utils\Html;
  * Class HealthInsuranceRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class HealthInsuranceRow extends AbstractColumnFactory {
+class HealthInsuranceRow extends DefaultColumnFactory {
     protected const ID_MAPPING = [
         111 => '(111) Všeobecná zdravotní pojišťovna ČR',
         201 => '(201) Vojenská zdravotní pojišťovna ČR',
@@ -27,18 +26,6 @@ class HealthInsuranceRow extends AbstractColumnFactory {
         25 => '(25) VŠEOBECNÁ zdravotná poisťovňa, a. s.',
         27 => '(27) UNION zdravotná poisťovňa, a. s.',
     ];
-
-    public function getModelAccessKey(): string {
-        return 'health_insurance';
-    }
-
-    public function getTitle(): string {
-        return _('Health insurance');
-    }
-
-    public function getPermission(): FieldLevelPermission {
-        return new FieldLevelPermission(self::PERMISSION_ALLOW_FULL, self::PERMISSION_ALLOW_FULL);
-    }
 
     /**
      * @param AbstractModelSingle|ModelPersonInfo $model
@@ -55,7 +42,7 @@ class HealthInsuranceRow extends AbstractColumnFactory {
      * @param array $args
      * @return BaseControl
      */
-    public function createField(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         $control = new SelectBox($this->getTitle());
         $control->setItems(self::ID_MAPPING);
         $control->setPrompt(_('Vybete zdravotní pojišťovnu'));

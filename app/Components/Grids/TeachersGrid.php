@@ -46,9 +46,6 @@ class TeachersGrid extends BaseGrid {
      */
     protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
-        //
-        // columns
-        //
         $this->addColumns([
             'person.full_name',
             'teacher.note',
@@ -58,18 +55,7 @@ class TeachersGrid extends BaseGrid {
             'teacher.number_brochures',
             'school.school',
         ]);
-        //
-        // operations
-        //
-        $this->addButton('edit', _('Edit'))
-            ->setText(_('Edit'))
-            ->setLink(function (ModelTeacher $row): string {
-                return $this->getPresenter()->link('edit', ['id' => $row->teacher_id]);
-            });
-        $this->addButton('detail', _('Detail'))
-            ->setText(_('Detail'))
-            ->setLink(function (ModelTeacher $row): string {
-                return $this->getPresenter()->link('detail', ['id' => $row->teacher_id]);
-            });
+        $this->addLink('teacher.edit', false);
+        $this->addLink('teacher.detail', false);
     }
 }

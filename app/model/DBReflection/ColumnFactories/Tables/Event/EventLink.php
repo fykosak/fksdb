@@ -2,8 +2,8 @@
 
 namespace FKSDB\DBReflection\ColumnFactories\Event;
 
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnFactory;
-use FKSDB\DBReflection\FieldLevelPermission;
+use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
+use FKSDB\DBReflection\MetaDataFactory;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\LinkGenerator;
 use FKSDB\ORM\Models\ModelEvent;
@@ -14,24 +14,18 @@ use Nette\Utils\Html;
  * Class EventLink
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class EventLink extends AbstractColumnFactory {
+class EventLink extends DefaultColumnFactory {
 
     private LinkGenerator $linkGenerator;
 
     /**
      * PersonLinkRow constructor.
      * @param LinkGenerator $linkGenerator
+     * @param MetaDataFactory $metaDataFactory
      */
-    public function __construct(LinkGenerator $linkGenerator) {
+    public function __construct(LinkGenerator $linkGenerator, MetaDataFactory $metaDataFactory) {
+        parent::__construct($metaDataFactory);
         $this->linkGenerator = $linkGenerator;
-    }
-
-    public function getPermission(): FieldLevelPermission {
-        return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
-    }
-
-    public function getTitle(): string {
-        return _('Event');
     }
 
     /**

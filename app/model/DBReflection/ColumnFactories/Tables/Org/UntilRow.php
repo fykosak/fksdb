@@ -2,6 +2,7 @@
 
 namespace FKSDB\DBReflection\ColumnFactories\Org;
 
+use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
 use FKSDB\ValuePrinters\StringPrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelOrg;
@@ -14,11 +15,7 @@ use Nette\Utils\Html;
  * Class UntilRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class UntilRow extends AbstractOrgRowFactory {
-
-    public function getTitle(): string {
-        return _('Until');
-    }
+class UntilRow extends DefaultColumnFactory {
 
     /**
      * @param AbstractModelSingle|ModelOrg $model
@@ -32,7 +29,7 @@ class UntilRow extends AbstractOrgRowFactory {
         }
     }
 
-    public function createField(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         [$min, $max] = $args;
         if (\is_null($max) || \is_null($min)) {
             throw new \InvalidArgumentException();

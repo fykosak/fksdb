@@ -2,6 +2,7 @@
 
 namespace FKSDB\DBReflection\ColumnFactories\Fyziklani\FyziklaniTeam;
 
+use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
 use FKSDB\ValuePrinters\StringPrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Utils\Html;
@@ -11,15 +12,7 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  * TODO fix input
  */
-class NameRow extends AbstractFyziklaniTeamRow {
-
-    public function getTitle(): string {
-        return _('Team name');
-    }
-
-    protected function getModelAccessKey(): string {
-        return 'name';
-    }
+class NameRow extends DefaultColumnFactory {
 
     /* TODO fix it
      *   public function createField(...$args): BaseControl {

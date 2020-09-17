@@ -2,25 +2,28 @@
 
 namespace FKSDB\DBReflection\ColumnFactories\StoredQuery\StoredQuery;
 
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnFactory;
-use FKSDB\DBReflection\FieldLevelPermission;
+use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
+use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
+use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
+use FKSDB\DBReflection\MetaDataFactory;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTagType;
+use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
 /**
  * Class TagsRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class TagsRow extends AbstractColumnFactory {
+class TagsRow extends DefaultColumnFactory {
 
-    public function getPermission(): FieldLevelPermission {
-        return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
-    }
+    private ServiceStoredQueryTagType $serviceStoredQueryTagType;
 
-    public function getTitle(): string {
-        return _('Tags');
+    public function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType, MetaDataFactory $metaDataFactory) {
+        parent::__construct($metaDataFactory);
+        $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
     }
 
     /**
@@ -40,5 +43,12 @@ class TagsRow extends AbstractColumnFactory {
                 ->addText($tag->name));
         }
         return $baseEl;
+    }
+
+    protected function createFormControl(...$args): BaseControl {
+        $select = new AutocompleteSelectBox(true, $this->getTitle(), 'tags');
+        $select->setDataProvider(new StoredQueryTagTypeProvider($this->serviceStoredQueryTagType));
+        $select->setMultiSelect(true);
+        return $select;
     }
 }

@@ -8,7 +8,7 @@ use FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs;
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory;
 use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Components\Controls\Choosers\ThemeChooser;
-use FKSDB\Components\Controls\DBReflection\DetailComponent;
+use FKSDB\Components\Controls\DBReflection\LinkPrinterComponent;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Components\Controls\Navigation\NavigationChooser;
 use FKSDB\Components\Controls\PresenterBuilder;
@@ -265,16 +265,16 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return new NavigationChooser($this->getContext());
     }
 
-    protected function createComponentDetail(): DetailComponent {
-        return new DetailComponent($this->getContext());
-    }
-
     protected function createComponentThemeChooser(): ThemeChooser {
         return new ThemeChooser($this->getContext());
     }
 
     protected function createComponentValuePrinter(): ValuePrinterComponent {
         return new ValuePrinterComponent($this->getContext());
+    }
+
+    protected function createComponentLinkPrinter(): LinkPrinterComponent {
+        return new LinkPrinterComponent($this->getContext());
     }
 
     final protected function createComponentLanguageChooser(): LanguageChooser {

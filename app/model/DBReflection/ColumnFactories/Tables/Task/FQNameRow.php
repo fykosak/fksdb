@@ -2,9 +2,8 @@
 
 namespace FKSDB\DBReflection\ColumnFactories\Task;
 
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnFactory;
-use FKSDB\DBReflection\FieldLevelPermission;
-use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelTask;
 use Nette\Forms\Controls\BaseControl;
@@ -14,7 +13,7 @@ use Nette\Utils\Html;
  * Class FQNameRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class FQNameRow extends AbstractColumnFactory {
+class FQNameRow extends DefaultColumnFactory {
 
     /**
      * @param AbstractModelSingle|ModelTask $model
@@ -24,20 +23,12 @@ class FQNameRow extends AbstractColumnFactory {
         return Html::el('span')->addText($model->getFQName());
     }
 
-    public function getPermission(): FieldLevelPermission {
-        return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
-    }
-
-    public function getTitle(): string {
-        return _('Task');
-    }
-
     /**
      * @param mixed ...$args
      * @return BaseControl
-     * @throws NotImplementedException
+     * @throws AbstractColumnException
      */
-    public function createField(...$args): BaseControl {
-        throw new NotImplementedException();
+    protected function createFormControl(...$args): BaseControl {
+        throw new AbstractColumnException();
     }
 }
