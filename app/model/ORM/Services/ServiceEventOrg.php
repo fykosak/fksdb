@@ -20,11 +20,6 @@ use Nette\Database\IConventions;
 class ServiceEventOrg extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    /**
-     * ServiceEventOrg constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_EVENT_ORG, ModelEventOrg::class);
     }

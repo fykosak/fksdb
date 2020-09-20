@@ -20,11 +20,6 @@ class PaymentColumnFactory extends DefaultColumnFactory {
 
     private DBReflectionFactory $reflectionFactory;
 
-    /**
-     * PaymentRow constructor.
-     * @param DBReflectionFactory $reflectionFactory
-     * @param MetaDataFactory $metaDataFactory
-     */
     public function __construct(DBReflectionFactory $reflectionFactory, MetaDataFactory $metaDataFactory) {
         parent::__construct($metaDataFactory);
         $this->reflectionFactory = $reflectionFactory;

@@ -54,14 +54,6 @@ class ApplicationHandler {
 
     private EventDispatchFactory $eventDispatchFactory;
 
-    /**
-     * ApplicationHandler constructor.
-     * @param ModelEvent $event
-     * @param ILogger $logger
-     * @param Connection $connection
-     * @param Container $container
-     * @param EventDispatchFactory $eventDispatchFactory
-     */
     public function __construct(ModelEvent $event, ILogger $logger, Connection $connection, Container $container, EventDispatchFactory $eventDispatchFactory) {
         $this->event = $event;
         $this->logger = $logger;

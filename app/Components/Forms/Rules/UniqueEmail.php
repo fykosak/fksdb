@@ -17,10 +17,6 @@ class UniqueEmail {
 
     private ?ModelPerson $ignoredPerson;
 
-    /**
-     * UniqueEmail constructor.
-     * @param ServicePersonInfo $servicePersonInfo
-     */
     public function __construct(ServicePersonInfo $servicePersonInfo) {
         $this->servicePersonInfo = $servicePersonInfo;
     }

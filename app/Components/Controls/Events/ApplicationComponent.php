@@ -36,12 +36,6 @@ class ApplicationComponent extends BaseComponent {
 
     private string $templateFile;
 
-    /**
-     * ApplicationComponent constructor.
-     * @param Container $container
-     * @param ApplicationHandler $handler
-     * @param Holder $holder
-     */
     public function __construct(Container $container, ApplicationHandler $handler, Holder $holder) {
         parent::__construct($container);
         $this->handler = $handler;

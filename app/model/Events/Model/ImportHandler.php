@@ -32,12 +32,6 @@ class ImportHandler {
 
     private CSVParser $parser;
 
-    /**
-     * ImportHandler constructor.
-     * @param Container $container
-     * @param CSVParser $parser
-     * @param SingleEventSource $source
-     */
     public function __construct(Container $container, CSVParser $parser, SingleEventSource $source) {
         $this->container = $container;
         $this->parser = $parser;

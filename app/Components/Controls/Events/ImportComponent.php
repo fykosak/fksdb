@@ -32,13 +32,6 @@ class ImportComponent extends BaseComponent {
 
     private ApplicationHandler $handler;
 
-    /**
-     * ImportComponent constructor.
-     * @param Machine $machine
-     * @param SingleEventSource $source
-     * @param ApplicationHandler $handler
-     * @param Container $container
-     */
     public function __construct(Machine $machine, SingleEventSource $source, ApplicationHandler $handler, Container $container) {
         parent::__construct($container);
         $this->machine = $machine;

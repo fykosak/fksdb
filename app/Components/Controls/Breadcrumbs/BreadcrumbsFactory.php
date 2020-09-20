@@ -15,11 +15,6 @@ class BreadcrumbsFactory {
 
     private Container $container;
 
-    /**
-     * BreadcrumbsFactory constructor.
-     * @param string $expiration
-     * @param Container $container
-     */
     public function __construct(string $expiration, Container $container) {
         $this->expiration = $expiration;
         $this->container = $container;

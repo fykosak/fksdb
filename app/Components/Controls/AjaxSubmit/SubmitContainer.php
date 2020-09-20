@@ -29,14 +29,6 @@ class SubmitContainer extends BaseComponent {
 
     private ServiceTask $serviceTask;
 
-    /**
-     * SubmitContainer constructor.
-     * @param Container $container
-     * @param ModelContestant $contestant
-     * @param ModelContest $contest
-     * @param int $acYear
-     * @param int $year
-     */
     public function __construct(Container $container, ModelContestant $contestant, ModelContest $contest, int $acYear, int $year) {
         parent::__construct($container);
         $this->contestant = $contestant;
@@ -56,7 +48,7 @@ class SubmitContainer extends BaseComponent {
      * @return IComponent|null
      * @throws AbortException
      */
-    public function getComponent($name, $throw = true) {
+    public function getComponent($name, $throw = true): ?IComponent {
         $component = parent::getComponent($name, $throw);
         if (!$component && preg_match('/task_[0-9]+/', $name)) {
             $this->flashMessage(_('Task is not available'), Message::LVL_DANGER);

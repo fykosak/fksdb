@@ -14,10 +14,6 @@ class UniqueEmailFactory {
 
     private ServicePersonInfo $servicePersonInfo;
 
-    /**
-     * UniqueEmailFactory constructor.
-     * @param ServicePersonInfo $servicePersonInfo
-     */
     public function __construct(ServicePersonInfo $servicePersonInfo) {
         $this->servicePersonInfo = $servicePersonInfo;
     }

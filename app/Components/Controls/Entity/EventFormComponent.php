@@ -47,13 +47,6 @@ class EventFormComponent extends EditEntityFormComponent {
 
     private EventDispatchFactory $eventDispatchFactory;
 
-    /**
-     * AbstractForm constructor.
-     * @param ModelContest $contest
-     * @param Container $container
-     * @param int $year
-     * @param bool $create
-     */
     public function __construct(ModelContest $contest, Container $container, int $year, bool $create) {
         parent::__construct($container, $create);
         $this->contest = $contest;

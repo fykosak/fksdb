@@ -23,11 +23,6 @@ class TeamApplicationsTimeProgress extends ReactComponent implements IChart {
 
     private ServiceEvent $serviceEvent;
 
-    /**
-     * TeamApplicationsTimeProgress constructor.
-     * @param Container $context
-     * @param ModelEvent $event
-     */
     public function __construct(Container $context, ModelEvent $event) {
         parent::__construct($context, 'events.applications-time-progress.teams');
         $this->eventType = $event->getEventType();

@@ -13,10 +13,6 @@ class ArrayProvider implements IFilteredDataProvider {
 
     private array $labelById;
 
-    /**
-     * ArrayProvider constructor.
-     * @param array $data
-     */
     public function __construct(array $data) {
         $this->data = [];
         $this->labelById = $data;

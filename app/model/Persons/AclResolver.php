@@ -20,12 +20,6 @@ class AclResolver implements IVisibilityResolver, IModifiabilityResolver {
 
     private ModelContest $contest;
 
-
-    /**
-     * AclResolver constructor.
-     * @param ContestAuthorizator $contestAuthorizator
-     * @param ModelContest $contest
-     */
     public function __construct(ContestAuthorizator $contestAuthorizator, ModelContest $contest) {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->contest = $contest;

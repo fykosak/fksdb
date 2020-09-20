@@ -28,12 +28,6 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
 
     private Holder $holder;
 
-    /**
-     * AbstractApplicationGrid constructor.
-     * @param ModelEvent $event
-     * @param Holder $holder
-     * @param Container $container
-     */
     public function __construct(ModelEvent $event, Holder $holder, Container $container) {
         parent::__construct($container);
         $this->event = $event;

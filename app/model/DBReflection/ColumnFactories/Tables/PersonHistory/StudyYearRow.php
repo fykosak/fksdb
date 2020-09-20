@@ -18,12 +18,7 @@ use Nette\Utils\Html;
 class StudyYearRow extends DefaultColumnFactory {
 
     private YearCalculator $yearCalculator;
-
-    /**
-     * StudyYearRow constructor.
-     * @param YearCalculator $yearCalculator
-     * @param MetaDataFactory $metaDataFactory
-     */
+    
     public function __construct(YearCalculator $yearCalculator, MetaDataFactory $metaDataFactory) {
         parent::__construct($metaDataFactory);
         $this->yearCalculator = $yearCalculator;

@@ -24,11 +24,6 @@ class FlagProcessing extends AbstractProcessing {
 
     private ServiceSchool $serviceSchool;
 
-    /**
-     * FlagProcessing constructor.
-     * @param YearCalculator $yearCalculator
-     * @param ServiceSchool $serviceSchool
-     */
     public function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;

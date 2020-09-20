@@ -26,12 +26,6 @@ class GlobalSession implements IGlobalSession {
 
     private bool $started = false;
 
-    /**
-     * GlobalSession constructor.
-     * @param string $expiration
-     * @param ServiceGlobalSession $serviceGlobalSession
-     * @param IGSIDHolder $gsidHolder
-     */
     public function __construct(string $expiration, ServiceGlobalSession $serviceGlobalSession, IGSIDHolder $gsidHolder) {
         $this->expiration = $expiration;
         $this->serviceGlobalSession = $serviceGlobalSession;

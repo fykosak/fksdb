@@ -14,10 +14,6 @@ class EventPrice implements IPreprocess {
 
     private ServiceEventParticipant $serviceEventParticipant;
 
-    /**
-     * EventPrice constructor.
-     * @param ServiceEventParticipant $serviceEventParticipant
-     */
     public function __construct(ServiceEventParticipant $serviceEventParticipant) {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }

@@ -20,11 +20,6 @@ class TeamSubmitsGrid extends SubmitsGrid {
 
     private ModelFyziklaniTeam $team;
 
-    /**
-     * FyziklaniSubmitsGrid constructor.
-     * @param ModelFyziklaniTeam $team
-     * @param Container $container
-     */
     public function __construct(ModelFyziklaniTeam $team, Container $container) {
         $this->team = $team;
         parent::__construct($container);

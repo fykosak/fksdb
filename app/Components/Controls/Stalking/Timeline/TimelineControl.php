@@ -23,11 +23,6 @@ class TimelineControl extends ReactComponent {
 
     private YearCalculator $yearCalculator;
 
-    /**
-     * TimelineControl constructor.
-     * @param Container $container
-     * @param ModelPerson $person
-     */
     public function __construct(Container $container, ModelPerson $person) {
         parent::__construct($container, 'person.detail.timeline');
         $this->person = $person;

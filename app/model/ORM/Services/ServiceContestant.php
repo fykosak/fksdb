@@ -17,11 +17,6 @@ class ServiceContestant extends AbstractServiceSingle {
 
     protected string $viewName = DbNames::VIEW_CONTESTANT;
 
-    /**
-     * ServiceContestant constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_CONTESTANT_BASE, ModelContestant::class);
     }

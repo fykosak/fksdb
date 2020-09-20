@@ -27,12 +27,6 @@ class EventsGrid extends BaseGrid {
 
     private int $year;
 
-    /**
-     * EventsGrid constructor.
-     * @param Container $container
-     * @param ModelContest $contest
-     * @param int $year
-     */
     public function __construct(Container $container, ModelContest $contest, int $year) {
         parent::__construct($container);
         $this->contest = $contest;

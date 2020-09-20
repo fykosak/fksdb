@@ -24,12 +24,6 @@ class EventRole extends DefaultColumnFactory {
 
     private YearCalculator $yearCalculator;
 
-    /**
-     * EventRole constructor.
-     * @param IUserStorage $userStorage
-     * @param YearCalculator $yearCalculator
-     * @param MetaDataFactory $metaDataFactory
-     */
     public function __construct(IUserStorage $userStorage, YearCalculator $yearCalculator, MetaDataFactory $metaDataFactory) {
         parent::__construct($metaDataFactory);
         $this->userStorage = $userStorage;

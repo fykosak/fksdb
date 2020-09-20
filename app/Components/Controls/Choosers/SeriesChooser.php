@@ -26,13 +26,6 @@ class SeriesChooser extends Chooser {
 
     private int $series;
 
-    /**
-     * SeriesChooser constructor.
-     * @param Container $container
-     * @param ModelContest $contest
-     * @param int $year
-     * @param int|null $urlSeries
-     */
     public function __construct(Container $container, ModelContest $contest, int $year, ?int $urlSeries) {
         parent::__construct($container);
         $this->urlSeries = $urlSeries;

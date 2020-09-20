@@ -25,11 +25,6 @@ class StoredQueriesGrid extends BaseGrid {
 
     private array $activeTagIds;
 
-    /**
-     * StoredQueries2Grid constructor.
-     * @param Container $container
-     * @param array $activeTagIds
-     */
     public function __construct(Container $container, array $activeTagIds) {
         parent::__construct($container);
         $this->activeTagIds = $activeTagIds;

@@ -18,11 +18,6 @@ class Price {
 
     private float $amount;
 
-    /**
-     * Price constructor.
-     * @param float $amount
-     * @param string $currency
-     */
     public function __construct(float $amount, string $currency) {
         $this->amount = $amount;
         $this->currency = $currency;

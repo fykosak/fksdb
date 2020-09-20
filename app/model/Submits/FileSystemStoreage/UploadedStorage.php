@@ -58,13 +58,6 @@ class UploadedStorage implements ISubmitStorage {
     /** @var IStorageProcessing[] */
     private array $processings = [];
 
-    /**
-     * FilesystemSubmitStorage constructor.
-     * @param string $root
-     * @param string $directoryMask
-     * @param string $filenameMask
-     * @param array $contestMap
-     */
     public function __construct(string $root, string $directoryMask, string $filenameMask, array $contestMap) {
         $this->root = $root;
         $this->directoryMask = $directoryMask;

@@ -73,10 +73,6 @@ class EventsExtension extends CompilerExtension {
 
     private string $schemeFile;
 
-    /**
-     * EventsExtension constructor.
-     * @param string $schemaFile
-     */
     public function __construct(string $schemaFile) {
         $this->schemeFile = $schemaFile;
         Helpers::registerSemantic(self::$semanticMap);

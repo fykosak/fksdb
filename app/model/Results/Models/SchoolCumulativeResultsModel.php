@@ -28,14 +28,6 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
 
     private CumulativeResultsModel $cumulativeResultsModel;
 
-    /**
-     * FKSDB\Results\Models\SchoolCumulativeResultsModel constructor.
-     * @param CumulativeResultsModel $cumulativeResultsModel
-     * @param ModelContest $contest
-     * @param ServiceTask $serviceTask
-     * @param Connection $connection
-     * @param int $year
-     */
     public function __construct(CumulativeResultsModel $cumulativeResultsModel, ModelContest $contest, ServiceTask $serviceTask, Connection $connection, int $year) {
         parent::__construct($contest, $serviceTask, $connection, $year, new EvaluationNullObject());
         $this->cumulativeResultsModel = $cumulativeResultsModel;

@@ -18,11 +18,6 @@ class PersonLinkRow extends DefaultColumnFactory {
 
     private LinkGenerator $presenterComponent;
 
-    /**
-     * PersonLinkRow constructor.
-     * @param LinkGenerator $presenterComponent
-     * @param MetaDataFactory $metaDataFactory
-     */
     public function __construct(LinkGenerator $presenterComponent, MetaDataFactory $metaDataFactory) {
         parent::__construct($metaDataFactory);
         $this->presenterComponent = $presenterComponent;

@@ -27,11 +27,6 @@ class LoggingMailer implements IMailer {
 
     private Container $container;
 
-    /**
-     * LoggingMailer constructor.
-     * @param IMailer $mailer
-     * @param Container $container
-     */
     public function __construct(IMailer $mailer, Container $container) {
         $this->mailer = $mailer;
         $this->container = $container;

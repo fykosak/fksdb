@@ -18,10 +18,6 @@ class SchoolFactory {
 
     private SchoolProvider $schoolProvider;
 
-    /**
-     * SchoolFactory constructor.
-     * @param SchoolProvider $schoolProvider
-     */
     public function __construct(SchoolProvider $schoolProvider) {
         $this->schoolProvider = $schoolProvider;
     }

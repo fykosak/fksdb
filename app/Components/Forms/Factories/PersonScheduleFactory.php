@@ -17,10 +17,6 @@ class PersonScheduleFactory {
 
     private ServiceScheduleItem $serviceScheduleItem;
 
-    /**
-     * PersonScheduleFactory constructor.
-     * @param ServiceScheduleItem $serviceScheduleItem
-     */
     public function __construct(ServiceScheduleItem $serviceScheduleItem) {
         $this->serviceScheduleItem = $serviceScheduleItem;
     }

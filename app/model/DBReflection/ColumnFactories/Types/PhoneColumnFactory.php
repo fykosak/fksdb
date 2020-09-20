@@ -24,11 +24,6 @@ class PhoneColumnFactory extends DefaultColumnFactory implements ITestedColumnFa
 
     private bool $isWriteOnly = true;
 
-    /**
-     * PhoneRow constructor.
-     * @param PhoneNumberFactory $phoneNumberFactory
-     * @param MetaDataFactory $metaDataFactory
-     */
     public function __construct(PhoneNumberFactory $phoneNumberFactory, MetaDataFactory $metaDataFactory) {
         $this->phoneNumberFactory = $phoneNumberFactory;
         parent::__construct($metaDataFactory);

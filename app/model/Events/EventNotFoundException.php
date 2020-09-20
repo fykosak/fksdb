@@ -9,11 +9,8 @@ use FKSDB\Exceptions\NotFoundException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventNotFoundException extends NotFoundException {
-    /**
-     * EventNotFoundException constructor.
-     * @param \Exception|null $previous
-     */
-    public function __construct( \Exception $previous = null) {
+
+    public function __construct(?\Throwable $previous = null) {
         parent::__construct(_('Event not found.'), $previous);
     }
 }

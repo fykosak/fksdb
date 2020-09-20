@@ -24,11 +24,6 @@ class StoredQueryFactory {
 
     private SingleReflectionFormFactory $reflectionFormFactory;
 
-    /**
-     * StoredQueryFactory constructor.
-     * @param ServiceStoredQueryTagType $serviceStoredQueryTagType
-     * @param SingleReflectionFormFactory $reflectionFormFactory
-     */
     public function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType, SingleReflectionFormFactory $reflectionFormFactory) {
         $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
         $this->reflectionFormFactory = $reflectionFormFactory;

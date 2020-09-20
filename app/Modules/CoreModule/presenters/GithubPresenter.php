@@ -2,7 +2,6 @@
 
 namespace FKSDB\Modules\CoreModule;
 
-use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Github\EventFactory;
 use FKSDB\Github\Events\Event;

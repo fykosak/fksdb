@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\React;
 
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\React\AjaxResponse;
 use Nette\Application\AbortException;
 use Nette\Http\IRequest;

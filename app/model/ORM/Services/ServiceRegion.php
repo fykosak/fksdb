@@ -17,11 +17,6 @@ use Nette\Database\IConventions;
 class ServiceRegion extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    /**
-     * ServiceRegion constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_REGION, ModelRegion::class);
     }

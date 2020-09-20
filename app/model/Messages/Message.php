@@ -21,11 +21,6 @@ class Message {
 
     private string $level;
 
-    /**
-     * Message constructor.
-     * @param string $message
-     * @param string $level
-     */
     public function __construct(string $message, string $level) {
         $this->message = $message;
         $this->level = $level;

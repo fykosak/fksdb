@@ -18,10 +18,6 @@ final class DBReflectionFactory {
 
     private Container $container;
 
-    /**
-     * PersonInfoFactory constructor.
-     * @param Container $container
-     */
     public function __construct(Container $container) {
         $this->container = $container;
     }

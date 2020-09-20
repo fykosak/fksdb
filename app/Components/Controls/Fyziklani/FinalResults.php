@@ -19,11 +19,6 @@ class FinalResults extends BaseComponent {
 
     private ModelEvent$event;
 
-    /**
-     * FinalResults constructor.
-     * @param ModelEvent $event
-     * @param Container $container
-     */
     public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container);
         $this->event = $event;

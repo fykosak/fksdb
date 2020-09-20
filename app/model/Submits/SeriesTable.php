@@ -40,12 +40,6 @@ class SeriesTable {
      */
     private ?array $taskFilter = null;
 
-    /**
-     * SeriesTable constructor.
-     * @param ServiceContestant $serviceContestant
-     * @param ServiceTask $serviceTask
-     * @param ServiceSubmit $serviceSubmit
-     */
     public function __construct(ServiceContestant $serviceContestant, ServiceTask $serviceTask, ServiceSubmit $serviceSubmit) {
         $this->serviceContestant = $serviceContestant;
         $this->serviceTask = $serviceTask;

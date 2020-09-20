@@ -31,11 +31,6 @@ class HandoutForm extends BaseComponent {
 
     private PersonFactory $personFactory;
 
-    /**
-     * HandoutForm constructor.
-     * @param Container $container
-     * @param SeriesTable $seriesTable
-     */
     public function __construct(Container $container, SeriesTable $seriesTable) {
         parent::__construct($container);
         $this->seriesTable = $seriesTable;

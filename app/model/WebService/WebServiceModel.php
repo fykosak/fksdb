@@ -47,16 +47,6 @@ class WebServiceModel {
 
     private ContestAuthorizator $contestAuthorizator;
 
-    /**
-     * FKSDB\WebService\WebServiceModel constructor.
-     * @param array $inverseContestMap
-     * @param ServiceContest $serviceContest
-     * @param ResultsModelFactory $resultsModelFactory
-     * @param StatsModelFactory $statsModelFactory
-     * @param IAuthenticator $authenticator
-     * @param StoredQueryFactory $storedQueryFactory
-     * @param ContestAuthorizator $contestAuthorizator
-     */
     public function __construct(
         array $inverseContestMap,
         ServiceContest $serviceContest,

@@ -44,10 +44,6 @@ abstract class BaseGrid extends Grid {
 
     private Container $container;
 
-    /**
-     * BaseGrid constructor.
-     * @param Container $container
-     */
     public function __construct(Container $container) {
         parent::__construct();
         $this->container = $container;

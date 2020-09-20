@@ -40,13 +40,6 @@ class AjaxSubmit extends AjaxComponent {
 
     private int $academicYear;
 
-    /**
-     * TaskUpload constructor.
-     * @param Container $container
-     * @param ModelTask $task
-     * @param ModelContestant $contestant
-     * @param int $academicYear
-     */
     public function __construct(Container $container, ModelTask $task, ModelContestant $contestant, int $academicYear) {
         parent::__construct($container, 'public.ajax-submit');
         $this->task = $task;

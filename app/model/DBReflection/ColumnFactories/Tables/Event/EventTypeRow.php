@@ -20,11 +20,6 @@ class EventTypeRow extends DefaultColumnFactory {
 
     private ServiceEventType $serviceEventType;
 
-    /**
-     * EventTypeRow constructor.
-     * @param ServiceEventType $serviceEventType
-     * @param MetaDataFactory $metaDataFactory
-     */
     public function __construct(ServiceEventType $serviceEventType, MetaDataFactory $metaDataFactory) {
         parent::__construct($metaDataFactory);
         $this->serviceEventType = $serviceEventType;

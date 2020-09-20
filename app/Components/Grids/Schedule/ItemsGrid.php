@@ -22,11 +22,6 @@ class ItemsGrid extends BaseGrid {
 
     private ModelScheduleGroup $group;
 
-    /**
-     * ItemsGrid constructor.
-     * @param Container $container
-     * @param ModelScheduleGroup $group
-     */
     public function __construct(Container $container, ModelScheduleGroup $group) {
         parent::__construct($container);
         $this->group = $group;

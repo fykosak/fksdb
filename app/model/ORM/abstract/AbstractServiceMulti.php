@@ -24,13 +24,6 @@ abstract class AbstractServiceMulti implements IService {
 
     private string $modelClassName;
 
-    /**
-     * AbstractServiceMulti constructor.
-     * @param AbstractServiceSingle $mainService
-     * @param AbstractServiceSingle $joinedService
-     * @param string $joiningColumn
-     * @param string $modelClassName
-     */
     public function __construct(AbstractServiceSingle $mainService, AbstractServiceSingle $joinedService, string $joiningColumn, string $modelClassName) {
         $this->mainService = $mainService;
         $this->joinedService = $joinedService;

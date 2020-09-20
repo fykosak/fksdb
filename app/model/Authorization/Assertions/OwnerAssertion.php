@@ -22,10 +22,6 @@ class OwnerAssertion {
 
     private IUserStorage $user;
 
-    /**
-     * OwnerAssertion constructor.
-     * @param IUserStorage $user
-     */
     public function __construct(IUserStorage $user) {
         $this->user = $user;
     }

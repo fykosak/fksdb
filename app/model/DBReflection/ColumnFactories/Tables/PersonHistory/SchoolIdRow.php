@@ -19,11 +19,6 @@ class SchoolIdRow extends DefaultColumnFactory {
 
     private SchoolFactory $schoolFactory;
 
-    /***
-     * SchoolIdRow constructor.
-     * @param SchoolFactory $schoolFactory
-     * @param MetaDataFactory $metaDataFactory
-     */
     public function __construct(SchoolFactory $schoolFactory, MetaDataFactory $metaDataFactory) {
         parent::__construct($metaDataFactory);
         $this->schoolFactory = $schoolFactory;

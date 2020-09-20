@@ -10,12 +10,8 @@ use Nette\Http\IResponse;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class UnsupportedLanguageException extends BadRequestException {
-    /**
-     * UnsupportedLanguageException constructor.
-     * @param string $lang
-     * @param \Exception|null $previous
-     */
-    public function __construct(string $lang, \Exception $previous = null) {
+
+    public function __construct(string $lang, ?\Throwable $previous = null) {
         parent::__construct(sprintf(_('Language %s is not supported'), $lang), IResponse::S400_BAD_REQUEST, $previous);
     }
 

@@ -33,11 +33,6 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
 
     private SingleReflectionFormFactory $singleReflectionFormFactory;
 
-    /**
-     * PrivacyPolicy constructor.
-     * @param ServicePersonInfo $servicePersonInfo
-     * @param SingleReflectionFormFactory $singleReflectionFormFactory
-     */
     public function __construct(ServicePersonInfo $servicePersonInfo, SingleReflectionFormFactory $singleReflectionFormFactory) {
         $this->servicePersonInfo = $servicePersonInfo;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;

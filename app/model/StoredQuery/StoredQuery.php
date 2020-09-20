@@ -60,10 +60,6 @@ class StoredQuery implements IDataSource, IResource {
     /** @var array */
     private $columnNames;
 
-    /**
-     * StoredQuery constructor.
-     * @param Connection $connection
-     */
     private function __construct(Connection $connection) {
         $this->connection = $connection;
     }

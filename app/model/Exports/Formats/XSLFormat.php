@@ -5,7 +5,6 @@ namespace FKSDB\Exports\Formats;
 use DOMDocument;
 use FKSDB\Exports\IExportFormat;
 use FKSDB\StoredQuery\StoredQuery;
-use Nette\Application\IResponse;
 use Nette\SmartObject;
 use FKSDB\WebService\IXMLNodeSerializer;
 use XSLTProcessor;
@@ -26,12 +25,6 @@ class XSLFormat implements IExportFormat {
 
     private IXMLNodeSerializer $xmlSerializer;
 
-    /**
-     * XSLFormat constructor.
-     * @param StoredQuery $storedQuery
-     * @param string $xslFile
-     * @param IXMLNodeSerializer $xmlSerializer
-     */
     public function __construct(StoredQuery $storedQuery, string $xslFile, IXMLNodeSerializer $xmlSerializer) {
         $this->storedQuery = $storedQuery;
         $this->xslFile = $xslFile;
