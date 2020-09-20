@@ -55,16 +55,6 @@ class ExtendedPersonHandler {
     /** @var ModelPerson */
     private $person;
 
-    /**
-     * ExtendedPersonHandler constructor.
-     * @param IService $service
-     * @param ServicePerson $servicePerson
-     * @param Connection $connection
-     * @param AccountManager $accountManager
-     * @param ModelContest $contest
-     * @param int $year
-     * @param string $invitationLang
-     */
     public function __construct(
         IService $service,
         ServicePerson $servicePerson,

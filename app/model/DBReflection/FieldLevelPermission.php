@@ -16,11 +16,6 @@ class FieldLevelPermission {
 
     public int $write;
 
-    /**
-     * FieldLevelPermission constructor.
-     * @param int $read
-     * @param int $write
-     */
     public function __construct(int $read, int $write) {
         $this->read = $read;
         $this->write = $write;

@@ -21,10 +21,6 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
 
     private Holder $holder;
 
-    /**
-     * SchoolCheck constructor.
-     * @param ServicePersonHistory $servicePersonHistory
-     */
     public function __construct(ServicePersonHistory $servicePersonHistory) {
         $this->servicePersonHistory = $servicePersonHistory;
     }

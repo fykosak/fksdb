@@ -13,11 +13,6 @@ use Nette\Security\IUserStorage;
  */
 class EventOrgAssertion extends AbstractEventOrgAssertion {
 
-    /**
-     * EventOrgAssertion constructor.
-     * @param IUserStorage $user
-     * @param Context $connection
-     */
     public function __construct(IUserStorage $user, Context $connection) {
         parent::__construct(null, $user, $connection);
     }

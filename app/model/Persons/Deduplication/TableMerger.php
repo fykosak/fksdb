@@ -38,14 +38,6 @@ class TableMerger {
 
     private ILogger $logger;
 
-    /**
-     * TableMerger constructor.
-     * @param string $table
-     * @param Merger $merger
-     * @param Context $context
-     * @param IMergeStrategy $globalMergeStrategy
-     * @param ILogger $logger
-     */
     public function __construct(string $table, Merger $merger, Context $context, IMergeStrategy $globalMergeStrategy, ILogger $logger) {
         $this->table = $table;
         $this->merger = $merger;

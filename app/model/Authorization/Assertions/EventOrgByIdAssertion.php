@@ -13,11 +13,6 @@ use Nette\Security\IUserStorage;
  */
 class EventOrgByIdAssertion extends AbstractEventOrgAssertion {
 
-    /**
-     * EventOrgByIdAssertion constructor.
-     * @param IUserStorage $user
-     * @param Context $connection
-     */
     public function __construct(IUserStorage $user, Context $connection) {
         parent::__construct('event_id', $user, $connection);
 

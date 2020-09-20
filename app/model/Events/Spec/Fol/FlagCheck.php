@@ -10,8 +10,6 @@ use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServiceSchool;
-use Nette\Database\Table\ActiveRow;
-use Nette\Database\Table\Selection;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
@@ -30,12 +28,6 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
     /** @var Holder */
     private $holder;
 
-
-    /**
-     * FlagCheck constructor.
-     * @param ServiceSchool $serviceSchool
-     * @param ServicePersonHistory $servicePersonHistory
-     */
     public function __construct(ServiceSchool $serviceSchool, ServicePersonHistory $servicePersonHistory) {
         $this->serviceSchool = $serviceSchool;
         $this->servicePersonHistory = $servicePersonHistory;

@@ -20,10 +20,6 @@ class AddressContainer extends ModelContainer {
 
     private ServiceRegion $serviceRegion;
 
-    /**
-     * AddressContainer constructor.
-     * @param DIContainer $container
-     */
     public function __construct(DIContainer $container) {
         parent::__construct($container);
     }

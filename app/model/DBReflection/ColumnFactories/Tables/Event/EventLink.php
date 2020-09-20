@@ -18,10 +18,6 @@ class EventLink extends AbstractColumnFactory {
 
     private LinkGenerator $linkGenerator;
 
-    /**
-     * PersonLinkRow constructor.
-     * @param LinkGenerator $linkGenerator
-     */
     public function __construct(LinkGenerator $linkGenerator) {
         $this->linkGenerator = $linkGenerator;
     }

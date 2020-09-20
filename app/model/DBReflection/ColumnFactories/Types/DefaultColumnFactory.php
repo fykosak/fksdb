@@ -31,10 +31,6 @@ abstract class DefaultColumnFactory extends AbstractColumnFactory {
 
     private MetaDataFactory $metaDataFactory;
 
-    /**
-     * StringRow constructor.
-     * @param MetaDataFactory $metaDataFactory
-     */
     public function __construct(MetaDataFactory $metaDataFactory) {
         $this->metaDataFactory = $metaDataFactory;
         $this->permission = new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);

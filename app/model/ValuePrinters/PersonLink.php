@@ -16,10 +16,6 @@ class PersonLink extends AbstractValuePrinter {
 
     private LinkGenerator $presenterComponent;
 
-    /**
-     * PersonLink constructor.
-     * @param LinkGenerator $presenterComponent
-     */
     public function __construct(LinkGenerator $presenterComponent) {
         $this->presenterComponent = $presenterComponent;
     }

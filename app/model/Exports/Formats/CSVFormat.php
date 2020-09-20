@@ -26,13 +26,6 @@ class CSVFormat implements IExportFormat {
 
     private bool $header;
 
-    /**
-     * CSVFormat constructor.
-     * @param StoredQuery $storedQuery
-     * @param bool $header
-     * @param string $delimiter
-     * @param bool $quote
-     */
     public function __construct(StoredQuery $storedQuery, bool $header, string $delimiter = self::DEFAULT_DELIMITER, bool $quote = self::DEFAULT_QUOTE) {
         $this->storedQuery = $storedQuery;
         $this->delimiter = $delimiter;

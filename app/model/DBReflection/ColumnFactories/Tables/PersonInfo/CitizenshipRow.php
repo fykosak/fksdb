@@ -20,10 +20,6 @@ class CitizenshipRow extends AbstractColumnFactory {
 
     private ServiceRegion $serviceRegion;
 
-    /**
-     * CitizenshipField constructor.
-     * @param ServiceRegion $serviceRegion
-     */
     public function __construct(ServiceRegion $serviceRegion) {
         $this->serviceRegion = $serviceRegion;
     }

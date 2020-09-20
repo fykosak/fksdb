@@ -20,11 +20,6 @@ abstract class AbstractEntityFormComponent extends FormComponent {
 
     protected bool $create;
 
-    /**
-     * AbstractEntityFormControl constructor.
-     * @param Container $container
-     * @param bool $create
-     */
     public function __construct(Container $container, bool $create) {
         parent::__construct($container);
         $this->create = $create;

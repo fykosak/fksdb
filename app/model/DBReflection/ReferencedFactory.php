@@ -19,11 +19,6 @@ final class ReferencedFactory {
      */
     private ?array $referencedAccess;
 
-    /**
-     * ReferencedFactory constructor.
-     * @param string $modelClassName
-     * @param array|null $referencedAccess
-     */
     public function __construct(string $modelClassName, ?array $referencedAccess) {
         $this->referencedAccess = $referencedAccess;
         $this->modelClassName = $modelClassName;

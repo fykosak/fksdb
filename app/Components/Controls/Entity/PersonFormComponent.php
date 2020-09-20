@@ -53,12 +53,6 @@ class PersonFormComponent extends EditEntityFormComponent {
 
     private FieldLevelPermission $userPermission;
 
-    /**
-     * AbstractPersonFormControl constructor.
-     * @param Container $container
-     * @param int $userPermission is required to model editing, otherwise is setted to 2048
-     * @param bool $create
-     */
     public function __construct(Container $container, bool $create, int $userPermission) {
         parent::__construct($container, $create);
         $this->userPermission = new FieldLevelPermission($userPermission, $userPermission);

@@ -16,10 +16,6 @@ class Count {
 
     private string $state;
 
-    /**
-     * Count constructor.
-     * @param string $state
-     */
     public function __construct(string $state) {
         $this->state = $state;
     }

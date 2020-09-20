@@ -20,9 +20,6 @@ class ACLExtension extends CompilerExtension {
         'queryTag' => StoredQueryTagAssertion::class,
     ];
 
-    /**
-     * ACLExtension constructor.
-     */
     public function __construct() {
         Helpers::registerSemantic(self::$semanticMap);
     }

@@ -29,12 +29,6 @@ class EventOrgFormComponent extends EditEntityFormComponent {
 
     protected ModelEvent $event;
 
-    /**
-     * AbstractForm constructor.
-     * @param Container $container
-     * @param ModelEvent $event
-     * @param bool $create
-     */
     public function __construct(Container $container, ModelEvent $event, bool $create) {
         parent::__construct($container, $create);
         $this->event = $event;

@@ -9,14 +9,8 @@ namespace FKSDB\Authentication;
  */
 class RecoveryExistsException extends RecoveryException {
 
-    /**
-     * RecoveryExistsException constructor.
-     * @param null $previous
-     */
-    public function __construct($previous = null) {
-        $message = _('Obnova účtu již probíhá.');
-        $code = null;
-        parent::__construct($message, $code, $previous);
+    public function __construct(?\Throwable $previous = null) {
+        parent::__construct(_('Obnova účtu již probíhá.'), null, $previous);
     }
 
 }

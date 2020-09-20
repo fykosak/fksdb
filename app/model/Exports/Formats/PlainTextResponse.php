@@ -18,13 +18,8 @@ class PlainTextResponse implements IResponse {
 
     private string $name;
 
-    /**
-     * PlainTextResponse constructor.
-     * @param string $content
-     */
     public function __construct(string $content) {
         $this->content = $content;
-
     }
 
     public function getName(): string {

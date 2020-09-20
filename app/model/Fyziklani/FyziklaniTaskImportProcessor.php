@@ -23,11 +23,6 @@ class FyziklaniTaskImportProcessor {
 
     private ModelEvent $event;
 
-    /**
-     * FyziklaniTaskImportProcessor constructor.
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param ModelEvent $event
-     */
     public function __construct(ServiceFyziklaniTask $serviceFyziklaniTask, ModelEvent $event) {
         $this->event = $event;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;

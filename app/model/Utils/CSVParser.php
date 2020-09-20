@@ -30,12 +30,6 @@ class CSVParser implements Iterator {
     /** @var mixed */
     private $header;
 
-    /**
-     * CSVParser constructor.
-     * @param string $filename
-     * @param int $indexType
-     * @param string $delimiter
-     */
     public function __construct(string $filename, int $indexType = self::INDEX_NUMERIC, string $delimiter = ';') {
         $this->indexType = $indexType;
         $this->delimiter = $delimiter;

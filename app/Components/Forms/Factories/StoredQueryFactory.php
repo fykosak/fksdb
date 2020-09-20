@@ -23,10 +23,6 @@ class StoredQueryFactory {
 
     private ServiceStoredQueryTagType $serviceStoredQueryTagType;
 
-    /**
-     * StoredQueryFactory constructor.
-     * @param ServiceStoredQueryTagType $serviceStoredQueryTagType
-     */
     public function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
         $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
     }

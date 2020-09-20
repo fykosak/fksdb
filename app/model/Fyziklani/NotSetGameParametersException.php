@@ -9,11 +9,8 @@ use FKSDB\Exceptions\NotImplementedException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class NotSetGameParametersException extends NotImplementedException {
-    /**
-     * NotSetGameParametersException constructor.
-     * @param \Exception|null $previous
-     */
-    public function __construct(\Exception $previous = null) {
+
+    public function __construct(?\Throwable $previous = null) {
         parent::__construct(_('Herné parametre niesu nastavené'), $previous);
     }
 }

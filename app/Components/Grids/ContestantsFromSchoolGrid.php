@@ -22,11 +22,6 @@ class ContestantsFromSchoolGrid extends BaseGrid {
 
     private ModelSchool $school;
 
-    /**
-     * ContestantsGrid constructor.
-     * @param ModelSchool $school
-     * @param Container $container
-     */
     public function __construct(ModelSchool $school, Container $container) {
         parent::__construct($container);
         $this->school = $school;

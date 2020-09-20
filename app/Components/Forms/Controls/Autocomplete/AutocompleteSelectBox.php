@@ -44,12 +44,6 @@ class AutocompleteSelectBox extends TextBase {
 
     private bool $attachedJS = false;
 
-    /**
-     * AutocompleteSelectBox constructor.
-     * @param bool $ajax
-     * @param string|null $label
-     * @param string|null $renderMethod
-     */
     public function __construct(bool $ajax, ?string $label = null, ?string $renderMethod = null) {
         parent::__construct($label);
 

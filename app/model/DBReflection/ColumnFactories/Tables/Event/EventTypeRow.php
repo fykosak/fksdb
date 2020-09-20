@@ -20,10 +20,6 @@ class EventTypeRow extends AbstractColumnFactory {
 
     private ServiceEventType $serviceEventType;
 
-    /**
-     * EventTypeRow constructor.
-     * @param ServiceEventType $serviceEventType
-     */
     public function __construct(ServiceEventType $serviceEventType) {
         $this->serviceEventType = $serviceEventType;
     }

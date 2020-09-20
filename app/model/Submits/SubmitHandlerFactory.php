@@ -32,13 +32,6 @@ class SubmitHandlerFactory {
 
     private ContestAuthorizator $contestAuthorizator;
 
-    /**
-     * SubmitDownloadFactory constructor.
-     * @param CorrectedStorage $correctedStorage
-     * @param UploadedStorage $uploadedStorage
-     * @param ServiceSubmit $serviceSubmit
-     * @param ContestAuthorizator $contestAuthorizator
-     */
     public function __construct(
         CorrectedStorage $correctedStorage,
         UploadedStorage $uploadedStorage,

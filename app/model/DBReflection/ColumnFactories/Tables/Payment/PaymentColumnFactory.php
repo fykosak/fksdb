@@ -19,10 +19,6 @@ class PaymentColumnFactory extends AbstractColumnFactory {
 
     private DBReflectionFactory $reflectionFactory;
 
-    /**
-     * PaymentRow constructor.
-     * @param DBReflectionFactory $reflectionFactory
-     */
     public function __construct(DBReflectionFactory $reflectionFactory) {
         $this->reflectionFactory = $reflectionFactory;
     }

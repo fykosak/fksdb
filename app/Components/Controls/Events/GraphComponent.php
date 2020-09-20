@@ -20,11 +20,6 @@ class GraphComponent extends BaseComponent {
 
     private bool $attachedJS = false;
 
-    /**
-     * GraphComponent constructor.
-     * @param Container $container
-     * @param BaseMachine $baseMachine
-     */
     public function __construct(Container $container, BaseMachine $baseMachine) {
         parent::__construct($container);
         $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {

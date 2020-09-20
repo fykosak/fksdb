@@ -21,12 +21,6 @@ class ExtendedPersonHandlerFactory {
 
     private AccountManager $accountManager;
 
-    /**
-     * ExtendedPersonHandlerFactory constructor.
-     * @param ServicePerson $servicePerson
-     * @param Connection $connection
-     * @param AccountManager $accountManager
-     */
     public function __construct(ServicePerson $servicePerson, Connection $connection, AccountManager $accountManager) {
         $this->servicePerson = $servicePerson;
         $this->connection = $connection;

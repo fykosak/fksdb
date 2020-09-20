@@ -28,11 +28,6 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
     /** @var Holder */
     private $holder;
 
-    /**
-     * BornCheck constructor.
-     * @param ServiceSchool $serviceSchool
-     * @param ServicePersonHistory $servicePersonHistory
-     */
     public function __construct(ServiceSchool $serviceSchool, ServicePersonHistory $servicePersonHistory) {
         $this->serviceSchool = $serviceSchool;
         $this->servicePersonHistory = $servicePersonHistory;

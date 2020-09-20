@@ -16,11 +16,7 @@ use Nette\Database\IConventions;
  * @method ModelPersonHistory refresh(AbstractModelSingle $model)
  */
 class ServicePersonHistory extends AbstractServiceSingle {
-    /**
-     * ServicePersonHistory constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
+
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_PERSON_HISTORY, ModelPersonHistory::class);
     }

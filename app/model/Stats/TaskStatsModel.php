@@ -21,12 +21,6 @@ class TaskStatsModel {
 
     protected int $series;
 
-    /**
-     * TaskStatsModel constructor.
-     * @param ModelContest $contest
-     * @param int $year
-     * @param Connection $connection
-     */
     public function __construct(ModelContest $contest, int $year, Connection $connection) {
         $this->contest = $contest;
         $this->connection = $connection;

@@ -25,11 +25,6 @@ class DuplicateFinder {
     /** @var array */
     private $parameters;
 
-    /**
-     * DuplicateFinder constructor.
-     * @param ServicePerson $servicePerson
-     * @param Container $container
-     */
     public function __construct(ServicePerson $servicePerson, Container $container) {
         $this->servicePerson = $servicePerson;
         $this->parameters = $container->getParameters()['deduplication']['finder'];

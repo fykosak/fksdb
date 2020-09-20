@@ -18,11 +18,6 @@ class GettextTranslator implements ITranslator {
 
     private ?string $lang = null;
 
-    /**
-     * GettextTranslator constructor.
-     * @param array $locales
-     * @param string $localeDir
-     */
     public function __construct(array $locales, string $localeDir) {
         $this->locales = $locales;
         $this->localeDir = $localeDir;

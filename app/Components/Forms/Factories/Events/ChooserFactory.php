@@ -24,11 +24,6 @@ class ChooserFactory extends AbstractFactory {
 
     private IOptionsProvider $optionsProvider;
 
-    /**
-     * ChooserFactory constructor.
-     * @param string $prompt
-     * @param IOptionsProvider $optionsProvider
-     */
     public function __construct(string $prompt, IOptionsProvider $optionsProvider) {
         $this->prompt = $prompt;
         $this->optionsProvider = $optionsProvider;

@@ -22,11 +22,6 @@ class TaskGrid extends BaseGrid {
 
     private ModelEvent $event;
 
-    /**
-     * FyziklaniTaskGrid constructor.
-     * @param ModelEvent $event
-     * @param Container $container
-     */
     public function __construct(ModelEvent $event, Container $container) {
         parent::__construct($container);
         $this->event = $event;

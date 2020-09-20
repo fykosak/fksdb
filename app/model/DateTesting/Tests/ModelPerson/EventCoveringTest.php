@@ -16,9 +16,7 @@ use FKSDB\ORM\Models\ModelPerson;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventCoveringTest extends PersonTest {
-    /**
-     * EventCoveringTest constructor.
-     */
+
     public function __construct() {
         parent::__construct('organization_participation_same_year', _('Organization and participation at same year'));
     }

@@ -25,12 +25,6 @@ class Handler {
 
     private ServiceScheduleItem $serviceScheduleItem;
 
-    /**
-     * Handler constructor.
-     * @param ServiceScheduleGroup $serviceScheduleGroup
-     * @param ServicePersonSchedule $servicePersonSchedule
-     * @param ServiceScheduleItem $serviceScheduleItem
-     */
     public function __construct(
         ServiceScheduleGroup $serviceScheduleGroup,
         ServicePersonSchedule $servicePersonSchedule,

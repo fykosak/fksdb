@@ -18,10 +18,6 @@ class PersonLinkRow extends AbstractColumnFactory {
 
     private LinkGenerator $presenterComponent;
 
-    /**
-     * PersonLinkRow constructor.
-     * @param LinkGenerator $presenterComponent
-     */
     public function __construct(LinkGenerator $presenterComponent) {
         $this->presenterComponent = $presenterComponent;
     }

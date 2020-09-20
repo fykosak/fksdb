@@ -26,11 +26,6 @@ class EventRole extends AbstractColumnFactory {
 
     private YearCalculator $yearCalculator;
 
-    /**
-     * EventRole constructor.
-     * @param IUserStorage $userStorage
-     * @param YearCalculator $yearCalculator
-     */
     public function __construct(IUserStorage $userStorage, YearCalculator $yearCalculator) {
         $this->userStorage = $userStorage;
         $this->yearCalculator = $yearCalculator;

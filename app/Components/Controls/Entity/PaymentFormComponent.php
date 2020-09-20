@@ -43,13 +43,6 @@ class PaymentFormComponent extends EditEntityFormComponent {
 
     private ServiceSchedulePayment $serviceSchedulePayment;
 
-    /**
-     * SelectForm constructor.
-     * @param Container $container
-     * @param bool $isOrg
-     * @param PaymentMachine $machine
-     * @param bool $create
-     */
     public function __construct(
         Container $container,
         bool $isOrg,

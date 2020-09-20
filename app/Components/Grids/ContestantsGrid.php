@@ -26,12 +26,6 @@ class ContestantsGrid extends BaseGrid {
 
     private ModelContest $contest;
 
-    /**
-     * ContestantsGrid constructor.
-     * @param Container $container
-     * @param ModelContest $contest
-     * @param int $year
-     */
     public function __construct(Container $container, ModelContest $contest, int $year) {
         parent::__construct($container);
         $this->contest = $contest;

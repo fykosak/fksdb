@@ -20,23 +20,12 @@ use Tracy\Debugger;
  */
 class FacebookAuthenticator extends AbstractAuthenticator {
 
-    /** @var ServicePerson */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
-    /** @var ServicePersonInfo */
-    private $servicePersonInfo;
+    private ServicePersonInfo $servicePersonInfo;
 
-    /** @var AccountManager */
-    private $accountManager;
+    private AccountManager $accountManager;
 
-    /**
-     * FacebookAuthenticator constructor.
-     * @param ServicePerson $servicePerson
-     * @param ServicePersonInfo $servicePersonInfo
-     * @param AccountManager $accountManager
-     * @param ServiceLogin $serviceLogin
-     * @param YearCalculator $yearCalculator
-     */
     public function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, AccountManager $accountManager, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->servicePerson = $servicePerson;

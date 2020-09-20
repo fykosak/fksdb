@@ -19,10 +19,6 @@ class SchoolIdRow extends AbstractColumnFactory {
 
     private SchoolFactory $schoolFactory;
 
-    /***
-     * SchoolIdRow constructor.
-     * @param SchoolFactory $schoolFactory
-     */
     public function __construct(SchoolFactory $schoolFactory) {
         $this->schoolFactory = $schoolFactory;
     }

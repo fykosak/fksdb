@@ -19,10 +19,6 @@ class StudyYearRow extends AbstractColumnFactory {
 
     private YearCalculator $yearCalculator;
 
-    /**
-     * StudyYearRow constructor.
-     * @param YearCalculator $yearCalculator
-     */
     public function __construct(YearCalculator $yearCalculator) {
         $this->yearCalculator = $yearCalculator;
     }

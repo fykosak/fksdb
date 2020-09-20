@@ -15,12 +15,7 @@ class ModelDataConflictException extends RuntimeException {
 
     private ReferencedId $referencedId;
 
-    /**
-     * ModelDataConflictException constructor.
-     * @param iterable $conflicts
-     * @param \Throwable|null $previous
-     */
-    public function __construct(iterable $conflicts, $previous = null) {
+    public function __construct(iterable $conflicts, ?\Throwable $previous = null) {
         parent::__construct(null, Response::S409_CONFLICT, $previous);
         $this->conflicts = $conflicts;
     }

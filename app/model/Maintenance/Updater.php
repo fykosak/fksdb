@@ -16,10 +16,6 @@ class Updater {
 
     private Container $container;
 
-    /**
-     * Updater constructor.
-     * @param Container $container
-     */
     public function __construct(Container $container) {
         $this->container = $container;
     }

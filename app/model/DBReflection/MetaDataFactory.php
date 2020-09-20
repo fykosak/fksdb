@@ -14,10 +14,6 @@ class MetaDataFactory {
 
     private Connection $connection;
 
-    /**
-     * MetaDataFactory constructor.
-     * @param Connection $connection
-     */
     public function __construct(Connection $connection) {
         $this->connection = $connection;
     }

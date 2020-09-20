@@ -12,11 +12,6 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
 
     private array $tmpData;
 
-    /**
-     * AbstractModelSingle constructor.
-     * @param array $data
-     * @param Selection $table
-     */
     public function __construct(array $data, Selection $table) {
         parent::__construct($data, $table);
         $this->tmpData = $data;

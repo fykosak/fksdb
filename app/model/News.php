@@ -14,10 +14,6 @@ class News {
 
     private Container $container;
 
-    /**
-     * News constructor.
-     * @param Container $container
-     */
     public function __construct(Container $container) {
         $this->container = $container;
     }

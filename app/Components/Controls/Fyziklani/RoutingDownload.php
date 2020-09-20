@@ -20,11 +20,6 @@ class RoutingDownload extends BaseComponent {
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    /**
-     * RoutingDownload constructor.
-     * @param Container $container
-     * @param ModelEvent $event
-     */
     public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container);
         $this->event = $event;
