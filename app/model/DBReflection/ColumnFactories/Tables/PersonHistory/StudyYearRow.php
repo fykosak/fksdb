@@ -2,8 +2,8 @@
 
 namespace FKSDB\DBReflection\ColumnFactories\PersonHistory;
 
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnFactory;
-use FKSDB\DBReflection\FieldLevelPermission;
+use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
+use FKSDB\DBReflection\MetaDataFactory;
 use FKSDB\ValuePrinters\StringPrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\YearCalculator;
@@ -15,24 +15,13 @@ use Nette\Utils\Html;
  * Class StudyYearRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class StudyYearRow extends AbstractColumnFactory {
+class StudyYearRow extends DefaultColumnFactory {
 
     private YearCalculator $yearCalculator;
-
-    public function __construct(YearCalculator $yearCalculator) {
+    
+    public function __construct(YearCalculator $yearCalculator, MetaDataFactory $metaDataFactory) {
+        parent::__construct($metaDataFactory);
         $this->yearCalculator = $yearCalculator;
-    }
-
-    public function getTitle(): string {
-        return _('Study year');
-    }
-
-    public function getPermission(): FieldLevelPermission {
-        return new FieldLevelPermission(self::PERMISSION_ALLOW_BASIC, self::PERMISSION_ALLOW_BASIC);
-    }
-
-    public function getDescription(): ?string {
-        return _('Kvůli zařazení do kategorie.');
     }
 
     /**
@@ -40,7 +29,7 @@ class StudyYearRow extends AbstractColumnFactory {
      * @return BaseControl
      * @throws \InvalidArgumentException
      */
-    public function createField(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         [$acYear] = $args;
         if (\is_null($acYear)) {
             throw new \InvalidArgumentException();
@@ -52,11 +41,7 @@ class StudyYearRow extends AbstractColumnFactory {
         return $control;
     }
 
-    /**
-     * @param int $acYear
-     * @return array
-     */
-    private function createOptions(int $acYear) {
+    private function createOptions(int $acYear): array {
         $hsYears = [];
         foreach (range(1, 4) as $studyYear) {
             $hsYears[$studyYear] = sprintf(_('%d. ročník (očekávaný rok maturity %d)'),
@@ -75,10 +60,6 @@ class StudyYearRow extends AbstractColumnFactory {
             _('střední škola') => $hsYears,
             _('základní škola nebo víceleté gymnázium') => $primaryYears,
         ];
-    }
-
-    protected function getModelAccessKey(): string {
-        return 'study_year';
     }
 
     protected function createHtmlValue(AbstractModelSingle $model): Html {

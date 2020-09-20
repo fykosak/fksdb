@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\Application\UI\Presenter;
@@ -41,6 +42,7 @@ class SchoolsGrid extends BaseGrid {
      * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
+     * @throws BadTypeException
      */
     protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
@@ -54,7 +56,8 @@ class SchoolsGrid extends BaseGrid {
             return Html::el('span')->addAttributes(['class' => ('badge ' . ($row->active ? 'badge-success' : 'badge-danger'))])->addText(($row->active));
         });
 
-        $this->addLinkButton('edit', 'edit', _('Edit'), false, ['id' => 'school_id']);
-        $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'school_id']);
+        $this->addLink('school.edit');
+        $this->addLink('school.detail');
+
     }
 }

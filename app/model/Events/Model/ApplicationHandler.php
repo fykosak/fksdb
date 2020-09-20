@@ -95,10 +95,9 @@ class ApplicationHandler {
         $this->initializeMachine();
 
         try {
-            $explicitMachineName = $this->machine->getPrimaryMachine()->getName();
             $this->beginTransaction();
-            $transition = $this->machine->getBaseMachine($explicitMachineName)->getTransition($explicitTransitionName);
-            if ($holder->getPrimaryHolder()->getModelState() !== $transition->getSource()) {
+            $transition = $this->machine->getPrimaryMachine()->getTransition($explicitTransitionName);
+            if (!$transition->matches($holder->getPrimaryHolder()->getModelState())) {
                 throw new UnavailableTransitionException($transition, $holder->getPrimaryHolder()->getModel());
             }
 

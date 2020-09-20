@@ -3,9 +3,9 @@
 namespace FKSDB\DBReflection\ColumnFactories\PersonHistory;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnFactory;
-use FKSDB\DBReflection\FieldLevelPermission;
+use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
+use FKSDB\DBReflection\MetaDataFactory;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPersonHistory;
 use Nette\Forms\Controls\BaseControl;
@@ -15,20 +15,13 @@ use Nette\Utils\Html;
  * Class SchoolIdRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class SchoolIdRow extends AbstractColumnFactory {
+class SchoolIdRow extends DefaultColumnFactory {
 
     private SchoolFactory $schoolFactory;
 
-    public function __construct(SchoolFactory $schoolFactory) {
+    public function __construct(SchoolFactory $schoolFactory, MetaDataFactory $metaDataFactory) {
+        parent::__construct($metaDataFactory);
         $this->schoolFactory = $schoolFactory;
-    }
-
-    public function getTitle(): string {
-        return _('School');
-    }
-
-    public function getPermission(): FieldLevelPermission {
-        return new FieldLevelPermission(self::PERMISSION_ALLOW_BASIC, self::PERMISSION_ALLOW_BASIC);
     }
 
     /**
@@ -42,7 +35,7 @@ class SchoolIdRow extends AbstractColumnFactory {
         return Html::el('span')->addText('#' . $model->school_id);
     }
 
-    public function createField(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         return $this->schoolFactory->createSchoolSelect();
     }
 }

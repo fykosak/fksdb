@@ -3,10 +3,9 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
-use FKSDB\Components\Forms\Controls\Autocomplete\IDataProvider;
-use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
-use FKSDB\Components\Forms\Controls\SQLConsole;
+use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\DBReflection\OmittedControlException;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
 use Kdyby\Extension\Forms\Replicator\Replicator;
@@ -23,42 +22,41 @@ class StoredQueryFactory {
 
     private ServiceStoredQueryTagType $serviceStoredQueryTagType;
 
-    public function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
+    private SingleReflectionFormFactory $reflectionFormFactory;
+
+    public function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType, SingleReflectionFormFactory $reflectionFormFactory) {
         $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
+        $this->reflectionFormFactory = $reflectionFormFactory;
     }
 
+    /**
+     * @param ControlGroup|null $group
+     * @return ModelContainer
+     * @throws AbstractColumnException
+     * @throws OmittedControlException
+     * @throws BadTypeException
+     */
     public function createConsole(?ControlGroup $group = null): ModelContainer {
         $container = new ModelContainer();
         $container->setCurrentGroup($group);
-        $control = new SQLConsole(_('SQL'));
+        $control = $this->reflectionFormFactory->createField('stored_query', 'sql');
         $container->addComponent($control, 'sql');
-
         return $container;
     }
 
+    /**
+     * @param ControlGroup|null $group
+     * @return ModelContainer
+     * @throws AbstractColumnException
+     * @throws BadTypeException
+     * @throws OmittedControlException
+     */
     public function createMetadata(?ControlGroup $group = null): ModelContainer {
-        $container = new ModelContainer();
+        $container = $this->reflectionFormFactory->createContainer('stored_query', ['name', 'qid', 'tags', 'description']);
         $container->setCurrentGroup($group);
 
-        $container->addText('name', _('Name'))
-            ->addRule(Form::FILLED, _('Název dotazu je třeba vyplnit.'))
-            ->addRule(Form::MAX_LENGTH, _('Název dotazu je moc dlouhý.'), 32);
-
-        $container->addText('qid', _('QID'))
-            ->setOption('description', _('Dotazy s QIDem nelze smazat a QID lze použít pro práva a trvalé odkazování.'))
-            ->addCondition(Form::FILLED)
-            ->addRule(Form::MAX_LENGTH, _('Název dotazu je moc dlouhý.'), 64)
-            ->addRule(Form::PATTERN, _('QID can contain only english letters, numbers and dots.'), '[a-z][a-z0-9.]*');
-
-        $container->addComponent($this->createTagSelect(false, _('Labels'), new StoredQueryTagTypeProvider($this->serviceStoredQueryTagType)), 'tags');
-
-        $container->addTextArea('description', _('Description'));
-
-        $container->addText('php_post_proc', _('PHP post processing'))
-            ->setOption('description', _('Název třídy pro zpracování výsledku v PHP. Lze upravit jen v databázi.'))
-            ->setDisabled();
-
-
+        $control = $this->reflectionFormFactory->createField('stored_query', 'php_post_proc')->setDisabled(true);
+        $container->addComponent($control, 'php_post_proc');
         return $container;
     }
 
@@ -137,17 +135,5 @@ class StoredQueryFactory {
         }
 
         return $container;
-    }
-
-    private function createTagSelect(bool $ajax, string $label, IDataProvider $dataProvider, ?string $renderMethod = null): AutocompleteSelectBox {
-        if ($renderMethod === null) {
-            $renderMethod = '$("<li>")
-                        .append("<a>" + item.label + "<br>" + item.description + ", ID: " + item.value + "</a>")
-                        .appendTo(ul);';
-        }
-        $select = new AutocompleteSelectBox($ajax, $label, $renderMethod);
-        $select->setDataProvider($dataProvider);
-        $select->setMultiSelect(true);
-        return $select;
     }
 }

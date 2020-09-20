@@ -2,33 +2,27 @@
 
 namespace FKSDB\DBReflection\ColumnFactories\PersonInfo;
 
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnFactory;
-use FKSDB\DBReflection\FieldLevelPermission;
-use FKSDB\ValuePrinters\StringPrinter;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
+use FKSDB\DBReflection\MetaDataFactory;
 use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
-use Nette\Utils\Html;
 
 /**
  * Class CitizenshipRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class CitizenshipRow extends AbstractColumnFactory {
+class CitizenshipRow extends DefaultColumnFactory {
 
     private ServiceRegion $serviceRegion;
 
-    public function __construct(ServiceRegion $serviceRegion) {
+    public function __construct(ServiceRegion $serviceRegion, MetaDataFactory $metaDataFactory) {
+        parent::__construct($metaDataFactory);
         $this->serviceRegion = $serviceRegion;
     }
 
-    public function getTitle(): string {
-        return _('Státní příslušnost');
-    }
-
-    public function createField(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         $control = new SelectBox($this->getTitle());
         $control->setItems($this->getCountries());
         $control->setPrompt(_('Vyberte státní příslušnost'));
@@ -43,13 +37,5 @@ class CitizenshipRow extends AbstractColumnFactory {
             $results[$country->country_iso] = $country->name;
         }
         return $results;
-    }
-
-    public function getPermission(): FieldLevelPermission {
-        return new FieldLevelPermission(self::PERMISSION_ALLOW_FULL, self::PERMISSION_ALLOW_FULL);
-    }
-
-    protected function createHtmlValue(AbstractModelSingle $model): Html {
-        return (new StringPrinter())($model->citizenship);
     }
 }

@@ -45,8 +45,8 @@ class GroupsGrid extends BaseGrid {
     protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
-        $this->addColumn('schedule_group_id', _('#'));
         $this->addColumns([
+            'schedule_group.schedule_group_id',
             'schedule_group.name_cs',
             'schedule_group.name_en',
             'schedule_group.schedule_group_type',
