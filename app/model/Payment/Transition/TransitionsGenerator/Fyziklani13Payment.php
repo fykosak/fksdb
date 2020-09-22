@@ -36,14 +36,6 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
 
     private MailTemplateFactory $mailTemplateFactory;
 
-    /**
-     * Fyziklani13Payment constructor.
-     * @param ServicePayment $servicePayment
-     * @param Connection $connection
-     * @param EventAuthorizator $eventAuthorizator
-     * @param ServiceEmailMessage $serviceEmailMessage
-     * @param MailTemplateFactory $mailTemplateFactory
-     */
     public function __construct(
         ServicePayment $servicePayment,
         Connection $connection,

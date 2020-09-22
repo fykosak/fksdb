@@ -3,6 +3,7 @@
 namespace FKSDB\DBReflection\ColumnFactories\Schedule\ScheduleItem;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\Payment\Price;
@@ -13,7 +14,7 @@ use Nette\Utils\Html;
  * Class PriceCZKRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PriceCZKRow extends AbstractScheduleItemRow {
+class PriceCZKRow extends DefaultColumnFactory {
     /**
      * @param AbstractModelSingle|ModelScheduleItem $model
      * @return Html
@@ -24,9 +25,5 @@ class PriceCZKRow extends AbstractScheduleItemRow {
             return NotSetBadge::getHtml();
         }
         return Html::el('span')->addText($model->getPrice(Price::CURRENCY_CZK)->__toString());
-    }
-
-    public function getTitle(): string {
-        return _('Price CZK');
     }
 }

@@ -29,10 +29,6 @@ class TasksFromXML extends Stage {
 
     private ServiceTask $taskService;
 
-    /**
-     * TasksFromXML2 constructor.
-     * @param ServiceTask $taskService
-     */
     public function __construct(ServiceTask $taskService) {
         $this->taskService = $taskService;
     }

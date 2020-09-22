@@ -19,10 +19,6 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
 
     private TypedTableSelection $searchTable;
 
-    /**
-     * StoredQueryTagTypeProvider constructor.
-     * @param ServiceStoredQueryTagType $serviceStoredQueryTagType
-     */
     public function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
         $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
         $this->searchTable = $this->serviceStoredQueryTagType->getTable();

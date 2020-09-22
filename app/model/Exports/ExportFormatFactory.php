@@ -37,13 +37,6 @@ class ExportFormatFactory {
 
     private array $defaultFormats;
 
-    /**
-     * ExportFormatFactory constructor.
-     * @param Container $container
-     * @param StoredQueryFactory $storedQueryFactory
-     * @param ServiceEvent $serviceEvent
-     * @param ServiceContest $serviceContest
-     */
     public function __construct(Container $container, StoredQueryFactory $storedQueryFactory, ServiceEvent $serviceEvent, ServiceContest $serviceContest) {
         $this->container = $container;
         $this->storedQueryFactory = $storedQueryFactory;

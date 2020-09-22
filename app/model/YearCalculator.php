@@ -38,12 +38,6 @@ class YearCalculator {
 
     private Container $container;
 
-    /**
-     * FKSDB\YearCalculator constructor.
-     * @param ServiceContestYear $serviceContestYear
-     * @param ServiceContest $serviceContest
-     * @param Container $container
-     */
     public function __construct(ServiceContestYear $serviceContestYear, ServiceContest $serviceContest, Container $container) {
         $this->serviceContestYear = $serviceContestYear;
         $this->serviceContest = $serviceContest;

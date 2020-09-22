@@ -25,11 +25,6 @@ class MassTransitionsControl extends BaseComponent {
 
     private ApplicationHandlerFactory $applicationHandlerFactory;
 
-    /**
-     * MassTransitionsControl constructor.
-     * @param Container $container
-     * @param ModelEvent $event
-     */
     public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container);
         $this->event = $event;

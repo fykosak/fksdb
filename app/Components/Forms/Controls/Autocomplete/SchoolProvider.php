@@ -26,10 +26,6 @@ class SchoolProvider implements IFilteredDataProvider {
      */
     private $defaultValue;
 
-    /**
-     * SchoolProvider constructor.
-     * @param ServiceSchool $serviceSchool
-     */
     public function __construct(ServiceSchool $serviceSchool) {
         $this->serviceSchool = $serviceSchool;
     }

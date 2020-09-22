@@ -15,11 +15,6 @@ use Nette\Database\IConventions;
 class ServiceOrg extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    /**
-     * ServiceOrg constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_ORG, ModelOrg::class);
     }

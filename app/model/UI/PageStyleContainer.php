@@ -14,9 +14,6 @@ class PageStyleContainer {
 
     public array $mainContainerClassNames = ['container', 'bg-white-container'];
 
-    /**
-     * PageStyleContainer constructor.
-     */
     public function __construct() {
         $this->styleId = null;
     }

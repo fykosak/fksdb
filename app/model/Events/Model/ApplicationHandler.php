@@ -54,14 +54,6 @@ class ApplicationHandler {
 
     private EventDispatchFactory $eventDispatchFactory;
 
-    /**
-     * ApplicationHandler constructor.
-     * @param ModelEvent $event
-     * @param ILogger $logger
-     * @param Connection $connection
-     * @param Container $container
-     * @param EventDispatchFactory $eventDispatchFactory
-     */
     public function __construct(ModelEvent $event, ILogger $logger, Connection $connection, Container $container, EventDispatchFactory $eventDispatchFactory) {
         $this->event = $event;
         $this->logger = $logger;
@@ -103,10 +95,9 @@ class ApplicationHandler {
         $this->initializeMachine();
 
         try {
-            $explicitMachineName = $this->machine->getPrimaryMachine()->getName();
             $this->beginTransaction();
-            $transition = $this->machine->getBaseMachine($explicitMachineName)->getTransition($explicitTransitionName);
-            if ($holder->getPrimaryHolder()->getModelState() !== $transition->getSource()) {
+            $transition = $this->machine->getPrimaryMachine()->getTransition($explicitTransitionName);
+            if (!$transition->matches($holder->getPrimaryHolder()->getModelState())) {
                 throw new UnavailableTransitionException($transition, $holder->getPrimaryHolder()->getModel());
             }
 

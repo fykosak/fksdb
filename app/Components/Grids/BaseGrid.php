@@ -44,10 +44,6 @@ abstract class BaseGrid extends Grid {
 
     private Container $container;
 
-    /**
-     * BaseGrid constructor.
-     * @param Container $container
-     */
     public function __construct(Container $container) {
         parent::__construct();
         $this->container = $container;
@@ -305,7 +301,7 @@ abstract class BaseGrid extends Grid {
         /** @var Button $button */
         $button = $this->addButton(str_replace('.', '_', $linkId), $factory->getText())
             ->setText($factory->getText())
-            ->setLink(function ($model) use ($factory) {
+            ->setLink(function ($model) use ($factory): string {
                 if (!$model instanceof AbstractModelSingle) {
                     $model = $this->getModelClassName()::createFromActiveRow($model);
                 }

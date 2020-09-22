@@ -28,11 +28,6 @@ class CategoryProcessing extends AbstractProcessing {
 
     private ServiceSchool $serviceSchool;
 
-    /**
-     * CategoryProcessing constructor.
-     * @param YearCalculator $yearCalculator
-     * @param ServiceSchool $serviceSchool
-     */
     public function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;

@@ -30,14 +30,6 @@ class Handler {
 
     private TaskCodePreprocessor $taskCodePreprocessor;
 
-    /**
-     * TaskCodeHandler constructor.
-     * @param ModelEvent $event
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
-     * @param User $user
-     */
     public function __construct(
         ModelEvent $event,
         ServiceFyziklaniTeam $serviceFyziklaniTeam,

@@ -24,11 +24,6 @@ class ContestAuthorizator {
 
     private Permission $permission;
 
-    /**
-     * ContestAuthorizator constructor.
-     * @param User $identity
-     * @param Permission $permission
-     */
     public function __construct(User $identity, Permission $permission) {
         $this->user = $identity;
         $this->permission = $permission;

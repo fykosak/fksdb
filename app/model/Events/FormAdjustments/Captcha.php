@@ -24,10 +24,6 @@ class Captcha implements IFormAdjustment {
 
     private User $user;
 
-    /**
-     * Captcha constructor.
-     * @param User $user
-     */
     public function __construct(User $user) {
         $this->user = $user;
     }

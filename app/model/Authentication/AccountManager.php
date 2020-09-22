@@ -33,13 +33,6 @@ class AccountManager {
 
     private MailTemplateFactory $mailTemplateFactory;
 
-    /**
-     * AccountManager constructor.
-     * @param MailTemplateFactory $mailTemplateFactory
-     * @param ServiceLogin $serviceLogin
-     * @param ServiceAuthToken $serviceAuthToken
-     * @param ServiceEmailMessage $serviceEmailMessage
-     */
     public function __construct(
         MailTemplateFactory $mailTemplateFactory,
         ServiceLogin $serviceLogin,

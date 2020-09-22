@@ -16,10 +16,6 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
 
     private ServicePerson $servicePerson;
 
-    /**
-     * TotalPersonsChartControl constructor.
-     * @param Container $container
-     */
     public function __construct(Container $container) {
         parent::__construct($container, 'chart.total-person');
     }

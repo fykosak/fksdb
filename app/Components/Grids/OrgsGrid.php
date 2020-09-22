@@ -23,11 +23,6 @@ class OrgsGrid extends BaseGrid {
 
     private ModelContest $contest;
 
-    /**
-     * OrgsGrid constructor.
-     * @param Container $container
-     * @param ModelContest $contest
-     */
     public function __construct(Container $container, ModelContest $contest) {
         parent::__construct($container);
         $this->contest = $contest;

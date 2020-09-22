@@ -31,12 +31,6 @@ class ResultsAndStatistics extends AjaxComponent {
 
     private ?string $lastUpdated = null;
 
-    /**
-     * FyziklaniReactControl constructor.
-     * @param Container $container
-     * @param ModelEvent $event
-     * @param string $reactId
-     */
     public function __construct(Container $container, ModelEvent $event, string $reactId) {
         parent::__construct($container, $reactId);
         $this->event = $event;

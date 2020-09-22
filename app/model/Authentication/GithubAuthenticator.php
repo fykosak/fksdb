@@ -24,12 +24,6 @@ class GithubAuthenticator extends AbstractAuthenticator {
 
     private Container $container;
 
-    /**
-     * GithubAuthenticator constructor.
-     * @param ServiceLogin $serviceLogin
-     * @param YearCalculator $yearCalculator
-     * @param Container $container
-     */
     public function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator, Container $container) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->container = $container;

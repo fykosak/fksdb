@@ -15,11 +15,6 @@ class SeriesCalculator {
 
     private YearCalculator $yearCalculator;
 
-    /**
-     * FKSDB\SeriesCalculator constructor.
-     * @param ServiceTask $serviceTask
-     * @param YearCalculator $yearCalculator
-     */
     public function __construct(ServiceTask $serviceTask, YearCalculator $yearCalculator) {
         $this->serviceTask = $serviceTask;
         $this->yearCalculator = $yearCalculator;

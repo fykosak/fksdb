@@ -29,12 +29,6 @@ class AddressFactory {
 
     private Container $container;
 
-    /**
-     * AddressFactory constructor.
-     * @param Container $container
-     * @param ServiceAddress $serviceAddress
-     * @param ServiceRegion $serviceRegion
-     */
     public function __construct(Container $container, ServiceAddress $serviceAddress, ServiceRegion $serviceRegion) {
         $this->serviceAddress = $serviceAddress;
         $this->serviceRegion = $serviceRegion;

@@ -20,12 +20,6 @@ class ServiceGlobalSession extends AbstractServiceSingle {
 
     private Request $request;
 
-    /**
-     * FKSDB\ORM\Services\ServiceGlobalSession constructor.
-     * @param Request $request
-     * @param Context $context
-     * @param IConventions $conventions
-     */
     public function __construct(Request $request, Context $context, IConventions $conventions) {
         parent::__construct($context, $conventions, DbNames::TAB_GLOBAL_SESSION, ModelGlobalSession::class);
         $this->request = $request;

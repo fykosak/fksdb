@@ -21,13 +21,6 @@ class PointsFormControl extends SeriesTableFormControl {
 
     private ServiceSubmit $serviceSubmit;
 
-    /**
-     * PointsFormControl constructor.
-     * @param callable $invalidCacheCallback
-     * @param Container $context
-     * @param SeriesTable $seriesTable
-     * @param bool $displayAll
-     */
     public function __construct(callable $invalidCacheCallback, Container $context, SeriesTable $seriesTable, bool $displayAll = false) {
         parent::__construct($context, $seriesTable, $displayAll);
         $this->invalidCacheCallback = $invalidCacheCallback;

@@ -2,8 +2,7 @@
 
 namespace FKSDB\DBReflection\ColumnFactories\PersonInfo;
 
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnFactory;
-use FKSDB\DBReflection\FieldLevelPermission;
+use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
 use FKSDB\ValuePrinters\DatePrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPersonInfo;
@@ -15,17 +14,13 @@ use Nette\Utils\Html;
  * Class AgreedField
  * *
  */
-class AgreedRow extends AbstractColumnFactory {
-
-    public function getTitle(): string {
-        return _('I agree with the privacy policy');
-    }
+class AgreedRow extends DefaultColumnFactory {
 
     /**
      * @param array $args
      * @return BaseControl
      */
-    public function createField(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         $control = new Checkbox($this->getTitle());
         $link = Html::el('a');
         $link->setText(_('Agreement'));
@@ -37,10 +32,6 @@ class AgreedRow extends AbstractColumnFactory {
         return $control;
     }
 
-    public function getPermission(): FieldLevelPermission {
-        return new FieldLevelPermission(self::PERMISSION_ALLOW_BASIC, self::PERMISSION_ALLOW_BASIC);
-    }
-
     /**
      * @param AbstractModelSingle|ModelPersonInfo $model
      * @return Html
@@ -48,5 +39,4 @@ class AgreedRow extends AbstractColumnFactory {
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         return (new DatePrinter())($model->agreed);
     }
-
 }

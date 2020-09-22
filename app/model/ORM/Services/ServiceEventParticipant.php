@@ -17,11 +17,7 @@ use Nette\Database\IConventions;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceEventParticipant extends AbstractServiceSingle {
-    /**
-     * ServiceEventParticipant constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
+
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_EVENT_PARTICIPANT, ModelEventParticipant::class);
     }

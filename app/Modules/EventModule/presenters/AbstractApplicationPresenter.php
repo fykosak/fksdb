@@ -2,6 +2,7 @@
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Components\Events\TransitionButtonsComponent;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Events\EventNotFoundException;
@@ -102,7 +103,6 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
 
     /**
      * @return ApplicationComponent
-     *
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws ForbiddenRequestException
@@ -115,6 +115,24 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
         foreach ($source->getHolders() as $key => $holder) {
             if ($key === $this->getEntity()->getPrimary()) {
                 return new ApplicationComponent($this->getContext(), $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);
+            }
+        }
+        throw new InvalidStateException();
+    }
+    /**
+     * @return TransitionButtonsComponent
+     * @throws BadTypeException
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws NeonSchemaException
+     *
+     */
+    protected function createComponentApplicationTransitions(): TransitionButtonsComponent {
+        $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->getEventDispatchFactory());
+        foreach ($source->getHolders() as $key => $holder) {
+            if ($key === $this->getEntity()->getPrimary()) {
+                return new TransitionButtonsComponent($this->getContext(), $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);
             }
         }
         throw new InvalidStateException();

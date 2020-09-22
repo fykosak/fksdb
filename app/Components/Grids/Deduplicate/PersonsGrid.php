@@ -24,12 +24,6 @@ class PersonsGrid extends BaseGrid {
     /** @var ModelPerson[] trunkId => ModelPerson */
     private array $pairs;
 
-    /**
-     * PersonsGrid constructor.
-     * @param TypedTableSelection $trunkPersons
-     * @param array $pairs
-     * @param Container $container
-     */
     public function __construct(TypedTableSelection $trunkPersons, array $pairs, Container $container) {
         parent::__construct($container);
         $this->trunkPersons = $trunkPersons;

@@ -23,11 +23,6 @@ class ReadonlyGlobalSession implements IGlobalSession {
 
     private array $data = [];
 
-    /**
-     * ReadonlyGlobalSession constructor.
-     * @param Connection $connection
-     * @param IGSIDHolder $gsidHolder
-     */
     public function __construct(Connection $connection, IGSIDHolder $gsidHolder) {
         $this->connection = $connection;
         $this->gsidHolder = $gsidHolder;

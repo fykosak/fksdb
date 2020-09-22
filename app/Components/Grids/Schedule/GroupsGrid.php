@@ -21,11 +21,6 @@ class GroupsGrid extends BaseGrid {
 
     private ModelEvent $event;
 
-    /**
-     * GroupsGrid constructor.
-     * @param ModelEvent $event
-     * @param Container $container
-     */
     public function __construct(ModelEvent $event, Container $container) {
         parent::__construct($container);
         $this->event = $event;
@@ -50,8 +45,8 @@ class GroupsGrid extends BaseGrid {
     protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
-        $this->addColumn('schedule_group_id', _('#'));
         $this->addColumns([
+            'schedule_group.schedule_group_id',
             'schedule_group.name_cs',
             'schedule_group.name_en',
             'schedule_group.schedule_group_type',

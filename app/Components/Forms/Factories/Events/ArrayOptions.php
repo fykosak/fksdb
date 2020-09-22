@@ -16,11 +16,6 @@ class ArrayOptions implements IOptionsProvider {
 
     private array $options;
 
-    /**
-     * ArrayOptions constructor.
-     * @param array $options
-     * @param bool $useKeys
-     */
     public function __construct(array $options, bool $useKeys = true) {
         if (!$useKeys) {
             $this->options = array_combine($options, $options);

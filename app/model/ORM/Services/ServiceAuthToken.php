@@ -19,11 +19,6 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
     private const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
-    /**
-     * ServiceAddress constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_AUTH_TOKEN, ModelAuthToken::class);
     }

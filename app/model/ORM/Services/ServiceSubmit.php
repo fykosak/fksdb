@@ -23,11 +23,6 @@ class ServiceSubmit extends AbstractServiceSingle {
 
     private array $submitCache = [];
 
-    /**
-     * ServiceSubmit constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_SUBMIT, ModelSubmit::class);
     }

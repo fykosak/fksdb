@@ -13,11 +13,6 @@ use Nette\Utils\Html;
 abstract class ReactComponent extends BaseComponent {
     use ReactComponentTrait;
 
-    /**
-     * ReactComponent constructor.
-     * @param Container $container
-     * @param string $reactId
-     */
     public function __construct(Container $container, string $reactId) {
         parent::__construct($container);
         $this->registerReact($reactId);

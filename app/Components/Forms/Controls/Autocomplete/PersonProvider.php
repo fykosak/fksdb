@@ -21,10 +21,6 @@ class PersonProvider implements IFilteredDataProvider {
 
     private TypedTableSelection $searchTable;
 
-    /**
-     * PersonProvider constructor.
-     * @param ServicePerson $servicePerson
-     */
     public function __construct(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
         $this->searchTable = $this->servicePerson->getTable();

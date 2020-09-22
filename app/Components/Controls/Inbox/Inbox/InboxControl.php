@@ -21,11 +21,6 @@ class InboxControl extends SeriesTableFormControl {
 
     private ServiceSubmit $serviceSubmit;
 
-    /**
-     * InboxControl constructor.
-     * @param Container $context
-     * @param SeriesTable $seriesTable
-     */
     public function __construct(Container $context, SeriesTable $seriesTable) {
         parent::__construct($context, $seriesTable, true);
     }

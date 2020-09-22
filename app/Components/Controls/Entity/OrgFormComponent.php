@@ -36,12 +36,6 @@ class OrgFormComponent extends EditEntityFormComponent {
 
     private YearCalculator $yearCalculator;
 
-    /**
-     * AbstractForm constructor.
-     * @param Container $container
-     * @param ModelContest $contest
-     * @param bool $create
-     */
     public function __construct(Container $container, ModelContest $contest, bool $create) {
         parent::__construct($container, $create);
         $this->contest = $contest;

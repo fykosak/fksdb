@@ -9,12 +9,8 @@ use FKSDB\Exceptions\NotFoundException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ModelNotFoundException extends NotFoundException {
-    /**
-     * ModelNotFoundException constructor.
-     * @param string|null $message
-     * @param \Exception|null $previous
-     */
-    public function __construct($message = null, \Exception $previous = null) {
+
+    public function __construct(?string $message = null, ?\Throwable $previous = null) {
         parent::__construct($message ?? _('Model not found'), $previous);
     }
 

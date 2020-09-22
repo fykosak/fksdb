@@ -2,6 +2,7 @@
 
 namespace FKSDB\DBReflection\ColumnFactories\Org;
 
+use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
 use FKSDB\ValuePrinters\StringPrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelOrg;
@@ -14,7 +15,7 @@ use Nette\Utils\Html;
  * Class OrderRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class OrderRow extends AbstractOrgRowFactory {
+class OrderRow extends DefaultColumnFactory {
 
     public function getOrderMapping(): array {
         return [
@@ -31,14 +32,6 @@ class OrderRow extends AbstractOrgRowFactory {
         ];
     }
 
-    public function getDescription(): ?string {
-        return _('Pro řazení v seznamu organizátorů');
-    }
-
-    public function getTitle(): string {
-        return _('Order');
-    }
-
     /**
      * @param AbstractModelSingle|ModelOrg $model
      * @return Html
@@ -50,7 +43,7 @@ class OrderRow extends AbstractOrgRowFactory {
         return (new StringPrinter())($model->order);
     }
 
-    public function createField(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         $control = new SelectBox($this->getTitle());
         $control->setOption('description', $this->getDescription());
         $control->setItems($this->getOrderMapping());

@@ -17,12 +17,6 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
 
     private ServicePerson $servicePerson;
 
-    /**
-     * PasswordAuthenticator constructor.
-     * @param ServiceLogin $serviceLogin
-     * @param YearCalculator $yearCalculator
-     * @param ServicePerson $servicePerson
-     */
     public function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator, ServicePerson $servicePerson) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->servicePerson = $servicePerson;

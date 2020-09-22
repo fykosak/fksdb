@@ -31,12 +31,6 @@ final class Transition {
 
     private string $toState;
 
-    /**
-     * Transition constructor.
-     * @param string $fromState
-     * @param string $toState
-     * @param string $label
-     */
     public function __construct(string $fromState, string $toState, string $label) {
         $this->fromState = $fromState;
         $this->toState = $toState;

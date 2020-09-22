@@ -19,11 +19,6 @@ use Nette\Database\Table\ActiveRow;
 class ServiceEmailMessage extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    /**
-     * ServiceEmailMessage constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_EMAIL_MESSAGE, ModelEmailMessage::class);
     }

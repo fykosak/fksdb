@@ -28,11 +28,6 @@ class FyziklaniSubmitEditComponent extends EditEntityFormComponent {
 
     private HandlerFactory $handlerFactory;
 
-    /**
-     * EditControl constructor.
-     * @param Container $container
-     * @param ModelEvent $event
-     */
     public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container, false);
         $this->event = $event;

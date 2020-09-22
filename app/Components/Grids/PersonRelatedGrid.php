@@ -5,12 +5,14 @@ namespace FKSDB\Components\Grids;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelPerson;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
+use NiftyGrid\DuplicateGlobalButtonException;
 
 /**
  * Class StalkingGrid
@@ -46,6 +48,8 @@ class PersonRelatedGrid extends BaseGrid {
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
+     * @throws InvalidLinkException
+     * @throws DuplicateGlobalButtonException
      */
     protected function configure(Presenter $presenter): void {
         $this->paginate = false;
@@ -54,6 +58,7 @@ class PersonRelatedGrid extends BaseGrid {
         foreach ($this->definition['links'] as $link) {
             $this->addLink($link);
         }
+        $this->addCSVDownloadButton();
     }
 
     protected function getModelClassName(): string {

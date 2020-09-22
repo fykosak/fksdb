@@ -52,12 +52,6 @@ class Transition {
 
     private string $type;
 
-    /**
-     * Transition constructor.
-     * @param string $mask
-     * @param string|null $label
-     * @param string $type
-     */
     public function __construct(string $mask, ?string $label = null, string $type = self::TYPE_DEFAULT) {
         $this->setMask($mask);
         $this->label = $label;

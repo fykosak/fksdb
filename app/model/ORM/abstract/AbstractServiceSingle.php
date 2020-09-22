@@ -29,13 +29,6 @@ abstract class AbstractServiceSingle extends Selection implements IService {
 
     private string $tableName;
 
-    /**
-     * AbstractServiceSingle constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     * @param string $tableName
-     * @param string $modelClassName
-     */
     public function __construct(Context $connection, IConventions $conventions, string $tableName, string $modelClassName) {
         $this->tableName = $tableName;
         $this->modelClassName = $modelClassName;
@@ -53,7 +46,6 @@ abstract class AbstractServiceSingle extends Selection implements IService {
         try {
             $result = $this->getTable()->insert($data);
             if ($result !== false) {
-                /** @var AbstractModelSingle $model */
                 $model = ($modelClassName)::createFromActiveRow($result);
                 $model->setNew(false); // only for old compatibility
                 return $model;
@@ -288,6 +280,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
         return $this->tableName;
     }
 
+    /** @return string|AbstractModelSingle */
     final public function getModelClassName(): string {
         return $this->modelClassName;
     }

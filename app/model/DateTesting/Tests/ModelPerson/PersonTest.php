@@ -15,11 +15,6 @@ abstract class PersonTest {
 
     private string $title;
 
-    /**
-     * PersonTest constructor.
-     * @param string $id
-     * @param string $title
-     */
     public function __construct(string $id, string $title) {
         $this->id = $id;
         $this->title = $title;

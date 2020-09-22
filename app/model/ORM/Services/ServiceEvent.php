@@ -21,11 +21,6 @@ class ServiceEvent extends AbstractServiceSingle {
 
     use DeprecatedLazyDBTrait;
 
-    /**
-     * ServiceEvent constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_EVENT, ModelEvent::class);
     }

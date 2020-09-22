@@ -47,15 +47,6 @@ class LoginUserStorage extends UserStorage {
 
     private Request $request;
 
-    /**
-     * LoginUserStorage constructor.
-     * @param Session $sessionHandler
-     * @param ServiceLogin $loginService
-     * @param YearCalculator $yearCalculator
-     * @param GlobalSession $globalSession
-     * @param Application $application
-     * @param Request $request
-     */
     public function __construct(
         Session $sessionHandler,
         ServiceLogin $loginService,
