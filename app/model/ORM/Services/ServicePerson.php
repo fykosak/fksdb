@@ -33,7 +33,7 @@ class ServicePerson extends AbstractServiceSingle {
      * @param IModel|ModelPerson $model
      * @return void
      */
-    public function save(IModel &$model) {
+    public function save(IModel &$model): void {
         if (is_null($model->gender)) {
             $model->inferGender();
         }

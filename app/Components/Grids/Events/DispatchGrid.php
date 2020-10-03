@@ -28,7 +28,7 @@ class DispatchGrid extends BaseGrid {
         $this->person = $person;
     }
 
-    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
+    final public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 

@@ -28,7 +28,7 @@ class OrgsGrid extends BaseGrid {
         $this->contest = $contest;
     }
 
-    public function injectServiceOrg(ServiceOrg $serviceOrg): void {
+    final public function injectServiceOrg(ServiceOrg $serviceOrg): void {
         $this->serviceOrg = $serviceOrg;
     }
 

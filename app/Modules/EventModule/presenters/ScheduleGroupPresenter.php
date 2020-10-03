@@ -2,15 +2,18 @@
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Components\Controls\Entity\ScheduleGroupFormComponent;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\AllPersonsGrid;
 use FKSDB\Components\Grids\Schedule\GroupsGrid;
+use FKSDB\Components\Grids\Schedule\ItemsGrid;
+use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Events\EventNotFoundException;
-use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\UI\PageTitle;
-use Nette\Application\UI\Control;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
 
 /**
@@ -22,7 +25,7 @@ class ScheduleGroupPresenter extends BasePresenter {
 
     private ServiceScheduleGroup $serviceScheduleGroup;
 
-    public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup): void {
+    final public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup): void {
         $this->serviceScheduleGroup = $serviceScheduleGroup;
     }
 
@@ -43,19 +46,47 @@ class ScheduleGroupPresenter extends BasePresenter {
     }
 
     /**
-     * @return Control
-     * @throws NotImplementedException
+     * @return void
+     * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): Control {
-        throw new NotImplementedException();
+    public function titleDetail(): void {
+        $this->setPageTitle(new PageTitle(\sprintf(_('Schedule items')), 'fa fa-calendar-check-o'));
     }
 
     /**
-     * @return Control
-     * @throws NotImplementedException
+     * @return void
+     * @throws ModelNotFoundException
+     * @throws BadTypeException
      */
-    protected function createComponentEditForm(): Control {
-        throw new NotImplementedException();
+    public function actionEdit(): void {
+        $this->traitActionEdit();
+    }
+
+    /**
+     *
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws EventNotFoundException
+     * @throws BadTypeException
+     */
+    public function renderDetail(): void {
+        $this->template->model = $this->getEntity();
+    }
+
+    /**
+     * @return ScheduleGroupFormComponent
+     * @throws EventNotFoundException
+     */
+    protected function createComponentCreateForm(): ScheduleGroupFormComponent {
+        return new ScheduleGroupFormComponent($this->getEvent(), $this->getContext(), true);
+    }
+
+    /**
+     * @return ScheduleGroupFormComponent
+     * @throws EventNotFoundException
+     */
+    protected function createComponentEditForm(): ScheduleGroupFormComponent {
+        return new ScheduleGroupFormComponent($this->getEvent(), $this->getContext(), false);
     }
 
     /**
@@ -72,6 +103,17 @@ class ScheduleGroupPresenter extends BasePresenter {
      */
     protected function createComponentAllPersonsGrid(): AllPersonsGrid {
         return new AllPersonsGrid($this->getContext(), $this->getEvent());
+    }
+
+    /**
+     * @return ItemsGrid
+     * @throws BadTypeException
+     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentItemsGrid(): ItemsGrid {
+        return new ItemsGrid($this->getContext(), $this->getEntity());
     }
 
     protected function getORMService(): ServiceScheduleGroup {

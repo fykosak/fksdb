@@ -36,38 +36,33 @@ use FKSDB\ORM\Services\ServiceSubmitQuizQuestion;
 class SubmitPresenter extends BasePresenter {
 
     private ServiceSubmit $submitService;
-
     private ServiceSubmitQuizQuestion $submitQuizQuestionService;
-
     private UploadedStorage $uploadedSubmitStorage;
-
     private ServiceTask $taskService;
-
     private ServiceQuizQuestion $quizQuestionService;
-
     private SubmitHandlerFactory $submitHandlerFactory;
 
-    public function injectSubmitService(ServiceSubmit $submitService): void {
+    final public function injectSubmitService(ServiceSubmit $submitService): void {
         $this->submitService = $submitService;
     }
 
-    public function injectSubmitQuizQuestionService(ServiceSubmitQuizQuestion $submitQuizQuestionService): void {
+    final public function injectSubmitQuizQuestionService(ServiceSubmitQuizQuestion $submitQuizQuestionService): void {
         $this->submitQuizQuestionService = $submitQuizQuestionService;
     }
 
-    public function injectSubmitUploadedStorage(UploadedStorage $filesystemUploadedSubmitStorage): void {
+    final public function injectSubmitUploadedStorage(UploadedStorage $filesystemUploadedSubmitStorage): void {
         $this->uploadedSubmitStorage = $filesystemUploadedSubmitStorage;
     }
 
-    public function injectTaskService(ServiceTask $taskService): void {
+    final public function injectTaskService(ServiceTask $taskService): void {
         $this->taskService = $taskService;
     }
 
-    public function injectQuizQuestionService(ServiceQuizQuestion $quizQuestionService): void {
+    final public function injectQuizQuestionService(ServiceQuizQuestion $quizQuestionService): void {
         $this->quizQuestionService = $quizQuestionService;
     }
 
-    public function injectSubmitHandlerFactory(SubmitHandlerFactory $submitHandlerFactory): void {
+    final public function injectSubmitHandlerFactory(SubmitHandlerFactory $submitHandlerFactory): void {
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
@@ -102,7 +97,6 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     *
      * @throws GoneException
      * @deprecated
      */
@@ -121,12 +115,12 @@ class SubmitPresenter extends BasePresenter {
         if (!$this->template->hasTasks) {
             /** @var ModelPerson $person */
             $person = $this->getUser()->getIdentity()->getPerson();
-            $contestants = $person->getActiveContestants($this->getYearCalculator());
+            $contestants = $person->getActiveContestants($this->yearCalculator);
             $contestant = $contestants[$this->getSelectedContest()->contest_id];
-            $currentYear = $this->getYearCalculator()->getCurrentYear($this->getSelectedContest());
-            $this->template->canRegister = ($contestant->year < $currentYear + $this->getYearCalculator()->getForwardShift($this->getSelectedContest()));
+            $currentYear = $this->yearCalculator->getCurrentYear($this->getSelectedContest());
+            $this->template->canRegister = ($contestant->year < $currentYear + $this->yearCalculator->getForwardShift($this->getSelectedContest()));
 
-            $this->template->hasForward = ($this->getSelectedYear() == $this->getYearCalculator()->getCurrentYear($this->getSelectedContest())) && ($this->getYearCalculator()->getForwardShift($this->getSelectedContest()) > 0);
+            $this->template->hasForward = ($this->getSelectedYear() == $this->yearCalculator->getCurrentYear($this->getSelectedContest())) && ($this->yearCalculator->getForwardShift($this->getSelectedContest()) > 0);
         }
     }
 
@@ -280,7 +274,7 @@ class SubmitPresenter extends BasePresenter {
                     foreach ($questions as $question) {
                         $name = 'question' . $question->question_id;
                         $answer = $taskValues[$name];
-                        if($answer != null){
+                        if ($answer != null) {
                             $this->submitQuizQuestionService->saveSubmittedQuestion($question, $this->getContestant(), $answer);
                         }
                     }

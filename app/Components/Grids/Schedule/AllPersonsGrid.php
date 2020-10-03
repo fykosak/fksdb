@@ -28,7 +28,7 @@ class AllPersonsGrid extends BaseGrid {
         $this->event = $event;
     }
 
-    public function injectServicePersonSchedule(ServicePersonSchedule $servicePersonSchedule): void {
+    final public function injectServicePersonSchedule(ServicePersonSchedule $servicePersonSchedule): void {
         $this->servicePersonSchedule = $servicePersonSchedule;
     }
 

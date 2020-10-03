@@ -32,7 +32,7 @@ class ContestantsGrid extends BaseGrid {
         $this->year = $year;
     }
 
-    public function injectServiceContestant(ServiceContestant $serviceContestant): void {
+    final public function injectServiceContestant(ServiceContestant $serviceContestant): void {
         $this->serviceContestant = $serviceContestant;
     }
 

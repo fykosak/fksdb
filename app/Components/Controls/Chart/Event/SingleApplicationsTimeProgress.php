@@ -29,7 +29,7 @@ class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
         $this->eventType = $event->getEventType();
     }
 
-    public function injectPrimary(ServiceEventParticipant $serviceEventParticipant, ServiceEvent $serviceEvent): void {
+    final public function injectPrimary(ServiceEventParticipant $serviceEventParticipant, ServiceEvent $serviceEvent): void {
         $this->serviceEventParticipant = $serviceEventParticipant;
         $this->serviceEvent = $serviceEvent;
     }

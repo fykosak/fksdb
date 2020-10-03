@@ -23,7 +23,7 @@ class TeacherPresenter extends BasePresenter {
 
     private ServiceTeacher $serviceTeacher;
 
-    public function injectServiceTeacher(ServiceTeacher $serviceTeacher): void {
+    final public function injectServiceTeacher(ServiceTeacher $serviceTeacher): void {
         $this->serviceTeacher = $serviceTeacher;
     }
 

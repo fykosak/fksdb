@@ -33,7 +33,7 @@ class EventsGrid extends BaseGrid {
         $this->year = $year;
     }
 
-    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
+    final public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 

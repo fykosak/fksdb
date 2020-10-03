@@ -28,12 +28,9 @@ class OrgFormComponent extends EditEntityFormComponent {
 
     public const CONTAINER = 'org';
 
-    protected ServiceOrg $serviceOrg;
-
-    protected ModelContest $contest;
-
+    private ServiceOrg $serviceOrg;
+    private ModelContest $contest;
     private SingleReflectionFormFactory $singleReflectionFormFactory;
-
     private YearCalculator $yearCalculator;
 
     public function __construct(Container $container, ModelContest $contest, bool $create) {
@@ -41,7 +38,7 @@ class OrgFormComponent extends EditEntityFormComponent {
         $this->contest = $contest;
     }
 
-    public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, ServiceOrg $serviceOrg, YearCalculator $yearCalculator): void {
+    final public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, ServiceOrg $serviceOrg, YearCalculator $yearCalculator): void {
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->serviceOrg = $serviceOrg;
         $this->yearCalculator = $yearCalculator;
@@ -74,11 +71,7 @@ class OrgFormComponent extends EditEntityFormComponent {
         if (!isset($data['contest_id'])) {
             $data['contest_id'] = $this->contest->contest_id;
         }
-        if ($this->create) {
-            $this->serviceOrg->createNewModel($data);
-        } else {
-            $this->serviceOrg->updateModel2($this->model, $data);
-        }
+        $this->serviceOrg->store($this->model ?? null, $data);
         $this->getPresenter()->flashMessage($this->create ? _('Org has been created.') : _('Org has been updated.'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }

@@ -56,6 +56,7 @@ class ItemsGrid extends BaseGrid {
             'schedule_item.used_capacity',
             'schedule_item.require_id_number',
         ]);
-        $this->addLinkButton('detail', 'detail', _('Detail'), true, ['id' => 'schedule_item_id']);
+        $this->addLinkButton('ScheduleItem:detail', 'detail', _('Detail'), true, ['id' => 'schedule_item_id']);
+        $this->addLinkButton('ScheduleItem:edit', 'edit', _('Edit'), true, ['id' => 'schedule_item_id']);
     }
 }

@@ -16,24 +16,12 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
  */
 abstract class BasePresenter extends EventBasePresenter {
 
-    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+    protected ServiceFyziklaniTeam $serviceFyziklaniTeam;
+    protected ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
 
-    private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
-
-    public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit): void {
+    final public function injectFyziklaniBase(ServiceFyziklaniSubmit $serviceFyziklaniSubmit, ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
-    }
-
-    protected function getServiceFyziklaniSubmit(): ServiceFyziklaniSubmit {
-        return $this->serviceFyziklaniSubmit;
-    }
-
-    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
-    }
-
-    protected function getServiceFyziklaniTeam(): ServiceFyziklaniTeam {
-        return $this->serviceFyziklaniTeam;
     }
 
     /**

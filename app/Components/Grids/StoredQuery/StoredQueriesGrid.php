@@ -30,7 +30,7 @@ class StoredQueriesGrid extends BaseGrid {
         $this->activeTagIds = $activeTagIds;
     }
 
-    public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery): void {
+    final public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery): void {
         $this->serviceStoredQuery = $serviceStoredQuery;
     }
 

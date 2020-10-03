@@ -91,12 +91,7 @@ class Authentication {
         return $_SERVER['REQUEST_URI'];
     }
 
-    /**
-     * @param string $url
-     * @param mixed $params
-     * @return string
-     */
-    private function setHttpParams($url, $params) {
+    private function setHttpParams(string $url, array $params): string {
         $query = http_build_query($params, false, '&');
 
         if (preg_match('/\?/', $url)) { // very simplistic test where URL contains query part

@@ -42,13 +42,9 @@ class Breadcrumbs extends BaseComponent {
     public const BACKID_DOMAIN = '0-9a-zA-Z';
 
     private Session $session;
-
     private IRouter $router;
-
     private HttpRequest $httpRequest;
-
     private IPresenterFactory $presenterFactory;
-
     /**
      * Prevents multiple storing the current request.
      *
@@ -61,7 +57,7 @@ class Breadcrumbs extends BaseComponent {
      * @param string $expiration
      * @param Container $container
      */
-    public function __construct($expiration, Container $container) {
+    public function __construct(string $expiration, Container $container) {
         parent::__construct($container);
         $this->getRequests()->setExpiration($expiration);
         $this->getPathKeyCache()->setExpiration($expiration);
@@ -69,7 +65,7 @@ class Breadcrumbs extends BaseComponent {
         $this->getReverseBackLinkMap()->setExpiration($expiration);
     }
 
-    public function injectPrimary(Session $session, IRouter $router, HttpRequest $httpRequest, IPresenterFactory $presenterFactory): void {
+    final public function injectPrimary(Session $session, IRouter $router, HttpRequest $httpRequest, IPresenterFactory $presenterFactory): void {
         $this->session = $session;
         $this->router = $router;
         $this->httpRequest = $httpRequest;
@@ -85,7 +81,7 @@ class Breadcrumbs extends BaseComponent {
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    public function setBackLink(AppRequest $request) {
+    public function setBackLink(AppRequest $request): void {
         $presenter = $this->getPresenter();
         if (!$presenter instanceof INavigablePresenter) {
             throw new BadTypeException(INavigablePresenter::class, $presenter);
@@ -198,7 +194,7 @@ class Breadcrumbs extends BaseComponent {
 
     /**
      *
-     * @param AppRequest|string $request
+     * @param AppRequest|string|NaviRequest $request
      * @return string
      * @throws \ReflectionException
      */
@@ -254,11 +250,11 @@ class Breadcrumbs extends BaseComponent {
      * ********************** */
 
     /**
-     * @param string $backLink
+     * @param string|null $backLink
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    private function storeRequest($backLink) {
+    private function storeRequest(?string $backLink): void {
         if ($this->storedRequest) {
             return;
         }
@@ -282,12 +278,12 @@ class Breadcrumbs extends BaseComponent {
     /**
      * @param INavigablePresenter|Presenter $presenter
      * @param AppRequest $request
-     * @param string $backLink
+     * @param string|null $backLink
      * @return Request
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    protected function createNaviRequest(Presenter $presenter, AppRequest $request, $backLink): NaviRequest {
+    protected function createNaviRequest(Presenter $presenter, AppRequest $request, ?string $backLink): NaviRequest {
         $pathKey = $this->getPathKey($request);
         if (!$presenter instanceof INavigablePresenter) {
             throw new BadTypeException(INavigablePresenter::class, $presenter);

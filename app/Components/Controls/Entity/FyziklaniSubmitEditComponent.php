@@ -25,7 +25,6 @@ use Nette\Forms\Controls\RadioList;
 class FyziklaniSubmitEditComponent extends EditEntityFormComponent {
 
     private ModelEvent $event;
-
     private HandlerFactory $handlerFactory;
 
     public function __construct(Container $container, ModelEvent $event) {
@@ -33,7 +32,7 @@ class FyziklaniSubmitEditComponent extends EditEntityFormComponent {
         $this->event = $event;
     }
 
-    public function injectHandlerFactory(HandlerFactory $handlerFactory): void {
+    final public function injectHandlerFactory(HandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
     }
 

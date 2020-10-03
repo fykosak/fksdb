@@ -18,10 +18,7 @@ abstract class ReactComponent extends BaseComponent {
         $this->registerReact($reactId);
     }
 
-    /**
-     * @return void
-     */
-    final public function render() {
+    final public function render(): void {
         $html = Html::el('div');
         $this->appendPropertyTo($html);
         $this->template->html = $html;

@@ -25,7 +25,7 @@ class InboxControl extends SeriesTableFormControl {
         parent::__construct($context, $seriesTable, true);
     }
 
-    public function injectServiceSubmit(ServiceSubmit $serviceSubmit): void {
+    final public function injectServiceSubmit(ServiceSubmit $serviceSubmit): void {
         $this->serviceSubmit = $serviceSubmit;
     }
 

@@ -35,16 +35,11 @@ use Nette\Utils\Html;
 class EventFormComponent extends EditEntityFormComponent {
     public const CONT_EVENT = 'event';
 
-    protected ModelContest $contest;
-
-    protected SingleReflectionFormFactory $singleReflectionFormFactory;
-
-    protected ServiceAuthToken $serviceAuthToken;
-
-    protected ServiceEvent $serviceEvent;
-
+    private ModelContest $contest;
+    private SingleReflectionFormFactory $singleReflectionFormFactory;
+    private ServiceAuthToken $serviceAuthToken;
+    private ServiceEvent $serviceEvent;
     private int $year;
-
     private EventDispatchFactory $eventDispatchFactory;
 
     public function __construct(ModelContest $contest, Container $container, int $year, bool $create) {
@@ -53,7 +48,7 @@ class EventFormComponent extends EditEntityFormComponent {
         $this->year = $year;
     }
 
-    public function injectPrimary(
+    final public function injectPrimary(
         SingleReflectionFormFactory $singleReflectionFormFactory,
         ServiceAuthToken $serviceAuthToken,
         ServiceEvent $serviceEvent,
@@ -85,13 +80,8 @@ class EventFormComponent extends EditEntityFormComponent {
     protected function handleFormSuccess(Form $form): void {
         $values = $form->getValues();
         $data = FormUtils::emptyStrToNull($values[self::CONT_EVENT], true);
-        if ($this->create) {
-            $data['year'] = $this->year;
-            $model = $this->serviceEvent->createNewModel($data);
-        } else {
-            $this->serviceEvent->updateModel2($this->model, $data);
-            $model = $this->model;
-        }
+        $data['year'] = $this->year;
+        $model = $this->serviceEvent->store($this->model ?? null, $data);
         $this->updateTokens($model);
         $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), ILogger::SUCCESS);
         $this->getPresenter()->redirect('list');

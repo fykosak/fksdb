@@ -27,7 +27,7 @@ class ContestantsFromSchoolGrid extends BaseGrid {
         $this->school = $school;
     }
 
-    public function injectServiceContestant(ServiceContestant $serviceContestant): void {
+    final public function injectServiceContestant(ServiceContestant $serviceContestant): void {
         $this->serviceContestant = $serviceContestant;
     }
 

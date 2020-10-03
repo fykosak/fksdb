@@ -46,7 +46,7 @@ class AllSubmitsGrid extends SubmitsGrid {
         $this->event = $event;
     }
 
-    public function injectPrimary(HandlerFactory $handlerFactory, ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask): void {
+    final public function injectPrimary(HandlerFactory $handlerFactory, ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->handlerFactory = $handlerFactory;
@@ -94,7 +94,7 @@ class AllSubmitsGrid extends SubmitsGrid {
     }
 
     private function getFilterCallBack(): callable {
-        return function (Selection $table, $value) {
+        return function (Selection $table, $value): void {
             foreach ($value as $key => $condition) {
                 if (!$condition) {
                     continue;
@@ -178,7 +178,7 @@ class AllSubmitsGrid extends SubmitsGrid {
         $form->addText('code', _('Code'))->setAttribute('placeholder', _('Task code'));
         $form->addCheckbox('not_null', _('Only not revoked submits'));
         $form->addSubmit('submit', _('Search'));
-        $form->onSuccess[] = function (Form $form) {
+        $form->onSuccess[] = function (Form $form): void {
             $values = $form->getValues();
             $this->searchTerm = $values;
             $this->dataSource->applyFilter($values);

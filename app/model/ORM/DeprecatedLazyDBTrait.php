@@ -11,10 +11,11 @@ use Nette\DeprecatedException;
  */
 trait DeprecatedLazyDBTrait {
     /**
-     * @param null $data
-     * @return void
+     * @param iterable|null $data
+     * @return IModel
+     * @deprecated
      */
-    public function createNew($data = null) {
+    public function createNew(?iterable $data = null) {
         throw new DeprecatedException();
     }
 
@@ -23,7 +24,7 @@ trait DeprecatedLazyDBTrait {
      * @return void
      * @deprecated
      */
-    public function save(IModel &$model) {
+    public function save(IModel &$model): void {
         throw new DeprecatedException();
     }
 
@@ -34,7 +35,7 @@ trait DeprecatedLazyDBTrait {
      * @return mixed
      * @deprecated
      */
-    public function updateModel(IModel $model, $data, $alive = true) {
+    public function updateModel(IModel $model, iterable $data, bool $alive = true): void {
         throw new DeprecatedException();
     }
 }

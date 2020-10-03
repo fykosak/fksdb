@@ -28,15 +28,15 @@ abstract class EntityPresenter extends BasePresenter {
      * @persistent
      */
     public $id;
-    /** @var IModel */
-    private $model;
+
+    private ?IModel $model;
 
     /**
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
     public function authorizedCreate(): void {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModelResource(), 'create', $this->getSelectedContest()));
+        $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModelResource(), 'create', $this->getSelectedContest()));
     }
 
     /**
@@ -44,7 +44,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function authorizedEdit(): void {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModel(), 'edit', $this->getSelectedContest()));
+        $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModel(), 'edit', $this->getSelectedContest()));
     }
 
     /**
@@ -52,7 +52,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function authorizedList(): void {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModelResource(), 'list', $this->getSelectedContest()));
+        $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModelResource(), 'list', $this->getSelectedContest()));
     }
 
     /**
@@ -61,7 +61,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function authorizedDelete($id): void {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModel(), 'delete', $this->getSelectedContest()));
+        $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModel(), 'delete', $this->getSelectedContest()));
     }
 
     /**
@@ -90,7 +90,7 @@ abstract class EntityPresenter extends BasePresenter {
      * @deprecated
      */
     final public function getModel(): ?IModel {
-        if (!$this->model) {
+        if (!isset($this->model)) {
             $this->model = $this->getParameter('id') ? $this->loadModel($this->getParameter('id')) : null;
         }
         return $this->model;

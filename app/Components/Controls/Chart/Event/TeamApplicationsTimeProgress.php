@@ -18,9 +18,7 @@ use Nette\DI\Container;
 class TeamApplicationsTimeProgress extends ReactComponent implements IChart {
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
-
     private ModelEventType $eventType;
-
     private ServiceEvent $serviceEvent;
 
     public function __construct(Container $context, ModelEvent $event) {
@@ -28,7 +26,7 @@ class TeamApplicationsTimeProgress extends ReactComponent implements IChart {
         $this->eventType = $event->getEventType();
     }
 
-    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceEvent $serviceEvent): void {
+    final public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceEvent $serviceEvent): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->serviceEvent = $serviceEvent;
     }

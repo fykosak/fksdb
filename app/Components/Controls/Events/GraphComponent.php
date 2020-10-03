@@ -34,7 +34,7 @@ class GraphComponent extends BaseComponent {
         $this->baseMachine = $baseMachine;
     }
 
-    public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter): void {
+    final public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter): void {
         $this->expressionPrinter = $expressionPrinter;
     }
 

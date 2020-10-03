@@ -39,7 +39,7 @@ class OptimisticForm extends Form {
      * @param bool $erase
      * @throws LogicException
      */
-    public function setDefaults($values = null, $erase = false) {
+    public function setDefaults($values = null, $erase = false): self {
         if ($values !== null) {
             throw new LogicException('Default values in ' . __CLASS__ . ' are set by the callback.');
         }
@@ -51,6 +51,7 @@ class OptimisticForm extends Form {
         if (!$this->isAnchored() || !$this->isSubmitted()) {
             $this->setFingerprint(($this->fingerprintCallback)());
         }
+        return $this;
     }
 
     /**
@@ -60,10 +61,7 @@ class OptimisticForm extends Form {
         return $this[self::FINGERPRINT];
     }
 
-    /**
-     * @return bool
-     */
-    public function isValid() {
+    public function isValid(): bool {
         $receivedFingerprint = $this->getFingerprintInput()->getValue();
         $currentFingerprint = ($this->fingerprintCallback)();
 

@@ -39,7 +39,7 @@ class Schedule extends EventModuleTestCase {
 
     protected function transformParams(string $presenterName, string $action, array $params): array {
         [$presenterName, $action, $params] = parent::transformParams($presenterName, $action, $params);
-        $params['groupId'] = $this->scheduleGroupId;
+        $params['id'] = $this->scheduleGroupId;
         return [$presenterName, $action, $params];
     }
 
@@ -47,7 +47,7 @@ class Schedule extends EventModuleTestCase {
         return [
             ['Event:ScheduleGroup', 'list'],
             ['Event:ScheduleGroup', 'persons'],
-            ['Event:ScheduleItem', 'list'],
+            ['Event:ScheduleGroup', 'detail'],
         ];
     }
 

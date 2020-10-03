@@ -31,7 +31,7 @@ class PersonProvider implements IFilteredDataProvider {
      * @param ModelContest $contest
      * @param YearCalculator $yearCalculator
      */
-    public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator) {
+    public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator): void {
         $this->searchTable = $this->servicePerson->getTable()
             ->where([
                 ':org.contest_id' => $contest->contest_id,

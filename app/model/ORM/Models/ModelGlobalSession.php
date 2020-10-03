@@ -10,8 +10,8 @@ use FKSDB\ORM\AbstractModelSingle;
  * @property-read \DateTimeInterface until
  * @property-read \DateTimeInterface since
  * @property-read int login_id
- * @property-read int session_id
- *
+ * @property-read string session_id
+ * @property-read string remote_ip
  */
 class ModelGlobalSession extends AbstractModelSingle {
 

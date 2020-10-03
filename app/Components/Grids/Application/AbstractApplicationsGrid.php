@@ -73,7 +73,7 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
         }
         $form->addComponent($stateContainer, 'status');
         $form->addSubmit('submit', _('Apply filter'));
-        $form->onSuccess[] = function (Form $form) {
+        $form->onSuccess[] = function (Form $form): void {
             $values = $form->getValues();
             $this->searchTerm = $values;
             $this->dataSource->applyFilter($values);
@@ -94,8 +94,8 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
         $this->addHolderColumns();
     }
 
-    public function getFilterCallBack(): Closure {
-        return function (Selection $table, $value) {
+    public function getFilterCallBack(): callable {
+        return function (Selection $table, $value): void {
             $states = [];
             foreach ($value->status as $state => $value) {
                 if ($value) {

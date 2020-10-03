@@ -19,7 +19,7 @@ class PizzaControl extends BaseComponent {
 
     private PersonFactory $personFactory;
 
-    public function injectPrimary(ServicePerson $servicePerson, PersonFactory $personFactory): void {
+    final public function injectPrimary(ServicePerson $servicePerson, PersonFactory $personFactory): void {
         $this->servicePerson = $servicePerson;
         $this->personFactory = $personFactory;
     }

@@ -82,7 +82,7 @@ class EventsExtension extends CompilerExtension {
      * @return void
      * @throws NeonSchemaException
      */
-    public function loadConfiguration() {
+    public function loadConfiguration(): void {
         parent::loadConfiguration();
 
         $this->loadScheme();

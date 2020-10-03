@@ -8,6 +8,8 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\Payment\Price;
 use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
+use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;
 
 /**
@@ -25,5 +27,12 @@ class PriceEURRow extends DefaultColumnFactory {
             return NotSetBadge::getHtml();
         }
         return Html::el('span')->addText($model->getPrice(Price::CURRENCY_EUR)->__toString());
+    }
+
+    protected function createFormControl(...$args): BaseControl {
+        $control = new TextInput($this->getTitle());
+        $control->setType('number')
+            ->setAttribute('step', '0.01');
+        return $control;
     }
 }

@@ -18,7 +18,7 @@ class SubmitsPreviewControl extends SeriesTableComponent {
 
     private SubmitHandlerFactory $submitHandlerFactory;
 
-    public function injectSubmitDownloadFactory(SubmitHandlerFactory $submitHandlerFactory): void {
+    final public function injectSubmitDownloadFactory(SubmitHandlerFactory $submitHandlerFactory): void {
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 

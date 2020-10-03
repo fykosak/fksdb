@@ -28,7 +28,7 @@ class PreferredLangFormComponent extends FormComponent {
         $this->person = $person;
     }
 
-    public function injectServicePersonInfo(ServicePersonInfo $servicePersonInfo): void {
+    final public function injectServicePersonInfo(ServicePersonInfo $servicePersonInfo): void {
         $this->servicePersonInfo = $servicePersonInfo;
     }
 

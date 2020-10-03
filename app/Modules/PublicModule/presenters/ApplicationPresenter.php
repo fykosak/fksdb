@@ -38,39 +38,28 @@ class ApplicationPresenter extends BasePresenter {
 
     public const PARAM_AFTER = 'a';
 
-    /** @var ModelEvent|null */
-    private $event;
-
-    /** @var IModel|ModelFyziklaniTeam|ModelEventParticipant */
-    private $eventApplication = false;
-
-    /** @var Holder */
-    private $holder;
-
-    /** @var Machine */
-    private $machine;
-
+    private ?ModelEvent $event;
+    private ?IModel $eventApplication = null;
+    private Holder $holder;
+    private Machine $machine;
     private ServiceEvent $serviceEvent;
-
     private RelatedPersonAuthorizator $relatedPersonAuthorizator;
-
     private ApplicationHandlerFactory $handlerFactory;
-
     private EventDispatchFactory $eventDispatchFactory;
 
-    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
+    final public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 
-    public function injectRelatedPersonAuthorizator(RelatedPersonAuthorizator $relatedPersonAuthorizator): void {
+    final public function injectRelatedPersonAuthorizator(RelatedPersonAuthorizator $relatedPersonAuthorizator): void {
         $this->relatedPersonAuthorizator = $relatedPersonAuthorizator;
     }
 
-    public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory): void {
+    final public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
     }
 
-    public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory): void {
+    final public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
@@ -164,10 +153,10 @@ class ApplicationPresenter extends BasePresenter {
 
         $this->initializeMachine();
 
-        if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
-            $data = $this->getTokenAuthenticator()->getTokenData();
+        if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
+            $data = $this->tokenAuthenticator->getTokenData();
             if ($data) {
-                $this->getTokenAuthenticator()->disposeTokenData();
+                $this->tokenAuthenticator->disposeTokenData();
                 $this->redirect('this', self::decodeParameters($data));
             }
         }
@@ -183,7 +172,7 @@ class ApplicationPresenter extends BasePresenter {
             }
         }
 
-        if (!$this->relatedPersonAuthorizator->isRelatedPerson($this->getHolder()) && !$this->getContestAuthorizator()->isAllowed($this->getEvent(), 'application', $this->getEvent()->getContest())) {
+        if (!$this->relatedPersonAuthorizator->isRelatedPerson($this->getHolder()) && !$this->contestAuthorizator->isAllowed($this->getEvent(), 'application', $this->getEvent()->getContest())) {
             if ($this->getParameter(self::PARAM_AFTER, false)) {
                 $this->setView('closed');
             } else {
@@ -238,31 +227,28 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     private function getEvent(): ?ModelEvent {
-        if (!$this->event) {
+        if (!isset($this->event)) {
             $eventId = null;
-            if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
-                $data = $this->getTokenAuthenticator()->getTokenData();
+            if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
+                $data = $this->tokenAuthenticator->getTokenData();
                 if ($data) {
-                    $data = self::decodeParameters($this->getTokenAuthenticator()->getTokenData());
+                    $data = self::decodeParameters($this->tokenAuthenticator->getTokenData());
                     $eventId = $data['eventId'];
                 }
             }
             $eventId = $eventId ?: $this->getParameter('eventId');
-            $event = $this->serviceEvent->findByPrimary($eventId);
-            if ($event) {
-                $this->event = $event;
-            }
+            $this->event = $this->serviceEvent->findByPrimary($eventId);
         }
 
         return $this->event;
     }
 
     /**
-     * @return AbstractModelMulti|AbstractModelSingle|IModel|ModelFyziklaniTeam|ModelEventParticipant|IEventReferencedModel
+     * @return AbstractModelMulti|AbstractModelSingle|IModel|ModelFyziklaniTeam|ModelEventParticipant|IEventReferencedModel|null
      * @throws NeonSchemaException
      */
-    private function getEventApplication() {
-        if (!$this->eventApplication) {
+    private function getEventApplication(): ?IModel {
+        if (!isset($this->eventApplication)) {
             $id = null;
             //if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
             //   $data = $this->getTokenAuthenticator()->getTokenData();
@@ -288,14 +274,14 @@ class ApplicationPresenter extends BasePresenter {
      * @throws NeonSchemaException
      */
     private function getHolder(): Holder {
-        if (!$this->holder) {
+        if (!isset($this->holder)) {
             $this->holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
         }
         return $this->holder;
     }
 
     private function getMachine(): Machine {
-        if (!$this->machine) {
+        if (!isset($this->machine)) {
             $this->machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
         }
         return $this->machine;

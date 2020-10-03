@@ -60,11 +60,7 @@ class TasksFromXML extends Stage {
         return $this->data;
     }
 
-    /**
-     * @param SimpleXMLElement $XMLTask
-     * @return void
-     */
-    private function processTask(SimpleXMLElement $XMLTask) {
+    private function processTask(SimpleXMLElement $XMLTask): void {
         $contest = $this->data->getContest();
         $year = $this->data->getYear();
         $series = $this->data->getSeries();

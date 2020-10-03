@@ -40,7 +40,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
      * @param array|string $fields
      * @return void
      */
-    private function setFields($fields) {
+    private function setFields($fields): void {
         if (!is_array($fields)) {
             $fields = [$fields];
         }

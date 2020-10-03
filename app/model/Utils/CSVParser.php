@@ -53,10 +53,7 @@ class CSVParser implements Iterator {
         return $this->rowNumber;
     }
 
-    /**
-     * @return void
-     */
-    public function next() {
+    public function next(): void {
         $this->currentRow = fgetcsv($this->file, 0, $this->delimiter);
         if ($this->indexType == self::INDEX_FROM_HEADER) {
             $result = [];
@@ -68,10 +65,7 @@ class CSVParser implements Iterator {
         $this->rowNumber++;
     }
 
-    /**
-     * @return void
-     */
-    public function rewind() {
+    public function rewind(): void {
         rewind($this->file);
         $this->rowNumber = 0;
         if ($this->indexType == self::INDEX_FROM_HEADER) {
@@ -87,10 +81,7 @@ class CSVParser implements Iterator {
         }
     }
 
-    /**
-     * @return bool
-     */
-    public function valid() {
+    public function valid(): bool {
         $eof = feof($this->file);
         if ($eof) {
             fclose($this->file);

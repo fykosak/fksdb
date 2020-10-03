@@ -30,7 +30,7 @@ class CloseTeamControl extends BaseComponent {
         $this->event = $event;
     }
 
-    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask): void {
+    final public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask): void {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 

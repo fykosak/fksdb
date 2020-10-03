@@ -67,7 +67,7 @@ abstract class AbstractProcessing implements IProcessing {
      * @param string $mask
      * @return IControl[]
      */
-    final protected function getValue($mask) {
+    final protected function getValue(string $mask): array {
         $keys = array_keys($this->valuesPathCache);
         $pMask = str_replace(self::WILDCART, '__WC__', $mask);
         $pMask = preg_quote($pMask);
@@ -87,7 +87,7 @@ abstract class AbstractProcessing implements IProcessing {
      * @param string $mask
      * @return IControl[]
      */
-    final protected function getControl($mask) {
+    final protected function getControl(string $mask): array {
         $keys = array_keys($this->formPathCache);
         $pMask = str_replace(self::WILDCART, '__WC__', $mask);
         $pMask = preg_quote($pMask);
@@ -111,7 +111,7 @@ abstract class AbstractProcessing implements IProcessing {
      * @param string $name
      * @return bool
      */
-    final protected function isBaseReallyEmpty($name) {
+    final protected function isBaseReallyEmpty(string $name): bool {
         $baseHolder = $this->holder->getBaseHolder($name);
         if ($baseHolder->getModelState() == BaseMachine::STATE_INIT) {
             return true; // it was empty since beginning
@@ -126,7 +126,7 @@ abstract class AbstractProcessing implements IProcessing {
      * @param ArrayHash $values
      * @param string $prefix
      */
-    private function setValues(ArrayHash $values, $prefix = '') {
+    private function setValues(ArrayHash $values, $prefix = ''): void {
         if (!$prefix) {
             $this->values = $values;
             $this->valuesPathCache = [];

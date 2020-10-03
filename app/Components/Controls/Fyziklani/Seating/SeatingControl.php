@@ -19,7 +19,7 @@ class SeatingControl extends BaseComponent {
 
     private EventDispatchFactory $eventDispatchFactory;
 
-    public function injectServicePrimary(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, EventDispatchFactory $eventDispatchFactory): void {
+    final public function injectServicePrimary(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, EventDispatchFactory $eventDispatchFactory): void {
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
         $this->eventDispatchFactory = $eventDispatchFactory;
     }

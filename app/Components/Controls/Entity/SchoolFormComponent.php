@@ -24,15 +24,12 @@ class SchoolFormComponent extends EditEntityFormComponent {
     public const CONT_ADDRESS = 'address';
     public const CONT_SCHOOL = 'school';
 
-    protected ServiceAddress $serviceAddress;
+    private ServiceAddress $serviceAddress;
+    private ServiceSchool $serviceSchool;
+    private SchoolFactory $schoolFactory;
+    private AddressFactory $addressFactory;
 
-    protected ServiceSchool $serviceSchool;
-
-    protected SchoolFactory $schoolFactory;
-
-    protected AddressFactory $addressFactory;
-
-    public function injectPrimary(
+    final public function injectPrimary(
         AddressFactory $addressFactory,
         SchoolFactory $schoolFactory,
         ServiceAddress $serviceAddress,

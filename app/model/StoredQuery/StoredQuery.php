@@ -325,7 +325,7 @@ class StoredQuery implements IDataSource, IResource {
      * @param int $limit
      * @param int $offset
      */
-    public function limitData($limit, $offset) {
+    public function limitData($limit, $offset): void {
         $this->limit = $limit;
         $this->offset = $offset;
         $this->invalidateData();
@@ -337,7 +337,7 @@ class StoredQuery implements IDataSource, IResource {
      * @param string $by column name
      * @param string $way DESC|ASC
      */
-    public function orderData($by, $way) {
+    public function orderData($by, $way): void {
         if (!is_numeric($by)) {
             $by = "`$by`";
         }

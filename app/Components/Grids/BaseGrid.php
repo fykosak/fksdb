@@ -50,11 +50,11 @@ abstract class BaseGrid extends Grid {
         $container->callInjects($this);
     }
 
-    public function injectTableReflectionFactory(DBReflectionFactory $tableReflectionFactory): void {
+    final public function injectTableReflectionFactory(DBReflectionFactory $tableReflectionFactory): void {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    public function injectTranslator(ITranslator $translator): void {
+    final public function injectTranslator(ITranslator $translator): void {
         $this->setTranslator($translator);
     }
 

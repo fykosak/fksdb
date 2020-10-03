@@ -24,7 +24,7 @@ class SchoolPresenter extends BasePresenter {
 
     private ServiceSchool $serviceSchool;
 
-    public function injectServiceSchool(ServiceSchool $serviceSchool): void {
+    final public function injectServiceSchool(ServiceSchool $serviceSchool): void {
         $this->serviceSchool = $serviceSchool;
     }
 

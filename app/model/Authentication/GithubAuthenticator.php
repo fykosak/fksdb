@@ -36,7 +36,7 @@ class GithubAuthenticator extends AbstractAuthenticator {
      * @throws InactiveLoginException
      * @throws NoLoginException
      */
-    public function authenticate(IRequest $request) {
+    public function authenticate(IRequest $request): ModelLogin {
         $loginName = $this->container->getParameters()['github']['login'];
         $secret = $this->container->getParameters()['github']['secret'];
 

@@ -16,7 +16,6 @@ use Nette\Application\UI\Form;
 
 /**
  * Class TaskPresenter
- * *
  */
 class TaskPresenter extends BasePresenter {
 
