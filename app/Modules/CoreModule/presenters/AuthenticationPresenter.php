@@ -356,6 +356,7 @@ final class AuthenticationPresenter extends BasePresenter {
      * @throws Exception
      */
     public function handleGoogle(): void {
+        $this->getGoogleSection()->state = $this->getGoogleOAuth2Provider()->getState();
         $this->redirectUrl($this->getGoogleOAuth2Provider()->getAuthorizationUrl());
     }
 
@@ -392,7 +393,6 @@ final class AuthenticationPresenter extends BasePresenter {
                 'scope' => 'openid email',// The client password assigned to you by the provider
                 'redirectUri' => $this->link('//google', ['bc' => null]),
             ]);
-            $this->getGoogleSection()->state = $this->provider->getState();
         }
         return $this->provider;
     }
