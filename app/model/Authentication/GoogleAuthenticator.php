@@ -1,0 +1,88 @@
+<?php
+
+namespace FKSDB\Authentication;
+
+use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Models\ModelOrg;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServiceLogin;
+use FKSDB\ORM\Services\ServiceOrg;
+use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\ORM\Services\ServicePersonInfo;
+use FKSDB\YearCalculator;
+use Nette\Database\Table\ActiveRow;
+use Nette\Security\AuthenticationException;
+use Tracy\Debugger;
+
+/**
+ * Due to author's laziness there's no class doc (or it's self explaining).
+ *
+ * @author Michal Koutný <michal@fykos.cz>
+ */
+class GoogleAuthenticator extends AbstractAuthenticator {
+
+    private ServiceOrg $serviceOrg;
+    private AccountManager $accountManager;
+
+    public function __construct(ServiceOrg $serviceOrg, AccountManager $accountManager, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
+        parent::__construct($serviceLogin, $yearCalculator);
+        $this->serviceOrg = $serviceOrg;
+        $this->accountManager = $accountManager;
+    }
+
+    /**
+     * @param array $user
+     * @return ModelLogin
+     * @throws AuthenticationException
+     * @throws InactiveLoginException
+     * @throws InvalidCredentialsException
+     */
+    public function authenticate(array $user): ModelLogin {
+        $person = $this->findPerson($user);
+
+        if (!$person) {
+            throw new UnknownLoginException();
+        } else {
+            $login = $person->getLogin();
+            if (!$login) {
+                $login = $this->accountManager->createLogin($person);
+            }
+        }
+        if ($login->active == 0) {
+            throw new InactiveLoginException();
+        }
+        $this->logAuthentication($login);
+        return $login;
+    }
+
+    /**
+     * @param array $user
+     * @return ModelPerson|null
+     * @throws AuthenticationException
+     * @throws InvalidCredentialsException
+     */
+    private function findPerson(array $user): ?ModelPerson {
+        if (!$user['email']) {
+            throw new AuthenticationException(_('V profilu google nebyl nalezen e-mail.'));
+        }
+        [$domainAlias, $domain] = explode('@', $user['email']);
+        switch ($domain) {
+            case 'fykos.cz':
+                $contestId = ModelContest::ID_FYKOS;
+                break;
+            case 'vyfuk.org':
+                $contestId = ModelContest::ID_VYFUK;
+                break;
+            default:
+                throw new InvalidCredentialsException();
+        }
+        /** @var ModelOrg|null $org */
+        $org = $this->serviceOrg->getTable()->where(['domain_alias' => $domainAlias, 'contest_id' => $contestId])->fetch();
+        return $org ? $org->getPerson() : null;
+
+        /* $result = $this->serviceOrg->getTable()->where(':person_info.email = ?', $user['email'])->fetch();
+         return $result;*/
+    }
+}

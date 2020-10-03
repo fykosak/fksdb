@@ -2,7 +2,9 @@
 
 namespace FKSDB\Modules\CoreModule;
 
-use FKSDB\Authentication\SSO\GlobalSession;
+use FKSDB\Authentication\GoogleAuthenticator;
+use FKSDB\Authentication\InactiveLoginException;
+use FKSDB\Authentication\InvalidCredentialsException;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Localization\UnsupportedLanguageException;
@@ -20,10 +22,13 @@ use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\UI\PageTitle;
 use FKSDB\Mail\SendFailedException;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use League\OAuth2\Client\Provider\Google;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Forms\Controls\TextInput;
+use Nette\Http\SessionSection;
 use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\DateTime;
@@ -58,17 +63,21 @@ final class AuthenticationPresenter extends BasePresenter {
     private IGlobalSession $globalSession;
     private PasswordAuthenticator $passwordAuthenticator;
     private AccountManager $accountManager;
+    private Google $provider;
+    private GoogleAuthenticator $googleAuthenticator;
 
     final public function injectTernary(
         ServiceAuthToken $serviceAuthToken,
         IGlobalSession $globalSession,
         PasswordAuthenticator $passwordAuthenticator,
-        AccountManager $accountManager
+        AccountManager $accountManager,
+        GoogleAuthenticator $googleAuthenticator
     ): void {
         $this->serviceAuthToken = $serviceAuthToken;
         $this->globalSession = $globalSession;
         $this->passwordAuthenticator = $passwordAuthenticator;
         $this->accountManager = $accountManager;
+        $this->googleAuthenticator = $googleAuthenticator;
     }
 
     public function titleLogin(): void {
@@ -317,6 +326,40 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
+     * @return void
+     * @throws InactiveLoginException
+     * @throws InvalidCredentialsException
+     * @throws AuthenticationException
+     * @throws InvalidLinkException
+     */
+    public function actionGoogle(): void {
+        if ($this->getGoogleSection()->state !== $this->getGoogleOAuth2Provider()->getState()) {
+            $this->flashMessage(_('Invalid CSRF token'), self::FLASH_ERROR);
+            $this->redirect('login');
+        }
+        try {
+            $token = $this->getGoogleOAuth2Provider()->getAccessToken('authorization_code', [
+                'code' => $this->getParameter('code'),
+            ]);
+            $ownerDetails = $this->getGoogleOAuth2Provider()->getResourceOwner($token);
+            $login = $this->googleAuthenticator->authenticate($ownerDetails->toArray());
+            $this->getUser()->login($login);
+            $this->initialRedirect();
+        } catch (IdentityProviderException $exception) {
+            $this->flashMessage(_('Error'), self::FLASH_ERROR);
+            $this->redirect('login');
+        }
+    }
+
+    /**
+     * @throws AbortException
+     * @throws Exception
+     */
+    public function handleGoogle(): void {
+        $this->redirectUrl($this->getGoogleOAuth2Provider()->getAuthorizationUrl());
+    }
+
+    /**
      * @throws AbortException
      */
     private function initialRedirect(): void {
@@ -330,5 +373,27 @@ final class AuthenticationPresenter extends BasePresenter {
         $this->getPageStyleContainer()->styleId = 'login';
         $this->getPageStyleContainer()->mainContainerClassNames = [];
         parent::beforeRender();
+    }
+
+    public function getGoogleSection(): SessionSection {
+        return $this->getSession()->getSection('google-oauth2state');
+    }
+
+    /**
+     * @return Google
+     * @throws InvalidLinkException
+     */
+    protected function getGoogleOAuth2Provider(): Google {
+        $params = $this->getContext()->getParameters()['googleOAuth2'];
+        if (!isset($this->provider)) {
+            $this->provider = new Google([
+                'clientId' => $params['clientId'],    // The client ID assigned to you by the provider
+                'clientSecret' => $params['clientSecret'],
+                'scope' => 'openid email',// The client password assigned to you by the provider
+                'redirectUri' => $this->link('//google', ['bc' => null]),
+            ]);
+            $this->getGoogleSection()->state = $this->provider->getState();
+        }
+        return $this->provider;
     }
 }
