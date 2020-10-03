@@ -11,8 +11,8 @@ $container = require '../../../bootstrap.php';
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class Schedule extends EventModuleTestCase {
-    /** @var int */
-    private $scheduleGroupId;
+
+    private int $scheduleGroupId;
 
     protected function setUp(): void {
         parent::setUp();
@@ -47,7 +47,9 @@ class Schedule extends EventModuleTestCase {
         return [
             ['Event:ScheduleGroup', 'list'],
             ['Event:ScheduleGroup', 'persons'],
+            ['Event:ScheduleGroup', 'create'],
             ['Event:ScheduleGroup', 'detail'],
+            ['Event:ScheduleGroup', 'edit'],
         ];
     }
 
