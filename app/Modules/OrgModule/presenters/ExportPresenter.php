@@ -31,7 +31,6 @@ use Nette\Utils\Strings;
 class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     use EntityPresenterTrait;
-
     use SeriesPresenterTrait;
 
     private const PARAM_HTTP_AUTH = 'ha';
@@ -42,16 +41,11 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     public $qid;
 
     private ServiceStoredQuery $serviceStoredQuery;
-
     private StoredQueryFactory $storedQueryFactory;
-
     private StoredQuery $storedQuery;
 
-    public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery): void {
+    final public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery, StoredQueryFactory $storedQueryFactory): void {
         $this->serviceStoredQuery = $serviceStoredQuery;
-    }
-
-    public function injectStoredQueryFactory(StoredQueryFactory $storedQueryFactory): void {
         $this->storedQueryFactory = $storedQueryFactory;
     }
 

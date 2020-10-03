@@ -28,7 +28,7 @@ class DBReflectionExtension extends CompilerExtension {
     /**
      * @throws NotImplementedException
      */
-    public function loadConfiguration() {
+    public function loadConfiguration(): void {
         $this->registerFactories($this->config['tables']);
     }
 

@@ -71,7 +71,7 @@ class WebServiceModel {
      * @param stdClass $args
      * @throws SoapFault
      */
-    public function authenticationCredentials($args) {
+    public function authenticationCredentials($args): void {
         if (!is_object($args) || !isset($args->username) || !isset($args->password)) {
             $this->log('Missing credentials.');
             throw new SoapFault('Sender', 'Missing credentials.');
@@ -291,7 +291,7 @@ class WebServiceModel {
      * @param null $arg
      * @throws SoapFault
      */
-    private function checkAuthentication($serviceName, $arg = null) {
+    private function checkAuthentication($serviceName, $arg = null): void {
         if (!$this->authenticatedLogin) {
             $this->log("Unauthenticated access to $serviceName.");
             throw new SoapFault('Sender', "Unauthenticated access to $serviceName.");
@@ -310,11 +310,7 @@ class WebServiceModel {
         return $this->contestAuthorizator->isAllowedForLogin($this->authenticatedLogin, $query, 'execute', $implicitParameters[StoredQueryFactory::PARAM_CONTEST]);
     }
 
-    /**
-     * @param string $msg
-     * @return void
-     */
-    private function log($msg) {
+    private function log(string $msg): void {
         if (!$this->authenticatedLogin) {
             $message = "unauthenticated@";
         } else {

@@ -72,11 +72,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
         $this->trySetAgreed($values);
     }
 
-    /**
-     * @param ArrayHash $values
-     * @return void
-     */
-    private function trySetAgreed(ArrayHash $values) {
+    private function trySetAgreed(ArrayHash $values): void {
         foreach ($values as $key => $value) {
             if ($value instanceof ArrayHash) {
                 $this->trySetAgreed($value);

@@ -32,7 +32,7 @@ class SchoolCheckComponent extends BaseComponent {
         $this->acYear = $acYear;
     }
 
-    public function injectPrimary(ServiceSchool $serviceSchool, ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
+    final public function injectPrimary(ServiceSchool $serviceSchool, ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceSchool = $serviceSchool;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }

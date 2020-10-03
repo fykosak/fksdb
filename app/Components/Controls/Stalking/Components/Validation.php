@@ -15,7 +15,7 @@ class Validation extends StalkingControl {
 
     private DataTestingFactory $validationFactory;
 
-    public function injectDataTestingFactory(DataTestingFactory $factory): void {
+    final public function injectDataTestingFactory(DataTestingFactory $factory): void {
         $this->validationFactory = $factory;
     }
 

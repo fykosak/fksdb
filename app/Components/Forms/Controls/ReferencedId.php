@@ -123,7 +123,7 @@ class ReferencedId extends HiddenField {
      * @param bool $force
      * @return static
      */
-    public function setValue($pValue, bool $force = false) {
+    public function setValue($pValue, bool $force = false): self {
 
         if ($pValue instanceof IModel) {
             $personModel = $pValue;

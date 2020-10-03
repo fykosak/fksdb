@@ -15,7 +15,7 @@ class LinkPrinterComponent extends BaseComponent {
 
     private DBReflectionFactory $tableReflectionFactory;
 
-    public function injectTableReflectionFactory(DBReflectionFactory $tableReflectionFactory): void {
+    final public function injectTableReflectionFactory(DBReflectionFactory $tableReflectionFactory): void {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 

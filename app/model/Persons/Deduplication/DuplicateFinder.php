@@ -77,7 +77,7 @@ class DuplicateFinder {
      * @todo Implement more than binary score.
      *
      */
-    private function getSimilarityScore(ModelPerson $a, ModelPerson $b) {
+    private function getSimilarityScore(ModelPerson $a, ModelPerson $b): float {
         /*
          * Check explixit difference
          */
@@ -126,21 +126,21 @@ class DuplicateFinder {
     /**
      * @param string $a
      * @param string $b
-     * @return float|int
+     * @return float
      */
-    private function stringScore($a, $b) {
-        return 1 - $this->relativeDistance(Strings::webalize($a), Strings::webalize($b));
+    private function stringScore($a, $b): float {
+        return 1.0 - $this->relativeDistance(Strings::webalize($a), Strings::webalize($b));
     }
 
     /**
      * @param string $a
      * @param string $b
-     * @return float|int
+     * @return float
      */
-    private function relativeDistance($a, $b) {
+    private function relativeDistance($a, $b): float {
         $maxLen = max(strlen($a), strlen($b));
         if ($maxLen == 0) {
-            return 0; // two empty strings are equal
+            return 0.0; // two empty strings are equal
         }
         return levenshtein($a, $b) / $maxLen;
     }

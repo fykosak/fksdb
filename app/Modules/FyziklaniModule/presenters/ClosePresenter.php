@@ -29,7 +29,6 @@ use Nette\Security\IResource;
  * @method ModelFyziklaniTeam getEntity()
  */
 class ClosePresenter extends BasePresenter {
-
     use EventEntityPresenterTrait;
 
     /* ******* TITLE ***********/
@@ -143,7 +142,7 @@ class ClosePresenter extends BasePresenter {
     }
 
     protected function getORMService(): ServiceFyziklaniTeam {
-        return $this->getServiceFyziklaniTeam();
+        return $this->serviceFyziklaniTeam;
     }
 
     protected function getModelResource(): string {

@@ -51,10 +51,7 @@ class GlobalSession implements IGlobalSession {
         $this->started = true;
     }
 
-    /**
-     * @return int|null|string
-     */
-    public function getId() {
+    public function getId(): ?string {
         if (!$this->started) {
             throw new InvalidStateException("Global session not started.");
         }

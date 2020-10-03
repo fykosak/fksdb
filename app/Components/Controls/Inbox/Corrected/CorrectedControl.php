@@ -17,7 +17,7 @@ class CorrectedControl extends SeriesTableComponent {
 
     private CorrectedStorage $correctedStorage;
 
-    public function injectCorrectedStorage(CorrectedStorage $correctedStorage): void {
+    final public function injectCorrectedStorage(CorrectedStorage $correctedStorage): void {
         $this->correctedStorage = $correctedStorage;
     }
 

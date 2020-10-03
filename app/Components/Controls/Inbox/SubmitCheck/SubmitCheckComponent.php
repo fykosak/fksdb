@@ -28,7 +28,7 @@ class SubmitCheckComponent extends BaseComponent {
         $this->seriesTable = $seriesTable;
     }
 
-    public function injectPrimary(UploadedStorage $uploadedStorage, CorrectedStorage $correctedStorage): void {
+    final public function injectPrimary(UploadedStorage $uploadedStorage, CorrectedStorage $correctedStorage): void {
         $this->uploadedStorage = $uploadedStorage;
         $this->correctedStorage = $correctedStorage;
     }

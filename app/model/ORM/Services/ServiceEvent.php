@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Services;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyDBTrait;
@@ -16,6 +17,7 @@ use Nette\Database\IConventions;
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelEvent createNewModel(array $data)
  * @method ModelEvent|null findByPrimary($key)
+ * @method ModelEvent refresh(AbstractModelSingle $model)
  */
 class ServiceEvent extends AbstractServiceSingle {
 
@@ -41,5 +43,14 @@ class ServiceEvent extends AbstractServiceSingle {
 
     public function getEventsByType(ModelEventType $eventType): TypedTableSelection {
         return $this->getTable()->where('event_type_id', $eventType->event_type_id);
+    }
+
+    public function store(?ModelEvent $model, array $data): ModelEvent {
+        if (is_null($model)) {
+            return $this->createNewModel($data);
+        } else {
+            $this->updateModel2($model, $data);
+            return $this->refresh($model);
+        }
     }
 }

@@ -32,20 +32,16 @@ class TasksPresenter extends BasePresenter {
     public const SOURCE_FILE = 'file';
 
     private SeriesCalculator $seriesCalculator;
-
     private PipelineFactory $pipelineFactory;
-
     private Downloader $downloader;
 
-    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator): void {
+    final public function injectQuarterly(
+        SeriesCalculator $seriesCalculator,
+        PipelineFactory $pipelineFactory,
+        Downloader $downloader
+    ): void {
         $this->seriesCalculator = $seriesCalculator;
-    }
-
-    public function injectPipelineFactory(PipelineFactory $pipelineFactory): void {
         $this->pipelineFactory = $pipelineFactory;
-    }
-
-    public function injectDownloader(Downloader $downloader): void {
         $this->downloader = $downloader;
     }
 
@@ -54,7 +50,7 @@ class TasksPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function authorizedImport(): void {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'insert', $this->getSelectedContest()));
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('task', 'insert', $this->getSelectedContest()));
     }
 
     public function titleImport(): void {

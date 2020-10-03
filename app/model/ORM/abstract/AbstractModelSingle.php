@@ -35,7 +35,7 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
      * @param bool $value
      * @deprecated
      */
-    public function setNew(bool $value = true) {
+    public function setNew(bool $value = true): void {
         $this->stored = !$value;
     }
 

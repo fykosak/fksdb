@@ -14,14 +14,13 @@ use FKSDB\ORM\Services\ServicePerson;
 trait ReferencedPersonTrait {
 
     protected PersonFactory $personFactory;
-
     protected ServicePerson $servicePerson;
 
     protected function createPersonSelect(): AutocompleteSelectBox {
         return $this->personFactory->createPersonSelect(true, _('Person'), new PersonProvider($this->servicePerson));
     }
 
-    public function injectPersonTrait(PersonFactory $personFactory, ServicePerson $servicePerson): void {
+    final public function injectPersonTrait(PersonFactory $personFactory, ServicePerson $servicePerson): void {
         $this->personFactory = $personFactory;
         $this->servicePerson = $servicePerson;
     }

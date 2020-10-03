@@ -26,7 +26,7 @@ class ServiceEventParticipant extends AbstractServiceSingle {
      * @param ModelEventParticipant|IModel $model
      * @deprecated
      */
-    public function save(IModel &$model) {
+    public function save(IModel &$model): void {
         try {
             parent::save($model);
         } catch (ModelException $exception) {

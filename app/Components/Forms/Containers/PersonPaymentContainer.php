@@ -36,7 +36,7 @@ class PersonPaymentContainer extends ContainerWithOptions {
         });
     }
 
-    public function injectServicePersonSchedule(ServicePersonSchedule $servicePersonSchedule): void {
+    final public function injectServicePersonSchedule(ServicePersonSchedule $servicePersonSchedule): void {
         $this->servicePersonSchedule = $servicePersonSchedule;
     }
 

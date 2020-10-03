@@ -24,7 +24,7 @@ class RoutingEdit extends AjaxComponent {
 
     private ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition;
 
-    public function injectPrimary(
+    final public function injectPrimary(
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
         ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
         ServiceFyziklaniRoom $serviceFyziklaniRoom

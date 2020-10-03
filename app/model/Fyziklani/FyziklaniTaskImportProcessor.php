@@ -33,7 +33,7 @@ class FyziklaniTaskImportProcessor {
      * @param ILogger $logger
      * @return void
      */
-    public function process($values, ILogger $logger) {
+    public function process($values, ILogger $logger): void {
         $filename = $values->csvfile->getTemporaryFile();
         $connection = $this->serviceFyziklaniTask->getConnection();
         $connection->beginTransaction();

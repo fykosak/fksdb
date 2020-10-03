@@ -82,9 +82,9 @@ class LoginUserStorage extends UserStorage {
 
     /**
      * @param mixed $state
-     * @return UserStorage|void
+     * @return static
      */
-    public function setAuthenticated($state) {
+    public function setAuthenticated($state): self {
         parent::setAuthenticated($state);
         if ($state) {
             $uid = parent::getIdentity()->getId();
@@ -92,13 +92,14 @@ class LoginUserStorage extends UserStorage {
         } else {
             unset($this->globalSession[GlobalSession::UID]);
         }
+        return $this;
     }
 
     /**
      * @return bool
      * @throws AbortException
      */
-    public function isAuthenticated() {
+    public function isAuthenticated(): bool {
         $local = parent::isAuthenticated();
         $global = isset($this->globalSession[GlobalSession::UID]) ? $this->globalSession[GlobalSession::UID] : null;
 
@@ -144,9 +145,9 @@ class LoginUserStorage extends UserStorage {
 
     /**
      * @param IIdentity|NULL $identity
-     * @return UserStorage
+     * @return static
      */
-    public function setIdentity(IIdentity $identity = null) {
+    public function setIdentity(IIdentity $identity = null): self {
         $this->identity = $identity;
         if ($identity instanceof ModelLogin) {
             $identity = new Identity($identity->getId());

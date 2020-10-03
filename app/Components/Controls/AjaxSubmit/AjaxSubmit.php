@@ -31,13 +31,9 @@ use Tracy\Debugger;
 class AjaxSubmit extends AjaxComponent {
 
     private ServiceSubmit $serviceSubmit;
-
     private ModelTask $task;
-
     private ModelContestant $contestant;
-
     private SubmitHandlerFactory $submitHandlerFactory;
-
     private int $academicYear;
 
     public function __construct(Container $container, ModelTask $task, ModelContestant $contestant, int $academicYear) {
@@ -47,7 +43,7 @@ class AjaxSubmit extends AjaxComponent {
         $this->academicYear = $academicYear;
     }
 
-    public function injectPrimary(ServiceSubmit $serviceSubmit, SubmitHandlerFactory $submitHandlerFactory): void {
+    final public function injectPrimary(ServiceSubmit $serviceSubmit, SubmitHandlerFactory $submitHandlerFactory): void {
         $this->serviceSubmit = $serviceSubmit;
         $this->submitHandlerFactory = $submitHandlerFactory;
     }

@@ -38,26 +38,19 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
     public $all;
 
     private SQLResultsCache $SQLResultsCache;
-
     private SeriesTable $seriesTable;
-
     private ServiceTask $serviceTask;
-
     private ServiceTaskContribution $serviceTaskContribution;
 
-    public function injectSQLResultsCache(SQLResultsCache $SQLResultsCache): void {
+    final public function injectQuarterly(
+        SQLResultsCache $SQLResultsCache,
+        SeriesTable $seriesTable,
+        ServiceTask $serviceTask,
+        ServiceTaskContribution $serviceTaskContribution
+    ): void {
         $this->SQLResultsCache = $SQLResultsCache;
-    }
-
-    public function injectSeriesTable(SeriesTable $seriesTable): void {
         $this->seriesTable = $seriesTable;
-    }
-
-    public function injectServiceTask(ServiceTask $serviceTask): void {
         $this->serviceTask = $serviceTask;
-    }
-
-    public function injectServiceTaskContribution(ServiceTaskContribution $serviceTaskContribution): void {
         $this->serviceTaskContribution = $serviceTaskContribution;
     }
 
@@ -93,7 +86,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadTypeException
      */
     public function authorizedEntry(): void {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'edit', $this->getSelectedContest()));
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'edit', $this->getSelectedContest()));
     }
 
     /**
@@ -102,7 +95,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadTypeException
      */
     public function authorizedPreview(): void {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'points', $this->getSelectedContest()));
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'points', $this->getSelectedContest()));
     }
 
     public function actionEntry(): void {
@@ -226,7 +219,6 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
     /**
      * @param PageTitle $pageTitle
      * @return void
-     *
      * @throws ForbiddenRequestException
      * @throws BadTypeException
      */

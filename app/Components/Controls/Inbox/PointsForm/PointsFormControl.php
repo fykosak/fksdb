@@ -26,7 +26,7 @@ class PointsFormControl extends SeriesTableFormControl {
         $this->invalidCacheCallback = $invalidCacheCallback;
     }
 
-    public function injectServiceSubmit(ServiceSubmit $serviceSubmit): void {
+    final public function injectServiceSubmit(ServiceSubmit $serviceSubmit): void {
         $this->serviceSubmit = $serviceSubmit;
     }
 

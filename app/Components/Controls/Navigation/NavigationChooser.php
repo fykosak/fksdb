@@ -19,7 +19,7 @@ class NavigationChooser extends Chooser {
 
     protected array $structure;
 
-    public function injectPrimary(NavigationFactory $navigationFactory): void {
+    final public function injectPrimary(NavigationFactory $navigationFactory): void {
         $this->navigationFactory = $navigationFactory;
     }
 

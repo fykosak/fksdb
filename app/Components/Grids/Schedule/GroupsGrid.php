@@ -59,10 +59,15 @@ class GroupsGrid extends BaseGrid {
             return $model->getItems()->count();
         });
 
-        $this->addButton('detail', _('Detail'))->setText(_('Detail'))
+        $this->addButton('detail')->setText(_('Detail'))
             ->setLink(function ($row): string {
                 /** @var ModelScheduleGroup $row */
-                return $this->getPresenter()->link('ScheduleItem:list', ['groupId' => $row->schedule_group_id]);
+                return $this->getPresenter()->link('ScheduleGroup:detail', ['id' => $row->schedule_group_id]);
+            });
+        $this->addButton('edit')->setText(_('Edit'))
+            ->setLink(function ($row): string {
+                /** @var ModelScheduleGroup $row */
+                return $this->getPresenter()->link('ScheduleGroup:edit', ['id' => $row->schedule_group_id]);
             });
     }
 }

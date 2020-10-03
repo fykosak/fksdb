@@ -18,7 +18,7 @@ abstract class SubmitsGrid extends BaseGrid {
 
     protected ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
 
-    public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit): void {
+    final public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit): void {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
     }
 

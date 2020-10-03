@@ -56,7 +56,7 @@ class PersonFlag extends SelectBox {
      * @param mixed $value
      * @return static
      */
-    public function setValue($value) {
+    public function setValue($value): self {
         if ($value === true || $value === '1' || $value === 1) {
             parent::setValue(self::FLAG_YES);
         } elseif ($value === false || $value === '0' || $value === 0) {

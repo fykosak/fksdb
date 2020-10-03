@@ -151,12 +151,7 @@ class DBReflectionFactory extends AbstractFactory {
         return $column;
     }
 
-    /**
-     * @param string $table
-     * @param string $column
-     * @return array|null
-     */
-    private function getColumnMetadata($table, $column) {
+    private function getColumnMetadata(string $table, string $column): ?array {
         if (!isset($this->columns[$table])) {
             $columns = [];
             foreach ($this->connection->getSupplementalDriver()->getColumns($table) as $columnMeta) {
@@ -170,5 +165,4 @@ class DBReflectionFactory extends AbstractFactory {
             return null;
         }
     }
-
 }

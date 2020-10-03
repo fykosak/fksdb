@@ -24,7 +24,7 @@ class OrgPresenter extends BasePresenter {
 
     private ServiceOrg $serviceOrg;
 
-    public function injectServiceOrg(ServiceOrg $serviceOrg): void {
+    final public function injectServiceOrg(ServiceOrg $serviceOrg): void {
         $this->serviceOrg = $serviceOrg;
     }
 

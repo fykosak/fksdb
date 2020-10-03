@@ -75,7 +75,7 @@ class Merger {
      *
      * @param mixed $rawValues
      */
-    public function setConflictResolution($rawValues) {
+    public function setConflictResolution($rawValues): void {
         foreach ($rawValues as $table => $pairs) {
             foreach ($pairs as $pairId => $values) {
                 $data = &$this->getPairDataById($table, $pairId);

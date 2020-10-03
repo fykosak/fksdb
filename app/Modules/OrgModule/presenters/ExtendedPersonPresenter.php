@@ -31,14 +31,10 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     protected bool $sendEmail = true;
 
     private ReferencedPersonFactory $referencedPersonFactory;
-
     private ExtendedPersonHandlerFactory $handlerFactory;
 
-    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory): void {
+    final public function injectExtendedPerson(ReferencedPersonFactory $referencedPersonFactory,ExtendedPersonHandlerFactory $handlerFactory): void {
         $this->referencedPersonFactory = $referencedPersonFactory;
-    }
-
-    public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
     }
 

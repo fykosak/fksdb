@@ -69,30 +69,21 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      */
     public $personId;
 
-    /** @var ModelPerson */
-    private $person;
-
+    private ?ModelPerson $person;
     private ServiceContestant $serviceContestant;
-
     private ReferencedPersonFactory $referencedPersonFactory;
-
     private ExtendedPersonHandlerFactory $handlerFactory;
+    private ServicePerson $servicePerson;
 
-    protected ServicePerson $servicePerson;
-
-    public function injectServiceContestant(ServiceContestant $serviceContestant): void {
+    final public function injectTernary(
+        ServiceContestant $serviceContestant,
+        ServicePerson $servicePerson,
+        ReferencedPersonFactory $referencedPersonFactory,
+        ExtendedPersonHandlerFactory $handlerFactory
+    ): void {
         $this->serviceContestant = $serviceContestant;
-    }
-
-    public function injectServicePerson(ServicePerson $servicePerson): void {
         $this->servicePerson = $servicePerson;
-    }
-
-    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory): void {
         $this->referencedPersonFactory = $referencedPersonFactory;
-    }
-
-    public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
     }
 
@@ -144,7 +135,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         }
 
         if ($this->getSelectedContest() && $person) {
-            $contestants = $person->getActiveContestants($this->getYearCalculator());
+            $contestants = $person->getActiveContestants($this->yearCalculator);
             $contest = $this->getSelectedContest();
             $contestant = isset($contestants[$contest->contest_id]) ? $contestants[$contest->contest_id] : null;
             if ($contestant && $contestant->year == $this->getSelectedYear()) {
@@ -156,7 +147,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function renderContest(): void {
-        $this->template->contests = $this->getServiceContest()->getTable();
+        $this->template->contests = $this->serviceContest->getTable();
     }
 
     /**
@@ -165,16 +156,16 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      */
     public function renderYear(): void {
         $contest = $this->getSelectedContest();
-        $forward = $this->getYearCalculator()->getForwardShift($contest);
+        $forward = $this->yearCalculator->getForwardShift($contest);
         if ($forward) {
             $years = [
-                $this->getYearCalculator()->getCurrentYear($contest),
-                $this->getYearCalculator()->getCurrentYear($contest) + $forward,
+                $this->yearCalculator->getCurrentYear($contest),
+                $this->yearCalculator->getCurrentYear($contest) + $forward,
             ];
 
             $this->template->years = $years;
         } else {
-            $this->redirect('email', ['year' => $this->getYearCalculator()->getCurrentYear($contest),]);
+            $this->redirect('email', ['year' => $this->yearCalculator->getCurrentYear($contest),]);
         }
     }
 
@@ -196,7 +187,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function getSelectedContest(): ?ModelContest {
-        return $this->contestId ? $this->getServiceContest()->findByPrimary($this->contestId) : null;
+        return $this->contestId ? $this->serviceContest->findByPrimary($this->contestId) : null;
     }
 
     public function getSelectedYear(): ?int {
@@ -207,11 +198,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         if (!$this->getSelectedContest()) {
             throw new InvalidStateException("Cannot get acadamic year without selected contest.");
         }
-        return $this->getYearCalculator()->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
+        return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 
     private function getPerson(): ?ModelPerson {
-        if (!$this->person) {
+        if (!isset($this->person)) {
 
             if ($this->user->isLoggedIn()) {
                 $this->person = $this->user->getIdentity()->getPerson();

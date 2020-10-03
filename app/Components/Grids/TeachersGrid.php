@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
@@ -20,7 +19,7 @@ class TeachersGrid extends BaseGrid {
 
     private ServiceTeacher $serviceTeacher;
 
-    public function injectServiceTeacher(ServiceTeacher $serviceTeacher): void {
+    final public function injectServiceTeacher(ServiceTeacher $serviceTeacher): void {
         $this->serviceTeacher = $serviceTeacher;
     }
 

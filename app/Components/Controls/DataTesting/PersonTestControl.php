@@ -47,7 +47,7 @@ class PersonTestControl extends BaseComponent {
 
     private DataTestingFactory $dataTestingFactory;
 
-    public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory): void {
+    final public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory): void {
         $this->servicePerson = $servicePerson;
         $this->dataTestingFactory = $dataTestingFactory;
     }

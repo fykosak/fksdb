@@ -20,13 +20,9 @@ use Nette\DI\Container;
 class SubmitContainer extends BaseComponent {
 
     private ModelContestant $contestant;
-
     private ModelContest $contest;
-
     private int $acYear;
-
     private int $year;
-
     private ServiceTask $serviceTask;
 
     public function __construct(Container $container, ModelContestant $contestant, ModelContest $contest, int $acYear, int $year) {
@@ -57,7 +53,7 @@ class SubmitContainer extends BaseComponent {
         return $component;
     }
 
-    public function injectPrimary(ServiceTask $serviceTask): void {
+    final public function injectPrimary(ServiceTask $serviceTask): void {
         $this->serviceTask = $serviceTask;
     }
 

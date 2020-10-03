@@ -36,7 +36,7 @@ class LanguageChooser extends Chooser {
         $this->urlLang = $urlLang;
     }
 
-    public function injectPrimary(User $user, IRequest $request): void {
+    final public function injectPrimary(User $user, IRequest $request): void {
         $this->user = $user;
         $this->request = $request;
     }

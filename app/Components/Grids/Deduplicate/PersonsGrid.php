@@ -105,11 +105,7 @@ class PersonsGrid extends BaseGrid {
             });
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return string
-     */
-    private function renderPerson(ModelPerson $person) {
+    private function renderPerson(ModelPerson $person): string {
         return $person->getFullName();
         // return (new PersonLink($this->getPresenter()))($person);
     }

@@ -38,7 +38,7 @@ class Updater {
      * @param mixed $path
      * @param mixed $branch
      */
-    private function install($path, $branch) {
+    private function install($path, $branch): void {
         $user = $this->container->getParameters()['updater']['installUser'];
         $script = $this->container->getParameters()['updater']['installScript'];
         $cmd = "sudo -u {$user} {$script} $path $branch >/dev/null 2>/dev/null &";
