@@ -6,7 +6,7 @@ use FKSDB\ORM\DbNames;
 use FKSDB\Tests\PresentersTests\PageDisplay\AbstractPageDisplayTestCase;
 
 abstract class EventModuleTestCase extends AbstractPageDisplayTestCase {
-    
+
     protected int $eventId;
 
     protected function setUp(): void {

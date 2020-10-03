@@ -42,27 +42,19 @@ class SubmitPresenter extends BasePresenter {
     private ServiceQuizQuestion $quizQuestionService;
     private SubmitHandlerFactory $submitHandlerFactory;
 
-    final public function injectSubmitService(ServiceSubmit $submitService): void {
+    final public function injectTernary(
+        ServiceSubmit $submitService,
+        ServiceSubmitQuizQuestion $submitQuizQuestionService,
+        UploadedStorage $filesystemUploadedSubmitStorage,
+        ServiceTask $taskService,
+        ServiceQuizQuestion $quizQuestionService,
+        SubmitHandlerFactory $submitHandlerFactory
+    ): void {
         $this->submitService = $submitService;
-    }
-
-    final public function injectSubmitQuizQuestionService(ServiceSubmitQuizQuestion $submitQuizQuestionService): void {
         $this->submitQuizQuestionService = $submitQuizQuestionService;
-    }
-
-    final public function injectSubmitUploadedStorage(UploadedStorage $filesystemUploadedSubmitStorage): void {
         $this->uploadedSubmitStorage = $filesystemUploadedSubmitStorage;
-    }
-
-    final public function injectTaskService(ServiceTask $taskService): void {
         $this->taskService = $taskService;
-    }
-
-    final public function injectQuizQuestionService(ServiceQuizQuestion $quizQuestionService): void {
         $this->quizQuestionService = $quizQuestionService;
-    }
-
-    final public function injectSubmitHandlerFactory(SubmitHandlerFactory $submitHandlerFactory): void {
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 

@@ -47,19 +47,15 @@ class ApplicationPresenter extends BasePresenter {
     private ApplicationHandlerFactory $handlerFactory;
     private EventDispatchFactory $eventDispatchFactory;
 
-    final public function injectServiceEvent(ServiceEvent $serviceEvent): void {
+    final public function injectTernary(
+        ServiceEvent $serviceEvent,
+        RelatedPersonAuthorizator $relatedPersonAuthorizator,
+        ApplicationHandlerFactory $handlerFactory,
+        EventDispatchFactory $eventDispatchFactory
+    ): void {
         $this->serviceEvent = $serviceEvent;
-    }
-
-    final public function injectRelatedPersonAuthorizator(RelatedPersonAuthorizator $relatedPersonAuthorizator): void {
         $this->relatedPersonAuthorizator = $relatedPersonAuthorizator;
-    }
-
-    final public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
-    }
-
-    final public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 

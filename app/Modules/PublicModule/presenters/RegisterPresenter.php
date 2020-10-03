@@ -75,19 +75,15 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     private ExtendedPersonHandlerFactory $handlerFactory;
     private ServicePerson $servicePerson;
 
-    final public function injectServiceContestant(ServiceContestant $serviceContestant): void {
+    final public function injectTernary(
+        ServiceContestant $serviceContestant,
+        ServicePerson $servicePerson,
+        ReferencedPersonFactory $referencedPersonFactory,
+        ExtendedPersonHandlerFactory $handlerFactory
+    ): void {
         $this->serviceContestant = $serviceContestant;
-    }
-
-    final public function injectServicePerson(ServicePerson $servicePerson): void {
         $this->servicePerson = $servicePerson;
-    }
-
-    final public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory): void {
         $this->referencedPersonFactory = $referencedPersonFactory;
-    }
-
-    final public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
     }
 

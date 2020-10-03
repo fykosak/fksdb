@@ -33,11 +33,8 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     private ReferencedPersonFactory $referencedPersonFactory;
     private ExtendedPersonHandlerFactory $handlerFactory;
 
-    final public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory): void {
+    final public function injectExtendedPerson(ReferencedPersonFactory $referencedPersonFactory,ExtendedPersonHandlerFactory $handlerFactory): void {
         $this->referencedPersonFactory = $referencedPersonFactory;
-    }
-
-    final public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
     }
 

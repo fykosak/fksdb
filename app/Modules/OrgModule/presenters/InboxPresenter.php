@@ -18,7 +18,7 @@ use Nette\Security\Permission;
 
 /**
  * Class InboxPresenter
- * *
+ *
  */
 class InboxPresenter extends BasePresenter implements ISeriesPresenter {
     use SeriesPresenterTrait;
