@@ -33,7 +33,7 @@ class ModelPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     protected function createComponentGraphComponent(): GraphComponent {
-        $machine = $this->getEventDispatchFactory()->getEventMachine($this->getEvent());
+        $machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
         return new GraphComponent($this->getContext(), $machine->getPrimaryMachine());
     }
 }

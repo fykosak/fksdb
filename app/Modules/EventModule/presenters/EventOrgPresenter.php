@@ -27,7 +27,7 @@ class EventOrgPresenter extends BasePresenter {
 
     private ServiceEventOrg $serviceEventOrg;
 
-    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg): void {
+    final public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg): void {
         $this->serviceEventOrg = $serviceEventOrg;
     }
 

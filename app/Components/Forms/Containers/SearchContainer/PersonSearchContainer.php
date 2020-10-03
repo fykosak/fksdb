@@ -35,7 +35,7 @@ class PersonSearchContainer extends SearchContainer {
         $this->searchType = $searchType;
     }
 
-    public function injectPrimary(PersonFactory $personFactory, ServicePerson $servicePerson, PersonProvider $provider): void {
+    final public function injectPrimary(PersonFactory $personFactory, ServicePerson $servicePerson, PersonProvider $provider): void {
         $this->personFactory = $personFactory;
         $this->servicePerson = $servicePerson;
         $this->personProvider = $provider;

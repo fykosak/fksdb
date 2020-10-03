@@ -25,13 +25,13 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
     /**
      * Performs an authentication.
      * @param array $credentials
-     * @return IIdentity
+     * @return ModelLogin
      * @throws InactiveLoginException
      * @throws InvalidCredentialsException
      * @throws NoLoginException
      * @throws UnknownLoginException
      */
-    public function authenticate(array $credentials) {
+    public function authenticate(array $credentials): ModelLogin {
         [$id, $password] = $credentials;
 
         $login = $this->findLogin($id);

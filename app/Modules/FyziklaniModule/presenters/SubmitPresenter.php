@@ -31,7 +31,7 @@ class SubmitPresenter extends BasePresenter {
 
     protected HandlerFactory $handlerFactory;
 
-    public function injectHandlerFactory(HandlerFactory $handlerFactory): void {
+    final public function injectHandlerFactory(HandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
     }
 
@@ -159,6 +159,6 @@ class SubmitPresenter extends BasePresenter {
     }
 
     protected function getORMService(): ServiceFyziklaniSubmit {
-        return $this->getServiceFyziklaniSubmit();
+        return $this->serviceFyziklaniSubmit;
     }
 }

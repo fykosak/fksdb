@@ -19,19 +19,15 @@ use FKSDB\Persons\Deduplication\Merger;
 class DeduplicatePresenter extends BasePresenter {
 
     private ServicePerson $servicePerson;
-
     private Merger $merger;
 
-    public function injectServicePerson(ServicePerson $servicePerson): void {
+    final public function injectQuarterly(ServicePerson $servicePerson, Merger $merger): void {
         $this->servicePerson = $servicePerson;
-    }
-
-    public function injectMerger(Merger $merger): void {
         $this->merger = $merger;
     }
 
     public function authorizedPerson(): void {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowedForAnyContest('person', 'list'));
+        $this->setAuthorized($this->contestAuthorizator->isAllowedForAnyContest('person', 'list'));
     }
 
     public function titlePerson(): void {
@@ -43,7 +39,7 @@ class DeduplicatePresenter extends BasePresenter {
      * @throws AbortException
      */
     public function handleBatchMerge(): void {
-        if (!$this->getContestAuthorizator()->isAllowedForAnyContest('person', 'merge')) { //TODO generic authorizator
+        if (!$this->contestAuthorizator->isAllowedForAnyContest('person', 'merge')) { //TODO generic authorizator
             throw new ForbiddenRequestException();
         }
         //TODO later specialize for each entinty type

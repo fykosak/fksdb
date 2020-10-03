@@ -29,26 +29,19 @@ class SettingsPresenter extends BasePresenter {
     public const CONT_LOGIN = 'login';
 
     private LoginFactory $loginFactory;
-
     private ServiceLogin $loginService;
-
     private UniqueEmailFactory $uniqueEmailFactory;
-
     private UniqueLoginFactory $uniqueLoginFactory;
 
-    public function injectLoginFactory(LoginFactory $loginFactory): void {
+    final public function injectQuarterly(
+        LoginFactory $loginFactory,
+        ServiceLogin $loginService,
+        UniqueEmailFactory $uniqueEmailFactory,
+        UniqueLoginFactory $uniqueLoginFactory
+    ): void {
         $this->loginFactory = $loginFactory;
-    }
-
-    public function injectLoginService(ServiceLogin $loginService): void {
         $this->loginService = $loginService;
-    }
-
-    public function injectUniqueEmailFactory(UniqueEmailFactory $uniqueEmailFactory): void {
         $this->uniqueEmailFactory = $uniqueEmailFactory;
-    }
-
-    public function injectUniqueLoginFactory(UniqueLoginFactory $uniqueLoginFactory): void {
         $this->uniqueLoginFactory = $uniqueLoginFactory;
     }
 
@@ -73,11 +66,11 @@ class SettingsPresenter extends BasePresenter {
     }
 
     public function renderDefault(): void {
-        if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN)) {
+        if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN)) {
             $this->flashMessage(_('Nastavte si nové heslo.'), self::FLASH_WARNING);
         }
 
-        if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY)) {
+        if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY)) {
             $this->flashMessage(_('Nastavte si nové heslo.'), self::FLASH_WARNING);
         }
     }
@@ -96,8 +89,8 @@ class SettingsPresenter extends BasePresenter {
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         $tokenAuthentication =
-            $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
-            $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
+            $this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
+            $this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
 
         $group = $form->addGroup(_('Autentizace'));
         $emailRule = $this->uniqueEmailFactory->create($login->getPerson()); //TODO em use it somewhere
@@ -140,8 +133,8 @@ class SettingsPresenter extends BasePresenter {
     private function handleSettingsFormSuccess(Form $form): void {
         $values = $form->getValues();
         $tokenAuthentication =
-            $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
-            $this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
+            $this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
+            $this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
 
@@ -155,7 +148,7 @@ class SettingsPresenter extends BasePresenter {
         $this->flashMessage(_('Uživatelské informace upraveny.'), self::FLASH_SUCCESS);
         if ($tokenAuthentication) {
             $this->flashMessage(_('Heslo nastaveno.'), self::FLASH_SUCCESS); //TODO here may be Facebook ID
-            $this->getTokenAuthenticator()->disposeAuthToken(); // from now on same like password authentication
+            $this->tokenAuthenticator->disposeAuthToken(); // from now on same like password authentication
         }
         $this->redirect('this');
     }

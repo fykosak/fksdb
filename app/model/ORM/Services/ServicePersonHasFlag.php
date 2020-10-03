@@ -23,12 +23,12 @@ class ServicePersonHasFlag extends AbstractServiceSingle {
     }
 
     /**
-     * @param null $data
-     * @return AbstractModelSingle
+     * @param null|iterable $data
+     * @return ModelPersonHasFlag
      * @throws ModelException
      * @deprecated
      */
-    public function createNew($data = null) {
+    public function createNew(?iterable $data = null) {
         if ($data === null) {
             $data = new ArrayHash();
         }
@@ -47,7 +47,7 @@ class ServicePersonHasFlag extends AbstractServiceSingle {
      * @param bool $alive
      * @return mixed|void
      */
-    public function updateModel(IModel $model, $data, $alive = true) {
+    public function updateModel(IModel $model, iterable $data, bool $alive = true): void {
         if ($data === null) {
             $data = new ArrayHash();
         }

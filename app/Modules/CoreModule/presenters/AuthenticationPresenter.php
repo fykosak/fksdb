@@ -55,26 +55,19 @@ final class AuthenticationPresenter extends BasePresenter {
     public $flag;
 
     private ServiceAuthToken $serviceAuthToken;
-    /** @var GlobalSession */
     private IGlobalSession $globalSession;
-
     private PasswordAuthenticator $passwordAuthenticator;
-
     private AccountManager $accountManager;
 
-    public function injectServiceAuthToken(ServiceAuthToken $serviceAuthToken): void {
+    final public function injectTernary(
+        ServiceAuthToken $serviceAuthToken,
+        IGlobalSession $globalSession,
+        PasswordAuthenticator $passwordAuthenticator,
+        AccountManager $accountManager
+    ): void {
         $this->serviceAuthToken = $serviceAuthToken;
-    }
-
-    public function injectGlobalSession(IGlobalSession $globalSession): void {
         $this->globalSession = $globalSession;
-    }
-
-    public function injectPasswordAuthenticator(PasswordAuthenticator $passwordAuthenticator): void {
         $this->passwordAuthenticator = $passwordAuthenticator;
-    }
-
-    public function injectAccountManager(AccountManager $accountManager): void {
         $this->accountManager = $accountManager;
     }
 

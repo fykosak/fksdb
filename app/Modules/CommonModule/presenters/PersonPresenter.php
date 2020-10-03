@@ -50,34 +50,22 @@ class PersonPresenter extends BasePresenter {
     use EntityPresenterTrait;
 
     private ServicePerson $servicePerson;
-
     private ServicePersonInfo $servicePersonInfo;
-
     private Merger $personMerger;
-
-    /** @var ModelPerson */
-    private $trunkPerson;
-
-    /** @var ModelPerson */
-    private $mergedPerson;
-
+    private ModelPerson $trunkPerson;
+    private ModelPerson $mergedPerson;
     private PersonFactory $personFactory;
-
     private int $userPermissions;
 
-    public function injectServicePerson(ServicePerson $servicePerson): void {
+    final public function injectQuarterly(
+        ServicePerson $servicePerson,
+        ServicePersonInfo $servicePersonInfo,
+        Merger $personMerger,
+        PersonFactory $personFactory
+    ): void {
         $this->servicePerson = $servicePerson;
-    }
-
-    public function injectServicePersonInfo(ServicePersonInfo $servicePersonInfo): void {
         $this->servicePersonInfo = $servicePersonInfo;
-    }
-
-    public function injectPersonMerger(Merger $personMerger): void {
         $this->personMerger = $personMerger;
-    }
-
-    public function injectPersonFactory(PersonFactory $personFactory): void {
         $this->personFactory = $personFactory;
     }
 
@@ -117,7 +105,6 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      */
     public function titleMerge(): void {
@@ -126,7 +113,6 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      */
     public function titlePizza(): void {
@@ -159,14 +145,16 @@ class PersonPresenter extends BasePresenter {
      * @param int $mergedId
      * @throws NotFoundException
      */
-    public function authorizedMerge($trunkId, $mergedId): void {
-        $this->trunkPerson = $this->servicePerson->findByPrimary($trunkId);
-        $this->mergedPerson = $this->servicePerson->findByPrimary($mergedId);
-        if (!$this->trunkPerson || !$this->mergedPerson) {
+    public function authorizedMerge(int $trunkId, int $mergedId): void {
+        $trunkPerson = $this->servicePerson->findByPrimary($trunkId);
+        $mergedPerson = $this->servicePerson->findByPrimary($mergedId);
+        if (is_null($this->trunkPerson) || is_null($this->mergedPerson)) {
             throw new NotFoundException('Neexistující osoba.');
         }
-        $authorized = $this->getContestAuthorizator()->isAllowedForAnyContest($this->trunkPerson, 'merge') &&
-            $this->getContestAuthorizator()->isAllowedForAnyContest($this->mergedPerson, 'merge');
+        $this->trunkPerson = $trunkPerson;
+        $this->mergedPerson = $mergedPerson;
+        $authorized = $this->contestAuthorizator->isAllowedForAnyContest($this->trunkPerson, 'merge') &&
+            $this->contestAuthorizator->isAllowedForAnyContest($this->mergedPerson, 'merge');
         $this->setAuthorized($authorized);
     }
 

@@ -14,14 +14,14 @@ class PersonInfoContainer extends ModelContainer {
     /**
      * @param mixed|iterable $values
      * @param bool $erase
-     * @return Container|void
+     * @return static
      */
-    public function setValues($values, $erase = false) {
+    public function setValues($values, $erase = false): self {
         if ($values instanceof ActiveRow) { //assert its from person info table
             $values['agreed'] = (bool)$values['agreed'];
         }
 
-        parent::setValues($values, $erase);
+        return parent::setValues($values, $erase);
     }
 
 }

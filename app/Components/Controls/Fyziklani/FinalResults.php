@@ -24,7 +24,7 @@ class FinalResults extends BaseComponent {
         $this->event = $event;
     }
 
-    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
+    final public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 

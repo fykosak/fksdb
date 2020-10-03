@@ -2,8 +2,8 @@
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Components\Controls\Entity\ScheduleItemFormContainer;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Components\Grids\Schedule\ItemsGrid;
 use FKSDB\Components\Grids\Schedule\PersonsGrid;
 use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Events\EventNotFoundException;
@@ -12,75 +12,61 @@ use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
-use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
 use FKSDB\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
-use Nette\InvalidStateException;
 use Nette\Security\IResource;
 
 /**
  * Class ScheduleItemPresenter
- *
+ * @method ModelScheduleItem getEntity()
  */
 class ScheduleItemPresenter extends BasePresenter {
-    use EventEntityPresenterTrait {
-        getEntity as traitGetEntity;
-    }
-
-    /**
-     * @var int
-     * @persistent
-     */
-    public $groupId;
+    use EventEntityPresenterTrait;
 
     private ModelScheduleGroup $group;
 
     private ServiceScheduleItem $serviceScheduleItem;
 
-    private ServiceScheduleGroup $serviceScheduleGroup;
-
-    public function injectServiceScheduleItem(ServiceScheduleItem $serviceScheduleItem): void {
+    final public function injectServiceScheduleItem(ServiceScheduleItem $serviceScheduleItem): void {
         $this->serviceScheduleItem = $serviceScheduleItem;
     }
 
-    public function injectServiceScheduleGroup(ServiceScheduleGroup $serviceScheduleGroup): void {
-        $this->serviceScheduleGroup = $serviceScheduleGroup;
-    }
-
-    public function getTitleList(): PageTitle {
-        return new PageTitle(\sprintf(_('Schedule items')), 'fa fa-calendar-check-o');
-    }
-
     /**
-     * @return PageTitle
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      * @throws EventNotFoundException
      * @throws BadTypeException
      */
-    public function getTitleDetail(): PageTitle {
-        $item = $this->getEntity();
-        return new PageTitle(\sprintf(_('Schedule item "%s/%s"'), $item->name_cs, $item->name_en), 'fa fa-calendar-check-o');
+    public function titleDetail(): void {
+        $this->setPageTitle(new PageTitle(\sprintf(_('Schedule item "%s"'), $this->getEntity()->getLabel()), 'fa fa-calendar-check-o'));
+    }
+
+    /**
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws EventNotFoundException
+     * @throws BadTypeException
+     */
+    public function titleEdit(): void {
+        $this->setPageTitle(new PageTitle(\sprintf(_('Edit schedule item "%s"'), $this->getEntity()->getLabel()), 'fa fa-calendar-check-o'));
     }
 
     /**
      * @return void
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
      * @throws EventNotFoundException
-     * @throws BadTypeException
      */
-    public function actionDetail(): void {
-        $this->getEntity();
+    public function titleCreate(): void {
+        $this->setPageTitle(new PageTitle(_('Create schedule item'), 'fa fa-calendar-check-o'));
     }
 
     /**
-     * @throws InvalidStateException
+     * @return void
+     * @throws ModelNotFoundException
+     * @throws BadTypeException
      */
-    public function renderList(): void {
-        $this->template->group = $this->getGroup();
+    public function actionEdit(): void {
+        $this->traitActionEdit();
     }
 
     /**
@@ -91,59 +77,23 @@ class ScheduleItemPresenter extends BasePresenter {
      * @throws BadTypeException
      */
     public function renderDetail(): void {
-        $this->template->group = $this->getGroup();
         $this->template->model = $this->getEntity();
     }
 
     /**
-     * @return ModelScheduleItem
-     * @throws ForbiddenRequestException
-     * @throws ModelNotFoundException
+     * @return ScheduleItemFormContainer
      * @throws EventNotFoundException
-     * @throws BadTypeException
      */
-    protected function getEntity(): ModelScheduleItem {
-        /** @var ModelScheduleItem $entity */
-        $entity = $this->traitGetEntity();
-        if ($entity->schedule_group_id !== $this->getGroup()->schedule_group_id) {
-            throw new ForbiddenRequestException();
-        }
-        return $entity;
+    protected function createComponentCreateForm(): ScheduleItemFormContainer {
+        return new ScheduleItemFormContainer($this->getEvent(), $this->getContext(), true);
     }
 
     /**
-     * @return ModelScheduleGroup
-     * @throws InvalidStateException
+     * @return ScheduleItemFormContainer
+     * @throws EventNotFoundException
      */
-    private function getGroup(): ModelScheduleGroup {
-        if (!isset($this->group)) {
-            $group = $this->serviceScheduleGroup->findByPrimary($this->groupId);
-            if (!$group) {
-                throw new InvalidStateException();
-            }
-            $this->group = $group;
-        }
-        return $this->group;
-    }
-
-    /**
-     * @return Control
-     * @throws NotImplementedException
-     */
-    protected function createComponentCreateForm(): Control {
-        throw new NotImplementedException();
-    }
-
-    /**
-     * @return Control
-     * @throws NotImplementedException
-     */
-    protected function createComponentEditForm(): Control {
-        throw new NotImplementedException();
-    }
-
-    protected function createComponentGrid(): BaseGrid {
-        return new ItemsGrid($this->getContext(), $this->getGroup());
+    protected function createComponentEditForm(): ScheduleItemFormContainer {
+        return new ScheduleItemFormContainer($this->getEvent(), $this->getContext(), false);
     }
 
     /**
@@ -171,13 +121,7 @@ class ScheduleItemPresenter extends BasePresenter {
         return $this->isContestsOrgAuthorized($resource, $privilege);
     }
 
-    /**
-     * @param PageTitle $pageTitle
-     * @return void
-     * @throws EventNotFoundException
-     */
-    protected function setPageTitle(PageTitle $pageTitle): void {
-        $pageTitle->subTitle .= ' ->' . sprintf('"%s/%s"', $this->getGroup()->name_cs, $this->getGroup()->name_en);
-        parent::setPageTitle($pageTitle);
+    protected function createComponentGrid(): BaseGrid {
+        throw new NotImplementedException();
     }
 }

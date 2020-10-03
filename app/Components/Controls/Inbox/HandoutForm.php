@@ -36,7 +36,7 @@ class HandoutForm extends BaseComponent {
         $this->seriesTable = $seriesTable;
     }
 
-    public function injectPrimary(PersonFactory $personFactory, ServicePerson $servicePerson, YearCalculator $yearCalculator, ServiceTaskContribution $serviceTaskContribution): void {
+    final public function injectPrimary(PersonFactory $personFactory, ServicePerson $servicePerson, YearCalculator $yearCalculator, ServiceTaskContribution $serviceTaskContribution): void {
         $this->personFactory = $personFactory;
         $this->servicePerson = $servicePerson;
         $this->yearCalculator = $yearCalculator;

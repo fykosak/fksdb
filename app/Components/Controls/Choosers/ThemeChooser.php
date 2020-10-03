@@ -19,7 +19,7 @@ class ThemeChooser extends Chooser {
 
     private Session $session;
 
-    public function injectSession(Session $session): void {
+    final public function injectSession(Session $session): void {
         $this->session = $session;
     }
 

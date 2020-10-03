@@ -2,6 +2,7 @@
 
 namespace FKSDB\Components\Events;
 
+use FKSDB\Authorization\ContestAuthorizator;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
@@ -28,18 +29,20 @@ use Nette\InvalidStateException;
 class ApplicationComponent extends BaseComponent {
 
     private ApplicationHandler $handler;
-
     private Holder $holder;
-
     /** @var callable ($primaryModelId, $eventId) */
     private $redirectCallback;
-
     private string $templateFile;
+    private ContestAuthorizator $contestAuthorizator;
 
     public function __construct(Container $container, ApplicationHandler $handler, Holder $holder) {
         parent::__construct($container);
         $this->handler = $handler;
         $this->holder = $holder;
+    }
+
+    public function injectContestAuthorizator(ContestAuthorizator $contestAuthorizator): void {
+        $this->contestAuthorizator = $contestAuthorizator;
     }
 
     /**
@@ -62,7 +65,7 @@ class ApplicationComponent extends BaseComponent {
      */
     public function isEventAdmin(): bool {
         $event = $this->holder->getPrimaryHolder()->getEvent();
-        return $this->getPresenter()->getContestAuthorizator()->isAllowed($event, 'application', $event->getContest());
+        return $this->contestAuthorizator->isAllowed($event, 'application', $event->getContest());
     }
 
     public function render(): void {
@@ -108,7 +111,7 @@ class ApplicationComponent extends BaseComponent {
         $saveSubmit = null;
         if ($this->canEdit()) {
             $saveSubmit = $form->addSubmit('save', _('Save'));
-            $saveSubmit->onClick[] = function (SubmitButton $button) {
+            $saveSubmit->onClick[] = function (SubmitButton $button): void {
                 $buttonForm = $button->getForm();
                 $this->handleSubmit($buttonForm);
             };
@@ -123,7 +126,7 @@ class ApplicationComponent extends BaseComponent {
             $transitionName = $transition->getName();
             $submit = $form->addSubmit($transitionName, $transition->getLabel());
 
-            $submit->onClick[] = function (SubmitButton $button) use ($transitionName) {
+            $submit->onClick[] = function (SubmitButton $button) use ($transitionName): void {
                 $form = $button->getForm();
                 $this->handleSubmit($form, $transitionName);
             };
@@ -144,7 +147,7 @@ class ApplicationComponent extends BaseComponent {
         $submit = $form->addSubmit('cancel', _('Cancel'));
         $submit->setValidationScope(false);
         $submit->getControlPrototype()->addAttributes(['class' => 'btn-warning']);
-        $submit->onClick[] = function (SubmitButton $button) {
+        $submit->onClick[] = function (): void {
             $this->finalRedirect();
         };
 

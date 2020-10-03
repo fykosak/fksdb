@@ -26,7 +26,7 @@ class FyziklaniChooser extends Chooser {
         $this->event = $event;
     }
 
-    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
+    final public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 

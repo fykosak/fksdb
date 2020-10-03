@@ -28,7 +28,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
 
     private ServiceStoredQuery $serviceStoredQuery;
 
-    public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery): void {
+    final public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery): void {
         $this->serviceStoredQuery = $serviceStoredQuery;
     }
 
@@ -128,7 +128,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadTypeException
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
-        return $this->getContestAuthorizator()->isAllowed($resource, $privilege, $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 
     /**

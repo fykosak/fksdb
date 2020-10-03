@@ -32,15 +32,10 @@ use Nette\Forms\Form;
 class PaymentFormComponent extends EditEntityFormComponent {
 
     private PersonFactory $personFactory;
-
     private PersonProvider $personProvider;
-
     private bool $isOrg;
-
     private PaymentMachine $machine;
-
     private ServicePayment $servicePayment;
-
     private ServiceSchedulePayment $serviceSchedulePayment;
 
     public function __construct(
@@ -54,7 +49,7 @@ class PaymentFormComponent extends EditEntityFormComponent {
         $this->isOrg = $isOrg;
     }
 
-    public function injectPrimary(
+    final public function injectPrimary(
         ServicePayment $servicePayment,
         PersonFactory $personFactory,
         PersonProvider $personProvider,
@@ -102,8 +97,8 @@ class PaymentFormComponent extends EditEntityFormComponent {
             ]), $this->servicePayment);
 
         } else {
-            $model = $this->model;
-            $this->servicePayment->updateModel2($model, $data);
+            $this->servicePayment->updateModel2($this->model, $data);
+            $model = $this->servicePayment->refresh($this->model);
         }
 
         $connection = $this->servicePayment->getConnection();

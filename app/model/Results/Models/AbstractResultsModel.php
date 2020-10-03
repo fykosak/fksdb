@@ -87,7 +87,7 @@ abstract class AbstractResultsModel {
      * Unused?
      * @return array
      */
-    public function getMetaColumns() {
+    public function getMetaColumns(): array {
         return [
             self::DATA_NAME,
             self::DATA_SCHOOL,

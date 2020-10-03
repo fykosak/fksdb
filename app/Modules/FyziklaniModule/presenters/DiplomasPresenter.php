@@ -53,13 +53,11 @@ class DiplomasPresenter extends BasePresenter {
         $items = [];
         foreach (['A', 'B', 'C'] as $category) {
             $items[$category] = [
-                'closed' => $this->getServiceFyziklaniTeam()
-                    ->findParticipating($this->getEvent())
+                'closed' => $this->serviceFyziklaniTeam->findParticipating($this->getEvent())
                     ->where('category', $category)
                     ->where('points IS NOT NULL')
                     ->count(),
-                'opened' => $this->getServiceFyziklaniTeam()
-                    ->findParticipating($this->getEvent())
+                'opened' => $this->serviceFyziklaniTeam->findParticipating($this->getEvent())
                     ->where('category', $category)
                     ->where('points IS NULL')
                     ->count(),
@@ -75,7 +73,7 @@ class DiplomasPresenter extends BasePresenter {
      * @throws NotClosedTeamException
      */
     public function handleCalculate(string $category = null): void {
-        $closeStrategy = new RankingStrategy($this->getEvent(), $this->getServiceFyziklaniTeam());
+        $closeStrategy = new RankingStrategy($this->getEvent(), $this->serviceFyziklaniTeam);
         $log = $closeStrategy($category);
         $this->flashMessage(Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(Html::el('ul')->addHtml($log)), \FKSDB\Modules\Core\BasePresenter::FLASH_SUCCESS);
         $this->redirect('this');
@@ -87,7 +85,7 @@ class DiplomasPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function isReadyAllToCalculate(string $category = null): bool {
-        return $this->getServiceFyziklaniTeam()->isCategoryReadyForClosing($this->getEvent(), $category);
+        return $this->serviceFyziklaniTeam->isCategoryReadyForClosing($this->getEvent(), $category);
     }
 
     /**

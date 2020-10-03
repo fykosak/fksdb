@@ -95,11 +95,7 @@ class CategoryProcessing extends AbstractProcessing {
         }
     }
 
-    /**
-     * @param array $participants
-     * @return string
-     */
-    private function getCategory($participants) {
+    private function getCategory(array $participants): string {
         $coefficientSum = 0;
         $count4 = 0;
         $count3 = 0;

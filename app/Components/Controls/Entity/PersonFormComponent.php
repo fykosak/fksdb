@@ -37,20 +37,13 @@ class PersonFormComponent extends EditEntityFormComponent {
     public const PERSON_CONTAINER = 'person';
     public const PERSON_INFO_CONTAINER = 'person_info';
 
-    protected SingleReflectionFormFactory $singleReflectionFormFactory;
-
-    protected AddressFactory $addressFactory;
-
-    protected ServicePerson $servicePerson;
-
-    protected ServicePersonInfo $servicePersonInfo;
-
+    private SingleReflectionFormFactory $singleReflectionFormFactory;
+    private AddressFactory $addressFactory;
+    private ServicePerson $servicePerson;
+    private ServicePersonInfo $servicePersonInfo;
     private ServicePostContact $servicePostContact;
-
     private ServiceAddress $serviceAddress;
-
     private MemoryLogger $logger;
-
     private FieldLevelPermission $userPermission;
 
     public function __construct(Container $container, bool $create, int $userPermission) {
@@ -59,7 +52,7 @@ class PersonFormComponent extends EditEntityFormComponent {
         $this->logger = new MemoryLogger();
     }
 
-    public function injectFactories(
+    final public function injectFactories(
         SingleReflectionFormFactory $singleReflectionFormFactory,
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,

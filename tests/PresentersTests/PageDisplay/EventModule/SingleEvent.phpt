@@ -34,9 +34,9 @@ class SingleEvent extends EventModuleTestCase {
             ['Event:EventOrg', 'list'],
             ['Event:EventOrg', 'create'],
             ['Event:Model', 'default'],
-            ['Event:Seating', 'default'],
-            ['Event:Seating', 'preview'],
-            ['Event:Seating', 'list'],
+            // ['Event:Seating', 'default'],
+            // ['Event:Seating', 'preview'],
+            // ['Event:Seating', 'list'],
         ];
     }
 }

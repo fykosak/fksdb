@@ -38,12 +38,12 @@ class ServiceSchedulePayment extends AbstractServiceSingle {
             throw new StorageException(_('Not in transaction!'));
         }
 
-        $this->getTable()->where('payment_id', $payment->payment_id)->delete();
-
         $newScheduleIds = $this->filerData($data);
         if (count($newScheduleIds) == 0) {
             throw new EmptyDataException(_('Nebola vybraná žiadá položka'));
         }
+
+        $this->getTable()->where('payment_id', $payment->payment_id)->delete();
         foreach ($newScheduleIds as $id) {
             /** @var ModelSchedulePayment $model */
             $model = $this->getTable()->where('person_schedule_id', $id)

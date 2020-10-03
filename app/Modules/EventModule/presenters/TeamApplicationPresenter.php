@@ -25,7 +25,7 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
+    final public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 

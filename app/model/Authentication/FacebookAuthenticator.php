@@ -39,7 +39,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
      * @throws AuthenticationException
      * @throws InactiveLoginException
      */
-    public function authenticate(array $fbUser) {
+    public function authenticate(array $fbUser): ModelLogin {
         $person = $this->findPerson($fbUser);
 
         if (!$person) {
@@ -66,7 +66,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
      * @return ModelPerson|ActiveRow|null
      * @throws AuthenticationException
      */
-    private function findPerson(array $fbUser) {
+    private function findPerson(array $fbUser): ?ModelPerson {
         if (!$fbUser['email']) {
             throw new AuthenticationException(_('V profilu Facebooku nebyl nalezen e-mail.'));
         }
@@ -91,12 +91,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         return $login;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param array $fbUser
-     * @return void
-     */
-    private function updateFromFB(ModelPerson $person, array $fbUser) {
+    private function updateFromFB(ModelPerson $person, array $fbUser): void {
         $this->servicePerson->getConnection()->beginTransaction();
         $personData = $this->getPersonData($fbUser);
         // there can be bullshit in this fields, so don't use it for update

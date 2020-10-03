@@ -17,7 +17,7 @@ class SeatingPresenter extends BasePresenter {
 
     private ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition;
 
-    public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition): void {
+    final public function injectServiceFyziklaniTeamPosition(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition): void {
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
     }
 

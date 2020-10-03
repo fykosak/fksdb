@@ -85,7 +85,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
         });
     }
 
-    public function injectPrimary(
+    final public function injectPrimary(
         AddressFactory $addressFactory,
         FlagFactory $flagFactory,
         ServicePerson $servicePerson,

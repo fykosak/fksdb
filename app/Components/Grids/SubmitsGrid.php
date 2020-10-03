@@ -36,7 +36,7 @@ class SubmitsGrid extends BaseGrid {
         $this->contestant = $contestant;
     }
 
-    public function injectPrimary(SubmitHandlerFactory $submitHandlerFactory): void {
+    final public function injectPrimary(SubmitHandlerFactory $submitHandlerFactory): void {
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 

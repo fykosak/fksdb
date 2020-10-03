@@ -1,17 +1,13 @@
 <?php
 
-/**
- * For presenters that provide contest and year context.
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
-
 namespace FKSDB\Modules\Core\ContestPresenter;
 
 use FKSDB\ORM\Models\ModelContest;
 
 /**
- * Interface IContestPresenter
+ * For presenters that provide contest and year context.
+ *
+ * @author Michal Koutný <xm.koutny@gmail.com>
  */
 interface IContestPresenter {
 

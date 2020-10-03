@@ -28,7 +28,7 @@ class TimelineControl extends ReactComponent {
         $this->person = $person;
     }
 
-    public function injectYearCalculator(YearCalculator $yearCalculator): void {
+    final public function injectYearCalculator(YearCalculator $yearCalculator): void {
         $this->yearCalculator = $yearCalculator;
     }
 

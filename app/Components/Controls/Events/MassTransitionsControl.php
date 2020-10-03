@@ -30,7 +30,7 @@ class MassTransitionsControl extends BaseComponent {
         $this->event = $event;
     }
 
-    public function injectPrimary(EventDispatchFactory $eventDispatchFactory, ApplicationHandlerFactory $applicationHandlerFactory): void {
+    final public function injectPrimary(EventDispatchFactory $eventDispatchFactory, ApplicationHandlerFactory $applicationHandlerFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
         $this->applicationHandlerFactory = $applicationHandlerFactory;
     }

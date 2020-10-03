@@ -70,11 +70,7 @@ class LoggingMailer implements IMailer {
         return $this->sentMessages;
     }
 
-    /**
-     * @param Message $mail
-     * @param Exception|null $e
-     */
-    private function logMessage(Message $mail, Exception $e = null): void {
+    private function logMessage(Message $mail, ?Exception $e = null): void {
         if (!$this->logging) {
             return;
         }

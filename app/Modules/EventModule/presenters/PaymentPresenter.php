@@ -31,7 +31,7 @@ class PaymentPresenter extends BasePresenter {
 
     private ServicePayment $servicePayment;
 
-    public function injectServicePayment(ServicePayment $servicePayment): void {
+    final public function injectServicePayment(ServicePayment $servicePayment): void {
         $this->servicePayment = $servicePayment;
     }
 

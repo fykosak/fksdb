@@ -18,14 +18,10 @@ use Nette\Application\Responses\TextResponse;
 class GithubPresenter extends AuthenticatedPresenter {
 
     private Updater $updater;
-
     private EventFactory $eventFactory;
 
-    public function injectEventFactory(EventFactory $eventFactory): void {
+    final public function injectQuarterly(EventFactory $eventFactory, Updater $updater): void {
         $this->eventFactory = $eventFactory;
-    }
-
-    public function injectUpdater(Updater $updater): void {
         $this->updater = $updater;
     }
 

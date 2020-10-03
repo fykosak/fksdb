@@ -33,7 +33,7 @@ class RoutingDownload extends BaseComponent {
         });
     }
 
-    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
+    final public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
