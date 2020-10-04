@@ -3786,7 +3786,7 @@ msgstr "Delete application"
 #: i18n/../data/events/dsef/dsef25.neon.neon2php:76
 #: i18n/../data/events/dsef/dsef24.neon.neon2php:76
 msgid "Preferovaná skupina"
-msgstr "Preffered group"
+msgstr "Preferred group"
 
 #: i18n/../data/events/dsef/dsef25.neon.neon2php:79
 #: i18n/../data/events/dsef/dsef24.neon.neon2php:79
