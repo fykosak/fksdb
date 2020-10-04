@@ -63,7 +63,7 @@ final class AuthenticationPresenter extends BasePresenter {
     private IGlobalSession $globalSession;
     private PasswordAuthenticator $passwordAuthenticator;
     private AccountManager $accountManager;
-    private Google $provider;
+    private Google $googleProvider;
     private GoogleAuthenticator $googleAuthenticator;
 
     final public function injectTernary(
@@ -386,14 +386,14 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     protected function getGoogleOAuth2Provider(): Google {
         $params = $this->getContext()->getParameters()['googleOAuth2'];
-        if (!isset($this->provider)) {
-            $this->provider = new Google([
+        if (!isset($this->googleProvider)) {
+            $this->googleProvider = new Google([
                 'clientId' => $params['clientId'],    // The client ID assigned to you by the provider
                 'clientSecret' => $params['clientSecret'],
                 'scope' => 'openid email',// The client password assigned to you by the provider
                 'redirectUri' => $this->link('//google', ['bc' => null]),
             ]);
         }
-        return $this->provider;
+        return $this->googleProvider;
     }
 }

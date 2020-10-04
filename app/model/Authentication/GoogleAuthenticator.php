@@ -17,9 +17,8 @@ use Nette\Security\AuthenticationException;
 use Tracy\Debugger;
 
 /**
- * Due to author's laziness there's no class doc (or it's self explaining).
- *
- * @author Michal Koutný <michal@fykos.cz>
+ * Class GoogleAuthenticator
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class GoogleAuthenticator extends AbstractAuthenticator {
 
@@ -65,7 +64,7 @@ class GoogleAuthenticator extends AbstractAuthenticator {
      */
     private function findPerson(array $user): ?ModelPerson {
         if (!$user['email']) {
-            throw new AuthenticationException(_('V profilu google nebyl nalezen e-mail.'));
+            throw new AuthenticationException(_('V profilu Google nebyl nalezen e-mail.'));
         }
         [$domainAlias, $domain] = explode('@', $user['email']);
         switch ($domain) {
@@ -81,8 +80,5 @@ class GoogleAuthenticator extends AbstractAuthenticator {
         /** @var ModelOrg|null $org */
         $org = $this->serviceOrg->getTable()->where(['domain_alias' => $domainAlias, 'contest_id' => $contestId])->fetch();
         return $org ? $org->getPerson() : null;
-
-        /* $result = $this->serviceOrg->getTable()->where(':person_info.email = ?', $user['email'])->fetch();
-         return $result;*/
     }
 }
