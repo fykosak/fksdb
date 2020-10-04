@@ -5,6 +5,7 @@ namespace FKSDB\Modules\CoreModule;
 use FKSDB\Authentication\GoogleAuthenticator;
 use FKSDB\Authentication\InactiveLoginException;
 use FKSDB\Authentication\InvalidCredentialsException;
+use FKSDB\Authentication\Provider\GoogleProvider;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Localization\UnsupportedLanguageException;
@@ -71,13 +72,15 @@ final class AuthenticationPresenter extends BasePresenter {
         IGlobalSession $globalSession,
         PasswordAuthenticator $passwordAuthenticator,
         AccountManager $accountManager,
-        GoogleAuthenticator $googleAuthenticator
+        GoogleAuthenticator $googleAuthenticator,
+        GoogleProvider $googleProvider
     ): void {
         $this->serviceAuthToken = $serviceAuthToken;
         $this->globalSession = $globalSession;
         $this->passwordAuthenticator = $passwordAuthenticator;
         $this->accountManager = $accountManager;
         $this->googleAuthenticator = $googleAuthenticator;
+        $this->googleProvider = $googleProvider;
     }
 
     public function titleLogin(): void {
@@ -330,18 +333,17 @@ final class AuthenticationPresenter extends BasePresenter {
      * @throws InactiveLoginException
      * @throws InvalidCredentialsException
      * @throws AuthenticationException
-     * @throws InvalidLinkException
      */
     public function actionGoogle(): void {
-        if ($this->getGoogleSection()->state !== $this->getGoogleOAuth2Provider()->getState()) {
+        if ($this->getGoogleSection()->state !== $this->googleProvider->getState()) {
             $this->flashMessage(_('Invalid CSRF token'), self::FLASH_ERROR);
             $this->redirect('login');
         }
         try {
-            $token = $this->getGoogleOAuth2Provider()->getAccessToken('authorization_code', [
+            $token = $this->googleProvider->getAccessToken('authorization_code', [
                 'code' => $this->getParameter('code'),
             ]);
-            $ownerDetails = $this->getGoogleOAuth2Provider()->getResourceOwner($token);
+            $ownerDetails = $this->googleProvider->getResourceOwner($token);
             $login = $this->googleAuthenticator->authenticate($ownerDetails->toArray());
             $this->getUser()->login($login);
             $this->initialRedirect();
@@ -356,8 +358,8 @@ final class AuthenticationPresenter extends BasePresenter {
      * @throws Exception
      */
     public function handleGoogle(): void {
-        $this->getGoogleSection()->state = $this->getGoogleOAuth2Provider()->getState();
-        $this->redirectUrl($this->getGoogleOAuth2Provider()->getAuthorizationUrl());
+        $this->getGoogleSection()->state = $this->googleProvider->getState();
+        $this->redirectUrl($this->googleProvider->getAuthorizationUrl());
     }
 
     /**
@@ -378,22 +380,5 @@ final class AuthenticationPresenter extends BasePresenter {
 
     public function getGoogleSection(): SessionSection {
         return $this->getSession()->getSection('google-oauth2state');
-    }
-
-    /**
-     * @return Google
-     * @throws InvalidLinkException
-     */
-    protected function getGoogleOAuth2Provider(): Google {
-        $params = $this->getContext()->getParameters()['googleOAuth2'];
-        if (!isset($this->googleProvider)) {
-            $this->googleProvider = new Google([
-                'clientId' => $params['clientId'],    // The client ID assigned to you by the provider
-                'clientSecret' => $params['clientSecret'],
-                'scope' => 'openid email',// The client password assigned to you by the provider
-                'redirectUri' => $this->link('//google', ['bc' => null]),
-            ]);
-        }
-        return $this->googleProvider;
     }
 }

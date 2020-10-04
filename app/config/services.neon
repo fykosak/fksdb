@@ -14,6 +14,7 @@ services:
     - FKSDB\Authentication\PasswordAuthenticator
     - FKSDB\Authentication\TokenAuthenticator
     - FKSDB\Authentication\GoogleAuthenticator
+    - FKSDB\Authentication\Provider\GoogleProvider(%googleOAuth2.clientId%,%googleOAuth2.clientSecret%, ...)
     - FKSDB\Authorization\ContestAuthorizator
     - FKSDB\Authorization\EventAuthorizator
     - FKSDB\Authorization\RelatedPersonAuthorizator
