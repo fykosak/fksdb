@@ -11,31 +11,19 @@ use Nette\Localization\ITranslator;
  */
 class GettextTranslator implements ITranslator {
 
-    /**
-     * @var array[lang] => locale
-     */
-    private $locales = [];
+    /** @var array[lang] => locale */
+    private array $locales;
 
-    /**
-     * @var string
-     */
-    private $localeDir;
-    private $lang;
+    private string $localeDir;
 
-    /**
-     * GettextTranslator constructor.
-     * @param array $locales
-     * @param $localeDir
-     */
-    function __construct(array $locales, $localeDir) {
+    private ?string $lang = null;
+
+    public function __construct(array $locales, string $localeDir) {
         $this->locales = $locales;
         $this->localeDir = $localeDir;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getLang() {
+    public function getLang(): ?string {
         return $this->lang;
     }
 
@@ -43,7 +31,7 @@ class GettextTranslator implements ITranslator {
      *
      * @param string $lang ISO 639-1
      */
-    public function setLang($lang) {
+    public function setLang(string $lang): void {
         if (!isset($this->locales[$lang])) {
             throw new InvalidArgumentException("Language $lang not supported");
         }
@@ -58,35 +46,35 @@ class GettextTranslator implements ITranslator {
     }
 
     /**
-     * @return array
+     * @return string[]
      */
-    public function getSupportedLanguages() {
+    public function getSupportedLanguages(): array {
         return array_keys($this->locales);
     }
 
     /**
-     * @param $message
+     * @param string $message
      * @param null $count
      * @return string
      */
-    public function translate($message, $count = NULL) {
+    public function translate($message, $count = null): string {
         if ($message === "" || $message === null) {
             return "";
         }
         if ($count !== null) {
-            return ngettext($message, $message, (int) $count);
+            return ngettext($message, $message, (int)$count);
         } else {
             return gettext($message);
         }
     }
 
     /**
-     * @param $object
-     * @param $field
-     * @param $lang
+     * @param object $object
+     * @param string $field
+     * @param string $lang
      * @return mixed
      */
-    public static function i18nHelper($object, $field, $lang) {
+    public static function i18nHelper(object $object, string $field, string $lang) {
         return $object->{$field . '_' . $lang};
     }
 

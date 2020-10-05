@@ -2,7 +2,8 @@
 
 namespace FKSDB\Components\Controls;
 
-use Nette\Application\PresenterFactory;
+use Nette\Application\IPresenterFactory;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Presenter;
 
 /**
@@ -12,17 +13,11 @@ use Nette\Application\UI\Presenter;
  */
 class PresenterBuilder {
 
-    /**
-     * @var PresenterFactory
-     */
-    private $presenterFactory;
-    private $presenterCache = [];
+    private IPresenterFactory $presenterFactory;
 
-    /**
-     * PresenterBuilder constructor.
-     * @param PresenterFactory $presenterFactory
-     */
-    function __construct(PresenterFactory $presenterFactory) {
+    private array $presenterCache = [];
+
+    public function __construct(IPresenterFactory $presenterFactory) {
         $this->presenterFactory = $presenterFactory;
     }
 
@@ -31,20 +26,20 @@ class PresenterBuilder {
      *
      * @param string $presenterName
      * @param string $action
-     * @param string $params
+     * @param array|string $params
      * @param array $baseParams
-     * @param boolean $newInstance when false all instances of the same class will be the same and only initilization methods are called
+     * @param bool $newInstance when false all instances of the same class will be the same and only initilization methods are called
      * @return Presenter
-     * @throws \Nette\Application\BadRequestException
+     * @throws BadRequestException
      */
-    public function preparePresenter($presenterName, $action, $params, $baseParams = [], $newInstance = false) {
+    public function preparePresenter($presenterName, $action, $params, $baseParams = [], $newInstance = false): Presenter {
         if ($newInstance) {
             $presenter = $this->presenterFactory->createPresenter($presenterName);
         } else {
             $presenter = $this->getCachePresenter($presenterName);
         }
 
-        $params = $params ? : [];
+        $params = $params ?: [];
 
         unset($baseParams[Presenter::ACTION_KEY]);
         foreach ($params as $key => $value) {
@@ -55,11 +50,8 @@ class PresenterBuilder {
 
         return $presenter;
     }
-    /**
-     * @param string $presenterName
-     * @return Presenter
-     */
-    private function getCachePresenter($presenterName) {
+
+    private function getCachePresenter(string $presenterName): Presenter {
         if (!isset($this->presenters[$presenterName])) {
             $this->presenterCache[$presenterName] = $this->presenterFactory->createPresenter($presenterName);
         }

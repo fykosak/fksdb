@@ -2,66 +2,56 @@
 
 namespace FKSDB\Components\Controls\PhoneNumber;
 
-use Closure;
-use FKSDB\Components\Controls\PhoneNumber\Region\AbstractRegion;
-use FKSDB\Components\Controls\PhoneNumber\Region\Czech;
-use FKSDB\Components\Controls\PhoneNumber\Region\Slovakia;
-use FKSDB\Components\Controls\PhoneNumber\Region\Spain;
-use Nette\Forms\Controls\BaseControl;
+use FKSDB\ORM\Models\ModelRegion;
+use FKSDB\ORM\Services\ServiceRegion;
+use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Utils\Html;
 
 /**
  * Class PhoneNumberFactory
- * @package FKSDB\Components\Controls
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PhoneNumberFactory {
-    /**
-     * @var AbstractRegion[]
-     */
-    static $regions = [Slovakia::class, Czech::class, Spain::class];
 
-    /**
-     * @param $number
-     * @return Html
-     */
-    public static function format(string $number): Html {
+    private ServiceRegion $serviceRegion;
+
+    private TypedTableSelection $table;
+
+    public function __construct(ServiceRegion $serviceRegion) {
+        $this->serviceRegion = $serviceRegion;
+        $this->table = $this->serviceRegion->getTable();
+    }
+
+    private function getAllRegions(): TypedTableSelection {
+        return $this->table;
+    }
+
+    public function formatPhone(string $number): Html {
         try {
-            foreach (static::$regions as $region) {
-                if ($region::match($number)) {
-                    return $region::create($number);
-                }
+            $region = $this->getRegion($number);
+            if ($region) {
+                $flag = Html::el('span')
+                    ->addAttributes(['class' => 'phone-flag mr-3'])
+                    ->addHtml(Html::el('img')
+                        ->addAttributes(['src' => '/images/flags/4x3/' . \strtolower($region->country_iso) . '.svg']));
+                return Html::el('span')->addHtml($flag)->addText($region->formatPhoneNumber($number));
             }
         } catch (InvalidPhoneNumberException $exception) {
         }
         return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText($number);
     }
 
-    /**
-     * @param string $number
-     * @return bool
-     */
-    public static function isValid(string $number): bool {
-        foreach (static::$regions as $region) {
-            if ($region::match($number)) {
-                return true;
+    private function getRegion(string $number): ?ModelRegion {
+        /** @var ModelRegion $region */
+        foreach ($this->getAllRegions() as $region) {
+            if ($region->matchPhone($number)) {
+                return $region;
             }
         }
-        return false;
+        return null;
     }
 
-    /**
-     * @return Closure
-     */
-    public static function getFormValidationCallback(): Closure {
-        return function (BaseControl $control): bool {
-            $value = $control->getValue();
-            foreach (static::$regions as $region) {
-                if ($region::match($value)) {
-                    return true;
-                }
-            }
-            return false;
-        };
-
+    public function isValid(string $number): bool {
+        return !!$this->getRegion($number);
     }
 }

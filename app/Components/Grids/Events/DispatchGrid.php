@@ -1,105 +1,52 @@
 <?php
 
-
 namespace FKSDB\Components\Grids\Events;
 
-
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceEvent;
-use Nette\Utils\Html;
+use Nette\Application\UI\Presenter;
+use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class DispatchGrid
- * @package FKSDB\Components\Grids\Events
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class DispatchGrid extends BaseGrid {
 
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
-    /**
-     * @var ModelPerson
-     */
-    private $person;
-    /**
-     * @var \FKSDB\YearCalculator
-     */
-    private $yearCalculator;
+    private ServiceEvent $serviceEvent;
 
-    /**
-     * DispatchGrid constructor.
-     * @param ServiceEvent $serviceEvent
-     * @param ModelPerson $person
-     * @param \FKSDB\YearCalculator $yearCalculator
-     */
-    function __construct(ServiceEvent $serviceEvent, ModelPerson $person, \FKSDB\YearCalculator $yearCalculator) {
-        parent::__construct();
+    private ModelPerson $person;
+
+    public function __construct(ModelPerson $person, Container $container) {
+        parent::__construct($container);
         $this->person = $person;
+    }
+
+    final public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
-        $this->yearCalculator = $yearCalculator;
+    }
+
+    protected function getData(): IDataSource {
+        $events = $this->serviceEvent->getTable()->order('begin DESC');
+        return new NDataSource($events);
     }
 
     /**
-     * @param $presenter
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @param Presenter $presenter
+     * @return void
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     * @throws BadTypeException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
-        //
-        // data
-        //
-        $events = $this->serviceEvent->getTable();
-
-        $dataSource = new NDataSource($events);
-
-        $this->setDataSource($dataSource);
-        $this->setDefaultOrder('begin DESC');
-
-
-        //
-        // columns
-        //
-        $this->addColumn('event_id', _('Event Id'))->setRenderer(function ($row) {
-            return '#' . $row->event_id;
-        });
-        $this->addColumn('name', _('Name'));
-        $this->addColumn('contest_id', _('Contest'))->setRenderer(function ($row) {
-            return $row->event_type->contest->name;
-        })->setSortable(false);
-        $this->addColumn('year', _('Year'));
-        $this->addColumn('roles', _('Roles'))->setRenderer(function ($row) {
-            $container = Html::el('span');
-            $modelEvent = ModelEvent::createFromActiveRow($row);
-            $isEventParticipant = $this->person->isEventParticipant($modelEvent->event_id);
-            if ($isEventParticipant) {
-                $container->addHtml(Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Event participant')));
-            }
-            $isEventOrg = count($this->person->getEventOrg()->where('event_id', $modelEvent->event_id));
-            if ($isEventOrg) {
-                $container->addHtml(Html::el('span')->addAttributes(['class' => 'badge badge-info'])->addText(_('Event org')));
-            }
-            $isOrg = \array_key_exists($modelEvent->getEventType()->contest_id, $this->person->getActiveOrgs($this->yearCalculator));
-            if ($isOrg) {
-                $container->addHtml(Html::el('span')->addAttributes(['class' => 'badge badge-warning'])->addText(_('Contest org')));
-            }
-            return $container;
-        })->setSortable(false);
-
-        //
-        // operations
-        //
-
-        $this->addButton('detail', _('Detail'))
-            ->setText(_('Detail'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('Dashboard:default', [
-                    'eventId' => $row->event_id,
-                ]);
-            })->setClass('btn btn-sm btn-primary');
+        $this->addColumns(['event.event_id', 'event.name', 'contest.contest', 'event.year', 'event.role']);
+        $this->addLinkButton('Dashboard:default', 'detail', _('Detail'), false, ['eventId' => 'event_id']);
     }
 }

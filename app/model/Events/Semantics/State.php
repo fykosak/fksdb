@@ -1,7 +1,8 @@
 <?php
 
-namespace Events\Semantics;
+namespace FKSDB\Events\Semantics;
 
+use FKSDB\Expressions\EvaluatedExpression;
 use Nette\SmartObject;
 
 /**
@@ -9,33 +10,25 @@ use Nette\SmartObject;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class State {
+class State extends EvaluatedExpression {
     use SmartObject;
     use WithEventTrait;
 
-    private $state;
+    private string $state;
 
-    /**
-     * State constructor.
-     * @param $state
-     */
-    function __construct($state) {
+    public function __construct(string $state) {
         $this->state = $state;
     }
 
     /**
-     * @param $obj
+     * @param array $args
      * @return bool
      */
-    public function __invoke($obj) {
-        $holder = $this->getHolder($obj);
-        return $holder->getMachine()->getPrimaryMachine()->getState() == $this->state;
+    public function __invoke(...$args): bool {
+        return $this->getHolder($args[0])->getPrimaryHolder()->getModelState() == $this->state;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return "state == {$this->state}";
     }
 

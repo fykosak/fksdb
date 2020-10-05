@@ -1,9 +1,10 @@
 <?php
 
-namespace Events\Semantics;
+namespace FKSDB\Events\Semantics;
 
-use Authorization\ContestAuthorizator;
-use Authorization\RelatedPersonAuthorizator;
+use FKSDB\Authorization\ContestAuthorizator;
+use FKSDB\Authorization\RelatedPersonAuthorizator;
+use FKSDB\Expressions\EvaluatedExpression;
 use Nette\Security\User;
 use Nette\SmartObject;
 
@@ -13,63 +14,38 @@ use Nette\SmartObject;
  * @obsolete Needs refactoring due to ConditionEvaluator (for only contestans events)
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Role {
+class Role extends EvaluatedExpression {
 
     use SmartObject;
     use WithEventTrait;
 
-    const GUEST = 'guest';
-    const REGISTERED = 'registered';
-    const RELATED = 'related';
-    const ADMIN = 'admin';
+    public const GUEST = 'guest';
+    public const REGISTERED = 'registered';
+    public const RELATED = 'related';
+    public const ADMIN = 'admin';
 
-    /**
-     * @var string
-     */
-    private $role;
+    private string $role;
 
-    /**
-     * @var User
-     */
-    private $user;
+    private User $user;
 
-    /**
-     * @var ContestAuthorizator
-     */
-    private $contestAuthorizator;
+    private ContestAuthorizator $contestAuthorizator;
 
-    /**
-     *
-     * @var RelatedPersonAuthorizator
-     */
-    private $relatedAuthorizator;
+    private RelatedPersonAuthorizator $relatedAuthorizator;
 
-    /**
-     * Role constructor.
-     * @param $role
-     * @param User $user
-     * @param ContestAuthorizator $contestAuthorizator
-     * @param RelatedPersonAuthorizator $relatedAuthorizator
-     */
-    function __construct($role, User $user, ContestAuthorizator $contestAuthorizator, RelatedPersonAuthorizator $relatedAuthorizator) {
+    public function __construct(string $role, User $user, ContestAuthorizator $contestAuthorizator, RelatedPersonAuthorizator $relatedAuthorizator) {
         $this->role = $role;
         $this->user = $user;
         $this->contestAuthorizator = $contestAuthorizator;
         $this->relatedAuthorizator = $relatedAuthorizator;
     }
 
-    /**
-     * @param $obj
-     * @return bool
-     */
-    public function __invoke($obj) {
+    public function __invoke(...$args): bool {
         switch ($this->role) {
             case self::ADMIN:
-                $event = $this->getEvent($obj);
-                return $this->contestAuthorizator->isAllowed($event, 'application', $event->getEventType()->contest);
+                $event = $this->getEvent($args[0]);
+                return $this->contestAuthorizator->isAllowed($event, 'application', $event->getContest());
             case self::RELATED:
-                $event = $this->getEvent($obj);
-                return $this->relatedAuthorizator->isRelatedPerson($this->getHolder($obj));
+                return $this->relatedAuthorizator->isRelatedPerson($this->getHolder($args[0]));
             case self::REGISTERED:
                 return $this->user->isLoggedIn();
             case self::GUEST:
@@ -79,10 +55,7 @@ class Role {
         }
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return "role({$this->role})";
     }
 

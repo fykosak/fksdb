@@ -12,38 +12,42 @@ use Nette\Database\Table\Selection;
 interface IService {
 
     /**
-     * @param IModel $data
+     * @param iterable|null $data
+     * @deprecated
      */
-    public function createNew($data = null);
+    public function createNew(?iterable $data = null);
+
+    public function createNewModel(array $data): IModel;
 
     /**
-     * @param $key
-     * @return mixed
+     * @param int $key
+     * @return IModel|null
      */
-    public function findByPrimary($key);
-
-    /**
-     * @param IModel $model
-     * @param $data
-     * @param bool $alive
-     * @return mixed
-     */
-    public function updateModel(IModel $model, $data, $alive = true);
+    public function findByPrimary($key): ?IModel;
 
     /**
      * @param IModel $model
-     * @return mixed
+     * @return void
+     * @deprecated
      */
-    public function save(IModel &$model);
+    public function save(IModel &$model): void;
+
+    public function dispose(IModel $model): void;
+
+    public function getTable(): Selection;
 
     /**
      * @param IModel $model
-     * @return mixed
+     * @param iterable $data
+     * @return void
+     * @deprecated
      */
-    public function dispose(IModel $model);
+    public function updateModel(IModel $model, iterable $data): void;
+
+    public function updateModel2(IModel $model, array $data): bool;
 
     /**
-     * @return Selection
+     * @return string|AbstractModelSingle|AbstractModelMulti
      */
-    public function getTable();
+    public function getModelClassName(): string;
 }

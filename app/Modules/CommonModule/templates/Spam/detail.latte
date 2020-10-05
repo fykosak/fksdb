@@ -1,0 +1,37 @@
+{block content}
+    {foreach [
+'email_message.email_message_id',
+'email_message.recipient',
+'email_message.sender',
+'email_message.reply_to',
+'email_message.subject',
+'email_message.carbon_copy',
+'email_message.blind_carbon_copy',
+'email_message.state',
+] as $row}
+        {control valuePrinter:row $row,$model}
+    {/foreach}
+    <div class="row mt-1">
+        <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{_'Sent'}
+        </b>
+        <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
+        {$model->sent?$model->sent->format('c'):'NA'}
+    </span>
+    </div>
+
+    <div class="row mt-1">
+        <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{_'Created'}
+        </b>
+        <span class="col-xl-10 col-lg-8 col-md-7 col-sm-6">
+    {$model->created->format('c')}
+    </span>
+    </div>
+
+
+    <div class="row mt-1">
+        <b class="col-xl-2 col-lg-4 col-md-5 col-sm-6">{_'Text'}</b>
+        <div class="embed-responsive embed-responsive-1by1">
+            <iframe class="embed-responsive-item" srcdoc="{$model->text}"></iframe>
+        </div>
+    </div>
+{/block}

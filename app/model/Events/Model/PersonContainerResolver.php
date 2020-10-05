@@ -1,14 +1,14 @@
 <?php
 
-namespace Events\Model;
+namespace FKSDB\Events\Model;
 
-use Events\Model\Holder\Field;
+use FKSDB\Events\Model\Holder\Field;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\SmartObject;
-use Persons\IModifiabilityResolver;
-use Persons\IVisibilityResolver;
-use Persons\ReferencedPersonHandler;
-use Persons\SelfResolver;
+use FKSDB\Persons\IModifiabilityResolver;
+use FKSDB\Persons\IVisibilityResolver;
+use FKSDB\Persons\ReferencedPersonHandler;
+use FKSDB\Persons\SelfResolver;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -19,63 +19,31 @@ class PersonContainerResolver implements IVisibilityResolver, IModifiabilityReso
 
     use SmartObject;
 
-    /**
-     * @var Field
-     */
-    private $field;
+    private Field $field;
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $condition;
 
-    /**
-     * @var SelfResolver
-     */
-    private $selfResolver;
+    private SelfResolver $selfResolver;
 
-    /**
-     * @var ExpressionEvaluator
-     */
-    private $evaluator;
+    private ExpressionEvaluator $evaluator;
 
-    /**
-     * PersonContainerResolver constructor.
-     * @param Field $field
-     * @param $condition
-     * @param SelfResolver $selfResolver
-     * @param ExpressionEvaluator $evaluator
-     */
-    function __construct(Field $field, $condition, SelfResolver $selfResolver, ExpressionEvaluator $evaluator) {
+    public function __construct(Field $field, $condition, SelfResolver $selfResolver, ExpressionEvaluator $evaluator) {
         $this->field = $field;
         $this->condition = $condition;
         $this->selfResolver = $selfResolver;
         $this->evaluator = $evaluator;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return mixed|string
-     */
-    public function getResolutionMode(ModelPerson $person) {
+    public function getResolutionMode(ModelPerson $person): string {
         return (!$person->isNew() && $this->isModifiable($person)) ? ReferencedPersonHandler::RESOLUTION_OVERWRITE : ReferencedPersonHandler::RESOLUTION_EXCEPTION;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return bool|mixed
-     */
-    public function isModifiable(ModelPerson $person) {
+    public function isModifiable(ModelPerson $person): bool {
         return $this->selfResolver->isModifiable($person) || $this->evaluator->evaluate($this->condition, $this->field);
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return bool|mixed
-     */
-    public function isVisible(ModelPerson $person) {
+    public function isVisible(ModelPerson $person): bool {
         return $this->selfResolver->isVisible($person) || $this->evaluator->evaluate($this->condition, $this->field);
     }
-
-//put your code here
 }

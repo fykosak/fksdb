@@ -2,18 +2,21 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use Events\Machine\BaseMachine;
-use Events\Model\Holder\Field;
-use FKSDB\Components\Forms\Controls\TimeBox;
+use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
+use FKSDB\Events\Machine\BaseMachine;
+use FKSDB\Events\Model\Holder\Field;
+use FKSDB\DBReflection\DBReflectionFactory as ReflectionFactory;
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\AbstractServiceSingle;
 use Nette\ComponentModel\Component;
+use Nette\ComponentModel\IComponent;
 use Nette\Database\Connection;
-use Nette\Forms\Container;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Forms\Controls\TextArea;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
+use Nette\Forms\IControl;
 use Nette\InvalidArgumentException;
 
 /**
@@ -23,31 +26,36 @@ use Nette\InvalidArgumentException;
  */
 class DBReflectionFactory extends AbstractFactory {
 
-    /**
-     * @var Connection
-     */
-    private $connection;
+    private Connection $connection;
 
-    /**
-     * @var array tableName => columnName[]
-     */
+    /** @var array tableName => columnName[] */
     private $columns = [];
 
-    /**
-     * DBReflectionFactory constructor.
-     * @param Connection $connection
-     */
-    function __construct(Connection $connection) {
+    private ReflectionFactory $tableReflectionFactory;
+
+    public function __construct(Connection $connection, ReflectionFactory $tableReflectionFactory) {
         $this->connection = $connection;
+        $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
-    /**
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return TimeBox|Checkbox|TextArea|TextInput
-     */
-    protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
+    public function createComponent(Field $field): IComponent {
+        $element = null;
+        try {
+            $service = $field->getBaseHolder()->getService();
+            $columnName = $field->getName();
+
+            $service->getTable()->getName();
+            $tableName = null;
+            if ($service instanceof AbstractServiceSingle) {
+                $tableName = $service->getTable()->getName();
+            } elseif ($service instanceof AbstractServiceMulti) {
+                $tableName = $service->getMainService()->getTable()->getName();
+            }
+            if ($tableName) {
+                $element = $this->tableReflectionFactory->loadColumnFactory($tableName . '.' . $columnName)->createField();
+            }
+        } catch (\Exception $e) {
+        }
         $column = $this->resolveColumn($field);
         $type = $column['nativetype'];
         $size = $column['size'];
@@ -55,35 +63,44 @@ class DBReflectionFactory extends AbstractFactory {
         /*
          * Create element
          */
-        if ($type == 'TINYINT' && $size == 1) {
-            $element = new Checkbox($field->getLabel());
-        } else if (substr_compare($type, 'INT', '-3') == 0) {
-            $element = new TextInput($field->getLabel());
-            $element->addCondition(Form::FILLED)
-                    ->addRule(Form::INTEGER, _('%label musí být celé číslo.'))
-                    ->addRule(Form::MAX_LENGTH, null, $size);
-        } else if ($type == 'TEXT') {
-            $element = new TextArea($field->getLabel());
-        } else if ($type == 'TIME') {
-            $element = new TimeBox($field->getLabel());
-        } else {
-            $element = new TextInput($field->getLabel());
-            if ($size) {
-                $element->addRule(Form::MAX_LENGTH, null, $size);
+        if (!$element) {
+            if ($type == 'TINYINT' && $size == 1) {
+                $element = new Checkbox($field->getLabel());
+            } elseif (substr_compare($type, 'INT', '-3') == 0) {
+                $element = new TextInput($field->getLabel());
+                $element->addCondition(Form::FILLED)
+                    ->addRule(Form::INTEGER, _('%label musí být celé číslo.'));
+                if ($size) {
+                    $element->addRule(Form::MAX_LENGTH, null, $size);
+                }
+            } elseif ($type == 'TEXT') {
+                $element = new TextArea($field->getLabel());
+            } elseif ($type == 'TIME') {
+                $element = new TimeInput($field->getLabel());
+            } else {
+                $element = new TextInput($field->getLabel());
+                if ($size) {
+                    $element->addRule(Form::MAX_LENGTH, null, $size);
+                }
             }
         }
-        $element->setOption('description', $field->getDescription());
+        $element->caption = $field->getLabel();
+        if ($field->getDescription()) {
+
+            $element->setOption('description', $field->getDescription());
+        }
+
         return $element;
     }
 
     /**
-     * @param $component
+     * @param IComponent|BaseControl $component
      * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
+     * @return void
      */
-    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
-        if ($machine->getState() == BaseMachine::STATE_INIT && $field->getDefault() === null) {
+    protected function setDefaultValue(IComponent $component, Field $field): void {
+
+        if ($field->getBaseHolder()->getModelState() == BaseMachine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
             $default = $column['default'];
         } else {
@@ -93,20 +110,18 @@ class DBReflectionFactory extends AbstractFactory {
     }
 
     /**
-     * @param $component
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
+     * @param IComponent|BaseControl $component
+     * @return void
      */
-    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDisabled(IComponent $component): void {
         $component->setDisabled();
     }
 
     /**
-     * @param Component $component
-     * @return Component|\Nette\Forms\IControl
+     * @param Component|IComponent $component
+     * @return Component|IControl
      */
-    public function getMainControl(Component $component) {
+    public function getMainControl(IComponent $component): IControl {
         return $component;
     }
 
@@ -122,7 +137,7 @@ class DBReflectionFactory extends AbstractFactory {
         if ($service instanceof AbstractServiceSingle) {
             $tableName = $service->getTable()->getName();
             $column = $this->getColumnMetadata($tableName, $columnName);
-        } else if ($service instanceof AbstractServiceMulti) {
+        } elseif ($service instanceof AbstractServiceMulti) {
             $tableName = $service->getMainService()->getTable()->getName();
             $column = $this->getColumnMetadata($tableName, $columnName);
             if ($column === null) {
@@ -136,12 +151,7 @@ class DBReflectionFactory extends AbstractFactory {
         return $column;
     }
 
-    /**
-     * @param $table
-     * @param $column
-     * @return null
-     */
-    private function getColumnMetadata($table, $column) {
+    private function getColumnMetadata(string $table, string $column): ?array {
         if (!isset($this->columns[$table])) {
             $columns = [];
             foreach ($this->connection->getSupplementalDriver()->getColumns($table) as $columnMeta) {
@@ -155,6 +165,4 @@ class DBReflectionFactory extends AbstractFactory {
             return null;
         }
     }
-
 }
-

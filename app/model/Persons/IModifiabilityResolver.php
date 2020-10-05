@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons;
+namespace FKSDB\Persons;
 
 use FKSDB\ORM\Models\ModelPerson;
 
@@ -11,15 +11,7 @@ use FKSDB\ORM\Models\ModelPerson;
  */
 interface IModifiabilityResolver {
 
-    /**
-     * @param \FKSDB\ORM\Models\ModelPerson $person
-     * @return mixed
-     */
-    public function isModifiable(ModelPerson $person);
+    public function isModifiable(ModelPerson $person): bool;
 
-    /**
-     * @param \FKSDB\ORM\Models\ModelPerson $person
-     * @return mixed
-     */
-    public function getResolutionMode(ModelPerson $person);
+    public function getResolutionMode(ModelPerson $person): string;
 }

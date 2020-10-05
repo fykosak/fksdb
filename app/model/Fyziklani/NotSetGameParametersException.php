@@ -1,15 +1,16 @@
 <?php
 
+namespace FKSDB\Fyziklani;
 
-namespace FKSDB\model\Fyziklani;
-
-
-use Nette\NotImplementedException;
+use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class NotSetGameParametersException
- * @package FKSDB\model\Fyziklani
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class NotSetGameParametersException extends NotImplementedException {
 
+    public function __construct(?\Throwable $previous = null) {
+        parent::__construct(_('Herné parametre niesu nastavené'), $previous);
+    }
 }

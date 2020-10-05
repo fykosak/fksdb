@@ -1,0 +1,15 @@
+{block content}
+    {if count($rests)}
+        <h3>{$person->getFullName()}</h3>
+        <table class="table table-sm table-striped">
+            <tbody>
+            {foreach $rests as $rest}
+                <tr>
+                    <td>{$rest->getLabel()}</td>
+                    <td>{$rest->getScheduleItem()->getPrice('czk')}/{$rest->getScheduleItem()->getPrice('eur')}</td>
+                </tr>
+            {/foreach}
+            </tbody>
+        </table>
+    {/if}
+{/block}

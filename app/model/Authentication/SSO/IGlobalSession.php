@@ -17,20 +17,14 @@ use ArrayAccess;
 interface IGlobalSession extends ArrayAccess {
     /** @const Session key that holds authenticated user UI. */
 
-    const UID = 'uid';
+    public const UID = 'uid';
 
-    /**
-     * @return void
-     */
-    public function start();
+    public function start(): void;
 
     /**
      * @return string
      */
     public function getId();
 
-    /**
-     * @return void
-     */
-    public function destroy();
+    public function destroy(): void;
 }

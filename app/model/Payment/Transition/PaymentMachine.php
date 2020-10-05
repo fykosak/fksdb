@@ -4,69 +4,74 @@ namespace FKSDB\Payment\Transition;
 
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\PriceCalculator\PriceCalculator;
-use FKSDB\Payment\SymbolGenerator\AbstractSymbolGenerator;
+use FKSDB\Payment\SymbolGenerator\Generators\AbstractSymbolGenerator;
+use FKSDB\Transitions\AbstractTransitionsGenerator;
 use FKSDB\Transitions\Machine;
-use Nette\Database\Connection;
+use Nette\Database\Context;
 
 /**
  * Class PaymentMachine
- * @package FKSDB\Payment\Transition
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PaymentMachine extends Machine {
-    /**
-     * @var PriceCalculator
-     */
-    private $priceCalculator;
-    /**
-     * @var AbstractSymbolGenerator
-     */
-    private $symbolGenerator;
-    /**
-     * @var \FKSDB\ORM\Models\ModelEvent
-     */
-    private $event;
 
-    /**
-     * PaymentMachine constructor.
-     * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @param PriceCalculator $priceCalculator
-     * @param AbstractSymbolGenerator $abstractSymbolGenerator
-     * @param Connection $connection
-     * @param ServicePayment $servicePayment
-     */
-    public function __construct(ModelEvent $event, PriceCalculator $priceCalculator, AbstractSymbolGenerator $abstractSymbolGenerator, Connection $connection, ServicePayment $servicePayment) {
+    private PriceCalculator $priceCalculator;
+
+    private AbstractSymbolGenerator $symbolGenerator;
+
+    private ModelEvent $event;
+
+    private ServiceEvent $serviceEvent;
+
+    private array $scheduleGroupTypes;
+
+    public function __construct(Context $connection, ServicePayment $servicePayment, ServiceEvent $serviceEvent) {
         parent::__construct($connection, $servicePayment);
-        $this->priceCalculator = $priceCalculator;
-        $this->symbolGenerator = $abstractSymbolGenerator;
-        $this->event = $event;
+        $this->serviceEvent = $serviceEvent;
     }
 
-    /**
-     * @return AbstractSymbolGenerator
-     */
+    public function setTransitions(AbstractTransitionsGenerator $factory): void {
+        $factory->createTransitions($this);
+    }
+
+    public function setEventId(int $eventId): void {
+        $event = $this->serviceEvent->findByPrimary($eventId);
+        if (!is_null($event)) {
+            $this->event = $event;
+        }
+    }
+
+    public function setScheduleGroupTypes(array $types): void {
+        $this->scheduleGroupTypes = $types;
+    }
+
+    public function getScheduleGroupTypes(): array {
+        return $this->scheduleGroupTypes;
+    }
+
+    public function setSymbolGenerator(AbstractSymbolGenerator $abstractSymbolGenerator): void {
+        $this->symbolGenerator = $abstractSymbolGenerator;
+    }
+
+    public function setPriceCalculator(PriceCalculator $priceCalculator): void {
+        $this->priceCalculator = $priceCalculator;
+    }
+
     public function getSymbolGenerator(): AbstractSymbolGenerator {
         return $this->symbolGenerator;
     }
 
-    /**
-     * @return PriceCalculator
-     */
     public function getPriceCalculator(): PriceCalculator {
         return $this->priceCalculator;
     }
 
-    /**
-     * @return \FKSDB\ORM\Models\ModelEvent
-     */
     public function getEvent(): ModelEvent {
         return $this->event;
     }
 
-    /**
-     * @return string
-     */
     public function getCreatingState(): string {
         return ModelPayment::STATE_NEW;
     }

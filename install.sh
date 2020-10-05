@@ -47,13 +47,13 @@ function update_files {
 		echo "Merged data from $remote/$branch into $branch"
 		rev=`git rev-parse HEAD`
 		echo "Installed revision $rev"
-
 		cd -
 		return 0
 	fi
 }
 
 function post_update {
+	composer install --no-interaction --prefer-source
 	rm -rf "$fksdb_dir"/temp/*
 	"$fksdb_dir/i18n/compile.sh"
 }
@@ -73,7 +73,7 @@ remote="${3:-origin}"
 lockfile="$fksdb_dir/.install-lock"
 
 check_args || exit 1
-	
+
 exec > "$fksdb_dir/install.sh.log"
 export GIT_DIR="$fksdb_dir/.git"
 
@@ -83,10 +83,10 @@ if [ `current_branch` != $branch ] ; then
 fi
 
 (
-	flock -n -w 10 9 || exit 1 
+	flock -n -w 10 9 || exit 1
 	mark_unavailable
 	if update_files ; then
 		post_update
 	fi
 	mark_available
-) 9>$lockfile 
+) 9>$lockfile

@@ -1,4 +1,8 @@
 export interface Price {
     eur: number;
-    kc: number;
+    /**
+     * @deprecated
+     */
+    kc?: number;
+    czk?: number;
 }

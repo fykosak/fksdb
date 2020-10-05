@@ -12,28 +12,15 @@ use FKSDB\ORM\Services\ServiceLogin;
  */
 class UniqueLoginFactory {
 
-    /**
-     * @var ServiceLogin
-     */
-    private $serviceLogin;
+    private ServiceLogin $serviceLogin;
 
-    /**
-     * UniqueLoginFactory constructor.
-     * @param ServiceLogin $serviceLogin
-     */
-    function __construct(ServiceLogin $serviceLogin) {
+    public function __construct(ServiceLogin $serviceLogin) {
         $this->serviceLogin = $serviceLogin;
     }
 
-    /**
-     * @param \FKSDB\ORM\Models\ModelLogin|null $login
-     * @return UniqueLogin
-     */
-    public function create(ModelLogin $login = null) {
+    public function create(?ModelLogin $login): UniqueLogin {
         $rule = new UniqueLogin($this->serviceLogin);
         $rule->setIgnoredLogin($login);
-
         return $rule;
     }
-
 }

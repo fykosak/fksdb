@@ -1,9 +1,9 @@
 <?php
 
-namespace Events\FormAdjustments;
+namespace FKSDB\Events\FormAdjustments;
 
-use Events\Machine\Machine;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\Holder;
 use Nette\Forms\Form;
 
 /**
@@ -14,11 +14,5 @@ use Nette\Forms\Form;
  */
 interface IFormAdjustment {
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     */
-    public function adjust(Form $form, Machine $machine, Holder $holder);
+    public function adjust(Form $form, Machine $machine, Holder $holder): void;
 }
-

@@ -1,19 +1,16 @@
 <?php
 
-namespace Authentication;
+namespace FKSDB\Authentication;
 
+use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceAuthToken;
+use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\ORM\Services\ServiceLogin;
-use Mail\SendFailedException;
+use FKSDB\Mail\MailTemplateFactory;
 use Nette\Utils\DateTime;
-use Nette\InvalidStateException;
-use Nette\Mail\IMailer;
-use Nette\Mail\Message;
-use Nette\Templating\ITemplate;
-use RuntimeException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -22,230 +19,143 @@ use RuntimeException;
  */
 class AccountManager {
 
-    /**
-     * @var ServiceLogin
-     */
-    private $serviceLogin;
+    private ServiceLogin $serviceLogin;
 
-    /**
-     * @var ServiceAuthToken
-     */
-    private $serviceAuthToken;
+    private ServiceAuthToken $serviceAuthToken;
 
-    /**
-     * @var IMailer
-     */
-    private $mailer;
-    private $invitationExpiration = '+1 month';
-    private $recoveryExpiration = '+1 day';
-    private $emailFrom;
+    private string $invitationExpiration = '+1 month';
 
-    /**
-     * AccountManager constructor.
-     * @param ServiceLogin $serviceLogin
-     * @param ServiceAuthToken $serviceAuthToken
-     * @param IMailer $mailer
-     */
-    function __construct(ServiceLogin $serviceLogin, ServiceAuthToken $serviceAuthToken, IMailer $mailer) {
+    private string $recoveryExpiration = '+1 day';
+
+    private string $emailFrom;
+
+    private ServiceEmailMessage $serviceEmailMessage;
+
+    private MailTemplateFactory $mailTemplateFactory;
+
+    public function __construct(
+        MailTemplateFactory $mailTemplateFactory,
+        ServiceLogin $serviceLogin,
+        ServiceAuthToken $serviceAuthToken,
+        ServiceEmailMessage $serviceEmailMessage
+    ) {
         $this->serviceLogin = $serviceLogin;
         $this->serviceAuthToken = $serviceAuthToken;
-        $this->mailer = $mailer;
+        $this->serviceEmailMessage = $serviceEmailMessage;
+        $this->mailTemplateFactory = $mailTemplateFactory;
     }
 
-    /**
-     * @return string
-     */
-    public function getInvitationExpiration() {
+    public function getInvitationExpiration(): string {
         return $this->invitationExpiration;
     }
 
-    /**
-     * @param $invitationExpiration
-     */
-    public function setInvitationExpiration($invitationExpiration) {
+    public function setInvitationExpiration(string $invitationExpiration): void {
         $this->invitationExpiration = $invitationExpiration;
     }
 
-    /**
-     * @return string
-     */
-    public function getRecoveryExpiration() {
+    public function getRecoveryExpiration(): string {
         return $this->recoveryExpiration;
     }
 
-    /**
-     * @param $recoveryExpiration
-     */
-    public function setRecoveryExpiration($recoveryExpiration) {
+    public function setRecoveryExpiration(string $recoveryExpiration): void {
         $this->recoveryExpiration = $recoveryExpiration;
     }
 
-    public function getEmailFrom() {
+    public function getEmailFrom(): string {
         return $this->emailFrom;
     }
 
-    /**
-     * @param $emailFrom
-     */
-    public function setEmailFrom($emailFrom) {
+    public function setEmailFrom(string $emailFrom): void {
         $this->emailFrom = $emailFrom;
     }
 
     /**
      * Creates login and invites user to set up the account.
      *
-     * @param ITemplate $template template of the mail
-     * @param \FKSDB\ORM\Models\ModelPerson $person
+     * @param ModelPerson $person
      * @param string $email
-     * @return \FKSDB\ORM\Models\ModelLogin
-     * @throws SendFailedException
+     * @param string $lang
+     * @return ModelLogin
+     * @throws UnsupportedLanguageException
      */
-    public function createLoginWithInvitation(ITemplate $template, ModelPerson $person, $email) {
+    public function createLoginWithInvitation(ModelPerson $person, string $email, string $lang): ModelLogin {
         $login = $this->createLogin($person);
-        //TODO email
-
-        $this->serviceLogin->save($login);
 
         $until = DateTime::from($this->getInvitationExpiration());
         $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_INITIAL_LOGIN, $until);
 
-        // prepare and send email
-        $template->token = $token->token;
-        $template->person = $person;
-        $template->email = $email;
-        $template->until = $until;
-
-        $message = new Message();
-        $message->setHtmlBody($template);
-        $message->setSubject(_('Založení účtu'));
-        $message->setFrom($this->getEmailFrom());
-        $message->addTo($email, $person->getFullName());
-
-        try {
-            $this->mailer->send($message);
-            return $login;
-        } catch (InvalidStateException $exception) {
-            throw new SendFailedException($exception);
-        }
+        $templateParams = [
+            'token' => $token->token,
+            'person' => $person,
+            'email' => $email,
+            'until' => $until,
+        ];
+        $data = [];
+        $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation($person->getPreferredLang() ?: $lang, $templateParams);
+        $data['subject'] = _('Create an account');
+        $data['sender'] = $this->getEmailFrom();
+        $data['recipient'] = $email;
+        $this->serviceEmailMessage->addMessageToSend($data);
+        return $login;
     }
 
     /**
-     * @param ITemplate $template
-     * @param \FKSDB\ORM\Models\ModelLogin $login
+     * @param ModelLogin $login
+     * @param string|null $lang
+     * @return void
+     * @throws UnsupportedLanguageException
      */
-    public function sendRecovery(ITemplate $template, ModelLogin $login) {
+    public function sendRecovery(ModelLogin $login, ?string $lang = null): void {
         $person = $login->getPerson();
         $recoveryAddress = $person ? $person->getInfo()->email : null;
         if (!$recoveryAddress) {
             throw new RecoveryNotImplementedException();
         }
-        $token = $this->serviceAuthToken->getTable()->where(array(
+        $token = $this->serviceAuthToken->getTable()->where([
             'login_id' => $login->login_id,
             'type' => ModelAuthToken::TYPE_RECOVERY,
-        ))
+        ])
             ->where('until > ?', new DateTime())->fetch();
-
         if ($token) {
             throw new RecoveryExistsException();
         }
 
         $until = DateTime::from($this->getRecoveryExpiration());
         $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_RECOVERY, $until);
+        $templateParams = [
+            'token' => $token->token,
+            'login' => $login,
+            'until' => $until,
+        ];
+        $data = [];
+        $data['text'] = (string)$this->mailTemplateFactory->createPasswordRecovery($lang, $templateParams);
+        $data['subject'] = _('Password recovery');
+        $data['sender'] = $this->getEmailFrom();
+        $data['recipient'] = $recoveryAddress;
 
-        // prepare and send email
-        $template->token = $token->token;
-        $template->login = $login;
-        $template->until = $until;
-
-        $message = new Message();
-        $message->setHtmlBody($template);
-        $message->setSubject(_('Obnova hesla'));
-        $message->setFrom($this->getEmailFrom());
-        $message->addTo($recoveryAddress, $login->__toString());
-
-        try {
-            $this->mailer->send($message);
-        } catch (InvalidStateException $exception) {
-            throw new SendFailedException($exception);
-        }
+        $this->serviceEmailMessage->addMessageToSend($data);
     }
 
-    /**
-     * @param \FKSDB\ORM\Models\ModelLogin $login
-     */
-    public function cancelRecovery(ModelLogin $login) {
-        $this->serviceAuthToken->getTable()->where(array(
+    public function cancelRecovery(ModelLogin $login): void {
+        $this->serviceAuthToken->getTable()->where([
             'login_id' => $login->login_id,
             'type' => ModelAuthToken::TYPE_RECOVERY,
-        ))->delete();
+        ])->delete();
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param null $login
-     * @param null $password
-     * @return \FKSDB\ORM\AbstractModelSingle|\FKSDB\ORM\Models\ModelLogin
-     */
-    public final function createLogin(ModelPerson $person, $login = null, $password = null) {
-        $login = $this->serviceLogin->createNew(array(
+    final public function createLogin(ModelPerson $person, ?string $login = null, ?string $password = null): ModelLogin {
+        /** @var ModelLogin $login */
+        $login = $this->serviceLogin->createNewModel([
             'person_id' => $person->person_id,
             'login' => $login,
             'active' => 1,
-        ));
-
-        $this->serviceLogin->save($login);
+        ]);
 
         /* Must be done after login_id is allocated. */
         if ($password) {
-            $login->setHash($password);
-            $this->serviceLogin->save($login);
+            $hash = $login->createHash($password);
+            $this->serviceLogin->updateModel2($login, ['hash' => $hash]);
         }
         return $login;
     }
-
 }
-
-/**
- * Class RecoveryException
- * @package Authentication
- */
-abstract class RecoveryException extends RuntimeException {
-
-}
-
-/**
- * Class RecoveryExistsException
- * @package Authentication
- */
-class RecoveryExistsException extends RecoveryException {
-
-    /**
-     * RecoveryExistsException constructor.
-     * @param null $previous
-     */
-    public function __construct($previous = null) {
-        $message = _('Obnova účtu již probíhá.');
-        $code = null;
-        parent::__construct($message, $code, $previous);
-    }
-
-}
-
-/**
- * Class RecoveryNotImplementedException
- * @package Authentication
- */
-class RecoveryNotImplementedException extends RecoveryException {
-
-    /**
-     * RecoveryNotImplementedException constructor.
-     * @param null $previous
-     */
-    public function __construct($previous = null) {
-        $message = _('Přístup k účtu nelze obnovit.');
-        $code = null;
-        parent::__construct($message, $code, $previous);
-    }
-
-}
-

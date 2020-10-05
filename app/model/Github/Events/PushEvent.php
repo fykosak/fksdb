@@ -1,9 +1,6 @@
 <?php
 
-namespace Github\Events;
-
-
-
+namespace FKSDB\Github\Events;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -12,15 +9,11 @@ namespace Github\Events;
  */
 class PushEvent extends Event {
 
-	const REFS_HEADS = 'refs/heads/';
+    public const REFS_HEADS = 'refs/heads/';
 
-	/** @var string */
-	public $ref;
+    public string $ref;
 
-	/** @var string */
-	public $after;
+    public string $after;
 
-	/** @var string */
-	public $before;
-
+    public string $before;
 }

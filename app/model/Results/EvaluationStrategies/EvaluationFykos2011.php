@@ -15,9 +15,6 @@ use Nette\Database\Table\ActiveRow;
  */
 class EvaluationFykos2011 extends EvaluationStrategy {
 
-    /**
-     * @return array|null
-     */
     public function getCategories(): array {
         return [
             new ModelCategory(ModelCategory::CAT_HS_1),
@@ -27,10 +24,6 @@ class EvaluationFykos2011 extends EvaluationStrategy {
         ];
     }
 
-    /**
-     * @param ModelCategory $category
-     * @return array|int
-     */
     public function categoryToStudyYears(ModelCategory $category): array {
         switch ($category->id) {
             case ModelCategory::CAT_HS_1:
@@ -43,7 +36,6 @@ class EvaluationFykos2011 extends EvaluationStrategy {
                 return [null, 4];
             default:
                 throw new Nette\InvalidArgumentException('Invalid category ' . $category->id);
-                break;
         }
     }
 
@@ -53,15 +45,12 @@ class EvaluationFykos2011 extends EvaluationStrategy {
      */
     public function getPointsColumn(ActiveRow $task): string {
         if ($task->label == '1' || $task->label == '2') {
-            return "IF(ct.study_year IN (6,7,8,9,1,2), 2 * s.raw_points, s.raw_points)";
+            return 'IF(ct.study_year IN (6,7,8,9,1,2), 2 * s.raw_points, s.raw_points)';
         } else {
-            return "s.raw_points";
+            return 's.raw_points';
         }
     }
 
-    /**
-     * @return string
-     */
     public function getSumColumn(): string {
         return "IF(t.label IN ('1', '2'), IF(ct.study_year IN (6,7,8,9,1,2), 2 * s.raw_points, s.raw_points), s.raw_points)";
     }
@@ -71,7 +60,7 @@ class EvaluationFykos2011 extends EvaluationStrategy {
      * @param ModelCategory $category
      * @return float|int
      */
-    public function getTaskPoints(ActiveRow $task, ModelCategory $category) {
+    public function getTaskPoints(ActiveRow $task, ModelCategory $category): int {
         switch ($category->id) {
             case ModelCategory::CAT_ES_6:
             case ModelCategory::CAT_ES_7:
@@ -84,16 +73,11 @@ class EvaluationFykos2011 extends EvaluationStrategy {
                 } else {
                     return $task->points;
                 }
-                break;
             default:
                 return $task->points;
         }
     }
 
-    /**
-     * @param ModelCategory $category
-     * @return string
-     */
     public function getTaskPointsColumn(ModelCategory $category): string {
         switch ($category->id) {
             case ModelCategory::CAT_ES_6:
@@ -103,11 +87,8 @@ class EvaluationFykos2011 extends EvaluationStrategy {
             case ModelCategory::CAT_HS_1:
             case ModelCategory::CAT_HS_2:
                 return "IF(s.raw_points IS NOT NULL, IF(t.label IN ('1', '2'), 2 * t.points, t.points), NULL)";
-                break;
             default:
                 return 'IF(s.raw_points IS NOT NULL, t.points, NULL)';
         }
-
     }
-
 }

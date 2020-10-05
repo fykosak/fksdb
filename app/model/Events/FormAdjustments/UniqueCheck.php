@@ -1,10 +1,10 @@
 <?php
 
-namespace Events\FormAdjustments;
+namespace FKSDB\Events\FormAdjustments;
 
-use Events\Machine\Machine;
-use Events\Model\Holder\BaseHolder;
-use Events\Model\Holder\Holder;
+use FKSDB\Events\Machine\Machine;
+use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
@@ -18,57 +18,45 @@ use Nette\Forms\IControl;
  */
 class UniqueCheck extends AbstractAdjustment {
 
-    private $field;
-    private $message;
+    private string $field;
 
-    /**
-     * UniqueCheck constructor.
-     * @param $field
-     * @param $message
-     */
-    function __construct($field, $message) {
+    private string $message;
+
+    public function __construct(string $field, string $message) {
         $this->field = $field;
         $this->message = $message;
     }
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return mixed|void
-     */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder) {
+    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
         $controls = $this->getControl($this->field);
         if (!$controls) {
             return;
         }
 
         foreach ($controls as $name => $control) {
-            $field = $this->field;
             $name = $holder->hasBaseHolder($name) ? $name : substr($this->field, 0, strpos($this->field, self::DELIMITER));
             $baseHolder = $holder->getBaseHolder($name);
-            $control->addRule(function(IControl $control) use($baseHolder, $field) {
-                        $table = $baseHolder->getService()->getTable();
-                        $column = BaseHolder::getBareColumn($field);
-                        if ($control instanceof ReferencedId) {
-                            /* We don't want to fullfil potential promise
-                             * as it would be out of transaction here.
-                             */
-                            $value = $control->getValue(false);
-                        } else {
-                            $value = $control->getValue();
-                        }
-                        $model = $baseHolder->getModel();
-                        $pk = $table->getName() . '.' . $table->getPrimary();
+            $control->addRule(function (IControl $control) use ($baseHolder) : bool {
+                $table = $baseHolder->getService()->getTable();
+                $column = BaseHolder::getBareColumn($this->field);
+                if ($control instanceof ReferencedId) {
+                    /* We don't want to fullfil potential promise
+                     * as it would be out of transaction here.
+                     */
+                    $value = $control->getValue(false);
+                } else {
+                    $value = $control->getValue();
+                }
+                $model = $baseHolder->getModel();
+                $pk = $table->getName() . '.' . $table->getPrimary();
 
-                        $table->where($column, $value);
-                        $table->where($baseHolder->getEventId(), $baseHolder->getHolder()->getEvent()->getPrimary());
-                        if ($model && !$model->isNew()) {
-                            $table->where("NOT $pk = ?", $model->getPrimary());
-                        }
-                        return count($table) == 0;
-                    }, $this->message);
+                $table->where($column, $value);
+                $table->where($baseHolder->getEventIdColumn(), $baseHolder->getHolder()->getPrimaryHolder()->getEvent()->getPrimary());
+                if ($model && !$model->isNew()) {
+                    $table->where("NOT $pk = ?", $model->getPrimary());
+                }
+                return count($table) == 0;
+            }, $this->message);
         }
     }
-
 }

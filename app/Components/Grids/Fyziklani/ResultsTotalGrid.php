@@ -1,56 +1,61 @@
 <?php
 
-
 namespace FKSDB\Components\Grids\Fyziklani;
 
-
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FyziklaniModule\BasePresenter;
+use Nette\Application\UI\Presenter;
+use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class ResultsTotalGrid
- * @package FKSDB\Components\Grids\Fyziklani
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class ResultsTotalGrid extends BaseGrid {
 
-    /**
-     *
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    /**
-     * @var \FKSDB\ORM\Models\ModelEvent
-     */
-    private $event;
+    private ModelEvent $event;
 
-    /**
-     * FyziklaniSubmitsGrid constructor.
-     * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     */
-    public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
-        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+    public function __construct(ModelEvent $event, Container $container) {
+        parent::__construct($container);
         $this->event = $event;
-        parent::__construct();
+    }
+
+    final public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
+        $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+    }
+
+    protected function getData(): IDataSource {
+        $teams = $this->serviceFyziklaniTeam->findParticipating($this->event)
+            ->order('name');
+        return new NDataSource($teams);
     }
 
     /**
-     * @param BasePresenter $presenter
-     * @throws \NiftyGrid\DuplicateColumnException
+     * @param Presenter $presenter
+     * @return void
+     * @throws DuplicateColumnException
+     * @throws BadTypeException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
-        $this->addColumn('rank_category', _('Pořadí celkové'));
-        $this->addColumn('name', _('Jméno týmu'));
-        $this->addColumn('e_fyziklani_team_id', _('Id týmu'));
+        $this->paginate = false;
 
-        $teams = $this->serviceFyziklaniTeam->findParticipating($this->event)
-            ->order('rank_total');
-        $dataSource = new NDataSource($teams);
-        $this->setDataSource($dataSource);
+        $this->addColumns([
+            'e_fyziklani_team.e_fyziklani_team_id',
+            'e_fyziklani_team.name',
+            'e_fyziklani_team.rank_total',
+        ]);
+    }
+
+    protected function getModelClassName(): string {
+        return ModelFyziklaniTeam::class;
     }
 }

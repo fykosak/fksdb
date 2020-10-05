@@ -1,10 +1,12 @@
 <?php
 
-namespace Authorization;
+namespace FKSDB\Authorization;
 
+use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelRole;
 use Nette\Database\Table\ActiveRow;
+use Nette\Security\IResource;
 use Nette\Security\Permission;
 use Nette\Security\User;
 use Nette\SmartObject;
@@ -17,80 +19,60 @@ use Nette\SmartObject;
 class ContestAuthorizator {
 
     use SmartObject;
-    /**
-     * @var User
-     */
-    private $user;
 
-    /**
-     * @var Permission
-     */
-    private $acl;
+    private User $user;
 
-    /**
-     * ContestAuthorizator constructor.
-     * @param User $identity
-     * @param Permission $acl
-     */
-    function __construct(User $identity, Permission $acl) {
+    private Permission $permission;
+
+    public function __construct(User $identity, Permission $permission) {
         $this->user = $identity;
-        $this->acl = $acl;
+        $this->permission = $permission;
     }
 
-    /**
-     * @return User
-     */
-    public function getUser() {
+    public function getUser(): User {
         return $this->user;
     }
 
-    /**
-     * @return Permission
-     */
-    protected function getAcl() {
-        return $this->acl;
+    protected function getPermission(): Permission {
+        return $this->permission;
     }
 
     /**
      * User must posses the role (for the resource:privilege) in the context
      * of the queried contest.
      *
-     * @param mixed $resource
-     * @param string $privilege
-     * @param int|\FKSDB\ORM\Models\ModelContest $contest queried contest
-     * @return boolean
+     * @param IResource|string|null $resource
+     * @param string|null $privilege
+     * @param int|ModelContest $contest queried contest
+     * @return bool
      */
-    public function isAllowed($resource, $privilege, $contest): bool {
+    public function isAllowed($resource, ?string $privilege, $contest): bool {
         if (!$this->getUser()->isLoggedIn()) {
             $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
-            return $this->acl->isAllowed($role, $resource, $privilege);
+            return $this->getPermission()->isAllowed($role, $resource, $privilege);
         }
-        /**
-         * @var \FKSDB\ORM\Models\ModelLogin $login
-         */
+        /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         return $this->isAllowedForLogin($login, $resource, $privilege, $contest);
     }
 
     /**
-     * @param $resource
-     * @param $privilege
+     * @param IResource|string|null $resource
+     * @param string|null $privilege
      * @return bool
      */
-    public final function isAllowedForAnyContest($resource, $privilege): bool {
+    final public function isAllowedForAnyContest($resource, ?string $privilege): bool {
         if (!$this->getUser()->isLoggedIn()) {
             $role = new Grant(Grant::CONTEST_ALL, ModelRole::GUEST);
-            return $this->acl->isAllowed($role, $resource, $privilege);
+            return $this->getPermission()->isAllowed($role, $resource, $privilege);
         }
-        /**
-         * @var \FKSDB\ORM\Models\ModelLogin $login
-         */
+        /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
 
         $roles = $login->getRoles();
 
         foreach ($roles as $role) {
-            if ($this->acl->isAllowed($role, $resource, $privilege)) {
+            if ($this->getPermission()->isAllowed($role, $resource, $privilege)) {
                 return true;
             }
         }
@@ -100,12 +82,12 @@ class ContestAuthorizator {
 
     /**
      * @param ModelLogin $login
-     * @param $resource
-     * @param $privilege
-     * @param $contest
+     * @param IResource|string $resource
+     * @param string|null $privilege
+     * @param ModelContest|int $contest
      * @return bool
      */
-    public final function isAllowedForLogin(ModelLogin $login, $resource, $privilege, $contest): bool {
+    final public function isAllowedForLogin(ModelLogin $login, $resource, $privilege, $contest): bool {
         $contestId = ($contest instanceof ActiveRow) ? $contest->contest_id : $contest;
         $roles = $login->getRoles();
 
@@ -113,7 +95,7 @@ class ContestAuthorizator {
             if (($role->getContestId() !== Grant::CONTEST_ALL) && ($role->getContestId() != $contestId)) {
                 continue;
             }
-            if ($this->acl->isAllowed($role, $resource, $privilege)) {
+            if ($this->getPermission()->isAllowed($role, $resource, $privilege)) {
                 return true;
             }
         }

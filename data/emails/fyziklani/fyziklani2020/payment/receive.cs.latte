@@ -1,0 +1,18 @@
+{layout '../layout.latte'}
+{block body}
+<div>
+    <p>
+        Dobrý den,<br/>
+        potvrzujeme, že jsme úspěšně přijali Vaši platbu #{$model->getPaymentId()} za Fyziklání 2019 v hodnotě
+        <b>{$model->getPrice()->__toString()}</b>.
+    </p>
+
+    <p>
+        Pro rekapitulaci, platba zahrnovala následující:
+    </p>
+
+    {include './items.latte'}
+
+    {include './signature.cs.latte'}
+</div>
+{/block}

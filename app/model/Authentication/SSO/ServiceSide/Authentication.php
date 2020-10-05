@@ -11,42 +11,32 @@ use FKSDB\Authentication\SSO\IGlobalSession;
  */
 class Authentication {
 
-    const PARAM_BACKLINK = 'backlink';
-    const PARAM_FLAG = 'flag';
-    const PARAM_GSID = 'gsid';
-    const FLAG_SSO_LOGIN = 'sso';
+    public const PARAM_BACKLINK = 'backlink';
+    public const PARAM_FLAG = 'flag';
+    public const PARAM_GSID = 'gsid';
+    public const FLAG_SSO_LOGIN = 'sso';
 
-    /**
-     * @var IGlobalSession
-     */
-    private $globalSession;
+    private IGlobalSession $globalSession;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $loginURL;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $logoutURL;
 
     /**
      * Authentication constructor.
      * @param IGlobalSession $globalSession
-     * @param $loginURL
-     * @param $logoutURL
+     * @param string $loginURL
+     * @param string $logoutURL
      */
-    function __construct(IGlobalSession $globalSession, $loginURL, $logoutURL) {
+    public function __construct(IGlobalSession $globalSession, $loginURL, $logoutURL) {
         $this->globalSession = $globalSession;
         $this->loginURL = $loginURL;
         $this->logoutURL = $logoutURL;
     }
 
-    /**
-     * @return bool
-     */
-    public function isAuthenticated() {
+    public function isAuthenticated(): bool {
         return isset($this->globalSession[IGlobalSession::UID]);
     }
 
@@ -60,13 +50,13 @@ class Authentication {
     /**
      * @param null $backlink
      */
-    public function login($backlink = null) {
-        $backlink = $backlink ? : $this->getDefaultBacklink();
+    public function login($backlink = null): void {
+        $backlink = $backlink ?: $this->getDefaultBacklink();
 
-        $data = array(
+        $data = [
             self::PARAM_BACKLINK => $backlink,
             self::PARAM_FLAG => self::FLAG_SSO_LOGIN,
-        );
+        ];
 
         $redirectURL = $this->setHttpParams($this->loginURL, $data);
 
@@ -78,14 +68,14 @@ class Authentication {
     /**
      * @param null $backlink
      */
-    public function logout($backlink = null) {
-        $backlink = $backlink ? : $this->getDefaultBacklink();
+    public function logout($backlink = null): void {
+        $backlink = $backlink ?: $this->getDefaultBacklink();
 
-        $data = array(
+        $data = [
             self::PARAM_BACKLINK => $backlink,
             self::PARAM_FLAG => self::FLAG_SSO_LOGIN,
             self::PARAM_GSID => $this->globalSession->getId(),
-        );
+        ];
 
         $redirectURL = $this->setHttpParams($this->logoutURL, $data);
 
@@ -101,12 +91,7 @@ class Authentication {
         return $_SERVER['REQUEST_URI'];
     }
 
-    /**
-     * @param $url
-     * @param $params
-     * @return string
-     */
-    private function setHttpParams($url, $params) {
+    private function setHttpParams(string $url, array $params): string {
         $query = http_build_query($params, false, '&');
 
         if (preg_match('/\?/', $url)) { // very simplistic test where URL contains query part
@@ -117,5 +102,4 @@ class Authentication {
 
         return $url;
     }
-
 }

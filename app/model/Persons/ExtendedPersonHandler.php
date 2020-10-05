@@ -1,23 +1,26 @@
 <?php
 
-namespace Persons;
+namespace FKSDB\Persons;
 
-use Authentication\AccountManager;
-use BasePresenter;
+use FKSDB\Authentication\AccountManager;
+use FKSDB\Localization\UnsupportedLanguageException;
+use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Forms\Controls\ModelDataConflictException;
+use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
-use FormUtils;
-use Mail\MailTemplateFactory;
-use Mail\SendFailedException;
-use ModelException;
+use FKSDB\Utils\FormUtils;
+use FKSDB\Mail\SendFailedException;
+use FKSDB\Exceptions\ModelException;
 use Nette\Database\Connection;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
-use OrgModule\ContestantPresenter;
+use FKSDB\Modules\OrgModule\ContestantPresenter;
 use Tracy\Debugger;
 
 /**
@@ -27,178 +30,112 @@ use Tracy\Debugger;
  */
 class ExtendedPersonHandler {
     use SmartObject;
-    const CONT_AGGR = 'aggr';
-    const CONT_PERSON = 'person';
-    const CONT_MODEL = 'model';
-    const EL_PERSON = 'person_id';
-    const RESULT_OK_EXISTING_LOGIN = 1;
-    const RESULT_OK_NEW_LOGIN = 2;
-    const RESULT_ERROR = false;
 
-    /**
-     * @var \FKSDB\ORM\IService
-     */
-    protected $service;
+    public const CONT_AGGR = 'aggr';
+    public const CONT_MODEL = 'model';
+    public const EL_PERSON = 'person_id';
+    public const RESULT_OK_EXISTING_LOGIN = 1;
+    public const RESULT_OK_NEW_LOGIN = 2;
+    public const RESULT_ERROR = 0;
 
-    /**
-     * @var \FKSDB\ORM\Services\ServicePerson
-     */
-    protected $servicePerson;
+    protected IService $service;
 
-    /**
-     * @var Connection
-     */
-    private $connection;
+    protected ServicePerson $servicePerson;
 
-    /**
-     * @var MailTemplateFactory
-     */
-    private $mailTemplateFactory;
+    private Connection $connection;
 
-    /**
-     * @var AccountManager
-     */
-    private $accountManager;
+    private AccountManager $accountManager;
 
-    /**
-     * @var \FKSDB\ORM\Models\ModelContest
-     */
-    private $contest;
+    private ModelContest $contest;
 
-    /**
-     * @var int
-     */
-    private $year;
+    private int $year;
 
-    /**
-     * @var string
-     */
-    private $invitationLang;
+    private string $invitationLang;
 
-    /**
-     * @var ModelPerson
-     */
+    /** @var ModelPerson */
     private $person;
 
-    /**
-     * ExtendedPersonHandler constructor.
-     * @param \FKSDB\ORM\IService $service
-     * @param \FKSDB\ORM\Services\ServicePerson $servicePerson
-     * @param Connection $connection
-     * @param MailTemplateFactory $mailTemplateFactory
-     * @param AccountManager $accountManager
-     */
-    function __construct(IService $service, ServicePerson $servicePerson, Connection $connection, MailTemplateFactory $mailTemplateFactory, AccountManager $accountManager) {
+    public function __construct(
+        IService $service,
+        ServicePerson $servicePerson,
+        Connection $connection,
+        AccountManager $accountManager,
+        ModelContest $contest,
+        int $year,
+        string $invitationLang
+    ) {
         $this->service = $service;
         $this->servicePerson = $servicePerson;
         $this->connection = $connection;
-        $this->mailTemplateFactory = $mailTemplateFactory;
         $this->accountManager = $accountManager;
-    }
-
-    /**
-     * @return \FKSDB\ORM\Models\ModelContest
-     */
-    public function getContest() {
-        return $this->contest;
-    }
-
-    /**
-     * @param \FKSDB\ORM\Models\ModelContest $contest
-     */
-    public function setContest(ModelContest $contest) {
         $this->contest = $contest;
-    }
-
-    /**
-     * @return int
-     */
-    public function getYear() {
-        return $this->year;
-    }
-
-    /**
-     * @param $year
-     */
-    public function setYear($year) {
         $this->year = $year;
-    }
-
-    /**
-     * @return string
-     */
-    public function getInvitationLang() {
-        return $this->invitationLang;
-    }
-
-    /**
-     * @param $invitationLang
-     */
-    public function setInvitationLang($invitationLang) {
         $this->invitationLang = $invitationLang;
     }
 
-    /**
-     * @return \FKSDB\ORM\Models\ModelPerson
-     */
-    public function getPerson() {
+    public function getContest(): ModelContest {
+        return $this->contest;
+    }
+
+    public function getYear(): int {
+        return $this->year;
+    }
+
+    public function getInvitationLang(): string {
+        return $this->invitationLang;
+    }
+
+    public function getPerson(): ModelPerson {
         return $this->person;
     }
 
     /**
      * @param Form $form
-     * @return mixed
+     * @return ModelPerson|null|AbstractModelSingle|IModel
      */
-    protected final function getReferencedPerson(Form $form) {
-        return $form[self::CONT_AGGR][self::EL_PERSON]->getModel();
+    final protected function getReferencedPerson(Form $form) {
+        /** @var ReferencedId $input */
+        $input = $form[self::CONT_AGGR][self::EL_PERSON];
+        return $input->getModel();
     }
 
     /**
      * @param Form $form
      * @param IExtendedPersonPresenter $presenter
-     * @return bool
+     * @param bool $sendEmail
+     * @return int
+     * @throws UnsupportedLanguageException
      */
-    public final function handleForm(Form $form, IExtendedPersonPresenter $presenter) {
-        $connection = $this->connection;
-        try {
-            if (!$connection->beginTransaction()) {
-                throw new ModelException();
-            }
-            $values = $form->getValues();
-            $create = !$presenter->getModel();
+    final public function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail): int {
 
-            $person = $this->person = $this->getReferencedPerson($form);
-            $this->storeExtendedModel($person, $values, $presenter);
+        try {
+            $this->connection->beginTransaction();
+            $create = !$presenter->getModel();
+            $form->getValues();
+            $this->person = $this->getReferencedPerson($form);
+            $this->storeExtendedModel($this->person, $form->getValues(true), $presenter);
 
             // create login
-            $email = $person->getInfo() ? $person->getInfo()->email : null;
-            $login = $person->getLogin();
+            $email = $this->person->getInfo() ? $this->person->getInfo()->email : null;
+            $login = $this->person->getLogin();
             $hasLogin = (bool)$login;
-            if ($email && !$login) {
-                $template = $this->mailTemplateFactory->createLoginInvitation($presenter, $this->getInvitationLang());
+            if ($sendEmail && ($email && !$login)) {
                 try {
-                    $this->accountManager->createLoginWithInvitation($template, $person, $email);
+                    $this->accountManager->createLoginWithInvitation($this->person, $email, $this->getInvitationLang());
                     $presenter->flashMessage(_('Zvací e-mail odeslán.'), BasePresenter::FLASH_INFO);
                 } catch (SendFailedException $exception) {
                     $presenter->flashMessage(_('Zvací e-mail se nepodařilo odeslat.'), BasePresenter::FLASH_ERROR);
                 }
             }
             // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
-            $person = $this->person = $this->servicePerson->findByPrimary($this->getReferencedPerson($form)->getPrimary());
+            $this->person = $this->servicePerson->findByPrimary($this->getReferencedPerson($form)->getPrimary());
 
             /*
              * Finalize
              */
-            if (!$connection->commit()) {
-                throw new ModelException();
-            }
+            $this->connection->commit();
 
-            if ($create) {
-                $msg = $presenter->messageCreate();
-            } else {
-                $msg = $presenter->messageEdit();
-            }
-            $presenter->flashMessage(sprintf($msg, $person->getFullname()), ContestantPresenter::FLASH_SUCCESS);
+            $presenter->flashMessage(sprintf($create ? $presenter->messageCreate() : $presenter->messageEdit(), $this->person->getFullName()), ContestantPresenter::FLASH_SUCCESS);
 
             if (!$hasLogin) {
                 return self::RESULT_OK_NEW_LOGIN;
@@ -206,7 +143,7 @@ class ExtendedPersonHandler {
                 return self::RESULT_OK_EXISTING_LOGIN;
             }
         } catch (ModelException $exception) {
-            $connection->rollBack();
+            $this->connection->rollBack();
             if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
                 $presenter->flashMessage($presenter->messageExists(), ContestantPresenter::FLASH_ERROR);
             } else {
@@ -219,39 +156,36 @@ class ExtendedPersonHandler {
             $form->addError(_('Zadaná data se neshodují s již uloženými.'));
             $exception->getReferencedId()->getReferencedContainer()->setConflicts($exception->getConflicts());
             $exception->getReferencedId()->rollback();
-            $connection->rollBack();
+            $this->connection->rollBack();
             return self::RESULT_ERROR;
         }
     }
 
     /**
      * @param ModelPerson $person
-     * @param $values
-     * @param $presenter
+     * @param iterable $values
+     * @param IExtendedPersonPresenter $presenter
      */
-    protected function storeExtendedModel(ModelPerson $person, $values, $presenter) {
+    protected function storeExtendedModel(ModelPerson $person, $values, IExtendedPersonPresenter $presenter): void {
         if ($this->contest === null || $this->year === null) {
             throw new InvalidStateException('Must set contest and year before storing contestant.');
         }
         // initialize model
         $model = $presenter->getModel();
+
         if (!$model) {
-            $data = array(
-                'contest_id' => $this->getContest()->contest_id,
-                'year' => $this->getYear(),
-            );
-            $model = $this->service->createNew($data);
-            $model->person_id = $person->getPrimary();
+            $data = [
+                'contest_id' => $this->contest ? $this->getContest()->contest_id : null,
+                'person_id' => $person->getPrimary(),
+                'year' => $this->year ? $this->getYear() : null,
+            ];
+            $model = $this->service->createNewModel((array)$data);
         }
 
         // update data
         if (isset($values[self::CONT_MODEL])) {
             $data = FormUtils::emptyStrToNull($values[self::CONT_MODEL]);
-            $this->service->updateModel($model, $data);
+            $this->service->updateModel2($model, (array)$data);
         }
-
-        // store model
-        $this->service->save($model);
     }
-
 }

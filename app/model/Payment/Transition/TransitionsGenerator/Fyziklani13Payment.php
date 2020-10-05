@@ -2,14 +2,13 @@
 
 namespace FKSDB\Payment\Transition\Transitions;
 
-use Authorization\EventAuthorizator;
+use FKSDB\Authorization\EventAuthorizator;
+use Exception;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelEventPersonAccommodation;
 use FKSDB\ORM\Models\ModelPayment;
+use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\ORM\Services\ServicePayment;
-use FKSDB\Payment\PriceCalculator\PriceCalculatorFactory;
-use FKSDB\Payment\SymbolGenerator\SymbolGeneratorFactory;
 use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\AbstractTransitionsGenerator;
 use FKSDB\Transitions\IStateModel;
@@ -17,83 +16,49 @@ use FKSDB\Transitions\Machine;
 use FKSDB\Transitions\Statements\Conditions\DateBetween;
 use FKSDB\Transitions\Statements\Conditions\ExplicitEventRole;
 use FKSDB\Transitions\Transition;
-use FKSDB\Transitions\TransitionsFactory;
-use Nette\Application\BadRequestException;
+use FKSDB\Mail\MailTemplateFactory;
 use Nette\Database\Connection;
-use Nette\Localization\ITranslator;
-use Nette\Mail\Message;
-use Nette\Utils\DateTime;
 use Tracy\Debugger;
-
 
 /**
  * Class Fyziklani13Payment
- * @package FKSDB\Payment\Transition\Transitions
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Fyziklani13Payment extends AbstractTransitionsGenerator {
-    const EMAIL_BCC = 'fyziklani@fykos.cz';
-    const EMAIL_FROM = 'Fyziklání <fyziklani@fykos.cz>';
-    /**
-     * @var SymbolGeneratorFactory
-     */
-    private $symbolGeneratorFactory;
 
-    /**
-     * @var PriceCalculatorFactory
-     */
-    private $priceCalculatorFactory;
-    /**
-     * @var Connection
-     */
-    private $connection;
-    /**
-     * @var ServicePayment
-     */
-    private $servicePayment;
-    /**
-     * @var EventAuthorizator
-     */
-    private $eventAuthorizator;
-    /**
-     * @var ITranslator
-     */
-    private $translator;
+    private Connection $connection;
 
-    /**
-     * Fyziklani13Payment constructor.
-     * @param ServicePayment $servicePayment
-     * @param Connection $connection
-     * @param TransitionsFactory $transitionFactory
-     * @param SymbolGeneratorFactory $symbolGeneratorFactory
-     * @param PriceCalculatorFactory $priceCalculatorFactory
-     * @param EventAuthorizator $eventAuthorizator
-     * @param ITranslator $translator
-     */
+    private ServicePayment $servicePayment;
+
+    private EventAuthorizator $eventAuthorizator;
+
+    private ServiceEmailMessage $serviceEmailMessage;
+
+    private MailTemplateFactory $mailTemplateFactory;
+
     public function __construct(
         ServicePayment $servicePayment,
         Connection $connection,
-        TransitionsFactory $transitionFactory,
-        SymbolGeneratorFactory $symbolGeneratorFactory,
-        PriceCalculatorFactory $priceCalculatorFactory,
         EventAuthorizator $eventAuthorizator,
-        ITranslator $translator
+        ServiceEmailMessage $serviceEmailMessage,
+        MailTemplateFactory $mailTemplateFactory
     ) {
-        parent::__construct($transitionFactory);
         $this->connection = $connection;
         $this->servicePayment = $servicePayment;
-        $this->symbolGeneratorFactory = $symbolGeneratorFactory;
-        $this->priceCalculatorFactory = $priceCalculatorFactory;
         $this->eventAuthorizator = $eventAuthorizator;
-        $this->translator = $translator;
+        $this->serviceEmailMessage = $serviceEmailMessage;
+        $this->mailTemplateFactory = $mailTemplateFactory;
     }
 
     /**
      * @param Machine $machine
-     * @throws BadRequestException
+     * @return void
+     * @throws BadTypeException
+     * @throws Exception
      */
-    public function createTransitions(Machine &$machine) {
+    public function createTransitions(Machine $machine): void {
         if (!$machine instanceof PaymentMachine) {
-            throw new BadRequestException(\sprintf(_('Expected class %s, got %s'), 'PaymentMachine', \get_class($machine)));
+            throw new BadTypeException(PaymentMachine::class, $machine);
         }
         $machine->setExplicitCondition(new ExplicitEventRole($this->eventAuthorizator, 'org', $machine->getEvent(), ModelPayment::RESOURCE_ID));
         $this->addTransitionInitToNew($machine);
@@ -103,25 +68,11 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
     }
 
     /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @return Machine
-     */
-    public function createMachine(ModelEvent $event): Machine {
-        $machine = new PaymentMachine(
-            $event,
-            $this->priceCalculatorFactory->createCalculator($event),
-            $this->symbolGeneratorFactory->createGenerator($event),
-            $this->connection,
-            $this->servicePayment
-        );
-        return $machine;
-    }
-
-    /**
      * implicit transition when creating model (it's not executed only try condition!)
      * @param PaymentMachine $machine
+     * @throws Exception
      */
-    private function addTransitionInitToNew(PaymentMachine &$machine) {
+    private function addTransitionInitToNew(PaymentMachine $machine): void {
         $transition = new Transition(Machine::STATE_INIT, ModelPayment::STATE_NEW, _('Create'));
         $transition->setCondition($this->getDatesCondition());
         $machine->addTransition($transition);
@@ -129,58 +80,49 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
 
     /**
      * @param PaymentMachine $machine
+     * @return void
+     * @throws Exception
      */
-    private function addTransitionNewToWaiting(PaymentMachine &$machine) {
+    private function addTransitionNewToWaiting(PaymentMachine $machine): void {
         $transition = new Transition(ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING, _('Confirm payment'));
 
         $transition->setType(Transition::TYPE_SUCCESS);
         $transition->setCondition($this->getDatesCondition());
 
-        $transition->beforeExecuteCallbacks[] = function (ModelPayment &$modelPayment) use ($machine) {
-            $modelPayment->update($machine->getSymbolGenerator()->create($modelPayment));
-            $modelPayment->updatePrice($machine->getPriceCalculator());
+        $transition->beforeExecuteCallbacks[] = $machine->getSymbolGenerator();
+        $transition->beforeExecuteCallbacks[] = $machine->getPriceCalculator();
+        /**
+         * @param IStateModel|ModelPayment|null $model
+         */
+        $transition->afterExecuteCallbacks[] = function (IStateModel $model = null) {
+            $data = $this->emailData;
+            $data['subject'] = \sprintf(_('Payment #%s was created'), $model->getPaymentId());
+            $data['recipient'] = $model->getPerson()->getInfo()->email;
+            $data['text'] = (string)$this->mailTemplateFactory->createWithParameters(
+                'fyziklani/fyziklani2019/payment/create',
+                $model->getPerson()->getPreferredLang(),
+                ['model' => $model]
+            );
+            $this->serviceEmailMessage->addMessageToSend($data);
+
         };
-
-        $transition->afterExecuteCallbacks[] = $this->transitionFactory->createMailCallback('fyziklani/fyziklani2019/payment/create',
-            $this->getMailSetupCallback(_('Payment #%s was created'))
-        );
-
         $machine->addTransition($transition);
     }
 
     /**
      * @return callable
+     * @throws Exception
      */
     private function getDatesCondition(): callable {
-        return new DateBetween(new DateTime('2019-01-21'), new DateTime('2019-02-15'));
+        return new DateBetween('2019-01-21', '2019-02-15');
     }
 
-    /**
-     * @param string $subject
-     * @return \Closure
-     */
-    private function getMailSetupCallback(string $subject): \Closure {
-        return function (IStateModel $model) use ($subject): Message {
-            $message = new Message();
-            if ($model instanceof ModelPayment) {
-                $message->setSubject(\sprintf(_($subject), $model->getPaymentId()));
-                $message->addTo($model->getPerson()->getInfo()->email);
-            }
-            $message->setFrom(self::EMAIL_FROM);
-            $message->addBcc(self::EMAIL_BCC);
-            return $message;
-        };
-    }
-
-    /**
-     * @param PaymentMachine $machine
-     */
-    private function addTransitionAllToCanceled(PaymentMachine &$machine) {
+    private function addTransitionAllToCanceled(PaymentMachine $machine): void {
         foreach ([ModelPayment::STATE_NEW, ModelPayment::STATE_WAITING] as $state) {
 
             $transition = new Transition($state, ModelPayment::STATE_CANCELED, _('Cancel payment'));
             $transition->setType(Transition::TYPE_DANGER);
-            $transition->setCondition(function () {
+            $transition->setCondition(function (): bool {
                 return true;
             });
             $transition->beforeExecuteCallbacks[] = $this->getClosureDeleteRows();
@@ -191,18 +133,27 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         }
     }
 
-    /**
-     * @param PaymentMachine $machine
-     */
-    private function addTransitionWaitingToReceived(PaymentMachine &$machine) {
+    private function addTransitionWaitingToReceived(PaymentMachine $machine): void {
         $transition = new Transition(ModelPayment::STATE_WAITING, ModelPayment::STATE_RECEIVED, _('Paid'));
         $transition->beforeExecuteCallbacks[] = function (ModelPayment $modelPayment) {
-            foreach ($modelPayment->getRelatedPersonAccommodation() as $personAccommodation) {
-                $personAccommodation->updateState(ModelEventPersonAccommodation::STATUS_PAID);
+            foreach ($modelPayment->getRelatedPersonSchedule() as $personSchedule) {
+                $personSchedule->updateState('received');
             }
         };
-        $transition->afterExecuteCallbacks[] = $this->transitionFactory->createMailCallback('fyziklani/fyziklani2019/payment/receive',
-            $this->getMailSetupCallback(_('We are receive payment #%s')));
+        /**
+         * @param IStateModel|ModelPayment|null $model
+         */
+        $transition->afterExecuteCallbacks[] = function (IStateModel $model = null) {
+            $data = $this->emailData;
+            $data['subject'] = \sprintf(_('We are receive payment #%s'), $model->getPaymentId());
+            $data['recipient'] = $model->getPerson()->getInfo()->email;
+            $data['text'] = (string)$this->mailTemplateFactory->createWithParameters(
+                'fyziklani/fyziklani2019/payment/receive',
+                $model->getPerson()->getPreferredLang(),
+                ['model' => $model]
+            );
+            $this->serviceEmailMessage->addMessageToSend($data);
+        };
 
         $transition->setCondition(function () {
             return false;
@@ -211,14 +162,11 @@ class Fyziklani13Payment extends AbstractTransitionsGenerator {
         $machine->addTransition($transition);
     }
 
-    /**
-     * @return \Closure
-     */
-    private function getClosureDeleteRows(): \Closure {
-        return function (ModelPayment $modelPayment) {
-            Debugger::log('payment-deleted--' . \json_encode($modelPayment->toArray()));
-            foreach ($modelPayment->related(DbNames::TAB_PAYMENT_ACCOMMODATION, 'payment_id') as $row) {
-                Debugger::log('payment-row-deleted--' . \json_encode($row->toArray()));
+    private function getClosureDeleteRows(): callable {
+        return function (ModelPayment $modelPayment): void {
+            Debugger::log('payment-deleted--' . \json_encode($modelPayment->toArray()), 'payment-info');
+            foreach ($modelPayment->related(DbNames::TAB_SCHEDULE_PAYMENT, 'payment_id') as $row) {
+                Debugger::log('payment-row-deleted--' . \json_encode($row->toArray()), 'payment-info');
                 $row->delete();
             }
         };

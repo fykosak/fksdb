@@ -13,30 +13,20 @@ use FKSDB\ORM\Models\ModelSubmit;
  */
 interface ISubmitStorage {
 
-    const TYPE_ORIGINAL = 0;
-    const TYPE_PROCESSED = 1;
+    public const TYPE_ORIGINAL = 0;
+    public const TYPE_PROCESSED = 1;
+
+    public function beginTransaction(): void;
 
     /**
      * @return void
-     */
-    public function beginTransaction();
-
-    /**
      * @throws StorageException for unsuccessful commit
-     * @return void
      */
-    public function commit();
+    public function commit(): void;
 
-    /**
-     * @return void
-     */
-    public function rollback();
+    public function rollback(): void;
 
-    /**
-     * @param \FKSDB\Submits\IStorageProcessing $processing
-     * @return void
-     */
-    public function addProcessing(IStorageProcessing $processing);
+    public function addProcessing(IStorageProcessing $processing): void;
 
     /**
      * File is renamed/moved to own purposes.
@@ -45,26 +35,17 @@ interface ISubmitStorage {
      * @param ModelSubmit $submit
      * @return void
      */
-    public function storeFile($filename, ModelSubmit $submit);
+    public function storeFile(string $filename, ModelSubmit $submit): void;
 
     /**
      *
-     * @param \FKSDB\ORM\Models\ModelSubmit $submit
+     * @param ModelSubmit $submit
      * @param int $type
      * @return string filename with absolute path
      */
-    public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED);
+    public function retrieveFile(ModelSubmit $submit, int $type = self::TYPE_PROCESSED): ?string;
 
-    /**
-     * @param \FKSDB\ORM\Models\ModelSubmit $submit
-     * @return bool
-     */
-    public function existsFile(ModelSubmit $submit);
+    public function fileExists(ModelSubmit $submit): bool;
 
-    /**
-     * @param \FKSDB\ORM\Models\ModelSubmit $submit
-     */
-    public function deleteFile(ModelSubmit $submit);
+    public function deleteFile(ModelSubmit $submit): void;
 }
-
-

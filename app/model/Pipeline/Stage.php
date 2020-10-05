@@ -1,8 +1,8 @@
 <?php
 
-namespace Pipeline;
+namespace FKSDB\Pipeline;
 
-use FKSDB\Logging\ILogger;
+use FKSDB\Messages\Message;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -11,43 +11,29 @@ use FKSDB\Logging\ILogger;
  */
 abstract class Stage {
 
-    /**
-     * @var Pipeline
-     */
-    private $pipeline;
+    private Pipeline $pipeline;
 
     /**
      * @param mixed $data data to process
      */
-    abstract public function setInput($data);
+    abstract public function setInput($data): void;
 
-    abstract public function process();
+    abstract public function process(): void;
 
     /**
      * @return mixed output of the stage
      */
     abstract public function getOutput();
 
-    /**
-     * @return Pipeline
-     */
-    public function getPipeline() {
+    final protected function getPipeline(): Pipeline {
         return $this->pipeline;
     }
 
-    /**
-     * @param Pipeline $pipeline
-     */
-    public function setPipeline(Pipeline $pipeline) {
+    final public function setPipeline(Pipeline $pipeline): void {
         $this->pipeline = $pipeline;
     }
 
-    /**
-     * @param $message
-     * @param int $level
-     */
-    protected function log($message, $level = ILogger::INFO) {
+    final protected function log(Message $message): void {
         $this->getPipeline()->log($message);
     }
-
 }

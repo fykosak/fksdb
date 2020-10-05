@@ -2,32 +2,14 @@
 
 namespace FKSDB\Transitions;
 
-use FKSDB\ORM\Models\ModelEvent;
-
 /**
  * Class AbstractTransitionsGenerator
- * @package FKSDB\Transitions
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractTransitionsGenerator {
-    protected $transitionFactory;
-
-    /**
-     * AbstractTransitionsGenerator constructor.
-     * @param TransitionsFactory $transitionFactory
-     */
-    public function __construct(TransitionsFactory $transitionFactory) {
-        $this->transitionFactory = $transitionFactory;
-    }
-
-    /**
-     * @param Machine $machine
-     * @return mixed
-     */
-    abstract public function createTransitions(Machine &$machine);
-
-    /**
-     * @param ModelEvent $event
-     * @return Machine
-     */
-    abstract public function createMachine(ModelEvent $event): Machine;
+    protected array $emailData = [
+        'blind_carbon_copy' => 'Fyziklání <fyziklani@fykos.cz>',
+        // $data['carbon_copy']=
+        'sender' => 'fyziklani@fykos.cz',
+    ];
 }

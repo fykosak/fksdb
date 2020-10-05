@@ -10,14 +10,17 @@ use PDO;
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read string type
- * @property-read integer default_integer
+ * @property-read int default_integer
  * @property-read string default_string
+ * @property-read int query_id
+ * @property-read string name
+ * @property-read string description
  */
 class ModelStoredQueryParameter extends AbstractModelSingle {
 
-    const TYPE_INT = 'integer';
-    const TYPE_STR = 'string';
-    const TYPE_BOOL = 'bool';
+    public const TYPE_INT = 'integer';
+    public const TYPE_STRING = 'string';
+    public const TYPE_BOOL = 'bool';
 
     /**
      * @return int|string
@@ -28,7 +31,7 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
             case self::TYPE_INT:
             case self::TYPE_BOOL:
                 return $this->default_integer;
-            case self::TYPE_STR:
+            case self::TYPE_STRING:
                 return $this->default_string;
             default:
                 throw new InvalidStateException("Unsupported parameter type '{$this->type}'.");
@@ -36,16 +39,16 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @throws InvalidStateException
      */
-    public function setDefaultValue($value) {
+    public function setDefaultValue($value): void {
         switch ($this->type) {
             case self::TYPE_INT:
             case self::TYPE_BOOL:
                 $this->default_integer = (int)$value;
                 break;
-            case self::TYPE_STR:
+            case self::TYPE_STRING:
                 $this->default_string = $value;
                 break;
             default:
@@ -54,19 +57,44 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
     }
 
     /**
+     * @param string $type
+     * @param mixed $value
+     * @return array
+     */
+    public static function setInferDefaultValue(string $type, $value): array {
+        $data = [];
+        switch ($type) {
+            case self::TYPE_INT:
+            case self::TYPE_BOOL:
+                $data['default_integer'] = (int)$value;
+                break;
+            case self::TYPE_STRING:
+                $data['default_string'] = $value;
+                break;
+            default:
+                throw new InvalidStateException("Unsupported parameter type '{$type}'.");
+        }
+        return $data;
+    }
+
+    /**
      * @return int
      * @throws InvalidStateException
      */
-    public function getPDOType() {
-        switch ($this->type) {
-            case self::TYPE_INT:
-            case self::TYPE_BOOL:
-                return PDO::PARAM_INT;
-            case self::TYPE_STR:
-                return PDO::PARAM_STR;
-            default:
-                throw new InvalidStateException("Unsupported parameter type '{$this->type}'.");
-        }
+    public function getPDOType(): int {
+        return static::staticGetPDOType($this->type);
     }
 
+    public static function staticGetPDOType(string $type): int {
+        switch ($type) {
+            case self::TYPE_INT:
+                return PDO::PARAM_INT;
+            case self::TYPE_BOOL:
+                return PDO::PARAM_BOOL;
+            case self::TYPE_STRING:
+                return PDO::PARAM_STR;
+            default:
+                throw new InvalidStateException("Unsupported parameter type '{$type}'.");
+        }
+    }
 }

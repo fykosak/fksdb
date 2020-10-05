@@ -2,11 +2,14 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Services\ServiceTeacher;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
-use Nette\Utils\Html;
-use OrgModule\TeacherPresenter;
-use SQL\SearchableDataSource;
+use NiftyGrid\DataSource\IDataSource;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use FKSDB\SQL\SearchableDataSource;
 
 /**
  *
@@ -14,33 +17,13 @@ use SQL\SearchableDataSource;
  */
 class TeachersGrid extends BaseGrid {
 
-    /**
-     * @var ServiceTeacher
-     */
-    private $serviceTeacher;
+    private ServiceTeacher $serviceTeacher;
 
-    /**
-     * TeachersGrid constructor.
-     * @param ServiceTeacher $serviceTeacher
-     */
-    function __construct(ServiceTeacher $serviceTeacher) {
-        parent::__construct();
+    final public function injectServiceTeacher(ServiceTeacher $serviceTeacher): void {
         $this->serviceTeacher = $serviceTeacher;
     }
 
-    /**
-     * @param TeacherPresenter $presenter
-     * @throws \Nette\Application\UI\InvalidLinkException
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
-     * @throws \Nette\Application\BadRequestException
-     */
-    protected function configure($presenter) {
-        parent::configure($presenter);
-        //
-        // data
-        //
+    protected function getData(): IDataSource {
         $teachers = $this->serviceTeacher->getTable()->select('teacher.*, person.family_name AS display_name');
 
         $dataSource = new SearchableDataSource($teachers);
@@ -50,46 +33,28 @@ class TeachersGrid extends BaseGrid {
                 $table->where('CONCAT(person.family_name, person.other_name) LIKE CONCAT(\'%\', ? , \'%\')', $token);
             }
         });
-        $this->setDataSource($dataSource);
-        //
-        // columns
-        //
-        $this->addColumn('display_name', _('Name'))->setRenderer(function ($row) {
-            $person = $row->getPerson();
-            return $person->getFullname();
-        });
-        $this->addColumn('since', _('Since'))->setRenderer(function ($row) {
-            if ($row->since === null) {
-                return Html::el('span')->addAttributes(['class' => 'badge badge-secondary'])->addText(_('undefined'));
-            }
-            return $row->since->format('Y-m-d');
-        });
-        $this->addColumn('until', _('Until'))->setRenderer(function ($row) {
-            if ($row->until === null) {
-                return Html::el('span')->addAttributes(['class' => 'badge badge-success'])->addText(_('Still teaches'));
-            }
-            return $row->until->format('Y-m-d');
-        });
-        $this->addColumn('school_id', _('School'))->setRenderer(function ($row) {
-            return $row->getSchool()->name_abbrev;
-        });
+        return $dataSource;
+    }
 
-        //
-        // operations
-        //
-        $this->addButton('edit', _('Edit'))
-            ->setText(_('Edit'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('edit', $row->teacher_id);
-            })
-            ->setShow(function ($row) use ($presenter) {
-                return $presenter->authorized('edit', ['id' => $row->teacher_id]);
-            });
-
-        if ($presenter->authorized('create')) {
-            $this->addGlobalButton('add')
-                ->setLabel(_('Create new teacher'))
-                ->setLink($this->getPresenter()->link('create'));
-        }
+    /**
+     * @param Presenter $presenter
+     * @return void
+     * @throws BadTypeException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     */
+    protected function configure(Presenter $presenter): void {
+        parent::configure($presenter);
+        $this->addColumns([
+            'person.full_name',
+            'teacher.note',
+            'teacher.state',
+            'teacher.since',
+            'teacher.until',
+            'teacher.number_brochures',
+            'school.school',
+        ]);
+        $this->addLink('teacher.edit', false);
+        $this->addLink('teacher.detail', false);
     }
 }

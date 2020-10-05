@@ -3,40 +3,42 @@
 namespace FKSDB\ORM\Services;
 
 use DateTime;
+use FKSDB\Exceptions\ModelException;
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelPersonHasFlag;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 use Nette\Utils\ArrayHash;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
  */
 class ServicePersonHasFlag extends AbstractServiceSingle {
-    /**
-     * @return string
-     */
-    public function getModelClassName(): string {
-        return ModelPersonHasFlag::class;
+
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_PERSON_HAS_FLAG, ModelPersonHasFlag::class);
     }
 
     /**
-     * @return string
+     * @param null|iterable $data
+     * @return ModelPersonHasFlag
+     * @throws ModelException
+     * @deprecated
      */
-    protected function getTableName(): string {
-        return DbNames::TAB_PERSON_HAS_FLAG;
-    }
-
-    /**
-     * @param null $data
-     * @return \FKSDB\ORM\AbstractModelSingle
-     */
-    public function createNew($data = null) {
+    public function createNew(?iterable $data = null) {
         if ($data === null) {
             $data = new ArrayHash();
         }
         $data['modified'] = new DateTime();
         return parent::createNew($data);
+    }
+
+    public function createNewModel(array $data): AbstractModelSingle {
+        $data['modified'] = new DateTime();
+        return parent::createNewModel($data);
     }
 
     /**
@@ -45,12 +47,16 @@ class ServicePersonHasFlag extends AbstractServiceSingle {
      * @param bool $alive
      * @return mixed|void
      */
-    public function updateModel(IModel $model, $data, $alive = true) {
+    public function updateModel(IModel $model, iterable $data, bool $alive = true): void {
         if ($data === null) {
             $data = new ArrayHash();
         }
         $data['modified'] = new DateTime();
-        return parent::updateModel($model, $data);
+        parent::updateModel($model, $data);
     }
 
+    public function updateModel2(IModel $model, array $data): bool {
+        $data['modified'] = new DateTime();
+        return parent::updateModel2($model, $data);
+    }
 }

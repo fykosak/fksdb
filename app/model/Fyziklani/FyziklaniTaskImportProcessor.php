@@ -1,11 +1,15 @@
 <?php
 
-namespace FKSDB\model\Fyziklani;
+namespace FKSDB\Fyziklani;
 
+use FKSDB\Logging\ILogger;
+use FKSDB\Messages\Message;
+use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Utils\CSVParser;
-use FyziklaniModule\TaskPresenter;
+use FKSDB\Modules\FyziklaniModule\TaskPresenter;
+use Nette\Utils\ArrayHash;
 use Tracy\Debugger;
 
 /**
@@ -15,31 +19,21 @@ use Tracy\Debugger;
  */
 class FyziklaniTaskImportProcessor {
 
-    /**
-     *
-     * @var \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask
-     */
-    private $serviceFyziklaniTask;
-    /**
-     * @var \FKSDB\ORM\Models\ModelEvent
-     */
-    private $event;
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
 
-    /**
-     * FyziklaniTaskImportProcessor constructor.
-     * @param ModelEvent $event
-     * @param \FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask $serviceFyziklaniTask
-     */
-    public function __construct(ModelEvent$event, ServiceFyziklaniTask $serviceFyziklaniTask) {
+    private ModelEvent $event;
+
+    public function __construct(ServiceFyziklaniTask $serviceFyziklaniTask, ModelEvent $event) {
         $this->event = $event;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 
     /**
-     * @param $values
-     * @param $messages
+     * @param ArrayHash $values
+     * @param ILogger $logger
+     * @return void
      */
-    public function __invoke($values, &$messages) {
+    public function process($values, ILogger $logger): void {
         $filename = $values->csvfile->getTemporaryFile();
         $connection = $this->serviceFyziklaniTask->getConnection();
         $connection->beginTransaction();
@@ -51,27 +45,25 @@ class FyziklaniTaskImportProcessor {
             try {
                 $task = $this->serviceFyziklaniTask->findByLabel($row['label'], $this->event);
                 if (!$task) {
-                    $task = $this->serviceFyziklaniTask->createNew([
+                    $this->serviceFyziklaniTask->createNewModel([
                         'label' => $row['label'],
                         'name' => $row['name'],
                         'event_id' => $this->event->event_id,
                     ]);
-                    $messages[] = [sprintf(_('Úloha %s "%s" bola vložena'), $row['label'], $row['name']), \BasePresenter::FLASH_SUCCESS];
+
+                    $logger->log(new Message(sprintf(_('Úloha %s "%s" bola vložena'), $row['label'], $row['name']), BasePresenter::FLASH_SUCCESS));
                 } elseif ($values->state == TaskPresenter::IMPORT_STATE_UPDATE_N_INSERT) {
-                        $this->serviceFyziklaniTask->updateModel($task, [
-                            'label' => $row['label'],
-                            'name' => $row['name']
-                        ]);
-                        $messages[] = [sprintf(_('Úloha %s "%s" byla aktualizována'), $row['label'], $row['name']),\BasePresenter::FLASH_INFO];
+                    $this->serviceFyziklaniTask->updateModel2($task, [
+                        'label' => $row['label'],
+                        'name' => $row['name'],
+                    ]);
+                    $logger->log(new Message(sprintf(_('Úloha %s "%s" byla aktualizována'), $row['label'], $row['name']), BasePresenter::FLASH_INFO));
                 } else {
-                        $messages[] = [
-                            sprintf(_('Úloha %s "%s" nebyla aktualizována'), $row['label'], $row['name']),
-                            'warning'
-                        ];
+                    $logger->log(new Message(
+                        sprintf(_('Úloha %s "%s" nebyla aktualizována'), $row['label'], $row['name']), ILogger::WARNING));
                 }
-                $this->serviceFyziklaniTask->save($task);
             } catch (\Exception $exception) {
-                $messages[] = [_('Vyskytla se chyba'),\BasePresenter::FLASH_ERROR];
+                $logger->log(new Message(_('Vyskytla se chyba'), BasePresenter::FLASH_ERROR));
                 Debugger::log($exception);
                 $connection->rollBack();
                 return;

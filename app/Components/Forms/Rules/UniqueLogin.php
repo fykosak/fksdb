@@ -14,43 +14,19 @@ use Nette\Forms\Controls\BaseControl;
  */
 class UniqueLogin {
 
-    /**
-     * @var ServiceLogin
-     */
-    private $serviceLogin;
+    private ServiceLogin $serviceLogin;
 
-    /**
-     * @var \FKSDB\ORM\Models\ModelLogin
-     */
-    private $ignoredLogin;
+    private ?ModelLogin $ignoredLogin;
 
-    /**
-     * UniqueLogin constructor.
-     * @param ServiceLogin $serviceLogin
-     */
-    function __construct(ServiceLogin $serviceLogin) {
+    public function __construct(ServiceLogin $serviceLogin) {
         $this->serviceLogin = $serviceLogin;
     }
 
-    /**
-     * @return \FKSDB\ORM\Models\ModelLogin
-     */
-    public function getIgnoredLogin() {
-        return $this->ignoredLogin;
-    }
-
-    /**
-     * @param \FKSDB\ORM\Models\ModelLogin|null $ignoredLogin
-     */
-    public function setIgnoredLogin(ModelLogin $ignoredLogin = null) {
+    public function setIgnoredLogin(?ModelLogin $ignoredLogin): void {
         $this->ignoredLogin = $ignoredLogin;
     }
 
-    /**
-     * @param BaseControl $control
-     * @return bool
-     */
-    public function __invoke(BaseControl $control) {
+    public function __invoke(BaseControl $control): bool {
         $login = $control->getValue();
 
         if (!$login) {
@@ -64,8 +40,6 @@ class UniqueLogin {
         if (count($conflicts) > 0) {
             return false;
         }
-
         return true;
     }
-
 }

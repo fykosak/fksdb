@@ -2,9 +2,8 @@
 
 namespace FKSDB\ORM\Models;
 
-use Authentication\PasswordAuthenticator;
-use Authorization\Grant;
-use DateTime;
+use FKSDB\Authentication\PasswordAuthenticator;
+use FKSDB\Authorization\Grant;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\YearCalculator;
@@ -15,38 +14,34 @@ use Nette\Security\IIdentity;
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
- * @property-read boolean active
- * @property-read integer login_id
- * @property-read DateTime last_login
+ * @property-read bool active
+ * @property-read int login_id
+ * @property-read \DateTimeInterface last_login
  * @property-read string hash
  * @property-read ActiveRow person
  * @property-read string login
  */
-class ModelLogin extends AbstractModelSingle implements IIdentity {
+class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonReferencedModel {
+
+    private YearCalculator $yearCalculator;
 
     /**
-     * @var \FKSDB\YearCalculator|null
+     * @return YearCalculator
+     * @throws InvalidStateException
+     * @internal
      */
-    private $yearCalculator;
-
-    /**
-     * @return null|\FKSDB\YearCalculator
-     */
-    protected function getYearCalculator() {
+    private function getYearCalculator(): YearCalculator {
+        if (!isset($this->yearCalculator)) {
+            throw new InvalidStateException('To obtain current roles, you have to inject FKSDB\YearCalculator to this Login instance.');
+        }
         return $this->yearCalculator;
     }
 
-    /**
-     * @param \FKSDB\YearCalculator $yearCalculator
-     */
-    public function injectYearCalculator(YearCalculator $yearCalculator) {
+    final public function injectYearCalculator(YearCalculator $yearCalculator): void {
         $this->yearCalculator = $yearCalculator;
     }
 
-    /**
-     * @return ModelPerson|null
-     */
-    public function getPerson() {
+    public function getPerson(): ?ModelPerson {
         if ($this->person) {
             return ModelPerson::createFromActiveRow($this->person);
         }
@@ -54,10 +49,10 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
     }
 
     /**
-     * @param \FKSDB\YearCalculator $yearCalculator
-     * @return array of FKSDB\ORM\Models\ModelOrg|null indexed by contest_id (i.e. impersonal orgs)
+     * @param YearCalculator $yearCalculator
+     * @return ModelOrg[] indexed by contest_id (i.e. impersonal orgs)
      */
-    public function getActiveOrgs(YearCalculator $yearCalculator) {
+    public function getActiveOrgs(YearCalculator $yearCalculator): array {
         if ($this->getPerson()) {
             return $this->getPerson()->getActiveOrgs($yearCalculator);
         } else {
@@ -71,36 +66,19 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
         }
     }
 
-    /**
-     * @param $yearCalculator
-     * @return bool
-     */
-    public function isOrg($yearCalculator): bool {
+    public function isOrg(YearCalculator $yearCalculator): bool {
         return count($this->getActiveOrgs($yearCalculator)) > 0;
     }
 
-    /**
-     * @param $yearCalculator
-     * @return bool
-     */
-    public function isContestant($yearCalculator) {
+    public function isContestant(YearCalculator $yearCalculator): bool {
         $person = $this->getPerson();
-        if ($person && count($person->getActiveContestants($yearCalculator)) > 0) {
-            return true;
-        } else {
-            return false;
-        }
+        return $person && count($person->getActiveContestants($yearCalculator)) > 0;
     }
 
-    /**
-     * Syntactic sugar.
-     *
-     * @return string Human readable identification of the login.
-     */
-    public function getName(): string {
+    public function __toString(): string {
         $person = $this->getPerson();
         if ($person) {
-            return (string)$person;
+            return $person->__toString();
         }
         if ($this->login) {
             return $this->login;
@@ -110,21 +88,14 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
     }
 
     /**
-     * @return string
-     */
-    public function __toString() {
-        return $this->getName();
-    }
-
-    /**
      * Sets hash of the instance with correct hashing function.
      *
      * @note Must be called after setting login_id.
-     *
-     * @param string $password password
+     * @param string $password
+     * @return string
      */
-    public function setHash($password) {
-        $this->hash = PasswordAuthenticator::calculateHash($password, $this);
+    public function createHash(string $password): string {
+        return PasswordAuthenticator::calculateHash($password, $this);
     }
 
     // ----- IIdentity implementation ----------
@@ -132,29 +103,20 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
     /**
      * @return int|mixed
      */
-    public function getId() {
+    public function getId(): int {
         return $this->login_id;
     }
 
-    /**
-     * @var Grant[]   cache
-     */
-    private $roles;
+    /** @var Grant[]   cache */
+    private array $roles;
 
     /**
-     * @return array|Grant[]|null
+     * @return Grant[]
      */
-    public function getRoles() {
-        if ($this->roles === null) {
-
-            if (!$this->yearCalculator) {
-                throw new InvalidStateException('To obtain current roles, you have to inject FKSDB\YearCalculator to this Login instance.');
-            }
+    public function getRoles(): array {
+        if (!isset($this->roles)) {
             $this->roles = [];
             $this->roles[] = new Grant(Grant::CONTEST_ALL, ModelRole::REGISTERED);
-            /* TODO 'registered' role, should be returned always, but consider whether it cannot happen
-             * that Identity is known, however user is not logged in.
-             */
 
             // explicitly assigned roles
             foreach ($this->related(DbNames::TAB_GRANT, 'login_id') as $row) {
@@ -164,16 +126,14 @@ class ModelLogin extends AbstractModelSingle implements IIdentity {
             // roles from other tables
             $person = $this->getPerson();
             if ($person) {
-                foreach ($person->getActiveOrgs($this->yearCalculator) as $org) {
+                foreach ($person->getActiveOrgs($this->getYearCalculator()) as $org) {
                     $this->roles[] = new Grant($org->contest_id, ModelRole::ORG);
                 }
-                foreach ($person->getActiveContestants($this->yearCalculator) as $contestant) {
+                foreach ($person->getActiveContestants($this->getYearCalculator()) as $contestant) {
                     $this->roles[] = new Grant($contestant->contest_id, ModelRole::CONTESTANT);
                 }
             }
         }
-
         return $this->roles;
     }
-
 }

@@ -1,0 +1,21 @@
+parameters:
+    events:
+        defaultSous:
+                states:
+                    - invited
+                    - invited1
+                    - invited2
+                    - invited3
+                    - auto.invited
+                    - spare
+                    - spare1
+                    - spare2
+                    - spare3
+                    - auto.spare
+                    - applied
+                    - interested
+                    - participated
+                    - rejected
+                    - missed
+                    - cancelled
+                    - out_of_db

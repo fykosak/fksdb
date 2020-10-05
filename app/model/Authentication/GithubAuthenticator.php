@@ -1,13 +1,13 @@
 <?php
 
-namespace Authentication;
+namespace FKSDB\Authentication;
 
-use FKSDB\Config\GlobalParameters;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\YearCalculator;
-use FullHttpRequest;
-use Github\Events\Event;
+use FKSDB\Github\Events\Event;
+use Nette\DI\Container;
+use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 use Nette\Security\AuthenticationException;
 
@@ -18,58 +18,47 @@ use Nette\Security\AuthenticationException;
  */
 class GithubAuthenticator extends AbstractAuthenticator {
 
-    const PARAM_AUTH_TOKEN = 'at';
-    const SESSION_NS = 'auth';
-    const HTTP_AUTH_HEADER = 'X-Hub-Signature';
+    public const PARAM_AUTH_TOKEN = 'at';
+    public const SESSION_NS = 'auth';
+    public const HTTP_AUTH_HEADER = 'X-Hub-Signature';
 
-    /**
-     * @var GlobalParameters
-     */
-    private $globalParameters;
+    private Container $container;
 
-    /**
-     * GithubAuthenticator constructor.
-     * @param GlobalParameters $globalParameters
-     * @param ServiceLogin $serviceLogin
-     * @param \FKSDB\YearCalculator $yearCalculator
-     */
-    function __construct(GlobalParameters $globalParameters, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
+    public function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator, Container $container) {
         parent::__construct($serviceLogin, $yearCalculator);
-        $this->globalParameters = $globalParameters;
+        $this->container = $container;
     }
 
     /**
-     * @param FullHttpRequest $request
-     * @return \FKSDB\ORM\Models\ModelLogin
+     * @param IRequest $request
+     * @return ModelLogin
      * @throws AuthenticationException
      * @throws InactiveLoginException
      * @throws NoLoginException
      */
-    public function authenticate(FullHttpRequest $request) {
-        $loginName = $this->globalParameters['github']['login'];
-        $secret = $this->globalParameters['github']['secret'];
+    public function authenticate(IRequest $request): ModelLogin {
+        $loginName = $this->container->getParameters()['github']['login'];
+        $secret = $this->container->getParameters()['github']['secret'];
 
-        if (!$request->getRequest()->getHeader(Event::HTTP_HEADER)) {
+        if (!$request->getHeader(Event::HTTP_HEADER)) {
             throw new InvalidArgumentException(_('Očekávána hlavička X-Github-Event'));
         }
 
-        $signature = $request->getRequest()->getHeader(self::HTTP_AUTH_HEADER);
+        $signature = $request->getHeader(self::HTTP_AUTH_HEADER);
         if (!$signature) {
             throw new AuthenticationException(_('Očekávána hlavička X-Hub-Signature.'));
         }
 
-        $expectedHash = 'sha1=' . hash_hmac('sha1', $request->getPayload(), $secret, false);
+        $expectedHash = 'sha1=' . hash_hmac('sha1', $request->getRawBody(), $secret, false);
 
         if ($signature !== $expectedHash) {
             //throw new AuthenticationException(_('Nesprávný hash požadavku.'));
         }
-
-        $row = $this->serviceLogin->getTable()->where('login = ?', $loginName)->fetch();
-
-        if (!$row) {
+        /** @var ModelLogin $login */
+        $login = $this->serviceLogin->getTable()->where('login = ?', $loginName)->fetch();
+        if (!$login) {
             throw new NoLoginException();
         }
-        $login = ModelLogin::createFromActiveRow($row);
         if (!$login->active) {
             throw new InactiveLoginException();
         }

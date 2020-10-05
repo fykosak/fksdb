@@ -3,98 +3,71 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
-use Nette\Application\AbortException;
+use Nette\Application\UI\Presenter;
+use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class GroupsGrid
- * @package FKSDB\Components\Grids\Schedule
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class GroupsGrid extends BaseGrid {
-    /**
-     * @var ModelEvent
-     */
-    private $event;
 
-    /**
-     * GroupsGrid constructor.
-     * @param ModelEvent $event
-     */
-    public function __construct(ModelEvent $event) {
-        parent::__construct();
+    private ModelEvent $event;
+
+    public function __construct(ModelEvent $event, Container $container) {
+        parent::__construct($container);
         $this->event = $event;
     }
 
+    protected function getModelClassName(): string {
+        return ModelScheduleGroup::class;
+    }
+
+    protected function getData(): IDataSource {
+        $groups = $this->event->getScheduleGroups();
+        return new NDataSource($groups);
+    }
+
     /**
-     * @param $presenter
+     * @param Presenter $presenter
+     * @return void
+     * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
-        $groups = $this->event->getScheduleGroups();
+        $this->addColumns([
+            'schedule_group.schedule_group_id',
+            'schedule_group.name_cs',
+            'schedule_group.name_en',
+            'schedule_group.schedule_group_type',
+            'schedule_group.start',
+            'schedule_group.end',
+        ]);
 
-        $dataSource = new NDataSource($groups);
-        $this->setDataSource($dataSource);
-        $this->addColumn('schedule_group_id', _('#'));
-
-        $this->addColumn('schedule_group_type', _('Type'))->setRenderer(function ($row) {
-            // TODO
-            return $row->schedule_group_type;
-        });
-        $this->addColumn('start', _('Start'))->setRenderer(function ($row) {
-            return $row->start->format('d. m. Y H:i');
-        });
-        $this->addColumn('end', _('End'))->setRenderer(function ($row) {
-            return $row->end->format('d. m. Y H:i');
-        });
-        $this->addColumn('items_count', _('Items count'))->setRenderer(function ($row) {
+        $this->addColumn('items_count', _('Items count'))->setRenderer(function ($row): int {
             $model = ModelScheduleGroup::createFromActiveRow($row);
             return $model->getItems()->count();
         });
 
-        $this->addButton('detail', _('Detail'))->setText(_('Detail'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('group', ['id' => $row->schedule_group_id]);
+        $this->addButton('detail')->setText(_('Detail'))
+            ->setLink(function ($row): string {
+                /** @var ModelScheduleGroup $row */
+                return $this->getPresenter()->link('ScheduleGroup:detail', ['id' => $row->schedule_group_id]);
             });
-
-        /* $this->addButton('delete', _('Remove'))->setClass('btn btn-sm btn-danger')->setText(_('Remove group'))
-             ->setLink(function ($row) {
-                 return $this->link('delete!', $row->schedule_group_id);
-             })->setConfirmationDialog(function () {
-                 return _('Do you want really remove this group?');
-             });
-/*
-         $this->addGlobalButton('add')
-             ->setLabel(_('Add accommodation'))
-             ->setLink($this->getPresenter()->link('create'));
-        */
+        $this->addButton('edit')->setText(_('Edit'))
+            ->setLink(function ($row): string {
+                /** @var ModelScheduleGroup $row */
+                return $this->getPresenter()->link('ScheduleGroup:edit', ['id' => $row->schedule_group_id]);
+            });
     }
-
-    /**
-     * @param $id
-     * @throws AbortException
-     */
-    /*
-    public function handleDelete($id) {
-        $model = $this->serviceEventAccommodation->findByPrimary($id);
-        if (!$model) {
-            $this->flashMessage(_('some another bullshit'));
-            return;
-        }
-        try {
-            $model->delete();
-        } catch (\PDOException $exception) {
-            if ($exception->getCode() == 23000) {
-                $this->flashMessage(_('Nelze zmazat ubytovaní, když je nekto ubytovaný'), \BasePresenter::FLASH_ERROR);
-                $this->redirect('this');
-            };
-        };
-        $this->redirect('this');
-    }*/
 }

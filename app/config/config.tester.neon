@@ -14,7 +14,11 @@ parameters:
     upload:
         # Path to storage directory
         root: %appDir%/../tmp/upload
-
-nette:
-    database:
-        dsn: "mysql:host=127.0.0.1;dbname=fksdb_test1"
+    astrid:
+        host: astrid.astrid.astrid
+        user: astrid
+        password: astrid
+application:
+    silentLinks: false
+database:
+    dsn: "mysql:host=127.0.0.1;dbname=fksdb_test1"

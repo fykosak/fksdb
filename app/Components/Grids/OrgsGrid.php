@@ -2,14 +2,16 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
-use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\ModelOrg;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceOrg;
-use Nette\Application\BadRequestException;
+use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
-use OrgModule\OrgPresenter;
-use SQL\SearchableDataSource;
+use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
+use NiftyGrid\DuplicateButtonException;
+use NiftyGrid\DuplicateColumnException;
+use FKSDB\SQL\SearchableDataSource;
 
 /**
  *
@@ -17,36 +19,21 @@ use SQL\SearchableDataSource;
  */
 class OrgsGrid extends BaseGrid {
 
-    /**
-     * @var \FKSDB\ORM\Services\ServiceOrg
-     */
-    private $serviceOrg;
+    private ServiceOrg $serviceOrg;
 
-    /**
-     * OrgsGrid constructor.
-     * @param \FKSDB\ORM\Services\ServiceOrg $serviceOrg
-     * @param TableReflectionFactory $tableReflectionFactory
-     */
-    function __construct(ServiceOrg $serviceOrg, TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct($tableReflectionFactory);
+    private ModelContest $contest;
 
+    public function __construct(Container $container, ModelContest $contest) {
+        parent::__construct($container);
+        $this->contest = $contest;
+    }
+
+    final public function injectServiceOrg(ServiceOrg $serviceOrg): void {
         $this->serviceOrg = $serviceOrg;
     }
 
-    /**
-     * @param OrgPresenter $presenter
-     * @throws BadRequestException
-     * @throws \Nette\Application\UI\InvalidLinkException
-     * @throws \NiftyGrid\DuplicateButtonException
-     * @throws \NiftyGrid\DuplicateColumnException
-     * @throws \NiftyGrid\DuplicateGlobalButtonException
-     */
-    protected function configure($presenter) {
-        parent::configure($presenter);
-        //
-        // data
-        //
-        $orgs = $this->serviceOrg->getTable()->where('contest_id', $presenter->getSelectedContest()->contest_id)
+    protected function getData(): IDataSource {
+        $orgs = $this->serviceOrg->getTable()->where('contest_id', $this->contest->contest_id)
             ->select('org.*, person.family_name AS display_name');
 
         $dataSource = new SearchableDataSource($orgs);
@@ -57,39 +44,29 @@ class OrgsGrid extends BaseGrid {
                             LIKE CONCAT(\'%\', ? , \'%\')', $token);
             }
         });
-        $this->setDataSource($dataSource);
+        return $dataSource;
+    }
+
+    /**
+     * @param Presenter $presenter
+     * @return void
+     * @throws BadTypeException
+     * @throws DuplicateButtonException
+     * @throws DuplicateColumnException
+     */
+    protected function configure(Presenter $presenter): void {
+        parent::configure($presenter);
+
         $this->setDefaultOrder('since DESC');
 
-        foreach (['person_name', 'since', 'until', 'role'] as $field) {
-            $this->addReflectionColumn(DbNames::TAB_ORG, $field, ModelOrg::class);
-        }
+        $this->addColumns([
+            'person.full_name',
+            'org.since',
+            'org.until',
+            'org.role',
+        ]);
 
-        //
-        // operations
-        //
-        $this->addButton('edit', _('Edit'))
-            ->setText(_('Edit'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('edit', ['id' => $row->org_id]);
-            })
-            ->setShow(function ($row) use ($presenter) {
-                return $presenter->authorized('edit', ['id' => $row->org_id]);
-            });
-
-        $this->addButton('detail', _('Detail'))
-            ->setText(_('Detail'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('detail', ['id' => $row->org_id]);
-            })
-            ->setShow(function ($row) use ($presenter) {
-                return $presenter->authorized('detail', ['id' => $row->org_id]);
-            });
-
-
-        if ($presenter->authorized('create')) {
-            $this->addGlobalButton('add')
-                ->setLabel(_('Založit organizátora'))
-                ->setLink($this->getPresenter()->link('create'));
-        }
+        $this->addLink('org.edit', true);
+        $this->addLink('org.detail', true);
     }
 }

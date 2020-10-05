@@ -4,70 +4,43 @@ namespace FKSDB\ORM\Services\StoredQuery;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
-use Nette;
-use Nette\Database\Connection;
+use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceStoredQuery extends AbstractServiceSingle {
+    use DeprecatedLazyDBTrait;
 
-    /**
-     * @return string
-     */
-    public function getModelClassName(): string {
-        return ModelStoredQuery::class;
-    }
+    private ServiceStoredQueryTag $serviceStoredQueryTag;
 
-    /**
-     * @return string
-     */
-    protected function getTableName(): string {
-        return DbNames::TAB_STORED_QUERY;
-    }
-
-    /**
-     *
-     * @var ServiceStoredQueryTag
-     */
-    private $serviceStoredQueryTag;
-
-    /**
-     * FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery constructor.
-     * @param Connection $connection
-     * @param ServiceStoredQueryTag $serviceStoredQueryTag
-     */
-    public function __construct(Connection $connection, ServiceStoredQueryTag $serviceStoredQueryTag) {
-        parent::__construct($connection);
+    public function __construct(Context $context, ServiceStoredQueryTag $serviceStoredQueryTag, IConventions $conventions) {
+        parent::__construct($context, $conventions, DbNames::TAB_STORED_QUERY, ModelStoredQuery::class);
         $this->serviceStoredQueryTag = $serviceStoredQueryTag;
     }
 
-    /**
-     * Syntactic sugar.
-     *
-     * @param string|null $qid
-     * @return \FKSDB\ORM\Models\StoredQuery\ModelStoredQuery|null
-     */
-    public function findByQid($qid) {
+    public function findByQid(string $qid): ?ModelStoredQuery {
         if (!$qid) {
             return null;
         }
+        /** @var ModelStoredQuery $result */
         $result = $this->getTable()->where('qid', $qid)->fetch();
-        return $result ? ModelStoredQuery::createFromActiveRow($result) : null;
+        return $result ?: null;
     }
 
     /**
      * @param int|array|null $tagTypeId
-     * @return Nette\Database\Table\Selection|null
+     * @return TypedTableSelection
      */
-    public function findByTagType($tagTypeId) {
+    public function findByTagType($tagTypeId): ?TypedTableSelection {
         if (!$tagTypeId) {
             return null;
         }
         $queryIds = $this->serviceStoredQueryTag->findByTagTypeId($tagTypeId)->fetchPairs('query_id', 'query_id');
-        $result = $this->getTable()->where('query_id', $queryIds);
-        return $result ?: null;
+        return $this->getTable()->where('query_id', $queryIds);
     }
-
 }

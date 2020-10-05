@@ -6,50 +6,46 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelPerson;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @method ModelPerson|null findByPrimary($key)
+ * @method ModelPerson createNewModel(array $data)
  */
 class ServicePerson extends AbstractServiceSingle {
 
-    /**
-     * @return string
-     */
-    public function getModelClassName(): string {
-        return ModelPerson::class;
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_PERSON, ModelPerson::class);
     }
 
-    /**
-     * @return string
-     */
-    protected function getTableName(): string {
-        return DbNames::TAB_PERSON;
-    }
-
-    /**
-     * Syntactic sugar.
-     *
-     * @param mixed $email
-     * @return \FKSDB\ORM\Models\ModelPerson|null
-     */
-    public function findByEmail($email) {
+    public function findByEmail(?string $email): ?ModelPerson {
         if (!$email) {
             return null;
         }
-        $result = $this->getTable()->where('person_info:email', $email)->fetch();
-        return $result ? ModelPerson::createFromActiveRow($result) : null;
+        /** @var ModelPerson|false $result */
+        $result = $this->getTable()->where(':person_info.email', $email)->fetch();
+        return $result ?: null;
     }
 
     /**
-     * @param IModel $model
-     * @return mixed|void
+     * @param IModel|ModelPerson $model
+     * @return void
      */
-    public function save(IModel &$model) {
-        if (!isset($model->gender)) {
+    public function save(IModel &$model): void {
+        if (is_null($model->gender)) {
             $model->inferGender();
         }
-        return parent::save($model);
+        parent::save($model);
     }
 
+    public function store(?ModelPerson $person, array $data): ModelPerson {
+        if ($person) {
+            $this->updateModel2($person, $data);
+            return $person;
+        } else {
+            return $this->createNewModel($data);
+        }
+    }
 }
-

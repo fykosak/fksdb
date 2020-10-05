@@ -1,124 +1,48 @@
 <?php
 
-
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\Models\ModelEventParticipant;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
-use Nette\Application\BadRequestException;
-use Nette\NotImplementedException;
-use Nette\Utils\Html;
+use Nette\Application\UI\Presenter;
+use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
 
 /**
  * Class PersonsGrid
- * @package FKSDB\Components\Grids\Schedule
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PersonsGrid extends BaseGrid {
-    /**
-     * @var ModelScheduleItem
-     */
-    private $item;
 
-    /**
-     * @param ModelScheduleItem $item
-     */
-    public function setItem(ModelScheduleItem $item) {
+    private ModelScheduleItem $item;
+
+    public function __construct(Container $container, ModelScheduleItem $item) {
+        parent::__construct($container);
         $this->item = $item;
-        $persons = $this->item->getInterested();
-        $dataSource = new NDataSource($persons);
-        $this->setDataSource($dataSource);
+    }
+
+    protected function getData(): IDataSource {
+        return new NDataSource($this->item->getInterested());
     }
 
     /**
-     * @param $presenter
+     * @param Presenter $presenter
+     * @return void
      * @throws DuplicateColumnException
+     * @throws BadTypeException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
-
         $this->addColumn('person_schedule_id', _('#'));
-
-        $this->addColumn('person', _('Person'))->setRenderer(function ($row) {
-            $model = ModelPersonSchedule::createFromActiveRow($row);
-            return $model->getPerson()->getFullName();
-        })->setSortable(false);
-
-        $this->addColumnRole();
-
-        $this->addColumnPayment();
-
-        $this->addColumn('state', _('State'))->setRenderer(function ($row) {
-            $model = ModelPersonSchedule::createFromActiveRow($row);
-            return $model->state;
-        });
+        $this->addColumns(['person.full_name', 'event.role', 'payment.payment']);
     }
 
-    /**
-     * @throws DuplicateColumnException
-     */
-    protected function addColumnPayment() {
-        $this->addColumn('payment', _('Payment'))
-            ->setRenderer(function ($row) {
-                $model = ModelPersonSchedule::createFromActiveRow($row);
-                $modelPayment = $model->getPayment();
-                if (!$modelPayment) {
-                    return Html::el('span')->addAttributes(['class' => 'badge badge-danger'])->addText('No payment found');
-                }
-                return Html::el('span')->addAttributes(['class' => $modelPayment->getUIClass()])->addText('#' . $modelPayment->getPaymentId() . '-' . $modelPayment->getStateLabel());
-            })->setSortable(false);
-    }
-
-    /**
-     * @throws DuplicateColumnException
-     */
-    protected function addColumnRole() {
-        $this->addColumn('role', _('Role'))
-            ->setRenderer(function ($row) {
-                $container = Html::el('span');
-                $model = ModelPersonSchedule::createFromActiveRow($row);
-                $person = $model->getPerson();
-                $roles = $person->getRolesForEvent($model->getScheduleItem()->getGroup()->getEvent());
-                if (!\count($roles)) {
-                    $container->addHtml(Html::el('span')
-                        ->addAttributes(['class' => 'badge badge-danger'])
-                        ->addText(_('No role')));
-                    return $container;
-                }
-                foreach ($roles as $role) {
-                    switch ($role['type']) {
-                        case 'teacher':
-                            $container->addHtml(Html::el('span')
-                                ->addAttributes(['class' => 'badge badge-9'])
-                                ->addText(_('Teacher') . ' - ' . $role['team']->name));
-                            break;
-                        case'org':
-                            $container->addHtml(Html::el('span')
-                                ->addAttributes(['class' => 'badge badge-7'])
-                                ->addText(_('Org') . ' - ' . $role['org']->note));
-                            break;
-                        case'participant':
-                            $team = null;
-                            /**
-                             * @var ModelEventParticipant $participant
-                             */
-                            $participant = $role['participant'];
-                            try {
-                                $team = $participant->getFyziklaniTeam();
-                            } catch (BadRequestException $exception) {
-                            }
-                            $container->addHtml(Html::el('span')
-                                ->addAttributes(['class' => 'badge badge-10'])
-                                ->addText(_('Participant') . ' - ' . _($participant->status) .
-                                    ($team ? (' - team: ' . $team->name) : '')
-                                ));
-                    }
-                }
-                return $container;
-            })->setSortable(false);
+    protected function getModelClassName(): string {
+        return ModelPersonSchedule::class;
     }
 }

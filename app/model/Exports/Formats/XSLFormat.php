@@ -1,12 +1,12 @@
 <?php
 
-namespace Exports\Formats;
+namespace FKSDB\Exports\Formats;
 
 use DOMDocument;
-use Exports\IExportFormat;
-use Exports\StoredQuery;
+use FKSDB\Exports\IExportFormat;
+use FKSDB\StoredQuery\StoredQuery;
 use Nette\SmartObject;
-use WebService\IXMLNodeSerializer;
+use FKSDB\WebService\IXMLNodeSerializer;
 use XSLTProcessor;
 
 /**
@@ -16,63 +16,34 @@ use XSLTProcessor;
  */
 class XSLFormat implements IExportFormat {
     use SmartObject;
-    /**
-     * @var StoredQuery
-     */
-    private $storedQuery;
 
-    /**
-     * @var array
-     */
-    private $parameters;
+    private StoredQuery $storedQuery;
 
-    /**
-     * @var string
-     */
-    private $xslFile;
+    private array $parameters = [];
 
-    /**
-     * @var IXMLNodeSerializer
-     */
-    private $xmlSerializer;
+    private string $xslFile;
 
-    /**
-     * XSLFormat constructor.
-     * @param StoredQuery $storedQuery
-     * @param $xslFile
-     * @param IXMLNodeSerializer $xmlSerializer
-     */
-    function __construct(StoredQuery $storedQuery, $xslFile, IXMLNodeSerializer $xmlSerializer) {
+    private IXMLNodeSerializer $xmlSerializer;
+
+    public function __construct(StoredQuery $storedQuery, string $xslFile, IXMLNodeSerializer $xmlSerializer) {
         $this->storedQuery = $storedQuery;
         $this->xslFile = $xslFile;
         $this->xmlSerializer = $xmlSerializer;
     }
 
-    /**
-     * @return array
-     */
-    public function getParameters() {
+    public function getParameters(): array {
         return $this->parameters;
     }
 
-    /**
-     * @param $parameters
-     */
-    public function setParameters($parameters) {
+    public function setParameters(array $parameters): void {
         $this->parameters = $parameters;
     }
 
-    /**
-     * @param $parameters
-     */
-    public function addParameters($parameters) {
+    public function addParameters(array $parameters): void {
         $this->parameters = array_merge($this->parameters, $parameters);
     }
 
-    /**
-     * @return PlainTextResponse|\Nette\Application\IResponse
-     */
-    public function getResponse() {
+    public function getResponse(): PlainTextResponse {
         // Prepare XSLT processor
         $xsl = new DOMDocument();
         $xsl->load($this->xslFile);
@@ -91,8 +62,6 @@ class XSLFormat implements IExportFormat {
         $this->xmlSerializer->fillNode($this->storedQuery, $export, $doc, IXMLNodeSerializer::EXPORT_FORMAT_1);
 
         // Prepare response
-        $response = new PlainTextResponse($proc->transformToXml($doc));
-        return $response;
+        return new PlainTextResponse($proc->transformToXml($doc));
     }
-
 }

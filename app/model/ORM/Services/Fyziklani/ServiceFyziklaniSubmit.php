@@ -4,76 +4,40 @@ namespace FKSDB\ORM\Services\Fyziklani;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\Database\Table\Selection;
+use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Lukáš Timko <lukast@fykos.cz>
+ * @method ModelFyziklaniSubmit createNewModel(array $data)
  */
 class ServiceFyziklaniSubmit extends AbstractServiceSingle {
+    use DeprecatedLazyDBTrait;
 
-    /**
-     * @return string
-     */
-    public function getModelClassName(): string {
-        return ModelFyziklaniSubmit::class;
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_FYZIKLANI_SUBMIT, ModelFyziklaniSubmit::class);
     }
 
-    /**
-     * @return string
-     */
-    protected function getTableName(): string {
-        return DbNames::TAB_FYZIKLANI_SUBMIT;
-    }
-
-    /**
-     * @param int $taskId
-     * @param int $teamId integer
-     * @return ModelFyziklaniSubmit|null
-     */
-    public function findByTaskAndTeam(int $taskId, int $teamId) {
-        if (!$taskId || !$teamId) {
-            return null;
-        }
+    public function findByTaskAndTeam(ModelFyziklaniTask $task, ModelFyziklaniTeam $team): ?ModelFyziklaniSubmit {
+        /** @var ModelFyziklaniSubmit $row */
         $row = $this->getTable()->where([
-            'fyziklani_task_id' => $taskId,
-            'e_fyziklani_team_id' => $teamId
+            'fyziklani_task_id' => $task->fyziklani_task_id,
+            'e_fyziklani_team_id' => $team->e_fyziklani_team_id,
         ])->fetch();
-        return $row ? ModelFyziklaniSubmit::createFromActiveRow($row) : null;
+        return $row ?: null;
     }
 
-    /**
-     * Syntactic sugar.
-     * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @return Selection
-     */
-    public function findAll(ModelEvent $event): Selection {
+    public function findAll(ModelEvent $event): TypedTableSelection {
         return $this->getTable()->where('e_fyziklani_team_id.event_id', $event->event_id);
     }
 
-    /**
-     * @param int $taskId
-     * @param int $teamId
-     * @return bool
-     */
-    public function submitExist(int $taskId, int $teamId): bool {
-        $submit = $this->findByTaskAndTeam($taskId, $teamId);
-        if (is_null($submit)) {
-            return false;
-        }
-        if (is_null($submit->points)) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * @param \FKSDB\ORM\Models\ModelEvent $event
-     * @param null $lastUpdated
-     * @return array
-     */
-    public function getSubmitsAsArray(ModelEvent $event, $lastUpdated = null): array {
+    public function getSubmitsAsArray(ModelEvent $event, ?string $lastUpdated): array {
         $query = $this->getTable()->where('e_fyziklani_team.event_id', $event->event_id);
         $submits = [];
         if ($lastUpdated) {

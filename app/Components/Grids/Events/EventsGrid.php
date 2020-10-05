@@ -2,17 +2,18 @@
 
 namespace FKSDB\Components\Grids\Events;
 
-use FKSDB\Components\Forms\Factories\TableReflectionFactory;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceEvent;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\Application\UI\Presenter;
+use Nette\DI\Container;
+use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
+use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
-use OrgModule\OrgPresenter;
 
 /**
  *
@@ -20,92 +21,58 @@ use OrgModule\OrgPresenter;
  */
 class EventsGrid extends BaseGrid {
 
-    /**
-     *
-     * @var \FKSDB\ORM\Services\ServiceEvent
-     */
-    private $serviceEvent;
+    private ServiceEvent $serviceEvent;
 
-    /**
-     * EventsGrid constructor.
-     * @param \FKSDB\ORM\Services\ServiceEvent $serviceEvent
-     * @param TableReflectionFactory $tableReflectionFactory
-     */
-    function __construct(ServiceEvent $serviceEvent, TableReflectionFactory $tableReflectionFactory) {
-        parent::__construct($tableReflectionFactory);
+    private ModelContest $contest;
+
+    private int $year;
+
+    public function __construct(Container $container, ModelContest $contest, int $year) {
+        parent::__construct($container);
+        $this->contest = $contest;
+        $this->year = $year;
+    }
+
+    final public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 
+    protected function getData(): IDataSource {
+        $events = $this->serviceEvent->getEvents($this->contest, $this->year);
+        return new NDataSource($events);
+    }
+
     /**
-     * @param OrgPresenter $presenter
-     * @throws BadRequestException
+     * @param Presenter $presenter
+     *
+     * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
-     * @throws \NiftyGrid\DuplicateButtonException
+     * @throws BadTypeException
      */
-    protected function configure($presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
-        //
-        // data
-        //
-        $events = $this->serviceEvent->getEvents($presenter->getSelectedContest(), $presenter->getSelectedYear());
-
-        $dataSource = new NDataSource($events);
-
         $this->setDefaultOrder('event.begin ASC');
-        $this->setDataSource($dataSource);
 
-        $this->addColumn('event_id', _('Id akce'));
+        $this->addColumns([
+            'event.event_id',
+            'event.event_type',
+            'event.name',
+            'event.year',
+            'event.event_year',
+        ]);
 
-        foreach (['event_type', 'name','year','event_year'] as $field) {
-            $this->addReflectionColumn(DbNames::TAB_EVENT, $field, ModelEvent::class);
-        }
-        //
-        // operations
-        //
-        $this->addButton('detail')
-            ->setText(_('Detail'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link(':Event:dashboard:', ['eventId' => $row->event_id]);
-            });
-        $this->addButton('edit', _('Edit'))
-            ->setText(_('Edit'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('edit', $row->event_id);
-            });
-        $this->addButton('applications')
-            ->setText(_('Applications'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link(':Event:application:list', ['eventId' => $row->event_id]);
-            })->setShow(function ($row) {
-                if ($this->getPresenter()->authorized(':Event:application:list', ['eventId' => $row->event_id])) {
-                    return true;
-                }
-                return false;
-            });
+        $this->addLinkButton(':Event:Dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
+        $this->addLinkButton('edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
 
-        $this->addButton('teamApplications')
-            ->setText(_('Team applications'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link(':Event:teamApplication:list', ['eventId' => $row->event_id]);
-            })->setShow(function ($row) {
-                if ($this->getPresenter()->authorized(':Event:teamApplication:list', ['eventId' => $row->event_id])) {
-                    return true;
-                }
-                return false;
-            });
+        $this->addLink('event.application.list');
 
-        $this->addButton('org')
-            ->setText(_('Organisers'))
-            ->setLink(function ($row) {
-                return $this->getPresenter()->link('EventOrg:list', ['eventId' => $row->event_id]);
-            });
+        $this->addLinkButton(':Event:EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
 
         $this->addGlobalButton('add')
             ->setLink($this->getPresenter()->link('create'))
             ->setLabel('Add event')
             ->setClass('btn btn-sm btn-primary');
     }
-
 }

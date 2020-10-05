@@ -4,7 +4,7 @@ namespace FKSDB\Payment\Handler;
 
 /**
  * Class EmptyDataException
- * @package FKSDB\Payment\Handler
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EmptyDataException extends \Exception {
 

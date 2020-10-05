@@ -1,0 +1,9 @@
+{block content}
+    <div class="btn-group">
+        <a n:href=":Public:Application:default eventId => $event->getPrimary()"
+                class="btn btn-sm btn-primary">{_'Nová přihláška'}</a>
+        <a href="{plink import}" class="btn btn-sm btn-secondary">{_'Import přihlášek'}</a>
+        <a n:href="transitions" class="btn btn-primary btn-sm">{_'Hromadné prechody'}</a>
+    </div>
+    {control grid}
+{/block}

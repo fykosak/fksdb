@@ -4,34 +4,24 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\ModelRegion;
-use Nette\Database\Table\Selection;
+use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @method ModelRegion findByPrimary($key)
  */
 class ServiceRegion extends AbstractServiceSingle {
+    use DeprecatedLazyDBTrait;
 
-    /**
-     * @return string
-     */
-    public function getModelClassName(): string {
-        return ModelRegion::class;
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_REGION, ModelRegion::class);
     }
 
-    /**
-     * @return string
-     */
-    protected function getTableName(): string {
-        return DbNames::TAB_REGION;
-    }
-
-    /**
-     * @return Selection
-     */
-    public function getCountries(): Selection {
+    public function getCountries(): TypedTableSelection {
         return $this->getTable()->where('country_iso = nuts');
     }
-
 }
-

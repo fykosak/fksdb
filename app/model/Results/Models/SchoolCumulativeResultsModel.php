@@ -7,7 +7,9 @@ use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\Results\EvaluationStrategies\EvaluationNullObject;
 use FKSDB\Results\ModelCategory;
 use Nette\Database\Connection;
+use Nette\Database\Row;
 use Nette\InvalidStateException;
+use Nette\NotSupportedException;
 
 /**
  * Cumulative results of schools' contest.
@@ -16,32 +18,17 @@ use Nette\InvalidStateException;
  */
 class SchoolCumulativeResultsModel extends AbstractResultsModel {
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $series;
 
     /**
      * Cache
-     * @var array
      */
-    private $dataColumns = [];
+    private array $dataColumns = [];
 
-    /**
-     *
-     * @var CumulativeResultsModel
-     */
-    private $cumulativeResultsModel;
+    private CumulativeResultsModel $cumulativeResultsModel;
 
-    /**
-     * FKSDB\Results\Models\SchoolCumulativeResultsModel constructor.
-     * @param CumulativeResultsModel $cumulativeResultsModel
-     * @param ModelContest $contest
-     * @param ServiceTask $serviceTask
-     * @param Connection $connection
-     * @param $year
-     */
-    public function __construct(CumulativeResultsModel $cumulativeResultsModel, ModelContest $contest, ServiceTask $serviceTask, Connection $connection, $year) {
+    public function __construct(CumulativeResultsModel $cumulativeResultsModel, ModelContest $contest, ServiceTask $serviceTask, Connection $connection, int $year) {
         parent::__construct($contest, $serviceTask, $connection, $year, new EvaluationNullObject());
         $this->cumulativeResultsModel = $cumulativeResultsModel;
     }
@@ -52,7 +39,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
      * @param ModelCategory $category
      * @return array
      */
-    public function getDataColumns($category) {
+    public function getDataColumns(ModelCategory $category): array {
         if ($this->series === null) {
             throw new InvalidStateException('Series not specified.');
         }
@@ -100,7 +87,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
     /**
      * @param mixed $series
      */
-    public function setSeries($series) {
+    public function setSeries($series): void {
         $this->series = $series;
         $this->cumulativeResultsModel->setSeries($series);
         // invalidate cache of columns
@@ -108,28 +95,24 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @return array
+     * @return ModelCategory[]
      */
-    public function getCategories() {
+    public function getCategories(): array {
         //return $this->evaluationStrategy->getCategories();
         return [
-            new ModelCategory(ModelCategory::CAT_ALL)
+            new ModelCategory(ModelCategory::CAT_ALL),
         ];
     }
 
-    /**
-     * @param $category
-     * @return mixed|void
-     */
-    protected function composeQuery($category) {
-        throw new \Nette\NotSupportedException;
+    protected function composeQuery(ModelCategory $category): string {
+        throw new NotSupportedException();
     }
 
     /**
      * @param ModelCategory $category
-     * @return array of Nette\Database\Row
+     * @return Row[]
      */
-    public function getData($category) {
+    public function getData(ModelCategory $category): array {
         $categories = [];
         if ($category->id == ModelCategory::CAT_ALL) {
             $categories = $this->cumulativeResultsModel->getCategories();
@@ -160,49 +143,38 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
             $result[] = $resultRow;
         }
         usort($result, function ($a, $b) {
-            return ($a[self::ALIAS_SUM] > $b[self::ALIAS_SUM]) ? -1 : 1;
+            return ($a[self::ALIAS_UNWEIGHTED_SUM] > $b[self::ALIAS_UNWEIGHTED_SUM]) ? -1 : 1;
         });
 
         $prevSum = false;
         for ($i = 0; $i < count($result); $i++) {
-            if ($result[$i][self::ALIAS_SUM] !== $prevSum) {
+            if ($result[$i][self::ALIAS_UNWEIGHTED_SUM] !== $prevSum) {
                 $result[$i][self::DATA_RANK_FROM] = $i + 1;
             } else {
                 $result[$i][self::DATA_RANK_FROM] = $result[$i - 1][self::DATA_RANK_FROM];
             }
-            $prevSum = $result[$i][self::ALIAS_SUM];
+            $prevSum = $result[$i][self::ALIAS_UNWEIGHTED_SUM];
         }
 
         // reverse iteration to get ranking ranges
         $nextSum = false; //because last sum can be null
         for ($i = count($result) - 1; $i >= 0; --$i) {
-            if ($result[$i][self::ALIAS_SUM] !== $nextSum) {
+            if ($result[$i][self::ALIAS_UNWEIGHTED_SUM] !== $nextSum) {
                 $result[$i][self::DATA_RANK_TO] = $i + 1;
             } else {
                 $result[$i][self::DATA_RANK_TO] = $result[$i + 1][self::DATA_RANK_TO];
             }
-            $nextSum = $result[$i][self::ALIAS_SUM];
+            $nextSum = $result[$i][self::ALIAS_UNWEIGHTED_SUM];
         }
 
         return $result;
     }
 
-    //TODO better have somehow in evaluation strategy
-
-    /**
-     * @param $i
-     * @return mixed
-     */
-    private function weightVector($i) {
+    private function weightVector(int $i): float {
         return max([1.0 - 0.1 * $i, 0.1]);
     }
 
-    /**
-     * @param $schoolContestants
-     * @param $category
-     * @return array
-     */
-    private function createResultRow($schoolContestants, $category) {
+    private function createResultRow(array $schoolContestants, ModelCategory $category): array {
         $resultRow = [];
         foreach ($this->getDataColumns($category) as $column) {
             $resultRow[$column[self::COL_ALIAS]] = 0;

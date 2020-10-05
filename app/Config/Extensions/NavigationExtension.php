@@ -2,8 +2,9 @@
 
 namespace FKSDB\Config\Extensions;
 
-use FKSDB\Components\Controls\Navigation\Navigation;
-use Nette\Config\CompilerExtension;
+use FKSDB\Components\Controls\Navigation\NavigationFactory;
+use Nette\DI\CompilerExtension;
+use Nette\DI\ServiceDefinition;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -12,19 +13,16 @@ use Nette\Config\CompilerExtension;
  */
 class NavigationExtension extends CompilerExtension {
 
-    private $createdNodes = [];
+    private array $createdNodes = [];
 
-    public function loadConfiguration() {
+    public function loadConfiguration(): void {
         parent::loadConfiguration();
 
         $builder = $this->getContainerBuilder();
-        $config = $this->getConfig([
-            'nodes' => [],
-            'structure' => [],
-        ]);
+        $config = $this->getConfig();
         $navbar = $builder->addDefinition('navbar')
-            ->setClass(Navigation::class);
-        $navbar->setShared(true)->setAutowired(true);
+            ->setFactory(NavigationFactory::class);
+        $navbar->setAutowired(true);
 
 
         foreach ($config['nodes'] as $nodeId => $arguments) {
@@ -38,11 +36,11 @@ class NavigationExtension extends CompilerExtension {
     }
 
     /**
-     * @param $navbar
-     * @param $nodeId
+     * @param ServiceDefinition $navbar
+     * @param int|string $nodeId
      * @param array $arguments
      */
-    private function createNode($navbar, $nodeId, $arguments = []) {
+    private function createNode(ServiceDefinition $navbar, $nodeId, $arguments = []): void {
         if (!isset($arguments['link'])) {
             $this->parseIdAsLink($nodeId, $arguments);
         }
@@ -52,11 +50,11 @@ class NavigationExtension extends CompilerExtension {
     }
 
     /**
-     * @param $structure
-     * @param $navbar
+     * @param iterable $structure
+     * @param ServiceDefinition $navbar
      * @param null $parent
      */
-    private function createFromStructure($structure, $navbar, $parent = null) {
+    private function createFromStructure(iterable $structure, ServiceDefinition $navbar, $parent = null): void {
         foreach ($structure as $nodeId => $children) {
             if (is_array($children)) {
                 if (!isset($this->createdNodes[$nodeId])) {
@@ -66,7 +64,7 @@ class NavigationExtension extends CompilerExtension {
                     }
                 }
                 $this->createFromStructure($children, $navbar, $nodeId);
-            } else if (!is_array($children)) {
+            } else {
                 $nodeId = $children;
                 if (!isset($this->createdNodes[$nodeId])) {
                     $this->createNode($navbar, $nodeId);
@@ -79,14 +77,15 @@ class NavigationExtension extends CompilerExtension {
     }
 
     /**
-     * @param $nodeId
-     * @param $arguments
+     * @param int|string $nodeId
+     * @param array $arguments
+     * @return void
      */
-    private function parseIdAsLink($nodeId, &$arguments) {
-        $FQAction = str_replace('.', ':', $nodeId);
-        $a = strrpos($FQAction, ':');
-        $presenterName = substr($FQAction, 0, $a);
-        $action = substr($FQAction, $a + 1);
+    private function parseIdAsLink($nodeId, &$arguments): void {
+        $fullQualityAction = str_replace('.', ':', $nodeId);
+        $a = strrpos($fullQualityAction, ':');
+        $presenterName = substr($fullQualityAction, 0, $a);
+        $action = substr($fullQualityAction, $a + 1);
         $arguments['linkPresenter'] = $presenterName;
         $arguments['linkAction'] = $action;
         $arguments['linkParams'] = isset($arguments['params']) ? $arguments['params'] : null;
