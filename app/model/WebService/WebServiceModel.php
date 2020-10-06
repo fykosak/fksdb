@@ -31,20 +31,14 @@ class WebServiceModel {
 
     /** @var array  contest name => contest_id */
     private array $inverseContestMap;
-
     private ServiceContest $serviceContest;
-
     private ResultsModelFactory $resultsModelFactory;
-
     private StatsModelFactory $statsModelFactory;
-
     private ModelLogin $authenticatedLogin;
-
     private IAuthenticator $authenticator;
-
     private StoredQueryFactory $storedQueryFactory;
-
     private ContestAuthorizator $contestAuthorizator;
+    private FyziklaniSoapFactory $fyziklaniSoapFactory;
 
     public function __construct(
         array $inverseContestMap,
@@ -53,7 +47,8 @@ class WebServiceModel {
         StatsModelFactory $statsModelFactory,
         IAuthenticator $authenticator,
         StoredQueryFactory $storedQueryFactory,
-        ContestAuthorizator $contestAuthorizator
+        ContestAuthorizator $contestAuthorizator,
+        FyziklaniSoapFactory $fyziklaniSoapFactory
     ) {
         $this->inverseContestMap = $inverseContestMap;
         $this->serviceContest = $serviceContest;
@@ -62,6 +57,7 @@ class WebServiceModel {
         $this->authenticator = $authenticator;
         $this->storedQueryFactory = $storedQueryFactory;
         $this->contestAuthorizator = $contestAuthorizator;
+        $this->fyziklaniSoapFactory = $fyziklaniSoapFactory;
     }
 
     /**
@@ -93,29 +89,18 @@ class WebServiceModel {
     /**
      * @param stdClass $args
      * @return SoapVar
-     * @throws BadRequestException
+     * @throws SoapFault
      */
-    public function getFyziklani($args): SoapVar {
-        Debugger::log((array)$args);
-        //   $this->checkAuthentication(__FUNCTION__);
-        $doc = new DOMDocument();
-        $fyziklaniNode = $doc->createElement('fyziklani');
-        if (!isset($args->eventId)) {
-            throw new BadRequestException();
-        }
-        if (isset($args->teams)) {
-            $fyziklaniNode->appendChild($doc->createElement('teams'));
-        }
-        $doc->appendChild($fyziklaniNode);
-        //    $teams = $doc->createElement('team');
-        //    $brawlNode->appendChild($teams);
-        $doc->formatOutput = true;
-        return new SoapVar($doc->saveXML($fyziklaniNode), XSD_ANYXML);
+    public function getFyziklani(stdClass $args): SoapVar {
+        $this->checkAuthentication(__FUNCTION__);
+        return $this->fyziklaniSoapFactory->handle($args);
     }
 
     /**
      * @param $args
      * @return SoapVar
+     * @throws BadRequestException
+     * @throws BadTypeException
      * @throws SoapFault
      */
     public function getResults($args): SoapVar {

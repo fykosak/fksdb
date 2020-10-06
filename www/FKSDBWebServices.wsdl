@@ -7,7 +7,6 @@
         xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
         xmlns:http="http://schemas.xmlsoap.org/wsdl/http/"
         xmlns:fksres="http://fykos.cz/xml/results/schema"
-        xmlns:fksfyziklani="http://fykos.cz/xml/fyziklani/schema"
         xmlns:fksst="http://fykos.cz/xml/stats/schema"
         xmlns:fksex="http://fykos.cz/xml/export/schema"
         xmlns:tns="http://fykos.cz/xml/ws/service"
@@ -23,8 +22,6 @@
                         schemaLocation="https://db.fykos.cz/xml/stats/schema.xsd"/>
             <xsd:import namespace="http://fykos.cz/xml/export/schema"
                         schemaLocation="https://db.fykos.cz/xml/export/schema.xsd"/>
-            <xsd:import namespace="http://fykos.cz/xml/fyziklani/schema"
-                        schemaLocation="http://db.fykos.local/xml/fyziklani/schema.xsd"/>
             <!-- types for web service only -->
             <xsd:complexType name="GetResultsRequestType">
                 <xsd:sequence>
@@ -85,15 +82,6 @@
                 <xsd:sequence>
                     <xsd:element name="username" type="xsd:string" minOccurs="1" maxOccurs="1"/>
                     <xsd:element name="password" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-                </xsd:sequence>
-            </xsd:complexType>
-            <xsd:complexType name="GetFyziklaniRequestType">
-                <xsd:sequence>
-                    <xsd:element name="event-id" type="xsd:nonNegativeInteger"/>
-                    <xsd:element name="teams" type="xsd:string"/>
-                    <!--<xsd:element name="tasks" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-                    <xsd:element name="submits" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-                    <xsd:element name="teamDetail" type="xsd:string" minOccurs="1" maxOccurs="1"/>-->
                 </xsd:sequence>
             </xsd:complexType>
         </xsd:schema>
