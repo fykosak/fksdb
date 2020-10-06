@@ -6,6 +6,7 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\SmartObject;
+use Nette\Utils\DateTime;
 use SoapVar;
 
 /**
@@ -41,6 +42,9 @@ class FyziklaniSoapFactory {
 
         if (isset($args->teamList)) {
             return $this->handleTeamList($args, $event);
+        }
+        if (isset($args->results)) {
+            return $this->handleResults($args, $event);
         }
         throw new \SoapFault('Sender', 'Unknown action.');
     }
@@ -93,6 +97,39 @@ class FyziklaniSoapFactory {
         }
 
         $doc->appendChild($rootNode);
+        $doc->formatOutput = true;
+        return new SoapVar($doc->saveXML($rootNode), XSD_ANYXML);
+    }
+
+    private function handleResults(\stdClass $args, ModelEvent $event): SoapVar {
+        $doc = new \DOMDocument();
+        $rootNode = $doc->createElement('teamList');
+        $gameSetup = $event->getFyziklaniGameSetup();
+
+        $result = [
+            'availablePoints' => $gameSetup->getAvailablePoints(),
+            'gameStart' => $gameSetup->game_start->format('c'),
+            'gameEnd' => $gameSetup->game_end->format('c'),
+            'times' => [
+                'toStart' => strtotime($gameSetup->game_start) - time(),
+                'toEnd' => strtotime($gameSetup->game_end) - time(),
+                'visible' => $gameSetup->isResultsVisible(),
+            ],
+            'lastUpdated' => (new DateTime())->format('c'),
+            'refreshDelay' => $gameSetup->refresh_delay,
+            'tasksOnBoard' => $gameSetup->tasks_on_board,
+            'submits' => [],
+        ];
+
+        if ($gameSetup->isResultsVisible()) {
+            $result['submits'] = $this->serviceFyziklaniSubmit->getSubmitsAsArray($event, $args->lastUpdated);
+        }
+        // probably need refresh before competition started
+        //if (!$this->lastUpdated) {
+        $result['teams'] = $this->serviceFyziklaniTeam->getTeamsAsArray($event);
+        $result['tasks'] = $this->serviceFyziklaniTask->getTasksAsArray($event);
+        $result['categories'] = ['A', 'B', 'C'];
+        //  }
         $doc->formatOutput = true;
         return new SoapVar($doc->saveXML($rootNode), XSD_ANYXML);
     }
