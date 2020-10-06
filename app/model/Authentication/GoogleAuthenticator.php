@@ -8,6 +8,7 @@ use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\ORM\Services\ServiceOrg;
+use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\YearCalculator;
 use Nette\Security\AuthenticationException;
 
@@ -19,11 +20,13 @@ class GoogleAuthenticator extends AbstractAuthenticator {
 
     private ServiceOrg $serviceOrg;
     private AccountManager $accountManager;
+    private ServicePerson $servicePerson;
 
-    public function __construct(ServiceOrg $serviceOrg, AccountManager $accountManager, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
+    public function __construct(ServiceOrg $serviceOrg, AccountManager $accountManager, ServiceLogin $serviceLogin, YearCalculator $yearCalculator, ServicePerson $servicePerson) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->serviceOrg = $serviceOrg;
         $this->accountManager = $accountManager;
+        $this->servicePerson = $servicePerson;
     }
 
     /**
@@ -31,7 +34,6 @@ class GoogleAuthenticator extends AbstractAuthenticator {
      * @return ModelLogin
      * @throws AuthenticationException
      * @throws InactiveLoginException
-     * @throws InvalidCredentialsException
      */
     public function authenticate(array $user): ModelLogin {
         $person = $this->findPerson($user);
@@ -55,12 +57,15 @@ class GoogleAuthenticator extends AbstractAuthenticator {
      * @param array $user
      * @return ModelPerson|null
      * @throws AuthenticationException
-     * @throws InvalidCredentialsException
      */
     private function findPerson(array $user): ?ModelPerson {
         if (!$user['email']) {
             throw new AuthenticationException(_('V profilu Google nebyl nalezen e-mail.'));
         }
+        return $this->findOrg($user) ?? $this->servicePerson->findByEmail($user['email']);
+    }
+
+    private function findOrg(array $user): ?ModelPerson {
         [$domainAlias, $domain] = explode('@', $user['email']);
         switch ($domain) {
             case 'fykos.cz':
@@ -70,7 +75,7 @@ class GoogleAuthenticator extends AbstractAuthenticator {
                 $contestId = ModelContest::ID_VYFUK;
                 break;
             default:
-                throw new InvalidCredentialsException();
+                return null;
         }
         /** @var ModelOrg|null $org */
         $org = $this->serviceOrg->getTable()->where(['domain_alias' => $domainAlias, 'contest_id' => $contestId])->fetch();
