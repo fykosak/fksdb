@@ -34,6 +34,7 @@ use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\DateTime;
 use FKSDB\Utils\Utils;
+use Tracy\Debugger;
 
 /**
  * Class AuthenticationPresenter
@@ -331,11 +332,10 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @return void
      * @throws InactiveLoginException
-     * @throws InvalidCredentialsException
      * @throws AuthenticationException
      */
     public function actionGoogle(): void {
-        if ($this->getGoogleSection()->state !== $this->googleProvider->getState()) {
+        if ($this->getGoogleSection()->state !== $this->getParameter('state')) {
             $this->flashMessage(_('Invalid CSRF token'), self::FLASH_ERROR);
             $this->redirect('login');
         }
@@ -358,8 +358,9 @@ final class AuthenticationPresenter extends BasePresenter {
      * @throws Exception
      */
     public function handleGoogle(): void {
+        $url = $this->googleProvider->getAuthorizationUrl();
         $this->getGoogleSection()->state = $this->googleProvider->getState();
-        $this->redirectUrl($this->googleProvider->getAuthorizationUrl());
+        $this->redirectUrl($url);
     }
 
     /**
