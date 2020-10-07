@@ -419,6 +419,7 @@ class EventsExtension extends CompilerExtension {
                 if ($hasNonDetermining) {
                     throw new MachineDefinitionException("Field '$name' cannot be preceded by non-determining fields. Reorder the fields.");
                 }
+                $fieldDef['required'] = $instanceDefinition['required'];
             } else {
                 $hasNonDetermining = true;
             }
