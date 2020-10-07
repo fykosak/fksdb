@@ -21,9 +21,7 @@ use Tracy\Debugger;
 class FacebookAuthenticator extends AbstractAuthenticator {
 
     private ServicePerson $servicePerson;
-
     private ServicePersonInfo $servicePersonInfo;
-
     private AccountManager $accountManager;
 
     public function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, AccountManager $accountManager, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
@@ -117,11 +115,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         $this->servicePerson->getConnection()->commit();
     }
 
-    /**
-     * @param array $fbUser
-     * @return array
-     */
-    private function getPersonData(array $fbUser) {
+    private function getPersonData(array $fbUser): array {
         return [
             'family_name' => $fbUser['last_name'],
             'other_name' => $fbUser['first_name'],
@@ -136,5 +130,4 @@ class FacebookAuthenticator extends AbstractAuthenticator {
             'fb_id' => $fbUser['id'],
         ];
     }
-
 }

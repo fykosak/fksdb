@@ -20,7 +20,6 @@ class TokenAuthenticator extends AbstractAuthenticator {
     public const SESSION_NS = 'auth';
 
     private ServiceAuthToken $authTokenService;
-
     private Session $session;
 
     public function __construct(ServiceAuthToken $authTokenService, Session $session, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
