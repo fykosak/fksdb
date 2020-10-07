@@ -3,6 +3,7 @@
 namespace FKSDB\Authentication\SSO\ServiceSide;
 
 use FKSDB\Authentication\SSO\IGlobalSession;
+use FKSDB\ORM\Models\ModelAuthToken;
 
 /**
  * Wrapper around IGlobalSession that intends to have no outer dependencies.
@@ -14,7 +15,7 @@ class Authentication {
     public const PARAM_BACKLINK = 'backlink';
     public const PARAM_FLAG = 'flag';
     public const PARAM_GSID = 'gsid';
-    public const FLAG_SSO_LOGIN = 'sso';
+    public const FLAG_SSO_LOGIN = ModelAuthToken::TYPE_SSO;
 
     private IGlobalSession $globalSession;
 
