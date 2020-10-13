@@ -2,7 +2,10 @@
 
 namespace FKSDB\Modules\CoreModule;
 
-use FKSDB\Authentication\SSO\GlobalSession;
+use FKSDB\Authentication\GoogleAuthenticator;
+use FKSDB\Authentication\InactiveLoginException;
+use FKSDB\Authentication\InvalidCredentialsException;
+use FKSDB\Authentication\Provider\GoogleProvider;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Localization\UnsupportedLanguageException;
@@ -20,14 +23,18 @@ use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\UI\PageTitle;
 use FKSDB\Mail\SendFailedException;
+use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
+use League\OAuth2\Client\Provider\Google;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Forms\Controls\TextInput;
+use Nette\Http\SessionSection;
 use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\DateTime;
 use FKSDB\Utils\Utils;
+use Tracy\Debugger;
 
 /**
  * Class AuthenticationPresenter
@@ -58,17 +65,23 @@ final class AuthenticationPresenter extends BasePresenter {
     private IGlobalSession $globalSession;
     private PasswordAuthenticator $passwordAuthenticator;
     private AccountManager $accountManager;
+    private Google $googleProvider;
+    private GoogleAuthenticator $googleAuthenticator;
 
     final public function injectTernary(
         ServiceAuthToken $serviceAuthToken,
         IGlobalSession $globalSession,
         PasswordAuthenticator $passwordAuthenticator,
-        AccountManager $accountManager
+        AccountManager $accountManager,
+        GoogleAuthenticator $googleAuthenticator,
+        GoogleProvider $googleProvider
     ): void {
         $this->serviceAuthToken = $serviceAuthToken;
         $this->globalSession = $globalSession;
         $this->passwordAuthenticator = $passwordAuthenticator;
         $this->accountManager = $accountManager;
+        $this->googleAuthenticator = $googleAuthenticator;
+        $this->googleProvider = $googleProvider;
     }
 
     public function titleLogin(): void {
@@ -317,6 +330,40 @@ final class AuthenticationPresenter extends BasePresenter {
     }
 
     /**
+     * @return void
+     * @throws InactiveLoginException
+     * @throws AuthenticationException
+     */
+    public function actionGoogle(): void {
+        if ($this->getGoogleSection()->state !== $this->getParameter('state')) {
+            $this->flashMessage(_('Invalid CSRF token'), self::FLASH_ERROR);
+            $this->redirect('login');
+        }
+        try {
+            $token = $this->googleProvider->getAccessToken('authorization_code', [
+                'code' => $this->getParameter('code'),
+            ]);
+            $ownerDetails = $this->googleProvider->getResourceOwner($token);
+            $login = $this->googleAuthenticator->authenticate($ownerDetails->toArray());
+            $this->getUser()->login($login);
+            $this->initialRedirect();
+        } catch (IdentityProviderException $exception) {
+            $this->flashMessage(_('Error'), self::FLASH_ERROR);
+            $this->redirect('login');
+        }
+    }
+
+    /**
+     * @throws AbortException
+     * @throws Exception
+     */
+    public function handleGoogle(): void {
+        $url = $this->googleProvider->getAuthorizationUrl();
+        $this->getGoogleSection()->state = $this->googleProvider->getState();
+        $this->redirectUrl($url);
+    }
+
+    /**
      * @throws AbortException
      */
     private function initialRedirect(): void {
@@ -330,5 +377,9 @@ final class AuthenticationPresenter extends BasePresenter {
         $this->getPageStyleContainer()->styleId = 'login';
         $this->getPageStyleContainer()->mainContainerClassNames = [];
         parent::beforeRender();
+    }
+
+    public function getGoogleSection(): SessionSection {
+        return $this->getSession()->getSection('google-oauth2state');
     }
 }
