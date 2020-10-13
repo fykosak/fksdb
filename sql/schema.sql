@@ -1454,6 +1454,41 @@ CREATE TABLE IF NOT EXISTS `submit_quiz` (
 )
 	ENGINE = InnoDB;
 
+CREATE TABLE IF NOT EXISTS `warehouse_producer`
+(
+    `producer_id` INT(11)      NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `name`        VARCHAR(256) NOT NULL
+) ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `warehouse_product`
+(
+    `product_id`  INT(11)                        NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `producer_id` INT(11)                        NOT NULL REFERENCES `warehouse_producer` (`producer_id`),
+    `category`    ENUM ('apparel','game','book') NOT NULL, # TODO
+    `note`        TEXT                           NULL     DEFAULT NULL,
+    `url`         VARCHAR(256)                   NULL     DEFAULT NULL COMMENT 'URL k objednaniu produktu'
+) ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS `warehouse_item`
+(
+    `item_id`           INT(11)            NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `product_id`        INT(11)            NOT NULL REFERENCES `warehouse_product` (producer_id),
+    'contest_id'        INT(11)            NOT NULL REFERENCES `contest` (contest_id),
+    `state`             ENUM ('new','used','unpacked','damaged'),
+    `description_cs`    TEXT               NULL     DEFAULT NULL,
+    `description_en`    TEXT               NULL     DEFAULT NULL,
+    `data`              TEXT               NULL     DEFAULT NULL COMMENT 'dalšie info ',
+    `purchase_price`    DECIMAL(10, 2)     NULL     DEFAULT NULL COMMENT 'pořizovací cena',
+    `purchase_currency` ENUM ('czk','eur') NOT NULL DEFAULT 'czk' COMMENT 'pořizovací měna',
+    `checked`           DATETIME                    DEFAULT CURRENT_TIMESTAMP,
+    `shipped`           DATETIME           NULL     DEFAULT NULL COMMENT 'kedy bola položka vyexpedovaná',
+    `available`         BOOLEAN            NOT NULL DEFAULT FALSE COMMENT 'available in online store',
+    `placed`            VARCHAR(256)       NULL     DEFAULT NULL COMMENT 'kde je uskladnena',
+    `price`             DECIMAL(10, 2)     NULL     DEFAULT NULL COMMENT 'price in FYKOS Coins',
+    INDEX `idx_finger_print` (`contest_id`, `state`, `description_cs`, `description_en`, `price`, `shipped`, `data`),
+    INDEX `idx_shipped` (`shipped`)
+) ENGINE = InnoDB;
+
 SET SQL_MODE = @OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS = @OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS = @OLD_UNIQUE_CHECKS;

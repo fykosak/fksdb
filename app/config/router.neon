@@ -135,7 +135,13 @@ fksrouter:
             subdomain: %subdomain.db%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
-
+        -
+            mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>/]warehouse/[<presenter>[/<action=default>[/<id>]]]'
+            module: Warehouse
+            presenter: Dashboard
+            action: default
+            tld: %domain.tld%
+            contestId: [filterTable: %inverseContestMapping%]
         -
             mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/]<module %modules%>/<presenter>/<action=default>[/<id>]'
             presenter: Dashboard
