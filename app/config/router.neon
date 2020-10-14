@@ -138,6 +138,7 @@ fksrouter:
         -
             mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>/]warehouse/[<presenter>[/<action=default>[/<id>]]]'
             module: Warehouse
+            subdomain: %subdomain.db%
             presenter: Dashboard
             action: default
             tld: %domain.tld%

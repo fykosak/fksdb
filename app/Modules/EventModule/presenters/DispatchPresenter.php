@@ -2,10 +2,9 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Components\Controls\Badges\ContestBadge;
 use FKSDB\Components\Grids\Events\DispatchGrid;
-use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\UI\PageTitle;
 
 /**
@@ -19,9 +18,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     protected function createComponentDispatchGrid(): DispatchGrid {
-        /** @var ModelLogin $login */
-        $login = $this->getUser()->getIdentity();
-        return new DispatchGrid($login->getPerson(), $this->getContext());
+        return new DispatchGrid($this->getContext());
     }
 
     public function titleDefault(): void {

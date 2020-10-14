@@ -2,12 +2,12 @@
 
 namespace FKSDB\Events\Spec\Fol;
 
+use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Field;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Events\Processings\AbstractProcessing;
-use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelPerson;
@@ -32,38 +32,35 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
     public const OPEN = 'O';
 
     private YearCalculator $yearCalculator;
-
     private ServiceSchool $serviceSchool;
-    /** @var array */
-    private $categoryNames;
-
+    private array $categoryNames;
     private int $rulesVersion;
 
     public function __construct(int $rulesVersion, YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
-
-        if (!in_array($rulesVersion, [1, 2])) {
-            throw new InvalidArgumentException(_('Not valid $rulesVersion.'));
+        switch ($rulesVersion) {
+            case 1:
+                $this->categoryNames = [
+                    self::HIGH_SCHOOL_A => sprintf(_('High school students %s'), 'A'),
+                    self::HIGH_SCHOOL_B => sprintf(_('High school students %s'), 'B'),
+                    self::HIGH_SCHOOL_C => sprintf(_('High school students %s'), 'C'),
+                    self::ABROAD => _('High school outside of CR/SR'),
+                    self::OPEN => _('Open'),
+                ];
+                break;
+            case 2:
+                $this->categoryNames = [
+                    self::HIGH_SCHOOL_A => sprintf(_('High school students %s'), 'A'),
+                    self::HIGH_SCHOOL_B => sprintf(_('High school students %s'), 'B'),
+                    self::HIGH_SCHOOL_C => sprintf(_('High school students %s'), 'C'),
+                    self::OPEN => _('Open'),
+                ];
+                break;
+            default:
+                throw new InvalidArgumentException(_('Not valid $rulesVersion.'));
         }
         $this->rulesVersion = $rulesVersion;
-
-        if ($this->rulesVersion == 1) {
-            $this->categoryNames = [
-                self::HIGH_SCHOOL_A => sprintf(_('High school students %s'), 'A'),
-                self::HIGH_SCHOOL_B => sprintf(_('High school students %s'), 'B'),
-                self::HIGH_SCHOOL_C => sprintf(_('High school students %s'), 'C'),
-                self::ABROAD => _('High school outside of CR/SR'),
-                self::OPEN => _('Open'),
-            ];
-        } elseif ($this->rulesVersion == 2) {
-            $this->categoryNames = [
-                self::HIGH_SCHOOL_A => sprintf(_('High school students %s'), 'A'),
-                self::HIGH_SCHOOL_B => sprintf(_('High school students %s'), 'B'),
-                self::HIGH_SCHOOL_C => sprintf(_('High school students %s'), 'C'),
-                self::OPEN => _('Open'),
-            ];
-        }
     }
 
     protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void {

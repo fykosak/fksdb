@@ -898,3 +898,15 @@ DBReflection:
                      params:
                          id: school_id
                      title: Detail
+         warehouse_product:
+             modelClassName: FKSDB\ORM\Models\Warehouse\ModelProduct
+             columnFactories:
+                 product_id:
+                     type: primaryKey
+                     title: _(Product Id)
+                 category:
+                     type: state
+                     title: _(Category)
+                     states:
+                         game: {badge: 'badge badge-1', label: 'Game'}
+                         game-extension: {badge: 'badge badge-1', label: 'Game extension'}

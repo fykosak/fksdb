@@ -3,10 +3,11 @@
 namespace FKSDB\Modules\WarehouseModule;
 
 use FKSDB\Exceptions\ContestNotFoundException;
-use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
+use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\ORM\Models\ModelContest;
+use Nette\Security\IResource;
 
-abstract class BasePresenter extends CoreBasePresenter {
+abstract class BasePresenter extends AuthenticatedPresenter {
     /**
      * @var int
      * @persistent
@@ -26,4 +27,12 @@ abstract class BasePresenter extends CoreBasePresenter {
         return $this->contest;
     }
 
+    /**
+     * @param IResource|string|null $resource
+     * @param string|null $privilege
+     * @return bool
+     */
+    protected function isAllowed($resource, ?string $privilege): bool {
+        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getContest());
+    }
 }

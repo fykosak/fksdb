@@ -196,10 +196,10 @@ trait EntityPresenterTrait {
 
     /**
      * @param IResource|string $resource
-     * @param string $privilege
+     * @param string|null $privilege
      * @return bool
      */
-    abstract protected function traitIsAuthorized($resource, string $privilege): bool;
+    abstract protected function traitIsAuthorized($resource, ?string $privilege): bool;
 
     /**
      * @param null $name
