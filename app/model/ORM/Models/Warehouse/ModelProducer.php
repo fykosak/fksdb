@@ -3,8 +3,6 @@
 namespace FKSDB\ORM\Models\Warehouse;
 
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\DbNames;
-use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
 
 /**
@@ -18,9 +16,5 @@ class ModelProducer extends AbstractModelSingle implements IResource {
 
     public function getResourceId(): string {
         return self::RESOURCE_ID;
-    }
-
-    public function getProducts(): GroupedSelection {
-        return $this->related(DbNames::TAB_WAREHOUSE_PRODUCT);
     }
 }

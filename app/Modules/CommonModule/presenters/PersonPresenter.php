@@ -177,15 +177,6 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @return void
-     * @throws BadTypeException
-     * @throws ModelNotFoundException
-     */
-    public function actionEdit(): void {
-        $this->traitActionEdit();
-    }
-
-    /**
      * @param int $trunkId
      * @param int $mergedId
      * @return void
@@ -263,11 +254,15 @@ class PersonPresenter extends BasePresenter {
     }
 
     protected function createComponentCreateForm(): PersonFormComponent {
-        return new PersonFormComponent($this->getContext(), true, $this->getUserPermissions());
+        return new PersonFormComponent($this->getContext(),  $this->getUserPermissions(),null);
     }
 
+    /**
+     * @return PersonFormComponent
+     * @throws ModelNotFoundException
+     */
     protected function createComponentEditForm(): PersonFormComponent {
-        return new PersonFormComponent($this->getContext(), false, $this->getUserPermissions());
+        return new PersonFormComponent($this->getContext(),  $this->getUserPermissions(),$this->getEntity());
     }
 
     protected function createComponentPizzaSelect(): PizzaControl {

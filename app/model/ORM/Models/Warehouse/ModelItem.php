@@ -19,7 +19,7 @@ use Nette\Security\IResource;
  * @property-read string state ENUM ('new','used','unpacked','damaged') NOT NULL,
  * @property-read string|null description_cs
  * @property-read string|null description_en
- * @property-read string|null data dalšie info ',
+ * @property-read string|null data dalšie info
  * @property-read float|null purchase_price pořizovací cena
  * @property-read string|null purchase_currency pořizovací měna
  * @property-read \DateTimeInterface checked
@@ -29,7 +29,7 @@ use Nette\Security\IResource;
  * @property-read float|null price price in FYKOS Coins
  * @property-read string|null note neverejná poznámka
  */
-class ModelItem extends AbstractModelSingle implements IResource, IContestReferencedModel {
+class ModelItem extends AbstractModelSingle implements IResource, IContestReferencedModel, IProductReferencedModel, IProducerReferencedModel {
     public const RESOURCE_ID = 'warehouse.item';
 
     public function getResourceId(): string {
@@ -38,5 +38,13 @@ class ModelItem extends AbstractModelSingle implements IResource, IContestRefere
 
     public function getContest(): ModelContest {
         return ModelContest::createFromActiveRow($this->contest);
+    }
+
+    public function getProducer(): ?ModelProducer {
+        return $this->getProduct()->getProducer();
+    }
+
+    public function getProduct(): ModelProduct {
+        return ModelProduct::createFromActiveRow($this->product);
     }
 }

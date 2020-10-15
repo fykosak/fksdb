@@ -904,9 +904,29 @@ DBReflection:
                  product_id:
                      type: primaryKey
                      title: _(Product Id)
+                 name_cs:
+                     type: string
+                     title: _(Name cs)
+                 name_en:
+                     type: string
+                     title: _(Name en)
                  category:
                      type: state
                      title: _(Category)
                      states:
                          game: {badge: 'badge badge-1', label: 'Game'}
                          game-extension: {badge: 'badge badge-1', label: 'Game extension'}
+                         apparel: {badge: 'badge badge-2', label: 'Apparel'}
+                         book: {badge: 'badge badge-3', label: 'Book'}
+         warehouse_producer:
+             modelClassName: FKSDB\ORM\Models\Warehouse\ModelProducer
+             referencedAccess:
+                 modelClassName: FKSDB\ORM\Models\Warehouse\IProducerReferencedModel
+                 method: getProducer
+             columnFactories:
+                 producer_id:
+                     type: primaryKey
+                     title: _(Product Id)
+                 name:
+                     type: string
+                     title: _(Name)

@@ -7,6 +7,10 @@ use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\ORM\Models\ModelContest;
 use Nette\Security\IResource;
 
+/**
+ * Class BasePresenter
+ * @author Michal Červeňák <miso@fykos.cz>
+ */
 abstract class BasePresenter extends AuthenticatedPresenter {
     /**
      * @var int

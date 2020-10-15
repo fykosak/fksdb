@@ -6,6 +6,7 @@ use FKSDB\Components\Grids\Warehouse\ProductsGrid;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\ORM\Services\Warehouse\ServiceProduct;
+use FKSDB\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 
@@ -17,6 +18,18 @@ class ProductPresenter extends BasePresenter {
     use EntityPresenterTrait;
 
     private ServiceProduct $serviceProduct;
+
+    protected function titleList(): void {
+        $this->setPageTitle(new PageTitle(_('Products'), 'fa fa-truck'));
+    }
+
+    protected function titleEdit(): void {
+        $this->setPageTitle(new PageTitle(_('Edit product'), 'fa fa-truck'));
+    }
+
+    protected function titleCreate(): void {
+        $this->setPageTitle(new PageTitle(_('Create product'), 'fa fa-truck'));
+    }
 
     public function injectService(ServiceProduct $serviceProduct): void {
         $this->serviceProduct = $serviceProduct;

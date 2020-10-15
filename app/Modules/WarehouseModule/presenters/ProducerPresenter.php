@@ -10,6 +10,7 @@ use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\ORM\Models\Warehouse\ModelProducer;
 use FKSDB\ORM\Services\Warehouse\ServiceProducer;
+use FKSDB\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 
@@ -27,6 +28,18 @@ class ProducerPresenter extends BasePresenter {
         $this->serviceProducer = $serviceProducer;
     }
 
+    protected function titleList(): void {
+        $this->setPageTitle(new PageTitle(_('Producers'), 'fa fa-truck'));
+    }
+
+    protected function titleEdit(): void {
+        $this->setPageTitle(new PageTitle(_('Edit producer'), 'fa fa-truck'));
+    }
+
+    protected function titleCreate(): void {
+        $this->setPageTitle(new PageTitle(_('Create producer'), 'fa fa-truck'));
+    }
+
     /**
      * @return void
      * @throws ModelNotFoundException
@@ -38,16 +51,6 @@ class ProducerPresenter extends BasePresenter {
     protected function getORMService(): ServiceProducer {
         return $this->serviceProducer;
     }
-
-    /**
-     * @param IResource|string|null $resource
-     * @param string|null $privilege
-     * @return bool
-     */
-    protected function traitIsAuthorized($resource, ?string $privilege): bool {
-        return $this->isAllowed($resource, $privilege);
-    }
-
 
     protected function createComponentCreateForm(): Control {
         throw new NotImplementedException();
@@ -67,5 +70,14 @@ class ProducerPresenter extends BasePresenter {
      */
     protected function createComponentProductsFromProducerGrid(): ProductsFromProducerGrid {
         return new ProductsFromProducerGrid($this->getContext(), $this->getEntity());
+    }
+
+    /**
+     * @param IResource|string|null $resource
+     * @param string|null $privilege
+     * @return bool
+     */
+    protected function traitIsAuthorized($resource, ?string $privilege): bool {
+        return $this->isAllowed($resource, $privilege);
     }
 }

@@ -5,21 +5,20 @@ namespace FKSDB\Components\Controls\Entity;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Messages\Message;
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEventOrg;
 use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
-use Nette\Forms\Form;
 use Nette\DI\Container;
+use Nette\Forms\Form;
 
 /**
  * Class EventOrgFormComponent
  * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelEventOrg $model
  */
-class EventOrgFormComponent extends EditEntityFormComponent {
+class EventOrgFormComponent extends AbstractEntityFormComponent {
 
     use ReferencedPersonTrait;
 
@@ -28,8 +27,8 @@ class EventOrgFormComponent extends EditEntityFormComponent {
     private ServiceEventOrg $serviceEventOrg;
     private ModelEvent $event;
 
-    public function __construct(Container $container, ModelEvent $event, bool $create) {
-        parent::__construct($container, $create);
+    public function __construct(Container $container, ModelEvent $event, ?ModelEventOrg $model) {
+        parent::__construct($container, $model);
         $this->event = $event;
     }
 
@@ -40,7 +39,7 @@ class EventOrgFormComponent extends EditEntityFormComponent {
     protected function configureForm(Form $form): void {
         $container = new ModelContainer();
         $personInput = $this->createPersonSelect();
-        $personInput->setDisabled(!$this->create);
+        $personInput->setDisabled(isset($this->model));
         $container->addComponent($personInput, 'person_id');
         $container->addText('note', _('Note'));
         $form->addComponent($container, self::CONTAINER);
@@ -57,18 +56,17 @@ class EventOrgFormComponent extends EditEntityFormComponent {
             $data['event_id'] = $this->event->event_id;
         }
         $this->serviceEventOrg->store($this->model ?? null, $data);
-        $this->getPresenter()->flashMessage($this->create ? _('Event org has been created') : _('Event org has been updated'), Message::LVL_SUCCESS);
+        $this->getPresenter()->flashMessage(!isset($this->model) ? _('Event org has been created') : _('Event org has been updated'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 
     /**
-     * @param AbstractModelSingle|ModelEventOrg|null $model
      * @return void
      * @throws BadTypeException
      */
-    protected function setDefaults(?AbstractModelSingle $model): void {
-        if (!is_null($model)) {
-            $this->getForm()->setDefaults([self::CONTAINER => $model->toArray()]);
+    protected function setDefaults(): void {
+        if (isset($this->model)) {
+            $this->getForm()->setDefaults([self::CONTAINER => $this->model->toArray()]);
         }
     }
 }

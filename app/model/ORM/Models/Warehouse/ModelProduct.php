@@ -3,6 +3,7 @@
 namespace FKSDB\ORM\Models\Warehouse;
 
 use FKSDB\ORM\AbstractModelSingle;
+use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 
 /**
@@ -10,6 +11,7 @@ use Nette\Security\IResource;
  * @author Michal Červeňák <miso@fykos.cz>
  * @property-read int product_id
  * @property-read int producer_id
+ * @property-read ActiveRow producer
  * @property-read string category
  * @property-read string name_cs
  * @property-read string name_en
@@ -18,7 +20,7 @@ use Nette\Security\IResource;
  * @property-read string note neverejná poznámka
  * @property-read string url URL k objednaniu produktu
  */
-class ModelProduct extends AbstractModelSingle implements IResource {
+class ModelProduct extends AbstractModelSingle implements IResource, IProducerReferencedModel {
 
     public const CATEGORY_APPAREL = 'apparel';
     public const CATEGORY_GAME = 'game';
@@ -32,4 +34,7 @@ class ModelProduct extends AbstractModelSingle implements IResource {
         return self::RESOURCE_ID;
     }
 
+    public function getProducer(): ?ModelProducer {
+        return $this->producer ? ModelProducer::createFromActiveRow($this->producer) : null;
+    }
 }

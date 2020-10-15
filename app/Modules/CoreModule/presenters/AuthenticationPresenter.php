@@ -2,24 +2,24 @@
 
 namespace FKSDB\Modules\CoreModule;
 
-use FKSDB\Authentication\SSO\GlobalSession;
-use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Localization\UnsupportedLanguageException;
-use FKSDB\Modules\Core\BasePresenter;
 use Exception;
 use FKSDB\Authentication\AccountManager;
 use FKSDB\Authentication\LoginUserStorage;
 use FKSDB\Authentication\PasswordAuthenticator;
 use FKSDB\Authentication\RecoveryException;
-use FKSDB\Authentication\TokenAuthenticator;
 use FKSDB\Authentication\SSO\IGlobalSession;
 use FKSDB\Authentication\SSO\ServiceSide\Authentication;
+use FKSDB\Authentication\TokenAuthenticator;
+use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Localization\UnsupportedLanguageException;
+use FKSDB\Mail\SendFailedException;
+use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\UI\PageTitle;
-use FKSDB\Mail\SendFailedException;
+use FKSDB\Utils\Utils;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
@@ -27,7 +27,6 @@ use Nette\Forms\Controls\TextInput;
 use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\DateTime;
-use FKSDB\Utils\Utils;
 
 /**
  * Class AuthenticationPresenter

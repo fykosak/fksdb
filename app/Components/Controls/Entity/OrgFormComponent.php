@@ -2,28 +2,27 @@
 
 namespace FKSDB\Components\Controls\Entity;
 
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\DBReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
+use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\DBReflection\OmittedControlException;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Messages\Message;
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelOrg;
 use FKSDB\ORM\Services\ServiceOrg;
 use FKSDB\Utils\FormUtils;
 use FKSDB\YearCalculator;
 use Nette\Application\AbortException;
-use Nette\Forms\Form;
 use Nette\DI\Container;
+use Nette\Forms\Form;
 
 /**
  * Class OrgForm
  * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelOrg $model
  */
-class OrgFormComponent extends EditEntityFormComponent {
+class OrgFormComponent extends AbstractEntityFormComponent {
     use ReferencedPersonTrait;
 
     public const CONTAINER = 'org';
@@ -33,8 +32,8 @@ class OrgFormComponent extends EditEntityFormComponent {
     private SingleReflectionFormFactory $singleReflectionFormFactory;
     private YearCalculator $yearCalculator;
 
-    public function __construct(Container $container, ModelContest $contest, bool $create) {
-        parent::__construct($container, $create);
+    public function __construct(Container $container, ModelContest $contest,?ModelOrg $model) {
+        parent::__construct($container, $model);
         $this->contest = $contest;
     }
 
@@ -54,7 +53,7 @@ class OrgFormComponent extends EditEntityFormComponent {
     protected function configureForm(Form $form): void {
         $container = $this->createOrgContainer();
         $personInput = $this->createPersonSelect();
-        if (!$this->create) {
+        if (!$this->isCreating()) {
             $personInput->setDisabled(true);
         }
         $container->addComponent($personInput, 'person_id', 'since');
@@ -72,18 +71,17 @@ class OrgFormComponent extends EditEntityFormComponent {
             $data['contest_id'] = $this->contest->contest_id;
         }
         $this->serviceOrg->store($this->model ?? null, $data);
-        $this->getPresenter()->flashMessage($this->create ? _('Org has been created.') : _('Org has been updated.'), Message::LVL_SUCCESS);
+        $this->getPresenter()->flashMessage(!isset($this->model) ? _('Org has been created.') : _('Org has been updated.'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 
     /**
-     * @param AbstractModelSingle|ModelOrg|null $model
      * @return void
      * @throws BadTypeException
      */
-    protected function setDefaults(?AbstractModelSingle $model): void {
-        if (!is_null($model)) {
-            $this->getForm()->setDefaults([self::CONTAINER => $model->toArray()]);
+    protected function setDefaults(): void {
+        if (isset($this->model)) {
+            $this->getForm()->setDefaults([self::CONTAINER => $this->model->toArray()]);
         }
     }
 

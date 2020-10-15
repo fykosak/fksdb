@@ -7,7 +7,6 @@ use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\DBReflection\OmittedControlException;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\ILogger;
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
@@ -20,7 +19,7 @@ use Nette\Forms\Form;
  * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelScheduleGroup|null $model
  */
-class ScheduleGroupFormComponent extends EditEntityFormComponent {
+class ScheduleGroupFormComponent extends AbstractEntityFormComponent {
 
     public const CONTAINER = 'container';
 
@@ -28,8 +27,8 @@ class ScheduleGroupFormComponent extends EditEntityFormComponent {
     private ModelEvent $event;
     private SingleReflectionFormFactory $singleReflectionFormFactory;
 
-    public function __construct(ModelEvent $event, Container $container, bool $create) {
-        parent::__construct($container, $create);
+    public function __construct(ModelEvent $event, Container $container, ?ModelScheduleGroup $model) {
+        parent::__construct($container, $model);
         $this->event = $event;
     }
 
@@ -48,14 +47,13 @@ class ScheduleGroupFormComponent extends EditEntityFormComponent {
     }
 
     /**
-     * @param AbstractModelSingle|null $model
      * @return void
      * @throws BadTypeException
      */
-    protected function setDefaults(?AbstractModelSingle $model): void {
-        if (!is_null($model)) {
+    protected function setDefaults(): void {
+        if (isset($this->model)) {
             $this->getForm()->setDefaults([
-                self::CONTAINER => $model->toArray(),
+                self::CONTAINER => $this->model->toArray(),
             ]);
         }
     }

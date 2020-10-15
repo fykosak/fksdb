@@ -2,13 +2,13 @@
 
 namespace FKSDB\Components\Grids\Application;
 
-use Closure;
-use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\SQL\SearchableDataSource;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
@@ -16,7 +16,6 @@ use Nette\Forms\Form;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateColumnException;
-use FKSDB\SQL\SearchableDataSource;
 
 /**
  * Class AbstractApplicationGrid
@@ -25,7 +24,6 @@ use FKSDB\SQL\SearchableDataSource;
 abstract class AbstractApplicationsGrid extends BaseGrid {
 
     protected ModelEvent $event;
-
     private Holder $holder;
 
     public function __construct(ModelEvent $event, Holder $holder, Container $container) {

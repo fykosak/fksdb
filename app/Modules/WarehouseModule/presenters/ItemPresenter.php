@@ -6,6 +6,7 @@ use FKSDB\Components\Grids\Warehouse\ItemsGrid;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\ORM\Services\Warehouse\ServiceItem;
+use FKSDB\UI\PageTitle;
 use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 
@@ -20,6 +21,18 @@ class ItemPresenter extends BasePresenter {
 
     public function injectService(ServiceItem $serviceItem): void {
         $this->serviceItem = $serviceItem;
+    }
+
+    protected function titleList(): void {
+        $this->setPageTitle(new PageTitle(_('Items'), 'fa fa-truck'));
+    }
+
+    protected function titleEdit(): void {
+        $this->setPageTitle(new PageTitle(_('Edit item'), 'fa fa-truck'));
+    }
+
+    protected function titleCreate(): void {
+        $this->setPageTitle(new PageTitle(_('Create item'), 'fa fa-truck'));
     }
 
     protected function createComponentCreateForm(): Control {

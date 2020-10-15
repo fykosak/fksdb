@@ -57,15 +57,6 @@ class OrgPresenter extends BasePresenter {
     }
 
     /**
-     * @return void
-     * @throws ModelNotFoundException
-     * @throws BadTypeException
-     */
-    public function actionEdit(): void {
-        $this->traitActionEdit();
-    }
-
-    /**
      * @return ModelOrg
      * @throws ForbiddenRequestException
      * @throws BadTypeException
@@ -104,16 +95,17 @@ class OrgPresenter extends BasePresenter {
      * @throws BadTypeException
      */
     protected function createComponentCreateForm(): OrgFormComponent {
-        return new OrgFormComponent($this->getContext(), $this->getSelectedContest(), true);
+        return new OrgFormComponent($this->getContext(), $this->getSelectedContest(), null);
     }
 
     /**
      * @return OrgFormComponent
      * @throws ForbiddenRequestException
      * @throws BadTypeException
+     * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): OrgFormComponent {
-        return new OrgFormComponent($this->getContext(), $this->getSelectedContest(), false);
+        return new OrgFormComponent($this->getContext(), $this->getSelectedContest(), $this->getEntity());
     }
 
     /**

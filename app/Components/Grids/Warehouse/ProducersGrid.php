@@ -11,7 +11,10 @@ use NiftyGrid\DuplicateColumnException;
 
 class ProducersGrid extends EntityGrid {
     public function __construct(Container $container) {
-        parent::__construct($container, ServiceProducer::class, [], []);
+        parent::__construct($container, ServiceProducer::class, [
+            'warehouse_producer.producer_id',
+            'warehouse_producer.name',
+        ]);
     }
 
     /**
@@ -23,7 +26,5 @@ class ProducersGrid extends EntityGrid {
     protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->setDefaultOrder('name');
-        $this->addColumn('producer_id', _('Producer Id'));
-        $this->addColumn('name', _('Name'));
     }
 }
