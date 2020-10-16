@@ -8,7 +8,6 @@ use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\YearCalculator;
 use Nette\Security\IAuthenticator;
-use Nette\Security\IIdentity;
 
 /**
  * Users authenticator.

@@ -1,6 +1,6 @@
 {block content}
     <ul>
-        {foreach $charts as $action=> $chart}
+        {foreach $charts as $action=>$chart}
             <li><a href="{plink $action}">{$chart->getTitle()}</a></li>
         {/foreach}
     </ul>
