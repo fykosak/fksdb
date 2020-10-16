@@ -45,6 +45,12 @@ class OrgModule extends AbstractPageDisplayTestCase {
             ['Org:Tasks', 'import'],
             ['Org:Teacher', 'list'],
             ['Org:Teacher', 'create'],
+
+            ['Org:Chart', 'list'],
+            ['Org:Chart', 'contestantsPerSeries'],
+            ['Org:Chart', 'totalContestantsPerSeries'],
+            ['Org:Chart', 'contestantsPerYears'],
+            ['Org:Chart', 'totalPersons'],
         ];
     }
 

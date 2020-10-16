@@ -28,8 +28,6 @@ class CommonModule extends AbstractPageDisplayTestCase {
     public function getPages(): array {
 
         return [
-            ['Common:Chart', 'list'],
-            ['Common:Chart', 'totalPersons'],
             ['Common:Dashboard', 'default'],
             ['Common:Deduplicate', 'person'],
             ['Common:Person', 'create'],

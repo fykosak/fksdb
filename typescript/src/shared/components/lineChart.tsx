@@ -1,18 +1,10 @@
 import { getAreaPath, getLinePath } from '@apps/fyziklaniResults/statistics/middleware/charts/lines';
 import AbstractChart from '@shared/components/chart';
 import { LineChartData } from '@shared/components/lineChart/interfaces';
-import {
-    axisBottom,
-    axisLeft,
-} from 'd3-axis';
-import {
-    ScaleLinear,
-    ScaleTime,
-} from 'd3-scale';
+import { axisBottom, axisLeft, } from 'd3-axis';
+import { ScaleLinear, ScaleTime, } from 'd3-scale';
 import { select } from 'd3-selection';
-import {
-    curveBasis, curveMonotoneX,
-} from 'd3-shape';
+import { curveBasis, curveMonotoneX, } from 'd3-shape';
 import * as React from 'react';
 
 interface OwnProps<> {
@@ -69,7 +61,8 @@ export default class LineChart extends AbstractChart<OwnProps, {}> {
                         cx={xScale(point.xValue)}
                     >
                         <title>
-                            {point.label} - {(point.xValue instanceof Date) ? point.xValue.toLocaleTimeString() : point.xValue}
+                            {point.label ? point.label :
+                                ((point.xValue instanceof Date) ? point.xValue.toLocaleTimeString() : point.xValue)}
                         </title>
                     </circle>);
                 });

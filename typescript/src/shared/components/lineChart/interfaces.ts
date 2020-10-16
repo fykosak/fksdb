@@ -2,7 +2,7 @@ import { PointData } from '@apps/fyziklaniResults/statistics/middleware/charts/l
 import { CurveFactory } from 'd3-shape';
 
 export type LineChartData = Array<{
-    name: string;
+    name: string | JSX.Element;
     description?: string;
     color: string;
     display: {
@@ -17,5 +17,5 @@ export type LineChartData = Array<{
 export interface ExtendedPointData<T> extends PointData<T> {
     active?: boolean;
     color?: string;
-    label?: string;
+    label?: string | JSX.Element;
 }
