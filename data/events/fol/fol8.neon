@@ -28,11 +28,10 @@ parameters:
                         required: false
                         description: _('Pouze pro české a slovenské studenty.')
 
-
 events:
     fol8:
         event_type_id: 9
-        eventYears: [8,9] # specify for which years this machine is valid, by default all years
+        eventYears: [8,9,10] # specify for which years this machine is valid, by default all years
         formLayout: fol.form
         paramScheme:
             notifyBcc:
@@ -144,35 +143,12 @@ events:
                         determining: true
                         factory: RefPerson(%events.fol8.participant%, email, true, role('admin'), false)
 
-
-
         #
         #   MACHINE
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            baseMachines:
-                team:
-                    bmName: TEAM
-                    label: _('Tým')
-                    required: true # default false, it's conjuction with fields requirement
-                    primary: true # base machine states are propagated to the machine
-                p1:
-                    bmName: PARTICIPANT
-                    label: _('1. člen')
-                    required: true
-                p2:
-                    bmName: PARTICIPANT
-                    label: _('2. člen')
-                p3:
-                    bmName: PARTICIPANT
-                    label: _('3. člen')
-                p4:
-                    bmName: PARTICIPANT
-                    label: _('4. člen')
-                p5:
-                    bmName: PARTICIPANT
-                    label: _('5. člen')
+            baseMachines: %events.fol.default.baseMachines%
             formAdjustments:
                 - @events.privacyPolicy
                 - @events.captcha
@@ -181,7 +157,6 @@ events:
                 - FKSDB\Events\Spec\Fol\FlagCheck()
                 - FKSDB\Events\Spec\Fol\BornCheck()
                 - FKSDB\Events\FormAdjustments\RegexpCheck('team.name', _("Název týmu smí obsahovat pouze latinku, řečtinu, cyrilici a ASCII znaky."), '/^[\p{Latin}\p{Greek}\p{Cyrillic}\x{0020}-\x{00FF}]+$/u')
-
 
             processings:
                 - FKSDB\Events\Spec\Fol\CategoryProcessing(%events.fol8.rulesVersion%)

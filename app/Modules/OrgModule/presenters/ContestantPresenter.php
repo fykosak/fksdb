@@ -21,7 +21,7 @@ class ContestantPresenter extends ExtendedPersonPresenter {
 
     private ServiceContestant $serviceContestant;
 
-    public function injectServiceContestant(ServiceContestant $serviceContestant): void {
+    final public function injectServiceContestant(ServiceContestant $serviceContestant): void {
         $this->serviceContestant = $serviceContestant;
     }
 
@@ -59,7 +59,7 @@ class ContestantPresenter extends ExtendedPersonPresenter {
         if (!$model) {
             return null;
         }
-        return $this->getYearCalculator()->getAcademicYear($this->getServiceContest()->findByPrimary($model->contest_id), $model->year);
+        return $this->yearCalculator->getAcademicYear($this->serviceContest->findByPrimary($model->contest_id), $model->year);
     }
 
     public function messageCreate(): string {

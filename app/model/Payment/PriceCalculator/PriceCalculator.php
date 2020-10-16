@@ -17,10 +17,6 @@ class PriceCalculator {
     /** @var IPreprocess[] */
     private array $preProcess = [];
 
-    /**
-     * PriceCalculator constructor.
-     * @param ServicePayment $servicePayment
-     */
     public function __construct(ServicePayment $servicePayment) {
         $this->servicePayment = $servicePayment;
     }

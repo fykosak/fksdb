@@ -3,6 +3,7 @@
 namespace FKSDB\DBReflection\ColumnFactories\EventParticipant;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
 use FKSDB\ValuePrinters\StringPrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelEventParticipant;
@@ -13,7 +14,7 @@ use Nette\Utils\Html;
  * Class TeamRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class TeamRow extends AbstractParticipantRow {
+class TeamRow extends DefaultColumnFactory {
 
     /**
      * @param ModelEventParticipant|AbstractModelSingle $model
@@ -26,9 +27,5 @@ class TeamRow extends AbstractParticipantRow {
         } catch (BadRequestException $exception) {
             return NotSetBadge::getHtml();
         }
-    }
-
-    public function getTitle(): string {
-        return _('Team');
     }
 }

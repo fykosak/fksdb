@@ -2,6 +2,8 @@
 
 namespace FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics;
 
+use FKSDB\Authorization\ContestAuthorizator;
+use FKSDB\Authorization\EventAuthorizator;
 use FKSDB\Components\React\AjaxComponent;
 use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\ModelEvent;
@@ -22,21 +24,13 @@ use Nette\Utils\DateTime;
 class ResultsAndStatistics extends AjaxComponent {
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
-
     private ServiceFyziklaniTask $serviceFyziklaniTask;
-
     private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
-
+    private EventAuthorizator $eventAuthorizator;
     private ModelEvent $event;
 
     private ?string $lastUpdated = null;
 
-    /**
-     * FyziklaniReactControl constructor.
-     * @param Container $container
-     * @param ModelEvent $event
-     * @param string $reactId
-     */
     public function __construct(Container $container, ModelEvent $event, string $reactId) {
         parent::__construct($container, $reactId);
         $this->event = $event;
@@ -46,14 +40,16 @@ class ResultsAndStatistics extends AjaxComponent {
         return $this->event;
     }
 
-    public function injectPrimary(
+    final public function injectPrimary(
         ServiceFyziklaniSubmit $serviceFyziklaniSubmit,
         ServiceFyziklaniTask $serviceFyziklaniTask,
-        ServiceFyziklaniTeam $serviceFyziklaniTeam
+        ServiceFyziklaniTeam $serviceFyziklaniTeam,
+        EventAuthorizator $eventAuthorizator
     ): void {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
+        $this->eventAuthorizator = $eventAuthorizator;
     }
 
     /**
@@ -77,7 +73,7 @@ class ResultsAndStatistics extends AjaxComponent {
         if (!$presenter instanceof BasePresenter) {
             throw new ArgumentOutOfRangeException();
         }
-        $isOrg = $presenter->getEventAuthorizator()->isContestOrgAllowed('fyziklani.results', 'presentation', $this->getEvent());
+        $isOrg = $this->eventAuthorizator->isContestOrgAllowed('fyziklani.results', 'presentation', $this->getEvent());
 
         $result = [
             'availablePoints' => $gameSetup->getAvailablePoints(),

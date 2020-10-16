@@ -18,10 +18,6 @@ class NavigationFactory {
 
     public PresenterBuilder $presenterBuilder;
 
-    /**
-     * NavigationFactory constructor.
-     * @param PresenterBuilder $presenterBuilder
-     */
     public function __construct(PresenterBuilder $presenterBuilder) {
         $this->presenterBuilder = $presenterBuilder;
     }

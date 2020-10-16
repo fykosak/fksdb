@@ -24,11 +24,6 @@ class RoomsFromCSV extends Stage {
 
     private ServiceFyziklaniTeam $serviceTeam;
 
-    /**
-     * RoomsFromCSV constructor.
-     * @param ModelEvent $event
-     * @param ServiceFyziklaniTeam $serviceTeam
-     */
     public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceTeam) {
         $this->event = $event;
         $this->serviceTeam = $serviceTeam;

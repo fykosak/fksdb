@@ -16,20 +16,15 @@
     "nette/database": "2.4.10",
     "nette/caching": "2.5.9",
     "latte/latte": "2.8.1",
-
-
-
     "tracy/tracy": "2.6.8",
-
-
-
     "nette/tester": "2.3.3",
-    "nette/application": "~2.4.0",
+    "nette/application": "2.4.16",
     "setasign/fpdf": "^1.8",
     "setasign/fpdi": "1.5.4",
     "nette/di": "2.4.16",
     "nette/bootstrap": "2.4.6",
-    "nette/tokenizer": "2.3.0"
+    "nette/tokenizer": "2.3.0",
+    "league/oauth2-google": "^3.0.3"
   },
   "autoload": {
     "classmap": []
@@ -50,12 +45,12 @@
     "test": [
       "@clearTestCache",
       "@clearTestDatabase",
-      "vendor/bin/tester tests -p php -s -c tests/php.ini"
+      "vendor/bin/tester tests -p php -s -c tests/php.ini -j 8"
     ],
     "testCoverage": [
       "@clearTestCache",
       "@clearTestDatabase",
-      "vendor/bin/tester tests -p php --coverage coverage.html --coverage-src app -s -c tests/php.ini"
+      "vendor/bin/tester tests -p php --coverage coverage.html --coverage-src app -s -c tests/php.ini -j 8"
     ]
   }
 }

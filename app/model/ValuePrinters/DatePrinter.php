@@ -13,10 +13,6 @@ class DatePrinter extends AbstractValuePrinter {
 
     protected string $format;
 
-    /**
-     * DatePrinter constructor.
-     * @param string $format
-     */
     public function __construct(string $format = 'c') {
         $this->format = $format;
     }

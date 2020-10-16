@@ -29,10 +29,6 @@ class TasksFromXML extends Stage {
 
     private ServiceTask $taskService;
 
-    /**
-     * TasksFromXML2 constructor.
-     * @param ServiceTask $taskService
-     */
     public function __construct(ServiceTask $taskService) {
         $this->taskService = $taskService;
     }
@@ -64,11 +60,7 @@ class TasksFromXML extends Stage {
         return $this->data;
     }
 
-    /**
-     * @param SimpleXMLElement $XMLTask
-     * @return void
-     */
-    private function processTask(SimpleXMLElement $XMLTask) {
+    private function processTask(SimpleXMLElement $XMLTask): void {
         $contest = $this->data->getContest();
         $year = $this->data->getYear();
         $series = $this->data->getSeries();

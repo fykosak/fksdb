@@ -25,13 +25,6 @@ class EventAuthorizator {
 
     private ContestAuthorizator $contestAuthorizator;
 
-    /**
-     * EventAuthorizator constructor.
-     * @param IUserStorage $identity
-     * @param Permission $acl
-     * @param ContestAuthorizator $contestAuthorizator
-     * @param Context $db
-     */
     public function __construct(IUserStorage $identity, Permission $acl, ContestAuthorizator $contestAuthorizator, Context $db) {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->userStorage = $identity;

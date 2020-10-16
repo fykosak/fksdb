@@ -26,19 +26,13 @@ class SchoolCheckComponent extends BaseComponent {
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    /**
-     * SchoolCheckControl constructor.
-     * @param ModelEvent $event
-     * @param int $acYear
-     * @param Container $container
-     */
     public function __construct(ModelEvent $event, int $acYear, Container $container) {
         parent::__construct($container);
         $this->event = $event;
         $this->acYear = $acYear;
     }
 
-    public function injectPrimary(ServiceSchool $serviceSchool, ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
+    final public function injectPrimary(ServiceSchool $serviceSchool, ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceSchool = $serviceSchool;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }

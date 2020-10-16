@@ -28,11 +28,6 @@ class CategoryProcessing extends AbstractProcessing {
 
     private ServiceSchool $serviceSchool;
 
-    /**
-     * CategoryProcessing constructor.
-     * @param YearCalculator $yearCalculator
-     * @param ServiceSchool $serviceSchool
-     */
     public function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
@@ -100,11 +95,7 @@ class CategoryProcessing extends AbstractProcessing {
         }
     }
 
-    /**
-     * @param array $participants
-     * @return string
-     */
-    private function getCategory($participants) {
+    private function getCategory(array $participants): string {
         $coefficientSum = 0;
         $count4 = 0;
         $count3 = 0;

@@ -24,17 +24,12 @@ class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
 
     private ServiceEvent $serviceEvent;
 
-    /**
-     * TeamApplicationsTimeProgress constructor.
-     * @param Container $context
-     * @param ModelEvent $event
-     */
     public function __construct(Container $context, ModelEvent $event) {
         parent::__construct($context, 'events.applications-time-progress.participants');
         $this->eventType = $event->getEventType();
     }
 
-    public function injectPrimary(ServiceEventParticipant $serviceEventParticipant, ServiceEvent $serviceEvent): void {
+    final public function injectPrimary(ServiceEventParticipant $serviceEventParticipant, ServiceEvent $serviceEvent): void {
         $this->serviceEventParticipant = $serviceEventParticipant;
         $this->serviceEvent = $serviceEvent;
     }

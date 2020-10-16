@@ -21,11 +21,6 @@ class GroupsGrid extends BaseGrid {
 
     private ModelEvent $event;
 
-    /**
-     * GroupsGrid constructor.
-     * @param ModelEvent $event
-     * @param Container $container
-     */
     public function __construct(ModelEvent $event, Container $container) {
         parent::__construct($container);
         $this->event = $event;
@@ -50,8 +45,8 @@ class GroupsGrid extends BaseGrid {
     protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
-        $this->addColumn('schedule_group_id', _('#'));
         $this->addColumns([
+            'schedule_group.schedule_group_id',
             'schedule_group.name_cs',
             'schedule_group.name_en',
             'schedule_group.schedule_group_type',
@@ -64,10 +59,15 @@ class GroupsGrid extends BaseGrid {
             return $model->getItems()->count();
         });
 
-        $this->addButton('detail', _('Detail'))->setText(_('Detail'))
+        $this->addButton('detail')->setText(_('Detail'))
             ->setLink(function ($row): string {
                 /** @var ModelScheduleGroup $row */
-                return $this->getPresenter()->link('ScheduleItem:list', ['groupId' => $row->schedule_group_id]);
+                return $this->getPresenter()->link('ScheduleGroup:detail', ['id' => $row->schedule_group_id]);
+            });
+        $this->addButton('edit')->setText(_('Edit'))
+            ->setLink(function ($row): string {
+                /** @var ModelScheduleGroup $row */
+                return $this->getPresenter()->link('ScheduleGroup:edit', ['id' => $row->schedule_group_id]);
             });
     }
 }

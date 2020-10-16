@@ -18,7 +18,7 @@ abstract class SubmitsGrid extends BaseGrid {
 
     protected ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
 
-    public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit): void {
+    final public function injectServiceFyziklaniSubmit(ServiceFyziklaniSubmit $serviceFyziklaniSubmit): void {
         $this->serviceFyziklaniSubmit = $serviceFyziklaniSubmit;
     }
 
@@ -40,7 +40,7 @@ abstract class SubmitsGrid extends BaseGrid {
     protected function addColumnTeam(): void {
         $this->addJoinedColumn('e_fyziklani_team.name_n_id', function ($row): ModelFyziklaniTeam {
             if (!$row instanceof ModelFyziklaniSubmit) {
-                $row = ModelFyziklaniSubmit::createFromActiveRow($row);  // TODO is needed?
+                $row = ModelFyziklaniSubmit::createFromActiveRow($row);
             }
             return $row->getFyziklaniTeam();
         });

@@ -26,12 +26,6 @@ class GlobalSession implements IGlobalSession {
 
     private bool $started = false;
 
-    /**
-     * GlobalSession constructor.
-     * @param string $expiration
-     * @param ServiceGlobalSession $serviceGlobalSession
-     * @param IGSIDHolder $gsidHolder
-     */
     public function __construct(string $expiration, ServiceGlobalSession $serviceGlobalSession, IGSIDHolder $gsidHolder) {
         $this->expiration = $expiration;
         $this->serviceGlobalSession = $serviceGlobalSession;
@@ -57,10 +51,7 @@ class GlobalSession implements IGlobalSession {
         $this->started = true;
     }
 
-    /**
-     * @return int|null|string
-     */
-    public function getId() {
+    public function getId(): ?string {
         if (!$this->started) {
             throw new InvalidStateException("Global session not started.");
         }

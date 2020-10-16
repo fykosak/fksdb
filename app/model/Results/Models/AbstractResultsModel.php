@@ -51,14 +51,6 @@ abstract class AbstractResultsModel {
 
     protected EvaluationStrategy $evaluationStrategy;
 
-    /**
-     * FKSDB\Results\Models\AbstractResultsModel constructor.
-     * @param ModelContest $contest
-     * @param ServiceTask $serviceTask
-     * @param Connection $connection
-     * @param int $year
-     * @param EvaluationStrategy $evaluationStrategy
-     */
     public function __construct(ModelContest $contest, ServiceTask $serviceTask, Connection $connection, int $year, EvaluationStrategy $evaluationStrategy) {
         $this->contest = $contest;
         $this->serviceTask = $serviceTask;
@@ -95,7 +87,7 @@ abstract class AbstractResultsModel {
      * Unused?
      * @return array
      */
-    public function getMetaColumns() {
+    public function getMetaColumns(): array {
         return [
             self::DATA_NAME,
             self::DATA_SCHOOL,

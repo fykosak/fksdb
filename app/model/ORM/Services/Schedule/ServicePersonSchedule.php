@@ -16,11 +16,6 @@ use Nette\Database\IConventions;
 class ServicePersonSchedule extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    /**
-     * ServicePersonSchedule constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_PERSON_SCHEDULE, ModelPersonSchedule::class);
     }

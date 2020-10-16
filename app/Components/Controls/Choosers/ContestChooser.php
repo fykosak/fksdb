@@ -67,7 +67,7 @@ class ContestChooser extends BaseComponent {
     /** @var int bitmask of what "sources" are used to infer selected contest */
     private $contestSource = 0xffffffff;
 
-    public function injectPrimary(Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest): void {
+    final public function injectPrimary(Session $session, YearCalculator $yearCalculator, ServiceContest $serviceContest): void {
         $this->session = $session;
         $this->yearCalculator = $yearCalculator;
         $this->serviceContest = $serviceContest;
@@ -141,26 +141,17 @@ class ContestChooser extends BaseComponent {
         }
     }
 
-    /**
-     * @return ModelContest
-     */
-    public function getContest() {
+    public function getContest(): ModelContest {
         $this->init();
         return $this->contest;
     }
 
-    /**
-     * @return int
-     */
-    public function getYear() {
+    public function getYear(): int {
         $this->init();
         return $this->year;
     }
 
-    /**
-     * @return void|null
-     */
-    private function init() {
+    private function init(): void {
         if ($this->initialized) {
             return;
         }
@@ -200,7 +191,7 @@ class ContestChooser extends BaseComponent {
                      * available, so use the first available.
                      */
                     if ($this->contestsDefinition === self::CONTESTS_ALL) {
-                        return null;
+                        return;
                     } else {
                         $contestId = reset($contestIds);
                     }

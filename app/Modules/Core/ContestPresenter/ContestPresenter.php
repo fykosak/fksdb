@@ -82,7 +82,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
      * @throws ForbiddenRequestException
      */
     public function getSelectedAcademicYear(): int {
-        return $this->getYearCalculator()->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
+        return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 
     protected function beforeRender(): void {

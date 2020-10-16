@@ -20,11 +20,6 @@ class PersonsGrid extends BaseGrid {
 
     private ModelScheduleItem $item;
 
-    /**
-     * PersonsGrid constructor.
-     * @param Container $container
-     * @param ModelScheduleItem $item
-     */
     public function __construct(Container $container, ModelScheduleItem $item) {
         parent::__construct($container);
         $this->item = $item;
@@ -43,15 +38,8 @@ class PersonsGrid extends BaseGrid {
     protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
-
         $this->addColumn('person_schedule_id', _('#'));
-
         $this->addColumns(['person.full_name', 'event.role', 'payment.payment']);
-
-        $this->addColumn('state', _('State'))->setRenderer(function ($row): ?string {
-            $model = ModelPersonSchedule::createFromActiveRow($row);
-            return $model->state;
-        });
     }
 
     protected function getModelClassName(): string {

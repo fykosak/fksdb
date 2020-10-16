@@ -19,10 +19,6 @@ abstract class BaseComponent extends Control {
 
     private GettextTranslator $translator;
 
-    /**
-     * SubmitsTableControl constructor.
-     * @param Container $container
-     */
     public function __construct(Container $container) {
         parent::__construct();
         $container->callInjects($this);

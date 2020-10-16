@@ -22,11 +22,6 @@ class ServiceAddress extends AbstractServiceSingle {
 
     private const PATTERN = '/[0-9]{5}/';
 
-    /**
-     * ServiceAddress constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_ADDRESS, ModelAddress::class);
     }

@@ -33,11 +33,6 @@ class StoredQueryFactory implements IXMLNodeSerializer {
 
     private ServiceStoredQuery $serviceStoredQuery;
 
-    /**
-     * StoredQueryFactory constructor.
-     * @param Connection $connection
-     * @param ServiceStoredQuery $serviceStoredQuery
-     */
     public function __construct(Connection $connection, ServiceStoredQuery $serviceStoredQuery) {
         $this->connection = $connection;
         $this->serviceStoredQuery = $serviceStoredQuery;

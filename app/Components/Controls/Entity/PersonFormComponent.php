@@ -37,35 +37,22 @@ class PersonFormComponent extends EditEntityFormComponent {
     public const PERSON_CONTAINER = 'person';
     public const PERSON_INFO_CONTAINER = 'person_info';
 
-    protected SingleReflectionFormFactory $singleReflectionFormFactory;
-
-    protected AddressFactory $addressFactory;
-
-    protected ServicePerson $servicePerson;
-
-    protected ServicePersonInfo $servicePersonInfo;
-
+    private SingleReflectionFormFactory $singleReflectionFormFactory;
+    private AddressFactory $addressFactory;
+    private ServicePerson $servicePerson;
+    private ServicePersonInfo $servicePersonInfo;
     private ServicePostContact $servicePostContact;
-
     private ServiceAddress $serviceAddress;
-
     private MemoryLogger $logger;
-
     private FieldLevelPermission $userPermission;
 
-    /**
-     * AbstractPersonFormControl constructor.
-     * @param Container $container
-     * @param int $userPermission is required to model editing, otherwise is setted to 2048
-     * @param bool $create
-     */
     public function __construct(Container $container, bool $create, int $userPermission) {
         parent::__construct($container, $create);
         $this->userPermission = new FieldLevelPermission($userPermission, $userPermission);
         $this->logger = new MemoryLogger();
     }
 
-    public function injectFactories(
+    final public function injectFactories(
         SingleReflectionFormFactory $singleReflectionFormFactory,
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,

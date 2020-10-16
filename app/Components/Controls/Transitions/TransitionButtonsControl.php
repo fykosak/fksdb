@@ -22,12 +22,6 @@ class TransitionButtonsControl extends BaseComponent {
 
     private IStateModel $model;
 
-    /**
-     * TransitionButtonsControl constructor.
-     * @param Machine $machine
-     * @param Container $container
-     * @param IStateModel $model
-     */
     public function __construct(Machine $machine, Container $container, IStateModel $model) {
         parent::__construct($container);
         $this->machine = $machine;

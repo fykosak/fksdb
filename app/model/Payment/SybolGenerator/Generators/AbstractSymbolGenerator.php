@@ -15,10 +15,6 @@ abstract class AbstractSymbolGenerator {
 
     protected ServicePayment $servicePayment;
 
-    /**
-     * AbstractSymbolGenerator constructor.
-     * @param ServicePayment $servicePayment
-     */
     public function __construct(ServicePayment $servicePayment) {
         $this->servicePayment = $servicePayment;
     }

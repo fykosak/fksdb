@@ -16,11 +16,6 @@ use Nette\Database\IConventions;
  */
 class ServiceFyziklaniTeam extends AbstractServiceSingle {
 
-    /**
-     * ServiceFyziklaniTeam constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_E_FYZIKLANI_TEAM, ModelFyziklaniTeam::class);
     }

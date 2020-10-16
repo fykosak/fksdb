@@ -19,7 +19,7 @@ abstract class StalkingControl extends BaseComponent {
 
     protected DBReflectionFactory $tableReflectionFactory;
 
-    public function injectPrimary(DBReflectionFactory $tableReflectionFactory): void {
+    final public function injectPrimary(DBReflectionFactory $tableReflectionFactory): void {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 

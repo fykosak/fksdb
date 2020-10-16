@@ -8,7 +8,6 @@ use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\YearCalculator;
 use Nette\Security\IAuthenticator;
-use Nette\Security\IIdentity;
 
 /**
  * Users authenticator.
@@ -17,12 +16,6 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
 
     private ServicePerson $servicePerson;
 
-    /**
-     * PasswordAuthenticator constructor.
-     * @param ServiceLogin $serviceLogin
-     * @param YearCalculator $yearCalculator
-     * @param ServicePerson $servicePerson
-     */
     public function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator, ServicePerson $servicePerson) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->servicePerson = $servicePerson;
@@ -31,13 +24,13 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
     /**
      * Performs an authentication.
      * @param array $credentials
-     * @return IIdentity
+     * @return ModelLogin
      * @throws InactiveLoginException
      * @throws InvalidCredentialsException
      * @throws NoLoginException
      * @throws UnknownLoginException
      */
-    public function authenticate(array $credentials) {
+    public function authenticate(array $credentials): ModelLogin {
         [$id, $password] = $credentials;
 
         $login = $this->findLogin($id);

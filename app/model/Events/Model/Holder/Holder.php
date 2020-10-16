@@ -45,10 +45,6 @@ class Holder {
 
     private SecondaryModelStrategy $secondaryModelStrategy;
 
-    /**
-     * Holder constructor.
-     * @param Connection $connection
-     */
     public function __construct(Connection $connection) {
         $this->connection = $connection;
 

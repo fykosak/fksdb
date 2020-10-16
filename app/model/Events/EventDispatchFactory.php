@@ -20,10 +20,6 @@ class EventDispatchFactory {
 
     private string $templateDir;
 
-    /**
-     * EventDispatchFactory constructor.
-     * @param Container $container
-     */
     public function __construct(Container $container) {
         $this->container = $container;
     }

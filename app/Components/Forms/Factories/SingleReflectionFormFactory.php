@@ -20,10 +20,6 @@ class SingleReflectionFormFactory {
 
     protected DBReflectionFactory $tableReflectionFactory;
 
-    /**
-     * PersonHistoryFactory constructor.
-     * @param DBReflectionFactory $tableReflectionFactory
-     */
     public function __construct(DBReflectionFactory $tableReflectionFactory) {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }

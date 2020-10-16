@@ -17,11 +17,6 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
 
     private ModelEvent $event;
 
-    /**
-     * ParticipantAcquaintanceChartControl constructor.
-     * @param Container $context
-     * @param ModelEvent $event
-     */
     public function __construct(Container $context, ModelEvent $event) {
         parent::__construct($context, 'chart.participant-acquaintance');
         $this->event = $event;

@@ -2,22 +2,23 @@
 
 namespace FKSDB\WebService;
 
+use FKSDB\Authentication\PasswordAuthenticator;
 use FKSDB\Authorization\ContestAuthorizator;
 use DOMDocument;
 use DOMElement;
 use FKSDB\Exceptions\BadTypeException;
+use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\StoredQuery\StoredQuery;
 use FKSDB\StoredQuery\StoredQueryFactory;
-use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\Results\Models\AbstractResultsModel;
 use FKSDB\Results\Models\BrojureResultsModel;
 use FKSDB\Results\ResultsModelFactory;
 use InvalidArgumentException;
 use Nette\Application\BadRequestException;
-use Tracy\Debugger;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
+use Tracy\Debugger;
 use SoapFault;
 use SoapVar;
 use FKSDB\Stats\StatsModelFactory;
@@ -31,40 +32,24 @@ class WebServiceModel {
 
     /** @var array  contest name => contest_id */
     private array $inverseContestMap;
-
     private ServiceContest $serviceContest;
-
     private ResultsModelFactory $resultsModelFactory;
-
     private StatsModelFactory $statsModelFactory;
-
-    /** @var ModelLogin */
-    private $authenticatedLogin;
-
-    private IAuthenticator $authenticator;
-
+    private ModelLogin $authenticatedLogin;
+    private PasswordAuthenticator $authenticator;
     private StoredQueryFactory $storedQueryFactory;
-
     private ContestAuthorizator $contestAuthorizator;
+    private FyziklaniSoapFactory $fyziklaniSoapFactory;
 
-    /**
-     * FKSDB\WebService\WebServiceModel constructor.
-     * @param array $inverseContestMap
-     * @param ServiceContest $serviceContest
-     * @param ResultsModelFactory $resultsModelFactory
-     * @param StatsModelFactory $statsModelFactory
-     * @param IAuthenticator $authenticator
-     * @param StoredQueryFactory $storedQueryFactory
-     * @param ContestAuthorizator $contestAuthorizator
-     */
     public function __construct(
         array $inverseContestMap,
         ServiceContest $serviceContest,
         ResultsModelFactory $resultsModelFactory,
         StatsModelFactory $statsModelFactory,
-        IAuthenticator $authenticator,
+        PasswordAuthenticator $authenticator,
         StoredQueryFactory $storedQueryFactory,
-        ContestAuthorizator $contestAuthorizator
+        ContestAuthorizator $contestAuthorizator,
+        FyziklaniSoapFactory $fyziklaniSoapFactory
     ) {
         $this->inverseContestMap = $inverseContestMap;
         $this->serviceContest = $serviceContest;
@@ -73,6 +58,7 @@ class WebServiceModel {
         $this->authenticator = $authenticator;
         $this->storedQueryFactory = $storedQueryFactory;
         $this->contestAuthorizator = $contestAuthorizator;
+        $this->fyziklaniSoapFactory = $fyziklaniSoapFactory;
     }
 
     /**
@@ -81,7 +67,7 @@ class WebServiceModel {
      * @param stdClass $args
      * @throws SoapFault
      */
-    public function authenticationCredentials($args) {
+    public function authenticationCredentials(stdClass $args): void {
         if (!is_object($args) || !isset($args->username) || !isset($args->password)) {
             $this->log('Missing credentials.');
             throw new SoapFault('Sender', 'Missing credentials.');
@@ -104,10 +90,21 @@ class WebServiceModel {
     /**
      * @param stdClass $args
      * @return SoapVar
-     * @throws BadRequestException
      * @throws SoapFault
      */
-    public function getResults($args): SoapVar {
+    public function getFyziklani(stdClass $args): SoapVar {
+        $this->checkAuthentication(__FUNCTION__);
+        return $this->fyziklaniSoapFactory->handle($args);
+    }
+
+    /**
+     * @param $args
+     * @return SoapVar
+     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws SoapFault
+     */
+    public function getResults(stdClass $args): SoapVar {
         $this->checkAuthentication(__FUNCTION__);
         if (!isset($this->inverseContestMap[$args->contest])) {
             throw new SoapFault('Sender', 'Unknown contest.');
@@ -193,7 +190,7 @@ class WebServiceModel {
      * @return SoapVar
      * @throws SoapFault
      */
-    public function getStats($args): SoapVar {
+    public function getStats(stdClass $args): SoapVar {
         $this->checkAuthentication(__FUNCTION__);
         if (!isset($this->inverseContestMap[$args->contest])) {
             throw new SoapFault('Sender', 'Unknown contest.');
@@ -247,7 +244,7 @@ class WebServiceModel {
      * @throws BadRequestException
      * @throws SoapFault
      */
-    public function getExport($args): SoapVar {
+    public function getExport(stdClass $args): SoapVar {
         // parse arguments
         $qid = $args->qid;
         $format = isset($args->{'format-version'}) ? ((int)$args->{'format-version'}) : IXMLNodeSerializer::EXPORT_FORMAT_1;
@@ -298,17 +295,15 @@ class WebServiceModel {
 
     /**
      * @param string $serviceName
-     * @param null $arg
+     * @param mixed ...$args
      * @throws SoapFault
      */
-    private function checkAuthentication($serviceName, $arg = null) {
-        if (!$this->authenticatedLogin) {
+    private function checkAuthentication(string $serviceName, ...$args): void {
+        if (!isset($this->authenticatedLogin)) {
             $this->log("Unauthenticated access to $serviceName.");
             throw new SoapFault('Sender', "Unauthenticated access to $serviceName.");
-        } elseif ($arg !== null) {
-            $this->log("Called $serviceName($arg).");
         } else {
-            $this->log("Called $serviceName.");
+            $this->log(sprintf('Called %s (%s).', $serviceName, join(',', $args)));
         }
     }
 
@@ -320,11 +315,7 @@ class WebServiceModel {
         return $this->contestAuthorizator->isAllowedForLogin($this->authenticatedLogin, $query, 'execute', $implicitParameters[StoredQueryFactory::PARAM_CONTEST]);
     }
 
-    /**
-     * @param string $msg
-     * @return void
-     */
-    private function log($msg) {
+    private function log(string $msg): void {
         if (!$this->authenticatedLogin) {
             $message = "unauthenticated@";
         } else {

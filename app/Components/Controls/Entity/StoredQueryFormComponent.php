@@ -3,6 +3,8 @@
 namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
+use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\DBReflection\OmittedControlException;
 use FKSDB\StoredQuery\StoredQueryFactory;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
 use FKSDB\Exceptions\BadTypeException;
@@ -30,50 +32,17 @@ use Nette\Forms\Controls\SubmitButton;
  * @property ModelStoredQuery $model
  */
 class StoredQueryFormComponent extends EditEntityFormComponent {
-    private const CONT_CONSOLE = 'console';
-    private const CONT_PARAMS_META = 'paramsMeta';
-    private const CONT_META = 'meta';
+    private const CONT_SQL = 'sql';
+    private const CONT_PARAMS = 'params';
+    private const CONT_MAIN = 'main';
 
     private StoredQueryFormFactory $storedQueryFormFactory;
-
     private ServiceStoredQuery $serviceStoredQuery;
-
     private ServiceStoredQueryTag $serviceStoredQueryTag;
-
     private ServiceStoredQueryParameter $serviceStoredQueryParameter;
-
     private StoredQueryFactory $storedQueryFactory;
 
-    /**
-     * @param Form $form
-     * @return void
-     * @throws AbortException
-     * @throws ModelException
-     */
-    protected function handleFormSuccess(Form $form): void {
-        $values = FormUtils::emptyStrToNull($form->getValues(), true);
-        $connection = $this->serviceStoredQuery->getConnection();
-        $connection->beginTransaction();
-
-        $data = array_merge($values[self::CONT_CONSOLE], $values[self::CONT_META]);
-
-        if ($this->create) {
-            $model = $this->serviceStoredQuery->createNewModel($data);
-        } else {
-            $model = $this->model;
-            $this->serviceStoredQuery->updateModel2($model, $data);
-        }
-
-        $this->saveTags($values[self::CONT_META]['tags'], $model->query_id);
-        $this->saveParameters($values[self::CONT_PARAMS_META], $model->query_id);
-
-        //$this->getPresenter()->clearSession();
-        $connection->commit();
-        $this->getPresenter()->flashMessage($this->create ? _('Query has been created') : _('Query has been edited'), Message::LVL_SUCCESS);
-        $this->getPresenter()->redirect('list');
-    }
-
-    public function injectPrimary(
+    final public function injectPrimary(
         StoredQueryFormFactory $storedQueryFormFactory,
         ServiceStoredQuery $serviceStoredQuery,
         ServiceStoredQueryTag $serviceStoredQueryTag,
@@ -87,16 +56,50 @@ class StoredQueryFormComponent extends EditEntityFormComponent {
         $this->storedQueryFactory = $storedQueryFactory;
     }
 
+    /**
+     * @param Form $form
+     * @return void
+     * @throws AbortException
+     * @throws ModelException
+     */
+    protected function handleFormSuccess(Form $form): void {
+        $values = FormUtils::emptyStrToNull($form->getValues(), true);
+        $connection = $this->serviceStoredQuery->getConnection();
+        $connection->beginTransaction();
+
+        $data = array_merge($values[self::CONT_SQL], $values[self::CONT_MAIN]);
+
+        if ($this->create) {
+            $model = $this->serviceStoredQuery->createNewModel($data);
+        } else {
+            $model = $this->model;
+            $this->serviceStoredQuery->updateModel2($model, $data);
+        }
+
+        $this->saveTags($values[self::CONT_MAIN]['tags'], $model->query_id);
+        $this->saveParameters($values[self::CONT_PARAMS], $model->query_id);
+
+        $connection->commit();
+        $this->getPresenter()->flashMessage($this->create ? _('Query has been created') : _('Query has been edited'), Message::LVL_SUCCESS);
+        $this->getPresenter()->redirect('list');
+    }
+
+    /**
+     * @param Form $form
+     * @return void
+     * @throws BadTypeException
+     * @throws AbstractColumnException
+     * @throws OmittedControlException
+     */
     protected function configureForm(Form $form): void {
         $group = $form->addGroup(_('SQL'));
-        $console = $this->storedQueryFormFactory->createConsole($group);
-        $form->addComponent($console, self::CONT_CONSOLE);
-        $params = $this->storedQueryFormFactory->createParametersMetadata($group);
-        $form->addComponent($params, self::CONT_PARAMS_META);
+        $form->addComponent($this->storedQueryFormFactory->createConsole($group), self::CONT_SQL);
+
+        $group = $form->addGroup(_('Parameters'));
+        $form->addComponent($this->storedQueryFormFactory->createParametersMetadata($group), self::CONT_PARAMS);
 
         $group = $form->addGroup(_('Metadata'));
-        $metadata = $this->storedQueryFormFactory->createMetadata($group);
-        $form->addComponent($metadata, self::CONT_META);
+        $form->addComponent($this->storedQueryFormFactory->createMetadata($group), self::CONT_MAIN);
 
         $form->setCurrentGroup();
 
@@ -141,14 +144,14 @@ class StoredQueryFormComponent extends EditEntityFormComponent {
     protected function setDefaults(?AbstractModelSingle $model): void {
         if (!is_null($model)) {
             $values = [];
-            $values[self::CONT_CONSOLE] = $model;
-            $values[self::CONT_META] = $model->toArray();
-            $values[self::CONT_META]['tags'] = $model->getTags()->fetchPairs('tag_type_id', 'tag_type_id');
-            $values[self::CONT_PARAMS_META] = [];
+            $values[self::CONT_SQL] = $model;
+            $values[self::CONT_MAIN] = $model->toArray();
+            $values[self::CONT_MAIN]['tags'] = $model->getTags()->fetchPairs('tag_type_id', 'tag_type_id');
+            $values[self::CONT_PARAMS] = [];
             foreach ($model->getParameters() as $parameter) {
                 $paramData = $parameter->toArray();
                 $paramData['default'] = $parameter->getDefaultValue();
-                $values[self::CONT_PARAMS_META][] = $paramData;
+                $values[self::CONT_PARAMS][] = $paramData;
             }
             if ($model->php_post_proc) {
                 $this->flashMessage(_('Query result is still processed by PHP. Stick to the correct names of columns and parameters.'), BasePresenter::FLASH_WARNING);
@@ -171,7 +174,7 @@ class StoredQueryFormComponent extends EditEntityFormComponent {
     private function handleComposeExecute(Form $form): void {
         $data = $form->getValues(true);
         $parameters = [];
-        foreach ($data[self::CONT_PARAMS_META] as $paramMetaData) {
+        foreach ($data[self::CONT_PARAMS] as $paramMetaData) {
             $parameters[] = new StoredQueryParameter(
                 $paramMetaData['name'],
                 $paramMetaData['default'],
@@ -180,7 +183,7 @@ class StoredQueryFormComponent extends EditEntityFormComponent {
         }
         $query = $this->storedQueryFactory->createQueryFromSQL(
             $this->getPresenter(),
-            $data[self::CONT_CONSOLE]['sql'],
+            $data[self::CONT_SQL]['sql'],
             $parameters
         );
         /** @var ResultsComponent $control */
@@ -188,8 +191,7 @@ class StoredQueryFormComponent extends EditEntityFormComponent {
         $control->setStoredQuery($query);
     }
 
-    public function render(): void {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.storedQuery.latte');
-        $this->template->render();
+    protected function getTemplatePath(): string {
+        return __DIR__ . DIRECTORY_SEPARATOR . 'layout.storedQuery.latte';
     }
 }

@@ -29,12 +29,6 @@ class AddressFactory {
 
     private Container $container;
 
-    /**
-     * AddressFactory constructor.
-     * @param Container $container
-     * @param ServiceAddress $serviceAddress
-     * @param ServiceRegion $serviceRegion
-     */
     public function __construct(Container $container, ServiceAddress $serviceAddress, ServiceRegion $serviceRegion) {
         $this->serviceAddress = $serviceAddress;
         $this->serviceRegion = $serviceRegion;
@@ -121,7 +115,7 @@ class AddressFactory {
 
         if ($options & self::REQUIRED) {
             $conditioned = $conditioningField ? $postalCode->addConditionOn($conditioningField, Form::FILLED) : $postalCode;
-            $conditioned->addConditionOn($country, function (BaseControl $control) {
+            $conditioned->addConditionOn($country, function (BaseControl $control): bool {
                 $value = $control->getValue();
                 return in_array($value, ['CZ', 'SK']);
             })->addRule(Form::FILLED, _('Adresa musí mít vyplněné PSČ.'));
@@ -131,12 +125,12 @@ class AddressFactory {
 
         if ($options & self::REQUIRED) {
             $conditioned = $conditioningField ? $country->addConditionOn($conditioningField, Form::FILLED) : $country;
-            $conditioned->addConditionOn($postalCode, function (BaseControl $control) {
+            $conditioned->addConditionOn($postalCode, function (BaseControl $control): bool {
                 return !$this->serviceAddress->tryInferRegion($control->getValue());
             })->addRule(Form::FILLED, _('Stát musí být vyplněn.'));
         }
         $country->addCondition(Form::FILLED)
-            ->addConditionOn($postalCode, $validPostalCode)->addRule(function (BaseControl $control) use ($postalCode) {
+            ->addConditionOn($postalCode, $validPostalCode)->addRule(function (BaseControl $control) use ($postalCode): bool {
                 $regionId = $this->serviceAddress->inferRegion($postalCode->getValue());
                 $region = $this->serviceRegion->findByPrimary($regionId);
                 return $region->country_iso == $control->getValue();

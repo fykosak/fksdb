@@ -19,9 +19,6 @@ class ParticipantsDurationTest extends PersonTest {
         ModelContest::ID_VYFUK => ['thresholds' => [4, 6]],
     ];
 
-    /**
-     * ParticipantsDurationTest constructor.
-     */
     public function __construct() {
         parent::__construct('participants_duration', _('Participate events'));
     }

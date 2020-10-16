@@ -2,6 +2,7 @@
 
 namespace FKSDB\DBReflection\ColumnFactories\Schedule\ScheduleItem;
 
+use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
 use FKSDB\ValuePrinters\NumberPrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
@@ -11,11 +12,7 @@ use Nette\Utils\Html;
  * Class FreeCapacityRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class FreeCapacityRow extends AbstractScheduleItemRow {
-
-    public function getTitle(): string {
-        return _('Free capacity');
-    }
+class FreeCapacityRow extends DefaultColumnFactory {
 
     /**
      * @param AbstractModelSingle|ModelScheduleItem $model

@@ -2,24 +2,12 @@
     {do $presenter->registerJSFile('js/codemirror.min.js')}
     {do $presenter->registerJSFile('js/sqlconsole.js')}
     {do $presenter->registerStylesheetFile('css/codemirror.css', array('screen', 'projection', 'tv'))}
-    <div class="btn-group">
-        <a href="{plink :Org:Export:execute ,'id' => $model->getPrimary()}"
-           class="btn btn-primary"
-           title="{_'Execute query'}">{_'Execute'}</a>
-        {if $presenter->authorized('edit', ['id' => $model->getPrimary()])}
-            <a href="{plink edit,'id' => $model->getPrimary()}"
-               class="btn btn-secondary" title="{_'Edit query'}">{_'Edit'}</a>
-        {/if}
-    </div>
 
-    <p>{$model->description|noescape|nl2br}</p>
-    {control tagCloud:detail $model}
-
-    {if $model->php_post_proc}
-        <h3>{_'PHP post processing'}</h3>
-        <p>{$model->php_post_proc|noescape|nl2br}</p>
-    {/if}
-
+    <hr/>
+    {control valuePrinter:row 'stored_query.description', $model,1024}
+    {control valuePrinter:row 'stored_query.tags', $model,1024}
+    {control valuePrinter:row 'stored_query.php_post_proc', $model,1024}
+    <hr/>
     {if count($model->getParameters())}
         <h3>{_'Parametry'}</h3>
         <table class="table table-hover table-striped">
@@ -41,7 +29,15 @@
     {/if}
 
     <h3>{_'SQL'}</h3>
-    <pre class="syntax-sql">
-{$model->sql}
-</pre>
+      {control valuePrinter:onlyValue 'stored_query.sql', $model,1024}
+    <hr/>
+    <div class="btn-group">
+        <a href="{plink :Org:Export:execute ,'id' => $model->getPrimary()}"
+           class="btn btn-primary"
+           title="{_'Execute query'}">{_'Execute'}</a>
+        {if $presenter->authorized('edit', ['id' => $model->getPrimary()])}
+            <a href="{plink edit,'id' => $model->getPrimary()}"
+               class="btn btn-secondary" title="{_'Edit query'}">{_'Edit'}</a>
+        {/if}
+    </div>
 {/block}

@@ -33,11 +33,6 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
 
     private SingleReflectionFormFactory $singleReflectionFormFactory;
 
-    /**
-     * PrivacyPolicy constructor.
-     * @param ServicePersonInfo $servicePersonInfo
-     * @param SingleReflectionFormFactory $singleReflectionFormFactory
-     */
     public function __construct(ServicePersonInfo $servicePersonInfo, SingleReflectionFormFactory $singleReflectionFormFactory) {
         $this->servicePersonInfo = $servicePersonInfo;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
@@ -77,11 +72,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
         $this->trySetAgreed($values);
     }
 
-    /**
-     * @param ArrayHash $values
-     * @return void
-     */
-    private function trySetAgreed(ArrayHash $values) {
+    private function trySetAgreed(ArrayHash $values): void {
         foreach ($values as $key => $value) {
             if ($value instanceof ArrayHash) {
                 $this->trySetAgreed($value);

@@ -25,7 +25,7 @@ class EventPresenter extends BasePresenter {
 
     private ServiceEvent $serviceEvent;
 
-    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
+    final public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 
@@ -101,6 +101,6 @@ class EventPresenter extends BasePresenter {
      * @throws BadTypeException
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
-        return $this->getContestAuthorizator()->isAllowed($resource, $privilege, $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 }

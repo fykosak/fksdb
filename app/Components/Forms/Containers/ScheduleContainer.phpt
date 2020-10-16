@@ -14,10 +14,6 @@ class ScheduleContainer extends ContainerWithOptions {
 
     private bool $isAttached = false;
 
-    /**
-     * ScheduleContainer constructor.
-     * @param Container $container
-     */
     public function __construct(Container $container) {
         parent::__construct($container);
         $this->monitor(IContainer::class, function () {

@@ -6,7 +6,7 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelContestYear;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\ORM\Services\ServiceContestYear;
-use InvalidArgumentException;
+use Nette\InvalidArgumentException;
 use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
@@ -38,12 +38,6 @@ class YearCalculator {
 
     private Container $container;
 
-    /**
-     * FKSDB\YearCalculator constructor.
-     * @param ServiceContestYear $serviceContestYear
-     * @param ServiceContest $serviceContest
-     * @param Container $container
-     */
     public function __construct(ServiceContestYear $serviceContestYear, ServiceContest $serviceContest, Container $container) {
         $this->serviceContestYear = $serviceContestYear;
         $this->serviceContest = $serviceContest;
@@ -90,7 +84,7 @@ class YearCalculator {
         if ($studyYear >= 1 && $studyYear <= 4) {
             return $acYear + (5 - $studyYear);
         }
-        throw new \Nette\InvalidArgumentException('Graduation year not match');
+        throw new InvalidArgumentException('Graduation year not match');
     }
 
     public function getCurrentYear(ModelContest $contest): int {

@@ -27,13 +27,11 @@ class TeacherFormComponent extends EditEntityFormComponent {
 
     private const CONTAINER = 'teacher';
 
-    protected SchoolFactory $schoolFactory;
-
+    private SchoolFactory $schoolFactory;
     private SingleReflectionFormFactory $singleReflectionFormFactory;
+    private ServiceTeacher $serviceTeacher;
 
-    protected ServiceTeacher $serviceTeacher;
-
-    public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, SchoolFactory $schoolFactory, ServiceTeacher $serviceTeacher): void {
+    final public function injectPrimary(SingleReflectionFormFactory $singleReflectionFormFactory, SchoolFactory $schoolFactory, ServiceTeacher $serviceTeacher): void {
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
         $this->schoolFactory = $schoolFactory;
         $this->serviceTeacher = $serviceTeacher;
@@ -65,11 +63,7 @@ class TeacherFormComponent extends EditEntityFormComponent {
      */
     protected function handleFormSuccess(Form $form): void {
         $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
-        if ($this->create) {
-            $this->getORMService()->createNewModel($data);
-        } else {
-            $this->getORMService()->updateModel2($this->model, $data);
-        }
+        $this->serviceTeacher->store($this->model ?? null, $data);
         $this->getPresenter()->flashMessage($this->create ? _('Teacher has been created') : _('Teacher has been updated'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
@@ -85,17 +79,13 @@ class TeacherFormComponent extends EditEntityFormComponent {
         }
     }
 
-    protected function getORMService(): ServiceTeacher {
-        return $this->serviceTeacher;
-    }
-
     /**
      * @return ModelContainer
      * @throws AbstractColumnException
      * @throws BadTypeException
      * @throws OmittedControlException
      */
-    public function createTeacherContainer(): ModelContainer {
+    private function createTeacherContainer(): ModelContainer {
         return $this->singleReflectionFormFactory->createContainer('teacher', ['state', 'since', 'until', 'number_brochures', 'note']);
     }
 }

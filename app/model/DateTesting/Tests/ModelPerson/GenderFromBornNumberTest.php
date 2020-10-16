@@ -12,9 +12,7 @@ use FKSDB\DataTesting\TestLog;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class GenderFromBornNumberTest extends PersonTest {
-    /**
-     * GenderFromBornNumberTest constructor.
-     */
+
     public function __construct() {
         parent::__construct('gender_from_born_number', _('Gender from born number'));
     }

@@ -13,7 +13,6 @@ use FKSDB\UI\PageTitle;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class GameSetupPresenter extends BasePresenter {
-
     private ModelFyziklaniGameSetup $gameSetup;
 
     /**

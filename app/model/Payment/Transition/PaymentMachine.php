@@ -28,12 +28,6 @@ class PaymentMachine extends Machine {
 
     private array $scheduleGroupTypes;
 
-    /**
-     * PaymentMachine constructor.
-     * @param Context $connection
-     * @param ServicePayment $servicePayment
-     * @param ServiceEvent $serviceEvent
-     */
     public function __construct(Context $connection, ServicePayment $servicePayment, ServiceEvent $serviceEvent) {
         parent::__construct($connection, $servicePayment);
         $this->serviceEvent = $serviceEvent;

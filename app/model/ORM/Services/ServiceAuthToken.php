@@ -5,6 +5,7 @@ namespace FKSDB\ORM\Services;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use Nette\Database\Context;
@@ -19,11 +20,6 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
     private const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
-    /**
-     * ServiceAddress constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_AUTH_TOKEN, ModelAuthToken::class);
     }
@@ -33,13 +29,13 @@ class ServiceAuthToken extends AbstractServiceSingle {
      * @param ModelLogin $login
      * @param string $type
      * @param \DateTimeInterface|null $until
-     * @param null $data
+     * @param null|string $data
      * @param bool $refresh
-     * @param DateTime|null $since
+     * @param \DateTimeInterface|null $since
      * @return ModelAuthToken
      * @throws ModelException
      */
-    public function createToken(ModelLogin $login, $type, \DateTimeInterface $until = null, $data = null, $refresh = false, DateTime $since = null): ModelAuthToken {
+    public function createToken(ModelLogin $login, string $type, ?\DateTimeInterface $until, ?string $data = null, bool $refresh = false, ?\DateTimeInterface $since = null): ModelAuthToken {
         if ($since === null) {
             $since = new DateTime();
         }

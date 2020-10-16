@@ -31,17 +31,12 @@ class SubmitsGrid extends BaseGrid {
 
     private SubmitHandlerFactory $submitHandlerFactory;
 
-    /**
-     * SubmitsGrid constructor.
-     * @param Container $container
-     * @param ModelContestant $contestant
-     */
     public function __construct(Container $container, ModelContestant $contestant) {
         parent::__construct($container);
         $this->contestant = $contestant;
     }
 
-    public function injectPrimary(SubmitHandlerFactory $submitHandlerFactory): void {
+    final public function injectPrimary(SubmitHandlerFactory $submitHandlerFactory): void {
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 

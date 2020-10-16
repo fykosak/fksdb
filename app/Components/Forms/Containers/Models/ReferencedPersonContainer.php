@@ -63,16 +63,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
 
     private bool $configured = false;
 
-    /**
-     * ReferencedPersonContainer constructor.
-     * @param Container $container
-     * @param IModifiabilityResolver $modifiabilityResolver
-     * @param IVisibilityResolver $visibilityResolver
-     * @param int $acYear
-     * @param array $fieldsDefinition
-     * @param ModelEvent|null $event
-     * @param bool $allowClear
-     */
     public function __construct(
         Container $container,
         IModifiabilityResolver $modifiabilityResolver,
@@ -95,7 +85,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
         });
     }
 
-    public function injectPrimary(
+    final public function injectPrimary(
         AddressFactory $addressFactory,
         FlagFactory $flagFactory,
         ServicePerson $servicePerson,

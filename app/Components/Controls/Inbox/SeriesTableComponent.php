@@ -18,12 +18,6 @@ abstract class SeriesTableComponent extends BaseComponent {
 
     private bool $displayAll;
 
-    /**
-     * CheckSubmitsControl constructor.
-     * @param Container $context
-     * @param SeriesTable $seriesTable
-     * @param bool $displayAll
-     */
     public function __construct(Container $context, SeriesTable $seriesTable, bool $displayAll = false) {
         parent::__construct($context);
         $this->seriesTable = $seriesTable;

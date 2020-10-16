@@ -21,7 +21,7 @@ class ContributionsFromXML extends Stage {
     private $data;
 
     /** @var array   contribution type => xml element */
-    private static $contributionFromXML = [
+    private static array $contributionFromXML = [
         'author' => 'authors/author',
         'solution' => 'solution-authors/solution-author',
     ];
@@ -30,11 +30,6 @@ class ContributionsFromXML extends Stage {
 
     private ServiceOrg $serviceOrg;
 
-    /**
-     * ContributionsFromXML2 constructor.
-     * @param ServiceTaskContribution $taskContributionService
-     * @param ServiceOrg $serviceOrg
-     */
     public function __construct(ServiceTaskContribution $taskContributionService, ServiceOrg $serviceOrg) {
         $this->taskContributionService = $taskContributionService;
         $this->serviceOrg = $serviceOrg;
@@ -61,11 +56,7 @@ class ContributionsFromXML extends Stage {
         return $this->data;
     }
 
-    /**
-     * @param SimpleXMLElement $XMLTask
-     * @return void
-     */
-    private function processTask(SimpleXMLElement $XMLTask) {
+    private function processTask(SimpleXMLElement $XMLTask): void {
         $tasks = $this->data->getTasks();
         $tasknr = (int)(string)$XMLTask->number;
 

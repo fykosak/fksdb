@@ -27,11 +27,6 @@ class LoggingMailer implements IMailer {
 
     private Container $container;
 
-    /**
-     * LoggingMailer constructor.
-     * @param IMailer $mailer
-     * @param Container $container
-     */
     public function __construct(IMailer $mailer, Container $container) {
         $this->mailer = $mailer;
         $this->container = $container;
@@ -75,11 +70,7 @@ class LoggingMailer implements IMailer {
         return $this->sentMessages;
     }
 
-    /**
-     * @param Message $mail
-     * @param Exception|null $e
-     */
-    private function logMessage(Message $mail, Exception $e = null): void {
+    private function logMessage(Message $mail, ?Exception $e = null): void {
         if (!$this->logging) {
             return;
         }

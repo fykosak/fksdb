@@ -24,13 +24,6 @@ abstract class AbstractServiceMulti implements IService {
 
     private string $modelClassName;
 
-    /**
-     * AbstractServiceMulti constructor.
-     * @param AbstractServiceSingle $mainService
-     * @param AbstractServiceSingle $joinedService
-     * @param string $joiningColumn
-     * @param string $modelClassName
-     */
     public function __construct(AbstractServiceSingle $mainService, AbstractServiceSingle $joinedService, string $joiningColumn, string $modelClassName) {
         $this->mainService = $mainService;
         $this->joinedService = $joinedService;
@@ -41,11 +34,11 @@ abstract class AbstractServiceMulti implements IService {
     /**
      * Use this method to create new models!
      *
-     * @param array|null $data
+     * @param iterable|null $data
      * @return AbstractModelMulti
      * @deprecated
      */
-    public function createNew($data = null) {
+    public function createNew(?iterable $data = null) {
         $mainModel = $this->getMainService()->createNew($data);
         $joinedModel = $this->getJoinedService()->createNew($data);
         return $this->composeModel($mainModel, $joinedModel);
@@ -76,7 +69,7 @@ abstract class AbstractServiceMulti implements IService {
      * @return void
      * @deprecated
      */
-    public function updateModel(IModel $model, $data, $alive = true) {
+    public function updateModel(IModel $model, iterable $data, bool $alive = true): void {
         $this->checkType($model);
         $this->getMainService()->updateModel($model->getMainModel(), $data, $alive);
         $this->getJoinedService()->updateModel($model->getJoinedModel(), $data, $alive);
@@ -110,7 +103,7 @@ abstract class AbstractServiceMulti implements IService {
      * @param IModel|AbstractModelMulti $model
      * @deprecated
      */
-    public function save(IModel &$model) {
+    public function save(IModel &$model): void {
         $this->checkType($model);
 
         $mainModel = $model->getMainModel();

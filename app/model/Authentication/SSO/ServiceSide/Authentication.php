@@ -3,6 +3,7 @@
 namespace FKSDB\Authentication\SSO\ServiceSide;
 
 use FKSDB\Authentication\SSO\IGlobalSession;
+use FKSDB\ORM\Models\ModelAuthToken;
 
 /**
  * Wrapper around IGlobalSession that intends to have no outer dependencies.
@@ -14,7 +15,7 @@ class Authentication {
     public const PARAM_BACKLINK = 'backlink';
     public const PARAM_FLAG = 'flag';
     public const PARAM_GSID = 'gsid';
-    public const FLAG_SSO_LOGIN = 'sso';
+    public const FLAG_SSO_LOGIN = ModelAuthToken::TYPE_SSO;
 
     private IGlobalSession $globalSession;
 
@@ -91,12 +92,7 @@ class Authentication {
         return $_SERVER['REQUEST_URI'];
     }
 
-    /**
-     * @param string $url
-     * @param mixed $params
-     * @return string
-     */
-    private function setHttpParams($url, $params) {
+    private function setHttpParams(string $url, array $params): string {
         $query = http_build_query($params, false, '&');
 
         if (preg_match('/\?/', $url)) { // very simplistic test where URL contains query part

@@ -18,14 +18,14 @@ use Nette\Security\Permission;
 
 /**
  * Class InboxPresenter
- * *
+ *
  */
 class InboxPresenter extends BasePresenter implements ISeriesPresenter {
     use SeriesPresenterTrait;
 
     private SeriesTable $seriesTable;
 
-    public function injectSeriesTable(SeriesTable $seriesTable): void {
+    final public function injectSeriesTable(SeriesTable $seriesTable): void {
         $this->seriesTable = $seriesTable;
     }
 
@@ -38,7 +38,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      */
     public function authorizedDefault(): void {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
     /**
@@ -47,7 +47,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      */
     public function authorizedInbox(): void {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
     /**
@@ -56,7 +56,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      */
     public function authorizedList(): void {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'list', $this->getSelectedContest()));
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'list', $this->getSelectedContest()));
     }
 
     /**
@@ -65,7 +65,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      */
     public function authorizedHandout(): void {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'edit', $this->getSelectedContest()));
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('task', 'edit', $this->getSelectedContest()));
     }
 
     /**
@@ -74,7 +74,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      */
     public function authorizedCorrected(): void {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'corrected', $this->getSelectedContest()));
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'corrected', $this->getSelectedContest()));
     }
 
     /* ***************** TITLES ***********************/

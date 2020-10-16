@@ -8,7 +8,7 @@ use FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs;
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory;
 use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Components\Controls\Choosers\ThemeChooser;
-use FKSDB\Components\Controls\DBReflection\DetailComponent;
+use FKSDB\Components\Controls\DBReflection\LinkPrinterComponent;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Components\Controls\Navigation\NavigationChooser;
 use FKSDB\Components\Controls\PresenterBuilder;
@@ -45,11 +45,8 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     use CollectorPresenterTrait;
 
     public const FLASH_SUCCESS = ILogger::SUCCESS;
-
     public const FLASH_INFO = ILogger::INFO;
-
     public const FLASH_WARNING = ILogger::WARNING;
-
     public const FLASH_ERROR = ILogger::ERROR;
 
     /** @persistent */
@@ -57,7 +54,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
 
     /**
      * BackLink for tree construction for breadcrumbs.
-     *
      * @persistent
      */
     public $bc;
@@ -68,49 +64,29 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      */
     public $lang;
 
-    private YearCalculator $yearCalculator;
-
-    private ServiceContest $serviceContest;
-
-    private BreadcrumbsFactory $breadcrumbsFactory;
-
-    private PresenterBuilder $presenterBuilder;
+    protected YearCalculator $yearCalculator;
+    protected ServiceContest $serviceContest;
+    protected BreadcrumbsFactory $breadcrumbsFactory;
+    protected PresenterBuilder $presenterBuilder;
+    protected GettextTranslator $translator;
 
     private ?PageTitle $pageTitle;
-
     private bool $authorized = true;
-
     private array $authorizedCache = [];
-
     private PageStyleContainer $pageStyleContainer;
 
-    private GettextTranslator $translator;
 
-    public function getYearCalculator(): YearCalculator {
-        return $this->yearCalculator;
-    }
-
-    public function injectYearCalculator(YearCalculator $yearCalculator): void {
+    final public function injectBase(
+        YearCalculator $yearCalculator,
+        ServiceContest $serviceContest,
+        BreadcrumbsFactory $breadcrumbsFactory,
+        PresenterBuilder $presenterBuilder,
+        GettextTranslator $translator
+    ): void {
         $this->yearCalculator = $yearCalculator;
-    }
-
-    public function getServiceContest(): ServiceContest {
-        return $this->serviceContest;
-    }
-
-    public function injectServiceContest(ServiceContest $serviceContest): void {
         $this->serviceContest = $serviceContest;
-    }
-
-    public function injectBreadcrumbsFactory(BreadcrumbsFactory $breadcrumbsFactory): void {
         $this->breadcrumbsFactory = $breadcrumbsFactory;
-    }
-
-    public function injectPresenterBuilder(PresenterBuilder $presenterBuilder): void {
         $this->presenterBuilder = $presenterBuilder;
-    }
-
-    final public function injectTranslator(GettextTranslator $translator): void {
         $this->translator = $translator;
     }
 
@@ -136,15 +112,12 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
      * IJSONProvider
      * ****************************** */
     /**
-     * @param mixed|string $acName
-     * @param mixed|string $acQ
+     * @param string $acName
      * @return void
      * @throws AbortException
      */
-    public function handleAutocomplete($acName, $acQ): void {
-        if (!$this->isAjax()) {
-            ['acQ' => $acQ] = (array)json_decode($this->getHttpRequest()->getRawBody());
-        }
+    public function handleAutocomplete(string $acName): void {
+        ['acQ' => $acQ] = (array)json_decode($this->getHttpRequest()->getRawBody());
         $component = $this->getComponent($acName);
         if (!($component instanceof AutocompleteSelectBox)) {
             throw new InvalidArgumentException('Cannot handle component of type ' . get_class($component) . '.');
@@ -265,16 +238,16 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
         return new NavigationChooser($this->getContext());
     }
 
-    protected function createComponentDetail(): DetailComponent {
-        return new DetailComponent($this->getContext());
-    }
-
     protected function createComponentThemeChooser(): ThemeChooser {
         return new ThemeChooser($this->getContext());
     }
 
     protected function createComponentValuePrinter(): ValuePrinterComponent {
         return new ValuePrinterComponent($this->getContext());
+    }
+
+    protected function createComponentLinkPrinter(): LinkPrinterComponent {
+        return new LinkPrinterComponent($this->getContext());
     }
 
     final protected function createComponentLanguageChooser(): LanguageChooser {

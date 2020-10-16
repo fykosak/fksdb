@@ -27,12 +27,6 @@ abstract class AbstractEventOrgAssertion {
 
     private Context $connection;
 
-    /**
-     * AbstractEventOrgAssertion constructor.
-     * @param string $parameterName
-     * @param IUserStorage $user
-     * @param Context $connection
-     */
     public function __construct(string $parameterName, IUserStorage $user, Context $connection) {
         $this->parameterName = $parameterName;
         $this->user = $user;

@@ -17,11 +17,6 @@ class Grant implements IRole {
 
     private string $roleId;
 
-    /**
-     * Grant constructor.
-     * @param int $contestId
-     * @param string $roleId
-     */
     public function __construct(int $contestId, string $roleId) {
         $this->contestId = $contestId;
         $this->roleId = $roleId;

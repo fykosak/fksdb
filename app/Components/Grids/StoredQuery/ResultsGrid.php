@@ -22,11 +22,6 @@ class ResultsGrid extends BaseGrid {
 
     private StoredQuery $storedQuery;
 
-    /**
-     * StoredQueryGrid constructor.
-     * @param StoredQuery $storedQuery
-     * @param Container $container
-     */
     public function __construct(StoredQuery $storedQuery, Container $container) {
         parent::__construct($container);
         $this->storedQuery = $storedQuery;
@@ -75,5 +70,4 @@ class ResultsGrid extends BaseGrid {
             }
         }
     }
-
 }

@@ -44,12 +44,6 @@ class AutocompleteSelectBox extends TextBase {
 
     private bool $attachedJS = false;
 
-    /**
-     * AutocompleteSelectBox constructor.
-     * @param bool $ajax
-     * @param string|null $label
-     * @param string|null $renderMethod
-     */
     public function __construct(bool $ajax, ?string $label = null, ?string $renderMethod = null) {
         parent::__construct($label);
 
@@ -158,9 +152,9 @@ class AutocompleteSelectBox extends TextBase {
 
     /**
      * @param mixed $value
-     * @return TextBase
+     * @return static
      */
-    public function setValue($value) {
+    public function setValue($value): self {
         if ($this->isMultiSelect()) {
             if (is_array($value)) {
                 $this->value = $value;
@@ -182,9 +176,9 @@ class AutocompleteSelectBox extends TextBase {
 
     /**
      * @param mixed $value
-     * @return BaseControl
+     * @return static
      */
-    public function setDefaultValue($value) {
+    public function setDefaultValue($value):self {
         if (isset($this->dataProvider)) {
             $this->dataProvider->setDefaultValue($value);
         }

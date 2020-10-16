@@ -29,13 +29,6 @@ class MailTemplateFactory {
 
     private IRequest $request;
 
-    /**
-     * MailTemplateFactory constructor.
-     * @param string $templateDir
-     * @param Application $application
-     * @param ITranslator $translator
-     * @param IRequest $request
-     */
     public function __construct(string $templateDir, Application $application, ITranslator $translator, IRequest $request) {
         $this->templateDir = $templateDir;
         $this->application = $application;
@@ -49,7 +42,7 @@ class MailTemplateFactory {
      * @deprecated
      * TODO remove this!
      */
-    public function injectApplication($application) {
+    final public function injectApplication($application): void {
         $this->application = $application;
     }
 

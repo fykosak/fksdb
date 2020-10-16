@@ -16,23 +16,12 @@ use Nette\DI\Container;
  */
 class SeriesChooser extends Chooser {
 
-    protected SeriesCalculator $seriesCalculator;
-
+    private SeriesCalculator $seriesCalculator;
     private ?int $urlSeries;
-
     private ModelContest $contest;
-
     private int $year;
-
     private int $series;
 
-    /**
-     * SeriesChooser constructor.
-     * @param Container $container
-     * @param ModelContest $contest
-     * @param int $year
-     * @param int|null $urlSeries
-     */
     public function __construct(Container $container, ModelContest $contest, int $year, ?int $urlSeries) {
         parent::__construct($container);
         $this->urlSeries = $urlSeries;
@@ -40,7 +29,7 @@ class SeriesChooser extends Chooser {
         $this->year = $year;
     }
 
-    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator): void {
+    final public function injectSeriesCalculator(SeriesCalculator $seriesCalculator): void {
         $this->seriesCalculator = $seriesCalculator;
     }
 
