@@ -12,6 +12,8 @@ import FyziklaniResultsTable from '@apps/fyziklaniResults/table';
 import { appsCollector } from '@appsCollector/index';
 import { mapRegister } from '@appsCollector/mapRegister';
 import * as React from 'react';
+import ContestantsPerSeries from '@apps/chart/contestantsPerSeries';
+import ContestantsPerYears from '@apps/chart/contestantsPerYears';
 
 appsCollector.register(eventSchedule);
 
@@ -29,6 +31,8 @@ mapRegister.registerDataComponent('events.applications-time-progress.teams', App
 mapRegister.registerDataComponent('chart.total-person', TotalPersons);
 mapRegister.registerDataComponent('person.detail.timeline', PersonTimeline);
 mapRegister.registerDataComponent('chart.participant-acquaintance', ParticipantAcquaintance);
+mapRegister.registerDataComponent('chart.contestants-per-series', ContestantsPerSeries);
+mapRegister.registerDataComponent('chart.contestants-per-years', ContestantsPerYears);
 
 mapRegister.registerComponent('attendance.qr-code', Attendance);
 
