@@ -69,7 +69,7 @@ fksrouter:
             tld: %domain.tld%
 
         -
-            mask: '//%subdomain.auth%.%domain.cz%%path%<action login|logout|fb-login|recover>'
+            mask: '//%subdomain.auth%.%domain.cz%%path%<action login|logout|fb-login|recover|google>'
             module: Core
             presenter: Authentication
             subdomain: %subdomain.auth%
