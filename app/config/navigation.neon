@@ -28,7 +28,6 @@ navigation:
             Common.Validation.default: []
             Common.Person.search: []
             Common.Spam.list: []
-            Common.Chart.list: []
             Common.School.list: []
         Common.Validation.default:
             Common.Validation.preview: []
