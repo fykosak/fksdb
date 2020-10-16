@@ -56,6 +56,12 @@
                     </xsd:element>
                 </xsd:sequence>
             </xsd:complexType>
+            <xsd:complexType name="GetFyziklaniRequestType">
+                <xsd:sequence>
+                    <xsd:element name="eventId" type="xsd:nonNegativeInteger" />
+                    <xsd:element name="teamList"/>
+                </xsd:sequence>
+            </xsd:complexType>
             <xsd:complexType name="GetStatsRequestType">
                 <xsd:sequence>
                     <xsd:element name="contest" type="fksres:contest-type" minOccurs="1" maxOccurs="1"/>
@@ -105,7 +111,7 @@
     </wsdl:message>
 
     <wsdl:message name="GetFyziklaniResponse">
-        <wsdl:part name="GetFyziklaniResponse" element="fksfyziklani:fyziklani"/>
+        <wsdl:part name="GetFyziklaniResponse"/>
     </wsdl:message>
 
     <wsdl:message name="GetStatsRequest">
@@ -123,7 +129,6 @@
     <wsdl:message name="GetExportResponse">
         <wsdl:part name="GetExportResponse" element="fksex:export"/>
     </wsdl:message>
-
 
     <wsdl:portType name="FKSDBPortType">
         <wsdl:operation name="GetResults">
@@ -143,7 +148,6 @@
             <wsdl:output message="tns:GetExportResponse"/>
         </wsdl:operation>
     </wsdl:portType>
-
 
     <wsdl:binding name="FKSDBBinding" type="tns:FKSDBPortType">
         <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>

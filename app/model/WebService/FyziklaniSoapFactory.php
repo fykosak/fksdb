@@ -62,6 +62,7 @@ class FyziklaniSoapFactory {
                 'name' => 'name',
                 'lang' => 'game_lang',
                 'status' => 'status',
+                'password' => 'password',
             ], $doc, $team, $teamNode);
 
 // from FOL fksdb_views
