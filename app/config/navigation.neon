@@ -15,7 +15,7 @@ navigation:
             Common.Dashboard.default: []
             Common.Validation.default: []
             Common.Spam.list: []
-            Common.Chart.list: []
+            Org.Chart.list: []
         Core.Dispatch.default:
             Core.MyApplications.default: []
             Core.MyPayments.default: []
