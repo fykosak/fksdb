@@ -16,9 +16,9 @@ use FKSDB\Results\Models\BrojureResultsModel;
 use FKSDB\Results\ResultsModelFactory;
 use InvalidArgumentException;
 use Nette\Application\BadRequestException;
-use Tracy\Debugger;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
+use Tracy\Debugger;
 use SoapFault;
 use SoapVar;
 use FKSDB\Stats\StatsModelFactory;
@@ -39,6 +39,7 @@ class WebServiceModel {
     private PasswordAuthenticator $authenticator;
     private StoredQueryFactory $storedQueryFactory;
     private ContestAuthorizator $contestAuthorizator;
+    private FyziklaniSoapFactory $fyziklaniSoapFactory;
 
     public function __construct(
         array $inverseContestMap,
@@ -47,7 +48,8 @@ class WebServiceModel {
         StatsModelFactory $statsModelFactory,
         PasswordAuthenticator $authenticator,
         StoredQueryFactory $storedQueryFactory,
-        ContestAuthorizator $contestAuthorizator
+        ContestAuthorizator $contestAuthorizator,
+        FyziklaniSoapFactory $fyziklaniSoapFactory
     ) {
         $this->inverseContestMap = $inverseContestMap;
         $this->serviceContest = $serviceContest;
@@ -56,6 +58,7 @@ class WebServiceModel {
         $this->authenticator = $authenticator;
         $this->storedQueryFactory = $storedQueryFactory;
         $this->contestAuthorizator = $contestAuthorizator;
+        $this->fyziklaniSoapFactory = $fyziklaniSoapFactory;
     }
 
     /**
@@ -87,7 +90,18 @@ class WebServiceModel {
     /**
      * @param stdClass $args
      * @return SoapVar
+     * @throws SoapFault
+     */
+    public function getFyziklani(stdClass $args): SoapVar {
+        $this->checkAuthentication(__FUNCTION__);
+        return $this->fyziklaniSoapFactory->handle($args);
+    }
+
+    /**
+     * @param $args
+     * @return SoapVar
      * @throws BadRequestException
+     * @throws BadTypeException
      * @throws SoapFault
      */
     public function getResults(stdClass $args): SoapVar {
