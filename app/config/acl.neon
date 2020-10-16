@@ -97,6 +97,7 @@ acl:
     - allow(org, person, edit, [@ownerAssertion, 'isSelf'])
     - allow(org, person, stalk.basic, [@ownerAssertion, 'existsOwnContestant'])
     - allow(org, person, stalk.full, [@ownerAssertion, 'isSelf'])
+    - allow(org, chart, ::constant(Nette\Security\Permission::ALL))
 
     - allow(webmaster, task, insert) # stahování úloh
 

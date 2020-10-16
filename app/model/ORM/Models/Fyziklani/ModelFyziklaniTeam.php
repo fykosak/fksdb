@@ -30,6 +30,7 @@ use Nette\Security\IResource;
  * @property-read  bool force_a
  * @property-read  string password
  * @property-read  ActiveRow event
+ * @property-read string game_lang
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @author Michal Červeňák <miso@fykos.cz>
