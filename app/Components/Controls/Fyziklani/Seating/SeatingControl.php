@@ -14,19 +14,12 @@ use Nette\Application\BadRequestException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class SeatingControl extends BaseComponent {
-    /**
-     * @var ServiceFyziklaniTeamPosition
-     */
-    private $serviceFyziklaniTeamPosition;
-    /** @var EventDispatchFactory */
-    private $eventDispatchFactory;
 
-    /**
-     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
-     * @param EventDispatchFactory $eventDispatchFactory
-     * @return void
-     */
-    public function injectServicePrimary(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, EventDispatchFactory $eventDispatchFactory) {
+    private ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition;
+
+    private EventDispatchFactory $eventDispatchFactory;
+
+    final public function injectServicePrimary(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, EventDispatchFactory $eventDispatchFactory): void {
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
@@ -36,7 +29,7 @@ class SeatingControl extends BaseComponent {
      * @return void
      * @throws NeonSchemaException
      */
-    public function renderAll(ModelEvent $event) {
+    public function renderAll(ModelEvent $event): void {
         $this->render($event, 'all');
     }
 
@@ -47,7 +40,7 @@ class SeatingControl extends BaseComponent {
      * @return void
      * @throws NeonSchemaException
      */
-    public function renderTeam(ModelEvent $event, int $teamId, string $lang) {
+    public function renderTeam(ModelEvent $event, int $teamId, string $lang): void {
         $this->template->teamId = $teamId;
         $this->render($event, 'single', $lang);
     }
@@ -57,7 +50,7 @@ class SeatingControl extends BaseComponent {
      * @return void
      * @throws NeonSchemaException
      */
-    public function renderDev(ModelEvent $event) {
+    public function renderDev(ModelEvent $event): void {
         $this->template->teams = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms($event))
             ->where('e_fyziklani_team_id IS NOT NULL');
         $this->render($event, 'dev');
@@ -70,11 +63,11 @@ class SeatingControl extends BaseComponent {
      * @return void
      * @throws NeonSchemaException
      */
-    public function render(ModelEvent $event, string $mode, string $lang = 'cs') {
+    public function render(ModelEvent $event, string $mode, string $lang = 'cs'): void {
         $this->template->places = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms($event));
         $this->template->mode = $mode;
         $this->template->lang = $lang;
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'Seating.' . $mode . '.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.' . $mode . '.latte');
         $this->template->render();
     }
 

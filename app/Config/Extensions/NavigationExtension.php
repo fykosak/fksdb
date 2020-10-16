@@ -2,7 +2,7 @@
 
 namespace FKSDB\Config\Extensions;
 
-use FKSDB\Components\Controls\Navigation\Navigation;
+use FKSDB\Components\Controls\Navigation\NavigationFactory;
 use Nette\DI\CompilerExtension;
 use Nette\DI\ServiceDefinition;
 
@@ -13,21 +13,15 @@ use Nette\DI\ServiceDefinition;
  */
 class NavigationExtension extends CompilerExtension {
 
-    /**
-     * @var array
-     */
-    private $createdNodes = [];
+    private array $createdNodes = [];
 
-    public function loadConfiguration() {
+    public function loadConfiguration(): void {
         parent::loadConfiguration();
 
         $builder = $this->getContainerBuilder();
-        $config = $this->getConfig([
-            'nodes' => [],
-            'structure' => [],
-        ]);
+        $config = $this->getConfig();
         $navbar = $builder->addDefinition('navbar')
-            ->setClass(Navigation::class);
+            ->setFactory(NavigationFactory::class);
         $navbar->setAutowired(true);
 
 
@@ -42,11 +36,11 @@ class NavigationExtension extends CompilerExtension {
     }
 
     /**
-     * @param $navbar
-     * @param $nodeId
+     * @param ServiceDefinition $navbar
+     * @param int|string $nodeId
      * @param array $arguments
      */
-    private function createNode(ServiceDefinition $navbar, $nodeId, $arguments = []) {
+    private function createNode(ServiceDefinition $navbar, $nodeId, $arguments = []): void {
         if (!isset($arguments['link'])) {
             $this->parseIdAsLink($nodeId, $arguments);
         }
@@ -56,11 +50,11 @@ class NavigationExtension extends CompilerExtension {
     }
 
     /**
-     * @param $structure
-     * @param $navbar
+     * @param iterable $structure
+     * @param ServiceDefinition $navbar
      * @param null $parent
      */
-    private function createFromStructure($structure, ServiceDefinition $navbar, $parent = null) {
+    private function createFromStructure(iterable $structure, ServiceDefinition $navbar, $parent = null): void {
         foreach ($structure as $nodeId => $children) {
             if (is_array($children)) {
                 if (!isset($this->createdNodes[$nodeId])) {
@@ -70,7 +64,7 @@ class NavigationExtension extends CompilerExtension {
                     }
                 }
                 $this->createFromStructure($children, $navbar, $nodeId);
-            } elseif (!is_array($children)) {
+            } else {
                 $nodeId = $children;
                 if (!isset($this->createdNodes[$nodeId])) {
                     $this->createNode($navbar, $nodeId);
@@ -83,11 +77,11 @@ class NavigationExtension extends CompilerExtension {
     }
 
     /**
-     * @param $nodeId
-     * @param $arguments
+     * @param int|string $nodeId
+     * @param array $arguments
      * @return void
      */
-    private function parseIdAsLink($nodeId, &$arguments) {
+    private function parseIdAsLink($nodeId, &$arguments): void {
         $fullQualityAction = str_replace('.', ':', $nodeId);
         $a = strrpos($fullQualityAction, ':');
         $presenterName = substr($fullQualityAction, 0, $a);

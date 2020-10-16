@@ -7,6 +7,7 @@ use FKSDB\ORM\Models\ModelAddress;
 use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Database\Table\ActiveRow;
+use Nette\DI\Container as DIContainer;
 use Nette\Forms\Container;
 use Nette\InvalidStateException;
 use Nette\Utils\ArrayHash;
@@ -17,43 +18,40 @@ use Nette\Utils\ArrayHash;
  */
 class AddressContainer extends ModelContainer {
 
-    /**
-     * @var ServiceRegion
-     */
-    private $serviceRegion;
+    private ServiceRegion $serviceRegion;
 
-    /**
-     * @param ServiceRegion $serviceRegion
-     * @return void
-     */
-    public function setServiceRegion(ServiceRegion $serviceRegion) {
+    public function __construct(DIContainer $container) {
+        parent::__construct($container);
+    }
+
+    final public function injectServiceRegion(ServiceRegion $serviceRegion): void {
         $this->serviceRegion = $serviceRegion;
     }
 
     /**
-     * Used for substituing form's IControl (via duck-typing).
+     * Used for substituting form's IControl (via duck-typing).
      *
-     * @param \Traversable $value
+     * @param iterable $value
      */
-    public function setValue($value) {
+    public function setValue($value): void {
         $this->setValues($value === null ? [] : $value);
     }
 
     /**
-     * Used for substituing form's IControl (via duck-typing).
+     * Used for substituting form's IControl (via duck-typing).
      *
-     * @param \Traversable $value
+     * @param iterable $value
      */
-    public function setDefaultValue($value) {
+    public function setDefaultValue($value): void {
         $this->setDefaults($value === null ? [] : $value);
     }
 
     /**
-     * @param $values
+     * @param iterable|mixed $values
      * @param bool $erase
-     * @return Container|void
+     * @return static
      */
-    public function setValues($values, $erase = FALSE) {
+    public function setValues($values, $erase = false): self {
         if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) { //assert its from address table
             if ($values instanceof AbstractModelMulti) {
                 $address = $values->getMainModel();
@@ -69,14 +67,14 @@ class AddressContainer extends ModelContainer {
             $values['country_iso'] = $region->country_iso;
         }
 
-        parent::setValues($values, $erase);
+        return parent::setValues($values, $erase);
     }
 
     /**
      * @param bool $asArray
      * @return array|ArrayHash
      */
-    public function getValues($asArray = FALSE) {
+    public function getValues($asArray = false) {
         $values = parent::getValues($asArray);
         if (count($values) && !isset($values['region_id'])) {
             if (!$this->serviceRegion) {

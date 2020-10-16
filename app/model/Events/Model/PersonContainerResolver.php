@@ -5,10 +5,10 @@ namespace FKSDB\Events\Model;
 use FKSDB\Events\Model\Holder\Field;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\SmartObject;
-use Persons\IModifiabilityResolver;
-use Persons\IVisibilityResolver;
-use Persons\ReferencedPersonHandler;
-use Persons\SelfResolver;
+use FKSDB\Persons\IModifiabilityResolver;
+use FKSDB\Persons\IVisibilityResolver;
+use FKSDB\Persons\ReferencedPersonHandler;
+use FKSDB\Persons\SelfResolver;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -19,33 +19,15 @@ class PersonContainerResolver implements IVisibilityResolver, IModifiabilityReso
 
     use SmartObject;
 
-    /**
-     * @var Field
-     */
-    private $field;
+    private Field $field;
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $condition;
 
-    /**
-     * @var SelfResolver
-     */
-    private $selfResolver;
+    private SelfResolver $selfResolver;
 
-    /**
-     * @var ExpressionEvaluator
-     */
-    private $evaluator;
+    private ExpressionEvaluator $evaluator;
 
-    /**
-     * PersonContainerResolver constructor.
-     * @param Field $field
-     * @param $condition
-     * @param SelfResolver $selfResolver
-     * @param ExpressionEvaluator $evaluator
-     */
     public function __construct(Field $field, $condition, SelfResolver $selfResolver, ExpressionEvaluator $evaluator) {
         $this->field = $field;
         $this->condition = $condition;

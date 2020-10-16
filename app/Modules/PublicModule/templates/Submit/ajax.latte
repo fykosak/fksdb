@@ -1,7 +1,6 @@
 {block content}
-    <a href="{plink ':Public:Submit:default' }">{_('Prejdi na starý systém uploadu úloh')}</a>
-    <h2>{_'Odevzdat řešení'}</h2>
-
-    {control ajaxUpload}
-
+    <a class="btn btn-secondary" href="{plink default }">{_'Prejdi na starý systém uploadu úloh'}</a>
+    <a class="btn btn-info" href="{plink list}">{_'Odevzdaná řešení'}</a>
+    <hr/>
+    {control submitContainer}
 {/block}

@@ -2,8 +2,8 @@
 
 namespace FKSDB\ORM\Models;
 
-use Authentication\PasswordAuthenticator;
-use Authorization\Grant;
+use FKSDB\Authentication\PasswordAuthenticator;
+use FKSDB\Authorization\Grant;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\YearCalculator;
@@ -23,10 +23,7 @@ use Nette\Security\IIdentity;
  */
 class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonReferencedModel {
 
-    /**
-     * @var YearCalculator|null
-     */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
     /**
      * @return YearCalculator
@@ -34,24 +31,17 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
      * @internal
      */
     private function getYearCalculator(): YearCalculator {
-        if (!$this->yearCalculator) {
+        if (!isset($this->yearCalculator)) {
             throw new InvalidStateException('To obtain current roles, you have to inject FKSDB\YearCalculator to this Login instance.');
         }
         return $this->yearCalculator;
     }
 
-    /**
-     * @param YearCalculator $yearCalculator
-     * @return void
-     */
-    public function injectYearCalculator(YearCalculator $yearCalculator) {
+    final public function injectYearCalculator(YearCalculator $yearCalculator): void {
         $this->yearCalculator = $yearCalculator;
     }
 
-    /**
-     * @return ModelPerson|null
-     */
-    public function getPerson() {
+    public function getPerson(): ?ModelPerson {
         if ($this->person) {
             return ModelPerson::createFromActiveRow($this->person);
         }
@@ -113,20 +103,18 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
     /**
      * @return int|mixed
      */
-    public function getId() {
+    public function getId(): int {
         return $this->login_id;
     }
 
-    /**
-     * @var Grant[]   cache
-     */
-    private $roles;
+    /** @var Grant[]   cache */
+    private array $roles;
 
     /**
-     * @return array|Grant[]|null
+     * @return Grant[]
      */
-    public function getRoles() {
-        if ($this->roles === null) {
+    public function getRoles(): array {
+        if (!isset($this->roles)) {
             $this->roles = [];
             $this->roles[] = new Grant(Grant::CONTEST_ALL, ModelRole::REGISTERED);
 
@@ -146,8 +134,6 @@ class ModelLogin extends AbstractModelSingle implements IIdentity, IPersonRefere
                 }
             }
         }
-
         return $this->roles;
     }
-
 }

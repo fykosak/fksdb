@@ -21,8 +21,9 @@ use Nette\Security\IResource;
  */
 class ModelSubmit extends AbstractModelSingle implements IResource, ITaskReferencedModel {
 
-    const SOURCE_UPLOAD = 'upload';
-    const SOURCE_POST = 'post';
+    public const SOURCE_UPLOAD = 'upload';
+    public const SOURCE_POST = 'post';
+    public const SOURCE_QUIZ = 'quiz';
 
     public function isEmpty(): bool {
         return !($this->submitted_on || $this->note);
@@ -58,5 +59,13 @@ class ModelSubmit extends AbstractModelSingle implements IResource, ITaskReferen
         $start = $this->getTask()->submit_start ? $this->getTask()->submit_start->getTimestamp() : 0;
         $deadline = $this->getTask()->submit_deadline ? $this->getTask()->submit_deadline->getTimestamp() : ($now + 1);
         return ($now <= $deadline) && ($now >= $start);
+    }
+
+    public function isQuiz(): bool {
+        if ($this->source === self::SOURCE_QUIZ) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }

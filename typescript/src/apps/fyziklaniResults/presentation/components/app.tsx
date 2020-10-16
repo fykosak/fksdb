@@ -4,11 +4,11 @@ import {
     Submits,
     Task,
     Team,
-} from '../../../fyziklani/helpers/interfaces';
+} from '@apps/fyziklani/helpers/interfaces';
 import {
     calculate,
     Item,
-} from '../../results/middleware/results/calculateData';
+} from '../../results/calculateData';
 import { FyziklaniResultsPresentationStore } from '../reducers';
 import Headline from './headline';
 import Row from './row';

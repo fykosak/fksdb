@@ -3,10 +3,12 @@
 namespace FKSDB\Modules\CommonModule;
 
 use FKSDB\Components\Grids\EmailsGrid;
+use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\UI\PageTitle;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 
@@ -17,20 +19,18 @@ use Nette\Security\IResource;
 class SpamPresenter extends BasePresenter {
     use EntityPresenterTrait;
 
-    /**
-     * @var ServiceEmailMessage
-     */
-    private $serviceEmailMessage;
+    private ServiceEmailMessage $serviceEmailMessage;
 
-    /**
-     * @param ServiceEmailMessage $serviceEmailMessage
-     * @return void
-     */
-    public function injectServiceEmailMessage(ServiceEmailMessage $serviceEmailMessage) {
+    final public function injectServiceEmailMessage(ServiceEmailMessage $serviceEmailMessage): void {
         $this->serviceEmailMessage = $serviceEmailMessage;
     }
 
-    public function titleDetail() {
+    /**
+     * @return void
+     * @throws ModelNotFoundException
+     * @throws ForbiddenRequestException
+     */
+    public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Detail of email #%s'), $this->getEntity()->getPrimary()), 'fa fa-envelope'));
     }
 
@@ -38,9 +38,9 @@ class SpamPresenter extends BasePresenter {
         return new PageTitle(_('List of emails'), 'fa fa-envelope');
     }
 
-    public function authorizedDetail() {
+    public function authorizedDetail(): void {
         $authorized = true;
-        foreach ($this->getServiceContest()->getTable() as $contest) {
+        foreach ($this->serviceContest->getTable() as $contest) {
             $authorized = $authorized && $this->contestAuthorizator->isAllowed($this->getORMService()->getModelClassName()::RESOURCE_ID, 'detail', $contest);
         }
         $this->setAuthorized($authorized);
@@ -48,8 +48,9 @@ class SpamPresenter extends BasePresenter {
 
     /**
      * @return void
+     * @throws ModelNotFoundException
      */
-    public function renderDetail() {
+    public function renderDetail(): void {
         $this->template->model = $this->getEntity();
     }
 

@@ -2,14 +2,14 @@
 
 namespace FKSDB\Payment\PriceCalculator\PreProcess;
 
-use Exception;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\Payment\Price;
 use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
 
 /**
  * Class SchedulePrice
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class SchedulePrice implements IPreprocess {
     /**
@@ -30,7 +30,7 @@ class SchedulePrice implements IPreprocess {
      * @param ModelPayment $modelPayment
      * @return array
      * @throws UnsupportedCurrencyException
-     * @throws Exception
+     * @throws NotImplementedException
      */
     public static function getGridItems(ModelPayment $modelPayment): array {
         $items = [];

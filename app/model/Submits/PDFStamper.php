@@ -13,31 +13,19 @@ use Nette\Utils\Strings;
  */
 class PDFStamper implements IStorageProcessing {
 
-    /**
-     * @var string
-     */
-    private $inputFile;
+    private string $inputFile;
 
-    /**
-     * @var string
-     */
-    private $outputFile;
+    private string $outputFile;
 
-    /**
-     * @var int used font size in pt
-     */
-    private $fontSize;
+    /** @var int used font size in pt */
+    private int $fontSize;
 
     /**
      *
      * @var string printf mask for arguments: series, label, contestant's name
      */
-    const STAMP_MASK = 'S%dU%s, %s, %s';
+    private const STAMP_MASK = 'S%dU%s, %s, %s';
 
-    /**
-     * PDFStamper constructor.
-     * @param int $fontSize
-     */
     public function __construct(int $fontSize) {
         $this->fontSize = $fontSize;
     }
@@ -46,11 +34,7 @@ class PDFStamper implements IStorageProcessing {
         return $this->inputFile;
     }
 
-    /**
-     * @param string $inputFile
-     * @return void
-     */
-    public function setInputFile(string $inputFile) {
+    public function setInputFile(string $inputFile): void {
         $this->inputFile = $inputFile;
     }
 
@@ -58,11 +42,7 @@ class PDFStamper implements IStorageProcessing {
         return $this->outputFile;
     }
 
-    /**
-     * @param string $outputFile
-     * @return void
-     */
-    public function setOutputFile(string $outputFile) {
+    public function setOutputFile(string $outputFile): void {
         $this->outputFile = $outputFile;
     }
 
@@ -79,7 +59,7 @@ class PDFStamper implements IStorageProcessing {
      * @throws ProcessingException
      * @throws InvalidStateException
      */
-    public function process(ModelSubmit $submit) {
+    public function process(ModelSubmit $submit): void {
         if (!$this->getInputFile()) {
             throw new InvalidStateException('Input file not set.');
         }
@@ -100,11 +80,7 @@ class PDFStamper implements IStorageProcessing {
         }
     }
 
-    /**
-     * @param string $text
-     * @return void
-     */
-    private function stampText(string $text) {
+    private function stampText(string $text): void {
         $pdf = new \FPDI();
         $pageCount = $pdf->setSourceFile($this->getInputFile());
 

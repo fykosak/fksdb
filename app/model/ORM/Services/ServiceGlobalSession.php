@@ -16,39 +16,20 @@ use Nette\Utils\Random;
  */
 class ServiceGlobalSession extends AbstractServiceSingle {
 
-    const SESSION_ID_LENGTH = 32;
+    private const SESSION_ID_LENGTH = 32;
 
-    public function getModelClassName(): string {
-        return ModelGlobalSession::class;
-    }
+    private Request $request;
 
-    protected function getTableName(): string {
-        return DbNames::TAB_GLOBAL_SESSION;
-    }
-
-    /**
-     * @var Request
-     */
-    private $request;
-
-    /**
-     * FKSDB\ORM\Services\ServiceGlobalSession constructor.
-     * @param Request $request
-     * @param Context $context
-     * @param IConventions $conventions
-     */
     public function __construct(Request $request, Context $context, IConventions $conventions) {
-        parent::__construct($context, $conventions);
+        parent::__construct($context, $conventions, DbNames::TAB_GLOBAL_SESSION, ModelGlobalSession::class);
         $this->request = $request;
     }
 
     /**
-     *
      * @param string $loginId
-     * @param DateTime $until
-     * @param DateTime $since
+     * @param DateTime|null $until
+     * @param DateTime|null $since
      * @return ModelGlobalSession
-     * @throws \Exception
      */
     public function createSession($loginId, DateTime $until = null, DateTime $since = null): ModelGlobalSession {
         if ($since === null) {

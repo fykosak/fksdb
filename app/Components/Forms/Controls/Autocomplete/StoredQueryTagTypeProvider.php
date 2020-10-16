@@ -13,22 +13,12 @@ use FKSDB\ORM\Tables\TypedTableSelection;
  */
 class StoredQueryTagTypeProvider implements IFilteredDataProvider {
 
-    const DESCRIPTION = 'description';
+    private const DESCRIPTION = 'description';
 
-    /**
-     * @var ServiceStoredQueryTagType
-     */
-    private $serviceStoredQueryTagType;
+    private ServiceStoredQueryTagType $serviceStoredQueryTagType;
 
-    /**
-     * @var TypedTableSelection
-     */
-    private $searchTable;
+    private TypedTableSelection $searchTable;
 
-    /**
-     * StoredQueryTagTypeProvider constructor.
-     * @param ServiceStoredQueryTagType $serviceStoredQueryTagType
-     */
     public function __construct(ServiceStoredQueryTagType $serviceStoredQueryTagType) {
         $this->serviceStoredQueryTagType = $serviceStoredQueryTagType;
         $this->searchTable = $this->serviceStoredQueryTagType->getTable();
@@ -40,7 +30,7 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
      * @param string $search
      * @return array
      */
-    public function getFilteredItems($search) {
+    public function getFilteredItems(string $search): array {
         $search = trim($search);
         $search = str_replace(' ', '', $search);
         $this->searchTable
@@ -74,10 +64,10 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
     }
 
     /**
-     * @param $id
+     * @param mixed $id
      * @return void
      */
-    public function setDefaultValue($id) {
+    public function setDefaultValue($id): void {
         /* intentionally blank */
     }
 }

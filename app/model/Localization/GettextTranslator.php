@@ -11,34 +11,19 @@ use Nette\Localization\ITranslator;
  */
 class GettextTranslator implements ITranslator {
 
-    /**
-     * @var array[lang] => locale
-     */
-    private $locales;
+    /** @var array[lang] => locale */
+    private array $locales;
 
-    /**
-     * @var string
-     */
-    private $localeDir;
-    /**
-     * @var string
-     */
-    private $lang;
+    private string $localeDir;
 
-    /**
-     * GettextTranslator constructor.
-     * @param array $locales
-     * @param $localeDir
-     */
+    private ?string $lang = null;
+
     public function __construct(array $locales, string $localeDir) {
         $this->locales = $locales;
         $this->localeDir = $localeDir;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getLang() {
+    public function getLang(): ?string {
         return $this->lang;
     }
 
@@ -46,7 +31,7 @@ class GettextTranslator implements ITranslator {
      *
      * @param string $lang ISO 639-1
      */
-    public function setLang(string $lang) {
+    public function setLang(string $lang): void {
         if (!isset($this->locales[$lang])) {
             throw new InvalidArgumentException("Language $lang not supported");
         }
@@ -68,11 +53,11 @@ class GettextTranslator implements ITranslator {
     }
 
     /**
-     * @param $message
+     * @param string $message
      * @param null $count
      * @return string
      */
-    public function translate($message, $count = NULL) {
+    public function translate($message, $count = null): string {
         if ($message === "" || $message === null) {
             return "";
         }
@@ -84,12 +69,12 @@ class GettextTranslator implements ITranslator {
     }
 
     /**
-     * @param $object
-     * @param $field
-     * @param $lang
+     * @param object $object
+     * @param string $field
+     * @param string $lang
      * @return mixed
      */
-    public static function i18nHelper($object, $field, $lang) {
+    public static function i18nHelper(object $object, string $field, string $lang) {
         return $object->{$field . '_' . $lang};
     }
 

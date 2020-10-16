@@ -11,13 +11,13 @@ $container = require '../../bootstrap.php';
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class OrgModule extends AbstractPageDisplayTestCase {
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->insert(DbNames::TAB_ORG, ['person_id' => $this->personId, 'contest_id' => 1, 'since' => 1, 'order' => 1]);
     }
 
     protected function transformParams(string $presenterName, string $action, array $params): array {
-        list($presenterName, $action, $params) = parent::transformParams($presenterName, $action, $params);
+        [$presenterName, $action, $params] = parent::transformParams($presenterName, $action, $params);
         $params['year'] = 1;
         $params['contestId'] = 1;
         $params['series'] = 1;
@@ -45,10 +45,16 @@ class OrgModule extends AbstractPageDisplayTestCase {
             ['Org:Tasks', 'import'],
             ['Org:Teacher', 'list'],
             ['Org:Teacher', 'create'],
+
+            ['Org:Chart', 'list'],
+            ['Org:Chart', 'contestantsPerSeries'],
+            ['Org:Chart', 'totalContestantsPerSeries'],
+            ['Org:Chart', 'contestantsPerYears'],
+            ['Org:Chart', 'totalPersons'],
         ];
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM org');
         parent::tearDown();
     }

@@ -10,7 +10,10 @@ use ArrayAccess;
  * @author Michal Koutný <michal@fykos.cz>
  */
 interface IModel extends ArrayAccess {
-
+    /**
+     * @return bool
+     * @deprecated
+     */
     public function isNew(): bool;
 
     public function toArray(): array;
@@ -19,7 +22,7 @@ interface IModel extends ArrayAccess {
      * @param bool $need
      * @return string|int
      */
-    public function getPrimary($need = TRUE);
+    public function getPrimary($need = true);
 
     /**
      * @note This is here to straddle duck-typing of ActiveRow.
@@ -28,5 +31,5 @@ interface IModel extends ArrayAccess {
      * @param bool
      * @return string
      */
-    public function getSignature($need = TRUE);
+    public function getSignature($need = true);
 }

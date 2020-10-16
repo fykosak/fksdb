@@ -17,102 +17,69 @@ use NiftyGrid\DataSource\IDataSource;
  */
 class StoredQuery implements IDataSource, IResource {
 
-    const INNER_QUERY = 'sub';
+    private const INNER_QUERY = 'sub';
 
-    /** @var ModelStoredQuery */
-    private $queryPattern;
-    /** @var string */
-    private $qid;
-    /** @var StoredQueryPostProcessing */
-    private $postProcessing;
-    /** @var string */
-    private $sql;
-    /** @var string */
-    private $name;
+    private ?ModelStoredQuery $queryPattern = null;
 
-    /** @var StoredQueryParameter[] */
-    private $queryParameters;
+    private ?string $qid = null;
 
-    /** @var Connection */
-    private $connection;
+    private ?StoredQueryPostProcessing $postProcessing = null;
 
-    /**
-     * @var array
-     * from Presenter
-     */
-    private $implicitParameterValues = [];
+    private string $sql;
 
-    /**
-     * @var array
-     * User setted parameters
-     */
-    private $parameterValues = [];
-    /**
-     * @var array
-     * default parameter of ModelStoredQueryParameter
-     */
-    private $parameterDefaultValues = [];
+    private ?string $name = null;
 
-    /**
-     * @var int|null
-     */
+    private array $queryParameters = [];
+
+    private Connection $connection;
+
+    /** from Presenter     */
+    private array $implicitParameterValues = [];
+
+    /** User setted parameters     */
+    private array $parameterValues = [];
+
+    /** default parameter of ModelStoredQueryParameter     */
+    private array $parameterDefaultValues = [];
+
+    /** @var int|null */
     private $count;
 
-    /**
-     * @var iterable|null
-     */
+    /** @var iterable|null */
     private $data;
 
-    /**
-     * @var int|null
-     */
+    /** @var int|null */
     private $limit;
 
-    /**
-     * @var int|null
-     */
+    /** @var int|null */
     private $offset;
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $orders = [];
 
-
-    /**
-     * @var array
-     */
+    /** @var array */
     private $columnNames;
 
-
-    /**
-     * StoredQuery constructor.
-     * @param Connection $connection
-     */
-    public function __construct(Connection $connection) {
+    private function __construct(Connection $connection) {
         $this->connection = $connection;
     }
 
-    /**
-     * @param ModelStoredQuery $queryPattern
-     * @return void
-     */
-    public function setQueryPattern(ModelStoredQuery $queryPattern) {
-        $this->queryPattern = $queryPattern;
-        if (isset($queryPattern->name)) {
-            $this->name = $queryPattern->name;
-        }
-        $this->sql = $this->queryPattern->sql;
-        if ($queryPattern->php_post_proc) {
-            $this->setPostProcessing($queryPattern->php_post_proc);
-        }
+    public static function createFromQueryPattern(Connection $connection, ModelStoredQuery $queryPattern): self {
+        $storedQuery = static::createWithoutQueryPattern($connection, $queryPattern->sql, $queryPattern->getParameters(), $queryPattern->php_post_proc ?: null);
+        $storedQuery->queryPattern = $queryPattern;
+        $storedQuery->name = $queryPattern->name;
+        return $storedQuery;
     }
 
-    /**
-     * @return ModelStoredQuery
-     * @deprecated
-     */
-    public function getQueryPattern(): ModelStoredQuery {
+    public static function createWithoutQueryPattern(Connection $connection, string $sql, array $parameters, ?string $postProcessingClass): self {
+        $storedQuery = new StoredQuery($connection);
+        $storedQuery->setSQL($sql);
+        $storedQuery->setPostProcessing($postProcessingClass);
+        $storedQuery->setQueryParameters($parameters);
+        return $storedQuery;
+    }
+
+    public function getQueryPattern(): ?ModelStoredQuery {
         return $this->queryPattern;
     }
 
@@ -120,20 +87,11 @@ class StoredQuery implements IDataSource, IResource {
         return $this->sql;
     }
 
-    /**
-     * @param string $sql
-     * @return void
-     */
-    public function setSQL(string $sql) {
+    private function setSQL(string $sql): void {
         $this->sql = $sql;
     }
 
-    /**
-     * @param array $parameters
-     * @param bool $strict
-     * @return void
-     */
-    public function setContextParameters(array $parameters, bool $strict = true) {
+    public function setContextParameters(array $parameters, bool $strict = true): void {
         $parameterNames = $this->getParameterNames();
         foreach ($parameters as $key => $value) {
             if ($strict && in_array($key, $parameterNames)) {
@@ -146,36 +104,26 @@ class StoredQuery implements IDataSource, IResource {
         }
     }
 
-    /**
-     * @return StoredQueryPostProcessing|null
-     */
-    public function getPostProcessing() {
+    public function getPostProcessing(): ?StoredQueryPostProcessing {
         return $this->postProcessing;
     }
 
-    /**
-     * @param string $className
-     * @return void
-     */
-    public function setPostProcessing(string $className) {
-        if (!class_exists($className)) {
-            throw new InvalidArgumentException("Expected class name, got '$className'.");
+    private function setPostProcessing(?string $className): void {
+        if (is_null($className)) {
+            $this->postProcessing = null;
+        } else {
+            if (!class_exists($className)) {
+                throw new InvalidArgumentException("Expected class name, got '$className'.");
+            }
+            $this->postProcessing = new $className();
         }
-        $this->postProcessing = new $className();
     }
 
-    /**
-     * @return array
-     */
-    public function getImplicitParameters() {
+    public function getImplicitParameters(): array {
         return $this->implicitParameterValues;
     }
 
-    /**
-     * @param $parameters
-     * @return void
-     */
-    public function setParameters($parameters) {
+    public function setParameters(iterable $parameters): void {
         $parameterNames = $this->getParameterNames();
         foreach ($parameters as $key => $value) {
             if (!in_array($key, $parameterNames)) {
@@ -200,40 +148,28 @@ class StoredQuery implements IDataSource, IResource {
         return $this->name ?? 'adhoc';
     }
 
-    /**
-     * @return string|null
-     */
-    public function getQId() {
+    public function getQId(): ?string {
         return $this->qid ?? ($this->hasQueryPattern() ? $this->queryPattern->qid : null);
     }
 
-    /**
-     * @param string $qid
-     * @return void
-     */
-    public function setQId(string $qid) {
+    public function setQId(string $qid): void {
         $this->qid = $qid;
     }
-
 
     /**
      * @return StoredQueryParameter[]
      */
     public function getQueryParameters(): array {
-        return $this->queryParameters ?? [];
+        return $this->queryParameters;
     }
 
-    /**
-     * @param mixed[] $queryParameters
-     * @return void
-     */
-    public function setQueryParameters(array $queryParameters) {
+    private function setQueryParameters(array $queryParameters): void {
         $this->parameterDefaultValues = [];
 
         foreach ($queryParameters as $parameter) {
             if ($parameter instanceof ModelStoredQueryParameter) {
                 $this->parameterDefaultValues[$parameter->name] = $parameter->getDefaultValue();
-                $this->queryParameters = new StoredQueryParameter($parameter->name, $parameter->getDefaultValue(), $parameter->getPDOType());
+                $this->queryParameters[] = new StoredQueryParameter($parameter->name, $parameter->getDefaultValue(), $parameter->getPDOType());
             } elseif ($parameter instanceof StoredQueryParameter) {
                 $this->parameterDefaultValues[$parameter->getName()] = $parameter->getDefaultValue();
                 $this->queryParameters[] = $parameter;
@@ -243,11 +179,12 @@ class StoredQuery implements IDataSource, IResource {
 
     // return true if pattern query is real ORM model, it means is already stored in DB
     public function hasQueryPattern(): bool {
-        return isset($this->queryPattern) && !is_null($this->queryPattern) && !$this->queryPattern->isNew();
+        return (bool)$this->queryPattern ?? false;
+        // return isset($this->queryPattern) && !is_null($this->queryPattern) && !$this->queryPattern->isNew();
     }
 
     public function getColumnNames(): array {
-        if (!isset($this->columnNames) || is_null($this->columnNames)) {
+        if (!isset($this->columnNames)) {
             $this->columnNames = [];
             $innerSql = $this->getSQL();
             $sql = "SELECT * FROM ($innerSql) " . self::INNER_QUERY . "";
@@ -305,12 +242,12 @@ class StoredQuery implements IDataSource, IResource {
         return $statement;
     }
 
-    private function invalidateAll() {
+    private function invalidateAll(): void {
         $this->count = null;
         $this->data = null;
     }
 
-    private function invalidateData() {
+    private function invalidateData(): void {
         $this->data = null;
     }
 
@@ -322,13 +259,13 @@ class StoredQuery implements IDataSource, IResource {
      * @param array $filters
      * @throws NotImplementedException
      */
-    public function filterData(array $filters) {
+    public function filterData(array $filters): void {
         throw new NotImplementedException();
     }
 
     /**
      * @param string $column
-     * @return FALSE|int|mixed|null
+     * @return false|int|mixed|null
      */
     public function getCount($column = '*') {
         if ($this->count === null) {
@@ -388,7 +325,7 @@ class StoredQuery implements IDataSource, IResource {
      * @param int $limit
      * @param int $offset
      */
-    public function limitData($limit, $offset) {
+    public function limitData($limit, $offset): void {
         $this->limit = $limit;
         $this->offset = $offset;
         $this->invalidateData();
@@ -400,7 +337,7 @@ class StoredQuery implements IDataSource, IResource {
      * @param string $by column name
      * @param string $way DESC|ASC
      */
-    public function orderData($by, $way) {
+    public function orderData($by, $way): void {
         if (!is_numeric($by)) {
             $by = "`$by`";
         }

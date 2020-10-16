@@ -11,17 +11,12 @@ use Nette\DI\Container;
  */
 class PointsPreviewControl extends SeriesTableComponent {
 
-    /**
-     * CheckSubmitsControl constructor.
-     * @param Container $context
-     * @param SeriesTable $seriesTable
-     */
     public function __construct(Container $context, SeriesTable $seriesTable) {
         parent::__construct($context, $seriesTable);
     }
 
-    public function render() {
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR.'layout.latte');
+    public function render(): void {
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
     }
 }

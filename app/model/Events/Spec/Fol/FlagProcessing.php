@@ -20,36 +20,16 @@ use Nette\Utils\ArrayHash;
  */
 class FlagProcessing extends AbstractProcessing {
 
-    /**
-     * @var YearCalculator
-     */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
-    /**
-     * @var ServiceSchool
-     */
-    private $serviceSchool;
+    private ServiceSchool $serviceSchool;
 
-    /**
-     * FlagProcessing constructor.
-     * @param YearCalculator $yearCalculator
-     * @param ServiceSchool $serviceSchool
-     */
     public function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
     }
 
-    /**
-     * @param $states
-     * @param ArrayHash $values
-     * @param Machine $machine
-     * @param Holder $holder
-     * @param ILogger $logger
-     * @param Form|null $form
-     * @return void
-     */
-    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
+    protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void {
         if (!isset($values['team'])) {
             return;
         }
@@ -103,10 +83,10 @@ class FlagProcessing extends AbstractProcessing {
     }
 
     /**
-     * @param $studyYear
+     * @param int|null $studyYear
      * @return bool
      */
-    private function isStudent($studyYear) {
+    private function isStudent($studyYear): bool {
         return ($studyYear === null) ? false : true;
     }
 }

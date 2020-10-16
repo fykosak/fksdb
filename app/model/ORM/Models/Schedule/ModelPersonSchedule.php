@@ -52,10 +52,7 @@ class ModelPersonSchedule extends AbstractModelSingle implements
         return $this->getScheduleGroup()->getEvent();
     }
 
-    /**
-     * @return ModelPayment|null
-     */
-    public function getPayment() {
+    public function getPayment(): ?ModelPayment {
         $data = $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'person_schedule_id')->select('payment.*')->fetch();
         if (!$data) {
             return null;
@@ -85,8 +82,8 @@ class ModelPersonSchedule extends AbstractModelSingle implements
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
                 return sprintf(_('Accommodation for %s from %s to %s in %s'),
                     $this->getPerson()->getFullName(),
-                    $group->start->format(_('__date_format')),
-                    $group->end->format(_('__date_format')),
+                    $group->start->format(_('__date')),
+                    $group->end->format(_('__date')),
                     $item->name_cs);
             case ModelScheduleGroup::TYPE_WEEKEND:
                 return $item->getLabel();
@@ -95,18 +92,11 @@ class ModelPersonSchedule extends AbstractModelSingle implements
         }
     }
 
-    /**
-     * @param $newState
-     * @return void
-     */
-    public function updateState($newState) {
+    public function updateState(?string $newState): void {
         $this->update(['state' => $newState]);
     }
 
-    /**
-     * @return null|string
-     */
-    public function getState() {
+    public function getState(): ?string {
         return $this->state;
     }
 

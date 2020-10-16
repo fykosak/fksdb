@@ -3,6 +3,7 @@
 namespace FKSDB\Authentication\SSO\ServiceSide;
 
 use FKSDB\Authentication\SSO\IGlobalSession;
+use FKSDB\ORM\Models\ModelAuthToken;
 
 /**
  * Wrapper around IGlobalSession that intends to have no outer dependencies.
@@ -11,31 +12,24 @@ use FKSDB\Authentication\SSO\IGlobalSession;
  */
 class Authentication {
 
-    const PARAM_BACKLINK = 'backlink';
-    const PARAM_FLAG = 'flag';
-    const PARAM_GSID = 'gsid';
-    const FLAG_SSO_LOGIN = 'sso';
+    public const PARAM_BACKLINK = 'backlink';
+    public const PARAM_FLAG = 'flag';
+    public const PARAM_GSID = 'gsid';
+    public const FLAG_SSO_LOGIN = ModelAuthToken::TYPE_SSO;
 
-    /**
-     * @var IGlobalSession
-     */
-    private $globalSession;
+    private IGlobalSession $globalSession;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $loginURL;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $logoutURL;
 
     /**
      * Authentication constructor.
      * @param IGlobalSession $globalSession
-     * @param $loginURL
-     * @param $logoutURL
+     * @param string $loginURL
+     * @param string $logoutURL
      */
     public function __construct(IGlobalSession $globalSession, $loginURL, $logoutURL) {
         $this->globalSession = $globalSession;
@@ -43,10 +37,7 @@ class Authentication {
         $this->logoutURL = $logoutURL;
     }
 
-    /**
-     * @return bool
-     */
-    public function isAuthenticated() {
+    public function isAuthenticated(): bool {
         return isset($this->globalSession[IGlobalSession::UID]);
     }
 
@@ -60,7 +51,7 @@ class Authentication {
     /**
      * @param null $backlink
      */
-    public function login($backlink = null) {
+    public function login($backlink = null): void {
         $backlink = $backlink ?: $this->getDefaultBacklink();
 
         $data = [
@@ -78,7 +69,7 @@ class Authentication {
     /**
      * @param null $backlink
      */
-    public function logout($backlink = null) {
+    public function logout($backlink = null): void {
         $backlink = $backlink ?: $this->getDefaultBacklink();
 
         $data = [
@@ -101,12 +92,7 @@ class Authentication {
         return $_SERVER['REQUEST_URI'];
     }
 
-    /**
-     * @param $url
-     * @param $params
-     * @return string
-     */
-    private function setHttpParams($url, $params) {
+    private function setHttpParams(string $url, array $params): string {
         $query = http_build_query($params, false, '&');
 
         if (preg_match('/\?/', $url)) { // very simplistic test where URL contains query part
@@ -117,5 +103,4 @@ class Authentication {
 
         return $url;
     }
-
 }

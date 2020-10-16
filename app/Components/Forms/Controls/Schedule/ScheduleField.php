@@ -10,7 +10,6 @@ use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\TextInput;
 use FKSDB\Exceptions\NotImplementedException;
-use Nette\Utils\JsonException;
 
 /**
  * Class ScheduleField
@@ -20,27 +19,19 @@ class ScheduleField extends TextInput {
 
     use ReactComponentTrait;
 
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /**
-     * @var string
-     */
-    private $type;
-    /**
-     * @var ServiceScheduleItem
-     */
-    private $serviceScheduleItem;
+    private ModelEvent $event;
+
+    private string $type;
+
+    private ServiceScheduleItem $serviceScheduleItem;
 
     /**
      * ScheduleField constructor.
      * @param ModelEvent $event
      * @param string $type
      * @param ServiceScheduleItem $serviceScheduleItem
-     * @throws JsonException
-     * @throws NotImplementedException
      * @throws BadRequestException
+     * @throws NotImplementedException
      */
     public function __construct(ModelEvent $event, string $type, ServiceScheduleItem $serviceScheduleItem) {
         parent::__construct($this->getLabelByType($type));
@@ -49,7 +40,6 @@ class ScheduleField extends TextInput {
         $this->serviceScheduleItem = $serviceScheduleItem;
         $this->registerReact('event.schedule.' . $type);
         $this->appendProperty();
-
     }
 
     /**
@@ -76,7 +66,7 @@ class ScheduleField extends TextInput {
         }
     }
 
-    public function getData(...$args): string {
+    public function getData(): string {
         $groups = $this->event->getScheduleGroups()->where('schedule_group_type', $this->type);
         $groupList = [];
         foreach ($groups as $row) {

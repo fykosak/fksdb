@@ -9,18 +9,12 @@ use FKSDB\Payment\SymbolGenerator\AlreadyGeneratedSymbolsException;
 
 /**
  * Class AbstractSymbolGenerator
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractSymbolGenerator {
-    /**
-     * @var ServicePayment;
-     */
-    protected $servicePayment;
 
-    /**
-     * AbstractSymbolGenerator constructor.
-     * @param ServicePayment $servicePayment
-     */
+    protected ServicePayment $servicePayment;
+
     public function __construct(ServicePayment $servicePayment) {
         $this->servicePayment = $servicePayment;
     }
@@ -31,14 +25,14 @@ abstract class AbstractSymbolGenerator {
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      */
-    abstract protected function create(ModelPayment $modelPayment);
+    abstract protected function create(ModelPayment $modelPayment): array;
 
     /**
      * @param ModelPayment $modelPayment
      * @throws AlreadyGeneratedSymbolsException
      * @throws UnsupportedCurrencyException
      */
-    final public function __invoke(ModelPayment $modelPayment) {
+    final public function __invoke(ModelPayment $modelPayment): void {
         $info = $this->create($modelPayment);
         $modelPayment->update($info);
     }

@@ -7,15 +7,11 @@ use Nette\Http\Response;
 
 /**
  * Class GoneException
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class GoneException extends BadRequestException {
-    /**
-     * GoneException constructor.
-     * @param string $message
-     * @param \Exception|NULL $previous
-     */
-    public function __construct($message = '', \Exception $previous = NULL) {
+
+    public function __construct(?string $message = null, ?\Throwable $previous = null) {
         parent::__construct($message ?: 'Gone', Response::S410_GONE, $previous);
     }
 }

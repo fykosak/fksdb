@@ -1,12 +1,13 @@
 <?php
 
-namespace Mail;
+namespace FKSDB\Mail;
 
+use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\Application;
 use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
-use Nette\Application\BadRequestException;
+use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
 use Nette\Localization\ITranslator;
@@ -19,22 +20,15 @@ use Nette\Localization\ITranslator;
  */
 class MailTemplateFactory {
 
-    /** @var string without trailing slash */
-    private $templateDir;
+    /** without trailing slash */
+    private string $templateDir;
     /** @var Application */
     private $application;
-    /** @var ITranslator */
-    private $translator;
-    /** @var IRequest */
-    private $request;
 
-    /**
-     * MailTemplateFactory constructor.
-     * @param string $templateDir
-     * @param Application $application
-     * @param ITranslator $translator
-     * @param IRequest $request
-     */
+    private ITranslator $translator;
+
+    private IRequest $request;
+
     public function __construct(string $templateDir, Application $application, ITranslator $translator, IRequest $request) {
         $this->templateDir = $templateDir;
         $this->application = $application;
@@ -48,38 +42,38 @@ class MailTemplateFactory {
      * @deprecated
      * TODO remove this!
      */
-    public function injectApplication($application) {
+    final public function injectApplication($application): void {
         $this->application = $application;
     }
 
     /**
-     * @param string $lang ISO 639-1
+     * @param string|null $lang ISO 639-1
      * @param array $data
      * @return ITemplate
-     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
-    public function createLoginInvitation(string $lang = null, array $data = []): ITemplate {
+    public function createLoginInvitation(?string $lang, array $data): ITemplate {
         return $this->createWithParameters('loginInvitation', $lang, $data);
     }
 
     /**
-     * @param string $lang ISO 639-1
+     * @param string|null $lang ISO 639-1
      * @param array $data
      * @return ITemplate
-     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
-    public function createPasswordRecovery(string $lang = null, array $data = []): ITemplate {
+    public function createPasswordRecovery(?string $lang, array $data): ITemplate {
         return $this->createWithParameters('passwordRecovery', $lang, $data);
     }
 
     /**
      * @param string $templateFile
-     * @param string $lang ISO 639-1
+     * @param string|null $lang ISO 639-1
      * @param array $data
      * @return ITemplate
-     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
-    public function createWithParameters(string $templateFile, string $lang = null, array $data = []): ITemplate {
+    public function createWithParameters(string $templateFile, ?string $lang, array $data = []): ITemplate {
         $template = $this->createFromFile($templateFile, $lang);
         $template->setTranslator($this->translator);
         foreach ($data as $key => $value) {
@@ -90,11 +84,11 @@ class MailTemplateFactory {
 
     /**
      * @param string $filename
-     * @param string $lang ISO 639-1
+     * @param string|null $lang ISO 639-1
      * @return ITemplate
-     * @throws BadRequestException
+     * @throws UnsupportedLanguageException
      */
-    final public function createFromFile(string $filename, string $lang = null): ITemplate {
+    final public function createFromFile(string $filename, ?string $lang): ITemplate {
         /** @var Presenter $presenter */
         $presenter = $this->application->getPresenter();
         if (($lang === null) && !$presenter instanceof BasePresenter) {
@@ -111,7 +105,11 @@ class MailTemplateFactory {
         }
         $template = $presenter->getTemplateFactory()->createTemplate();
         $template->setFile($file);
-        $template->control = $template->_control = $control;
+
+        if ($template instanceof Template) {
+            $template->getLatte()->addProvider('uiControl', $control);
+        }
+        $template->control = $control;
         $template->baseUri = $this->request->getUrl()->getBaseUrl();
         return $template;
     }

@@ -2,10 +2,9 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
-use Nette\Forms\Container;
+use Nette\ComponentModel\IComponent;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
 use Nette\Forms\IControl;
@@ -17,37 +16,20 @@ use Nette\Forms\IControl;
  */
 class ChooserFactory extends AbstractFactory {
 
-    const FORMAT_KEY_VALUE = 'key-value';
-    const FORMAT_VALUE_META = 'value-meta';
-    const FORMAT_KEY_META = 'key-meta';
+    public const FORMAT_KEY_VALUE = 'key-value';
+    public const FORMAT_VALUE_META = 'value-meta';
+    public const FORMAT_KEY_META = 'key-meta';
 
-    /**
-     * @var string
-     */
-    private $prompt;
+    private string $prompt;
 
-    /**
-     * @var IOptionsProvider
-     */
-    private $optionsProvider;
+    private IOptionsProvider $optionsProvider;
 
-    /**
-     * ChooserFactory constructor.
-     * @param $prompt
-     * @param IOptionsProvider $optionsProvider
-     */
-    public function __construct($prompt, IOptionsProvider $optionsProvider) {
+    public function __construct(string $prompt, IOptionsProvider $optionsProvider) {
         $this->prompt = $prompt;
         $this->optionsProvider = $optionsProvider;
     }
 
-    /**
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
-     * @return SelectBox
-     */
-    protected function createComponent(Field $field, BaseMachine $machine, Container $container) {
+    public function createComponent(Field $field): SelectBox {
 
         $component = new SelectBox($field->getLabel());
         $component->setOption('description', $field->getDescription());
@@ -70,33 +52,27 @@ class ChooserFactory extends AbstractFactory {
     }
 
     /**
-     * @param BaseControl $component
+     * @param BaseControl|IComponent $component
      * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
      * @return void
      */
-    protected function setDefaultValue($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDefaultValue(IComponent $component, Field $field): void {
         $component->setDefaultValue($field->getValue());
     }
 
     /**
-     * @param BaseControl $component
-     * @param Field $field
-     * @param BaseMachine $machine
-     * @param Container $container
+     * @param BaseControl|IComponent $component
      * @return void
      */
-    protected function setDisabled($component, Field $field, BaseMachine $machine, Container $container) {
+    protected function setDisabled(IComponent $component): void {
         $component->setDisabled();
     }
 
     /**
-     * @param Component $component
+     * @param Component|IComponent $component
      * @return Component|IControl
      */
-    public function getMainControl(Component $component) {
+    public function getMainControl(IComponent $component): IControl {
         return $component;
     }
-
 }

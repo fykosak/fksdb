@@ -33,28 +33,22 @@ class RoutingApp extends React.Component<DispatchProps & OwnProps, {}> {
     public render() {
         const {rooms} = this.props;
 
-        return (
-            <div>
-                <div className="row">
-                    <div className="col-lg-8" style={{overflowY: 'scroll', maxHeight: '700px'}}>
-                        <Rooms rooms={rooms}/>
-                    </div>
-                    <div className="col-lg-4" style={{overflowY: 'scroll', maxHeight: '700px'}}>
-                        <UnRoutedTeams/>
-                    </div>
+        return (<>
+            <div className="row">
+                <div className="col-lg-8" style={{overflowY: 'scroll', maxHeight: '700px'}}>
+                    <Rooms rooms={rooms}/>
                 </div>
-                <div>
-                    <Form accessKey={'@@fyziklani/routing'}/>
+                <div className="col-lg-4" style={{overflowY: 'scroll', maxHeight: '700px'}}>
+                    <UnRoutedTeams/>
                 </div>
-                <Powered/>
             </div>
-        );
+            <div>
+                <Form/>
+            </div>
+            <Powered/>
+        </>);
     }
 }
-
-const mapStateToProps = (): {} => {
-    return {};
-};
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>): DispatchProps => {
     return {
@@ -62,4 +56,4 @@ const mapDispatchToProps = (dispatch: Dispatch<Action>): DispatchProps => {
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(RoutingApp);
+export default connect(null, mapDispatchToProps)(RoutingApp);

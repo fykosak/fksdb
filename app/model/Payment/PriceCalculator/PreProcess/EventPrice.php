@@ -8,18 +8,12 @@ use FKSDB\Payment\Price;
 
 /**
  * Class EventPrice
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventPrice implements IPreprocess {
-    /**
-     * @var ServiceEventParticipant
-     */
-    private $serviceEventParticipant;
 
-    /**
-     * EventPrice constructor.
-     * @param ServiceEventParticipant $serviceEventParticipant
-     */
+    private ServiceEventParticipant $serviceEventParticipant;
+
     public function __construct(ServiceEventParticipant $serviceEventParticipant) {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }

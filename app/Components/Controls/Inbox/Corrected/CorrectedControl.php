@@ -3,10 +3,10 @@
 namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\ILogger;
 use FKSDB\Submits\FileSystemStorage\CorrectedStorage;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 
 /**
@@ -14,20 +14,14 @@ use Nette\Application\UI\Form;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class CorrectedControl extends SeriesTableComponent {
-    /**
-     * @var CorrectedStorage
-     */
-    private $correctedStorage;
 
-    /**
-     * @param CorrectedStorage $correctedStorage
-     * @return void
-     */
-    public function injectCorrectedStorage(CorrectedStorage$correctedStorage){
-        $this->correctedStorage=$correctedStorage;
+    private CorrectedStorage $correctedStorage;
+
+    final public function injectCorrectedStorage(CorrectedStorage $correctedStorage): void {
+        $this->correctedStorage = $correctedStorage;
     }
 
-    public function render() {
+    public function render(): void {
         $this->template->correctedSubmitStorage = $this->correctedStorage;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.latte');
         $this->template->render();
@@ -35,7 +29,7 @@ class CorrectedControl extends SeriesTableComponent {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function createComponentForm(): FormControl {
         $control = new FormControl();
@@ -52,7 +46,7 @@ class CorrectedControl extends SeriesTableComponent {
      * @param Form $form
      * @throws AbortException
      */
-    private function handleSuccess(Form $form) {
+    private function handleSuccess(Form $form): void {
         $values = $form->getValues();
         $ids = [];
         foreach (\explode(',', $values['submits']) as $value) {

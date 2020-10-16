@@ -11,29 +11,29 @@ use FKSDB\UI\PageTitle;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ValidationPresenter extends BasePresenter {
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Data validation'), 'fa fa-check'));
     }
 
-    public function titleList() {
+    public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('All test'), 'fa fa-check'));
     }
 
-    public function titlePreview() {
+    public function titlePreview(): void {
         $this->setPageTitle(new PageTitle(_('Select test'), 'fa fa-check'));
     }
 
-    public function authorizedDefault() {
+    public function authorizedDefault(): void {
         $this->setAuthorized(
-            $this->getContestAuthorizator()->isAllowedForAnyContest('person', 'validation'));
+            $this->contestAuthorizator->isAllowedForAnyContest('person', 'validation'));
     }
 
-    public function authorizedList() {
-        return $this->authorizedDefault();
+    public function authorizedList(): void {
+        $this->authorizedDefault();
     }
 
-    public function authorizedPreview() {
-        return $this->authorizedDefault();
+    public function authorizedPreview(): void {
+        $this->authorizedDefault();
     }
 
     protected function createComponentGrid(): PersonsGrid {

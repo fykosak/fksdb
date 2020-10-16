@@ -14,28 +14,23 @@ use Nette\Utils\JsonException;
  * *
  */
 class PersonScheduleFactory {
-    /**
-     * @var ServiceScheduleItem
-     */
-    private $serviceScheduleItem;
 
-    /**
-     * PersonScheduleFactory constructor.
-     * @param ServiceScheduleItem $serviceScheduleItem
-     */
+    private ServiceScheduleItem $serviceScheduleItem;
+
     public function __construct(ServiceScheduleItem $serviceScheduleItem) {
         $this->serviceScheduleItem = $serviceScheduleItem;
     }
 
     /**
-     * @param $fieldName
+     * @param string $fieldName
      * @param ModelEvent $event
      * @return ScheduleField
-     * @throws JsonException
+     * @throws BadRequestException
      * @throws NotImplementedException
      * @throws BadRequestException
+     * @throws JsonException
      */
-    public function createField($fieldName, ModelEvent $event) {
+    public function createField(string $fieldName, ModelEvent $event): ScheduleField {
         return new ScheduleField($event, $fieldName, $this->serviceScheduleItem);
     }
 }

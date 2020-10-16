@@ -1,11 +1,13 @@
 {block content}
+    <a class="btn btn-success" href="{plink ajax}">{_'Nový systém odovzdávaní'}</a>
+    <a class="btn btn-info" href="{plink list}">{_'Odevzdaná řešení'}</a>
+    <hr/>
     {if $hasTasks}
         {control uploadForm}
     {else}
         <p class="alert alert-info">
             {_'Žádné úlohy k odevzdávání.'}
         </p>
-
         {if $canRegister}
             <p>
                 <a class="btn btn-primary" n:href=":Public:Register:contestant, year => $presenter->year + 1,contestId=>$presenter->contestId">{_'Registrovat se do dalšího ročníku'}</a>
@@ -16,9 +18,4 @@
             </p>
         {/if}
     {/if}
-
-    <h2>{_'Odevzdaná řešení'}</h2>
-
-    {control submitsGrid}
-
 {/block}

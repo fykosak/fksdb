@@ -2,49 +2,33 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
-use FKSDB\Modules\Core\BasePresenter;
+use FKSDB\Components\React\AjaxComponent;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
-use FKSDB\React\ReactResponse;
-use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
+use Nette\DeprecatedException;
 use Nette\Utils\Json;
 use Nette\Utils\JsonException;
-use ReactMessage;
 
 /**
- * Class Routing
+ * Class RoutingEdit
+ * @author Michal Červeňák <miso@fykos.cz>
  */
-class RoutingEdit extends FyziklaniReactControl {
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
+class RoutingEdit extends AjaxComponent {
 
-    /**
-     * @var ServiceFyziklaniRoom
-     */
-    private $serviceFyziklaniRoom;
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    /**
-     * @var ServiceFyziklaniTeamPosition
-     */
-    private $serviceFyziklaniTeamPosition;
+    private ServiceFyziklaniRoom $serviceFyziklaniRoom;
 
-    /**
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition
-     * @param ServiceFyziklaniRoom $serviceFyziklaniRoom
-     * @return void
-     */
-    public function injectPrimary(
+    private ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition;
+
+    final public function injectPrimary(
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
         ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
         ServiceFyziklaniRoom $serviceFyziklaniRoom
-    ) {
+    ): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
         $this->serviceFyziklaniRoom = $serviceFyziklaniRoom;
@@ -69,30 +53,27 @@ class RoutingEdit extends FyziklaniReactControl {
     /**
      * @throws InvalidLinkException
      */
-    protected function configure() {
+    protected function configure(): void {
         $this->addAction('save', $this->link('save!'));
         parent::configure();
     }
 
-    /**
-     * @throws AbortException
-     * @throws BadRequestException
-     */
-    public function handleSave() {
-        $data = $this->getHttpRequest()->getPost('requestData');
+    public function handleSave(): void {
+        throw new DeprecatedException();
+        /*$data = $this->getHttpRequest()->getPost('requestData');
         $updatedTeams = $this->serviceFyziklaniTeamPosition->updateRouting($data);
         $response = new ReactResponse();
         $response->setAct('update-teams');
         $response->setData(['updatedTeams' => $updatedTeams]);
-        $response->addMessage(new ReactMessage(_('Zmeny boli uložené'), BasePresenter::FLASH_SUCCESS));
-        $this->getPresenter()->sendResponse($response);
+        $response->addMessage(new Message(_('Routing has been saved'), Message::LVL_SUCCESS));
+        $this->getPresenter()->sendResponse($response);*/
     }
 
     /**
      * @return ModelFyziklaniRoom[]
      * TODO fix getParameter
      */
-    protected function getRooms() {
+    protected function getRooms(): array {
         return $this->serviceFyziklaniRoom->getRoomsByIds([]/*$this->getEvent()->getParameter(null, 'gameSetup')['rooms']*/);
     }
 }

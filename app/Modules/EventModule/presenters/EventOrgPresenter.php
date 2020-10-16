@@ -2,8 +2,12 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Components\Controls\Entity\EventOrg\EventOrgForm;
+use FKSDB\Components\Controls\Entity\EventOrgFormComponent;
 use FKSDB\Components\Grids\EventOrgsGrid;
+use FKSDB\Entity\ModelNotFoundException;
+use FKSDB\Events\EventNotFoundException;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Messages\Message;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\ORM\Models\ModelEventOrg;
 use FKSDB\ORM\Services\ServiceEventOrg;
@@ -11,7 +15,7 @@ use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
+use Nette\Security\IResource;
 
 /**
  * Class EventOrgPresenter
@@ -21,16 +25,9 @@ use Nette\Application\UI\Control;
 class EventOrgPresenter extends BasePresenter {
     use EventEntityPresenterTrait;
 
-    /**
-     * @var ServiceEventOrg
-     */
-    private $serviceEventOrg;
+    private ServiceEventOrg $serviceEventOrg;
 
-    /**
-     * @param ServiceEventOrg $serviceEventOrg
-     * @return void
-     */
-    public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg) {
+    final public function injectServiceEventOrg(ServiceEventOrg $serviceEventOrg): void {
         $this->serviceEventOrg = $serviceEventOrg;
     }
 
@@ -44,19 +41,20 @@ class EventOrgPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws BadTypeException
      */
-    public function titleEdit() {
+    public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Edit Organiser of event "%s"'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-users'));
     }
 
     /**
-     * @param $resource
+     * @param IResource|string|null $resource
      * @param string $privilege
      * @return bool
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
         return $this->isContestsOrgAuthorized($resource, $privilege);
@@ -65,10 +63,10 @@ class EventOrgPresenter extends BasePresenter {
     /**
      * @throws AbortException
      */
-    public function actionDelete() {
+    public function actionDelete(): void {
         try {
-            list($message) = $this->traitHandleDelete();
-            $this->flashMessage($message->getMessage(), $message->getLevel());
+           $this->traitHandleDelete();
+            $this->flashMessage(_('Entity has been deleted'), Message::LVL_WARNING);
             $this->redirect('list');
         } catch (BadRequestException $exception) {
             $this->flashMessage(_('Error during deleting'), self::FLASH_ERROR);
@@ -78,9 +76,10 @@ class EventOrgPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws ModelNotFoundException
+     * @throws BadTypeException
      */
-    public function actionEdit() {
+    public function actionEdit(): void {
         $this->traitActionEdit();
     }
 
@@ -90,29 +89,26 @@ class EventOrgPresenter extends BasePresenter {
 
     /**
      * @return EventOrgsGrid
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function createComponentGrid(): EventOrgsGrid {
         return new EventOrgsGrid($this->getEvent(), $this->getContext());
     }
 
     /**
-     * @return Control
-     * @throws AbortException
-     * @throws BadRequestException
+     * @return EventOrgFormComponent
+     * @throws EventNotFoundException
      */
-    protected function createComponentCreateForm(): Control {
-        return new EventOrgForm($this->getContext(), $this->getEvent(), true);
+    protected function createComponentCreateForm(): EventOrgFormComponent {
+        return new EventOrgFormComponent($this->getContext(), $this->getEvent(), true);
     }
 
     /**
-     * @return Control
-     * @throws AbortException
-     * @throws BadRequestException
+     * @return EventOrgFormComponent
+     * @throws EventNotFoundException
      */
-    protected function createComponentEditForm(): Control {
-        return new EventOrgForm($this->getContext(), $this->getEvent(), false);
+    protected function createComponentEditForm(): EventOrgFormComponent {
+        return new EventOrgFormComponent($this->getContext(), $this->getEvent(), false);
     }
 
 }

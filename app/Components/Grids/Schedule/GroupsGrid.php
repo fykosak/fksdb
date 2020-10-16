@@ -18,22 +18,15 @@ use NiftyGrid\DuplicateColumnException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class GroupsGrid extends BaseGrid {
-    /**
-     * @var ModelEvent
-     */
-    private $event;
 
-    /**
-     * GroupsGrid constructor.
-     * @param ModelEvent $event
-     * @param Container $container
-     */
+    private ModelEvent $event;
+
     public function __construct(ModelEvent $event, Container $container) {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    public function getModelClassName(): string {
+    protected function getModelClassName(): string {
         return ModelScheduleGroup::class;
     }
 
@@ -49,11 +42,11 @@ class GroupsGrid extends BaseGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
-        $this->addColumn('schedule_group_id', _('#'));
         $this->addColumns([
+            'schedule_group.schedule_group_id',
             'schedule_group.name_cs',
             'schedule_group.name_en',
             'schedule_group.schedule_group_type',
@@ -61,15 +54,20 @@ class GroupsGrid extends BaseGrid {
             'schedule_group.end',
         ]);
 
-        $this->addColumn('items_count', _('Items count'))->setRenderer(function ($row) {
+        $this->addColumn('items_count', _('Items count'))->setRenderer(function ($row): int {
             $model = ModelScheduleGroup::createFromActiveRow($row);
             return $model->getItems()->count();
         });
 
-        $this->addButton('detail', _('Detail'))->setText(_('Detail'))
-            ->setLink(function ($row) {
+        $this->addButton('detail')->setText(_('Detail'))
+            ->setLink(function ($row): string {
                 /** @var ModelScheduleGroup $row */
-                return $this->getPresenter()->link('ScheduleItem:list', ['groupId' => $row->schedule_group_id]);
+                return $this->getPresenter()->link('ScheduleGroup:detail', ['id' => $row->schedule_group_id]);
+            });
+        $this->addButton('edit')->setText(_('Edit'))
+            ->setLink(function ($row): string {
+                /** @var ModelScheduleGroup $row */
+                return $this->getPresenter()->link('ScheduleGroup:edit', ['id' => $row->schedule_group_id]);
             });
     }
 }

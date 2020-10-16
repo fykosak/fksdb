@@ -9,19 +9,13 @@ use Nette\Database\Table\Selection;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class AbstractModelSingle extends ActiveRow implements IModel {
-    /** @var array */
-    private $tmpData;
 
-    /**
-     * AbstractModelSingle constructor.
-     * @param array $data
-     * @param Selection $table
-     */
+    private array $tmpData;
+
     public function __construct(array $data, Selection $table) {
         parent::__construct($data, $table);
         $this->tmpData = $data;
     }
-
 
     /**
      * @var bool
@@ -41,7 +35,7 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
      * @param bool $value
      * @deprecated
      */
-    public function setNew(bool $value = true) {
+    public function setNew(bool $value = true): void {
         $this->stored = !$value;
     }
 
@@ -58,14 +52,14 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
 
     /**
      * @param string|int $key
-     * @param $value
+     * @param mixed $value
      */
     public function __set($key, $value) {
         $this->tmpData[$key] = $value;
     }
 
     /**
-     * @param $key
+     * @param int|string $key
      * @return bool|mixed|ActiveRow|Selection|null
      */
     public function &__get($key) {

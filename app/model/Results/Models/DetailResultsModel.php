@@ -13,9 +13,7 @@ use Nette\InvalidStateException;
  */
 class DetailResultsModel extends AbstractResultsModel {
 
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $series;
 
     /**
@@ -64,7 +62,7 @@ class DetailResultsModel extends AbstractResultsModel {
     /**
      * @param mixed $series
      */
-    public function setSeries($series) {
+    public function setSeries($series): void {
         $this->series = $series;
         // invalidate cache of columns
         $this->dataColumns = [];

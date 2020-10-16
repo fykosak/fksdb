@@ -32,28 +32,28 @@ class EvaluationNullObject extends EvaluationStrategy {
 
     /**
      * @param ActiveRow $task
-     * @return string|void
+     * @return string
      * @throws NotImplementedException
      */
-    public function getPointsColumn(ActiveRow $task) {
+    public function getPointsColumn(ActiveRow $task): string {
         throw new NotImplementedException();
     }
 
     /**
-     * @return string|void
+     * @return string
      * @throws NotImplementedException
      */
-    public function getSumColumn() {
+    public function getSumColumn(): string {
         throw new NotImplementedException();
     }
 
     /**
      * @param ActiveRow $task
      * @param ModelCategory $category
-     * @return int|void
+     * @return int|null
      * @throws NotImplementedException
      */
-    public function getTaskPoints(ActiveRow $task, ModelCategory $category) {
+    public function getTaskPoints(ActiveRow $task, ModelCategory $category): ?int {
         throw new NotImplementedException();
     }
 

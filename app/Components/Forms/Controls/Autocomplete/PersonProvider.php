@@ -15,22 +15,12 @@ use FKSDB\YearCalculator;
  */
 class PersonProvider implements IFilteredDataProvider {
 
-    const PLACE = 'place';
+    private const PLACE = 'place';
 
-    /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
 
-    /**
-     * @var TypedTableSelection
-     */
-    private $searchTable;
+    private TypedTableSelection $searchTable;
 
-    /**
-     * PersonProvider constructor.
-     * @param ServicePerson $servicePerson
-     */
     public function __construct(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
         $this->searchTable = $this->servicePerson->getTable();
@@ -41,10 +31,10 @@ class PersonProvider implements IFilteredDataProvider {
      * @param ModelContest $contest
      * @param YearCalculator $yearCalculator
      */
-    public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator) {
+    public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator): void {
         $this->searchTable = $this->servicePerson->getTable()
             ->where([
-                ':org.contest_id' => $contest->contest_id
+                ':org.contest_id' => $contest->contest_id,
             ])
             ->where(':org.since <= ?', $yearCalculator->getCurrentYear($contest))
             ->where(':org.until IS NULL OR :org.until <= ?', $yearCalculator->getCurrentYear($contest));
@@ -57,7 +47,7 @@ class PersonProvider implements IFilteredDataProvider {
      * @param string $search
      * @return array
      */
-    public function getFilteredItems($search) {
+    public function getFilteredItems(string $search): array {
         $search = trim($search);
         $search = str_replace(' ', '', $search);
         $this->searchTable
@@ -83,11 +73,7 @@ class PersonProvider implements IFilteredDataProvider {
         return $result;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @return array
-     */
-    private function getItem(ModelPerson $person) {
+    private function getItem(ModelPerson $person): array {
         $place = null;
         $address = $person->getDeliveryAddress();
         if ($address) {
@@ -103,7 +89,7 @@ class PersonProvider implements IFilteredDataProvider {
     /**
      * @param mixed $id
      */
-    public function setDefaultValue($id) {
+    public function setDefaultValue($id): void {
         /* intentionally blank */
     }
 

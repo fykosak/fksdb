@@ -3,10 +3,10 @@
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
-use Github\EventFactory;
-use Github\Events\Event;
-use Github\Events\PushEvent;
-use Maintenance\Updater;
+use FKSDB\Github\EventFactory;
+use FKSDB\Github\Events\Event;
+use FKSDB\Github\Events\PushEvent;
+use FKSDB\Maintenance\Updater;
 use Nette\Application\AbortException;
 use Nette\Application\Responses\TextResponse;
 
@@ -17,45 +17,27 @@ use Nette\Application\Responses\TextResponse;
  */
 class GithubPresenter extends AuthenticatedPresenter {
 
-    /** @var Updater */
-    private $updater;
+    private Updater $updater;
+    private EventFactory $eventFactory;
 
-    /** @var EventFactory */
-    private $eventFactory;
-
-    /**
-     * @param EventFactory $eventFactory
-     * @return void
-     */
-    public function injectEventFactory(EventFactory $eventFactory) {
+    final public function injectQuarterly(EventFactory $eventFactory, Updater $updater): void {
         $this->eventFactory = $eventFactory;
-    }
-
-    /**
-     * @param Updater $updater
-     * @return void
-     */
-    public function injectUpdater(Updater $updater) {
         $this->updater = $updater;
     }
 
-    /**
-     * @return bool|int|string
-     */
-    public function getAllowedAuthMethods() {
+    public function getAllowedAuthMethods(): int {
         return AuthenticatedPresenter::AUTH_ALLOW_GITHUB;
     }
 
-    public function authorizedApi() {
+    public function authorizedApi(): void {
         /* Already authenticated user has ultimate access to this presenter. */
         $this->setAuthorized(true);
     }
 
-    public function actionApi() {
-        $type = $this->getFullHttpRequest()->getRequest()->getHeader(Event::HTTP_HEADER);
-        $payload = $this->getFullHttpRequest()->getPayload();
+    public function actionApi(): void {
+        $type = $this->getHttpRequest()->getHeader(Event::HTTP_HEADER);
+        $payload = $this->getHttpRequest()->getRawBody();
         $data = json_decode($payload, true);
-
         $event = $this->eventFactory->createEvent($type, $data);
         if ($event instanceof PushEvent) {
             if (strncasecmp(PushEvent::REFS_HEADS, $event->ref, strlen(PushEvent::REFS_HEADS))) {
@@ -69,9 +51,8 @@ class GithubPresenter extends AuthenticatedPresenter {
     /**
      * @throws AbortException
      */
-    public function renderApi() {
+    public function renderApi(): void {
         $response = new TextResponse("Thank you, Github.");
         $this->sendResponse($response);
     }
-
 }

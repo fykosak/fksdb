@@ -35,12 +35,15 @@ DBReflection:
              referencedAccess:
                 modelClassName: FKSDB\ORM\Models\IEventReferencedModel
                 method: getEvent
-             fields:
+             columnFactories:
                 event:
                     type: string
                     title: _(Event)
                     accessKey: name
-                role: FKSDB\Components\DatabaseReflection\Event\EventRole
+                role:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Event\EventRole
+                    title: _('Event role')
                 event_id:
                     type: primaryKey
                     title: _('Event Id')
@@ -81,17 +84,34 @@ DBReflection:
                     type: int
                     title: _(Contest year)
                     omitInputField: true
-                event_type: FKSDB\Components\DatabaseReflection\Event\EventTypeRow
-                event_type_id: FKSDB\Components\DatabaseReflection\Event\EventTypeRow
-                event_link: FKSDB\Components\DatabaseReflection\ReferencedRows\EventLink
+                event_type:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Event\EventTypeRow
+                    title: _('Event type')
+                event_type_id:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Event\EventTypeRow
+                    title: _('Event type')
+                event_link:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Event\EventLink
+                    title: _('Event')
+             linkFactories:
+                 application.list: FKSDB\DBReflection\LinkFactories\ParticipantListLink
          payment:
              modelClassName: FKSDB\ORM\Models\ModelPayment
              referencedAccess:
                   modelClassName: FKSDB\ORM\Models\IPaymentReferencedModel
                   method: getPayment
-             fields:
-                 payment: FKSDB\Components\DatabaseReflection\ReferencedRows\PaymentRow
-                 payment_uid: FKSDB\Components\DatabaseReflection\Payment\UIdRow
+             columnFactories:
+                 payment:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Payment\PaymentColumnFactory
+                    title: _('Payment')
+                 payment_uid:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Payment\UIdRow
+                    title: _('Payment UId')
                  bank_account:
                     type: string
                     title: _(Bank account)
@@ -116,7 +136,11 @@ DBReflection:
                  recipient:
                     type: string
                     title: _(Recipient)
-                 price: FKSDB\Components\DatabaseReflection\Payment\PriceRow
+                 price:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Payment\PriceRow
+                    title: _('Price')
+                 #currency:
                  state:
                      type: state
                      title: _(State)
@@ -125,35 +149,83 @@ DBReflection:
                          canceled: [badge: 'badge badge-secondary', label: 'Payment canceled']
                          received: [badge: 'badge badge-success', label: 'Payment received']
                          new: [badge: 'badge badge-primary', label: 'New payment']
+             linkFactories:
+                 detail:
+                      destination: ':Event:Payment:detail'
+                      params:
+                          eventId: event_id
+                          id: payment_id
+                      title: Detail
          org:
-             org_id:
-                  type: primaryKey
-                  title: _(Org Id)
-             since: FKSDB\Components\DatabaseReflection\Org\SinceRow
-             until: FKSDB\Components\DatabaseReflection\Org\UntilRow
-             order: FKSDB\Components\DatabaseReflection\Org\OrderRow
-             tex_signature: FKSDB\Components\DatabaseReflection\Org\TexSignatureRow
-             domain_alias: FKSDB\Components\DatabaseReflection\Org\DomainAliasRow
-             contribution:
-                 type: string
-                 title: _(Contribution)
-                 description: _('Zobrazeno v síni slávy')
-             role:
-                 type: string
-                 title: Role
+             modelClassName: FKSDB\ORM\Models\ModelOrg
+             columnFactories:
+                org_id:
+                    type: primaryKey
+                    title: _(Org Id)
+                since:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Org\SinceRow
+                    title: _('Since')
+                until:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Org\UntilRow
+                    title: _('Until')
+                order:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Org\OrderRow
+                    description: _('Pro řazení v seznamu organizátorů')
+                    title: _('Order')
+                tex_signature:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Org\TexSignatureRow
+                    title: _('Tex signature')
+                domain_alias:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Org\DomainAliasRow
+                    title: _('Domain alias')
+                contribution:
+                    type: string
+                    title: _(Contribution)
+                    description: _('Zobrazeno v síni slávy')
+                role:
+                    type: string
+                    title: Role
+             linkFactories:
+                 detail:
+                    destination: ':Org:Org:detail'
+                    params:
+                        contestId: contest_id
+                        id: org_id
+                    title: Detail
+                 edit:
+                    destination: ':Org:Org:edit'
+                    params:
+                        contestId: contest_id
+                        id: org_id
+                    title: Edit
          person:
              modelClassName: FKSDB\ORM\Models\ModelPerson
              referencedAccess:
                 modelClassName: FKSDB\ORM\Models\IPersonReferencedModel
                 method: getPerson
-             fields:
-                person_link: FKSDB\Components\DatabaseReflection\ReferencedRows\PersonLinkRow
-                full_name: FKSDB\Components\DatabaseReflection\Person\FullNameRow
+             columnFactories:
+                person_link:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Person\PersonLinkRow
+                    title: _('Person')
+                full_name:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Person\FullNameRow
+                    title: _('Person')
                 person_id:
                     type: primaryKey
                     title: _(Person Id)
-                    permission: PERMISSION_ALLOW_BASIC
-                gender: FKSDB\Components\DatabaseReflection\Person\GenderRow
+                    permission: BASIC
+                gender:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Person\GenderRow
+                    permission: FULL
+                    title: _('Gender')
                 created:
                     type: dateTime
                     title: _(Created)
@@ -161,202 +233,358 @@ DBReflection:
                     type: string
                     title: _(Born family name)
                     description: _('Pouze pokud je odlišné od příjmení.')
-                    permission: PERMISSION_ALLOW_FULL
+                    permission: FULL
                 display_name:
                     type: string
                     title: _(Display name)
                     description: _('Pouze pokud je odlišné od "jméno příjmení".')
-                    permission: PERMISSION_ALLOW_BASIC
+                    permission: BASIC
                 family_name:
                     type: string
                     title: _(Family name)
-                    permission: PERMISSION_ALLOW_BASIC
+                    permission: BASIC
                 other_name:
                     type: string
                     title: _(Other name)
-                    permission: PERMISSION_ALLOW_BASIC
+                    permission: BASIC
          person_info:
-             email: FKSDB\Components\DatabaseReflection\PersonInfo\EmailRow
-             health_insurance: FKSDB\Components\DatabaseReflection\PersonInfo\HealthInsuranceRow
-             citizenship: FKSDB\Components\DatabaseReflection\PersonInfo\CitizenshipRow
-             account: FKSDB\Components\DatabaseReflection\PersonInfo\AccountRow
-             homepage: FKSDB\Components\DatabaseReflection\PersonInfo\HomepageRow
-             phone:
-                 type: phone
-                 title: _('Phone')
-             phone_parent_m:
-                 type: phone
-                 title: _('Phone number (mother)')
-             phone_parent_d:
-                 type: phone
-                 title: _('Phone number (father)')
-             email_parent_m: FKSDB\Components\DatabaseReflection\PersonInfo\EmailParentMRow
-             email_parent_d: FKSDB\Components\DatabaseReflection\PersonInfo\EmailParentDRow
-             id_number: FKSDB\Components\DatabaseReflection\PersonInfo\IdNumberRow
-             born: FKSDB\Components\DatabaseReflection\PersonInfo\BornRow
-             born_id: FKSDB\Components\DatabaseReflection\PersonInfo\BornIdRow
-             birthplace: FKSDB\Components\DatabaseReflection\PersonInfo\BirthplaceRow
-             career:
-                 title: _(Co právě dělá)
-                 type: text
-                 description: _(Zobrazeno v seznamu organizátorů)
-             im: FKSDB\Components\DatabaseReflection\PersonInfo\ImRow
-             agreed: FKSDB\Components\DatabaseReflection\PersonInfo\AgreedRow
-             uk_login:
-                 type: string
-                 title: Login UK
-                 permission: PERMISSION_ALLOW_RESTRICT
-             linkedin_id:
-                 type: string
-                 title: Linkedin Id
-                 permission: PERMISSION_ALLOW_BASIC
-             employer:
-                 type: string
-                 title: Zaměstnavatel
-                 permission: PERMISSION_ALLOW_FULL
-             origin:
-                 type: string
-                 title: 'Jak jsi se o nás dozvěděl(a)?'
-                 permission: PERMISSION_ALLOW_BASIC
-             note:
-                 type: string
-                 title: Poznámka
-                 permission: PERMISSION_ALLOW_BASIC
-             academic_degree_prefix:
-                  type: string
-                  title: Titul před jménem
-                  permission: PERMISSION_ALLOW_RESTRICT
-             academic_degree_suffix:
-                 type: string
-                 title: Titul za jménem
-                 permission: PERMISSION_ALLOW_RESTRICT
-             pizza:
-                 type: string
-                 title: Pizza
-                 permission: PERMISSION_ALLOW_RESTRICT
+             modelClassName: FKSDB\ORM\Models\ModelPersonInfo
+             columnFactories:
+                email:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\PersonInfo\EmailRow
+                    permision: RESTRICT
+                    title:  _('E-mail')
+                health_insurance:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\PersonInfo\HealthInsuranceRow
+                    permisson: FULL
+                    title: _('Health insurance')
+                citizenship:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\PersonInfo\CitizenshipRow
+                    permission: FULL
+                    title: _('Státní příslušnost')
+                account:
+                    type: string
+                    title: _('Bank account')
+                    permission:
+                        read: FULL
+                        write: FULL
+                homepage:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\PersonInfo\HomepageRow
+                    title: _('Homepage')
+                phone:
+                    type: phone
+                    title: _('Phone')
+                phone_parent_m:
+                    type: phone
+                    title: _('Phone number (mother)')
+                    permission:
+                       read: RESTRICT
+                       write: RESTRICT
+                phone_parent_d:
+                    type: phone
+                    title: _('Phone number (father)')
+                    permission:
+                        read: RESTRICT
+                        write: RESTRICT
+                email_parent_m:
+                    type: email
+                    title: _('E-mail (matka)')
+                    permission: RESTRICT
+                email_parent_d:
+                    type: email
+                    title: _('E-mail (otec)')
+                    permission: RESTRICT
+                id_number:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\PersonInfo\IdNumberRow
+                    description: _('U cizinců číslo pasu.')
+                    title: _('Číslo OP')
+                    permission: FULL
+                born:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\PersonInfo\BornRow
+                    permission: FULL
+                    title: _('Datum narození')
+                born_id:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\PersonInfo\BornIdRow
+                    title: _('Rodné číslo')
+                    description: _('U cizinců prázdné.')
+                    permission: FULL
+                birthplace:
+                    type: string
+                    title: _('Místo narození')
+                    description: _('Město a okres (kvůli diplomům).')
+                    permission:
+                        read: FULL
+                        write: FULL
+                career:
+                    title: _(Co právě dělá)
+                    type: text
+                    description: _(Zobrazeno v seznamu organizátorů)
+                im:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\PersonInfo\ImRow
+                    permission: RESTRICT
+                    title: _('ICQ, Jabber, apod.')
+                agreed:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\PersonInfo\AgreedRow
+                    title: _('I agree with the privacy policy')
+                uk_login:
+                    type: string
+                    title: Login UK
+                    permission: RESTRICT
+                linkedin_id:
+                    type: string
+                    title: Linkedin Id
+                    permission: BASIC
+                employer:
+                    type: string
+                    title: Zaměstnavatel
+                    permission: FULL
+                origin:
+                    type: string
+                    title: 'Jak jsi se o nás dozvěděl(a)?'
+                    permission: BASIC
+                note:
+                    type: string
+                    title: Poznámka
+                    permission: BASIC
+                academic_degree_prefix:
+                    type: string
+                    title: Titul před jménem
+                    permission: RESTRICT
+                academic_degree_suffix:
+                    type: string
+                    title: Titul za jménem
+                    permission: RESTRICT
+                pizza:
+                    type: string
+                    title: Pizza
+                    permission: RESTRICT
 
          person_history:
-             ac_year: FKSDB\Components\DatabaseReflection\PersonHistory\AcYearRow
-             study_year: FKSDB\Components\DatabaseReflection\PersonHistory\StudyYearRow
-             class:
-                 type: string
-                 title: 'Class'
-                 permissions: PERMISSION_ALLOW_RESTRICT
+             modelClassName: FKSDB\ORM\Models\ModelPersonHistory
+             columnFactories:
+                school_id:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\PersonHistory\SchoolIdRow
+                    title: _(School)
+                ac_year:
+                    type: string
+                    title: _('Academic year')
+                    omitInputField: true
+                study_year:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\PersonHistory\StudyYearRow
+                    description: _('Kvůli zařazení do kategorie.')
+                    title: _('Study year')
+                class:
+                    type: string
+                    title: 'Class'
+                    permissions: RESTRICT
          login:
-             login_id:
-                 type: primaryKey
-                 title: _(login Id)
-             hash: FKSDB\Components\DatabaseReflection\Login\HashRow
-             last_login:
-                 type: dateTime
-                 title: _(Last logged)
-             login:
-                 type: string
-                 title: _(Login)
-                 permission: PERMISSION_ALLOW_RESTRICT
+             modelClassName: FKSDB\ORM\Models\ModelLogin
+             columnFactories:
+                login_id:
+                    type: primaryKey
+                    title: _(login Id)
+                hash:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Login\HashRow
+                    permissions: RESTRICT
+                    title: _('Password')
+                    omitInputField: true
+                last_login:
+                    type: dateTime
+                    title: _(Last logged)
+                login:
+                    type: string
+                    title: _(Login)
+                    permission: RESTRICT
          event_participant:
-             team: FKSDB\Components\DatabaseReflection\EventParticipant\TeamRow
-             status:
-                 type: state
-                 title: _(State)
-                 states: %event_participant.states%
-             created:
-                 type: dateTime
-                 title: _(Created event)
-             swimmer: FKSDB\Components\DatabaseReflection\EventParticipant\SwimmerRow
-             price: FKSDB\Components\DatabaseReflection\EventParticipant\PriceRow
-             diet: FKSDB\Components\DatabaseReflection\EventParticipant\DietRow
-             health_restrictions: FKSDB\Components\DatabaseReflection\EventParticipant\HealthRestrictionsRow
-             used_drugs: FKSDB\Components\DatabaseReflection\EventParticipant\UsedDrugsRow
-             note: FKSDB\Components\DatabaseReflection\EventParticipant\NoteRow
-             tshirt_color: FKSDB\Components\DatabaseReflection\EventParticipant\TShirtColorRow
-             tshirt_size: FKSDB\Components\DatabaseReflection\EventParticipant\TShirtSizeRow
-             arrival_ticket: FKSDB\Components\DatabaseReflection\EventParticipant\ArrivalTicketRow
-             arrival_time: FKSDB\Components\DatabaseReflection\EventParticipant\ArrivalTimeRow
-             arrival_destination: FKSDB\Components\DatabaseReflection\EventParticipant\ArrivalDestinationRow
-             departure_time: FKSDB\Components\DatabaseReflection\EventParticipant\DepartureTimeRow
-             departure_destination: FKSDB\Components\DatabaseReflection\EventParticipant\DepartureDestinationRow
-             departure_ticket: FKSDB\Components\DatabaseReflection\EventParticipant\DepartureTicketRow
-             event_participant_id:
-                 type: primaryKey
-                 title:  _(Event participant Id)
+             modelClassName: FKSDB\ORM\Models\ModelEventParticipant
+             columnFactories:
+                team:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\EventParticipant\TeamRow
+                    title: _('Team')
+                status:
+                    type: state
+                    title: _(State)
+                    states: %event_participant.states%
+                created:
+                    type: dateTime
+                    title: _(Created event)
+                swimmer:
+                    type: logic
+                    title: _(Swimmer)
+                price:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\EventParticipant\PriceRow
+                    title: _('Price')
+                diet:
+                    type: text
+                    title: _(Diet)
+                health_restrictions:
+                    type: text
+                    title:  _(Health restrictions)
+                used_drugs:
+                    type: text
+                    title: _(Used drugs)
+                note:
+                    type: text
+                    title: _(Note)
+                tshirt_color:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\EventParticipant\TShirtColorRow
+                    title: _('T-shirt color')
+                tshirt_size:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\EventParticipant\TShirtSizeRow
+                    title: _('T-shirt size')
+                arrival_ticket:
+                    type: logic
+                    title: _(Arrival ticket)
+                arrival_time:
+                    type: time
+                    title:  _(Arrival time)
+                    format: %H:%I
+                arrival_destination:
+                    type: string
+                    title: _('Arrival destination')
+                departure_time:
+                    type: time
+                    title: _(Departure time)
+                    format: %H:%I
+                departure_destination:
+                    type: string
+                    title: _('Departure destination')
+                departure_ticket:
+                    type: logic
+                    title: _(Departure ticket)
+                event_participant_id:
+                    type: primaryKey
+                    title:  _(Event participant Id)
+                lunch_count:
+                    type: int
+                    title: _('Počet baget k obědu')
+             linkFactories:
+                   detail: FKSDB\DBReflection\LinkFactories\ParticipantDetailLink
+                   edit: FKSDB\DBReflection\LinkFactories\ApplicationEditLink
          contestant_base:
-             ct_id:
-                 type: primaryKey
-                 title: _(Contestant Id)
-             year:
-                 type: string
-                 title: _(Year)
+             modelClassName: FKSDB\ORM\Models\ModelContestant
+             columnFactories:
+                ct_id:
+                    type: primaryKey
+                    title: _(Contestant Id)
+                year:
+                    type: string
+                    title: _(Year)
+             linkFactories:
+                 edit:
+                    destination: ':Org:Contestant:edit'
+                    params:
+                        contestId: contest_id
+                        id: ct_id
+                    title: Edit
          event_org:
-             event_org_id:
-                 accessKey: e_org_id
-                 type: primaryKey
-                 title:  _(Event org Id)
-             note:
-                 type: string
-                 title: _(Note)
+             modelClassName: FKSDB\ORM\Models\ModelEventOrg
+             columnFactories:
+                event_org_id:
+                    accessKey: e_org_id
+                    type: primaryKey
+                    title:  _(Event org Id)
+                note:
+                    type: string
+                    title: _(Note)
+             linkFactories:
+                 edit:
+                    destination: ':Event:Eventorg:edit'
+                    params:
+                        eventId: event_id
+                        id: e_org_id
+                    title: Edit
+                 detail:
+                     destination: ':Event:Eventorg:detail'
+                     params:
+                         eventId: event_id
+                         id: e_org_id
+                     title: Detail
          email_message:
-             email_message_id:
-                 type: primaryKey
-                 title: _(Message Id)
-             recipient:
-                 sender:
-                 type: email
-                 title: _(Recipient)
-             sender:
-                 type: email
-                 title: _(Sender)
-             reply_to:
-                 type: email
-                 title: _(Reply to)
-             subject:
-                 type: string
-                 title: _(Subject)
-             carbon_copy:
-                 type: email
-                 title: _(Cc)
-             blind_carbon_copy:
-                 type: email
-                 title: _(Bcc)
-             text:
-                 type: string
-                 title: _(Text)
-             state:
-                 type: state
-                 title: _(State)
-                 states:
-                      saved: [badge :'badge badge-1', label: Saved]
-                      waiting: [badge :'badge badge-2', label: Waiting]
-                      sent: [badge :'badge badge-3', label: Sent]
-                      failed: [badge :'badge badge-4', label: Failed]
-                      canceled: [badge :'badge badge-6', label: Canceled]
+             modelClassName: FKSDB\ORM\Models\ModelEmailMessage
+             columnFactories:
+                email_message_id:
+                    type: primaryKey
+                    title: _(Message Id)
+                recipient:
+                    sender:
+                    type: email
+                    title: _(Recipient)
+                sender:
+                    type: email
+                    title: _(Sender)
+                reply_to:
+                    type: email
+                    title: _(Reply to)
+                subject:
+                    type: string
+                    title: _(Subject)
+                carbon_copy:
+                    type: email
+                    title: _(Cc)
+                blind_carbon_copy:
+                    type: email
+                    title: _(Bcc)
+                text:
+                    type: string
+                    title: _(Text)
+                state:
+                    type: state
+                    title: _(State)
+                    states:
+                        saved: [badge :'badge badge-1', label: Saved]
+                        waiting: [badge :'badge badge-2', label: Waiting]
+                        sent: [badge :'badge badge-3', label: Sent]
+                        failed: [badge :'badge badge-4', label: Failed]
+                        canceled: [badge :'badge badge-6', label: Canceled]
              #created:
              #send:
          fyziklani_submit:
-             fyziklani_submit_id:
-                 type: primaryKey
-                 title: _(Submit Id)
-             state:
-                 type: state
-                 title: _(State)
-                 states:
-                     not_checked: [badge: 'badge badge-danger', label: 'not checked']
-                     checked: [badge: 'badge badge-success', label: 'checked']
-             created:
-                 type: dateTime
-                 title: _(Created)
-                 format: 'H:m:s d-M-Y'
-             modified:
-                 type: dateTime
-                 title: _(Modified)
-                 format: 'H:m:s d-M-Y'
-             points: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniSubmit\PointsRow
+             modelClassName: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit
+             columnFactories:
+                fyziklani_submit_id:
+                    type: primaryKey
+                    title: _(Submit Id)
+                state:
+                    type: state
+                    title: _(State)
+                    states:
+                        not_checked: [badge: 'badge badge-danger', label: 'not checked']
+                        checked: [badge: 'badge badge-success', label: 'checked']
+                created:
+                    type: dateTime
+                    title: _(Created)
+                    format: 'H:m:s d-M-Y'
+                modified:
+                    type: dateTime
+                    title: _(Modified)
+                    format: 'H:m:s d-M-Y'
+                points:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Fyziklani\FyziklaniSubmit\PointsRow
+                    title: _('Points')
          fyziklani_task:
              modelClassName: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask
              referencedAccess:
                 modelClassName: FKSDB\ORM\Models\IFyziklaniTaskReferencedModel
                 method: getFyziklaniTask
-             fields:
+             columnFactories:
                 fyziklani_task_id:
                     type: primaryKey
                     title: _(Task Id)
@@ -367,33 +595,40 @@ DBReflection:
                     type: string
                     title: _(Label)
          fyziklani_game_setup:
-             tasks_on_board:
-                 type: string
-                 title: Tasks on board
-             game_start:
-                 type: dateTime
-                 title: _(Game start)
-             game_end:
-                 type: dateTime
-                 title: _(Game end)
-             result_display:
-                 type: dateTime
-                 title: _(Results display)
-             result_hide:
-                 type: dateTime
-                 title: _(Results hide)
-             refresh_delay:
-                 type: int
-                 title: _(Refresh delay)
-                 suffix: ms
-             result_hard_display: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup\ResultHardDisplayRow
-             available_points: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniGameSetup\AvailablePointsRow
+             modelClassName: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup
+             columnFactories:
+                tasks_on_board:
+                    type: string
+                    title: Tasks on board
+                game_start:
+                    type: dateTime
+                    title: _(Game start)
+                game_end:
+                    type: dateTime
+                    title: _(Game end)
+                result_display:
+                    type: dateTime
+                    title: _(Results display)
+                result_hide:
+                    type: dateTime
+                    title: _(Results hide)
+                refresh_delay:
+                    type: int
+                    title: _(Refresh delay)
+                    suffix: ms
+                result_hard_display:
+                    type: logic
+                    title: _(Hard display)
+                available_points:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Fyziklani\FyziklaniGameSetup\AvailablePointsRow
+                    title: _('Available points')
          e_fyziklani_team:
              modelClassName: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
              referencedAccess:
                  modelClassName: FKSDB\ORM\Models\IFyziklaniTeamReferencedModel
                  method: getFyziklaniTeam
-             fields:
+             columnFactories:
                 e_fyziklani_team_id:
                   type: primaryKey
                   title: _(Team Id)
@@ -428,44 +663,125 @@ DBReflection:
                     type: string
                     title: _(Points)
                     omitInputField: true
-                game_lang: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\GameLangRow
-                force_a: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\ForceARow
-                password: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\PasswordRow
-                name: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NameRow
-                name_n_id: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\NameNIdRow
-                opened_submitting: FKSDB\Components\DatabaseReflection\Fyziklani\FyziklaniTeam\OpenedSubmittingRow
+                game_lang:
+                    type: string
+                    title: _('Game language')
+                force_a:
+                    type: logic
+                    title: _(Force A)
+                password:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Fyziklani\FyziklaniTeam\PasswordRow
+                    title: _('Password')
+                name:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Fyziklani\FyziklaniTeam\NameRow
+                    title: _('Team name')
+                name_n_id:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Fyziklani\FyziklaniTeam\NameNIdRow
+                    title: _('Team')
+                opened_submitting:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Fyziklani\FyziklaniTeam\OpenedSubmittingRow
+                    title: _('Submit opened?')
+             linkFactories:
+                detail:
+                    destination: ':Event:TeamApplication:detail'
+                    params:
+                       eventId: event_id
+                       id: e_fyziklani_team_id
+                    title: Detail
          stored_query:
-             qid: FKSDB\Components\DatabaseReflection\StoredQuery\StoredQuery\QIDRow
-             tags: FKSDB\Components\DatabaseReflection\StoredQuery\StoredQuery\TagsRow
+             modelClassName: FKSDB\ORM\Models\StoredQuery\ModelStoredQuery
+             columnFactories:
+                qid:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\StoredQuery\StoredQuery\QIDRow
+                    title: _('QID')
+                tags:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\StoredQuery\StoredQuery\TagsRow
+                    title: _('Tags')
+                sql:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\StoredQuery\StoredQuery\SQLColumnFactory
+                    title: _('SQL')
+                name:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\StoredQuery\StoredQuery\NameColumnFactory
+                    title: _('Query name')
+                query_id:
+                    type: primaryKey
+                    title: _(Query Id)
+                description:
+                    type: text
+                    title: _(Description)
+                php_post_proc:
+                    type: string
+                    title: _(PHP post processing)
+                    description: _('Název třídy pro zpracování výsledku v PHP. Lze upravit jen v databázi.')
+
          schedule_group:
-             schedule_group_type: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleGroup\ScheduleGroupTypeRow
-             start:
-                 type: dateTime
-                 title: _(Schedule start)
-             end:
-                 type: dateTime
-                 title: _(Schedule end)
-             name_cs:
-                 type: string
-                 title: _(Name cs)
-             name_en:
-                 type: string
-                 title: _(Name en)
+             referencedAccess:
+                modelClassName: FKSDB\ORM\Models\IScheduleGroupReferencedModel
+                method: getScheduleGroup
+             modelClassName: FKSDB\ORM\Models\Schedule\ModelScheduleGroup
+             columnFactories:
+                schedule_group_id:
+                    type: primaryKey
+                    title: _(Schedule group Id)
+                schedule_group_type:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Schedule\ScheduleGroup\ScheduleGroupTypeRow
+                    title: _(Type)
+                start:
+                    type: dateTime
+                    title: _(Schedule start)
+                end:
+                    type: dateTime
+                    title: _(Schedule end)
+                name_cs:
+                    type: string
+                    title: _(Name cs)
+                name_en:
+                    type: string
+                    title: _(Name en)
+                name:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Schedule\ScheduleGroup\NameColumnFactory
+                    title: _(Group name)
          schedule_item:
              modelClassName: FKSDB\ORM\Models\Schedule\ModelScheduleItem
              referencedAccess:
                 modelClassName: FKSDB\ORM\Models\IScheduleItemReferencedModel
                 method: getScheduleItem
-             fields:
-                require_id_number: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\RequireIdNumberRow
-                price_czk: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\PriceCZKRow
-                price_eur: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\PriceEURRow
+             columnFactories:
+                schedule_item_id:
+                    type: primaryKey
+                    title: _(Schedule item Id)
+                require_id_number:
+                    type: logic
+                    title: _(Require Id number)
+                price_czk:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Schedule\ScheduleItem\PriceCZKRow
+                    title: _(Price CZK)
+                price_eur:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Schedule\ScheduleItem\PriceEURRow
+                    title: _(Price EUR)
                 name_en:
                     type: string
                     title: _(Name en)
                 name_cs:
                     type: string
                     title: _(Name cs)
+                name:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Schedule\ScheduleItem\NameColumnFactory
+                    title: _(Item name)
+                    omitInputField: true
                 description_en:
                     type: string
                     title: _(Description en)
@@ -476,30 +792,63 @@ DBReflection:
                     type: int
                     title: _(Total capacity)
                     nullValueFormat: infinite
-                free_capacity: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\FreeCapacityRow
-                used_capacity: FKSDB\Components\DatabaseReflection\Tables\Schedule\ScheduleItem\UsedCapacityRow
+                free_capacity:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Schedule\ScheduleItem\FreeCapacityRow
+                    title: _(Free capacity)
+                used_capacity:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Schedule\ScheduleItem\UsedCapacityRow
+                    title: _(Used capacity)
          teacher:
-             state: FKSDB\Components\DatabaseReflection\Tables\Teacher\StateRow
-             since: FKSDB\Components\DatabaseReflection\Tables\Teacher\SinceRow
-             until: FKSDB\Components\DatabaseReflection\Tables\Teacher\UntilRow
-             number_brochures:
-                 type: int
-                 title: _(Number of brochures)
-                 description: _('Number of brochures/propagation items, that he wants to send.')
-             note:
-                 type: text
-                 title: _(Note)
+             modelClassName: FKSDB\ORM\Models\ModelTeacher
+             columnFactories:
+                 state:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Teacher\StateRow
+                    title: _('Cooperation status')
+                 since:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Teacher\SinceRow
+                    title: _('Teaches since')
+                 until:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Teacher\UntilRow
+                    title: _('Teaches until')
+                 number_brochures:
+                    type: int
+                    title: _(Number of brochures)
+                    description: _('Number of brochures/propagation items, that he wants to send.')
+                 note:
+                    type: text
+                    title: _(Note)
+             linkFactories:
+                 edit:
+                     destination: :Org:Teacher:edit
+                     params:
+                         id: teacher_id
+                     title: Edit
+                 detail:
+                     destination: :Org:Teacher:detail
+                     params:
+                         id: teacher_id
+                     title: Detail
          task_contribution:
-             type:
-                type: string
-                title: _(Type)
+             modelClassName: FKSDB\ORM\Models\ModelTaskContribution
+             columnFactories:
+                 type:
+                    type: string
+                    title: _(Type)
          task:
              modelClassName: FKSDB\ORM\Models\ModelTask
              referencedAccess:
                 modelClassName: FKSDB\ORM\Models\ITaskReferencedModel
                 method: getTask
-             fields:
-                 fq_name: FKSDB\Components\DatabaseReflection\Tables\Task\FQNameRow
+             columnFactories:
+                 fq_name:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Task\FQNameRow
+                    title: _('Task')
                  series:
                     type: string
                     title: _(Series)
@@ -523,76 +872,29 @@ DBReflection:
              referencedAccess:
                 modelClassName: FKSDB\ORM\Models\IContestReferencedModel
                 method: getContest
-             fields:
-                  contestBadge: FKSDB\Components\DatabaseReflection\ReferencedRows\ContestRow
+             columnFactories:
+                 contest:
+                    type: class
+                    class: FKSDB\DBReflection\ColumnFactories\Contest\ContestColumnFactory
+                    title: _('Contest')
          school:
              modelClassName: FKSDB\ORM\Models\ModelSchool
              referencedAccess:
                 modelClassName: FKSDB\ORM\Models\ISchoolReferencedModel
                 method: getSchool
-             fields:
+             columnFactories:
                  school:
                      type: string
                      title: _(School)
                      accessKey: name_abbrev
-
-    links:
-        payment.detail:
-            destination: ':Event:Payment:detail'
-            params:
-                eventId: event_id
-                id: payment_id
-            title: Detail
-            model: FKSDB\ORM\Models\ModelPayment
-        org.detail:
-            destination: ':Org:Org:detail'
-            params:
-                contestId: contest_id
-                id: org_id
-            title: Detail
-            model: FKSDB\ORM\Models\ModelOrg
-        org.edit:
-            destination: ':Org:Org:edit'
-            params:
-                contestId: contest_id
-                id: org_id
-            title: Edit
-            model: FKSDB\ORM\Models\ModelOrg
-        contestatnt_base.edit:
-            destination: ':Org:Contestant:edit'
-            params:
-                contestId: contest_id
-                id: ct_id
-            title: Edit
-            model: FKSDB\ORM\Models\ModelContestant
-        event_participant.detail: FKSDB\Components\DatabaseReflection\LinkFactories\ParticipantDetailLink
-        event_participant.list: FKSDB\Components\DatabaseReflection\LinkFactories\ParticipantListLink
-        fyziklani_team.detail:
-            destination: ':Event:TeamApplication:detail'
-            params:
-                eventId: event_id
-                id: e_fyziklani_team_id
-            title: Detail
-            model: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
-    details:
-        fyziklani.submit:
-            -
-                fields:
-                   - fyziklani_submit.fyziklani_submit_id
-                   - e_fyziklani_team.opened_submitting
-                   - e_fyziklani_team.name
-                   - e_fyziklani_team.e_fyziklani_team_id
-            -
-                headline: Task
-                fields:
-                   - fyziklani_task.fyziklani_task_id
-                   - fyziklani_task.name
-                   - fyziklani_task.label
-            -
-                fields:
-                   - fyziklani_submit.points
-                   - fyziklani_submit.state
-            -
-                fields:
-                   - fyziklani_submit.created
-                   - fyziklani_submit.modified
+             linkFactories:
+                 edit:
+                     destination: :Common:School:edit
+                     params:
+                         id: school_id
+                     title: Edit
+                 detail:
+                     destination: :Common:School:detail
+                     params:
+                         id: school_id
+                     title: Detail

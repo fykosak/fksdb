@@ -2,15 +2,16 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Entity\Teacher\TeacherForm;
+use FKSDB\Components\Controls\Entity\TeacherFormComponent;
 use FKSDB\Components\Grids\TeachersGrid;
+use FKSDB\Entity\ModelNotFoundException;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
 use FKSDB\UI\PageTitle;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
+use Nette\Security\IResource;
 
 /**
  * Class TeacherPresenter
@@ -20,25 +21,18 @@ use Nette\Application\UI\Control;
 class TeacherPresenter extends BasePresenter {
     use EntityPresenterTrait;
 
-    /**
-     * @var ServiceTeacher
-     */
-    private $serviceTeacher;
+    private ServiceTeacher $serviceTeacher;
 
-    /**
-     * @param ServiceTeacher $serviceTeacher
-     * @return void
-     */
-    public function injectServiceTeacher(ServiceTeacher $serviceTeacher) {
+    final public function injectServiceTeacher(ServiceTeacher $serviceTeacher): void {
         $this->serviceTeacher = $serviceTeacher;
     }
 
     /**
      * @return void
-     * @throws BadRequestException
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
-    public function titleEdit() {
+    public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Edit teacher %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-pencil'));
     }
 
@@ -52,22 +46,26 @@ class TeacherPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
      * @throws ForbiddenRequestException
      */
-    public function titleDetail() {
+    public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(_('Teacher detail'), 'fa fa-graduation-cap'));
     }
 
-    public function renderDetail() {
+    /**
+     * @return void
+     * @throws ModelNotFoundException
+     */
+    public function renderDetail(): void {
         $this->template->model = $this->getEntity();
     }
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws ModelNotFoundException
+     * @throws BadTypeException
      */
-    public function actionEdit() {
+    public function actionEdit(): void {
         $this->traitActionEdit();
     }
 
@@ -75,19 +73,20 @@ class TeacherPresenter extends BasePresenter {
         return new TeachersGrid($this->getContext());
     }
 
-    protected function createComponentCreateForm(): Control {
-        return new TeacherForm($this->getContext(), true);
+    protected function createComponentCreateForm(): TeacherFormComponent {
+        return new TeacherFormComponent($this->getContext(), true);
     }
 
-    protected function createComponentEditForm(): Control {
-        return new TeacherForm($this->getContext(), false);
+    protected function createComponentEditForm(): TeacherFormComponent {
+        return new TeacherFormComponent($this->getContext(), false);
     }
 
     /**
-     * @param $resource
-     * @param string $privilege
+     * @param IResource|string|null $resource
+     * @param string|null $privilege
      * @return bool
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
@@ -100,5 +99,4 @@ class TeacherPresenter extends BasePresenter {
     protected function getModelResource(): string {
         return ModelTeacher::RESOURCE_ID;
     }
-
 }

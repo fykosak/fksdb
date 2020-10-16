@@ -7,33 +7,33 @@ $container = require '../../../bootstrap.php';
 use FKSDB\Exports\ExportFormatFactory;
 use FKSDB\Exports\Formats\AESOPFormat;
 use FKSDB\Exports\Formats\PlainTextResponse;
+use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\StoredQuery\StoredQueryFactory;
 use FKSDB\StoredQuery\StoredQueryPostProcessing;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\StoredQuery\StoredQueryParameter;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
+use Nette\DI\Container;
 use Tester\Assert;
 
 class AESOPFormatTest extends DatabaseTestCase {
 
-    /**
-     * @var AESOPFormat
-     */
-    private $fixture;
+    private AESOPFormat $fixture;
 
-    protected function setUp() {
+    protected function setUp(): void {
+        global $container;
         parent::setUp();
         /** @var ExportFormatFactory $exportFactory */
-        $exportFactory = $this->getContext()->getByType(ExportFormatFactory::class);
+        $exportFactory = $this->getContainer()->getByType(ExportFormatFactory::class);
         /** @var StoredQueryFactory $queryFactory */
-        $queryFactory = $this->getContext()->getByType(StoredQueryFactory::class);
+        $queryFactory = $this->getContainer()->getByType(StoredQueryFactory::class);
         //$queryFactory->setPresenter(new MockSeriesPresenter());
 
         $parameters = [
             'category' => new MockQueryParameter('category'),
         ];
-        $storedQuery = $queryFactory->createQueryFromSQL(new MockSeriesPresenter(), 'SELECT 1, \'ahoj\' FROM dual', $parameters, MockProcessing::class);
+        $storedQuery = $queryFactory->createQueryFromSQL(new MockSeriesPresenter($container), 'SELECT 1, \'ahoj\' FROM dual', $parameters, MockProcessing::class);
 
         // AESOP format requires QID
         $storedQuery->setQId('aesop.ct');
@@ -41,11 +41,11 @@ class AESOPFormatTest extends DatabaseTestCase {
         $this->fixture = $exportFactory->createFormat(ExportFormatFactory::AESOP, $storedQuery);
     }
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         parent::tearDown();
     }
 
-    public function testResponse() {
+    public function testResponse(): void {
         $response = $this->fixture->getResponse();
 
         Assert::type(PlainTextResponse::class, $response);
@@ -54,6 +54,11 @@ class AESOPFormatTest extends DatabaseTestCase {
 }
 
 class MockSeriesPresenter implements ISeriesPresenter {
+    private ModelContest $contest;
+
+    public function __construct(Container $container) {
+        $this->contest = $container->getByType(ServiceContest::class)->findByPrimary(1);
+    }
 
     public function getSelectedAcademicYear(): int {
         return 2000;
@@ -62,11 +67,8 @@ class MockSeriesPresenter implements ISeriesPresenter {
     /**
      * @return ModelContest|object
      */
-    public function getSelectedContest() {
-        return (object)[
-            'contest_id' => 1,
-            'name' => 'FYKOS',
-        ];
+    public function getSelectedContest(): ModelContest {
+        return $this->contest;
     }
 
     public function getSelectedSeries(): int {
@@ -87,14 +89,14 @@ class MockSeriesPresenter implements ISeriesPresenter {
 }
 
 class MockQueryParameter extends StoredQueryParameter {
-    public function __construct($name) {
+    public function __construct(string $name) {
         parent::__construct($name, null, \PDO::PARAM_STR);
     }
 }
 
 class MockProcessing extends StoredQueryPostProcessing {
 
-    public function getMaxPoints() {
+    public function getMaxPoints(): int {
         return 0;
     }
 
@@ -102,7 +104,7 @@ class MockProcessing extends StoredQueryPostProcessing {
         return '';
     }
 
-    public function processData(\PDOStatement $data) {
+    public function processData(\PDOStatement $data): \PDOStatement {
         return $data;
     }
 

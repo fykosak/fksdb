@@ -11,24 +11,24 @@ use Nette\Application\UI\Control;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 trait ChartPresenterTrait {
-    /**
-     * @var IChart
-     */
-    protected $selectedChart;
 
-    public function titleChart() {
+    protected IChart $selectedChart;
+
+    private array $chartComponents;
+
+    public function titleChart(): void {
         $this->setPageTitle(new PageTitle($this->selectedChart->getTitle(), 'fa fa-pie-chart'));
     }
 
-    public function titleList() {
+    public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('Charts'), 'fa fa fa-pie-chart'));
     }
 
-    public function renderChart() {
+    public function renderChart(): void {
         $this->template->chart = $this->selectedChart;
     }
 
-    public function renderList() {
+    public function renderList(): void {
         $this->template->charts = $this->getCharts();
     }
 
@@ -36,19 +36,16 @@ trait ChartPresenterTrait {
      * @return IChart[]
      */
     protected function getCharts(): array {
-        static $chartComponents;
-        if (!$chartComponents) {
-            $chartComponents = $this->registerCharts();
-        }
-        return $chartComponents;
+        $this->chartComponents = $this->chartComponents ?? $this->registerCharts();
+        return $this->chartComponents;
     }
 
-    protected function selectChart() {
-        foreach ($this->getCharts() as $action => $chart) {
-            if ($action === $this->getAction()) {
-                $this->selectedChart = $chart;
-                $this->setView('chart');
-            }
+    protected function selectChart(): void {
+        $charts = $this->getCharts();
+        $action = $this->getAction();
+        if (isset($charts[$action])) {
+            $this->selectedChart = $charts[$action];
+            $this->setView('chart');
         }
     }
 
@@ -56,9 +53,9 @@ trait ChartPresenterTrait {
         return $this->selectedChart->getControl();
     }
 
-    abstract public function authorizedList();
+    abstract public function authorizedList(): void;
 
-    abstract public function authorizedChart();
+    abstract public function authorizedChart(): void;
 
     /**
      * @return IChart[]

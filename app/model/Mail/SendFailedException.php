@@ -1,8 +1,7 @@
 <?php
 
-namespace Mail;
+namespace FKSDB\Mail;
 
-use Nette\Mail\Message;
 use RuntimeException;
 
 /**
@@ -12,18 +11,8 @@ use RuntimeException;
  */
 class SendFailedException extends RuntimeException {
 
-    /**
-     * @var Message
-     */
-    public $message;
-
-    /**
-     * SendFailedException constructor.
-     * @param null $previous
-     */
-    public function __construct($previous = null) {
-        $message = _('Nepodařilo se odeslat e-mail.');
-        parent::__construct($message, null, $previous);
+    public function __construct(?\Throwable $previous = null) {
+        parent::__construct(_('Nepodařilo se odeslat e-mail.'), null, $previous);
     }
 
 }

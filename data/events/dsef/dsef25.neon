@@ -1,7 +1,6 @@
 parameters:
     events:
         dsef25:
-            appCond: or(regOpen(), role('admin'))
             person:
                 person:
                     other_name:
@@ -26,60 +25,31 @@ events:
     dsef25:
         event_type_id: 2
         eventYears: [25]
-        tableLayout: event.grid
         formLayout: dsef.form
-        paramScheme:
-            notifyBcc:
-                default: dsef@fykos.cz
-            notifyFrom:
-                default: Den s experimentální fyzikou <dsef@fykos.cz>
+        paramScheme: %events.defaultDsef.paramScheme%
 
         baseMachines:
             PARTICIPANT_DSEF:
                 service: @event.ServiceMDsefParticipant
 
-                states:
-                    applied: _('Přihlášen')
-                    participated: _('Účastnil se')
-                    missed: _('Nepřijel')
-                    cancelled: _('Zrušen')
+                states: %events.defaultDsef.states%
 
-                transitions:
-                    __init->applied:
-                        condition: %events.dsef25.appCond%
-                        label: _('Přihlásit účastníka')
-                        onExecuted:
-                            - FKSDB\Events\Transitions\MailSender(confirmation, .self)
-                    applied->participated:
-                        condition: and(role('admin'),eventWas())
-                        label: _('Prezentovat')
-                    applied->missed:
-                        condition: and(role('admin'),eventWas())
-                        label: _('Nepřijel')
-                        behaviorType: danger
-                    applied->cancelled:
-                        condition: role('admin')
-                        label: _('Zrušit přihlášku')
-                        behaviorType: danger
-                    cancelled->__terminated:
-                        condition: role('admin')
-                        label: _('Smazat přihlášku')
+                transitions: %events.defaultDsef.transitions%
 
                 fields:
                     person_id:
-                        label: _('Osoba')
+                        label: _('Person')
                         required: true
-                        modifiable: %events.dsef25.appCond%
+                        modifiable: %events.defaultDsef.appCond%
                         default: fromLogin
                         factory: RefPerson(%events.dsef25.person%, email, or(state('__init'),role('admin')), role('admin'), false)
                     e_dsef_group_id:
                         label: _('Preferovaná skupina')
                         required: true
-                        modifiable: %events.dsef25.appCond%
+                        modifiable: %events.defaultDsef.appCond%
                         factory: Chooser(_('Zvolit skupinu'), FKSDB\Events\Spec\Dsef\GroupOptions())
                     lunch_count:
-                        label:  _('Počet baget k obědu')
-                        modifiable: %events.dsef25.appCond%
+                        modifiable: %events.defaultDsef.appCond%
                         description:  _('à 30 Kč')
 
 

@@ -7,10 +7,11 @@ use FKSDB\Events\EventDispatchFactory;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Tables\MultiTableSelection;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Events\Model\Holder\Holder;
-use Nette\Application\BadRequestException;
+use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
@@ -28,77 +29,51 @@ use Nette\SmartObject;
 class SingleEventSource implements IHolderSource {
     use SmartObject;
 
-    /**
-     * @var ModelEvent
-     */
-    private $event;
+    private ModelEvent $event;
 
-    /**
-     * @var Container
-     */
-    private $container;
+    private Container $container;
 
-    /**
-     * @var IModel[]
-     */
-    private $primaryModels = null;
-
-    /**
-     *
-     * @var IModel[][]
-     */
-    private $secondaryModels = null;
-
-    /**
-     * @var TypedTableSelection
-     */
+    private EventDispatchFactory $eventDispatchFactory;
+    /** @var MultiTableSelection|TypedTableSelection|Selection */
     private $primarySelection;
 
-    /**
-     * @var Holder
-     */
-    private $dummyHolder;
+    private Holder $dummyHolder;
 
-    /**
-     *
-     * @var Holder[]
-     */
+    /** @var IModel[] */
+    private $primaryModels = null;
+
+    /** @var IModel[][] */
+    private $secondaryModels = null;
+
+    /** @var Holder[] */
     private $holders = [];
 
     /**
      * SingleEventSource constructor.
      * @param ModelEvent $event
      * @param Container $container
+     * @param EventDispatchFactory $eventDispatchFactory
      * @throws NeonSchemaException
-     * @throws BadRequestException
      */
-    public function __construct(ModelEvent $event, Container $container) {
+    public function __construct(ModelEvent $event, Container $container, EventDispatchFactory $eventDispatchFactory) {
         $this->event = $event;
         $this->container = $container;
-        /** @var EventDispatchFactory $factory */
-        $factory = $this->container->getByType(EventDispatchFactory::class);
-        $this->dummyHolder = $factory->getDummyHolder($this->event);
-
+        $this->eventDispatchFactory = $eventDispatchFactory;
+        $this->dummyHolder = $eventDispatchFactory->getDummyHolder($this->event);
         $primaryHolder = $this->dummyHolder->getPrimaryHolder();
-        $eventIdColumn = $primaryHolder->getEventId();
+        $eventIdColumn = $primaryHolder->getEventIdColumn();
         $this->primarySelection = $primaryHolder->getService()->getTable()->where($eventIdColumn, $this->event->getPrimary());
     }
 
-    /**
-     * @return ModelEvent
-     */
-    public function getEvent() {
+    public function getEvent(): ModelEvent {
         return $this->event;
     }
 
-    /**
-     * @return Holder
-     */
-    public function getDummyHolder() {
+    public function getDummyHolder(): Holder {
         return $this->dummyHolder;
     }
 
-    private function loadData() {
+    private function loadData(): void {
         $joinToCheck = false;
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
             if ($joinToCheck === false) {
@@ -114,7 +89,7 @@ class SingleEventSource implements IHolderSource {
         $joinValues = array_keys($this->primaryModels);
 
         // load secondaries
-        /** @var IService[]|BaseHolder[] $group */
+        /** @var IService[]|BaseHolder[][] $group */
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
             /** @var TypedTableSelection $secondarySelection */
             $secondarySelection = $group['service']->getTable()->where($group['joinOn'], $joinValues);
@@ -137,10 +112,9 @@ class SingleEventSource implements IHolderSource {
 
     /**
      * @return void
-     * @throws BadRequestException
      * @throws NeonSchemaException
      */
-    private function createHolders() {
+    private function createHolders(): void {
         $cache = [];
         foreach ($this->dummyHolder->getGroupedSecondaryHolders() as $key => $group) {
             foreach ($this->secondaryModels[$key] as $secondaryPK => $secondaryModel) {
@@ -155,9 +129,7 @@ class SingleEventSource implements IHolderSource {
             }
         }
         foreach ($this->primaryModels as $primaryPK => $primaryModel) {
-            /** @var EventDispatchFactory $factory */
-            $factory = $this->container->getByType(EventDispatchFactory::class);
-            $holder = $factory->getDummyHolder($this->event);
+            $holder = $this->eventDispatchFactory->getDummyHolder($this->event);
             $holder->setModel($primaryModel, isset($cache[$primaryPK]) ? $cache[$primaryPK] : []);
             $this->holders[$primaryPK] = $holder;
         }
@@ -178,7 +150,8 @@ class SingleEventSource implements IHolderSource {
             'limit' => false,
             'count' => true,
         ];
-        $result = call_user_func_array([$this->primarySelection, $name], $args);
+        $result = $this->primarySelection->{$name}(...$args);
+        // $result = call_user_func_array([$this->primarySelection, $name], $args);
         $this->primaryModels = null;
 
         if ($delegated[$name]) {
@@ -190,7 +163,6 @@ class SingleEventSource implements IHolderSource {
 
     /**
      * @return Holder[]
-     * @throws BadRequestException
      * @throws NeonSchemaException
      */
     public function getHolders(): array {

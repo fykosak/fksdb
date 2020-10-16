@@ -7,30 +7,20 @@ use Nette\SmartObject;
 
 /**
  * Class Message
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class Message {
     use SmartObject;
 
-    const LVL_DANGER = ILogger::ERROR;
-    const LVL_SUCCESS = ILogger::SUCCESS;
-    const LVL_WARNING = ILogger::WARNING;
-    const LVL_INFO = ILogger::INFO;
-    /**
-     * @var string
-     */
-    private $message;
+    public const LVL_DANGER = ILogger::ERROR;
+    public const LVL_SUCCESS = ILogger::SUCCESS;
+    public const LVL_WARNING = ILogger::WARNING;
+    public const LVL_INFO = ILogger::INFO;
 
-    /**
-     * @var string
-     */
-    private $level;
+    private string $message;
 
-    /**
-     * Message constructor.
-     * @param string $message
-     * @param string $level
-     */
+    private string $level;
+
     public function __construct(string $message, string $level) {
         $this->message = $message;
         $this->level = $level;
@@ -49,15 +39,11 @@ class Message {
      * @return void
      * @deprecated
      */
-    public function setText(string $message) {
+    public function setText(string $message): void {
         $this->message = $message;
     }
 
-    /**
-     * @param string $message
-     * @return void
-     */
-    public function setMessage(string $message) {
+    public function setMessage(string $message): void {
         $this->message = $message;
     }
 
@@ -69,11 +55,7 @@ class Message {
         return $this->level;
     }
 
-    /**
-     * @param string $level
-     * @return void
-     */
-    public function setLevel(string $level) {
+    public function setLevel(string $level): void {
         $this->level = $level;
     }
 

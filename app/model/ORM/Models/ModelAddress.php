@@ -16,4 +16,7 @@ use Nette\Database\Table\ActiveRow;
  */
 class ModelAddress extends AbstractModelSingle {
 
+    public function getRegion(): ?ModelRegion {
+        return $this->region_id ? ModelRegion::createFromActiveRow($this->region) : null;
+    }
 }

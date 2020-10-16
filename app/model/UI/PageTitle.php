@@ -9,16 +9,10 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PageTitle extends Title {
-    /** @var string|null */
-    public $subTitle;
 
-    /**
-     * PageTitle constructor.
-     * @param string $title
-     * @param string $icon
-     * @param string $subTitle
-     */
-    public function __construct(string $title = '', string $icon = '', string $subTitle = null) {
+    public ?string $subTitle;
+
+    public function __construct(string $title = '', string $icon = '', ?string $subTitle = null) {
         parent::__construct($title, $icon);
         $this->subTitle = $subTitle;
     }

@@ -4,9 +4,10 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\IModel;
-use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 
 /**
@@ -19,53 +20,55 @@ use Nette\Application\UI\Form;
  */
 abstract class EntityPresenter extends BasePresenter {
 
-    const COMP_EDIT_FORM = 'editComponent';
-    const COMP_CREATE_FORM = 'createComponent';
-    const COMP_GRID = 'grid';
+    public const COMP_EDIT_FORM = 'editComponent';
+    public const COMP_CREATE_FORM = 'createComponent';
+
     /**
      * @var int
      * @persistent
      */
     public $id;
-    /**
-     * @var IModel
-     */
-    private $model;
+
+    private ?IModel $model;
 
     /**
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
-    public function authorizedCreate() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModelResource(), 'create', $this->getSelectedContest()));
+    public function authorizedCreate(): void {
+        $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModelResource(), 'create', $this->getSelectedContest()));
     }
 
     /**
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
-    public function authorizedEdit() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModel(), 'edit', $this->getSelectedContest()));
+    public function authorizedEdit(): void {
+        $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModel(), 'edit', $this->getSelectedContest()));
     }
 
     /**
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
-    public function authorizedList() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModelResource(), 'list', $this->getSelectedContest()));
+    public function authorizedList(): void {
+        $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModelResource(), 'list', $this->getSelectedContest()));
     }
 
     /**
-     * @param $id
-     * @throws BadRequestException
+     * @param int $id
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
-    public function authorizedDelete($id) {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed($this->getModel(), 'delete', $this->getSelectedContest()));
+    public function authorizedDelete($id): void {
+        $this->setAuthorized($this->contestAuthorizator->isAllowed($this->getModel(), 'delete', $this->getSelectedContest()));
     }
 
     /**
-     * @param $id
-     * @throws BadRequestException
+     * @param int $id
+     * @throws BadTypeException
      */
-    public function renderEdit($id) {
+    public function renderEdit($id): void {
         /** @var FormControl $component */
         $component = $this->getComponent(self::COMP_EDIT_FORM);
         $form = $component->getForm();
@@ -73,9 +76,9 @@ abstract class EntityPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
-    public function renderCreate() {
+    public function renderCreate(): void {
         /** @var FormControl $component */
         $component = $this->getComponent(self::COMP_CREATE_FORM);
         $form = $component->getForm();
@@ -86,18 +89,14 @@ abstract class EntityPresenter extends BasePresenter {
      * @return AbstractModelSingle|null|IModel
      * @deprecated
      */
-    final public function getModel() {
-        if (!$this->model) {
+    final public function getModel(): ?IModel {
+        if (!isset($this->model)) {
             $this->model = $this->getParameter('id') ? $this->loadModel($this->getParameter('id')) : null;
         }
         return $this->model;
     }
-    /**
-     * @param IModel|null $model
-     * @param Form $form
-     * @return void
-     */
-    protected function setDefaults(IModel $model = null, Form $form) {
+
+    protected function setDefaults(?IModel $model, Form $form): void {
         if (!$model) {
             return;
         }
@@ -105,19 +104,16 @@ abstract class EntityPresenter extends BasePresenter {
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @return AbstractModelSingle
      */
-    abstract protected function loadModel($id);
+    abstract protected function loadModel($id): ?IModel;
 
     abstract protected function createComponentEditComponent(): FormControl;
 
     abstract protected function createComponentCreateComponent(): FormControl;
 
-    /**
-     * @return BaseGrid
-     */
-    abstract protected function createComponentGrid();
+    abstract protected function createComponentGrid(): BaseGrid;
 
     abstract protected function getModelResource(): string;
 }

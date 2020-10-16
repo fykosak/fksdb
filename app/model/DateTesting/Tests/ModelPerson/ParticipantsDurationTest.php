@@ -14,21 +14,20 @@ use FKSDB\DataTesting\TestLog;
  */
 class ParticipantsDurationTest extends PersonTest {
 
-    /**
-     * @param ILogger $logger
-     * @param ModelPerson $person
-     * @return void
-     */
-    public function run(ILogger $logger, ModelPerson $person) {
-        $contestsDefs = [
-            ModelContest::ID_FYKOS => ['thresholds' => [4, 6]],
-            ModelContest::ID_VYFUK => ['thresholds' => [4, 6]]
-        ];
+    private const CONTESTS = [
+        ModelContest::ID_FYKOS => ['thresholds' => [4, 6]],
+        ModelContest::ID_VYFUK => ['thresholds' => [4, 6]],
+    ];
 
-        foreach ($contestsDefs as $contestId => $contestsDef) {
+    public function __construct() {
+        parent::__construct('participants_duration', _('Participate events'));
+    }
+
+    public function run(ILogger $logger, ModelPerson $person): void {
+        foreach (self::CONTESTS as $contestId => $contestDef) {
             $max = null;
             $min = null;
-            foreach ($person->getEventParticipant() as $row) {
+            foreach ($person->getEventParticipants() as $row) {
                 $model = ModelEventParticipant::createFromActiveRow($row);
                 $event = $model->getEvent();
                 if ($event->getEventType()->contest_id !== $contestId) {
@@ -44,10 +43,9 @@ class ParticipantsDurationTest extends PersonTest {
             $logger->log(new TestLog(
                 $this->getTitle(),
                 \sprintf('Person participate %d years in the events of contestId %d', $delta, $contestId),
-                $this->evaluateThresholds($delta, $contestsDef['thresholds'])
+                $this->evaluateThresholds($delta, $contestDef['thresholds'])
             ));
         }
-
     }
 
     final private function evaluateThresholds(int $delta, array $thresholds): string {
@@ -58,13 +56,5 @@ class ParticipantsDurationTest extends PersonTest {
             return TestLog::LVL_WARNING;
         }
         return TestLog::LVL_DANGER;
-    }
-
-    public function getAction(): string {
-        return 'participants_duration';
-    }
-
-    public function getTitle(): string {
-        return _('Participate events');
     }
 }

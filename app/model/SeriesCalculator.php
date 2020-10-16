@@ -11,32 +11,15 @@ use Nette\Utils\DateTime;
  */
 class SeriesCalculator {
 
-    /**
-     * @var ServiceTask
-     */
-    private $serviceTask;
+    private ServiceTask $serviceTask;
 
-    /**
-     *
-     * @var YearCalculator
-     */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
-    /**
-     * FKSDB\SeriesCalculator constructor.
-     * @param ServiceTask $serviceTask
-     * @param YearCalculator $yearCalculator
-     */
     public function __construct(ServiceTask $serviceTask, YearCalculator $yearCalculator) {
         $this->serviceTask = $serviceTask;
         $this->yearCalculator = $yearCalculator;
     }
 
-    /**
-     * @param ModelContest $contest
-     * @return int
-     * @throws \Exception
-     */
     public function getCurrentSeries(ModelContest $contest): int {
         $year = $this->yearCalculator->getCurrentYear($contest);
         $currentSeries = $this->serviceTask->getTable()->where([
@@ -68,7 +51,7 @@ class SeriesCalculator {
     public function getTotalSeries(ModelContest $contest, $year): int {
         //TODO allow variance?
         if ($contest->contest_id === ModelContest::ID_VYFUK && $year >= 9) { //TODO Think of better solution of deciding
-            return 8;
+            return 9;
         } else {
             return 6;
         }

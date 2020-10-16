@@ -12,8 +12,8 @@ use Nette\Forms\Controls\SelectBox;
  */
 class CaptchaBox extends SelectBox {
 
-    const VALUE_YES = 'xyz';
-    const VALUE_NO = 'pqrt';
+    private const VALUE_YES = 'xyz';
+    private const VALUE_NO = 'pqrt';
 
     public function __construct() {
         parent::__construct(_('Jsi robot?'), [
@@ -21,11 +21,10 @@ class CaptchaBox extends SelectBox {
             self::VALUE_YES => _('ano'),
         ]);
 
-        $this->addRule(function(BaseControl $control) {
-                    return $control->getValue() == self::VALUE_NO;
-                }, _('Tento formulář je jenom pro lidi.'));
+        $this->addRule(function (BaseControl $control): bool {
+            return $control->getValue() == self::VALUE_NO;
+        }, _('This form is for people only.'));
 
         $this->setDefaultValue(self::VALUE_YES);
     }
-
 }

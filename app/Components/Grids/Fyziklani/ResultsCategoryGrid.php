@@ -19,36 +19,19 @@ use NiftyGrid\DuplicateColumnException;
  */
 class ResultsCategoryGrid extends BaseGrid {
 
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /**
-     * @var string
-     */
-    private $category;
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    /**
-     * FyziklaniSubmitsGrid constructor.
-     * @param ModelEvent $event
-     * @param string $category
-     * @param Container $container
-     */
+    private ModelEvent $event;
+
+    private string $category;
+
     public function __construct(ModelEvent $event, string $category, Container $container) {
         parent::__construct($container);
         $this->event = $event;
         $this->category = $category;
     }
 
-    /**
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @return void
-     */
-    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    final public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
@@ -66,7 +49,7 @@ class ResultsCategoryGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->paginate = false;

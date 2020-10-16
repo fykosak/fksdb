@@ -1,6 +1,6 @@
 <?php
 
-namespace Authorization\Assertions;
+namespace FKSDB\Authorization\Assertions;
 
 use Nette\Database\Context;
 use Nette\Security\IUserStorage;
@@ -12,11 +12,7 @@ use Nette\Security\IUserStorage;
  * @deprecated
  */
 class EventOrgByYearAssertion extends AbstractEventOrgAssertion {
-    /**
-     * EventOrgByYearAssertion constructor.
-     * @param IUserStorage $user
-     * @param Context $connection
-     */
+
     public function __construct(IUserStorage $user, Context $connection) {
         parent::__construct('year', $user, $connection);
     }

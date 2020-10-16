@@ -1,16 +1,15 @@
 <?php
 
-namespace Persons\Deduplication;
+namespace FKSDB\Persons\Deduplication;
 
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
-use Nette\Database\Connection;
 use Nette\Database\Context;
 use Nette\Database\Conventions\AmbiguousReferenceKeyException;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
-use Persons\Deduplication\MergeStrategy\CannotMergeException;
-use Persons\Deduplication\MergeStrategy\IMergeStrategy;
+use FKSDB\Persons\Deduplication\MergeStrategy\CannotMergeException;
+use FKSDB\Persons\Deduplication\MergeStrategy\IMergeStrategy;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -22,62 +21,26 @@ use Persons\Deduplication\MergeStrategy\IMergeStrategy;
  */
 class TableMerger {
 
-    /**
-     * @var string
-     */
-    private $table;
+    private string $table;
 
-    /**
-     * @var Merger
-     */
-    private $merger;
+    private Merger $merger;
 
-    /**
-     * @var Connection
-     */
-    private $connection;
-    /**
-     * @var Context
-     */
-    private $context;
+    private Context $context;
 
-    /**
-     * @var ActiveRow
-     */
-    private $trunkRow;
+    private ActiveRow $trunkRow;
 
-    /**
-     * @var ActiveRow
-     */
-    private $mergedRow;
+    private ActiveRow $mergedRow;
 
-    /**
-     * @var IMergeStrategy[]
-     */
-    private $columnMergeStrategies = [];
+    /** @var IMergeStrategy[] */
+    private array $columnMergeStrategies = [];
 
-    /**
-     * @var IMergeStrategy
-     */
-    private $globalMergeStrategy;
+    private IMergeStrategy $globalMergeStrategy;
 
-    /**
-     * @var ILogger
-     */
-    private $logger;
+    private ILogger $logger;
 
-    /**
-     * TableMerger constructor.
-     * @param $table
-     * @param Merger $merger
-     * @param Context $context
-     * @param IMergeStrategy $globalMergeStrategy
-     * @param ILogger $logger
-     */
-    public function __construct($table, Merger $merger, Context $context, IMergeStrategy $globalMergeStrategy, ILogger $logger) {
+    public function __construct(string $table, Merger $merger, Context $context, IMergeStrategy $globalMergeStrategy, ILogger $logger) {
         $this->table = $table;
         $this->merger = $merger;
-        $this->connection = $context->getConnection();
         $this->context = $context;
         $this->globalMergeStrategy = $globalMergeStrategy;
         $this->logger = $logger;
@@ -87,21 +50,12 @@ class TableMerger {
      * Merging
      * ****************************** */
 
-    /**
-     * @param ActiveRow $trunkRow
-     * @param ActiveRow $mergedRow
-     * @return void
-     */
-    public function setMergedPair(ActiveRow $trunkRow, ActiveRow $mergedRow) {
+    public function setMergedPair(ActiveRow $trunkRow, ActiveRow $mergedRow): void {
         $this->trunkRow = $trunkRow;
         $this->mergedRow = $mergedRow;
     }
 
-    /**
-     * @param $column
-     * @param IMergeStrategy|null $mergeStrategy
-     */
-    public function setColumnMergeStrategy($column, IMergeStrategy $mergeStrategy = null) {
+    public function setColumnMergeStrategy(string $column, ?IMergeStrategy $mergeStrategy = null): void {
         if (!$mergeStrategy) {
             unset($this->columnMergeStrategies[$column]);
         } else {
@@ -114,7 +68,7 @@ class TableMerger {
      * @param mixed $column
      * @return bool
      */
-    private function tryColumnMerge($column) {
+    private function tryColumnMerge($column): bool {
         if ($this->getMerger()->hasResolution($this->trunkRow, $this->mergedRow, $column)) {
             $values = [
                 $column => $this->getMerger()->getResolution($this->trunkRow, $this->mergedRow, $column),
@@ -141,17 +95,14 @@ class TableMerger {
         }
     }
 
-    /**
-     * @return Merger
-     */
-    private function getMerger() {
+    private function getMerger(): Merger {
         return $this->merger;
     }
 
     /**
      * @param null $mergedParent
      */
-    public function merge($mergedParent = null) {
+    public function merge($mergedParent = null): void {
         $this->trunkRow->getTable()->accessColumn(null); // stupid touch
         $this->mergedRow->getTable()->accessColumn(null); // stupid touch
 
@@ -179,6 +130,7 @@ class TableMerger {
                 $secondaryKeys = array_unique($secondaryKeys);
                 foreach ($secondaryKeys as $secondaryKey) {
                     $refTrunk = isset($groupedTrunks[$secondaryKey]) ? $groupedTrunks[$secondaryKey] : null;
+                    /** @var ActiveRow|null $refMerged */
                     $refMerged = isset($groupedMerged[$secondaryKey]) ? $groupedMerged[$secondaryKey] : null;
                     if ($refTrunk && $refMerged) {
                         $backTrunk = $referencingMerger->trunkRow;
@@ -234,11 +186,11 @@ class TableMerger {
     }
 
     /**
-     * @param $rows
-     * @param $parentColumn
+     * @param mixed $rows
+     * @param mixed $parentColumn
      * @return array
      */
-    private function groupBySecondaryKey($rows, $parentColumn) {
+    private function groupBySecondaryKey($rows, $parentColumn): array {
         $result = [];
         foreach ($rows as $row) {
             $key = $this->getSecondaryKeyValue($row, $parentColumn);
@@ -252,7 +204,7 @@ class TableMerger {
 
     /**
      * @param ActiveRow $row
-     * @param $parentColumn
+     * @param mixed $parentColumn
      * @return string
      */
     private function getSecondaryKeyValue(ActiveRow $row, $parentColumn) {
@@ -270,12 +222,7 @@ class TableMerger {
      * Logging sugar
      * ****************************** */
 
-    /**
-     * @param ActiveRow $row
-     * @param $changes
-     * @return void
-     */
-    private function logUpdate(ActiveRow $row, $changes) {
+    private function logUpdate(ActiveRow $row, iterable $changes): void {
         $msg = [];
         foreach ($changes as $column => $value) {
             if ($row[$column] != $value) {
@@ -287,19 +234,11 @@ class TableMerger {
         }
     }
 
-    /**
-     * @param ActiveRow $row
-     * @return void
-     */
-    private function logDelete(ActiveRow $row) {
+    private function logDelete(ActiveRow $row): void {
         $this->logger->log(new Message(sprintf(_('%s(%s) sloučen a smazán.'), $row->getTable()->getName(), $row->getPrimary()), ILogger::INFO));
     }
 
-    /**
-     * @param ActiveRow $row
-     * @return void
-     */
-    private function logTrunk(ActiveRow $row) {
+    private function logTrunk(ActiveRow $row): void {
         $this->logger->log(new Message(sprintf(_('%s(%s) rozšířen sloučením.'), $row->getTable()->getName(), $row->getPrimary()), ILogger::INFO));
     }
 
@@ -307,13 +246,9 @@ class TableMerger {
      * DB reflection
      * ****************************** */
 
-    /**
-     * @var null
-     */
+    /** @var null */
     private $refTables = null;
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private static $refreshReferencing = true;
 
     /**
@@ -322,9 +257,9 @@ class TableMerger {
     private function getReferencingTables() {
         if ($this->refTables === null) {
             $this->refTables = [];
-            foreach ($this->connection->getSupplementalDriver()->getTables() as $otherTable) {
+            foreach ($this->context->getConnection()->getSupplementalDriver()->getTables() as $otherTable) {
                 try {
-                    list($table, $refColumn) = $this->context->getConventions()->getHasManyReference($this->table, $otherTable['name'], self::$refreshReferencing);
+                    [$table, $refColumn] = $this->context->getConventions()->getHasManyReference($this->table, $otherTable['name'], self::$refreshReferencing);
                     self::$refreshReferencing = false;
                     $this->refTables[$table] = $refColumn;
                 } catch (AmbiguousReferenceKeyException $exception) {
@@ -335,9 +270,7 @@ class TableMerger {
         return $this->refTables;
     }
 
-    /**
-     * @var null
-     */
+    /** @var null */
     private $columns = null;
 
     /**
@@ -346,46 +279,40 @@ class TableMerger {
     private function getColumns() {
         if ($this->columns === null) {
             $this->columns = [];
-            foreach ($this->connection->getSupplementalDriver()->getColumns($this->table) as $column) {
+            foreach ($this->context->getConnection()->getSupplementalDriver()->getColumns($this->table) as $column) {
                 $this->columns[] = $column['name'];
             }
         }
         return $this->columns;
     }
 
-    /**
-     * @var mixed
-     */
+    /** @var string */
     private $primaryKey;
 
     /**
-     * @param $column
+     * @param string $column
      * @return bool
      */
-    private function isPrimaryKey($column) {
+    private function isPrimaryKey($column): bool {
         if ($this->primaryKey === null) {
-            $this->primaryKey = $this->context->getDatabaseReflection()->getPrimary($this->table);
+            $this->primaryKey = $this->context->getConventions()->getPrimary($this->table);
         }
         return $column == $this->primaryKey;
     }
 
-    /**
-     * @var array
-     */
+    /** @var array */
     private $referencedTables = [];
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private static $refreshReferenced = true;
 
     /**
-     * @param $column
+     * @param string $column
      * @return mixed
      */
     private function getReferencedTable($column) {
         if (!array_key_exists($column, $this->referencedTables)) {
             try {
-                list($table, $refColumn) = $this->context->getConventions()->getBelongsToReference($this->table, $column, self::$refreshReferenced);
+                [$table, $refColumn] = $this->context->getConventions()->getBelongsToReference($this->table, $column, self::$refreshReferenced);
                 self::$refreshReferenced = false;
                 $this->referencedTables[$column] = $table;
             } catch (\Exception $exception) {
@@ -395,9 +322,7 @@ class TableMerger {
         return $this->referencedTables[$column];
     }
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $secondaryKey;
 
     /**
@@ -406,7 +331,7 @@ class TableMerger {
     private function getSecondaryKey() {
         if ($this->secondaryKey === null) {
             $this->secondaryKey = [];
-            foreach ($this->connection->getSupplementalDriver()->getIndexes($this->table) as $index) {
+            foreach ($this->context->getConnection()->getSupplementalDriver()->getIndexes($this->table) as $index) {
                 if ($index['unique']) {
                     $this->secondaryKey = array_merge($this->secondaryKey, $index['columns']);
                 }
@@ -418,10 +343,10 @@ class TableMerger {
     }
 
     /**
-     * @param $secondaryKey
+     * @param string $secondaryKey
      * @return void
      */
-    public function setSecondaryKey($secondaryKey) {
+    public function setSecondaryKey($secondaryKey): void {
         $this->secondaryKey = $secondaryKey;
     }
 }

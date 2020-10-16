@@ -17,7 +17,7 @@ class SecondaryLimitOk extends ResourceAvailabilityTestCase {
      */
     private $tsafEventId;
 
-    protected function setUp() {
+    protected function setUp(): void {
         parent::setUp();
         $this->tsafEventId = $this->createEvent([
             'event_type_id' => 7,
@@ -34,15 +34,7 @@ EOT
                 'status' => 'applied',
                 'accomodation' => 1,
             ]);
-            $this->insert('e_tsaf_participant', [
-                'event_participant_id' => $eid,
-            ]);
         }
-    }
-
-    protected function tearDown() {
-        $this->connection->query('DELETE FROM e_tsaf_participant');
-        parent::tearDown();
     }
 
     public function getTestData(): array {
@@ -55,7 +47,7 @@ EOT
     /**
      * @dataProvider getTestData
      */
-    public function testDisplay(int $capacity, bool $disabled) {
+    public function testDisplay(int $capacity, bool $disabled): void {
         Assert::equal(2, (int)$this->connection->query('SELECT SUM(accomodation) FROM event_participant WHERE event_id = ?', $this->eventId)->fetchField());
         $this->connection->query('UPDATE event SET parameters = ? WHERE event_id = ?', <<<EOT
 accomodationCapacity: $capacity                

@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\Core\ContestPresenter;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
-use FKSDB\Components\Controls\ContestChooser;
+use FKSDB\Components\Controls\Choosers\ContestChooser;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\UI\PageTitle;
@@ -29,11 +29,11 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
     public $year;
 
     /**
-     * @throws BadRequestException
      * @throws AbortException
+     * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    protected function startup() {
+    protected function startup(): void {
         parent::startup();
         $contestChooser = $this->getComponent('contestChooser');
         if (!$contestChooser instanceof ContestChooser) {
@@ -46,9 +46,10 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
 
     /**
      * @return ModelContest
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
-    public function getSelectedContest(): ModelContest {
+    public function getSelectedContest(): ?ModelContest {
         $contestChooser = $this->getComponent('contestChooser');
         if (!$contestChooser instanceof ContestChooser) {
             throw new BadTypeException(ContestChooser::class, $contestChooser);
@@ -61,7 +62,8 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
 
     /**
      * @return int
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function getSelectedYear(): int {
         $contestChooser = $this->getComponent('contestChooser');
@@ -76,13 +78,14 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
 
     /**
      * @return int
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     public function getSelectedAcademicYear(): int {
-        return $this->getYearCalculator()->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
+        return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 
-    protected function beforeRender() {
+    protected function beforeRender(): void {
         try {
             $contest = $this->getSelectedContest();
         } catch (BadRequestException $exception) {
@@ -90,16 +93,12 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
         }
         if (isset($contest) && $contest) {
             $this->getPageStyleContainer()->styleId = $contest->getContestSymbol();
-            $this->getPageStyleContainer()->navBarClassName = 'navbar-dark bg-' . $contest->getContestSymbol();
+            $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-' . $contest->getContestSymbol());
         }
         parent::beforeRender();
     }
 
-    /**
-     * @param PageTitle $pageTitle
-     * @return void
-     */
-    protected function setPageTitle(PageTitle $pageTitle) {
+    protected function setPageTitle(PageTitle $pageTitle): void {
         $pageTitle->subTitle = sprintf(_('%d. ročník'), $this->year) . ' ' . $pageTitle->subTitle;
         parent::setPageTitle($pageTitle);
     }

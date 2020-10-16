@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Application\IJavaScriptCollector;
-use Nette\ComponentModel\IComponent;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 
@@ -21,41 +20,45 @@ use Nette\Utils\Html;
  */
 trait WriteOnlyTrait {
 
-    /**
-     * @var bool
-     */
-    private $writeOnly = true;
-    /**
-     * @var bool
-     */
-    private $actuallyDisabled = false;
-    /**
-     * @var bool
-     */
-    private $hasManualValue = false;
+    private bool $writeOnly = true;
 
-    private function writeOnlyAppendMonitors() {
-        $this->monitor(Form::class);
-        $this->monitor(IJavaScriptCollector::class);
+    private bool $actuallyDisabled = false;
+
+    private bool $hasManualValue = false;
+
+    private bool $writeOnlyAttachedOnValidate = false;
+
+    private bool $writeOnlyAttachedJS = false;
+
+    private function writeOnlyAppendMonitors(): void {
+        $this->monitor(Form::class, function (Form $form) {
+            if (!$this->writeOnlyAttachedOnValidate) {
+                $form->onValidate = $form->onValidate ?: [];
+                array_unshift($form->onValidate, function (Form $form) {
+                    if ($this->writeOnly && $this->getValue() == self::VALUE_ORIGINAL) {
+                        $this->writeOnlyDisable();
+                    }
+                });
+                $this->writeOnlyAttachedOnValidate = true;
+            }
+        });
+        $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
+            if (!$this->writeOnlyAttachedJS) {
+                $this->writeOnlyAttachedJS = true;
+                $collector->registerJSFile('js/writeOnlyInput.js');
+            }
+        });
     }
 
     public function getWriteOnly(): bool {
         return $this->writeOnly;
     }
 
-    /**
-     * @param bool $writeOnly
-     * @return void
-     */
-    public function setWriteOnly(bool $writeOnly = true) {
+    public function setWriteOnly(bool $writeOnly = true): void {
         $this->writeOnly = $writeOnly;
     }
 
-    /**
-     * @param Html $control
-     * @return Html
-     */
-    private function writeOnlyAdjustControl(Html $control) {
+    private function writeOnlyAdjustControl(Html $control): Html {
 // rendered control may not disabled
         $control->addAttributes([
             'disabled' => $this->actuallyDisabled,
@@ -74,45 +77,14 @@ trait WriteOnlyTrait {
         return $control;
     }
 
-    protected function writeOnlyLoadHttpData() {
+    protected function writeOnlyLoadHttpData(): void {
         if ($this->getValue() != self::VALUE_ORIGINAL) {
             $this->hasManualValue = true;
         }
     }
 
-    private function writeOnlyDisable() {
+    private function writeOnlyDisable(): void {
         $this->actuallyDisabled = $this->isDisabled();
         $this->setDisabled();
     }
-
-    /**
-     * @var bool
-     */
-    private $writeOnlyAttachedOnValidate = false;
-    /**
-     * @var bool
-     */
-    private $writeOnlyAttachedJS = false;
-
-    /**
-     * @param IComponent $obj
-     * @return void
-     */
-    protected function writeOnlyAttached($obj) {
-        if (!$this->writeOnlyAttachedOnValidate && $obj instanceof Form) {
-            $that = $this;
-            $obj->onValidate = $obj->onValidate ?: [];
-            array_unshift($obj->onValidate, function (Form $form) use ($that) {
-                if ($that->writeOnly && $that->getValue() == self::VALUE_ORIGINAL) {
-                    $that->writeOnlyDisable();
-                }
-            });
-            $this->writeOnlyAttachedOnValidate = true;
-        }
-        if (!$this->writeOnlyAttachedJS && $obj instanceof IJavaScriptCollector) {
-            $this->writeOnlyAttachedJS = true;
-            $obj->registerJSFile('js/writeOnlyInput.js');
-        }
-    }
-
 }

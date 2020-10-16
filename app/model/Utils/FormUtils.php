@@ -5,7 +5,6 @@ namespace FKSDB\Utils;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
-use Traversable;
 
 /**
  *
@@ -16,13 +15,13 @@ class FormUtils {
     /**
      * Convert empty strings to nulls.
      *
-     * @param string|array|Traversable $values
+     * @param string|iterable $values
      * @param bool $asArray
-     * @return ArrayHash|array|null
+     * @return iterable|null
      * @todo Move to general utils.
      */
     public static function emptyStrToNull($values, bool $asArray = false) {
-        if ($values instanceof Traversable || is_array($values)) {
+        if (is_iterable($values)) {
             $result = $asArray ? [] : new ArrayHash();
             foreach ($values as $key => $value) {
                 $result[$key] = self::emptyStrToNull($value, $asArray);
@@ -71,11 +70,7 @@ class FormUtils {
         return $result;
     }
 
-    /**
-     * @param Form $form
-     * @return SubmitButton|null
-     */
-    public static function findFirstSubmit(Form $form) {
+    public static function findFirstSubmit(Form $form): ?SubmitButton {
         foreach ($form->getComponents() as $component) {
             if ($component instanceof SubmitButton) {
                 return $component;

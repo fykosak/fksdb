@@ -6,7 +6,7 @@ use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Services\ServiceStudyYear;
 use FKSDB\ORM\Services\ServiceTaskStudyYear;
-use Pipeline\Stage;
+use FKSDB\Pipeline\Stage;
 use SimpleXMLElement;
 
 /**
@@ -16,33 +16,23 @@ use SimpleXMLElement;
  */
 class StudyYearsFromXML extends Stage {
 
-    const XML_ELEMENT_PARENT = 'study-years';
+    public const XML_ELEMENT_PARENT = 'study-years';
 
-    const XML_ELEMENT_CHILD = 'study-year';
+    public const XML_ELEMENT_CHILD = 'study-year';
 
-    /**
-     * @var SeriesData
-     */
+    /** @var SeriesData */
     private $data;
 
-    /**
-     * @var array   contribution type => xml element
-     */
+    /** @var array   contribution type => xml element */
     private $defaultStudyYears;
 
-    /**
-     * @var ServiceTaskStudyYear
-     */
-    private $serviceTaskStudyYear;
+    private ServiceTaskStudyYear $serviceTaskStudyYear;
 
-    /**
-     * @var ServiceStudyYear
-     */
-    private $serviceStudyYear;
+    private ServiceStudyYear $serviceStudyYear;
 
     /**
      * StudyYearsFromXML2 constructor.
-     * @param $defaultStudyYears
+     * @param iterable $defaultStudyYears
      * @param ServiceTaskStudyYear $serviceTaskStudyYear
      * @param ServiceStudyYear $serviceStudyYear
      */
@@ -55,11 +45,11 @@ class StudyYearsFromXML extends Stage {
     /**
      * @param mixed $data
      */
-    public function setInput($data) {
+    public function setInput($data): void {
         $this->data = $data;
     }
 
-    public function process() {
+    public function process(): void {
         $xml = $this->data->getData();
         foreach ($xml->problems[0]->problem as $task) {
             $this->processTask($task);
@@ -73,11 +63,7 @@ class StudyYearsFromXML extends Stage {
         return $this->data;
     }
 
-    /**
-     * @param SimpleXMLElement $XMLTask
-     * @return void
-     */
-    private function processTask(SimpleXMLElement $XMLTask) {
+    private function processTask(SimpleXMLElement $XMLTask): void {
         $tasks = $this->data->getTasks();
         $tasknr = (int)(string)$XMLTask->number;
 
@@ -128,9 +114,6 @@ class StudyYearsFromXML extends Stage {
                 'study_year' => $studyYear,
             ]);
         }
-
-
         $this->serviceTaskStudyYear->getConnection()->commit();
     }
-
 }

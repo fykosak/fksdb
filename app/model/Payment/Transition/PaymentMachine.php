@@ -14,66 +14,49 @@ use Nette\Database\Context;
 
 /**
  * Class PaymentMachine
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class PaymentMachine extends Machine {
-    /**
-     * @var PriceCalculator
-     */
-    private $priceCalculator;
-    /**
-     * @var AbstractSymbolGenerator
-     */
-    private $symbolGenerator;
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
 
-    /**
-     * PaymentMachine constructor.
-     * @param Context $connection
-     * @param ServicePayment $servicePayment
-     * @param ServiceEvent $serviceEvent
-     */
+    private PriceCalculator $priceCalculator;
+
+    private AbstractSymbolGenerator $symbolGenerator;
+
+    private ModelEvent $event;
+
+    private ServiceEvent $serviceEvent;
+
+    private array $scheduleGroupTypes;
+
     public function __construct(Context $connection, ServicePayment $servicePayment, ServiceEvent $serviceEvent) {
         parent::__construct($connection, $servicePayment);
         $this->serviceEvent = $serviceEvent;
     }
 
-    /**
-     * @param AbstractTransitionsGenerator $factory
-     * @return void
-     */
-    public function setTransitions(AbstractTransitionsGenerator $factory) {
+    public function setTransitions(AbstractTransitionsGenerator $factory): void {
         $factory->createTransitions($this);
     }
 
-    /**
-     * @param int $eventId
-     * @return void
-     */
-    public function setEventId(int $eventId) {
-        $this->event = $this->serviceEvent->findByPrimary($eventId);
+    public function setEventId(int $eventId): void {
+        $event = $this->serviceEvent->findByPrimary($eventId);
+        if (!is_null($event)) {
+            $this->event = $event;
+        }
     }
 
-    /**
-     * @param AbstractSymbolGenerator $abstractSymbolGenerator
-     * @return void
-     */
-    public function setSymbolGenerator(AbstractSymbolGenerator $abstractSymbolGenerator) {
+    public function setScheduleGroupTypes(array $types): void {
+        $this->scheduleGroupTypes = $types;
+    }
+
+    public function getScheduleGroupTypes(): array {
+        return $this->scheduleGroupTypes;
+    }
+
+    public function setSymbolGenerator(AbstractSymbolGenerator $abstractSymbolGenerator): void {
         $this->symbolGenerator = $abstractSymbolGenerator;
     }
 
-    /**
-     * @param PriceCalculator $priceCalculator
-     * @return void
-     */
-    public function setPriceCalculator(PriceCalculator $priceCalculator) {
+    public function setPriceCalculator(PriceCalculator $priceCalculator): void {
         $this->priceCalculator = $priceCalculator;
     }
 

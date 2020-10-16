@@ -13,20 +13,11 @@ use FKSDB\DataTesting\TestLog;
  */
 class GenderFromBornNumberTest extends PersonTest {
 
-    public function getTitle(): string {
-        return _('Gender from born number');
+    public function __construct() {
+        parent::__construct('gender_from_born_number', _('Gender from born number'));
     }
 
-    public function getAction(): string {
-        return 'gender_from_born_number';
-    }
-
-    /**
-     * @param ILogger $logger
-     * @param ModelPerson $person
-     * @return void
-     */
-    public function run(ILogger $logger, ModelPerson $person) {
+    public function run(ILogger $logger, ModelPerson $person): void {
         $info = $person->getInfo();
 
         if (!$info) {
@@ -49,5 +40,4 @@ class GenderFromBornNumberTest extends PersonTest {
             $logger->log(new TestLog($this->getTitle(), 'Gender match born number', TestLog::LVL_SUCCESS));
         }
     }
-
 }

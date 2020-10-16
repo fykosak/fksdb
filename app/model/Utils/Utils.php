@@ -118,7 +118,11 @@ class Utils {
         } elseif ($object instanceof DateTimeInterface) {
             return $object->format('c');
         } else {
-            return (string)$object;
+            try {
+                return (string)$object;
+            } catch (\Error$error) {
+                return $error->__toString();
+            }
         }
     }
 
@@ -129,7 +133,7 @@ class Utils {
      * @return string
      */
     public static function getRepr($object): string {
-        if ($object instanceof Traversable || is_array($object)) {
+        if (is_iterable($object)) {
             $items = [];
             foreach ($object as $key => $item) {
                 $items[] = "$key: " . self::getRepr($item);
@@ -138,7 +142,11 @@ class Utils {
         } elseif ($object instanceof DateTimeInterface) {
             return $object->format('c');
         } else {
-            return (string)$object;
+            try {
+                return (string)$object;
+            } catch (\Error$error) {
+                return $error->__toString();
+            }
         }
     }
 
@@ -149,7 +157,7 @@ class Utils {
      * @return string
      */
     public static function cryptEmail(string $email): string {
-        list($user, $host) = preg_split('/@/', $email);
+        [$user, $host] = preg_split('/@/', $email);
         if (strlen($user) < 3) {
             return "@$host";
         } else {

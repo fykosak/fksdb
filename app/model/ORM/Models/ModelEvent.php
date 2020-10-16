@@ -27,9 +27,9 @@ use Nette\Security\IResource;
  */
 class ModelEvent extends AbstractModelSingle implements IResource, IContestReferencedModel {
 
-    const TEAM_EVENTS = [1, 9, 13];
+    public const TEAM_EVENTS = [1, 9, 13];
 
-    const RESOURCE_ID = 'event';
+    public const RESOURCE_ID = 'event';
 
     public function getEventType(): ModelEventType {
         return ModelEventType::createFromActiveRow($this->event_type);
@@ -51,6 +51,10 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
         return $this->name;
     }
 
+    public function isTeamEvent(): bool {
+        return in_array($this->event_type_id, ModelEvent::TEAM_EVENTS);
+    }
+
     /**
      * @return ModelFyziklaniGameSetup
      * @throws NotSetGameParametersException
@@ -58,7 +62,7 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
     public function getFyziklaniGameSetup(): ModelFyziklaniGameSetup {
         $gameSetupRow = $this->related(DbNames::TAB_FYZIKLANI_GAME_SETUP, 'event_id')->fetch();
         if (!$gameSetupRow) {
-            throw new NotSetGameParametersException(_('Herné parametre niesu nastavené'));
+            throw new NotSetGameParametersException();
         }
         return ModelFyziklaniGameSetup::createFromActiveRow($gameSetupRow);
     }
@@ -73,6 +77,14 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
 
     public function getTeams(): GroupedSelection {
         return $this->related(DbNames::TAB_E_FYZIKLANI_TEAM, 'event_id');
+    }
+
+    public function getEventOrgs(): GroupedSelection {
+        return $this->related(DbNames::TAB_EVENT_ORG, 'event_id');
+    }
+
+    public function getPayments(): GroupedSelection {
+        return $this->related(DbNames::TAB_PAYMENT, 'event_id');
     }
 
     public function __toArray(): array {

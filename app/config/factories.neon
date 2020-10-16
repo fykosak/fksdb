@@ -3,16 +3,14 @@
 #
 services:
     mailTemplateFactory:
-        class: Mail\MailTemplateFactory(%email.templatesDir%)
+        class: FKSDB\Mail\MailTemplateFactory(%email.templatesDir%)
 
     - FKSDB\Events\Model\ApplicationHandlerFactory
     - FKSDB\Exports\ExportFormatFactory
     - FKSDB\Components\Forms\Factories\StoredQueryFactory
-    referencedEventPersonFactory:
-        class: FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedEventPersonFactory
     referencedPersonFactory:
         class: FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory
-    - Persons\ReferencedPersonHandlerFactory
+    - FKSDB\Persons\ReferencedPersonHandlerFactory
     breadcrumbFactory:
         class: FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory(%navigation.expiration%, ...)
     storedQueryFactory:

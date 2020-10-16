@@ -1,0 +1,17 @@
+{varType array $transitions}
+{varType FKSDB\Events\Model\Holder\Holder $holder}
+
+{if count($transitions)}
+    {foreach $transitions as $transition}
+        {var $className = 'btn btn-sm btn-' . $transition->getType()}
+        {if $transition->isCreating()}
+            <a href="{plink :Public:Application:default eventId => $holder->getPrimaryHolder()->getEvent()->event_id}"
+               class="{$className}">{$transition->getLabel()}</a>
+        {else}
+            <a n:href="transition! $transition->getName()"
+                    class="{$className}">{$transition->getLabel()}</a>
+        {/if}
+    {/foreach}
+{else}
+    <em>{_'žádné'}</em>
+{/if}

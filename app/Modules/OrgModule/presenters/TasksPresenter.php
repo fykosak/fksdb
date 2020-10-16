@@ -4,17 +4,19 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Astrid\Downloader;
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\SeriesCalculator;
 use FKSDB\Submits\UploadException;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DeprecatedException;
+use Nette\InvalidStateException;
 use Tracy\Debugger;
-use Pipeline\PipelineException;
+use FKSDB\Pipeline\PipelineException;
 use SimpleXMLElement;
 use FKSDB\Tasks\PipelineFactory;
 use FKSDB\Tasks\SeriesData;
@@ -26,62 +28,39 @@ use FKSDB\Tasks\SeriesData;
  */
 class TasksPresenter extends BasePresenter {
 
-    const SOURCE_ASTRID = 'astrid';
-    const SOURCE_FILE = 'file';
+    public const SOURCE_ASTRID = 'astrid';
+    public const SOURCE_FILE = 'file';
 
-    /**
-     * @var SeriesCalculator
-     */
-    private $seriesCalculator;
+    private SeriesCalculator $seriesCalculator;
+    private PipelineFactory $pipelineFactory;
+    private Downloader $downloader;
 
-    /**
-     * @var PipelineFactory
-     */
-    private $pipelineFactory;
-
-    /**
-     * @var Downloader
-     */
-    private $downloader;
-
-    /**
-     * @param SeriesCalculator $seriesCalculator
-     * @return void
-     */
-    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator) {
+    final public function injectQuarterly(
+        SeriesCalculator $seriesCalculator,
+        PipelineFactory $pipelineFactory,
+        Downloader $downloader
+    ): void {
         $this->seriesCalculator = $seriesCalculator;
-    }
-
-    /**
-     * @param PipelineFactory $pipelineFactory
-     * @return void
-     */
-    public function injectPipelineFactory(PipelineFactory $pipelineFactory) {
         $this->pipelineFactory = $pipelineFactory;
-    }
-
-    /**
-     * @param Downloader $downloader
-     * @return void
-     */
-    public function injectDownloader(Downloader $downloader) {
         $this->downloader = $downloader;
     }
 
     /**
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
-    public function authorizedImport() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('task', 'insert', $this->getSelectedContest()));
+    public function authorizedImport(): void {
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('task', 'insert', $this->getSelectedContest()));
     }
 
-    public function titleImport() {
+    public function titleImport(): void {
         $this->setPageTitle(new PageTitle(_('Import úloh'), 'fa fa-upload'));
     }
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     protected function createComponentSeriesForm(): FormControl {
         $control = new FormControl();
@@ -116,10 +95,12 @@ class TasksPresenter extends BasePresenter {
 
     /**
      * @param Form $seriesForm
+     * @return void
      * @throws AbortException
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
-    private function validSubmitSeriesForm(Form $seriesForm) {
+    private function validSubmitSeriesForm(Form $seriesForm): void {
         $values = $seriesForm->getValues();
         $series = $values['series'];
         $file = null;
@@ -135,7 +116,7 @@ class TasksPresenter extends BasePresenter {
                 $file = $values['file']->getTemporaryFile();
                 break;
             default:
-                throw new BadRequestException();
+                throw new InvalidStateException();
         }
 
         try {

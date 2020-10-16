@@ -10,67 +10,38 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
-use Nette\Utils\Json;
-use Nette\Utils\JsonException;
 
 /**
  * Class TeamApplicationsTimeProgress
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class TeamApplicationsTimeProgress extends ReactComponent implements IChart {
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
 
-    /**
-     * @var ModelEventType
-     */
-    private $eventType;
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+    private ModelEventType $eventType;
+    private ServiceEvent $serviceEvent;
 
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
-
-    /**
-     * TeamApplicationsTimeProgress constructor.
-     * @param Container $context
-     * @param ModelEvent $event
-     */
     public function __construct(Container $context, ModelEvent $event) {
         parent::__construct($context, 'events.applications-time-progress.teams');
         $this->eventType = $event->getEventType();
     }
 
-    /**
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param ServiceEvent $serviceEvent
-     * @return void
-     */
-    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceEvent $serviceEvent) {
+    final public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceEvent $serviceEvent): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->serviceEvent = $serviceEvent;
     }
 
-    /**
-     * @param mixed ...$args
-     * @return string
-     * @throws JsonException
-     */
-    public function getData(...$args): string {
+    protected function getData(): array {
         $data = [
             'teams' => [],
             'events' => [],
         ];
-        /**
-         * @var ModelEvent $event
-         */
+        /** @var ModelEvent $event */
         foreach ($this->serviceEvent->getEventsByType($this->eventType) as $event) {
             $data['teams'][$event->event_id] = $this->serviceFyziklaniTeam->getTeamsAsArray($event);
             $data['events'][$event->event_id] = $event->__toArray();
         }
-        return Json::encode($data);
+        return $data;
     }
 
     public function getTitle(): string {
@@ -81,10 +52,7 @@ class TeamApplicationsTimeProgress extends ReactComponent implements IChart {
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return null;
     }
 }

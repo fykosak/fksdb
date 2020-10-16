@@ -2,15 +2,14 @@
 
 namespace FKSDB\Authentication;
 
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\ORM\Services\ServiceLogin;
-use Mail\MailTemplateFactory;
-use Mail\SendFailedException;
+use FKSDB\Mail\MailTemplateFactory;
 use Nette\Utils\DateTime;
 
 /**
@@ -20,87 +19,47 @@ use Nette\Utils\DateTime;
  */
 class AccountManager {
 
-    /** @var ServiceLogin */
-    private $serviceLogin;
+    private ServiceLogin $serviceLogin;
+    private ServiceAuthToken $serviceAuthToken;
+    private string $invitationExpiration = '+1 month';
+    private string $recoveryExpiration = '+1 day';
+    private string $emailFrom;
+    private ServiceEmailMessage $serviceEmailMessage;
+    private MailTemplateFactory $mailTemplateFactory;
 
-    /** @var ServiceAuthToken */
-    private $serviceAuthToken;
-    /**
-     * @var string
-     */
-    private $invitationExpiration = '+1 month';
-    /**
-     * @var string
-     */
-    private $recoveryExpiration = '+1 day';
-    /**
-     * @var mixed
-     */
-    private $emailFrom;
-    /** @var ServiceEmailMessage */
-    private $serviceEmailMessage;
-    /** @var MailTemplateFactory */
-    private $mailTemplateFactory;
-
-    /**
-     * AccountManager constructor.
-     * @param MailTemplateFactory $mailTemplateFactory
-     * @param ServiceLogin $serviceLogin
-     * @param ServiceAuthToken $serviceAuthToken
-     * @param ServiceEmailMessage $serviceEmailMessage
-     */
-    public function __construct(MailTemplateFactory $mailTemplateFactory,
-                                ServiceLogin $serviceLogin,
-                                ServiceAuthToken $serviceAuthToken,
-                                ServiceEmailMessage $serviceEmailMessage) {
+    public function __construct(
+        MailTemplateFactory $mailTemplateFactory,
+        ServiceLogin $serviceLogin,
+        ServiceAuthToken $serviceAuthToken,
+        ServiceEmailMessage $serviceEmailMessage
+    ) {
         $this->serviceLogin = $serviceLogin;
         $this->serviceAuthToken = $serviceAuthToken;
         $this->serviceEmailMessage = $serviceEmailMessage;
         $this->mailTemplateFactory = $mailTemplateFactory;
     }
 
-    /**
-     * @return string
-     */
-    public function getInvitationExpiration() {
+    public function getInvitationExpiration(): string {
         return $this->invitationExpiration;
     }
 
-    /**
-     * @param $invitationExpiration
-     * @return void
-     */
-    public function setInvitationExpiration($invitationExpiration) {
+    public function setInvitationExpiration(string $invitationExpiration): void {
         $this->invitationExpiration = $invitationExpiration;
     }
 
-    /**
-     * @return string
-     */
-    public function getRecoveryExpiration() {
+    public function getRecoveryExpiration(): string {
         return $this->recoveryExpiration;
     }
 
-    /**
-     * @param $recoveryExpiration
-     * @return void
-     */
-    public function setRecoveryExpiration($recoveryExpiration) {
+    public function setRecoveryExpiration(string $recoveryExpiration): void {
         $this->recoveryExpiration = $recoveryExpiration;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getEmailFrom() {
+    public function getEmailFrom(): string {
         return $this->emailFrom;
     }
 
-    /**
-     * @param $emailFrom
-     * @return void
-     */
-    public function setEmailFrom($emailFrom) {
+    public function setEmailFrom(string $emailFrom): void {
         $this->emailFrom = $emailFrom;
     }
 
@@ -109,11 +68,11 @@ class AccountManager {
      *
      * @param ModelPerson $person
      * @param string $email
+     * @param string $lang
      * @return ModelLogin
-     * @throws SendFailedException
-     * @throws \Exception
+     * @throws UnsupportedLanguageException
      */
-    public function createLoginWithInvitation(ModelPerson $person, string $email) {
+    public function createLoginWithInvitation(ModelPerson $person, string $email, string $lang): ModelLogin {
         $login = $this->createLogin($person);
 
         $until = DateTime::from($this->getInvitationExpiration());
@@ -126,8 +85,8 @@ class AccountManager {
             'until' => $until,
         ];
         $data = [];
-        $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation($person->getPreferredLang(), $templateParams);
-        $data['subject'] = _('Založení účtu');
+        $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation($person->getPreferredLang() ?: $lang, $templateParams);
+        $data['subject'] = _('Create an account');
         $data['sender'] = $this->getEmailFrom();
         $data['recipient'] = $email;
         $this->serviceEmailMessage->addMessageToSend($data);
@@ -137,9 +96,10 @@ class AccountManager {
     /**
      * @param ModelLogin $login
      * @param string|null $lang
-     * @throws \Exception
+     * @return void
+     * @throws UnsupportedLanguageException
      */
-    public function sendRecovery(ModelLogin $login, string $lang = null) {
+    public function sendRecovery(ModelLogin $login, ?string $lang = null): void {
         $person = $login->getPerson();
         $recoveryAddress = $person ? $person->getInfo()->email : null;
         if (!$recoveryAddress) {
@@ -163,31 +123,21 @@ class AccountManager {
         ];
         $data = [];
         $data['text'] = (string)$this->mailTemplateFactory->createPasswordRecovery($lang, $templateParams);
-        $data['subject'] = _('Obnova hesla');
+        $data['subject'] = _('Password recovery');
         $data['sender'] = $this->getEmailFrom();
         $data['recipient'] = $recoveryAddress;
 
         $this->serviceEmailMessage->addMessageToSend($data);
     }
 
-    /**
-     * @param ModelLogin $login
-     * @return void
-     */
-    public function cancelRecovery(ModelLogin $login) {
+    public function cancelRecovery(ModelLogin $login): void {
         $this->serviceAuthToken->getTable()->where([
             'login_id' => $login->login_id,
             'type' => ModelAuthToken::TYPE_RECOVERY,
         ])->delete();
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param string $login
-     * @param string $password
-     * @return AbstractModelSingle|ModelLogin
-     */
-    final public function createLogin(ModelPerson $person, string $login = null, string $password = null) {
+    final public function createLogin(ModelPerson $person, ?string $login = null, ?string $password = null): ModelLogin {
         /** @var ModelLogin $login */
         $login = $this->serviceLogin->createNewModel([
             'person_id' => $person->person_id,

@@ -20,34 +20,29 @@ use UnexpectedValueException;
  */
 class UploadedStorage implements ISubmitStorage {
     /** Characters delimiting name and metadata in filename. */
-    const DELIMITER = '__';
+    public const DELIMITER = '__';
 
     /** @const File extension that marks original untouched file. */
-    const ORIGINAL_EXT = '.bak';
+    public const ORIGINAL_EXT = '.bak';
 
     /** @const File extension that marks temporary working file. */
-    const TEMPORARY_EXT = '.tmp';
+    public const TEMPORARY_EXT = '.tmp';
 
     /** @const File extension that marks final file extension.
      *         It's a bit dangerous that only supported filetype is hard-coded in this class
      */
-    const FINAL_EXT = '.pdf';
+    public const FINAL_EXT = '.pdf';
 
-    /**
-     * @var null
-     */
-    private $todo = null;
+    private ?array $todo = null;
 
-    /**
-     * @var string  Absolute path to (existing) directory of the storage.
-     */
-    private $root;
+    /** @var string  Absolute path to (existing) directory of the storage. */
+    private string $root;
 
     /**
      * Sprintf string for arguments (in order): contestName, year, series, label
      * @var string
      */
-    private $directoryMask;
+    private string $directoryMask;
 
     /**
      * Sprintf string for arguments (in order): contestantName, contestName, year, series, label.
@@ -55,48 +50,33 @@ class UploadedStorage implements ISubmitStorage {
      *
      * @var string
      */
-    private $filenameMask;
+    private string $filenameMask;
 
-    /**
-     * @var array   contestId => contest name
-     */
-    private $contestMap;
+    /** @var array   contestId => contest name */
+    private array $contestMap;
 
-    /**
-     * @var IStorageProcessing[]
-     */
-    private $processings = [];
+    /** @var IStorageProcessing[] */
+    private array $processings = [];
 
-    /**
-     * FilesystemSubmitStorage constructor.
-     * @param $root
-     * @param $directoryMask
-     * @param $filenameMask
-     * @param $contestMap
-     */
-    public function __construct($root, $directoryMask, $filenameMask, $contestMap) {
+    public function __construct(string $root, string $directoryMask, string $filenameMask, array $contestMap) {
         $this->root = $root;
         $this->directoryMask = $directoryMask;
         $this->filenameMask = $filenameMask;
         $this->contestMap = $contestMap;
     }
 
-    /**
-     * @param IStorageProcessing $processing
-     * @return void
-     */
-    public function addProcessing(IStorageProcessing $processing) {
+    public function addProcessing(IStorageProcessing $processing): void {
         $this->processings[] = $processing;
     }
 
-    public function beginTransaction() {
+    public function beginTransaction(): void {
         $this->todo = [];
     }
 
     /**
      * @throws StorageException for unsuccessful commit
      */
-    public function commit() {
+    public function commit(): void {
         if ($this->todo === null) {
             throw new InvalidStateException('Cannot commit out of transaction.');
         }
@@ -149,7 +129,7 @@ class UploadedStorage implements ISubmitStorage {
      *
      * @throws InvalidStateException
      */
-    public function rollback() {
+    public function rollback(): void {
         if ($this->todo === null) {
             throw new InvalidStateException('Cannot rollback out of transaction.');
         }
@@ -157,12 +137,7 @@ class UploadedStorage implements ISubmitStorage {
         $this->todo = null;
     }
 
-    /**
-     * @param string $filename
-     * @param ModelSubmit $submit
-     * @return void
-     */
-    public function storeFile($filename, ModelSubmit $submit) {
+    public function storeFile(string $filename, ModelSubmit $submit): void {
         if ($this->todo === null) {
             throw new InvalidStateException('Cannot store file out of transaction.');
         }
@@ -173,19 +148,14 @@ class UploadedStorage implements ISubmitStorage {
         ];
     }
 
-    /**
-     * @param ModelSubmit $submit
-     * @param int $type
-     * @return null|string
-     */
-    public function retrieveFile(ModelSubmit $submit, $type = self::TYPE_PROCESSED) {
+    public function retrieveFile(ModelSubmit $submit, int $type = self::TYPE_PROCESSED): ?string {
         $files = $this->retrieveFiles($submit);
         if ($type == self::TYPE_ORIGINAL) {
-            $files = array_filter($files, function (\SplFileInfo $file) {
+            $files = array_filter($files, function (\SplFileInfo $file): bool {
                 return Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT);
             });
         } else {
-            $files = array_filter($files, function (\SplFileInfo $file) {
+            $files = array_filter($files, function (\SplFileInfo $file): bool {
                 return !Strings::endsWith($file->getRealPath(), self::ORIGINAL_EXT) &&
                     !Strings::endsWith($file->getRealPath(), self::TEMPORARY_EXT);
             });
@@ -211,11 +181,7 @@ class UploadedStorage implements ISubmitStorage {
         return (bool)$this->retrieveFile($submit);
     }
 
-    /**
-     * @param ModelSubmit $submit
-     * @return void
-     */
-    public function deleteFile(ModelSubmit $submit) {
+    public function deleteFile(ModelSubmit $submit): void {
         $fails = [];
         $files = $this->retrieveFiles($submit);
         foreach ($files as $file) {

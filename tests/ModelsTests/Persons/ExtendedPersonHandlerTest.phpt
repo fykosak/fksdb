@@ -4,9 +4,11 @@ namespace FKSDB\Tests\ModelTests\Person;
 
 $container = require '../../bootstrap.php';
 
+use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
+use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceContest;
@@ -15,31 +17,20 @@ use FKSDB\Tests\ModelTests\DatabaseTestCase;
 use MockEnvironment\MockApplicationTrait;
 use Nette\DI\Container;
 use Nette\Forms\Form;
-use Persons\ExtendedPersonHandler;
-use Persons\ExtendedPersonHandlerFactory;
-use Persons\IExtendedPersonPresenter;
-use Persons\IModifiabilityResolver;
-use Persons\IVisibilityResolver;
-use Persons\ReferencedPersonHandler;
+use FKSDB\Persons\ExtendedPersonHandler;
+use FKSDB\Persons\ExtendedPersonHandlerFactory;
+use FKSDB\Persons\IExtendedPersonPresenter;
+use FKSDB\Persons\IModifiabilityResolver;
+use FKSDB\Persons\IVisibilityResolver;
+use FKSDB\Persons\ReferencedPersonHandler;
 use Tester\Assert;
 
 class ExtendedPersonHandlerTest extends DatabaseTestCase {
     use MockApplicationTrait;
 
-    /**
-     * @var Container
-     */
-    private $container;
+    private ExtendedPersonHandler $fixture;
 
-    /**
-     * @var ExtendedPersonHandler
-     */
-    private $fixture;
-
-    /**
-     * @var ReferencedPersonFactory
-     */
-    private $referencedPersonFactory;
+    private ReferencedPersonFactory $referencedPersonFactory;
 
     /**
      * ExtendedPersonHandlerTest constructor.
@@ -47,32 +38,32 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
      */
     public function __construct(Container $container) {
         parent::__construct($container);
-        $this->container = $container;
-    }
-
-    protected function setUp() {
-        parent::setUp();
-        $this->mockApplication();
-        $handlerFactory = $this->container->getByType(ExtendedPersonHandlerFactory::class);
-
-        $service = $this->container->getByType(ServiceContestant::class);
-        $contest = $this->container->getByType(ServiceContest::class)->findByPrimary(ModelContest::ID_FYKOS);
-        $this->fixture = $handlerFactory->create($service, $contest, 1, 'cs');
-
+        $this->setContainer($container);
         $this->referencedPersonFactory = $this->container->getByType(ReferencedPersonFactory::class);
     }
 
-    protected function tearDown() {
-        $this->connection->query("DELETE FROM contestant_base");
-        $this->connection->query("DELETE FROM auth_token");
-        $this->connection->query("DELETE FROM login");
+    protected function setUp(): void {
+        parent::setUp();
+        $this->mockApplication();
+        $handlerFactory = $this->getContainer()->getByType(ExtendedPersonHandlerFactory::class);
+
+        $service = $this->getContainer()->getByType(ServiceContestant::class);
+        $contest = $this->container->getByType(ServiceContest::class)->findByPrimary(ModelContest::ID_FYKOS);
+        $this->fixture = $handlerFactory->create($service, $contest, 1, 'cs');
+
+    }
+
+    protected function tearDown(): void {
+        $this->connection->query('DELETE FROM contestant_base');
+        $this->connection->query('DELETE FROM auth_token');
+        $this->connection->query('DELETE FROM login');
 
         parent::tearDown();
     }
 
 
-    public function testNewPerson() {
-        Assert::true(true);
+    public function testNewPerson(): void {
+
         $presenter = new PersonPresenter();
         // Define a form
 
@@ -118,7 +109,7 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $form->setValues([
             ExtendedPersonHandler::CONT_AGGR => [
                 ExtendedPersonHandler::EL_PERSON => "__promise",
-                ExtendedPersonHandler::CONT_PERSON => [
+                ExtendedPersonHandler::EL_PERSON . '_1' => [
                     '_c_compact' => " ",
                     'person' => [
                         'other_name' => "Jana",
@@ -173,17 +164,20 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $container = new ContainerWithOptions();
         $form->addComponent($container, ExtendedPersonHandler::CONT_AGGR);
 
-        $searchType = ReferencedPersonFactory::SEARCH_NONE;
-        $allowClear = false;
-        $modifiabilityResolver = $visibilityResolver = new TestResolver();
-        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson(
+            $fieldsDefinition,
+            $acYear,
+            PersonSearchContainer::SEARCH_NONE,
+            false,
+            new TestResolver(),
+            new TestResolver()
+        );
 
-        $container->addComponent($components[0], ExtendedPersonHandler::EL_PERSON);
-        $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
+        $container->addComponent($referencedId, ExtendedPersonHandler::EL_PERSON);
+        // $container->addComponent($component->getReferencedContainer(), ExtendedPersonHandler::CONT_PERSON);
 
         return $form;
     }
-
 }
 
 /*
@@ -192,8 +186,8 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
 
 class PersonPresenter extends BasePresenter implements IExtendedPersonPresenter {
 
-    public function getModel() {
-
+    public function getModel(): ?IModel {
+        return null;
     }
 
     public function messageCreate(): string {

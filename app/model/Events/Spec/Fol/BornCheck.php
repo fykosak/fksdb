@@ -21,67 +21,41 @@ use Nette\Forms\IControl;
  */
 class BornCheck extends AbstractAdjustment implements IFormAdjustment {
 
-    /**
-     * @var ServiceSchool
-     */
-    private $serviceSchool;
+    private ServiceSchool $serviceSchool;
 
-    /**
-     * @var ServicePersonHistory
-     */
-    private $servicePersonHistory;
+    private ServicePersonHistory $servicePersonHistory;
 
-    /**
-     * @var Holder
-     */
+    /** @var Holder */
     private $holder;
 
-    /**
-     * @return Holder
-     */
-    public function getHolder() {
-        return $this->holder;
-    }
-
-    /**
-     * @param Holder $holder
-     * @return void
-     */
-    public function setHolder(Holder $holder) {
-        $this->holder = $holder;
-    }
-
-    /**
-     * BornCheck constructor.
-     * @param ServiceSchool $serviceSchool
-     * @param ServicePersonHistory $servicePersonHistory
-     */
     public function __construct(ServiceSchool $serviceSchool, ServicePersonHistory $servicePersonHistory) {
         $this->serviceSchool = $serviceSchool;
         $this->servicePersonHistory = $servicePersonHistory;
     }
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return void
-     */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder) {
+    public function getHolder(): Holder {
+        return $this->holder;
+    }
+
+    public function setHolder(Holder $holder): void {
+        $this->holder = $holder;
+    }
+
+    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
         $this->setHolder($holder);
         $schoolControls = $this->getControl('p*.person_id.person_history.school_id');
         $studyYearControls = $this->getControl("p*.person_id.person_history.study_year");
         $personControls = $this->getControl('p*.person_id');
         $bornControls = $this->getControl('p*.person_id.person_info.born');
 
-        $msg = _('Datum narození je povinné.');
+        $msg = _('Birthday is required field.');
         /** @var BaseControl $control */
         foreach ($bornControls as $i => $control) {
             $schoolControl = $schoolControls[$i];
             $personControl = $personControls[$i];
             $studyYearControl = $studyYearControls[$i];
-            $control->addCondition(~$form::FILLED)
-                ->addRule(function (IControl $control) use ($schoolControl, $personControl, $studyYearControl, $form, $msg) {
+            $control->addCondition(Form::BLANK)
+                ->addRule(function () use ($schoolControl, $personControl, $studyYearControl, $form, $msg) {
                     if (!$personControl->getValue()) {
                         return true;
                     }
@@ -108,12 +82,7 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
 //                };
     }
 
-    /**
-     * @param IControl $studyYearControl
-     * @param IControl $personControl
-     * @return int|null
-     */
-    private function getStudyYear($studyYearControl, $personControl) {
+    private function getStudyYear(IControl $studyYearControl, IControl $personControl): ?int {
         if ($studyYearControl->getValue()) {
             return $studyYearControl->getValue();
         }
@@ -126,12 +95,7 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
         return $personHistory ? $personHistory->study_year : null;
     }
 
-    /**
-     * @param IControl $schoolControl
-     * @param IControl $personControl
-     * @return int
-     */
-    private function getSchoolId($schoolControl, $personControl) {
+    private function getSchoolId(IControl $schoolControl, IControl $personControl): int {
         if ($schoolControl->getValue()) {
             return $schoolControl->getValue();
         }
@@ -143,11 +107,7 @@ class BornCheck extends AbstractAdjustment implements IFormAdjustment {
         return $school->school_id;
     }
 
-    /**
-     * @param $studyYear
-     * @return bool
-     */
-    private function isStudent($studyYear) {
+    private function isStudent(?int $studyYear): bool {
         return ($studyYear === null) ? false : true;
     }
 }

@@ -2,16 +2,18 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Entity\Event\EventForm;
+use FKSDB\Components\Controls\Entity\EventFormComponent;
 use FKSDB\Components\Grids\Events\EventsGrid;
+use FKSDB\Entity\ModelNotFoundException;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\UI\PageTitle;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use FKSDB\Exceptions\NotImplementedException;
+use Nette\Security\IResource;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -21,16 +23,9 @@ use FKSDB\Exceptions\NotImplementedException;
 class EventPresenter extends BasePresenter {
     use EntityPresenterTrait;
 
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
+    private ServiceEvent $serviceEvent;
 
-    /**
-     * @param ServiceEvent $serviceEvent
-     * @return void
-     */
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+    final public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 
@@ -44,31 +39,33 @@ class EventPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
-    public function titleEdit() {
+    public function titleEdit(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Edit event %s'), $this->getEntity()->name), 'fa fa-pencil'));
     }
 
     /**
      * @throws NotImplementedException
      */
-    public function actionDelete() {
+    public function actionDelete(): void {
         throw new NotImplementedException();
     }
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws ModelNotFoundException
+     * @throws BadTypeException
      */
-    public function actionEdit() {
+    public function actionEdit(): void {
         $this->traitActionEdit();
     }
 
     /**
      * @return EventsGrid
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
     protected function createComponentGrid(): EventsGrid {
         return new EventsGrid($this->getContext(), $this->getSelectedContest(), $this->getSelectedYear());
@@ -76,18 +73,20 @@ class EventPresenter extends BasePresenter {
 
     /**
      * @return Control
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
     protected function createComponentCreateForm(): Control {
-        return new EventForm($this->getSelectedContest(), $this->getContext(), $this->getSelectedYear(), true);
+        return new EventFormComponent($this->getSelectedContest(), $this->getContext(), $this->getSelectedYear(), true);
     }
 
     /**
      * @return Control
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
     protected function createComponentEditForm(): Control {
-        return new EventForm($this->getSelectedContest(), $this->getContext(), $this->getSelectedYear(), false);
+        return new EventFormComponent($this->getSelectedContest(), $this->getContext(), $this->getSelectedYear(), false);
     }
 
     protected function getORMService(): ServiceEvent {
@@ -95,12 +94,13 @@ class EventPresenter extends BasePresenter {
     }
 
     /**
-     * @param $resource
+     * @param IResource|string|null $resource
      * @param string $privilege
      * @return bool
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
-        return $this->getContestAuthorizator()->isAllowed($resource, $privilege, $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 }

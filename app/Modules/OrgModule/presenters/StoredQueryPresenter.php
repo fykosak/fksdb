@@ -2,11 +2,13 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Entity\StoredQuery\StoredQueryForm;
-use FKSDB\Components\Controls\ResultsComponent;
-use FKSDB\Components\Controls\StoredQueryTagCloud;
+use FKSDB\Components\Controls\Entity\StoredQueryFormComponent;
+use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
+use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
+use FKSDB\Entity\ModelNotFoundException;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
@@ -18,7 +20,6 @@ use FKSDB\StoredQuery\StoredQueryFactory;
 use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 use Nette\Utils\Strings;
 
@@ -36,25 +37,13 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
      * @persistent
      */
     public $qid;
-    /**
-     * @var ServiceStoredQuery
-     */
-    private $serviceStoredQuery;
 
-    /**
-     * @var StoredQueryFactory
-     */
-    private $storedQueryFactory;
-    /**
-     * @var StoredQuery
-     */
-    private $storedQuery;
+    private StoredQueryFactory $storedQueryFactory;
+    private StoredQuery $storedQuery;
+    private ServiceStoredQuery $serviceStoredQuery;
 
-    /**
-     * @param ServiceStoredQuery $serviceStoredQuery
-     * @return void
-     */
-    public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery) {
+    final public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery): void {
+
         $this->serviceStoredQuery = $serviceStoredQuery;
     }
 
@@ -74,19 +63,37 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
         $this->contestAuthorizator->isAllowed($this->getStoredQuery(), 'execute', $this->getSelectedContest());
     }
 
-    public function titleEdit() {
-        $this->setPageTitle(new PageTitle(sprintf(_('Úprava dotazu %s'), $this->getEntity()->name), 'fa fa-pencil'));
+    /**
+     * @return void
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     */
+    public function titleEdit(): void {
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit query %s'), $this->getEntity()->name), 'fa fa-pencil'));
+
     }
 
     public function getTitleCreate(): PageTitle {
         return new PageTitle(sprintf(_('Create query')), 'fa fa-pencil');
     }
 
-    public function titleList() {
+    /**
+     * @return void
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
+     */
+    public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('Exports'), 'fa fa-database'));
     }
 
-    public function titleDetail() {
+    /**
+     * @return void
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     */
+    public function titleDetail(): void {
         $title = sprintf(_('Detail of the query "%s"'), $this->getEntity()->name);
         $qid = $this->getEntity()->qid;
         if ($qid) {
@@ -105,17 +112,21 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
         $this->setPageTitle(new PageTitle(sprintf(_('%s'), $this->getStoredQuery()->getName()), 'fa fa-play-circle-o'));
     }
 
-
-    protected function startup() {
+    protected function startup(): void {
+        switch ($this->getAction()) {
+            case 'execute':
+                $this->redirect(':Org:Export:execute', $this->getParameters());
+        }
         parent::startup();
         $this->seriesTraitStartup();
     }
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws ModelNotFoundException
+     * @throws BadTypeException
      */
-    public function actionEdit() {
+    public function actionEdit(): void {
         $this->traitActionEdit();
     }
 
@@ -135,7 +146,11 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
         }
     }
 
-    public function renderDetail() {
+    /**
+     * @return void
+     * @throws ModelNotFoundException
+     */
+    public function renderDetail(): void {
         $this->template->model = $this->getEntity();
     }
 
@@ -147,11 +162,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
         $this->template->model = $this->getStoredQuery()->getQueryPattern();
     }
 
-
-    /**
-     * @return bool|int|string
-     */
-    public function getAllowedAuthMethods() {
+    public function getAllowedAuthMethods(): int {
         $methods = parent::getAllowedAuthMethods();
         if ($this->getParameter(self::PARAM_HTTP_AUTH, false)) {
             $methods = $methods | AuthenticatedPresenter::AUTH_ALLOW_HTTP;
@@ -159,10 +170,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
         return $methods;
     }
 
-    /**
-     * @return string
-     */
-    protected function getHttpRealm() {
+    protected function getHttpRealm(): ?string {
         return 'FKSDB-export';
     }
 
@@ -192,12 +200,12 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
         return null;
     }
 
-    protected function createComponentCreateForm(): Control {
-        return new StoredQueryForm($this->getContext(), true);
+    protected function createComponentCreateForm(): StoredQueryFormComponent {
+        return new StoredQueryFormComponent($this->getContext(), true);
     }
 
-    protected function createComponentEditForm(): Control {
-        return new StoredQueryForm($this->getContext(), true);
+    protected function createComponentEditForm(): StoredQueryFormComponent {
+        return new StoredQueryFormComponent($this->getContext(), false);
     }
 
     protected function createComponentGrid(): BaseGrid {
@@ -226,22 +234,23 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
 
 
     /**
-     * @param IResource|string $resource
+     * @param IResource|string|null $resource
      * @param string|null $privilege
      * @return bool
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
-        return $this->getContestAuthorizator()->isAllowed($resource, $privilege, $this->getSelectedContest());
+        return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 
     /**
      * @param PageTitle $pageTitle
      * @return void
-     * @throws BadRequestException
      * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
-    protected function setPageTitle(PageTitle $pageTitle) {
+    protected function setPageTitle(PageTitle $pageTitle): void {
         $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
         parent::setPageTitle($pageTitle);
     }

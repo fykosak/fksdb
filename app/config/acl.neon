@@ -7,7 +7,8 @@
 
 services:
     # assertions
-    ownerAssertion: Authorization\Assertions\OwnerAssertion
+    ownerAssertion: FKSDB\Authorization\Assertions\OwnerAssertion
+    paymentAssertion: FKSDB\Authorization\Assertions\PaymentAssertion
 
     # data services
     #- authorizator:
@@ -96,6 +97,7 @@ acl:
     - allow(org, person, edit, [@ownerAssertion, 'isSelf'])
     - allow(org, person, stalk.basic, [@ownerAssertion, 'existsOwnContestant'])
     - allow(org, person, stalk.full, [@ownerAssertion, 'isSelf'])
+    - allow(org, chart, ::constant(Nette\Security\Permission::ALL))
 
     - allow(webmaster, task, insert) # stahování úloh
 
@@ -158,7 +160,6 @@ acl:
     - allow(boss, fyziklani.gameSetup, ::constant(Nette\Security\Permission::ALL)) # pozerať nastavnie
     - allow(boss, fyziklani.close, ::constant(Nette\Security\Permission::ALL)) # pozerať nastavnie
 
-
     # eventModule
     - allow(registered, event.dashboard, ::constant(Nette\Security\Permission::ALL))
 
@@ -173,7 +174,8 @@ acl:
 
     # payment
     - allow(registered, event.payment, detail, [@ownerAssertion, 'isSelf'])
-    - allow(registered, event.payment, edit, [@ownerAssertion, 'isSelf'])
+    - allow(registered, event.payment, edit, and([@paymentAssertion, 'isSelf'],[@paymentAssertion,'isPaymentEditable']))
+
     - allow(registered, event.payment, create)
     #paymnet org
     - allow(org, event.payment, ::constant(Nette\Security\Permission::ALL))

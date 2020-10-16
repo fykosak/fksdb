@@ -2,6 +2,8 @@
 
 namespace FKSDB\ORM\Models\Fyziklani;
 
+use FKSDB\Fyziklani\Submit\AlreadyRevokedSubmitException;
+use FKSDB\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\IFyziklaniTaskReferencedModel;
@@ -27,10 +29,10 @@ use Nette\Security\IResource;
  * @property-read \DateTimeInterface modified
  */
 class ModelFyziklaniSubmit extends AbstractModelSingle implements IFyziklaniTeamReferencedModel, IEventReferencedModel, IFyziklaniTaskReferencedModel, IResource {
-    const STATE_NOT_CHECKED = 'not_checked';
-    const STATE_CHECKED = 'checked';
+    public const STATE_NOT_CHECKED = 'not_checked';
+    public const STATE_CHECKED = 'checked';
 
-    const RESOURCE_ID = 'fyziklani.submit';
+    public const RESOURCE_ID = 'fyziklani.submit';
 
     public function getFyziklaniTask(): ModelFyziklaniTask {
         return ModelFyziklaniTask::createFromActiveRow($this->fyziklani_task);
@@ -57,8 +59,25 @@ class ModelFyziklaniSubmit extends AbstractModelSingle implements IFyziklaniTeam
         ];
     }
 
-    public function canRevoke(): bool {
-        return $this->canChange() && !is_null($this->points);
+    /**
+     * @param bool $throws
+     * @return bool
+     * @throws AlreadyRevokedSubmitException
+     * @throws ClosedSubmittingException
+     */
+    public function canRevoke(bool $throws = true): bool {
+        if (is_null($this->points)) {
+            if (!$throws) {
+                return false;
+            }
+            throw new AlreadyRevokedSubmitException();
+        } elseif ($this->getFyziklaniTeam()->hasOpenSubmitting()) {
+            if (!$throws) {
+                return false;
+            }
+            throw new ClosedSubmittingException($this->getFyziklaniTeam());
+        }
+        return true;
     }
 
     public function canChange(): bool {

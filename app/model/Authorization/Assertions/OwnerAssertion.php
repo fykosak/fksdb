@@ -1,8 +1,8 @@
 <?php
 
-namespace Authorization\Assertions;
+namespace FKSDB\Authorization\Assertions;
 
-use Authorization\Grant;
+use FKSDB\Authorization\Grant;
 use FKSDB\ORM\Models\IContestReferencedModel;
 use FKSDB\ORM\Models\IPersonReferencedModel;
 use FKSDB\ORM\Models\ModelContestant;
@@ -20,15 +20,8 @@ use Nette\Security\Permission;
  */
 class OwnerAssertion {
 
-    /**
-     * @var IUserStorage
-     */
-    private $user;
+    private IUserStorage $user;
 
-    /**
-     * OwnerAssertion constructor.
-     * @param IUserStorage $user
-     */
     public function __construct(IUserStorage $user) {
         $this->user = $user;
     }

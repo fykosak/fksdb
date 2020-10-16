@@ -2,15 +2,16 @@
 
 namespace FKSDB\Modules\CommonModule;
 
-use FKSDB\Components\Controls\Entity\School\SchoolForm;
+use FKSDB\Components\Controls\Entity\SchoolFormComponent;
+use FKSDB\Components\Grids\ContestantsFromSchoolGrid;
 use FKSDB\Components\Grids\SchoolsGrid;
+use FKSDB\Entity\ModelNotFoundException;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
 use FKSDB\UI\PageTitle;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 
 /**
@@ -21,14 +22,9 @@ use Nette\Security\IResource;
 class SchoolPresenter extends BasePresenter {
     use EntityPresenterTrait;
 
-    /** @var ServiceSchool */
-    private $serviceSchool;
+    private ServiceSchool $serviceSchool;
 
-    /**
-     * @param ServiceSchool $serviceSchool
-     * @return void
-     */
-    public function injectServiceSchool(ServiceSchool $serviceSchool) {
+    final public function injectServiceSchool(ServiceSchool $serviceSchool): void {
         $this->serviceSchool = $serviceSchool;
     }
 
@@ -37,38 +33,42 @@ class SchoolPresenter extends BasePresenter {
     }
 
     public function getTitleCreate(): PageTitle {
-        return new PageTitle(_('Založit školu'), 'fa fa-plus');
+        return new PageTitle(_('Create school'), 'fa fa-plus');
     }
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
-    public function titleEdit() {
-        $this->setPageTitle(new PageTitle(sprintf(_('Úprava školy %s'), $this->getEntity()->name_abbrev), 'fa fa-pencil'));
+    public function titleEdit(): void {
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit school %s'), $this->getEntity()->name_abbrev), 'fa fa-pencil'));
     }
 
     /**
      * @return void
-     * @throws BadRequestException
+     *
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
-    public function titleDetail() {
+    public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Detail of school %s'), $this->getEntity()->name_abbrev), 'fa fa-university'));
     }
 
     /**
-     * @throws BadRequestException
+     * @throws ModelNotFoundException
+     * @throws BadTypeException
      */
-    public function actionEdit() {
+    public function actionEdit(): void {
         $this->traitActionEdit();
     }
 
     /**
      * @return void
+     * @throws ModelNotFoundException
      */
-    public function renderDetail() {
+    public function renderDetail(): void {
         $this->template->model = $this->getEntity();
     }
 
@@ -76,12 +76,20 @@ class SchoolPresenter extends BasePresenter {
         return new SchoolsGrid($this->getContext());
     }
 
-    protected function createComponentEditForm(): Control {
-        return new SchoolForm($this->getContext(), false);
+    protected function createComponentEditForm(): SchoolFormComponent {
+        return new SchoolFormComponent($this->getContext(), false);
     }
 
-    protected function createComponentCreateForm(): Control {
-        return new SchoolForm($this->getContext(), true);
+    protected function createComponentCreateForm(): SchoolFormComponent {
+        return new SchoolFormComponent($this->getContext(), true);
+    }
+
+    /**
+     * @return ContestantsFromSchoolGrid
+     * @throws ModelNotFoundException
+     */
+    protected function createComponentContestantsFromSchoolGrid(): ContestantsFromSchoolGrid {
+        return new ContestantsFromSchoolGrid($this->getEntity(), $this->getContext());
     }
 
     /**

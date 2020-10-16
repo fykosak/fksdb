@@ -10,14 +10,23 @@ use FKSDB\ORM\Models\ModelPerson;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class PersonTest {
-    /**
-     * @param ILogger $logger
-     * @param ModelPerson $person
-     * @return void
-     */
-    abstract public function run(ILogger $logger, ModelPerson $person);
 
-    abstract public function getTitle(): string;
+    private string $id;
 
-    abstract public function getAction(): string;
+    private string $title;
+
+    public function __construct(string $id, string $title) {
+        $this->id = $id;
+        $this->title = $title;
+    }
+
+    abstract public function run(ILogger $logger, ModelPerson $person): void;
+
+    public function getTitle(): string {
+        return $this->title;
+    }
+
+    public function getId(): string {
+        return $this->id;
+    }
 }

@@ -24,36 +24,16 @@ use Nette\Utils\ArrayHash;
  */
 class CategoryProcessing extends AbstractProcessing {
 
-    /**
-     * @var YearCalculator
-     */
-    private $yearCalculator;
+    private YearCalculator $yearCalculator;
 
-    /**
-     * @var ServiceSchool
-     */
-    private $serviceSchool;
+    private ServiceSchool $serviceSchool;
 
-    /**
-     * CategoryProcessing constructor.
-     * @param YearCalculator $yearCalculator
-     * @param ServiceSchool $serviceSchool
-     */
     public function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
     }
 
-    /**
-     * @param $states
-     * @param ArrayHash $values
-     * @param Machine $machine
-     * @param Holder $holder
-     * @param ILogger $logger
-     * @param Form|null $form
-     * @return void
-     */
-    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
+    protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void {
 
         if (!isset($values['team'])) {
             return;
@@ -111,15 +91,11 @@ class CategoryProcessing extends AbstractProcessing {
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
 
         if ($original != $values['team']['category']) {
-            $logger->log(new Message(sprintf(_('Tým zařazen do kategorie %s.'), $values['team']['category']), ILogger::INFO));
+            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), $values['team']['category']), ILogger::INFO));
         }
     }
 
-    /**
-     * @param $participants
-     * @return string
-     */
-    private function getCategory($participants) {
+    private function getCategory(array $participants): string {
         $coefficientSum = 0;
         $count4 = 0;
         $count3 = 0;
@@ -148,7 +124,7 @@ class CategoryProcessing extends AbstractProcessing {
         } elseif ($categoryHandle <= 4) {
             $result = 'A';
         } else {
-            throw new SubmitProcessingException(_('Nelze spočítat kategorii.'));
+            throw new SubmitProcessingException(_('Cannot determine category.'));
         }
         return $result;
     }
