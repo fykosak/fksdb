@@ -9,6 +9,8 @@ use FKSDB\ORM\Models\IScheduleGroupReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\Payment\Price;
 use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
+use FKSDB\WebService\INodeCreator;
+use FKSDB\WebService\XMLHelper;
 use LogicException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
@@ -29,7 +31,7 @@ use Nette\Security\IResource;
  * @property-read string description_cs
  * @property-read string description_en
  */
-class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupReferencedModel, IEventReferencedModel, IResource {
+class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupReferencedModel, IEventReferencedModel, IResource, INodeCreator {
     public const RESOURCE_ID = 'event.scheduleItem';
 
     public function getScheduleGroup(): ModelScheduleGroup {
@@ -59,6 +61,7 @@ class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupRef
     public function getInterested(): GroupedSelection {
         return $this->related(DbNames::TAB_PERSON_SCHEDULE);
     }
+
     /* ****** CAPACITY CALCULATION *******/
 
     public function getCapacity(): ?int {
@@ -123,6 +126,35 @@ class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupRef
                 'en' => $this->description_en,
             ],
         ];
+    }
+
+    public function createXMLNode(\DOMDocument $doc): \DOMNode {
+        $node = $doc->createElement('scheduleItem');
+        $node->setAttribute('scheduleItemId', $this->schedule_item_id);
+        XMLHelper::fillArrayToNode([
+            'scheduleGroupId' => $this->schedule_group_id,
+            'totalCapacity' => $this->capacity,
+            'usedCapacity' => $this->getUsedCapacity(),
+            'scheduleItemId' => $this->schedule_item_id,
+            'requireIdNumber' => $this->require_id_number,
+        ], $doc, $node);
+        XMLHelper::fillArrayArgumentsToNode('lang', [
+            'description' => [
+                'cs' => $this->description_cs,
+                'en' => $this->description_en,
+            ],
+            'name' => [
+                'cs' => $this->name_cs,
+                'en' => $this->name_en,
+            ],
+        ], $doc, $node);
+        XMLHelper::fillArrayArgumentsToNode('currency', [
+            'price' => [
+                'eur' => $this->price_eur,
+                'czk' => $this->price_czk,
+            ],
+        ], $doc, $node);
+        return $node;
     }
 
     public function getResourceId(): string {

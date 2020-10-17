@@ -59,7 +59,7 @@ services:
         class: SoapServer(%wsdlUrl%)
         setup:
             - setObject(@webServiceModel)
-    - FKSDB\WebService\FyziklaniSoapFactory
+    - FKSDB\WebService\EventSoapFactory
 
     webServiceModel: FKSDB\WebService\WebServiceModel(%inverseContestMapping%, ...)
 

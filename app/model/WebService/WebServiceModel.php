@@ -39,7 +39,7 @@ class WebServiceModel {
     private PasswordAuthenticator $authenticator;
     private StoredQueryFactory $storedQueryFactory;
     private ContestAuthorizator $contestAuthorizator;
-    private FyziklaniSoapFactory $fyziklaniSoapFactory;
+    private EventSoapFactory $eventSoapFactory;
 
     public function __construct(
         array $inverseContestMap,
@@ -49,7 +49,7 @@ class WebServiceModel {
         PasswordAuthenticator $authenticator,
         StoredQueryFactory $storedQueryFactory,
         ContestAuthorizator $contestAuthorizator,
-        FyziklaniSoapFactory $fyziklaniSoapFactory
+        EventSoapFactory $fyziklaniSoapFactory
     ) {
         $this->inverseContestMap = $inverseContestMap;
         $this->serviceContest = $serviceContest;
@@ -58,7 +58,7 @@ class WebServiceModel {
         $this->authenticator = $authenticator;
         $this->storedQueryFactory = $storedQueryFactory;
         $this->contestAuthorizator = $contestAuthorizator;
-        $this->fyziklaniSoapFactory = $fyziklaniSoapFactory;
+        $this->eventSoapFactory = $fyziklaniSoapFactory;
     }
 
     /**
@@ -92,9 +92,9 @@ class WebServiceModel {
      * @return SoapVar
      * @throws SoapFault
      */
-    public function getFyziklani(stdClass $args): SoapVar {
+    public function getEvent(stdClass $args): SoapVar {
         $this->checkAuthentication(__FUNCTION__);
-        return $this->fyziklaniSoapFactory->handle($args);
+        return $this->eventSoapFactory->handle($args);
     }
 
     /**
