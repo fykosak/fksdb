@@ -17,7 +17,7 @@ class DispatchPresenter extends BasePresenter {
     private array $contestsProperty;
 
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Rozcestník'), 'fa fa-home'));
+        $this->setPageTitle(new PageTitle(_('Menu'), 'fa fa-home'));
     }
 
     /**
@@ -28,7 +28,7 @@ class DispatchPresenter extends BasePresenter {
         $login = $this->getUser()->getIdentity();
         $person = $login->getPerson();
         $this->template->contestants = $person ? $this->getAllContestants($person) : [];
-        $this->template->orgs = $this->getAllOrgs($login);
+        $this->template->orgs = $this->getAllOrganisers($login);
         $this->template->contestsProperty = $this->getContestsProperty();
     }
 
@@ -42,7 +42,7 @@ class DispatchPresenter extends BasePresenter {
      * @return array
      * @throws InvalidLinkException
      */
-    private function getAllOrgs(ModelLogin $login): array {
+    private function getAllOrganisers(ModelLogin $login): array {
         $results = [];
         foreach ($login->getActiveOrgs($this->yearCalculator) as $contestId => $org) {
             $results[$contestId] = [

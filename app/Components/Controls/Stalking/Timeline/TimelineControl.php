@@ -52,7 +52,7 @@ class TimelineControl extends ReactComponent {
             'since' => [],
             'until' => [],
         ];
-        $orgs = [];
+        $organisers = [];
         foreach ($this->person->getOrgs() as $row) {
             $org = ModelOrg::createFromActiveRow($row);
             $since = new \DateTime($this->yearCalculator->getAcademicYear($org->getContest(), $org->since) . '-' . YearCalculator::FIRST_AC_MONTH . '-1');
@@ -62,7 +62,7 @@ class TimelineControl extends ReactComponent {
             }
             $dates['since'][] = $since;
             $dates['until'][] = $until;
-            $orgs[] = ['since' => $since->format('c'), 'until' => $until->format('c'), 'model' => [
+            $organisers[] = ['since' => $since->format('c'), 'until' => $until->format('c'), 'model' => [
                 'orgId' => $org->org_id,
                 'contestId' => $org->contest_id,
             ]];
@@ -85,7 +85,7 @@ class TimelineControl extends ReactComponent {
                 ]];
         }
         return [$dates, [
-            'orgs' => $orgs,
+            'orgs' => $organisers,
             'contestants' => $contestants,
         ]];
     }

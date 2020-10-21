@@ -67,11 +67,11 @@ class SettingsPresenter extends BasePresenter {
 
     public function renderDefault(): void {
         if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN)) {
-            $this->flashMessage(_('Nastavte si nové heslo.'), self::FLASH_WARNING);
+            $this->flashMessage(_('Set up new password.'), self::FLASH_WARNING);
         }
 
         if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY)) {
-            $this->flashMessage(_('Nastavte si nové heslo.'), self::FLASH_WARNING);
+            $this->flashMessage(_('Set up new password.'), self::FLASH_WARNING);
         }
     }
 
@@ -92,7 +92,7 @@ class SettingsPresenter extends BasePresenter {
             $this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_INITIAL_LOGIN) ||
             $this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
 
-        $group = $form->addGroup(_('Autentizace'));
+        $group = $form->addGroup(_('Authentication'));
         $emailRule = $this->uniqueEmailFactory->create($login->getPerson()); //TODO em use it somewhere
         $loginRule = $this->uniqueLoginFactory->create($login);
 
@@ -113,7 +113,7 @@ class SettingsPresenter extends BasePresenter {
                 ->addRule(function (BaseControl $control) use ($login): bool {
                     $hash = PasswordAuthenticator::calculateHash($control->getValue(), $login);
                     return $hash == $login->hash;
-                }, 'Špatně zadané staré heslo.');
+                }, _('Špatně zadané staré heslo.'));
         }
 
         $form->setCurrentGroup();
@@ -145,9 +145,9 @@ class SettingsPresenter extends BasePresenter {
 
         $this->loginService->updateModel2($login, $loginData);
 
-        $this->flashMessage(_('Uživatelské informace upraveny.'), self::FLASH_SUCCESS);
+        $this->flashMessage(_('User information has been saved.'), self::FLASH_SUCCESS);
         if ($tokenAuthentication) {
-            $this->flashMessage(_('Heslo nastaveno.'), self::FLASH_SUCCESS); //TODO here may be Facebook ID
+            $this->flashMessage(_('Password changed.'), self::FLASH_SUCCESS); //TODO here may be Facebook ID
             $this->tokenAuthenticator->disposeAuthToken(); // from now on same like password authentication
         }
         $this->redirect('this');

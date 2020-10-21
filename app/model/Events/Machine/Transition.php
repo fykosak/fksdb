@@ -71,7 +71,7 @@ class Transition {
     }
 
     /**
-     * Meaningless idenifier.
+     * Meaningless identifier.
      */
     public function getName(): string {
         return $this->name;
@@ -282,7 +282,7 @@ class Transition {
     }
 
     /**
-     * @note Assumes the condition is fullfilled.
+     * @note Assumes the condition is fulfilled.
      * @param BaseHolder $holder
      */
     private function changeState(BaseHolder $holder): void {

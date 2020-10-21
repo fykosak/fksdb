@@ -45,8 +45,8 @@ class TransitionUnsatisfiedTargetException extends MachineExecutionException {
     /**
      * TransitionUnsatisfiedTargetException constructor.
      * @param mixed $validationResult
-     * @param null $code
-     * @param null $previous
+     * @param int $code
+     * @param \Throwable|null $previous
      */
     public function __construct($validationResult, int $code = 0, ?\Throwable $previous = null) {
         $message = '';

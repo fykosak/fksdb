@@ -97,11 +97,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function titleEmail(): void {
-        $this->setPageTitle(new PageTitle(_('Zadejte e-mail'), 'fa fa-envelope', $this->getSelectedContest()->name));
+        $this->setPageTitle(new PageTitle(_('Type e-mail'), 'fa fa-envelope', $this->getSelectedContest()->name));
     }
 
     public function titleContestant(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('%s – registrace řešitele (%s. ročník)'), $this->getSelectedContest()->name, $this->getSelectedYear())));
+        $this->setPageTitle(new PageTitle(sprintf(_('%s – contestant application (year %s)'), $this->getSelectedContest()->name, $this->getSelectedYear())));
     }
     /* ********************* ACTIONS ***************** */
     /**
@@ -120,7 +120,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
             $person = $this->getPerson();
 
             if (!$person) {
-                $this->flashMessage(_('Uživatel musí být osobou, aby se mohl registrovat jako řešitel.'), self::FLASH_INFO);
+                $this->flashMessage(_('User must be a person in order to register as a contestant.'), self::FLASH_INFO);
                 $this->redirect(':Core:Authentication:login');
             }
         } else {
@@ -128,7 +128,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
             $person = $this->servicePerson->findByEmail($email);
             if ($person) {
                 if ($person->getLogin()) {
-                    $this->flashMessage('Byl nalezen existující účet, pro pokračování se přihlaste.');
+                    $this->flashMessage(_('Byl nalezen existující účet, pro pokračování se přihlaste.'));
                     $this->redirect(':Core:Authentication:login', ['login' => $email, 'backlink' => $this->storeRequest()]);
                 }
             }
@@ -196,7 +196,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     public function getSelectedAcademicYear(): int {
         if (!$this->getSelectedContest()) {
-            throw new InvalidStateException("Cannot get acadamic year without selected contest.");
+            throw new InvalidStateException(_('Cannot get academic year without selected contest.'));
         }
         return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
@@ -292,7 +292,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
             }
         };
-        $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
+        $form->addProtection(_('The form has expired. Please send it again.'));
 
         return $control;
     }
@@ -302,19 +302,19 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     }
 
     public function messageCreate(): string {
-        return _('Řešitel %s zaregistrován.');
+        return _('Contestant %s registered.');
     }
 
     public function messageEdit(): string {
-        return _('Řešitel %s upraven.');
+        return _('Contestant %s modified.');
     }
 
     public function messageError(): string {
-        return _('Chyba při registraci.');
+        return _('Error while registering.');
     }
 
     public function messageExists(): string {
-        return _('Řešitel je již registrován.');
+        return _('Contestant already registered.');
     }
 
     /**

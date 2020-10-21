@@ -140,7 +140,7 @@ class YearCalculator {
         }
 
         if (!$this->cache) {
-            throw new InvalidStateException('FKSDB\YearCalculator cannot be initalized, table contest_year is probably empty.');
+            throw new InvalidStateException('FKSDB\YearCalculator cannot be initialized, table contest_year is probably empty.');
         }
 
         $pk = $this->serviceContest->getPrimary();

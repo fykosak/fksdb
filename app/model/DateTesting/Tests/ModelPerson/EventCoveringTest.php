@@ -52,10 +52,10 @@ class EventCoveringTest extends PersonTest {
         $this->check($logger, $contestantYears, $eventOrgYears, 'contestant', $person);
     }
 
-    private function check(ILogger $logger, array $data, array $orgs, string $type, ModelPerson $person): void {
+    private function check(ILogger $logger, array $data, array $organisers, string $type, ModelPerson $person): void {
         foreach ($data as $contestId => $contestYears) {
             foreach ($contestYears as $year) {
-                if (\in_array($year, $orgs[$contestId])) {
+                if (\in_array($year, $organisers[$contestId])) {
                     $logger->log($this->createLog($year, $contestId, $type, 'eventOrg'));
                 }
                 $query = $person->getOrgs($contestId);

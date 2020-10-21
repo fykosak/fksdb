@@ -20,13 +20,11 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Http\FileUpload;
 use Nette\Http\Response;
-use FKSDB\Modules\PublicModule\SubmitPresenter;
 use Tracy\Debugger;
 
 /**
  * Class TaskUpload
  * @author Michal Červeňák <miso@fykos.cz>
- * @property-read SubmitPresenter $presenter
  */
 class AjaxSubmit extends AjaxComponent {
 

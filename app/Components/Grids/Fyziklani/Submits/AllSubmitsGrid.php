@@ -132,7 +132,7 @@ class AllSubmitsGrid extends SubmitsGrid {
         /** @var ModelFyziklaniSubmit $submit */
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
         if (!$submit) {
-            $this->flashMessage(_('Submit dos not exists.'), BasePresenter::FLASH_ERROR);
+            $this->flashMessage(_('Submit does not exists.'), BasePresenter::FLASH_ERROR);
             $this->redirect('this');
         }
         try {

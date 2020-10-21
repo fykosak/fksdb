@@ -292,11 +292,11 @@ DBReflection:
                         write: RESTRICT
                 email_parent_m:
                     type: email
-                    title: _('E-mail (matka)')
+                    title: _('E-mail (mother)')
                     permission: RESTRICT
                 email_parent_d:
                     type: email
-                    title: _('E-mail (otec)')
+                    title: _('E-mail (father)')
                     permission: RESTRICT
                 id_number:
                     type: class

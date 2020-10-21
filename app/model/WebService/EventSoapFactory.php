@@ -53,10 +53,6 @@ class EventSoapFactory {
             $this->createPersonScheduleNode($doc, $args, $event);
         }
 
-        if (isset($args->results)) {
-            throw new \SoapFault('Server', 'Not implemented');
-        }
-
         $doc->formatOutput = true;
         return new SoapVar($doc->saveXML(), XSD_ANYXML);
     }
@@ -125,10 +121,24 @@ class EventSoapFactory {
             throw new \SoapFault('Sender', 'Wrong event type.');
         }
         $rootNode = $doc->createElement('teamList');
-
-        foreach ($event->getTeams() as $row) {
+        $query=$event->getTeams();
+        if (isset($args->teamList) && isset($args->teamList->status)) {
+            $query->where('status', $args->teamList->status);
+        }
+        foreach ($query as $row) {
             $team = ModelFyziklaniTeam::createFromActiveRow($row);
+            $teacher = $team->getTeacher();
             $teamNode = $team->createXMLNode($doc);
+
+            if ($teacher) {
+                $teacherNode = $doc->createElement('teacher');
+                $teacherNode->setAttribute('personId', $teacher->person_id);
+                XMLHelper::fillArrayToNode([
+                    'name' => $teacher->getFullName(),
+                    'email' => $teacher->getInfo()->email,
+                ], $doc, $teacherNode);
+                $teamNode->appendChild($teacherNode);
+            }
 
 // from FOL fksdb_views
             $query = $this->serviceEvent->getContext()->query('
@@ -142,7 +152,10 @@ class EventSoapFactory {
             FROM fksdb.event_participant ep
             LEFT JOIN fksdb.e_fyziklani_participant efp ON efp.event_participant_id = ep.event_participant_id
             LEFT JOIN fksdb.v_person vp on vp.person_id = ep.person_id
-            LEFT JOIN fksdb.person_history ph on ph.person_id = ep.person_id AND ph.ac_year = 2019 -- UPDATE HERE
+            LEFT JOIN fksdb.event e2 on ep.event_id = e2.event_id
+            LEFT JOIN fksdb.event_type et on e2.event_type_id = et.event_type_id
+            LEFT JOIN fksdb.contest_year cy on e2.year = cy.year and cy.contest_id = et.contest_id
+            LEFT JOIN fksdb.person_history ph on ph.person_id = ep.person_id AND ph.ac_year = cy.ac_year
             LEFT JOIN fksdb.school s on s.school_id = ph.school_id
             LEFT JOIN fksdb.address sa on sa.address_id = s.address_id
             LEFT JOIN fksdb.region sr on sr.region_id = sa.region_id

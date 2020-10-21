@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Events\Processings;
+namespace FKSDB\Events\Processing;
 
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;

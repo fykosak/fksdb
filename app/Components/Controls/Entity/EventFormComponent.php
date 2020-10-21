@@ -151,7 +151,7 @@ class EventFormComponent extends EditEntityFormComponent {
             $item->addHtml(Html::el(null)->setText($key));
             if (isset($meta['default'])) {
                 $item->addText(': ');
-                $item->addHtml(Html::el(null)->setText(Utils::getRepr($meta['default'])));
+                $item->addHtml(Html::el(null)->setText(Utils::getRepresentation($meta['default'])));
             }
         }
         return $result;

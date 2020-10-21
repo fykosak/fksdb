@@ -3,13 +3,14 @@
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Authorization\RelatedPersonAuthorizator;
+use FKSDB\Components\Controls\Choosers\ContestChooser;
+use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Config\NeonSchemaException;
+use FKSDB\Events\EventDispatchFactory;
+use FKSDB\Events\EventNotFoundException;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\Components\Controls\Choosers\ContestChooser;
-use FKSDB\Components\Events\ApplicationComponent;
-use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\GoneException;
 use FKSDB\Exceptions\NotFoundException;
@@ -132,12 +133,12 @@ class ApplicationPresenter extends BasePresenter {
      */
     public function actionDefault($eventId, $id): void {
         if (!$this->getEvent()) {
-            throw new NotFoundException(_('Neexistující akce.'));
+            throw new EventNotFoundException();
         }
         $eventApplication = $this->getEventApplication();
         if ($id) { // test if there is a new application, case is set there are a edit od application, empty => new application
             if (!$eventApplication) {
-                throw new NotFoundException(_('Neexistující přihláška.'));
+                throw new NotFoundException(_('Unknown application.'));
             }
             if (!$eventApplication instanceof IEventReferencedModel) {
                 throw new BadTypeException(IEventReferencedModel::class, $eventApplication);
@@ -162,9 +163,9 @@ class ApplicationPresenter extends BasePresenter {
 
             if ($this->getHolder()->getPrimaryHolder()->getModelState() == \FKSDB\Transitions\Machine::STATE_INIT) {
                 $this->setView('closed');
-                $this->flashMessage(_('Přihlašování není povoleno.'), BasePresenter::FLASH_INFO);
+                $this->flashMessage(_('Registration is not open.'), BasePresenter::FLASH_INFO);
             } elseif (!$this->getParameter(self::PARAM_AFTER, false)) {
-                $this->flashMessage(_('Automat přihlášky nemá aktuálně žádné možné přechody.'), BasePresenter::FLASH_INFO);
+                $this->flashMessage(_('Application machine has no available transitions.'), BasePresenter::FLASH_INFO);
             }
         }
 
@@ -193,7 +194,7 @@ class ApplicationPresenter extends BasePresenter {
         $component = parent::createComponentContestChooser();
         if ($this->getAction() == 'default') {
             if (!$this->getEvent()) {
-                throw new NotFoundException(_('Neexistující akce.'));
+                throw new EventNotFoundException();
             }
             $component->setContests([
                 $this->getEvent()->getEventType()->contest_id,

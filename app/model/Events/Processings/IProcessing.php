@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Events\Processings;
+namespace FKSDB\Events\Processing;
 
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;

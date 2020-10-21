@@ -27,7 +27,7 @@ abstract class AbstractResultsModel {
 
     public const LABEL_SUM = 'sum';
     public const ALIAS_SUM = 'sum';
-    public const LABEL_PERCETAGE = 'percent';
+    public const LABEL_PERCENTAGE = 'percent';
     public const ALIAS_PERCENTAGE = 'percent';
     public const LABEL_TOTAL_PERCENTAGE = 'total-percent';
     public const ALIAS_TOTAL_PERCENTAGE = 'total-percent';

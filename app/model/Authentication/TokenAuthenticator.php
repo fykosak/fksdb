@@ -36,7 +36,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
     public function authenticate($tokenData): ModelLogin {
         $token = $this->authTokenService->verifyToken($tokenData);
         if (!$token) {
-            throw new AuthenticationException(_('Autentizační token je neplatný.'));
+            throw new AuthenticationException(_('Invalid authentication token.'));
         }
         // login by the identity
         $login = $token->getLogin();

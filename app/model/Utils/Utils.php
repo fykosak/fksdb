@@ -3,7 +3,6 @@
 namespace FKSDB\Utils;
 
 use DateTimeInterface;
-use Traversable;
 
 /**
  * Description of Utils
@@ -12,16 +11,7 @@ use Traversable;
  */
 class Utils {
 
-    /**
-     * @param int $arabic
-     * @return string
-     * @todo Copy+paste from old fksweb, engage more general algorithm.
-     *
-     */
-    public static function toRoman($arabic): string {
-        if (!is_numeric($arabic)) {
-            $arabic = intval($arabic);
-        }
+    public static function toRoman(int $arabic): string {
         switch ($arabic) {
             case 1:
                 return 'I';
@@ -109,7 +99,7 @@ class Utils {
      * @return string
      */
     public static function getFingerprint($object): string {
-        if ($object instanceof Traversable || is_array($object)) {
+        if (is_iterable($object)) {
             $raw = '';
             foreach ($object as $item) {
                 $raw .= self::getFingerprint($item);
@@ -127,16 +117,16 @@ class Utils {
     }
 
     /**
-     * Returns string represetation of iterable objects.
+     * Returns string representation of iterable objects.
      *
      * @param mixed $object
      * @return string
      */
-    public static function getRepr($object): string {
+    public static function getRepresentation($object): string {
         if (is_iterable($object)) {
             $items = [];
             foreach ($object as $key => $item) {
-                $items[] = "$key: " . self::getRepr($item);
+                $items[] = "$key: " . self::getRepresentation($item);
             }
             return '{' . implode(', ', $items) . '}';
         } elseif ($object instanceof DateTimeInterface) {

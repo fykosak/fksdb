@@ -6,7 +6,7 @@ use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Field;
 use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\Events\Processings\AbstractProcessing;
+use FKSDB\Events\Processing\AbstractProcessing;
 use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;

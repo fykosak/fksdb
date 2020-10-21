@@ -44,8 +44,8 @@ class ExportFormatFactory {
         $this->serviceContest = $serviceContest;
         $this->defaultFormats = [
             self::CSV_HEAD => _('Save CSV'),
-            self::CSV_HEADLESS => _('Uložit CSV (bez hlavičky)'),
-            self::CSV_QUOTE_HEAD => _('Uložit CSV s uvozovkami'),
+            self::CSV_HEADLESS => _('Save CSV (without head)'),
+            self::CSV_QUOTE_HEAD => _('Save CSV with quotes'),
         ];
     }
 
