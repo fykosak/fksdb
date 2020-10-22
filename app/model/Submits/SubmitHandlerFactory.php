@@ -24,13 +24,10 @@ use Nette\Utils\DateTime;
  */
 class SubmitHandlerFactory {
 
-    private CorrectedStorage $correctedStorage;
-
-    private UploadedStorage $uploadedStorage;
-
-    private ServiceSubmit $serviceSubmit;
-
-    private ContestAuthorizator $contestAuthorizator;
+    public CorrectedStorage $correctedStorage;
+    public UploadedStorage $uploadedStorage;
+    public ServiceSubmit $serviceSubmit;
+    public ContestAuthorizator $contestAuthorizator;
 
     public function __construct(
         CorrectedStorage $correctedStorage,
@@ -42,18 +39,6 @@ class SubmitHandlerFactory {
         $this->uploadedStorage = $uploadedStorage;
         $this->serviceSubmit = $serviceSubmit;
         $this->contestAuthorizator = $contestAuthorizator;
-    }
-
-    public function getUploadedStorage(): UploadedStorage {
-        return $this->uploadedStorage;
-    }
-
-    public function getCorrectedStorage(): CorrectedStorage {
-        return $this->correctedStorage;
-    }
-
-    public function getServiceSubmit(): ServiceSubmit {
-        return $this->serviceSubmit;
     }
 
     /**

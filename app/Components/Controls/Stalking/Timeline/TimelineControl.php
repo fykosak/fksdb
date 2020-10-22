@@ -98,11 +98,11 @@ class TimelineControl extends ReactComponent {
             $events[] = $participant->getEvent();
             $eventParticipants[] = ['event' => $this->eventToArray($participant->getEvent()), 'model' => null];
         }
-        $eventOrgs = [];
+        $eventOrganisers = [];
         foreach ($this->person->getEventOrgs() as $row) {
             $eventOrg = ModelEventOrg::createFromActiveRow($row);
             $events[] = $eventOrg->getEvent();
-            $eventOrgs[] = ['event' => $this->eventToArray($eventOrg->getEvent()), 'model' => null];
+            $eventOrganisers[] = ['event' => $this->eventToArray($eventOrg->getEvent()), 'model' => null];
         }
         $eventTeachers = [];
         foreach ($this->person->getEventTeachers() as $row) {
@@ -112,7 +112,7 @@ class TimelineControl extends ReactComponent {
 
         }
         return [$events, [
-            'eventOrgs' => $eventOrgs,
+            'eventOrgs' => $eventOrganisers,
             'eventParticipants' => $eventParticipants,
             'eventTeachers' => $eventTeachers,
         ]];

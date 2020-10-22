@@ -41,7 +41,7 @@ class SubmitsGrid extends BaseGrid {
     }
 
     protected function getData(): IDataSource {
-        $submits = $this->submitHandlerFactory->getServiceSubmit()->getSubmits();
+        $submits = $this->submitHandlerFactory->serviceSubmit->getSubmits();
         $submits->where('ct_id = ?', $this->contestant->ct_id); //TODO year + contest?
         return new NDataSource($submits);
     }

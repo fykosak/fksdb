@@ -166,7 +166,6 @@ trait EntityPresenterTrait {
         if (!$success) {
             throw new Exceptions\ModelException(_('Error during deleting'));
         }
-        return;
     }
 
     /**

@@ -51,14 +51,14 @@
                                 {if $login->getPerson()}
                                     <b>{$login->getPerson()->getFullname()}</b>
                                 {else}
-                                {_'Uživatel'} <b>{$login->login}</b>
+                                {_'User'} <b>{$login->login}</b>
                                 {/if}</a>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" n:href=":Core:Settings:">{_'Nastavení'}</a>
+                                <a class="dropdown-item" n:href=":Core:Settings:">{_'Settings'}</a>
                                 <a class="dropdown-item" n:href=":Core:MyPayments:default">{_'My payments'}</a>
                                 <a class="dropdown-item" n:href=":Core:MyApplications:default">{_'My applications'}</a>
                                 <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" n:href=":Core:Authentication:logout">{_'Odhlásit'}</a>
+                                <a class="dropdown-item" n:href=":Core:Authentication:logout">{_'Log out'}</a>
                             </div>
                         </div>
 
@@ -96,7 +96,7 @@
             <a href="//fyziklani.cz/"
                title="">Fyziklání</a>
             <span>| </span>
-            <span>{_'Správce systému'}: </span>
+            <span>{_'Administrator'}: </span>
             <a href="m&#97;ilto:webmaster&#64;fykos.cz">webmaster&#64;fykos.cz</a>
         </span>
         </div>

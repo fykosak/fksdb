@@ -6,9 +6,9 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelContestYear;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\ORM\Services\ServiceContestYear;
-use Nette\InvalidArgumentException;
 use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
+use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 
 /**
@@ -147,10 +147,10 @@ class YearCalculator {
         $contests = $this->serviceContest->fetchPairs($pk, $pk);
         foreach ($contests as $contestId) {
             if (!array_key_exists($contestId, $this->revCache)) {
-                throw new InvalidStateException(sprintf('Table contest_year doesn\'t specify any years at all for contest %s.', $contestId));
+                throw new InvalidStateException(sprintf('Table contest_year does not specify any years at all for contest %s.', $contestId));
             }
             if (!array_key_exists($this->getCurrentAcademicYear(), $this->revCache[$contestId])) {
-                throw new InvalidStateException(sprintf('Table contest_year doesn\'t specify year for contest %s for current academic year %s', $contestId, $this->getCurrentAcademicYear()));
+                throw new InvalidStateException(sprintf('Table contest_year does not specify year for contest %s for current academic year %s', $contestId, $this->getCurrentAcademicYear()));
             }
         }
     }

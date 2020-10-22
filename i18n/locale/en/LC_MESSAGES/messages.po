@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FKSDB\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-10-22 01:03+0200\n"
+"POT-Creation-Date: 2020-10-22 04:03+0200\n"
 "PO-Revision-Date: 2019-01-10 12:34+0100\n"
 "Last-Translator: Karel Kolář <karel@fykos.cz>\n"
 "Language-Team: FYKOS <michal@fykos.cz>\n"
@@ -613,32 +613,32 @@ msgstr ""
 msgid "Field %s requires JavaScript enabled."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:116
+#: i18n/../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:114
 msgid "Deliver address"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:119
+#: i18n/../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:117
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:52
 #: i18n/../app/Components/Controls/Stalking/Components/layout.address.latte.latte2php:7
 msgid "Permanent address"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:121
+#: i18n/../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:119
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:52
 msgid "(when different from delivery address)"
 msgstr ""
 
-#: i18n/../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:146
+#: i18n/../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:144
 msgid ""
 "There is (formally) different person with email %value. Probably it is a "
 "duplicate so it substituted original data in the form."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:281
+#: i18n/../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:278
 msgid "Confirmation is necessary to proceed."
 msgstr ""
 
-#: i18n/../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:283
+#: i18n/../app/Components/Forms/Containers/Models/ReferencedPersonContainer.php:280
 #: i18n/../app/model/Events/FormAdjustments/DependentRequirements.php:22
 msgid "Field %label is required."
 msgstr ""
@@ -671,6 +671,7 @@ msgid "Unknown search type"
 msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/SchoolFactory.php:27
+#: i18n/../app/Modules/CommonModule/templates/School/detail.latte.latte2php:3
 msgid "Full name"
 msgstr ""
 
@@ -861,84 +862,85 @@ msgid "Delivery address"
 msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:68
-msgid "První řádek"
-msgstr "First row"
+msgid "First row"
+msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:69
-msgid "První volitelný řádek adresy (např. bytem u)"
-msgstr "First optional row of the address (e.g. title)"
+msgid "First optional row of the address (e.g. title)"
+msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:71
-msgid "Druhý řádek"
-msgstr "Second row"
+msgid "Second row"
+msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:72
-msgid "Druhý volitelný řádek adresy (použití zřídka)"
-msgstr "Second optional row of the address (used rarely)"
+msgid "Second optional row of the address (used rarely)"
+msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:75
-msgid "Místo"
-msgstr "Place"
+msgid "Place"
+msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:77
-msgid "Typicky ulice a číslo popisné."
-msgstr "Typically street and (house) number."
+msgid "Typically street and (house) number."
+msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:80
-msgid "Adresa musí mít vyplněné místo."
-msgstr "The place is required."
+msgid "The place is required."
+msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:86
-msgid "Město"
-msgstr "City"
+#: i18n/../app/Components/Grids/SchoolsGrid.php:54
+msgid "City"
+msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:90
-msgid "Adresa musí mít vyplněné město."
-msgstr "City is required."
+msgid "City is required."
+msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:97
 msgid "PSČ"
 msgstr "Postal code"
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:99
-msgid "Bez mezer. Pro Českou republiku nebo Slovensko."
-msgstr "Without spaces. For the Czech Republic or Slovakia only."
+msgid "Without spaces. For the Czech Republic or Slovakia only."
+msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:102
-msgid "Stát"
-msgstr "Country"
+msgid "Country"
+msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:104
-msgid "Určit stát dle PSČ"
-msgstr "Detect country from postal code (CR, SK only)"
+msgid "Detect country from postal code (CR, SK only)"
+msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:107
-msgid "Při vyplněném městě musí mít adresa vyplněno i místo."
-msgstr "You have to fill in the place when the city is filled."
+msgid "You have to fill in the place when the city is filled."
+msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:108
-msgid "Při vyplněném PSČ musí mít adresa vyplněno i místo."
-msgstr "You have to fill in the place when the postal code is filled."
+msgid "You have to fill in the place when the postal code is filled."
+msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:109
-msgid "Při vyplněném státu musí mít adresa vyplněno i místo."
-msgstr "You have to fill in the place when the country is filled."
+msgid "You have to fill in the place when the country is filled."
+msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:121
-msgid "Adresa musí mít vyplněné PSČ."
-msgstr "Postal code is required."
+msgid "Postal code is required."
+msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:124
-msgid "Neplatný formát PSČ."
-msgstr "Invalid postal code."
+msgid "Invalid postal code."
+msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:130
-msgid "Stát musí být vyplněn."
-msgstr "Country is required."
+msgid "Country is required."
+msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/AddressFactory.php:137
-msgid "Zvolený stát neodpovídá zadanému PSČ."
-msgstr "Chosen country doesn't match provided postal code."
+msgid "Chosen country does not match provided postal code."
+msgstr ""
 
 #: i18n/../app/Components/Forms/Factories/FlagFactory.php:24
 msgid "Pole %label je povinné."
@@ -983,6 +985,7 @@ msgstr ""
 #: i18n/../app/Modules/CommonModule/presenters/PersonPresenter.php:235
 #: i18n/../app/Modules/FyziklaniModule/templates/Submit/detail.latte.latte2php:26
 #: i18n/../app/Modules/EventModule/templates/Dashboard/default.latte.latte2php:14
+#: i18n/../app/Modules/EventModule/templates/AbstractApplication/applicationControl.latte.latte2php:4
 #: i18n/../app/Modules/OrgModule/templates/StoredQuery/detail.latte.latte2php:40
 msgid "Edit"
 msgstr ""
@@ -1015,7 +1018,7 @@ msgid "Wrong task code"
 msgstr ""
 
 #: i18n/../app/Components/Grids/Fyziklani/Submits/AllSubmitsGrid.php:135
-#: i18n/../app/model/Submits/SubmitHandlerFactory.php:152
+#: i18n/../app/model/Submits/SubmitHandlerFactory.php:137
 msgid "Submit does not exists."
 msgstr ""
 
@@ -1108,10 +1111,6 @@ msgstr ""
 #: i18n/../app/Components/Grids/ContestantsGrid.php:65
 #: i18n/../app/Modules/OrgModule/presenters/ContestantPresenter.php:33
 msgid "Create contestant"
-msgstr ""
-
-#: i18n/../app/Components/Grids/SchoolsGrid.php:54
-msgid "City"
 msgstr ""
 
 #: i18n/../app/Components/Grids/SchoolsGrid.php:55
@@ -1906,26 +1905,26 @@ msgstr ""
 msgid "You have to agree with the privacy policy before submitting."
 msgstr ""
 
-#: i18n/../app/model/Submits/SubmitHandlerFactory.php:71
+#: i18n/../app/model/Submits/SubmitHandlerFactory.php:56
 #, fuzzy
 msgid "Lze stahovat jen uploadovaná řešení."
 msgstr "Overwrite submitted solutions."
 
-#: i18n/../app/model/Submits/SubmitHandlerFactory.php:74
-#: i18n/../app/model/Submits/SubmitHandlerFactory.php:95
+#: i18n/../app/model/Submits/SubmitHandlerFactory.php:59
+#: i18n/../app/model/Submits/SubmitHandlerFactory.php:80
 msgid "Poškozený soubor submitu"
 msgstr ""
 
-#: i18n/../app/model/Submits/SubmitHandlerFactory.php:91
+#: i18n/../app/model/Submits/SubmitHandlerFactory.php:76
 msgid "Opravené riešenie nieje nahrané"
 msgstr ""
 
-#: i18n/../app/model/Submits/SubmitHandlerFactory.php:109
+#: i18n/../app/model/Submits/SubmitHandlerFactory.php:94
 #, fuzzy
 msgid "Nelze zrušit submit."
 msgstr "Nonexistent submit."
 
-#: i18n/../app/model/Submits/SubmitHandlerFactory.php:165
+#: i18n/../app/model/Submits/SubmitHandlerFactory.php:150
 msgid "Access denied"
 msgstr ""
 
@@ -2127,6 +2126,7 @@ msgid "%d. year"
 msgstr ""
 
 #: i18n/../app/Modules/CoreModule/presenters/SettingsPresenter.php:49
+#: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:57
 msgid "Settings"
 msgstr ""
 
@@ -2154,7 +2154,7 @@ msgstr ""
 #: i18n/../app/Modules/CoreModule/presenters/AuthenticationPresenter.php:86
 #: i18n/../app/config/DBReflection.neon.neon2php:408
 msgid "Login"
-msgstr "Login"
+msgstr ""
 
 #: i18n/../app/Modules/CoreModule/presenters/AuthenticationPresenter.php:128
 msgid "You were logged out."
@@ -2259,6 +2259,8 @@ msgid "Submit a solution"
 msgstr ""
 
 #: i18n/../app/Modules/PublicModule/presenters/SubmitPresenter.php:84
+#: i18n/../app/Modules/PublicModule/templates/Submit/default.latte.latte2php:3
+#: i18n/../app/Modules/PublicModule/templates/Submit/ajax.latte.latte2php:3
 msgid "Submitted solutions"
 msgstr ""
 
@@ -2329,8 +2331,8 @@ msgstr ""
 
 #: i18n/../app/Modules/PublicModule/presenters/RegisterPresenter.php:143
 #, php-format
-msgid "%s již řeší %s."
-msgstr "%s is already contestant in %s."
+msgid "%s is already contestant in %s."
+msgstr ""
 
 #: i18n/../app/Modules/PublicModule/presenters/RegisterPresenter.php:199
 msgid "Cannot get academic year without selected contest."
@@ -2338,10 +2340,11 @@ msgstr ""
 
 #: i18n/../app/Modules/PublicModule/presenters/RegisterPresenter.php:223
 msgid "e-mail"
-msgstr "e-mail"
+msgstr ""
 
 #: i18n/../app/Modules/PublicModule/presenters/RegisterPresenter.php:278
 #: i18n/../app/Modules/CoreModule/templates/Dispatch/default.latte.latte2php:4
+#: i18n/../app/Modules/CoreModule/templates/Authentication/login.latte.latte2php:9
 msgid "Register"
 msgstr ""
 
@@ -2592,18 +2595,18 @@ msgid "Common dashboard"
 msgstr ""
 
 #: i18n/../app/Modules/CommonModule/presenters/DeduplicatePresenter.php:34
-msgid "Duplicitní osoby"
-msgstr "Duplicate persons"
+msgid "Duplicate persons"
+msgstr ""
 
 #: i18n/../app/Modules/CommonModule/presenters/DeduplicatePresenter.php:61
-#, php-format
-msgid "%s (%d) a %s (%d) sloučeny."
+#, fuzzy, php-format
+msgid "%s (%d) and %s (%d) merged."
 msgstr "%s (%d) and %s (%d) merged."
 
 #: i18n/../app/Modules/CommonModule/presenters/DeduplicatePresenter.php:63
-#, php-format
-msgid "%s (%d) a %s (%d) potřebují vyřešit konflitky."
-msgstr "%s (%d) and %s (%d) need to solve conflicts."
+#, fuzzy, php-format
+msgid "%s (%d) and %s (%d) need to solve conflicts."
+msgstr "%s (%d) and %s (%d) merged."
 
 #: i18n/../app/Modules/CommonModule/presenters/SchoolPresenter.php:32
 msgid "Schools"
@@ -2794,7 +2797,7 @@ msgstr ""
 #: i18n/../app/Modules/OrgModule/presenters/ExportPresenter.php:86
 #, php-format
 msgid "%s"
-msgstr "%s"
+msgstr ""
 
 #: i18n/../app/Modules/OrgModule/presenters/EventPresenter.php:33
 #: i18n/../app/Components/Controls/Stalking/layout.container.latte.latte2php:69
@@ -2985,8 +2988,8 @@ msgid "Download"
 msgstr ""
 
 #: i18n/../app/Components/Controls/Events/layout.application.inline.latte.latte2php:16
-msgid "žádné"
-msgstr "none"
+msgid "none"
+msgstr ""
 
 #: i18n/../app/Components/Controls/Events/layout.massTransitions.latte.latte2php:10
 msgid "Evalute"
@@ -2997,8 +3000,8 @@ msgid "Detail of the query"
 msgstr ""
 
 #: i18n/../app/Components/Grids/BaseGrid.latte.latte2php:11
-msgid "celkem"
-msgstr "total"
+msgid "Total"
+msgstr ""
 
 #: i18n/../app/Modules/FyziklaniModule/templates/Diplomas/default.latte.latte2php:17
 msgid "Global"
@@ -3014,16 +3017,12 @@ msgid "FKSDB"
 msgstr ""
 
 #: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:54
-msgid "Uživatel"
-msgstr "User"
-
-#: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:57
-msgid "Nastavení"
-msgstr "Settings"
+msgid "User"
+msgstr ""
 
 #: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:61
-msgid "Odhlásit"
-msgstr "Log out"
+msgid "Log out"
+msgstr ""
 
 #: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:91
 msgid "Fyzikální korespondenční seminář MFF UK"
@@ -3034,20 +3033,20 @@ msgid "Fyzikální korespondenční seminář MFF UK pro ZŠ a nižší ročník
 msgstr ""
 
 #: i18n/../app/Modules/Core/templates/@layout.latte.latte2php:99
-msgid "Správce systému"
-msgstr "Administrator"
+msgid "Administrator"
+msgstr ""
 
 #: i18n/../app/Modules/CoreModule/templates/Error/403.latte.latte2php:10
-msgid "K zobrazení stránky nemáte dostatečné oprávnění."
-msgstr "You are not authorized to view this page."
+msgid "You are not authorized to view this page."
+msgstr ""
 
 #: i18n/../app/Modules/CoreModule/templates/Error/403.latte.latte2php:11
-msgid "Možná řešení:"
-msgstr "Submitted solutions:"
+msgid "Submitted solutions:"
+msgstr ""
 
 #: i18n/../app/Modules/CoreModule/templates/Error/403.latte.latte2php:13
-msgid "Zaregistrovat se jako řešitel"
-msgstr "Register as a contestant"
+msgid "Register as a contestant"
+msgstr ""
 
 #: i18n/../app/Modules/CoreModule/templates/Error/403.latte.latte2php:14
 msgid ""
@@ -3057,16 +3056,16 @@ msgstr ""
 "it's necessary to fill in school information or register for the new year"
 
 #: i18n/../app/Modules/CoreModule/templates/Error/403.latte.latte2php:16
-msgid "stát se organizátorem"
-msgstr "become an organiser"
+msgid "become an organiser"
+msgstr ""
 
 #: i18n/../app/Modules/CoreModule/templates/Error/403.latte.latte2php:17
-msgid "požádat o přidělení role"
-msgstr "ask for a role grant"
+msgid "ask for a role grant"
+msgstr ""
 
 #: i18n/../app/Modules/CoreModule/templates/Error/405.latte.latte2php:9
-msgid "Zvolená metoda není pro tuto stránku podporována."
-msgstr "Chosen method is not supported."
+msgid "Chosen method is not supported."
+msgstr ""
 
 #: i18n/../app/Modules/CoreModule/templates/Error/410.latte.latte2php:8
 msgid "Gone!"
@@ -3081,7 +3080,7 @@ msgid "Contestant"
 msgstr ""
 
 #: i18n/../app/Modules/CoreModule/templates/Settings/default.latte.latte2php:3
-msgid "Preffered language"
+msgid "Preferred language"
 msgstr ""
 
 #: i18n/../app/Modules/CoreModule/templates/MyApplications/default.latte.latte2php:4
@@ -3090,16 +3089,12 @@ msgstr ""
 
 #: i18n/../app/Modules/CoreModule/templates/MyApplications/default.latte.latte2php:6
 #: i18n/../app/Modules/PublicModule/templates/Application/list.latte.latte2php:4
-msgid "Akce s otevřenou registrací"
-msgstr "Events with open registration"
-
-#: i18n/../app/Modules/CoreModule/templates/Authentication/login.latte.latte2php:9
-msgid "Registrace"
-msgstr "Register"
+msgid "Events with open registration"
+msgstr ""
 
 #: i18n/../app/Modules/CoreModule/templates/Authentication/login.latte.latte2php:10
-msgid "Zapomenuté heslo"
-msgstr "Forgotten password"
+msgid "Forgotten password"
+msgstr ""
 
 #: i18n/../app/Modules/CoreModule/templates/Authentication/login.latte.latte2php:11
 msgid "Login via Google account"
@@ -3110,30 +3105,25 @@ msgstr ""
 msgid "Nový systém odovzdávaní"
 msgstr "Fyziklani's game system"
 
-#: i18n/../app/Modules/PublicModule/templates/Submit/default.latte.latte2php:3
-#: i18n/../app/Modules/PublicModule/templates/Submit/ajax.latte.latte2php:3
-msgid "Odevzdaná řešení"
-msgstr "Submitted solutions"
-
 #: i18n/../app/Modules/PublicModule/templates/Submit/default.latte.latte2php:9
-msgid "Žádné úlohy k odevzdávání."
-msgstr "No tasks available to submit."
+msgid "No tasks available to submit."
+msgstr ""
 
 #: i18n/../app/Modules/PublicModule/templates/Submit/default.latte.latte2php:13
 msgid "Registrovat se do dalšího ročníku"
 msgstr "Register for the next year"
 
 #: i18n/../app/Modules/PublicModule/templates/Submit/default.latte.latte2php:17
-msgid "Další ročník"
-msgstr "Next year"
+msgid "Next year"
+msgstr ""
 
 #: i18n/../app/Modules/PublicModule/templates/Submit/ajax.latte.latte2php:2
 msgid "Prejdi na starý systém uploadu úloh"
 msgstr ""
 
 #: i18n/../app/Modules/PublicModule/templates/Application/contestChooser.latte.latte2php:2
-msgid "Zvolit seminář"
-msgstr "Choose contest"
+msgid "Choose contest"
+msgstr ""
 
 #: i18n/../app/Modules/EventModule/templates/Dashboard/default.latte.latte2php:3
 #: i18n/../app/Modules/EventModule/templates/TeamApplication/detail.latte.latte2php:11
@@ -3183,7 +3173,7 @@ msgstr ""
 #: i18n/../typescript/src/apps/fyziklaniResults/presentation/components/headline.tsx.tsx2php:26
 #: i18n/../typescript/src/apps/fyziklaniResults/table/middleware/filters/filters.ts.ts2php:7
 msgid "Category"
-msgstr "Category"
+msgstr ""
 
 #: i18n/../app/Modules/EventModule/templates/Seating/preview.latte.latte2php:22
 msgid "Czech"
@@ -3278,8 +3268,8 @@ msgstr ""
 #: i18n/../app/Modules/EventModule/templates/TeamApplication/list.latte.latte2php:4
 #: i18n/../app/Modules/EventModule/templates/Application/list.latte.latte2php:4
 #: i18n/../app/Modules/EventModule/templates/AbstractApplication/list.latte.latte2php:4
-msgid "Nová přihláška"
-msgstr "New application"
+msgid "New application"
+msgstr ""
 
 #: i18n/../app/Modules/EventModule/templates/TeamApplication/list.latte.latte2php:5
 #: i18n/../app/Modules/EventModule/templates/Application/list.latte.latte2php:5
@@ -3297,17 +3287,9 @@ msgstr ""
 msgid "Base info"
 msgstr ""
 
-#: i18n/../app/Modules/EventModule/templates/AbstractApplication/applicationControl.latte.latte2php:4
-msgid "Upravit"
-msgstr "Edit"
-
 #: i18n/../app/Modules/EventModule/templates/AbstractApplication/applicationControl.latte.latte2php:7
 msgid "Transitions"
 msgstr ""
-
-#: i18n/../app/Modules/CommonModule/templates/School/detail.latte.latte2php:3
-msgid "Plný název"
-msgstr "Full name"
 
 #: i18n/../app/Modules/CommonModule/templates/School/detail.latte.latte2php:17
 msgid "Zkrácený název"
@@ -5202,6 +5184,138 @@ msgstr ""
 #: i18n/../typescript/src/shared/components/displays/price/index.tsx.tsx2php:14
 msgid "for free"
 msgstr ""
+
+#~ msgid "%s již řeší %s."
+#~ msgstr "%s is already contestant in %s."
+
+#~ msgid "Duplicitní osoby"
+#~ msgstr "Duplicate persons"
+
+#~ msgid "%s (%d) a %s (%d) potřebují vyřešit konflitky."
+#~ msgstr "%s (%d) and %s (%d) need to solve conflicts."
+
+#~ msgid "žádné"
+#~ msgstr "none"
+
+#~ msgid "celkem"
+#~ msgstr "total"
+
+#~ msgid "Uživatel"
+#~ msgstr "User"
+
+#~ msgid "Nastavení"
+#~ msgstr "Settings"
+
+#~ msgid "Odhlásit"
+#~ msgstr "Log out"
+
+#~ msgid "Správce systému"
+#~ msgstr "Administrator"
+
+#~ msgid "K zobrazení stránky nemáte dostatečné oprávnění."
+#~ msgstr "You are not authorized to view this page."
+
+#~ msgid "Možná řešení:"
+#~ msgstr "Submitted solutions:"
+
+#~ msgid "Zaregistrovat se jako řešitel"
+#~ msgstr "Register as a contestant"
+
+#~ msgid "stát se organizátorem"
+#~ msgstr "become an organiser"
+
+#~ msgid "požádat o přidělení role"
+#~ msgstr "ask for a role grant"
+
+#~ msgid "Zvolená metoda není pro tuto stránku podporována."
+#~ msgstr "Chosen method is not supported."
+
+#~ msgid "Akce s otevřenou registrací"
+#~ msgstr "Events with open registration"
+
+#~ msgid "Registrace"
+#~ msgstr "Register"
+
+#~ msgid "Zapomenuté heslo"
+#~ msgstr "Forgotten password"
+
+#~ msgid "Odevzdaná řešení"
+#~ msgstr "Submitted solutions"
+
+#~ msgid "Žádné úlohy k odevzdávání."
+#~ msgstr "No tasks available to submit."
+
+#~ msgid "Další ročník"
+#~ msgstr "Next year"
+
+#~ msgid "Zvolit seminář"
+#~ msgstr "Choose contest"
+
+#~ msgid "Nová přihláška"
+#~ msgstr "New application"
+
+#~ msgid "Upravit"
+#~ msgstr "Edit"
+
+#~ msgid "Plný název"
+#~ msgstr "Full name"
+
+#~ msgid "První řádek"
+#~ msgstr "First row"
+
+#~ msgid "První volitelný řádek adresy (např. bytem u)"
+#~ msgstr "First optional row of the address (e.g. title)"
+
+#~ msgid "Druhý řádek"
+#~ msgstr "Second row"
+
+#~ msgid "Druhý volitelný řádek adresy (použití zřídka)"
+#~ msgstr "Second optional row of the address (used rarely)"
+
+#~ msgid "Místo"
+#~ msgstr "Place"
+
+#~ msgid "Typicky ulice a číslo popisné."
+#~ msgstr "Typically street and (house) number."
+
+#~ msgid "Adresa musí mít vyplněné místo."
+#~ msgstr "The place is required."
+
+#~ msgid "Město"
+#~ msgstr "City"
+
+#~ msgid "Adresa musí mít vyplněné město."
+#~ msgstr "City is required."
+
+#~ msgid "Bez mezer. Pro Českou republiku nebo Slovensko."
+#~ msgstr "Without spaces. For the Czech Republic or Slovakia only."
+
+#~ msgid "Stát"
+#~ msgstr "Country"
+
+#~ msgid "Určit stát dle PSČ"
+#~ msgstr "Detect country from postal code (CR, SK only)"
+
+#~ msgid "Při vyplněném městě musí mít adresa vyplněno i místo."
+#~ msgstr "You have to fill in the place when the city is filled."
+
+#~ msgid "Při vyplněném PSČ musí mít adresa vyplněno i místo."
+#~ msgstr "You have to fill in the place when the postal code is filled."
+
+#~ msgid "Při vyplněném státu musí mít adresa vyplněno i místo."
+#~ msgstr "You have to fill in the place when the country is filled."
+
+#~ msgid "Adresa musí mít vyplněné PSČ."
+#~ msgstr "Postal code is required."
+
+#~ msgid "Neplatný formát PSČ."
+#~ msgstr "Invalid postal code."
+
+#~ msgid "Stát musí být vyplněn."
+#~ msgstr "Country is required."
+
+#~ msgid "Zvolený stát neodpovídá zadanému PSČ."
+#~ msgstr "Chosen country doesn't match provided postal code."
 
 #, fuzzy
 #~ msgid "aktivní org"
