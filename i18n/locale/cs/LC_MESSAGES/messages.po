@@ -68,14 +68,14 @@ msgstr ""
 #: i18n/../app/Modules/CoreModule/presenters/AuthenticationPresenter.php:347
 #: i18n/../app/Modules/CoreModule/presenters/ErrorPresenter.php:29
 msgid "Error"
-msgstr ""
+msgstr "Chyba"
 
 #: i18n/../app/Components/Controls/Entity/AbstractEntityFormComponent.php:53
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani14Payment.php:76
 #: i18n/../app/model/Payment/Transition/TransitionsGenerator/Fyziklani13Payment.php:76
 #: i18n/../app/Modules/OrgModule/presenters/ExtendedPersonPresenter.php:103
 msgid "Create"
-msgstr "Vytvořit platbu"
+msgstr "Vytvořit"
 
 #: i18n/../app/Components/Controls/Entity/AbstractEntityFormComponent.php:53
 #: i18n/../app/Components/Controls/Inbox/SeriesTableFormControl.php:27
@@ -89,9 +89,8 @@ msgid "Save"
 msgstr "Uložit"
 
 #: i18n/../app/Components/Controls/Entity/FyziklaniSubmitEditComponent.php:86
-#, fuzzy
 msgid "Number of points"
-msgstr "Počet akcí"
+msgstr "Počet bodů"
 
 #: i18n/../app/Components/Controls/Entity/PaymentFormComponent.php:65
 msgid "Proceed to summary"
@@ -136,7 +135,7 @@ msgstr "Parametry"
 
 #: i18n/../app/Components/Controls/Entity/StoredQueryFormComponent.php:101
 msgid "Metadata"
-msgstr ""
+msgstr "Metadata"
 
 #: i18n/../app/Components/Controls/Entity/StoredQueryFormComponent.php:106
 #: i18n/../app/Components/Controls/StoredQuery/ResultsComponent.php:96
