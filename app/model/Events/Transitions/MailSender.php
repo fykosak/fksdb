@@ -2,13 +2,15 @@
 
 namespace FKSDB\Events\Transitions;
 
-use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Authentication\AccountManager;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Machine\Transition;
 use FKSDB\Events\Model\Holder\BaseHolder;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Localization\UnsupportedLanguageException;
+use FKSDB\Mail\MailTemplateFactory;
+use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelEmailMessage;
@@ -18,10 +20,8 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\ORM\Services\ServiceEmailMessage;
 use FKSDB\ORM\Services\ServicePerson;
-use FKSDB\Mail\MailTemplateFactory;
 use Nette\SmartObject;
 use Nette\Utils\Strings;
-use FKSDB\Modules\PublicModule\ApplicationPresenter;
 
 /**
  * Sends email with given template name (in standard template directory)

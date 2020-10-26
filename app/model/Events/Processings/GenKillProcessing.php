@@ -63,5 +63,4 @@ class GenKillProcessing implements IProcessing {
         }
         return $result;
     }
-
 }

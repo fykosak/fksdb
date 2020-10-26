@@ -24,16 +24,10 @@ abstract class AbstractProcessing implements IProcessing {
     public const DELIMITER = '.';
     public const WILD_CART = '*';
 
-    /** @var mixed */
-    private $valuesPathCache;
-    /** @var mixed */
-    private $formPathCache;
-    /** @var mixed */
-    private $states;
-
+    private array $valuesPathCache;
+    private array $formPathCache;
+    private array $states;
     private Holder $holder;
-    /** @var mixed */
-    private $values;
 
     /**
      * @param array $states
@@ -42,7 +36,7 @@ abstract class AbstractProcessing implements IProcessing {
      * @param Holder $holder
      * @param ILogger $logger
      * @param Form|null $form
-     * @return array|void
+     * @return mixed|void
      */
     final public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form = null) {
         $this->states = $states;
@@ -54,11 +48,7 @@ abstract class AbstractProcessing implements IProcessing {
 
     abstract protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void;
 
-    /**
-     * @param string $mask
-     * @return bool
-     */
-    final protected function hasWildCart($mask): bool {
+    final protected function hasWildCart(string $mask): bool {
         return strpos($mask, self::WILD_CART) !== false;
     }
 
@@ -128,7 +118,6 @@ abstract class AbstractProcessing implements IProcessing {
      */
     private function setValues(ArrayHash $values, $prefix = ''): void {
         if (!$prefix) {
-            $this->values = $values;
             $this->valuesPathCache = [];
         }
 

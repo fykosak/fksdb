@@ -56,13 +56,6 @@ class SeatingControl extends BaseComponent {
         $this->render($event, 'dev');
     }
 
-    /**
-     * @param ModelEvent $event
-     * @param string $mode
-     * @param string $lang
-     * @return void
-     * @throws NeonSchemaException
-     */
     public function render(ModelEvent $event, string $mode, string $lang = 'cs'): void {
         $this->template->places = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms($event));
         $this->template->mode = $mode;

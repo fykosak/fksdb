@@ -90,7 +90,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     /**
      * Syntactic sugar.
      *
-     * @param int $key
+     * @param mixed $key
      * @return AbstractModelSingle|null
      */
     public function findByPrimary($key): ?AbstractModelSingle {
