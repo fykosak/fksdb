@@ -20,7 +20,7 @@ abstract class AbstractContestantsPerSeriesChart extends ReactComponent implemen
         $this->contest = $contest;
     }
 
-    public function getControl(): Control {
+    public function getControl(): self {
         return $this;
     }
 }

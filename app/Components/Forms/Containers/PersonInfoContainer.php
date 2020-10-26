@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Forms\Containers;
 
 use Nette\Database\Table\ActiveRow;
-use Nette\Forms\Container;
 
 /**
  *

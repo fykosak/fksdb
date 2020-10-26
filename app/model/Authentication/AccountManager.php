@@ -28,39 +28,21 @@ class AccountManager {
     private MailTemplateFactory $mailTemplateFactory;
 
     public function __construct(
+        string $invitationExpiration,
+        string $recoveryExpiration,
+        string $emailFrom,
         MailTemplateFactory $mailTemplateFactory,
         ServiceLogin $serviceLogin,
         ServiceAuthToken $serviceAuthToken,
         ServiceEmailMessage $serviceEmailMessage
     ) {
+        $this->invitationExpiration = $invitationExpiration;
+        $this->recoveryExpiration = $recoveryExpiration;
+        $this->emailFrom = $emailFrom;
         $this->serviceLogin = $serviceLogin;
         $this->serviceAuthToken = $serviceAuthToken;
         $this->serviceEmailMessage = $serviceEmailMessage;
         $this->mailTemplateFactory = $mailTemplateFactory;
-    }
-
-    public function getInvitationExpiration(): string {
-        return $this->invitationExpiration;
-    }
-
-    public function setInvitationExpiration(string $invitationExpiration): void {
-        $this->invitationExpiration = $invitationExpiration;
-    }
-
-    public function getRecoveryExpiration(): string {
-        return $this->recoveryExpiration;
-    }
-
-    public function setRecoveryExpiration(string $recoveryExpiration): void {
-        $this->recoveryExpiration = $recoveryExpiration;
-    }
-
-    public function getEmailFrom(): string {
-        return $this->emailFrom;
-    }
-
-    public function setEmailFrom(string $emailFrom): void {
-        $this->emailFrom = $emailFrom;
     }
 
     /**
@@ -75,7 +57,7 @@ class AccountManager {
     public function createLoginWithInvitation(ModelPerson $person, string $email, string $lang): ModelLogin {
         $login = $this->createLogin($person);
 
-        $until = DateTime::from($this->getInvitationExpiration());
+        $until = DateTime::from($this->invitationExpiration);
         $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_INITIAL_LOGIN, $until);
 
         $templateParams = [
@@ -87,7 +69,7 @@ class AccountManager {
         $data = [];
         $data['text'] = (string)$this->mailTemplateFactory->createLoginInvitation($person->getPreferredLang() ?: $lang, $templateParams);
         $data['subject'] = _('Create an account');
-        $data['sender'] = $this->getEmailFrom();
+        $data['sender'] = $this->emailFrom;
         $data['recipient'] = $email;
         $this->serviceEmailMessage->addMessageToSend($data);
         return $login;
@@ -114,7 +96,7 @@ class AccountManager {
             throw new RecoveryExistsException();
         }
 
-        $until = DateTime::from($this->getRecoveryExpiration());
+        $until = DateTime::from($this->recoveryExpiration);
         $token = $this->serviceAuthToken->createToken($login, ModelAuthToken::TYPE_RECOVERY, $until);
         $templateParams = [
             'token' => $token->token,
@@ -124,7 +106,7 @@ class AccountManager {
         $data = [];
         $data['text'] = (string)$this->mailTemplateFactory->createPasswordRecovery($lang, $templateParams);
         $data['subject'] = _('Password recovery');
-        $data['sender'] = $this->getEmailFrom();
+        $data['sender'] = $this->emailFrom;
         $data['recipient'] = $recoveryAddress;
 
         $this->serviceEmailMessage->addMessageToSend($data);

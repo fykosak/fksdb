@@ -20,7 +20,7 @@ interface IService {
     public function createNewModel(array $data): IModel;
 
     /**
-     * @param int $key
+     * @param mixed $key
      * @return IModel|null
      */
     public function findByPrimary($key): ?IModel;

@@ -6,19 +6,19 @@ use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\Breadcrumbs\Request as NaviRequest;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Utils\Utils;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\IRouter;
 use Nette\Application\Request as AppRequest;
-use Nette\Application\UI\Presenter;
 use Nette\Application\UI\ComponentReflection;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use Tracy\Debugger;
 use Nette\Http\Request as HttpRequest;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Random;
-use FKSDB\Utils\Utils;
+use Tracy\Debugger;
 
 /**
  * Monitors user's traversal through the web and build the tree,
@@ -33,10 +33,10 @@ use FKSDB\Utils\Utils;
  */
 class Breadcrumbs extends BaseComponent {
 
-    public const SECTION_REQUESTS = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.main';
-    public const SECTION_BACKIDS = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.backids';
-    public const SECTION_REVERSE = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.reverse';
-    public const SECTION_PATH_REVERSE = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.pathReverse';
+    public const SECTION_REQUESTS = self::class . '.main';
+    public const SECTION_BACKIDS = self::class . '.backids';
+    public const SECTION_REVERSE = self::class . '.reverse';
+    public const SECTION_PATH_REVERSE = self::class . '.pathReverse';
     // const EXPIRATION = '+ 10 minutes';
     public const BACKID_LEN = 4;
     public const BACKID_DOMAIN = '0-9a-zA-Z';

@@ -38,8 +38,8 @@ class PersonsGrid extends BaseGrid {
     /**
      * @param Presenter $presenter
      * @return void
-     * @throws DuplicateColumnException
      * @throws BadTypeException
+     * @throws DuplicateColumnException
      */
     protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
@@ -47,7 +47,7 @@ class PersonsGrid extends BaseGrid {
         $this->addColumns(['person.person_link']);
 
         foreach ($this->dataTestingFactory->getTests('person') as $test) {
-            $this->addColumn($test->getId(), $test->getTitle())->setRenderer(function ($person) use ($test): Html {
+            $this->addColumn($test->id, $test->title)->setRenderer(function ($person) use ($test): Html {
                 $logger = new MemoryLogger();
                 $test->run($logger, $person);
                 return self::createHtmlLog($logger->getMessages());
@@ -71,8 +71,8 @@ class PersonsGrid extends BaseGrid {
                 throw new BadTypeException(TestLog::class, $log);
             }
             $container->addHtml(Html::el('span')->addAttributes([
-                'class' => 'text-' . $log->getLevel(),
-                'title' => $log->getMessage(),
+                'class' => 'text-' . $log->level,
+                'title' => $log->text,
             ])->addHtml($icon));
         }
         return $container;

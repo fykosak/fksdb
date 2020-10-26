@@ -49,7 +49,7 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
         return _('Participant acquaintance');
     }
 
-    public function getControl(): Control {
+    public function getControl(): self {
         return $this;
     }
 

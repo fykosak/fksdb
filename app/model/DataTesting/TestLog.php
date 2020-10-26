@@ -34,7 +34,7 @@ class TestLog extends Message {
      * @throws NotImplementedException
      */
     public function mapLevelToIcon(): string {
-        switch ($this->getLevel()) {
+        switch ($this->level) {
             case self::LVL_DANGER:
                 return 'fa fa-close';
             case self::LVL_WARNING:
@@ -44,7 +44,7 @@ class TestLog extends Message {
             case self::LVL_SUCCESS:
                 return 'fa fa-check';
             default:
-                throw new NotImplementedException(\sprintf('Level "%s" is not supported', $this->getLevel()));
+                throw new NotImplementedException(\sprintf('Level "%s" is not supported', $this->level));
         }
     }
 
@@ -58,8 +58,8 @@ class TestLog extends Message {
             'class' => $this->mapLevelToIcon(),
         ]);
         return Html::el('span')->addAttributes([
-            'class' => 'text-' . $this->getLevel(),
-            'title' => $this->getMessage(),
+            'class' => 'text-' . $this->level,
+            'title' => $this->text,
         ])->addHtml($icon);
     }
 }

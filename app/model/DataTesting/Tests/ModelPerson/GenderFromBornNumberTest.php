@@ -26,7 +26,7 @@ class GenderFromBornNumberTest extends PersonTest {
         }
 
         if (!$person->gender) {
-            $logger->log(new TestLog($this->getTitle(), _('Gender is not set'), TestLog::LVL_WARNING));
+            $logger->log(new TestLog($this->title, _('Gender is not set'), TestLog::LVL_WARNING));
             return;
         }
         if (!$info->born_id) {
@@ -35,9 +35,9 @@ class GenderFromBornNumberTest extends PersonTest {
         }
 
         if (BornNumber::getGender($info->born_id) != $person->gender) {
-            $logger->log(new TestLog($this->getTitle(), 'Gender not match born number', TestLog::LVL_DANGER));
+            $logger->log(new TestLog($this->title, 'Gender not match born number', TestLog::LVL_DANGER));
         } else {
-            $logger->log(new TestLog($this->getTitle(), 'Gender match born number', TestLog::LVL_SUCCESS));
+            $logger->log(new TestLog($this->title, 'Gender match born number', TestLog::LVL_SUCCESS));
         }
     }
 }

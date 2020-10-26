@@ -15,9 +15,7 @@ abstract class AbstractModelMulti implements IModel {
     use SmartObject;
 
     protected AbstractModelSingle $mainModel;
-
     protected AbstractModelSingle $joinedModel;
-
     protected AbstractServiceMulti $service;
 
     /**

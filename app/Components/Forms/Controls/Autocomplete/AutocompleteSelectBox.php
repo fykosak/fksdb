@@ -3,7 +3,6 @@
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
 use FKSDB\Application\IJavaScriptCollector;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextBase;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Arrays;
@@ -178,7 +177,7 @@ class AutocompleteSelectBox extends TextBase {
      * @param mixed $value
      * @return static
      */
-    public function setDefaultValue($value):self {
+    public function setDefaultValue($value): self {
         if (isset($this->dataProvider)) {
             $this->dataProvider->setDefaultValue($value);
         }

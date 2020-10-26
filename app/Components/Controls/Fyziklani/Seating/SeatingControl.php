@@ -71,15 +71,10 @@ class SeatingControl extends BaseComponent {
         $this->template->render();
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return int[]
-     * @throws NeonSchemaException
-     */
     private function getRooms(ModelEvent $event): array {
         try {
             return $this->eventDispatchFactory->getDummyHolder($event)->getParameter('rooms') ?: [];
-        } catch (BadRequestException $exception) {
+        } catch (\Exception $exception) {
             return [];
         }
     }
