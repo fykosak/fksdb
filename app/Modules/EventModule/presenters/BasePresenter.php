@@ -26,8 +26,9 @@ use Nette\Security\IResource;
 abstract class BasePresenter extends AuthenticatedPresenter {
 
     private ModelEvent $event;
-
     private Holder $holder;
+    protected ServiceEvent $serviceEvent;
+    protected EventDispatchFactory $eventDispatchFactory;
 
     /**
      * @var int
@@ -35,24 +36,9 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     public $eventId;
 
-    protected ServiceEvent $serviceEvent;
-
-    private EventDispatchFactory $eventDispatchFactory;
-
-    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
+    final public function injectEventBase(ServiceEvent $serviceEvent, EventDispatchFactory $eventDispatchFactory): void {
         $this->serviceEvent = $serviceEvent;
-    }
-
-    protected function getServiceEvent(): ServiceEvent {
-        return $this->serviceEvent;
-    }
-
-    public function injectEventDispatch(EventDispatchFactory $eventDispatchFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
-    }
-
-    protected function getEventDispatchFactory(): EventDispatchFactory {
-        return $this->eventDispatchFactory;
     }
 
     /**
@@ -81,7 +67,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected function getEvent(): ModelEvent {
         if (!isset($this->event)) {
-            $model = $this->getServiceEvent()->findByPrimary($this->eventId);
+            $model = $this->serviceEvent->findByPrimary($this->eventId);
             if (!$model) {
                 throw new EventNotFoundException();
             }
@@ -97,7 +83,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      */
     protected function getHolder(): Holder {
         if (!isset($this->holder)) {
-            $this->holder = $this->getEventDispatchFactory()->getDummyHolder($this->getEvent());
+            $this->holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
         }
         return $this->holder;
     }
@@ -107,7 +93,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws EventNotFoundException
      */
     protected function getAcYear(): int {
-        return $this->getYearCalculator()->getAcademicYear($this->getContest(), $this->getEvent()->year);
+        return $this->yearCalculator->getAcademicYear($this->getContest(), $this->getEvent()->year);
     }
 
     /**
@@ -127,7 +113,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws EventNotFoundException
      */
     protected function isTeamEvent(): bool {
-        return (bool)in_array($this->getEvent()->event_type_id, ModelEvent::TEAM_EVENTS);
+        return in_array($this->getEvent()->event_type_id, ModelEvent::TEAM_EVENTS);
     }
 
     /* **************** ACL *********************** */
@@ -139,7 +125,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws EventNotFoundException
      */
     protected function isContestsOrgAuthorized($resource, ?string $privilege): bool {
-        return $this->getEventAuthorizator()->isContestOrgAllowed($resource, $privilege, $this->getEvent());
+        return $this->eventAuthorizator->isContestOrgAllowed($resource, $privilege, $this->getEvent());
     }
 
     /**
@@ -151,7 +137,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws EventNotFoundException
      */
     protected function isEventAndContestOrgAuthorized($resource, ?string $privilege): bool {
-        return $this->getEventAuthorizator()->isEventAndContestOrgAllowed($resource, $privilege, $this->getEvent());
+        return $this->eventAuthorizator->isEventAndContestOrgAllowed($resource, $privilege, $this->getEvent());
     }
 
     /**
@@ -162,7 +148,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws EventNotFoundException
      */
     public function isEventOrContestOrgAuthorized($resource, ?string $privilege): bool {
-        return $this->getEventAuthorizator()->isEventOrContestOrgAllowed($resource, $privilege, $this->getEvent());
+        return $this->eventAuthorizator->isEventOrContestOrgAllowed($resource, $privilege, $this->getEvent());
     }
 
     /* ********************** GUI ************************ */

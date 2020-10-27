@@ -25,7 +25,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
-use Nette\Utils\JsonException;
 use FKSDB\Persons\IModifiabilityResolver;
 use FKSDB\Persons\IVisibilityResolver;
 use FKSDB\Persons\ReferencedPersonHandler;
@@ -63,16 +62,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
 
     private bool $configured = false;
 
-    /**
-     * ReferencedPersonContainer constructor.
-     * @param Container $container
-     * @param IModifiabilityResolver $modifiabilityResolver
-     * @param IVisibilityResolver $visibilityResolver
-     * @param int $acYear
-     * @param array $fieldsDefinition
-     * @param ModelEvent|null $event
-     * @param bool $allowClear
-     */
     public function __construct(
         Container $container,
         IModifiabilityResolver $modifiabilityResolver,
@@ -95,7 +84,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
         });
     }
 
-    public function injectPrimary(
+    final public function injectPrimary(
         AddressFactory $addressFactory,
         FlagFactory $flagFactory,
         ServicePerson $servicePerson,
@@ -114,7 +103,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @throws AbstractColumnException
      * @throws BadRequestException
      * @throws BadTypeException
-     * @throws JsonException
      * @throws NotImplementedException
      * @throws OmittedControlException
      */
@@ -237,7 +225,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @return IComponent
      * @throws AbstractColumnException
      * @throws BadTypeException
-     * @throws JsonException
      * @throws NotImplementedException
      * @throws OmittedControlException
      * @throws BadRequestException

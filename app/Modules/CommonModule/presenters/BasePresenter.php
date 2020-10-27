@@ -21,7 +21,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         $roots = parent::getNavRoots();
         $roots[] = 'Common.Dashboard.default';
         return $roots;
-
     }
 
     /**
@@ -30,6 +29,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @return bool
      */
     protected function isAnyContestAuthorized($resource, ?string $privilege): bool {
-        return $this->getContestAuthorizator()->isAllowedForAnyContest($resource, $privilege);
+        return $this->contestAuthorizator->isAllowedForAnyContest($resource, $privilege);
     }
 }

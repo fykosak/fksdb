@@ -66,7 +66,7 @@ class BrojureResultsModel extends AbstractResultsModel {
                 ];
             }
             $dataColumns[] = [
-                self::COL_DEF_LABEL => self::LABEL_PERCETAGE,
+                self::COL_DEF_LABEL => self::LABEL_PERCENTAGE,
                 self::COL_DEF_LIMIT => 100,
                 self::COL_ALIAS => self::ALIAS_PERCENTAGE,
             ];
@@ -95,7 +95,7 @@ class BrojureResultsModel extends AbstractResultsModel {
     /**
      * @param mixed $series
      */
-    public function setSeries($series) {
+    public function setSeries($series): void {
         $this->series = $series;
         // invalidate cache of columns
         $this->dataColumns = [];

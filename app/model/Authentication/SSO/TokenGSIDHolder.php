@@ -24,12 +24,6 @@ class TokenGSIDHolder implements IGSIDHolder {
 
     private Request $request;
 
-    /**
-     * TokenGSIDHolder constructor.
-     * @param Session $session
-     * @param ServiceAuthToken $serviceAuthToken
-     * @param Request $request
-     */
     public function __construct(Session $session, ServiceAuthToken $serviceAuthToken, Request $request) {
         $this->session = $session;
         $this->serviceAuthToken = $serviceAuthToken;

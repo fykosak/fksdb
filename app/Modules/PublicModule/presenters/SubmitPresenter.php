@@ -8,25 +8,25 @@ use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\GoneException;
+use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelQuizQuestion;
 use FKSDB\ORM\Models\ModelSubmit;
 use FKSDB\ORM\Models\ModelTask;
+use FKSDB\ORM\Services\ServiceQuizQuestion;
 use FKSDB\ORM\Services\ServiceSubmit;
+use FKSDB\ORM\Services\ServiceSubmitQuizQuestion;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Submits\ProcessingException;
-use FKSDB\Exceptions\ModelException;
 use FKSDB\Submits\SubmitHandlerFactory;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Tracy\Debugger;
-use FKSDB\ORM\Services\ServiceQuizQuestion;
-use FKSDB\ORM\Services\ServiceSubmitQuizQuestion;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -36,38 +36,25 @@ use FKSDB\ORM\Services\ServiceSubmitQuizQuestion;
 class SubmitPresenter extends BasePresenter {
 
     private ServiceSubmit $submitService;
-
     private ServiceSubmitQuizQuestion $submitQuizQuestionService;
-
     private UploadedStorage $uploadedSubmitStorage;
-
     private ServiceTask $taskService;
-
     private ServiceQuizQuestion $quizQuestionService;
-
     private SubmitHandlerFactory $submitHandlerFactory;
 
-    public function injectSubmitService(ServiceSubmit $submitService): void {
+    final public function injectTernary(
+        ServiceSubmit $submitService,
+        ServiceSubmitQuizQuestion $submitQuizQuestionService,
+        UploadedStorage $filesystemUploadedSubmitStorage,
+        ServiceTask $taskService,
+        ServiceQuizQuestion $quizQuestionService,
+        SubmitHandlerFactory $submitHandlerFactory
+    ): void {
         $this->submitService = $submitService;
-    }
-
-    public function injectSubmitQuizQuestionService(ServiceSubmitQuizQuestion $submitQuizQuestionService): void {
         $this->submitQuizQuestionService = $submitQuizQuestionService;
-    }
-
-    public function injectSubmitUploadedStorage(UploadedStorage $filesystemUploadedSubmitStorage): void {
         $this->uploadedSubmitStorage = $filesystemUploadedSubmitStorage;
-    }
-
-    public function injectTaskService(ServiceTask $taskService): void {
         $this->taskService = $taskService;
-    }
-
-    public function injectQuizQuestionService(ServiceQuizQuestion $quizQuestionService): void {
         $this->quizQuestionService = $quizQuestionService;
-    }
-
-    public function injectSubmitHandlerFactory(SubmitHandlerFactory $submitHandlerFactory): void {
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
@@ -102,7 +89,6 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /**
-     *
      * @throws GoneException
      * @deprecated
      */
@@ -121,12 +107,12 @@ class SubmitPresenter extends BasePresenter {
         if (!$this->template->hasTasks) {
             /** @var ModelPerson $person */
             $person = $this->getUser()->getIdentity()->getPerson();
-            $contestants = $person->getActiveContestants($this->getYearCalculator());
+            $contestants = $person->getActiveContestants($this->yearCalculator);
             $contestant = $contestants[$this->getSelectedContest()->contest_id];
-            $currentYear = $this->getYearCalculator()->getCurrentYear($this->getSelectedContest());
-            $this->template->canRegister = ($contestant->year < $currentYear + $this->getYearCalculator()->getForwardShift($this->getSelectedContest()));
+            $currentYear = $this->yearCalculator->getCurrentYear($this->getSelectedContest());
+            $this->template->canRegister = ($contestant->year < $currentYear + $this->yearCalculator->getForwardShift($this->getSelectedContest()));
 
-            $this->template->hasForward = ($this->getSelectedYear() == $this->getYearCalculator()->getCurrentYear($this->getSelectedContest())) && ($this->getYearCalculator()->getForwardShift($this->getSelectedContest()) > 0);
+            $this->template->hasForward = ($this->getSelectedYear() == $this->yearCalculator->getCurrentYear($this->getSelectedContest())) && ($this->yearCalculator->getForwardShift($this->getSelectedContest()) > 0);
         }
     }
 
@@ -183,10 +169,10 @@ class SubmitPresenter extends BasePresenter {
 
                 if ($submit && $this->uploadedSubmitStorage->fileExists($submit)) {
                     $overwrite = $container->addCheckbox('overwrite', _('Overwrite submitted solutions.'));
-                    $conditionedUpload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(Form::BLANK, _('Buď zvolte přepsání odeslaného řešení anebo jej neposílejte.'));
+                    $conditionedUpload->addConditionOn($overwrite, Form::EQUAL, false)->addRule(Form::BLANK, _('Either tick overwrite the solution, or don\'t submit it.'));
                 }
             } else {
-                //Implementaton of quiz questions
+                //Implementation of quiz questions
                 $options = ['A' => 'A', 'B' => 'B', 'C' => 'C', 'D' => 'D']; //TODO add variability of options
                 foreach ($questions as $question) {
                     $select = $container->addRadioList('question' . $question->question_id, $task->getFQName() . ' - ' . $question->getFQName(), $options);
@@ -218,7 +204,7 @@ class SubmitPresenter extends BasePresenter {
                 $this->handleUploadFormSuccess($form);
             };
 
-            //     $form->addProtection(_('Vypršela časová platnost formuláře. Odešlete jej prosím znovu.'));
+            // $form->addProtection(_('The form has expired. Please send it again.'));
         }
 
         return $control;
@@ -280,7 +266,7 @@ class SubmitPresenter extends BasePresenter {
                     foreach ($questions as $question) {
                         $name = 'question' . $question->question_id;
                         $answer = $taskValues[$name];
-                        if($answer != null){
+                        if ($answer != null) {
                             $this->submitQuizQuestionService->saveSubmittedQuestion($question, $this->getContestant(), $answer);
                         }
                     }
@@ -295,7 +281,7 @@ class SubmitPresenter extends BasePresenter {
                     }
                     $this->submitHandlerFactory->handleSave($taskValues['file'], $task, $this->getContestant());
                 }
-                $this->flashMessage(sprintf(_('Úloha %s odevzdána.'), $task->label), self::FLASH_SUCCESS);
+                $this->flashMessage(sprintf(_('Task %s submitted.'), $task->label), self::FLASH_SUCCESS);
             }
 
             $this->uploadedSubmitStorage->commit();

@@ -23,17 +23,12 @@ class AllPersonsGrid extends BaseGrid {
 
     private ModelEvent $event;
 
-    /**
-     * PersonsGrid constructor.
-     * @param Container $container
-     * @param ModelEvent $event
-     */
     public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    public function injectServicePersonSchedule(ServicePersonSchedule $servicePersonSchedule): void {
+    final public function injectServicePersonSchedule(ServicePersonSchedule $servicePersonSchedule): void {
         $this->servicePersonSchedule = $servicePersonSchedule;
     }
 

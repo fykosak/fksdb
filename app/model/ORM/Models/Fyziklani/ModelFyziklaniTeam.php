@@ -13,29 +13,34 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\WebService\INodeCreator;
+use FKSDB\WebService\XMLHelper;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
 
 /**
- * @property-read  string category
- * @property-read  string name
- * @property-read  int e_fyziklani_team_id
- * @property-read  int event_id
- * @property-read  int points
- * @property-read  string status
- * @property-read  \DateTimeInterface created
- * @property-read  \DateTimeInterface modified
- * @property-read  string phone
- * @property-read  bool force_a
- * @property-read  string password
- * @property-read  ActiveRow event
+ * @property-read string category
+ * @property-read string name
+ * @property-read int e_fyziklani_team_id
+ * @property-read int event_id
+ * @property-read int points
+ * @property-read string status
+ * @property-read \DateTimeInterface created
+ * @property-read \DateTimeInterface modified
+ * @property-read string phone
+ * @property-read bool force_a
+ * @property-read string password
+ * @property-read ActiveRow event
+ * @property-read string game_lang
+ * @property-read int rank_category
+ * @property-read int rank_total
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @author Michal Červeňák <miso@fykos.cz>
  *
  */
-class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferencedModel, IResource, IContestReferencedModel {
+class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferencedModel, IResource, IContestReferencedModel, INodeCreator {
     public const RESOURCE_ID = 'fyziklani.team';
 
     public function __toString(): string {
@@ -142,14 +147,19 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
         return $persons;
     }
 
-    public function __toArray(bool $includePosition = false): array {
+    public function __toArray(bool $includePosition = false, bool $includePassword = false): array {
         $data = [
             'created' => $this->created->format('c'),
             'category' => $this->category,
             'name' => $this->name,
             'status' => $this->status,
             'teamId' => $this->e_fyziklani_team_id,
+            'gameLang' => $this->game_lang,
+            'points' => $this->points,
         ];
+        if ($includePassword) {
+            $data['password'] = $this->password;
+        }
         $position = $this->getPosition();
         if ($includePosition && $position) {
             $data['x'] = $position->col;
@@ -157,6 +167,32 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
             $data['roomId'] = $position->getRoom()->room_id;
         }
         return $data;
+    }
+
+    public function createXMLNode(\DOMDocument $doc): \DOMNode {
+        $node = $doc->createElement('team');
+        $node->setAttribute('teamId', $this->e_fyziklani_team_id);
+        XMLHelper::fillArrayToNode([
+            'teamId' => $this->e_fyziklani_team_id,
+            'name' => $this->name,
+            'status' => $this->status,
+            'category' => $this->category,
+            'created' => $this->created->format('c'),
+            'phone' => $this->phone,
+            'password' => $this->password,
+            'points' => $this->points,
+            'rankCategory' => $this->rank_category,
+            'rankTotal' => $this->rank_total,
+            'forceA' => $this->force_a,
+            'gameLang' => $this->game_lang,
+        ], $doc, $node);
+        return $node;
+
+        // `teacher_id`           INT(11)     NULL     DEFAULT NULL
+        // `teacher_accomodation` TINYINT(1)  NOT NULL DEFAULT 0,
+        // `teacher_present`      TINYINT(1)  NOT NULL DEFAULT 0,
+        // `teacher_schedule`     TEXT        NULL     DEFAULT NULL
+        // `note`                 TEXT        NULL     DEFAULT NULL,
     }
 
     public function getResourceId(): string {

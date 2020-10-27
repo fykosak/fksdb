@@ -31,11 +31,6 @@ class TaskCodeInput extends AjaxComponent {
 
     private ModelEvent $event;
 
-    /**
-     * TaskCodeInput constructor.
-     * @param Container $container
-     * @param ModelEvent $event
-     */
     public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container, 'fyziklani.submit-form');
         $this->event = $event;
@@ -44,7 +39,7 @@ class TaskCodeInput extends AjaxComponent {
         });
     }
 
-    public function injectPrimary(HandlerFactory $handlerFactory, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
+    final public function injectPrimary(HandlerFactory $handlerFactory, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->handlerFactory = $handlerFactory;

@@ -29,12 +29,11 @@ use Nette\Security\IResource;
  * @method ModelFyziklaniTeam getEntity()
  */
 class ClosePresenter extends BasePresenter {
-
     use EventEntityPresenterTrait;
 
     /* ******* TITLE ***********/
     public function getTitleList(): PageTitle {
-        return new PageTitle(_('Uzavírání bodování'), 'fa fa-check');
+        return new PageTitle(_('Sealing of the scoring'), 'fa fa-check');
     }
 
     /**
@@ -45,7 +44,7 @@ class ClosePresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function titleTeam(): void {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Uzavírání bodování týmu "%s"'), $this->getEntity()->name), 'fa fa-check-square-o'));
+        $this->setPageTitle(new PageTitle(\sprintf(_('Sealing of the scoring for the team "%s"'), $this->getEntity()->name), 'fa fa-check-square-o'));
     }
 
     /**
@@ -143,7 +142,7 @@ class ClosePresenter extends BasePresenter {
     }
 
     protected function getORMService(): ServiceFyziklaniTeam {
-        return $this->getServiceFyziklaniTeam();
+        return $this->serviceFyziklaniTeam;
     }
 
     protected function getModelResource(): string {

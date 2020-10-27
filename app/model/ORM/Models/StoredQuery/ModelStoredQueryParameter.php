@@ -42,7 +42,7 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
      * @param mixed $value
      * @throws InvalidStateException
      */
-    public function setDefaultValue($value) {
+    public function setDefaultValue($value): void {
         switch ($this->type) {
             case self::TYPE_INT:
             case self::TYPE_BOOL:

@@ -16,11 +16,6 @@ use Nette\Utils\DateTime;
  */
 class ServiceSubmitQuizQuestion extends AbstractServiceSingle {
 
-    /**
-     * ServiceSubmitQuizQuestion constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_SUBMIT_QUIZ, ModelSubmitQuizQuestion::class);
     }

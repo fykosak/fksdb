@@ -292,11 +292,11 @@ DBReflection:
                         write: RESTRICT
                 email_parent_m:
                     type: email
-                    title: _('E-mail (matka)')
+                    title: _('E-mail (mother)')
                     permission: RESTRICT
                 email_parent_d:
                     type: email
-                    title: _('E-mail (otec)')
+                    title: _('E-mail (father)')
                     permission: RESTRICT
                 id_number:
                     type: class
@@ -582,7 +582,7 @@ DBReflection:
          fyziklani_task:
              modelClassName: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask
              referencedAccess:
-                modelClassName: FKSDB\ORM\Models\IFyziklaniTaskReferencedModel
+                modelClassName: FKSDB\ORM\Models\Fyziklani\IFyziklaniTaskReferencedModel
                 method: getFyziklaniTask
              columnFactories:
                 fyziklani_task_id:
@@ -626,7 +626,7 @@ DBReflection:
          e_fyziklani_team:
              modelClassName: FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam
              referencedAccess:
-                 modelClassName: FKSDB\ORM\Models\IFyziklaniTeamReferencedModel
+                 modelClassName: FKSDB\ORM\Models\Fyziklani\IFyziklaniTeamReferencedModel
                  method: getFyziklaniTeam
              columnFactories:
                 e_fyziklani_team_id:
@@ -724,7 +724,7 @@ DBReflection:
 
          schedule_group:
              referencedAccess:
-                modelClassName: FKSDB\ORM\Models\IScheduleGroupReferencedModel
+                modelClassName: FKSDB\ORM\Models\Schedule\IScheduleGroupReferencedModel
                 method: getScheduleGroup
              modelClassName: FKSDB\ORM\Models\Schedule\ModelScheduleGroup
              columnFactories:
@@ -754,7 +754,7 @@ DBReflection:
          schedule_item:
              modelClassName: FKSDB\ORM\Models\Schedule\ModelScheduleItem
              referencedAccess:
-                modelClassName: FKSDB\ORM\Models\IScheduleItemReferencedModel
+                modelClassName: FKSDB\ORM\Models\Schedule\IScheduleItemReferencedModel
                 method: getScheduleItem
              columnFactories:
                 schedule_item_id:

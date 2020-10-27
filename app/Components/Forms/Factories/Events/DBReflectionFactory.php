@@ -33,11 +33,6 @@ class DBReflectionFactory extends AbstractFactory {
 
     private ReflectionFactory $tableReflectionFactory;
 
-    /**
-     * DBReflectionFactory constructor.
-     * @param Connection $connection
-     * @param ReflectionFactory $tableReflectionFactory
-     */
     public function __construct(Connection $connection, ReflectionFactory $tableReflectionFactory) {
         $this->connection = $connection;
         $this->tableReflectionFactory = $tableReflectionFactory;
@@ -156,12 +151,7 @@ class DBReflectionFactory extends AbstractFactory {
         return $column;
     }
 
-    /**
-     * @param string $table
-     * @param string $column
-     * @return array|null
-     */
-    private function getColumnMetadata($table, $column) {
+    private function getColumnMetadata(string $table, string $column): ?array {
         if (!isset($this->columns[$table])) {
             $columns = [];
             foreach ($this->connection->getSupplementalDriver()->getColumns($table) as $columnMeta) {
@@ -175,5 +165,4 @@ class DBReflectionFactory extends AbstractFactory {
             return null;
         }
     }
-
 }

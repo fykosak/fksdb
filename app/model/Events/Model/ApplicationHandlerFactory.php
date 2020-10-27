@@ -21,12 +21,6 @@ class ApplicationHandlerFactory {
 
     private EventDispatchFactory $eventDispatchFactory;
 
-    /**
-     * ApplicationHandlerFactory constructor.
-     * @param Connection $connection
-     * @param Container $container
-     * @param EventDispatchFactory $eventDispatchFactory
-     */
     public function __construct(Connection $connection, Container $container, EventDispatchFactory $eventDispatchFactory) {
         $this->connection = $connection;
         $this->container = $container;

@@ -16,10 +16,6 @@ class State extends EvaluatedExpression {
 
     private string $state;
 
-    /**
-     * State constructor.
-     * @param string $state
-     */
     public function __construct(string $state) {
         $this->state = $state;
     }

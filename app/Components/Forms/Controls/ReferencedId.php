@@ -51,13 +51,6 @@ class ReferencedId extends HiddenField {
 
     private bool $attachedSearch = false;
 
-    /**
-     * ReferencedId constructor.
-     * @param SearchContainer $searchContainer
-     * @param ReferencedContainer $referencedContainer
-     * @param IService $service
-     * @param IReferencedHandler $handler
-     */
     public function __construct(SearchContainer $searchContainer, ReferencedContainer $referencedContainer, IService $service, IReferencedHandler $handler) {
         $this->referencedContainer = $referencedContainer;
         $this->getReferencedContainer()->setReferencedId($this);
@@ -130,7 +123,7 @@ class ReferencedId extends HiddenField {
      * @param bool $force
      * @return static
      */
-    public function setValue($pValue, bool $force = false) {
+    public function setValue($pValue, bool $force = false): self {
 
         if ($pValue instanceof IModel) {
             $personModel = $pValue;

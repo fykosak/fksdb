@@ -21,20 +21,20 @@ class ContestantPresenter extends ExtendedPersonPresenter {
 
     private ServiceContestant $serviceContestant;
 
-    public function injectServiceContestant(ServiceContestant $serviceContestant): void {
+    final public function injectServiceContestant(ServiceContestant $serviceContestant): void {
         $this->serviceContestant = $serviceContestant;
     }
 
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Úprava řešitele %s'), $this->getModel()->getPerson()->getFullName()), 'fa fa-user'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit the contestant %s'), $this->getModel()->getPerson()->getFullName()), 'fa fa-user'));
     }
 
     public function titleCreate(): void {
-        $this->setPageTitle(new PageTitle(_('Založit řešitele'), 'fa fa-user-plus'));
+        $this->setPageTitle(new PageTitle(_('Create contestant'), 'fa fa-user-plus'));
     }
 
     public function titleList(): void {
-        $this->setPageTitle(new PageTitle(_('Řešitelé'), 'fa fa-users'));
+        $this->setPageTitle(new PageTitle(_('Contestants'), 'fa fa-users'));
     }
 
     /**
@@ -59,23 +59,23 @@ class ContestantPresenter extends ExtendedPersonPresenter {
         if (!$model) {
             return null;
         }
-        return $this->getYearCalculator()->getAcademicYear($this->getServiceContest()->findByPrimary($model->contest_id), $model->year);
+        return $this->yearCalculator->getAcademicYear($this->serviceContest->findByPrimary($model->contest_id), $model->year);
     }
 
     public function messageCreate(): string {
-        return _('Řešitel %s založen.');
+        return _('Contestant %s created.');
     }
 
     public function messageEdit(): string {
-        return _('Řešitel %s upraven.');
+        return _('Contestant %s modified.');
     }
 
     public function messageError(): string {
-        return _('Chyba při zakládání řešitele.');
+        return _('Error while creating the contestant.');
     }
 
     public function messageExists(): string {
-        return _('Řešitel už existuje.');
+        return _('Contestant already exists.');
     }
 
     protected function getModelResource(): string {

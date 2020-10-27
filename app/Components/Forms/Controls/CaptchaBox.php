@@ -15,9 +15,6 @@ class CaptchaBox extends SelectBox {
     private const VALUE_YES = 'xyz';
     private const VALUE_NO = 'pqrt';
 
-    /**
-     * CaptchaBox constructor.
-     */
     public function __construct() {
         parent::__construct(_('Jsi robot?'), [
             self::VALUE_NO => _('ne'),

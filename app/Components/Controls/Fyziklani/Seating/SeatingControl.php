@@ -19,7 +19,7 @@ class SeatingControl extends BaseComponent {
 
     private EventDispatchFactory $eventDispatchFactory;
 
-    public function injectServicePrimary(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, EventDispatchFactory $eventDispatchFactory): void {
+    final public function injectServicePrimary(ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition, EventDispatchFactory $eventDispatchFactory): void {
         $this->serviceFyziklaniTeamPosition = $serviceFyziklaniTeamPosition;
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
@@ -56,13 +56,6 @@ class SeatingControl extends BaseComponent {
         $this->render($event, 'dev');
     }
 
-    /**
-     * @param ModelEvent $event
-     * @param string $mode
-     * @param string $lang
-     * @return void
-     * @throws NeonSchemaException
-     */
     public function render(ModelEvent $event, string $mode, string $lang = 'cs'): void {
         $this->template->places = $this->serviceFyziklaniTeamPosition->getAllPlaces($this->getRooms($event));
         $this->template->mode = $mode;
@@ -71,15 +64,10 @@ class SeatingControl extends BaseComponent {
         $this->template->render();
     }
 
-    /**
-     * @param ModelEvent $event
-     * @return int[]
-     * @throws NeonSchemaException
-     */
     private function getRooms(ModelEvent $event): array {
         try {
             return $this->eventDispatchFactory->getDummyHolder($event)->getParameter('rooms') ?: [];
-        } catch (BadRequestException $exception) {
+        } catch (\Exception $exception) {
             return [];
         }
     }

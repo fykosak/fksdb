@@ -54,14 +54,6 @@ class ApplicationHandler {
 
     private EventDispatchFactory $eventDispatchFactory;
 
-    /**
-     * ApplicationHandler constructor.
-     * @param ModelEvent $event
-     * @param ILogger $logger
-     * @param Connection $connection
-     * @param Container $container
-     * @param EventDispatchFactory $eventDispatchFactory
-     */
     public function __construct(ModelEvent $event, ILogger $logger, Connection $connection, Container $container, EventDispatchFactory $eventDispatchFactory) {
         $this->event = $event;
         $this->logger = $logger;
@@ -116,21 +108,21 @@ class ApplicationHandler {
             $this->commit();
 
             if ($transition->isCreating()) {
-                $this->logger->log(new Message(sprintf(_('Přihláška "%s" vytvořena.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS));
+                $this->logger->log(new Message(sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS));
             } elseif ($transition->isTerminating()) {
                 $this->logger->log(new Message(_('Application deleted.'), ILogger::SUCCESS));
             } elseif (isset($transition)) {
-                $this->logger->log(new Message(sprintf(_('Stav přihlášky "%s" změněn.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::INFO));
+                $this->logger->log(new Message(sprintf(_('State of application "%s" changed.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::INFO));
             }
         } catch (ModelDataConflictException $exception) {
             $container = $exception->getReferencedId()->getReferencedContainer();
             $container->setConflicts($exception->getConflicts());
 
-            $message = sprintf(_('Některá pole skupiny "%s" neodpovídají existujícímu záznamu.'), $container->getOption('label'));
+            $message = sprintf(_('Some fields of group "%s" don\'t match an existing record.'), $container->getOption('label'));
             $this->logger->log(new Message($message, ILogger::ERROR));
             $this->reRaise($exception);
         } catch (SecondaryModelDataConflictException $exception) {
-            $message = sprintf(_('Data ve skupině "%s" kolidují s již existující přihláškou.'), $exception->getBaseHolder()->getLabel());
+            $message = sprintf(_('Data in group "%s" collide with an existing application.'), $exception->getBaseHolder()->getLabel());
             Debugger::log($exception, 'app-conflict');
             $this->logger->log(new Message($message, ILogger::ERROR));
             $this->reRaise($exception);
@@ -180,12 +172,11 @@ class ApplicationHandler {
             $this->commit();
 
             if (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isCreating()) {
-                $this->logger->log(new Message(sprintf(_('Přihláška "%s" vytvořena.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS));
+                $this->logger->log(new Message(sprintf(_('Application "%s" created.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS));
             } elseif (isset($transitions[$explicitMachineName]) && $transitions[$explicitMachineName]->isTerminating()) {
-                //$this->logger->log(sprintf(_("Přihláška '%s' smazána."), (string) $holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS);
                 $this->logger->log(new Message(_('Application deleted.'), ILogger::SUCCESS));
             } elseif (isset($transitions[$explicitMachineName])) {
-                $this->logger->log(new Message(sprintf(_('Stav přihlášky "%s" změněn.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::INFO));
+                $this->logger->log(new Message(sprintf(_('State of application "%s" changed.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::INFO));
             }
             if ($data && (!isset($transitions[$explicitMachineName]) || !$transitions[$explicitMachineName]->isTerminating())) {
                 $this->logger->log(new Message(sprintf(_('Application "%s" saved.'), (string)$holder->getPrimaryHolder()->getModel()), ILogger::SUCCESS));
@@ -193,12 +184,12 @@ class ApplicationHandler {
         } catch (ModelDataConflictException $exception) {
             $container = $exception->getReferencedId()->getReferencedContainer();
             $container->setConflicts($exception->getConflicts());
-            $message = sprintf(_('Některá pole skupiny "%s" neodpovídají existujícímu záznamu.'), $container->getOption('label'));
+            $message = sprintf(_('Some fields of group "%s" don\'t match an existing record.'), $container->getOption('label'));
             $this->logger->log(new Message($message, ILogger::ERROR));
             $this->formRollback($form);
             $this->reRaise($exception);
         } catch (SecondaryModelDataConflictException $exception) {
-            $message = sprintf(_('Data ve skupině "%s" kolidují s již existující přihláškou.'), $exception->getBaseHolder()->getLabel());
+            $message = sprintf(_('Data in group "%s" collide with an existing application.'), $exception->getBaseHolder()->getLabel());
             Debugger::log($exception, 'app-conflict');
             $this->logger->log(new Message($message, ILogger::ERROR));
             $this->formRollback($form);

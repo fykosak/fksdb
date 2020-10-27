@@ -52,12 +52,6 @@ class Transition {
 
     private string $type;
 
-    /**
-     * Transition constructor.
-     * @param string $mask
-     * @param string|null $label
-     * @param string $type
-     */
     public function __construct(string $mask, ?string $label = null, string $type = self::TYPE_DEFAULT) {
         $this->setMask($mask);
         $this->label = $label;
@@ -77,7 +71,7 @@ class Transition {
     }
 
     /**
-     * Meaningless idenifier.
+     * Meaningless identifier.
      */
     public function getName(): string {
         return $this->name;
@@ -288,7 +282,7 @@ class Transition {
     }
 
     /**
-     * @note Assumes the condition is fullfilled.
+     * @note Assumes the condition is fulfilled.
      * @param BaseHolder $holder
      */
     private function changeState(BaseHolder $holder): void {

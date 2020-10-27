@@ -14,11 +14,6 @@ use FKSDB\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
  */
 class ServiceMFyziklaniParticipant extends AbstractServiceMulti {
 
-    /**
-     * ServiceMFyziklaniParticipant constructor.
-     * @param ServiceEventParticipant $mainService
-     * @param ServiceFyziklaniParticipant $joinedService
-     */
     public function __construct(ServiceEventParticipant $mainService, ServiceFyziklaniParticipant $joinedService) {
         parent::__construct($mainService, $joinedService, 'event_participant_id', ModelMFyziklaniParticipant::class);
     }

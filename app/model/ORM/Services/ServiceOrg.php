@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Services;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyDBTrait;
@@ -11,15 +12,12 @@ use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
+ * @method ModelOrg createNewModel(array $data)
+ * @method ModelOrg refresh(AbstractModelSingle $model)
  */
 class ServiceOrg extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    /**
-     * ServiceOrg constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_ORG, ModelOrg::class);
     }
@@ -32,5 +30,14 @@ class ServiceOrg extends AbstractServiceSingle {
         $result = $this->getTable()->where('tex_signature', $signature)
             ->where('contest_id', $contestId)->fetch();
         return $result ?: null;
+    }
+
+    public function store(?ModelOrg $model, array $data): ModelOrg {
+        if (is_null($model)) {
+            return $this->createNewModel($data);
+        } else {
+            $this->updateModel2($model, $data);
+            return $this->refresh($model);
+        }
     }
 }

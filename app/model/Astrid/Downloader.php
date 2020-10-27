@@ -27,15 +27,6 @@ class Downloader {
 
     private Container $container;
 
-    /**
-     * Downloader constructor.
-     * @param string $httpUser
-     * @param string $httpPassword
-     * @param string $host
-     * @param string $tmpDir
-     * @param array $contestMap
-     * @param Container $container
-     */
     public function __construct(string $httpUser, string $httpPassword, string $host, string $tmpDir, array $contestMap, Container $container) {
         $this->httpUser = $httpUser;
         $this->httpPassword = $httpPassword;

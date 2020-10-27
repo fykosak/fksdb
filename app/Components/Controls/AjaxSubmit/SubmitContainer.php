@@ -20,23 +20,11 @@ use Nette\DI\Container;
 class SubmitContainer extends BaseComponent {
 
     private ModelContestant $contestant;
-
     private ModelContest $contest;
-
     private int $acYear;
-
     private int $year;
-
     private ServiceTask $serviceTask;
 
-    /**
-     * SubmitContainer constructor.
-     * @param Container $container
-     * @param ModelContestant $contestant
-     * @param ModelContest $contest
-     * @param int $acYear
-     * @param int $year
-     */
     public function __construct(Container $container, ModelContestant $contestant, ModelContest $contest, int $acYear, int $year) {
         parent::__construct($container);
         $this->contestant = $contestant;
@@ -50,8 +38,7 @@ class SubmitContainer extends BaseComponent {
         }
     }
 
-
-    protected function createComponent(string $name): ?IComponent {
+    protected function createComponent($name): ?IComponent {
         $component = parent::createComponent($name);
         if (!$component && preg_match('/task_[0-9]+/', $name)) {
             $this->flashMessage(_('Task is not available'), Message::LVL_DANGER);
@@ -61,7 +48,7 @@ class SubmitContainer extends BaseComponent {
 
     }
 
-    public function injectPrimary(ServiceTask $serviceTask): void {
+    final public function injectPrimary(ServiceTask $serviceTask): void {
         $this->serviceTask = $serviceTask;
     }
 

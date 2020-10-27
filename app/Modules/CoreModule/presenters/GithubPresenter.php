@@ -2,7 +2,6 @@
 
 namespace FKSDB\Modules\CoreModule;
 
-use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Github\EventFactory;
 use FKSDB\Github\Events\Event;
@@ -19,14 +18,10 @@ use Nette\Application\Responses\TextResponse;
 class GithubPresenter extends AuthenticatedPresenter {
 
     private Updater $updater;
-
     private EventFactory $eventFactory;
 
-    public function injectEventFactory(EventFactory $eventFactory): void {
+    final public function injectQuarterly(EventFactory $eventFactory, Updater $updater): void {
         $this->eventFactory = $eventFactory;
-    }
-
-    public function injectUpdater(Updater $updater): void {
         $this->updater = $updater;
     }
 

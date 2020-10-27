@@ -15,7 +15,6 @@ use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
-use Nette\Utils\JsonException;
 use Nette\DI\Container as DIContainer;
 
 /**
@@ -36,11 +35,6 @@ abstract class ReferencedContainer extends ContainerWithOptions {
 
     private bool $attachedJS = false;
 
-    /**
-     * ReferencedContainer constructor.
-     * @param DIContainer $container
-     * @param bool $allowClear
-     */
     public function __construct(DIContainer $container, bool $allowClear) {
         parent::__construct($container);
         $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
@@ -135,7 +129,6 @@ abstract class ReferencedContainer extends ContainerWithOptions {
      * @throws AbstractColumnException
      * @throws BadRequestException
      * @throws BadTypeException
-     * @throws JsonException
      * @throws NotImplementedException
      * @throws OmittedControlException
      */

@@ -37,13 +37,6 @@ class ExportFormatFactory {
 
     private array $defaultFormats;
 
-    /**
-     * ExportFormatFactory constructor.
-     * @param Container $container
-     * @param StoredQueryFactory $storedQueryFactory
-     * @param ServiceEvent $serviceEvent
-     * @param ServiceContest $serviceContest
-     */
     public function __construct(Container $container, StoredQueryFactory $storedQueryFactory, ServiceEvent $serviceEvent, ServiceContest $serviceContest) {
         $this->container = $container;
         $this->storedQueryFactory = $storedQueryFactory;
@@ -51,8 +44,8 @@ class ExportFormatFactory {
         $this->serviceContest = $serviceContest;
         $this->defaultFormats = [
             self::CSV_HEAD => _('Save CSV'),
-            self::CSV_HEADLESS => _('Uložit CSV (bez hlavičky)'),
-            self::CSV_QUOTE_HEAD => _('Uložit CSV s uvozovkami'),
+            self::CSV_HEADLESS => _('Save CSV (without head)'),
+            self::CSV_QUOTE_HEAD => _('Save CSV with quotes'),
         ];
     }
 

@@ -25,19 +25,13 @@ class ResultsCategoryGrid extends BaseGrid {
 
     private string $category;
 
-    /**
-     * FyziklaniSubmitsGrid constructor.
-     * @param ModelEvent $event
-     * @param string $category
-     * @param Container $container
-     */
     public function __construct(ModelEvent $event, string $category, Container $container) {
         parent::__construct($container);
         $this->event = $event;
         $this->category = $category;
     }
 
-    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
+    final public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 

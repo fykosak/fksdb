@@ -20,23 +20,10 @@ use Tracy\Debugger;
  */
 class FacebookAuthenticator extends AbstractAuthenticator {
 
-    /** @var ServicePerson */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
+    private ServicePersonInfo $servicePersonInfo;
+    private AccountManager $accountManager;
 
-    /** @var ServicePersonInfo */
-    private $servicePersonInfo;
-
-    /** @var AccountManager */
-    private $accountManager;
-
-    /**
-     * FacebookAuthenticator constructor.
-     * @param ServicePerson $servicePerson
-     * @param ServicePersonInfo $servicePersonInfo
-     * @param AccountManager $accountManager
-     * @param ServiceLogin $serviceLogin
-     * @param YearCalculator $yearCalculator
-     */
     public function __construct(ServicePerson $servicePerson, ServicePersonInfo $servicePersonInfo, AccountManager $accountManager, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->servicePerson = $servicePerson;
@@ -50,7 +37,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
      * @throws AuthenticationException
      * @throws InactiveLoginException
      */
-    public function authenticate(array $fbUser) {
+    public function authenticate(array $fbUser): ModelLogin {
         $person = $this->findPerson($fbUser);
 
         if (!$person) {
@@ -77,7 +64,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
      * @return ModelPerson|ActiveRow|null
      * @throws AuthenticationException
      */
-    private function findPerson(array $fbUser) {
+    private function findPerson(array $fbUser): ?ModelPerson {
         if (!$fbUser['email']) {
             throw new AuthenticationException(_('V profilu Facebooku nebyl nalezen e-mail.'));
         }
@@ -102,12 +89,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         return $login;
     }
 
-    /**
-     * @param ModelPerson $person
-     * @param array $fbUser
-     * @return void
-     */
-    private function updateFromFB(ModelPerson $person, array $fbUser) {
+    private function updateFromFB(ModelPerson $person, array $fbUser): void {
         $this->servicePerson->getConnection()->beginTransaction();
         $personData = $this->getPersonData($fbUser);
         // there can be bullshit in this fields, so don't use it for update
@@ -133,11 +115,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
         $this->servicePerson->getConnection()->commit();
     }
 
-    /**
-     * @param array $fbUser
-     * @return array
-     */
-    private function getPersonData(array $fbUser) {
+    private function getPersonData(array $fbUser): array {
         return [
             'family_name' => $fbUser['last_name'],
             'other_name' => $fbUser['first_name'],
@@ -152,5 +130,4 @@ class FacebookAuthenticator extends AbstractAuthenticator {
             'fb_id' => $fbUser['id'],
         ];
     }
-
 }

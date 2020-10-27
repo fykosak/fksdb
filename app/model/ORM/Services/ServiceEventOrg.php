@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Services;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Services\Exception\DuplicateOrgException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
@@ -16,15 +17,11 @@ use Nette\Database\IConventions;
 /**
  * Class ServiceEventOrg
  * @author Michal Červeňák <miso@fykos.cz>
+ * @method ModelEventOrg refresh(AbstractModelSingle $model)
  */
 class ServiceEventOrg extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    /**
-     * ServiceEventOrg constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_EVENT_ORG, ModelEventOrg::class);
     }
@@ -58,5 +55,14 @@ class ServiceEventOrg extends AbstractServiceSingle {
 
     public function findByEvent(ModelEvent $event): TypedTableSelection {
         return $this->getTable()->where('event_id', $event->event_id);
+    }
+
+    public function store(?ModelEventOrg $model, array $data): ModelEventOrg {
+        if (is_null($model)) {
+            return $this->createNewModel($data);
+        } else {
+            $this->updateModel2($model, $data);
+            return $this->refresh($model);
+        }
     }
 }

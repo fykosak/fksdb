@@ -31,14 +31,10 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     protected bool $sendEmail = true;
 
     private ReferencedPersonFactory $referencedPersonFactory;
-
     private ExtendedPersonHandlerFactory $handlerFactory;
 
-    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory): void {
+    final public function injectExtendedPerson(ReferencedPersonFactory $referencedPersonFactory,ExtendedPersonHandlerFactory $handlerFactory): void {
         $this->referencedPersonFactory = $referencedPersonFactory;
-    }
-
-    public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
     }
 
@@ -95,7 +91,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         $allowClear = $create;
         $modifiabilityResolver = $visibilityResolver = new AclResolver($this->contestAuthorizator, $this->getSelectedContest());
         $referencedId = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
-        $referencedId->addRule(Form::FILLED, _('Osobu je třeba zadat.'));
+        $referencedId->addRule(Form::FILLED, _('Person is required.'));
         $referencedId->getReferencedContainer()->setOption('label', _('Person'));
 
         $container->addComponent($referencedId, ExtendedPersonHandler::EL_PERSON);

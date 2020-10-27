@@ -3,13 +3,14 @@
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Authorization\RelatedPersonAuthorizator;
+use FKSDB\Components\Controls\Choosers\ContestChooser;
+use FKSDB\Components\Events\ApplicationComponent;
 use FKSDB\Config\NeonSchemaException;
+use FKSDB\Events\EventDispatchFactory;
+use FKSDB\Events\EventNotFoundException;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\Components\Controls\Choosers\ContestChooser;
-use FKSDB\Components\Events\ApplicationComponent;
-use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\GoneException;
 use FKSDB\Exceptions\NotFoundException;
@@ -38,39 +39,24 @@ class ApplicationPresenter extends BasePresenter {
 
     public const PARAM_AFTER = 'a';
 
-    /** @var ModelEvent|null */
-    private $event;
-
-    /** @var IModel|ModelFyziklaniTeam|ModelEventParticipant */
-    private $eventApplication = false;
-
-    /** @var Holder */
-    private $holder;
-
-    /** @var Machine */
-    private $machine;
-
+    private ?ModelEvent $event;
+    private ?IModel $eventApplication = null;
+    private Holder $holder;
+    private Machine $machine;
     private ServiceEvent $serviceEvent;
-
     private RelatedPersonAuthorizator $relatedPersonAuthorizator;
-
     private ApplicationHandlerFactory $handlerFactory;
-
     private EventDispatchFactory $eventDispatchFactory;
 
-    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
+    final public function injectTernary(
+        ServiceEvent $serviceEvent,
+        RelatedPersonAuthorizator $relatedPersonAuthorizator,
+        ApplicationHandlerFactory $handlerFactory,
+        EventDispatchFactory $eventDispatchFactory
+    ): void {
         $this->serviceEvent = $serviceEvent;
-    }
-
-    public function injectRelatedPersonAuthorizator(RelatedPersonAuthorizator $relatedPersonAuthorizator): void {
         $this->relatedPersonAuthorizator = $relatedPersonAuthorizator;
-    }
-
-    public function injectHandlerFactory(ApplicationHandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
-    }
-
-    public function injectEventDispatchFactory(EventDispatchFactory $eventDispatchFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
     }
 
@@ -147,12 +133,12 @@ class ApplicationPresenter extends BasePresenter {
      */
     public function actionDefault($eventId, $id): void {
         if (!$this->getEvent()) {
-            throw new NotFoundException(_('Neexistující akce.'));
+            throw new EventNotFoundException();
         }
         $eventApplication = $this->getEventApplication();
         if ($id) { // test if there is a new application, case is set there are a edit od application, empty => new application
             if (!$eventApplication) {
-                throw new NotFoundException(_('Neexistující přihláška.'));
+                throw new NotFoundException(_('Unknown application.'));
             }
             if (!$eventApplication instanceof IEventReferencedModel) {
                 throw new BadTypeException(IEventReferencedModel::class, $eventApplication);
@@ -164,10 +150,10 @@ class ApplicationPresenter extends BasePresenter {
 
         $this->initializeMachine();
 
-        if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
-            $data = $this->getTokenAuthenticator()->getTokenData();
+        if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
+            $data = $this->tokenAuthenticator->getTokenData();
             if ($data) {
-                $this->getTokenAuthenticator()->disposeTokenData();
+                $this->tokenAuthenticator->disposeTokenData();
                 $this->redirect('this', self::decodeParameters($data));
             }
         }
@@ -177,13 +163,13 @@ class ApplicationPresenter extends BasePresenter {
 
             if ($this->getHolder()->getPrimaryHolder()->getModelState() == \FKSDB\Transitions\Machine::STATE_INIT) {
                 $this->setView('closed');
-                $this->flashMessage(_('Přihlašování není povoleno.'), BasePresenter::FLASH_INFO);
+                $this->flashMessage(_('Registration is not open.'), BasePresenter::FLASH_INFO);
             } elseif (!$this->getParameter(self::PARAM_AFTER, false)) {
-                $this->flashMessage(_('Automat přihlášky nemá aktuálně žádné možné přechody.'), BasePresenter::FLASH_INFO);
+                $this->flashMessage(_('Application machine has no available transitions.'), BasePresenter::FLASH_INFO);
             }
         }
 
-        if (!$this->relatedPersonAuthorizator->isRelatedPerson($this->getHolder()) && !$this->getContestAuthorizator()->isAllowed($this->getEvent(), 'application', $this->getEvent()->getContest())) {
+        if (!$this->relatedPersonAuthorizator->isRelatedPerson($this->getHolder()) && !$this->contestAuthorizator->isAllowed($this->getEvent(), 'application', $this->getEvent()->getContest())) {
             if ($this->getParameter(self::PARAM_AFTER, false)) {
                 $this->setView('closed');
             } else {
@@ -208,7 +194,7 @@ class ApplicationPresenter extends BasePresenter {
         $component = parent::createComponentContestChooser();
         if ($this->getAction() == 'default') {
             if (!$this->getEvent()) {
-                throw new NotFoundException(_('Neexistující akce.'));
+                throw new EventNotFoundException();
             }
             $component->setContests([
                 $this->getEvent()->getEventType()->contest_id,
@@ -238,31 +224,28 @@ class ApplicationPresenter extends BasePresenter {
     }
 
     private function getEvent(): ?ModelEvent {
-        if (!$this->event) {
+        if (!isset($this->event)) {
             $eventId = null;
-            if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
-                $data = $this->getTokenAuthenticator()->getTokenData();
+            if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
+                $data = $this->tokenAuthenticator->getTokenData();
                 if ($data) {
-                    $data = self::decodeParameters($this->getTokenAuthenticator()->getTokenData());
+                    $data = self::decodeParameters($this->tokenAuthenticator->getTokenData());
                     $eventId = $data['eventId'];
                 }
             }
             $eventId = $eventId ?: $this->getParameter('eventId');
-            $event = $this->serviceEvent->findByPrimary($eventId);
-            if ($event) {
-                $this->event = $event;
-            }
+            $this->event = $this->serviceEvent->findByPrimary($eventId);
         }
 
         return $this->event;
     }
 
     /**
-     * @return AbstractModelMulti|AbstractModelSingle|IModel|ModelFyziklaniTeam|ModelEventParticipant|IEventReferencedModel
+     * @return AbstractModelMulti|AbstractModelSingle|IModel|ModelFyziklaniTeam|ModelEventParticipant|IEventReferencedModel|null
      * @throws NeonSchemaException
      */
-    private function getEventApplication() {
-        if (!$this->eventApplication) {
+    private function getEventApplication(): ?IModel {
+        if (!isset($this->eventApplication)) {
             $id = null;
             //if ($this->getTokenAuthenticator()->isAuthenticatedByToken(ModelAuthToken::TYPE_EVENT_NOTIFY)) {
             //   $data = $this->getTokenAuthenticator()->getTokenData();
@@ -288,14 +271,14 @@ class ApplicationPresenter extends BasePresenter {
      * @throws NeonSchemaException
      */
     private function getHolder(): Holder {
-        if (!$this->holder) {
+        if (!isset($this->holder)) {
             $this->holder = $this->eventDispatchFactory->getDummyHolder($this->getEvent());
         }
         return $this->holder;
     }
 
     private function getMachine(): Machine {
-        if (!$this->machine) {
+        if (!isset($this->machine)) {
             $this->machine = $this->eventDispatchFactory->getEventMachine($this->getEvent());
         }
         return $this->machine;

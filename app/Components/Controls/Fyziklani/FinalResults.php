@@ -19,17 +19,12 @@ class FinalResults extends BaseComponent {
 
     private ModelEvent$event;
 
-    /**
-     * FinalResults constructor.
-     * @param ModelEvent $event
-     * @param Container $container
-     */
     public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
+    final public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 

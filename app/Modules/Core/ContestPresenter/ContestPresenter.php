@@ -83,7 +83,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
      * @throws ForbiddenRequestException
      */
     public function getSelectedAcademicYear(): int {
-        return $this->getYearCalculator()->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
+        return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 
     protected function beforeRender(): void {
@@ -100,7 +100,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
     }
 
     protected function setPageTitle(PageTitle $pageTitle): void {
-        $pageTitle->subTitle = sprintf(_('%d. ročník'), $this->year) . ' ' . $pageTitle->subTitle;
+        $pageTitle->subTitle = sprintf(_('%d. year'), $this->year) . ' ' . $pageTitle->subTitle;
         parent::setPageTitle($pageTitle);
     }
 }

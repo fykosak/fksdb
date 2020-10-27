@@ -20,11 +20,6 @@ class RankingStrategy {
 
     private ModelEvent $event;
 
-    /**
-     * CloseSubmitStrategy constructor.
-     * @param ModelEvent $event
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     */
     public function __construct(ModelEvent $event, ServiceFyziklaniTeam $serviceFyziklaniTeam) {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->event = $event;

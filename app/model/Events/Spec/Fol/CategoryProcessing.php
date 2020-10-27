@@ -6,7 +6,7 @@ use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Field;
 use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\Events\Processings\AbstractProcessing;
+use FKSDB\Events\Processing\AbstractProcessing;
 use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
@@ -39,12 +39,6 @@ class CategoryProcessing extends AbstractProcessing implements IOptionsProvider 
 
     private int $rulesVersion;
 
-    /**
-     *
-     * @param int $rulesVersion version 1 is up to year 2017, version 2 from 2018
-     * @param YearCalculator $yearCalculator
-     * @param ServiceSchool $serviceSchool
-     */
     public function __construct(int $rulesVersion, YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;

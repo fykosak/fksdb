@@ -8,7 +8,6 @@ use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container as DIContainer;
-use Nette\Forms\Container;
 use Nette\InvalidStateException;
 use Nette\Utils\ArrayHash;
 
@@ -20,22 +19,18 @@ class AddressContainer extends ModelContainer {
 
     private ServiceRegion $serviceRegion;
 
-    /**
-     * AddressContainer constructor.
-     * @param DIContainer $container
-     */
     public function __construct(DIContainer $container) {
         parent::__construct($container);
     }
 
-    public function injectServiceRegion(ServiceRegion $serviceRegion): void {
+    final public function injectServiceRegion(ServiceRegion $serviceRegion): void {
         $this->serviceRegion = $serviceRegion;
     }
 
     /**
      * Used for substituting form's IControl (via duck-typing).
      *
-     * @param iterable $value
+     * @param iterable|null $value
      */
     public function setValue($value): void {
         $this->setValues($value === null ? [] : $value);
@@ -53,9 +48,9 @@ class AddressContainer extends ModelContainer {
     /**
      * @param iterable|mixed $values
      * @param bool $erase
-     * @return Container|void
+     * @return static
      */
-    public function setValues($values, $erase = false): void {
+    public function setValues($values, $erase = false): self {
         if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) { //assert its from address table
             if ($values instanceof AbstractModelMulti) {
                 $address = $values->getMainModel();
@@ -71,7 +66,7 @@ class AddressContainer extends ModelContainer {
             $values['country_iso'] = $region->country_iso;
         }
 
-        parent::setValues($values, $erase);
+        return parent::setValues($values, $erase);
     }
 
     /**

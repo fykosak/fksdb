@@ -2,6 +2,7 @@
 
 namespace FKSDB\SQL;
 
+use Nette\Database\Table\Selection;
 use NiftyGrid\DataSource\NDataSource;
 
 /**
@@ -13,12 +14,7 @@ class ViewDataSource extends NDataSource {
 
     private string $primaryKey;
 
-    /**
-     * ViewDataSource constructor.
-     * @param string $primaryKey
-     * @param string $table
-     */
-    public function __construct(string $primaryKey, $table) {
+    public function __construct(string $primaryKey, Selection $table) {
         parent::__construct($table);
         $this->primaryKey = $primaryKey;
     }

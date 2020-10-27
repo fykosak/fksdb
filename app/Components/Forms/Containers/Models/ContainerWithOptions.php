@@ -13,10 +13,6 @@ class ContainerWithOptions extends Container {
 
     private array $options = [];
 
-    /**
-     * ContainerWithOptions constructor.
-     * @param DIContainer|null $container
-     */
     public function __construct(?DIContainer $container = null) {
         if ($container) {
             $container->callInjects($this);

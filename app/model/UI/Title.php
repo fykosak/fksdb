@@ -14,11 +14,6 @@ class Title {
 
     public string $icon;
 
-    /**
-     * PageTitle constructor.
-     * @param string $title
-     * @param string $icon
-     */
     public function __construct(string $title, string $icon = '') {
         $this->title = $title;
         $this->icon = $icon;

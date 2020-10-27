@@ -17,11 +17,6 @@ class CitizenshipRow extends DefaultColumnFactory {
 
     private ServiceRegion $serviceRegion;
 
-    /**
-     * CitizenshipField constructor.
-     * @param ServiceRegion $serviceRegion
-     * @param MetaDataFactory $metaDataFactory
-     */
     public function __construct(ServiceRegion $serviceRegion, MetaDataFactory $metaDataFactory) {
         parent::__construct($metaDataFactory);
         $this->serviceRegion = $serviceRegion;
@@ -30,7 +25,7 @@ class CitizenshipRow extends DefaultColumnFactory {
     protected function createFormControl(...$args): BaseControl {
         $control = new SelectBox($this->getTitle());
         $control->setItems($this->getCountries());
-        $control->setPrompt(_('Vyberte státní příslušnost'));
+        $control->setPrompt(_('Choose citizenship'));
         return $control;
     }
 

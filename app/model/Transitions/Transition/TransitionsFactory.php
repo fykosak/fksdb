@@ -7,9 +7,7 @@ namespace FKSDB\Transitions;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class TransitionsFactory {
-    /**
-     * TransitionsFactory constructor.
-     */
+
     public function __construct() {
     }
 }

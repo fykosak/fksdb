@@ -2,9 +2,9 @@
 
 namespace FKSDB\ORM;
 
+use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use InvalidArgumentException;
-use FKSDB\Exceptions\ModelException;
 use Nette\Database\Connection;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
@@ -29,13 +29,6 @@ abstract class AbstractServiceSingle extends Selection implements IService {
 
     private string $tableName;
 
-    /**
-     * AbstractServiceSingle constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     * @param string $tableName
-     * @param string $modelClassName
-     */
     public function __construct(Context $connection, IConventions $conventions, string $tableName, string $modelClassName) {
         $this->tableName = $tableName;
         $this->modelClassName = $modelClassName;
@@ -53,7 +46,6 @@ abstract class AbstractServiceSingle extends Selection implements IService {
         try {
             $result = $this->getTable()->insert($data);
             if ($result !== false) {
-                /** @var AbstractModelSingle $model */
                 $model = ($modelClassName)::createFromActiveRow($result);
                 $model->setNew(false); // only for old compatibility
                 return $model;
@@ -74,7 +66,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @throws ModelException
      * @deprecated use createNewModel
      */
-    public function createNew($data = null) {
+    public function createNew(iterable $data = null) {
         if ($data === null) {
             $data = $this->getDefaultData();
         }
@@ -98,7 +90,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     /**
      * Syntactic sugar.
      *
-     * @param int $key
+     * @param mixed $key
      * @return AbstractModelSingle|null
      */
     public function findByPrimary($key): ?AbstractModelSingle {
@@ -119,7 +111,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @param bool $alive
      * @deprecated
      */
-    public function updateModel(IModel $model, $data, $alive = true) {
+    public function updateModel(IModel $model, iterable $data, bool $alive = true): void {
         $modelClassName = $this->getModelClassName();
         if (!$model instanceof $modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
@@ -162,7 +154,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @throws ModelException
      * @deprecated
      */
-    public function save(IModel &$model) {
+    public function save(IModel &$model): void {
         $modelClassName = $this->getModelClassName();
         /** @var AbstractModelSingle $model */
         if (!$model instanceof $modelClassName) {
@@ -225,23 +217,22 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @param AbstractModelSingle|IModel $model
      * @throws InvalidArgumentException
      */
-    private function checkType(AbstractModelSingle $model) {
+    private function checkType(AbstractModelSingle $model): void {
         $modelClassName = $this->getModelClassName();
         if (!$model instanceof $modelClassName) {
             throw new InvalidArgumentException('Service for class ' . $this->getModelClassName() . ' cannot store ' . get_class($model));
         }
     }
 
-    /** @var array|null */
-    protected $defaults = null;
+    protected ?array $defaults = null;
 
     /**
      * Default data for the new model.
      * TODO is this really needed?
      * @return array
      */
-    protected function getDefaultData() {
-        if ($this->defaults == null) {
+    protected function getDefaultData(): array {
+        if (!isset($this->defaults)) {
             $this->defaults = [];
             foreach ($this->getColumnMetadata() as $column) {
                 if ($column['nativetype'] == 'TIMESTAMP' && isset($column['default'])
@@ -257,13 +248,10 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     /**
      * Omits array elements whose keys aren't columns in the table.
      *
-     * @param array|null $data
-     * @return array|null
+     * @param array $data
+     * @return array
      */
-    protected function filterData($data) {
-        if ($data === null) {
-            return null;
-        }
+    protected function filterData(array $data): array {
         $result = [];
         foreach ($this->getColumnMetadata() as $column) {
             $name = $column['name'];
@@ -274,11 +262,10 @@ abstract class AbstractServiceSingle extends Selection implements IService {
         return $result;
     }
 
-    /** @var array */
-    private $columns;
+    private array $columns;
 
     private function getColumnMetadata(): array {
-        if ($this->columns === null) {
+        if (!isset($this->columns)) {
             $this->columns = $this->context->getConnection()->getSupplementalDriver()->getColumns($this->getTableName());
         }
         return $this->columns;
@@ -288,6 +275,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
         return $this->tableName;
     }
 
+    /** @return string|AbstractModelSingle */
     final public function getModelClassName(): string {
         return $this->modelClassName;
     }

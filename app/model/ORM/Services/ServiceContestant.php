@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelContestant;
 use Nette\Database\Context;
@@ -14,14 +15,10 @@ use Nette\Database\Table\Selection;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceContestant extends AbstractServiceSingle {
+    use DeprecatedLazyDBTrait;
 
     protected string $viewName = DbNames::VIEW_CONTESTANT;
 
-    /**
-     * ServiceContestant constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_CONTESTANT_BASE, ModelContestant::class);
     }

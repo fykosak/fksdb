@@ -16,7 +16,7 @@ class WebServicePresenter extends BasePresenter {
 
     private \SoapServer $server;
 
-    public function injectSoapServer(\SoapServer $server): void {
+    final public function injectSoapServer(\SoapServer $server): void {
         $this->server = $server;
     }
 
@@ -34,5 +34,4 @@ class WebServicePresenter extends BasePresenter {
             $this->redirect('Dashboard:');
         }
     }
-
 }

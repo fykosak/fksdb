@@ -18,10 +18,6 @@ class UniqueLogin {
 
     private ?ModelLogin $ignoredLogin;
 
-    /**
-     * UniqueLogin constructor.
-     * @param ServiceLogin $serviceLogin
-     */
     public function __construct(ServiceLogin $serviceLogin) {
         $this->serviceLogin = $serviceLogin;
     }

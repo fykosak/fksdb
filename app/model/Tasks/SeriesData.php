@@ -26,13 +26,6 @@ class SeriesData {
      */
     private $tasks = [];
 
-    /**
-     * SeriesData constructor.
-     * @param ModelContest $contest
-     * @param int $year
-     * @param int $series
-     * @param \SimpleXMLElement $data
-     */
     public function __construct(ModelContest $contest, int $year, int $series, \SimpleXMLElement $data) {
         $this->contest = $contest;
         $this->year = $year;

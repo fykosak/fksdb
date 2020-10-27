@@ -4,15 +4,13 @@
 
 services:
     accountManager:
-        factory: FKSDB\Authentication\AccountManager
-        setup:
-            - setInvitationExpiration(%invitation.expiration%)
-            - setRecoveryExpiration(%recovery.expiration%)
-            - setEmailFrom(%email.from%)
+        factory: FKSDB\Authentication\AccountManager(%invitation.expiration%,%recovery.expiration%,%email.from%)
     - FKSDB\Authentication\FacebookAuthenticator
     - FKSDB\Authentication\GithubAuthenticator
     - FKSDB\Authentication\PasswordAuthenticator
     - FKSDB\Authentication\TokenAuthenticator
+    - FKSDB\Authentication\GoogleAuthenticator
+    - FKSDB\Authentication\Provider\GoogleProvider(%googleOAuth2.clientId%,%googleOAuth2.clientSecret%, ...)
     - FKSDB\Authorization\ContestAuthorizator
     - FKSDB\Authorization\EventAuthorizator
     - FKSDB\Authorization\RelatedPersonAuthorizator
@@ -57,6 +55,7 @@ services:
         factory: SoapServer(%wsdlUrl%)
         setup:
             - setObject(@webServiceModel)
+    - FKSDB\WebService\EventSoapFactory
 
     webServiceModel: FKSDB\WebService\WebServiceModel(%inverseContestMapping%, ...)
 

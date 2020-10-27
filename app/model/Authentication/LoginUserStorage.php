@@ -2,9 +2,10 @@
 
 namespace FKSDB\Authentication;
 
-use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Authentication\SSO\GlobalSession;
+use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
+use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\YearCalculator;
@@ -26,7 +27,7 @@ use Nette\Security\IIdentity;
 class LoginUserStorage extends UserStorage {
     /** @const HTTP GET parameter holding control information for the SSO */
 
-    public const PARAM_SSO = 'sso';
+    public const PARAM_SSO = ModelAuthToken::TYPE_SSO;
 
     /** @const Value meaning the user is not centally authneticated. */
     public const SSO_AUTHENTICATED = 'a';
@@ -35,11 +36,8 @@ class LoginUserStorage extends UserStorage {
     public const SSO_UNAUTHENTICATED = 'ua';
 
     private ServiceLogin $serviceLogin;
-
     private YearCalculator $yearCalculator;
-
     private GlobalSession $globalSession;
-
     private Application $application;
 
     /** @var IPresenter */
@@ -47,15 +45,6 @@ class LoginUserStorage extends UserStorage {
 
     private Request $request;
 
-    /**
-     * LoginUserStorage constructor.
-     * @param Session $sessionHandler
-     * @param ServiceLogin $loginService
-     * @param YearCalculator $yearCalculator
-     * @param GlobalSession $globalSession
-     * @param Application $application
-     * @param Request $request
-     */
     public function __construct(
         Session $sessionHandler,
         ServiceLogin $loginService,
@@ -91,9 +80,9 @@ class LoginUserStorage extends UserStorage {
 
     /**
      * @param mixed $state
-     * @return UserStorage|void
+     * @return static
      */
-    public function setAuthenticated($state) {
+    public function setAuthenticated($state): self {
         parent::setAuthenticated($state);
         if ($state) {
             $uid = parent::getIdentity()->getId();
@@ -101,6 +90,7 @@ class LoginUserStorage extends UserStorage {
         } else {
             unset($this->globalSession[GlobalSession::UID]);
         }
+        return $this;
     }
 
     /**
@@ -151,11 +141,7 @@ class LoginUserStorage extends UserStorage {
         }
     }
 
-    /**
-     * @param IIdentity|NULL $identity
-     * @return UserStorage
-     */
-    public function setIdentity(?IIdentity $identity = null) {
+    public function setIdentity(?IIdentity $identity = null): self {
         $this->identity = $identity;
         if ($identity instanceof ModelLogin) {
             $identity = new Identity($identity->getId());

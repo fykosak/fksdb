@@ -20,11 +20,6 @@ class PersonsGrid extends BaseGrid {
 
     private ModelScheduleItem $item;
 
-    /**
-     * PersonsGrid constructor.
-     * @param Container $container
-     * @param ModelScheduleItem $item
-     */
     public function __construct(Container $container, ModelScheduleItem $item) {
         parent::__construct($container);
         $this->item = $item;

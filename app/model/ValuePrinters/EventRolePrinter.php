@@ -17,10 +17,6 @@ class EventRolePrinter {
 
     private YearCalculator $yearCalculator;
 
-    /**
-     * EventRolePrinter constructor.
-     * @param YearCalculator $yearCalculator
-     */
     public function __construct(YearCalculator $yearCalculator) {
         $this->yearCalculator = $yearCalculator;
     }

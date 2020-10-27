@@ -5,7 +5,6 @@ namespace FKSDB\Components\Forms\Containers;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\ORM\AbstractModelMulti;
 use Nette\Database\Table\ActiveRow;
-use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 
 /**
@@ -18,13 +17,13 @@ class ModelContainer extends ContainerWithOptions {
     /**
      * @param mixed|iterable $values
      * @param bool $erase
-     * @return Container|void
+     * @return static
      */
-    public function setValues($values, $erase = false) {
+    public function setValues($values, $erase = false): self {
         if ($values instanceof ActiveRow || $values instanceof AbstractModelMulti) {
             $values = $values->toArray();
         }
-        parent::setValues($values, $erase);
+        return parent::setValues($values, $erase);
     }
 
     /**

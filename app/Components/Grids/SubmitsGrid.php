@@ -31,22 +31,17 @@ class SubmitsGrid extends BaseGrid {
 
     private SubmitHandlerFactory $submitHandlerFactory;
 
-    /**
-     * SubmitsGrid constructor.
-     * @param Container $container
-     * @param ModelContestant $contestant
-     */
     public function __construct(Container $container, ModelContestant $contestant) {
         parent::__construct($container);
         $this->contestant = $contestant;
     }
 
-    public function injectPrimary(SubmitHandlerFactory $submitHandlerFactory): void {
+    final public function injectPrimary(SubmitHandlerFactory $submitHandlerFactory): void {
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
 
     protected function getData(): IDataSource {
-        $submits = $this->submitHandlerFactory->getServiceSubmit()->getSubmits();
+        $submits = $this->submitHandlerFactory->serviceSubmit->getSubmits();
         $submits->where('ct_id = ?', $this->contestant->ct_id); //TODO year + contest?
         return new NDataSource($submits);
     }
@@ -68,8 +63,8 @@ class SubmitsGrid extends BaseGrid {
             ->setRenderer(function (ModelSubmit $row): string {
                 return $row->getTask()->getFQName();
             });
-        $this->addColumn('submitted_on', _('Čas odevzdání'));
-        $this->addColumn('source', _('Způsob odevzdání'));
+        $this->addColumn('submitted_on', _('Timestamp'));
+        $this->addColumn('source', _('Method of handing'));
 
         //
         // operations
@@ -84,7 +79,7 @@ class SubmitsGrid extends BaseGrid {
                 return $this->link('revoke!', $row->submit_id);
             })
             ->setConfirmationDialog(function (ModelSubmit $row): string {
-                return \sprintf(_('Opravdu vzít řešení úlohy %s zpět?'), $row->getTask()->getFQName());
+                return \sprintf(_('Do you really want to tak solution of task %s back?'), $row->getTask()->getFQName());
             });
         $this->addButton('download_uploaded')
             ->setText(_('Download original'))->setLink(function (ModelSubmit $row): string {

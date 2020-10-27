@@ -18,12 +18,7 @@ use Nette\Utils\Html;
 class StudyYearRow extends DefaultColumnFactory {
 
     private YearCalculator $yearCalculator;
-
-    /**
-     * StudyYearRow constructor.
-     * @param YearCalculator $yearCalculator
-     * @param MetaDataFactory $metaDataFactory
-     */
+    
     public function __construct(YearCalculator $yearCalculator, MetaDataFactory $metaDataFactory) {
         parent::__construct($metaDataFactory);
         $this->yearCalculator = $yearCalculator;
@@ -42,28 +37,28 @@ class StudyYearRow extends DefaultColumnFactory {
         $control = new SelectBox($this->getTitle());
         $control->setItems($this->createOptions($acYear));
         $control->setOption('description', $this->getDescription());
-        $control->setPrompt(_('Zvolit ročník'));
+        $control->setPrompt(_('Choose study year'));
         return $control;
     }
 
     private function createOptions(int $acYear): array {
         $hsYears = [];
         foreach (range(1, 4) as $studyYear) {
-            $hsYears[$studyYear] = sprintf(_('%d. ročník (očekávaný rok maturity %d)'),
+            $hsYears[$studyYear] = sprintf(_('grade %d (expected graduation in %d)'),
                 $studyYear,
                 $this->yearCalculator->getGraduationYear($studyYear, $acYear));
         }
 
         $primaryYears = [];
         foreach (range(6, 9) as $studyYear) {
-            $primaryYears[$studyYear] = sprintf(_('%d. ročník (očekávaný rok maturity %d)'),
+            $primaryYears[$studyYear] = sprintf(_('grade %d (expected graduation in %d)'),
                 $studyYear,
                 $this->yearCalculator->getGraduationYear($studyYear, $acYear));
         }
 
         return [
-            _('střední škola') => $hsYears,
-            _('základní škola nebo víceleté gymnázium') => $primaryYears,
+            _('high school') => $hsYears,
+            _('primary school') => $primaryYears,
         ];
     }
 

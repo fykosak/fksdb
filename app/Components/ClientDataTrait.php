@@ -16,7 +16,7 @@ trait ClientDataTrait {
      * @param string|int $key
      * @param null|array|object|mixed $value
      */
-    public function setClientData($key, $value) {
+    public function setClientData($key, $value): void {
         if ($value === null) {
             unset($this->clientData[$key]);
         } elseif (is_array($value)) {

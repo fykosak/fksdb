@@ -37,16 +37,12 @@ class StoredQueryFormComponent extends EditEntityFormComponent {
     private const CONT_MAIN = 'main';
 
     private StoredQueryFormFactory $storedQueryFormFactory;
-
     private ServiceStoredQuery $serviceStoredQuery;
-
     private ServiceStoredQueryTag $serviceStoredQueryTag;
-
     private ServiceStoredQueryParameter $serviceStoredQueryParameter;
-
     private StoredQueryFactory $storedQueryFactory;
 
-    public function injectPrimary(
+    final public function injectPrimary(
         StoredQueryFormFactory $storedQueryFormFactory,
         ServiceStoredQuery $serviceStoredQuery,
         ServiceStoredQueryTag $serviceStoredQueryTag,

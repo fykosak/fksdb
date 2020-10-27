@@ -4,9 +4,9 @@ namespace FKSDB\Authentication\SSO;
 
 use FKSDB\ORM\Models\ModelGlobalSession;
 use FKSDB\ORM\Services\ServiceGlobalSession;
-use Nette\Utils\DateTime;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
+use Nette\Utils\DateTime;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -26,12 +26,6 @@ class GlobalSession implements IGlobalSession {
 
     private bool $started = false;
 
-    /**
-     * GlobalSession constructor.
-     * @param string $expiration
-     * @param ServiceGlobalSession $serviceGlobalSession
-     * @param IGSIDHolder $gsidHolder
-     */
     public function __construct(string $expiration, ServiceGlobalSession $serviceGlobalSession, IGSIDHolder $gsidHolder) {
         $this->expiration = $expiration;
         $this->serviceGlobalSession = $serviceGlobalSession;
@@ -57,10 +51,7 @@ class GlobalSession implements IGlobalSession {
         $this->started = true;
     }
 
-    /**
-     * @return int|null|string
-     */
-    public function getId() {
+    public function getId(): ?string {
         if (!$this->started) {
             throw new InvalidStateException("Global session not started.");
         }
@@ -135,20 +126,15 @@ class GlobalSession implements IGlobalSession {
         if ($offset != self::UID) {
             throw new InvalidArgumentException("Cannot set offset '$offset' in global session.");
         }
-
+        if (isset($this->globalSession) && $value != $this->globalSession->login_id) {
+            $this->serviceGlobalSession->updateModel2($this->globalSession, ['login_id' => $value]);
+            $this->globalSession = $this->serviceGlobalSession->findByPrimary($this->globalSession->session_id) ?: null;
+        }
         // lazy initialization because we need to know login id
         if (!isset($this->globalSession)) {
             $until = DateTime::from($this->expiration);
             $this->globalSession = $this->serviceGlobalSession->createSession($value, $until);
             $this->gsidHolder->setGSID($this->globalSession->session_id);
-        }
-
-        if ($value != $this->globalSession->login_id) {
-            //  $this->serviceGlobalSession->updateModel2($this->globalSession, ['login_id' => $value]);
-            //  $this->globalSession = $this->serviceGlobalSession->refresh($this->globalSession);
-            //TODO
-            $this->globalSession->login_id = $value;
-            $this->serviceGlobalSession->save($this->globalSession);
         }
     }
 

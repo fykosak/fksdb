@@ -24,12 +24,6 @@ class GithubAuthenticator extends AbstractAuthenticator {
 
     private Container $container;
 
-    /**
-     * GithubAuthenticator constructor.
-     * @param ServiceLogin $serviceLogin
-     * @param YearCalculator $yearCalculator
-     * @param Container $container
-     */
     public function __construct(ServiceLogin $serviceLogin, YearCalculator $yearCalculator, Container $container) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->container = $container;
@@ -42,7 +36,7 @@ class GithubAuthenticator extends AbstractAuthenticator {
      * @throws InactiveLoginException
      * @throws NoLoginException
      */
-    public function authenticate(IRequest $request) {
+    public function authenticate(IRequest $request): ModelLogin {
         $loginName = $this->container->getParameters()['github']['login'];
         $secret = $this->container->getParameters()['github']['secret'];
 

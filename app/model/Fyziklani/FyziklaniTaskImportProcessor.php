@@ -23,11 +23,6 @@ class FyziklaniTaskImportProcessor {
 
     private ModelEvent $event;
 
-    /**
-     * FyziklaniTaskImportProcessor constructor.
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param ModelEvent $event
-     */
     public function __construct(ServiceFyziklaniTask $serviceFyziklaniTask, ModelEvent $event) {
         $this->event = $event;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
@@ -38,7 +33,7 @@ class FyziklaniTaskImportProcessor {
      * @param ILogger $logger
      * @return void
      */
-    public function process($values, ILogger $logger) {
+    public function process($values, ILogger $logger): void {
         $filename = $values->csvfile->getTemporaryFile();
         $connection = $this->serviceFyziklaniTask->getConnection();
         $connection->beginTransaction();

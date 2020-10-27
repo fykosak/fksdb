@@ -18,11 +18,6 @@ class EventLink extends DefaultColumnFactory {
 
     private LinkGenerator $linkGenerator;
 
-    /**
-     * PersonLinkRow constructor.
-     * @param LinkGenerator $linkGenerator
-     * @param MetaDataFactory $metaDataFactory
-     */
     public function __construct(LinkGenerator $linkGenerator, MetaDataFactory $metaDataFactory) {
         parent::__construct($metaDataFactory);
         $this->linkGenerator = $linkGenerator;

@@ -23,17 +23,12 @@ class SubmitCheckComponent extends BaseComponent {
 
     private UploadedStorage $uploadedStorage;
 
-    /**
-     * CheckSubmitsControl constructor.
-     * @param Container $context
-     * @param SeriesTable $seriesTable
-     */
     public function __construct(Container $context, SeriesTable $seriesTable) {
         parent::__construct($context);
         $this->seriesTable = $seriesTable;
     }
 
-    public function injectPrimary(UploadedStorage $uploadedStorage, CorrectedStorage $correctedStorage): void {
+    final public function injectPrimary(UploadedStorage $uploadedStorage, CorrectedStorage $correctedStorage): void {
         $this->uploadedStorage = $uploadedStorage;
         $this->correctedStorage = $correctedStorage;
     }

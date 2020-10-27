@@ -22,13 +22,7 @@ class TransitionConditionFailedException extends MachineExecutionException {
 
     private Transition $transition;
 
-    /**
-     * TransitionConditionFailedException constructor.
-     * @param Transition $blockingTransition
-     * @param null $code
-     * @param null $previous
-     */
-    public function __construct(Transition $blockingTransition, $code = null, $previous = null) {
+    public function __construct(Transition $blockingTransition, int $code = 0, ?\Throwable $previous = null) {
         $message = sprintf(_("Nelze provést akci '%s' v automatu '%s'."), $blockingTransition->getLabel(), $blockingTransition->getBaseMachine()->getName());
         parent::__construct($message, $code, $previous);
         $this->transition = $blockingTransition;
@@ -51,10 +45,10 @@ class TransitionUnsatisfiedTargetException extends MachineExecutionException {
     /**
      * TransitionUnsatisfiedTargetException constructor.
      * @param mixed $validationResult
-     * @param null $code
-     * @param null $previous
+     * @param int $code
+     * @param \Throwable|null $previous
      */
-    public function __construct($validationResult, $code = null, $previous = null) {
+    public function __construct($validationResult, int $code = 0, ?\Throwable $previous = null) {
         $message = '';
         foreach ($validationResult as $result) {
             $message .= $result;
@@ -72,26 +66,11 @@ class TransitionUnsatisfiedTargetException extends MachineExecutionException {
 
 }
 
-/**
- * Class SubmitProcessingException
- * *
- */
 class SubmitProcessingException extends RuntimeException {
-
 }
 
-/**
- * Class TransitionOnExecutedException
- * *
- */
 class TransitionOnExecutedException extends MachineExecutionException {
-
 }
 
-/**
- * Class UndeclaredEventException
- * *
- */
 class UndeclaredEventException extends InvalidArgumentException {
-
 }

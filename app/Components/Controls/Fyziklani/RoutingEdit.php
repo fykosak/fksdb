@@ -9,8 +9,6 @@ use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DeprecatedException;
-use Nette\Utils\Json;
-use Nette\Utils\JsonException;
 
 /**
  * Class RoutingEdit
@@ -24,7 +22,7 @@ class RoutingEdit extends AjaxComponent {
 
     private ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition;
 
-    public function injectPrimary(
+    final public function injectPrimary(
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
         ServiceFyziklaniTeamPosition $serviceFyziklaniTeamPosition,
         ServiceFyziklaniRoom $serviceFyziklaniRoom
@@ -34,13 +32,8 @@ class RoutingEdit extends AjaxComponent {
         $this->serviceFyziklaniRoom = $serviceFyziklaniRoom;
     }
 
-    /**
-     * @param mixed ...$args
-     * @return string
-     * @throws JsonException
-     */
     public function getData(...$args): string {
-        return Json::encode([
+        return json_encode([
             'teams' => $this->serviceFyziklaniTeam->getTeamsAsArray($this->getEvent()),
             'rooms' => $this->getRooms(),
         ]);

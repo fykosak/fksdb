@@ -15,12 +15,16 @@ use Nette\Database\IConventions;
 class ServiceTeacher extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    /**
-     * ServiceTeacher constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_TEACHER, ModelTeacher::class);
+    }
+
+    public function store(?ModelTeacher $model, array $data): ModelTeacher {
+        if (is_null($model)) {
+            return $this->createNewModel($data);
+        } else {
+            $this->updateModel2($model, $data);
+            return $this->refresh($model);
+        }
     }
 }

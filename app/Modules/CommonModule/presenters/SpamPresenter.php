@@ -21,7 +21,7 @@ class SpamPresenter extends BasePresenter {
 
     private ServiceEmailMessage $serviceEmailMessage;
 
-    public function injectServiceEmailMessage(ServiceEmailMessage $serviceEmailMessage): void {
+    final public function injectServiceEmailMessage(ServiceEmailMessage $serviceEmailMessage): void {
         $this->serviceEmailMessage = $serviceEmailMessage;
     }
 
@@ -40,7 +40,7 @@ class SpamPresenter extends BasePresenter {
 
     public function authorizedDetail(): void {
         $authorized = true;
-        foreach ($this->getServiceContest()->getTable() as $contest) {
+        foreach ($this->serviceContest->getTable() as $contest) {
             $authorized = $authorized && $this->contestAuthorizator->isAllowed($this->getORMService()->getModelClassName()::RESOURCE_ID, 'detail', $contest);
         }
         $this->setAuthorized($authorized);

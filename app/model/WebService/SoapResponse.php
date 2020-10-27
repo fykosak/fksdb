@@ -14,10 +14,6 @@ class SoapResponse implements \Nette\Application\IResponse {
 
     private \SoapServer $soapServer;
 
-    /**
-     * SoapResponse constructor.
-     * @param \SoapServer $server
-     */
     public function __construct(\SoapServer $server) {
         $this->soapServer = $server;
     }
@@ -29,5 +25,4 @@ class SoapResponse implements \Nette\Application\IResponse {
             Debugger::log($e);
         }
     }
-
 }

@@ -30,17 +30,12 @@ class PersonSearchContainer extends SearchContainer {
 
     protected ServicePerson $servicePerson;
 
-    /**
-     * SearchContainer constructor.
-     * @param Container $container
-     * @param string $searchType
-     */
     public function __construct(Container $container, string $searchType) {
         parent::__construct($container);
         $this->searchType = $searchType;
     }
 
-    public function injectPrimary(PersonFactory $personFactory, ServicePerson $servicePerson, PersonProvider $provider): void {
+    final public function injectPrimary(PersonFactory $personFactory, ServicePerson $servicePerson, PersonProvider $provider): void {
         $this->personFactory = $personFactory;
         $this->servicePerson = $servicePerson;
         $this->personProvider = $provider;

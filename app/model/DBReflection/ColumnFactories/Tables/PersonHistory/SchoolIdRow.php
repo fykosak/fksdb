@@ -2,12 +2,11 @@
 
 namespace FKSDB\DBReflection\ColumnFactories\PersonHistory;
 
-use FKSDB\Components\Controls\Badges\NotSetBadge;
-use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
+use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
 use FKSDB\DBReflection\MetaDataFactory;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\Models\ModelPersonHistory;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
@@ -19,25 +18,18 @@ class SchoolIdRow extends DefaultColumnFactory {
 
     private SchoolFactory $schoolFactory;
 
-    /***
-     * SchoolIdRow constructor.
-     * @param SchoolFactory $schoolFactory
-     * @param MetaDataFactory $metaDataFactory
-     */
     public function __construct(SchoolFactory $schoolFactory, MetaDataFactory $metaDataFactory) {
         parent::__construct($metaDataFactory);
         $this->schoolFactory = $schoolFactory;
     }
 
     /**
-     * @param AbstractModelSingle|ModelPersonHistory $model
+     * @param AbstractModelSingle $model
      * @return Html
+     * @throws NotImplementedException
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
-        if (is_null($model->school_id)) {
-            return NotSetBadge::getHtml();
-        }
-        return Html::el('span')->addText('#' . $model->school_id);
+        throw new NotImplementedException();
     }
 
     protected function createFormControl(...$args): BaseControl {

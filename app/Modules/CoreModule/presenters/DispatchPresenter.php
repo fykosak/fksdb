@@ -17,7 +17,7 @@ class DispatchPresenter extends BasePresenter {
     private array $contestsProperty;
 
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Rozcestník'), 'fa fa-home'));
+        $this->setPageTitle(new PageTitle(_('Menu'), 'fa fa-home'));
     }
 
     /**
@@ -28,7 +28,7 @@ class DispatchPresenter extends BasePresenter {
         $login = $this->getUser()->getIdentity();
         $person = $login->getPerson();
         $this->template->contestants = $person ? $this->getAllContestants($person) : [];
-        $this->template->orgs = $this->getAllOrgs($login);
+        $this->template->orgs = $this->getAllOrganisers($login);
         $this->template->contestsProperty = $this->getContestsProperty();
     }
 
@@ -42,9 +42,9 @@ class DispatchPresenter extends BasePresenter {
      * @return array
      * @throws InvalidLinkException
      */
-    private function getAllOrgs(ModelLogin $login): array {
+    private function getAllOrganisers(ModelLogin $login): array {
         $results = [];
-        foreach ($login->getActiveOrgs($this->getYearCalculator()) as $contestId => $org) {
+        foreach ($login->getActiveOrgs($this->yearCalculator) as $contestId => $org) {
             $results[$contestId] = [
                 'link' => $this->link(':Org:Dashboard:default', [
                     'contestId' => $contestId,
@@ -62,7 +62,7 @@ class DispatchPresenter extends BasePresenter {
     private function getContestsProperty(): array {
         if (!isset($this->contestsProperty)) {
             $this->contestsProperty = [];
-            $query = $this->getServiceContest()->getTable();
+            $query = $this->serviceContest->getTable();
             /** @var ModelContest $contest */
             foreach ($query as $contest) {
                 $this->contestsProperty[$contest->contest_id] = [
@@ -82,7 +82,7 @@ class DispatchPresenter extends BasePresenter {
      */
     private function getAllContestants(ModelPerson $person): array {
         $result = [];
-        foreach ($person->getActiveContestants($this->getYearCalculator()) as $contestId => $org) {
+        foreach ($person->getActiveContestants($this->yearCalculator) as $contestId => $org) {
             $result[$contestId] = [
                 'link' => $this->link(':Public:Dashboard:default', [
                     'contestId' => $contestId,

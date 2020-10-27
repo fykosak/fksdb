@@ -4,7 +4,7 @@ namespace FKSDB\Events\Spec\Fol;
 
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\Events\Processings\AbstractProcessing;
+use FKSDB\Events\Processing\AbstractProcessing;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPersonHasFlag;
@@ -24,11 +24,6 @@ class FlagProcessing extends AbstractProcessing {
 
     private ServiceSchool $serviceSchool;
 
-    /**
-     * FlagProcessing constructor.
-     * @param YearCalculator $yearCalculator
-     * @param ServiceSchool $serviceSchool
-     */
     public function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;

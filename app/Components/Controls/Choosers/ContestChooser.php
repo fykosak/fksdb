@@ -147,26 +147,17 @@ class ContestChooser extends BaseComponent {
         }
     }
 
-    /**
-     * @return ModelContest
-     */
-    public function getContest() {
+    public function getContest(): ModelContest {
         $this->init();
         return $this->contest;
     }
 
-    /**
-     * @return int
-     */
-    public function getYear() {
+    public function getYear(): int {
         $this->init();
         return $this->year;
     }
 
-    /**
-     * @return void|null
-     */
-    private function init() {
+    private function init(): void {
         if ($this->initialized) {
             return;
         }
@@ -206,7 +197,7 @@ class ContestChooser extends BaseComponent {
                      * available, so use the first available.
                      */
                     if ($this->contestsDefinition === self::CONTESTS_ALL) {
-                        return null;
+                        return;
                     } else {
                         $contestId = reset($contestIds);
                     }

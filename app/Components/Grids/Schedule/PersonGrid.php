@@ -7,7 +7,6 @@ use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
-use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use Nette\Application\IPresenter;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;
@@ -19,12 +18,7 @@ use NiftyGrid\GridException;
  */
 class PersonGrid extends BaseGrid {
 
-    /**
-     * @param ModelEvent $event
-     * @param ModelPerson $person
-     * @return void
-     */
-    public function setData(ModelEvent $event, ModelPerson $person) {
+    public function setData(ModelEvent $event, ModelPerson $person): void {
         $query = $person->getScheduleForEvent($event);
         $dataSource = new NDataSource($query);
         $this->setDataSource($dataSource);

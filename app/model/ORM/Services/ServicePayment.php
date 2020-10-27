@@ -2,6 +2,7 @@
 
 namespace FKSDB\ORM\Services;
 
+use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyDBTrait;
@@ -11,15 +12,11 @@ use Nette\Database\IConventions;
 
 /**
  * @author Michal Červeňák <miso@fykos.cz>
+ * @method ModelPayment refresh(AbstractModelSingle $model)
  */
 class ServicePayment extends AbstractServiceSingle {
     use DeprecatedLazyDBTrait;
 
-    /**
-     * ServicePayment constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_PAYMENT, ModelPayment::class);
     }

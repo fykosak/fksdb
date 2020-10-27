@@ -32,14 +32,10 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     use EventEntityPresenterTrait;
 
     protected ApplicationHandlerFactory $applicationHandlerFactory;
-
     protected ServiceEventParticipant $serviceEventParticipant;
 
-    public function injectHandlerFactory(ApplicationHandlerFactory $applicationHandlerFactory): void {
+    final public function injectQuarterly(ApplicationHandlerFactory $applicationHandlerFactory, ServiceEventParticipant $serviceEventParticipant): void {
         $this->applicationHandlerFactory = $applicationHandlerFactory;
-    }
-
-    public function injectServiceEventParticipant(ServiceEventParticipant $serviceEventParticipant): void {
         $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
@@ -111,7 +107,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      *
      */
     protected function createComponentApplicationComponent(): ApplicationComponent {
-        $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->getEventDispatchFactory());
+        $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
         foreach ($source->getHolders() as $key => $holder) {
             if ($key === $this->getEntity()->getPrimary()) {
                 return new ApplicationComponent($this->getContext(), $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);
@@ -119,6 +115,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
         }
         throw new InvalidStateException();
     }
+
     /**
      * @return TransitionButtonsComponent
      * @throws BadTypeException
@@ -129,7 +126,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
      *
      */
     protected function createComponentApplicationTransitions(): TransitionButtonsComponent {
-        $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->getEventDispatchFactory());
+        $source = new SingleEventSource($this->getEvent(), $this->getContext(), $this->eventDispatchFactory);
         foreach ($source->getHolders() as $key => $holder) {
             if ($key === $this->getEntity()->getPrimary()) {
                 return new TransitionButtonsComponent($this->getContext(), $this->applicationHandlerFactory->create($this->getEvent(), new MemoryLogger()), $holder);

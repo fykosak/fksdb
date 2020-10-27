@@ -3,7 +3,7 @@
 namespace FKSDB;
 
 /**
- * Interface Arrayable
+ * Interface ArrayAble
  * *
  */
 interface ArrayAble {

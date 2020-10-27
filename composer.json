@@ -24,7 +24,8 @@
     "nette/di": "^3.0.5",
     "nette/bootstrap": "^3.0.2",
     "nette/tokenizer": "^3.1.0",
-    "nette/nette": "^3.0.0"
+    "nette/nette": "^3.0.0",
+    "league/oauth2-google": "^3.0.3"
   },
   "autoload": {
     "classmap": []
@@ -45,12 +46,12 @@
     "test": [
       "@clearTestCache",
       "@clearTestDatabase",
-      "vendor/bin/tester tests -p php -s -c tests/php.ini"
+      "vendor/bin/tester tests -p php -s -c tests/php.ini -j 8"
     ],
     "testCoverage": [
       "@clearTestCache",
       "@clearTestDatabase",
-      "vendor/bin/tester tests -p php --coverage coverage.html --coverage-src app -s -c tests/php.ini"
+      "vendor/bin/tester tests -p php --coverage coverage.html --coverage-src app -s -c tests/php.ini -j 8"
     ]
   }
 }

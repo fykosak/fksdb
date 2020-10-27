@@ -27,11 +27,6 @@ class LoggingMailer implements IMailer {
 
     private Container $container;
 
-    /**
-     * LoggingMailer constructor.
-     * @param IMailer $mailer
-     * @param Container $container
-     */
     public function __construct(IMailer $mailer, Container $container) {
         $this->mailer = $mailer;
         $this->container = $container;
@@ -75,11 +70,7 @@ class LoggingMailer implements IMailer {
         return $this->sentMessages;
     }
 
-    /**
-     * @param Message $mail
-     * @param Exception|null $e
-     */
-    private function logMessage(Message $mail, Exception $e = null): void {
+    private function logMessage(Message $mail, ?Exception $exception = null): void {
         if (!$this->logging) {
             return;
         }
@@ -87,8 +78,8 @@ class LoggingMailer implements IMailer {
         $filename = 'mail-' . @date('Y-m-d-H-i-s') . '-' . $fingerprint . '.txt';
         $f = fopen($this->logPath . DIRECTORY_SEPARATOR . $filename, 'w');
 
-        if ($e) {
-            fprintf($f, "FAILED %s\n", $e->getMessage());
+        if ($exception) {
+            fprintf($f, "FAILED %s\n", $exception->getMessage());
         }
         fwrite($f, $mail->generateMessage());
 

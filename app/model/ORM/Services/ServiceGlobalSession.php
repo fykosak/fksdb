@@ -4,6 +4,7 @@ namespace FKSDB\ORM\Services;
 
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\ModelGlobalSession;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
@@ -15,29 +16,18 @@ use Nette\Utils\Random;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceGlobalSession extends AbstractServiceSingle {
+    use DeprecatedLazyDBTrait;
 
     private const SESSION_ID_LENGTH = 32;
 
     private Request $request;
 
-    /**
-     * FKSDB\ORM\Services\ServiceGlobalSession constructor.
-     * @param Request $request
-     * @param Context $context
-     * @param IConventions $conventions
-     */
     public function __construct(Request $request, Context $context, IConventions $conventions) {
         parent::__construct($context, $conventions, DbNames::TAB_GLOBAL_SESSION, ModelGlobalSession::class);
         $this->request = $request;
     }
 
-    /**
-     * @param string $loginId
-     * @param DateTime|null $until
-     * @param DateTime|null $since
-     * @return ModelGlobalSession
-     */
-    public function createSession($loginId, DateTime $until = null, DateTime $since = null): ModelGlobalSession {
+    public function createSession(int $loginId, ?DateTime $until = null, ?DateTime $since = null): ModelGlobalSession {
         if ($since === null) {
             $since = new DateTime();
         }

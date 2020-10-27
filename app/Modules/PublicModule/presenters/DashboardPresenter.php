@@ -19,7 +19,7 @@ class DashboardPresenter extends BasePresenter {
 
     private News $news;
 
-    public function injectNews(News $news): void {
+    final public function injectNews(News $news): void {
         $this->news = $news;
     }
 
