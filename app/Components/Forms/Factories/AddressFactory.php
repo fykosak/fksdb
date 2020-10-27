@@ -6,11 +6,11 @@ use FKSDB\Components\Forms\Containers\AddressContainer;
 use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use FKSDB\ORM\Services\ServiceAddress;
 use FKSDB\ORM\Services\ServiceRegion;
+use FKSDB\Persons\ReferencedPersonHandler;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\IControl;
-use FKSDB\Persons\ReferencedPersonHandler;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -65,29 +65,29 @@ class AddressFactory {
      */
     public function buildAddress(AddressContainer $container, int $options = 0, ?IControl $conditioningField = null): void {
         if ($options & self::SHOW_EXTENDED_ROWS) {
-            $container->addText('first_row', _('První řádek'))
-                ->setOption('description', _('První volitelný řádek adresy (např. bytem u)'));
+            $container->addText('first_row', _('First row'))
+                ->setOption('description', _('First optional row of the address (e.g. title)'));
 
-            $container->addText('second_row', _('Druhý řádek'))
-                ->setOption('description', _('Druhý volitelný řádek adresy (použití zřídka)'));
+            $container->addText('second_row', _('Second row'))
+                ->setOption('description', _('Second optional row of the address (used rarely)'));
         }
 
-        $target = new WriteOnlyInput(_('Místo'));
+        $target = new WriteOnlyInput(_('Place'));
         $container->addComponent($target, 'target');
-        $target->setOption('description', _('Typicky ulice a číslo popisné.'));
+        $target->setOption('description', _('Typically street and (house) number.'));
         if ($options & self::REQUIRED) {
             $conditioned = $conditioningField ? $target->addConditionOn($conditioningField, Form::FILLED) : $target;
-            $conditioned->addRule(Form::FILLED, _('Adresa musí mít vyplněné místo.'));
+            $conditioned->addRule(Form::FILLED, _('The place is required.'));
         }
         if ($options & self::NOT_WRITEONLY) {
             $target->setWriteOnly(false);
         }
 
-        $city = new WriteOnlyInput(_('Město'));
+        $city = new WriteOnlyInput(_('City'));
         $container->addComponent($city, 'city');
         if ($options & self::REQUIRED) {
             $conditioned = $conditioningField ? $city->addConditionOn($conditioningField, Form::FILLED) : $city;
-            $conditioned->addRule(Form::FILLED, _('Adresa musí mít vyplněné město.'));
+            $conditioned->addRule(Form::FILLED, _('City is required.'));
         }
         if ($options & self::NOT_WRITEONLY) {
             $city->setWriteOnly(false);
@@ -96,17 +96,17 @@ class AddressFactory {
 
         $postalCode = $container->addText('postal_code', _('PSČ'))
             ->addRule(Form::MAX_LENGTH, null, 5)
-            ->setOption('description', _('Bez mezer. Pro Českou republiku nebo Slovensko.'));
+            ->setOption('description', _('Without spaces. For the Czech Republic or Slovakia only.'));
 
 
-        $country = $container->addSelect('country_iso', _('Stát'));
+        $country = $container->addSelect('country_iso', _('Country'));
         $country->setItems($this->serviceRegion->getCountries()->order('name')->fetchPairs('country_iso', 'name'));
-        $country->setPrompt(_('Určit stát dle PSČ'));
+        $country->setPrompt(_('Detect country from postal code (CR, SK only)'));
 
         // check valid address structure
-        $target->addConditionOn($city, Form::FILLED)->addRule(Form::FILLED, _('Při vyplněném městě musí mít adresa vyplněno i místo.'));
-        $target->addConditionOn($postalCode, Form::FILLED)->addRule(Form::FILLED, _('Při vyplněném PSČ musí mít adresa vyplněno i místo.'));
-        $target->addConditionOn($country, Form::FILLED)->addRule(Form::FILLED, _('Při vyplněném státu musí mít adresa vyplněno i místo.'));
+        $target->addConditionOn($city, Form::FILLED)->addRule(Form::FILLED, _('You have to fill in the place when the city is filled.'));
+        $target->addConditionOn($postalCode, Form::FILLED)->addRule(Form::FILLED, _('You have to fill in the place when the postal code is filled.'));
+        $target->addConditionOn($country, Form::FILLED)->addRule(Form::FILLED, _('You have to fill in the place when the country is filled.'));
 
         /* Country + postal code validation */
         $validPostalCode = function (BaseControl $control): bool {
@@ -118,22 +118,22 @@ class AddressFactory {
             $conditioned->addConditionOn($country, function (BaseControl $control): bool {
                 $value = $control->getValue();
                 return in_array($value, ['CZ', 'SK']);
-            })->addRule(Form::FILLED, _('Adresa musí mít vyplněné PSČ.'));
+            })->addRule(Form::FILLED, _('Postal code is required.'));
         }
         $postalCode->addCondition(Form::FILLED)
-            ->addRule($validPostalCode, _('Neplatný formát PSČ.'));
+            ->addRule($validPostalCode, _('Invalid postal code.'));
 
         if ($options & self::REQUIRED) {
             $conditioned = $conditioningField ? $country->addConditionOn($conditioningField, Form::FILLED) : $country;
             $conditioned->addConditionOn($postalCode, function (BaseControl $control): bool {
                 return !$this->serviceAddress->tryInferRegion($control->getValue());
-            })->addRule(Form::FILLED, _('Stát musí být vyplněn.'));
+            })->addRule(Form::FILLED, _('Country is required.'));
         }
         $country->addCondition(Form::FILLED)
             ->addConditionOn($postalCode, $validPostalCode)->addRule(function (BaseControl $control) use ($postalCode): bool {
                 $regionId = $this->serviceAddress->inferRegion($postalCode->getValue());
                 $region = $this->serviceRegion->findByPrimary($regionId);
                 return $region->country_iso == $control->getValue();
-            }, _('Zvolený stát neodpovídá zadanému PSČ.'));
+            }, _('Chosen country does not match provided postal code.'));
     }
 }

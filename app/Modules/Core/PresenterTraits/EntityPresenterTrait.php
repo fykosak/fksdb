@@ -24,11 +24,6 @@ use Nette\Security\IResource;
 trait EntityPresenterTrait {
 
     protected ?AbstractModelSingle $model;
-    /**
-     * @var int
-     * @persistent
-     */
-    public $id;
 
     public function authorizedList(): void {
         $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'list'));
@@ -166,7 +161,6 @@ trait EntityPresenterTrait {
         if (!$success) {
             throw new Exceptions\ModelException(_('Error during deleting'));
         }
-        return;
     }
 
     /**

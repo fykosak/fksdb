@@ -91,7 +91,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         $allowClear = $create;
         $modifiabilityResolver = $visibilityResolver = new AclResolver($this->contestAuthorizator, $this->getSelectedContest());
         $referencedId = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
-        $referencedId->addRule(Form::FILLED, _('Osobu je třeba zadat.'));
+        $referencedId->addRule(Form::FILLED, _('Person is required.'));
         $referencedId->getReferencedContainer()->setOption('label', _('Person'));
 
         $container->addComponent($referencedId, ExtendedPersonHandler::EL_PERSON);

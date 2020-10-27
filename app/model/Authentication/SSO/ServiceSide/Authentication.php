@@ -18,12 +18,8 @@ class Authentication {
     public const FLAG_SSO_LOGIN = ModelAuthToken::TYPE_SSO;
 
     private IGlobalSession $globalSession;
-
-    /** @var string */
-    private $loginURL;
-
-    /** @var string */
-    private $logoutURL;
+    private string $loginURL;
+    private string $logoutURL;
 
     /**
      * Authentication constructor.
@@ -31,7 +27,7 @@ class Authentication {
      * @param string $loginURL
      * @param string $logoutURL
      */
-    public function __construct(IGlobalSession $globalSession, $loginURL, $logoutURL) {
+    public function __construct(IGlobalSession $globalSession, string $loginURL,string $logoutURL) {
         $this->globalSession = $globalSession;
         $this->loginURL = $loginURL;
         $this->logoutURL = $logoutURL;

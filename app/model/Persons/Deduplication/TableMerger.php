@@ -108,7 +108,7 @@ class TableMerger {
 
         /*
          * We merge child-rows (referencing rows) of the merged rows.
-         * We get the list of possible referncing tables from the database reflection.
+         * We get the list of possible referencing tables from the database reflection.
          */
         foreach ($this->getReferencingTables() as $referencingTable => $fKColumn) {
             $referencingMerger = $this->getMerger()->getMerger($referencingTable);
@@ -123,7 +123,7 @@ class TableMerger {
              * we have to recursively merge the children with the same secondary key.
              */
             if ($referencingMerger->getSecondaryKey()) {
-                /* Group by ignores the FKcolumn value, as it's being changed. */
+                /* Group by ignores the FK column value, as it's being changed. */
                 $groupedTrunks = $referencingMerger->groupBySecondaryKey($trunkDependants, $fKColumn);
                 $groupedMerged = $referencingMerger->groupBySecondaryKey($mergedDependants, $fKColumn);
                 $secondaryKeys = array_merge(array_keys($groupedTrunks), array_keys($groupedMerged));
@@ -180,7 +180,7 @@ class TableMerger {
         }
 
 
-        /* Log the overeall changes. */
+        /* Log the overall changes. */
         $this->logDelete($this->mergedRow);
         $this->logTrunk($this->trunkRow);
     }
@@ -230,16 +230,16 @@ class TableMerger {
             }
         }
         if ($msg) {
-            $this->logger->log(new Message(sprintf(_('%s(%s) nové hodnoty: %s'), $row->getTable()->getName(), $row->getPrimary(), implode(', ', $msg)), ILogger::INFO));
+            $this->logger->log(new Message(sprintf(_('%s(%s) new values: %s'), $row->getTable()->getName(), $row->getPrimary(), implode(', ', $msg)), ILogger::INFO));
         }
     }
 
     private function logDelete(ActiveRow $row): void {
-        $this->logger->log(new Message(sprintf(_('%s(%s) sloučen a smazán.'), $row->getTable()->getName(), $row->getPrimary()), ILogger::INFO));
+        $this->logger->log(new Message(sprintf(_('%s(%s) merged and deleted.'), $row->getTable()->getName(), $row->getPrimary()), ILogger::INFO));
     }
 
     private function logTrunk(ActiveRow $row): void {
-        $this->logger->log(new Message(sprintf(_('%s(%s) rozšířen sloučením.'), $row->getTable()->getName(), $row->getPrimary()), ILogger::INFO));
+        $this->logger->log(new Message(sprintf(_('%s(%s) extended by merge.'), $row->getTable()->getName(), $row->getPrimary()), ILogger::INFO));
     }
 
     /*     * ******************************

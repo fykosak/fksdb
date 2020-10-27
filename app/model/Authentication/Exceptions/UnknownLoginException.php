@@ -12,6 +12,6 @@ use Nette\Security\IAuthenticator;
  */
 class UnknownLoginException extends AuthenticationException {
     public function __construct(?\Throwable $previous = null) {
-        parent::__construct(_('Neexistující účet.'), IAuthenticator::IDENTITY_NOT_FOUND, $previous);
+        parent::__construct(_('Unknown account.'), IAuthenticator::IDENTITY_NOT_FOUND, $previous);
     }
 }

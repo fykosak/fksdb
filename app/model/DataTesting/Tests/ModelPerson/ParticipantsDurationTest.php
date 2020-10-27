@@ -41,7 +41,7 @@ class ParticipantsDurationTest extends PersonTest {
 
             $delta = ($max - $min) + 1;
             $logger->log(new TestLog(
-                $this->getTitle(),
+                $this->title,
                 \sprintf('Person participate %d years in the events of contestId %d', $delta, $contestId),
                 $this->evaluateThresholds($delta, $contestDef['thresholds'])
             ));

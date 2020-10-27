@@ -60,7 +60,7 @@ class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
         return 'Applications time progress';
     }
 
-    public function getControl(): Control {
+    public function getControl(): self {
         return $this;
     }
 

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Chart;
 
-use Nette\Application\UI\Control;
+use Nette\ComponentModel\IComponent;
 
 /**
  * Interface IChart
@@ -12,7 +12,7 @@ interface IChart {
 
     public function getTitle(): string;
 
-    public function getControl(): Control;
+    public function getControl(): IComponent;
 
     public function getDescription(): ?string;
 }

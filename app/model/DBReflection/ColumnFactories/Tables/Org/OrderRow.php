@@ -19,14 +19,14 @@ class OrderRow extends DefaultColumnFactory {
 
     public function getOrderMapping(): array {
         return [
-            0 => '0 - ' . _('pasivní org'),
-            1 => '1 - ' . _('org'),
-            2 => '2 - ' . _('aktivní org'),
+            0 => '0 - ' . _('Passive organiser'),
+            1 => '1 - ' . _('Organiser'),
+            2 => '2 - ' . _('Active organiser'),
             3 => '3 - ',
-            4 => '4 - ' . _('vedení'),
+            4 => '4 - ' . _('Leadership'),
             5 => '5 - ',
-            6 => '6 - ' . _('zástupce hlavního organizátora'),
-            7 => '7 - ' . _('hlavní organizátor'),
+            6 => '6 - ' . _('Deputy head organiser'),
+            7 => '7 - ' . _('Head organiser'),
             8 => '8 - ',
             9 => '9 - ' . _('vedoucí semináře'),
         ];

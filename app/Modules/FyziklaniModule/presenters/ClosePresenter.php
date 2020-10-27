@@ -33,7 +33,7 @@ class ClosePresenter extends BasePresenter {
 
     /* ******* TITLE ***********/
     public function getTitleList(): PageTitle {
-        return new PageTitle(_('Uzavírání bodování'), 'fa fa-check');
+        return new PageTitle(_('Sealing of the scoring'), 'fa fa-check');
     }
 
     /**
@@ -44,7 +44,7 @@ class ClosePresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function titleTeam(): void {
-        $this->setPageTitle(new PageTitle(\sprintf(_('Uzavírání bodování týmu "%s"'), $this->getEntity()->name), 'fa fa-check-square-o'));
+        $this->setPageTitle(new PageTitle(\sprintf(_('Sealing of the scoring for the team "%s"'), $this->getEntity()->name), 'fa fa-check-square-o'));
     }
 
     /**

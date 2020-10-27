@@ -99,7 +99,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
     }
 
     protected function setPageTitle(PageTitle $pageTitle): void {
-        $pageTitle->subTitle = sprintf(_('%d. ročník'), $this->year) . ' ' . $pageTitle->subTitle;
+        $pageTitle->subTitle = sprintf(_('%d. year'), $this->year) . ' ' . $pageTitle->subTitle;
         parent::setPageTitle($pageTitle);
     }
 }

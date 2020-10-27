@@ -2,27 +2,27 @@
 
 namespace FKSDB\Modules\CoreModule;
 
+use Exception;
+use FKSDB\Authentication\AccountManager;
 use FKSDB\Authentication\GoogleAuthenticator;
-use FKSDB\Authentication\InactiveLoginException;
-use FKSDB\Authentication\InvalidCredentialsException;
+use FKSDB\Authentication\LoginUserStorage;
+use FKSDB\Authentication\PasswordAuthenticator;
 use FKSDB\Authentication\Provider\GoogleProvider;
+use FKSDB\Authentication\RecoveryException;
+use FKSDB\Authentication\SSO\IGlobalSession;
+use FKSDB\Authentication\SSO\ServiceSide\Authentication;
+use FKSDB\Authentication\TokenAuthenticator;
+use FKSDB\Authentication\UnknownLoginException;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Localization\UnsupportedLanguageException;
+use FKSDB\Mail\SendFailedException;
 use FKSDB\Modules\Core\BasePresenter;
-use Exception;
-use FKSDB\Authentication\AccountManager;
-use FKSDB\Authentication\LoginUserStorage;
-use FKSDB\Authentication\PasswordAuthenticator;
-use FKSDB\Authentication\RecoveryException;
-use FKSDB\Authentication\TokenAuthenticator;
-use FKSDB\Authentication\SSO\IGlobalSession;
-use FKSDB\Authentication\SSO\ServiceSide\Authentication;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceAuthToken;
 use FKSDB\UI\PageTitle;
-use FKSDB\Mail\SendFailedException;
+use FKSDB\Utils\Utils;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\Google;
 use Nette\Application\AbortException;
@@ -33,8 +33,6 @@ use Nette\Http\SessionSection;
 use Nette\Http\Url;
 use Nette\Security\AuthenticationException;
 use Nette\Utils\DateTime;
-use FKSDB\Utils\Utils;
-use Tracy\Debugger;
 
 /**
  * Class AuthenticationPresenter
@@ -249,9 +247,9 @@ final class AuthenticationPresenter extends BasePresenter {
         $values = $form->getValues();
         try {
             // TODO use form->getValues()
-            $this->user->login($values['id'], $values['password']);
+            $this->getUser()->login($values['id'], $values['password']);
             /** @var ModelLogin $login */
-            $login = $this->user->getIdentity();
+            $login = $this->getUser()->getIdentity();
             $this->loginBackLinkRedirect($login);
             $this->initialRedirect();
         } catch (AuthenticationException $exception) {
@@ -299,7 +297,7 @@ final class AuthenticationPresenter extends BasePresenter {
         }
         $this->restoreRequest($this->backlink);
 
-        /* If it was't valid backLink serialization interpret it like a URL. */
+        /* If it wasn't valid backLink serialization interpret it like a URL. */
         $url = new Url($this->backlink);
         $this->backlink = null;
 
@@ -329,11 +327,6 @@ final class AuthenticationPresenter extends BasePresenter {
         }
     }
 
-    /**
-     * @return void
-     * @throws InactiveLoginException
-     * @throws AuthenticationException
-     */
     public function actionGoogle(): void {
         if ($this->getGoogleSection()->state !== $this->getParameter('state')) {
             $this->flashMessage(_('Invalid CSRF token'), self::FLASH_ERROR);
@@ -347,7 +340,10 @@ final class AuthenticationPresenter extends BasePresenter {
             $login = $this->googleAuthenticator->authenticate($ownerDetails->toArray());
             $this->getUser()->login($login);
             $this->initialRedirect();
-        } catch (IdentityProviderException $exception) {
+        } catch (UnknownLoginException $exception) {
+            $this->flashMessage(_('No account is associated with this profile'), self::FLASH_ERROR);
+            $this->redirect('login');
+        } catch (IdentityProviderException|AuthenticationException $exception) {
             $this->flashMessage(_('Error'), self::FLASH_ERROR);
             $this->redirect('login');
         }

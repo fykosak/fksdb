@@ -8,7 +8,7 @@
             <span class="badge badge-secondary">#{$log['model']->person_id}</span>
         </h3>
         {foreach $log['log'] as $simpleLog}
-            <div class="alert alert-{$simpleLog->getLevel()}"><b>{$simpleLog->testName}</b>: {$simpleLog->getMessage()}
+            <div class="alert alert-{$simpleLog->level}"><b>{$simpleLog->testName}</b>: {$simpleLog->text}
             </div>
         {/foreach}
         <hr/>
