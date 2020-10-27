@@ -1,8 +1,6 @@
 <?php
 
-namespace FKSDB\ORM\Models;
-
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+namespace FKSDB\ORM\Models\Fyziklani;
 
 /**
  * Interface IFyziklaniTeamReferencedModel

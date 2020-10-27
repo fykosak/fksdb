@@ -19,6 +19,12 @@ class DataTestingFactory {
 
     private DBReflectionFactory $tableReflectionFactory;
 
+    /**
+     * DataTestingFactory constructor.
+     * @param ServiceContest $serviceContest
+     * @param DBReflectionFactory $tableReflectionFactory
+     * @throws BadTypeException
+     */
     public function __construct(ServiceContest $serviceContest, DBReflectionFactory $tableReflectionFactory) {
         $this->serviceContest = $serviceContest;
         $this->tableReflectionFactory = $tableReflectionFactory;

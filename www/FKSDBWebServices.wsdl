@@ -56,10 +56,12 @@
                     </xsd:element>
                 </xsd:sequence>
             </xsd:complexType>
-            <xsd:complexType name="GetFyziklaniRequestType">
+            <xsd:complexType name="GetEventRequestType">
                 <xsd:sequence>
-                    <xsd:element name="eventId" type="xsd:nonNegativeInteger" />
-                    <xsd:element name="teamList"/>
+                    <xsd:element name="eventId" type="xsd:nonNegativeInteger"/>
+                    <xsd:element name="teamList" minOccurs="0"/>
+                    <xsd:element name="schedule" minOccurs="0"/>
+                    <xsd:element name="personSchedule" minOccurs="0"/>
                 </xsd:sequence>
             </xsd:complexType>
             <xsd:complexType name="GetStatsRequestType">
@@ -106,12 +108,12 @@
         <wsdl:part name="GetResultsResponse" element="fksres:results"/>
     </wsdl:message>
 
-    <wsdl:message name="GetFyziklaniRequest">
-        <wsdl:part name="GetFyziklaniRequest" type="xsd1:GetFyziklaniRequestType"/>
+    <wsdl:message name="GetEventRequest">
+        <wsdl:part name="GetEventRequest" type="xsd1:GetEventRequestType"/>
     </wsdl:message>
 
-    <wsdl:message name="GetFyziklaniResponse">
-        <wsdl:part name="GetFyziklaniResponse"/>
+    <wsdl:message name="GetEventResponse">
+        <wsdl:part name="GetEventResponse"/>
     </wsdl:message>
 
     <wsdl:message name="GetStatsRequest">
@@ -135,9 +137,9 @@
             <wsdl:input message="tns:GetResultsRequest"/>
             <wsdl:output message="tns:GetResultsResponse"/>
         </wsdl:operation>
-        <wsdl:operation name="GetFyziklani">
-            <wsdl:input message="tns:GetFyziklaniRequest"/>
-            <wsdl:output message="tns:GetFyziklaniResponse"/>
+        <wsdl:operation name="GetEvent">
+            <wsdl:input message="tns:GetEventRequest"/>
+            <wsdl:output message="tns:GetEventResponse"/>
         </wsdl:operation>
         <wsdl:operation name="GetStats">
             <wsdl:input message="tns:GetStatsRequest"/>
@@ -161,8 +163,8 @@
                 <soap:body use="literal"/>
             </wsdl:output>
         </wsdl:operation>
-        <wsdl:operation name="GetFyziklani">
-            <soap:operation soapAction="GetFyziklani"/>
+        <wsdl:operation name="GetEvent">
+            <soap:operation soapAction="GetEvent"/>
             <wsdl:input>
                 <soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
                 <soap:body use="literal"/>

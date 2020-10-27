@@ -11,9 +11,9 @@ use FKSDB\ORM\Models\ModelPerson;
  */
 abstract class PersonTest {
 
-    private string $id;
+    public string $id;
 
-    private string $title;
+    public string $title;
 
     public function __construct(string $id, string $title) {
         $this->id = $id;
@@ -21,12 +21,4 @@ abstract class PersonTest {
     }
 
     abstract public function run(ILogger $logger, ModelPerson $person): void;
-
-    public function getTitle(): string {
-        return $this->title;
-    }
-
-    public function getId(): string {
-        return $this->id;
-    }
 }

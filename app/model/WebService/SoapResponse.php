@@ -25,5 +25,4 @@ class SoapResponse implements \Nette\Application\IResponse {
             Debugger::log($e);
         }
     }
-
 }

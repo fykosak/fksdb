@@ -102,7 +102,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      */
     public function titleHandout(): void {
-        $this->setPageTitle(new PageTitle(_('Rozdělení úloh opravovatelům'), 'fa fa-inbox'));
+        $this->setPageTitle(new PageTitle(_('Handout'), 'fa fa-inbox'));
     }
 
     /**

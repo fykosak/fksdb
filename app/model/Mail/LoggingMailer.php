@@ -70,7 +70,7 @@ class LoggingMailer implements IMailer {
         return $this->sentMessages;
     }
 
-    private function logMessage(Message $mail, ?Exception $e = null): void {
+    private function logMessage(Message $mail, ?Exception $exception = null): void {
         if (!$this->logging) {
             return;
         }
@@ -78,8 +78,8 @@ class LoggingMailer implements IMailer {
         $filename = 'mail-' . @date('Y-m-d-H-i-s') . '-' . $fingerprint . '.txt';
         $f = fopen($this->logPath . DIRECTORY_SEPARATOR . $filename, 'w');
 
-        if ($e) {
-            fprintf($f, "FAILED %s\n", $e->getMessage());
+        if ($exception) {
+            fprintf($f, "FAILED %s\n", $exception->getMessage());
         }
         fwrite($f, $mail->generateMessage());
 

@@ -122,9 +122,9 @@ class ExtendedPersonHandler {
             if ($sendEmail && ($email && !$login)) {
                 try {
                     $this->accountManager->createLoginWithInvitation($this->person, $email, $this->getInvitationLang());
-                    $presenter->flashMessage(_('Zvací e-mail odeslán.'), BasePresenter::FLASH_INFO);
+                    $presenter->flashMessage(_('E-mail invitation sent.'), BasePresenter::FLASH_INFO);
                 } catch (SendFailedException $exception) {
-                    $presenter->flashMessage(_('Zvací e-mail se nepodařilo odeslat.'), BasePresenter::FLASH_ERROR);
+                    $presenter->flashMessage(_('E-mail invitation failed to sent.'), BasePresenter::FLASH_ERROR);
                 }
             }
             // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
@@ -153,7 +153,7 @@ class ExtendedPersonHandler {
 
             return self::RESULT_ERROR;
         } catch (ModelDataConflictException $exception) {
-            $form->addError(_('Zadaná data se neshodují s již uloženými.'));
+            $form->addError(_('Data don\'t match already stored data.'));
             $exception->getReferencedId()->getReferencedContainer()->setConflicts($exception->getConflicts());
             $exception->getReferencedId()->rollback();
             $this->connection->rollBack();

@@ -32,6 +32,7 @@ class GoogleAuthenticator extends AbstractAuthenticator {
     /**
      * @param array $user
      * @return ModelLogin
+     * @throws UnknownLoginException
      * @throws AuthenticationException
      * @throws InactiveLoginException
      */

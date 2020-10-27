@@ -1,8 +1,6 @@
 <?php
 
-namespace FKSDB\ORM\Models;
-
-use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
+namespace FKSDB\ORM\Models\Schedule;
 
 /**
  * Interface IScheduleGroupReferencedModel

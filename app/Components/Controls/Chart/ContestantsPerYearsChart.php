@@ -18,7 +18,7 @@ class ContestantsPerYearsChart extends ReactComponent implements IChart {
         $this->contest = $contest;
     }
 
-    public function getControl(): Control {
+    public function getControl(): self {
         return $this;
     }
 

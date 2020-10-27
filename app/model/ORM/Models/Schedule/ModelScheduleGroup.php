@@ -6,6 +6,8 @@ use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\WebService\INodeCreator;
+use FKSDB\WebService\XMLHelper;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
@@ -22,7 +24,7 @@ use Nette\Security\IResource;
  * @property-read string name_cs
  * @property-read string name_en
  */
-class ModelScheduleGroup extends AbstractModelSingle implements IEventReferencedModel, IResource {
+class ModelScheduleGroup extends AbstractModelSingle implements IEventReferencedModel, IResource, INodeCreator {
 
     public const RESOURCE_ID = 'event.scheduleGroup';
 
@@ -66,5 +68,24 @@ class ModelScheduleGroup extends AbstractModelSingle implements IEventReferenced
 
     public function getResourceId(): string {
         return self::RESOURCE_ID;
+    }
+
+    public function createXMLNode(\DOMDocument $doc): \DOMNode {
+        $node = $doc->createElement('scheduleGroup');
+        $node->setAttribute('scheduleGroupId', $this->schedule_group_id);
+        XMLHelper::fillArrayToNode([
+            'scheduleGroupId' => $this->schedule_group_id,
+            'scheduleGroupType' => $this->schedule_group_type,
+            'eventId' => $this->event_id,
+            'start' => $this->start->format('c'),
+            'end' => $this->end->format('c'),
+        ], $doc, $node);
+        XMLHelper::fillArrayArgumentsToNode('lang', [
+            'name' => [
+                'cs' => $this->name_cs,
+                'en' => $this->name_en,
+            ],
+        ], $doc, $node);
+        return $node;
     }
 }

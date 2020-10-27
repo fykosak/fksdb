@@ -5,21 +5,21 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Astrid\Downloader;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\ModelException;
 use FKSDB\Logging\FlashMessageDump;
+use FKSDB\Pipeline\PipelineException;
 use FKSDB\SeriesCalculator;
 use FKSDB\Submits\UploadException;
-use FKSDB\Exceptions\ModelException;
+use FKSDB\Tasks\PipelineFactory;
+use FKSDB\Tasks\SeriesData;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DeprecatedException;
 use Nette\InvalidStateException;
-use Tracy\Debugger;
-use FKSDB\Pipeline\PipelineException;
 use SimpleXMLElement;
-use FKSDB\Tasks\PipelineFactory;
-use FKSDB\Tasks\SeriesData;
+use Tracy\Debugger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -54,7 +54,7 @@ class TasksPresenter extends BasePresenter {
     }
 
     public function titleImport(): void {
-        $this->setPageTitle(new PageTitle(_('Import úloh'), 'fa fa-upload'));
+        $this->setPageTitle(new PageTitle(_('Task import'), 'fa fa-upload'));
     }
 
     /**
@@ -66,21 +66,21 @@ class TasksPresenter extends BasePresenter {
         $control = new FormControl();
         $form = $control->getForm();
 
-        $source = $form->addRadioList('source', _('Zdroj úloh'), [
+        $source = $form->addRadioList('source', _('Problem source'), [
             self::SOURCE_ASTRID => _('Astrid'),
-            self::SOURCE_FILE => _('XML soubor (nové XML)'),
+            self::SOURCE_FILE => _('XML file (new XML)'),
         ]);
         $source->setDefaultValue(self::SOURCE_ASTRID);
 
         // Astrid download
         $seriesItems = range(1, $this->seriesCalculator->getTotalSeries($this->getSelectedContest(), $this->getSelectedYear()));
-        $form->addSelect('series', _('Série'))
+        $form->addSelect('series', _('Series'))
             ->setItems($seriesItems, false);
 
-        $upload = $form->addUpload('file', _('XML soubor úloh'));
+        $upload = $form->addUpload('file', _('XML file'));
         $upload->addConditionOn($source, Form::EQUAL, self::SOURCE_FILE)->toggle($upload->getHtmlId() . '-pair');
 
-        $form->addSubmit('submit', _('Importovat'));
+        $form->addSubmit('submit', _('Import'));
 
         $form->onSuccess[] = function (Form $seriesForm) {
             $this->validSubmitSeriesForm($seriesForm);
@@ -130,13 +130,13 @@ class TasksPresenter extends BasePresenter {
                 $pipeline->setInput($data);
                 $pipeline->run();
                 FlashMessageDump::dump($pipeline->getLogger(), $this);
-                $this->flashMessage(_('Úlohy pro úspěšně importovány.'), self::FLASH_SUCCESS);
+                $this->flashMessage(_('Tasks successfully imported.'), self::FLASH_SUCCESS);
             }
         } catch (PipelineException $exception) {
-            $this->flashMessage(sprintf(_('Při ukládání úloh došlo k chybě. %s'), $exception->getMessage()), self::FLASH_ERROR);
+            $this->flashMessage(sprintf(_('Error during import. %s'), $exception->getMessage()), self::FLASH_ERROR);
             Debugger::log($exception);
         } catch (ModelException $exception) {
-            $this->flashMessage(sprintf(_('Při ukládání úloh došlo k chybě.')), self::FLASH_ERROR);
+            $this->flashMessage(sprintf(_('Error during import.')), self::FLASH_ERROR);
             Debugger::log($exception);
         } catch (DeprecatedException $exception) {
             $this->flashMessage(_('Legacy XML format is deprecated'), self::FLASH_ERROR);

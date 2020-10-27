@@ -36,11 +36,8 @@ class LoginUserStorage extends UserStorage {
     public const SSO_UNAUTHENTICATED = 'ua';
 
     private ServiceLogin $serviceLogin;
-
     private YearCalculator $yearCalculator;
-
     private GlobalSession $globalSession;
-
     private Application $application;
 
     /** @var IPresenter */

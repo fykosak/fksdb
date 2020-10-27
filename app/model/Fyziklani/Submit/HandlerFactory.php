@@ -15,11 +15,8 @@ use Nette\Security\User;
 class HandlerFactory {
 
     private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
-
     private ServiceFyziklaniTask $serviceFyziklaniTask;
-
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
-
     private User $user;
 
     public function __construct(

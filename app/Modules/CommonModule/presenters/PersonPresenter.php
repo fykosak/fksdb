@@ -5,22 +5,24 @@ namespace FKSDB\Modules\CommonModule;
 use FKSDB\Components\Controls\Entity\PersonFormComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Person\PizzaControl;
-use FKSDB\DBReflection\FieldLevelPermission;
+use FKSDB\Components\Controls\Stalking\StalkingContainer;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\DBReflection\FieldLevelPermission;
 use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotFoundException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\ILogger;
 use FKSDB\Logging\MemoryLogger;
-use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\ORM\Services\ServicePersonInfo;
+use FKSDB\Persons\Deduplication\Merger;
 use FKSDB\UI\PageTitle;
 use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
@@ -31,9 +33,7 @@ use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
 use Nette\Utils\Html;
-use FKSDB\Persons\Deduplication\Merger;
 use ReflectionException;
-use FKSDB\Components\Controls\Stalking\StalkingContainer;
 use Tracy\Debugger;
 
 /**
@@ -72,7 +72,6 @@ class PersonPresenter extends BasePresenter {
     /* *********** TITLE ***************/
     /**
      * @return void
-     *
      * @throws ForbiddenRequestException
      */
     public function titleSearch(): void {
@@ -108,7 +107,7 @@ class PersonPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleMerge(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Sloučení osob %s (%d) a %s (%d)'), $this->trunkPerson->getFullName(), $this->trunkPerson->person_id, $this->mergedPerson->getFullName(), $this->mergedPerson->person_id)));
+        $this->setPageTitle(new PageTitle(sprintf(_('Merging persons %s (%d) and %s (%d)'), $this->trunkPerson->getFullName(), $this->trunkPerson->person_id, $this->mergedPerson->getFullName(), $this->mergedPerson->person_id)));
     }
 
     /**
@@ -148,8 +147,8 @@ class PersonPresenter extends BasePresenter {
     public function authorizedMerge(int $trunkId, int $mergedId): void {
         $trunkPerson = $this->servicePerson->findByPrimary($trunkId);
         $mergedPerson = $this->servicePerson->findByPrimary($mergedId);
-        if (is_null($this->trunkPerson) || is_null($this->mergedPerson)) {
-            throw new NotFoundException('Neexistující osoba.');
+        if (is_null($trunkPerson) || is_null($mergedPerson)) {
+            throw new NotFoundException('Person does not exists');
         }
         $this->trunkPerson = $trunkPerson;
         $this->mergedPerson = $mergedPerson;
@@ -163,17 +162,13 @@ class PersonPresenter extends BasePresenter {
      * @param int $mergedId
      * @throws NotFoundException
      */
-    public function authorizedDontMerge($trunkId, $mergedId): void {
+    public function authorizedDontMerge(int $trunkId, int $mergedId): void {
         $this->authorizedMerge($trunkId, $mergedId);
     }
 
     /* ********************* ACTIONS **************/
-    /**
-     * @param int $trunkId
-     * @param int $mergedId
-     * @return void
-     */
-    public function actionMerge($trunkId, $mergedId): void {
+
+    public function actionMerge(int $trunkId, int $mergedId): void {
         $this->personMerger->setMergedPair($this->trunkPerson, $this->mergedPerson);
         $this->updateMergeForm($this->getComponent('mergeForm')->getForm());
     }
@@ -195,7 +190,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadTypeException
      * @throws ReflectionException
      */
-    public function actionDontMerge($trunkId, $mergedId): void {
+    public function actionDontMerge(int $trunkId, int $mergedId): void {
         $mergedPI = $this->servicePersonInfo->findByPrimary($mergedId);
         $mergedData = ['duplicates' => trim($mergedPI->duplicates . ",not-same($trunkId)", ',')];
         $this->servicePersonInfo->updateModel2($mergedPI, $mergedData);
@@ -204,7 +199,7 @@ class PersonPresenter extends BasePresenter {
         $trunkData = ['duplicates' => trim($trunkPI->duplicates . ",not-same($mergedId)", ',')];
         $this->servicePersonInfo->updateModel2($trunkPI, $trunkData);
 
-        $this->flashMessage(_('Osoby úspešně nesloučeny.'), ILogger::SUCCESS);
+        $this->flashMessage(_('Persons not merged.'), ILogger::SUCCESS);
         $this->backLinkRedirect(true);
     }
 
@@ -232,7 +227,7 @@ class PersonPresenter extends BasePresenter {
         $form = $control->getForm();
         $form->addComponent($this->personFactory->createPersonSelect(true, _('Person'), new PersonProvider($this->servicePerson)), 'person_id');
 
-        $form->addSubmit('stalk', _('Stalk'))
+        $form->addSubmit('stalk', _('Let\'s stalk'))
             ->onClick[] = function (SubmitButton $button) {
             $values = $button->getForm()->getValues();
             $this->redirect('detail', ['id' => $values['person_id']]);
@@ -254,9 +249,9 @@ class PersonPresenter extends BasePresenter {
         $control = new FormControl();
         $form = $control->getForm();
 
-        $form->addSubmit('send', _('Sloučit osoby'))->getControlPrototype()->addAttributes(['class' => 'btn-lg']);
+        $form->addSubmit('send', _('Merge persons'))->getControlPrototype()->addAttributes(['class' => 'btn-lg']);
 
-        $form->addSubmit('cancel', _('Storno'))
+        $form->addSubmit('cancel', _('Cancel'))
             ->getControlPrototype()->addAttributes(['class' => 'btn-lg']);
         $form->onSuccess[] = function (Form $form) {
             $this->handleMergeFormSuccess($form);
@@ -412,12 +407,12 @@ class PersonPresenter extends BasePresenter {
         $merger->setLogger($logger);
         if ($merger->merge()) {
             $this->setMergeConflicts(null); // flush the session
-            $this->flashMessage(_('Osoby úspešně sloučeny.'), self::FLASH_SUCCESS);
+            $this->flashMessage(_('Persons successfully merged.'), self::FLASH_SUCCESS);
             FlashMessageDump::dump($logger, $this);
             $this->backLinkRedirect(true);
         } else {
             $this->setMergeConflicts($merger->getConflicts());
-            $this->flashMessage(_('Je třeba ručně vyřešit konflikty.'), self::FLASH_INFO);
+            $this->flashMessage(_('Manual conflict resolution is necessary.'), self::FLASH_INFO);
             $this->redirect('this'); //this is correct
         }
     }

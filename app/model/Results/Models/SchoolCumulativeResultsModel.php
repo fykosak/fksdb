@@ -63,7 +63,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
                 self::COL_ALIAS => self::ALIAS_UNWEIGHTED_SUM,
             ];
             $dataColumns[] = [
-                self::COL_DEF_LABEL => self::LABEL_PERCETAGE,
+                self::COL_DEF_LABEL => self::LABEL_PERCENTAGE,
                 self::COL_DEF_LIMIT => 100,
                 self::COL_ALIAS => self::ALIAS_PERCENTAGE,
             ];

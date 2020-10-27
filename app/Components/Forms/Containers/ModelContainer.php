@@ -5,7 +5,6 @@ namespace FKSDB\Components\Forms\Containers;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\ORM\AbstractModelMulti;
 use Nette\Database\Table\ActiveRow;
-use Nette\Forms\Container;
 use Nette\Forms\Controls\BaseControl;
 
 /**

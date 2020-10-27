@@ -16,9 +16,7 @@ use Nette\Database\Table\ActiveRow;
 final class TaskCodePreprocessor {
 
     private ServiceFyziklaniTask $serviceFyziklaniTask;
-
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
-
     private ModelEvent $event;
 
     public function __construct(

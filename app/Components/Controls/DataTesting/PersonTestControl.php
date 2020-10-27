@@ -79,7 +79,7 @@ class PersonTestControl extends BaseComponent {
         $testsContainer = new ContainerWithOptions();
         $testsContainer->setOption('label', _('Tests'));
         foreach ($this->dataTestingFactory->getTests('person') as $key => $test) {
-            $field = $testsContainer->addCheckbox($key, $test->getTitle());
+            $field = $testsContainer->addCheckbox($key, $test->title);
             if (\in_array($test, $this->tests)) {
                 $field->setDefaultValue(true);
             }
@@ -123,7 +123,7 @@ class PersonTestControl extends BaseComponent {
                 $test->run($logger, $model);
             }
             $personLog = \array_filter($logger->getMessages(), function (TestLog $simpleLog): bool {
-                return \in_array($simpleLog->getLevel(), $this->levels);
+                return \in_array($simpleLog->level, $this->levels);
             });
             if (\count($personLog)) {
                 $logs[] = ['model' => $model, 'log' => $personLog];

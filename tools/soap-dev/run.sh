@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./soap.sh http://db.fykos.local/web-service ./request.soap ./r.html
+./tools/soap-dev/soap.sh http://db.fykos.local/web-service ./tools/soap-dev/request.soap ./temp/r.xml

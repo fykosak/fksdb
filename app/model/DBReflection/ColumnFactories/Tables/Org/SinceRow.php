@@ -21,7 +21,7 @@ class SinceRow extends DefaultColumnFactory {
         $control = new TextInput($this->getTitle());
         $control->addRule(Form::NUMERIC);
         $control->addRule(Form::FILLED);
-        $control->addRule(Form::RANGE, _('Počáteční ročník není v intervalu [%d, %d].'), [$min, $max]);
+        $control->addRule(Form::RANGE, _('First year is not in interval [%d, %d].'), [$min, $max]);
         return $control;
     }
 }

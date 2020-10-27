@@ -6,7 +6,7 @@ use FKSDB\Results\ModelCategory;
 use Nette\InvalidStateException;
 
 /**
- * Cumulative results (sums and precentage) for chosen series.
+ * Cumulative results (sums and percentage) for chosen series.
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
@@ -50,7 +50,7 @@ class CumulativeResultsModel extends AbstractResultsModel {
                 ];
             }
             $dataColumns[] = [
-                self::COL_DEF_LABEL => self::LABEL_PERCETAGE,
+                self::COL_DEF_LABEL => self::LABEL_PERCENTAGE,
                 self::COL_DEF_LIMIT => 100,
                 self::COL_ALIAS => self::ALIAS_PERCENTAGE,
             ];
