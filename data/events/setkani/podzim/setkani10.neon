@@ -55,14 +55,6 @@ events:
                         modifiable: %events.setkani.appCond%
                         default: fromLogin
                         factory: RefPerson(%events.setkani.person%, email, or(state('__init'),role('admin')), role('admin'), false)
-                    tshirt_size:
-                        label: _('Jaké tričko nosíš?')
-                        required: true
-                        factory: Chooser("Zvol velikost", Options(%events.setkani.tshirt.size%))
-                    tshirt_color:
-                        label: _('Jakou barvu trička bys chtěl?')
-                        required: false
-                        factory: Chooser("Zvol barvu", Options(%events.setkani.tshirt.color%))
                     event_fri:
                         label: "Páteční hra"
                         description: "V pátek od 17:00 pořádáme strategickou hru. Přihláška je závazná."
