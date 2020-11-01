@@ -1,0 +1,90 @@
+parameters:
+    events:
+        setkani_dist:
+            yesorno:
+                yes: Ano
+                no: Ne
+events:
+    setkani10podzim:
+        event_type_id: [12]
+        eventYears: [10] # specify for which years this machine is valid, by default all years
+        formLayout: setkani.form
+        paramScheme:
+            notifyBcc:
+                default: vyfuk@vyfuk.mff.cuni.cz
+            notifyFrom:
+                default: Pozdzimní setkáni řešitelů Výfuku <vyfuk@vyfuk.mff.cuni.cz>
+            capacity:
+                default: 0
+
+        baseMachines:
+            PARTICIPANT:
+                service: @event.ServiceEventParticipant
+
+                states:
+                    - applied
+                    - participated
+                    - missed
+                    - cancelled
+
+                transitions:
+                    __init->applied:
+                        condition: or(and(regOpen(),le(count('applied'),param('capacity'))), role('admin'))
+                        label: _('Přihlásit účastníka')
+                        onExecuted:
+                            - FKSDB\Events\Transitions\MailSender(confirmation, .self)
+                    applied->participated:
+                        condition: and(role('admin'),eventWas())
+                        label: _('Prezentovat')
+                    applied->missed:
+                        condition: and(role('admin'),eventWas())
+                        label: _('Nepřijel')
+                        behaviorType: danger
+                    applied->cancelled:
+                        condition: and(role('admin'),neg(or(state('missed'),state('participated'),state('cancelled'))))
+                        label: _('Zrušit přihlášku')
+                        behaviorType: danger
+                    cancelled->__terminated:
+                        condition: role('admin')
+                        label: _('Smazat přihlášku')
+
+                fields:
+                    person_id:
+                        label: _('Person')
+                        required: true
+                        modifiable: %events.setkani.appCond%
+                        default: fromLogin
+                        factory: RefPerson(%events.setkani.person%, email, or(state('__init'),role('admin')), role('admin'), false)
+                    event_fri:
+                        label: "Páteční hra"
+                        description: "V pátek od 17:00 pořádáme strategickou hru. Přihláška je závazná."
+                        factory: Chooser("Zúčastním se?", Options(%events.setkani_dist.yesorno%))
+                    event_sat:
+                        label: "Sobotní hra"
+                        description: "V sobotu od 15:00 pořádáme šifrovačku. Přihláška je závazná."
+                        factory: Chooser("Zúčastním se?", Options(%events.setkani_dist.yesorno%))
+                    event_sun:
+                        label: "Nedělní hra"
+                        description: "V neděli od 14:00 pořádáme hru na hrdiny. Přihláška je závazná."
+                        factory: Chooser("Zúčastním se?", Options(%events.setkani_dist.yesorno%))
+                    note:
+                       label: _('Další poznámky')
+
+        #
+        #   MACHINE
+        #   explanation: machine consists of several instances of base machines
+        #
+        machine:
+            baseMachines:
+                participant:
+                    bmName: PARTICIPANT
+                    label: _('Účastník')
+                    required: true
+                    primary: true
+            formAdjustments:
+                - FKSDB\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                - @events.privacyPolicy
+                - @events.captcha
+
+            processings:
+                - @events.privacyPolicy
