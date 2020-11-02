@@ -90,7 +90,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
 //                };
     }
 
-    private function getStudyYear(IControl $studyYearControl, IControl $personControl): int {
+    private function getStudyYear(IControl $studyYearControl, IControl $personControl): ?int {
         if ($studyYearControl->getValue()) {
             return $studyYearControl->getValue();
         }
