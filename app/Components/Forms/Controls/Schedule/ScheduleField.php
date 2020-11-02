@@ -3,13 +3,13 @@
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
 use FKSDB\Components\React\ReactComponentTrait;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\TextInput;
-use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class ScheduleField
@@ -66,7 +66,7 @@ class ScheduleField extends TextInput {
         }
     }
 
-    public function getData(): string {
+    public function getData(): array {
         $groups = $this->event->getScheduleGroups()->where('schedule_group_type', $this->type);
         $groupList = [];
         foreach ($groups as $row) {
@@ -74,7 +74,7 @@ class ScheduleField extends TextInput {
             $groupList[] = $this->serializeGroup($group);
         }
         $options = $this->getRenderOptions();
-        return json_encode(['groups' => $groupList, 'options' => $options]);
+        return ['groups' => $groupList, 'options' => $options];
     }
 
     private function getRenderOptions(): array {
