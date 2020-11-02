@@ -1,9 +1,33 @@
 parameters:
     events:
         setkani_dist:
-            yesorno:
-                yes: Ano
-                no: Ne
+            person:
+                person:
+                    other_name:
+                        required: true
+                    family_name:
+                        required: true
+                person_history:
+                    school_id:
+                        required: true
+                person_info:
+                    email:
+                        required: true
+                    born:
+                        required: true
+                    id_number:
+                        required: false
+                        description: _('Číslo OP/pasu, pokud máš')
+                    phone_parent_m:
+                        required: false
+                    phone_parent_d:
+                        required: false
+                    phone:
+                        required: true
+                        description: "Telefon (i s předvolbou státu), který budeš mít s sebou."
+                person_schedule:
+                    weekend:
+                        required: false
 events:
     setkani10podzim:
         event_type_id: [12]
