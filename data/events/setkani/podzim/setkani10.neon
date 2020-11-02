@@ -1,9 +1,14 @@
 parameters:
     events:
         setkani_dist:
-            yesorno:
-                yes: Ano
-                no: Ne
+            person:
+                person_schedule:
+                    friday:
+                        required: false
+                    saturday:
+                        required: false
+                    sunday:
+                        required: false
 events:
     setkani10podzim:
         event_type_id: [12]
