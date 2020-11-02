@@ -78,19 +78,7 @@ events:
                         required: true
                         modifiable: %events.setkani.appCond%
                         default: fromLogin
-                        factory: RefPerson(%events.setkani.person%, email, or(state('__init'),role('admin')), role('admin'), false)
-                    event_fri:
-                        label: "Páteční hra"
-                        description: "V pátek od 17:00 pořádáme strategickou hru. Přihláška je závazná."
-                        factory: Chooser("Zúčastním se?", Options(%events.setkani_dist.yesorno%))
-                    event_sat:
-                        label: "Sobotní hra"
-                        description: "V sobotu od 15:00 pořádáme šifrovačku. Přihláška je závazná."
-                        factory: Chooser("Zúčastním se?", Options(%events.setkani_dist.yesorno%))
-                    event_sun:
-                        label: "Nedělní hra"
-                        description: "V neděli od 14:00 pořádáme hru na hrdiny. Přihláška je závazná."
-                        factory: Chooser("Zúčastním se?", Options(%events.setkani_dist.yesorno%))
+                        factory: RefPerson(%events.setkani_dist.person%, email, or(state('__init'),role('admin')), role('admin'), false)
                     note:
                        label: _('Další poznámky')
 
