@@ -13,14 +13,13 @@ class Parameter {
     use SmartObject;
     use WithEventTrait;
 
-    /** @var mixed */
-    private $parameter;
+    private string $parameter;
 
     /**
      * Parameter constructor.
      * @param string $parameter
      */
-    public function __construct($parameter) {
+    public function __construct(string $parameter) {
         $this->parameter = $parameter;
     }
 

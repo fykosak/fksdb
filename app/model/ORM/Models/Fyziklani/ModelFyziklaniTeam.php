@@ -43,6 +43,12 @@ use Nette\Security\IResource;
 class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferencedModel, IResource, IContestReferencedModel, INodeCreator {
     public const RESOURCE_ID = 'fyziklani.team';
 
+    public const CATEGORY_HIGH_SCHOOL_A = 'A';
+    public const CATEGORY_HIGH_SCHOOL_B = 'B';
+    public const CATEGORY_HIGH_SCHOOL_C = 'C';
+    public const CATEGORY_ABROAD = 'F';
+    public const CATEGORY_OPEN = 'O';
+
     public function __toString(): string {
         return $this->name;
     }
@@ -197,5 +203,22 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
 
     public function getResourceId(): string {
         return self::RESOURCE_ID;
+    }
+
+    public static function mapCategoryToName(string $category): string {
+        switch ($category) {
+            case self::CATEGORY_HIGH_SCHOOL_A :
+                return _('Středoškoláci A');
+            case self::CATEGORY_HIGH_SCHOOL_B :
+                return _('Středoškoláci B');
+            case self::CATEGORY_HIGH_SCHOOL_C :
+                return _('Středoškoláci C');
+            case self::CATEGORY_ABROAD :
+                return _('Zahraniční SŠ');
+            case self::CATEGORY_OPEN :
+                return _('Open');
+            default:
+                throw new \InvalidArgumentException();
+        }
     }
 }

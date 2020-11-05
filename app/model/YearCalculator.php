@@ -6,7 +6,6 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelContestYear;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\ORM\Services\ServiceContestYear;
-use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
@@ -47,12 +46,12 @@ class YearCalculator {
     }
 
     /**
-     * @param ActiveRow|ModelContest $contest
+     * @param ModelContest $contest
      * @param int|null $year
      * @return int
      * @throws InvalidArgumentException
      */
-    public function getAcademicYear(ActiveRow $contest, ?int $year): int {
+    public function getAcademicYear(ModelContest $contest, ?int $year): int {
         if (!isset($this->cache[$contest->contest_id]) || !isset($this->cache[$contest->contest_id][$year])) {
             throw new InvalidArgumentException("No academic year defined for {$contest->contest_id}:$year.");
         }
@@ -76,7 +75,7 @@ class YearCalculator {
     }
 
     public function getGraduationYear(int $studyYear, ?int $acYear): int {
-        $acYear = ($acYear !== null) ? $acYear : $this->getCurrentAcademicYear();
+        $acYear = is_null($acYear) ? $this->getCurrentAcademicYear() : $acYear;
 
         if ($studyYear >= 6 && $studyYear <= 9) {
             return $acYear + (5 - ($studyYear - 9));
@@ -102,7 +101,7 @@ class YearCalculator {
     }
 
     public function isValidYear(ModelContest $contest, ?int $year): bool {
-        return $year !== null && $year >= $this->getFirstYear($contest) && $year <= $this->getLastYear($contest);
+        return !is_null($year) && $year >= $this->getFirstYear($contest) && $year <= $this->getLastYear($contest);
     }
 
     /**
