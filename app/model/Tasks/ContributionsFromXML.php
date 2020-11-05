@@ -6,7 +6,7 @@ use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Services\ServiceOrg;
 use FKSDB\ORM\Services\ServiceTaskContribution;
-use Pipeline\Stage;
+use FKSDB\Pipeline\Stage;
 use SimpleXMLElement;
 
 
@@ -17,34 +17,19 @@ use SimpleXMLElement;
  */
 class ContributionsFromXML extends Stage {
 
-    /**
-     * @var SeriesData
-     */
+    /** @var SeriesData */
     private $data;
 
-    /**
-     * @var array   contribution type => xml element
-     */
-    private static $contributionFromXML = [
+    /** @var array   contribution type => xml element */
+    private static array $contributionFromXML = [
         'author' => 'authors/author',
         'solution' => 'solution-authors/solution-author',
     ];
 
-    /**
-     * @var ServiceTaskContribution
-     */
-    private $taskContributionService;
+    private ServiceTaskContribution $taskContributionService;
 
-    /**
-     * @var ServiceOrg
-     */
-    private $serviceOrg;
+    private ServiceOrg $serviceOrg;
 
-    /**
-     * ContributionsFromXML2 constructor.
-     * @param ServiceTaskContribution $taskContributionService
-     * @param ServiceOrg $serviceOrg
-     */
     public function __construct(ServiceTaskContribution $taskContributionService, ServiceOrg $serviceOrg) {
         $this->taskContributionService = $taskContributionService;
         $this->serviceOrg = $serviceOrg;
@@ -53,11 +38,11 @@ class ContributionsFromXML extends Stage {
     /**
      * @param SeriesData $data
      */
-    public function setInput($data) {
+    public function setInput($data): void {
         $this->data = $data;
     }
 
-    public function process() {
+    public function process(): void {
         $xml = $this->data->getData();
         foreach ($xml->problems[0]->problem as $task) {
             $this->processTask($task);
@@ -71,11 +56,7 @@ class ContributionsFromXML extends Stage {
         return $this->data;
     }
 
-    /**
-     * @param SimpleXMLElement $XMLTask
-     * @return void
-     */
-    private function processTask(SimpleXMLElement $XMLTask) {
+    private function processTask(SimpleXMLElement $XMLTask): void {
         $tasks = $this->data->getTasks();
         $tasknr = (int)(string)$XMLTask->number;
 
@@ -83,7 +64,7 @@ class ContributionsFromXML extends Stage {
         $this->taskContributionService->getConnection()->beginTransaction();
 
         foreach (self::$contributionFromXML as $type => $xmlElement) {
-            list($parent, $child) = explode('/', $xmlElement);
+            [$parent, $child] = explode('/', $xmlElement);
             $parentEl = $XMLTask->{$parent}[0];
             // parse contributors
             $contributors = [];
@@ -101,7 +82,7 @@ class ContributionsFromXML extends Stage {
                 $org = $this->serviceOrg->findByTeXSignature($signature, $this->data->getContest()->contest_id);
 
                 if (!$org) {
-                    $this->log(new Message(sprintf(_("Neznámý TeX identifikátor '%s'."), $signature), ILogger::INFO));
+                    $this->log(new Message(sprintf(_('Unknown TeX ident \'%s\'.'), $signature), ILogger::INFO));
                     continue;
                 }
                 $contributors[] = $org;

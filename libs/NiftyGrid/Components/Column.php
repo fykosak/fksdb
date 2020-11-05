@@ -15,7 +15,7 @@ use NiftyGrid,
 	NiftyGrid\FilterCondition;
 
 
-class Column extends \Nette\Application\UI\PresenterComponent
+class Column extends \Nette\Application\UI\Component
 {
 	/** @var string */
 	public $name;
@@ -128,17 +128,20 @@ class Column extends \Nette\Application\UI\PresenterComponent
 	 */
 	public function prepareValue($row)
 	{
-		if(!empty($this->renderer))
-			$value = call_user_func($this->renderer, (object)$row);
-		else
-			$value = $row[$this->name];
+		if(!empty($this->renderer)) {
+            $value = ($this->renderer)((object)$row);
+        }		else {
+            $value = $row[$this->name];
+        }
 
-		if(!empty($this->truncate))
-			return \Nette\Utils\Strings::truncate($value, $this->truncate);
-		else
-			return $value;
+		if(!empty($this->truncate)) {
+            return \Nette\Utils\Strings::truncate($value, $this->truncate);
+        } else {
+            return $value;
+        }
 	}
 
+private $renderer;
 	/**
 	 * @param callback $renderer
 	 * @return Column

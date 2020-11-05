@@ -3,14 +3,13 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use SQL\SearchableDataSource;
+use FKSDB\SQL\SearchableDataSource;
 
 /**
  *
@@ -18,16 +17,9 @@ use SQL\SearchableDataSource;
  */
 class TeachersGrid extends BaseGrid {
 
-    /**
-     * @var ServiceTeacher
-     */
-    private $serviceTeacher;
+    private ServiceTeacher $serviceTeacher;
 
-    /**
-     * @param ServiceTeacher $serviceTeacher
-     * @return void
-     */
-    public function injectServiceTeacher(ServiceTeacher $serviceTeacher) {
+    final public function injectServiceTeacher(ServiceTeacher $serviceTeacher): void {
         $this->serviceTeacher = $serviceTeacher;
     }
 
@@ -51,11 +43,8 @@ class TeachersGrid extends BaseGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
-        //
-        // columns
-        //
         $this->addColumns([
             'person.full_name',
             'teacher.note',
@@ -65,18 +54,7 @@ class TeachersGrid extends BaseGrid {
             'teacher.number_brochures',
             'school.school',
         ]);
-        //
-        // operations
-        //
-        $this->addButton('edit', _('Edit'))
-            ->setText(_('Edit'))
-            ->setLink(function (ModelTeacher $row) {
-                return $this->getPresenter()->link('edit', ['id' => $row->teacher_id]);
-            });
-        $this->addButton('detail', _('Detail'))
-            ->setText(_('Detail'))
-            ->setLink(function (ModelTeacher $row) {
-                return $this->getPresenter()->link('detail', ['id' => $row->teacher_id]);
-            });
+        $this->addLink('teacher.edit', false);
+        $this->addLink('teacher.detail', false);
     }
 }

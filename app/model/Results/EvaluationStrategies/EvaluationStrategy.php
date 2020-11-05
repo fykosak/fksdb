@@ -13,29 +13,29 @@ abstract class EvaluationStrategy {
 
     /**
      * Should return SQL expression with points for given task.
-     * There are avilable tables 'contestant' aliased to 'ct' and
-     * 'submit' aliaded to 's'.
+     * There are available tables 'contestant' aliased to 'ct' and
+     * 'submit' aliased to 's'.
      *
      * @param ActiveRow $task
      * @return string
      */
-    abstract public function getPointsColumn(ActiveRow $task);
+    abstract public function getPointsColumn(ActiveRow $task): string;
 
     /**
      * Should return SQL expression with points for given submit.
-     * There are avilable tables 'contestant' aliased to 'ct',
-     * 'submit' aliaded to 's' and 'task' to 't'.
+     * There are available tables 'contestant' aliased to 'ct',
+     * 'submit' aliased to 's' and 'task' to 't'.
      * The returned expression is summed over group by series and contestant.
      *
-     * @return string
+     * @return string|null
      */
-    abstract public function getSumColumn();
+    abstract public function getSumColumn(): string;
 
     /**
      * @param ModelCategory $category
      * @return array of int (study years of students with category)
      */
-    abstract public function categoryToStudyYears(ModelCategory $category);
+    abstract public function categoryToStudyYears(ModelCategory $category): array;
 
     /**
      * @return ModelCategory[]
@@ -59,5 +59,5 @@ abstract class EvaluationStrategy {
      * @param ModelCategory $category
      * @return int
      */
-    abstract public function getTaskPoints(ActiveRow $task, ModelCategory $category);
+    abstract public function getTaskPoints(ActiveRow $task, ModelCategory $category): ?int;
 }

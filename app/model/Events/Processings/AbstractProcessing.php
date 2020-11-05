@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Events\Processings;
+namespace FKSDB\Events\Processing;
 
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
@@ -22,63 +22,35 @@ use Nette\Utils\ArrayHash;
 abstract class AbstractProcessing implements IProcessing {
     use SmartObject;
 
-    const DELIMITER = '.';
-    const WILDCART = '*';
+    public const DELIMITER = '.';
+    public const WILD_CART = '*';
+
+    private array $valuesPathCache;
+    private array $formPathCache;
+    private array $states;
+    private Holder $holder;
 
     /**
-     * @var mixed
-     */
-    private $valuesPathCache;
-    /**
-     * @var mixed
-     */
-    private $formPathCache;
-    /**
-     * @var mixed
-     */
-    private $states;
-    /**
-     * @var Holder
-     */
-    private $holder;
-    /**
-     * @var mixed
-     */
-    private $values;
-
-    /**
-     * @param $states
+     * @param array $states
      * @param ArrayHash $values
      * @param Machine $machine
      * @param Holder $holder
      * @param ILogger $logger
      * @param Form|null $form
+     * @return mixed|void
      */
-    final public function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
+    final public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form = null) {
         $this->states = $states;
         $this->holder = $holder;
         $this->setValues($values);
         $this->setForm($form);
-        $this->_process($states, $values, $machine, $holder, $logger, $form);
+        $this->innerProcess($states, $values, $machine, $holder, $logger, $form);
     }
 
-    /**
-     * @param $states
-     * @param ArrayHash $values
-     * @param Machine $machine
-     * @param Holder $holder
-     * @param ILogger $logger
-     * @param Form|null $form
-     * @return void
-     */
-    abstract protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null);
+    abstract protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void;
 
-    /**
-     * @param $mask
-     * @return bool
-     */
-    final protected function hasWildcart($mask) {
-        return strpos($mask, self::WILDCART) !== false;
+    final protected function hasWildCart(string $mask): bool {
+        return strpos($mask, self::WILD_CART) !== false;
     }
 
     /**
@@ -86,9 +58,9 @@ abstract class AbstractProcessing implements IProcessing {
      * @param string $mask
      * @return IControl[]
      */
-    final protected function getValue($mask) {
+    final protected function getValue(string $mask): array {
         $keys = array_keys($this->valuesPathCache);
-        $pMask = str_replace(self::WILDCART, '__WC__', $mask);
+        $pMask = str_replace(self::WILD_CART, '__WC__', $mask);
         $pMask = preg_quote($pMask);
         $pMask = str_replace('__WC__', '(.+)', $pMask);
         $pattern = "/^$pMask\$/";
@@ -106,9 +78,9 @@ abstract class AbstractProcessing implements IProcessing {
      * @param string $mask
      * @return IControl[]
      */
-    final protected function getControl($mask) {
+    final protected function getControl(string $mask): array {
         $keys = array_keys($this->formPathCache);
-        $pMask = str_replace(self::WILDCART, '__WC__', $mask);
+        $pMask = str_replace(self::WILD_CART, '__WC__', $mask);
         $pMask = preg_quote($pMask);
         $pMask = str_replace('__WC__', '(.+)', $pMask);
         $pattern = "/^$pMask\$/";
@@ -127,13 +99,13 @@ abstract class AbstractProcessing implements IProcessing {
      * When it returns false, correct value can be loaded from the model
      * (which is not updated yet).
      *
-     * @param $name
+     * @param string $name
      * @return bool
      */
-    final protected function isBaseReallyEmpty($name) {
+    final protected function isBaseReallyEmpty(string $name): bool {
         $baseHolder = $this->holder->getBaseHolder($name);
         if ($baseHolder->getModelState() == BaseMachine::STATE_INIT) {
-            return true; // it was empty since begining
+            return true; // it was empty since beginning
         }
         if (isset($this->states[$name]) && $this->states[$name] == BaseMachine::STATE_TERMINATED) {
             return true; // it has been deleted by user
@@ -145,9 +117,8 @@ abstract class AbstractProcessing implements IProcessing {
      * @param ArrayHash $values
      * @param string $prefix
      */
-    private function setValues(ArrayHash $values, $prefix = '') {
+    private function setValues(ArrayHash $values, $prefix = ''): void {
         if (!$prefix) {
-            $this->values = $values;
             $this->valuesPathCache = [];
         }
 
@@ -161,10 +132,7 @@ abstract class AbstractProcessing implements IProcessing {
         }
     }
 
-    /**
-     * @param Form $form
-     */
-    private function setForm($form) {
+    private function setForm(?Form $form): void {
         $this->formPathCache = [];
         if (!$form) {
             return;

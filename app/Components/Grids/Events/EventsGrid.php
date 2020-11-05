@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceEvent;
-use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
@@ -21,53 +21,37 @@ use NiftyGrid\DuplicateGlobalButtonException;
  */
 class EventsGrid extends BaseGrid {
 
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
-    /**
-     * @var ModelContest
-     */
-    private $contest;
-    /**
-     * @var int
-     */
-    private $year;
+    private ServiceEvent $serviceEvent;
 
-    /**
-     * EventsGrid constructor.
-     * @param Container $container
-     * @param ModelContest $contest
-     * @param int $year
-     */
+    private ModelContest $contest;
+
+    private int $year;
+
     public function __construct(Container $container, ModelContest $contest, int $year) {
         parent::__construct($container);
         $this->contest = $contest;
         $this->year = $year;
     }
 
-    /**
-     * @param ServiceEvent $serviceEvent
-     * @return void
-     */
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+    final public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 
-    public function getData(): IDataSource {
+    protected function getData(): IDataSource {
         $events = $this->serviceEvent->getEvents($this->contest, $this->year);
         return new NDataSource($events);
     }
 
     /**
      * @param Presenter $presenter
-     * @throws BadRequestException
+     *
+     * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
-     * @throws DuplicateButtonException
+     * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
         $this->setDefaultOrder('event.begin ASC');
 
@@ -82,7 +66,7 @@ class EventsGrid extends BaseGrid {
         $this->addLinkButton(':Event:Dashboard:default', 'detail', _('Detail'), true, ['eventId' => 'event_id']);
         $this->addLinkButton('edit', 'edit', _('Edit'), true, ['id' => 'event_id']);
 
-        $this->addLink('event_participant.list');
+        $this->addLink('event.application.list');
 
         $this->addLinkButton(':Event:EventOrg:list', 'org', _('Organisers'), true, ['eventId' => 'event_id']);
 

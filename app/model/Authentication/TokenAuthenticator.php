@@ -1,6 +1,6 @@
 <?php
 
-namespace Authentication;
+namespace FKSDB\Authentication;
 
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
@@ -16,26 +16,12 @@ use Nette\Security\AuthenticationException;
  */
 class TokenAuthenticator extends AbstractAuthenticator {
 
-    const PARAM_AUTH_TOKEN = 'at';
-    const SESSION_NS = 'auth';
+    public const PARAM_AUTH_TOKEN = 'at';
+    public const SESSION_NS = 'auth';
 
-    /**
-     * @var ServiceAuthToken
-     */
-    private $authTokenService;
+    private ServiceAuthToken $authTokenService;
+    private Session $session;
 
-    /**
-     * @var Session
-     */
-    private $session;
-
-    /**
-     * TokenAuthenticator constructor.
-     * @param ServiceAuthToken $authTokenService
-     * @param Session $session
-     * @param ServiceLogin $serviceLogin
-     * @param YearCalculator $yearCalculator
-     */
     public function __construct(ServiceAuthToken $authTokenService, Session $session, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->authTokenService = $authTokenService;
@@ -47,10 +33,10 @@ class TokenAuthenticator extends AbstractAuthenticator {
      * @return ModelLogin
      * @throws AuthenticationException
      */
-    public function authenticate($tokenData) {
+    public function authenticate($tokenData): ModelLogin {
         $token = $this->authTokenService->verifyToken($tokenData);
         if (!$token) {
-            throw new AuthenticationException(_('Autentizační token je neplatný.'));
+            throw new AuthenticationException(_('Invalid authentication token.'));
         }
         // login by the identity
         $login = $token->getLogin();
@@ -70,7 +56,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
      *
      * @return void
      */
-    public function disposeAuthToken() {
+    public function disposeAuthToken(): void {
         $section = $this->session->getSection(self::SESSION_NS);
         if (isset($section->token)) {
             $this->authTokenService->disposeToken($section->token);
@@ -79,10 +65,10 @@ class TokenAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @param string $tokenType require specific token type
+     * @param string|null $tokenType require specific token type
      * @return bool true iff user has been authenticated by the authentication token
      */
-    public function isAuthenticatedByToken($tokenType = null) {
+    public function isAuthenticatedByToken($tokenType = null): bool {
         $section = $this->session->getSection(self::SESSION_NS);
         if (isset($section->token)) {
             return ($tokenType === null) ? true : ($section->type == $tokenType);
@@ -91,7 +77,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
     }
 
     /**
-     * @return array
+     * @return mixed
      */
     public function getTokenData() {
         if (!$this->isAuthenticatedByToken()) {
@@ -101,7 +87,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
         return $section->data;
     }
 
-    public function disposeTokenData() {
+    public function disposeTokenData(): void {
         if (!$this->isAuthenticatedByToken()) {
             throw new InvalidStateException('Not authenticated by token.');
         }
@@ -109,11 +95,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
         unset($section->data);
     }
 
-    /**
-     * @param ModelAuthToken $token
-     * @return void
-     */
-    private function storeAuthToken(ModelAuthToken $token) {
+    private function storeAuthToken(ModelAuthToken $token): void {
         $section = $this->session->getSection(self::SESSION_NS);
         $section->token = $token->token;
         $section->type = $token->type;

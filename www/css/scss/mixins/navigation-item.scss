@@ -1,4 +1,4 @@
-@mixin navigation-item($color,$background) {
+@mixin navigation-item($color,$background,$apply-hover : true) {
   height: 12rem;
   width: 12rem;
   text-align: center;
@@ -8,12 +8,22 @@
   .icon {
     font-size: 5rem;
   }
-
-  &:hover, &:focus {
-    transition-duration: 200ms;
-    background-color: $color;
-    color: $background;
+  @if $apply-hover {
+    &:hover, &:focus {
+      transition-duration: 200ms;
+      background-color: $color;
+      color: $background;
+    }
+  } @else {
+    &:hover, &:focus {
+      background-color: $background;
+      color: $color;
+      transition-duration: 200ms;
+      border-color: $color;
+      border-width: 1px;
+    }
   }
+
 
   @media (max-width: 767px) {
     text-align: start;

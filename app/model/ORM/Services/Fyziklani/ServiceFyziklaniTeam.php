@@ -7,18 +7,17 @@ use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Tables\TypedTableSelection;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Červeňák <miso@fykos.cz>
+ * @method ModelFyziklaniTeam|null findByPrimary($key)
  */
 class ServiceFyziklaniTeam extends AbstractServiceSingle {
 
-    public function getModelClassName(): string {
-        return ModelFyziklaniTeam::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_E_FYZIKLANI_TEAM;
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_E_FYZIKLANI_TEAM, ModelFyziklaniTeam::class);
     }
 
     public function findParticipating(ModelEvent $event): TypedTableSelection {
@@ -57,8 +56,6 @@ class ServiceFyziklaniTeam extends AbstractServiceSingle {
             $query->where('category', $category);
         }
         $query->where('points', null);
-        $count = $query->count();
-        return $count == 0;
+        return $query->count() == 0;
     }
-
 }

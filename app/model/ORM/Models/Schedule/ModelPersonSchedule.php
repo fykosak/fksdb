@@ -2,13 +2,12 @@
 
 namespace FKSDB\ORM\Models\Schedule;
 
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\IPaymentReferencedModel;
 use FKSDB\ORM\Models\IPersonReferencedModel;
-use FKSDB\ORM\Models\IScheduleGroupReferencedModel;
-use FKSDB\ORM\Models\IScheduleItemReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\ModelPerson;
@@ -16,7 +15,6 @@ use FKSDB\Transitions\IStateModel;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
 use Nette\Database\Table\ActiveRow;
-use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class ModelPersonSchedule
@@ -52,10 +50,7 @@ class ModelPersonSchedule extends AbstractModelSingle implements
         return $this->getScheduleGroup()->getEvent();
     }
 
-    /**
-     * @return ModelPayment|null
-     */
-    public function getPayment() {
+    public function getPayment(): ?ModelPayment {
         $data = $this->related(DbNames::TAB_SCHEDULE_PAYMENT, 'person_schedule_id')->select('payment.*')->fetch();
         if (!$data) {
             return null;
@@ -85,8 +80,8 @@ class ModelPersonSchedule extends AbstractModelSingle implements
             case ModelScheduleGroup::TYPE_ACCOMMODATION:
                 return sprintf(_('Accommodation for %s from %s to %s in %s'),
                     $this->getPerson()->getFullName(),
-                    $group->start->format(_('__date_format')),
-                    $group->end->format(_('__date_format')),
+                    $group->start->format(_('__date')),
+                    $group->end->format(_('__date')),
                     $item->name_cs);
             case ModelScheduleGroup::TYPE_WEEKEND:
                 return $item->getLabel();
@@ -95,18 +90,11 @@ class ModelPersonSchedule extends AbstractModelSingle implements
         }
     }
 
-    /**
-     * @param $newState
-     * @return void
-     */
-    public function updateState($newState) {
+    public function updateState(?string $newState): void {
         $this->update(['state' => $newState]);
     }
 
-    /**
-     * @return null|string
-     */
-    public function getState() {
+    public function getState(): ?string {
         return $this->state;
     }
 

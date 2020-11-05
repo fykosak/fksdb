@@ -2,10 +2,10 @@
 
 namespace MockEnvironment;
 
-use Authentication\LoginUserStorage;
+use FKSDB\Authentication\LoginUserStorage;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
-use Mail\MailTemplateFactory;
+use FKSDB\Mail\MailTemplateFactory;
 use Nette\Application\IPresenter;
 use Nette\Application\IPresenterFactory;
 use Nette\DI\Container;
@@ -18,10 +18,8 @@ use Tester\Assert;
  * @author Michal Koutný <michal@fykos.cz>
  */
 trait MockApplicationTrait {
-    /**
-     * @var Container
-     */
-    private $container;
+
+    protected Container $container;
 
     /**
      * @param Container $container
@@ -31,20 +29,16 @@ trait MockApplicationTrait {
         $this->container = $container;
     }
 
-    /**
-     * @return Container
-     */
-    protected function getContainer() {
+    protected function getContainer(): Container {
         return $this->container;
     }
 
-    protected function mockApplication() {
-        $container = $this->getContainer();
+    protected function mockApplication(): void {
         $mockPresenter = new MockPresenter();
-        $container->callInjects($mockPresenter);
         $application = new MockApplication($mockPresenter);
 
-        $mailFactory = $container->getByType(MailTemplateFactory::class);
+        $this->container->callInjects($mockPresenter);
+        $mailFactory = $this->getContainer()->getByType(MailTemplateFactory::class);
         $mailFactory->injectApplication($application);
     }
 
@@ -53,7 +47,7 @@ trait MockApplicationTrait {
      * @param null $timeout
      * @return void
      */
-    protected function fakeProtection($token, $timeout = null) {
+    protected function fakeProtection($token, $timeout = null): void {
         $container = $this->getContainer();
         /** @var Session $session */
         $session = $container->getService('session');
@@ -62,7 +56,7 @@ trait MockApplicationTrait {
         $section->$key = $token;
     }
 
-    protected function authenticate($login) {
+    protected function authenticate($login): void {
         $container = $this->getContainer();
         if (!$login instanceof ModelLogin) {
             $login = $container->getByType(ServiceLogin::class)->findByPrimary($login);

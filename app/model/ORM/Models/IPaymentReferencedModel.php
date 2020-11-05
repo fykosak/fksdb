@@ -6,8 +6,5 @@ namespace FKSDB\ORM\Models;
  * *
  */
 interface IPaymentReferencedModel {
-    /**
-     * @return ModelPayment|null
-     */
-    public function getPayment();
+    public function getPayment(): ?ModelPayment;
 }

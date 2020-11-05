@@ -2,14 +2,13 @@
 
 namespace FKSDB;
 
-use FKSDB\Config\GlobalParameters;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelContestYear;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\ORM\Services\ServiceContestYear;
 use InvalidArgumentException;
+use Nette\DI\Container;
 use Nette\InvalidStateException;
-use Nette\Utils\Arrays;
 
 /**
  * Class FKSDB\YearCalculator
@@ -19,61 +18,40 @@ class YearCalculator {
     /**
      * @const No. of years of shift for forward registration.
      */
-    const FORWARD_SHIFT = 1;
+    private const FORWARD_SHIFT = 1;
 
     /**
      * @const First month of the academic year (for high schoolers).
      */
-    const FIRST_AC_MONTH = 9;
+    public const FIRST_AC_MONTH = 9;
 
-    /**
-     * @var ServiceContestYear
-     */
-    private $serviceContestYear;
+    private ServiceContestYear $serviceContestYear;
 
-    /**
-     * @var ServiceContest
-     */
-    private $serviceContest;
+    private ServiceContest $serviceContest;
 
-    /**
-     * @var GlobalParameters
-     */
-    private $globalParameters;
-    /**
-     * @var int[][]
-     */
-    private $cache = [];
-    /**
-     * @var int[][]
-     */
-    private $revCache = [];
-    /**
-     * @var int
-     */
-    private $acYear;
+    private array $cache = [];
 
-    /**
-     * FKSDB\YearCalculator constructor.
-     * @param ServiceContestYear $serviceContestYear
-     * @param ServiceContest $serviceContest
-     * @param GlobalParameters $globalParameters
-     */
-    public function __construct(ServiceContestYear $serviceContestYear, ServiceContest $serviceContest, GlobalParameters $globalParameters) {
+    private array $revCache = [];
+
+    private ?int $acYear;
+
+    private Container $container;
+
+    public function __construct(ServiceContestYear $serviceContestYear, ServiceContest $serviceContest, Container $container) {
         $this->serviceContestYear = $serviceContestYear;
         $this->serviceContest = $serviceContest;
-        $this->globalParameters = $globalParameters;
-        $this->acYear = Arrays::get($this->globalParameters['tester'], 'acYear', null);
+        $this->container = $container;
+        $this->acYear = $container->getParameters()['tester']['acYear'] ?? null;
         $this->preloadCache();
     }
 
     /**
      * @param ModelContest $contest
-     * @param int $year
+     * @param int|null $year
      * @return int
      * @throws InvalidArgumentException
      */
-    public function getAcademicYear(ModelContest $contest, int $year): int {
+    public function getAcademicYear(ModelContest $contest, ?int $year): int {
         if (!isset($this->cache[$contest->contest_id]) || !isset($this->cache[$contest->contest_id][$year])) {
             throw new InvalidArgumentException("No academic year defined for {$contest->contest_id}:$year.");
         }
@@ -96,13 +74,8 @@ class YearCalculator {
         return $calYear;
     }
 
-    /**
-     * @param int $studyYear
-     * @param int|null $acYear
-     * @return int
-     */
-    public function getGraduationYear(int $studyYear, int $acYear = null): int {
-        $acYear = ($acYear !== null) ? $acYear : $this->getCurrentAcademicYear();
+    public function getGraduationYear(int $studyYear, ?int $acYear): int {
+        $acYear = is_null($acYear) ? $this->getCurrentAcademicYear() : $acYear;
 
         if ($studyYear >= 6 && $studyYear <= 9) {
             return $acYear + (5 - ($studyYear - 9));
@@ -110,7 +83,7 @@ class YearCalculator {
         if ($studyYear >= 1 && $studyYear <= 4) {
             return $acYear + (5 - $studyYear);
         }
-        throw new \Nette\InvalidArgumentException('Graduation year not match');
+        throw new InvalidArgumentException('Graduation year not match');
     }
 
     public function getCurrentYear(ModelContest $contest): int {
@@ -127,8 +100,8 @@ class YearCalculator {
         return end($years);
     }
 
-    public function isValidYear(ModelContest $contest, int $year = null): bool {
-        return $year !== null && $year >= $this->getFirstYear($contest) && $year <= $this->getLastYear($contest);
+    public function isValidYear(ModelContest $contest, ?int $year): bool {
+        return !is_null($year) && $year >= $this->getFirstYear($contest) && $year <= $this->getLastYear($contest);
     }
 
     /**
@@ -139,12 +112,12 @@ class YearCalculator {
     public function getForwardShift(ModelContest $contest): int {
         $calMonth = date('m');
         if ($calMonth < self::FIRST_AC_MONTH) {
-            $contestName = $this->globalParameters['contestMapping'][$contest->contest_id];
+            $contestName = $this->container->getParameters()['contestMapping'][$contest->contest_id];
             $forwardYear = $this->getCurrentYear($contest) + self::FORWARD_SHIFT;
             $hasForwardYear = isset($this->cache[$contest->contest_id]) && isset($this->cache[$contest->contest_id][$forwardYear]);
 
             /* Apply the forward shift only when the appropriate year is defined in the database */
-            if ($this->globalParameters[$contestName]['forwardRegistration'] && $hasForwardYear) {
+            if ($this->container->getParameters()[$contestName]['forwardRegistration'] && $hasForwardYear) {
                 return self::FORWARD_SHIFT;
             } else {
                 return 0;
@@ -154,7 +127,7 @@ class YearCalculator {
         }
     }
 
-    private function preloadCache() {
+    private function preloadCache(): void {
         /** @var ModelContestYear $model */
         foreach ($this->serviceContestYear->getTable()->order('year') as $model) {
             if (!isset($this->cache[$model->contest_id])) {
@@ -166,17 +139,17 @@ class YearCalculator {
         }
 
         if (!$this->cache) {
-            throw new InvalidStateException('FKSDB\YearCalculator cannot be initalized, table contest_year is probably empty.');
+            throw new InvalidStateException('FKSDB\YearCalculator cannot be initialized, table contest_year is probably empty.');
         }
 
         $pk = $this->serviceContest->getPrimary();
         $contests = $this->serviceContest->fetchPairs($pk, $pk);
         foreach ($contests as $contestId) {
             if (!array_key_exists($contestId, $this->revCache)) {
-                throw new InvalidStateException(sprintf('Table contest_year doesn\'t specify any years at all for contest %s.', $contestId));
+                throw new InvalidStateException(sprintf('Table contest_year does not specify any years at all for contest %s.', $contestId));
             }
             if (!array_key_exists($this->getCurrentAcademicYear(), $this->revCache[$contestId])) {
-                throw new InvalidStateException(sprintf('Table contest_year doesn\'t specify year for contest %s for current academic year %s', $contestId, $this->getCurrentAcademicYear()));
+                throw new InvalidStateException(sprintf('Table contest_year does not specify year for contest %s for current academic year %s', $contestId, $this->getCurrentAcademicYear()));
             }
         }
     }

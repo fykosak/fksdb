@@ -5,10 +5,11 @@ namespace FKSDB\ORM\Models\Schedule;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\IEventReferencedModel;
-use FKSDB\ORM\Models\IScheduleGroupReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\Payment\Price;
 use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
+use FKSDB\WebService\INodeCreator;
+use FKSDB\WebService\XMLHelper;
 use LogicException;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
@@ -29,8 +30,8 @@ use Nette\Security\IResource;
  * @property-read string description_cs
  * @property-read string description_en
  */
-class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupReferencedModel, IEventReferencedModel, IResource {
-    const RESOURCE_ID = 'event.scheduleItem';
+class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupReferencedModel, IEventReferencedModel, IResource, INodeCreator {
+    public const RESOURCE_ID = 'event.scheduleItem';
 
     public function getScheduleGroup(): ModelScheduleGroup {
         return ModelScheduleGroup::createFromActiveRow($this->schedule_group);
@@ -59,11 +60,10 @@ class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupRef
     public function getInterested(): GroupedSelection {
         return $this->related(DbNames::TAB_PERSON_SCHEDULE);
     }
+
     /* ****** CAPACITY CALCULATION *******/
-    /**
-     * @return int|null
-     */
-    public function getCapacity() {
+
+    public function getCapacity(): ?int {
         return $this->capacity;
     }
 
@@ -127,10 +127,36 @@ class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupRef
         ];
     }
 
-    /**
-     * @return string
-     */
-    public function getResourceId() {
+    public function createXMLNode(\DOMDocument $doc): \DOMNode {
+        $node = $doc->createElement('scheduleItem');
+        $node->setAttribute('scheduleItemId', $this->schedule_item_id);
+        XMLHelper::fillArrayToNode([
+            'scheduleGroupId' => $this->schedule_group_id,
+            'totalCapacity' => $this->capacity,
+            'usedCapacity' => $this->getUsedCapacity(),
+            'scheduleItemId' => $this->schedule_item_id,
+            'requireIdNumber' => $this->require_id_number,
+        ], $doc, $node);
+        XMLHelper::fillArrayArgumentsToNode('lang', [
+            'description' => [
+                'cs' => $this->description_cs,
+                'en' => $this->description_en,
+            ],
+            'name' => [
+                'cs' => $this->name_cs,
+                'en' => $this->name_en,
+            ],
+        ], $doc, $node);
+        XMLHelper::fillArrayArgumentsToNode('currency', [
+            'price' => [
+                'eur' => $this->price_eur,
+                'czk' => $this->price_czk,
+            ],
+        ], $doc, $node);
+        return $node;
+    }
+
+    public function getResourceId(): string {
         return self::RESOURCE_ID;
     }
 }

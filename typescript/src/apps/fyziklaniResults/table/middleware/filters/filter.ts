@@ -1,4 +1,4 @@
-import { Team } from '../../../../fyziklani/helpers/interfaces';
+import { Team } from '@apps/fyziklani/helpers/interfaces';
 
 export class Filter {
     public name: string;

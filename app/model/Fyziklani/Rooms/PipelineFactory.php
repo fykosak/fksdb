@@ -5,7 +5,7 @@ namespace FKSDB\model\Fyziklani\Rooms;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use Pipeline\Pipeline;
+use FKSDB\Pipeline\Pipeline;
 
 /**
  *
@@ -13,15 +13,8 @@ use Pipeline\Pipeline;
  */
 class PipelineFactory {
 
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceTeam;
+    private ServiceFyziklaniTeam $serviceTeam;
 
-    /**
-     * PipelineFactory constructor.
-     * @param ServiceFyziklaniTeam $serviceTeam
-     */
     public function __construct(ServiceFyziklaniTeam $serviceTeam) {
         $this->serviceTeam = $serviceTeam;
     }

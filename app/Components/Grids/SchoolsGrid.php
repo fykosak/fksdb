@@ -2,17 +2,16 @@
 
 namespace FKSDB\Components\Grids;
 
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use NiftyGrid\DuplicateGlobalButtonException;
-use SQL\SearchableDataSource;
+use FKSDB\SQL\SearchableDataSource;
 
 /**
  *
@@ -20,16 +19,9 @@ use SQL\SearchableDataSource;
  */
 class SchoolsGrid extends BaseGrid {
 
-    /**
-     * @var ServiceSchool
-     */
-    private $serviceSchool;
+    private ServiceSchool $serviceSchool;
 
-    /**
-     * @param ServiceSchool $serviceSchool
-     * @return void
-     */
-    public function injectServiceSchool(ServiceSchool $serviceSchool) {
+    final public function injectServiceSchool(ServiceSchool $serviceSchool): void {
         $this->serviceSchool = $serviceSchool;
     }
 
@@ -50,8 +42,9 @@ class SchoolsGrid extends BaseGrid {
      * @return void
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
+     * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         //
@@ -59,11 +52,12 @@ class SchoolsGrid extends BaseGrid {
         //
         $this->addColumn('name', _('Name'));
         $this->addColumn('city', _('City'));
-        $this->addColumn('active', _('Exists?'))->setRenderer(function (ModelSchool $row) {
+        $this->addColumn('active', _('Active?'))->setRenderer(function (ModelSchool $row): Html {
             return Html::el('span')->addAttributes(['class' => ('badge ' . ($row->active ? 'badge-success' : 'badge-danger'))])->addText(($row->active));
         });
 
-        $this->addLinkButton('edit', 'edit', _('Edit'), false, ['id' => 'school_id']);
-        $this->addLinkButton('detail', 'detail', _('Detail'), false, ['id' => 'school_id']);
+        $this->addLink('school.edit');
+        $this->addLink('school.detail');
+
     }
 }

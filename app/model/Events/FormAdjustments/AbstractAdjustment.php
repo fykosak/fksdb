@@ -19,48 +19,31 @@ abstract class AbstractAdjustment implements IFormAdjustment {
 
     use SmartObject;
 
-    const DELIMITER = '.';
-    const WILDCART = '*';
-    /** @var array */
-    private $pathCache;
+    public const DELIMITER = '.';
+    public const WILD_CART = '*';
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return void
-     */
-    final public function adjust(Form $form, Machine $machine, Holder $holder) {
+    private array $pathCache;
+
+    final public function adjust(Form $form, Machine $machine, Holder $holder): void {
         $this->setForm($form);
-        $this->_adjust($form, $machine, $holder);
+        $this->innerAdjust($form, $machine, $holder);
+    }
+
+    abstract protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void;
+
+    final protected function hasWildCart(string $mask): bool {
+        return strpos($mask, self::WILD_CART) !== false;
     }
 
     /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return void
-     */
-    abstract protected function _adjust(Form $form, Machine $machine, Holder $holder);
-
-    /**
-     * @param $mask
-     * @return bool
-     */
-    final protected function hasWildcart($mask) {
-        return strpos($mask, self::WILDCART) !== false;
-    }
-
-    /**
-     *
      * @param string $mask
      * @return IControl[]
      */
-    final protected function getControl($mask) {
+    final protected function getControl(string $mask): array {
         $keys = array_keys($this->pathCache);
-        $pMask = str_replace(self::WILDCART, '__WC__', $mask);
-        $pMask = preg_quote($pMask);
-        $pMask = str_replace('__WC__', '(.+)', $pMask);
+        $pMask = str_replace(self::WILD_CART, '__WC__', $mask);
+
+        $pMask = str_replace('__WC__', '(.+)', preg_quote($pMask));
         $pattern = "/^$pMask\$/";
         $result = [];
         foreach ($keys as $key) {
@@ -76,10 +59,7 @@ abstract class AbstractAdjustment implements IFormAdjustment {
         return $result;
     }
 
-    /**
-     * @param Form $form
-     */
-    private function setForm($form) {
+    private function setForm(Form $form): void {
         $this->pathCache = [];
         /** @var Control $control */
         // TODO not type safe

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import Timer from '../../timer/components';
-import Images from '../../timer/components/images';
+import Images from '../../timer/images';
+import Timer from '../../timer/timer';
 import { FyziklaniResultsCoreStore } from '../reducers/coreStore';
 
 interface StateProps {
@@ -21,10 +21,10 @@ class ResultsShower extends React.Component<StateProps & OwnProps, {}> {
         return (
             <>
                 {(visible || hardVisible) ?
-                    (<div>
+                    (<>
                         <Timer mode={'small'}/>
                         {this.props.children}
-                    </div>) :
+                    </>) :
                     (<div className={this.props.className}>
                         <div className={'logo row'}>
                             <img className={'col-3 offset-1'} alt="" src="/images/fof/logo-2020.svg"/>

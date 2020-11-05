@@ -18,40 +18,29 @@ use Nette\Utils\Html;
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
  * @author Michal Koutný <michal@fykos.cz>
+ * @deprecated use person_schedule UC
  */
 class MultiResourceAvailability extends AbstractAdjustment {
 
-    /**
-     * @var array fields that specifies amount used (string masks)
-     */
+    /** @var array fields that specifies amount used (string masks) */
     private $fields;
 
-    /**
-     * @var string Name of event parameter that hold overall capacity.
-     */
+    /** @var string Name of event parameter that hold overall capacity. */
     private $paramCapacity;
-    /**
-     * @var array|string
-     */
+    /** @var array|string */
     private $includeStates;
-    /**
-     * @var array|string|string[]
-     */
+    /** @var array|string|string[] */
     private $excludeStates;
-    /**
-     * @var string
-     */
+    /** @var string */
     private $message;
-    /**
-     * @var Context
-     */
-    private $database;
+
+    private Context $database;
 
     /**
-     * @param $fields
+     * @param array|string $fields
      * @return void
      */
-    private function setFields($fields) {
+    private function setFields($fields): void {
         if (!is_array($fields)) {
             $fields = [$fields];
         }
@@ -76,13 +65,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
         $this->excludeStates = $excludeStates;
     }
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return void
-     */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder) {
+    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
         $groups = $holder->getGroupedSecondaryHolders();
         $groups[] = [
             'service' => $holder->getPrimaryHolder()->getService(),
@@ -129,7 +112,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
             $event = $firstHolder->getEvent();
             $tableName = $serviceData['service']->getTable()->getName();
             $table = $this->database->table($tableName);
-            $table->where($firstHolder->getEventId(), $event->getPrimary());
+            $table->where($firstHolder->getEventIdColumn(), $event->getPrimary());
             if ($this->includeStates !== BaseMachine::STATE_ANY) {
                 $table->where(BaseHolder::STATE_COLUMN, $this->includeStates);
             }
@@ -143,7 +126,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
             $primaries = array_map(function (BaseHolder $baseHolder) {
                 return $baseHolder->getModel()->getPrimary(false);
             }, $serviceData['holders']);
-            $primaries = array_filter($primaries, function ($primary) {
+            $primaries = array_filter($primaries, function ($primary): bool {
                 return (bool)$primary;
             });
 
@@ -170,7 +153,6 @@ class MultiResourceAvailability extends AbstractAdjustment {
                 $capacities[$option['value']] = $option['capacity'];
             }
         }
-
 
         foreach ($controls as $control) {
             $newItems = [];

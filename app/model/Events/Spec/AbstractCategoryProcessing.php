@@ -6,7 +6,7 @@ use FKSDB\Components\Forms\Factories\Events\IOptionsProvider;
 use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Events\Model\Holder\Field;
 use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\Events\Processings\AbstractProcessing;
+use FKSDB\Events\Processing\AbstractProcessing;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPersonHistory;
@@ -18,22 +18,9 @@ use FKSDB\YearCalculator;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractCategoryProcessing extends AbstractProcessing implements IOptionsProvider {
+    protected YearCalculator $yearCalculator;
+    protected ServiceSchool $serviceSchool;
 
-    /**
-     * @var YearCalculator
-     */
-    protected $yearCalculator;
-
-    /**
-     * @var ServiceSchool
-     */
-    protected $serviceSchool;
-
-    /**
-     * CategoryProcessing2 constructor.
-     * @param YearCalculator $yearCalculator
-     * @param ServiceSchool $serviceSchool
-     */
     public function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
@@ -69,12 +56,7 @@ abstract class AbstractCategoryProcessing extends AbstractProcessing implements 
         return $participants;
     }
 
-    /**
-     * @param BaseHolder $baseHolder
-     * @param int $acYear
-     * @return ModelPersonHistory|null
-     */
-    private function getPersonHistory(BaseHolder $baseHolder, int $acYear) {
+    private function getPersonHistory(BaseHolder $baseHolder, int $acYear): ?ModelPersonHistory {
         /** @var ModelPerson $person */
         $person = $baseHolder->getModel()->getMainModel()->person;
         return $person->getHistory($acYear);
@@ -113,15 +95,13 @@ abstract class AbstractCategoryProcessing extends AbstractProcessing implements 
         return $this->yearCalculator->getAcademicYear($event->getEventType()->getContest(), $event->year);
     }
 
-    /**
-     * @param Field $field
-     * @return array
-     */
-    public function getOptions(Field $field) {
+    public function getOptions(Field $field): array {
         $results = [];
         foreach ([ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A, ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_B, ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_C, ModelFyziklaniTeam::CATEGORY_ABROAD, ModelFyziklaniTeam::CATEGORY_OPEN] as $category) {
             $results[$category] = ModelFyziklaniTeam::mapCategoryToName($category);
         }
         return $results;
     }
+
+    abstract protected function getCategory(array $competitors): string;
 }

@@ -3,10 +3,11 @@
 namespace FKSDB\Modules\FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\FinalResults;
-use FKSDB\Fyziklani\CloseStrategy;
+use FKSDB\Events\EventNotFoundException;
+use FKSDB\Fyziklani\Ranking\NotClosedTeamException;
+use FKSDB\Fyziklani\Ranking\RankingStrategy;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Utils\Html;
 
 /**
@@ -16,48 +17,47 @@ use Nette\Utils\Html;
 class DiplomasPresenter extends BasePresenter {
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
-    public function titleResults() {
+    public function titleResults(): void {
         $this->setPageTitle(new PageTitle(_('Final results'), 'fa fa-trophy'));
     }
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Calculate ranking'), 'fa fa-check'));
     }
 
     /**
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
-    public function authorizedResults() {
+    public function authorizedResults(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.diplomas', 'results'));
     }
 
     /**
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
-    public function authorizeDefault() {
+    public function authorizeDefault(): void {
         $this->setAuthorized($this->isContestsOrgAuthorized('fyziklani.diplomas', 'calculate'));
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
+     * @throws EventNotFoundException
      */
-    public function renderDefault() {
+    public function renderDefault(): void {
         $items = [];
         foreach (['A', 'B', 'C'] as $category) {
             $items[$category] = [
-                'closed' => $this->getServiceFyziklaniTeam()
-                    ->findParticipating($this->getEvent())
+                'closed' => $this->serviceFyziklaniTeam->findParticipating($this->getEvent())
                     ->where('category', $category)
                     ->where('points IS NOT NULL')
                     ->count(),
-                'opened' => $this->getServiceFyziklaniTeam()
-                    ->findParticipating($this->getEvent())
+                'opened' => $this->serviceFyziklaniTeam->findParticipating($this->getEvent())
                     ->where('category', $category)
                     ->where('points IS NULL')
                     ->count(),
@@ -69,27 +69,28 @@ class DiplomasPresenter extends BasePresenter {
     /**
      * @param string|null $category
      * @throws AbortException
-     * @throws BadRequestException
+     * @throws EventNotFoundException
+     * @throws NotClosedTeamException
      */
-    public function handleCalculate(string $category = null) {
-        $closeStrategy = new CloseStrategy($this->getEvent(), $this->getServiceFyziklaniTeam());
+    public function handleCalculate(string $category = null): void {
+        $closeStrategy = new RankingStrategy($this->getEvent(), $this->serviceFyziklaniTeam);
         $log = $closeStrategy($category);
         $this->flashMessage(Html::el()->addHtml(Html::el('h3')->addHtml('Rankin has been saved.'))->addHtml(Html::el('ul')->addHtml($log)), \FKSDB\Modules\Core\BasePresenter::FLASH_SUCCESS);
         $this->redirect('this');
     }
 
     /**
-     * @param string $category
+     * @param string|null $category
      * @return bool
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     public function isReadyAllToCalculate(string $category = null): bool {
-        return $this->getServiceFyziklaniTeam()->isCategoryReadyForClosing($this->getEvent(), $category);
+        return $this->serviceFyziklaniTeam->isCategoryReadyForClosing($this->getEvent(), $category);
     }
 
     /**
      * @return FinalResults
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function createComponentResults(): FinalResults {
         return new FinalResults($this->getContext(), $this->getEvent());

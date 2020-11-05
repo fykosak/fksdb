@@ -6,7 +6,7 @@
         </div>
     {else}
         {foreach $rows as $field}
-            {control valuePrinter:listItem $field, $model}
+            {control valuePrinter:listItem $field, $model,$userPermission}
         {/foreach}
     {/if}
 {/block}

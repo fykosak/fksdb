@@ -584,6 +584,52 @@ body[data-style-id="login"] {
       [data-contest~="vyfuk"] .navigation-item .icon, [data-contest~="vyfuk"] .navigation-item {
         font-size: 1.2rem; } }
 
+.navigation-item-fykos {
+  height: 12rem;
+  width: 12rem;
+  text-align: center;
+  color: #1175da;
+  background-color: white;
+  transition-duration: 200ms; }
+  .navigation-item-fykos .icon {
+    font-size: 5rem; }
+  .navigation-item-fykos:hover, .navigation-item-fykos:focus {
+    background-color: white;
+    color: #1175da;
+    transition-duration: 200ms;
+    border-color: #1175da;
+    border-width: 1px; }
+  @media (max-width: 767px) {
+    .navigation-item-fykos {
+      text-align: start;
+      height: initial;
+      width: 100%; }
+      .navigation-item-fykos .icon, .navigation-item-fykos {
+        font-size: 1.2rem; } }
+
+.navigation-item-vyfuk {
+  height: 12rem;
+  width: 12rem;
+  text-align: center;
+  color: #ff4800;
+  background-color: white;
+  transition-duration: 200ms; }
+  .navigation-item-vyfuk .icon {
+    font-size: 5rem; }
+  .navigation-item-vyfuk:hover, .navigation-item-vyfuk:focus {
+    background-color: white;
+    color: #ff4800;
+    transition-duration: 200ms;
+    border-color: #ff4800;
+    border-width: 1px; }
+  @media (max-width: 767px) {
+    .navigation-item-vyfuk {
+      text-align: start;
+      height: initial;
+      width: 100%; }
+      .navigation-item-vyfuk .icon, .navigation-item-vyfuk {
+        font-size: 1.2rem; } }
+
 [data-contest~="fykos"] .bg-contest {
   background-color: #1175da; }
 
@@ -919,5 +965,23 @@ footer {
       height: 2px; }
   .legend.line-chart-legend .legend-item .legend-item-name {
     font-weight: bold; }
+
+/*
+.fa-vyfuk {
+  background-image: url('/images/contests/vyfuk.svg');
+}
+
+.fa-fykos {
+  background-image: url('/images/contests/fykos.svg');
+}
+
+.fa-vyfuk::before {
+  content: url('/images/contests/vyfuk.svg');
+}
+
+.fa-fykos::before {
+  content: url('/images/contests/fykos.svg');
+}
+*/
 
 /*# sourceMappingURL=bundle.css.map */

@@ -3,8 +3,8 @@
 namespace FKSDB\Tasks;
 
 use FKSDB\ORM\Services\ServiceTask;
-use Pipeline\PipelineException;
-use Pipeline\Stage;
+use FKSDB\Pipeline\PipelineException;
+use FKSDB\Pipeline\Stage;
 use SimpleXMLElement;
 
 /**
@@ -14,16 +14,12 @@ use SimpleXMLElement;
  */
 class TasksFromXML extends Stage {
 
-    const XML_NAMESPACE = 'http://www.w3.org/XML/1998/namespace';
+    public const XML_NAMESPACE = 'http://www.w3.org/XML/1998/namespace';
 
-    /**
-     * @var SeriesData
-     */
+    /** @var SeriesData */
     private $data;
 
-    /**
-     * @var array   xml element => task column
-     */
+    /** @var array   xml element => task column */
     private static $xmlToColumnMap = [
         'name[@xml:lang="cs"]' => 'name_cs',
         'name[@xml:lang="en"]' => 'name_en',
@@ -31,15 +27,8 @@ class TasksFromXML extends Stage {
         'label' => 'label',
     ];
 
-    /**
-     * @var ServiceTask
-     */
-    private $taskService;
+    private ServiceTask $taskService;
 
-    /**
-     * TasksFromXML2 constructor.
-     * @param ServiceTask $taskService
-     */
     public function __construct(ServiceTask $taskService) {
         $this->taskService = $taskService;
     }
@@ -47,16 +36,16 @@ class TasksFromXML extends Stage {
     /**
      * @param mixed $data
      */
-    public function setInput($data) {
+    public function setInput($data): void {
         $this->data = $data;
     }
 
-    public function process() {
+    public function process(): void {
         $xml = $this->data->getData();
         $sImported = (string)$xml->number;
         $sSet = $this->data->getSeries();
         if ($sImported != $sSet) {
-            throw new PipelineException(sprintf(_('Nesouhlasí importovaná (%s) a nastavená (%s) série.'), $sImported, $sSet));
+            throw new PipelineException(sprintf(_('Imported (%s) and set (%s) series does not match.'), $sImported, $sSet));
         }
         $problems = $xml->problems[0]->problem;
         foreach ($problems as $task) {
@@ -65,17 +54,13 @@ class TasksFromXML extends Stage {
     }
 
     /**
-     * @return SeriesData
+     * @return mixed|SeriesData
      */
     public function getOutput() {
         return $this->data;
     }
 
-    /**
-     * @param SimpleXMLElement $XMLTask
-     * @return void
-     */
-    private function processTask(SimpleXMLElement $XMLTask) {
+    private function processTask(SimpleXMLElement $XMLTask): void {
         $contest = $this->data->getContest();
         $year = $this->data->getYear();
         $series = $this->data->getSeries();
@@ -84,7 +69,7 @@ class TasksFromXML extends Stage {
         // update fields
         $data = [];
         foreach (self::$xmlToColumnMap as $xmlElement => $column) {
-            $value = NULL;
+            $value = null;
 
             // Argh, I was not able not make ->xpath() working so emulate it.
             $matches = [];

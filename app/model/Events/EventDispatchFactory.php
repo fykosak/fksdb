@@ -6,45 +6,41 @@ use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\ORM\Models\ModelEvent;
-use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 
 /**
  * Class EventDispatchFactory
- * *
+ * @author Michal Červeňák <miso@fykos.cz>
  */
 class EventDispatchFactory {
-    /** @var array */
-    private $definitions = [];
-    /** @var Container */
-    private $container;
 
-    /**
-     * EventDispatchFactory constructor.
-     * @param Container $container
-     */
+    private array $definitions = [];
+
+    private Container $container;
+
+    private string $templateDir;
+
     public function __construct(Container $container) {
         $this->container = $container;
     }
 
-    /**
-     * @param array $key
-     * @param string $machineName
-     * @param string $holderMethodName
-     */
-    public function addEvent(array $key, string $holderMethodName, string $machineName) {
+    public function setTemplateDir(string $templateDir): void {
+        $this->templateDir = $templateDir;
+    }
+
+    public function addEvent(array $key, string $holderMethodName, string $machineName, string $formLayout): void {
         $this->definitions[] = [
             'keys' => $key,
             'holderMethod' => $holderMethodName,
             'machineName' => $machineName,
+            'formLayout' => $formLayout,
         ];
     }
 
     /**
      * @param ModelEvent $event
-     * @return mixed
-     * @throws BadRequestException
-     * @throws \Exception
+     * @return Machine
+     * @throws ConfigurationNotFoundException
      */
     public function getEventMachine(ModelEvent $event): Machine {
         $definition = $this->findDefinition($event);
@@ -53,8 +49,18 @@ class EventDispatchFactory {
 
     /**
      * @param ModelEvent $event
-     * @return string[]
-     * @throws BadRequestException
+     * @return string
+     * @throws ConfigurationNotFoundException
+     */
+    public function getFormLayout(ModelEvent $event): string {
+        $definition = $this->findDefinition($event);
+        return $this->templateDir . DIRECTORY_SEPARATOR . $definition['formLayout'] . '.latte';
+    }
+
+    /**
+     * @param ModelEvent $event
+     * @return array
+     * @throws ConfigurationNotFoundException
      */
     private function findDefinition(ModelEvent $event): array {
         $key = $this->createKey($event);
@@ -68,13 +74,13 @@ class EventDispatchFactory {
                 return $definition;
             }
         }
-        throw new BadRequestException();
+        throw new ConfigurationNotFoundException($event);
     }
 
     /**
      * @param ModelEvent $event
      * @return Holder
-     * @throws BadRequestException
+     * @throws ConfigurationNotFoundException
      * @throws NeonSchemaException
      */
     public function getDummyHolder(ModelEvent $event): Holder {

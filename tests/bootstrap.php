@@ -1,8 +1,11 @@
 <?php
 
+namespace FKSDB\Tests;
+
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Configurator;
 use Nette\Utils\Finder;
+use Tester\Environment;
 use Tracy\Debugger;
 
 // absolute filesystem path to this web root
@@ -23,39 +26,46 @@ define('LOG_DIR', TESTS_DIR . '/../temp/tester/log');
 // Load Nette Framework
 require LIBS_DIR . '/../vendor/autoload.php';
 
-define('CONFIG_DIR', APP_DIR . DIRECTORY_SEPARATOR . 'config');
+class Bootstrap {
+    public static function boot(): Configurator {
+        $configurator = new Configurator();
+
+        // Enable Nette Debugger for error visualisation & logging
+        $configurator->setDebugMode(false);
+        Debugger::$logDirectory = LOG_DIR;
+        Environment::setup();
+        error_reporting(/*~E_USER_DEPRECATED &*/ ~E_USER_WARNING & ~E_USER_NOTICE & ~E_WARNING & ~E_NOTICE /*& ~E_DEPRECATED*/);
+
+// Enable RobotLoader - this will load all classes automatically
+        $configurator->setTempDirectory(TEMP_DIR);
+        error_reporting(/*~E_USER_DEPRECATED &*/ ~E_USER_WARNING & ~E_USER_NOTICE & ~E_WARNING & ~E_NOTICE /*& ~E_DEPRECATED*/);
+        $configurator->createRobotLoader()
+            ->addDirectory(APP_DIR)
+            ->addDirectory(LIBS_DIR)
+            ->addDirectory(TESTS_DIR)
+            ->register();
+
+// Create Dependency Injection container from config.neon file
+        $configurator->addConfig(APP_DIR . '/config/config.neon');
+        $configurator->addConfig(APP_DIR . '/config/config.local.neon');
+        $configurator->addConfig(APP_DIR . '/config/config.tester.neon');
+
+        // Load all .neon files in events data directory
+        foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/../data/events') as $filename => $file) {
+            $configurator->addConfig($filename);
+        }
+        // Load .neon files for tests
+        foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/neon') as $filename => $file) {
+            $configurator->addConfig($filename);
+        }
+        return $configurator;
+    }
+}
 
 
 // Configure application
-$configurator = new Configurator();
+$configurator = Bootstrap::boot();
 
-$configurator->setDebugMode(false);
-Debugger::$logDirectory = LOG_DIR;
-Tester\Environment::setup();
-
-// Enable RobotLoader - this will load all classes automatically
-$configurator->setTempDirectory(TEMP_DIR);
-error_reporting(~E_USER_DEPRECATED & ~E_USER_WARNING & ~E_USER_NOTICE & ~E_WARNING & ~E_NOTICE & ~E_DEPRECATED);
-$configurator->createRobotLoader()
-    ->addDirectory(APP_DIR)
-    ->addDirectory(LIBS_DIR)
-    ->addDirectory(TESTS_DIR)
-    ->register();
-
-// Create Dependency Injection container from config.neon file
-$configurator->addConfig(CONFIG_DIR . '/config.neon', Configurator::NONE);
-$configurator->addConfig(CONFIG_DIR . '/config.local.neon', Configurator::NONE);
-$configurator->addConfig(CONFIG_DIR . '/config.tester.neon', Configurator::NONE);
-
-// Load all .neon files in events data directory
-foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/../data/events') as $filename => $file) {
-    $configurator->addConfig($filename, Configurator::NONE);
-}
-
-// Load .neon files for tests
-foreach (Finder::findFiles('*.neon')->from(dirname(__FILE__) . '/neon') as $filename => $file) {
-    $configurator->addConfig($filename, Configurator::NONE);
-}
 $container = $configurator->createContainer();
 
 // Register addons

@@ -14,19 +14,12 @@ class RegOpen extends EvaluatedExpression {
     use SmartObject;
     use WithEventTrait;
 
-    /**
-     * @param array $args
-     * @return bool
-     */
     public function __invoke(...$args): bool {
         $event = $this->getEvent($args[0]);
         return (!$event->registration_begin || $event->registration_begin->getTimestamp() <= time()) && (!$event->registration_end || $event->registration_end->getTimestamp() >= time());
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return 'regOpen';
     }
 

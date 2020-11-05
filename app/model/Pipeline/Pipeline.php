@@ -1,6 +1,6 @@
 <?php
 
-namespace Pipeline;
+namespace FKSDB\Pipeline;
 
 use FKSDB\Logging\ILogger;
 use FKSDB\Logging\MemoryLogger;
@@ -17,31 +17,17 @@ use Nette\InvalidStateException;
  */
 class Pipeline {
 
-    /**
-     * @var Stage[]
-     */
-    private $stages = [];
+    /** @var Stage[] */
+    private array $stages = [];
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $input;
 
-    /**
-     * @var bool
-     */
-    private $fixedStages = false;
+    private bool $fixedStages = false;
 
-    /**
-     * @var ILogger
-     */
-    private $logger = null;
+    private ?ILogger $logger = null;
 
-    /**
-     * @param ILogger $logger
-     * @return void
-     */
-    public function setLogger(ILogger $logger) {
+    public function setLogger(ILogger $logger): void {
         $this->logger = $logger;
     }
 
@@ -58,7 +44,7 @@ class Pipeline {
      * @param Stage $stage
      * @throws InvalidStateException
      */
-    public function addStage(Stage $stage) {
+    public function addStage(Stage $stage): void {
         if ($this->fixedStages) {
             throw new InvalidStateException('Cannot modify pipeline after loading data.');
         }
@@ -71,7 +57,7 @@ class Pipeline {
      *
      * @param mixed $input
      */
-    public function setInput($input) {
+    public function setInput($input): void {
         $this->fixedStages = true;
         $this->input = $input;
     }
@@ -92,11 +78,7 @@ class Pipeline {
         return $data;
     }
 
-    /**
-     * @param Message $message
-     * @return void
-     */
-    public function log(Message $message) {
+    public function log(Message $message): void {
         if ($this->logger) {
             $this->logger->log($message);
         }

@@ -5,7 +5,9 @@ namespace FKSDB\Modules\OrgModule;
 use Exception;
 use FKSDB\Components\Controls\Inbox\PointsFormControl;
 use FKSDB\Components\Controls\Inbox\PointsPreviewControl;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
+use FKSDB\ORM\Models\ModelContest;
 use FKSDB\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use FKSDB\Modules\Core\PresenterTraits\{SeriesPresenterTrait};
@@ -35,59 +37,25 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      */
     public $all;
 
-    /**
-     * @var SQLResultsCache
-     */
-    private $SQLResultsCache;
+    private SQLResultsCache $SQLResultsCache;
+    private SeriesTable $seriesTable;
+    private ServiceTask $serviceTask;
+    private ServiceTaskContribution $serviceTaskContribution;
 
-    /**
-     * @var SeriesTable
-     */
-    private $seriesTable;
-
-    /**
-     * @var ServiceTask
-     */
-    private $serviceTask;
-
-    /**
-     * @var ServiceTaskContribution
-     */
-    private $serviceTaskContribution;
-
-    /**
-     * @param SQLResultsCache $SQLResultsCache
-     * @return void
-     */
-    public function injectSQLResultsCache(SQLResultsCache $SQLResultsCache) {
+    final public function injectQuarterly(
+        SQLResultsCache $SQLResultsCache,
+        SeriesTable $seriesTable,
+        ServiceTask $serviceTask,
+        ServiceTaskContribution $serviceTaskContribution
+    ): void {
         $this->SQLResultsCache = $SQLResultsCache;
-    }
-
-    /**
-     * @param SeriesTable $seriesTable
-     * @return void
-     */
-    public function injectSeriesTable(SeriesTable $seriesTable) {
         $this->seriesTable = $seriesTable;
-    }
-
-    /**
-     * @param ServiceTask $serviceTask
-     * @return void
-     */
-    public function injectServiceTask(ServiceTask $serviceTask) {
         $this->serviceTask = $serviceTask;
-    }
-
-    /**
-     * @param ServiceTaskContribution $serviceTaskContribution
-     * @return void
-     */
-    public function injectServiceTaskContribution(ServiceTaskContribution $serviceTaskContribution) {
         $this->serviceTaskContribution = $serviceTaskContribution;
     }
 
-    protected function startup() {
+    protected function startup(): void {
+        $this->seriesTraitStartup();
         parent::startup();
         $this->seriesTable->setContest($this->getSelectedContest());
         $this->seriesTable->setYear($this->getSelectedYear());
@@ -96,48 +64,56 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
-    public function titleEntry() {
-        $this->setPageTitle(new PageTitle(sprintf(_('Zadávání bodů %d. série'), $this->getSelectedSeries()), 'fa fa-trophy'));
+    public function titleEntry(): void {
+        $this->setPageTitle(new PageTitle(sprintf(_('Grade series %d'), $this->getSelectedSeries()), 'fa fa-trophy'));
     }
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
-    public function titlePreview() {
+    public function titlePreview(): void {
         $this->setPageTitle(new PageTitle(_('Points'), 'fa fa-inbox'));
     }
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
-    public function authorizedEntry() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'edit', $this->getSelectedContest()));
+    public function authorizedEntry(): void {
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'edit', $this->getSelectedContest()));
     }
 
     /**
      * @return void
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
-    public function authorizedPreview() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowed('submit', 'points', $this->getSelectedContest()));
+    public function authorizedPreview(): void {
+        $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'points', $this->getSelectedContest()));
     }
 
-    /**
-     * @return void
-     */
-    public function actionEntry() {
+    public function actionEntry(): void {
         $this->seriesTable->setTaskFilter($this->all ? null : $this->getGradedTasks());
     }
 
     /**
      * @return void
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
-    public function renderEntry() {
+    public function renderEntry(): void {
         $this->template->showAll = (bool)$this->all;
+        if ($this->getSelectedContest()->contest_id === ModelContest::ID_VYFUK && $this->getSelectedSeries() > 6) {
+            $this->template->hasQuizTask = true;
+        } else {
+            $this->template->hasQuizTask = false;
+        }
     }
 
     protected function createComponentPointsForm(): PointsFormControl {
@@ -151,14 +127,15 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     /**
+     * @return void
      * @throws AbortException
      */
-    public function handleInvalidate() {
+    public function handleInvalidate(): void {
         try {
             $this->SQLResultsCache->invalidate($this->getSelectedContest(), $this->getSelectedYear());
-            $this->flashMessage(_('Body invalidovány.'), self::FLASH_INFO);
+            $this->flashMessage(_('Points invalidated.'), self::FLASH_INFO);
         } catch (Exception $exception) {
-            $this->flashMessage(_('Chyba při invalidaci.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Error during invalidation.'), self::FLASH_ERROR);
             Debugger::log($exception);
         }
 
@@ -166,10 +143,12 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     /**
+     * @return void
      * @throws AbortException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    public function handleRecalculateAll() {
+    public function handleRecalculateAll(): void {
         try {
             $contest = $this->getSelectedContest();
 
@@ -183,13 +162,31 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
                 $this->SQLResultsCache->recalculate($contest, $year->year);
             }
 
-            $this->flashMessage(_('Body přepočítány.'), self::FLASH_INFO);
+            $this->flashMessage(_('Points recounted.'), self::FLASH_INFO);
         } catch (InvalidArgumentException $exception) {
-            $this->flashMessage(_('Chyba při přepočtu.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Error while recounting.'), self::FLASH_ERROR);
             Debugger::log($exception);
         }
 
         $this->redirect('this');
+    }
+
+    /**
+     * @return void
+     * @throws AbortException
+     */
+    public function handleCalculateQuizPoints(): void {
+        try {
+            $contest = $this->getSelectedContest();
+            $year = $this->getSelectedYear();
+            $series = $this->getSelectedSeries();
+
+            $this->SQLResultsCache->calculateQuizPoints($contest, $year, $series);
+            $this->flashMessage(_('Body kvízových úloh spočteny.'), self::FLASH_INFO);
+        } catch (Exception $exception) {
+            $this->flashMessage(_('Chyba při výpočtu.'), self::FLASH_ERROR);
+            Debugger::log($exception);
+        }
     }
 
     private function getGradedTasks(): array {
@@ -214,18 +211,18 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
         return array_values($gradedTasks);
     }
 
-    protected function beforeRender() {
-        $this->getPageStyleContainer()->mainContainerClassName = str_replace('container ', 'container-fluid ', $this->getPageStyleContainer()->mainContainerClassName) . ' px-3';
+    protected function beforeRender(): void {
+        $this->getPageStyleContainer()->setWidePage();
         parent::beforeRender();
     }
 
     /**
      * @param PageTitle $pageTitle
      * @return void
-     * @throws BadRequestException
      * @throws ForbiddenRequestException
+     * @throws BadTypeException
      */
-    protected function setPageTitle(PageTitle $pageTitle) {
+    protected function setPageTitle(PageTitle $pageTitle): void {
         $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
         parent::setPageTitle($pageTitle);
     }

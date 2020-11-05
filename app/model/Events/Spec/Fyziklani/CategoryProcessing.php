@@ -22,22 +22,12 @@ use Nette\Utils\ArrayHash;
  */
 class CategoryProcessing extends AbstractCategoryProcessing {
 
-    /**
-     * @param $states
-     * @param ArrayHash $values
-     * @param Machine $machine
-     * @param Holder $holder
-     * @param ILogger $logger
-     * @param Form|null $form
-     * @return void
-     */
-    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
-
+    protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void {
         if (!isset($values['team'])) {
             return;
         }
         if ($values['team']['force_a']) {
-            $values['team']['category'] = 'A';
+            $values['team']['category'] = ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A;
         } else {
             $participants = $this->extractValues($holder);
             $values['team']['category'] = $this->getCategory($participants);
@@ -46,11 +36,11 @@ class CategoryProcessing extends AbstractCategoryProcessing {
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
 
         if ($original != $values['team']['category']) {
-            $logger->log(new Message(sprintf(_('Tým zařazen do kategorie %s.'), ModelFyziklaniTeam::mapCategoryToName($values['team']['category'])), ILogger::INFO));
+            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($values['team']['category'])), ILogger::INFO));
         }
     }
 
-    private function getCategory(array $participants): string {
+    protected function getCategory(array $participants): string {
         $coefficientSum = 0;
         $count4 = 0;
         $count3 = 0;
@@ -79,7 +69,7 @@ class CategoryProcessing extends AbstractCategoryProcessing {
         } elseif ($categoryHandle <= 4) {
             $result = ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A;
         } else {
-            throw new SubmitProcessingException(_('Nelze spočítat kategorii.'));
+            throw new SubmitProcessingException(_('Cannot determine category.'));
         }
         return $result;
     }

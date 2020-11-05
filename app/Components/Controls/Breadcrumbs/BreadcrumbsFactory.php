@@ -11,21 +11,11 @@ use Nette\DI\Container;
  */
 class BreadcrumbsFactory {
 
-    /**
-     * @var string
-     */
-    private $expiration;
-    /**
-     * @var Container
-     */
-    private $container;
+    private string $expiration;
 
-    /**
-     * BreadcrumbsFactory constructor.
-     * @param $expiration
-     * @param Container $container
-     */
-    public function __construct($expiration, Container $container) {
+    private Container $container;
+
+    public function __construct(string $expiration, Container $container) {
         $this->expiration = $expiration;
         $this->container = $container;
     }

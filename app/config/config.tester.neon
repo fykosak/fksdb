@@ -18,6 +18,7 @@ parameters:
         host: astrid.astrid.astrid
         user: astrid
         password: astrid
-
+application:
+    silentLinks: false
 database:
     dsn: "mysql:host=127.0.0.1;dbname=fksdb_test1"

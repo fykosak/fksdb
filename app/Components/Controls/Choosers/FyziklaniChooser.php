@@ -16,31 +16,17 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class FyziklaniChooser extends Chooser {
-    /**
-     * @var ModelEvent
-     */
-    private $event;
 
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
+    private ModelEvent $event;
 
-    /**
-     * FyziklaniChooser constructor.
-     * @param Container $container
-     * @param ModelEvent $event
-     */
+    private ServiceEvent $serviceEvent;
+
     public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    /**.
-     * @param ServiceEvent $serviceEvent
-     * @return void
-     */
-    public function injectServiceEvent(ServiceEvent $serviceEvent) {
+    final public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 
@@ -56,16 +42,16 @@ class FyziklaniChooser extends Chooser {
         return $item->event_id === $this->event->event_id;
     }
 
-    public function getTitle(): Title {
+    protected function getTitle(): Title {
         return new Title(_('Event'));
     }
 
     /**
      * @param ModelEvent $item
-     * @return string
+     * @return Title
      */
-    public function getItemLabel($item): string {
-        return $item->name;
+    public function getItemTitle($item): Title {
+        return new Title($item->name);
     }
 
     /**

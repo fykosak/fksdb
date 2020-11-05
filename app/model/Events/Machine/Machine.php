@@ -11,36 +11,20 @@ use Nette\InvalidArgumentException;
  */
 class Machine {
 
-    /**
-     * @var BaseMachine[]
-     */
-    private $baseMachines = [];
+    /** @var BaseMachine[] */
+    private array $baseMachines = [];
 
-    /**
-     * @var BaseMachine
-     */
-    private $primaryMachine;
+    private BaseMachine $primaryMachine;
 
-    /**
-     * @param $name
-     * @return void
-     */
-    public function setPrimaryMachine($name) {
+    public function setPrimaryMachine(string $name): void {
         $this->primaryMachine = $this->getBaseMachine($name);
     }
 
-    /**
-     * @return BaseMachine
-     */
-    public function getPrimaryMachine() {
+    public function getPrimaryMachine(): BaseMachine {
         return $this->primaryMachine;
     }
 
-    /**
-     * @param BaseMachine $baseMachine
-     * @return void
-     */
-    public function addBaseMachine(BaseMachine $baseMachine) {
+    public function addBaseMachine(BaseMachine $baseMachine): void {
         $name = $baseMachine->getName();
         $this->baseMachines[$name] = $baseMachine;
 

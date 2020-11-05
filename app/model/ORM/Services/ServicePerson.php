@@ -6,28 +6,21 @@ use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelPerson;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @method ModelPerson|null findByPrimary($key)
+ * @method ModelPerson createNewModel(array $data)
  */
 class ServicePerson extends AbstractServiceSingle {
 
-    public function getModelClassName(): string {
-        return ModelPerson::class;
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_PERSON, ModelPerson::class);
     }
 
-    protected function getTableName(): string {
-        return DbNames::TAB_PERSON;
-    }
-
-    /**
-     * Syntactic sugar.
-     *
-     * @param string $email
-     * @return ModelPerson|null
-     */
-    public function findByEmail($email) {
+    public function findByEmail(?string $email): ?ModelPerson {
         if (!$email) {
             return null;
         }
@@ -40,11 +33,19 @@ class ServicePerson extends AbstractServiceSingle {
      * @param IModel|ModelPerson $model
      * @return void
      */
-    public function save(IModel &$model) {
+    public function save(IModel &$model): void {
         if (is_null($model->gender)) {
             $model->inferGender();
         }
         parent::save($model);
     }
 
+    public function store(?ModelPerson $person, array $data): ModelPerson {
+        if ($person) {
+            $this->updateModel2($person, $data);
+            return $person;
+        } else {
+            return $this->createNewModel($data);
+        }
+    }
 }

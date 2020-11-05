@@ -2,16 +2,15 @@
 
 namespace FKSDB\Modules\Core;
 
-use Authentication\GithubAuthenticator;
-use Authentication\PasswordAuthenticator;
-use Authentication\TokenAuthenticator;
-use Authorization\ContestAuthorizator;
-use Authorization\EventAuthorizator;
+use FKSDB\Authentication\GithubAuthenticator;
+use FKSDB\Authentication\PasswordAuthenticator;
+use FKSDB\Authentication\TokenAuthenticator;
+use FKSDB\Authorization\ContestAuthorizator;
+use FKSDB\Authorization\EventAuthorizator;
 use Exception;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use FKSDB\ORM\Models\ModelAuthToken;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Http\Response;
 use ReflectionClass;
@@ -30,104 +29,41 @@ use Nette\Security\AuthenticationException;
  */
 abstract class AuthenticatedPresenter extends BasePresenter {
 
-    const AUTH_ALLOW_LOGIN = 0x1;
-    const AUTH_ALLOW_HTTP = 0x2;
-    const AUTH_ALLOW_TOKEN = 0x4;
-    const AUTH_ALLOW_GITHUB = 0x8;
+    public const AUTH_ALLOW_LOGIN = 0x1;
+    public const AUTH_ALLOW_HTTP = 0x2;
+    public const AUTH_ALLOW_TOKEN = 0x4;
+    public const AUTH_ALLOW_GITHUB = 0x8;
 
-    /**
-     * @var TokenAuthenticator
-     */
-    private $tokenAuthenticator;
+    protected TokenAuthenticator $tokenAuthenticator;
+    protected PasswordAuthenticator $passwordAuthenticator;
+    protected GithubAuthenticator $githubAuthenticator;
+    protected EventAuthorizator $eventAuthorizator;
+    protected ContestAuthorizator $contestAuthorizator;
 
-    /**
-     * @var PasswordAuthenticator
-     */
-    private $passwordAuthenticator;
-
-    /**
-     * @var GithubAuthenticator
-     */
-    private $githubAuthenticator;
-    /**
-     * @var EventAuthorizator
-     */
-    private $eventAuthorizator;
-
-    /**
-     * @var ContestAuthorizator
-     */
-    protected $contestAuthorizator;
-
-    /**
-     * @param TokenAuthenticator $tokenAuthenticator
-     * @return void
-     */
-    public function injectTokenAuthenticator(TokenAuthenticator $tokenAuthenticator) {
+    final public function injectAuthenticated(
+        TokenAuthenticator $tokenAuthenticator,
+        PasswordAuthenticator $passwordAuthenticator,
+        GithubAuthenticator $githubAuthenticator,
+        ContestAuthorizator $contestAuthorizator,
+        EventAuthorizator $eventAuthorizator
+    ): void {
         $this->tokenAuthenticator = $tokenAuthenticator;
-    }
-
-    /**
-     * @param PasswordAuthenticator $passwordAuthenticator
-     * @return void
-     */
-    public function injectPasswordAuthenticator(PasswordAuthenticator $passwordAuthenticator) {
         $this->passwordAuthenticator = $passwordAuthenticator;
-    }
-
-    /**
-     * @param GithubAuthenticator $githubAuthenticator
-     * @return void
-     */
-    public function injectGithubAuthenticator(GithubAuthenticator $githubAuthenticator) {
         $this->githubAuthenticator = $githubAuthenticator;
-    }
-
-    /**
-     * @param ContestAuthorizator $contestAuthorizator
-     * @return void
-     */
-    public function injectContestAuthorizator(ContestAuthorizator $contestAuthorizator) {
         $this->contestAuthorizator = $contestAuthorizator;
-    }
-
-    public function getContestAuthorizator(): ContestAuthorizator {
-        return $this->contestAuthorizator;
-    }
-
-    /**
-     * @param EventAuthorizator $eventAuthorizator
-     * @return void
-     */
-    public function injectEventAuthorizator(EventAuthorizator $eventAuthorizator) {
         $this->eventAuthorizator = $eventAuthorizator;
     }
 
-    public function getEventAuthorizator(): EventAuthorizator {
-        return $this->eventAuthorizator;
-    }
-
-    /**
-     * @return TokenAuthenticator
-     */
-    public function getTokenAuthenticator() {
-        return $this->tokenAuthenticator;
-    }
-
-    /**
-     * Formats action method name.
-     * @param string
-     * @return string
-     */
-    protected static function formatAuthorizedMethod($action) {
+    /* Formats action method name.*/
+    protected static function formatAuthorizedMethod(string $action): string {
         return 'authorized' . $action;
     }
 
     /**
-     * @param $element
+     * @param mixed $element
      * @throws ForbiddenRequestException
      */
-    public function checkRequirements($element) {
+    public function checkRequirements($element): void {
         parent::checkRequirements($element);
         if ($element instanceof ReflectionClass) {
             $this->setAuthorized($this->isAuthorized() && $this->getUser()->isLoggedIn());
@@ -139,18 +75,18 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
-     * @throws ForbiddenRequestException
+     * @return void
      * @throws AbortException
+     * @throws ForbiddenRequestException
      * @throws Exception
      */
-    protected function startup() {
+    protected function startup(): void {
         parent::startup();
 
         $methods = $this->getAllowedAuthMethods();
 
         if ($methods & self::AUTH_ALLOW_TOKEN) {
-            // successfull token authentication overwrites the user identity (if any)
+            // successful token authentication overwrites the user identity (if any)
             $this->tryAuthToken();
         }
 
@@ -172,7 +108,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     /**
      * @throws AbortException
      */
-    private function optionalLoginRedirect() {
+    private function optionalLoginRedirect(): void {
         if (!$this->requiresLogin()) {
             return;
         }
@@ -182,7 +118,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     /**
      * @throws AbortException
      */
-    final protected function loginRedirect() {
+    final protected function loginRedirect(): void {
         if ($this->user->logoutReason === UserStorage::INACTIVITY) {
             $reason = AuthenticationPresenter::REASON_TIMEOUT;
         } else {
@@ -196,43 +132,40 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     * This method may be overriden, however only simple conditions
+     * This method may be override, however only simple conditions
      * can be checked there -- user session is not prepared at the
      * moment of the call.
      *
      * @return bool
      */
-    public function requiresLogin() {
+    public function requiresLogin(): bool {
         return true;
     }
 
     /**
-     * It may be overriden (should return realm).
-     * @return bool|string
+     * It may be override (should return realm).
+     * @return int
      */
-    public function getAllowedAuthMethods() {
+    public function getAllowedAuthMethods(): int {
         return self::AUTH_ALLOW_LOGIN | self::AUTH_ALLOW_TOKEN;
     }
 
-    /**
-     * @return string
-     */
-    protected function getHttpRealm() {
+    protected function getHttpRealm(): ?string {
         return null;
     }
 
     /**
      * @throws ForbiddenRequestException
      */
-    protected function unauthorizedAccess() {
+    protected function unauthorizedAccess(): void {
         throw new ForbiddenRequestException();
     }
 
     /**
      * @throws AbortException
      */
-    private function tryAuthToken() {
-        $tokenData = $this->getParam(TokenAuthenticator::PARAM_AUTH_TOKEN);
+    private function tryAuthToken(): void {
+        $tokenData = $this->getParameter(TokenAuthenticator::PARAM_AUTH_TOKEN);
 
         if (!$tokenData) {
             return;
@@ -240,11 +173,11 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
         try {
             $login = $this->tokenAuthenticator->authenticate($tokenData);
-            Debugger::log("$login signed in using token $tokenData.");
+            Debugger::log("$login signed in using token $tokenData.", 'token-login');
             if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_SSO)) {
                 $this->tokenAuthenticator->disposeAuthToken();
             } else {
-                $this->flashMessage(_('Úspešné přihlášení pomocí tokenu.'), self::FLASH_INFO);
+                $this->flashMessage(_('Successful token authentication.'), self::FLASH_INFO);
             }
 
             $this->getUser()->login($login);
@@ -254,10 +187,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         }
     }
 
-    /**
-     * @return void
-     */
-    private function tryHttpAuth() {
+    private function tryHttpAuth(): void {
         if (!isset($_SERVER['PHP_AUTH_USER'])) {
             $this->httpAuthPrompt();
             return;
@@ -280,10 +210,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         }
     }
 
-    /**
-     * @return void
-     */
-    private function httpAuthPrompt() {
+    private function httpAuthPrompt(): void {
         $realm = $this->getHttpRealm();
         if ($realm && $this->requiresLogin()) {
             header('WWW-Authenticate: Basic realm="' . $realm . '"');
@@ -294,15 +221,15 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    private function tryGithub() {
+    private function tryGithub(): void {
         if (!$this->getHttpRequest()->getHeader('X-GitHub-Event')) {
             return;
         }
 
         try {
-            $login = $this->githubAuthenticator->authenticate($this->getFullHttpRequest());
+            $login = $this->githubAuthenticator->authenticate($this->getHttpRequest());
 
             Debugger::log("$login signed in using Github authentication.");
 
@@ -311,8 +238,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             $method = $this->formatAuthorizedMethod($this->getAction());
             $this->tryCall($method, $this->getParameters());
         } catch (AuthenticationException $exception) {
-            throw new ForbiddenRequestException(_('Chyba autentizace.'), Response::S403_FORBIDDEN, $exception);
+            throw new ForbiddenRequestException(_('Authentication failure.'), Response::S403_FORBIDDEN, $exception);
         }
     }
-
 }

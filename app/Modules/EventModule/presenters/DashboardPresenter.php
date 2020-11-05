@@ -2,8 +2,8 @@
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Events\EventNotFoundException;
 use FKSDB\UI\PageTitle;
-use Nette\Application\BadRequestException;
 
 /**
  * Class DashboardPresenter
@@ -11,35 +11,36 @@ use Nette\Application\BadRequestException;
  */
 class DashboardPresenter extends BasePresenter {
 
-
     /**
-     * @throws BadRequestException
+     * @return void
+     * @throws EventNotFoundException
      */
-    public function titleDefault() {
+    public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(\sprintf(_('Event %s'), $this->getEvent()->name), 'fa fa-dashboard'));
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
+     * @throws EventNotFoundException
      */
-    public function authorizedDefault() {
+    public function authorizedDefault(): void {
         $this->setAuthorized($this->isEventOrContestOrgAuthorized('event.dashboard', 'default'));
     }
 
     /**
-     * @throws BadRequestException
+     * @return void
+     * @throws EventNotFoundException
      */
-    public function renderDefault() {
+    public function renderDefault(): void {
         $this->template->event = $this->getEvent();
         $this->template->webUrl = $this->getWebUrl();
-        $this->template->fields = ['event_type', 'year', 'event_year', 'begin', 'end'];
     }
 
     /**
      * @return string
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
-    private function getWebUrl() {
+    private function getWebUrl(): string {
         switch ($this->getEvent()->event_type_id) {
             case 1:
                 // FOF

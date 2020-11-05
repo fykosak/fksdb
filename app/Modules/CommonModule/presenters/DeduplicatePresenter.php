@@ -4,13 +4,12 @@ namespace FKSDB\Modules\CommonModule;
 
 use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
 use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\Persons\Deduplication\DuplicateFinder;
+use FKSDB\Persons\Deduplication\Merger;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Table\ActiveRow;
-use Persons\Deduplication\DuplicateFinder;
-use Persons\Deduplication\Merger;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -19,56 +18,31 @@ use Persons\Deduplication\Merger;
  */
 class DeduplicatePresenter extends BasePresenter {
 
-    /**
-     * @var ServicePerson
-     */
-    private $servicePerson;
+    private ServicePerson $servicePerson;
+    private Merger $merger;
 
-    /**
-     * @var Merger
-     */
-    private $merger;
-
-    /**
-     * @param ServicePerson $servicePerson
-     * @return void
-     */
-    public function injectServicePerson(ServicePerson $servicePerson) {
+    final public function injectQuarterly(ServicePerson $servicePerson, Merger $merger): void {
         $this->servicePerson = $servicePerson;
-    }
-
-    /**
-     * @param Merger $merger
-     * @return void
-     */
-    public function injectMerger(Merger $merger) {
         $this->merger = $merger;
     }
 
-    /**
-     * @return void
-     */
-    public function authorizedPerson() {
-        $this->setAuthorized($this->getContestAuthorizator()->isAllowedForAnyContest('person', 'list'));
+    public function authorizedPerson(): void {
+        $this->setAuthorized($this->contestAuthorizator->isAllowedForAnyContest('person', 'list'));
     }
 
-    /**
-     * @return void
-     */
-    public function titlePerson() {
-        $this->setPageTitle(new PageTitle(_('Duplicitní osoby'), 'fa fa-exchange'));
+    public function titlePerson(): void {
+        $this->setPageTitle(new PageTitle(_('Duplicate persons'), 'fa fa-exchange'));
     }
 
     /**
      * @throws ForbiddenRequestException
      * @throws AbortException
-     * @throws BadRequestException
      */
-    public function handleBatchMerge() {
-        if (!$this->getContestAuthorizator()->isAllowedForAnyContest('person', 'merge')) { //TODO generic authorizator
+    public function handleBatchMerge(): void {
+        if (!$this->contestAuthorizator->isAllowedForAnyContest('person', 'merge')) { //TODO generic authorizator
             throw new ForbiddenRequestException();
         }
-        //TODO later specialize for each entinty type
+        //TODO later specialize for each entity type
         $finder = $this->createPersonDuplicateFinder();
         $pairs = $finder->getPairs();
         $trunkPersons = $this->servicePerson->getTable()->where('person_id', array_keys($pairs));
@@ -84,9 +58,9 @@ class DeduplicatePresenter extends BasePresenter {
             $this->merger->setMergedPair($trunkRow, $mergedRow);
 
             if ($this->merger->merge()) {
-                $this->flashMessage(sprintf(_('%s (%d) a %s (%d) sloučeny.'), $table, $trunkRow->getPrimary(), $table, $mergedRow->getPrimary()), self::FLASH_SUCCESS);
+                $this->flashMessage(sprintf(_('%s (%d) and %s (%d) merged.'), $table, $trunkRow->getPrimary(), $table, $mergedRow->getPrimary()), self::FLASH_SUCCESS);
             } else {
-                $this->flashMessage(sprintf(_('%s (%d) a %s (%d) potřebují vyřešit konflitky.'), $table, $trunkRow->getPrimary(), $table, $mergedRow->getPrimary()), self::FLASH_INFO);
+                $this->flashMessage(sprintf(_('%s (%d) and %s (%d) need to solve conflicts.'), $table, $trunkRow->getPrimary(), $table, $mergedRow->getPrimary()), self::FLASH_INFO);
             }
         }
 
@@ -102,6 +76,6 @@ class DeduplicatePresenter extends BasePresenter {
     }
 
     protected function createPersonDuplicateFinder(): DuplicateFinder {
-        return new DuplicateFinder($this->servicePerson, $this->globalParameters);
+        return new DuplicateFinder($this->servicePerson, $this->getContext());
     }
 }

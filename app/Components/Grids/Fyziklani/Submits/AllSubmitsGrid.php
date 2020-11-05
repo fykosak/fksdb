@@ -2,10 +2,12 @@
 
 namespace FKSDB\Components\Grids\Fyziklani;
 
-use Closure;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Fyziklani\TaskCodePreprocessor;
+use FKSDB\Fyziklani\Submit\HandlerFactory;
+use FKSDB\Fyziklani\Submit\TaskCodePreprocessor;
+use FKSDB\Logging\FlashMessageDump;
+use FKSDB\Logging\MemoryLogger;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
@@ -23,7 +25,7 @@ use Nette\InvalidStateException;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use SQL\SearchableDataSource;
+use FKSDB\SQL\SearchableDataSource;
 
 /**
  * @author Michal Červeňák
@@ -31,37 +33,23 @@ use SQL\SearchableDataSource;
  */
 class AllSubmitsGrid extends SubmitsGrid {
 
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
-    /**
-     * @var ServiceFyziklaniTask
-     */
-    private $serviceFyziklaniTask;
+    private ModelEvent $event;
 
-    /**
-     * FyziklaniSubmitsGrid constructor.
-     * @param ModelEvent $event
-     * @param Container $container
-     */
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+
+    private ServiceFyziklaniTask $serviceFyziklaniTask;
+
+    private HandlerFactory $handlerFactory;
+
     public function __construct(ModelEvent $event, Container $container) {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    /**
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @return void
-     */
-    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask) {
+    final public function injectPrimary(HandlerFactory $handlerFactory, ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
+        $this->handlerFactory = $handlerFactory;
     }
 
     protected function getData(): IDataSource {
@@ -74,13 +62,12 @@ class AllSubmitsGrid extends SubmitsGrid {
 
     /**
      * @param Presenter $presenter
+     * @return void
+     * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws BadTypeException
-     * @throws BadTypeException
-     * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->addColumnTeam();
@@ -96,21 +83,18 @@ class AllSubmitsGrid extends SubmitsGrid {
 
         $this->addButton('delete', null)
             ->setClass('btn btn-sm btn-danger')
-            ->setLink(function (ModelFyziklaniSubmit $row) {
+            ->setLink(function (ModelFyziklaniSubmit $row): string {
                 return $this->link('delete!', $row->fyziklani_submit_id);
-            })->setConfirmationDialog(function () {
+            })->setConfirmationDialog(function (): string {
                 return _('Opravdu vzít submit úlohy zpět?');
             })->setText(_('Delete'))
-            ->setShow(function (ModelFyziklaniSubmit $row) {
+            ->setShow(function (ModelFyziklaniSubmit $row): bool {
                 return $row->canRevoke();
             });
     }
 
-    /**
-     * @return Closure
-     */
     private function getFilterCallBack(): callable {
-        return function (Selection $table, $value) {
+        return function (Selection $table, $value): void {
             foreach ($value as $key => $condition) {
                 if (!$condition) {
                     continue;
@@ -137,26 +121,25 @@ class AllSubmitsGrid extends SubmitsGrid {
                         break;
                 }
             }
-            return;
         };
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @throws AbortException
      */
-    public function handleDelete($id) {
-        /**
-         * @var ModelFyziklaniSubmit $submit
-         */
+    public function handleDelete(int $id): void {
+        /** @var ModelFyziklaniSubmit $submit */
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
         if (!$submit) {
-            $this->flashMessage(_('Submit dos not exists.'), BasePresenter::FLASH_ERROR);
+            $this->flashMessage(_('Submit does not exists.'), BasePresenter::FLASH_ERROR);
             $this->redirect('this');
         }
         try {
-            $log = $this->serviceFyziklaniSubmit->revokeSubmit($submit, $this->getPresenter()->getUser());
-            $this->flashMessage($log->getMessage(), BasePresenter::FLASH_SUCCESS);
+            $logger = new MemoryLogger();
+            $handler = $this->handlerFactory->create($this->event);
+            $handler->revokeSubmit($logger, $submit);
+            FlashMessageDump::dump($logger, $this);
             $this->redirect('this');
         } catch (BadRequestException $exception) {
             $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
@@ -166,7 +149,7 @@ class AllSubmitsGrid extends SubmitsGrid {
 
     /**
      * @return FormControl
-     * @throws BadRequestException
+     * @throws BadTypeException
      */
     protected function createComponentSearchForm(): FormControl {
         if (!$this->isSearchable()) {
@@ -195,7 +178,7 @@ class AllSubmitsGrid extends SubmitsGrid {
         $form->addText('code', _('Code'))->setAttribute('placeholder', _('Task code'));
         $form->addCheckbox('not_null', _('Only not revoked submits'));
         $form->addSubmit('submit', _('Search'));
-        $form->onSuccess[] = function (Form $form) {
+        $form->onSuccess[] = function (Form $form): void {
             $values = $form->getValues();
             $this->searchTerm = $values;
             $this->dataSource->applyFilter($values);

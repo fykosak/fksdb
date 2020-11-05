@@ -13,11 +13,9 @@ use Nette\InvalidStateException;
  */
 class BrojureResultsModel extends AbstractResultsModel {
 
-    const COL_SERIES_PREFIX = 's';
+    public const COL_SERIES_PREFIX = 's';
 
-    /**
-     * @var array of int
-     */
+    /** @var array of int */
     protected $series;
 
     /**
@@ -30,7 +28,7 @@ class BrojureResultsModel extends AbstractResultsModel {
      * Cache
      * @var array
      */
-    private $dataColumns = [];
+    private array $dataColumns = [];
 
     /**
      * Definition of header.
@@ -68,7 +66,7 @@ class BrojureResultsModel extends AbstractResultsModel {
                 ];
             }
             $dataColumns[] = [
-                self::COL_DEF_LABEL => self::LABEL_PERCETAGE,
+                self::COL_DEF_LABEL => self::LABEL_PERCENTAGE,
                 self::COL_DEF_LIMIT => 100,
                 self::COL_ALIAS => self::ALIAS_PERCENTAGE,
             ];
@@ -97,8 +95,7 @@ class BrojureResultsModel extends AbstractResultsModel {
     /**
      * @param mixed $series
      */
-    public function setSeries($series) {
-        $this->dataColumns = null;
+    public function setSeries($series): void {
         $this->series = $series;
         // invalidate cache of columns
         $this->dataColumns = [];
@@ -112,10 +109,10 @@ class BrojureResultsModel extends AbstractResultsModel {
     }
 
     /**
-     * @param $listedSeries
+     * @param array $listedSeries
      * @return void
      */
-    public function setListedSeries($listedSeries) {
+    public function setListedSeries($listedSeries): void {
         $this->listedSeries = $listedSeries;
         // invalidate cache of columns
         $this->dataColumns = [];

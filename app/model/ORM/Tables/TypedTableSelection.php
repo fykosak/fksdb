@@ -13,18 +13,8 @@ use Nette\Database\Table\Selection;
  */
 class TypedTableSelection extends Selection {
 
-    /**
-     * @var string
-     */
-    protected $modelClassName;
+    protected string $modelClassName;
 
-    /**
-     * TypedTableSelection constructor.
-     * @param $modelClassName
-     * @param $table
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(string $modelClassName, string $table, Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, $table);
         $this->modelClassName = $modelClassName;

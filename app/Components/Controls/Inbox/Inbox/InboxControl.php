@@ -18,23 +18,14 @@ use Nette\DI\Container;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class InboxControl extends SeriesTableFormControl {
-    /** @var ServiceSubmit */
-    private $serviceSubmit;
 
-    /**
-     * InboxControl constructor.
-     * @param Container $context
-     * @param SeriesTable $seriesTable
-     */
+    private ServiceSubmit $serviceSubmit;
+
     public function __construct(Container $context, SeriesTable $seriesTable) {
         parent::__construct($context, $seriesTable, true);
     }
 
-    /**
-     * @param ServiceSubmit $serviceSubmit
-     * @return void
-     */
-    public function injectServiceSubmit(ServiceSubmit $serviceSubmit) {
+    final public function injectServiceSubmit(ServiceSubmit $serviceSubmit): void {
         $this->serviceSubmit = $serviceSubmit;
     }
 
@@ -43,7 +34,7 @@ class InboxControl extends SeriesTableFormControl {
      * @throws AbortException
      * @throws ForbiddenRequestException
      */
-    protected function handleFormSuccess(Form $form) {
+    protected function handleFormSuccess(Form $form): void {
         foreach ($form->getHttpData()['submits'] as $ctId => $tasks) {
             foreach ($tasks as $taskNo => $submittedOn) {
                 if (!$this->getSeriesTable()->getContestants()->where('ct_id', $ctId)->fetch()) {
@@ -74,7 +65,7 @@ class InboxControl extends SeriesTableFormControl {
         $this->getPresenter()->redirect('this');
     }
 
-    public function render() {
+    public function render(): void {
         $form = $this->getComponent('form');
         if ($form instanceof OptimisticForm) {
             $form->setDefaults();

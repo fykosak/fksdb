@@ -1,7 +1,8 @@
 import {
     Message,
-    Response,
-} from '@fetchApi/middleware/interfaces';
+    Response2,
+} from '@fetchApi/interfaces';
+import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -12,27 +13,25 @@ import {
 import {
     Task,
     Team,
-} from '../../helpers/interfaces/';
+} from '../../helpers/interfaces';
 import { SubmitFormRequest } from '../actions';
-import { Store as SubmitStore } from '../reducers/';
-import CodeInputError from './errorBlock';
-import { FORM_NAME } from './formContainer';
-import CodeInput from './input';
-import Scan from './scan';
-import SubmitButtons from './submitButtons';
-import ValueDisplay from './valueDisplay';
-import { lang } from '@i18n/i18n';
+import { Store as SubmitStore } from '../reducer';
+import { FORM_NAME } from './container';
+import ScanInput from './inputs/scan';
+import SubmitButtons from './inputs/submitButtons';
+import TextInput from './inputs/text';
+import ErrorBlock from './outputs/errorBlock';
+import ValueDisplay from './outputs/valueDisplay';
 
 export interface OwnProps {
-    accessKey: string;
     tasks: Task[];
     teams: Team[];
     valid: boolean;
     submitting: boolean;
     availablePoints: number[];
-    handleSubmit: SubmitHandler<{ code: string }, any, string>;
+    handleSubmit: SubmitHandler<{ code: string }, any>;
 
-    onSubmit(values: SubmitFormRequest): Promise<Response<void>>;
+    onSubmit(values: SubmitFormRequest): Promise<Response2<void>>;
 }
 
 interface StateProps {
@@ -54,14 +53,14 @@ class FormSection extends React.Component<OwnProps & StateProps, {}> {
                     <div className="col-lg-6 col-md-12 mb-3">
                         <h3 className={'fyziklani-headline-color'}>{lang.getText('Code')}</h3>
                         <div className="form-group">
-                            <Field name="code" component={CodeInput}/>
+                            <Field name="code" component={TextInput}/>
                         </div>
                         <div className="form-group">
-                            <Field name="code" component={CodeInputError}/>
+                            <Field name="code" component={ErrorBlock}/>
                         </div>
                     </div>
                     <div className="col-lg-6 col-md-12 mb-3">
-                        <Field name="code" component={Scan}/>
+                        <Field name="code" component={ScanInput}/>
                     </div>
 
                     <div className="col-12">
@@ -81,12 +80,11 @@ class FormSection extends React.Component<OwnProps & StateProps, {}> {
     }
 }
 
-const mapStateToProps = (state: SubmitStore, ownProps: OwnProps): StateProps => {
+const mapStateToProps = (state: SubmitStore): StateProps => {
     const selector = formValueSelector(FORM_NAME);
-    const {accessKey} = ownProps;
     return {
         code: selector(state, 'code'),
-        messages: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].messages : [],
+        messages: state.fetchApi.messages,
     };
 };
 

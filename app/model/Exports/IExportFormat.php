@@ -1,6 +1,6 @@
 <?php
 
-namespace Exports;
+namespace FKSDB\Exports;
 
 use Nette\Application\IResponse;
 

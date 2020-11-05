@@ -3,6 +3,7 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Services\ServiceContestant;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
@@ -11,7 +12,7 @@ use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
-use SQL\ViewDataSource;
+use FKSDB\SQL\ViewDataSource;
 
 /**
  *
@@ -19,36 +20,19 @@ use SQL\ViewDataSource;
  */
 class ContestantsGrid extends BaseGrid {
 
-    /**
-     * @var ServiceContestant
-     */
-    private $serviceContestant;
-    /**
-     * @var int
-     */
-    private $year;
-    /**
-     * @var ModelContest
-     */
-    private $contest;
+    private ServiceContestant $serviceContestant;
 
-    /**
-     * ContestantsGrid constructor.
-     * @param Container $container
-     * @param ModelContest $contest
-     * @param int $year
-     */
+    private int $year;
+
+    private ModelContest $contest;
+
     public function __construct(Container $container, ModelContest $contest, int $year) {
         parent::__construct($container);
         $this->contest = $contest;
         $this->year = $year;
     }
 
-    /**
-     * @param ServiceContestant $serviceContestant
-     * @return void
-     */
-    public function injectServiceContestant(ServiceContestant $serviceContestant) {
+    final public function injectServiceContestant(ServiceContestant $serviceContestant): void {
         $this->serviceContestant = $serviceContestant;
     }
 
@@ -65,37 +49,26 @@ class ContestantsGrid extends BaseGrid {
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->setDefaultOrder('name_lex ASC');
 
-        //
-        // columns
-        //
         $this->addColumn('name', _('Name'));
-        $this->addColumn('study_year', _('Ročník'));
-        $this->addColumn('school_name', _('Škola'));
+        $this->addColumn('study_year', _('Study year'));
+        $this->addColumn('school_name', _('School'));
 
-        //
-        // operations
-        //
-        $this->addButton('editPerson', _('Edit'))
-            ->setText(_('Edit'))
-            ->setLink(function ($row) use ($presenter) {
-                return $presenter->link('Contestant:edit', [
-                    'id' => $row->ct_id,
-                ]);
-            });
+        $this->addLinkButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'ct_id']);
+        // $this->addLinkButton('Contestant:detail', 'detail', _('Detail'), false, ['id' => 'ct_id']);
 
         $this->addGlobalButton('add')
-            ->setLabel(_('Založit řešitele'))
+            ->setLabel(_('Create contestant'))
             ->setLink($this->getPresenter()->link('create'));
 
-
-        //
-        // appeareance
-        //
         $this->paginate = false;
+    }
+
+    protected function getModelClassName(): string {
+        return ModelContestant::class;
     }
 }

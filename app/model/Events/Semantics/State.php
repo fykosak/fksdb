@@ -14,30 +14,17 @@ class State extends EvaluatedExpression {
     use SmartObject;
     use WithEventTrait;
 
-    /** @var string */
-    private $state;
+    private string $state;
 
-    /**
-     * State constructor.
-     * @param string $state
-     */
     public function __construct(string $state) {
         $this->state = $state;
     }
 
-    /**
-     * @param array $args
-     * @return bool
-     */
     public function __invoke(...$args): bool {
         return $this->getHolder($args[0])->getPrimaryHolder()->getModelState() == $this->state;
     }
 
-    /**
-     * @return string
-     */
-    public function __toString() {
+    public function __toString(): string {
         return "state == {$this->state}";
     }
-
 }

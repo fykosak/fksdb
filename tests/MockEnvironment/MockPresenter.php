@@ -10,7 +10,7 @@ class MockPresenter extends BasePresenter {
      * @param array $args
      * @return string
      */
-    public function link($destination, $args = []) {
+    public function link($destination, $args = []): string {
         return '';
     }
 

@@ -1,25 +1,19 @@
 <?php
 
-/**
- * For presenters that provide contest and year context.
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
-
 namespace FKSDB\Modules\Core\ContestPresenter;
 
 use FKSDB\ORM\Models\ModelContest;
 
 /**
- * Interface IContestPresenter
+ * For presenters that provide contest and year context.
+ *
+ * @author Michal Koutný <xm.koutny@gmail.com>
  */
 interface IContestPresenter {
 
-    /** @return ModelContest */
-    public function getSelectedContest();
+    public function getSelectedContest(): ?ModelContest;
 
-    /** @return int */
-    public function getSelectedYear();
+    public function getSelectedYear(): ?int;
 
     public function getSelectedAcademicYear(): int;
 

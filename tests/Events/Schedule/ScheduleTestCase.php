@@ -10,14 +10,20 @@ use Nette\Utils\DateTime;
 abstract class ScheduleTestCase extends EventTestCase {
     /** @var int */
     protected $itemId;
-    /** @var IPresenter */
-    protected $fixture;
-    /** @var int */
-    protected $groupId;
-    /** @var array */
-    protected $persons = [];
 
-    protected function setUp() {
+    protected IPresenter $fixture;
+
+    protected int $groupId;
+
+    protected array $persons = [];
+
+    protected int $eventId;
+
+    protected function getEventId(): int {
+        return $this->eventId;
+    }
+
+    protected function setUp(): void {
         parent::setUp();
 
         $this->eventId = $this->createEvent([
@@ -127,7 +133,7 @@ EOT
 
     abstract public function getAccommodationCapacity(): int;
 
-    protected function tearDown() {
+    protected function tearDown(): void {
         $this->connection->query('DELETE FROM e_dsef_participant');
         $this->connection->query('DELETE FROM e_dsef_group');
         $this->connection->query('DELETE FROM person_schedule');

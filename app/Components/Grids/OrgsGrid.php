@@ -11,7 +11,7 @@ use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use SQL\SearchableDataSource;
+use FKSDB\SQL\SearchableDataSource;
 
 /**
  *
@@ -19,30 +19,16 @@ use SQL\SearchableDataSource;
  */
 class OrgsGrid extends BaseGrid {
 
-    /**
-     * @var ServiceOrg
-     */
-    private $serviceOrg;
-    /**
-     * @var ModelContest
-     */
-    private $contest;
+    private ServiceOrg $serviceOrg;
 
-    /**
-     * OrgsGrid constructor.
-     * @param Container $container
-     * @param ModelContest $contest
-     */
+    private ModelContest $contest;
+
     public function __construct(Container $container, ModelContest $contest) {
         parent::__construct($container);
         $this->contest = $contest;
     }
 
-    /**
-     * @param ServiceOrg $serviceOrg
-     * @return void
-     */
-    public function injectServiceOrg(ServiceOrg $serviceOrg) {
+    final public function injectServiceOrg(ServiceOrg $serviceOrg): void {
         $this->serviceOrg = $serviceOrg;
     }
 
@@ -68,7 +54,7 @@ class OrgsGrid extends BaseGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->setDefaultOrder('since DESC');

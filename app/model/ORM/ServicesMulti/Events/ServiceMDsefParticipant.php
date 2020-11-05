@@ -14,29 +14,16 @@ use FKSDB\ORM\ModelsMulti\Events\ModelMDsefParticipant;
  */
 class ServiceMDsefParticipant extends AbstractServiceMulti {
 
-    /**
-     * ServiceMDsefParticipant constructor.
-     * @param ServiceEventParticipant $mainService
-     * @param ServiceDsefParticipant $joinedService
-     */
     public function __construct(ServiceEventParticipant $mainService, ServiceDsefParticipant $joinedService) {
-        parent::__construct($mainService, $joinedService);
+        parent::__construct($mainService, $joinedService, 'event_participant_id', ModelMDsefParticipant::class);
     }
 
     /**
      * Delete post contact including the address.
      * @param IModel|AbstractModelMulti $model
      */
-    public function dispose(IModel $model) {
+    public function dispose(IModel $model): void {
         parent::dispose($model);
         $this->getMainService()->dispose($model->getMainModel());
-    }
-
-    public function getJoiningColumn(): string {
-        return 'event_participant_id';
-    }
-
-    public function getModelClassName(): string {
-        return ModelMDsefParticipant::class;
     }
 }

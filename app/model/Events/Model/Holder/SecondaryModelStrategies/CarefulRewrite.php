@@ -13,26 +13,13 @@ use FKSDB\ORM\IService;
  */
 class CarefulRewrite extends SecondaryModelStrategy {
 
-    /**
-     * @var array
-     */
-    private $safeKeys = [];
+    private array $safeKeys;
 
-    /**
-     * CarefulRewrite constructor.
-     * @param array $safeKeys
-     */
-    public function __construct($safeKeys = []) {
+    public function __construct(array $safeKeys = []) {
         $this->safeKeys = $safeKeys;
     }
 
-    /**
-     * @param BaseHolder $holder
-     * @param $secondaries
-     * @param $joinData
-     * @return void
-     */
-    protected function resolveMultipleSecondaries(BaseHolder $holder, $secondaries, $joinData) {
+    protected function resolveMultipleSecondaries(BaseHolder $holder, array $secondaries, array $joinData): void {
         if (count($secondaries) > 1) {
             throw new SecondaryModelConflictException($holder, $secondaries);
         }
@@ -49,14 +36,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
         $holder->setModel($foundModel); // "swap" models
     }
 
-    /**
-     * @param IModel $currentModel
-     * @param IModel $foundModel
-     * @param iterable $joinData
-     * @param IService $service
-     * @return array
-     */
-    private function getConflicts(IModel $currentModel, IModel $foundModel, $joinData, IService $service): array {
+    private function getConflicts(IModel $currentModel, IModel $foundModel, array $joinData, IService $service): array {
         $currentArray = $currentModel->toArray();
         $foundArray = $foundModel->toArray();
         $result = [];
@@ -75,13 +55,7 @@ class CarefulRewrite extends SecondaryModelStrategy {
         return $result;
     }
 
-    /**
-     * @param IModel $currentModel
-     * @param IModel $foundModel
-     * @param iterable $joinData
-     * @param IService $service
-     */
-    private function updateFoundModel(IModel $currentModel, IModel $foundModel, $joinData, IService $service) {
+    private function updateFoundModel(IModel $currentModel, IModel $foundModel, array $joinData, IService $service): void {
         $currentArray = $currentModel->toArray();
         $data = [];
         foreach ($currentArray as $key => $value) {

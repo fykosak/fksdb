@@ -1,6 +1,7 @@
 <?php
 
-use FKSDB\Tests\DatabaseTestCase;
+use FKSDB\Tests\ModelTests\DatabaseTestCase;
+
 
 /**
  * Class PaymentTestCase

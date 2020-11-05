@@ -11,19 +11,15 @@ use FKSDB\Expressions\EvaluatedExpression;
  */
 class Leq extends EvaluatedExpression {
 
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $aValue;
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $bValue;
 
     /**
      * Leq constructor.
-     * @param $aValue
-     * @param $bValue
+     * @param mixed $aValue
+     * @param mixed $bValue
      */
     public function __construct($aValue, $bValue) {
         $this->aValue = $aValue;

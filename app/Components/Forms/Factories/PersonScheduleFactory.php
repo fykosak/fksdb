@@ -6,35 +6,29 @@ use FKSDB\Components\Forms\Controls\Schedule\ScheduleField;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
-use Nette\Forms\Controls\BaseControl;
-use Nette\Utils\JsonException;
+use Nette\Application\BadRequestException;
 
 /**
  * Class PersonScheduleFactory
  * *
  */
 class PersonScheduleFactory {
-    /**
-     * @var ServiceScheduleItem
-     */
-    private $serviceScheduleItem;
 
-    /**
-     * PersonScheduleFactory constructor.
-     * @param ServiceScheduleItem $serviceScheduleItem
-     */
+    private ServiceScheduleItem $serviceScheduleItem;
+
     public function __construct(ServiceScheduleItem $serviceScheduleItem) {
         $this->serviceScheduleItem = $serviceScheduleItem;
     }
 
     /**
-     * @param $fieldName
+     * @param string $fieldName
      * @param ModelEvent $event
-     * @return BaseControl
-     * @throws JsonException
+     * @return ScheduleField
+     * @throws BadRequestException
      * @throws NotImplementedException
+     * @throws BadRequestException
      */
-    public function createField($fieldName, ModelEvent $event) {
+    public function createField(string $fieldName, ModelEvent $event): ScheduleField {
         return new ScheduleField($event, $fieldName, $this->serviceScheduleItem);
     }
 }

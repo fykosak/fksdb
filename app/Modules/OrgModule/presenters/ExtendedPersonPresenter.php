@@ -4,62 +4,45 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\AbstractServiceMulti;
-use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\IService;
+use FKSDB\ORM\Models\ModelContestant;
 use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
-use Persons\AclResolver;
-use Persons\ExtendedPersonHandler;
-use Persons\ExtendedPersonHandlerFactory;
-use Persons\IExtendedPersonPresenter;
+use Nette\Forms\IControl;
+use FKSDB\Persons\AclResolver;
+use FKSDB\Persons\ExtendedPersonHandler;
+use FKSDB\Persons\ExtendedPersonHandlerFactory;
+use FKSDB\Persons\IExtendedPersonPresenter;
 
 /**
  * Class ExtendedPersonPresenter
- * *
+ *
  */
 abstract class ExtendedPersonPresenter extends EntityPresenter implements IExtendedPersonPresenter {
-    /**
-     * @var bool
-     */
-    protected $sendEmail = true;
 
-    /**
-     * @var ReferencedPersonFactory
-     */
-    private $referencedPersonFactory;
+    protected bool $sendEmail = true;
 
-    /**
-     * @var ExtendedPersonHandlerFactory
-     */
-    private $handlerFactory;
+    private ReferencedPersonFactory $referencedPersonFactory;
+    private ExtendedPersonHandlerFactory $handlerFactory;
 
-    /**
-     * @param ReferencedPersonFactory $referencedPersonFactory
-     * @return void
-     */
-    public function injectReferencedPersonFactory(ReferencedPersonFactory $referencedPersonFactory) {
+    final public function injectExtendedPerson(ReferencedPersonFactory $referencedPersonFactory,ExtendedPersonHandlerFactory $handlerFactory): void {
         $this->referencedPersonFactory = $referencedPersonFactory;
-    }
-
-    /**
-     * @param ExtendedPersonHandlerFactory $handlerFactory
-     * @return void
-     */
-    public function injectHandlerFactory(ExtendedPersonHandlerFactory $handlerFactory) {
         $this->handlerFactory = $handlerFactory;
     }
 
     /**
-     * @param IModel|null $model
-     * @param Form $form
+     * @param ModelContestant|IModel|null $model
+     * @param Form|IControl[][] $form
      */
-    protected function setDefaults(IModel $model = null, Form $form) {
+    protected function setDefaults(?IModel $model, Form $form): void {
         if (!$model) {
             return;
         }
@@ -71,38 +54,29 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     /**
      * @return array
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
-    protected function getFieldsDefinition() {
+    protected function getFieldsDefinition(): array {
         $contestId = $this->getSelectedContest()->contest_id;
-        $contestName = $this->globalParameters['contestMapping'][$contestId];
-        return Helpers::evalExpressionArray($this->globalParameters[$contestName][$this->fieldsDefinition], $this->getContext());
+        $contestName = $this->getContext()->getParameters()['contestMapping'][$contestId];
+        return Helpers::evalExpressionArray($this->getContext()->getParameters()[$contestName][$this->fieldsDefinition], $this->getContext());
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     */
-    abstract protected function appendExtendedContainer(Form $form);
+    abstract protected function appendExtendedContainer(Form $form): void;
 
-    /**
-     * @return AbstractServiceMulti|AbstractServiceSingle
-     */
-    abstract protected function getORMService();
+    abstract protected function getORMService(): IService;
 
-    /**
-     * @return null
-     */
-    protected function getAcYearFromModel() {
+    protected function getAcYearFromModel(): ?int {
         return null;
     }
 
     /**
      * @param bool $create
      * @return FormControl
-     * @throws BadRequestException
      * @throws BadTypeException
-     * @throws \Exception
+     * @throws ForbiddenRequestException
+     * @throws BadRequestException
      */
     private function createComponentFormControl(bool $create): FormControl {
         $control = new FormControl();
@@ -113,20 +87,20 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
         $fieldsDefinition = $this->getFieldsDefinition();
         $acYear = $this->getAcYearFromModel() ? $this->getAcYearFromModel() : $this->getSelectedAcademicYear();
-        $searchType = ReferencedPersonFactory::SEARCH_ID;
+        $searchType = PersonSearchContainer::SEARCH_ID;
         $allowClear = $create;
         $modifiabilityResolver = $visibilityResolver = new AclResolver($this->contestAuthorizator, $this->getSelectedContest());
-        $components = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
-        $components[0]->addRule(Form::FILLED, _('Osobu je třeba zadat.'));
-        $components[1]->setOption('label', _('Osoba'));
+        $referencedId = $this->referencedPersonFactory->createReferencedPerson($fieldsDefinition, $acYear, $searchType, $allowClear, $modifiabilityResolver, $visibilityResolver);
+        $referencedId->addRule(Form::FILLED, _('Person is required.'));
+        $referencedId->getReferencedContainer()->setOption('label', _('Person'));
 
-        $container->addComponent($components[0], ExtendedPersonHandler::EL_PERSON);
-        $container->addComponent($components[1], ExtendedPersonHandler::CONT_PERSON);
+        $container->addComponent($referencedId, ExtendedPersonHandler::EL_PERSON);
 
         $this->appendExtendedContainer($form);
 
-        $handler = $this->handlerFactory->create($this->getORMService(), $this->getSelectedContest(), $this->getSelectedYear(), $this->globalParameters['invitation']['defaultLang']);
-        $submit = $form->addSubmit('send', $create ? _('Založit') : _('Save'));
+        $handler = $this->handlerFactory->create($this->getORMService(), $this->getSelectedContest(), $this->getSelectedYear(), $this->getContext()->getParameters()['invitation']['defaultLang']);
+
+        $submit = $form->addSubmit('send', $create ? _('Create') : _('Save'));
 
         $submit->onClick[] = function (SubmitButton $button) use ($handler) {
             $form = $button->getForm();
@@ -141,6 +115,8 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     /**
      * @return FormControl
      * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     final protected function createComponentCreateComponent(): FormControl {
         return $this->createComponentFormControl(true);
@@ -149,16 +125,18 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     /**
      * @return FormControl
      * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     final protected function createComponentEditComponent(): FormControl {
         return $this->createComponentFormControl(false);
     }
 
     /**
-     * @param $id
+     * @param int $id
      * @return AbstractModelSingle
      */
-    protected function loadModel($id) {
+    protected function loadModel($id): ?IModel {
         return $this->getORMService()->findByPrimary($id);
     }
 }

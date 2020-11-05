@@ -17,45 +17,27 @@ use Nette\Forms\IControl;
  */
 abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment {
 
-    /**
-     * @var ServicePersonHistory
-     */
-    private $servicePersonHistory;
+    private ServicePersonHistory $servicePersonHistory;
+    private Holder $holder;
 
-    /**
-     * @var Holder
-     */
-    private $holder;
-
-    /**
-     * SchoolCheck constructor.
-     * @param ServicePersonHistory $servicePersonHistory
-     */
     public function __construct(ServicePersonHistory $servicePersonHistory) {
         $this->servicePersonHistory = $servicePersonHistory;
     }
 
-    /**
-     * @return Holder
-     */
-    public function getHolder() {
+    public function getHolder(): Holder {
         return $this->holder;
     }
 
-    /**
-     * @param Holder $holder
-     * @return void
-     */
-    public function setHolder(Holder $holder) {
+    public function setHolder(Holder $holder): void {
         $this->holder = $holder;
     }
 
     /**
-     * @param $schoolControls
-     * @param $personControls
+     * @param IControl[] $schoolControls
+     * @param IControl[] $personControls
      * @return array
      */
-    final protected function getSchools($schoolControls, $personControls) {
+    final protected function getSchools(array $schoolControls, array $personControls): array {
         $personIds = array_filter(array_map(function (BaseControl $control) {
             try {
                 return $control->getValue();
@@ -70,7 +52,6 @@ abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment
             ->fetchPairs('person_id', 'school_id');
 
         $result = [];
-        /** @var IControl $control */
         foreach ($schoolControls as $key => $control) {
             if ($control->getValue()) {
                 $result[] = $control->getValue();

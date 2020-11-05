@@ -16,14 +16,9 @@ use NiftyGrid\DuplicateColumnException;
  */
 class EmailsGrid extends BaseGrid {
 
-    /** @var ServiceEmailMessage */
-    private $serviceEmailMessage;
+    private ServiceEmailMessage $serviceEmailMessage;
 
-    /***
-     * @param ServiceEmailMessage $serviceEmailMessage
-     * @return void
-     */
-    public function injectServiceEmailMessage(ServiceEmailMessage $serviceEmailMessage) {
+    final public function injectServiceEmailMessage(ServiceEmailMessage $serviceEmailMessage): void {
         $this->serviceEmailMessage = $serviceEmailMessage;
     }
 
@@ -40,7 +35,7 @@ class EmailsGrid extends BaseGrid {
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->addColumns([

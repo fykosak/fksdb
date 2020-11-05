@@ -1,6 +1,6 @@
 <?php
 
-namespace Exports\Formats;
+namespace FKSDB\Exports\Formats;
 
 use Nette\Application\IResponse;
 use Nette\Http\IRequest;
@@ -14,38 +14,23 @@ use Nette\SmartObject;
 class PlainTextResponse implements IResponse {
     use SmartObject;
 
-    /** @var string */
-    private $content;
-    /** @var mixed */
-    private $name;
+    private string $content;
 
-    /**
-     * PlainTextResponse constructor.
-     * @param $content
-     */
+    private string $name;
+
     public function __construct(string $content) {
         $this->content = $content;
-
     }
 
     public function getName(): string {
         return $this->name;
     }
 
-    /**
-     * @param string $name
-     * @return void
-     */
-    public function setName(string $name) {
+    public function setName(string $name): void {
         $this->name = $name;
     }
 
-    /**
-     * @param IRequest $httpRequest
-     * @param \Nette\Http\IResponse $httpResponse
-     * @return void
-     */
-    public function send(IRequest $httpRequest, \Nette\Http\IResponse $httpResponse) {
+    public function send(IRequest $httpRequest, \Nette\Http\IResponse $httpResponse): void {
         $httpResponse->setContentType('text/plain', 'utf-8');
 
         if ($this->name) {

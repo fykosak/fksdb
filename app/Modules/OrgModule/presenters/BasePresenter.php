@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\ContestChooser;
+use FKSDB\Components\Controls\Choosers\ContestChooser;
 use FKSDB\Modules\Core\ContestPresenter\ContestPresenter;
 use FKSDB\ORM\Models\ModelRole;
 
@@ -19,10 +19,7 @@ abstract class BasePresenter extends ContestPresenter {
         return $control;
     }
 
-    /**
-     * @return string[]
-     */
-    public function getNavRoots(): array {
+    protected function getNavRoots(): array {
         return ['Org.Dashboard.default'];
     }
 }

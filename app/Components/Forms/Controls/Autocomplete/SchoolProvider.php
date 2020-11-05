@@ -14,25 +14,18 @@ use FKSDB\Exceptions\NotImplementedException;
  */
 class SchoolProvider implements IFilteredDataProvider {
 
-    const LIMIT = 50;
+    private const LIMIT = 50;
+
+    private ServiceSchool $serviceSchool;
 
     /**
-     * @var ServiceSchool
-     */
-    private $serviceSchool;
-
-    /**
-     * School with school_id equal to defaulValue is suggested even when it's not
+     * School with school_id equal to defaultValue is suggested even when it's not
      * active.
      *
      * @var int
      */
     private $defaultValue;
 
-    /**
-     * SchoolProvider constructor.
-     * @param ServiceSchool $serviceSchool
-     */
     public function __construct(ServiceSchool $serviceSchool) {
         $this->serviceSchool = $serviceSchool;
     }
@@ -43,7 +36,7 @@ class SchoolProvider implements IFilteredDataProvider {
      * @param string $search
      * @return array
      */
-    public function getFilteredItems($search) {
+    public function getFilteredItems(string $search): array {
         $search = trim($search);
         $tokens = preg_split('/[ ,\.]+/', $search);
 
@@ -97,8 +90,9 @@ class SchoolProvider implements IFilteredDataProvider {
 
     /**
      * @param mixed $id
+     * @return void
      */
-    public function setDefaultValue($id) {
+    public function setDefaultValue($id): void {
         $this->defaultValue = $id;
     }
 }

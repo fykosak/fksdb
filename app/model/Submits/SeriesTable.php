@@ -19,51 +19,27 @@ use FKSDB\ORM\Tables\TypedTableSelection;
  */
 class SeriesTable {
 
-    const FORM_SUBMIT = 'submit';
-    const FORM_CONTESTANT = 'contestant';
+    public const FORM_SUBMIT = 'submit';
+    public const FORM_CONTESTANT = 'contestant';
 
-    /**
-     * @var ServiceContestant
-     */
-    private $serviceContestant;
+    private ServiceContestant $serviceContestant;
 
-    /**
-     * @var ServiceTask
-     */
-    private $serviceTask;
+    private ServiceTask $serviceTask;
 
-    /**
-     * @var ServiceSubmit
-     */
-    private $serviceSubmit;
+    private ServiceSubmit $serviceSubmit;
 
-    /**
-     * @var ModelContest
-     */
-    private $contest;
+    private ModelContest $contest;
 
-    /**
-     * @var int
-     */
-    private $year;
+    private int $year;
 
-    /**
-     * @var int
-     */
-    private $series;
+    private int $series;
 
     /**
      *
      * @var null|array of int IDs of allowed tasks or null for unrestricted
      */
-    private $taskFilter;
+    private ?array $taskFilter = null;
 
-    /**
-     * SeriesTable constructor.
-     * @param ServiceContestant $serviceContestant
-     * @param ServiceTask $serviceTask
-     * @param ServiceSubmit $serviceSubmit
-     */
     public function __construct(ServiceContestant $serviceContestant, ServiceTask $serviceTask, ServiceSubmit $serviceSubmit) {
         $this->serviceContestant = $serviceContestant;
         $this->serviceTask = $serviceTask;
@@ -74,11 +50,7 @@ class SeriesTable {
         return $this->contest;
     }
 
-    /**
-     * @param ModelContest $contest
-     * @return void
-     */
-    public function setContest(ModelContest $contest) {
+    public function setContest(ModelContest $contest): void {
         $this->contest = $contest;
     }
 
@@ -86,11 +58,7 @@ class SeriesTable {
         return $this->year;
     }
 
-    /**
-     * @param int $year
-     * @return void
-     */
-    public function setYear(int $year) {
+    public function setYear(int $year): void {
         $this->year = $year;
     }
 
@@ -98,25 +66,15 @@ class SeriesTable {
         return $this->series;
     }
 
-    /**
-     * @param int $series
-     * @return void
-     */
-    public function setSeries(int $series) {
+    public function setSeries(int $series): void {
         $this->series = $series;
     }
 
-    /**
-     * @return array|null
-     */
-    public function getTaskFilter() {
+    public function getTaskFilter(): ?array {
         return $this->taskFilter;
     }
 
-    /**
-     * @param array|null $taskFilter
-     */
-    public function setTaskFilter($taskFilter) {
+    public function setTaskFilter(?array $taskFilter): void {
         $this->taskFilter = $taskFilter;
     }
 
@@ -175,7 +133,7 @@ class SeriesTable {
             }
         }
         return [
-            self::FORM_CONTESTANT => $result
+            self::FORM_CONTESTANT => $result,
         ];
     }
 
@@ -183,9 +141,7 @@ class SeriesTable {
         $fingerprint = '';
         foreach ($this->getSubmitsTable() as $submits) {
             foreach ($submits as $submit) {
-                /**
-                 * @var ModelSubmit $submit
-                 */
+                /** @var ModelSubmit $submit */
                 $fingerprint .= $submit->getFingerprint();
             }
         }

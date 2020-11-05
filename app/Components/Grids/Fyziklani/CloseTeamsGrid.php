@@ -21,30 +21,17 @@ use NiftyGrid\DuplicateColumnException;
  * @author Lukáš Timko
  */
 class CloseTeamsGrid extends BaseGrid {
-    /**
-     * @var ServiceFyziklaniTeam
-     */
-    private $serviceFyziklaniTeam;
-    /**
-     * @var ModelEvent
-     */
-    private $event;
 
-    /**
-     * FyziklaniTeamsGrid constructor.
-     * @param ModelEvent $event
-     * @param Container $container
-     */
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+
+    private ModelEvent $event;
+
     public function __construct(ModelEvent $event, Container $container) {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    /**
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @return void
-     */
-    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    final public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
@@ -60,7 +47,7 @@ class CloseTeamsGrid extends BaseGrid {
      * @throws DuplicateColumnException
      * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter) {
+    protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
 
         $this->paginate = false;
@@ -83,7 +70,7 @@ class CloseTeamsGrid extends BaseGrid {
             'id' => 'e_fyziklani_team_id',
             'eventId' => 'event_id',
         ])->setShow(function (ModelFyziklaniTeam $row) {
-            return $row->isReadyForClosing();
+            return $row->canClose(false);
         });
     }
 

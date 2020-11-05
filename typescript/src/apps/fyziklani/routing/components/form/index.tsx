@@ -4,51 +4,44 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { Team } from '../../../helpers/interfaces/';
+import { Team } from '../../../helpers/interfaces';
 import { saveTeams } from '../../actions/save';
 import { Store as RoutingStore } from '../../reducers/';
-import jqXHR = JQuery.jqXHR;
 
 interface StateProps {
     teams: Team[];
     saving: boolean;
-    error: jqXHR<any>;
+    error: Error | any;
 }
 
 interface DispatchProps {
     onSaveRouting(teams: Team[]): void;
 }
 
-interface OwnProps {
-    accessKey: string;
-}
-
-class Form extends React.Component<StateProps & DispatchProps & OwnProps, {}> {
+class Form extends React.Component<StateProps & DispatchProps, {}> {
 
     public render() {
         const {onSaveRouting, teams, saving, error} = this.props;
-        return (<div>
+        return (<>
             <button disabled={saving} className="btn btn-success" onClick={() => {
                 onSaveRouting(teams);
             }}>Save
             </button>
             {error && (<span className="text-danger">{error.statusText}</span>)}
-        </div>);
+        </>);
     }
 }
 
-const mapDispatchToProps = (dispatch: Dispatch<Action>, ownProps: OwnProps): DispatchProps => {
-    const {accessKey} = ownProps;
+const mapDispatchToProps = (dispatch: Dispatch<Action>): DispatchProps => {
     return {
-        onSaveRouting: (data: Team[]) => saveTeams(accessKey, dispatch, data),
+        onSaveRouting: (data: Team[]) => saveTeams(dispatch, data),
     };
 };
 
-const mapStateToProps = (state: RoutingStore, ownProps: OwnProps): StateProps => {
-    const {accessKey} = ownProps;
+const mapStateToProps = (state: RoutingStore): StateProps => {
     return {
-        error: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].error : null,
-        saving: state.fetchApi.hasOwnProperty(accessKey) ? state.fetchApi[accessKey].submitting : false,
+        error: state.fetchApi.error,
+        saving: state.fetchApi.submitting,
         teams: state.teams.availableTeams,
     };
 };

@@ -2,10 +2,13 @@
 
 namespace FKSDB\ORM\Services;
 
+use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
+use Nette\Database\Context;
+use Nette\Database\IConventions;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
 
@@ -14,28 +17,24 @@ use Nette\Utils\Random;
  */
 class ServiceAuthToken extends AbstractServiceSingle {
 
-    const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
+    private const TOKEN_LENGTH = 32; // for 62 characters ~ 128 bit
 
-    public function getModelClassName(): string {
-        return ModelAuthToken::class;
-    }
-
-    protected function getTableName(): string {
-        return DbNames::TAB_AUTH_TOKEN;
+    public function __construct(Context $connection, IConventions $conventions) {
+        parent::__construct($connection, $conventions, DbNames::TAB_AUTH_TOKEN, ModelAuthToken::class);
     }
 
     /**
      *
      * @param ModelLogin $login
      * @param string $type
-     * @param \DateTimeInterface $until
-     * @param null $data
+     * @param \DateTimeInterface|null $until
+     * @param null|string $data
      * @param bool $refresh
-     * @param DateTime $since
+     * @param \DateTimeInterface|null $since
      * @return ModelAuthToken
-     * @throws \Exception
+     * @throws ModelException
      */
-    public function createToken(ModelLogin $login, $type, \DateTimeInterface $until = null, $data = null, $refresh = false, DateTime $since = null) {
+    public function createToken(ModelLogin $login, string $type, ?\DateTimeInterface $until, ?string $data = null, bool $refresh = false, ?\DateTimeInterface $since = null): ModelAuthToken {
         if ($since === null) {
             $since = new DateTime();
         }
@@ -71,7 +70,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
                 'token' => $tokenData,
                 'data' => $data,
                 'since' => $since,
-                'type' => $type
+                'type' => $type,
             ]);
         } else {
             $this->updateModel2($token, ['until' => $until]);
@@ -88,11 +87,11 @@ class ServiceAuthToken extends AbstractServiceSingle {
 
     /**
      *
-     * @param $tokenData
+     * @param string $tokenData
      * @param bool $strict
      * @return ModelAuthToken|null
      */
-    public function verifyToken($tokenData, $strict = true) {
+    public function verifyToken($tokenData, $strict = true): ?ModelAuthToken {
         $tokens = $this->getTable()
             ->where('token', $tokenData);
         if ($strict) {
@@ -105,10 +104,10 @@ class ServiceAuthToken extends AbstractServiceSingle {
     }
 
     /**
-     * @param $token
+     * @param string|ModelAuthToken $token
      * @return void
      */
-    public function disposeToken($token) {
+    public function disposeToken($token): void {
         if (!$token instanceof ModelAuthToken) {
             $token = $this->verifyToken($token);
         }
@@ -118,10 +117,10 @@ class ServiceAuthToken extends AbstractServiceSingle {
     }
 
     /**
-     * @param $eventId
+     * @param int $eventId
      * @return array
      */
-    public function findTokensByEventId($eventId) {
+    public function findTokensByEventId($eventId): array {
         $res = $this->getTable()
             ->where('type', ModelAuthToken::TYPE_EVENT_NOTIFY)
             ->where('since <= NOW()')

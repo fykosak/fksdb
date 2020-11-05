@@ -12,3 +12,7 @@ upload/*
 vendor/*
 .idea/*
 *.map
+www/**/.sass-cache/
+coverage.html
+install.sh.log
+/tools/soap-dev/request.soap

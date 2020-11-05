@@ -15,68 +15,52 @@ use Nette\InvalidArgumentException;
  */
 abstract class PairwiseAdjustment extends AbstractAdjustment implements IFormAdjustment {
 
-    const DELIMITER = '.';
-    const WILDCART = '*';
-
-    /**
-     * @var mixed
-     */
+    /** @var mixed */
     private $rules;
 
     /**
      * PairwiseAdjustment constructor.
-     * @param $rules
+     * @param mixed $rules
      */
     public function __construct($rules) {
         $this->rules = $rules;
     }
 
-    /**
-     * @param Form $form
-     * @param Machine $machine
-     * @param Holder $holder
-     * @return void
-     */
-    protected function _adjust(Form $form, Machine $machine, Holder $holder) {
-        foreach ($this->rules as $target => $prerequisities) {
-            if (is_scalar($prerequisities)) {
-                $prerequisities = [$prerequisities];
+    protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void {
+        foreach ($this->rules as $target => $prerequisites) {
+            if (is_scalar($prerequisites)) {
+                $prerequisites = [$prerequisites];
             }
 
-            foreach ($prerequisities as $prerequisity) {
+            foreach ($prerequisites as $prerequisite) {
                 $cTarget = $this->getControl($target);
-                $cPrerequisity = $this->getControl($prerequisity);
+                $cPrerequisite = $this->getControl($prerequisite);
 
-                if (!$cTarget || !$cPrerequisity) {
+                if (!$cTarget || !$cPrerequisite) {
                     break;
                 }
-                if ($this->hasWildcart($target) && $this->hasWildcart($prerequisity)) {
+                if ($this->hasWildCart($target) && $this->hasWildCart($prerequisite)) {
                     foreach ($cTarget as $key => $control) {
-                        if (isset($cPrerequisity[$key])) {
-                            $this->processPair($control, $cPrerequisity[$key]);
+                        if (isset($cPrerequisite[$key])) {
+                            $this->processPair($control, $cPrerequisite[$key]);
                         }
                     }
                 } elseif (count($cTarget) == 1) {
-                    foreach ($cPrerequisity as $control) {
+                    foreach ($cPrerequisite as $control) {
                         $this->processPair(reset($cTarget), $control);
                     }
-                } elseif (count($cPrerequisity) == 1) {
+                } elseif (count($cPrerequisite) == 1) {
                     foreach ($cTarget as $control) {
-                        $this->processPair($control, reset($cPrerequisity));
+                        $this->processPair($control, reset($cPrerequisite));
                     }
                 } else {
                     $sTarget = count($cTarget);
-                    $sPrerequisity = count($cPrerequisity);
-                    throw new InvalidArgumentException("Cannot apply 1:1, 1:n, n:1 neither matching rule to '$target ($sTarget match(es)): $prerequisity ($sPrerequisity match(es))'.");
+                    $sPrerequisite = count($cPrerequisite);
+                    throw new InvalidArgumentException("Cannot apply 1:1, 1:n, n:1 neither matching rule to '$target ($sTarget match(es)): $prerequisite ($sPrerequisite match(es))'.");
                 }
             }
         }
     }
 
-    /**
-     * @param IControl $target
-     * @param IControl $prerequisity
-     * @return void
-     */
-    abstract protected function processPair(IControl $target, IControl $prerequisity);
+    abstract protected function processPair(IControl $target, IControl $prerequisite): void;
 }

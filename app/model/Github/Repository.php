@@ -1,23 +1,20 @@
 <?php
 
-namespace Github;
+namespace FKSDB\Github;
 
 use Nette\SmartObject;
 
 /**
  * Class Repository
- * *
+ * @author Michal Koutný <michal@fykos.cz>
  */
 class Repository {
 
     use SmartObject;
-    /** @var string $name */
-    public $id;
 
-    /** @var string $name */
-    public $full_name;
+    public string $id;
 
-    /** @var User $user */
-    public $owner;
+    public string $full_name;
 
+    public User $owner;
 }

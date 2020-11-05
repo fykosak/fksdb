@@ -1,6 +1,6 @@
 <?php
 
-namespace Authorization;
+namespace FKSDB\Authorization;
 
 use Nette\Security\IRole;
 
@@ -11,23 +11,12 @@ use Nette\Security\IRole;
  */
 class Grant implements IRole {
 
-    const CONTEST_ALL = -1;
+    public const CONTEST_ALL = -1;
 
-    /**
-     * @var int
-     */
-    private $contestId;
+    private int $contestId;
 
-    /**
-     * @var string
-     */
-    private $roleId;
+    private string $roleId;
 
-    /**
-     * Grant constructor.
-     * @param int $contestId
-     * @param string $roleId
-     */
     public function __construct(int $contestId, string $roleId) {
         $this->contestId = $contestId;
         $this->roleId = $roleId;

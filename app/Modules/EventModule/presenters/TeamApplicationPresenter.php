@@ -5,15 +5,15 @@ namespace FKSDB\Modules\EventModule;
 use FKSDB\Components\Controls\Fyziklani\SchoolCheckComponent;
 use FKSDB\Components\Controls\Fyziklani\SeatingControl;
 use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
-use FKSDB\Components\Grids\Events\Application\AbstractApplicationGrid;
-use FKSDB\Components\Grids\Events\Application\ApplicationGrid;
-use FKSDB\Components\Grids\Events\Application\TeamApplicationGrid;
+use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
+use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
 use FKSDB\Config\NeonSchemaException;
+use FKSDB\Entity\ModelNotFoundException;
+use FKSDB\Events\EventNotFoundException;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 
 /**
@@ -22,31 +22,29 @@ use Nette\Application\ForbiddenRequestException;
  * @method ModelFyziklaniTeam getEntity()
  */
 class TeamApplicationPresenter extends AbstractApplicationPresenter {
-    /** @var ServiceFyziklaniTeam */
-    private $serviceFyziklaniTeam;
 
-    /**
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @return void
-     */
-    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam) {
+    private ServiceFyziklaniTeam $serviceFyziklaniTeam;
+
+    final public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
     /**
      * @return bool
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function isEnabled(): bool {
         return $this->isTeamEvent();
     }
 
     /**
-     * @throws AbortException
-     * @throws BadRequestException
+     * @return void
+     * @throws EventNotFoundException
      * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
+     * @throws BadTypeException
      */
-    public function renderDetail() {
+    public function renderDetail(): void {
         parent::renderDetail();
         $this->template->acYear = $this->getAcYear();
         try {
@@ -65,21 +63,19 @@ class TeamApplicationPresenter extends AbstractApplicationPresenter {
 
     /**
      * @return SchoolCheckComponent
-     * @throws AbortException
-     * @throws BadRequestException
+     * @throws EventNotFoundException
      */
     protected function createComponentSchoolCheck(): SchoolCheckComponent {
         return new SchoolCheckComponent($this->getEvent(), $this->getAcYear(), $this->getContext());
     }
 
     /**
-     * @return ApplicationGrid
-     * @throws AbortException
-     * @throws BadRequestException
+     * @return AbstractApplicationsGrid
+     * @throws EventNotFoundException
      * @throws NeonSchemaException
      */
-    protected function createComponentGrid(): AbstractApplicationGrid {
-        return new TeamApplicationGrid($this->getEvent(), $this->getHolder(), $this->getContext());
+    protected function createComponentGrid(): AbstractApplicationsGrid {
+        return new TeamApplicationsGrid($this->getEvent(), $this->getHolder(), $this->getContext());
     }
 
     protected function createComponentTeamRestsControl(): TeamRestsComponent {

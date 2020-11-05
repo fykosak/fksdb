@@ -5,7 +5,7 @@ namespace FKSDB\Events\Spec\Fol;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\Events\Processings\AbstractProcessing;
+use FKSDB\Events\Processing\AbstractProcessing;
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use Nette\Forms\Form;
@@ -17,16 +17,7 @@ use Nette\Utils\ArrayHash;
  */
 class PasswordProcessing extends AbstractProcessing {
 
-    /**
-     * @param $states
-     * @param ArrayHash $values
-     * @param Machine $machine
-     * @param Holder $holder
-     * @param ILogger $logger
-     * @param Form|null $form
-     * @return void
-     */
-    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
+    protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void {
         if (!isset($values['team'])) {
             return;
         }
@@ -40,15 +31,11 @@ class PasswordProcessing extends AbstractProcessing {
         }
 
         if ($original !== null && $original != $result) {
-            $logger->log(new Message(_('Nastaveno nové herní heslo.'), ILogger::INFO));
+            $logger->log(new Message(_('Set new game password.'), ILogger::INFO));
         }
     }
 
-    /**
-     * @param $string
-     * @return string
-     */
-    private function hash($string) {
+    private function hash(?string $string): string {
         return sha1($string);
     }
 

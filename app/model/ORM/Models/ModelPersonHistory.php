@@ -38,19 +38,17 @@ class ModelPersonHistory extends AbstractModelSingle implements ISchoolReference
         return $result;
     }
 
-    /**
-     * @var string[][]
-     */
-    private static $classProgress = [
+    /** @var string[][] */
+    private static array $classProgress = [
         ['prima', 'sekunda', 'tercie', 'kvarta', 'kvinta', 'sexta', 'septima', 'oktáva'],
         ['I.', 'II.', 'III.', 'IV.', 'V.', 'VI.', 'VII.', 'VIII.'],
         ['1.', '2.', '3.', '4.', '5.', '6.', '7.', '8.'],
     ];
 
     /**
-     * @param $class
-     * @param $diff
-     * @return null|string|string[]
+     * @param string|null $class
+     * @param int $diff
+     * @return string|string[]|null
      */
     private function extrapolateClass(string $class = null, int $diff = 0) {
         if (!$class) {
@@ -71,12 +69,7 @@ class ModelPersonHistory extends AbstractModelSingle implements ISchoolReference
         return $class;
     }
 
-    /**
-     * @param $studyYear
-     * @param $diff
-     * @return int|null
-     */
-    private function extrapolateStudyYear(int $studyYear = null, int $diff = 0) {
+    private function extrapolateStudyYear(?int $studyYear = null, int $diff = 0): ?int {
         if (!$studyYear) {
             return null;
         }
@@ -95,8 +88,6 @@ class ModelPersonHistory extends AbstractModelSingle implements ISchoolReference
                 $result = null;
             }
         }
-
         return $result;
     }
-
 }

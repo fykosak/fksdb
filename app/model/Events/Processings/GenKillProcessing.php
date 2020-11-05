@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Events\Processings;
+namespace FKSDB\Events\Processing;
 
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
@@ -24,16 +24,7 @@ use Nette\Utils\ArrayHash;
 class GenKillProcessing implements IProcessing {
     use SmartObject;
 
-    /**
-     * @param $states
-     * @param ArrayHash $values
-     * @param Machine $machine
-     * @param Holder $holder
-     * @param ILogger $logger
-     * @param Form|null $form
-     * @return array
-     */
-    public function process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
+    public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form = null): array {
         $result = [];
         foreach ($holder->getBaseHolders() as $name => $baseHolder) {
             if (!isset($values[$name])) { // whole machine unmodofiable/invisible
@@ -72,5 +63,4 @@ class GenKillProcessing implements IProcessing {
         }
         return $result;
     }
-
 }

@@ -11,56 +11,35 @@ use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\Application\UI\Control;
 use Nette\DI\Container;
-use Nette\Utils\Json;
-use Nette\Utils\JsonException;
 
 /**
  * Class SingleApplicationsTimeProgress
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
-    /**
-     * @var ServiceEventParticipant
-     */
-    private $serviceEventParticipant;
 
-    /**
-     * @var ModelEventType
-     */
-    private $eventType;
-    /**
-     * @var ServiceEvent
-     */
-    private $serviceEvent;
+    private ServiceEventParticipant $serviceEventParticipant;
 
-    /**
-     * TeamApplicationsTimeProgress constructor.
-     * @param Container $context
-     * @param ModelEvent $event
-     */
+    private ModelEventType $eventType;
+
+    private ServiceEvent $serviceEvent;
+
     public function __construct(Container $context, ModelEvent $event) {
-        parent::__construct($context);
+        parent::__construct($context, 'events.applications-time-progress.participants');
         $this->eventType = $event->getEventType();
-        $this->serviceEventParticipant = $context->getByType(ServiceEventParticipant::class);
-        $this->serviceEvent = $context->getByType(ServiceEvent::class);
     }
 
-    protected function getReactId(): string {
-        return 'events.applications-time-progress.participants';
+    final public function injectPrimary(ServiceEventParticipant $serviceEventParticipant, ServiceEvent $serviceEvent): void {
+        $this->serviceEventParticipant = $serviceEventParticipant;
+        $this->serviceEvent = $serviceEvent;
     }
 
-    /**
-     * @return string
-     * @throws JsonException
-     */
-    public function getData(): string {
+    protected function getData(): array {
         $data = [
             'participants' => [],
             'events' => [],
         ];
-        /**
-         * @var ModelEvent $event
-         */
+        /** @var ModelEvent $event */
         foreach ($this->serviceEvent->getEventsByType($this->eventType) as $event) {
             $participants = [];
             $query = $this->serviceEventParticipant->findPossiblyAttending($event);
@@ -74,25 +53,18 @@ class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
             $data['participants'][$event->event_id] = $participants;
             $data['events'][$event->event_id] = $event->__toArray();
         }
-        return Json::encode($data);
-    }
-
-    public function getAction(): string {
-        return 'singleApplicationProgress';
+        return $data;
     }
 
     public function getTitle(): string {
         return 'Applications time progress';
     }
 
-    public function getControl(): Control {
+    public function getControl(): self {
         return $this;
     }
 
-    /**
-     * @return string|null
-     */
-    public function getDescription() {
+    public function getDescription(): ?string {
         return null;
     }
 }

@@ -21,59 +21,40 @@ use Nette\Utils\ArrayHash;
  * *
  */
 class CategoryProcessing extends AbstractCategoryProcessing {
-    /**
-     * @var int
-     */
-    private $rulesVersion;
 
-    /**
-     *
-     * @param int $rulesVersion version 1 is up to year 2017, version 2 from 2018
-     * @param YearCalculator $yearCalculator
-     * @param ServiceSchool $serviceSchool
-     */
-    public function __construct($rulesVersion, YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
+    private int $rulesVersion;
+
+    public function __construct(int $rulesVersion, YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         parent::__construct($yearCalculator, $serviceSchool);
+
         if (!in_array($rulesVersion, [1, 2])) {
-            throw new InvalidArgumentException(_("Neplatná hodnota \$rulesVersion."));
+            throw new InvalidArgumentException(_('Not valid $rulesVersion.'));
         }
         $this->rulesVersion = $rulesVersion;
     }
 
-    /**
-     * @param array $states
-     * @param ArrayHash $values
-     * @param Machine $machine
-     * @param Holder $holder
-     * @param ILogger $logger
-     * @param Form|null $form
-     * @return void
-     */
-    protected function _process($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, Form $form = null) {
+    protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void {
         if (!isset($values['team'])) {
             return;
         }
-
         $participants = $this->extractValues($holder);
 
         $result = $values['team']['category'] = $this->getCategory($participants);
 
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
         if ($original != $result) {
-            $logger->log(new Message(sprintf(_('Tým zařazen do kategorie %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), ILogger::INFO));
+            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), ILogger::INFO));
         }
     }
 
-    /**
+    /*
      *   Open (staří odkudkoliv - pokazí to i jeden člen týmu)
      *   Zahraniční
      *   ČR - A - (3,4]
      *   ČR - B - (2,3] - max. 2 ze 4. ročníku
      *   ČR - C - [0,2] - nikdo ze 4. ročníku, max. 2 z 3 ročníku
-     * @param $competitors
-     * @return string
      */
-    private function getCategory(array $competitors): string {
+    protected function getCategory(array $competitors): string {
         // init stats
         $olds = 0;
         $year = [0, 0, 0, 0, 0]; //0 - ZŠ, 1..4 - SŠ

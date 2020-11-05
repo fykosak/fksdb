@@ -24,7 +24,7 @@ parameters:
         db: db
 
     # Pipe-separated list of presenters w/out module
-    rootPresenters: settings|github|my-payments
+    rootPresenters: settings|github|my-payments|my-applications
 
     # Pipe-separated list of modules
     modules: org|public
@@ -40,7 +40,7 @@ fksrouter:
             module: Public
             presenter: Dashboard
             action: default
-            flags: [ONE_WAY, SECURED]
+            flags: [ONE_WAY]
 
         # Backward compatibility
         -
@@ -48,7 +48,7 @@ fksrouter:
             module: Org
             presenter: WebService
             action: default
-            flags: [ONE_WAY, SECURED]
+            flags: [ONE_WAY]
 
         # Cool URL
         -
@@ -59,7 +59,6 @@ fksrouter:
             presenter: Export
             action: execute
             contestId: [filterTable: %inverseContestMapping%]
-            flags: SECURED
 
         # Central authentication domain (+ logout must be enabled at each domain too)
         -
@@ -68,15 +67,13 @@ fksrouter:
             presenter: Authentication
             subdomain: %subdomain.db%
             tld: %domain.tld%
-            flags: SECURED
 
         -
-            mask: '//%subdomain.auth%.%domain.cz%%path%<action login|logout|fb-login|recover>'
+            mask: '//%subdomain.auth%.%domain.cz%%path%<action login|logout|fb-login|recover|google>'
             module: Core
             presenter: Authentication
             subdomain: %subdomain.auth%
             tld: %domain.tld%
-            flags: SECURED
 
         # Registration must be at the same domain as central authentication.
         -
@@ -85,7 +82,6 @@ fksrouter:
             subdomain: %subdomain.auth%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
-            flags: SECURED
             year: null
 
         -
@@ -94,7 +90,7 @@ fksrouter:
             subdomain: %subdomain.auth%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
-            flags: [ONE_WAY, SECURED]
+            flags: [ONE_WAY]
 
         -
             mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%'
@@ -103,7 +99,6 @@ fksrouter:
             presenter: Dispatch
             tld: %domain.tld%
             action: default
-            flags:  SECURED
 
         # Application itself (note the presenters w/out module are handled specially)
         -
@@ -112,7 +107,6 @@ fksrouter:
             module: Core
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
-            flags: SECURED
 
         # Application itself (note the presenters w/out module are handled specially)
         -
@@ -121,14 +115,12 @@ fksrouter:
             presenter: Dashboard
             subdomain: %subdomain.db%
             tld: %domain.tld%
-            flags: SECURED
 
         -
             mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%fyziklani[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]'
             subdomain: %subdomain.db%
             tld: %domain.tld%
             module: Fyziklani
-            flags: SECURED
 
         -
             mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%event[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]'
@@ -136,7 +128,6 @@ fksrouter:
             tld: %domain.tld%
             module: Event
             presenter: Dashboard
-            flags: SECURED
 
         -
             mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/][series<series [0-9]+>/]<module %modules%>/<presenter>/<action=default>[/<id>]'
@@ -144,7 +135,6 @@ fksrouter:
             subdomain: %subdomain.db%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
-            flags: SECURED
 
         -
             mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/]<module %modules%>/<presenter>/<action=default>[/<id>]'
@@ -152,4 +142,3 @@ fksrouter:
             subdomain: %subdomain.db%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
-            flags: SECURED

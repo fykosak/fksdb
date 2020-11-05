@@ -1,4 +1,4 @@
-import { Submit } from '../../../../fyziklani/helpers/interfaces';
+import { Submit } from '@apps/fyziklani/helpers/interfaces';
 import {
     getAverageNStandardDeviation,
     StdDevOutput,

@@ -52,7 +52,7 @@ class Lang {
         return msgId;
     }
 
-    public getBCP47() {
+    public getBCP47(): string {
         switch (this.currentLocale) {
             case 'cs':
                 return 'cs-CZ';

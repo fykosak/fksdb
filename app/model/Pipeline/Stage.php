@@ -1,6 +1,6 @@
 <?php
 
-namespace Pipeline;
+namespace FKSDB\Pipeline;
 
 use FKSDB\Messages\Message;
 
@@ -11,17 +11,14 @@ use FKSDB\Messages\Message;
  */
 abstract class Stage {
 
-    /**
-     * @var Pipeline
-     */
-    private $pipeline;
+    private Pipeline $pipeline;
 
     /**
      * @param mixed $data data to process
      */
-    abstract public function setInput($data);
+    abstract public function setInput($data): void;
 
-    abstract public function process();
+    abstract public function process(): void;
 
     /**
      * @return mixed output of the stage
@@ -32,19 +29,11 @@ abstract class Stage {
         return $this->pipeline;
     }
 
-    /**
-     * @param Pipeline $pipeline
-     * @return void
-     */
-    final public function setPipeline(Pipeline $pipeline) {
+    final public function setPipeline(Pipeline $pipeline): void {
         $this->pipeline = $pipeline;
     }
 
-    /**
-     * @param Message $message
-     * @return void
-     */
-    final protected function log(Message $message) {
+    final protected function log(Message $message): void {
         $this->getPipeline()->log($message);
     }
 }

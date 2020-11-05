@@ -7,7 +7,8 @@
 
 services:
     # assertions
-    ownerAssertion: Authorization\Assertions\OwnerAssertion
+    ownerAssertion: FKSDB\Authorization\Assertions\OwnerAssertion
+    paymentAssertion: FKSDB\Authorization\Assertions\PaymentAssertion
 
     # data services
     #- authorizator:
@@ -18,16 +19,16 @@ acl:
     - addRole(guest)                    # anonym (automatická role)
     - addRole(registered, guest)        # registrant (automatická role)
     - addRole(contestant, registered)   # řešitel (automatická role)
-    - addRole(org)                      # org (automatická role)
+    - addRole(org, registered)          # org (automatická role)
     - addRole(webmaster, org)           # webař
     - addRole(taskManager, org)         # úlohář
     - addRole(inboxManager, org)        # koordinátor obálkování, příjemce řešení
     - addRole(exportDesigner, org)      # tvůrce exportů (!! má RO přístup ke všem datům)
     - addRole(dataManager, [org, exportDesigner]) # správce dat DB
-    - addRole(eventManager, org)        # správce přihlášek
-    - addRole(boss, org)                # šéf
     - addRole(schoolManager)            # správce dat škol
-    - addRole(superuser, [org, webmaster, taskManager, inboxManager, dataManager, exportDesigner, eventManager, boss])
+    - addRole(eventManager, [org, schoolManager])        # správce přihlášek + allow add schools
+    - addRole(boss, org)                # šéf
+    - addRole(superuser, [org, webmaster, taskManager, schoolManager, inboxManager, dataManager, exportDesigner, eventManager, boss])
     - addRole(cartesian)
     # robot's roles
     - addRole(aesop)                    # AESOPový stahovač dat
@@ -40,7 +41,7 @@ acl:
     - addResource(person)        # create, edit, list, delete, merge, stalk.restrict, stalk.search, stalk.search, stalk.full, validation
     - addResource(contestant)    # create, edit, list, delete
     - addResource(school)        # create, edit, list, delete
-    - addResource(storedQuery)   # create, edit, list, delete, show
+    - addResource(storedQuery)   # create, edit, list, delete, detial
     - addResource(export.adhoc)  # execute
     - addResource(export)        # execute
     - addResource(org)           # create, edit, list, delete
@@ -88,18 +89,16 @@ acl:
     # - allow(org, storedQuery, list) # aby měli přehled // TODO vedie k milnému dojmu, že to môžu spustiť
     - allow(org, org, list)
     - allow(org, org, edit, [@ownerAssertion, 'isSelf'])
-    - allow(org, person, edit, [@ownerAssertion, 'isSelf'])
-    - allow(org, storedQuery, show)
+    - allow(org, storedQuery, [list,detail])
     - allow(org, teacher, ::constant(Nette\Security\Permission::ALL))
     - allow(org, person, stalk.search)
     - allow(org, person, edit, [@ownerAssertion, 'isSelf'])
     - allow(org, person, stalk.basic, [@ownerAssertion, 'existsOwnContestant'])
     - allow(org, person, stalk.full, [@ownerAssertion, 'isSelf'])
+    - allow(org, chart, ::constant(Nette\Security\Permission::ALL))
 
     - allow(webmaster, task, insert) # stahování úloh
 
-    - allow(inboxManager, storedQuery, list)
-    - allow(inboxManager, storedQuery, show)
     - allow(inboxManager, export, execute)
     - allow(inboxManager, submit, ::constant(Nette\Security\Permission::ALL))
     - allow(inboxManager, task, edit)  # zadání opravovačů
@@ -120,6 +119,8 @@ acl:
     - allow(dataManager, person, ::constant(Nette\Security\Permission::ALL))
     - allow(dataManager, school, ::constant(Nette\Security\Permission::ALL))
 
+    - allow(schoolManager, school, ::constant(Nette\Security\Permission::ALL))
+
     - allow(eventManager, event, ::constant(Nette\Security\Permission::ALL)) # TODO add certain privilegies to organizers too
     - allow(eventManager, event.org, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, eventOrg, ::constant(Nette\Security\Permission::ALL))
@@ -129,6 +130,7 @@ acl:
     - allow(eventManager, person, edit)
     - allow(eventManager, fyziklani.team, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, event.participant, ::constant(Nette\Security\Permission::ALL))
+    - allow(eventManager, event.chart, ::constant(Nette\Security\Permission::ALL))
 
     - allow(boss, org, ::constant(Nette\Security\Permission::ALL))
     - allow(boss, person, edit, [@ownerAssertion, 'existsOwnContestant'])
@@ -136,7 +138,7 @@ acl:
     - allow(boss, person, edit)
     - allow(boss, email_message, list)
 
-    - allow(schoolManager, school, ::constant(Nette\Security\Permission::ALL))
+
     # robot role
     - allow(aesop, export, execute, qid(['aesop.ct', 'aesop.fol', 'aesop.dsef', 'aesop.dsef2', 'aesop.tsaf', 'aesop.vaf', 'aesop.sous.j', 'aesop.sous.p', 'aesop.klani.ct', 'aesop.klani.uc', 'aesop.tabor', 'aesop.setkani.j', 'aesop.setkani.p']))
     - allow(web, export, execute, queryTag(['web-safe']))
@@ -159,7 +161,6 @@ acl:
     - allow(boss, fyziklani.gameSetup, ::constant(Nette\Security\Permission::ALL)) # pozerať nastavnie
     - allow(boss, fyziklani.close, ::constant(Nette\Security\Permission::ALL)) # pozerať nastavnie
 
-
     # eventModule
     - allow(registered, event.dashboard, ::constant(Nette\Security\Permission::ALL))
 
@@ -174,7 +175,8 @@ acl:
 
     # payment
     - allow(registered, event.payment, detail, [@ownerAssertion, 'isSelf'])
-    - allow(registered, event.payment, edit, [@ownerAssertion, 'isSelf'])
+    - allow(registered, event.payment, edit, and([@paymentAssertion, 'isSelf'],[@paymentAssertion,'isPaymentEditable']))
+
     - allow(registered, event.payment, create)
     #paymnet org
     - allow(org, event.payment, ::constant(Nette\Security\Permission::ALL))

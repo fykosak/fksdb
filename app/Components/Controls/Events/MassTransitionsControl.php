@@ -11,7 +11,6 @@ use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\AbortException;
-use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 
 /**
@@ -19,56 +18,40 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class MassTransitionsControl extends BaseComponent {
-    /**
-     * @var ModelEvent
-     */
-    private $event;
-    /** @var EventDispatchFactory */
-    private $eventDispatchFactory;
-    /** @var ApplicationHandlerFactory */
-    private $applicationHandlerFactory;
 
-    /**
-     * MassTransitionsControl constructor.
-     * @param Container $container
-     * @param ModelEvent $event
-     */
+    private ModelEvent $event;
+
+    private EventDispatchFactory $eventDispatchFactory;
+
+    private ApplicationHandlerFactory $applicationHandlerFactory;
+
     public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    /**
-     * @param EventDispatchFactory $eventDispatchFactory
-     * @param ApplicationHandlerFactory $applicationHandlerFactory
-     * @return void
-     */
-    public function injectPrimary(EventDispatchFactory $eventDispatchFactory, ApplicationHandlerFactory $applicationHandlerFactory) {
+    final public function injectPrimary(EventDispatchFactory $eventDispatchFactory, ApplicationHandlerFactory $applicationHandlerFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
         $this->applicationHandlerFactory = $applicationHandlerFactory;
     }
 
-    /**
-     * @return void
-     * @throws BadRequestException
-     */
-    public function render() {
+    public function render(): void {
         /** @var  $machine */
         $machine = $this->eventDispatchFactory->getEventMachine($this->event);
         $this->template->transitions = $machine->getPrimaryMachine()->getTransitions();
-        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'MassTransitions.latte');
+        $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.massTransitions.latte');
         $this->template->render();
     }
 
     /**
      * @param string $name
      * @return void
-     * @throws NeonSchemaException
-     * @throws BadRequestException
      * @throws AbortException
+     *
+     * @throws NeonSchemaException
      */
-    public function handleTransition(string $name) {
-        $source = new SingleEventSource($this->event, $this->getContext());
+    public function handleTransition(string $name): void {
+        $source = new SingleEventSource($this->event, $this->getContext(), $this->eventDispatchFactory);
         $logger = new MemoryLogger();
         $total = 0;
         $errored = 0;

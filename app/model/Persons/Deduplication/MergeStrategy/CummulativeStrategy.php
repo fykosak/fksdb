@@ -1,6 +1,6 @@
 <?php
 
-namespace Persons\Deduplication\MergeStrategy;
+namespace FKSDB\Persons\Deduplication\MergeStrategy;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -9,9 +9,7 @@ namespace Persons\Deduplication\MergeStrategy;
  */
 class CummulativeStrategy implements IMergeStrategy {
 
-    /**
-     * @var mixed|null
-     */
+    /** @var mixed|null */
     private $precedence;
 
     /**
@@ -48,11 +46,11 @@ class CummulativeStrategy implements IMergeStrategy {
     }
 
     /**
-     * @param $trunk
-     * @param $merged
+     * @param mixed $trunk
+     * @param mixed $merged
      * @return bool
      */
-    private function equals($trunk, $merged) {
+    private function equals($trunk, $merged): bool {
         if ($trunk instanceof \DateTime && $merged instanceof \DateTime) {
             return $trunk->getTimestamp() == $merged->getTimestamp();
         } else {

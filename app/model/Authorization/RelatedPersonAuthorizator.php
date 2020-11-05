@@ -1,6 +1,6 @@
 <?php
 
-namespace Authorization;
+namespace FKSDB\Authorization;
 
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\Holder\Holder;
@@ -16,15 +16,8 @@ class RelatedPersonAuthorizator {
 
     use SmartObject;
 
-    /**
-     * @var IUserStorage
-     */
-    private $user;
+    private IUserStorage $user;
 
-    /**
-     * RelatedPersonAuthorizator constructor.
-     * @param IUserStorage $user
-     */
     public function __construct(IUserStorage $user) {
         $this->user = $user;
     }

@@ -40,7 +40,6 @@ events:
     vikend3:
         event_type_id: 3
         eventYears: [3]
-        tableLayout: event.grid
         formLayout: vikend.form
         paramScheme:
             notifyBcc:
@@ -52,14 +51,14 @@ events:
 
         baseMachines:
             PARTICIPANT:
-                service: @event.ServiceMVikendParticipant
+                service: @event.ServiceEventParticipant
 
                 states:
-                    applied: _('Přihlášen')
-                    spare: _('Náhradník')
-                    participated: _('Účastnil se')
-                    missed: _('Nepřijel')
-                    cancelled: _('Zrušen')
+                    - applied
+                    - spare
+                    - participated
+                    - missed
+                    - cancelled
 
                 transitions:
                     __init->spare:
@@ -87,7 +86,7 @@ events:
 
                 fields:
                     person_id:
-                        label: _('Osoba')
+                        label: _('Person')
                         required: true
                         modifiable: %events.vikend3.appCond%
                         default: fromLogin
@@ -112,7 +111,7 @@ events:
             baseMachines:
                 participant:
                     bmName: PARTICIPANT
-                    label: Účastník
+                    label: _('Účastník')
                     required: true
                     primary: true
             formAdjustments:

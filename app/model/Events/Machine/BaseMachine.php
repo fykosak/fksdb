@@ -12,82 +12,46 @@ use Nette\InvalidArgumentException;
  */
 class BaseMachine {
 
-    const STATE_INIT = '__init';
-    const STATE_TERMINATED = '__terminated';
-    const STATE_ANY = '*';
-    const EXECUTABLE = 0x1;
-    const VISIBLE = 0x2;
+    public const STATE_INIT = '__init';
+    public const STATE_TERMINATED = '__terminated';
+    public const STATE_ANY = '*';
 
-    /**
-     * @var string
-     */
-    private $name;
-    /**
-     * @var string[]
-     */
-    private $states;
+    public const EXECUTABLE = 0x1;
+    public const VISIBLE = 0x2;
 
-    /**
-     * @var Transition[]
-     */
-    private $transitions = [];
+    private string $name;
 
-    /**
-     * @var Machine
-     */
-    private $machine;
+    private array $states;
 
-    /**
-     * BaseMachine constructor.
-     * @param $name
-     */
+    private array $transitions = [];
+
+    private Machine $machine;
+
     public function __construct(string $name) {
         $this->name = $name;
     }
 
-    /**
-     * @return string
-     */
-    public function getName() {
+    public function getName(): string {
         return $this->name;
     }
 
-    /**
-     * @param string $state
-     * @param string $label
-     * @return void
-     */
-    public function addState(string $state, string $label) {
-        $this->states[$state] = $label;
+    public function addState(string $state): void {
+        $this->states[] = $state;
     }
 
-    /**
-     * @return string[]
-     */
     public function getStates(): array {
         return $this->states;
     }
 
-    /**
-     * @return Machine
-     */
-    public function getMachine() {
+    public function getMachine(): Machine {
         return $this->machine;
     }
 
-    /**
-     * @param Machine $machine
-     * @return void
-     */
-    public function setMachine(Machine $machine) {
+    public function setMachine(Machine $machine): void {
         $this->machine = $machine;
     }
 
-    /**
-     * @param Transition $transition
-     * @return void
-     */
-    public function addTransition(Transition $transition) {
+    public function addTransition(Transition $transition): void {
         $transition->setBaseMachine($this);
         $this->transitions[$transition->getName()] = $transition;
     }
@@ -96,13 +60,7 @@ class BaseMachine {
         return $this->transitions[$name];
     }
 
-
-    /**
-     * @param $transitionMask
-     * @param $induced
-     * @return void
-     */
-    public function addInducedTransition($transitionMask, $induced) {
+    public function addInducedTransition(string $transitionMask, array $induced): void {
         foreach ($this->getMatchingTransitions($transitionMask) as $transition) {
             foreach ($induced as $machineName => $state) {
                 $targetMachine = $this->getMachine()->getBaseMachine($machineName);
@@ -118,9 +76,9 @@ class BaseMachine {
     public function getStateName(string $state): string {
         switch ($state) {
             case self::STATE_INIT:
-                return _('vznikající');
+                return _('initial');
             case self::STATE_TERMINATED:
-                return _('zaniklý');
+                return _('terminated');
             default:
                 return _($state);
         }
@@ -139,20 +97,14 @@ class BaseMachine {
      * @param int $mode
      * @return Transition[]
      */
-    public function getAvailableTransitions(Holder $holder, string $sourceState, $mode = self::EXECUTABLE): array {
+    public function getAvailableTransitions(Holder $holder, string $sourceState, int $mode = self::EXECUTABLE): array {
         return array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($mode, $holder) {
             return
                 (!($mode & self::EXECUTABLE) || $transition->canExecute($holder)) && (!($mode & self::VISIBLE) || $transition->isVisible($holder));
         });
     }
 
-
-    /**
-     * @param string $sourceState
-     * @param string $targetState
-     * @return Transition[]|null
-     */
-    public function getTransitionByTarget(string $sourceState, string $targetState) {
+    public function getTransitionByTarget(string $sourceState, string $targetState): ?Transition {
         $candidates = array_filter($this->getMatchingTransitions($sourceState), function (Transition $transition) use ($targetState) {
             return $transition->getTarget() == $targetState;
         });

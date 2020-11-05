@@ -3,10 +3,11 @@
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Grids\ContestantsGrid;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\UI\PageTitle;
-use Nette\Application\BadRequestException;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 
 /**
@@ -15,83 +16,66 @@ use Nette\Application\UI\Form;
  * @method ModelContestant getModel()
  */
 class ContestantPresenter extends ExtendedPersonPresenter {
-    /** @var string */
-    protected $fieldsDefinition = 'adminContestant';
 
-    /**
-     * @var ServiceContestant
-     */
-    private $serviceContestant;
+    protected string $fieldsDefinition = 'adminContestant';
 
-    /**
-     * @param ServiceContestant $serviceContestant
-     * @return void
-     */
-    public function injectServiceContestant(ServiceContestant $serviceContestant) {
+    private ServiceContestant $serviceContestant;
+
+    final public function injectServiceContestant(ServiceContestant $serviceContestant): void {
         $this->serviceContestant = $serviceContestant;
     }
 
-    public function titleEdit() {
-        $this->setPageTitle(new PageTitle(sprintf(_('Úprava řešitele %s'), $this->getModel()->getPerson()->getFullName()), 'fa fa-user'));
+    public function titleEdit(): void {
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit the contestant %s'), $this->getModel()->getPerson()->getFullName()), 'fa fa-user'));
     }
 
-    public function titleCreate() {
-        $this->setPageTitle(new PageTitle(_('Založit řešitele'), 'fa fa-user-plus'));
+    public function titleCreate(): void {
+        $this->setPageTitle(new PageTitle(_('Create contestant'), 'fa fa-user-plus'));
     }
 
-    public function titleList() {
-        $this->setPageTitle(new PageTitle(_('Řešitelé'), 'fa fa-users'));
+    public function titleList(): void {
+        $this->setPageTitle(new PageTitle(_('Contestants'), 'fa fa-users'));
     }
 
     /**
      * @return ContestantsGrid
-     * @throws BadRequestException
+     * @throws BadTypeException
+     * @throws ForbiddenRequestException
      */
     protected function createComponentGrid(): ContestantsGrid {
         return new ContestantsGrid($this->getContext(), $this->getSelectedContest(), $this->getSelectedYear());
     }
 
-    /**
-     * @param Form $form
-     * @return void
-     */
-    protected function appendExtendedContainer(Form $form) {
+    protected function appendExtendedContainer(Form $form): void {
         // no container for contestant
     }
 
-    /**
-     * @return ServiceContestant
-     */
-    protected function getORMService() {
+    protected function getORMService(): ServiceContestant {
         return $this->serviceContestant;
     }
 
-    /**
-     * @return null
-     * TODO refactoring
-     */
-    protected function getAcYearFromModel() {
+    protected function getAcYearFromModel(): ?int {
         $model = $this->getModel();
         if (!$model) {
             return null;
         }
-        return $this->getYearCalculator()->getAcademicYear($this->getServiceContest()->findByPrimary($model->contest_id), $model->year);
+        return $this->yearCalculator->getAcademicYear($this->serviceContest->findByPrimary($model->contest_id), $model->year);
     }
 
     public function messageCreate(): string {
-        return _('Řešitel %s založen.');
+        return _('Contestant %s created.');
     }
 
     public function messageEdit(): string {
-        return _('Řešitel %s upraven.');
+        return _('Contestant %s modified.');
     }
 
     public function messageError(): string {
-        return _('Chyba při zakládání řešitele.');
+        return _('Error while creating the contestant.');
     }
 
     public function messageExists(): string {
-        return _('Řešitel už existuje.');
+        return _('Contestant already exists.');
     }
 
     protected function getModelResource(): string {
