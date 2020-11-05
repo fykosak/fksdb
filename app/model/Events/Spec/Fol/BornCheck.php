@@ -22,11 +22,8 @@ use Nette\Forms\IControl;
 class BornCheck extends AbstractAdjustment implements IFormAdjustment {
 
     private ServiceSchool $serviceSchool;
-
     private ServicePersonHistory $servicePersonHistory;
-
-    /** @var Holder */
-    private $holder;
+    private Holder $holder;
 
     public function __construct(ServiceSchool $serviceSchool, ServicePersonHistory $servicePersonHistory) {
         $this->serviceSchool = $serviceSchool;

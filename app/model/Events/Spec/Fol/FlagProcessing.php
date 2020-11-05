@@ -35,9 +35,7 @@ class FlagProcessing extends AbstractProcessing {
         }
 
         $event = $holder->getPrimaryHolder()->getEvent();
-        $contest = $event->getEventType()->contest;
-        $year = $event->year;
-        $acYear = $this->yearCalculator->getAcademicYear($contest, $year);
+        $acYear = $this->yearCalculator->getAcademicYear($event->getEventType()->getContest(), $event->year);
 
         foreach ($holder->getBaseHolders() as $name => $baseHolder) {
             if ($name == 'team') {

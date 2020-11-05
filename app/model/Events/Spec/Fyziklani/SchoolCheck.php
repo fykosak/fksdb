@@ -18,7 +18,6 @@ use Nette\Forms\IControl;
 abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment {
 
     private ServicePersonHistory $servicePersonHistory;
-
     private Holder $holder;
 
     public function __construct(ServicePersonHistory $servicePersonHistory) {

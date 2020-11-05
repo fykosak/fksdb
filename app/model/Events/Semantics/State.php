@@ -20,10 +20,6 @@ class State extends EvaluatedExpression {
         $this->state = $state;
     }
 
-    /**
-     * @param array $args
-     * @return bool
-     */
     public function __invoke(...$args): bool {
         return $this->getHolder($args[0])->getPrimaryHolder()->getModelState() == $this->state;
     }
@@ -31,5 +27,4 @@ class State extends EvaluatedExpression {
     public function __toString(): string {
         return "state == {$this->state}";
     }
-
 }
