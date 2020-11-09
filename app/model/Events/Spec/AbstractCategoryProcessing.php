@@ -18,7 +18,6 @@ use FKSDB\YearCalculator;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 abstract class AbstractCategoryProcessing extends AbstractProcessing implements IOptionsProvider {
-
     protected YearCalculator $yearCalculator;
     protected ServiceSchool $serviceSchool;
 

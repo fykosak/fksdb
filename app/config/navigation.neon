@@ -10,7 +10,7 @@ navigation:
             Org.StoredQuery.list: []
             Org.Org.list: []
             Org.Event.list: []
-            Common.Deduplicate.person: []
+            #Common.Deduplicate.person: []
             Common.Person.search: []
             Common.Dashboard.default: []
             Common.Validation.default: []

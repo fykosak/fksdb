@@ -73,5 +73,4 @@ class CategoryProcessing extends AbstractCategoryProcessing {
         }
         return $result;
     }
-
 }

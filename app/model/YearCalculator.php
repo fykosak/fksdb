@@ -6,8 +6,8 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelContestYear;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\ORM\Services\ServiceContestYear;
+use InvalidArgumentException;
 use Nette\DI\Container;
-use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 
 /**
