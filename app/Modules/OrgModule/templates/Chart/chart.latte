@@ -1,0 +1,10 @@
+{block content}
+    {var $description = $chart->getDescription()}
+    {if $description}
+        <p>
+            {$description|noescape}
+        </p>
+        <hr/>
+    {/if}
+    {control chart}
+{/block}

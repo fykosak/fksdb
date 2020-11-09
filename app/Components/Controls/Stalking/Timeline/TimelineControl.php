@@ -52,7 +52,7 @@ class TimelineControl extends ReactComponent {
             'since' => [],
             'until' => [],
         ];
-        $orgs = [];
+        $organisers = [];
         foreach ($this->person->getOrgs() as $row) {
             $org = ModelOrg::createFromActiveRow($row);
             $since = new \DateTime($this->yearCalculator->getAcademicYear($org->getContest(), $org->since) . '-' . YearCalculator::FIRST_AC_MONTH . '-1');
@@ -62,7 +62,7 @@ class TimelineControl extends ReactComponent {
             }
             $dates['since'][] = $since;
             $dates['until'][] = $until;
-            $orgs[] = ['since' => $since->format('c'), 'until' => $until->format('c'), 'model' => [
+            $organisers[] = ['since' => $since->format('c'), 'until' => $until->format('c'), 'model' => [
                 'orgId' => $org->org_id,
                 'contestId' => $org->contest_id,
             ]];
@@ -85,7 +85,7 @@ class TimelineControl extends ReactComponent {
                 ]];
         }
         return [$dates, [
-            'orgs' => $orgs,
+            'orgs' => $organisers,
             'contestants' => $contestants,
         ]];
     }
@@ -98,11 +98,11 @@ class TimelineControl extends ReactComponent {
             $events[] = $participant->getEvent();
             $eventParticipants[] = ['event' => $this->eventToArray($participant->getEvent()), 'model' => null];
         }
-        $eventOrgs = [];
+        $eventOrganisers = [];
         foreach ($this->person->getEventOrgs() as $row) {
             $eventOrg = ModelEventOrg::createFromActiveRow($row);
             $events[] = $eventOrg->getEvent();
-            $eventOrgs[] = ['event' => $this->eventToArray($eventOrg->getEvent()), 'model' => null];
+            $eventOrganisers[] = ['event' => $this->eventToArray($eventOrg->getEvent()), 'model' => null];
         }
         $eventTeachers = [];
         foreach ($this->person->getEventTeachers() as $row) {
@@ -112,7 +112,7 @@ class TimelineControl extends ReactComponent {
 
         }
         return [$events, [
-            'eventOrgs' => $eventOrgs,
+            'eventOrgs' => $eventOrganisers,
             'eventParticipants' => $eventParticipants,
             'eventTeachers' => $eventTeachers,
         ]];

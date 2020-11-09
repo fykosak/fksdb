@@ -3,6 +3,7 @@
 namespace FKSDB\Authentication\SSO\ServiceSide;
 
 use FKSDB\Authentication\SSO\IGlobalSession;
+use FKSDB\ORM\Models\ModelAuthToken;
 
 /**
  * Wrapper around IGlobalSession that intends to have no outer dependencies.
@@ -14,15 +15,11 @@ class Authentication {
     public const PARAM_BACKLINK = 'backlink';
     public const PARAM_FLAG = 'flag';
     public const PARAM_GSID = 'gsid';
-    public const FLAG_SSO_LOGIN = 'sso';
+    public const FLAG_SSO_LOGIN = ModelAuthToken::TYPE_SSO;
 
     private IGlobalSession $globalSession;
-
-    /** @var string */
-    private $loginURL;
-
-    /** @var string */
-    private $logoutURL;
+    private string $loginURL;
+    private string $logoutURL;
 
     /**
      * Authentication constructor.
@@ -30,7 +27,7 @@ class Authentication {
      * @param string $loginURL
      * @param string $logoutURL
      */
-    public function __construct(IGlobalSession $globalSession, $loginURL, $logoutURL) {
+    public function __construct(IGlobalSession $globalSession, string $loginURL,string $logoutURL) {
         $this->globalSession = $globalSession;
         $this->loginURL = $loginURL;
         $this->logoutURL = $logoutURL;

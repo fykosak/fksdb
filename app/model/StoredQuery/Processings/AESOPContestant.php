@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Exports\Processings;
+namespace FKSDB\Exports\Processing;
 
 use FKSDB\StoredQuery\StoredQueryPostProcessing;
 use FKSDB\ORM\Services\ServiceTask;
@@ -22,7 +22,7 @@ class AESOPContestant extends StoredQueryPostProcessing {
     public const SPAM_DATE = 'spam-date';
 
     public function getDescription(): string {
-        return 'Profiltruje jenom na kategorii zadanou v parametru "category" a spočítá rank v rámci kategorie.';
+        return _('Profiltruje jenom na kategorii zadanou v parametru "category" a spočítá rank v rámci kategorie.');
     }
 
     public function keepsCount(): bool {

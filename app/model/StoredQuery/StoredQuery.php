@@ -36,7 +36,7 @@ class StoredQuery implements IDataSource, IResource {
     /** from Presenter     */
     private array $implicitParameterValues = [];
 
-    /** User setted parameters     */
+    /** User set parameters     */
     private array $parameterValues = [];
 
     /** default parameter of ModelStoredQueryParameter     */
@@ -332,7 +332,7 @@ class StoredQuery implements IDataSource, IResource {
     }
 
     /**
-     * Implemements only single column sorting.
+     * Implements only single column sorting.
      *
      * @param string $by column name
      * @param string $way DESC|ASC

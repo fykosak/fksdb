@@ -48,7 +48,7 @@ class TeamApplicationsTimeProgress extends ReactComponent implements IChart {
         return 'Team applications time progress';
     }
 
-    public function getControl(): Control {
+    public function getControl(): self {
         return $this;
     }
 

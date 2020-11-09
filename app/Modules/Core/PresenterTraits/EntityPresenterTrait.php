@@ -20,13 +20,13 @@ use Nette\Security\IResource;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 trait EntityPresenterTrait {
-
-    protected ?AbstractModelSingle $model;
     /**
-     * @var int
      * @persistent
+     * @var int
      */
     public $id;
+
+    protected ?AbstractModelSingle $model;
 
     public function authorizedList(): void {
         $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'list'));

@@ -18,6 +18,6 @@ class DashboardPresenter extends BasePresenter {
     }
 
     public function titleDefault(): void {
-        $this->setPageTitle(new PageTitle(_('Organizátorský pultík'), 'fa fa-dashboard'));
+        $this->setPageTitle(new PageTitle(_('Organiser\'s dashboard'), 'fa fa-dashboard'));
     }
 }

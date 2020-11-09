@@ -86,7 +86,7 @@ class StudyYearsFromXML extends Stage {
                 $hasYears = true;
 
                 if (!$this->serviceStudyYear->findByPrimary($studyYear)) {
-                    $this->log(new Message(sprintf(_("Neznámý ročník '%s'."), $studyYear), ILogger::INFO));
+                    $this->log(new Message(sprintf(_('Unknown year "%s".'), $studyYear), ILogger::INFO));
                     continue;
                 }
 

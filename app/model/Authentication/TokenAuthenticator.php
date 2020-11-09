@@ -20,7 +20,6 @@ class TokenAuthenticator extends AbstractAuthenticator {
     public const SESSION_NS = 'auth';
 
     private ServiceAuthToken $authTokenService;
-
     private Session $session;
 
     public function __construct(ServiceAuthToken $authTokenService, Session $session, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
@@ -37,7 +36,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
     public function authenticate($tokenData): ModelLogin {
         $token = $this->authTokenService->verifyToken($tokenData);
         if (!$token) {
-            throw new AuthenticationException(_('Autentizační token je neplatný.'));
+            throw new AuthenticationException(_('Invalid authentication token.'));
         }
         // login by the identity
         $login = $token->getLogin();

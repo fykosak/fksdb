@@ -38,7 +38,7 @@ class UntilRow extends DefaultColumnFactory {
 
         $control->addCondition(Form::FILLED)
             ->addRule(Form::NUMERIC)
-            ->addRule(Form::RANGE, _('Koncový ročník není v intervalu [%d, %d].'), [$min, $max]);
+            ->addRule(Form::RANGE, _('Final year is not in interval [%d, %d].'), [$min, $max]);
         return $control;
     }
 }

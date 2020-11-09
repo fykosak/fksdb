@@ -36,7 +36,7 @@ class DeadlineFromXML extends Stage {
         $xml = $this->data->getData();
         $deadline = (string)$xml->deadline[0];
         if (!$deadline) {
-            $this->log(new Message(_('Chybí deadline série.'), ILogger::WARNING));
+            $this->log(new Message(_('Missing deadline of the series.'), ILogger::WARNING));
             return;
         }
 

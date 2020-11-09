@@ -79,7 +79,7 @@ class DuplicateFinder {
      */
     private function getSimilarityScore(ModelPerson $a, ModelPerson $b): float {
         /*
-         * Check explixit difference
+         * Check explicit difference
          */
         if (in_array($a->getPrimary(), $this->getDifferentPersons($b))) {
             return 0;

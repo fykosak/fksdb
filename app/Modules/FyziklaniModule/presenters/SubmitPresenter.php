@@ -41,7 +41,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleCreate(): void {
-        $this->setPageTitle(new PageTitle(_('Zadávání bodů'), 'fa fa-pencil-square-o'));
+        $this->setPageTitle(new PageTitle(_('Scoring'), 'fa fa-pencil-square-o'));
     }
 
     /**
@@ -57,7 +57,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(_('Úprava bodování'), 'fa fa-pencil'));
+        $this->setPageTitle(new PageTitle(_('Change of scoring'), 'fa fa-pencil'));
     }
 
     /**

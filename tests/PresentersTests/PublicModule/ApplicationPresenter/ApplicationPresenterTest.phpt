@@ -4,8 +4,9 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
 $container = require '../../../bootstrap.php';
 
+use FKSDB\Events\EventNotFoundException;
+use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Tests\Events\EventTestCase;
-use Nette\Application\BadRequestException;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
@@ -27,26 +28,25 @@ class ApplicationPresenterTest extends EventTestCase {
     }
 
     public function test404(): void {
-        $fixture = $this->fixture;
-        Assert::exception(function () use ($fixture) {
+
+        Assert::exception(function (): void {
             $request = new Request('Public:Register', 'GET', [
                 'action' => 'default',
                 'lang' => 'cs',
                 'eventId' => 666,
             ]);
 
-            $fixture->run($request);
-        }, BadRequestException::class, 'Neexistující akce.', 404);
+            $this->fixture->run($request);
+        }, EventNotFoundException::class, 'Event not found.', 404);
     }
 
     public function test404Application(): void {
-        $fixture = $this->fixture;
         $eventId = $this->createEvent([
             'event_type_id' => 2,
             'event_year' => 19,
             'registration_begin' => DateTime::from(time() + DateTime::DAY),
         ]);
-        Assert::exception(function () use ($fixture, $eventId) {
+        Assert::exception(function () use ($eventId): void {
             $request = new Request('Public:Register', 'GET', [
                 'action' => 'default',
                 'lang' => 'cs',
@@ -56,8 +56,8 @@ class ApplicationPresenterTest extends EventTestCase {
                 'year' => 1,
             ]);
 
-            $fixture->run($request);
-        }, BadRequestException::class, 'Neexistující přihláška.', 404);
+            $this->fixture->run($request);
+        }, NotFoundException::class, 'Unknown application.', 404);
     }
 
     public function testClosed(): void {
@@ -82,7 +82,7 @@ class ApplicationPresenterTest extends EventTestCase {
         Assert::type(ITemplate::class, $source);
 
         $html = (string)$source;
-        Assert::contains('Přihlašování není povoleno', $html);
+        Assert::contains('Registration is not open.', $html);
     }
 }
 

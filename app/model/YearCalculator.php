@@ -7,7 +7,6 @@ use FKSDB\ORM\Models\ModelContestYear;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\ORM\Services\ServiceContestYear;
 use InvalidArgumentException;
-use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 
@@ -47,12 +46,12 @@ class YearCalculator {
     }
 
     /**
-     * @param ActiveRow|ModelContest $contest
+     * @param ModelContest $contest
      * @param int|null $year
      * @return int
      * @throws InvalidArgumentException
      */
-    public function getAcademicYear(ActiveRow $contest, ?int $year): int {
+    public function getAcademicYear(ModelContest $contest, ?int $year): int {
         if (!isset($this->cache[$contest->contest_id]) || !isset($this->cache[$contest->contest_id][$year])) {
             throw new InvalidArgumentException("No academic year defined for {$contest->contest_id}:$year.");
         }
@@ -76,7 +75,7 @@ class YearCalculator {
     }
 
     public function getGraduationYear(int $studyYear, ?int $acYear): int {
-        $acYear = ($acYear !== null) ? $acYear : $this->getCurrentAcademicYear();
+        $acYear = is_null($acYear) ? $this->getCurrentAcademicYear() : $acYear;
 
         if ($studyYear >= 6 && $studyYear <= 9) {
             return $acYear + (5 - ($studyYear - 9));
@@ -84,7 +83,7 @@ class YearCalculator {
         if ($studyYear >= 1 && $studyYear <= 4) {
             return $acYear + (5 - $studyYear);
         }
-        throw new \Nette\InvalidArgumentException('Graduation year not match');
+        throw new InvalidArgumentException('Graduation year not match');
     }
 
     public function getCurrentYear(ModelContest $contest): int {
@@ -102,7 +101,7 @@ class YearCalculator {
     }
 
     public function isValidYear(ModelContest $contest, ?int $year): bool {
-        return $year !== null && $year >= $this->getFirstYear($contest) && $year <= $this->getLastYear($contest);
+        return !is_null($year) && $year >= $this->getFirstYear($contest) && $year <= $this->getLastYear($contest);
     }
 
     /**
@@ -140,17 +139,17 @@ class YearCalculator {
         }
 
         if (!$this->cache) {
-            throw new InvalidStateException('FKSDB\YearCalculator cannot be initalized, table contest_year is probably empty.');
+            throw new InvalidStateException('FKSDB\YearCalculator cannot be initialized, table contest_year is probably empty.');
         }
 
         $pk = $this->serviceContest->getPrimary();
         $contests = $this->serviceContest->fetchPairs($pk, $pk);
         foreach ($contests as $contestId) {
             if (!array_key_exists($contestId, $this->revCache)) {
-                throw new InvalidStateException(sprintf('Table contest_year doesn\'t specify any years at all for contest %s.', $contestId));
+                throw new InvalidStateException(sprintf('Table contest_year does not specify any years at all for contest %s.', $contestId));
             }
             if (!array_key_exists($this->getCurrentAcademicYear(), $this->revCache[$contestId])) {
-                throw new InvalidStateException(sprintf('Table contest_year doesn\'t specify year for contest %s for current academic year %s', $contestId, $this->getCurrentAcademicYear()));
+                throw new InvalidStateException(sprintf('Table contest_year does not specify year for contest %s for current academic year %s', $contestId, $this->getCurrentAcademicYear()));
             }
         }
     }

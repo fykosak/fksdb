@@ -5,6 +5,7 @@ namespace FKSDB\Authentication;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Authentication\SSO\GlobalSession;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
+use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\YearCalculator;
@@ -26,7 +27,7 @@ use Nette\Security\IIdentity;
 class LoginUserStorage extends UserStorage {
     /** @const HTTP GET parameter holding control information for the SSO */
 
-    public const PARAM_SSO = 'sso';
+    public const PARAM_SSO = ModelAuthToken::TYPE_SSO;
 
     /** @const Value meaning the user is not centally authneticated. */
     public const SSO_AUTHENTICATED = 'a';
@@ -35,11 +36,8 @@ class LoginUserStorage extends UserStorage {
     public const SSO_UNAUTHENTICATED = 'ua';
 
     private ServiceLogin $serviceLogin;
-
     private YearCalculator $yearCalculator;
-
     private GlobalSession $globalSession;
-
     private Application $application;
 
     /** @var IPresenter */
@@ -143,11 +141,7 @@ class LoginUserStorage extends UserStorage {
         }
     }
 
-    /**
-     * @param IIdentity|NULL $identity
-     * @return static
-     */
-    public function setIdentity(IIdentity $identity = null): self {
+    public function setIdentity(?IIdentity $identity = null): self {
         $this->identity = $identity;
         if ($identity instanceof ModelLogin) {
             $identity = new Identity($identity->getId());

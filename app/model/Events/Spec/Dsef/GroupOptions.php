@@ -102,8 +102,6 @@ class GroupOptions implements IOptionsProvider {
                 $result[$key] = $group->name . ' ' . $info;
             }
         }
-
         return $result;
     }
-
 }

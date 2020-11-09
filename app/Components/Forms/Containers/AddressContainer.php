@@ -30,7 +30,7 @@ class AddressContainer extends ModelContainer {
     /**
      * Used for substituting form's IControl (via duck-typing).
      *
-     * @param iterable $value
+     * @param iterable|null $value
      */
     public function setValue($value): void {
         $this->setValues($value === null ? [] : $value);

@@ -2,9 +2,9 @@
 
 namespace FKSDB\ORM;
 
+use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use InvalidArgumentException;
-use FKSDB\Exceptions\ModelException;
 use Nette\Database\Connection;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
@@ -90,7 +90,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     /**
      * Syntactic sugar.
      *
-     * @param int $key
+     * @param mixed $key
      * @return AbstractModelSingle|null
      */
     public function findByPrimary($key): ?AbstractModelSingle {
@@ -262,11 +262,10 @@ abstract class AbstractServiceSingle extends Selection implements IService {
         return $result;
     }
 
-    /** @var array */
-    private $columns;
+    private array $columns;
 
     private function getColumnMetadata(): array {
-        if ($this->columns === null) {
+        if (!isset($this->columns)) {
             $this->columns = $this->context->getConnection()->getSupplementalDriver()->getColumns($this->getTableName());
         }
         return $this->columns;
