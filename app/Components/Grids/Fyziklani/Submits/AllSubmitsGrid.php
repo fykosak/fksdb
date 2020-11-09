@@ -34,11 +34,8 @@ use FKSDB\SQL\SearchableDataSource;
 class AllSubmitsGrid extends SubmitsGrid {
 
     private ModelEvent $event;
-
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
-
     private ServiceFyziklaniTask $serviceFyziklaniTask;
-
     private HandlerFactory $handlerFactory;
 
     public function __construct(ModelEvent $event, Container $container) {
@@ -188,5 +185,4 @@ class AllSubmitsGrid extends SubmitsGrid {
         };
         return $control;
     }
-
 }
