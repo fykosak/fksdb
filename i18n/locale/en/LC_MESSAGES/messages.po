@@ -2848,7 +2848,7 @@ msgstr ""
 
 #: i18n/../libs/NiftyGrid/Grid.php:813 i18n/../libs/NiftyGrid/Grid.php:815
 msgid "Nebyl vybrán žádný záznam."
-msgstr "No record selectd."
+msgstr "No record selected."
 
 #: i18n/../app/Components/Controls/Stalking/Components/layout.flag.latte.latte2php:9
 msgid "Value"

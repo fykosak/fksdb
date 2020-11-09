@@ -5,13 +5,11 @@ namespace FKSDB\Events\Spec\Fyziklani;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\Events\Processing\AbstractProcessing;
+use FKSDB\Events\Spec\AbstractCategoryProcessing;
 use FKSDB\Events\SubmitProcessingException;
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Services\ServiceSchool;
-use FKSDB\YearCalculator;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
@@ -22,80 +20,27 @@ use Nette\Utils\ArrayHash;
  * @author Aleš Podolník <ales@fykos.cz>
  * @author Michal Koutný <michal@fykos.cz> (ported to FKSDB)
  */
-class CategoryProcessing extends AbstractProcessing {
-
-    private YearCalculator $yearCalculator;
-
-    private ServiceSchool $serviceSchool;
-
-    public function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
-        $this->yearCalculator = $yearCalculator;
-        $this->serviceSchool = $serviceSchool;
-    }
+class CategoryProcessing extends AbstractCategoryProcessing {
 
     protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void {
-
         if (!isset($values['team'])) {
             return;
         }
-
-        $event = $holder->getPrimaryHolder()->getEvent();
-        $contest = $event->getEventType()->contest;
-        $year = $event->year;
-        $acYear = $this->yearCalculator->getAcademicYear($contest, $year);
-
-        $participants = [];
-        foreach ($holder->getBaseHolders() as $name => $baseHolder) {
-            if ($name == 'team') {
-                continue;
-            }
-            $studyYearControl = $this->getControl("$name.person_id.person_history.study_year");
-            $schoolControl = $this->getControl("$name.person_id.person_history.school_id");
-
-            $studyYearControl = reset($studyYearControl);
-            $schoolControl = reset($schoolControl);
-
-            $schoolValue = null;
-            if ($schoolControl) {
-                $schoolControl->loadHttpData();
-                $schoolValue = $schoolControl->getValue();
-            }
-            $studyYearValue = null;
-            if ($studyYearControl) {
-                $studyYearControl->loadHttpData();
-                $studyYearValue = $studyYearControl->getValue();
-            }
-
-            if (!$studyYearValue) {
-                if ($this->isBaseReallyEmpty($name)) {
-                    continue;
-                }
-                /** @var ModelPerson $person */
-                $person = $baseHolder->getModel()->getMainModel()->person;
-                $history = $person->related('person_history')->where('ac_year', $acYear)->fetch();
-                $participantData = [
-                    'school_id' => $history->school_id,
-                    'study_year' => $history->study_year,
-                ];
-
-            } else {
-                $participantData = [
-                    'school_id' => $schoolValue,
-                    'study_year' => $studyYearValue,
-                ];
-            }
-            $participants[] = $participantData;
+        if ($values['team']['force_a']) {
+            $values['team']['category'] = ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A;
+        } else {
+            $participants = $this->extractValues($holder);
+            $values['team']['category'] = $this->getCategory($participants);
         }
 
-        $values['team']['category'] = $values['team']['force_a'] ? "A" : $this->getCategory($participants);
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
 
         if ($original != $values['team']['category']) {
-            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), $values['team']['category']), ILogger::INFO));
+            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($values['team']['category'])), ILogger::INFO));
         }
     }
 
-    private function getCategory(array $participants): string {
+    protected function getCategory(array $participants): string {
         $coefficientSum = 0;
         $count4 = 0;
         $count3 = 0;
@@ -118,15 +63,14 @@ class CategoryProcessing extends AbstractProcessing {
         //     $result = 'F';
         // } else
         if ($categoryHandle <= 2 && $count4 == 0 && $count3 <= 2) {
-            $result = 'C';
+            $result = ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_C;
         } elseif ($categoryHandle <= 3 && $count4 <= 2) {
-            $result = 'B';
+            $result = ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_B;
         } elseif ($categoryHandle <= 4) {
-            $result = 'A';
+            $result = ModelFyziklaniTeam::CATEGORY_HIGH_SCHOOL_A;
         } else {
             throw new SubmitProcessingException(_('Cannot determine category.'));
         }
         return $result;
     }
-
 }
