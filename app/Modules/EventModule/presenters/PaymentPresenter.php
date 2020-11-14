@@ -5,13 +5,13 @@ namespace FKSDB\Modules\EventModule;
 use FKSDB\Components\Controls\Entity\PaymentFormComponent;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\Components\Grids\Payment\EventPaymentGrid;
-use FKSDB\Payment\PaymentExtension;
 use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Events\EventNotFoundException;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\ServicePayment;
+use FKSDB\Payment\PaymentExtension;
 use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\Machine;
 use FKSDB\UI\PageTitle;
@@ -101,7 +101,6 @@ class PaymentPresenter extends BasePresenter {
             $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()), \FKSDB\Modules\Core\BasePresenter::FLASH_ERROR);
             $this->redirect(':Core:MyPayments:');
         }
-        $this->traitActionEdit();
     }
 
     /**
@@ -211,7 +210,7 @@ class PaymentPresenter extends BasePresenter {
             $this->getContext(),
             $this->isOrg(),
             $this->getMachine(),
-            true
+            null
         );
     }
 
@@ -219,13 +218,15 @@ class PaymentPresenter extends BasePresenter {
      * @return PaymentFormComponent
      * @throws BadTypeException
      * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): PaymentFormComponent {
         return new PaymentFormComponent(
             $this->getContext(),
             $this->isOrg(),
             $this->getMachine(),
-            false
+            $this->getEntity()
         );
     }
 }

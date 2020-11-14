@@ -84,26 +84,21 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
     /**
      * @return void
      * @throws ModelNotFoundException
-     * @throws BadTypeException
-     */
-    public function actionEdit(): void {
-        $this->traitActionEdit();
-    }
-
-    /**
-     * @return void
-     * @throws ModelNotFoundException
      */
     public function renderDetail(): void {
         $this->template->model = $this->getEntity();
     }
 
     protected function createComponentCreateForm(): StoredQueryFormComponent {
-        return new StoredQueryFormComponent($this->getContext(), true);
+        return new StoredQueryFormComponent($this->getContext(), null);
     }
 
+    /**
+     * @return StoredQueryFormComponent
+     * @throws ModelNotFoundException
+     */
     protected function createComponentEditForm(): StoredQueryFormComponent {
-        return new StoredQueryFormComponent($this->getContext(), false);
+        return new StoredQueryFormComponent($this->getContext(), $this->getEntity());
     }
 
     protected function createComponentGrid(): BaseGrid {

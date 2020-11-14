@@ -2,14 +2,13 @@
 
 namespace FKSDB\Components\Controls\Entity;
 
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\DBReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
+use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\DBReflection\OmittedControlException;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Messages\Message;
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
 use FKSDB\Utils\FormUtils;
@@ -21,7 +20,7 @@ use Nette\Forms\Form;
  * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelTeacher $model
  */
-class TeacherFormComponent extends EditEntityFormComponent {
+class TeacherFormComponent extends AbstractEntityFormComponent {
 
     use ReferencedPersonTrait;
 
@@ -49,7 +48,7 @@ class TeacherFormComponent extends EditEntityFormComponent {
         $schoolContainer = $this->schoolFactory->createSchoolSelect();
         $container->addComponent($schoolContainer, 'school_id');
         $personInput = $this->createPersonSelect();
-        if (!$this->create) {
+        if (!$this->isCreating()) {
             $personInput->setDisabled();
         }
         $container->addComponent($personInput, 'person_id', 'state');
@@ -64,18 +63,17 @@ class TeacherFormComponent extends EditEntityFormComponent {
     protected function handleFormSuccess(Form $form): void {
         $data = FormUtils::emptyStrToNull($form->getValues()[self::CONTAINER], true);
         $this->serviceTeacher->store($this->model ?? null, $data);
-        $this->getPresenter()->flashMessage($this->create ? _('Teacher has been created') : _('Teacher has been updated'), Message::LVL_SUCCESS);
+        $this->getPresenter()->flashMessage(!isset($this->model) ? _('Teacher has been created') : _('Teacher has been updated'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 
     /**
-     * @param AbstractModelSingle|null $model
      * @return void
      * @throws BadTypeException
      */
-    protected function setDefaults(?AbstractModelSingle $model): void {
-        if (!is_null($model)) {
-            $this->getForm()->setDefaults([self::CONTAINER => $model->toArray()]);
+    protected function setDefaults(): void {
+        if (isset($this->model)) {
+            $this->getForm()->setDefaults([self::CONTAINER => $this->model->toArray()]);
         }
     }
 

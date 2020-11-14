@@ -18,7 +18,6 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Application\UI\Control;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Security\IResource;
 use Tracy\Debugger;
@@ -114,16 +113,6 @@ class PersonPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws BadTypeException
-     * @throws ModelNotFoundException
-     */
-    public function actionEdit(): void {
-        $this->traitActionEdit();
-    }
-
-
-    /**
-     * @return void
      * @throws ModelNotFoundException
      */
     public function renderDetail(): void {
@@ -161,19 +150,19 @@ class PersonPresenter extends BasePresenter {
     }
 
     /**
-     * @return Control
+     * @return PersonFormComponent
      * @throws ModelNotFoundException
      */
-    protected function createComponentCreateForm(): Control {
-        return new PersonFormComponent($this->getContext(), true, $this->getUserPermissions(false));
+    protected function createComponentCreateForm(): PersonFormComponent {
+        return new PersonFormComponent($this->getContext(), $this->getUserPermissions(false), null);
     }
 
     /**
-     * @return Control
+     * @return PersonFormComponent
      * @throws ModelNotFoundException
      */
-    protected function createComponentEditForm(): Control {
-        return new PersonFormComponent($this->getContext(), false, $this->getUserPermissions(true));
+    protected function createComponentEditForm(): PersonFormComponent {
+        return new PersonFormComponent($this->getContext(), $this->getUserPermissions(), $this->getEntity());
     }
 
     protected function createComponentPizzaSelect(): PizzaControl {

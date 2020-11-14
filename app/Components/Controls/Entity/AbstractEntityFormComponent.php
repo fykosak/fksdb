@@ -5,11 +5,12 @@ namespace FKSDB\Components\Controls\Entity;
 use FKSDB\Components\Forms\FormComponent;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\Messages\Message;
+use FKSDB\ORM\AbstractModelSingle;
 use Nette\Application\AbortException;
 use Nette\Database\ConstraintViolationException;
-use Nette\Forms\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\Form;
 use Tracy\Debugger;
 
 /**
@@ -18,11 +19,20 @@ use Tracy\Debugger;
  */
 abstract class AbstractEntityFormComponent extends FormComponent {
 
-    protected bool $create;
+    protected ?AbstractModelSingle $model;
 
-    public function __construct(Container $container, bool $create) {
+    public function __construct(Container $container, ?AbstractModelSingle $model) {
         parent::__construct($container);
-        $this->create = $create;
+        $this->model = $model;
+    }
+
+    public function render(): void {
+        $this->setDefaults();
+        parent::render();
+    }
+
+    final protected function isCreating(): bool {
+        return !isset($this->model);
     }
 
     /**
@@ -50,7 +60,10 @@ abstract class AbstractEntityFormComponent extends FormComponent {
     }
 
     protected function appendSubmitButton(Form $form): SubmitButton {
-        return $form->addSubmit('submit', $this->create ? _('Create') : _('Save'));
+        return $form->addSubmit('submit', $this->isCreating() ? _('Create') : _('Save'));
+    }
+
+    protected function configureForm(Form $form): void {
     }
 
     /**
@@ -61,6 +74,5 @@ abstract class AbstractEntityFormComponent extends FormComponent {
      */
     abstract protected function handleFormSuccess(Form $form): void;
 
-    protected function configureForm(Form $form): void {
-    }
+    abstract protected function setDefaults(): void;
 }
