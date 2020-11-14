@@ -61,15 +61,6 @@ class ScheduleItemPresenter extends BasePresenter {
     }
 
     /**
-     * @return void
-     * @throws ModelNotFoundException
-     * @throws BadTypeException
-     */
-    public function actionEdit(): void {
-        $this->traitActionEdit();
-    }
-
-    /**
      *
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -85,15 +76,18 @@ class ScheduleItemPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     protected function createComponentCreateForm(): ScheduleItemFormContainer {
-        return new ScheduleItemFormContainer($this->getEvent(), $this->getContext(), true);
+        return new ScheduleItemFormContainer($this->getEvent(), $this->getContext(), null);
     }
 
     /**
      * @return ScheduleItemFormContainer
+     * @throws BadTypeException
      * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): ScheduleItemFormContainer {
-        return new ScheduleItemFormContainer($this->getEvent(), $this->getContext(), false);
+        return new ScheduleItemFormContainer($this->getEvent(), $this->getContext(), $this->getEntity());
     }
 
     /**

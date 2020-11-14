@@ -60,25 +60,20 @@ class TeacherPresenter extends BasePresenter {
         $this->template->model = $this->getEntity();
     }
 
-    /**
-     * @return void
-     * @throws ModelNotFoundException
-     * @throws BadTypeException
-     */
-    public function actionEdit(): void {
-        $this->traitActionEdit();
-    }
-
     protected function createComponentGrid(): TeachersGrid {
         return new TeachersGrid($this->getContext());
     }
 
     protected function createComponentCreateForm(): TeacherFormComponent {
-        return new TeacherFormComponent($this->getContext(), true);
+        return new TeacherFormComponent($this->getContext(), null);
     }
 
+    /**
+     * @return TeacherFormComponent
+     * @throws ModelNotFoundException
+     */
     protected function createComponentEditForm(): TeacherFormComponent {
-        return new TeacherFormComponent($this->getContext(), false);
+        return new TeacherFormComponent($this->getContext(), $this->getEntity());
     }
 
     /**

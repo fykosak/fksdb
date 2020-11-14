@@ -54,15 +54,6 @@ class EventPresenter extends BasePresenter {
     }
 
     /**
-     * @return void
-     * @throws ModelNotFoundException
-     * @throws BadTypeException
-     */
-    public function actionEdit(): void {
-        $this->traitActionEdit();
-    }
-
-    /**
      * @return EventsGrid
      * @throws ForbiddenRequestException
      * @throws BadTypeException
@@ -77,16 +68,17 @@ class EventPresenter extends BasePresenter {
      * @throws BadTypeException
      */
     protected function createComponentCreateForm(): Control {
-        return new EventFormComponent($this->getSelectedContest(), $this->getContext(), $this->getSelectedYear(), true);
+        return new EventFormComponent($this->getSelectedContest(), $this->getContext(), $this->getSelectedYear(), null);
     }
 
     /**
      * @return Control
      * @throws ForbiddenRequestException
      * @throws BadTypeException
+     * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): Control {
-        return new EventFormComponent($this->getSelectedContest(), $this->getContext(), $this->getSelectedYear(), false);
+        return new EventFormComponent($this->getSelectedContest(), $this->getContext(), $this->getSelectedYear(), $this->getEntity());
     }
 
     protected function getORMService(): ServiceEvent {

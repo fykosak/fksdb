@@ -220,7 +220,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
     protected function createComponentEmailForm(): FormControl {
         $control = new FormControl();
         $form = $control->getForm();
-        $form->addText('email', _('e-mail'));
+        $form->addText('email', _('E-mail'));
         $form->addSubmit('submit', _('Find'));
         $form->onSuccess[] = function (Form $form) {
             $this->emailFormSucceeded($form);
