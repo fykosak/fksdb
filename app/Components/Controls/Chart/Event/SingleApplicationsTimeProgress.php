@@ -57,7 +57,7 @@ class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
     }
 
     public function getTitle(): string {
-        return 'Applications time progress';
+        return _('Applications time progress');
     }
 
     public function getControl(): self {
