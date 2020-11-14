@@ -18,7 +18,7 @@ jobs:
         name: Setup PHP
         with:
           php-version: ${{ matrix.php }}
-          extensions: curl, mbstring, mysql, soap, sqlite3, xml
+          extensions: curl, mbstring, mysql, soap, xml
           tools: composer
           ini-values: session.gc_probability=0, date.timezone="Europe/Prague", display_startup_errors = Off
       - name: Composer install
