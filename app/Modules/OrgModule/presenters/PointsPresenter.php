@@ -77,7 +77,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      */
     public function titlePreview(): void {
-        $this->setPageTitle(new PageTitle(_('Points'), 'fa fa-inbox'));
+        $this->setPageTitle(new PageTitle(_('Points list'), 'fa fa-inbox'));
     }
 
     /**
