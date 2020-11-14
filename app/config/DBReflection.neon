@@ -386,7 +386,7 @@ DBReflection:
                     title: _('Study year')
                 class:
                     type: string
-                    title: 'Class'
+                    title: _('Class')
                     permissions: RESTRICT
          login:
              modelClassName: FKSDB\ORM\Models\ModelLogin
