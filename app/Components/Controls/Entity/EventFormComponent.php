@@ -2,17 +2,16 @@
 
 namespace FKSDB\Components\Controls\Entity;
 
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\DBReflection\OmittedControlException;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;
+use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\DBReflection\OmittedControlException;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\ILogger;
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceAuthToken;
@@ -20,10 +19,10 @@ use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\Utils\FormUtils;
 use FKSDB\Utils\Utils;
 use Nette\Application\AbortException;
-use Nette\Forms\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextArea;
+use Nette\Forms\Form;
 use Nette\Neon\Neon;
 use Nette\Utils\Html;
 
@@ -32,7 +31,7 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelEvent $model
  */
-class EventFormComponent extends EditEntityFormComponent {
+class EventFormComponent extends AbstractEntityFormComponent {
     public const CONT_EVENT = 'event';
 
     private ModelContest $contest;
@@ -42,8 +41,8 @@ class EventFormComponent extends EditEntityFormComponent {
     private int $year;
     private EventDispatchFactory $eventDispatchFactory;
 
-    public function __construct(ModelContest $contest, Container $container, int $year, bool $create) {
-        parent::__construct($container, $create);
+    public function __construct(ModelContest $contest, Container $container, int $year, ?ModelEvent $model) {
+        parent::__construct($container, $model);
         $this->contest = $contest;
         $this->year = $year;
     }
@@ -88,15 +87,14 @@ class EventFormComponent extends EditEntityFormComponent {
     }
 
     /**
-     * @param AbstractModelSingle|ModelEvent|null $model
      * @return void
      * @throws BadTypeException
      * @throws NeonSchemaException
      */
-    protected function setDefaults(?AbstractModelSingle $model): void {
-        if (!is_null($model)) {
+    protected function setDefaults(): void {
+        if (isset($this->model)) {
             $this->getForm()->setDefaults([
-                self::CONT_EVENT => $model->toArray(),
+                self::CONT_EVENT => $this->model->toArray(),
             ]);
             /** @var TextArea $paramControl */
             $paramControl = $this->getForm()->getComponent(self::CONT_EVENT)->getComponent('parameters');

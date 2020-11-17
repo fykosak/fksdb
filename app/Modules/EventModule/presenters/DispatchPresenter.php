@@ -19,9 +19,7 @@ class DispatchPresenter extends AuthenticatedPresenter {
     }
 
     protected function createComponentDispatchGrid(): DispatchGrid {
-        /** @var ModelLogin $login */
-        $login = $this->getUser()->getIdentity();
-        return new DispatchGrid($login->getPerson(), $this->getContext());
+        return new DispatchGrid($this->getContext());
     }
 
     public function titleDefault(): void {

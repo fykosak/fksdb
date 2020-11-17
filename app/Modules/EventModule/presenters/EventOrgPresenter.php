@@ -74,15 +74,6 @@ class EventOrgPresenter extends BasePresenter {
         }
     }
 
-    /**
-     * @return void
-     * @throws ModelNotFoundException
-     * @throws BadTypeException
-     */
-    public function actionEdit(): void {
-        $this->traitActionEdit();
-    }
-
     protected function getORMService(): ServiceEventOrg {
         return $this->serviceEventOrg;
     }
@@ -100,15 +91,18 @@ class EventOrgPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     protected function createComponentCreateForm(): EventOrgFormComponent {
-        return new EventOrgFormComponent($this->getContext(), $this->getEvent(), true);
+        return new EventOrgFormComponent($this->getContext(), $this->getEvent(), null);
     }
 
     /**
      * @return EventOrgFormComponent
+     * @throws BadTypeException
      * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): EventOrgFormComponent {
-        return new EventOrgFormComponent($this->getContext(), $this->getEvent(), false);
+        return new EventOrgFormComponent($this->getContext(), $this->getEvent(), $this->getEntity());
     }
 
 }

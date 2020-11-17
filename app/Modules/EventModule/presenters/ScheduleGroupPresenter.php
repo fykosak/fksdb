@@ -11,6 +11,7 @@ use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Events\EventNotFoundException;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
+use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
@@ -19,6 +20,7 @@ use Nette\Security\IResource;
 /**
  * Class ScheduleGroupPresenter
  * @author Michal Červeňák <miso@fykos.cz>
+ * @method ModelScheduleGroup getEntity()
  */
 class ScheduleGroupPresenter extends BasePresenter {
     use EventEntityPresenterTrait;
@@ -54,15 +56,6 @@ class ScheduleGroupPresenter extends BasePresenter {
     }
 
     /**
-     * @return void
-     * @throws ModelNotFoundException
-     * @throws BadTypeException
-     */
-    public function actionEdit(): void {
-        $this->traitActionEdit();
-    }
-
-    /**
      *
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
@@ -78,15 +71,18 @@ class ScheduleGroupPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     protected function createComponentCreateForm(): ScheduleGroupFormComponent {
-        return new ScheduleGroupFormComponent($this->getEvent(), $this->getContext(), true);
+        return new ScheduleGroupFormComponent($this->getEvent(), $this->getContext(), null);
     }
 
     /**
      * @return ScheduleGroupFormComponent
+     * @throws BadTypeException
      * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): ScheduleGroupFormComponent {
-        return new ScheduleGroupFormComponent($this->getEvent(), $this->getContext(), false);
+        return new ScheduleGroupFormComponent($this->getEvent(), $this->getContext(), $this->getEntity());
     }
 
     /**
