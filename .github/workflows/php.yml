@@ -7,20 +7,17 @@ jobs:
     name: PHP ${{ matrix.php }} with ${{ matrix.database }}
     runs-on: ubuntu-20.04
     strategy:
+      fail-fast: false
       matrix:
         php: [ '7.4' ]
         database: [ 'mysql', 'mariadb:10.4' ]
     steps:
-      # It mounts /var/run/mysqld directory into docker container and waits for sockets to appear
-      # There were some issues with TCP connection method
+      # MariaDB container has to be started in advance to initialize itself before using it.
       - name: Start MariaDB
         if: ${{ startsWith(matrix.database, 'mariadb' ) }}
         run: |
-          sudo mkdir -p /var/run/mysqld
-          sudo docker volume create --driver local --name mysqld --opt type=none --opt device=/var/run/mysqld --opt o=uid=root,gid=root --opt o=bind
-          sudo docker run --name mariadb -p 3306 -dv mysqld:/var/run/mysqld -e MYSQL_ALLOW_EMPTY_PASSWORD=1 ${{ matrix.database }}
-          until [ -e /var/run/mysqld/mysqld.sock -o "$( sudo docker container inspect -f '{{.State.Status}}' mariadb )" != "running" ]; do sleep 1; done;
-          sudo mysql -e "CREATE USER 'runner'@'localhost' IDENTIFIED BY ''; GRANT ALL PRIVILEGES ON * . * TO 'runner'@'localhost'; FLUSH PRIVILEGES;"
+          sudo docker run --name mariadb -p 3306 -de MYSQL_ALLOW_EMPTY_PASSWORD=1 ${{ matrix.database }}
+          printf '\n[client]\nport=3306\nhost='$( sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mariadb )'\n' | sudo tee -a /etc/mysql/my.cnf
       - uses: actions/checkout@v2
         name: Checkout
         with:
@@ -34,25 +31,24 @@ jobs:
           ini-values: session.gc_probability=0, date.timezone="Europe/Prague", display_startup_errors = Off
       - name: Composer install
         run: composer install --no-progress --prefer-dist
-      - name: FKSDB configuration for MySQL
-        if: ${{ matrix.database == 'mysql' }}
-        run: "sed -e 's/user:/user: root/' app/config/config.local.neon.sample > app/config/config.local.neon"
+      - name: FKSDB configuration
+        run: "sed -e 's/user:/user: runner/' app/config/config.local.neon.sample > app/config/config.local.neon"
       - name: FKSDB configuration for MariaDB
         if: ${{ startsWith(matrix.database, 'mariadb' ) }}
-        run: "sed -e 's/user:/user: root/' -e 's/mysql:host=127.0.0.1/mysql:host='$( sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mariadb )/ app/config/config.local.neon.sample > app/config/config.local.neon"
+        run: sed -ie 's/mysql:host=127.0.0.1/mysql:host='$( sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mariadb )/ app/config/config.tester.neon
       - name: i18n compile
         run: |
           sudo apt-get install gettext
           ./i18n/compile.sh
-      - name: Start MySQL
+      - name: Start and prepare MySQL
         if: ${{ matrix.database == 'mysql' }}
         run: |
           sudo service mysql start
-          sudo mysql -proot -e "ALTER USER 'root'@'localhost' IDENTIFIED BY ''; CREATE USER 'runner'@'localhost' IDENTIFIED BY ''; GRANT ALL PRIVILEGES ON * . * TO 'runner'@'localhost'; FLUSH PRIVILEGES;"
+          sudo mysql -proot -e "ALTER USER 'root'@'localhost' IDENTIFIED BY ''; CREATE USER 'runner'@'localhost' IDENTIFIED BY ''; GRANT ALL PRIVILEGES ON * . * TO 'runner'@'localhost';"
       - name: Prepare MariaDB
         if: ${{ startsWith(matrix.database, 'mariadb' ) }}
         run: |
-          sudo mysql -e "CREATE USER 'runner'@'localhost' IDENTIFIED BY ''; GRANT ALL PRIVILEGES ON * . * TO 'runner'@'localhost'; FLUSH PRIVILEGES;"
+          sudo mysql -e "CREATE USER 'runner'@'%' IDENTIFIED BY ''; GRANT ALL PRIVILEGES ON * . * TO 'runner'@'%';"
       - run: composer run-script initTestDatabase
         name: Init test database
       - run: composer run-script test
