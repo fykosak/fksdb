@@ -58,7 +58,9 @@
             </xsd:complexType>
             <xsd:complexType name="GetEventRequestType">
                 <xsd:sequence>
-                    <xsd:element name="eventId" type="xsd:nonNegativeInteger"/>
+                    <xsd:element name="eventList" minOccurs="0"/>
+                    <xsd:element name="eventTypeId" type="xsd:nonNegativeInteger" minOccurs="0"/>
+                    <xsd:element name="eventId" type="xsd:nonNegativeInteger" minOccurs="0"/>
                     <xsd:element name="teamList" minOccurs="0"/>
                     <xsd:element name="schedule" minOccurs="0"/>
                     <xsd:element name="personSchedule" minOccurs="0"/>
