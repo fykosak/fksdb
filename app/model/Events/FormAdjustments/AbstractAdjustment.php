@@ -20,7 +20,7 @@ abstract class AbstractAdjustment implements IFormAdjustment {
     use SmartObject;
 
     public const DELIMITER = '.';
-    public const WILDCART = '*';
+    public const WILD_CART = '*';
 
     private array $pathCache;
 
@@ -32,7 +32,7 @@ abstract class AbstractAdjustment implements IFormAdjustment {
     abstract protected function innerAdjust(Form $form, Machine $machine, Holder $holder): void;
 
     final protected function hasWildCart(string $mask): bool {
-        return strpos($mask, self::WILDCART) !== false;
+        return strpos($mask, self::WILD_CART) !== false;
     }
 
     /**
@@ -41,7 +41,7 @@ abstract class AbstractAdjustment implements IFormAdjustment {
      */
     final protected function getControl(string $mask): array {
         $keys = array_keys($this->pathCache);
-        $pMask = str_replace(self::WILDCART, '__WC__', $mask);
+        $pMask = str_replace(self::WILD_CART, '__WC__', $mask);
 
         $pMask = str_replace('__WC__', '(.+)', preg_quote($pMask));
         $pattern = "/^$pMask\$/";

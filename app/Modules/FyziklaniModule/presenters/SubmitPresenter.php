@@ -2,6 +2,10 @@
 
 namespace FKSDB\Modules\FyziklaniModule;
 
+use FKSDB\Components\Controls\Entity\FyziklaniSubmitEditComponent;
+use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
+use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
+use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
 use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Events\EventNotFoundException;
 use FKSDB\Exceptions\BadTypeException;
@@ -10,10 +14,6 @@ use FKSDB\Fyziklani\Submit\HandlerFactory;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use FKSDB\Components\Controls\Entity\FyziklaniSubmitEditComponent;
-use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
-use FKSDB\Components\Grids\Fyziklani\AllSubmitsGrid;
-use FKSDB\Components\Grids\Fyziklani\SubmitsGrid;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit;
 use FKSDB\UI\PageTitle;
@@ -41,7 +41,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleCreate(): void {
-        $this->setPageTitle(new PageTitle(_('Zadávání bodů'), 'fa fa-pencil-square-o'));
+        $this->setPageTitle(new PageTitle(_('Scoring'), 'fa fa-pencil-square-o'));
     }
 
     /**
@@ -57,7 +57,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws ForbiddenRequestException
      */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(_('Úprava bodování'), 'fa fa-pencil'));
+        $this->setPageTitle(new PageTitle(_('Change of scoring'), 'fa fa-pencil'));
     }
 
     /**
@@ -84,15 +84,6 @@ class SubmitPresenter extends BasePresenter {
     }
 
     /* ******** ACTION METHODS ********/
-
-    /**
-     * @return void
-     * @throws BadTypeException
-     * @throws ModelNotFoundException
-     */
-    public function actionEdit(): void {
-        $this->traitActionEdit();
-    }
 
     /**
      * @return void
@@ -135,10 +126,13 @@ class SubmitPresenter extends BasePresenter {
 
     /**
      * @return FyziklaniSubmitEditComponent
+     * @throws BadTypeException
      * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
+     * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): FyziklaniSubmitEditComponent {
-        return new FyziklaniSubmitEditComponent($this->getContext(), $this->getEvent());
+        return new FyziklaniSubmitEditComponent($this->getContext(), $this->getEvent(), $this->getEntity());
     }
 
     /**

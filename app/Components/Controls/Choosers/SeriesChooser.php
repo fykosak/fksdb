@@ -44,7 +44,7 @@ class SeriesChooser extends Chooser {
             $this->series = $this->selectSeries();
         }
         if ($redirect && +$this->urlSeries !== $this->series) {
-            $this->getPresenter()->redirect('this', ['series' => $this->series]);
+            $this->getPresenter()->redirect('this', array_merge($this->getPresenter()->getParameters(), ['series' => $this->series]));
         }
     }
 

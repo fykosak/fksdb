@@ -8,7 +8,6 @@ use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Services\ServiceRegion;
 use Nette\Database\Table\ActiveRow;
 use Nette\DI\Container as DIContainer;
-use Nette\Forms\Container;
 use Nette\InvalidStateException;
 use Nette\Utils\ArrayHash;
 
@@ -31,7 +30,7 @@ class AddressContainer extends ModelContainer {
     /**
      * Used for substituting form's IControl (via duck-typing).
      *
-     * @param iterable $value
+     * @param iterable|null $value
      */
     public function setValue($value): void {
         $this->setValues($value === null ? [] : $value);

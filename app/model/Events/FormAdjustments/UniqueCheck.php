@@ -12,7 +12,7 @@ use Nette\Forms\IControl;
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  * @note Assumes the first part of the field name is the holder name or
- * the dynamic (wildcart) part represents the holder name.
+ * the dynamic (wildCart) part represents the holder name.
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
@@ -40,7 +40,7 @@ class UniqueCheck extends AbstractAdjustment {
                 $table = $baseHolder->getService()->getTable();
                 $column = BaseHolder::getBareColumn($this->field);
                 if ($control instanceof ReferencedId) {
-                    /* We don't want to fullfil potential promise
+                    /* We don't want to fulfill potential promise
                      * as it would be out of transaction here.
                      */
                     $value = $control->getValue(false);

@@ -3,6 +3,7 @@
 namespace FKSDB\DBReflection\ColumnFactories\EventParticipant;
 
 use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
+use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ValuePrinters\StringPrinter;
 use FKSDB\ORM\AbstractModelSingle;
 use Nette\Utils\Html;
@@ -21,6 +22,10 @@ class TShirtSizeRow extends DefaultColumnFactory {
         'F' => 'female',
     ];
 
+    /**
+     * @param AbstractModelSingle|ModelEventParticipant $model
+     * @return Html
+     */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         return (new StringPrinter())($model->tshirt_size);
     }

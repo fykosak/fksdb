@@ -12,7 +12,7 @@ use Nette\DeprecatedException;
 trait DeprecatedLazyDBTrait {
     /**
      * @param iterable|null $data
-     * @return IModel
+     * @return IModel|mixed
      * @deprecated
      */
     public function createNew(?iterable $data = null) {

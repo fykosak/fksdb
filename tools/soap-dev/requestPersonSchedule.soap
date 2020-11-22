@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns1="http://fykos.cz/ws/service">
+    <SOAP-ENV:Header>
+        <ns1:AuthenticationCredentials>
+            <ns1:username>--LOGIN--</ns1:username>
+            <ns1:password>--PASSWD--</ns1:password>
+        </ns1:AuthenticationCredentials>
+    </SOAP-ENV:Header>
+    <SOAP-ENV:Body>
+        <GetEventRequest>
+            <eventId>145</eventId>
+            <schedule>
+                <groupType>weekend</groupType>
+                <groupType>accommodation</groupType>
+            </schedule>
+            <personSchedule>
+                <groupType>accommodation</groupType>
+                <groupType>weekend</groupType>
+            </personSchedule>
+        </GetEventRequest>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\Components\Controls\Entity\IEditEntityForm;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Exceptions;
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\AbstractServiceSingle;
@@ -22,13 +20,13 @@ use Nette\Security\IResource;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 trait EntityPresenterTrait {
-
-    protected ?AbstractModelSingle $model;
     /**
-     * @var int
      * @persistent
+     * @var int
      */
     public $id;
+
+    protected ?AbstractModelSingle $model;
 
     public function authorizedList(): void {
         $this->setAuthorized($this->traitIsAuthorized($this->getModelResource(), 'list'));
@@ -146,19 +144,6 @@ trait EntityPresenterTrait {
 
     /**
      * @return void
-     * @throws BadTypeException
-     * @throws ModelNotFoundException
-     */
-    protected function traitActionEdit(): void {
-        $component = $this->getComponent('editForm');
-        if (!$component instanceof IEditEntityForm) {
-            throw new BadTypeException(IEditEntityForm::class, $component);
-        }
-        $component->setModel($this->getEntity());
-    }
-
-    /**
-     * @return void
      * @throws ModelNotFoundException
      */
     public function traitHandleDelete(): void {
@@ -166,7 +151,6 @@ trait EntityPresenterTrait {
         if (!$success) {
             throw new Exceptions\ModelException(_('Error during deleting'));
         }
-        return;
     }
 
     /**
@@ -196,10 +180,10 @@ trait EntityPresenterTrait {
 
     /**
      * @param IResource|string $resource
-     * @param string $privilege
+     * @param string|null $privilege
      * @return bool
      */
-    abstract protected function traitIsAuthorized($resource, string $privilege): bool;
+    abstract protected function traitIsAuthorized($resource, ?string $privilege): bool;
 
     /**
      * @param null $name

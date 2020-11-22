@@ -2,8 +2,8 @@
 
 namespace FKSDB\Authorization;
 
-use FKSDB\Authorization\Assertions\EventOrgByIdAssertion;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelLogin;
 use Nette\Database\Context;
 use Nette\Security\IResource;
 use Nette\Security\IUserStorage;
@@ -100,6 +100,12 @@ class EventAuthorizator {
      * @return bool
      */
     private function isEventOrg($resource, ?string $privilege, ModelEvent $event): bool {
-        return (new EventOrgByIdAssertion($this->getUser(), $this->context))($this->getPermission(), null, $resource, $privilege, $event->event_id);
+        /** @var ModelLogin $identity */
+        $identity = $this->getUser()->getIdentity();
+        $person = $identity ? $identity->getPerson() : null;
+        if (!$person) {
+            return false;
+        }
+        return $event->getEventOrgs()->where('person_id', $person->person_id)->count() > 0;
     }
 }

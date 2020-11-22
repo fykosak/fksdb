@@ -34,11 +34,8 @@ use FKSDB\SQL\SearchableDataSource;
 class AllSubmitsGrid extends SubmitsGrid {
 
     private ModelEvent $event;
-
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
-
     private ServiceFyziklaniTask $serviceFyziklaniTask;
-
     private HandlerFactory $handlerFactory;
 
     public function __construct(ModelEvent $event, Container $container) {
@@ -132,7 +129,7 @@ class AllSubmitsGrid extends SubmitsGrid {
         /** @var ModelFyziklaniSubmit $submit */
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
         if (!$submit) {
-            $this->flashMessage(_('Submit dos not exists.'), BasePresenter::FLASH_ERROR);
+            $this->flashMessage(_('Submit does not exists.'), BasePresenter::FLASH_ERROR);
             $this->redirect('this');
         }
         try {
@@ -188,5 +185,4 @@ class AllSubmitsGrid extends SubmitsGrid {
         };
         return $control;
     }
-
 }

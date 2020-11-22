@@ -45,7 +45,7 @@ class TasksFromXML extends Stage {
         $sImported = (string)$xml->number;
         $sSet = $this->data->getSeries();
         if ($sImported != $sSet) {
-            throw new PipelineException(sprintf(_('Nesouhlasí importovaná (%s) a nastavená (%s) série.'), $sImported, $sSet));
+            throw new PipelineException(sprintf(_('Imported (%s) and set (%s) series does not match.'), $sImported, $sSet));
         }
         $problems = $xml->problems[0]->problem;
         foreach ($problems as $task) {

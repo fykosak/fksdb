@@ -20,10 +20,6 @@ class Count {
         $this->state = $state;
     }
 
-    /**
-     * @param array $args
-     * @return int
-     */
     public function __invoke(...$args): int {
         $baseHolder = $this->getHolder($args[0])->getPrimaryHolder();
         $table = $baseHolder->getService()->getTable();

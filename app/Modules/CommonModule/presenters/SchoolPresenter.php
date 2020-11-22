@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\Entity\SchoolFormComponent;
 use FKSDB\Components\Grids\ContestantsFromSchoolGrid;
 use FKSDB\Components\Grids\SchoolsGrid;
 use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
@@ -57,14 +56,6 @@ class SchoolPresenter extends BasePresenter {
     }
 
     /**
-     * @throws ModelNotFoundException
-     * @throws BadTypeException
-     */
-    public function actionEdit(): void {
-        $this->traitActionEdit();
-    }
-
-    /**
      * @return void
      * @throws ModelNotFoundException
      */
@@ -76,12 +67,16 @@ class SchoolPresenter extends BasePresenter {
         return new SchoolsGrid($this->getContext());
     }
 
+    /**
+     * @return SchoolFormComponent
+     * @throws ModelNotFoundException
+     */
     protected function createComponentEditForm(): SchoolFormComponent {
-        return new SchoolFormComponent($this->getContext(), false);
+        return new SchoolFormComponent($this->getContext(), $this->getEntity());
     }
 
     protected function createComponentCreateForm(): SchoolFormComponent {
-        return new SchoolFormComponent($this->getContext(), true);
+        return new SchoolFormComponent($this->getContext(), null);
     }
 
     /**

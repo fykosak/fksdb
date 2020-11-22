@@ -10,12 +10,12 @@ navigation:
             Org.StoredQuery.list: []
             Org.Org.list: []
             Org.Event.list: []
-            Common.Deduplicate.person: []
+            #Common.Deduplicate.person: []
             Common.Person.search: []
             Common.Dashboard.default: []
             Common.Validation.default: []
             Common.Spam.list: []
-            Common.Chart.list: []
+            Org.Chart.list: []
         Core.Dispatch.default:
             Core.MyApplications.default: []
             Core.MyPayments.default: []
@@ -28,7 +28,6 @@ navigation:
             Common.Validation.default: []
             Common.Person.search: []
             Common.Spam.list: []
-            Common.Chart.list: []
             Common.School.list: []
         Common.Validation.default:
             Common.Validation.preview: []

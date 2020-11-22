@@ -4,11 +4,7 @@
 
 services:
     accountManager:
-        class: FKSDB\Authentication\AccountManager
-        setup:
-            - setInvitationExpiration(%invitation.expiration%)
-            - setRecoveryExpiration(%recovery.expiration%)
-            - setEmailFrom(%email.from%)
+        class: FKSDB\Authentication\AccountManager(%invitation.expiration%,%recovery.expiration%,%email.from%)
     - FKSDB\Authentication\FacebookAuthenticator
     - FKSDB\Authentication\GithubAuthenticator
     - FKSDB\Authentication\PasswordAuthenticator
@@ -59,6 +55,7 @@ services:
         class: SoapServer(%wsdlUrl%)
         setup:
             - setObject(@webServiceModel)
+    - FKSDB\WebService\EventSoapFactory
 
     webServiceModel: FKSDB\WebService\WebServiceModel(%inverseContestMapping%, ...)
 

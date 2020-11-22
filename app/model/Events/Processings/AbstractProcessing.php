@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Events\Processings;
+namespace FKSDB\Events\Processing;
 
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
@@ -8,6 +8,7 @@ use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Logging\ILogger;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\Component;
+use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 use Nette\SmartObject;
@@ -22,18 +23,12 @@ abstract class AbstractProcessing implements IProcessing {
     use SmartObject;
 
     public const DELIMITER = '.';
-    public const WILDCART = '*';
+    public const WILD_CART = '*';
 
-    /** @var mixed */
-    private $valuesPathCache;
-    /** @var mixed */
-    private $formPathCache;
-    /** @var mixed */
-    private $states;
-
+    private array $valuesPathCache;
+    private array $formPathCache;
+    private array $states;
     private Holder $holder;
-    /** @var mixed */
-    private $values;
 
     /**
      * @param array $states
@@ -42,7 +37,7 @@ abstract class AbstractProcessing implements IProcessing {
      * @param Holder $holder
      * @param ILogger $logger
      * @param Form|null $form
-     * @return array|void
+     * @return mixed|void
      */
     final public function process(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form = null) {
         $this->states = $states;
@@ -54,12 +49,8 @@ abstract class AbstractProcessing implements IProcessing {
 
     abstract protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form): void;
 
-    /**
-     * @param string $mask
-     * @return bool
-     */
-    final protected function hasWildCart($mask): bool {
-        return strpos($mask, self::WILDCART) !== false;
+    final protected function hasWildCart(string $mask): bool {
+        return strpos($mask, self::WILD_CART) !== false;
     }
 
     /**
@@ -69,7 +60,7 @@ abstract class AbstractProcessing implements IProcessing {
      */
     final protected function getValue(string $mask): array {
         $keys = array_keys($this->valuesPathCache);
-        $pMask = str_replace(self::WILDCART, '__WC__', $mask);
+        $pMask = str_replace(self::WILD_CART, '__WC__', $mask);
         $pMask = preg_quote($pMask);
         $pMask = str_replace('__WC__', '(.+)', $pMask);
         $pattern = "/^$pMask\$/";
@@ -89,7 +80,7 @@ abstract class AbstractProcessing implements IProcessing {
      */
     final protected function getControl(string $mask): array {
         $keys = array_keys($this->formPathCache);
-        $pMask = str_replace(self::WILDCART, '__WC__', $mask);
+        $pMask = str_replace(self::WILD_CART, '__WC__', $mask);
         $pMask = preg_quote($pMask);
         $pMask = str_replace('__WC__', '(.+)', $pMask);
         $pattern = "/^$pMask\$/";
@@ -128,7 +119,6 @@ abstract class AbstractProcessing implements IProcessing {
      */
     private function setValues(ArrayHash $values, $prefix = ''): void {
         if (!$prefix) {
-            $this->values = $values;
             $this->valuesPathCache = [];
         }
 
@@ -150,6 +140,9 @@ abstract class AbstractProcessing implements IProcessing {
         /** @var Control $control */
         // TODO not type safe
         foreach ($form->getComponents(true, IControl::class) as $control) {
+            if ($control instanceof BaseControl) {
+                $control->loadHttpData();
+            }
             $path = $control->lookupPath(Form::class);
             $path = str_replace('_1', '', $path);
             $path = str_replace(Component::NAME_SEPARATOR, self::DELIMITER, $path);

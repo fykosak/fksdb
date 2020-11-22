@@ -25,7 +25,7 @@ class CitizenshipRow extends DefaultColumnFactory {
     protected function createFormControl(...$args): BaseControl {
         $control = new SelectBox($this->getTitle());
         $control->setItems($this->getCountries());
-        $control->setPrompt(_('Vyberte státní příslušnost'));
+        $control->setPrompt(_('Choose citizenship'));
         return $control;
     }
 

@@ -20,13 +20,11 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use Nette\Http\FileUpload;
 use Nette\Http\Response;
-use FKSDB\Modules\PublicModule\SubmitPresenter;
 use Tracy\Debugger;
 
 /**
  * Class TaskUpload
  * @author Michal Červeňák <miso@fykos.cz>
- * @property-read SubmitPresenter $presenter
  */
 class AjaxSubmit extends AjaxComponent {
 
@@ -101,7 +99,7 @@ class AjaxSubmit extends AjaxComponent {
         /** @var FileUpload $fileContainer */
         foreach ($files as $name => $fileContainer) {
             $this->serviceSubmit->getConnection()->beginTransaction();
-            $this->submitHandlerFactory->getUploadedStorage()->beginTransaction();
+            $this->submitHandlerFactory->uploadedStorage->beginTransaction();
             if ($name !== 'submit') {
                 continue;
             }
@@ -112,7 +110,7 @@ class AjaxSubmit extends AjaxComponent {
             }
             // store submit
             $this->submitHandlerFactory->handleSave($fileContainer, $this->task, $this->contestant);
-            $this->submitHandlerFactory->getUploadedStorage()->commit();
+            $this->submitHandlerFactory->uploadedStorage->commit();
             $this->serviceSubmit->getConnection()->commit();
             $this->getLogger()->log(new Message(_('Upload successful'), ILogger::SUCCESS));
             $this->sendAjaxResponse();

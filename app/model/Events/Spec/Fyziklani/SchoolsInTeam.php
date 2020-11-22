@@ -44,7 +44,7 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
     }
 
     /**
-     * @param int $schoolsInTeam
+     * @param mixed $schoolsInTeam
      * @return void
      */
     public function setSchoolsInTeam($schoolsInTeam): void {

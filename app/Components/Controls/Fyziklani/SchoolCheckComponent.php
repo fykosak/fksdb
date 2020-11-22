@@ -39,17 +39,17 @@ class SchoolCheckComponent extends BaseComponent {
 
     public function render(ModelFyziklaniTeam $currentTeam): void {
         $schools = [];
-        $query = $this->serviceSchool->getConnection()->queryArgs(
+        $query = $this->serviceSchool->getContext()->query(
             'select GROUP_CONCAT(DISTINCT e_fyziklani_team_id) as `teams`, school_id
 from event_participant ep
          JOIN person_history ph ON ph.person_id = ep.person_id and ac_year = ? and school_id IN (?)
          JOIN e_fyziklani_participant efp USING (event_participant_id)
          JOIN e_fyziklani_team eft USING (e_fyziklani_team_id)
 WHERE ep.event_id = ?
-group by school_id', [$this->acYear, array_keys($this->getSchoolsFromTeam($currentTeam)), $this->event->getPrimary()]);
+group by school_id', ...[$this->acYear, array_keys($this->getSchoolsFromTeam($currentTeam)), $this->event->getPrimary()]);
 
         foreach ($query as $row) {
-            $schools[$row->school_id] = array_map(function ($teamId):?ModelFyziklaniTeam {
+            $schools[$row->school_id] = array_map(function ($teamId): ?ModelFyziklaniTeam {
                 return $this->serviceFyziklaniTeam->findByPrimary($teamId);
             }, explode(',', $row->teams));
             $schools[$row->school_id]['school'] = $this->serviceSchool->findByPrimary($row->school_id);

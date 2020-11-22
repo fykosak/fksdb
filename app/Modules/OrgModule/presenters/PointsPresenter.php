@@ -68,7 +68,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws BadTypeException
      */
     public function titleEntry(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Zadávání bodů %d. série'), $this->getSelectedSeries()), 'fa fa-trophy'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Grade series %d'), $this->getSelectedSeries()), 'fa fa-trophy'));
     }
 
     /**
@@ -77,7 +77,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      * @throws ForbiddenRequestException
      */
     public function titlePreview(): void {
-        $this->setPageTitle(new PageTitle(_('Points'), 'fa fa-inbox'));
+        $this->setPageTitle(new PageTitle(_('Points list'), 'fa fa-inbox'));
     }
 
     /**
@@ -133,9 +133,9 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
     public function handleInvalidate(): void {
         try {
             $this->SQLResultsCache->invalidate($this->getSelectedContest(), $this->getSelectedYear());
-            $this->flashMessage(_('Body invalidovány.'), self::FLASH_INFO);
+            $this->flashMessage(_('Points invalidated.'), self::FLASH_INFO);
         } catch (Exception $exception) {
-            $this->flashMessage(_('Chyba při invalidaci.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Error during invalidation.'), self::FLASH_ERROR);
             Debugger::log($exception);
         }
 
@@ -162,9 +162,9 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
                 $this->SQLResultsCache->recalculate($contest, $year->year);
             }
 
-            $this->flashMessage(_('Body přepočítány.'), self::FLASH_INFO);
+            $this->flashMessage(_('Points recounted.'), self::FLASH_INFO);
         } catch (InvalidArgumentException $exception) {
-            $this->flashMessage(_('Chyba při přepočtu.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Error while recounting.'), self::FLASH_ERROR);
             Debugger::log($exception);
         }
 

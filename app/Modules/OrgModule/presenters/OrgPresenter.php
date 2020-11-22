@@ -35,7 +35,7 @@ class OrgPresenter extends BasePresenter {
      * @throws BadTypeException
      */
     public function titleEdit(): void {
-        $this->setPageTitle(new PageTitle(sprintf(_('Úprava organizátora %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-pencil'));
+        $this->setPageTitle(new PageTitle(sprintf(_('Edit of organiser %s'), $this->getEntity()->getPerson()->getFullName()), 'fa fa-pencil'));
     }
 
     /**
@@ -49,20 +49,11 @@ class OrgPresenter extends BasePresenter {
     }
 
     public function getTitleCreate(): PageTitle {
-        return new PageTitle(_('Založit organizátora'), 'fa fa-user-plus');
+        return new PageTitle(_('Create an organiser'), 'fa fa-user-plus');
     }
 
     public function getTitleList(): PageTitle {
-        return new PageTitle(_('Organizátoři'), 'fa fa-address-book');
-    }
-
-    /**
-     * @return void
-     * @throws ModelNotFoundException
-     * @throws BadTypeException
-     */
-    public function actionEdit(): void {
-        $this->traitActionEdit();
+        return new PageTitle(_('Organisers'), 'fa fa-address-book');
     }
 
     /**
@@ -75,7 +66,7 @@ class OrgPresenter extends BasePresenter {
         /** @var ModelOrg $entity */
         $entity = $this->traitGetEntity();
         if ($entity->contest_id != $this->getSelectedContest()->contest_id) {
-            throw new ForbiddenRequestException(_('Editace organizátora mimo zvolený seminář.'));
+            throw new ForbiddenRequestException(_('Editing of organiser outside chosen seminar.'));
         }
         return $entity;
     }
@@ -104,16 +95,17 @@ class OrgPresenter extends BasePresenter {
      * @throws BadTypeException
      */
     protected function createComponentCreateForm(): OrgFormComponent {
-        return new OrgFormComponent($this->getContext(), $this->getSelectedContest(), true);
+        return new OrgFormComponent($this->getContext(), $this->getSelectedContest(), null);
     }
 
     /**
      * @return OrgFormComponent
      * @throws ForbiddenRequestException
      * @throws BadTypeException
+     * @throws ModelNotFoundException
      */
     protected function createComponentEditForm(): OrgFormComponent {
-        return new OrgFormComponent($this->getContext(), $this->getSelectedContest(), false);
+        return new OrgFormComponent($this->getContext(), $this->getSelectedContest(), $this->getEntity());
     }
 
     /**

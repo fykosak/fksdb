@@ -2,27 +2,27 @@
 
 namespace FKSDB\WebService;
 
-use FKSDB\Authentication\PasswordAuthenticator;
-use FKSDB\Authorization\ContestAuthorizator;
 use DOMDocument;
 use DOMElement;
+use FKSDB\Authentication\PasswordAuthenticator;
+use FKSDB\Authorization\ContestAuthorizator;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelLogin;
-use FKSDB\StoredQuery\StoredQuery;
-use FKSDB\StoredQuery\StoredQueryFactory;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\Results\Models\AbstractResultsModel;
 use FKSDB\Results\Models\BrojureResultsModel;
 use FKSDB\Results\ResultsModelFactory;
+use FKSDB\Stats\StatsModelFactory;
+use FKSDB\StoredQuery\StoredQuery;
+use FKSDB\StoredQuery\StoredQueryFactory;
 use InvalidArgumentException;
 use Nette\Application\BadRequestException;
-use Tracy\Debugger;
 use Nette\Security\AuthenticationException;
 use Nette\Security\IAuthenticator;
 use SoapFault;
 use SoapVar;
-use FKSDB\Stats\StatsModelFactory;
 use stdClass;
+use Tracy\Debugger;
 
 /**
  * Web service provider for fksdb.wdsl
@@ -39,6 +39,7 @@ class WebServiceModel {
     private PasswordAuthenticator $authenticator;
     private StoredQueryFactory $storedQueryFactory;
     private ContestAuthorizator $contestAuthorizator;
+    private EventSoapFactory $eventSoapFactory;
 
     public function __construct(
         array $inverseContestMap,
@@ -47,7 +48,8 @@ class WebServiceModel {
         StatsModelFactory $statsModelFactory,
         PasswordAuthenticator $authenticator,
         StoredQueryFactory $storedQueryFactory,
-        ContestAuthorizator $contestAuthorizator
+        ContestAuthorizator $contestAuthorizator,
+        EventSoapFactory $fyziklaniSoapFactory
     ) {
         $this->inverseContestMap = $inverseContestMap;
         $this->serviceContest = $serviceContest;
@@ -56,6 +58,7 @@ class WebServiceModel {
         $this->authenticator = $authenticator;
         $this->storedQueryFactory = $storedQueryFactory;
         $this->contestAuthorizator = $contestAuthorizator;
+        $this->eventSoapFactory = $fyziklaniSoapFactory;
     }
 
     /**
@@ -87,12 +90,23 @@ class WebServiceModel {
     /**
      * @param stdClass $args
      * @return SoapVar
+     * @throws SoapFault
+     */
+    public function getEvent(stdClass $args): SoapVar {
+        $this->checkAuthentication(__FUNCTION__);
+        return $this->eventSoapFactory->handle($args);
+    }
+
+    /**
+     * @param $args
+     * @return SoapVar
      * @throws BadRequestException
+     * @throws BadTypeException
      * @throws SoapFault
      */
     public function getResults(stdClass $args): SoapVar {
         $this->checkAuthentication(__FUNCTION__);
-        if (!isset($this->inverseContestMap[$args->contest])) {
+        if (!isset($args->contest) || !isset($this->inverseContestMap[$args->contest])) {
             throw new SoapFault('Sender', 'Unknown contest.');
         }
         $contest = $this->serviceContest->findByPrimary($this->inverseContestMap[$args->contest]);
@@ -178,7 +192,7 @@ class WebServiceModel {
      */
     public function getStats(stdClass $args): SoapVar {
         $this->checkAuthentication(__FUNCTION__);
-        if (!isset($this->inverseContestMap[$args->contest])) {
+        if (!isset($args->contest) || !isset($this->inverseContestMap[$args->contest])) {
             throw new SoapFault('Sender', 'Unknown contest.');
         }
         $contest = $this->serviceContest->findByPrimary($this->inverseContestMap[$args->contest]);

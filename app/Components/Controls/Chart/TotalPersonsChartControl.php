@@ -42,7 +42,7 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
         return _('Total persons in FKSDB');
     }
 
-    public function getControl(): Control {
+    public function getControl(): self {
         return $this;
     }
 
