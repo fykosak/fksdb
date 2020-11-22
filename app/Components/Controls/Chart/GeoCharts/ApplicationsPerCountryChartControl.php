@@ -59,4 +59,3 @@ GROUP BY  region.country_iso3', $this->event->event_id);
         return null;
     }
 }
-
