@@ -180,6 +180,8 @@ CREATE TABLE IF NOT EXISTS `region` (
   `region_id`   INT(11)      NOT NULL AUTO_INCREMENT,
   `country_iso` CHAR(2)      NOT NULL
   COMMENT 'ISO 3166-1',
+  `country_iso3` CHAR(3)      NOT NULL
+      COMMENT 'ISO 3166-1',
   `nuts`        VARCHAR(5)   NOT NULL
   COMMENT 'NUTS of the EU region\nor ISO 3166-1 for other countries',
   `name`        VARCHAR(255) NOT NULL
