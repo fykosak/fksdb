@@ -33,7 +33,9 @@ class EventSoapFactory {
      * @throws \SoapFault
      */
     public function handle(\stdClass $args): SoapVar {
-
+        if (isset($args->eventList)) {
+            return $this->handleEventList($args);
+        }
         if (!isset($args->eventId)) {
             throw new \SoapFault('Sender', 'Unknown event.');
         }
@@ -54,7 +56,32 @@ class EventSoapFactory {
         }
 
         $doc->formatOutput = true;
-        return new SoapVar($doc->saveXML(), XSD_ANYXML);
+
+        $nodeString = '';
+        foreach ($doc->childNodes as $node) {
+            $nodeString .= $doc->saveXML($node);
+        }
+        return new SoapVar($nodeString, XSD_ANYXML);
+    }
+
+    /**
+     * @param \stdClass $args
+     * @return SoapVar
+     * @throws \SoapFault
+     */
+    private function handleEventList(\stdClass $args): SoapVar {
+        if (!isset($args->eventList) || !isset($args->eventTypeId)) {
+            throw new \SoapFault('Sender', 'Unknown eventType.');
+        }
+        $query = $this->serviceEvent->getTable()->where('event_type_id', $args->eventTypeId);
+        $doc = new \DOMDocument();
+        $doc->formatOutput = true;
+        $rootNode = $doc->createElement('events');
+        /** @var ModelEvent $event */
+        foreach ($query as $event) {
+            $rootNode->appendChild($event->createXMLNode($doc));
+        }
+        return new SoapVar($doc->saveXML($rootNode), XSD_ANYXML);
     }
 
     private function createPersonScheduleNode(\DOMDocument $doc, \stdClass $args, ModelEvent $event): void {
@@ -121,7 +148,7 @@ class EventSoapFactory {
             throw new \SoapFault('Sender', 'Wrong event type.');
         }
         $rootNode = $doc->createElement('teamList');
-        $query=$event->getTeams();
+        $query = $event->getTeams();
         if (isset($args->teamList) && isset($args->teamList->status)) {
             $query->where('status', $args->teamList->status);
         }

@@ -2,6 +2,9 @@
 
 namespace FKSDB\Modules\EventModule;
 
+use FKSDB\Components\Controls\Chart\ApplicationRationGeoChartControl;
+use FKSDB\Components\Controls\Chart\ParticipantsGeoChartControl;
+use FKSDB\Components\Controls\Chart\TeamsGeoChartControl;
 use FKSDB\Events\EventNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
 use FKSDB\Components\Controls\Chart\Event\ParticipantAcquaintanceChartControl;
@@ -43,6 +46,9 @@ class ChartPresenter extends BasePresenter {
             'participantAcquaintance' => new ParticipantAcquaintanceChartControl($this->getContext(), $this->getEvent()),
             'singleApplicationProgress' => new SingleApplicationsTimeProgress($this->getContext(), $this->getEvent()),
             'teamApplicationProgress' => new TeamApplicationsTimeProgress($this->getContext(), $this->getEvent()),
+            'teamsPerCountry' => new TeamsGeoChartControl($this->getContext(), $this->getEvent()),
+            'participantsPerCountry' => new ParticipantsGeoChartControl($this->getContext(), $this->getEvent()),
+            'ratioPerCountry' => new ApplicationRationGeoChartControl($this->getContext(), $this->getEvent()),
         ];
     }
 
