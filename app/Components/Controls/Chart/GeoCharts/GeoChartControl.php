@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Controls\Chart;
 
-use FKSDB\Components\Controls\Chart\IChart;
 use FKSDB\Components\React\ReactComponent;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
@@ -10,6 +9,8 @@ use Nette\InvalidStateException;
 abstract class GeoChartControl extends ReactComponent implements IChart {
     protected const SCALE_LINEAR = 'linear';
     protected const SCALE_LOG = 'log';
+
+    protected const KEY_COUNT = 'count';
 
     public function __construct(Container $container, string $scale) {
         parent::__construct($container, $this->getReactId($scale));
@@ -25,4 +26,7 @@ abstract class GeoChartControl extends ReactComponent implements IChart {
         throw new InvalidStateException();
     }
 
+    public function getControl(): self {
+        return $this;
+    }
 }

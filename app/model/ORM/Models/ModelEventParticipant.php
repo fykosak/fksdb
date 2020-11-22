@@ -11,6 +11,7 @@ use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
+use Tracy\Debugger;
 
 /**
  *
@@ -55,6 +56,10 @@ class ModelEventParticipant extends AbstractModelSingle implements
 
     public function getPerson(): ?ModelPerson {
         return $this->person ? ModelPerson::createFromActiveRow($this->person) : null;
+    }
+
+    public function getPersonHistory(): ?ModelPersonHistory {
+        return $this->getPerson()->getHistory($this->getEvent()->getAcYear());
     }
 
     public function getContest(): ModelContest {

@@ -1,23 +1,17 @@
 import GeoChart from "@shared/components/geoChart/geoChart";
+import { findMax, GeoData } from "@shared/components/geoChart/geoData";
 import { scaleLinear } from 'd3-scale';
 import * as React from 'react';
 
 interface OwnProps {
-    data: Array<{
-        country: string;
-        count: number;
-    }>;
+    data: GeoData;
 }
 
 export default class ItemsPerCountryLinear extends React.Component<OwnProps, {}> {
 
     public render() {
         const {data} = this.props;
-
-        let max = 0;
-        data.forEach((datum) => {
-            max = max > datum.count ? max : datum.count;
-        });
+        const max = findMax(data);
         const inActiveColorScale = scaleLinear<string, string>();
         const activeColorScale = scaleLinear<string, string>();
 
