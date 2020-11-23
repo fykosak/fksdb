@@ -3,7 +3,6 @@ import ApplicationsTimeProgressChart from '@apps/chart/applicationsTimeProgress'
 import ContestantsPerSeries from '@apps/chart/contestantsPerSeries';
 import ContestantsPerYears from '@apps/chart/contestantsPerYears';
 import ItemsPerCountryLinear from "@apps/chart/itemsPerCountryLinear";
-import ItemsPerCountry from "@apps/chart/itemsPerCountryLog";
 import ItemsPerCountryLog from "@apps/chart/itemsPerCountryLog";
 import ParticipantAcquaintance from '@apps/chart/participantAcquaintance';
 import PersonTimeline from '@apps/chart/personTimeLine';

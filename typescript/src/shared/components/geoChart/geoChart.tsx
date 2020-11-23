@@ -1,12 +1,10 @@
+import { GeoData } from '@shared/components/geoChart/geoData';
 import { geoNaturalEarth1, geoPath } from 'd3-geo';
 import { ScaleLinear, ScaleLogarithmic } from 'd3-scale';
 import * as React from 'react';
 
 interface OwnProps {
-    data: Array<{
-        country: string;
-        count: number;
-    }>;
+    data: GeoData;
     activeColorScale: ScaleLinear<string, string> | ScaleLogarithmic<string, string>;
     inactiveColorScale: ScaleLinear<string, string> | ScaleLogarithmic<string, string>;
 }
@@ -35,10 +33,7 @@ export default class GeoChart extends React.Component<OwnProps, { active?: strin
         const countryNodes = [];
         this.countryData.forEach((country, key) => {
             const isActive = this.state && country.id === this.state.active;
-            const candidates = data.filter((datum) => {
-                return datum.country === country.id;
-            });
-            const count = candidates.length ? candidates[0].count : 0;
+            const count = data.hasOwnProperty(country.id) ? data[country.id].count : 0;
             countryNodes.push(<path
                 key={key}
                 fill={isActive ? activeColorScale(count) : inactiveColorScale(count)}
