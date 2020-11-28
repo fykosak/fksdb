@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Control\AjaxSubmit;
+namespace FKSDB\Components\Controls\AjaxSubmit;
 
 use FKSDB\Components\React\AjaxComponent;
 use FKSDB\Exceptions\ModelException;

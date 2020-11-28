@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use Nette\Utils\ArrayHash;
 

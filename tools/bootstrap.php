@@ -8,7 +8,7 @@ define('LIBS_DIR', __DIR__ . '/../libs');
 define('APP_DIR', __DIR__ . '/../app');
 
 // Load Nette Framework
-require APP_DIR . '/bootstrap.php';
+require APP_DIR . '/Bootstrap.php';
 
 // Configure application
 $configurator = Bootstrap::boot();

@@ -1,9 +1,9 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories;
+namespace FKSDB\DBReflection\ColumnFactories\Types;
 
 use FKSDB\ValuePrinters\EmailPrinter;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;

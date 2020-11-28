@@ -1,7 +1,8 @@
 <?php
 
-namespace FKSDB\Components\Controls\Chart;
+namespace FKSDB\Components\Controls\Chart\GeoCharts;
 
+use FKSDB\Components\Controls\Chart\IChart;
 use FKSDB\Components\React\ReactComponent;
 use Nette\DI\Container;
 use Nette\InvalidStateException;

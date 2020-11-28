@@ -1,12 +1,12 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\PersonHistory;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\PersonHistory;
 
 use FKSDB\Components\Forms\Factories\SchoolFactory;
-use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
 use FKSDB\DBReflection\MetaDataFactory;
 use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 

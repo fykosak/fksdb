@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Tests\ComponentTests\Form\Controls;
+namespace FKSDB\Tests\ComponentTests\Forms\Controls;
 
 $container = require '../../../bootstrap.php';
 

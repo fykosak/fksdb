@@ -2,7 +2,7 @@
 
 namespace FKSDB\ORM\Services\Fyziklani;
 
-use FKSDB\ORM\AbstractServiceSingle;
+use FKSDB\ORM\Services\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;

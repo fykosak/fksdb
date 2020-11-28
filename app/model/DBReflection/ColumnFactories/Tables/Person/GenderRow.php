@@ -1,9 +1,9 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\Person;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\Person;
 
-use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\RadioList;

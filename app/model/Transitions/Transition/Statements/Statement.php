@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Transitions\Statements;
+namespace FKSDB\Transitions\Transition\Statements;
 
 /**
  * Class Statement

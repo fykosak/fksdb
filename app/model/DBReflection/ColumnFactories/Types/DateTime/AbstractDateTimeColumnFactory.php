@@ -1,9 +1,10 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories;
+namespace FKSDB\DBReflection\ColumnFactories\Types\DateTime;
 
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
 use FKSDB\ValuePrinters\DatePrinter;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use Nette\Utils\Html;
 
 /**

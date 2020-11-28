@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
-use FKSDB\Application\IJavaScriptCollector;
+use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
 use Nette\Forms\Form;
 use Nette\Utils\Html;
 

@@ -2,12 +2,12 @@
 
 namespace FKSDB\ORM\ServicesMulti\Events;
 
-use FKSDB\ORM\AbstractModelMulti;
-use FKSDB\ORM\AbstractServiceMulti;
+use FKSDB\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Services\Events\ServiceFyziklaniParticipant;
 use FKSDB\ORM\Services\ServiceEventParticipant;
 use FKSDB\ORM\ModelsMulti\Events\ModelMFyziklaniParticipant;
+use FKSDB\ORM\ServicesMulti\AbstractServiceMulti;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>

@@ -1,13 +1,12 @@
 <?php
 
-namespace FKSDB\Components\Controls\Fyziklani;
+namespace FKSDB\Components\Controls\Fyziklani\Seating;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
-use Nette\Application\BadRequestException;
 
 /**
  * Class SeatingControl

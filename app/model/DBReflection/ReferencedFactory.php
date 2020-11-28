@@ -4,7 +4,7 @@ namespace FKSDB\DBReflection;
 
 use FKSDB\Entity\CannotAccessModelException;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 
 /**
  * Class ReferencedFactory

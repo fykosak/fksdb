@@ -2,7 +2,7 @@
 
 namespace FKSDB\Events\Model;
 
-use FKSDB\ORM\Services\Exception\DuplicateApplicationException;
+use FKSDB\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Machine\Transition;
@@ -20,7 +20,7 @@ use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\Transitions\UnavailableTransitionException;
+use FKSDB\Transitions\Transition\UnavailableTransitionException;
 use FKSDB\Utils\FormUtils;
 use Nette\Database\Connection;
 use Nette\DI\Container;

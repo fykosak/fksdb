@@ -2,7 +2,7 @@
 
 namespace FKSDB\ORM\Tables;
 
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
 use Nette\Database\Table\Selection;

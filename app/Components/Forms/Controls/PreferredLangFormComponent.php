@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Forms\Controls;
 
 use FKSDB\Components\Controls\Choosers\LanguageChooser;
-use FKSDB\Components\Forms\FormComponent;
+use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\ModelException;
 use FKSDB\Messages\Message;

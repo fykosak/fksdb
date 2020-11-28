@@ -7,11 +7,11 @@ use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Model\ExpressionEvaluator;
-use FKSDB\ORM\AbstractServiceMulti;
-use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Services\AbstractServiceSingle;
+use FKSDB\ORM\ServicesMulti\AbstractServiceMulti;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Neon\Neon;
@@ -222,7 +222,6 @@ class BaseHolder {
     public function setLabel(string $label): void {
         $this->label = $label;
     }
-
 
     public function getDescription(): ?string {
         return $this->description;

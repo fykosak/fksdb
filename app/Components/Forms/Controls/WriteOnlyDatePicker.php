@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
-use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Controls\DateInputs\DateInput;
 use Nette\Utils\Html;
 

@@ -2,6 +2,8 @@
 
 namespace FKSDB\ORM;
 
+use FKSDB\ORM\Models\AbstractModelSingle;
+use FKSDB\ORM\ModelsMulti\AbstractModelMulti;
 use Nette\Database\Table\Selection;
 
 /**

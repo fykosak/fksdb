@@ -7,7 +7,7 @@ use FKSDB\Components\Controls\Badges\NoRecordsBadge;
 use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\DBReflection\LinkPrinterComponent;
-use FKSDB\Components\Controls\DBReflection\ValuePrinterComponent;
+use FKSDB\Components\Controls\DBReflection\ValuePrinter\ValuePrinterComponent;
 use FKSDB\DBReflection\DBReflectionFactory;
 use FKSDB\ORM\Models\ModelPerson;
 

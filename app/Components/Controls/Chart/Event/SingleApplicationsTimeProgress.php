@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\React\ReactComponent\Events;
+namespace FKSDB\Components\Controls\Chart\Event;
 
 use FKSDB\Components\Controls\Chart\IChart;
 use FKSDB\Components\React\ReactComponent;

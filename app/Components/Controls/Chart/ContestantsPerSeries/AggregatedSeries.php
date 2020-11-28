@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Chart;
+namespace FKSDB\Components\Controls\Chart\ContestantsPerSeries;
 
 use Nette\Database\Context;
 

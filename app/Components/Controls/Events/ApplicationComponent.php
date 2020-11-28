@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Events;
+namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Authorization\ContestAuthorizator;
 use FKSDB\Components\Controls\BaseComponent;

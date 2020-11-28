@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Inbox;
+namespace FKSDB\Components\Controls\Inbox\SubmitCheck;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Logging\ILogger;

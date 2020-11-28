@@ -2,20 +2,20 @@
 
 namespace FKSDB\Modules\Core;
 
-use FKSDB\Application\IJavaScriptCollector;
-use FKSDB\Application\IStylesheetCollector;
 use FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs;
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory;
 use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Components\Controls\Choosers\ThemeChooser;
 use FKSDB\Components\Controls\DBReflection\LinkPrinterComponent;
+use FKSDB\Components\Controls\DBReflection\ValuePrinter\ValuePrinterComponent;
+use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
+use FKSDB\Components\Controls\Loaders\IStylesheetCollector;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Components\Controls\Navigation\NavigationChooser;
-use FKSDB\Components\Controls\PresenterBuilder;
-use FKSDB\Components\Controls\DBReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
+use FKSDB\Components\Forms\PresenterBuilder;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Localization\GettextTranslator;
 use FKSDB\Localization\UnsupportedLanguageException;
