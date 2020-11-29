@@ -16,7 +16,7 @@ use Nette\Database\Context;
  * Class PaymentMachine
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PaymentMachine extends Machine {
+class PaymentMachine extends Machine\Machine {
 
     private PriceCalculator $priceCalculator;
 

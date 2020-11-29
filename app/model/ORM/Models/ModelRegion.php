@@ -2,14 +2,14 @@
 
 namespace FKSDB\ORM\Models;
 
-use FKSDB\Components\Controls\PhoneNumber\InvalidPhoneNumberException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\PhoneNumber\InvalidPhoneNumberException;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @property-read int region_id
  * @property-read string country_iso
+ * @property-read string country_iso3
  * @property-read string nuts
  * @property-read string name
  * @property-read int phone_nsn

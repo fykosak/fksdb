@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\React;
 
-use FKSDB\Application\IJavaScriptCollector;
+use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
 use FKSDB\Logging\ILogger;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\Messages\Message;

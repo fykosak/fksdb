@@ -2,7 +2,10 @@
 
 namespace FKSDB\Events\Model;
 
-use FKSDB\ORM\Services\Exception\DuplicateApplicationException;
+use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
+use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
+use FKSDB\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Machine\Transition;
@@ -12,15 +15,12 @@ use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelDataConflictException;
 use FKSDB\Events\SubmitProcessingException;
 use Exception;
-use FKSDB\Components\Forms\Controls\ModelDataConflictException;
-use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
-use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
+use FKSDB\Persons\ModelDataConflictException;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\Transitions\UnavailableTransitionException;
+use FKSDB\Transitions\Transition\UnavailableTransitionException;
 use FKSDB\Utils\FormUtils;
 use Nette\Database\Connection;
 use Nette\DI\Container;

@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\React\ReactComponent\Events;
+namespace FKSDB\Components\Controls\Chart\Event;
 
 use FKSDB\Components\Controls\Chart\IChart;
 use FKSDB\Components\React\ReactComponent;
@@ -9,7 +9,6 @@ use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelEventType;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Services\ServiceEventParticipant;
-use Nette\Application\UI\Control;
 use Nette\DI\Container;
 
 /**

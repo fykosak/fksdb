@@ -2,6 +2,10 @@
 
 namespace FKSDB\Authentication;
 
+use FKSDB\Authentication\Exceptions\InactiveLoginException;
+use FKSDB\Authentication\Exceptions\InvalidCredentialsException;
+use FKSDB\Authentication\Exceptions\NoLoginException;
+use FKSDB\Authentication\Exceptions\UnknownLoginException;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceLogin;

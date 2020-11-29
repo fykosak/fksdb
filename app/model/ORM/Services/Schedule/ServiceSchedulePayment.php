@@ -3,7 +3,7 @@
 namespace FKSDB\ORM\Services\Schedule;
 
 use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\AbstractServiceSingle;
+use FKSDB\ORM\Services\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\ModelPayment;

@@ -2,8 +2,8 @@
 
 namespace FKSDB\ORM\Services\Schedule;
 
-use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\AbstractServiceSingle;
+use FKSDB\ORM\Services\AbstractServiceSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;

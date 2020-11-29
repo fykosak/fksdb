@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\StoredQuery\StoredQuery;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\StoredQuery\StoredQuery;
 
-use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;

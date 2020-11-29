@@ -3,8 +3,8 @@
 namespace FKSDB\Tests\Events;
 
 use FKSDB\ORM\DbNames;
+use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
-use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Request;
 use Nette\DI\Container;
 use Nette\DI\Config\Helpers;

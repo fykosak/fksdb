@@ -1,6 +1,6 @@
 import { Submits } from '@apps/fyziklani/helpers/interfaces';
-import LineChart from '@shared/components/lineChart';
 import { LineChartData } from '@shared/components/lineChart/interfaces';
+import LineChart from '@shared/components/lineChart/lineChart';
 import {
     scaleLinear,
     scaleTime,

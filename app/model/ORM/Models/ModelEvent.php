@@ -3,7 +3,6 @@
 namespace FKSDB\ORM\Models;
 
 use FKSDB\Fyziklani\NotSetGameParametersException;
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
 use FKSDB\WebService\INodeCreator;
@@ -101,11 +100,11 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
             'registrationBegin' => $this->registration_begin ? $this->registration_begin->format('c') : null,
             'registrationEnd' => $this->registration_end ? $this->registration_end->format('c') : null,
             'name' => $this->name,
-            'event_type_id' => $this->event_type_id,
+            'eventTypeId' => $this->event_type_id,
         ];
     }
 
-    public function createXMLNode(\DOMDocument $doc): \DOMNode {
+    public function createXMLNode(\DOMDocument $doc): \DOMElement {
         $node = $doc->createElement('event');
         $node->setAttribute('eventId', $this->event_id);
         XMLHelper::fillArrayToNode($this->__toArray(), $doc, $node);

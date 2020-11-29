@@ -2,8 +2,7 @@
 
 namespace FKSDB\ORM\Models;
 
-use \Nette\Mail\Message;
-use FKSDB\ORM\AbstractModelSingle;
+use Nette\Mail\Message;
 use Nette\Security\IResource;
 
 /**

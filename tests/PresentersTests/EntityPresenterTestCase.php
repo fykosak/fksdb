@@ -3,8 +3,8 @@
 namespace FKSDB\Tests\PresentersTests;
 
 use FKSDB\ORM\DbNames;
+use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
-use MockEnvironment\MockApplicationTrait;
 use Nette\Application\IPresenter;
 use Nette\Application\IResponse;
 use Nette\Application\Request;

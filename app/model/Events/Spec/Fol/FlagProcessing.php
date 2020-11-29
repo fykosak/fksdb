@@ -40,14 +40,14 @@ class FlagProcessing extends AbstractProcessing {
             if ($name == 'team') {
                 continue;
             }
-            /** @var BaseControl[] $formControls */
+            /** @var BaseControl[][] $formControls */
             $formControls = [
                 'school_id' => $this->getControl("$name.person_id.person_history.school_id"),
                 'study_year' => $this->getControl("$name.person_id.person_history.study_year"),
             ];
             $formControls['school_id'] = reset($formControls['school_id']);
             $formControls['study_year'] = reset($formControls['study_year']);
-
+            /** @var BaseControl[] $formControls */
             $formValues = [
                 'school_id' => ($formControls['school_id'] ? $formControls['school_id']->getValue() : null),
                 'study_year' => ($formControls['study_year'] ? $formControls['study_year']->getValue() : null),

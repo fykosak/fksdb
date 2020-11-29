@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\ModelTests\Exports\Formats;
 
-$container = require '../../../bootstrap.php';
+$container = require '../../../Bootstrap.php';
 
 use FKSDB\Exports\ExportFormatFactory;
 use FKSDB\Exports\Formats\AESOPFormat;

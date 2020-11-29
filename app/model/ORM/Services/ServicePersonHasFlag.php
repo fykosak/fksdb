@@ -4,8 +4,8 @@ namespace FKSDB\ORM\Services;
 
 use DateTime;
 use FKSDB\Exceptions\ModelException;
-use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\AbstractServiceSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
+
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelPersonHasFlag;

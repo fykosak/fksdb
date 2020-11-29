@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\DataTesting\Tests\Person;
+namespace FKSDB\DataTesting\Tests\ModelPerson;
 
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelContest;

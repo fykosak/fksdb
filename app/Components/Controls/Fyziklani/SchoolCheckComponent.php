@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Components\Controls\DBReflection\ValuePrinterComponent;
+use FKSDB\Components\Controls\DBReflection\ValuePrinter\ValuePrinterComponent;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
@@ -57,7 +57,6 @@ group by school_id', ...[$this->acYear, array_keys($this->getSchoolsFromTeam($cu
         $this->template->schools = $schools;
         $this->template->setFile(__DIR__ . DIRECTORY_SEPARATOR . 'layout.schoolCheck.latte');
         $this->template->render();
-
     }
 
     /**

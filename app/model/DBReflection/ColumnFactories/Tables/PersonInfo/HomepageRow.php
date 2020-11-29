@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\PersonInfo;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\PersonInfo;
 
-use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
 use Nette\Forms\Form;
