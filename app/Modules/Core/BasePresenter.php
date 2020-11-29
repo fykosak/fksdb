@@ -127,7 +127,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
             if ($provider && $provider instanceof IFilteredDataProvider) {
                 $data = $provider->getFilteredItems($acQ);
             }
-
             $response = new JsonResponse($data);
             $this->sendResponse($response);
         }
