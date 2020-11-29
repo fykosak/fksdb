@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Forms\Controls;
+namespace FKSDB\Components\Forms\Controls\WriteOnly;
 
 use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
 use Nette\Forms\Form;

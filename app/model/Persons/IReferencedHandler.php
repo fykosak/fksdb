@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Forms\Controls;
+namespace FKSDB\Persons;
 
 use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\IModel;

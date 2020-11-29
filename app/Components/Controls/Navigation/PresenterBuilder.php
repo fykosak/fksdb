@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Forms;
+namespace FKSDB\Components\Controls\Navigation;
 
 use Nette\Application\IPresenterFactory;
 use Nette\Application\BadRequestException;

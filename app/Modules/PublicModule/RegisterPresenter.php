@@ -3,13 +3,13 @@
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
+use FKSDB\Components\Forms\Controls\CaptchaBox;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Components\Forms\Controls\CaptchaBox;
-use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\ORM\IModel;

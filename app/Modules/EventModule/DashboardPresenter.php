@@ -68,7 +68,7 @@ class DashboardPresenter extends BasePresenter {
                 return '#'; // FIXME
             case 9:
                 // FOL
-                return \sprintf('https://online.fyziklani.cz', $this->getEvent()->year);
+                return 'https://online.fyziklani.cz';
             // 1 Fyziklání online
             case 10:
                 // Tábor výfuku

@@ -2,10 +2,10 @@
 
 namespace FKSDB\Modules\CoreModule;
 
+use FKSDB\Components\Controls\PreferredLangFormComponent;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Authentication\PasswordAuthenticator;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Forms\Controls\PreferredLangFormComponent;
 use FKSDB\Components\Forms\Factories\LoginFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Forms\Rules\UniqueLoginFactory;

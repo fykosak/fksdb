@@ -4,7 +4,7 @@ namespace FKSDB\DBReflection\ColumnFactories\Tables\PersonInfo;
 
 use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
 use FKSDB\ValuePrinters\DatePrinter;
-use FKSDB\Components\Forms\Controls\WriteOnlyDatePicker;
+use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyDatePicker;
 use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPersonInfo;
 use Nette\Forms\Controls\BaseControl;

@@ -2,10 +2,10 @@
 
 namespace FKSDB\Components\Forms\Containers\Models;
 
-use FKSDB\Components\Forms\Controls\IWriteOnly;
+use FKSDB\Components\Forms\Controls\WriteOnly\IWriteOnly;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\DBReflection\OmittedControlException;
-use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
@@ -259,12 +259,10 @@ class ReferencedPersonContainer extends ReferencedContainer {
                 break;
             default:
                 throw new InvalidArgumentException();
-
         }
         $this->appendMetadata($control, $fieldName, $metadata);
 
         return $control;
-
     }
 
     protected function appendMetadata(BaseControl $control, string $fieldName, array $metadata): void {

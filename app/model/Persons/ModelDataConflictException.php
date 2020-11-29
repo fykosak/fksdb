@@ -1,7 +1,8 @@
 <?php
 
-namespace FKSDB\Components\Forms\Controls;
+namespace FKSDB\Persons;
 
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use Nette\Http\Response;
 use RuntimeException;
 

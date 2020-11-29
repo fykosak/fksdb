@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Forms\Controls;
+namespace FKSDB\Components\Controls;
 
 use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Components\Controls\FormComponent\FormComponent;

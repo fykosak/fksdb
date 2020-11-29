@@ -204,7 +204,6 @@ class PersonPresenter extends BasePresenter {
                 if ($this->isAnyContestAuthorized($person, 'stalk.full')) {
                     $this->userPermissions = FieldLevelPermission::ALLOW_FULL;
                 }
-
             } catch (ModelNotFoundException $exception) {
                 if ($throw) {
                     throw $exception;

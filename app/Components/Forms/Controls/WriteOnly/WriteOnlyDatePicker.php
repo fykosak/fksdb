@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Forms\Controls;
+namespace FKSDB\Components\Forms\Controls\WriteOnly;
 
 use FKSDB\Components\Forms\Controls\DateInputs\DateInput;
 use Nette\Utils\Html;

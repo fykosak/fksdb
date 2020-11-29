@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Forms\Controls;
+namespace FKSDB\Components\Forms\Controls\WriteOnly;
 
 use Nette\Forms\Controls\TextInput;
 use Nette\Utils\Html;

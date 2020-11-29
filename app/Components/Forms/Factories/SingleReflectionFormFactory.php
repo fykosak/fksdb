@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
-use FKSDB\Components\Forms\Controls\IWriteOnly;
+use FKSDB\Components\Forms\Controls\WriteOnly\IWriteOnly;
 use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\DBReflection\ColumnFactories\IColumnFactory;
 use FKSDB\DBReflection\FieldLevelPermission;
