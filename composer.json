@@ -27,7 +27,12 @@
     "league/oauth2-google": "^3.0.3"
   },
   "autoload": {
-    "classmap": []
+    "psr-4": {
+      "FKSDB\\": [
+        "app/",
+        "app/model/"
+      ]
+    }
   },
   "scripts": {
     "initTestDatabase": [

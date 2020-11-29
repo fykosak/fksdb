@@ -94,7 +94,17 @@ class WebServiceModel {
      */
     public function getEvent(stdClass $args): SoapVar {
         $this->checkAuthentication(__FUNCTION__);
-        return $this->eventSoapFactory->handle($args);
+        return $this->eventSoapFactory->handleGetEvent($args);
+    }
+
+    /**
+     * @param stdClass $args
+     * @return SoapVar
+     * @throws SoapFault
+     */
+    public function getEventsList(stdClass $args): SoapVar {
+        $this->checkAuthentication(__FUNCTION__);
+        return $this->eventSoapFactory->handleGetEventsList($args);
     }
 
     /**
@@ -113,7 +123,6 @@ class WebServiceModel {
         $doc = new DOMDocument();
         $resultsNode = $doc->createElement('results');
         $doc->appendChild($resultsNode);
-
 
         if (isset($args->detail)) {
             $resultsModel = $this->resultsModelFactory->createDetailResultsModel($contest, $args->year);
@@ -231,7 +240,6 @@ class WebServiceModel {
                 }
             }
         }
-
 
         $doc->formatOutput = true;
 

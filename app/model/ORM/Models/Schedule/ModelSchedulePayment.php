@@ -2,7 +2,7 @@
 
 namespace FKSDB\ORM\Models\Schedule;
 
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\IPaymentReferencedModel;
 use FKSDB\ORM\Models\ModelPayment;
 use Nette\Database\Table\ActiveRow;

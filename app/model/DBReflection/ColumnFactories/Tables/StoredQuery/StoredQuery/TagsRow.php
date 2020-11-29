@@ -1,12 +1,12 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\StoredQuery\StoredQuery;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\StoredQuery\StoredQuery;
 
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\StoredQueryTagTypeProvider;
-use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
 use FKSDB\DBReflection\MetaDataFactory;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTagType;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType;

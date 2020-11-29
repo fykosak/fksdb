@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\Chart;
+namespace FKSDB\Components\Controls\Chart\GeoCharts;
 
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\DI\Container;

@@ -2,9 +2,9 @@
 
 namespace FKSDB\Tests\PresentersTests\CommonModule\Stalking;
 
-$container = require '../../../bootstrap.php';
+$container = require '../../../Bootstrap.php';
 
-use MockEnvironment\MockApplicationTrait;
+use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;
 use Nette\DI\Container;

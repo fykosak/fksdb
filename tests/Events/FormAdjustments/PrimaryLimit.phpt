@@ -9,7 +9,7 @@ use Nette\Application\UI\ITemplate;
 use Tester\Assert;
 use Tester\DomQuery;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 class PrimaryLimit extends ResourceAvailabilityTestCase {
 

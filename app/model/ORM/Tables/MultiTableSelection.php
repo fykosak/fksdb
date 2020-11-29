@@ -2,8 +2,8 @@
 
 namespace FKSDB\ORM\Tables;
 
-use FKSDB\ORM\AbstractModelMulti;
-use FKSDB\ORM\AbstractServiceMulti;
+use FKSDB\ORM\ModelsMulti\AbstractModelMulti;
+use FKSDB\ORM\ServicesMulti\AbstractServiceMulti;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
 use Nette\Database\Table\Selection;

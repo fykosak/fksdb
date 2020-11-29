@@ -3,7 +3,7 @@
 namespace FKSDB\DataTesting;
 
 use FKSDB\DBReflection\DBReflectionFactory;
-use FKSDB\DataTesting\Tests\Person\PersonTest;
+use FKSDB\DataTesting\Tests\ModelPerson\PersonTest;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Services\ServiceContest;
 
@@ -37,12 +37,12 @@ class DataTestingFactory {
      */
     private function registersTests(): void {
         $tests = [
-            new Tests\Person\GenderFromBornNumberTest(),
-            new Tests\Person\ParticipantsDurationTest(),
-            new Tests\Person\EventCoveringTest(),
+            new Tests\ModelPerson\GenderFromBornNumberTest(),
+            new Tests\ModelPerson\ParticipantsDurationTest(),
+            new Tests\ModelPerson\EventCoveringTest(),
         ];
         foreach (['person_info.phone', 'person_info.phone_parent_d', 'person_info.phone_parent_m'] as $fieldName) {
-            $tests[] = new Tests\Person\PersonInfoFieldTest($this->tableReflectionFactory, $fieldName);
+            $tests[] = new Tests\ModelPerson\PersonInfoFieldTest($this->tableReflectionFactory, $fieldName);
         }
         $this->tests['person'] = $tests;
     }

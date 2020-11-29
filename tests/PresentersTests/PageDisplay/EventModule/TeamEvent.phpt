@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay\EventModule;
 
-$container = require '../../../bootstrap.php';
+$container = require '../../../Bootstrap.php';
 
 /**
  * Class EventModule

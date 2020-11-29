@@ -1,5 +1,5 @@
-import GeoChart from "@shared/components/geoChart/geoChart";
-import { findMax, GeoData } from "@shared/components/geoChart/geoData";
+import GeoChart from '@shared/components/geoChart/geoChart';
+import { findMax, GeoData } from '@shared/components/geoChart/geoData';
 import { scaleLog } from 'd3-scale';
 import * as React from 'react';
 
@@ -15,10 +15,10 @@ export default class ItemsPerCountryLog extends React.Component<OwnProps, {}> {
         const inActiveColorScale = scaleLog<string, string>();
         const activeColorScale = scaleLog<string, string>();
 
-        inActiveColorScale.domain([0.1, max]);
-        activeColorScale.domain([0.1, max]);
-        inActiveColorScale.range(['#fff', '#007bff']);
-        activeColorScale.range(['#fff', '#dc3545']);
+        inActiveColorScale.domain([0.1, max + 1]);
+        activeColorScale.domain([0.1, max + 1]);
+        inActiveColorScale.range(['#dc3545', '#28a745']);
+        activeColorScale.range(['#fc5565', '#48c765']);
 
         return <GeoChart data={data} activeColorScale={activeColorScale} inactiveColorScale={inActiveColorScale}/>;
     }

@@ -2,7 +2,8 @@
 
 namespace FKSDB\Authentication;
 
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\Authentication\Exceptions\InactiveLoginException;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceLogin;

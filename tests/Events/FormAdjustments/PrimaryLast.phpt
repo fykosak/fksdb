@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Events\Model;
+namespace FKSDB\Tests\Events\FormAdjustments;
 
 use FKSDB\Tests\Events\FormAdjustments\ResourceAvailabilityTestCase;
 use Nette\Application\Request;
@@ -12,7 +12,7 @@ use Tester\Assert;
 use Tester\DomQuery;
 
 /** @var Container $container */
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 class PrimaryLast extends ResourceAvailabilityTestCase {
 

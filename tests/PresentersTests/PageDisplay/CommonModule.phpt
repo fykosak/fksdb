@@ -4,7 +4,7 @@ namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
 use FKSDB\ORM\DbNames;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 /**
  * Class CommonModule

@@ -1,7 +1,8 @@
 <?php
 
-namespace FKSDB\Components\Controls\Inbox;
+namespace FKSDB\Components\Controls\Inbox\SubmitsPreview;
 
+use FKSDB\Components\Controls\Inbox\SeriesTableComponent;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Messages\Message;
 use FKSDB\Submits\StorageException;

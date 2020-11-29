@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\DataTesting\Tests\Person;
+namespace FKSDB\DataTesting\Tests\ModelPerson;
 
 use FKSDB\DBReflection\ColumnFactories\ITestedColumnFactory;
 use FKSDB\DBReflection\DBReflectionFactory;

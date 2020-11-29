@@ -2,16 +2,16 @@
 
 namespace FKSDB\ORM\Models;
 
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Payment\IPaymentModel;
 use FKSDB\Payment\Price;
+use FKSDB\WebService\INodeCreator;
+use FKSDB\WebService\XMLHelper;
 use Nette\Application\BadRequestException;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
-use Tracy\Debugger;
 
 /**
  *
@@ -47,7 +47,8 @@ class ModelEventParticipant extends AbstractModelSingle implements
     IPaymentModel,
     IPersonReferencedModel,
     IResource,
-    IContestReferencedModel {
+    IContestReferencedModel,
+    INodeCreator {
 
     public const RESOURCE_ID = 'event.participant';
 
@@ -99,5 +100,38 @@ class ModelEventParticipant extends AbstractModelSingle implements
 
     public function getResourceId(): string {
         return self::RESOURCE_ID;
+    }
+
+    public function __toArray(): array {
+        return [
+            'participantId' => $this->event_participant_id,
+            'eventId' => $this->event_id,
+            'personId' => $this->person_id,
+            // 'note' => $this->note,
+            'status' => $this->status,
+            'created' => $this->created,
+            // 'diet' => $this->diet,
+            // 'healthRestrictions' => $this->health_restrictions,
+            // 'tshirtSize' => $this->tshirt_size,
+            // 'tshirtColor' => $this->tshirt_color,
+            // 'jumperSize' => $this->jumper_size,
+            // 'price' => $this->price,
+            // 'arrivalTime' => $this->arrival_time,
+            // 'arrivalDestination' => $this->arrival_destination,
+            // 'arrivalTicket' => $this->arrival_ticket,
+            // 'departureTime' => $this->departure_time,
+            // 'departureDestination' => $this->departure_destination,
+            // 'departureTicket' => $this->departure_ticket,
+            // 'swimmer' => $this->swimmer,
+            // 'usedDrugs' => $this->used_drugs,
+            // 'lunchCount' => $this->lunch_count,
+        ];
+    }
+
+    public function createXMLNode(\DOMDocument $document): \DOMElement {
+        $node = $document->createElement('participant');
+        $node->setAttribute('eventParticipantId', $this->event_participant_id);
+        XMLHelper::fillArrayToNode($this->__toArray(), $document, $node);
+        return $node;
     }
 }

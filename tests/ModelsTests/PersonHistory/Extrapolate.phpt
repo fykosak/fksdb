@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\Tests\ModelTests\PersonHistory;
+namespace FKSDB\Tests\ModelsTests\PersonHistory;
 /** @var Container $container */
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Services\ServicePersonHistory;

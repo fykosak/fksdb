@@ -2,8 +2,8 @@
 
 namespace FKSDB\ORM\Services;
 
-use FKSDB\ORM\Services\Exception\DuplicateApplicationException;
-use FKSDB\ORM\AbstractServiceSingle;
+use FKSDB\ORM\Services\Exceptions\DuplicateApplicationException;
+
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
@@ -66,6 +66,10 @@ class ServiceEventParticipant extends AbstractServiceSingle {
     }
 
     public function findPossiblyAttending(ModelEvent $event): TypedTableSelection {
-        return $this->getTable()->where('status', ['participated', 'approved', 'spare', 'applied'])->where('event_id', $event->event_id);
+        return $this->findByEvent($event)->where('status', ['participated', 'approved', 'spare', 'applied']);
+    }
+
+    public function findByEvent(ModelEvent $event): TypedTableSelection {
+        return $this->getTable()->where('event_id', $event->event_id);
     }
 }

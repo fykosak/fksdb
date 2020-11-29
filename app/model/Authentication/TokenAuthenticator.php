@@ -2,6 +2,7 @@
 
 namespace FKSDB\Authentication;
 
+use FKSDB\Authentication\Exceptions\InactiveLoginException;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceAuthToken;

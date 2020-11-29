@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Transitions\Callbacks;
+namespace FKSDB\Transitions\Transition\Callbacks;
 
 /**
  * Class AbstractCallback

@@ -1,12 +1,12 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\Event;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\Event;
 
-use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
 use FKSDB\DBReflection\MetaDataFactory;
 use FKSDB\ValuePrinters\EventRolePrinter;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\IPersonReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;

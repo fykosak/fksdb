@@ -2,8 +2,7 @@
 
 namespace FKSDB\ORM\ServicesMulti;
 
-use FKSDB\ORM\AbstractModelMulti;
-use FKSDB\ORM\AbstractServiceMulti;
+use FKSDB\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\ModelsMulti\ModelMPostContact;
