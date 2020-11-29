@@ -2,6 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
+use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\Components\Controls\Entity\StoredQueryFormComponent;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
 use FKSDB\Components\Grids\BaseGrid;
@@ -71,14 +72,13 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
         $this->setPageTitle(new PageTitle($title, 'fa fa-database'));
     }
 
-
     protected function startup(): void {
         switch ($this->getAction()) {
             case 'execute':
                 $this->redirect(':Org:Export:execute', $this->getParameters());
         }
         parent::startup();
-        $this->seriesTraitStartup();
+        $this->seriesTraitStartup(YearChooser::ROLE_ORG);
     }
 
     /**

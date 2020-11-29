@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-
+use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\Components\Controls\Inbox\Corrected\CorrectedControl;
 use FKSDB\Components\Controls\Inbox\HandoutForm;
 use FKSDB\Components\Controls\Inbox\Inbox\InboxControl;
@@ -132,7 +132,7 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      */
     protected function startup(): void {
         parent::startup();
-        $this->seriesTraitStartup();
+        $this->seriesTraitStartup(YearChooser::ROLE_ORG);
         $this->seriesTable->setContest($this->getSelectedContest());
         $this->seriesTable->setYear($this->getSelectedYear());
         $this->seriesTable->setSeries($this->getSelectedSeries());

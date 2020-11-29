@@ -15,5 +15,5 @@ use FKSDB\Modules\Core\ContestPresenter\IContestPresenter;
  */
 interface ISeriesPresenter extends IContestPresenter {
 
-    public function getSelectedSeries(): int;
+    public function getSelectedSeries(): ?int;
 }

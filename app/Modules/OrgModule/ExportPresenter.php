@@ -2,6 +2,7 @@
 
 namespace FKSDB\Modules\OrgModule;
 
+use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Exceptions\BadTypeException;
@@ -9,7 +10,6 @@ use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\StoredQuery\StoredQuery;
 use FKSDB\StoredQuery\StoredQueryFactory;
-use FKSDB\Components\Controls\Choosers\ContestChooser;
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
@@ -60,7 +60,7 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
             case 'show':
                 $this->redirect(':Org:StoredQuery:detail', $this->getParameters());
         }
-        $this->seriesTraitStartup();
+        $this->seriesTraitStartup(YearChooser::ROLE_ORG);
         parent::startup();
     }
 
@@ -146,16 +146,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
             return $this->serviceStoredQuery->findByQid($qid);
         }
         return null;
-    }
-
-    protected function createComponentContestChooser(): ContestChooser {
-        $component = parent::createComponentContestChooser();
-        if ($this->getAction() == 'execute') {
-            // Contest and year check is done in StoredQueryComponent
-            $component->setContests(ContestChooser::CONTESTS_ALL);
-            $component->setYears(ContestChooser::YEARS_ALL);
-        }
-        return $component;
     }
 
     /**

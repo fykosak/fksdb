@@ -17,14 +17,13 @@ use Nette\DI\Container;
 class SeriesChooser extends Chooser {
 
     private SeriesCalculator $seriesCalculator;
-    private ?int $urlSeries;
     private ModelContest $contest;
     private int $year;
     private int $series;
 
-    public function __construct(Container $container, ModelContest $contest, int $year, ?int $urlSeries) {
+    public function __construct(Container $container, ModelContest $contest, int $year, int $series) {
         parent::__construct($container);
-        $this->urlSeries = $urlSeries;
+        $this->series = $series;
         $this->contest = $contest;
         $this->year = $year;
     }
@@ -33,59 +32,13 @@ class SeriesChooser extends Chooser {
         $this->seriesCalculator = $seriesCalculator;
     }
 
-    /**
-     * @param bool $redirect
-     * @return void
-     * @throws AbortException
-     * @throws ForbiddenRequestException
-     */
-    public function init(bool $redirect = true): void {
-        if (!isset($this->series)) {
-            $this->series = $this->selectSeries();
-        }
-        if ($redirect && +$this->urlSeries !== $this->series) {
-            $this->getPresenter()->redirect('this', array_merge($this->getPresenter()->getParameters(), ['series' => $this->series]));
-        }
-    }
-
-    /**
-     * @param bool $redirect
-     * @return int
-     * @throws AbortException
-     * @throws ForbiddenRequestException
-     */
-    public function getSelectedSeries(bool $redirect = true): int {
-        $this->init($redirect);
-        return $this->series;
-    }
-
-    /**
-     * @return int
-     * @throws ForbiddenRequestException
-     */
-    private function selectSeries(): int {
-        $candidate = $this->urlSeries ?? $this->seriesCalculator->getLastSeries($this->contest, $this->year);
-        if (!$this->isValidSeries($candidate)) {
-            throw new ForbiddenRequestException();
-        }
-        return $candidate;
-    }
-
-    private function isValidSeries(?int $series): bool {
-        return in_array($series, $this->getAllowedSeries());
-    }
-
-    private function getAllowedSeries(): array {
-        return $this->seriesCalculator->getAllowedSeries($this->contest, $this->year);
-    }
-
     /* ************ CHOOSER METHODS *************** */
     protected function getTitle(): Title {
         return new Title(sprintf(_('Series %d'), $this->series));
     }
 
     protected function getItems(): array {
-        return $this->getAllowedSeries();
+        return $this->seriesCalculator->getAllowedSeries($this->contest, $this->year);
     }
 
     /**

@@ -2,13 +2,17 @@
 
 namespace FKSDB;
 
+use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelContestYear;
+use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\ORM\Services\ServiceContestYear;
 use InvalidArgumentException;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
+use Nette\Security\User;
 
 /**
  * Class FKSDB\YearCalculator
@@ -151,6 +155,33 @@ class YearCalculator {
             if (!array_key_exists($this->getCurrentAcademicYear(), $this->revCache[$contestId])) {
                 throw new InvalidStateException(sprintf('Table contest_year does not specify year for contest %s for current academic year %s', $contestId, $this->getCurrentAcademicYear()));
             }
+        }
+    }
+
+    public function getAvailableYears(string $role, ModelContest $contest, User $user): array {
+        switch ($role) {
+            case YearChooser::ROLE_ORG:
+            case YearChooser::ROLE_ALL:
+                $min = $this->getFirstYear($contest);
+                $max = $this->getLastYear($contest);
+                return array_reverse(range($min, $max));
+            case YearChooser::ROLE_CONTESTANT:
+                /** @var ModelLogin $login */
+                $login = $user->getIdentity();
+                $currentYear = $this->getCurrentYear($contest);
+                if (!$login || !$login->getPerson()) {
+                    return [$currentYear];
+                }
+                $contestants = $login->getPerson()->getContestants($contest);
+                $years = [];
+                /** @var ModelContestant $contestant */
+                foreach ($contestants as $contestant) {
+                    $years[] = $contestant->year;
+                }
+                sort($years);
+                return $years;
+            default:
+                throw new InvalidStateException(sprintf('Role %s is not supported', $role));
         }
     }
 }

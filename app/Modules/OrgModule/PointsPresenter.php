@@ -3,6 +3,7 @@
 namespace FKSDB\Modules\OrgModule;
 
 use Exception;
+use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewControl;
 use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormControl;
 use FKSDB\Exceptions\BadTypeException;
@@ -55,7 +56,7 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     protected function startup(): void {
-        $this->seriesTraitStartup();
+        $this->seriesTraitStartup(YearChooser::ROLE_ORG);
         parent::startup();
         $this->seriesTable->setContest($this->getSelectedContest());
         $this->seriesTable->setYear($this->getSelectedYear());

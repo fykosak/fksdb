@@ -65,7 +65,7 @@ abstract class ContestPresenter extends AuthenticatedPresenter implements IConte
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function getSelectedYear(): int {
+    public function getSelectedYear(): ?int {
         $contestChooser = $this->getComponent('contestChooser');
         if (!$contestChooser instanceof ContestChooser) {
             throw new BadTypeException(ContestChooser::class, $contestChooser);
