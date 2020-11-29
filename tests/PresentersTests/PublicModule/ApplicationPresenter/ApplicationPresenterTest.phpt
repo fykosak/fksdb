@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
-$container = require '../../../bootstrap.php';
+$container = require '../../../Bootstrap.php';
 
 use FKSDB\Events\EventNotFoundException;
 use FKSDB\Exceptions\NotFoundException;

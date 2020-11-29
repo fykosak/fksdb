@@ -62,7 +62,6 @@ class Bootstrap {
     }
 }
 
-
 // Configure application
 $configurator = Bootstrap::boot();
 
@@ -75,3 +74,9 @@ Replicator::register();
 define('LOCK_DB', __DIR__ . '/tmp/database.lock');
 define('LOCK_UPLOAD', __DIR__ . '/tmp/upload.lock');
 return $container;
+
+/* Allow PSR-4 loading in tests
+ * "FKSDB\\Tests\\Events\\": "tests/Events/",
+ * "FKSDB\\Tests\\MockEnvironment\\": "tests/MockEnvironment/",
+ * "FKSDB\\Tests\\PresentersTests\\": "tests/PresentersTests/"
+ */

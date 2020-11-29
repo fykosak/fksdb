@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Controls\PhoneNumber;
+namespace FKSDB\PhoneNumber;
 
 use Exception;
 

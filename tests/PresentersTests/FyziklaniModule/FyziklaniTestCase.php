@@ -3,8 +3,8 @@
 namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
 use FKSDB\ORM\DbNames;
+use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
-use MockEnvironment\MockApplicationTrait;
 use Nette\Database\Row;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\ComponentTests\Forms\Controls;
 
-$container = require '../../../bootstrap.php';
+$container = require '../../../Bootstrap.php';
 
 use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;

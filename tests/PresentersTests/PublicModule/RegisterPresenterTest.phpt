@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 use FKSDB\Authentication\LoginUserStorage;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;

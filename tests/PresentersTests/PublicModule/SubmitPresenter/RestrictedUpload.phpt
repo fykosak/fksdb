@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\SubmitPresenter;
 
-$container = require '../../../bootstrap.php';
+$container = require '../../../Bootstrap.php';
 
 class RestrictedUpload extends SubmitTestCase {
 

@@ -2,7 +2,7 @@
 
 namespace FKSDB\ORM\Models;
 
-use FKSDB\Components\Controls\PhoneNumber\InvalidPhoneNumberException;
+use FKSDB\PhoneNumber\InvalidPhoneNumberException;
 
 /**
  *

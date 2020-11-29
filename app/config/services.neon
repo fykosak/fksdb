@@ -76,7 +76,7 @@ services:
     events.captcha: FKSDB\Events\FormAdjustments\Captcha
 
     - FKSDB\DBReflection\DBReflectionFactory
-    - FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory
+    - FKSDB\PhoneNumber\PhoneNumberFactory
     - FKSDB\DBReflection\MetaDataFactory
     - FKSDB\Fyziklani\Submit\HandlerFactory
 

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\PresentersTests\OrgModule;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 use FKSDB\Components\Controls\Entity\OrgFormComponent;
 use FKSDB\ORM\DbNames;

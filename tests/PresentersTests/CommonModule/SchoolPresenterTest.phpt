@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\Tests\PresentersTests\OrgModule;
+namespace FKSDB\Tests\PresentersTests\CommonModule;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 use FKSDB\Components\Controls\Entity\SchoolFormComponent;
 use FKSDB\ORM\DbNames;
