@@ -58,7 +58,7 @@ class FlagProcessing extends AbstractProcessing {
                     continue;
                 }
                 /** @var ModelPerson $person */
-                $person = $baseHolder->getModel()->getMainModel()->person;
+                $person = $baseHolder->getModel()->getMainModel()->getPerson();
                 $history = $person->getHistory($acYear);
                 $participantData = [
                     'school_id' => $history->school_id,
