@@ -9,11 +9,12 @@ use FKSDB\Components\Controls\Inbox\Inbox\InboxControl;
 use FKSDB\Components\Controls\Inbox\SubmitCheck\SubmitCheckComponent;
 use FKSDB\Components\Controls\Inbox\SubmitsPreview\SubmitsPreviewControl;
 use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\UI\PageTitle;
+use Nette\Application\BadRequestException;
 use FKSDB\Modules\Core\PresenterTraits\{SeriesPresenterTrait};
 use FKSDB\Submits\SeriesTable;
-use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Permission;
 
@@ -32,103 +33,53 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
 
     /* ***************** AUTH ***********************/
 
-    /**
-     * @return void
-     *
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     public function authorizedDefault(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
-    /**
-     * @return void
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     public function authorizedInbox(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', Permission::ALL, $this->getSelectedContest()));
     }
 
-    /**
-     * @return void
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     public function authorizedList(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'list', $this->getSelectedContest()));
     }
 
-    /**
-     * @return void
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     public function authorizedHandout(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('task', 'edit', $this->getSelectedContest()));
     }
 
-    /**
-     * @return void
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     public function authorizedCorrected(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'corrected', $this->getSelectedContest()));
     }
 
     /* ***************** TITLES ***********************/
-    /**
-     * @return void
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
+
     public function titleInbox(): void {
         $this->setPageTitle(new PageTitle(_('Inbox'), 'fa fa-envelope-open'));
     }
 
-    /**
-     * @return void
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     public function titleDefault(): void {
         $this->setPageTitle(new PageTitle(_('Inbox dashboard'), 'fa fa-envelope-open'));
     }
 
-    /**
-     * @return void
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     public function titleHandout(): void {
         $this->setPageTitle(new PageTitle(_('Handout'), 'fa fa-inbox'));
     }
 
-    /**
-     * @return void
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('List of submits'), 'fa fa-cloud-download'));
     }
 
-    /**
-     * @return void
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     public function titleCorrected(): void {
         $this->setPageTitle(new PageTitle(_('Corrected'), 'fa fa-inbox'));
     }
 
     /* *********** LIVE CYCLE *************/
     /**
-     * @throws AbortException
-     * @throws BadTypeException
      * @throws ForbiddenRequestException
+     * @throws NotImplementedException
+     * @throws BadRequestException
      */
     protected function startup(): void {
         parent::startup();
@@ -183,13 +134,6 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
         parent::beforeRender();
     }
 
-    /**
-     * @param PageTitle $pageTitle
-     * @return void
-     *
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     protected function setPageTitle(PageTitle $pageTitle): void {
         $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
         parent::setPageTitle($pageTitle);

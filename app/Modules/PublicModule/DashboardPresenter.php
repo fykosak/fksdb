@@ -2,7 +2,6 @@
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use FKSDB\UI\PageTitle;
@@ -46,8 +45,6 @@ class DashboardPresenter extends BasePresenter {
     }
 
     /**
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
      * @throws UnsupportedLanguageException
      */
     public function renderDefault(): void {

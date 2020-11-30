@@ -5,7 +5,6 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\StoredQuery\StoredQuery;
@@ -18,7 +17,6 @@ use FKSDB\Modules\Core\PresenterTraits\{EntityPresenterTrait, SeriesPresenterTra
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 use Nette\Utils\Strings;
@@ -67,8 +65,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     /**
      * @return void
      * @throws BadRequestException
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
     public function authorizedExecute(): void {
@@ -78,8 +74,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     /**
      * @return void
      * @throws BadRequestException
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
     public function titleExecute(): void {
@@ -163,12 +157,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         return new StoredQueryTagCloud($this->getContext());
     }
 
-    /**
-     * @param PageTitle $pageTitle
-     * @return void
-     * @throws ForbiddenRequestException
-     * @throws BadTypeException
-     */
     protected function setPageTitle(PageTitle $pageTitle): void {
         $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
         parent::setPageTitle($pageTitle);

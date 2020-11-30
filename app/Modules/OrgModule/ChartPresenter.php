@@ -5,11 +5,8 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Controls\Chart\ContestantsPerSeries\AggregatedSeries;
 use FKSDB\Components\Controls\Chart\ContestantsPerSeries\PerSeriesChart;
 use FKSDB\Components\Controls\Chart\ContestantsPerYearsChart;
-use FKSDB\Components\Controls\Chart\IChart;
 use FKSDB\Components\Controls\Chart\TotalPersonsChartControl;
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
-use Nette\Application\ForbiddenRequestException;
 
 /**
  * Class ChartPresenter
@@ -18,20 +15,10 @@ use Nette\Application\ForbiddenRequestException;
 class ChartPresenter extends BasePresenter {
     use ChartPresenterTrait;
 
-    /**
-     * @return void
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     public function authorizedList(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('chart', 'list', $this->getSelectedContest()));
     }
 
-    /**
-     * @return void
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     public function authorizedChart(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('chart', 'chart', $this->getSelectedContest()));
     }
@@ -41,11 +28,6 @@ class ChartPresenter extends BasePresenter {
         $this->selectChart();
     }
 
-    /**
-     * @return IChart[]
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     protected function registerCharts(): array {
         return [
             'contestantsPerSeries' => new PerSeriesChart($this->getContext(), $this->getSelectedContest()),

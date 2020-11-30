@@ -52,11 +52,6 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         }
     }
 
-    /**
-     * @return array
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     protected function getFieldsDefinition(): array {
         $contestId = $this->getSelectedContest()->contest_id;
         $contestName = $this->getContext()->getParameters()['contestMapping'][$contestId];
@@ -75,7 +70,6 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @param bool $create
      * @return FormControl
      * @throws BadTypeException
-     * @throws ForbiddenRequestException
      * @throws BadRequestException
      */
     private function createComponentFormControl(bool $create): FormControl {
@@ -116,7 +110,6 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @return FormControl
      * @throws BadRequestException
      * @throws BadTypeException
-     * @throws ForbiddenRequestException
      */
     final protected function createComponentCreateComponent(): FormControl {
         return $this->createComponentFormControl(true);
@@ -126,7 +119,6 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @return FormControl
      * @throws BadRequestException
      * @throws BadTypeException
-     * @throws ForbiddenRequestException
      */
     final protected function createComponentEditComponent(): FormControl {
         return $this->createComponentFormControl(false);

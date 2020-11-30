@@ -1,19 +1,19 @@
 <?php
 
-
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-
-use FKSDB\Components\Controls\Choosers\ContestChooser2;
+use FKSDB\Components\Controls\Choosers\ContestChooser;
 use FKSDB\Components\Controls\Choosers\YearChooser;
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceContest;
 use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 
+/**
+ * Trait ContestPresenterTrait
+ * @property ServiceContest $serviceContest
+ */
 trait ContestPresenterTrait {
 
     /**
@@ -83,7 +83,7 @@ trait ContestPresenterTrait {
             case YearChooser::ROLE_CONTESTANT:
                 $person = $login->getPerson();
                 if ($person) {
-                    $contests = array_keys($person->getActiveContestants($this->yearCalculator));
+                    $contestIds = array_keys($person->getActiveContestants($this->yearCalculator));
                 }
                 break;
             case YearChooser::ROLE_ORG:
@@ -105,12 +105,10 @@ trait ContestPresenterTrait {
     }
 
     /**
-     * @return ContestChooser2
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
+     * @return ContestChooser
      * @throws NotImplementedException
      */
-    protected function createComponentContestChooser2(): ContestChooser2 {
-        return new ContestChooser2($this->getContext(), $this->getSelectedContest(), $this->getAllowedContests());
+    protected function createComponentContestChooser(): ContestChooser {
+        return new ContestChooser($this->getContext(), $this->getSelectedContest(), $this->getAllowedContests());
     }
 }

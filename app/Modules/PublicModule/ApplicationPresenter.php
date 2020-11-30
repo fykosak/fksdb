@@ -3,7 +3,6 @@
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Authorization\RelatedPersonAuthorizator;
-use FKSDB\Components\Controls\Choosers\ContestChooser;
 use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\EventDispatchFactory;
@@ -184,23 +183,6 @@ class ApplicationPresenter extends BasePresenter {
      */
     private function initializeMachine(): void {
         $this->getHolder()->setModel($this->getEventApplication());
-    }
-
-    /**
-     * @return ContestChooser
-     * @throws NotFoundException
-     */
-    protected function createComponentContestChooser(): ContestChooser {
-        $component = parent::createComponentContestChooser();
-        if ($this->getAction() == 'default') {
-            if (!$this->getEvent()) {
-                throw new EventNotFoundException();
-            }
-            $component->setContests([
-                $this->getEvent()->getEventType()->contest_id,
-            ]);
-        }
-        return $component;
     }
 
     /**

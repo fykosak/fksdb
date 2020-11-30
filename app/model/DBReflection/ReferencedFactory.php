@@ -38,7 +38,7 @@ final class ReferencedFactory {
 
         // if referenced access is not set and model is not desired model throw exception
         if (!isset($this->referencedAccess)) {
-            throw new BadTypeException($this->modelClassName, get_class($model));
+            throw new BadTypeException($this->modelClassName, $model);
         }
         return $this->accessReferencedModel($model);
     }

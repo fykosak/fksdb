@@ -3,12 +3,16 @@
 namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Choosers\YearChooser;
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\YearCalculator;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 
+/**
+ * Trait YearPresenterTrait
+ * @property YearCalculator $yearCalculator
+ */
 trait YearPresenterTrait {
     use ContestPresenterTrait;
 
@@ -23,15 +27,14 @@ trait YearPresenterTrait {
     /**
      * @param string $role
      * @return void
-     * @throws BadTypeException
+     * @throws BadRequestException
      * @throws ForbiddenRequestException
      * @throws NotImplementedException
-     * @throws BadRequestException
      */
     protected function yearTraitStartup(string $role): void {
         $this->contestTraitStartup($role);
         $this->role = $role;
-        if (!isset($this->year)) {
+        if (!isset($this->year) || !$this->isValidYear($this->year)) {
             $this->redirect('this', array_merge($this->getParameters(), ['year' => $this->selectYear()]));
         }
     }
@@ -39,7 +42,6 @@ trait YearPresenterTrait {
     /**
      * @return int
      * @throws ForbiddenRequestException
-     * @throws BadTypeException
      */
     private function selectYear(): int {
         $candidate = $this->yearCalculator->getCurrentYear($this->getSelectedContest());
@@ -49,14 +51,8 @@ trait YearPresenterTrait {
         return $candidate;
     }
 
-    /**
-     * @param int|null $series
-     * @return bool
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
-    private function isValidYear(?int $series): bool {
-        return in_array($series, $this->yearCalculator->getAvailableYears($this->role, $this->getSelectedContest(), $this->getUser()));
+    private function isValidYear(?int $year): bool {
+        return in_array($year, $this->yearCalculator->getAvailableYears($this->role, $this->getSelectedContest(), $this->getUser()));
     }
 
     public function getSelectedYear(): ?int {
@@ -67,13 +63,8 @@ trait YearPresenterTrait {
         return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
     }
 
-    /**
-     * @return YearChooser
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     protected function createComponentYearChooser(): YearChooser {
-        return new YearChooser($this->getContext(), $this->year, $this->yearCalculator->getAvailableYears($this->role, $this->getSelectedContest(), $this->getUser()));
+        return new YearChooser($this->getContext(), $this->getSelectedYear(), $this->yearCalculator->getAvailableYears($this->role, $this->getSelectedContest(), $this->getUser()));
     }
 
     /**

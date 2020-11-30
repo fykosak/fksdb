@@ -8,7 +8,6 @@ use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
 use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
@@ -35,7 +34,6 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws BadTypeException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
@@ -49,7 +47,6 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
     public function titleList(): void {
@@ -58,7 +55,6 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @return void
-     * @throws BadTypeException
      * @throws ForbiddenRequestException
      * @throws ModelNotFoundException
      */
@@ -119,19 +115,11 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
      * @param IResource|string|null $resource
      * @param string|null $privilege
      * @return bool
-     * @throws ForbiddenRequestException
-     * @throws BadTypeException
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 
-    /**
-     * @param PageTitle $pageTitle
-     * @return void
-     * @throws ForbiddenRequestException
-     * @throws BadTypeException
-     */
     protected function setPageTitle(PageTitle $pageTitle): void {
         $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
         parent::setPageTitle($pageTitle);

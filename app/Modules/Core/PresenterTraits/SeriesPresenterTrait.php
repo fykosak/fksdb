@@ -3,10 +3,9 @@
 namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Choosers\SeriesChooser;
-use FKSDB\Components\Controls\Choosers\YearChooser;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\ModelContest;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\SeriesCalculator;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 
@@ -25,8 +24,6 @@ trait SeriesPresenterTrait {
 
     private SeriesCalculator $seriesCalculator;
 
-    private string $role = YearChooser::ROLE_ORG;
-
     public function injectSeriesCalculator(SeriesCalculator $seriesCalculator): void {
         $this->seriesCalculator = $seriesCalculator;
     }
@@ -34,13 +31,12 @@ trait SeriesPresenterTrait {
     /**
      * @param string $role
      * @return void
-     * @throws BadTypeException
      * @throws ForbiddenRequestException
+     * @throws NotImplementedException
+     * @throws BadRequestException
      */
     protected function seriesTraitStartup(string $role): void {
         $this->yearTraitStartup($role);
-
-        $this->role = $role;
         if (!isset($this->series)) {
             $this->redirect('this', array_merge($this->getParameters(), ['series' => $this->selectSeries()]));
         }
@@ -49,7 +45,6 @@ trait SeriesPresenterTrait {
     /**
      * @return int
      * @throws ForbiddenRequestException
-     * @throws BadTypeException
      */
     private function selectSeries(): int {
         $candidate = $this->seriesCalculator->getLastSeries($this->getSelectedContest(), $this->getSelectedYear());
@@ -59,21 +54,10 @@ trait SeriesPresenterTrait {
         return $candidate;
     }
 
-    /**
-     * @param int|null $series
-     * @return bool
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     private function isValidSeries(?int $series): bool {
         return in_array($series, $this->getAllowedSeries());
     }
 
-    /**
-     * @return array
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     private function getAllowedSeries(): array {
         return $this->seriesCalculator->getAllowedSeries($this->getSelectedContest(), $this->getSelectedYear());
     }
@@ -82,19 +66,12 @@ trait SeriesPresenterTrait {
         return $this->series;
     }
 
-    /**
-     * @return SeriesChooser
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     protected function createComponentSeriesChooser(): SeriesChooser {
-        return new SeriesChooser($this->getContext(), $this->getSelectedSeries(), $this->series, $this->getAllowedSeries());
+        return new SeriesChooser($this->getContext(), $this->getSelectedSeries(), $this->getSelectedSeries(), $this->getAllowedSeries());
     }
 
     /**
      * @return Container
      */
     abstract protected function getContext();
-
-    abstract public function getSelectedContest(): ?ModelContest;
 }

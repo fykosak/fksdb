@@ -5,7 +5,6 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Controls\Entity\TeacherFormComponent;
 use FKSDB\Components\Grids\TeachersGrid;
 use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\ORM\Models\ModelTeacher;
 use FKSDB\ORM\Services\ServiceTeacher;
@@ -80,8 +79,6 @@ class TeacherPresenter extends BasePresenter {
      * @param IResource|string|null $resource
      * @param string|null $privilege
      * @return bool
-     * @throws ForbiddenRequestException
-     * @throws BadTypeException
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());

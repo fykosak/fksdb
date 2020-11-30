@@ -2,34 +2,28 @@
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Components\Controls\Choosers\ContestChooser;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Modules\Core\ContestPresenter\ContestPresenter;
+use FKSDB\Components\Controls\Choosers\YearChooser;
+use FKSDB\Modules\Core\AuthenticatedPresenter;
+use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Models\ModelRole;
-use Nette\Application\ForbiddenRequestException;
+use FKSDB\UI\PageTitle;
 
 /**
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-abstract class BasePresenter extends ContestPresenter {
+abstract class BasePresenter extends AuthenticatedPresenter {
+    use YearPresenterTrait;
 
     private ?ModelContestant $contestant;
 
-    protected function createComponentContestChooser(): ContestChooser {
-        $control = new ContestChooser($this->getContext());
-        $control->setContests(ModelRole::CONTESTANT);
-        return $control;
+    protected function startup(): void {
+        $this->yearTraitStartup(YearChooser::ROLE_CONTESTANT);
+        parent::startup();
     }
 
-    /**
-     * @return ModelContestant|null
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     public function getContestant(): ?ModelContestant {
         if (!isset($this->contestant)) {
             /** @var ModelPerson $person */
@@ -46,5 +40,19 @@ abstract class BasePresenter extends ContestPresenter {
 
     protected function getNavRoots(): array {
         return ['Public.Dashboard.default'];
+    }
+
+    protected function beforeRender(): void {
+        $contest = $this->getSelectedContest();
+        if (isset($contest) && $contest) {
+            $this->getPageStyleContainer()->styleId = $contest->getContestSymbol();
+            $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-' . $contest->getContestSymbol());
+        }
+        parent::beforeRender();
+    }
+
+    protected function setPageTitle(PageTitle $pageTitle): void {
+        $pageTitle->subTitle = sprintf(_('%d. year'), $this->year) . ' ' . $pageTitle->subTitle;
+        parent::setPageTitle($pageTitle);
     }
 }

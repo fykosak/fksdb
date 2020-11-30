@@ -6,11 +6,9 @@ use Exception;
 use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewControl;
 use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormControl;
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\UI\PageTitle;
-use Nette\Application\ForbiddenRequestException;
 use FKSDB\Modules\Core\PresenterTraits\{SeriesPresenterTrait};
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelTask;
@@ -63,38 +61,18 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
         $this->seriesTable->setSeries($this->getSelectedSeries());
     }
 
-    /**
-     * @return void
-     * @throws ForbiddenRequestException
-     * @throws BadTypeException
-     */
     public function titleEntry(): void {
         $this->setPageTitle(new PageTitle(sprintf(_('Grade series %d'), $this->getSelectedSeries()), 'fa fa-trophy'));
     }
 
-    /**
-     * @return void
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     public function titlePreview(): void {
         $this->setPageTitle(new PageTitle(_('Points list'), 'fa fa-inbox'));
     }
 
-    /**
-     * @return void
-     * @throws ForbiddenRequestException
-     * @throws BadTypeException
-     */
     public function authorizedEntry(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'edit', $this->getSelectedContest()));
     }
 
-    /**
-     * @return void
-     * @throws ForbiddenRequestException
-     * @throws BadTypeException
-     */
     public function authorizedPreview(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'points', $this->getSelectedContest()));
     }
@@ -103,11 +81,6 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
         $this->seriesTable->setTaskFilter($this->all ? null : $this->getGradedTasks());
     }
 
-    /**
-     * @return void
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     public function renderEntry(): void {
         $this->template->showAll = (bool)$this->all;
         if ($this->getSelectedContest()->contest_id === ModelContest::ID_VYFUK && $this->getSelectedSeries() > 6) {
@@ -147,7 +120,6 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
      * @return void
      * @throws AbortException
      * @throws BadRequestException
-     * @throws ForbiddenRequestException
      */
     public function handleRecalculateAll(): void {
         try {
@@ -217,12 +189,6 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
         parent::beforeRender();
     }
 
-    /**
-     * @param PageTitle $pageTitle
-     * @return void
-     * @throws ForbiddenRequestException
-     * @throws BadTypeException
-     */
     protected function setPageTitle(PageTitle $pageTitle): void {
         $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
         parent::setPageTitle($pageTitle);
