@@ -4,11 +4,14 @@ namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\ModelContest;
+use FKSDB\Exceptions\NotImplementedException;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 
 trait YearPresenterTrait {
+    use ContestPresenterTrait;
+
     /**
      * @var int
      * @persistent
@@ -22,8 +25,11 @@ trait YearPresenterTrait {
      * @return void
      * @throws BadTypeException
      * @throws ForbiddenRequestException
+     * @throws NotImplementedException
+     * @throws BadRequestException
      */
     protected function yearTraitStartup(string $role): void {
+        $this->contestTraitStartup($role);
         $this->role = $role;
         if (!isset($this->year)) {
             $this->redirect('this', array_merge($this->getParameters(), ['year' => $this->selectYear()]));
@@ -57,19 +63,21 @@ trait YearPresenterTrait {
         return $this->year;
     }
 
+    public function getSelectedAcademicYear(): int {
+        return $this->yearCalculator->getAcademicYear($this->getSelectedContest(), $this->getSelectedYear());
+    }
+
     /**
      * @return YearChooser
      * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
     protected function createComponentYearChooser(): YearChooser {
-        return new YearChooser($this->getContext(), $this->year, $this->role, $this->getSelectedContest());
+        return new YearChooser($this->getContext(), $this->year, $this->yearCalculator->getAvailableYears($this->role, $this->getSelectedContest(), $this->getUser()));
     }
 
     /**
      * @return Container
      */
     abstract protected function getContext();
-
-    abstract public function getSelectedContest(): ?ModelContest;
 }

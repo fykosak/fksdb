@@ -3,10 +3,10 @@
 namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Choosers\SeriesChooser;
+use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\SeriesCalculator;
-use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 
@@ -24,6 +24,8 @@ trait SeriesPresenterTrait {
     public $series;
 
     private SeriesCalculator $seriesCalculator;
+
+    private string $role = YearChooser::ROLE_ORG;
 
     public function injectSeriesCalculator(SeriesCalculator $seriesCalculator): void {
         $this->seriesCalculator = $seriesCalculator;
@@ -50,7 +52,7 @@ trait SeriesPresenterTrait {
      * @throws BadTypeException
      */
     private function selectSeries(): int {
-        $candidate = $this->seriesCalculator->getLastSeries($this->getSelectedContest(), $this->year);
+        $candidate = $this->seriesCalculator->getLastSeries($this->getSelectedContest(), $this->getSelectedYear());
         if (!$this->isValidSeries($candidate)) {
             throw new ForbiddenRequestException();
         }
@@ -73,7 +75,7 @@ trait SeriesPresenterTrait {
      * @throws ForbiddenRequestException
      */
     private function getAllowedSeries(): array {
-        return $this->seriesCalculator->getAllowedSeries($this->getSelectedContest(), $this->year);
+        return $this->seriesCalculator->getAllowedSeries($this->getSelectedContest(), $this->getSelectedYear());
     }
 
     public function getSelectedSeries(): ?int {
@@ -86,7 +88,7 @@ trait SeriesPresenterTrait {
      * @throws ForbiddenRequestException
      */
     protected function createComponentSeriesChooser(): SeriesChooser {
-        return new SeriesChooser($this->getContext(), $this->getSelectedContest(), $this->getSelectedYear(), $this->series);
+        return new SeriesChooser($this->getContext(), $this->getSelectedSeries(), $this->series, $this->getAllowedSeries());
     }
 
     /**

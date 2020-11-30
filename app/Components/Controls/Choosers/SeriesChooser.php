@@ -5,8 +5,6 @@ namespace FKSDB\Components\Controls\Choosers;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\SeriesCalculator;
 use FKSDB\UI\Title;
-use Nette\Application\AbortException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 
@@ -16,20 +14,15 @@ use Nette\DI\Container;
  */
 class SeriesChooser extends Chooser {
 
-    private SeriesCalculator $seriesCalculator;
-    private ModelContest $contest;
     private int $year;
     private int $series;
+    private array $allowedSeries;
 
-    public function __construct(Container $container, ModelContest $contest, int $year, int $series) {
+    public function __construct(Container $container, int $year, int $series, array $allowedSeries) {
         parent::__construct($container);
         $this->series = $series;
-        $this->contest = $contest;
         $this->year = $year;
-    }
-
-    final public function injectSeriesCalculator(SeriesCalculator $seriesCalculator): void {
-        $this->seriesCalculator = $seriesCalculator;
+        $this->allowedSeries = $allowedSeries;
     }
 
     /* ************ CHOOSER METHODS *************** */
@@ -38,7 +31,7 @@ class SeriesChooser extends Chooser {
     }
 
     protected function getItems(): array {
-        return $this->seriesCalculator->getAllowedSeries($this->contest, $this->year);
+        return $this->allowedSeries;
     }
 
     /**

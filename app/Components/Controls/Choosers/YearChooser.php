@@ -2,15 +2,9 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
-use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelContestant;
-use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\UI\Title;
-use FKSDB\YearCalculator;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
-use Nette\InvalidStateException;
-use Nette\Security\User;
 
 class YearChooser extends Chooser {
 
@@ -19,22 +13,12 @@ class YearChooser extends Chooser {
     public const ROLE_ALL = 'all';
 
     private int $year;
-    private string $role;
-    private ModelContest $contest;
+    private array $availableYears;
 
-    private User $user;
-    private YearCalculator $yearCalculator;
-
-    public function __construct(Container $container, int $urlYear, string $role, ModelContest $contest) {
+    public function __construct(Container $container, int $urlYear, array $availableYears) {
         parent::__construct($container);
         $this->year = $urlYear;
-        $this->role = $role;
-        $this->contest = $contest;
-    }
-
-    public function injectPrimary(YearCalculator $yearCalculator, User $user): void {
-        $this->user = $user;
-        $this->yearCalculator = $yearCalculator;
+        $this->availableYears = $availableYears;
     }
 
     protected function getTitle(): Title {
@@ -42,7 +26,7 @@ class YearChooser extends Chooser {
     }
 
     protected function getItems(): iterable {
-        return $this->yearCalculator->getAvailableYears($this->role, $this->contest, $this->user);
+        return $this->availableYears;
     }
 
     /**
