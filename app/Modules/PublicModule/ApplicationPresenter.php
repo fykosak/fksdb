@@ -37,8 +37,6 @@ use Nette\InvalidArgumentException;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ApplicationPresenter extends BasePresenter {
-    use YearPresenterTrait;
-
     public const PARAM_AFTER = 'a';
 
     private ?ModelEvent $event;
@@ -167,7 +165,6 @@ class ApplicationPresenter extends BasePresenter {
                 $this->redirect('this', self::decodeParameters($data));
             }
         }
-
 
         if (!$this->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->holder, $this->getHolder()->getPrimaryHolder()->getModelState())) {
 
@@ -304,5 +301,12 @@ class ApplicationPresenter extends BasePresenter {
             $this->getPageStyleContainer()->styleId = ' event-type-' . $event->event_type_id;
         }
         parent::beforeRender();
+    }
+
+    protected function getRole(): string {
+        if ($this->getAction() === 'default') {
+            return 'selected';
+        }
+        return parent::getRole();
     }
 }

@@ -17,14 +17,8 @@ use Nette\Application\ForbiddenRequestException;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DashboardPresenter extends BasePresenter {
-    use YearPresenterTrait;
 
     private News $news;
-
-    protected function startup(): void {
-        $this->yearTraitStartup(YearChooser::ROLE_CONTESTANT);
-        parent::startup();
-    }
 
     final public function injectNews(News $news): void {
         $this->news = $news;

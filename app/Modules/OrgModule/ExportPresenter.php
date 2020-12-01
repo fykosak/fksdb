@@ -29,7 +29,6 @@ use Nette\Utils\Strings;
 class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     use EntityPresenterTrait;
-    use SeriesPresenterTrait;
 
     private const PARAM_HTTP_AUTH = 'ha';
 
@@ -155,11 +154,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     protected function createComponentTagCloud(): StoredQueryTagCloud {
         return new StoredQueryTagCloud($this->getContext());
-    }
-
-    protected function setPageTitle(PageTitle $pageTitle): void {
-        $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
-        parent::setPageTitle($pageTitle);
     }
 
     protected function createComponentCreateForm(): Control {

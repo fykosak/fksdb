@@ -27,9 +27,6 @@ use Nette\InvalidArgumentException;
  *
  */
 class PointsPresenter extends BasePresenter implements ISeriesPresenter {
-
-    use SeriesPresenterTrait;
-
     /**
      * Show all tasks?
      * @persistent
@@ -54,7 +51,6 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
     }
 
     protected function startup(): void {
-        $this->seriesTraitStartup(YearChooser::ROLE_ORG);
         parent::startup();
         $this->seriesTable->setContest($this->getSelectedContest());
         $this->seriesTable->setYear($this->getSelectedYear());
@@ -187,10 +183,5 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
     protected function beforeRender(): void {
         $this->getPageStyleContainer()->setWidePage();
         parent::beforeRender();
-    }
-
-    protected function setPageTitle(PageTitle $pageTitle): void {
-        $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
-        parent::setPageTitle($pageTitle);
     }
 }

@@ -3,7 +3,6 @@
 namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Choosers\SeriesChooser;
-use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\SeriesCalculator;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -29,14 +28,12 @@ trait SeriesPresenterTrait {
     }
 
     /**
-     * @param string $role
      * @return void
-     * @throws ForbiddenRequestException
-     * @throws NotImplementedException
      * @throws BadRequestException
+     * @throws ForbiddenRequestException
      */
-    protected function seriesTraitStartup(string $role): void {
-        $this->yearTraitStartup($role);
+    protected function seriesTraitStartup(): void {
+        $this->yearTraitStartup();
         if (!isset($this->series)) {
             $this->redirect('this', array_merge($this->getParameters(), ['series' => $this->selectSeries()]));
         }

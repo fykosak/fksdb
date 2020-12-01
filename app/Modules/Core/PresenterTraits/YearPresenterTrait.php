@@ -22,18 +22,13 @@ trait YearPresenterTrait {
      */
     public $year;
 
-    private string $role = YearChooser::ROLE_ORG;
-
     /**
-     * @param string $role
      * @return void
      * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws NotImplementedException
      */
-    protected function yearTraitStartup(string $role): void {
-        $this->contestTraitStartup($role);
-        $this->role = $role;
+    protected function yearTraitStartup(): void {
+        $this->contestTraitStartup();
         if (!isset($this->year) || !$this->isValidYear($this->year)) {
             $this->redirect('this', array_merge($this->getParameters(), ['year' => $this->selectYear()]));
         }
@@ -52,11 +47,15 @@ trait YearPresenterTrait {
     }
 
     private function isValidYear(?int $year): bool {
-        return in_array($year, $this->yearCalculator->getAvailableYears($this->role, $this->getSelectedContest(), $this->getUser()));
+        return in_array($year, $this->getAvailableItems());
     }
 
     public function getSelectedYear(): ?int {
         return $this->year;
+    }
+
+    protected function getAvailableItems(): array {
+        return $this->yearCalculator->getAvailableYears($this->getRole(), $this->getSelectedContest(), $this->getUser());
     }
 
     public function getSelectedAcademicYear(): int {
@@ -64,7 +63,7 @@ trait YearPresenterTrait {
     }
 
     protected function createComponentYearChooser(): YearChooser {
-        return new YearChooser($this->getContext(), $this->getSelectedYear(), $this->yearCalculator->getAvailableYears($this->role, $this->getSelectedContest(), $this->getUser()));
+        return new YearChooser($this->getContext(), $this->getSelectedYear(), $this->getAvailableItems());
     }
 
     /**

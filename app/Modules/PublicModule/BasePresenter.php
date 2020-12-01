@@ -15,12 +15,12 @@ use FKSDB\UI\PageTitle;
  * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
-
+    use YearPresenterTrait;
 
     private ?ModelContestant $contestant;
 
     protected function startup(): void {
-        $this->yearTraitStartup(YearChooser::ROLE_CONTESTANT);
+        $this->yearTraitStartup();
         parent::startup();
     }
 
@@ -54,5 +54,9 @@ abstract class BasePresenter extends AuthenticatedPresenter {
     protected function setPageTitle(PageTitle $pageTitle): void {
         $pageTitle->subTitle = sprintf(_('%d. year'), $this->year) . ' ' . $pageTitle->subTitle;
         parent::setPageTitle($pageTitle);
+    }
+
+    protected function getRole(): string {
+        return 'contestant';
     }
 }

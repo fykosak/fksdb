@@ -15,7 +15,7 @@ use Tester\Assert;
  * Class OrgPresenterTest
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class OrgPresenterTest extends EntityPresenterTestCase {
+class OrgPresenterTest extends AbstractOrgPresenterTestCase {
 
     /** @var int */
     private $personId;
@@ -93,7 +93,6 @@ class OrgPresenterTest extends EntityPresenterTestCase {
         Assert::equal($init, $after);
     }
 
-
     public function testEdit(): void {
         $response = $this->createFormRequest('edit', [
             OrgFormComponent::CONTAINER => [
@@ -111,7 +110,6 @@ class OrgPresenterTest extends EntityPresenterTestCase {
         Assert::equal(2, $org->order);
     }
 
-
     public function testDetail() {
         $request = $this->createGetRequest('list', []);
         $response = $this->fixture->run($request);
@@ -123,18 +121,6 @@ class OrgPresenterTest extends EntityPresenterTestCase {
 
     protected function getPresenterName(): string {
         return 'Org:Org';
-    }
-
-    protected function createPostRequest(string $action, array $params, array $postData = []): Request {
-        $params['year'] = 1;
-        $params['contestId'] = 1;
-        return parent::createPostRequest($action, $params, $postData);
-    }
-
-    protected function createGetRequest(string $action, array $params, array $postData = []): Request {
-        $params['year'] = 1;
-        $params['contestId'] = 1;
-        return parent::createGetRequest($action, $params, $postData);
     }
 
     protected function tearDown(): void {

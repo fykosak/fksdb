@@ -6,7 +6,9 @@ use FKSDB\Components\Controls\Chart\ContestantsPerSeries\AggregatedSeries;
 use FKSDB\Components\Controls\Chart\ContestantsPerSeries\PerSeriesChart;
 use FKSDB\Components\Controls\Chart\ContestantsPerYearsChart;
 use FKSDB\Components\Controls\Chart\TotalPersonsChartControl;
+use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
+use FKSDB\Modules\Core\PresenterTraits\ContestPresenterTrait;
 
 /**
  * Class ChartPresenter

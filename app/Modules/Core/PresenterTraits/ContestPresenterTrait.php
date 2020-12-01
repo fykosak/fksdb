@@ -23,7 +23,6 @@ trait ContestPresenterTrait {
     public $contestId;
 
     private ?ModelContest $contest;
-    private string $role = YearChooser::ROLE_ORG;
 
     public function injectServiceContest(ServiceContest $serviceContest): void {
         $this->serviceContest = $serviceContest;
@@ -33,10 +32,8 @@ trait ContestPresenterTrait {
      * @param string $role
      * @return void
      * @throws BadRequestException
-     * @throws NotImplementedException
      */
-    protected function contestTraitStartup(string $role): void {
-        $this->role = $role;
+    protected function contestTraitStartup(): void {
         if (!isset($this->contestId)) {
             $this->redirect('this', array_merge($this->getParameters(), ['contestId' => $this->selectContest()->contest_id]));
         }
@@ -45,7 +42,6 @@ trait ContestPresenterTrait {
     /**
      * @return ModelContest
      * @throws BadRequestException
-     * @throws NotImplementedException
      */
     private function selectContest(): ModelContest {
         $candidates = $this->getAllowedContests();
@@ -55,11 +51,6 @@ trait ContestPresenterTrait {
         return reset($candidates);
     }
 
-    /**
-     * @param ModelContest $contest
-     * @return bool
-     * @throws NotImplementedException
-     */
     private function isValidContest(ModelContest $contest): bool {
         foreach ($this->getAllowedContests() as $allowedContest) {
             if ($allowedContest->contest_id === $contest->contest_id) {
@@ -71,13 +62,12 @@ trait ContestPresenterTrait {
 
     /**
      * @return ModelContest[]
-     * @throws NotImplementedException
      */
     private function getAllowedContests(): array {
         $contestIds = [];
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
-        switch ($this->role) {
+        switch ($this->getRole()) {
             case YearChooser::ROLE_ALL:
                 $contestIds = $this->serviceContest->getTable()->fetchPairs('contest_id', 'contest_id');
                 break;
@@ -107,11 +97,9 @@ trait ContestPresenterTrait {
         return $this->contest;
     }
 
-    /**
-     * @return ContestChooser
-     * @throws NotImplementedException
-     */
     protected function createComponentContestChooser(): ContestChooser {
         return new ContestChooser($this->getContext(), $this->getSelectedContest(), $this->getAllowedContests());
     }
+
+    abstract protected function getRole(): string;
 }

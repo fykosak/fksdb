@@ -74,7 +74,6 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
                 $this->redirect(':Org:Export:execute', $this->getParameters());
         }
         parent::startup();
-        $this->seriesTraitStartup(YearChooser::ROLE_ORG);
     }
 
     /**
@@ -118,10 +117,5 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
      */
     protected function traitIsAuthorized($resource, string $privilege): bool {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
-    }
-
-    protected function setPageTitle(PageTitle $pageTitle): void {
-        $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
-        parent::setPageTitle($pageTitle);
     }
 }

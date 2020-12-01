@@ -35,7 +35,6 @@ use Tracy\Debugger;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SubmitPresenter extends BasePresenter {
-    use YearPresenterTrait;
 
     private ServiceSubmit $submitService;
     private ServiceSubmitQuizQuestion $submitQuizQuestionService;
@@ -59,12 +58,6 @@ class SubmitPresenter extends BasePresenter {
         $this->quizQuestionService = $quizQuestionService;
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
-
-    protected function startup(): void {
-        $this->yearTraitStartup(YearChooser::ROLE_CONTESTANT);
-        parent::startup();
-    }
-
     /* ******************* AUTH ************************/
 
     public function authorizedDefault(): void {

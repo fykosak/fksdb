@@ -83,7 +83,6 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
      */
     protected function startup(): void {
         parent::startup();
-        $this->seriesTraitStartup(YearChooser::ROLE_ORG);
         $this->seriesTable->setContest($this->getSelectedContest());
         $this->seriesTable->setYear($this->getSelectedYear());
         $this->seriesTable->setSeries($this->getSelectedSeries());
@@ -132,10 +131,5 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
                 $this->getPageStyleContainer()->setWidePage();
         }
         parent::beforeRender();
-    }
-
-    protected function setPageTitle(PageTitle $pageTitle): void {
-        $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
-        parent::setPageTitle($pageTitle);
     }
 }

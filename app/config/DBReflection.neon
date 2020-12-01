@@ -889,12 +889,12 @@ DBReflection:
                      accessKey: name_abbrev
              linkFactories:
                  edit:
-                     destination: :Common:School:edit
+                     destination: :Org:School:edit
                      params:
                          id: school_id
                      title: Edit
                  detail:
-                     destination: :Common:School:detail
+                     destination: :Org:School:detail
                      params:
                          id: school_id
                      title: Detail

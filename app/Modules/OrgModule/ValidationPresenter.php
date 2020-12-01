@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Modules\CommonModule;
+namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\DataTesting\PersonTestControl;
 use FKSDB\Components\Grids\DataTesting\PersonsGrid;
