@@ -162,6 +162,7 @@ class YearCalculator {
         switch ($role) {
             case YearChooser::ROLE_ORG:
             case YearChooser::ROLE_ALL:
+            case YearChooser::ROLE_SELECTED:
                 $min = $this->getFirstYear($contest);
                 $max = $this->getLastYear($contest);
                 return array_reverse(range($min, $max));

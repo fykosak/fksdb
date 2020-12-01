@@ -2,12 +2,14 @@
 
 namespace FKSDB\Modules\PublicModule;
 
+use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\Localization\UnsupportedLanguageException;
+use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
+use FKSDB\News;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
-use FKSDB\News;
 
 /**
  * Just proof of concept.
@@ -15,8 +17,14 @@ use FKSDB\News;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DashboardPresenter extends BasePresenter {
+    use YearPresenterTrait;
 
     private News $news;
+
+    protected function startup(): void {
+        $this->yearTraitStartup(YearChooser::ROLE_CONTESTANT);
+        parent::startup();
+    }
 
     final public function injectNews(News $news): void {
         $this->news = $news;

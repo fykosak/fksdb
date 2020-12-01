@@ -3,12 +3,14 @@
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\AjaxSubmit\SubmitContainer;
+use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\GoneException;
 use FKSDB\Exceptions\ModelException;
+use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelQuizQuestion;
@@ -33,6 +35,7 @@ use Tracy\Debugger;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SubmitPresenter extends BasePresenter {
+    use YearPresenterTrait;
 
     private ServiceSubmit $submitService;
     private ServiceSubmitQuizQuestion $submitQuizQuestionService;
@@ -55,6 +58,11 @@ class SubmitPresenter extends BasePresenter {
         $this->taskService = $taskService;
         $this->quizQuestionService = $quizQuestionService;
         $this->submitHandlerFactory = $submitHandlerFactory;
+    }
+
+    protected function startup(): void {
+        $this->yearTraitStartup(YearChooser::ROLE_CONTESTANT);
+        parent::startup();
     }
 
     /* ******************* AUTH ************************/

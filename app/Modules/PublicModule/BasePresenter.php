@@ -15,7 +15,7 @@ use FKSDB\UI\PageTitle;
  * @author Michal Koutný <michal@fykos.cz>
  */
 abstract class BasePresenter extends AuthenticatedPresenter {
-    use YearPresenterTrait;
+
 
     private ?ModelContestant $contestant;
 

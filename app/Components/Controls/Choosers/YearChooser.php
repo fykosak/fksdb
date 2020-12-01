@@ -11,6 +11,7 @@ class YearChooser extends Chooser {
     public const ROLE_ORG = 'org';
     public const ROLE_CONTESTANT = 'contestant';
     public const ROLE_ALL = 'all';
+    public const ROLE_SELECTED = 'selected';
 
     private int $year;
     private array $availableYears;

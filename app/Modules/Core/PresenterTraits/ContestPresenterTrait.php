@@ -79,12 +79,15 @@ trait ContestPresenterTrait {
         $login = $this->getUser()->getIdentity();
         switch ($this->role) {
             case YearChooser::ROLE_ALL:
-                throw new NotImplementedException();
+                $contestIds = $this->serviceContest->getTable()->fetchPairs('contest_id', 'contest_id');
+                break;
             case YearChooser::ROLE_CONTESTANT:
-                $person = $login->getPerson();
-                if ($person) {
-                    $contestIds = array_keys($person->getActiveContestants($this->yearCalculator));
+                if (!$login || !$login->getPerson()) {
+                    break;
                 }
+                $person = $login->getPerson();
+                $contestIds = array_keys($person->getActiveContestants($this->yearCalculator));
+
                 break;
             case YearChooser::ROLE_ORG:
                 $contestIds = array_keys($login->getActiveOrgs($this->yearCalculator));

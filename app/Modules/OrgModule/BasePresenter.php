@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 use FKSDB\UI\PageTitle;
-use Nette\Application\BadRequestException;
 
 /**
  * Presenter keeps chosen contest, year and language in session.
