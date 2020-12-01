@@ -170,17 +170,16 @@ class YearCalculator {
                 /** @var ModelLogin $login */
                 $login = $user->getIdentity();
                 $currentYear = $this->getCurrentYear($contest);
-                if (!$login || !$login->getPerson()) {
-                    return [$currentYear];
-                }
-                $contestants = $login->getPerson()->getContestants($contest);
                 $years = [];
-                /** @var ModelContestant $contestant */
-                foreach ($contestants as $contestant) {
-                    $years[] = $contestant->year;
+                if ($login && !$login->getPerson()) {
+                    $contestants = $login->getPerson()->getContestants($contest);
+                    /** @var ModelContestant $contestant */
+                    foreach ($contestants as $contestant) {
+                        $years[] = $contestant->year;
+                    }
                 }
                 sort($years);
-                return $years;
+                return count($years) ? $years : [$currentYear];
             default:
                 throw new InvalidStateException(sprintf('Role %s is not supported', $role));
         }
