@@ -27,7 +27,7 @@ parameters:
     rootPresenters: settings|github|my-payments|my-applications
 
     # Pipe-separated list of modules
-    modules: org|public
+    modules: org|public|warehouse
 
     # Pipe-separated list of contest names
     contests: fykos|vyfuk
@@ -133,14 +133,6 @@ fksrouter:
             mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%<module %modules%>/[<contestId %contests%>[<year [0-9]+>]/][series<series [0-9]+>/]<presenter>/<action=default>[/<id>]'
             presenter: Dashboard
             subdomain: %subdomain.db%
-            tld: %domain.tld%
-            contestId: [filterTable: %inverseContestMapping%]
-        -
-            mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>/]warehouse/[<presenter>[/<action=default>[/<id>]]]'
-            module: Warehouse
-            subdomain: %subdomain.db%
-            presenter: Dashboard
-            action: default
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
         -

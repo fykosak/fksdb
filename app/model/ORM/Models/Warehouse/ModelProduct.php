@@ -2,7 +2,7 @@
 
 namespace FKSDB\ORM\Models\Warehouse;
 
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 

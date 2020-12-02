@@ -2,7 +2,7 @@
 
 namespace FKSDB\ORM\Models\Warehouse;
 
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\IContestReferencedModel;
 use FKSDB\ORM\Models\ModelContest;
 use Nette\Database\Table\ActiveRow;

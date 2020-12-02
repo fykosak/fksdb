@@ -44,7 +44,7 @@ class ItemPresenter extends BasePresenter {
     }
 
     protected function createComponentGrid(): ItemsGrid {
-        return new ItemsGrid($this->getContext(), $this->getContest());
+        return new ItemsGrid($this->getContext(), $this->getSelectedContest());
     }
 
     protected function getORMService(): ServiceItem {

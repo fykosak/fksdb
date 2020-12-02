@@ -2,7 +2,7 @@
 
 namespace FKSDB\ORM\Services\Warehouse;
 
-use FKSDB\ORM\AbstractServiceSingle;
+use FKSDB\ORM\Services\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Warehouse\ModelProduct;
 use Nette\Database\Context;
