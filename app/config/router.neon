@@ -50,15 +50,15 @@ fksrouter:
             action: default
             flags: [ONE_WAY]
 
-        # Cool URL
-        -
-            mask: '%path%<contestId %contests%><year [0-9]+>[.<series [0-9]+>]/q/<qid>'
-            subdomain: %subdomain.db%
-            tld: %domain.tld%
-            module: Org
-            presenter: Export
-            action: execute
-            contestId: [filterTable: %inverseContestMapping%]
+        # Cool URL // doesnot wors
+        #-
+        #    mask: '%path%<contestId %contests%><year [0-9]+>[.<series [0-9]+>]/q/<qid>'
+        #    subdomain: %subdomain.db%
+        #    tld: %domain.tld%
+        #    module: Org
+        #    presenter: Export
+        #    action: execute
+        #    contestId: [filterTable: %inverseContestMapping%]
 
         # Central authentication domain (+ logout must be enabled at each domain too)
         -
@@ -107,38 +107,22 @@ fksrouter:
             module: Core
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
-
-        # Application itself (note the presenters w/out module are handled specially)
-        #-
-        #    mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%common/<presenter>/<action=default>[/<id>]'
-        #    module: Org
-        #    presenter: Dashboard
-        #    subdomain: %subdomain.db%
-        #    tld: %domain.tld%
-
         -
-            mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%fyziklani[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]'
+            mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%<module event|fyziklani>[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]'
             subdomain: %subdomain.db%
             tld: %domain.tld%
             module: Fyziklani
-
-        -
-            mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%event[<eventId [0-9]+>]/<presenter>/<action=default>[/<id>]'
-            subdomain: %subdomain.db%
-            tld: %domain.tld%
-            module: Event
-            presenter: Dashboard
-
         -
             mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%<module %modules%>/[<contestId %contests%>[<year [0-9]+>]/][series<series [0-9]+>/]<presenter>/<action=default>[/<id>]'
             presenter: Dashboard
             subdomain: %subdomain.db%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
-
+        # old compatibility
         -
-            mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%<module %modules%>/[<contestId %contests%>[<year [0-9]+>]/]<presenter>/<action=default>[/<id>]'
+            mask: '//[!<subdomain>].%domain.host%.[!<tld>]%path%[<contestId %contests%>[<year [0-9]+>]/][series<series [0-9]+>/]<module %modules%>/<presenter>/<action=default>[/<id>]'
             presenter: Dashboard
             subdomain: %subdomain.db%
             tld: %domain.tld%
             contestId: [filterTable: %inverseContestMapping%]
+            flags: [ONE_WAY]
