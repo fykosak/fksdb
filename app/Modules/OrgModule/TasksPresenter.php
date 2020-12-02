@@ -14,7 +14,6 @@ use FKSDB\Tasks\PipelineFactory;
 use FKSDB\Tasks\SeriesData;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\DeprecatedException;
 use Nette\InvalidStateException;
@@ -45,10 +44,6 @@ class TasksPresenter extends BasePresenter {
         $this->downloader = $downloader;
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     public function authorizedImport(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('task', 'insert', $this->getSelectedContest()));
     }
@@ -60,7 +55,6 @@ class TasksPresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadTypeException
-     * @throws ForbiddenRequestException
      */
     protected function createComponentSeriesForm(): FormControl {
         $control = new FormControl();
@@ -97,8 +91,6 @@ class TasksPresenter extends BasePresenter {
      * @param Form $seriesForm
      * @return void
      * @throws AbortException
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
      */
     private function validSubmitSeriesForm(Form $seriesForm): void {
         $values = $seriesForm->getValues();

@@ -6,8 +6,6 @@ $container = require '../../Bootstrap.php';
 
 use FKSDB\Components\Controls\Entity\EventFormComponent;
 use FKSDB\ORM\DbNames;
-use FKSDB\Tests\PresentersTests\EntityPresenterTestCase;
-use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
 use Tester\Assert;
@@ -16,7 +14,7 @@ use Tester\Assert;
  * Class EventPresenterTest
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class EventPresenterTest extends EntityPresenterTestCase {
+class EventPresenterTest extends AbstractOrgPresenterTestCase {
 
     /** @var int */
     private $eventId;
@@ -102,21 +100,8 @@ class EventPresenterTest extends EntityPresenterTestCase {
         Assert::equal('Dummy Event edited', $org->name);
     }
 
-
     protected function getPresenterName(): string {
         return 'Org:Event';
-    }
-
-    protected function createPostRequest(string $action, array $params, array $postData = []): Request {
-        $params['year'] = 1;
-        $params['contestId'] = 1;
-        return parent::createPostRequest($action, $params, $postData);
-    }
-
-    protected function createGetRequest(string $action, array $params, array $postData = []): Request {
-        $params['year'] = 1;
-        $params['contestId'] = 1;
-        return parent::createGetRequest($action, $params, $postData);
     }
 
     protected function tearDown(): void {

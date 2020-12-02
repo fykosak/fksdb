@@ -31,7 +31,7 @@ class ParticipantsInTimeGeoChartControl extends ReactComponent implements IChart
         $rawData = [];
         foreach ($this->event->getParticipants() as $row) {
             $participant = ModelEventParticipant::createFromActiveRow($row);
-            $iso = $participant->getPersonHistory()->getSchool()->getAddress()->getRegion()->country_iso3;;
+            $iso = $participant->getPersonHistory()->getSchool()->getAddress()->getRegion()->country_iso3;
             $rawData[] = [
                 'country' => $iso,
                 'created' => $participant->created->format('c'),

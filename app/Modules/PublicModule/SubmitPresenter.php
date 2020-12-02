@@ -3,12 +3,14 @@
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\AjaxSubmit\SubmitContainer;
+use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\GoneException;
 use FKSDB\Exceptions\ModelException;
+use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelQuizQuestion;
@@ -24,7 +26,6 @@ use FKSDB\Submits\ProcessingException;
 use FKSDB\Submits\SubmitHandlerFactory;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Tracy\Debugger;
 
@@ -57,20 +58,12 @@ class SubmitPresenter extends BasePresenter {
         $this->quizQuestionService = $quizQuestionService;
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
-
     /* ******************* AUTH ************************/
-    /**
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
+
     public function authorizedDefault(): void {
         $this->setAuthorized($this->contestAuthorizator->isAllowed('submit', 'upload', $this->getSelectedContest()));
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     public function authorizedAjax(): void {
         $this->authorizedDefault();
     }
@@ -96,10 +89,6 @@ class SubmitPresenter extends BasePresenter {
         throw new GoneException('');
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     public function renderDefault(): void {
         $this->template->hasTasks = count($this->getAvailableTasks()) > 0;
         $this->template->canRegister = false;
@@ -116,10 +105,6 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
-    /**
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     public function renderAjax(): void {
         $this->template->availableTasks = $this->getAvailableTasks();
     }
@@ -127,7 +112,6 @@ class SubmitPresenter extends BasePresenter {
     /**
      * @return FormControl
      * @throws BadTypeException
-     * @throws ForbiddenRequestException
      */
     protected function createComponentUploadForm(): FormControl {
         $control = new FormControl();
@@ -210,21 +194,10 @@ class SubmitPresenter extends BasePresenter {
         return $control;
     }
 
-
-    /**
-     * @return SubmitsGrid
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     protected function createComponentSubmitsGrid(): SubmitsGrid {
         return new SubmitsGrid($this->getContext(), $this->getContestant());
     }
 
-    /**
-     * @return SubmitContainer
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     protected function createComponentSubmitContainer(): SubmitContainer {
         return new SubmitContainer($this->getContext(), $this->getContestant(), $this->getSelectedContest(), $this->getSelectedAcademicYear(), $this->getSelectedYear());
     }
@@ -233,8 +206,6 @@ class SubmitPresenter extends BasePresenter {
      * @param Form $form
      * @return void
      * @throws AbortException
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
      */
     private function handleUploadFormSuccess(Form $form): void {
         $values = $form->getValues();
@@ -300,11 +271,6 @@ class SubmitPresenter extends BasePresenter {
         }
     }
 
-    /**
-     * @return TypedTableSelection
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
     private function getAvailableTasks(): TypedTableSelection {
         $tasks = $this->taskService->getTable();
         $tasks->where('contest_id = ? AND year = ?', $this->getSelectedContest()->contest_id, $this->getSelectedYear());

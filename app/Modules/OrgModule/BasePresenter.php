@@ -2,24 +2,47 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Choosers\ContestChooser;
-use FKSDB\Modules\Core\ContestPresenter\ContestPresenter;
-use FKSDB\ORM\Models\ModelRole;
+use FKSDB\Modules\Core\AuthenticatedPresenter;
+use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
+use FKSDB\UI\PageTitle;
+use Nette\Security\IResource;
 
-/**
- * Presenter keeps chosen contest, year and language in session.
- *
- * @author Michal Koutný <michal@fykos.cz>
- */
-abstract class BasePresenter extends ContestPresenter {
+abstract class BasePresenter extends AuthenticatedPresenter {
+    use SeriesPresenterTrait;
 
-    protected function createComponentContestChooser(): ContestChooser {
-        $control = new ContestChooser($this->getContext());
-        $control->setContests(ModelRole::ORG);
-        return $control;
+    protected function startup(): void {
+        $this->seriesTraitStartup();
+        parent::startup();
     }
 
     protected function getNavRoots(): array {
         return ['Org.Dashboard.default'];
+    }
+
+    protected function beforeRender(): void {
+        $contest = $this->getSelectedContest();
+        if (isset($contest) && $contest) {
+            $this->getPageStyleContainer()->styleId = $contest->getContestSymbol();
+            $this->getPageStyleContainer()->setNavBarClassName('navbar-dark bg-' . $contest->getContestSymbol());
+        }
+        parent::beforeRender();
+    }
+
+    protected function setPageTitle(PageTitle $pageTitle): void {
+        $pageTitle->subTitle = sprintf(_('%d. year, %s. series'), $this->getSelectedYear(), $this->getSelectedSeries()) . ' ' . $pageTitle->subTitle;
+        parent::setPageTitle($pageTitle);
+    }
+
+    /**
+     * @param IResource|string|null $resource
+     * @param string|null $privilege
+     * @return bool
+     */
+    protected function isAnyContestAuthorized($resource, ?string $privilege): bool {
+        return $this->contestAuthorizator->isAllowedForAnyContest($resource, $privilege);
+    }
+
+    protected function getRole(): string {
+        return 'org';
     }
 }

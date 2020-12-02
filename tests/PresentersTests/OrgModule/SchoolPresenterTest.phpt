@@ -7,6 +7,8 @@ $container = require '../../Bootstrap.php';
 use FKSDB\Components\Controls\Entity\SchoolFormComponent;
 use FKSDB\ORM\DbNames;
 use FKSDB\Tests\PresentersTests\EntityPresenterTestCase;
+use FKSDB\Tests\PresentersTests\OrgModule\AbstractOrgPresenterTestCase;
+use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\Application\Responses\TextResponse;
 use Tester\Assert;
@@ -15,13 +17,14 @@ use Tester\Assert;
  * Class EventPresenterTest
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class SchoolPresenterTest extends EntityPresenterTestCase {
+class SchoolPresenterTest extends AbstractOrgPresenterTestCase {
 
     private int $schoolId;
 
     protected function setUp(): void {
         parent::setUp();
         $this->loginUser();
+        $this->insert(DbNames::TAB_ORG, ['person_id' => $this->cartesianPersonId, 'contest_id' => 1, 'since' => 1, 'order' => 1]);
         $addressId = $this->insert(DbNames::TAB_ADDRESS, [
             'first_row' => 'PU',
             'second_row' => 'PU',
@@ -45,7 +48,6 @@ class SchoolPresenterTest extends EntityPresenterTestCase {
         Assert::contains('PU', $html);
     }
 
-
     public function testCreate(): void {
         $init = $this->countSchools();
         $response = $this->createFormRequest('create', [
@@ -67,7 +69,6 @@ class SchoolPresenterTest extends EntityPresenterTestCase {
         $after = $this->countSchools();
         Assert::equal($init + 1, $after);
     }
-
 
     public function testEdit(): void {
         $init = $this->countSchools();
@@ -100,12 +101,10 @@ class SchoolPresenterTest extends EntityPresenterTestCase {
         Assert::equal('Test school edited', $school->name);
         $school = $this->connection->query('SELECT * FROM address where address_id=?', $school->address_id)->fetch();
         Assert::equal('PU edited', $school->city);
-
     }
 
-
     protected function getPresenterName(): string {
-        return 'Common:School';
+        return 'Org:School';
     }
 
     protected function tearDown(): void {

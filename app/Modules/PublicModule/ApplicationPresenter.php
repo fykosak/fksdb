@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Authorization\RelatedPersonAuthorizator;
-use FKSDB\Components\Controls\Choosers\ContestChooser;
+use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\EventDispatchFactory;
@@ -16,14 +16,15 @@ use FKSDB\Exceptions\GoneException;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\ModelsMulti\AbstractModelMulti;
-use FKSDB\ORM\Models\AbstractModelSingle;
+use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
 use FKSDB\ORM\IModel;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
+use FKSDB\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
@@ -36,7 +37,6 @@ use Nette\InvalidArgumentException;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ApplicationPresenter extends BasePresenter {
-
     public const PARAM_AFTER = 'a';
 
     private ?ModelEvent $event;
@@ -66,8 +66,16 @@ class ApplicationPresenter extends BasePresenter {
                 $this->forward('default', $this->getParameters());
             case 'list':
                 $this->forward(':Core:MyApplications:default', $this->getParameters());
+            case 'default':
+                if (!isset($this->contestId)) {
+                    if (!$this->getEvent()) {
+                        throw new EventNotFoundException();
+                    }
+                    // hack if contestId is not present, but there ale a eventId param
+                    $this->forward('default', array_merge($this->getParameters(), ['contestId' => $this->getEvent()->contest_id, 'year' => $this->getEvent()->year]));
+                }
         }
-
+        $this->yearTraitStartup(YearChooser::ROLE_SELECTED);
         parent::startup();
     }
 
@@ -158,7 +166,6 @@ class ApplicationPresenter extends BasePresenter {
             }
         }
 
-
         if (!$this->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->holder, $this->getHolder()->getPrimaryHolder()->getModelState())) {
 
             if ($this->getHolder()->getPrimaryHolder()->getModelState() == \FKSDB\Transitions\Machine\Machine::STATE_INIT) {
@@ -184,23 +191,6 @@ class ApplicationPresenter extends BasePresenter {
      */
     private function initializeMachine(): void {
         $this->getHolder()->setModel($this->getEventApplication());
-    }
-
-    /**
-     * @return ContestChooser
-     * @throws NotFoundException
-     */
-    protected function createComponentContestChooser(): ContestChooser {
-        $component = parent::createComponentContestChooser();
-        if ($this->getAction() == 'default') {
-            if (!$this->getEvent()) {
-                throw new EventNotFoundException();
-            }
-            $component->setContests([
-                $this->getEvent()->getEventType()->contest_id,
-            ]);
-        }
-        return $component;
     }
 
     /**
@@ -284,20 +274,11 @@ class ApplicationPresenter extends BasePresenter {
         return $this->machine;
     }
 
-    /**
-     * @param int $eventId
-     * @param int $id
-     * @return string
-     */
-    public static function encodeParameters($eventId, $id): string {
+    public static function encodeParameters(int $eventId, int $id): string {
         return "$eventId:$id";
     }
 
-    /**
-     * @param string $data
-     * @return array
-     */
-    public static function decodeParameters($data): array {
+    public static function decodeParameters(string $data): array {
         $parts = explode(':', $data);
         if (count($parts) != 2) {
             throw new InvalidArgumentException("Cannot decode '$data'.");
@@ -320,5 +301,12 @@ class ApplicationPresenter extends BasePresenter {
             $this->getPageStyleContainer()->styleId = ' event-type-' . $event->event_type_id;
         }
         parent::beforeRender();
+    }
+
+    protected function getRole(): string {
+        if ($this->getAction() === 'default') {
+            return 'selected';
+        }
+        return parent::getRole();
     }
 }

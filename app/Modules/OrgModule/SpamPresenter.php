@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Modules\CommonModule;
+namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Grids\EmailsGrid;
 use FKSDB\Entity\ModelNotFoundException;
