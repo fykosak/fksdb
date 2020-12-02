@@ -17,7 +17,7 @@ jobs:
         if: ${{ startsWith(matrix.database, 'mariadb' ) }}
         run: |
           sudo docker run --name mariadb -p 3306 -de MYSQL_ALLOW_EMPTY_PASSWORD=1 ${{ matrix.database }}
-          printf '\n[client]\nport=3306\nhost='$( sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mariadb )'\n' | sudo tee -a /etc/mysql/my.cnf
+          printf '\n[client]\ndefault-character-set=utf8\nport=3306\nhost='$( sudo docker inspect -f '{{range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mariadb )'\n' | sudo tee -a /etc/mysql/my.cnf
       - uses: actions/checkout@v2
         name: Checkout
         with:
