@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories;
+namespace FKSDB\DBReflection\ColumnFactories\Types\DateTime;
 
 use FKSDB\Components\Forms\Controls\DateInputs\DateTimeLocalInput;
 use Nette\Forms\Controls\BaseControl;

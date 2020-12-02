@@ -1,11 +1,11 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\EventParticipant;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\EventParticipant;
 
-use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
 use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ValuePrinters\StringPrinter;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use Nette\Utils\Html;
 
 /**

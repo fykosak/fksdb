@@ -2,7 +2,7 @@
 
 namespace FKSDB\ORM\Services;
 
-use FKSDB\ORM\AbstractServiceSingle;
+
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelQuizQuestion;

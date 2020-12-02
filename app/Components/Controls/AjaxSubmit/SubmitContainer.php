@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Control\AjaxSubmit;
+namespace FKSDB\Components\Controls\AjaxSubmit;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Messages\Message;

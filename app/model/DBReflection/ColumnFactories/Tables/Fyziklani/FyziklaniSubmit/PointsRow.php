@@ -1,9 +1,9 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\Fyziklani\FyziklaniSubmit;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\Fyziklani\FyziklaniSubmit;
 
-use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use Nette\Utils\Html;
 

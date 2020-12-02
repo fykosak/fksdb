@@ -1,15 +1,16 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories;
+namespace FKSDB\DBReflection\ColumnFactories\Types;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
+use FKSDB\DBReflection\ColumnFactories\IColumnFactory;
 use FKSDB\DBReflection\FieldLevelPermission;
 use FKSDB\DBReflection\MetaDataFactory;
 use FKSDB\DBReflection\OmittedControlException;
 use FKSDB\DBReflection\ReferencedFactory;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ValuePrinters\StringPrinter;
 use Nette\Forms\Controls\BaseControl;
 use Nette\SmartObject;

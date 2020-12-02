@@ -4,7 +4,7 @@ namespace FKSDB\ORM\Models\Fyziklani;
 
 use FKSDB\Fyziklani\Closing\AlreadyClosedException;
 use FKSDB\Fyziklani\Closing\NotCheckedSubmitsException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Events\ModelFyziklaniParticipant;
 use FKSDB\ORM\Models\IContestReferencedModel;
@@ -175,7 +175,7 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
         return $data;
     }
 
-    public function createXMLNode(\DOMDocument $doc): \DOMNode {
+    public function createXMLNode(\DOMDocument $doc): \DOMElement {
         $node = $doc->createElement('team');
         $node->setAttribute('teamId', $this->e_fyziklani_team_id);
         XMLHelper::fillArrayToNode([

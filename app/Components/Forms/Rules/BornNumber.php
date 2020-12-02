@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Rules;
 
-use FKSDB\Components\Forms\Controls\WriteOnlyInput;
+use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use Nette\Forms\Controls\BaseControl;
 use Nette\OutOfRangeException;
 

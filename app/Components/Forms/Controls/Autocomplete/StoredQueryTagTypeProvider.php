@@ -27,11 +27,11 @@ class StoredQueryTagTypeProvider implements IFilteredDataProvider {
     /**
      * Prefix search.
      *
-     * @param string $search
+     * @param string|null $search
      * @return array
      */
-    public function getFilteredItems(string $search): array {
-        $search = trim($search);
+    public function getFilteredItems(?string $search): array {
+        $search = trim((string)$search);
         $search = str_replace(' ', '', $search);
         $this->searchTable
             ->where('name LIKE concat(?, \'%\') OR description LIKE concat(?, \'%\')', $search, $search);

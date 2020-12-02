@@ -6,5 +6,5 @@ namespace FKSDB\WebService;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 interface INodeCreator {
-    public function createXMLNode(\DOMDocument $document): \DOMNode;
+    public function createXMLNode(\DOMDocument $document): \DOMElement;
 }

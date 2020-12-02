@@ -1,12 +1,12 @@
 <?php
 
-namespace FKSDB\Components\Controls\DBReflection;
+namespace FKSDB\Components\Controls\DBReflection\ValuePrinter;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\DBReflection\DBReflectionFactory;
 use FKSDB\DBReflection\FieldLevelPermission;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 
 /**
  * Class ValuePrinterComponent

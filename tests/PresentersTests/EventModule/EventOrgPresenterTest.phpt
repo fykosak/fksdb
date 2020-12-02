@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\PresentersTests\EventModule;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 use FKSDB\Components\Controls\Entity\EventOrgFormComponent;
 use FKSDB\ORM\DbNames;

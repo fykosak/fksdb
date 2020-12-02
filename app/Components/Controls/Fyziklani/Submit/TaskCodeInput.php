@@ -2,11 +2,11 @@
 
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
+use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
 use FKSDB\Components\React\AjaxComponent;
 use FKSDB\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Fyziklani\Submit\HandlerFactory;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Messages\Message;
 use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\Fyziklani\Submit\TaskCodeException;

@@ -2,6 +2,8 @@
 
 namespace FKSDB\Authentication;
 
+use FKSDB\Authentication\Exceptions\InactiveLoginException;
+use FKSDB\Authentication\Exceptions\NoLoginException;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\YearCalculator;

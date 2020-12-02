@@ -1,11 +1,11 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\PersonHistory;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\PersonHistory;
 
-use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
 use FKSDB\DBReflection\MetaDataFactory;
 use FKSDB\ValuePrinters\StringPrinter;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\YearCalculator;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
@@ -18,7 +18,7 @@ use Nette\Utils\Html;
 class StudyYearRow extends DefaultColumnFactory {
 
     private YearCalculator $yearCalculator;
-    
+
     public function __construct(YearCalculator $yearCalculator, MetaDataFactory $metaDataFactory) {
         parent::__construct($metaDataFactory);
         $this->yearCalculator = $yearCalculator;

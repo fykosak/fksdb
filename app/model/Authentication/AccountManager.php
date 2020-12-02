@@ -2,6 +2,8 @@
 
 namespace FKSDB\Authentication;
 
+use FKSDB\Authentication\Exceptions\RecoveryExistsException;
+use FKSDB\Authentication\Exceptions\RecoveryNotImplementedException;
 use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;

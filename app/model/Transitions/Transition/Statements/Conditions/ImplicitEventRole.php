@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Transitions\Statements\Conditions;
+namespace FKSDB\Transitions\Transition\Statements\Conditions;
 
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\IEventReferencedModel;

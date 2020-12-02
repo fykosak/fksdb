@@ -58,7 +58,7 @@ abstract class AbstractCategoryProcessing extends AbstractProcessing implements 
 
     private function getPersonHistory(BaseHolder $baseHolder, int $acYear): ?ModelPersonHistory {
         /** @var ModelPerson $person */
-        $person = $baseHolder->getModel()->getMainModel()->person;
+        $person = $baseHolder->getModel()->getMainModel()->getPerson();
         return $person->getHistory($acYear);
     }
 

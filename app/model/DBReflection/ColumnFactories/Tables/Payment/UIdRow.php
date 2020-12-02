@@ -1,9 +1,9 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\Payment;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\Payment;
 
-use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPayment;
 use Nette\Utils\Html;
 

@@ -2,7 +2,7 @@
 
 namespace FKSDB\ORM\Models\Schedule;
 
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
@@ -70,7 +70,7 @@ class ModelScheduleGroup extends AbstractModelSingle implements IEventReferenced
         return self::RESOURCE_ID;
     }
 
-    public function createXMLNode(\DOMDocument $doc): \DOMNode {
+    public function createXMLNode(\DOMDocument $doc): \DOMElement {
         $node = $doc->createElement('scheduleGroup');
         $node->setAttribute('scheduleGroupId', $this->schedule_group_id);
         XMLHelper::fillArrayToNode([

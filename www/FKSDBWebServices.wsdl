@@ -59,9 +59,39 @@
             <xsd:complexType name="GetEventRequestType">
                 <xsd:sequence>
                     <xsd:element name="eventId" type="xsd:nonNegativeInteger"/>
-                    <xsd:element name="teamList" minOccurs="0"/>
-                    <xsd:element name="schedule" minOccurs="0"/>
-                    <xsd:element name="personSchedule" minOccurs="0"/>
+                    <xsd:element name="teamsList" minOccurs="0">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="status" maxOccurs="unbounded" minOccurs="0"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="schedule" minOccurs="0">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="groupType" maxOccurs="unbounded" minOccurs="0"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="personSchedule" minOccurs="0">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="groupType" maxOccurs="unbounded" minOccurs="0"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                    <xsd:element name="participantsList" minOccurs="0">
+                        <xsd:complexType>
+                            <xsd:sequence>
+                                <xsd:element name="status" maxOccurs="unbounded" minOccurs="0"/>
+                            </xsd:sequence>
+                        </xsd:complexType>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="GetEventsListRequestType">
+                <xsd:sequence>
+                    <xsd:element name="eventTypeIds" type="xsd:nonNegativeInteger" maxOccurs="unbounded"/>
                 </xsd:sequence>
             </xsd:complexType>
             <xsd:complexType name="GetStatsRequestType">
@@ -116,6 +146,14 @@
         <wsdl:part name="GetEventResponse"/>
     </wsdl:message>
 
+    <wsdl:message name="GetEventsListRequest">
+        <wsdl:part name="GetEventsListRequest" type="xsd1:GetEventsListRequestType"/>
+    </wsdl:message>
+
+    <wsdl:message name="GetEventsListResponse">
+        <wsdl:part name="GetEventsListResponse"/>
+    </wsdl:message>
+
     <wsdl:message name="GetStatsRequest">
         <wsdl:part name="GetStatsRequest" type="xsd1:GetStatsRequestType"/>
     </wsdl:message>
@@ -141,6 +179,10 @@
             <wsdl:input message="tns:GetEventRequest"/>
             <wsdl:output message="tns:GetEventResponse"/>
         </wsdl:operation>
+        <wsdl:operation name="GetEventsList">
+            <wsdl:input message="tns:GetEventsListRequest"/>
+            <wsdl:output message="tns:GetEventsListResponse"/>
+        </wsdl:operation>
         <wsdl:operation name="GetStats">
             <wsdl:input message="tns:GetStatsRequest"/>
             <wsdl:output message="tns:GetStatsResponse"/>
@@ -165,6 +207,16 @@
         </wsdl:operation>
         <wsdl:operation name="GetEvent">
             <soap:operation soapAction="GetEvent"/>
+            <wsdl:input>
+                <soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+        <wsdl:operation name="GetEventsList">
+            <soap:operation soapAction="GetEventsList"/>
             <wsdl:input>
                 <soap:header message="tns:AuthenticationCredentials" part="AuthenticationCredentials" use="literal"/>
                 <soap:body use="literal"/>

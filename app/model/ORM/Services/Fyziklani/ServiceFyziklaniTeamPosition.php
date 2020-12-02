@@ -2,7 +2,7 @@
 
 namespace FKSDB\ORM\Services\Fyziklani;
 
-use FKSDB\ORM\AbstractServiceSingle;
+use FKSDB\ORM\Services\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyDBTrait;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition;
@@ -54,7 +54,6 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
                 }
             } catch (\Exception $exception) {
             }
-
         }
         return $updatedTeams;
     }

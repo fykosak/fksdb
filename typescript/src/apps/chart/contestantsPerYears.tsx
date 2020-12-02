@@ -1,7 +1,7 @@
 import { getMinMaxYear, getSeriesLabel, parseData, seriesType, YearsData } from '@apps/chart/contestatnsData';
 import { lang } from '@i18n/i18n';
 import Ordinal from '@i18n/ordinal';
-import LineChart from '@shared/components/lineChart';
+import LineChart from '@shared/components/lineChart/lineChart';
 import { ExtendedPointData, LineChartData } from '@shared/components/lineChart/interfaces';
 import LineChartLegend from '@shared/components/lineChart/lineChartLegend';
 import { scaleLinear, scaleOrdinal } from 'd3-scale';

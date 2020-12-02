@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
+use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use FKSDB\Components\Forms\Containers\AddressContainer;
-use FKSDB\Components\Forms\Controls\WriteOnlyInput;
 use FKSDB\ORM\Services\ServiceAddress;
 use FKSDB\ORM\Services\ServiceRegion;
 use FKSDB\Persons\ReferencedPersonHandler;
@@ -93,11 +93,9 @@ class AddressFactory {
             $city->setWriteOnly(false);
         }
 
-
         $postalCode = $container->addText('postal_code', _('PSČ'))
             ->addRule(Form::MAX_LENGTH, null, 5)
             ->setOption('description', _('Without spaces. For the Czech Republic or Slovakia only.'));
-
 
         $country = $container->addSelect('country_iso', _('Country'));
         $country->setItems($this->serviceRegion->getCountries()->order('name')->fetchPairs('country_iso', 'name'));

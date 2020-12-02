@@ -1,9 +1,9 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\Schedule\ScheduleItem;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\Schedule\ScheduleItem;
 
-use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use Nette\Utils\Html;
 

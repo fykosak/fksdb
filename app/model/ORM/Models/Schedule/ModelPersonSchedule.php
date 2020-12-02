@@ -3,7 +3,7 @@
 namespace FKSDB\ORM\Models\Schedule;
 
 use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\IPaymentReferencedModel;

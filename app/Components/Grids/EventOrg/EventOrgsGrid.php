@@ -1,7 +1,8 @@
 <?php
 
-namespace FKSDB\Components\Grids;
+namespace FKSDB\Components\Grids\EventOrg;
 
+use FKSDB\Components\Grids\EntityGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEventOrg;

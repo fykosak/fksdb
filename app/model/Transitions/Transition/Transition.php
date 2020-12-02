@@ -1,8 +1,10 @@
 <?php
 
-namespace FKSDB\Transitions;
+namespace FKSDB\Transitions\Transition;
 
 use FKSDB\Logging\ILogger;
+use FKSDB\Transitions\IStateModel;
+use FKSDB\Transitions\Machine\Machine;
 
 /**
  * Class Transition
@@ -25,7 +27,6 @@ final class Transition {
     public array $beforeExecuteCallbacks = [];
     /** @var callable[] */
     public array $afterExecuteCallbacks = [];
-
 
     private string $fromState;
 

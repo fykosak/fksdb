@@ -1,7 +1,8 @@
 <?php
 
-namespace FKSDB\Components\Controls\Inbox;
+namespace FKSDB\Components\Controls\Inbox\Inbox;
 
+use FKSDB\Components\Controls\Inbox\SeriesTableFormControl;
 use FKSDB\Components\Forms\OptimisticForm;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelSubmit;

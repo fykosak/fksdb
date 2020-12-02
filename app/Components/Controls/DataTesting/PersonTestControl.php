@@ -6,7 +6,7 @@ use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\DataTesting\DataTestingFactory;
-use FKSDB\DataTesting\Tests\Person\PersonTest;
+use FKSDB\DataTesting\Tests\ModelPerson\PersonTest;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelPerson;

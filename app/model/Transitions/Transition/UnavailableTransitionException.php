@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Transitions;
+namespace FKSDB\Transitions\Transition;
 
 use FKSDB\Events\Machine\Transition as EventTransition;
 use FKSDB\ORM\IModel;

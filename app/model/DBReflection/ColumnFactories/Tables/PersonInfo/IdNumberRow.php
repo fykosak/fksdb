@@ -1,11 +1,11 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\PersonInfo;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\PersonInfo;
 
-use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
 use FKSDB\ValuePrinters\StringPrinter;
-use FKSDB\Components\Forms\Controls\WriteOnlyInput;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Utils\Html;

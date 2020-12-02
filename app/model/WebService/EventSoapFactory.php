@@ -4,11 +4,13 @@ namespace FKSDB\WebService;
 
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\ORM\Services\ServiceEvent;
+use FKSDB\ORM\Services\ServiceEventParticipant;
 use Nette\SmartObject;
 use SoapVar;
 
@@ -21,10 +23,12 @@ class EventSoapFactory {
 
     private ServiceEvent $serviceEvent;
     private ServicePersonSchedule $servicePersonSchedule;
+    private ServiceEventParticipant $serviceEventParticipant;
 
-    public function __construct(ServiceEvent $serviceEvent, ServicePersonSchedule $servicePersonSchedule) {
+    public function __construct(ServiceEvent $serviceEvent, ServicePersonSchedule $servicePersonSchedule, ServiceEventParticipant $serviceEventParticipant) {
         $this->serviceEvent = $serviceEvent;
         $this->servicePersonSchedule = $servicePersonSchedule;
+        $this->serviceEventParticipant = $serviceEventParticipant;
     }
 
     /**
@@ -32,8 +36,7 @@ class EventSoapFactory {
      * @return SoapVar
      * @throws \SoapFault
      */
-    public function handle(\stdClass $args): SoapVar {
-
+    public function handleGetEvent(\stdClass $args): SoapVar {
         if (!isset($args->eventId)) {
             throw new \SoapFault('Sender', 'Unknown event.');
         }
@@ -43,7 +46,7 @@ class EventSoapFactory {
         }
         $doc = new \DOMDocument();
 
-        if (isset($args->teamList)) {
+        if (isset($args->teamsList)) {
             $this->createTeamList($doc, $args, $event);
         }
         if (isset($args->schedule)) {
@@ -52,9 +55,37 @@ class EventSoapFactory {
         if (isset($args->personSchedule)) {
             $this->createPersonScheduleNode($doc, $args, $event);
         }
+        if (isset($args->participantsList)) {
+            $this->createPersonScheduleNode($doc, $args, $event);
+        }
 
         $doc->formatOutput = true;
-        return new SoapVar($doc->saveXML(), XSD_ANYXML);
+
+        $nodeString = '';
+        foreach ($doc->childNodes as $node) {
+            $nodeString .= $doc->saveXML($node);
+        }
+        return new SoapVar($nodeString, XSD_ANYXML);
+    }
+
+    /**
+     * @param \stdClass $args
+     * @return SoapVar
+     * @throws \SoapFault
+     */
+    public function handleGetEventsList(\stdClass $args): SoapVar {
+        if (!isset($args->eventTypeIds)) {
+            throw new \SoapFault('Sender', 'Unknown eventType.');
+        }
+        $query = $this->serviceEvent->getTable()->where('event_type_id', (array)$args->eventTypeIds);
+        $doc = new \DOMDocument();
+        $doc->formatOutput = true;
+        $rootNode = $doc->createElement('events');
+        /** @var ModelEvent $event */
+        foreach ($query as $event) {
+            $rootNode->appendChild($event->createXMLNode($doc));
+        }
+        return new SoapVar($doc->saveXML($rootNode), XSD_ANYXML);
     }
 
     private function createPersonScheduleNode(\DOMDocument $doc, \stdClass $args, ModelEvent $event): void {
@@ -85,7 +116,6 @@ class EventSoapFactory {
             $scheduleItemNode = $doc->createElement('scheduleItemId');
             $scheduleItemNode->nodeValue = $model->schedule_item_id;
             $currentNode->appendChild($scheduleItemNode);
-
         }
         $doc->appendChild($rootNode);
     }
@@ -121,7 +151,7 @@ class EventSoapFactory {
             throw new \SoapFault('Sender', 'Wrong event type.');
         }
         $rootNode = $doc->createElement('teamList');
-        $query=$event->getTeams();
+        $query = $event->getTeams();
         if (isset($args->teamList) && isset($args->teamList->status)) {
             $query->where('status', $args->teamList->status);
         }
@@ -140,83 +170,39 @@ class EventSoapFactory {
                 $teamNode->appendChild($teacherNode);
             }
 
-// from FOL fksdb_views
-            $query = $this->serviceEvent->getContext()->query('
-            SELECT
-                ep.event_participant_id,
-                ph.school_id ,
-                vp.email,
-                vp.name,
-                s.name_abbrev,
-                sr.country_iso
-            FROM fksdb.event_participant ep
-            LEFT JOIN fksdb.e_fyziklani_participant efp ON efp.event_participant_id = ep.event_participant_id
-            LEFT JOIN fksdb.v_person vp on vp.person_id = ep.person_id
-            LEFT JOIN fksdb.event e2 on ep.event_id = e2.event_id
-            LEFT JOIN fksdb.event_type et on e2.event_type_id = et.event_type_id
-            LEFT JOIN fksdb.contest_year cy on e2.year = cy.year and cy.contest_id = et.contest_id
-            LEFT JOIN fksdb.person_history ph on ph.person_id = ep.person_id AND ph.ac_year = cy.ac_year
-            LEFT JOIN fksdb.school s on s.school_id = ph.school_id
-            LEFT JOIN fksdb.address sa on sa.address_id = s.address_id
-            LEFT JOIN fksdb.region sr on sr.region_id = sa.region_id
-        WHERE efp.e_fyziklani_team_id = ?;', $team->e_fyziklani_team_id);
-
-            foreach ($query as $pRow) {
-                $pNode = $doc->createElement('participant');
-                $pNode->setAttribute('participantId', $pRow->event_participant_id);
-                XMLHelper::fillArrayToNode([
-                    'participantId' => $pRow->event_participant_id,
-                    'schoolId' => $pRow->school_id,
-                    'name' => $pRow->name,
-                    'email' => $pRow->email,
-                    'schoolName' => $pRow->name_abbrev,
-                    'countryIso' => $pRow->country_iso,
-                ], $doc, $pNode);
+            foreach ($team->getParticipants() as $participantRow) {
+                $participant = ModelEventParticipant::createFromActiveRow($participantRow->event_participant);
+                $pNode = $this->createParticipantNode($participant, $doc);
                 $teamNode->appendChild($pNode);
             }
+
             $rootNode->appendChild($teamNode);
         }
         $doc->appendChild($rootNode);
     }
 
-    /* private function handleParticipantList(\stdClass $args, ModelEvent $event): SoapVar {
-         $doc = new \DOMDocument();
-         $rootNode = $doc->createElement('participantList');
+    private function handleParticipantList(\stdClass $args, ModelEvent $event): SoapVar {
+        $doc = new \DOMDocument();
+        $rootNode = $doc->createElement('participantList');
+        /** @var ModelEventParticipant $participant */
+        foreach ($this->serviceEventParticipant->findByEvent($event) as $participant) {
+            $pNode = $this->createParticipantNode($participant, $doc);
+            $rootNode->appendChild($pNode);
+        }
+        $doc->appendChild($rootNode);
+        $doc->formatOutput = true;
+        return new SoapVar($doc->saveXML($rootNode), XSD_ANYXML);
+    }
 
- // from FOL fksdb_views
-         $query = $this->serviceEvent->getContext()->query('
-             SELECT ep.event_participant_id,
-        ph.school_id,
-        vp.email,
-        vp.name,
-        s.name_abbrev,
-        sr.country_iso
- FROM fksdb.event_participant ep
-          LEFT JOIN fksdb.v_person vp on vp.person_id = ep.person_id
-          LEFT JOIN event e2 on ep.event_id = e2.event_id
-          LEFT JOIN event_type et on e2.event_type_id = et.event_type_id
-          LEFT JOIN contest_year cy on e2.year = cy.year and cy.contest_id = et.contest_id
-          LEFT JOIN fksdb.person_history ph on ph.person_id = ep.person_id AND ph.ac_year = cy.ac_year
-          LEFT JOIN fksdb.school s on s.school_id = ph.school_id
-          LEFT JOIN fksdb.address sa on sa.address_id = s.address_id
-          LEFT JOIN fksdb.region sr on sr.region_id = sa.region_id
- WHERE ep.event_id = ?', $event->event_id);
-         foreach ($query as $pRow) {
-             $pNode = $doc->createElement('participant');
-             $this->fillNode([
-                 'participantId' => 'event_participant_id',
-                 'schoolId' => 'school_id',
-                 'name' => 'name',
-                 'email' => 'email',
-                 'schoolName' => 'name_abbrev',
-                 'countryIso' => 'country_iso',
-             ], $doc, $pRow, $pNode);
-             $rootNode->appendChild($pNode);
-         }
-
-         $doc->appendChild($rootNode);
-         $doc->formatOutput = true;
-         return new SoapVar($doc->saveXML($rootNode), XSD_ANYXML);
-     }*/
-
+    private function createParticipantNode(ModelEventParticipant $participant, \DOMDocument $doc): \DOMElement {
+        $pNode = $participant->createXMLNode($doc);
+        XMLHelper::fillArrayToNode([
+            'name' => $participant->getPerson()->getFullName(),
+            'email' => $participant->getPerson()->getInfo()->email,
+            'schoolId' => $participant->getPersonHistory()->school_id,
+            'schoolName' => $participant->getPersonHistory()->getSchool()->name_abbrev,
+            'countryIso' => $participant->getPersonHistory()->getSchool()->getAddress()->getRegion()->country_iso,
+        ], $doc, $pNode);
+        return $pNode;
+    }
 }
