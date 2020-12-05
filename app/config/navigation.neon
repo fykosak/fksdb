@@ -5,16 +5,16 @@ navigation:
             Org.Points.entry: []
             Org.Tasks.import: []
             Org.Contestant.list: []
-            Common.School.list: []
+            Org.School.list: []
             Org.Teacher.list: []
             Org.StoredQuery.list: []
             Org.Org.list: []
             Org.Event.list: []
-            Common.Deduplicate.person: []
-            Common.Person.search: []
-            Common.Dashboard.default: []
-            Common.Validation.default: []
-            Common.Spam.list: []
+            #Common.Deduplicate.person: []
+            Org.Person.search: []
+            Org.Dashboard.default: []
+            Org.Validation.default: []
+            Org.Spam.list: []
             Org.Chart.list: []
         Core.Dispatch.default:
             Core.MyApplications.default: []
@@ -23,15 +23,9 @@ navigation:
                 params:
                     eventId: 145
                 visible: true
-        Common.Dashboard.default:
-            Common.Dashboard.default: []
-            Common.Validation.default: []
-            Common.Person.search: []
-            Common.Spam.list: []
-            Common.School.list: []
-        Common.Validation.default:
-            Common.Validation.preview: []
-            Common.Validation.list: []
+        Org.Validation.default:
+            Org.Validation.preview: []
+            Org.Validation.list: []
         Public.Dashboard.default:
             Core.Dispatch.default: []
             Public.Submit.ajax:

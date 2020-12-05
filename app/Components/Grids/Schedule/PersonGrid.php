@@ -49,7 +49,13 @@ class PersonGrid extends BaseGrid {
         $this->paginate = false;
 
         $this->addColumn('person_schedule_id', _('#'));
-        $this->addColumns(['schedule_group.name', 'schedule_item.name', 'schedule_item.price_czk', 'schedule_item.price_eur', 'payment.payment']);
+        $this->addColumns([
+            'schedule_group.name',
+            'schedule_item.name',
+            'schedule_item.price_czk',
+            'schedule_item.price_eur',
+            'payment.payment',
+        ]);
     }
 
     protected function getModelClassName(): string {

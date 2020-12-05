@@ -2,7 +2,6 @@
 
 namespace FKSDB\ORM\Models;
 
-use FKSDB\ORM\AbstractModelSingle;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use Nette\Security\IResource;
@@ -15,7 +14,7 @@ use Nette\Security\IResource;
  * @property-read int e_org_id
  */
 class ModelEventOrg extends AbstractModelSingle implements IResource, IEventReferencedModel, IContestReferencedModel, IPersonReferencedModel {
-    public const RESOURCE_ID = 'eventOrg';
+    public const RESOURCE_ID = 'event.org';
 
     public function getPerson(): ModelPerson {
         return ModelPerson::createFromActiveRow($this->person);

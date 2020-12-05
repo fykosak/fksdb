@@ -61,7 +61,7 @@ class StoredQueriesGrid extends BaseGrid {
 
         $this->addLinkButton('StoredQuery:edit', 'edit', _('Edit'), false, ['id' => 'query_id']);
         $this->addLinkButton('StoredQuery:detail', 'detail', _('Detail'), false, ['id' => 'query_id']);
-        $this->addLinkButton('Export:execute', 'execute', _('Execute'), false, ['id' => 'query_id']);
+        $this->addLinkButton('Export:execute', 'execute', _('Execute export'), false, ['id' => 'query_id']);
     }
 
     protected function getModelClassName(): string {

@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Control\AjaxSubmit;
+namespace FKSDB\Components\Controls\AjaxSubmit;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Messages\Message;
@@ -9,7 +9,6 @@ use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelTask;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\ORM\Tables\TypedTableSelection;
-use Nette\Application\AbortException;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 
@@ -38,7 +37,7 @@ class SubmitContainer extends BaseComponent {
         }
     }
 
-    protected function createComponent($name): ?IComponent {
+    protected function createComponent(string $name): ?IComponent {
         $component = parent::createComponent($name);
         if (!$component && preg_match('/task_[0-9]+/', $name)) {
             $this->flashMessage(_('Task is not available'), Message::LVL_DANGER);

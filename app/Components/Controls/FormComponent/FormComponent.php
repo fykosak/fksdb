@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Forms;
+namespace FKSDB\Components\Controls\FormComponent;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;

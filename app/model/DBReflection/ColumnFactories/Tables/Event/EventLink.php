@@ -1,10 +1,10 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\Event;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\Event;
 
-use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
 use FKSDB\DBReflection\MetaDataFactory;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use Nette\Application\LinkGenerator;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\UI\InvalidLinkException;

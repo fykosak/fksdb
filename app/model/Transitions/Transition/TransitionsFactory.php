@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Transitions;
+namespace FKSDB\Transitions\Transition;
 
 /**
  * Class TransitionsFactory

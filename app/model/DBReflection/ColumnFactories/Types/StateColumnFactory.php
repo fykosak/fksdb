@@ -1,10 +1,10 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories;
+namespace FKSDB\DBReflection\ColumnFactories\Types;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
 use FKSDB\DBReflection\OmittedControlException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 

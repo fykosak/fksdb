@@ -45,10 +45,9 @@ acl:
     - addResource(export.adhoc)  # execute
     - addResource(export)        # execute
     - addResource(org)           # create, edit, list, delete
-    - addResource(eventOrg)      # create, edit, list, delete
     - addResource(event)         # create, edit, list, application
     - addResource(teacher)       # create, edit, list, detail
-    - addResource(email_message) # list, detail
+    - addResource(emailMessage) # list, detail
     - addResource(chart)         # list, chart
 
     #applications
@@ -72,8 +71,8 @@ acl:
     - addResource(event.seating)     # edit, download, preview, print
     - addResource(event.org)         # create, edit, list, detail, delete
     - addResource(event.chart)       # list, chart
-    - addResource(event.scheduleGroup)
-    - addResource(event.scheduleItem)
+    - addResource(event.scheduleGroup) # create, edit, list, detail, delete
+    - addResource(event.scheduleItem) # create, edit, list, detail, delete
 
     ## ACL
     - allow(contestant, submit, upload)
@@ -122,28 +121,30 @@ acl:
     - allow(schoolManager, school, ::constant(Nette\Security\Permission::ALL))
 
     - allow(eventManager, event, ::constant(Nette\Security\Permission::ALL)) # TODO add certain privilegies to organizers too
-    - allow(eventManager, event.org, ::constant(Nette\Security\Permission::ALL))
-    - allow(eventManager, eventOrg, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, school, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, export, execute) # TODO (needs better distinction -- assertion at event org)
     - allow(eventManager, person, stalk.full)
     - allow(eventManager, person, edit)
     - allow(eventManager, fyziklani.team, ::constant(Nette\Security\Permission::ALL))
+    - allow(eventManager, event.org, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, event.participant, ::constant(Nette\Security\Permission::ALL))
     - allow(eventManager, event.chart, ::constant(Nette\Security\Permission::ALL))
+    - allow(eventManager, event.schedule, ::constant(Nette\Security\Permission::ALL)) #môže všetko s programom
+    - allow(eventManager, event.scheduleGroup, ::constant(Nette\Security\Permission::ALL)) #môže všetko s programom
+    - allow(eventManager, event.scheduleItem, ::constant(Nette\Security\Permission::ALL)) #môže všetko s programom
+    - allow(eventManager, event.model, ::constant(Nette\Security\Permission::ALL)) #može vidieť model
+    - allow(eventManager, event.application, ::constant(Nette\Security\Permission::ALL)) #môže zobraziť prihlášky
 
     - allow(boss, org, ::constant(Nette\Security\Permission::ALL))
     - allow(boss, person, edit, [@ownerAssertion, 'existsOwnContestant'])
     - allow(boss, person, stalk.full)
     - allow(boss, person, edit)
-    - allow(boss, email_message, list)
-
+    - allow(boss, emailMessage, list)
 
     # robot role
     - allow(aesop, export, execute, qid(['aesop.ct', 'aesop.fol', 'aesop.dsef', 'aesop.dsef2', 'aesop.tsaf', 'aesop.vaf', 'aesop.sous.j', 'aesop.sous.p', 'aesop.klani.ct', 'aesop.klani.uc', 'aesop.tabor', 'aesop.setkani.j', 'aesop.setkani.p']))
     - allow(web, export, execute, queryTag(['web-safe']))
     - allow(wiki, export, execute, queryTag(['wiki-safe']))
-
 
 # fyziklani
     - allow(guest,fyziklani.dashboard, default)
@@ -168,10 +169,6 @@ acl:
     - allow(org, fyziklani.team, timeProgress, ::constant(Nette\Security\Permission::ALL))
 
     - allow(org, event.dashboard, ::constant(Nette\Security\Permission::ALL))
-
-    - allow(eventManager, event.schedule, ::constant(Nette\Security\Permission::ALL)) #môže všetko s programom
-    - allow(eventManager, event.model, ::constant(Nette\Security\Permission::ALL)) #može vidieť model
-    - allow(eventManager, event.application, ::constant(Nette\Security\Permission::ALL)) #môže zobraziť prihlášky
 
     # payment
     - allow(registered, event.payment, detail, [@ownerAssertion, 'isSelf'])

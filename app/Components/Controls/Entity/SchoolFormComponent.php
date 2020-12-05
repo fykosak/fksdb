@@ -6,7 +6,6 @@ use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceAddress;
 use FKSDB\ORM\Services\ServiceSchool;
@@ -19,7 +18,7 @@ use Nette\Forms\Form;
  * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelSchool $model
  */
-class SchoolFormComponent extends EditEntityFormComponent {
+class SchoolFormComponent extends AbstractEntityFormComponent {
 
     public const CONT_ADDRESS = 'address';
     public const CONT_SCHOOL = 'school';
@@ -61,34 +60,33 @@ class SchoolFormComponent extends EditEntityFormComponent {
 
         $connection = $this->serviceSchool->getConnection();
         $connection->beginTransaction();
-        if ($this->create) {
+        if (isset($this->model)) {
+            /* Address */
+            $this->serviceAddress->updateModel2($this->model->getAddress(), $addressData);
+            /* School */
+            $this->serviceSchool->updateModel2($this->model, $schoolData);
+        } else {
             /* Address */
             $address = $this->serviceAddress->createNewModel($addressData);
             /* School */
             $schoolData['address_id'] = $address->address_id;
             $this->serviceSchool->createNewModel($schoolData);
-        } else {
-            /* Address */
-            $this->serviceAddress->updateModel2($this->model->getAddress(), $addressData);
-            /* School */
-            $this->serviceSchool->updateModel2($this->model, $schoolData);
         }
         $connection->commit();
 
-        $this->getPresenter()->flashMessage($this->create ? _('School has been created') : _('School has been updated'), BasePresenter::FLASH_SUCCESS);
+        $this->getPresenter()->flashMessage(!isset($this->model) ? _('School has been created') : _('School has been updated'), BasePresenter::FLASH_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 
     /**
-     * @param AbstractModelSingle|ModelSchool|null $model
      * @return void
      * @throws BadTypeException
      */
-    protected function setDefaults(?AbstractModelSingle $model): void {
-        if (!is_null($model)) {
+    protected function setDefaults(): void {
+        if (isset($this->model)) {
             $this->getForm()->setDefaults([
-                self::CONT_SCHOOL => $model->toArray(),
-                self::CONT_ADDRESS => $model->getAddress() ? $model->getAddress()->toArray() : null,
+                self::CONT_SCHOOL => $this->model->toArray(),
+                self::CONT_ADDRESS => $this->model->getAddress() ? $this->model->getAddress()->toArray() : null,
             ]);
         }
     }

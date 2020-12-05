@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Grids\Fyziklani;
+namespace FKSDB\Components\Grids\Fyziklani\Submits;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
@@ -34,11 +34,8 @@ use FKSDB\SQL\SearchableDataSource;
 class AllSubmitsGrid extends SubmitsGrid {
 
     private ModelEvent $event;
-
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
-
     private ServiceFyziklaniTask $serviceFyziklaniTask;
-
     private HandlerFactory $handlerFactory;
 
     public function __construct(ModelEvent $event, Container $container) {
@@ -188,5 +185,4 @@ class AllSubmitsGrid extends SubmitsGrid {
         };
         return $control;
     }
-
 }

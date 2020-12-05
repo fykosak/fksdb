@@ -5,7 +5,7 @@ namespace FKSDB\DBReflection\LinkFactories;
 use FKSDB\DBReflection\ReferencedFactory;
 use FKSDB\Entity\CannotAccessModelException;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;
 

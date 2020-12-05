@@ -2,9 +2,9 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\FOL;
 
-$container = require '../../../../bootstrap.php';
+$container = require '../../../../Bootstrap.php';
 
-use FKSDB\Events\Spec\Fol\CategoryProcessing;
+use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\FolTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
@@ -67,7 +67,7 @@ class AnonymousTest extends FolTestCase {
 
         $teamApplication = $this->assertTeamApplication($this->eventId, 'Okurkový tým');
         Assert::equal(sha1('1234'), $teamApplication->password);
-        Assert::equal(CategoryProcessing::OPEN, $teamApplication->category);
+        Assert::equal(ModelFyziklaniTeam::CATEGORY_OPEN, $teamApplication->category);
 
         $application = $this->assertApplication($this->eventId, 'ksaad@kalo.cz');
         Assert::equal('applied', $application->status);

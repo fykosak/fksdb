@@ -1,10 +1,10 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\Fyziklani\FyziklaniTeam;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\Fyziklani\FyziklaniTeam;
 
-use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
 use FKSDB\ValuePrinters\StringPrinter;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use Nette\Utils\Html;
 
 /**

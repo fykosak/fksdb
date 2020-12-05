@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\Events\Model;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Events\Model\ApplicationHandler;
@@ -14,7 +14,7 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\ServiceEvent;
-use MockEnvironment\MockApplicationTrait;
+use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Utils\ArrayHash;
@@ -52,7 +52,6 @@ class ApplicationHandlerTest extends EventTestCase {
 
         /** @var ServiceEvent $serviceEvent */
         $serviceEvent = $this->getContainer()->getByType(ServiceEvent::class);
-
 
         $handlerFactory = $this->getContainer()->getByType(ApplicationHandlerFactory::class);
         /** @var ModelEvent $event */
@@ -92,7 +91,7 @@ class ApplicationHandlerTest extends EventTestCase {
                     'name' => $teamName,
                     'phone' => '+420987654321',
                     'force_a' => false,
-                    'teacher_id' => $id1,
+                    'teacher_id' => (string)$id1,
                     'teacher_id_1' =>
                         [
                             '_c_compact' => 'Karel Kolář',
@@ -111,7 +110,7 @@ class ApplicationHandlerTest extends EventTestCase {
                 ],
             'p1' =>
                 [
-                    'person_id' => $id2,
+                    'person_id' => (string)$id2,
                     'person_id_1' =>
                         [
                             '_c_compact' => 'Michal Koutný',
@@ -135,7 +134,7 @@ class ApplicationHandlerTest extends EventTestCase {
                 ],
             'p2' =>
                 [
-                    'person_id' => $id3,
+                    'person_id' => (string)$id3,
                     'person_id_1' =>
                         [
                             '_c_compact' => 'Kristína Nešporová',

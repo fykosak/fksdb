@@ -1,8 +1,9 @@
 <?php
 
-namespace FKSDB\Components\Controls\Inbox;
+namespace FKSDB\Components\Controls\Inbox\Corrected;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\Inbox\SeriesTableComponent;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\ILogger;
 use FKSDB\Submits\FileSystemStorage\CorrectedStorage;

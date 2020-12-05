@@ -1,11 +1,11 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\Person;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\Person;
 
 use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
 use FKSDB\ValuePrinters\StringPrinter;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;

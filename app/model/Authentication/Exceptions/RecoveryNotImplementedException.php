@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Authentication;
+namespace FKSDB\Authentication\Exceptions;
 
 class RecoveryNotImplementedException extends RecoveryException {
     public function __construct(?\Throwable $previous = null) {

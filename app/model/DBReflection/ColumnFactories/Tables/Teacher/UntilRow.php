@@ -1,11 +1,11 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\Teacher;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\Teacher;
 
-use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
 use FKSDB\ValuePrinters\DatePrinter;
 use FKSDB\Components\Forms\Controls\DateInputs\DateInput;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelTeacher;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;

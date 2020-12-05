@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\ORM\Services\Exception;
+namespace FKSDB\ORM\Services\Exceptions;
 
 use FKSDB\Exceptions\ModelException;
 use FKSDB\ORM\Models\ModelPerson;

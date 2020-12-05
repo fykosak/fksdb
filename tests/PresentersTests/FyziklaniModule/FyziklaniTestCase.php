@@ -3,8 +3,9 @@
 namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
 use FKSDB\ORM\DbNames;
+use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
-use MockEnvironment\MockApplicationTrait;
+use Nette\Database\IRow;
 use Nette\Database\Row;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
@@ -110,12 +111,12 @@ abstract class FyziklaniTestCase extends DatabaseTestCase {
 
     }
 
-    protected function findSubmit(int $taskId, int $teamId): Row {
+    protected function findSubmit(int $taskId, int $teamId): ?IRow {
         return $this->connection->fetch(
             'SELECT * FROM fyziklani_submit WHERE fyziklani_task_id = ? AND e_fyziklani_team_id = ?', $taskId, $teamId);
     }
 
-    protected function findTeam(int $teamId): Row {
+    protected function findTeam(int $teamId): ?IRow {
         return $this->connection->fetch(
             'SELECT * FROM e_fyziklani_team WHERE e_fyziklani_team_id = ?', $teamId);
     }

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\ModelTests;
 
-$container = require '../bootstrap.php';
+$container = require '../Bootstrap.php';
 
 use FKSDB\WebService\WebServiceModel;
 use Nette\DI\Container;

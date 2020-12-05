@@ -4,7 +4,7 @@ namespace FKSDB\ORM\Models\Fyziklani;
 
 use FKSDB\Fyziklani\Submit\AlreadyRevokedSubmitException;
 use FKSDB\Fyziklani\Submit\ClosedSubmittingException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\ActiveRow;

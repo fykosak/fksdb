@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\Tests\ComponentTests\Form\Controls;
+namespace FKSDB\Tests\ComponentTests\Forms\Controls;
 
-$container = require '../../../bootstrap.php';
+$container = require '../../../Bootstrap.php';
 
 use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;
@@ -62,10 +62,10 @@ class WriteOnlyTraitTest extends DsefTestCase {
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',
-            'contestId' => 1,
-            'year' => 1,
-            'eventId' => $this->eventId,
-            'id' => $this->dsefAppId,
+            'contestId' => '1',
+            'year' => '1',
+            'eventId' => (string)$this->eventId,
+            'id' => (string)$this->dsefAppId,
         ]);
 
         $response = $this->fixture->run($request);
@@ -89,7 +89,7 @@ class WriteOnlyTraitTest extends DsefTestCase {
         $request = $this->createPostRequest([
             'participant' =>
                 [
-                    'person_id' => $this->personId,
+                    'person_id' => (string)$this->personId,
                     'person_id_1' =>
                         [
                             '_c_compact' => 'Paní Bílá',
@@ -121,14 +121,14 @@ class WriteOnlyTraitTest extends DsefTestCase {
                 ],
             'save' => 'Uložit',
         ], [
-            'id' => $this->dsefAppId,
+            'id' => (string)$this->dsefAppId,
         ]);
 
         $response = $this->fixture->run($request);
 
         //Assert::same('fsafs', (string) $response->getSource());
+        /** @var RedirectResponse $response */
         Assert::type(RedirectResponse::class, $response);
-
 
         $application = $this->assertApplication($this->eventId, 'bila@hrad.cz');
         Assert::equal('applied', $application->status);
@@ -138,16 +138,15 @@ class WriteOnlyTraitTest extends DsefTestCase {
         Assert::equal(null, $info->id_number);
         Assert::equal(DateTime::from('2000-01-01'), $info->born);
 
-
         $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');
         Assert::equal(1, $eApplication->e_dsef_group_id);
         Assert::equal(3, $application->lunch_count);
 
         $addressId = $this->connection->fetchField('SELECT address_id FROM post_contact WHERE person_id = ? AND type = ?', $this->personId, ModelPostContact::TYPE_PERMANENT);
-        Assert::notEqual(false, $addressId);
-        $address = $this->connection->fetch('SELECT * FROM address WHERE address_id = ?', $addressId);
-        Assert::notEqual(false, $address);
+        Assert::notEqual(null, $addressId);
 
+        $address = $this->connection->fetch('SELECT * FROM address WHERE address_id = ?', $addressId);
+        Assert::notEqual(null, $address);
         Assert::equal('PomaláUlice', $address->target);
         Assert::equal('SinCity', $address->city);
         Assert::equal('67401', $address->postal_code);

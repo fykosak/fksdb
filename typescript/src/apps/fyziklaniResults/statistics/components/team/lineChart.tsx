@@ -3,8 +3,8 @@ import {
     Submits,
     Task, Team,
 } from '@apps/fyziklani/helpers/interfaces';
-import LineChart from '@shared/components/lineChart';
 import { LineChartData } from '@shared/components/lineChart/interfaces';
+import LineChart from '@shared/components/lineChart/lineChart';
 import {
     scaleLinear, scaleTime,
 } from 'd3-scale';

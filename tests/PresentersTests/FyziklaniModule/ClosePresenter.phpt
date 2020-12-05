@@ -2,9 +2,9 @@
 
 namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
-use MockEnvironment\MockApplicationTrait;
+use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;

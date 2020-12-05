@@ -2,7 +2,7 @@
 
 namespace FKSDB\ORM\Models\StoredQuery;
 
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 
 /**
  * @todo Better (general) support for related collection setter.

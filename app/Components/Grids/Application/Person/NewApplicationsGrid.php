@@ -3,12 +3,14 @@
 namespace FKSDB\Components\Grids\Application\Person;
 
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
 use Nette\Application\IPresenter;
+use Nette\Application\UI\InvalidLinkException;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
@@ -42,6 +44,8 @@ class NewApplicationsGrid extends BaseGrid {
      * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
+     * @throws NeonSchemaException
+     * @throws InvalidLinkException
      */
     protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);

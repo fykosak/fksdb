@@ -8,7 +8,7 @@ use FKSDB\DBReflection\FieldLevelPermission;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\SQL\SearchableDataSource;
 use Nette\Application\AbortException;
 use Nette\Application\IPresenter;
@@ -247,7 +247,6 @@ abstract class BaseGrid extends Grid {
             $this->addReflectionColumn($name, $userPermissions);
         }
     }
-
 
     /**
      * @param string $destination

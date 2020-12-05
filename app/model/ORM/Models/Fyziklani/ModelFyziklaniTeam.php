@@ -4,7 +4,7 @@ namespace FKSDB\ORM\Models\Fyziklani;
 
 use FKSDB\Fyziklani\Closing\AlreadyClosedException;
 use FKSDB\Fyziklani\Closing\NotCheckedSubmitsException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Events\ModelFyziklaniParticipant;
 use FKSDB\ORM\Models\IContestReferencedModel;
@@ -42,6 +42,12 @@ use Nette\Security\IResource;
  */
 class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferencedModel, IResource, IContestReferencedModel, INodeCreator {
     public const RESOURCE_ID = 'fyziklani.team';
+
+    public const CATEGORY_HIGH_SCHOOL_A = 'A';
+    public const CATEGORY_HIGH_SCHOOL_B = 'B';
+    public const CATEGORY_HIGH_SCHOOL_C = 'C';
+    public const CATEGORY_ABROAD = 'F';
+    public const CATEGORY_OPEN = 'O';
 
     public function __toString(): string {
         return $this->name;
@@ -169,7 +175,7 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
         return $data;
     }
 
-    public function createXMLNode(\DOMDocument $doc): \DOMNode {
+    public function createXMLNode(\DOMDocument $doc): \DOMElement {
         $node = $doc->createElement('team');
         $node->setAttribute('teamId', $this->e_fyziklani_team_id);
         XMLHelper::fillArrayToNode([
@@ -197,5 +203,22 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
 
     public function getResourceId(): string {
         return self::RESOURCE_ID;
+    }
+
+    public static function mapCategoryToName(string $category): string {
+        switch ($category) {
+            case self::CATEGORY_HIGH_SCHOOL_A :
+                return _('Středoškoláci A');
+            case self::CATEGORY_HIGH_SCHOOL_B :
+                return _('Středoškoláci B');
+            case self::CATEGORY_HIGH_SCHOOL_C :
+                return _('Středoškoláci C');
+            case self::CATEGORY_ABROAD :
+                return _('Zahraniční SŠ');
+            case self::CATEGORY_OPEN :
+                return _('Open');
+            default:
+                throw new \InvalidArgumentException();
+        }
     }
 }

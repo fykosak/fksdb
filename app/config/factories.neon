@@ -22,4 +22,4 @@ services:
     event.DBReflectionFactory:
         factory: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
 #transition
-    transitionsFactory: FKSDB\Transitions\TransitionsFactory
+    transitionsFactory: FKSDB\Transitions\Transition\TransitionsFactory

@@ -24,7 +24,6 @@ use NiftyGrid\DuplicateColumnException;
 abstract class AbstractApplicationsGrid extends BaseGrid {
 
     protected ModelEvent $event;
-
     private Holder $holder;
 
     public function __construct(ModelEvent $event, Holder $holder, Container $container) {

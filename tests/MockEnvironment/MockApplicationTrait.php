@@ -1,6 +1,6 @@
 <?php
 
-namespace MockEnvironment;
+namespace FKSDB\Tests\MockEnvironment;
 
 use FKSDB\Authentication\LoginUserStorage;
 use FKSDB\ORM\Models\ModelLogin;
@@ -67,11 +67,7 @@ trait MockApplicationTrait {
         $storage->setAuthenticated(true);
     }
 
-    /**
-     * @param string $presenterName
-     * @return IPresenter
-     */
-    protected function createPresenter($presenterName): IPresenter {
+    protected function createPresenter(string $presenterName): IPresenter {
         $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);
         $presenter = $presenterFactory->createPresenter($presenterName);
         $presenter->autoCanonicalize = false;

@@ -2,14 +2,17 @@
 
 namespace FKSDB;
 
+use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\ORM\Models\ModelContest;
+use FKSDB\ORM\Models\ModelContestant;
 use FKSDB\ORM\Models\ModelContestYear;
+use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\ORM\Services\ServiceContestYear;
-use Nette\Database\Table\ActiveRow;
+use InvalidArgumentException;
 use Nette\DI\Container;
-use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
+use Nette\Security\User;
 
 /**
  * Class FKSDB\YearCalculator
@@ -47,12 +50,12 @@ class YearCalculator {
     }
 
     /**
-     * @param ActiveRow|ModelContest $contest
+     * @param ModelContest $contest
      * @param int|null $year
      * @return int
      * @throws InvalidArgumentException
      */
-    public function getAcademicYear(ActiveRow $contest, ?int $year): int {
+    public function getAcademicYear(ModelContest $contest, ?int $year): int {
         if (!isset($this->cache[$contest->contest_id]) || !isset($this->cache[$contest->contest_id][$year])) {
             throw new InvalidArgumentException("No academic year defined for {$contest->contest_id}:$year.");
         }
@@ -76,7 +79,7 @@ class YearCalculator {
     }
 
     public function getGraduationYear(int $studyYear, ?int $acYear): int {
-        $acYear = ($acYear !== null) ? $acYear : $this->getCurrentAcademicYear();
+        $acYear = is_null($acYear) ? $this->getCurrentAcademicYear() : $acYear;
 
         if ($studyYear >= 6 && $studyYear <= 9) {
             return $acYear + (5 - ($studyYear - 9));
@@ -102,7 +105,7 @@ class YearCalculator {
     }
 
     public function isValidYear(ModelContest $contest, ?int $year): bool {
-        return $year !== null && $year >= $this->getFirstYear($contest) && $year <= $this->getLastYear($contest);
+        return !is_null($year) && $year >= $this->getFirstYear($contest) && $year <= $this->getLastYear($contest);
     }
 
     /**
@@ -152,6 +155,33 @@ class YearCalculator {
             if (!array_key_exists($this->getCurrentAcademicYear(), $this->revCache[$contestId])) {
                 throw new InvalidStateException(sprintf('Table contest_year does not specify year for contest %s for current academic year %s', $contestId, $this->getCurrentAcademicYear()));
             }
+        }
+    }
+
+    public function getAvailableYears(string $role, ModelContest $contest, User $user): array {
+        switch ($role) {
+            case YearChooser::ROLE_ORG:
+            case YearChooser::ROLE_ALL:
+            case YearChooser::ROLE_SELECTED:
+                $min = $this->getFirstYear($contest);
+                $max = $this->getLastYear($contest);
+                return array_reverse(range($min, $max));
+            case YearChooser::ROLE_CONTESTANT:
+                /** @var ModelLogin $login */
+                $login = $user->getIdentity();
+                $currentYear = $this->getCurrentYear($contest);
+                $years = [];
+                if ($login && !$login->getPerson()) {
+                    $contestants = $login->getPerson()->getContestants($contest);
+                    /** @var ModelContestant $contestant */
+                    foreach ($contestants as $contestant) {
+                        $years[] = $contestant->year;
+                    }
+                }
+                sort($years);
+                return count($years) ? $years : [$currentYear];
+            default:
+                throw new InvalidStateException(sprintf('Role %s is not supported', $role));
         }
     }
 }

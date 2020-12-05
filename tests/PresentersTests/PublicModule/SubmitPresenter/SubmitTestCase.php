@@ -2,11 +2,12 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\SubmitPresenter;
 
+use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
-use MockEnvironment\MockApplicationTrait;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
+use Nette\Database\IRow;
 use Nette\Database\Row;
 use Nette\DI\Config\Helpers;
 use Nette\DI\Container;
@@ -156,15 +157,15 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         $this->assertSubmit($this->contestantId, $this->taskAll);
     }
 
-    protected function assertSubmit(int $contestantId, int $taskId): Row {
+    protected function assertSubmit(int $contestantId, int $taskId): IRow {
         $submit = $this->connection->fetch('SELECT * FROM submit WHERE ct_id = ? AND task_id = ?', $contestantId, $taskId);
-        Assert::notEqual(false, $submit);
+        Assert::notEqual(null, $submit);
         return $submit;
     }
 
     protected function assertNotSubmit(int $contestantId, int $taskId): void {
         $submit = $this->connection->fetch('SELECT * FROM submit WHERE ct_id = ? AND task_id = ?', $contestantId, $taskId);
-        Assert::equal(false, $submit);
+        Assert::equal(null, $submit);
     }
 
 }

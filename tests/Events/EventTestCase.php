@@ -3,9 +3,10 @@
 namespace FKSDB\Tests\Events;
 
 use FKSDB\ORM\DbNames;
+use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
-use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Request;
+use Nette\Database\IRow;
 use Nette\DI\Container;
 use Nette\DI\Config\Helpers;
 use Nette\Database\Row;
@@ -51,8 +52,8 @@ abstract class EventTestCase extends DatabaseTestCase {
         $post = Helpers::merge($post, [
             'action' => 'default',
             'lang' => 'cs',
-            'contestId' => 1,
-            'year' => 1,
+            'contestId' => (string)1,
+            'year' => (string)1,
             'eventId' => $this->getEventId(),
             'do' => 'application-form-form-submit',
         ]);
@@ -62,18 +63,18 @@ abstract class EventTestCase extends DatabaseTestCase {
 
     abstract protected function getEventId(): int;
 
-    protected function assertApplication(int $eventId, string $email): Row {
+    protected function assertApplication(int $eventId, string $email): IRow {
         $personId = $this->connection->fetchField('SELECT person_id FROM person_info WHERE email=?', $email);
-        Assert::notEqual(false, $personId);
+        Assert::notEqual(null, $personId);
 
         $application = $this->connection->fetch('SELECT * FROM event_participant WHERE event_id = ? AND person_id = ?', $eventId, $personId);
-        Assert::notEqual(false, $application);
+        Assert::notEqual(null, $application);
         return $application;
     }
 
-    protected function assertExtendedApplication(Row $application, string $table): Row {
+    protected function assertExtendedApplication(IRow $application, string $table): IRow {
         $application = $this->connection->fetch('SELECT * FROM `' . $table . '` WHERE event_participant_id = ?', $application->event_participant_id);
-        Assert::notEqual(false, $application);
+        Assert::notEqual(null, $application);
         return $application;
     }
 

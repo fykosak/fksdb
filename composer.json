@@ -28,7 +28,12 @@
     "league/oauth2-google": "^3.0.3"
   },
   "autoload": {
-    "classmap": []
+    "psr-4": {
+      "FKSDB\\": [
+        "app/",
+        "app/model/"
+      ]
+    }
   },
   "scripts": {
     "initTestDatabase": [
@@ -46,7 +51,7 @@
     "test": [
       "@clearTestCache",
       "@clearTestDatabase",
-      "vendor/bin/tester tests -p php -s -c tests/php.ini -j 8"
+      "vendor/bin/tester tests/PresentersTests/PageDisplay -p php -s -c tests/php.ini -j 8"
     ],
     "testCoverage": [
       "@clearTestCache",

@@ -4,7 +4,6 @@ namespace FKSDB\Persons\Deduplication;
 
 use FKSDB\Logging\DevNullLogger;
 use FKSDB\Logging\ILogger;
-use Nette\Caching\Cache;
 use Nette\Database\Context;
 use Nette\Database\Table\ActiveRow;
 use Nette\MemberAccessException;
@@ -91,8 +90,6 @@ class Merger {
 
     public function merge(?bool $commit = null): bool {
         // This workaround fixes inproper caching of referenced tables.
-        $this->context->getConnection()->getCache()->clean([Cache::ALL => true]);
-        $this->context->getConnection()->getDatabaseReflection()->setConnection($this->context->getConnection()); // TODO
 
         $table = $this->trunkRow->getTable()->getName();
         $tableMerger = $this->getMerger($table);

@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\DataTesting\Tests\Person;
+namespace FKSDB\DataTesting\Tests\ModelPerson;
 
 use FKSDB\DataTesting\TestLog;
 use FKSDB\Exceptions\BadTypeException;

@@ -1,7 +1,8 @@
 <?php
 
-namespace FKSDB\Components\Controls\Stalking;
+namespace FKSDB\Components\Controls\Stalking\Components;
 
+use FKSDB\Components\Controls\Stalking\StalkingControl;
 use FKSDB\DBReflection\FieldLevelPermission;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelPerson;

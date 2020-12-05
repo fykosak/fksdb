@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKSDB\Application\IJavaScriptCollector;
+use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
 use Nette\Forms\Controls\TextBase;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Arrays;

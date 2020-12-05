@@ -2,6 +2,8 @@
 
 namespace FKSDB\Authentication;
 
+use FKSDB\Authentication\Exceptions\InactiveLoginException;
+use FKSDB\Authentication\Exceptions\UnknownLoginException;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelOrg;

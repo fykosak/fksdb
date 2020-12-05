@@ -3,13 +3,12 @@
 namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Forms\Containers\PersonPaymentContainer;
-use FKSDB\Components\Forms\Controls\Payment\CurrencyField;
-use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
+use FKSDB\Components\Forms\Controls\Payment\CurrencyField;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Services\Schedule\ServiceSchedulePayment;
@@ -17,7 +16,7 @@ use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Payment\Handler\EmptyDataException;
 use FKSDB\Payment\Transition\PaymentMachine;
-use FKSDB\Transitions\UnavailableTransitionsException;
+use FKSDB\Transitions\Transition\UnavailableTransitionsException;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
@@ -29,7 +28,7 @@ use Nette\Forms\Form;
  * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelPayment $model
  */
-class PaymentFormComponent extends EditEntityFormComponent {
+class PaymentFormComponent extends AbstractEntityFormComponent {
 
     private PersonFactory $personFactory;
     private PersonProvider $personProvider;
@@ -42,9 +41,9 @@ class PaymentFormComponent extends EditEntityFormComponent {
         Container $container,
         bool $isOrg,
         PaymentMachine $machine,
-        bool $create
+        ?ModelPayment $model
     ) {
-        parent::__construct($container, $create);
+        parent::__construct($container, $model);
         $this->machine = $machine;
         $this->isOrg = $isOrg;
     }
@@ -62,7 +61,7 @@ class PaymentFormComponent extends EditEntityFormComponent {
     }
 
     protected function appendSubmitButton(Form $form): SubmitButton {
-        return $form->addSubmit('submit', $this->create ? _('Proceed to summary') : _('Save payment'));
+        return $form->addSubmit('submit', $this->isCreating() ? _('Proceed to summary') : _('Save payment'));
     }
 
     protected function configureForm(Form $form): void {
@@ -74,7 +73,7 @@ class PaymentFormComponent extends EditEntityFormComponent {
         $currencyField = new CurrencyField();
         $currencyField->setRequired(_('Please select currency'));
         $form->addComponent($currencyField, 'currency');
-        $form->addComponent(new PersonPaymentContainer($this->getContext(), $this->machine->getEvent(), $this->machine->getScheduleGroupTypes(), !$this->create), 'payment_accommodation');
+        $form->addComponent(new PersonPaymentContainer($this->getContext(), $this->machine->getEvent(), $this->machine->getScheduleGroupTypes(), !$this->isCreating()), 'payment_accommodation');
     }
 
     /**
@@ -91,14 +90,13 @@ class PaymentFormComponent extends EditEntityFormComponent {
             'currency' => $values['currency'],
             'person_id' => $values['person_id'],
         ];
-        if ($this->create) {
+        if (isset($this->model)) {
+            $this->servicePayment->updateModel2($this->model, $data);
+            $model = $this->servicePayment->refresh($this->model);
+        } else {
             $model = $this->machine->createNewModel(array_merge($data, [
                 'event_id' => $this->machine->getEvent()->event_id,
             ]), $this->servicePayment);
-
-        } else {
-            $this->servicePayment->updateModel2($this->model, $data);
-            $model = $this->servicePayment->refresh($this->model);
         }
 
         $connection = $this->servicePayment->getConnection();
@@ -107,28 +105,23 @@ class PaymentFormComponent extends EditEntityFormComponent {
         try {
             $this->serviceSchedulePayment->store((array)$values['payment_accommodation'], $model);
             //$this->serviceSchedulePayment->prepareAndUpdate($values['payment_accommodation'], $model);
-        } catch (DuplicatePaymentException $exception) {
-            $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
-            $connection->rollBack();
-            return;
-        } catch (EmptyDataException $exception) {
+        } catch (DuplicatePaymentException|EmptyDataException $exception) {
             $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             $connection->rollBack();
             return;
         }
         $connection->commit();
 
-        $this->getPresenter()->flashMessage($this->create ? _('Payment has been created.') : _('Payment has been updated.'));
+        $this->getPresenter()->flashMessage(!isset($this->model) ? _('Payment has been created.') : _('Payment has been updated.'));
         $this->getPresenter()->redirect('detail', ['id' => $model->payment_id]);
     }
 
     /**
-     * @param ModelPayment|AbstractModelSingle|null $model
      * @return void
      * @throws BadTypeException
      */
-    protected function setDefaults(?AbstractModelSingle $model): void {
-        if (!is_null($model)) {
+    protected function setDefaults(): void {
+        if (isset($this->model)) {
             $values = $this->model->toArray();
             $query = $this->model->getRelatedPersonSchedule();
             $items = [];

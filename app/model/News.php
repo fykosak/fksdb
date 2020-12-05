@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\News;
+namespace FKSDB;
 
 use FKSDB\ORM\Models\ModelContest;
 use Nette\DI\Container;
@@ -30,5 +30,4 @@ class News {
             return [];
         }
     }
-
 }

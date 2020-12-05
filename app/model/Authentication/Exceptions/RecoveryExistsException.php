@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Authentication;
+namespace FKSDB\Authentication\Exceptions;
 
 class RecoveryExistsException extends RecoveryException {
 

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\ModelTests\Person;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Modules\Core\BasePresenter;
@@ -13,8 +13,8 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\ORM\Services\ServiceContestant;
+use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
-use MockEnvironment\MockApplicationTrait;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use FKSDB\Persons\ExtendedPersonHandler;

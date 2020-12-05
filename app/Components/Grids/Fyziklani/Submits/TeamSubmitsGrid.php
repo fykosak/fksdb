@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Grids\Fyziklani;
+namespace FKSDB\Components\Grids\Fyziklani\Submits;
 
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;

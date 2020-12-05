@@ -145,7 +145,7 @@ abstract class Grid extends \Nette\Application\UI\Control {
     }
 
 
-    abstract protected function configure(IPresenter $presenter): void;
+    abstract protected function configure(Presenter $presenter): void;
 
     /**
      * @param string $subGrid

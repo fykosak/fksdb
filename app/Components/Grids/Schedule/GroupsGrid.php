@@ -2,14 +2,14 @@
 
 namespace FKSDB\Components\Grids\Schedule;
 
-use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Components\Grids\EntityGrid;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use Nette\Application\IPresenter;
+use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
+use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
-use NiftyGrid\DataSource\IDataSource;
-use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 
@@ -17,22 +17,19 @@ use NiftyGrid\DuplicateColumnException;
  * Class GroupsGrid
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class GroupsGrid extends BaseGrid {
-
-    private ModelEvent $event;
+class GroupsGrid extends EntityGrid {
 
     public function __construct(ModelEvent $event, Container $container) {
-        parent::__construct($container);
-        $this->event = $event;
-    }
-
-    protected function getModelClassName(): string {
-        return ModelScheduleGroup::class;
-    }
-
-    protected function getData(): IDataSource {
-        $groups = $this->event->getScheduleGroups();
-        return new NDataSource($groups);
+        parent::__construct($container, ServiceScheduleGroup::class, [
+            'schedule_group.schedule_group_id',
+            'schedule_group.name_cs',
+            'schedule_group.name_en',
+            'schedule_group.schedule_group_type',
+            'schedule_group.start',
+            'schedule_group.end',
+        ], [
+            'event_id' => $event->event_id,
+        ]);
     }
 
     /**
@@ -40,19 +37,11 @@ class GroupsGrid extends BaseGrid {
      * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
-     * @throws DuplicateColumnException
+     * @throws DuplicateColumnException|InvalidLinkException
      */
     protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
         $this->paginate = false;
-        $this->addColumns([
-            'schedule_group.schedule_group_id',
-            'schedule_group.name_cs',
-            'schedule_group.name_en',
-            'schedule_group.schedule_group_type',
-            'schedule_group.start',
-            'schedule_group.end',
-        ]);
 
         $this->addColumn('items_count', _('Items count'))->setRenderer(function ($row): int {
             $model = ModelScheduleGroup::createFromActiveRow($row);
