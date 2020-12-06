@@ -7,14 +7,12 @@ $container = require '../../../../Bootstrap.php';
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TsafTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
-use Tester\Environment;
 
 class CancelTest extends TsafTestCase {
 
     private int $tsafAppId;
 
     protected function setUp(): void {
-        Environment::skip('3.0');
         parent::setUp();
 
         $adminId = $this->createPerson('Admin', 'Adminovič', [], []);
@@ -47,7 +45,7 @@ class CancelTest extends TsafTestCase {
     public function testCancel(): void {
         $request = $this->createPostRequest([
             'participantTsaf' => [
-                'person_id' => $this->personId,
+                'person_id' => (string)$this->personId,
                 'person_id_1' => [
                     '_c_compact' => " ",
                     'person' => [
@@ -81,8 +79,8 @@ class CancelTest extends TsafTestCase {
             'c_a_p_t_cha' => "pqrt",
             'auto_invited_or_invited_or_applied_or_applied_nodsef__cancelled' => "Zrušit přihlášku",
         ], [
-            'eventId' => $this->tsafEventId,
-            'id' => $this->tsafAppId,
+            'eventId' => (string)$this->tsafEventId,
+            'id' => (string)$this->tsafAppId,
         ]);
 
         $response = $this->fixture->run($request);

@@ -27,7 +27,7 @@ class NoDSEFTest extends TsafTestCase {
     public function testRegistration(): void {
         $request = $this->createPostRequest([
             'participantTsaf' => [
-                'person_id' => $this->personId,
+                'person_id' => (string)$this->personId,
                 'person_id_1' => [
                     '_c_compact' => " ",
                     'person' => [

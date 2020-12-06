@@ -102,11 +102,11 @@ class Authorization extends FyziklaniTestCase {
     private function createGetRequest(string $presenterName, string $action): Request {
         $params = [
             'lang' => 'cs',
-            'contestId' => 1,
-            'year' => 1,
-            'eventId' => $this->eventId,
+            'contestId' => (string)1,
+            'year' => (string)1,
+            'eventId' => (string)$this->eventId,
             'action' => $action,
-            'id' => $this->submitId,
+            'id' => (string)$this->submitId,
         ];
 
         return new Request($presenterName, 'GET', $params);

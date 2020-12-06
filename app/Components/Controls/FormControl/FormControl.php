@@ -19,11 +19,7 @@ class FormControl extends BaseComponent {
     public const SNIPPET_MAIN = 'groupContainer';
 
     protected function createComponentForm(): Form {
-        $form = new Form();
-        if ($this->getContext()->getParameters()['disableCrossOrigin']) {
-            $form->disableSameSiteProtection();
-        }
-        return $form;
+        return new Form();
     }
 
     /**

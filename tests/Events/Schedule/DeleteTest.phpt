@@ -5,9 +5,9 @@ namespace FKSDB\Tests\Events\Schedule;
 use FKSDB\ORM\DbNames;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
+use Nette\Schema\Helpers;
 use Nette\Utils\DateTime;
 use Tester\Assert;
-use Tester\Environment;
 
 $container = require '../../Bootstrap.php';
 
@@ -18,7 +18,6 @@ class DeleteTest extends ScheduleTestCase {
     protected int $dsefAppId;
 
     protected function setUp(): void {
-        Environment::skip('3.0');
         parent::setUp();
         $this->lastPersonId = $this->createPerson('Paní', 'Bílá III.',
             [
@@ -45,9 +44,9 @@ class DeleteTest extends ScheduleTestCase {
     }
 
     public function testRegistration(): void {
-        $postData = [
+        $formData = [
             'participant' => [
-                'person_id' => $this->lastPersonId,
+                'person_id' => (string)$this->lastPersonId,
                 'person_id_1' => [
                     '_c_compact' => ' ',
                     'person' => [
@@ -71,25 +70,25 @@ class DeleteTest extends ScheduleTestCase {
                         'accommodation' => json_encode([$this->groupId => $this->itemId]),
                     ],
                 ],
-                'e_dsef_group_id' => 2,
-                'lunch_count' => 0,
+                'e_dsef_group_id' => (string)2,
+                'lunch_count' => (string)0,
                 'message' => '',
             ],
             'privacy' => 'on',
             'c_a_p_t_cha' => 'pqrt',
             'cancelled____terminated' => 'Zrušit přihlášku',
+            '_do' => 'application-form-form-submit',
         ];
 
-        $post = \Nette\Schema\Helpers::merge([], [
+        $params = Helpers::merge([], [
             'action' => 'default',
             'lang' => 'cs',
-            'contestId' => 1,
-            'year' => 1,
-            'eventId' => $this->eventId,
-            'id' => $this->dsefAppId,
-            '_do' => 'application-form-form-submit',
+            'contestId' => (string)1,
+            'year' => (string)1,
+            'eventId' => (string)$this->eventId,
+            'id' => (string)$this->dsefAppId,
         ]);
-        $request = new Request('Public:Application', 'POST', $post, $postData);
+        $request = new Request('Public:Application', 'POST', $params, $formData);
 
         $response = $this->fixture->run($request);
         Assert::type(RedirectResponse::class, $response);

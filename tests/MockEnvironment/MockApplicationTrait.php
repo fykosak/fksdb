@@ -9,6 +9,7 @@ use FKSDB\Mail\MailTemplateFactory;
 use Nette\Application\IPresenter;
 use Nette\Application\IPresenterFactory;
 use Nette\DI\Container;
+use Nette\Http\Request;
 use Nette\Http\Session;
 use Tester\Assert;
 
@@ -68,11 +69,16 @@ trait MockApplicationTrait {
     }
 
     protected function createPresenter(string $presenterName): IPresenter {
+        $_COOKIE['nette-samesite'] = 1;
         $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);
         $presenter = $presenterFactory->createPresenter($presenterName);
         $presenter->autoCanonicalize = false;
 
         $this->getContainer()->getByType(LoginUserStorage::class)->setPresenter($presenter);
+        $request = $this->getContainer()->getByType(Request::class);
+
+        // $request->__set('cookies', ['nette-samesite' => 1]);
+        //$request->cookies['nette-samesite'] = 1;
         return $presenter;
     }
 

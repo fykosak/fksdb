@@ -12,7 +12,7 @@ class WithDSEFAnonymousTest extends TsafTestCase {
 
     protected function setUp(): void {
         parent::setUp();
-        $adminId = $this->createPerson('Admin', 'Adminovič', [],  []);
+        $adminId = $this->createPerson('Admin', 'Adminovič', [], []);
         $this->insert('grant', [
             'login_id' => $adminId,
             'role_id' => 5,
@@ -37,7 +37,7 @@ class WithDSEFAnonymousTest extends TsafTestCase {
 
         $request = $this->createPostRequest([
             'participantTsaf' => [
-                'person_id' => $this->personId,
+                'person_id' => (string)$this->personId,
                 'person_id_1' => [
                     '_c_compact' => " ",
                     'person' => [

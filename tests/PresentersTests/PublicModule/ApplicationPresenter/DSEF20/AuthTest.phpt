@@ -16,20 +16,20 @@ use Tester\Environment;
 class AuthTest extends DsefTestCase {
 
     protected function setUp(): void {
-        Environment::skip('3.0');
         parent::setUp();
         $this->authenticate($this->personId);
     }
 
     public function testDisplay(): void {
+        Environment::skip('3.0');
         Assert::equal(true, $this->fixture->getUser()->isLoggedIn());
 
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',
-            'contestId' => 1,
-            'year' => 1,
-            'eventId' => $this->eventId,
+            'contestId' => (string)1,
+            'year' => (string)1,
+            'eventId' => (string)$this->eventId,
         ]);
 
         $response = $this->fixture->run($request);
@@ -49,7 +49,7 @@ class AuthTest extends DsefTestCase {
 
         $request = $this->createPostRequest([
             'participant' => [
-                'person_id' => $this->personId,
+                'person_id' => (string)$this->personId,
                 'person_id_1' => [
                     '_c_compact' => " ",
                     'person' => [

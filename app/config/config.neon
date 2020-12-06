@@ -177,8 +177,6 @@ parameters:
 
         # system user who should run the install script
         installUser: fksdb-updater
-    disableCrossOrigin: false # only for testing
-
 php:
     date.timezone: Europe/Prague
     session.gc_maxlifetime: 1213200

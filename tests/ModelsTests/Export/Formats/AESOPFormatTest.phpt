@@ -16,31 +16,35 @@ use FKSDB\StoredQuery\StoredQueryParameter;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
 use Nette\DI\Container;
 use Tester\Assert;
-use Tester\Environment;
 
 class AESOPFormatTest extends DatabaseTestCase {
 
+    private ExportFormatFactory $exportFactory;
+    private StoredQueryFactory $queryFactory;
+
     private AESOPFormat $fixture;
+    public function __construct(Container $container) {
+        parent::__construct($container);
+        $this->exportFactory = $this->getContainer()->getByType(ExportFormatFactory::class);
+        $this->queryFactory = $this->getContainer()->getByType(StoredQueryFactory::class);
+    }
+
 
     protected function setUp(): void {
-        Environment::skip('3.0');
         global $container;
         parent::setUp();
-        /** @var ExportFormatFactory $exportFactory */
-        $exportFactory = $this->getContainer()->getByType(ExportFormatFactory::class);
-        /** @var StoredQueryFactory $queryFactory */
-        $queryFactory = $this->getContainer()->getByType(StoredQueryFactory::class);
+
         //$queryFactory->setPresenter(new MockSeriesPresenter());
 
         $parameters = [
             'category' => new MockQueryParameter('category'),
         ];
-        $storedQuery = $queryFactory->createQueryFromSQL(new MockSeriesPresenter($container), 'SELECT 1, \'ahoj\' FROM dual', $parameters, MockProcessing::class);
+        $storedQuery = $this->queryFactory->createQueryFromSQL(new MockSeriesPresenter($container), 'SELECT 1, \'ahoj\' FROM dual', $parameters, MockProcessing::class);
 
         // AESOP format requires QID
         $storedQuery->setQId('aesop.ct');
 
-        $this->fixture = $exportFactory->createFormat(ExportFormatFactory::AESOP, $storedQuery);
+        $this->fixture = $this->exportFactory->createFormat(ExportFormatFactory::AESOP, $storedQuery);
     }
 
     protected function tearDown(): void {
@@ -49,10 +53,8 @@ class AESOPFormatTest extends DatabaseTestCase {
 
     public function testResponse(): void {
         $response = $this->fixture->getResponse();
-
         Assert::type(PlainTextResponse::class, $response);
     }
-
 }
 
 class MockSeriesPresenter implements ISeriesPresenter {

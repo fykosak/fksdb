@@ -25,6 +25,7 @@ abstract class DatabaseTestCase extends TestCase {
      * @param Container $container
      */
     public function __construct(Container $container) {
+
         $this->container = $container;
         /** @var Context $context */
         $context = $container->getByType(Context::class);

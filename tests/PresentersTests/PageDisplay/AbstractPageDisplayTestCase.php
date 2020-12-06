@@ -10,8 +10,6 @@ use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;
 use Nette\DI\Container;
 use Tester\Assert;
-use Tester\Environment;
-
 /**
  * Class PageDisplayTest
  * @author Michal Červeňák <miso@fykos.cz>
@@ -19,15 +17,14 @@ use Tester\Environment;
 abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
     use MockApplicationTrait;
 
-    /** @var int */
-    protected $personId;
+    protected int $personId;
+    private int $loginId;
 
     /**
      * PageDisplayTest constructor.
      * @param Container $container
      */
     public function __construct(Container $container) {
-        Environment::skip('3.0');
         parent::__construct($container);
         $this->setContainer($container);
     }
@@ -41,10 +38,10 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
             'gender' => 'M',
         ]);
 
-        $loginId = $this->insert(DbNames::TAB_LOGIN, ['person_id' => $this->personId, 'active' => 1]);
+        $this->loginId = $this->insert(DbNames::TAB_LOGIN, ['person_id' => $this->personId, 'active' => 1]);
 
-        $this->insert(DbNames::TAB_GRANT, ['login_id' => $loginId, 'role_id' => 1000, 'contest_id' => 1]);
-        $this->authenticate($loginId);
+        $this->insert(DbNames::TAB_GRANT, ['login_id' => $this->loginId, 'role_id' => 1000, 'contest_id' => 1]);
+        $this->authenticate($this->loginId);
     }
 
     final protected function createRequest(string $presenterName, string $action, array $params): Request {

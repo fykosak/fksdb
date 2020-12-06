@@ -9,8 +9,8 @@ use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Nette\DI\Container;
+use Nette\Schema\Helpers;
 use Tester\Assert;
-use Tester\Environment;
 
 class ClosePresenter extends FyziklaniTestCase {
 
@@ -32,7 +32,6 @@ class ClosePresenter extends FyziklaniTestCase {
     }
 
     protected function setUp(): void {
-        Environment::skip('3.0');
         parent::setUp();
 
         $this->eventId = $this->createEvent([]);
@@ -107,20 +106,15 @@ class ClosePresenter extends FyziklaniTestCase {
         parent::tearDown();
     }
 
-    /**
-     * @param $postData
-     * @param array $post
-     * @return Request
-     */
-    private function createPostRequest($postData, $post = []): Request {
-        $post = \Nette\Schema\Helpers::merge($post, [
-            'lang' => 'cs',
-            'contestId' => 1,
-            'year' => 1,
-            'eventId' => $this->eventId,
-        ]);
-
-        return new Request('Fyziklani:Close', 'POST', $post, $postData);
+    private function createPostRequest(array $formData, array $params = []): Request {
+        return new Request('Fyziklani:Close', 'POST',
+            Helpers::merge([
+                'lang' => 'cs',
+                'contestId' => 1,
+                'year' => 1,
+                'eventId' => $this->eventId,
+            ], $params)
+            , $formData);
     }
 
     /**
@@ -129,7 +123,7 @@ class ClosePresenter extends FyziklaniTestCase {
      * @return Request
      */
     private function createPostDiplomasRequest($postData, $post = []): Request {
-        $post = \Nette\Schema\Helpers::merge($post, [
+        $post = Helpers::merge($post, [
             'lang' => 'cs',
             'contestId' => 1,
             'year' => 1,
@@ -166,11 +160,10 @@ class ClosePresenter extends FyziklaniTestCase {
      */
     private function innertestCloseTeam(int $teamId, int $pointsSum): void {
         $request = $this->createPostRequest([
-            'id' => $teamId,
+            '_do' => 'closeTeamControl-close',
         ], [
             'id' => $teamId,
             'action' => 'team',
-            '_do' => 'closeTeamControl-close',
         ]);
         $response = $this->fixture->run($request);
         Assert::type(RedirectResponse::class, $response);
