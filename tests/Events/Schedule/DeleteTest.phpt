@@ -5,9 +5,9 @@ namespace FKSDB\Tests\Events\Schedule;
 use FKSDB\ORM\DbNames;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
-use Nette\DI\Config\Helpers;
 use Nette\Utils\DateTime;
 use Tester\Assert;
+use Tester\Environment;
 
 $container = require '../../Bootstrap.php';
 
@@ -18,6 +18,7 @@ class DeleteTest extends ScheduleTestCase {
     protected int $dsefAppId;
 
     protected function setUp(): void {
+        Environment::skip('3.0');
         parent::setUp();
         $this->lastPersonId = $this->createPerson('Paní', 'Bílá III.',
             [
@@ -41,7 +42,6 @@ class DeleteTest extends ScheduleTestCase {
         $loginId = $this->insert('login', ['person_id' => $this->lastPersonId, 'active' => 1]);
         $this->insert(DbNames::TAB_GRANT, ['login_id' => $loginId, 'role_id' => 5, 'contest_id' => 1]);
         $this->authenticate($loginId);
-
     }
 
     public function testRegistration(): void {
@@ -80,7 +80,7 @@ class DeleteTest extends ScheduleTestCase {
             'cancelled____terminated' => 'Zrušit přihlášku',
         ];
 
-        $post = Helpers::merge([], [
+        $post = \Nette\Schema\Helpers::merge([], [
             'action' => 'default',
             'lang' => 'cs',
             'contestId' => 1,

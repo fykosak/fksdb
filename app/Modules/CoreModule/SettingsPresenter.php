@@ -84,7 +84,7 @@ class SettingsPresenter extends BasePresenter {
      * @throws BadTypeException
      */
     protected function createComponentSettingsForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();

@@ -58,7 +58,6 @@ class DeduplicatePresenter extends BasePresenter {
         $this->authorizedMerge($trunkId, $mergedId);
     }
 
-
     /**
      * @param int $trunkId
      * @param int $mergedId
@@ -187,7 +186,7 @@ class DeduplicatePresenter extends BasePresenter {
      * @throws BadTypeException
      */
     protected function createComponentMergeForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $this->updateMergeForm($form);
         $submitButton = $form->addSubmit('send', _('Merge persons'));

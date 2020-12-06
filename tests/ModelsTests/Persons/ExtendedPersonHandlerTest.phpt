@@ -50,7 +50,6 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
         $service = $this->getContainer()->getByType(ServiceContestant::class);
         $contest = $this->container->getByType(ServiceContest::class)->findByPrimary(ModelContest::ID_FYKOS);
         $this->fixture = $handlerFactory->create($service, $contest, 1, 'cs');
-
     }
 
     protected function tearDown(): void {
@@ -60,7 +59,6 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
 
         parent::tearDown();
     }
-
 
     public function testNewPerson(): void {
 

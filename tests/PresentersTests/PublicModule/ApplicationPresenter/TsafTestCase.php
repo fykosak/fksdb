@@ -3,6 +3,7 @@
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
 use Nette\Utils\DateTime;
+use Tester\Environment;
 
 abstract class TsafTestCase extends DsefTestCase {
 
@@ -15,6 +16,7 @@ abstract class TsafTestCase extends DsefTestCase {
     }
 
     protected function setUp(): void {
+        Environment::skip('3.0');
         parent::setUp();
         $this->dsefEventId = $this->eventId;
 

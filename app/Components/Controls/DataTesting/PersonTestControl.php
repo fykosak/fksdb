@@ -57,7 +57,7 @@ class PersonTestControl extends BaseComponent {
      * @throws BadTypeException
      */
     protected function createComponentForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->addText('start_id', sprintf(_('From %s'), 'person_id'))
             ->addRule(Form::INTEGER)

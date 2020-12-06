@@ -47,9 +47,9 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase {
         $init = $this->countEvents();
         $response = $this->createFormRequest('create', [
             EventFormComponent::CONT_EVENT => [
-                'event_type_id' => 2,
-                'year' => 1,
-                'event_year' => 1,
+                'event_type_id' => (string)2,
+                'year' => (string)1,
+                'event_year' => (string)1,
                 'begin' => (new \DateTime())->format('c'),
                 'end' => (new \DateTime())->format('c'),
                 'name' => 'Dummy Event',
@@ -64,9 +64,9 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase {
         $init = $this->countEvents();
         $response = $this->createFormRequest('create', [
             EventFormComponent::CONT_EVENT => [
-                'event_type_id' => 1,
-                'year' => 1,
-                'event_year' => 1,
+                'event_type_id' => (string)1,
+                'year' => (string)1,
+                'event_year' => (string)1,
                 'begin' => (new \DateTime())->format('c'),
                 'end' => (new \DateTime())->format('c'),
                 'name' => 'Dummy Event',
@@ -82,9 +82,9 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase {
     public function testEdit(): void {
         $response = $this->createFormRequest('edit', [
             EventFormComponent::CONT_EVENT => [
-                'event_type_id' => 1,
-                'year' => 1,
-                'event_year' => 1,
+                'event_type_id' => (string)1,
+                'year' => (string)1,
+                'event_year' => (string)1,
                 'begin' => (new \DateTime())->format('c'),
                 'end' => (new \DateTime())->format('c'),
                 'name' => 'Dummy Event edited',

@@ -18,6 +18,7 @@ parameters:
         host: astrid.astrid.astrid
         user: astrid
         password: astrid
+    disableCrossOrigin: true
 application:
     silentLinks: false
 database:

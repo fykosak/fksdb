@@ -11,12 +11,13 @@ use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;
 use Nette\Utils\DateTime;
 use Tester\Assert;
+use Tester\Environment;
 
 class AuthTest extends DsefTestCase {
 
     protected function setUp(): void {
+        Environment::skip('3.0');
         parent::setUp();
-
         $this->authenticate($this->personId);
     }
 
@@ -88,7 +89,6 @@ class AuthTest extends DsefTestCase {
         $info = $this->assertPersonInfo($this->personId);
         Assert::equal('1231354', $info->id_number);
         Assert::equal(DateTime::from('2014-09-15'), $info->born);
-
 
         $eApplication = $this->assertExtendedApplication($application, 'e_dsef_participant');
         Assert::equal(1, $eApplication->e_dsef_group_id);

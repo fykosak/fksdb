@@ -16,12 +16,14 @@ use FKSDB\StoredQuery\StoredQueryParameter;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
 use Nette\DI\Container;
 use Tester\Assert;
+use Tester\Environment;
 
 class AESOPFormatTest extends DatabaseTestCase {
 
     private AESOPFormat $fixture;
 
     protected function setUp(): void {
+        Environment::skip('3.0');
         global $container;
         parent::setUp();
         /** @var ExportFormatFactory $exportFactory */

@@ -33,7 +33,7 @@ class CorrectedControl extends SeriesTableComponent {
      * @throws BadTypeException
      */
     protected function createComponentForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->addTextArea('submits', _('Submits'))->setOption('description', _('Comma separated submitIDs'));
         $form->addSubmit('submit', _('Save'));

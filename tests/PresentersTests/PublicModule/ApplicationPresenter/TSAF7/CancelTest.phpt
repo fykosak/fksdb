@@ -7,15 +7,17 @@ $container = require '../../../../Bootstrap.php';
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TsafTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
+use Tester\Environment;
 
 class CancelTest extends TsafTestCase {
 
     private int $tsafAppId;
 
     protected function setUp(): void {
+        Environment::skip('3.0');
         parent::setUp();
 
-        $adminId = $this->createPerson('Admin', 'Adminovič', [],  []);
+        $adminId = $this->createPerson('Admin', 'Adminovič', [], []);
         $this->insert('grant', [
             'login_id' => $adminId,
             'role_id' => 5,
@@ -91,7 +93,6 @@ class CancelTest extends TsafTestCase {
         Assert::equal('cancelled', $application->status);
         Assert::equal('F_S', $application->tshirt_size);
         Assert::equal('F_M', $application->jumper_size);
-
 
         $application = $this->assertApplication($this->dsefEventId, 'bila@hrad.cz');
         Assert::equal('applied.notsaf', $application->status);

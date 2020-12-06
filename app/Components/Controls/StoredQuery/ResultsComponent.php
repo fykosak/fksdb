@@ -87,7 +87,7 @@ class ResultsComponent extends BaseComponent {
      * @throws BadTypeException
      */
     protected function createComponentParametrizeForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $parameters = $this->storedQueryFormFactory->createParametersValues($this->storedQuery->getQueryPattern()->getParameters());
@@ -167,7 +167,7 @@ class ResultsComponent extends BaseComponent {
 
     /**
      * TODO is this really need?
-      G*/
+     * G*/
     private function isAuthorized(): bool {
         if (!$this->hasStoredQuery()) {
             return false;

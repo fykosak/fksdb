@@ -93,7 +93,7 @@ class UploadedStorage implements ISubmitStorage {
                 $filename = $todo['file'];
 
                 $dest = $this->root . DIRECTORY_SEPARATOR . $this->createDirname($submit) . DIRECTORY_SEPARATOR . $this->createFilename($submit);
-                @mkdir(dirname($dest), 0777, true); // @ - dir may already exist
+                mkdir(dirname($dest), 0777, true); // @ - dir may already exist
 
                 if (count($this->processings) > 0) {
                     $original = $dest . self::ORIGINAL_EXT;

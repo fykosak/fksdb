@@ -6,7 +6,7 @@ $container = require '../../../../Bootstrap.php';
 
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Responses\RedirectResponse;
-use Nette\Application\Responses\TextResponse;
+
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
@@ -17,7 +17,7 @@ class AnonymousExistingTest extends DsefTestCase {
 
         $request = $this->createPostRequest([
             'participant' => [
-                'person_id' => $this->personId,
+                'person_id' => (string)$this->personId,
                 'person_id_1' => [
                     '_c_compact' => " ",
                     'person' => [
@@ -49,7 +49,6 @@ class AnonymousExistingTest extends DsefTestCase {
 
         $response = $this->fixture->run($request);
         Assert::type(RedirectResponse::class, $response);
-        var_dump($this->connection->getDsn());
         $application = $this->assertApplication($this->eventId, 'bila@hrad.cz');
         Assert::equal('applied', $application->status);
         Assert::equal((int)$this->personId, $application->person_id);

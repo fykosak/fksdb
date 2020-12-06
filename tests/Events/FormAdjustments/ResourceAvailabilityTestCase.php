@@ -41,7 +41,6 @@ EOT
             'capacity' => 4,
         ]);
 
-
         $this->fixture = $this->createPresenter('Public:Application');
         $this->mockApplication();
 

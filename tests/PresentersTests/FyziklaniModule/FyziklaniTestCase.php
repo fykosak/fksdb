@@ -6,7 +6,6 @@ use FKSDB\ORM\DbNames;
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
 use Nette\Database\IRow;
-use Nette\Database\Row;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
 

@@ -91,7 +91,7 @@ class ApplicationComponent extends BaseComponent {
      *
      */
     protected function createComponentForm(): FormControl {
-        $result = new FormControl();
+        $result = new FormControl($this->getContext());
         $form = $result->getForm();
 
         /*

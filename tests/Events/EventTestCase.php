@@ -8,8 +8,7 @@ use FKSDB\Tests\ModelTests\DatabaseTestCase;
 use Nette\Application\Request;
 use Nette\Database\IRow;
 use Nette\DI\Container;
-use Nette\DI\Config\Helpers;
-use Nette\Database\Row;
+use Nette\Schema\Helpers;
 use Tester\Assert;
 
 abstract class EventTestCase extends DatabaseTestCase {
@@ -48,17 +47,20 @@ abstract class EventTestCase extends DatabaseTestCase {
         return $this->insert(DbNames::TAB_EVENT, $data);
     }
 
-    protected function createPostRequest(array $postData, array $post = []): Request {
-        $post = \Nette\Schema\Helpers::merge($post, [
-            'action' => 'default',
-            'lang' => 'cs',
-            'contestId' => (string)1,
-            'year' => (string)1,
-            'eventId' => $this->getEventId(),
-            '_do' => 'application-form-form-submit',
-        ]);
-
-        return new Request('Public:Application', 'POST', $post, $postData);
+    protected function createPostRequest(array $formData, array $params=[]): Request {
+        return new Request(
+            'Public:Application',
+            'POST',
+            Helpers::merge([
+                'action' => 'default',
+                'lang' => 'cs',
+                'contestId' => (string)1,
+                'year' => (string)1,
+                'eventId' => $this->getEventId(),
+            ], $params),
+            Helpers::merge($formData, [
+                '_do' => 'application-form-form-submit',
+            ]));
     }
 
     abstract protected function getEventId(): int;

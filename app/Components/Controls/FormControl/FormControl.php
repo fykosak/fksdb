@@ -2,9 +2,11 @@
 
 namespace FKSDB\Components\Controls\FormControl;
 
+use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Exceptions\BadTypeException;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\Form;
+use Nette\DI\Container;
 
 /**
  * Bootstrap compatible form control with support for AJAX in terms
@@ -12,12 +14,16 @@ use Nette\Application\UI\Form;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class FormControl extends Control {
+class FormControl extends BaseComponent {
 
     public const SNIPPET_MAIN = 'groupContainer';
 
     protected function createComponentForm(): Form {
-        return new Form();
+        $form = new Form();
+        if ($this->getContext()->getParameters()['disableCrossOrigin']) {
+            $form->disableSameSiteProtection();
+        }
+        return $form;
     }
 
     /**

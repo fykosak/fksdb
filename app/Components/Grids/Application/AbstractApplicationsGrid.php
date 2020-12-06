@@ -57,7 +57,7 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
             ];
         }
 
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $stateContainer = new ContainerWithOptions();
         $stateContainer->setOption('label', _('States'));

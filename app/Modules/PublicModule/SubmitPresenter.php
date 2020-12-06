@@ -25,6 +25,7 @@ use FKSDB\Submits\SubmitHandlerFactory;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
+use Nette\Http\FileUpload;
 use Tracy\Debugger;
 
 /**
@@ -113,7 +114,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadTypeException
      */
     protected function createComponentUploadForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $taskIds = [];
@@ -226,7 +227,7 @@ class SubmitPresenter extends BasePresenter {
                     $this->flashMessage(sprintf(_('Task %s cannot be submitted anymore.'), $task->label), self::FLASH_ERROR);
                     continue;
                 }
-
+                /** @var FileUpload[] $taskValues */
                 $taskValues = $values['task' . $task->task_id];
 
                 if (count($questions)) {

@@ -22,7 +22,6 @@ use FKSDB\Components\Forms\Factories\Events\PersonFactory;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;
-use Nette\DI\Config\Helpers as ConfigHelpers;
 use Nette\DI\Config\Loader;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Container;
@@ -144,9 +143,9 @@ class EventsExtension extends CompilerExtension {
              */
             $protoConfig = $this->getBaseMachineConfig($protoDefinitionName, $protoBaseName);
             $eventTypeId = $config[$protoDefinitionName]['event_type_id'];
-            $protoConfig['eventRelation'] = new Statement(SameYearEvent::class, [$eventTypeId]);
+            $protoConfig['eventRelation'] = new \Nette\DI\Definitions\Statement(SameYearEvent::class, [$eventTypeId]);
             $protoConfig['paramScheme'] = $config[$protoDefinitionName]['paramScheme'];
-            $this->baseMachineConfig[$key] = ConfigHelpers::merge($baseMachineDef, $protoConfig);
+            $this->baseMachineConfig[$key] = \Nette\Schema\Helpers::merge($baseMachineDef, $protoConfig);
             break;
         }
         return $this->baseMachineConfig[$key];

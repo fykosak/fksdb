@@ -32,7 +32,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     private ReferencedPersonFactory $referencedPersonFactory;
     private ExtendedPersonHandlerFactory $handlerFactory;
 
-    final public function injectExtendedPerson(ReferencedPersonFactory $referencedPersonFactory,ExtendedPersonHandlerFactory $handlerFactory): void {
+    final public function injectExtendedPerson(ReferencedPersonFactory $referencedPersonFactory, ExtendedPersonHandlerFactory $handlerFactory): void {
         $this->referencedPersonFactory = $referencedPersonFactory;
         $this->handlerFactory = $handlerFactory;
     }
@@ -72,7 +72,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @throws BadRequestException
      */
     private function createComponentFormControl(bool $create): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $container = new ContainerWithOptions();

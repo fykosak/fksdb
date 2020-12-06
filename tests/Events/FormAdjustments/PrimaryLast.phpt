@@ -2,7 +2,6 @@
 
 namespace FKSDB\Tests\Events\FormAdjustments;
 
-use FKSDB\Tests\Events\FormAdjustments\ResourceAvailabilityTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;

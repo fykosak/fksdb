@@ -7,11 +7,11 @@ use FKSDB\Tests\ModelTests\DatabaseTestCase;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
+use Nette\Application\Responses\TextResponse;
 use Nette\Database\IRow;
-use Nette\Database\Row;
-use Nette\DI\Config\Helpers;
 use Nette\DI\Container;
 use Nette\Http\FileUpload;
+use Nette\Schema\Helpers;
 use Nette\Utils\Finder;
 use Tester\Assert;
 use Tester\Environment;
@@ -43,6 +43,7 @@ abstract class SubmitTestCase extends DatabaseTestCase {
     }
 
     protected function setUp(): void {
+        Environment::skip('3.0');
         parent::setUp();
         Environment::lock(LOCK_UPLOAD, TEMP_DIR);
 
@@ -91,7 +92,6 @@ abstract class SubmitTestCase extends DatabaseTestCase {
             'person_id' => $this->personId,
         ]);
 
-
         $this->fixture = $this->createPresenter('Public:Submit');
         $this->authenticate($this->personId);
         $this->fakeProtection(self::TOKEN);
@@ -115,15 +115,16 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         parent::tearDown();
     }
 
-    protected function createPostRequest(array $postData, array $post = []): Request {
-        $post = Helpers::merge($post, [
+    protected function createPostRequest(array $formData): Request {
+        $formData = Helpers::merge($formData, [
+            '_do' => 'uploadForm-form-submit',
+        ]);
+        return new Request('Public:Submit', 'POST', [
             'action' => 'default',
             'lang' => 'cs',
             'contestId' => 1,
             'year' => 1,
-            '_do' => 'uploadForm-form-submit',
-        ]);
-        return new Request('Public:Submit', 'POST', $post, $postData);
+        ], $formData);
     }
 
     protected function createFileUpload(): array {
@@ -150,8 +151,9 @@ abstract class SubmitTestCase extends DatabaseTestCase {
             "task{$this->taskAll}" => $this->createFileUpload(),
             "task{$this->taskRestricted}" => $this->createFileUpload(),
         ]);
+        /** @var TextResponse $response */
         $response = $this->fixture->run($request);
-
+        // file_put_contents('t.html', $response->getSource());
         Assert::type(RedirectResponse::class, $response);
 
         $this->assertSubmit($this->contestantId, $this->taskAll);

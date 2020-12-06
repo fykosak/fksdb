@@ -218,7 +218,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @throws BadTypeException
      */
     protected function createComponentEmailForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->addText('email', _('E-mail'));
         $form->addSubmit('submit', _('Find'));
@@ -249,7 +249,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @throws UnsupportedLanguageException
      */
     protected function createComponentContestantForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $container = new ContainerWithOptions();
@@ -289,7 +289,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
                     $this->getUser()->login($login);
                 }
                 $this->redirect('Dashboard:default');
-
             }
         };
         $form->addProtection(_('The form has expired. Please send it again.'));

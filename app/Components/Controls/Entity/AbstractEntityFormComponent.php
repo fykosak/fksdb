@@ -60,7 +60,7 @@ abstract class AbstractEntityFormComponent extends FormComponent {
     }
 
     protected function appendSubmitButton(Form $form): SubmitButton {
-        return $form->addSubmit('submit', $this->isCreating() ? _('Create') : _('Save'));
+        return $form->addSubmit('send', $this->isCreating() ? _('Create') : _('Save'));
     }
 
     protected function configureForm(Form $form): void {

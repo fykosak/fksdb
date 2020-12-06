@@ -44,7 +44,7 @@ class ImportComponent extends BaseComponent {
      * @throws BadTypeException
      */
     protected function createComponentFormImport(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $form->addUpload('file', _('Soubor s přihláškami'))

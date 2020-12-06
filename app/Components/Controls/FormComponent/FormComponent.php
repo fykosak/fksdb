@@ -25,7 +25,7 @@ abstract class FormComponent extends BaseComponent {
     }
 
     protected function createFormControl(): FormControl {
-        return new FormControl();
+        return new FormControl($this->getContext());
     }
 
     /**

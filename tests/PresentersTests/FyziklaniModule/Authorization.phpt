@@ -14,6 +14,7 @@ use Nette\Application\Responses\TextResponse;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
 use Tester\Assert;
+use Tester\Environment;
 
 class Authorization extends FyziklaniTestCase {
 
@@ -39,25 +40,26 @@ class Authorization extends FyziklaniTestCase {
     }
 
     protected function setUp(): void {
+        Environment::skip('3.0');
         parent::setUp();
 
         $this->perPerson = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka@les.cz', 'born' => DateTime::from('2000-01-01'),
-        ],  []);
+        ], []);
 
         $this->perOrg = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka2@les.cz', 'born' => DateTime::from('2000-01-01'),
-        ],  []);
+        ], []);
         $this->insert(DbNames::TAB_ORG, ['person_id' => $this->perOrg, 'contest_id' => 1, 'since' => 0, 'order' => 0]);
 
         $this->perOrgOther = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka3@les.cz', 'born' => DateTime::from('2000-01-01'),
-        ],  []);
+        ], []);
         $this->insert(DbNames::TAB_ORG, ['person_id' => $this->perOrgOther, 'contest_id' => 2, 'since' => 0, 'order' => 0]);
 
         $this->perContestant = $this->createPerson('Karkulka', 'Červená', [
             'email' => 'karkulka4@les.cz', 'born' => DateTime::from('2000-01-01'),
-        ],  []);
+        ], []);
         $this->insert(DbNames::TAB_CONTESTANT_BASE, ['person_id' => $this->perContestant, 'contest_id' => 1, 'year' => 1]);
 
         $this->eventId = $this->createEvent([]);

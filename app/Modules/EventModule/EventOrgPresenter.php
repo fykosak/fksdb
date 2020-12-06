@@ -65,7 +65,7 @@ class EventOrgPresenter extends BasePresenter {
      */
     public function actionDelete(): void {
         try {
-           $this->traitHandleDelete();
+            $this->traitHandleDelete();
             $this->flashMessage(_('Entity has been deleted'), Message::LVL_WARNING);
             $this->redirect('list');
         } catch (BadRequestException $exception) {

@@ -68,12 +68,12 @@ class EventOrgPresenterTest extends EntityPresenterTestCase {
     public function testModelErrorCreate(): void {
         $init = $this->countEventOrgs();
         $response = $this->createFormRequest('create', [
-                EventOrgFormComponent::CONTAINER => [
-                    'person_id__meta' => 'JS',
-                    'person_id' => null, // empty personId
-                    'note' => '',
-                ],]
-        );
+            EventOrgFormComponent::CONTAINER => [
+                'person_id__meta' => 'JS',
+                'person_id' => null, // empty personId
+                'note' => '',
+            ],
+        ]);
         $html = $this->assertPageDisplay($response);
         Assert::contains('Error', $html);
         $after = $this->countEventOrgs();

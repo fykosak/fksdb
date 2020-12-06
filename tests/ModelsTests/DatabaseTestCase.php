@@ -7,7 +7,6 @@ use FKSDB\ORM\DbNames;
 use Nette\Database\Connection;
 use Nette\Database\Context;
 use Nette\Database\IRow;
-use Nette\Database\Row;
 use Nette\DI\Container;
 use Tester\Assert;
 use Tester\Environment;

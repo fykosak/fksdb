@@ -48,7 +48,7 @@ class HandoutForm extends BaseComponent {
      * @throws BadTypeException
      */
     protected function createComponentForm(): FormControl {
-        $formControl = new FormControl();
+        $formControl = new FormControl($this->getContext());
         $form = $formControl->getForm();
         $orgProvider = new PersonProvider($this->servicePerson);
         $orgProvider->filterOrgs($this->seriesTable->getContest(), $this->yearCalculator);

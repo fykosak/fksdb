@@ -34,6 +34,7 @@ class WithDSEFAnonymousTest extends TsafTestCase {
     }
 
     public function testRegistration(): void {
+
         $request = $this->createPostRequest([
             'participantTsaf' => [
                 'person_id' => $this->personId,

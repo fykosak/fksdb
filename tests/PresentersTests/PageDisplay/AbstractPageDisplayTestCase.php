@@ -27,6 +27,7 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
      * @param Container $container
      */
     public function __construct(Container $container) {
+        Environment::skip('3.0');
         parent::__construct($container);
         $this->setContainer($container);
     }
@@ -56,6 +57,7 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
      * @dataProvider getPages
      */
     final public function testDisplay(string $presenterName, string $action, array $params = []): void {
+
         [$presenterName, $action, $params] = $this->transformParams($presenterName, $action, $params);
         $fixture = $this->createPresenter($presenterName);
         $request = $this->createRequest($presenterName, $action, $params);
@@ -64,7 +66,7 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
         $source = $response->getSource();
         Assert::type(ITemplate::class, $source);
 
-        Assert::noError(function () use ($source) : string {
+        Assert::noError(function () use ($source): string {
             return (string)$source;
         });
     }

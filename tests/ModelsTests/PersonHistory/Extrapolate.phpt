@@ -92,7 +92,7 @@ class Extrapolate extends DatabaseTestCase {
     /**
      * @dataProvider getStudyYearData
      */
-    public function testStudyYear(int $from, int $step,?int $to): void {
+    public function testStudyYear(int $from, int $step, ?int $to): void {
         $fixture = $this->service->createNewModel([
             'person_id' => $this->personId,
             'ac_year' => 2000,

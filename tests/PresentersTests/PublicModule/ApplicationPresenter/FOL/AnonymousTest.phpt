@@ -34,6 +34,7 @@ class AnonymousTest extends FolTestCase {
     }
 
     public function testAnonymousRegistration(): void {
+
         $request = $this->createPostRequest([
             'team' => [
                 'name' => 'Okurkový tým',
@@ -52,7 +53,7 @@ class AnonymousTest extends FolTestCase {
                     ],
                     'person_history' => [
                         'school_id__meta' => 'JS',
-                        'school_id' => 1,
+                        'school_id' => (string)1,
                         'study_year' => '',
                     ],
                 ],

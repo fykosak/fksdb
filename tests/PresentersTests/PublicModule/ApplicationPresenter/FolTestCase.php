@@ -5,7 +5,6 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\IPresenter;
 use Nette\Database\IRow;
-use Nette\Database\Row;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 

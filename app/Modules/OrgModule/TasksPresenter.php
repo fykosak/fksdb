@@ -57,7 +57,7 @@ class TasksPresenter extends BasePresenter {
      * @throws BadTypeException
      */
     protected function createComponentSeriesForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $source = $form->addRadioList('source', _('Problem source'), [

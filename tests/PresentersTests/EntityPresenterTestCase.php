@@ -5,11 +5,11 @@ namespace FKSDB\Tests\PresentersTests;
 use FKSDB\ORM\DbNames;
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
-use Nette\Application\IPresenter;
 use Nette\Application\IResponse;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Tester\Assert;
 
@@ -22,7 +22,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase {
 
     protected int $cartesianPersonId;
 
-    protected IPresenter $fixture;
+    protected Presenter $fixture;
 
     /**
      * OrgPresenter constructor.
@@ -67,7 +67,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase {
         $source = $response->getSource();
         Assert::type(ITemplate::class, $source);
 
-        Assert::noError(function () use ($source) : string {
+        Assert::noError(function () use ($source): string {
             return (string)$source;
         });
         return (string)$source;
@@ -76,8 +76,9 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase {
     protected function createFormRequest(string $action, array $formData, array $params = []): IResponse {
         $request = $this->createPostRequest($action, $params, array_merge([
             '_do' => ($action === 'create') ? 'createForm-formControl-form-submit' : 'editForm-formControl-form-submit',
-            '_submit' => 'save',
+            'send' => 'Save',
         ], $formData));
+
         return $this->fixture->run($request);
     }
 

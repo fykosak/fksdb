@@ -131,7 +131,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadTypeException
      */
     protected function createComponentFormSearch(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->addComponent($this->personFactory->createPersonSelect(true, _('Person'), new PersonProvider($this->servicePerson)), 'person_id');
 

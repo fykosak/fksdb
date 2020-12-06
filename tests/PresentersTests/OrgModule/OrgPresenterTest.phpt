@@ -6,10 +6,9 @@ $container = require '../../Bootstrap.php';
 
 use FKSDB\Components\Controls\Entity\OrgFormComponent;
 use FKSDB\ORM\DbNames;
-use FKSDB\Tests\PresentersTests\EntityPresenterTestCase;
-use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
+use Tester\Environment;
 
 /**
  * Class OrgPresenterTest
@@ -25,6 +24,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase {
     private $orgPersonId;
 
     protected function setUp(): void {
+        Environment::skip('3.0');
         parent::setUp();
         $this->loginUser();
         $this->insert(DbNames::TAB_ORG, ['person_id' => $this->cartesianPersonId, 'contest_id' => 1, 'since' => 1, 'order' => 1]);
