@@ -41,7 +41,6 @@ class PersonSearchContainer extends SearchContainer {
         $this->personProvider = $provider;
     }
 
-
     protected function createSearchControl(): ?BaseControl {
         switch ($this->searchType) {
             case self::SEARCH_EMAIL:
@@ -49,8 +48,8 @@ class PersonSearchContainer extends SearchContainer {
                 $control->addCondition(Form::FILLED)
                     ->addRule(Form::EMAIL, _('Invalid e-mail.'));
                 $control->setOption('description', _('First of all try to find the person in our database using e-mail address'));
-                $control->setAttribute('placeholder', 'your-email@exmaple.com');
-                $control->setAttribute('autocomplete', 'email');
+                $control->setHtmlAttribute('placeholder', 'your-email@exmaple.com');
+                $control->setHtmlAttribute('autocomplete', 'email');
                 return $control;
             case self::SEARCH_ID:
                 return $this->personFactory->createPersonSelect(true, _('Person'), $this->personProvider);

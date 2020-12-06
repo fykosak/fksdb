@@ -49,13 +49,13 @@ abstract class EventTestCase extends DatabaseTestCase {
     }
 
     protected function createPostRequest(array $postData, array $post = []): Request {
-        $post = Helpers::merge($post, [
+        $post = \Nette\Schema\Helpers::merge($post, [
             'action' => 'default',
             'lang' => 'cs',
             'contestId' => (string)1,
             'year' => (string)1,
             'eventId' => $this->getEventId(),
-            'do' => 'application-form-form-submit',
+            '_do' => 'application-form-form-submit',
         ]);
 
         return new Request('Public:Application', 'POST', $post, $postData);

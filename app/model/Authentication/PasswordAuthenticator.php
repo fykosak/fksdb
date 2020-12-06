@@ -84,7 +84,7 @@ class PasswordAuthenticator extends AbstractAuthenticator implements IAuthentica
 
     /**
      * @param string $password
-     * @param ModelLogin $login
+     * @param ModelLogin|object $login
      * @return string
      */
     public static function calculateHash($password, $login): string {

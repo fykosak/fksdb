@@ -87,7 +87,7 @@ class DeleteTest extends ScheduleTestCase {
             'year' => 1,
             'eventId' => $this->eventId,
             'id' => $this->dsefAppId,
-            'do' => 'application-form-form-submit',
+            '_do' => 'application-form-form-submit',
         ]);
         $request = new Request('Public:Application', 'POST', $post, $postData);
 

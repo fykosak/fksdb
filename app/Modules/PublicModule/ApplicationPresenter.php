@@ -70,7 +70,7 @@ class ApplicationPresenter extends BasePresenter {
                         throw new EventNotFoundException();
                     }
                     // hack if contestId is not present, but there ale a eventId param
-                    $this->forward('default', array_merge($this->getParameters(), ['contestId' => $this->getEvent()->contest_id, 'year' => $this->getEvent()->year]));
+                    $this->forward('default', array_merge($this->getParameters(), ['contestId' => $this->getEvent()->getEventType()->contest_id, 'year' => $this->getEvent()->year]));
                 }
         }
         $this->yearTraitStartup();

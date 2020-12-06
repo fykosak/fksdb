@@ -44,8 +44,8 @@ EOT
     }
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM e_dsef_participant');
-        $this->connection->query('DELETE FROM e_dsef_group');
+     //   $this->connection->query('DELETE FROM e_dsef_participant');
+      //  $this->connection->query('DELETE FROM e_dsef_group');
         parent::tearDown();
     }
 }

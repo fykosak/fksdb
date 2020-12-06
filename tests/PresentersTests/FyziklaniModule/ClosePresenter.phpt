@@ -170,7 +170,7 @@ class ClosePresenter extends FyziklaniTestCase {
         ], [
             'id' => $teamId,
             'action' => 'team',
-            'do' => 'closeTeamControl-close',
+            '_do' => 'closeTeamControl-close',
         ]);
         $response = $this->fixture->run($request);
         Assert::type(RedirectResponse::class, $response);
