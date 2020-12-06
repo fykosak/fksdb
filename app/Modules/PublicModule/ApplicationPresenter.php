@@ -6,7 +6,7 @@ use FKSDB\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Events\EventDispatchFactory;
-use FKSDB\Events\EventNotFoundException;
+use FKSDB\Events\Exceptions\EventNotFoundException;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Events\Model\Holder\Holder;
@@ -26,6 +26,7 @@ use FKSDB\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidArgumentException;
 
@@ -291,6 +292,7 @@ class ApplicationPresenter extends BasePresenter {
      * @return void
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
+     * @throws BadRequestException
      * @throws \ReflectionException
      */
     protected function beforeRender(): void {

@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\FinalResults;
-use FKSDB\Events\EventNotFoundException;
+use FKSDB\Events\Exceptions\EventNotFoundException;
 use FKSDB\Fyziklani\Ranking\NotClosedTeamException;
 use FKSDB\Fyziklani\Ranking\RankingStrategy;
 use FKSDB\UI\PageTitle;

@@ -15,8 +15,8 @@ class BrojureResultsModel extends AbstractResultsModel {
 
     public const COL_SERIES_PREFIX = 's';
 
-    /** @var array of int */
-    protected $series;
+    /** @var int[] */
+    protected array $series;
 
     /**
      * Number of (single) series that is listed in detail
@@ -85,10 +85,7 @@ class BrojureResultsModel extends AbstractResultsModel {
         return $this->dataColumns[$category->id];
     }
 
-    /**
-     * @return array|mixed
-     */
-    public function getSeries() {
+    public function getSeries(): array {
         return $this->series;
     }
 

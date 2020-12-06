@@ -3,11 +3,8 @@
 namespace FKSDB\Tests\PresentersTests;
 
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\ModelLogin;
-use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
-use FKSDB\Tests\ModelTests\DatabaseTestCase;
-use FKSDB\YearCalculator;
+use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\IResponse;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
@@ -24,8 +21,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase {
     use MockApplicationTrait;
 
     protected int $cartesianPersonId;
-    private int $loginId;
-
+    protected int $loginId;
     protected Presenter $fixture;
 
     /**

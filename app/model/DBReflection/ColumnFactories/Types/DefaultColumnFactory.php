@@ -157,12 +157,12 @@ abstract class DefaultColumnFactory implements IColumnFactory {
     }
 
     /**
-     * @param AbstractModelSingle $modelSingle
+     * @param AbstractModelSingle $modelSingleSingle
      * @return AbstractModelSingle|null
      * @throws BadTypeException
      */
-    protected function resolveModel(AbstractModelSingle $modelSingle): ?AbstractModelSingle {
-        return $this->referencedFactory->accessModel($modelSingle);
+    protected function resolveModel(AbstractModelSingle $modelSingleSingle): ?AbstractModelSingle {
+        return $this->referencedFactory->accessModel($modelSingleSingle);
     }
 
     final public function hasReadPermissions(int $userValue): bool {

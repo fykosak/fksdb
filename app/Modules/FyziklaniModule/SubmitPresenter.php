@@ -6,7 +6,7 @@ use FKSDB\Components\Controls\Entity\FyziklaniSubmitEditComponent;
 use FKSDB\Components\Controls\Fyziklani\Submit\TaskCodeInput;
 use FKSDB\Components\Grids\Fyziklani\Submits\AllSubmitsGrid;
 use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Events\EventNotFoundException;
+use FKSDB\Events\Exceptions\EventNotFoundException;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Fyziklani\Submit\HandlerFactory;

@@ -265,7 +265,6 @@ abstract class BaseGrid extends Grid {
             }
             return $hrefParams;
         };
-        /** @var Button $button */
         $button = $this->addButton($id, $label)
             ->setText($label)
             ->setLink(function ($model) use ($destination, $paramMapCallback): string {
@@ -294,7 +293,6 @@ abstract class BaseGrid extends Grid {
      */
     protected function addLink(string $linkId, bool $checkACL = false): Button {
         $factory = $this->tableReflectionFactory->loadLinkFactory($linkId);
-        /** @var Button $button */
         $button = $this->addButton(str_replace('.', '_', $linkId), $factory->getText())
             ->setText($factory->getText())
             ->setLink(function ($model) use ($factory): string {

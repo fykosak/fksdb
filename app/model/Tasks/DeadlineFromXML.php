@@ -8,7 +8,6 @@ use FKSDB\ORM\Services\ServiceTask;
 use Nette\Utils\DateTime;
 use FKSDB\Pipeline\Stage;
 
-
 /**
  * @note Assumes TasksFromXML has been run previously.
  *
@@ -16,19 +15,14 @@ use FKSDB\Pipeline\Stage;
  */
 class DeadlineFromXML extends Stage {
 
-    /** @var SeriesData */
-    private $data;
-
+    private SeriesData $data;
     private ServiceTask $taskService;
 
     public function __construct(ServiceTask $taskService) {
         $this->taskService = $taskService;
     }
 
-    /**
-     * @return SeriesData
-     */
-    public function getOutput() {
+    public function getOutput(): SeriesData {
         return $this->data;
     }
 
@@ -52,5 +46,4 @@ class DeadlineFromXML extends Stage {
     public function setInput($data): void {
         $this->data = $data;
     }
-
 }

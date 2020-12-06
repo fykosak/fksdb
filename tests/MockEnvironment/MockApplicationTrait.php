@@ -7,10 +7,9 @@ use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\Mail\MailTemplateFactory;
 use FKSDB\YearCalculator;
-use Nette\Application\IPresenter;
 use Nette\Application\IPresenterFactory;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use Nette\Http\Request;
 use Nette\Http\Session;
 use Tester\Assert;
 
@@ -58,7 +57,7 @@ trait MockApplicationTrait {
         $section->$key = $token;
     }
 
-    protected function authenticate($login, ?IPresenter $presenter = null): void {
+    protected function authenticate($login, ?Presenter $presenter = null): void {
         $container = $this->getContainer();
         if (!$login instanceof ModelLogin) {
             $login = $container->getByType(ServiceLogin::class)->findByPrimary($login);
@@ -74,7 +73,7 @@ trait MockApplicationTrait {
         }
     }
 
-    protected function createPresenter(string $presenterName): IPresenter {
+    protected function createPresenter(string $presenterName): Presenter {
         $_COOKIE['nette-samesite'] = 1;
         $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);
         $presenter = $presenterFactory->createPresenter($presenterName);

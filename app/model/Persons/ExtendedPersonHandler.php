@@ -4,6 +4,7 @@ namespace FKSDB\Persons;
 
 use FKSDB\Authentication\AccountManager;
 use FKSDB\Components\Forms\Controls\ReferencedId;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\ORM\Models\AbstractModelSingle;
@@ -104,6 +105,7 @@ class ExtendedPersonHandler {
      * @param bool $sendEmail
      * @return int
      * @throws UnsupportedLanguageException
+     * @throws BadTypeException
      */
     final public function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail): int {
 

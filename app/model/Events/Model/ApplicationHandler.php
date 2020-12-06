@@ -5,15 +5,15 @@ namespace FKSDB\Events\Model;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
 use FKSDB\Components\Forms\Controls\Schedule\FullCapacityException;
+use FKSDB\Events\Exceptions\MachineExecutionException;
 use FKSDB\ORM\Services\Exceptions\DuplicateApplicationException;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Machine\Transition;
-use FKSDB\Events\MachineExecutionException;
 use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelDataConflictException;
-use FKSDB\Events\SubmitProcessingException;
+use FKSDB\Events\Exceptions\SubmitProcessingException;
 use Exception;
 use FKSDB\Persons\ModelDataConflictException;
 use FKSDB\Events\EventDispatchFactory;
@@ -126,7 +126,7 @@ class ApplicationHandler {
             Debugger::log($exception, 'app-conflict');
             $this->logger->log(new Message($message, ILogger::ERROR));
             $this->reRaise($exception);
-        } catch (DuplicateApplicationException|MachineExecutionException|SubmitProcessingException|FullCapacityException|ExistingPaymentException|UnavailableTransitionException $exception) {
+        } catch (DuplicateApplicationException | MachineExecutionException | SubmitProcessingException | FullCapacityException | ExistingPaymentException | UnavailableTransitionException $exception) {
             $this->logger->log(new Message($exception->getMessage(), ILogger::ERROR));
             $this->reRaise($exception);
         }
@@ -194,7 +194,7 @@ class ApplicationHandler {
             $this->logger->log(new Message($message, ILogger::ERROR));
             $this->formRollback($form);
             $this->reRaise($exception);
-        } catch (DuplicateApplicationException|MachineExecutionException|SubmitProcessingException|FullCapacityException|ExistingPaymentException $exception) {
+        } catch (DuplicateApplicationException | MachineExecutionException | SubmitProcessingException | FullCapacityException | ExistingPaymentException $exception) {
             $this->logger->log(new Message($exception->getMessage(), ILogger::ERROR));
             $this->formRollback($form);
             $this->reRaise($exception);

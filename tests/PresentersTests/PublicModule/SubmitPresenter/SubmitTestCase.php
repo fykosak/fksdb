@@ -3,11 +3,10 @@
 namespace FKSDB\Tests\PresentersTests\PublicModule\SubmitPresenter;
 
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
-use FKSDB\Tests\ModelTests\DatabaseTestCase;
+use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\IPresenter;
 use Nette\Application\Request;
 use Nette\Application\Responses\RedirectResponse;
-use Nette\Application\Responses\TextResponse;
 use Nette\Database\IRow;
 use Nette\DI\Container;
 use Nette\Http\FileUpload;
@@ -150,9 +149,7 @@ abstract class SubmitTestCase extends DatabaseTestCase {
             "task{$this->taskAll}" => $this->createFileUpload(),
             "task{$this->taskRestricted}" => $this->createFileUpload(),
         ]);
-        /** @var TextResponse $response */
         $response = $this->fixture->run($request);
-        // file_put_contents('t.html', $response->getSource());
         Assert::type(RedirectResponse::class, $response);
 
         $this->assertSubmit($this->contestantId, $this->taskAll);

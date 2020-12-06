@@ -6,7 +6,7 @@ use FKSDB\Components\Controls\Entity\ScheduleItemFormContainer;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\PersonsGrid;
 use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Events\EventNotFoundException;
+use FKSDB\Events\Exceptions\EventNotFoundException;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
@@ -54,7 +54,7 @@ class ScheduleItemPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
      */
     public function titleCreate(): void {
         $this->setPageTitle(new PageTitle(_('Create schedule item'), 'fa fa-calendar-check-o'));

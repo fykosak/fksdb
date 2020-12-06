@@ -4,7 +4,7 @@ namespace FKSDB\Tests\Events;
 
 use FKSDB\ORM\DbNames;
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
-use FKSDB\Tests\ModelTests\DatabaseTestCase;
+use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\Request;
 use Nette\Database\IRow;
 use Nette\DI\Container;

@@ -6,7 +6,7 @@ use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Events\Spec\AbstractCategoryProcessing;
-use FKSDB\Events\SubmitProcessingException;
+use FKSDB\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;

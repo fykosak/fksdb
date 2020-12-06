@@ -32,7 +32,8 @@
       "FKSDB\\": [
         "app/",
         "app/model/"
-      ]
+      ],
+      "FKSDB\\Tests\\": "tests/"
     }
   },
   "scripts": {

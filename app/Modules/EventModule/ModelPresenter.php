@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Events\GraphComponent;
-use FKSDB\Events\EventNotFoundException;
+use FKSDB\Events\Exceptions\EventNotFoundException;
 use FKSDB\UI\PageTitle;
 
 /**

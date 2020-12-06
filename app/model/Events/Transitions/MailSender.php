@@ -8,6 +8,7 @@ use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Machine\Transition;
 use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Mail\MailTemplateFactory;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
@@ -94,6 +95,7 @@ class MailSender {
      * @param Transition $transition
      * @param Holder $holder
      * @return void
+     * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
     public function __invoke(Transition $transition, Holder $holder): void {
@@ -104,6 +106,7 @@ class MailSender {
      * @param Transition $transition
      * @param Holder $holder
      * @return void
+     * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
     private function send(Transition $transition, Holder $holder): void {
@@ -135,6 +138,7 @@ class MailSender {
      * @param BaseHolder $baseHolder
      * @return ModelEmailMessage
      * @throws UnsupportedLanguageException
+     * @throws BadTypeException
      */
     private function createMessage(string $filename, ModelLogin $login, BaseMachine $baseMachine, BaseHolder $baseHolder): ModelEmailMessage {
         $machine = $baseMachine->getMachine();

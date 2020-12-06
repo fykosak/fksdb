@@ -3,11 +3,8 @@
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
 use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\ModelLogin;
-use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
-use FKSDB\Tests\ModelTests\DatabaseTestCase;
-use FKSDB\YearCalculator;
+use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;

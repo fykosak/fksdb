@@ -1,28 +1,21 @@
 <?php
 
-namespace FKSDB\Tests\ModelTests\Person;
+namespace FKSDB\Tests\ModelsTests\Persons;
 
 $container = require '../../Bootstrap.php';
 
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
-use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
-use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServiceContest;
 use FKSDB\ORM\Services\ServiceContestant;
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
-use FKSDB\Tests\ModelTests\DatabaseTestCase;
+use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use FKSDB\Persons\ExtendedPersonHandler;
 use FKSDB\Persons\ExtendedPersonHandlerFactory;
-use FKSDB\Persons\IExtendedPersonPresenter;
-use FKSDB\Persons\IModifiabilityResolver;
-use FKSDB\Persons\IVisibilityResolver;
-use FKSDB\Persons\ReferencedPersonHandler;
 use Tester\Assert;
 
 class ExtendedPersonHandlerTest extends DatabaseTestCase {
@@ -181,50 +174,6 @@ class ExtendedPersonHandlerTest extends DatabaseTestCase {
 /*
  * Mock classes
  */
-
-class PersonPresenter extends BasePresenter implements IExtendedPersonPresenter {
-
-    public function getModel(): ?IModel {
-        return null;
-    }
-
-    public function messageCreate(): string {
-        return '';
-    }
-
-    public function messageEdit(): string {
-        return '';
-    }
-
-    public function messageError(): string {
-        return '';
-    }
-
-    public function messageExists(): string {
-        return '';
-    }
-
-    public function flashMessage($message, string $type = 'info'): \stdClass {
-        return new \stdClass();
-    }
-
-}
-
-class TestResolver implements IVisibilityResolver, IModifiabilityResolver {
-
-    public function getResolutionMode(ModelPerson $person): string {
-        return ReferencedPersonHandler::RESOLUTION_EXCEPTION;
-    }
-
-    public function isModifiable(ModelPerson $person): bool {
-        return true;
-    }
-
-    public function isVisible(ModelPerson $person): bool {
-        return true;
-    }
-
-}
 
 $testCase = new ExtendedPersonHandlerTest($container);
 $testCase->run();

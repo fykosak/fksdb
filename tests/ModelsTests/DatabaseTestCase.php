@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Tests\ModelTests;
+namespace FKSDB\Tests\ModelsTests;
 
 use FKSDB\Authentication\PasswordAuthenticator;
 use FKSDB\ORM\DbNames;

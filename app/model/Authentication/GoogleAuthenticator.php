@@ -37,6 +37,7 @@ class GoogleAuthenticator extends AbstractAuthenticator {
      * @throws UnknownLoginException
      * @throws AuthenticationException
      * @throws InactiveLoginException
+     * @throws \Exception
      */
     public function authenticate(array $user): ModelLogin {
         $person = $this->findPerson($user);

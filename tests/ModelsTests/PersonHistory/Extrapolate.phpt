@@ -6,7 +6,7 @@ $container = require '../../Bootstrap.php';
 
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Services\ServicePersonHistory;
-use FKSDB\Tests\ModelTests\DatabaseTestCase;
+use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\DI\Container;
 use Tester\Assert;
 

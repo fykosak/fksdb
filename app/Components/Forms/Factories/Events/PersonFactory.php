@@ -90,6 +90,11 @@ class PersonFactory extends AbstractFactory {
         $this->container = $container;
     }
 
+    /**
+     * @param Field $field
+     * @return ReferencedId
+     * @throws \ReflectionException
+     */
     public function createComponent(Field $field): ReferencedId {
         $searchType = $this->evaluator->evaluate($this->searchType, $field);
         $allowClear = $this->evaluator->evaluate($this->allowClear, $field);
@@ -141,6 +146,7 @@ class PersonFactory extends AbstractFactory {
      * @param Field $field
      * @param DataValidator $validator
      * @return bool|void
+     * @throws \ReflectionException
      */
     public function validate(Field $field, DataValidator $validator) {
         // check person ID itself
@@ -171,6 +177,7 @@ class PersonFactory extends AbstractFactory {
     /**
      * @param Field $field
      * @return array|mixed
+     * @throws \ReflectionException
      */
     private function evaluateFieldsDefinition(Field $field) {
         Helpers::registerSemantic(EventsExtension::$semanticMap);

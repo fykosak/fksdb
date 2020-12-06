@@ -13,14 +13,11 @@ use Nette\Schema\Helpers;
 use Tester\Assert;
 
 class ClosePresenter extends FyziklaniTestCase {
-
     use MockApplicationTrait;
 
     private IPresenter $fixture;
-    /** @var int */
-    private $teamIds;
-    /** @var int */
-    private $taskIds;
+    private array $teamIds;
+    private array $taskIds;
 
     /**
      * ClosePresenterTest constructor.

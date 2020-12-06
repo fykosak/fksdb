@@ -3,7 +3,6 @@
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
 use FKSDB\ORM\DbNames;
-use Tester\Environment;
 
 $container = require '../../Bootstrap.php';
 

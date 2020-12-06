@@ -16,11 +16,10 @@ class TasksFromXML extends Stage {
 
     public const XML_NAMESPACE = 'http://www.w3.org/XML/1998/namespace';
 
-    /** @var SeriesData */
-    private $data;
+    private SeriesData $data;
 
     /** @var array   xml element => task column */
-    private static $xmlToColumnMap = [
+    private static array $xmlToColumnMap = [
         'name[@xml:lang="cs"]' => 'name_cs',
         'name[@xml:lang="en"]' => 'name_en',
         'points' => 'points',
@@ -34,7 +33,7 @@ class TasksFromXML extends Stage {
     }
 
     /**
-     * @param mixed $data
+     * @param SeriesData $data
      */
     public function setInput($data): void {
         $this->data = $data;
@@ -53,10 +52,7 @@ class TasksFromXML extends Stage {
         }
     }
 
-    /**
-     * @return mixed|SeriesData
-     */
-    public function getOutput() {
+    public function getOutput(): SeriesData {
         return $this->data;
     }
 

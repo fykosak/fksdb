@@ -33,6 +33,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
      * @param string $tokenData
      * @return ModelLogin
      * @throws AuthenticationException
+     * @throws \Exception
      */
     public function authenticate($tokenData): ModelLogin {
         $token = $this->authTokenService->verifyToken($tokenData);

@@ -51,7 +51,7 @@ class EventRole extends DefaultColumnFactory {
         return (new EventRolePrinter($this->yearCalculator))($person, $event);
     }
 
-    protected function resolveModel(AbstractModelSingle $model): ?AbstractModelSingle {
-        return $model; // need to be original model because of referenced access
+    protected function resolveModel(AbstractModelSingle $modelSingle): ?AbstractModelSingle {
+        return $modelSingle; // need to be original model because of referenced access
     }
 }

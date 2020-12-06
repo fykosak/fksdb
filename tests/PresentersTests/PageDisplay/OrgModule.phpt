@@ -3,7 +3,6 @@
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
 use FKSDB\ORM\DbNames;
-use Tester\Environment;
 
 $container = require '../../Bootstrap.php';
 
@@ -16,7 +15,6 @@ class OrgModule extends AbstractPageDisplayTestCase {
         parent::setUp();
         $this->insert(DbNames::TAB_ORG, ['person_id' => $this->personId, 'contest_id' => 1, 'since' => 1, 'order' => 1]);
         $this->insert(DbNames::TAB_PERSON_INFO, ['person_id' => $this->personId]);
-        var_dump($this->personId . 'S');
     }
 
     protected function transformParams(string $presenterName, string $action, array $params): array {

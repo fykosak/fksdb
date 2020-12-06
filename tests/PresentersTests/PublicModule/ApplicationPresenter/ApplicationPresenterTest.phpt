@@ -4,7 +4,7 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
 $container = require '../../../Bootstrap.php';
 
-use FKSDB\Events\EventNotFoundException;
+use FKSDB\Events\Exceptions\EventNotFoundException;
 use FKSDB\Exceptions\NotFoundException;
 use FKSDB\Tests\Events\EventTestCase;
 use Nette\Application\IPresenter;

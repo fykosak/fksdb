@@ -8,7 +8,6 @@ use FKSDB\Components\Controls\Inbox\Inbox\InboxControl;
 use FKSDB\Components\Controls\Inbox\SubmitCheck\SubmitCheckComponent;
 use FKSDB\Components\Controls\Inbox\SubmitsPreview\SubmitsPreviewControl;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\UI\PageTitle;
 use Nette\Application\BadRequestException;
@@ -77,7 +76,6 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
     /* *********** LIVE CYCLE *************/
     /**
      * @throws ForbiddenRequestException
-     * @throws NotImplementedException
      * @throws BadRequestException
      */
     protected function startup(): void {

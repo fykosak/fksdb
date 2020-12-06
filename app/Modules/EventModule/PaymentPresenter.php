@@ -6,7 +6,7 @@ use FKSDB\Components\Controls\Entity\PaymentFormComponent;
 use FKSDB\Components\Controls\Transitions\TransitionButtonsControl;
 use FKSDB\Components\Grids\Payment\EventPaymentGrid;
 use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Events\EventNotFoundException;
+use FKSDB\Events\Exceptions\EventNotFoundException;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\ORM\Models\ModelPayment;
@@ -38,7 +38,7 @@ class PaymentPresenter extends BasePresenter {
     /* ********* titles *****************/
     /**
      * @return void
-     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
      */
     public function titleCreate(): void {
         $this->setPageTitle(new PageTitle(_('New payment'), 'fa fa-credit-card'));
@@ -66,7 +66,7 @@ class PaymentPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
      */
     public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('List of payments'), 'fa fa-credit-card'));
@@ -110,7 +110,7 @@ class PaymentPresenter extends BasePresenter {
      * @throws EventNotFoundException
      */
     public function actionCreate(): void {
-        if (\count($this->getMachine()->getAvailableTransitions(null)) === 0) {
+        if (\count($this->getMachine()->getAvailableTransitions()) === 0) {
             $this->flashMessage(_('Payment is not allowed in this time!'));
             if (!$this->isOrg()) {
                 $this->redirect(':Core:Dashboard:default');

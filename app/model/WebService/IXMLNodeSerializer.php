@@ -19,8 +19,8 @@ interface IXMLNodeSerializer {
      * @param mixed $dataSource
      * @param DOMNode $node
      * @param DOMDocument $doc
-     * @param int $formatVersion
+     * @param int $formatVersionVersion
      * @return void
      */
-    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $formatVersion): void;
+    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $formatVersionVersion): void;
 }

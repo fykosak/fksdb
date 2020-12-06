@@ -4,6 +4,7 @@ namespace FKSDB\Authentication;
 
 use FKSDB\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Authentication\Exceptions\RecoveryNotImplementedException;
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
@@ -55,6 +56,8 @@ class AccountManager {
      * @param string $lang
      * @return ModelLogin
      * @throws UnsupportedLanguageException
+     * @throws BadTypeException
+     * @throws \Exception
      */
     public function createLoginWithInvitation(ModelPerson $person, string $email, string $lang): ModelLogin {
         $login = $this->createLogin($person);
@@ -82,6 +85,8 @@ class AccountManager {
      * @param string|null $lang
      * @return void
      * @throws UnsupportedLanguageException
+     * @throws BadTypeException
+     * @throws \Exception
      */
     public function sendRecovery(ModelLogin $login, ?string $lang = null): void {
         $person = $login->getPerson();

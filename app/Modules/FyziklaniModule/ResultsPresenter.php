@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\ResultsAndStatistics\ResultsAndStatistics;
-use FKSDB\Events\EventNotFoundException;
+use FKSDB\Events\Exceptions\EventNotFoundException;
 use FKSDB\UI\PageTitle;
 
 /**

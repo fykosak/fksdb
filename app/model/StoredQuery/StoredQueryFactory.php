@@ -74,11 +74,6 @@ class StoredQueryFactory implements IXMLNodeSerializer {
         return $storedQuery;
     }
 
-    /**
-     * @param ISeriesPresenter $presenter
-     * @return array
-     * @throws BadRequestException
-     */
     private function presenterContextParameters(ISeriesPresenter $presenter): array {
         try {
             return [
@@ -102,16 +97,16 @@ class StoredQueryFactory implements IXMLNodeSerializer {
      * @param StoredQuery $dataSource
      * @param DOMNode $node
      * @param DOMDocument $doc
-     * @param int $format
+     * @param int $formatVersion
      * @return void
      * @throws BadRequestException
      */
-    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $format): void {
+    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $formatVersion): void {
         if (!$dataSource instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got ' . get_class($dataSource) . '.');
         }
-        if ($format !== self::EXPORT_FORMAT_1 && $format !== self::EXPORT_FORMAT_2) {
-            throw new InvalidArgumentException(sprintf('Export format %s not supported.', $format));
+        if ($formatVersion !== self::EXPORT_FORMAT_1 && $formatVersion !== self::EXPORT_FORMAT_2) {
+            throw new InvalidArgumentException(sprintf('Export format %s not supported.', $formatVersion));
         }
         // parameters
         $parametersNode = $doc->createElement('parameters');
@@ -141,9 +136,9 @@ class StoredQueryFactory implements IXMLNodeSerializer {
                 if (is_numeric($colName)) {
                     continue;
                 }
-                if ($format == self::EXPORT_FORMAT_1) {
+                if ($formatVersion == self::EXPORT_FORMAT_1) {
                     $colNode = $doc->createElement('col');
-                } elseif ($format == self::EXPORT_FORMAT_2) {
+                } elseif ($formatVersion == self::EXPORT_FORMAT_2) {
                     $colNode = $doc->createElement(Utils::xmlName($colName));
                 } else {
                     throw new BadRequestException(_('Unsupported format'));

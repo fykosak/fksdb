@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\FyziklaniModule;
 
-use FKSDB\Events\EventNotFoundException;
+use FKSDB\Events\Exceptions\EventNotFoundException;
 use FKSDB\Modules\EventModule\BasePresenter as EventBasePresenter;
 use FKSDB\Components\Controls\Choosers\FyziklaniChooser;
 use FKSDB\ORM\Models\ModelEventType;

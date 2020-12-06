@@ -12,14 +12,14 @@ use Nette\InvalidStateException;
  */
 class CumulativeResultsModel extends AbstractResultsModel {
 
-    /** @var array of int */
-    protected $series;
+    /** @var int[] */
+    protected array $series;
 
     /**
      * Cache
      * @var array
      */
-    private $dataColumns = [];
+    private array $dataColumns = [];
 
     /**
      * Definition of header.
@@ -72,7 +72,7 @@ class CumulativeResultsModel extends AbstractResultsModel {
     /**
      * @return array|mixed
      */
-    public function getSeries() {
+    public function getSeries(): array {
         return $this->series;
     }
 
@@ -80,7 +80,6 @@ class CumulativeResultsModel extends AbstractResultsModel {
      * @param mixed $series
      */
     public function setSeries($series): void {
-        $this->dataColumns = null;
         $this->series = $series;
         // invalidate cache of columns
         $this->dataColumns = [];

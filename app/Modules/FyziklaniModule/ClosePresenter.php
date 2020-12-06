@@ -4,7 +4,7 @@ namespace FKSDB\Modules\FyziklaniModule;
 
 use FKSDB\Components\Grids\Fyziklani\Submits\TeamSubmitsGrid;
 use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Events\EventNotFoundException;
+use FKSDB\Events\Exceptions\EventNotFoundException;
 use FKSDB\Fyziklani\Closing\AlreadyClosedException;
 use FKSDB\Fyziklani\Closing\NotCheckedSubmitsException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;

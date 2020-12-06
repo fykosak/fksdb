@@ -18,7 +18,7 @@ use Nette\Utils\ArrayHash;
  */
 class CategoryProcessing2 extends AbstractCategoryProcessing {
 
-    protected function innerProcess($states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form = null): void {
+    protected function innerProcess(array $states, ArrayHash $values, Machine $machine, Holder $holder, ILogger $logger, ?Form $form = null): void {
         if (!isset($values['team'])) {
             return;
         }

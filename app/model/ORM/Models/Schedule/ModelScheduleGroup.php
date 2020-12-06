@@ -70,8 +70,8 @@ class ModelScheduleGroup extends AbstractModelSingle implements IEventReferenced
         return self::RESOURCE_ID;
     }
 
-    public function createXMLNode(\DOMDocument $doc): \DOMElement {
-        $node = $doc->createElement('scheduleGroup');
+    public function createXMLNode(\DOMDocument $document): \DOMElement {
+        $node = $document->createElement('scheduleGroup');
         $node->setAttribute('scheduleGroupId', $this->schedule_group_id);
         XMLHelper::fillArrayToNode([
             'scheduleGroupId' => $this->schedule_group_id,
@@ -79,13 +79,13 @@ class ModelScheduleGroup extends AbstractModelSingle implements IEventReferenced
             'eventId' => $this->event_id,
             'start' => $this->start->format('c'),
             'end' => $this->end->format('c'),
-        ], $doc, $node);
+        ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('lang', [
             'name' => [
                 'cs' => $this->name_cs,
                 'en' => $this->name_en,
             ],
-        ], $doc, $node);
+        ], $document, $node);
         return $node;
     }
 }

@@ -192,10 +192,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
+     * @throws BadRequestException
      * @throws BadTypeException
      * @throws ReflectionException
      * @throws UnsupportedLanguageException
-     * @throws AbortException
      */
     protected function beforeRender(): void {
         parent::beforeRender();

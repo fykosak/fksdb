@@ -37,6 +37,7 @@ class FacebookAuthenticator extends AbstractAuthenticator {
      * @return AbstractModelSingle|ModelLogin
      * @throws AuthenticationException
      * @throws InactiveLoginException
+     * @throws \Exception
      */
     public function authenticate(array $fbUser): ModelLogin {
         $person = $this->findPerson($fbUser);

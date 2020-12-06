@@ -11,7 +11,6 @@ use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;
 use Nette\Utils\DateTime;
 use Tester\Assert;
-use Tester\Environment;
 
 class AuthTest extends DsefTestCase {
 

@@ -13,18 +13,14 @@ use FKSDB\ORM\Models\ModelTask;
 class SeriesData {
 
     private ModelContest $contest;
-
     private int $year;
-
     private int $series;
-
     private \SimpleXMLElement $data;
 
     /**
-     * array[tasknr] of FKSDB\ORM\Models\ModelTask
      * @var ModelTask[]
      */
-    private $tasks = [];
+    private array $tasks = [];
 
     public function __construct(ModelContest $contest, int $year, int $series, \SimpleXMLElement $data) {
         $this->contest = $contest;

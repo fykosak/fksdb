@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\FyziklaniModule;
 
-use FKSDB\Events\EventNotFoundException;
+use FKSDB\Events\Exceptions\EventNotFoundException;
 use FKSDB\UI\PageTitle;
 
 /**

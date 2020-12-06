@@ -14,7 +14,6 @@ use Nette\Application\Responses\TextResponse;
 use Nette\DI\Container;
 use Nette\Utils\DateTime;
 use Tester\Assert;
-use Tester\Environment;
 
 class Authorization extends FyziklaniTestCase {
 

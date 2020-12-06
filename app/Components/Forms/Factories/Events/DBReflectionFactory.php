@@ -27,10 +27,8 @@ use Nette\InvalidArgumentException;
 class DBReflectionFactory extends AbstractFactory {
 
     private Connection $connection;
-
     /** @var array tableName => columnName[] */
-    private $columns = [];
-
+    private array $columns = [];
     private ReflectionFactory $tableReflectionFactory;
 
     public function __construct(Connection $connection, ReflectionFactory $tableReflectionFactory) {
@@ -125,11 +123,7 @@ class DBReflectionFactory extends AbstractFactory {
         return $component;
     }
 
-    /**
-     * @param Field $field
-     * @return null
-     */
-    private function resolveColumn(Field $field) {
+    private function resolveColumn(Field $field): ?array {
         $service = $field->getBaseHolder()->getService();
         $columnName = $field->getName();
 

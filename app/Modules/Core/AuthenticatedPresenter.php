@@ -163,7 +163,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     * @throws AbortException
+     * @throws Exception
      */
     private function tryAuthToken(): void {
         $tokenData = $this->getParameter(TokenAuthenticator::PARAM_AUTH_TOKEN);
@@ -190,6 +190,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @throws BadRequestException
+     * @throws Exception
      */
     private function tryHttpAuth(): void {
         if (!isset($_SERVER['PHP_AUTH_USER'])) {
@@ -226,6 +227,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
 
     /**
      * @throws ForbiddenRequestException|BadRequestException
+     * @throws Exception
      */
     private function tryGithub(): void {
         if (!$this->getHttpRequest()->getHeader('X-GitHub-Event')) {

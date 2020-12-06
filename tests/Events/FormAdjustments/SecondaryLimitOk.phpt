@@ -7,13 +7,12 @@ use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;
 use Tester\Assert;
 use Tester\DomQuery;
-use Tester\Environment;
 
 $container = require '../../Bootstrap.php';
 
 class SecondaryLimitOk extends ResourceAvailabilityTestCase {
 
-    private $tsafEventId;
+    private int $tsafEventId;
 
     protected function setUp(): void {
         parent::setUp();

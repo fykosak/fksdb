@@ -5,7 +5,7 @@ namespace FKSDB\Modules\EventModule;
 use FKSDB\Components\Controls\Events\TransitionButtonsComponent;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Events\EventNotFoundException;
+use FKSDB\Events\Exceptions\EventNotFoundException;
 use FKSDB\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Controls\Events\ApplicationComponent;
@@ -40,7 +40,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
     }
 
     /**
-     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
      */
     final public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('List of applications'), 'fa fa-users'));
@@ -60,7 +60,7 @@ abstract class AbstractApplicationPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
      */
     final public function titleTransitions(): void {
         $this->setPageTitle(new PageTitle(_('Group transitions'), 'fa fa-user'));

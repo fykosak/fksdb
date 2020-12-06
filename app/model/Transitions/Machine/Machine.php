@@ -178,7 +178,7 @@ abstract class Machine {
      * @throws Exception
      */
     public function canCreate(): bool {
-        return $this->canExecute($this->getCreatingTransition(), null);
+        return $this->canExecute($this->getCreatingTransition());
     }
 
     /**
@@ -192,7 +192,7 @@ abstract class Machine {
      */
     public function createNewModel(array $data, IService $service): IStateModel {
         $transition = $this->getCreatingTransition();
-        if (!$this->canExecute($transition, null)) {
+        if (!$this->canExecute($transition )) {
             throw new ForbiddenRequestException(_('Model sa nedá vytvoriť'));
         }
         /** @var IStateModel|IModel|ActiveRow $model */

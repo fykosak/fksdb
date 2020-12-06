@@ -33,6 +33,7 @@ class WriteOnlyDatePicker extends DateInput implements IWriteOnly {
     /**
      * @param mixed $value
      * @return static
+     * @throws \Exception
      */
     public function setValue($value): self {
         if ($value == self::VALUE_ORIGINAL) {

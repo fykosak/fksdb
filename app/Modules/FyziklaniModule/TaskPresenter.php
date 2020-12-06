@@ -4,7 +4,7 @@ namespace FKSDB\Modules\FyziklaniModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Fyziklani\TaskGrid;
-use FKSDB\Events\EventNotFoundException;
+use FKSDB\Events\Exceptions\EventNotFoundException;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Fyziklani\FyziklaniTaskImportProcessor;
 use FKSDB\Logging\FlashMessageDump;

@@ -20,6 +20,7 @@ use FKSDB\ORM\Services\ServicePerson;
 use FKSDB\Modules\Core\ContestPresenter\IContestPresenter;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
@@ -237,6 +238,10 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $this->redirect('contestant', ['email' => $values['email'],]);
     }
 
+    /**
+     * @return array
+     * @throws \ReflectionException
+     */
     private function getFieldsDefinition(): array {
         $contestId = $this->getSelectedContest()->contest_id;
         $contestName = $this->getContext()->getParameters()['contestMapping'][$contestId];
@@ -247,6 +252,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @return FormControl
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
+     * @throws \ReflectionException
      */
     protected function createComponentContestantForm(): FormControl {
         $control = new FormControl($this->getContext());
@@ -320,6 +326,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @return void
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
+     * @throws BadRequestException
      * @throws \ReflectionException
      */
     protected function beforeRender(): void {

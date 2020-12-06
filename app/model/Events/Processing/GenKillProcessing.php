@@ -6,7 +6,7 @@ use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\Events\SubmitProcessingException;
+use FKSDB\Events\Exceptions\SubmitProcessingException;
 use FKSDB\Logging\ILogger;
 use Nette\Forms\Form;
 use Nette\SmartObject;

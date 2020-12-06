@@ -23,11 +23,11 @@ class TeamApplicationsGrid extends AbstractApplicationsGrid {
     /**
      * @param IPresenter $presenter
      * @return void
+     * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
      * @throws DuplicateGlobalButtonException
      * @throws InvalidLinkException
-     * @throws BadTypeException
      */
     protected function configure(IPresenter $presenter): void {
 

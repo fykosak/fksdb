@@ -54,7 +54,7 @@ class TeachersGrid extends BaseGrid {
             'teacher.number_brochures',
             'school.school',
         ]);
-        $this->addLink('teacher.edit', false);
-        $this->addLink('teacher.detail', false);
+        $this->addLink('teacher.edit');
+        $this->addLink('teacher.detail');
     }
 }

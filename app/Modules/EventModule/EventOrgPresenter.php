@@ -5,7 +5,7 @@ namespace FKSDB\Modules\EventModule;
 use FKSDB\Components\Controls\Entity\EventOrgFormComponent;
 use FKSDB\Components\Grids\EventOrg\EventOrgsGrid;
 use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Events\EventNotFoundException;
+use FKSDB\Events\Exceptions\EventNotFoundException;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Messages\Message;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;

@@ -22,7 +22,6 @@ class NoDSEFTest extends TsafTestCase {
             'event_id' => $this->tsafEventId,
             'status' => 'invited',
         ]);
-        var_dump($this->tsafAppId);
     }
 
     public function testRegistration(): void {

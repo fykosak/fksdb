@@ -146,10 +146,10 @@ class EventFormComponent extends AbstractEntityFormComponent {
             $item = Html::el('li');
             $result->addText($item);
 
-            $item->addHtml(Html::el(null)->setText($key));
+            $item->addHtml(Html::el()->setText($key));
             if (isset($meta['default'])) {
                 $item->addText(': ');
-                $item->addHtml(Html::el(null)->setText(Utils::getRepresentation($meta['default'])));
+                $item->addHtml(Html::el()->setText(Utils::getRepresentation($meta['default'])));
             }
         }
         return $result;

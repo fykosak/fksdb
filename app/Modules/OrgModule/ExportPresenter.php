@@ -2,7 +2,6 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Entity\ModelNotFoundException;
 use FKSDB\Exceptions\NotImplementedException;
@@ -57,7 +56,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
             case 'show':
                 $this->redirect(':Org:StoredQuery:detail', $this->getParameters());
         }
-        $this->seriesTraitStartup(YearChooser::ROLE_ORG);
         parent::startup();
     }
 

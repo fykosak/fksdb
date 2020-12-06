@@ -2,6 +2,7 @@
 
 namespace FKSDB\Events;
 
+use FKSDB\Events\Exceptions\MachineDefinitionException;
 use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Machine\Transition;
@@ -25,8 +26,8 @@ use FKSDB\Config\NeonScheme;
 use Nette\DI\Config\Loader;
 use Nette\DI\CompilerExtension;
 use Nette\DI\Container;
-use Nette\DI\ServiceDefinition;
-use Nette\DI\Statement;
+use Nette\DI\Definitions\ServiceDefinition;
+use Nette\DI\Definitions\Statement;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Strings;
 
@@ -143,7 +144,7 @@ class EventsExtension extends CompilerExtension {
              */
             $protoConfig = $this->getBaseMachineConfig($protoDefinitionName, $protoBaseName);
             $eventTypeId = $config[$protoDefinitionName]['event_type_id'];
-            $protoConfig['eventRelation'] = new \Nette\DI\Definitions\Statement(SameYearEvent::class, [$eventTypeId]);
+            $protoConfig['eventRelation'] = new Statement(SameYearEvent::class, [$eventTypeId]);
             $protoConfig['paramScheme'] = $config[$protoDefinitionName]['paramScheme'];
             $this->baseMachineConfig[$key] = \Nette\Schema\Helpers::merge($baseMachineDef, $protoConfig);
             break;
@@ -259,7 +260,6 @@ class EventsExtension extends CompilerExtension {
         }
         $factory->addSetup('setPrimaryMachine', [$primaryName]);
 
-
         /*
          * Set other attributes of the machine.
          */
@@ -318,7 +318,6 @@ class EventsExtension extends CompilerExtension {
     /*
      * Specialized data factories
      */
-
 
     /**
      * @param string $name

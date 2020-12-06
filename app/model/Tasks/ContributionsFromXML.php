@@ -9,7 +9,6 @@ use FKSDB\ORM\Services\ServiceTaskContribution;
 use FKSDB\Pipeline\Stage;
 use SimpleXMLElement;
 
-
 /**
  * @note Assumes TasksFromXML has been run previously.
  *
@@ -17,8 +16,7 @@ use SimpleXMLElement;
  */
 class ContributionsFromXML extends Stage {
 
-    /** @var SeriesData */
-    private $data;
+    private SeriesData $data;
 
     /** @var array   contribution type => xml element */
     private static array $contributionFromXML = [
@@ -49,10 +47,7 @@ class ContributionsFromXML extends Stage {
         }
     }
 
-    /**
-     * @return SeriesData
-     */
-    public function getOutput() {
+    public function getOutput(): SeriesData {
         return $this->data;
     }
 
@@ -78,7 +73,6 @@ class ContributionsFromXML extends Stage {
                     continue;
                 }
 
-
                 $org = $this->serviceOrg->findByTeXSignature($signature, $this->data->getContest()->contest_id);
 
                 if (!$org) {
@@ -100,7 +94,6 @@ class ContributionsFromXML extends Stage {
                     'task_id' => $task->task_id,
                     'type' => $type,
                 ]);
-
             }
         }
 

@@ -3,6 +3,7 @@
 namespace FKSDB\Events;
 
 use FKSDB\Config\NeonSchemaException;
+use FKSDB\Events\Exceptions\ConfigurationNotFoundException;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\ORM\Models\ModelEvent;

@@ -66,6 +66,7 @@ class WebServiceModel {
      *
      * @param stdClass $args
      * @throws SoapFault
+     * @throws \Exception
      */
     public function authenticationCredentials(stdClass $args): void {
         if (!is_object($args) || !isset($args->username) || !isset($args->password)) {

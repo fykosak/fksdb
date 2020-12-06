@@ -28,12 +28,11 @@ trait ContestPresenterTrait {
     }
 
     /**
-     * @param string $role
      * @return void
      * @throws BadRequestException
      */
     protected function contestTraitStartup(): void {
-        if (!isset($this->contestId)) {
+        if (!isset($this->contestId) || !$this->isValidContest($this->getSelectedContest())) {
             $this->redirect('this', array_merge($this->getParameters(), ['contestId' => $this->selectContest()->contest_id]));
         }
     }
@@ -67,6 +66,9 @@ trait ContestPresenterTrait {
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         switch ($this->getRole()) {
+            case YearChooser::ROLE_SELECTED:
+                $contestIds = [$this->contestId];
+                break;
             case YearChooser::ROLE_ALL:
                 $contestIds = $this->serviceContest->getTable()->fetchPairs('contest_id', 'contest_id');
                 break;

@@ -64,6 +64,11 @@ class ExportFormatFactory {
         }
     }
 
+    /**
+     * @param StoredQuery $storedQuery
+     * @return array
+     * @throws \ReflectionException
+     */
     public function getFormats(StoredQuery $storedQuery): array {
         $qid = $storedQuery->getQId();
         if (!$qid) {

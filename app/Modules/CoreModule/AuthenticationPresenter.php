@@ -93,6 +93,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @throws AbortException
      * @throws InvalidLinkException
+     * @throws Exception
      */
     public function actionLogout(): void {
         $subDomainAuth = $this->getContext()->getParameters()['subdomain']['auth'];
@@ -133,6 +134,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @throws AbortException
      * @throws BadTypeException
+     * @throws Exception
      */
     public function actionLogin(): void {
         if ($this->isLoggedIn()) {
@@ -260,7 +262,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @param Form $form
      * @return void
-     * @throws AbortException
+     * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
     private function recoverFormSubmitted(Form $form): void {
@@ -287,6 +289,7 @@ final class AuthenticationPresenter extends BasePresenter {
     /**
      * @param ModelLogin|null $login
      * @return void
+     * @throws Exception
      */
     private function loginBackLinkRedirect($login = null): void {
         if (!$this->backlink) {
@@ -324,6 +327,9 @@ final class AuthenticationPresenter extends BasePresenter {
         }
     }
 
+    /**
+     * @throws Exception
+     */
     public function actionGoogle(): void {
         if ($this->getGoogleSection()->state !== $this->getParameter('state')) {
             $this->flashMessage(_('Invalid CSRF token'), self::FLASH_ERROR);

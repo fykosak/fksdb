@@ -127,8 +127,8 @@ class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupRef
         ];
     }
 
-    public function createXMLNode(\DOMDocument $doc): \DOMElement {
-        $node = $doc->createElement('scheduleItem');
+    public function createXMLNode(\DOMDocument $document): \DOMElement {
+        $node = $document->createElement('scheduleItem');
         $node->setAttribute('scheduleItemId', $this->schedule_item_id);
         XMLHelper::fillArrayToNode([
             'scheduleGroupId' => $this->schedule_group_id,
@@ -136,7 +136,7 @@ class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupRef
             'usedCapacity' => $this->getUsedCapacity(),
             'scheduleItemId' => $this->schedule_item_id,
             'requireIdNumber' => $this->require_id_number,
-        ], $doc, $node);
+        ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('lang', [
             'description' => [
                 'cs' => $this->description_cs,
@@ -146,13 +146,13 @@ class ModelScheduleItem extends AbstractModelSingle implements IScheduleGroupRef
                 'cs' => $this->name_cs,
                 'en' => $this->name_en,
             ],
-        ], $doc, $node);
+        ], $document, $node);
         XMLHelper::fillArrayArgumentsToNode('currency', [
             'price' => [
                 'eur' => $this->price_eur,
                 'czk' => $this->price_czk,
             ],
-        ], $doc, $node);
+        ], $document, $node);
         return $node;
     }
 

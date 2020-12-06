@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Events\EventNotFoundException;
+use FKSDB\Events\Exceptions\EventNotFoundException;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
@@ -15,6 +15,7 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
 
@@ -167,6 +168,7 @@ abstract class BasePresenter extends AuthenticatedPresenter {
      * @throws BadTypeException
      * @throws EventNotFoundException
      * @throws UnsupportedLanguageException
+     * @throws BadRequestException
      * @throws \ReflectionException
      */
     protected function beforeRender(): void {

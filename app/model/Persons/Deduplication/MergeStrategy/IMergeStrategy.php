@@ -2,8 +2,6 @@
 
 namespace FKSDB\Persons\Deduplication\MergeStrategy;
 
-use Nette\InvalidArgumentException;
-
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
  *
@@ -18,12 +16,4 @@ interface IMergeStrategy {
      * @throws CannotMergeException
      */
     public function mergeValues($trunk, $merged);
-}
-
-/**
- * Class CannotMergeException
- * *
- */
-class CannotMergeException extends InvalidArgumentException {
-
 }

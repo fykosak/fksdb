@@ -78,7 +78,7 @@ class EventFactory {
           * whatever we can store.
         */
         $user = new User();
-        self::fillHelper(['login', 'id'], $user, $data, false);
+        self::fillHelper(['login', 'id'], $user, $data);
 
         return $user;
     }

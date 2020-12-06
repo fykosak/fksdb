@@ -8,7 +8,6 @@ use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
 use Nette\Application\IPresenter;
 use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -37,7 +36,7 @@ class GroupsGrid extends EntityGrid {
      * @return void
      * @throws BadTypeException
      * @throws DuplicateButtonException
-     * @throws DuplicateColumnException|InvalidLinkException
+     * @throws DuplicateColumnException
      */
     protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);

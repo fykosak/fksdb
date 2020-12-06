@@ -3,7 +3,6 @@
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter;
 
 use Nette\Utils\DateTime;
-use Tester\Environment;
 
 abstract class TsafTestCase extends DsefTestCase {
 

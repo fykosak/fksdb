@@ -34,6 +34,7 @@ class GlobalSession implements IGlobalSession {
 
     /**
      * @param null $sessionId
+     * @throws \Exception
      */
     public function start($sessionId = null): void {
         $sessionId = $sessionId ?: $this->gsidHolder->getGSID();
@@ -118,6 +119,7 @@ class GlobalSession implements IGlobalSession {
      * @param mixed $offset
      * @param mixed $value
      * @return void
+     * @throws \Exception
      */
     public function offsetSet($offset, $value) {
         if (!$this->started) {

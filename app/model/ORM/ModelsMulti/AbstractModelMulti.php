@@ -80,16 +80,16 @@ abstract class AbstractModelMulti extends ActiveRow implements IModel {
     }
 
     /**
-     * @param string|int $name
+     * @param string|int $key
      * @return bool|mixed|ActiveRow|Selection|null
      */
-    public function &__get($name) {
+    public function &__get($key) {
         // $value = $this->getMainModel()->{$name} ?? $this->getJoinedModel()->{$name} ?? null;
-        if ($this->getMainModel()->__isset($name)) {
-            return $this->getMainModel()->__get($name);
+        if ($this->getMainModel()->__isset($key)) {
+            return $this->getMainModel()->__get($key);
         }
-        if ($this->getJoinedModel()->__isset($name)) {
-            return $this->getJoinedModel()->__get($name);
+        if ($this->getJoinedModel()->__isset($key)) {
+            return $this->getJoinedModel()->__get($key);
         }
         // this reference isn't that important
         $null = null;
@@ -97,18 +97,18 @@ abstract class AbstractModelMulti extends ActiveRow implements IModel {
     }
 
     /**
-     * @param string|int $name
+     * @param string|int $key
      * @return bool
      */
-    public function __isset($name) {
-        return $this->getMainModel()->__isset($name) || $this->getJoinedModel()->__isset($name);
+    public function __isset($key): bool {
+        return $this->getMainModel()->__isset($key) || $this->getJoinedModel()->__isset($key);
     }
 
     /**
      * @param string|int $name
      * @param mixed $value
      */
-    public function __set($name, $value) {
+    public function __set($name, $value): void {
         throw new LogicException("Cannot update multiModel directly.");
     }
 

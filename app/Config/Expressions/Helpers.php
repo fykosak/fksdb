@@ -10,8 +10,8 @@ use FKSDB\Expressions\Logic\LogicOr;
 use FKSDB\Expressions\Predicates\After;
 use FKSDB\Expressions\Predicates\Before;
 use Nette\DI\Container;
-use Nette\DI\Definitions\Helpers as DIHelpers;
 use Nette\DI\Definitions\Statement;
+use Nette\DI\Resolver;
 use Nette\Reflection\ClassType;
 
 /**
@@ -56,7 +56,6 @@ class Helpers {
             return array_map(function ($subExpresion) {
                 return self::statementFromExpression($subExpresion);
             }, $expression);
-
         } else {
             return $expression;
         }
@@ -68,6 +67,7 @@ class Helpers {
      * @param mixed $expression
      * @param Container $container
      * @return mixed
+     * @throws \ReflectionException
      */
     public static function evalExpression($expression, Container $container) {
         if ($expression instanceof Statement) {
@@ -84,7 +84,10 @@ class Helpers {
                 return $entity(...$arguments);
             } else {
                 $rc = ClassType::from($entity);
-                return $rc->newInstanceArgs(DIHelpers::autowireArguments($rc->getConstructor(), $arguments, $container));
+                return $rc->newInstanceArgs(Resolver::autowireArguments($rc->getConstructor(), $arguments, function (string $type, bool $single) use ($container) {
+                    return $this->getByType($type);
+                }));
+                // TODO!!!
             }
         } else {
             return $expression;
@@ -95,6 +98,7 @@ class Helpers {
      * @param mixed $expressionArray
      * @param Container $container
      * @return mixed
+     * @throws \ReflectionException
      */
     public static function evalExpressionArray($expressionArray, Container $container) {
         if (is_iterable($expressionArray)) {

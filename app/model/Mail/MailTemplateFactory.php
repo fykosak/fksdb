@@ -2,11 +2,11 @@
 
 namespace FKSDB\Mail;
 
+use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\Application;
 use Nette\Application\UI\ITemplate;
-use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\Http\IRequest;
 use Nette\InvalidArgumentException;
@@ -50,6 +50,7 @@ class MailTemplateFactory {
      * @param string|null $lang ISO 639-1
      * @param array $data
      * @return ITemplate
+     * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
     public function createLoginInvitation(?string $lang, array $data): ITemplate {
@@ -60,6 +61,7 @@ class MailTemplateFactory {
      * @param string|null $lang ISO 639-1
      * @param array $data
      * @return ITemplate
+     * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
     public function createPasswordRecovery(?string $lang, array $data): ITemplate {
@@ -71,6 +73,7 @@ class MailTemplateFactory {
      * @param string|null $lang ISO 639-1
      * @param array $data
      * @return ITemplate
+     * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
     public function createWithParameters(string $templateFile, ?string $lang, array $data = []): ITemplate {
@@ -87,12 +90,12 @@ class MailTemplateFactory {
      * @param string|null $lang ISO 639-1
      * @return ITemplate
      * @throws UnsupportedLanguageException
+     * @throws BadTypeException
      */
     final public function createFromFile(string $filename, ?string $lang): ITemplate {
-        /** @var Presenter $presenter */
         $presenter = $this->application->getPresenter();
         if (($lang === null) && !$presenter instanceof BasePresenter) {
-            throw new InvalidArgumentException("Expecting BasePresenter, got " . ($presenter ? get_class($presenter) : (string)$presenter));
+            throw new BadTypeException(BasePresenter::class, $presenter);
         }
         if ($lang === null) {
             $lang = $presenter->getLang();

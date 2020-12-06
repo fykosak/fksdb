@@ -2,7 +2,7 @@
 
 namespace FKSDB\WebService;
 
-use Nette\StaticClassException;
+use Nette\InvalidArgumentException;
 
 /**
  * Class XMLHelper
@@ -10,7 +10,7 @@ use Nette\StaticClassException;
  */
 class XMLHelper {
     public function __construct() {
-        throw new StaticClassException();
+        throw new InvalidArgumentException();
     }
 
     public static function fillArrayToNode(array $data, \DOMDocument $doc, \DOMNode $parentNode): void {

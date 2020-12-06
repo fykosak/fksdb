@@ -7,7 +7,6 @@ use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use FKSDB\Persons\Deduplication\DuplicateFinder;
 use Nette\Application\IPresenter;
-use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -39,7 +38,6 @@ class PersonsGrid extends BaseGrid {
      * @param IPresenter $presenter
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws InvalidLinkException
      */
     protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);

@@ -17,9 +17,6 @@ abstract class BasePresenter extends AuthenticatedPresenter {
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
         if (!$login || !$login->getPerson() || !$login->getPerson()->getActiveOrgsAsQuery($this->yearCalculator, $this->getSelectedContest())->count()) {
-            var_dump($login->login_id);
-            var_dump($login->getPerson()->person_id);
-            var_dump($login->getPerson()->getActiveOrgsAsQuery($this->yearCalculator, $this->getSelectedContest())->count());
             throw new ForbiddenRequestException();
         }
         parent::startup();

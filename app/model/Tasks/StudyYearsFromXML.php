@@ -20,30 +20,26 @@ class StudyYearsFromXML extends Stage {
 
     public const XML_ELEMENT_CHILD = 'study-year';
 
-    /** @var SeriesData */
-    private $data;
-
+    private SeriesData $data;
     /** @var array   contribution type => xml element */
-    private $defaultStudyYears;
-
+    private array $defaultStudyYears;
     private ServiceTaskStudyYear $serviceTaskStudyYear;
-
     private ServiceStudyYear $serviceStudyYear;
 
     /**
      * StudyYearsFromXML2 constructor.
-     * @param iterable $defaultStudyYears
+     * @param array $defaultStudyYears
      * @param ServiceTaskStudyYear $serviceTaskStudyYear
      * @param ServiceStudyYear $serviceStudyYear
      */
-    public function __construct($defaultStudyYears, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear) {
+    public function __construct(array $defaultStudyYears, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear) {
         $this->defaultStudyYears = $defaultStudyYears;
         $this->serviceTaskStudyYear = $serviceTaskStudyYear;
         $this->serviceStudyYear = $serviceStudyYear;
     }
 
     /**
-     * @param mixed $data
+     * @param SeriesData $data
      */
     public function setInput($data): void {
         $this->data = $data;
@@ -56,10 +52,7 @@ class StudyYearsFromXML extends Stage {
         }
     }
 
-    /**
-     * @return SeriesData
-     */
-    public function getOutput() {
+    public function getOutput(): SeriesData {
         return $this->data;
     }
 
@@ -105,7 +98,6 @@ class StudyYearsFromXML extends Stage {
         foreach ($task->getStudyYears() as $studyYear) {
             $this->serviceTaskStudyYear->dispose($studyYear);
         }
-
 
         // store new contributions
         foreach ($studyYears as $studyYear) {

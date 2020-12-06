@@ -122,6 +122,7 @@ class ResultsComponent extends BaseComponent {
     /**
      * @return void
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     public function render(): void {
         if ($this->parameters) {

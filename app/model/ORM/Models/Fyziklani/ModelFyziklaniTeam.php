@@ -175,8 +175,8 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
         return $data;
     }
 
-    public function createXMLNode(\DOMDocument $doc): \DOMElement {
-        $node = $doc->createElement('team');
+    public function createXMLNode(\DOMDocument $document): \DOMElement {
+        $node = $document->createElement('team');
         $node->setAttribute('teamId', $this->e_fyziklani_team_id);
         XMLHelper::fillArrayToNode([
             'teamId' => $this->e_fyziklani_team_id,
@@ -191,7 +191,7 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
             'rankTotal' => $this->rank_total,
             'forceA' => $this->force_a,
             'gameLang' => $this->game_lang,
-        ], $doc, $node);
+        ], $document, $node);
         return $node;
 
         // `teacher_id`           INT(11)     NULL     DEFAULT NULL

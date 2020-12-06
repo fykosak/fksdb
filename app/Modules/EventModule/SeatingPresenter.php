@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Fyziklani\Seating\SeatingControl;
-use FKSDB\Events\EventNotFoundException;
+use FKSDB\Events\Exceptions\EventNotFoundException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use FKSDB\UI\PageTitle;

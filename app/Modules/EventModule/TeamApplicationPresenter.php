@@ -9,7 +9,7 @@ use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Events\EventNotFoundException;
+use FKSDB\Events\Exceptions\EventNotFoundException;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;

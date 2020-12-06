@@ -5,12 +5,10 @@ namespace FKSDB\Tests\Events\FormAdjustments;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;
-use Nette\DI\Container;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 use Tester\DomQuery;
 
-/** @var Container $container */
 $container = require '../../Bootstrap.php';
 
 class PrimaryLast extends ResourceAvailabilityTestCase {

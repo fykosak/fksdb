@@ -22,42 +22,27 @@ class PipelineFactory {
      * @see TasksFromXML
      * @var array
      */
-    private $columnMappings;
+    private array $columnMappings;
 
     /**
      * @see ContributionsFromXML
      * @var array
      */
-    private $contributionMappings;
+    private array $contributionMappings;
 
     /**
      * @see StudyYearsFromXML
      * @var array
      */
-    private $defaultStudyYears;
+    private array $defaultStudyYears;
 
     private ServiceTask $serviceTask;
-
     private ServiceTaskContribution $serviceTaskContribution;
-
     private ServiceTaskStudyYear $serviceTaskStudyYear;
-
     private ServiceStudyYear $serviceStudyYear;
-
     private ServiceOrg $serviceOrg;
 
-    /**
-     * PipelineFactory constructor.
-     * @param array $columnMappings
-     * @param array $contributionMappings
-     * @param array $defaultStudyYears
-     * @param ServiceTask $serviceTask
-     * @param ServiceTaskContribution $serviceTaskContribution
-     * @param ServiceTaskStudyYear $serviceTaskStudyYear
-     * @param ServiceStudyYear $serviceStudyYear
-     * @param ServiceOrg $serviceOrg
-     */
-    public function __construct($columnMappings, $contributionMappings, $defaultStudyYears, ServiceTask $serviceTask, ServiceTaskContribution $serviceTaskContribution, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear, ServiceOrg $serviceOrg) {
+    public function __construct(array $columnMappings, array $contributionMappings, array $defaultStudyYears, ServiceTask $serviceTask, ServiceTaskContribution $serviceTaskContribution, ServiceTaskStudyYear $serviceTaskStudyYear, ServiceStudyYear $serviceStudyYear, ServiceOrg $serviceOrg) {
         $this->columnMappings = $columnMappings;
         $this->contributionMappings = $contributionMappings;
         $this->defaultStudyYears = $defaultStudyYears;

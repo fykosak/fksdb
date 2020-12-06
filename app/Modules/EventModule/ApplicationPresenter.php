@@ -4,7 +4,7 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Events\EventNotFoundException;
+use FKSDB\Events\Exceptions\EventNotFoundException;
 use FKSDB\Events\Model\Grid\SingleEventSource;
 use FKSDB\Components\Controls\Events\ImportComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
@@ -23,7 +23,7 @@ use Nette\Application\ForbiddenRequestException;
 class ApplicationPresenter extends AbstractApplicationPresenter {
     /**
      * @return void
-     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
      */
     public function titleImport(): void {
         $this->setPageTitle(new PageTitle(_('Application import'), 'fa fa-upload'));

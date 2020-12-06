@@ -182,7 +182,7 @@ class PersonPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      */
     public function createComponentStalkingContainer(): StalkingContainer {
-        return new StalkingContainer($this->getContext(), $this->getEntity(), $this->getUserPermissions(true));
+        return new StalkingContainer($this->getContext(), $this->getEntity(), $this->getUserPermissions());
     }
 
     /**

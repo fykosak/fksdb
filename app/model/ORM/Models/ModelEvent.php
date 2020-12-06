@@ -104,10 +104,10 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
         ];
     }
 
-    public function createXMLNode(\DOMDocument $doc): \DOMElement {
-        $node = $doc->createElement('event');
+    public function createXMLNode(\DOMDocument $document): \DOMElement {
+        $node = $document->createElement('event');
         $node->setAttribute('eventId', $this->event_id);
-        XMLHelper::fillArrayToNode($this->__toArray(), $doc, $node);
+        XMLHelper::fillArrayToNode($this->__toArray(), $document, $node);
         return $node;
     }
 }

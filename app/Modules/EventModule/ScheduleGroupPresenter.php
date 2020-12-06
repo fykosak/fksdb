@@ -8,7 +8,7 @@ use FKSDB\Components\Grids\Schedule\AllPersonsGrid;
 use FKSDB\Components\Grids\Schedule\GroupsGrid;
 use FKSDB\Components\Grids\Schedule\ItemsGrid;
 use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Events\EventNotFoundException;
+use FKSDB\Events\Exceptions\EventNotFoundException;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
@@ -33,7 +33,7 @@ class ScheduleGroupPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
      */
     public function titleList(): void {
         $this->setPageTitle(new PageTitle(_('Schedule'), 'fa fa-calendar-check-o'));
@@ -41,7 +41,7 @@ class ScheduleGroupPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
      */
     public function titlePersons(): void {
         $this->setPageTitle(new PageTitle(_('Whole program'), 'fa fa-calendar-check-o'));
@@ -49,7 +49,7 @@ class ScheduleGroupPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
      */
     public function titleDetail(): void {
         $this->setPageTitle(new PageTitle(\sprintf(_('Schedule items')), 'fa fa-calendar-check-o'));

@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Events;
+namespace FKSDB\Events\Exceptions;
 
 use Nette\InvalidStateException;
 

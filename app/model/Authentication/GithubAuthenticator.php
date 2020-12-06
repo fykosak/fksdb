@@ -37,6 +37,7 @@ class GithubAuthenticator extends AbstractAuthenticator {
      * @throws AuthenticationException
      * @throws InactiveLoginException
      * @throws NoLoginException
+     * @throws \Exception
      */
     public function authenticate(IRequest $request): ModelLogin {
         $loginName = $this->container->getParameters()['github']['login'];

@@ -27,7 +27,6 @@ class GroupedContainer extends Container {
      */
     public function __construct($prefix) {
         $this->monitor(Form::class, function (Form $form) {
-            $this->getName();
             foreach ($this->groups as $caption => $myGroup) {
                 $formGroup = $form->addGroup($this->prefix . '-' . $caption, false);
                 foreach ($myGroup->getControls() as $control) {

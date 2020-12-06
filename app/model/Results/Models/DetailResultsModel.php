@@ -13,14 +13,9 @@ use Nette\InvalidStateException;
  */
 class DetailResultsModel extends AbstractResultsModel {
 
-    /** @var int */
-    protected $series;
-
-    /**
-     * Cache
-     * @var array
-     */
-    private $dataColumns = [];
+    protected int $series;
+    /** Cache */
+    private array $dataColumns = [];
 
     /**
      * Definition of header.
@@ -52,15 +47,12 @@ class DetailResultsModel extends AbstractResultsModel {
         return $this->dataColumns[$category->id];
     }
 
-    /**
-     * @return int|mixed
-     */
-    public function getSeries() {
+    public function getSeries(): int {
         return $this->series;
     }
 
     /**
-     * @param mixed $series
+     * @param int $series
      */
     public function setSeries($series): void {
         $this->series = $series;

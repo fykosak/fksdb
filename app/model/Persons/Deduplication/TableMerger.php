@@ -179,7 +179,6 @@ class TableMerger {
             }
         }
 
-
         /* Log the overall changes. */
         $this->logDelete($this->mergedRow);
         $this->logTrunk($this->trunkRow);
@@ -259,7 +258,7 @@ class TableMerger {
             $this->refTables = [];
             foreach ($this->context->getConnection()->getSupplementalDriver()->getTables() as $otherTable) {
                 try {
-                    [$table, $refColumn] = $this->context->getConventions()->getHasManyReference($this->table, $otherTable['name'], self::$refreshReferencing);
+                    [$table, $refColumn] = $this->context->getConventions()->getHasManyReference($this->table, $otherTable['name']);
                     self::$refreshReferencing = false;
                     $this->refTables[$table] = $refColumn;
                 } catch (AmbiguousReferenceKeyException $exception) {
@@ -312,7 +311,7 @@ class TableMerger {
     private function getReferencedTable($column) {
         if (!array_key_exists($column, $this->referencedTables)) {
             try {
-                [$table, $refColumn] = $this->context->getConventions()->getBelongsToReference($this->table, $column, self::$refreshReferenced);
+                [$table, $refColumn] = $this->context->getConventions()->getBelongsToReference($this->table, $column);
                 self::$refreshReferenced = false;
                 $this->referencedTables[$column] = $table;
             } catch (\Exception $exception) {

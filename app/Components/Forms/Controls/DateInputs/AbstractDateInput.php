@@ -39,6 +39,7 @@ abstract class AbstractDateInput extends TextInput {
     /**
      * @param string|\DateTimeInterface|\DateInterval $value
      * @return static
+     * @throws \Exception
      */
     public function setValue($value): self {
         if ($value instanceof \DateTimeInterface) {
