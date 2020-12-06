@@ -31,8 +31,8 @@ class PriceEURRow extends DefaultColumnFactory {
 
     protected function createFormControl(...$args): BaseControl {
         $control = new TextInput($this->getTitle());
-        $control->setType('number')
-            ->setAttribute('step', '0.01');
+        $control->setHtmlType('number')
+            ->setHtmlAttribute('step', '0.01');
         return $control;
     }
 }

@@ -172,7 +172,7 @@ class AllSubmitsGrid extends SubmitsGrid {
 
         $form->addSelect('team', _('Team'), $teams)->setPrompt(_('--Select team--'));
         $form->addSelect('task', _('Task'), $tasks)->setPrompt(_('--Select task--'));
-        $form->addText('code', _('Code'))->setAttribute('placeholder', _('Task code'));
+        $form->addText('code', _('Code'))->setHtmlAttribute('placeholder', _('Task code'));
         $form->addCheckbox('not_null', _('Only not revoked submits'));
         $form->addSubmit('submit', _('Search'));
         $form->onSuccess[] = function (Form $form): void {

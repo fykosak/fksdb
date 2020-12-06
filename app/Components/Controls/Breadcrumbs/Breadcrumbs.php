@@ -8,7 +8,6 @@ use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Utils\Utils;
 use Nette\Application\IPresenterFactory;
-use Nette\Application\IRouter;
 use Nette\Application\Request as AppRequest;
 use Nette\Application\UI\ComponentReflection;
 use Nette\Application\UI\Presenter;
@@ -17,6 +16,7 @@ use Nette\Http\Request as HttpRequest;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\InvalidArgumentException;
+use Nette\Routing\Router;
 use Nette\Utils\Random;
 use Tracy\Debugger;
 
@@ -42,7 +42,7 @@ class Breadcrumbs extends BaseComponent {
     public const BACKID_DOMAIN = '0-9a-zA-Z';
 
     private Session $session;
-    private IRouter $router;
+    private Router $router;
     private HttpRequest $httpRequest;
     private IPresenterFactory $presenterFactory;
     /**
@@ -65,7 +65,7 @@ class Breadcrumbs extends BaseComponent {
         $this->getReverseBackLinkMap()->setExpiration($expiration);
     }
 
-    final public function injectPrimary(Session $session, IRouter $router, HttpRequest $httpRequest, IPresenterFactory $presenterFactory): void {
+    final public function injectPrimary(Session $session, Router $router, HttpRequest $httpRequest, IPresenterFactory $presenterFactory): void {
         $this->session = $session;
         $this->router = $router;
         $this->httpRequest = $httpRequest;

@@ -92,9 +92,9 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
     /**
      * @param string|int $key
      */
-    public function __unset($key) {
+    public function __unset($key): void {
         unset($this->tmpData[$key]);
-        return parent::__unset($key);
+        parent::__unset($key);
     }
 
     public function toArray(): array {

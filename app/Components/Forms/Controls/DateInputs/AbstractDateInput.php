@@ -25,7 +25,7 @@ abstract class AbstractDateInput extends TextInput {
     public function __construct(string $type, string $format, $label = null, $maxLength = null) {
         $this->format = $format;
         parent::__construct($label, $maxLength);
-        $this->setType($type);
+        $this->setHtmlType($type);
     }
 
     public function getControl(): Html {

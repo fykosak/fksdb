@@ -152,7 +152,7 @@ abstract class BaseGrid extends Grid {
         $form = $control->getForm();
         //$form = new Form();
         $form->setMethod(Form::GET);
-        $form->addText('term')->setDefaultValue($this->searchTerm)->setAttribute('placeholder', _('Vyhledat'));
+        $form->addText('term')->setDefaultValue($this->searchTerm)->setHtmlAttribute('placeholder', _('Vyhledat'));
         $form->addSubmit('submit', _('Search'));
         $form->onSuccess[] = function (Form $form) {
             $values = $form->getValues();

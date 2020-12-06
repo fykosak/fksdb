@@ -5,7 +5,7 @@ namespace FKSDB\Mail;
 use Exception;
 use FKSDB\Utils\Utils;
 use Nette\DI\Container;
-use Nette\Mail\IMailer;
+use Nette\Mail\Mailer;
 use Nette\Mail\Message;
 use Nette\SmartObject;
 
@@ -14,10 +14,10 @@ use Nette\SmartObject;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class LoggingMailer implements IMailer {
+class LoggingMailer implements Mailer {
     use SmartObject;
 
-    private IMailer $mailer;
+    private Mailer $mailer;
 
     private string $logPath;
 
@@ -27,7 +27,7 @@ class LoggingMailer implements IMailer {
 
     private Container $container;
 
-    public function __construct(IMailer $mailer, Container $container) {
+    public function __construct(Mailer $mailer, Container $container) {
         $this->mailer = $mailer;
         $this->container = $container;
     }

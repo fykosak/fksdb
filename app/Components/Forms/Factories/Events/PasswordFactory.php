@@ -17,7 +17,7 @@ class PasswordFactory extends AbstractFactory {
 
     public function createComponent(Field $field): TextInput {
         $element = new TextInput($field->getLabel());
-        $element->setType('password');
+        $element->setHtmlType('password');
         $element->setOption('description', $field->getDescription());
         return $element;
     }
