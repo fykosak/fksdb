@@ -16,12 +16,12 @@ use Tester\Environment;
 class AuthTest extends DsefTestCase {
 
     protected function setUp(): void {
+        Environment::skip('3.0');
         parent::setUp();
         $this->authenticate($this->personId);
     }
 
     public function testDisplay(): void {
-        Environment::skip('3.0');
         Assert::equal(true, $this->fixture->getUser()->isLoggedIn());
 
         $request = new Request('Public:Application', 'GET', [

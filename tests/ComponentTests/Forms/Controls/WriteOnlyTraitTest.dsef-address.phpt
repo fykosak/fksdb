@@ -127,7 +127,6 @@ class WriteOnlyTraitTest extends DsefTestCase {
         $response = $this->fixture->run($request);
 
         //Assert::same('fsafs', (string) $response->getSource());
-        /** @var RedirectResponse $response */
         Assert::type(RedirectResponse::class, $response);
 
         $application = $this->assertApplication($this->eventId, 'bila@hrad.cz');
