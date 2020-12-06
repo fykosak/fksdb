@@ -9,7 +9,7 @@ use Nette\DI\Config\Helpers;
 use Nette\Utils\DateTime;
 use Tester\Assert;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 class DeleteTest extends ScheduleTestCase {
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace FKSDB\Transitions\Statements\Conditions;
+namespace FKSDB\Transitions\Transition\Statements\Conditions;
 
 use DateTime;
 use Exception;
-use FKSDB\Transitions\Statements\Statement;
+use FKSDB\Transitions\Transition\Statements\Statement;
 
 /**
  * Class DateBetween

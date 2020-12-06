@@ -1,10 +1,10 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\Login;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\Login;
 
-use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
 use FKSDB\ValuePrinters\HashPrinter;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelLogin;
 use Nette\Utils\Html;
 

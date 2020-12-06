@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Grids\Fyziklani;
+namespace FKSDB\Components\Grids\Fyziklani\Submits;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\Events\Model;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 use FKSDB\Events\EventDispatchFactory;
 use FKSDB\Events\Model\ApplicationHandler;
@@ -14,7 +14,7 @@ use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\ORM\Services\ServiceEvent;
-use MockEnvironment\MockApplicationTrait;
+use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use Nette\Application\BadRequestException;
 use Nette\DI\Container;
 use Nette\Utils\ArrayHash;

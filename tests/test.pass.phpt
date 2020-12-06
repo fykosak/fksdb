@@ -1,6 +1,6 @@
 <?php
 
-require 'bootstrap.php';
+require 'Bootstrap.php';
 
 use Tester\Assert;
 

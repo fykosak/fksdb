@@ -5,7 +5,7 @@ namespace FKSDB\Tests\Events\Schedule;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 class CreateTest extends ScheduleTestCase {
 

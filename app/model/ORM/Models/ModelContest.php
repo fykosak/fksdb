@@ -2,7 +2,6 @@
 
 namespace FKSDB\ORM\Models;
 
-use FKSDB\ORM\AbstractModelSingle;
 use Nette\Utils\Strings;
 
 /**

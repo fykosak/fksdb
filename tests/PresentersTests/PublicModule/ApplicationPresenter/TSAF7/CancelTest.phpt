@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TSAF7;
 
-$container = require '../../../../bootstrap.php';
+$container = require '../../../../Bootstrap.php';
 
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TsafTestCase;
 use Nette\Application\Responses\RedirectResponse;

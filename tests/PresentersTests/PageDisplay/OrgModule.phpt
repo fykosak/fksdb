@@ -4,7 +4,7 @@ namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
 use FKSDB\ORM\DbNames;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 /**
  * Class OrgModule
@@ -14,6 +14,7 @@ class OrgModule extends AbstractPageDisplayTestCase {
     protected function setUp(): void {
         parent::setUp();
         $this->insert(DbNames::TAB_ORG, ['person_id' => $this->personId, 'contest_id' => 1, 'since' => 1, 'order' => 1]);
+        $this->insert(DbNames::TAB_PERSON_INFO, ['person_id' => $this->personId]);
     }
 
     protected function transformParams(string $presenterName, string $action, array $params): array {
@@ -21,6 +22,9 @@ class OrgModule extends AbstractPageDisplayTestCase {
         $params['year'] = 1;
         $params['contestId'] = 1;
         $params['series'] = 1;
+        if ($presenterName === 'Org:Person') {
+            $params['id'] = $this->personId;
+        }
         return [$presenterName, $action, $params];
     }
 
@@ -51,10 +55,24 @@ class OrgModule extends AbstractPageDisplayTestCase {
             ['Org:Chart', 'totalContestantsPerSeries'],
             ['Org:Chart', 'contestantsPerYears'],
             ['Org:Chart', 'totalPersons'],
+
+            ['Org:Deduplicate', 'person'],
+            ['Org:Person', 'create'],
+            ['Org:Person', 'edit'],
+            ['Org:Person', 'detail'],
+            ['Org:Person', 'pizza'],
+            ['Org:Person', 'search'],
+            ['Org:School', 'list'],
+            ['Org:School', 'create'],
+            ['Org:Spam', 'list'],
+            ['Org:Validation', 'default'],
+            ['Org:Validation', 'list'],
+            ['Org:Validation', 'preview'],
         ];
     }
 
     protected function tearDown(): void {
+        $this->connection->query('DELETE FROM person_info');
         $this->connection->query('DELETE FROM org');
         parent::tearDown();
     }

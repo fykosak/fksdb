@@ -1,11 +1,14 @@
 <?php
 
-namespace FKSDB\Transitions;
+namespace FKSDB\Transitions\Machine;
 
 use Exception;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
+use FKSDB\Transitions\IStateModel;
+use FKSDB\Transitions\Transition\Transition;
+use FKSDB\Transitions\Transition\UnavailableTransitionsException;
 use LogicException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Context;

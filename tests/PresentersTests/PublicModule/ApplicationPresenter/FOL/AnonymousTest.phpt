@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\FOL;
 
-$container = require '../../../../bootstrap.php';
+$container = require '../../../../Bootstrap.php';
 
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\FolTestCase;

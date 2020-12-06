@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Containers;
 
-use FKSDB\ORM\AbstractModelMulti;
+use FKSDB\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\ORM\Models\ModelAddress;
 use FKSDB\ORM\Models\ModelRegion;
 use FKSDB\ORM\Services\ServiceRegion;

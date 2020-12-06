@@ -3,7 +3,7 @@
 namespace FKSDB\DBReflection\ColumnFactories;
 
 use FKSDB\Logging\ILogger;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 
 /**
  * Interface ITestedRowFactory

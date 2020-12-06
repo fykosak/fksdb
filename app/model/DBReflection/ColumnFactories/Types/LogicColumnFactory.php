@@ -1,9 +1,9 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories;
+namespace FKSDB\DBReflection\ColumnFactories\Types;
 
 use FKSDB\ValuePrinters\BinaryPrinter;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\Checkbox;
 use Nette\Utils\Html;

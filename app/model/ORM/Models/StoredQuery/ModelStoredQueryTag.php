@@ -2,7 +2,7 @@
 
 namespace FKSDB\ORM\Models\StoredQuery;
 
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use Nette\Database\Table\ActiveRow;
 
 /**

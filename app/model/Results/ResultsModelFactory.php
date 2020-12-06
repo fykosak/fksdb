@@ -6,7 +6,7 @@ use DOMDocument;
 use DOMNode;
 use Exception;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\Results\EvaluationStrategies\EvaluationFykos2001;

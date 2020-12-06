@@ -1,6 +1,6 @@
 <?php
 
-namespace MockEnvironment;
+namespace FKSDB\Tests\MockEnvironment;
 
 use FKSDB\Authentication\LoginUserStorage;
 use FKSDB\ORM\Models\ModelLogin;

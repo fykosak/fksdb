@@ -2,8 +2,9 @@
 
 namespace FKSDB\DBReflection;
 
-use FKSDB\DBReflection\ColumnFactories\{DateRow,
-    DateTimeRow,
+use FKSDB\DBReflection\ColumnFactories\Types\{
+    DateTime\DateRow,
+    DateTime\DateTimeRow,
     EmailColumnFactory,
     IntColumnFactory,
     LogicColumnFactory,
@@ -12,7 +13,7 @@ use FKSDB\DBReflection\ColumnFactories\{DateRow,
     StringColumnFactory,
     PhoneColumnFactory,
     TextColumnFactory,
-    TimeRow
+    DateTime\TimeRow
 };
 use FKSDB\DBReflection\LinkFactories\Link;
 use Nette\DI\CompilerExtension;

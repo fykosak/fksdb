@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DSEF20;
 
-$container = require '../../../../bootstrap.php';
+$container = require '../../../../Bootstrap.php';
 
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\DsefTestCase;
 use Nette\Application\Request;

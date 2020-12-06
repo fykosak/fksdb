@@ -1,10 +1,10 @@
 <?php
 
-namespace FKSDB\Components\Controls\Chart;
+namespace FKSDB\Components\Controls\Chart\ContestantsPerSeries;
 
+use FKSDB\Components\Controls\Chart\IChart;
 use FKSDB\Components\React\ReactComponent;
 use FKSDB\ORM\Models\ModelContest;
-use Nette\Application\UI\Control;
 use Nette\DI\Container;
 
 /**

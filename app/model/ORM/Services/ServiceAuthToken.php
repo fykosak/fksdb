@@ -3,7 +3,7 @@
 namespace FKSDB\ORM\Services;
 
 use FKSDB\Exceptions\ModelException;
-use FKSDB\ORM\AbstractServiceSingle;
+
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;

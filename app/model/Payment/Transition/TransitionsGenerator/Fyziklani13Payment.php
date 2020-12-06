@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Payment\Transition\Transitions;
+namespace FKSDB\Payment\Transition\TransitionsGenerator;
 
 use FKSDB\Authorization\EventAuthorizator;
 use Exception;
@@ -12,11 +12,11 @@ use FKSDB\ORM\Services\ServicePayment;
 use FKSDB\Payment\Transition\PaymentMachine;
 use FKSDB\Transitions\AbstractTransitionsGenerator;
 use FKSDB\Transitions\IStateModel;
-use FKSDB\Transitions\Machine;
-use FKSDB\Transitions\Statements\Conditions\DateBetween;
-use FKSDB\Transitions\Statements\Conditions\ExplicitEventRole;
-use FKSDB\Transitions\Transition;
 use FKSDB\Mail\MailTemplateFactory;
+use FKSDB\Transitions\Machine\Machine;
+use FKSDB\Transitions\Transition\Statements\Conditions\DateBetween;
+use FKSDB\Transitions\Transition\Statements\Conditions\ExplicitEventRole;
+use FKSDB\Transitions\Transition\Transition;
 use Nette\Database\Connection;
 use Tracy\Debugger;
 

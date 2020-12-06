@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 /**
  * Class OrgModule

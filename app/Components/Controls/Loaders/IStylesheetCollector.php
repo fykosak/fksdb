@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Application;
+namespace FKSDB\Components\Controls\Loaders;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

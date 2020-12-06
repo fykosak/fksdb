@@ -1,10 +1,10 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\Teacher;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\Teacher;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
-use FKSDB\DBReflection\ColumnFactories\DefaultColumnFactory;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelTeacher;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;

@@ -3,7 +3,7 @@
 namespace FKSDB\Payment;
 
 use FKSDB\Payment\PriceCalculator\PriceCalculator;
-use FKSDB\Payment\SymbolGenerator\Generators\Generators\DefaultGenerator;
+use FKSDB\Payment\SymbolGenerator\Generators\DefaultGenerator;
 use FKSDB\Payment\Transition\PaymentMachine;
 use Nette\DI\CompilerExtension;
 

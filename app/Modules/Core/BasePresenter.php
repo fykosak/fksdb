@@ -2,17 +2,17 @@
 
 namespace FKSDB\Modules\Core;
 
-use FKSDB\Application\IJavaScriptCollector;
-use FKSDB\Application\IStylesheetCollector;
 use FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs;
 use FKSDB\Components\Controls\Breadcrumbs\BreadcrumbsFactory;
 use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Components\Controls\Choosers\ThemeChooser;
 use FKSDB\Components\Controls\DBReflection\LinkPrinterComponent;
+use FKSDB\Components\Controls\DBReflection\ValuePrinter\ValuePrinterComponent;
+use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
+use FKSDB\Components\Controls\Loaders\IStylesheetCollector;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Components\Controls\Navigation\NavigationChooser;
-use FKSDB\Components\Controls\PresenterBuilder;
-use FKSDB\Components\Controls\DBReflection\ValuePrinterComponent;
+use FKSDB\Components\Controls\Navigation\PresenterBuilder;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
@@ -127,7 +127,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
             if ($provider && $provider instanceof IFilteredDataProvider) {
                 $data = $provider->getFilteredItems($acQ);
             }
-
             $response = new JsonResponse($data);
             $this->sendResponse($response);
         }

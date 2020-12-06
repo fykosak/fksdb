@@ -5,7 +5,7 @@ namespace FKSDB\Tests\PresentersTests\PageDisplay;
 use FKSDB\ORM\DbNames;
 use FKSDB\Tests\PresentersTests\PageDisplay\EventModule\EventModuleTestCase;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 /**
  * Class FyziklaniModule

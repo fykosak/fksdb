@@ -2,7 +2,6 @@
 
 namespace FKSDB\ORM\Services;
 
-use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\ModelLogin;
 use Nette\Database\Context;

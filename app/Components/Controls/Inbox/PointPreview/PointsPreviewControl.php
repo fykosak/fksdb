@@ -1,7 +1,8 @@
 <?php
 
-namespace FKSDB\Components\Controls\Inbox;
+namespace FKSDB\Components\Controls\Inbox\PointPreview;
 
+use FKSDB\Components\Controls\Inbox\SeriesTableComponent;
 use FKSDB\Submits\SeriesTable;
 use Nette\DI\Container;
 
