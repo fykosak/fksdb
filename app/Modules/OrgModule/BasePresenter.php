@@ -14,11 +14,11 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     protected function startup(): void {
         $this->seriesTraitStartup();
-        /** @var ModelLogin $login */
-        $login = $this->getUser()->getIdentity();
-        if (!$login || !$login->getPerson() || !$login->getPerson()->getActiveOrgsAsQuery($this->yearCalculator, $this->getSelectedContest())->count()) {
-            throw new ForbiddenRequestException();
-        }
+        /*  @var ModelLogin $login
+         * $login = $this->getUser()->getIdentity();
+         * if (!$login || !$login->getPerson() || !$login->getPerson()->getActiveOrgsAsQuery($this->yearCalculator, $this->getSelectedContest())->count()) {
+         * throw new ForbiddenRequestException();
+         * }*/
         parent::startup();
     }
 
