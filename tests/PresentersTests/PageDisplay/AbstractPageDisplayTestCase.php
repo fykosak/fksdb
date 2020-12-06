@@ -3,13 +3,17 @@
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
+use FKSDB\YearCalculator;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;
 use Nette\DI\Container;
 use Tester\Assert;
+
 /**
  * Class PageDisplayTest
  * @author Michal Červeňák <miso@fykos.cz>
@@ -57,6 +61,7 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
 
         [$presenterName, $action, $params] = $this->transformParams($presenterName, $action, $params);
         $fixture = $this->createPresenter($presenterName);
+        $this->authenticate($this->loginId, $fixture);
         $request = $this->createRequest($presenterName, $action, $params);
         $response = $fixture->run($request);
         Assert::type(TextResponse::class, $response);
@@ -75,10 +80,10 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
     abstract public function getPages(): array;
 
     protected function tearDown(): void {
-        //   $this->connection->query('DELETE FROM global_session');
-        //    $this->connection->query('DELETE FROM `grant`');
-        //    $this->connection->query('DELETE FROM login');
-        //    $this->connection->query('DELETE FROM person');
+        $this->connection->query('DELETE FROM global_session');
+        $this->connection->query('DELETE FROM `grant`');
+        $this->connection->query('DELETE FROM login');
+        $this->connection->query('DELETE FROM person');
         parent::tearDown();
     }
 }

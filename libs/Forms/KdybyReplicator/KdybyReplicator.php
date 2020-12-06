@@ -58,7 +58,6 @@ class Replicator extends Container
 	 */
 	public function __construct(callable $factory, $createDefault = 0, $forceDefault = FALSE)
 	{
-		parent::__construct();
 		$this->monitor('Nette\Application\UI\Presenter');
 
 		try {

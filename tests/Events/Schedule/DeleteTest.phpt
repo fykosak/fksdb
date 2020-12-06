@@ -40,7 +40,7 @@ class DeleteTest extends ScheduleTestCase {
         ]);
         $loginId = $this->insert('login', ['person_id' => $this->lastPersonId, 'active' => 1]);
         $this->insert(DbNames::TAB_GRANT, ['login_id' => $loginId, 'role_id' => 5, 'contest_id' => 1]);
-        $this->authenticate($loginId);
+        $this->authenticate($loginId, $this->fixture);
     }
 
     public function testRegistration(): void {

@@ -73,9 +73,8 @@ abstract class StalkingTestCase extends DatabaseTestCase {
         $loginId = $this->insert(DbNames::TAB_LOGIN, ['person_id' => $userPersonId, 'active' => 1]);
         $this->insert(DbNames::TAB_ORG, ['person_id' => $userPersonId, 'contest_id' => 1, 'since' => 1, 'order' => 1]);
         $this->insert(DbNames::TAB_GRANT, ['login_id' => $loginId, 'role_id' => $this->getUserRoleId(), 'contest_id' => 1]);
-        $this->authenticate($loginId);
-
         $this->fixture = $this->createPresenter('Org:Person');
+        $this->authenticate($loginId, $this->fixture);
     }
 
     abstract protected function getUserRoleId(): int;

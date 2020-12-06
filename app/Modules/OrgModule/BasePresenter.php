@@ -4,7 +4,9 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
+use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\UI\PageTitle;
+use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
 
 abstract class BasePresenter extends AuthenticatedPresenter {
@@ -12,6 +14,14 @@ abstract class BasePresenter extends AuthenticatedPresenter {
 
     protected function startup(): void {
         $this->seriesTraitStartup();
+        /** @var ModelLogin $login */
+        $login = $this->getUser()->getIdentity();
+        if (!$login || !$login->getPerson() || !$login->getPerson()->getActiveOrgsAsQuery($this->yearCalculator, $this->getSelectedContest())->count()) {
+            var_dump($login->login_id);
+            var_dump($login->getPerson()->person_id);
+            var_dump($login->getPerson()->getActiveOrgsAsQuery($this->yearCalculator, $this->getSelectedContest())->count());
+            throw new ForbiddenRequestException();
+        }
         parent::startup();
     }
 

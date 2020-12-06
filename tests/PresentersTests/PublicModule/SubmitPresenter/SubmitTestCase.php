@@ -43,7 +43,6 @@ abstract class SubmitTestCase extends DatabaseTestCase {
     }
 
     protected function setUp(): void {
-        Environment::skip('3.0');
         parent::setUp();
         Environment::lock(LOCK_UPLOAD, TEMP_DIR);
 
@@ -93,7 +92,7 @@ abstract class SubmitTestCase extends DatabaseTestCase {
         ]);
 
         $this->fixture = $this->createPresenter('Public:Submit');
-        $this->authenticate($this->personId);
+        $this->authenticate($this->personId, $this->fixture);
         $this->fakeProtection(self::TOKEN);
     }
 

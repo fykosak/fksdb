@@ -16,9 +16,8 @@ use Tester\Environment;
 class AuthTest extends DsefTestCase {
 
     protected function setUp(): void {
-        Environment::skip('3.0');
         parent::setUp();
-        $this->authenticate($this->personId);
+        $this->authenticate($this->personId, $this->fixture);
     }
 
     public function testDisplay(): void {

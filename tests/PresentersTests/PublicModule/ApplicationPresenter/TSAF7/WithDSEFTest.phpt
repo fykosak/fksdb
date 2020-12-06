@@ -15,7 +15,7 @@ class WithDSEFTest extends TsafTestCase {
 
     protected function setUp(): void {
         parent::setUp();
-        $this->authenticate($this->personId);
+        $this->authenticate($this->personId, $this->fixture);
 
         $this->tsafAppId = $this->insert('event_participant', [
             'person_id' => $this->personId,

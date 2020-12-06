@@ -13,10 +13,10 @@ $container = require '../../Bootstrap.php';
  */
 class OrgModule extends AbstractPageDisplayTestCase {
     protected function setUp(): void {
-        Environment::skip('3.0');
         parent::setUp();
         $this->insert(DbNames::TAB_ORG, ['person_id' => $this->personId, 'contest_id' => 1, 'since' => 1, 'order' => 1]);
         $this->insert(DbNames::TAB_PERSON_INFO, ['person_id' => $this->personId]);
+        var_dump($this->personId . 'S');
     }
 
     protected function transformParams(string $presenterName, string $action, array $params): array {
@@ -32,18 +32,24 @@ class OrgModule extends AbstractPageDisplayTestCase {
 
     public function getPages(): array {
         return [
+            ['Org:Inbox', 'corrected'],
+
+            ['Org:Contestant', 'list'],
+
+            ['Org:Inbox', 'default'],
+            ['Org:Inbox', 'handout'],
+            ['Org:Inbox', 'inbox'],
+            ['Org:Inbox', 'list'],
+
             ['Org:Contestant', 'create'],
             ['Org:Contestant', 'list'],
+
             ['Org:Dashboard', 'default'],
             ['Org:Event', 'create'],
             ['Org:Event', 'list'],
             ['Org:StoredQuery', 'create'],
             ['Org:StoredQuery', 'list'],
-            ['Org:Inbox', 'corrected'],
-            ['Org:Inbox', 'default'],
-            ['Org:Inbox', 'handout'],
-            ['Org:Inbox', 'inbox'],
-            ['Org:Inbox', 'list'],
+
             ['Org:Org', 'list'],
             ['Org:Org', 'create'],
             ['Org:Points', 'entry'],

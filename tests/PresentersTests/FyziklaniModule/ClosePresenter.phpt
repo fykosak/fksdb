@@ -99,7 +99,7 @@ class ClosePresenter extends FyziklaniTestCase {
         $this->fixture = $this->createPresenter('Fyziklani:Close');
         $this->mockApplication();
 
-        $this->authenticate($this->userPersonId);
+        $this->authenticate($this->userPersonId, $this->fixture);
     }
 
     protected function tearDown(): void {

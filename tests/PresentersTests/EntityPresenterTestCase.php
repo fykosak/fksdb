@@ -3,8 +3,11 @@
 namespace FKSDB\Tests\PresentersTests;
 
 use FKSDB\ORM\DbNames;
+use FKSDB\ORM\Models\ModelLogin;
+use FKSDB\ORM\Services\ServiceLogin;
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
+use FKSDB\YearCalculator;
 use Nette\Application\IResponse;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
@@ -21,6 +24,7 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase {
     use MockApplicationTrait;
 
     protected int $cartesianPersonId;
+    private int $loginId;
 
     protected Presenter $fixture;
 
@@ -56,10 +60,10 @@ abstract class EntityPresenterTestCase extends DatabaseTestCase {
             'other_name' => 'Cartesiansky',
             'gender' => 'M',
         ]);
-        $loginId = $this->insert(DbNames::TAB_LOGIN, ['person_id' => $this->cartesianPersonId, 'active' => 1]);
+        $this->loginId = $this->insert(DbNames::TAB_LOGIN, ['person_id' => $this->cartesianPersonId, 'active' => 1]);
 
-        $this->insert(DbNames::TAB_GRANT, ['login_id' => $loginId, 'role_id' => $roleId, 'contest_id' => 1]);
-        $this->authenticate($loginId);
+        $this->insert(DbNames::TAB_GRANT, ['login_id' => $this->loginId, 'role_id' => $roleId, 'contest_id' => 1]);
+        $this->authenticate($this->loginId, $this->fixture);
     }
 
     protected function assertPageDisplay(IResponse $response): string {

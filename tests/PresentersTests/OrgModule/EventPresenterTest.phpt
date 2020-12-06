@@ -7,7 +7,6 @@ $container = require '../../Bootstrap.php';
 use FKSDB\Components\Controls\Entity\EventFormComponent;
 use FKSDB\ORM\DbNames;
 use Nette\Application\Responses\RedirectResponse;
-use Nette\Application\Responses\TextResponse;
 use Tester\Assert;
 
 /**
@@ -16,8 +15,7 @@ use Tester\Assert;
  */
 class EventPresenterTest extends AbstractOrgPresenterTestCase {
 
-    /** @var int */
-    private $eventId;
+    private int $eventId;
 
     protected function setUp(): void {
         parent::setUp();
@@ -92,9 +90,6 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase {
         ], [
             'id' => $this->eventId,
         ]);
-        if ($response instanceof TextResponse) {
-            file_put_contents('t.html', (string)$response->getSource());
-        }
         Assert::type(RedirectResponse::class, $response);
         $org = $this->connection->query('SELECT * FROM event where event_id=?', $this->eventId)->fetch();
         Assert::equal('Dummy Event edited', $org->name);

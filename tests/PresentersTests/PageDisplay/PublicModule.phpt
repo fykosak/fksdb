@@ -13,7 +13,6 @@ $container = require '../../Bootstrap.php';
  */
 class PublicModule extends AbstractPageDisplayTestCase {
     protected function setUp(): void {
-        Environment::skip('3.0');
         parent::setUp();
         $this->insert(DbNames::TAB_CONTESTANT_BASE, ['person_id' => $this->personId, 'contest_id' => 1, 'year' => 1]);
     }

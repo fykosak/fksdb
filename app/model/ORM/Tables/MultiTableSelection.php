@@ -6,7 +6,6 @@ use FKSDB\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\ORM\ServicesMulti\AbstractServiceMulti;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
-use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 
 /**

@@ -40,7 +40,6 @@ class Authorization extends FyziklaniTestCase {
     }
 
     protected function setUp(): void {
-        Environment::skip('3.0');
         parent::setUp();
 
         $this->perPerson = $this->createPerson('Karkulka', 'Červená', [
@@ -122,12 +121,12 @@ class Authorization extends FyziklaniTestCase {
         if (!is_array($results)) {
             $results = array_fill(0, count($actions), $results);
         }
+        $presenter = $this->createPresenter($presenterName);
         if ($personCol) {
             /* Use indirect access because data provider is called before test set up. */
-            $this->authenticate($this->{$personCol});
+            $this->authenticate($this->{$personCol}, $presenter);
         }
 
-        $presenter = $this->createPresenter($presenterName);
         foreach ($actions as $i => $action) {
             $request = $this->createGetRequest($presenterName, $action);
             $forbidden = false;

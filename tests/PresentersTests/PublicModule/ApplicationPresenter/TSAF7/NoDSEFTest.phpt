@@ -15,13 +15,14 @@ class NoDSEFTest extends TsafTestCase {
 
     protected function setUp(): void {
         parent::setUp();
-        $this->authenticate($this->personId);
+        $this->authenticate($this->personId, $this->fixture);
 
         $this->tsafAppId = $this->insert('event_participant', [
             'person_id' => $this->personId,
             'event_id' => $this->tsafEventId,
             'status' => 'invited',
         ]);
+        var_dump($this->tsafAppId);
     }
 
     public function testRegistration(): void {
@@ -29,23 +30,23 @@ class NoDSEFTest extends TsafTestCase {
             'participantTsaf' => [
                 'person_id' => (string)$this->personId,
                 'person_id_1' => [
-                    '_c_compact' => " ",
+                    '_c_compact' => ' ',
                     'person' => [
-                        'other_name' => "Paní",
-                        'family_name' => "Bílá",
+                        'other_name' => 'Paní',
+                        'family_name' => 'Bílá',
                     ],
                     'person_info' => [
-                        'email' => "bila@hrad.cz",
-                        'id_number' => "1231354",
-                        'born' => "2014-09-15",
+                        'email' => 'bila@hrad.cz',
+                        'id_number' => '1231354',
+                        'born' => '2014-09-15',
                         'phone' => '+420987654321',
                     ],
                     'post_contact_d' => [
                         'address' => [
-                            'target' => "jkljhkjh",
-                            'city' => "jkhlkjh",
-                            'postal_code' => "64546",
-                            'country_iso' => "",
+                            'target' => 'jkljhkjh',
+                            'city' => 'jkhlkjh',
+                            'postal_code' => '64546',
+                            'country_iso' => '',
                         ],
                     ],
                 ],
@@ -53,13 +54,13 @@ class NoDSEFTest extends TsafTestCase {
                 'jumper_size' => 'F_M',
             ],
             'participantDsef' => [
-                'e_dsef_group_id' => "1",
-                'lunch_count' => "3",
-                'message' => "",
+                'e_dsef_group_id' => '1',
+                'lunch_count' => '3',
+                'message' => '',
             ],
-            'privacy' => "on",
-            'c_a_p_t_cha' => "pqrt",
-            'invited__applied' => "Potvrdit účast",
+            'privacy' => 'on',
+            'c_a_p_t_cha' => 'pqrt',
+            'invited__applied' => 'Potvrdit účast',
         ], [
             'eventId' => $this->tsafEventId,
             'id' => $this->tsafAppId,

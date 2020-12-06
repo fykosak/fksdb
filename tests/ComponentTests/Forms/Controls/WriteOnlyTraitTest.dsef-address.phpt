@@ -53,7 +53,7 @@ class WriteOnlyTraitTest extends DsefTestCase {
             'role_id' => 5,
             'contest_id' => 1,
         ]);
-        $this->authenticate($adminId);
+        $this->authenticate($adminId, $this->fixture);
     }
 
     public function testDisplay(): void {

@@ -47,17 +47,17 @@ abstract class EventTestCase extends DatabaseTestCase {
         return $this->insert(DbNames::TAB_EVENT, $data);
     }
 
-    protected function createPostRequest(array $formData, array $params=[]): Request {
+    protected function createPostRequest(array $formData, array $params = []): Request {
         return new Request(
             'Public:Application',
             'POST',
-            Helpers::merge([
+            Helpers::merge($params, [
                 'action' => 'default',
                 'lang' => 'cs',
                 'contestId' => (string)1,
                 'year' => (string)1,
                 'eventId' => $this->getEventId(),
-            ], $params),
+            ]),
             Helpers::merge($formData, [
                 '_do' => 'application-form-form-submit',
             ]));

@@ -18,7 +18,7 @@ class WithDSEFAnonymousTest extends TsafTestCase {
             'role_id' => 5,
             'contest_id' => 1,
         ]);
-        $this->authenticate($adminId);
+        $this->authenticate($adminId, $this->fixture);
 
         $dsefAppId = $this->insert('event_participant', [
             'person_id' => $this->personId,

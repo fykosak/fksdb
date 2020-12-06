@@ -12,13 +12,10 @@ use Tester\Environment;
 $container = require '../../Bootstrap.php';
 
 class SecondaryLimitOk extends ResourceAvailabilityTestCase {
-    /**
-     * @var int
-     */
+
     private $tsafEventId;
 
     protected function setUp(): void {
-        Environment::skip('3.0');
         parent::setUp();
         $this->tsafEventId = $this->createEvent([
             'event_type_id' => 7,
@@ -29,7 +26,7 @@ EOT
         ]);
 
         foreach ($this->persons as $personId) {
-            $eid = $this->insert('event_participant', [
+            $this->insert('event_participant', [
                 'person_id' => $personId,
                 'event_id' => $this->tsafEventId,
                 'status' => 'applied',

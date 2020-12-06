@@ -16,7 +16,6 @@ abstract class TsafTestCase extends DsefTestCase {
     }
 
     protected function setUp(): void {
-        Environment::skip('3.0');
         parent::setUp();
         $this->dsefEventId = $this->eventId;
 
@@ -29,10 +28,5 @@ capacity: 5
 EOT
             ,
         ]);
-    }
-
-    protected function tearDown(): void {
-        $this->connection->query('DELETE FROM e_dsef_participant');
-        parent::tearDown();
     }
 }
