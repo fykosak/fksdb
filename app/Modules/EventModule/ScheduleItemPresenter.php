@@ -107,11 +107,11 @@ class ScheduleItemPresenter extends BasePresenter {
 
     /**
      * @param string|IResource $resource
-     * @param string $privilege
+     * @param string|null $privilege
      * @return bool
      * @throws EventNotFoundException
      */
-    protected function traitIsAuthorized($resource, string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool {
         return $this->isContestsOrgAuthorized($resource, $privilege);
     }
 

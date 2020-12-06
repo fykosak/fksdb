@@ -72,10 +72,10 @@ class SpamPresenter extends BasePresenter {
 
     /**
      * @param IResource|string $resource
-     * @param string $privilege
+     * @param string|null $privilege
      * @return bool
      */
-    protected function traitIsAuthorized($resource, string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool {
         return $this->isAnyContestAuthorized($resource, $privilege);
     }
 }
