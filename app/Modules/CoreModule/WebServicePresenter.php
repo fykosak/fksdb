@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Modules\OrgModule;
+namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\AbortException;
