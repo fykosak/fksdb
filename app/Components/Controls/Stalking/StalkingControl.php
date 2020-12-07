@@ -8,8 +8,8 @@ use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\DBReflection\LinkPrinterComponent;
 use FKSDB\Components\Controls\DBReflection\ValuePrinter\ValuePrinterComponent;
-use FKSDB\DBReflection\DBReflectionFactory;
-use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\Model\DBReflection\DBReflectionFactory;
+use FKSDB\Model\ORM\Models\ModelPerson;
 
 /**
  * Class StalkingControl

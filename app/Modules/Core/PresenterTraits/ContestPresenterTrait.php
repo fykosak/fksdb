@@ -4,9 +4,9 @@ namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Choosers\ContestChooser;
 use FKSDB\Components\Controls\Choosers\YearChooser;
-use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelLogin;
-use FKSDB\ORM\Services\ServiceContest;
+use FKSDB\Model\ORM\Models\ModelContest;
+use FKSDB\Model\ORM\Models\ModelLogin;
+use FKSDB\Model\ORM\Services\ServiceContest;
 use Nette\Application\BadRequestException;
 
 /**

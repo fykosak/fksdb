@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Controls\FormComponent\FormComponent;
-use FKSDB\Exceptions\ModelException;
-use FKSDB\Messages\Message;
-use FKSDB\ORM\Models\AbstractModelSingle;
+use FKSDB\Model\Exceptions\ModelException;
+use FKSDB\Model\Messages\Message;
+use FKSDB\Model\ORM\Models\AbstractModelSingle;
 use Nette\Application\AbortException;
 use Nette\Database\ConstraintViolationException;
 use Nette\DI\Container;

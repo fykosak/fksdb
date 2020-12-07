@@ -4,9 +4,9 @@ namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use FKSDB\Components\Forms\Containers\AddressContainer;
-use FKSDB\ORM\Services\ServiceAddress;
-use FKSDB\ORM\Services\ServiceRegion;
-use FKSDB\Persons\ReferencedPersonHandler;
+use FKSDB\Model\ORM\Services\ServiceAddress;
+use FKSDB\Model\ORM\Services\ServiceRegion;
+use FKSDB\Model\Persons\ReferencedPersonHandler;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;

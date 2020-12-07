@@ -1,7 +1,7 @@
 <?php
 
-use FKSDB\ORM\Models\ModelEmailMessage;
-use FKSDB\ORM\Services\ServiceEmailMessage;
+use FKSDB\Model\ORM\Models\ModelEmailMessage;
+use FKSDB\Model\ORM\Services\ServiceEmailMessage;
 use Nette\DI\Container;
 use Nette\Mail\IMailer;
 use Nette\Mail\Mailer;

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
-use FKSDB\ORM\DbNames;
+use FKSDB\Model\ORM\DbNames;
 
 $container = require '../../Bootstrap.php';
 

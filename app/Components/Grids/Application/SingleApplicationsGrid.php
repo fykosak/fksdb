@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Grids\Application;
 
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\ModelEventParticipant;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\ORM\DbNames;
+use FKSDB\Model\ORM\Models\ModelEventParticipant;
 use Nette\Application\IPresenter;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Database\Table\GroupedSelection;

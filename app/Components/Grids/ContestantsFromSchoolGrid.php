@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\ModelSchool;
-use FKSDB\ORM\Services\ServiceContestant;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\ORM\Models\ModelSchool;
+use FKSDB\Model\ORM\Services\ServiceContestant;
 use Nette\Application\IPresenter;
 use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;

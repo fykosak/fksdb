@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\ModelsTests\Export\Formats;
 
-use FKSDB\StoredQuery\StoredQueryParameter;
+use FKSDB\Model\StoredQuery\StoredQueryParameter;
 
 class MockQueryParameter extends StoredQueryParameter {
     public function __construct(string $name) {

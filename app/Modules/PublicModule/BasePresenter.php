@@ -4,10 +4,10 @@ namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
-use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\ModelContestant;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\ORM\DbNames;
+use FKSDB\Model\ORM\Models\ModelContestant;
+use FKSDB\Model\ORM\Models\ModelPerson;
+use FKSDB\Model\UI\PageTitle;
 
 /**
  *

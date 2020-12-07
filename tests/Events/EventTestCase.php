@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\Events;
 
-use FKSDB\ORM\DbNames;
+use FKSDB\Model\ORM\DbNames;
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Application\Request;

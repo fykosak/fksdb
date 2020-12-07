@@ -4,9 +4,8 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
-use FKSDB\ORM\Models\ModelLogin;
-use FKSDB\UI\PageTitle;
-use Nette\Application\ForbiddenRequestException;
+use FKSDB\Model\ORM\Models\ModelLogin;
+use FKSDB\Model\UI\PageTitle;
 use Nette\Security\IResource;
 
 abstract class BasePresenter extends AuthenticatedPresenter {

@@ -2,10 +2,10 @@
 
 namespace FKSDB\Tests\ModelsTests\Persons;
 
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\Persons\IModifiabilityResolver;
-use FKSDB\Persons\IVisibilityResolver;
-use FKSDB\Persons\ReferencedPersonHandler;
+use FKSDB\Model\ORM\Models\ModelPerson;
+use FKSDB\Model\Persons\IModifiabilityResolver;
+use FKSDB\Model\Persons\IVisibilityResolver;
+use FKSDB\Model\Persons\ReferencedPersonHandler;
 
 class TestResolver implements IVisibilityResolver, IModifiabilityResolver {
 

@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Rules;
 
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Services\ServicePersonInfo;
+use FKSDB\Model\ORM\Models\ModelPerson;
+use FKSDB\Model\ORM\Services\ServicePersonInfo;
 use Nette\Forms\Controls\BaseControl;
 
 /**

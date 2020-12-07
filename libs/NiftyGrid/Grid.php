@@ -14,6 +14,7 @@ use Nette\Application\IPresenter;
 use Nette\Application\UI\Presenter;
 use Nette\ComponentModel\Container;
 use Nette\ComponentModel\IComponent;
+use NiftyGrid\Components\Column;
 
 abstract class Grid extends \Nette\Application\UI\Control {
     const ROW_FORM = "rowForm";
@@ -214,7 +215,7 @@ abstract class Grid extends \Nette\Application\UI\Control {
      * @param null|string $width
      * @param null|int $truncate
      * @return Components\Column
-     * @return \Nifty\Grid\Column
+     * @return Column
      * @throws DuplicateColumnException
      */
     protected function addColumn($name, $label = null, $width = null, $truncate = null) {

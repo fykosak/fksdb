@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Messages\Message;
-use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\Messages\Message;
+use FKSDB\Model\ORM\Models\ModelPerson;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\IPresenter;
 use Nette\DI\Container;

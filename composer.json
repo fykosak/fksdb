@@ -29,10 +29,7 @@
   },
   "autoload": {
     "psr-4": {
-      "FKSDB\\": [
-        "app/",
-        "app/model/"
-      ],
+      "FKSDB\\": "app/",
       "FKSDB\\Tests\\": "tests/"
     }
   },

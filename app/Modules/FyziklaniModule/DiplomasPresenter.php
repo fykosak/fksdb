@@ -3,10 +3,10 @@
 namespace FKSDB\Modules\FyziklaniModule;
 
 use FKSDB\Components\Controls\Fyziklani\FinalResults;
-use FKSDB\Events\Exceptions\EventNotFoundException;
-use FKSDB\Fyziklani\Ranking\NotClosedTeamException;
-use FKSDB\Fyziklani\Ranking\RankingStrategy;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\Events\Exceptions\EventNotFoundException;
+use FKSDB\Model\Fyziklani\Ranking\NotClosedTeamException;
+use FKSDB\Model\Fyziklani\Ranking\RankingStrategy;
+use FKSDB\Model\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Utils\Html;
 

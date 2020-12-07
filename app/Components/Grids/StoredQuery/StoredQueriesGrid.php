@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Grids\StoredQuery;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
-use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\Model\ORM\Services\StoredQuery\ServiceStoredQuery;
 use Nette\Application\IPresenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\NDataSource;

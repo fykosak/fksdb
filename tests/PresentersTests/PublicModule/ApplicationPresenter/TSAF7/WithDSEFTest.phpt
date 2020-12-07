@@ -4,7 +4,7 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TSAF7;
 
 $container = require '../../../../Bootstrap.php';
 
-use FKSDB\ORM\Models\ModelEventParticipant;
+use FKSDB\Model\ORM\Models\ModelEventParticipant;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TsafTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;

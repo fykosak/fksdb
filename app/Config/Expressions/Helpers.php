@@ -2,13 +2,13 @@
 
 namespace FKSDB\Config\Expressions;
 
-use FKSDB\Expressions\Comparison\Le;
-use FKSDB\Expressions\Comparison\Leq;
-use FKSDB\Expressions\Logic\LogicAnd;
-use FKSDB\Expressions\Logic\Not;
-use FKSDB\Expressions\Logic\LogicOr;
-use FKSDB\Expressions\Predicates\After;
-use FKSDB\Expressions\Predicates\Before;
+use FKSDB\Model\Expressions\Comparison\Le;
+use FKSDB\Model\Expressions\Comparison\Leq;
+use FKSDB\Model\Expressions\Logic\LogicAnd;
+use FKSDB\Model\Expressions\Logic\Not;
+use FKSDB\Model\Expressions\Logic\LogicOr;
+use FKSDB\Model\Expressions\Predicates\After;
+use FKSDB\Model\Expressions\Predicates\Before;
 use Nette\DI\Container;
 use Nette\DI\Definitions\Statement;
 use Nette\DI\Resolver;

@@ -4,11 +4,11 @@ namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Fyziklani\NotSetGameParametersException;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use FKSDB\Model\Fyziklani\NotSetGameParametersException;
+use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTask;
+use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Model\ORM\Models\ModelEvent;
+use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 

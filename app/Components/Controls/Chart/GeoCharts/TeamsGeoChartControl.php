@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Chart\GeoCharts;
 
-use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\Model\ORM\Models\ModelEvent;
 use Nette\DI\Container;
 
 class TeamsGeoChartControl extends ApplicationsPerCountryChartControl {

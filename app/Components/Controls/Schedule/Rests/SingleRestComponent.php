@@ -3,8 +3,8 @@
 namespace FKSDB\Components\Controls\Schedule\Rests;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\Model\ORM\Models\ModelEvent;
+use FKSDB\Model\ORM\Models\ModelPerson;
 
 /**
  * Class SingleRestComponent

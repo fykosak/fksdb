@@ -2,17 +2,17 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Astrid\Downloader;
+use FKSDB\Model\Astrid\Downloader;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\ModelException;
-use FKSDB\Logging\FlashMessageDump;
-use FKSDB\Pipeline\PipelineException;
-use FKSDB\SeriesCalculator;
-use FKSDB\Submits\UploadException;
-use FKSDB\Tasks\PipelineFactory;
-use FKSDB\Tasks\SeriesData;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\Exceptions\ModelException;
+use FKSDB\Model\Logging\FlashMessageDump;
+use FKSDB\Model\Pipeline\PipelineException;
+use FKSDB\Model\SeriesCalculator;
+use FKSDB\Model\Submits\UploadException;
+use FKSDB\Model\Tasks\PipelineFactory;
+use FKSDB\Model\Tasks\SeriesData;
+use FKSDB\Model\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\DeprecatedException;

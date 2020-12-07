@@ -3,10 +3,10 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\ORM\Models\ModelEvent;
+use FKSDB\Model\ORM\Models\ModelPerson;
+use FKSDB\Model\ORM\Models\Schedule\ModelPersonSchedule;
 use Nette\Application\IPresenter;
 use NiftyGrid\DataSource\NDataSource;
 use NiftyGrid\DuplicateColumnException;

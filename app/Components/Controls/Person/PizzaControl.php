@@ -7,8 +7,8 @@ use FKSDB\Components\Controls\DBReflection\ValuePrinter\ValuePrinterComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\ORM\Services\ServicePerson;
 use Nette\Application\UI\Form;
 
 class PizzaControl extends BaseComponent {

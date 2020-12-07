@@ -2,12 +2,12 @@
 
 namespace FKSDB\Components\Controls\Stalking\Components;
 
-use FKSDB\Authorization\Grant;
+use FKSDB\Model\Authorization\Grant;
 use FKSDB\Components\Controls\Stalking\StalkingControl;
-use FKSDB\DBReflection\FieldLevelPermission;
-use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\ModelGrant;
-use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\Model\DBReflection\FieldLevelPermission;
+use FKSDB\Model\ORM\DbNames;
+use FKSDB\Model\ORM\Models\ModelGrant;
+use FKSDB\Model\ORM\Models\ModelPerson;
 
 /**
  * Class Role

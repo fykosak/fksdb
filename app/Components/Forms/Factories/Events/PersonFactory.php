@@ -3,20 +3,20 @@
 namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Events\EventsExtension;
-use FKSDB\Events\Model\ExpressionEvaluator;
-use FKSDB\Events\Model\Holder\DataValidator;
-use FKSDB\Events\Model\Holder\Field;
-use FKSDB\Events\Model\PersonContainerResolver;
+use FKSDB\Model\Events\EventsExtension;
+use FKSDB\Model\Events\Model\ExpressionEvaluator;
+use FKSDB\Model\Events\Model\Holder\DataValidator;
+use FKSDB\Model\Events\Model\Holder\Field;
+use FKSDB\Model\Events\Model\PersonContainerResolver;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
-use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\Model\ORM\Services\ServicePerson;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\IControl;
 use Nette\Security\User;
-use FKSDB\Persons\SelfResolver;
+use FKSDB\Model\Persons\SelfResolver;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

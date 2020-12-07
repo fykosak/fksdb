@@ -3,10 +3,10 @@
 namespace FKSDB\Components\Controls\DBReflection\ValuePrinter;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\DBReflection\DBReflectionFactory;
-use FKSDB\DBReflection\FieldLevelPermission;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\AbstractModelSingle;
+use FKSDB\Model\DBReflection\DBReflectionFactory;
+use FKSDB\Model\DBReflection\FieldLevelPermission;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\ORM\Models\AbstractModelSingle;
 
 /**
  * Class ValuePrinterComponent

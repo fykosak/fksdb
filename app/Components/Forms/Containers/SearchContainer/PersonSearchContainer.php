@@ -4,8 +4,8 @@ namespace FKSDB\Components\Forms\Containers\SearchContainer;
 
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\Model\ORM\Models\ModelPerson;
+use FKSDB\Model\ORM\Services\ServicePerson;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;

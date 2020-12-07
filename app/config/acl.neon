@@ -7,13 +7,9 @@
 
 services:
     # assertions
-    ownerAssertion: FKSDB\Authorization\Assertions\OwnerAssertion
-    paymentAssertion: FKSDB\Authorization\Assertions\PaymentAssertion
+    ownerAssertion: FKSDB\Model\Authorization\Assertions\OwnerAssertion
+    paymentAssertion: FKSDB\Model\Authorization\Assertions\PaymentAssertion
 
-    # data services
-    #- authorizator:
-     #   class: Nette\Security\Permission
-      #  setup:
 acl:
     ## Roles
     - addRole(guest)                    # anonym (automatická role)

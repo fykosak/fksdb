@@ -3,12 +3,12 @@
 namespace FKSDB\Components\Grids\DataTesting;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\DataTesting\DataTestingFactory;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\Services\ServicePerson;
-use FKSDB\DataTesting\TestLog;
-use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Model\DataTesting\DataTestingFactory;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\Logging\MemoryLogger;
+use FKSDB\Model\ORM\Services\ServicePerson;
+use FKSDB\Model\DataTesting\TestLog;
+use FKSDB\Model\Exceptions\NotImplementedException;
 use Nette\Application\IPresenter;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;

@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Chart\IChart;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\UI\PageTitle;
 use Nette\ComponentModel\IComponent;
 
 /**

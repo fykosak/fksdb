@@ -3,11 +3,11 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\EntityGrid;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\ORM\Models\ModelEvent;
+use FKSDB\Model\ORM\Models\Schedule\ModelScheduleGroup;
 use Nette\Application\IPresenter;
-use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
+use FKSDB\Model\ORM\Services\Schedule\ServiceScheduleGroup;
 use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;

@@ -2,14 +2,14 @@
 
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
-use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
-use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
-use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
-use FKSDB\ORM\Services\Schedule\ServiceScheduleGroup;
-use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
+use FKSDB\Model\Exceptions\NotImplementedException;
+use FKSDB\Model\ORM\Models\ModelEvent;
+use FKSDB\Model\ORM\Models\ModelPerson;
+use FKSDB\Model\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\Model\ORM\Models\Schedule\ModelScheduleItem;
+use FKSDB\Model\ORM\Services\Schedule\ServicePersonSchedule;
+use FKSDB\Model\ORM\Services\Schedule\ServiceScheduleGroup;
+use FKSDB\Model\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Utils\ArrayHash;
 use PDOException;
 

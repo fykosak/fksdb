@@ -3,14 +3,14 @@
 namespace FKSDB\Components\Controls\Stalking\Timeline;
 
 use FKSDB\Components\React\ReactComponent;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Models\ModelContestant;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelEventOrg;
-use FKSDB\ORM\Models\ModelEventParticipant;
-use FKSDB\ORM\Models\ModelOrg;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\YearCalculator;
+use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Model\ORM\Models\ModelContestant;
+use FKSDB\Model\ORM\Models\ModelEvent;
+use FKSDB\Model\ORM\Models\ModelEventOrg;
+use FKSDB\Model\ORM\Models\ModelEventParticipant;
+use FKSDB\Model\ORM\Models\ModelOrg;
+use FKSDB\Model\ORM\Models\ModelPerson;
+use FKSDB\Model\YearCalculator;
 use Nette\DI\Container;
 
 /**

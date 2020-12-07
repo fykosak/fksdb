@@ -4,13 +4,13 @@ namespace FKSDB\Modules\FyziklaniModule;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Grids\Fyziklani\TaskGrid;
-use FKSDB\Events\Exceptions\EventNotFoundException;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Fyziklani\FyziklaniTaskImportProcessor;
-use FKSDB\Logging\FlashMessageDump;
-use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\Events\Exceptions\EventNotFoundException;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\Fyziklani\FyziklaniTaskImportProcessor;
+use FKSDB\Model\Logging\FlashMessageDump;
+use FKSDB\Model\Logging\MemoryLogger;
+use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use FKSDB\Model\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 

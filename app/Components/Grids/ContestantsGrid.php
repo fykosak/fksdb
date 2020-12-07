@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelContestant;
-use FKSDB\ORM\Services\ServiceContestant;
+use FKSDB\Model\ORM\Models\ModelContest;
+use FKSDB\Model\ORM\Models\ModelContestant;
+use FKSDB\Model\ORM\Services\ServiceContestant;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\IPresenter;
 use Nette\DI\Container;
@@ -12,7 +12,7 @@ use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
 use NiftyGrid\DuplicateGlobalButtonException;
-use FKSDB\SQL\ViewDataSource;
+use FKSDB\Model\SQL\ViewDataSource;
 
 /**
  *

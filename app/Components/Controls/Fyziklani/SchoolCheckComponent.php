@@ -4,12 +4,12 @@ namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\DBReflection\ValuePrinter\ValuePrinterComponent;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelEventParticipant;
-use FKSDB\ORM\Models\ModelSchool;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\ORM\Services\ServiceSchool;
+use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Model\ORM\Models\ModelEvent;
+use FKSDB\Model\ORM\Models\ModelEventParticipant;
+use FKSDB\Model\ORM\Models\ModelSchool;
+use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Model\ORM\Services\ServiceSchool;
 use Nette\DI\Container;
 
 /**

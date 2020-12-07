@@ -3,11 +3,11 @@ payment:
         eventId: 137
         scheduleGroupType:
             - accommodation
-        transitionsGenerator: FKSDB\Payment\Transition\TransitionsGenerator\Fyziklani13Payment
+        transitionsGenerator: FKSDB\Model\Payment\Transition\TransitionsGenerator\Fyziklani13Payment
         eventPrice: false
         priceCalculator:
             preProcess:
-                - FKSDB\Payment\PriceCalculator\PreProcess\SchedulePrice
+                - FKSDB\Model\Payment\PriceCalculator\PreProcess\SchedulePrice
         symbolGenerator:
             variableSymbolStart: 7292000
             variableSymbolEnd: 7292999
@@ -22,10 +22,10 @@ payment:
         eventId: 145
         scheduleGroupType:
             - accommodation
-        transitionsGenerator: FKSDB\Payment\Transition\TransitionsGenerator\Fyziklani14Payment
+        transitionsGenerator: FKSDB\Model\Payment\Transition\TransitionsGenerator\Fyziklani14Payment
         priceCalculator:
             preProcess:
-                - FKSDB\Payment\PriceCalculator\PreProcess\SchedulePrice
+                - FKSDB\Model\Payment\PriceCalculator\PreProcess\SchedulePrice
         symbolGenerator:
             variableSymbolStart: 7292000
             variableSymbolEnd: 7292999

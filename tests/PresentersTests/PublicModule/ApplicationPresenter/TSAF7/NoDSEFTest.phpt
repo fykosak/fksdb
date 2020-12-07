@@ -4,7 +4,7 @@ namespace FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TSAF7;
 
 $container = require '../../../../Bootstrap.php';
 
-use FKSDB\ORM\Services\ServiceEmailMessage;
+use FKSDB\Model\ORM\Services\ServiceEmailMessage;
 use FKSDB\Tests\PresentersTests\PublicModule\ApplicationPresenter\TsafTestCase;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;

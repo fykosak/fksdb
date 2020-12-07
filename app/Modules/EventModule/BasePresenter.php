@@ -2,18 +2,18 @@
 
 namespace FKSDB\Modules\EventModule;
 
-use FKSDB\Events\Exceptions\EventNotFoundException;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Localization\UnsupportedLanguageException;
+use FKSDB\Model\Events\Exceptions\EventNotFoundException;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Config\NeonSchemaException;
-use FKSDB\Events\EventDispatchFactory;
-use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\ServiceEvent;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\Events\EventDispatchFactory;
+use FKSDB\Model\Exceptions\NotImplementedException;
+use FKSDB\Model\Events\Model\Holder\Holder;
+use FKSDB\Model\ORM\Models\ModelContest;
+use FKSDB\Model\ORM\Models\ModelEvent;
+use FKSDB\Model\ORM\Services\ServiceEvent;
+use FKSDB\Model\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;

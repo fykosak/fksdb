@@ -3,12 +3,12 @@
 namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Events\Machine\BaseMachine;
-use FKSDB\Events\Machine\Machine;
-use FKSDB\Events\Model\ApplicationHandler;
-use FKSDB\Events\Model\ApplicationHandlerException;
-use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\Logging\FlashMessageDump;
+use FKSDB\Model\Events\Machine\BaseMachine;
+use FKSDB\Model\Events\Machine\Machine;
+use FKSDB\Model\Events\Model\ApplicationHandler;
+use FKSDB\Model\Events\Model\ApplicationHandlerException;
+use FKSDB\Model\Events\Model\Holder\Holder;
+use FKSDB\Model\Logging\FlashMessageDump;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\AbortException;

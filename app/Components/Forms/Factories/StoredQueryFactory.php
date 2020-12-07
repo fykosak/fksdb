@@ -3,11 +3,11 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\DBReflection\OmittedControlException;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
-use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
+use FKSDB\Model\DBReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Model\DBReflection\OmittedControlException;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\ORM\Models\StoredQuery\ModelStoredQueryParameter;
+use FKSDB\Model\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
 use Kdyby\Extension\Forms\Replicator\Replicator;
 use Nette\Application\UI\Form;
 use Nette\Forms\Container;

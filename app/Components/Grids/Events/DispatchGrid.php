@@ -3,8 +3,8 @@
 namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\Grids\EntityGrid;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Services\ServiceEvent;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\ORM\Services\ServiceEvent;
 use Nette\Application\IPresenter;
 use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;

@@ -3,18 +3,18 @@
 namespace FKSDB\Components\Grids\Fyziklani\Submits;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Fyziklani\Submit\HandlerFactory;
-use FKSDB\Fyziklani\Submit\TaskCodePreprocessor;
-use FKSDB\Logging\FlashMessageDump;
-use FKSDB\Logging\MemoryLogger;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\Fyziklani\Submit\HandlerFactory;
+use FKSDB\Model\Fyziklani\Submit\TaskCodePreprocessor;
+use FKSDB\Model\Logging\FlashMessageDump;
+use FKSDB\Model\Logging\MemoryLogger;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTask;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTask;
+use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Model\ORM\Models\ModelEvent;
+use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTask;
+use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\IPresenter;
@@ -25,7 +25,7 @@ use Nette\InvalidStateException;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
-use FKSDB\SQL\SearchableDataSource;
+use FKSDB\Model\SQL\SearchableDataSource;
 
 /**
  * @author Michal Červeňák

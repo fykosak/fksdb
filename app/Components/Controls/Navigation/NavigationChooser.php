@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Controls\Navigation;
 
 use FKSDB\Components\Controls\Choosers\Chooser;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\UI\PageTitle;
-use FKSDB\UI\Title;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\UI\PageTitle;
+use FKSDB\Model\UI\Title;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 

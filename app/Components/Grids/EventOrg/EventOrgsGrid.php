@@ -3,10 +3,10 @@
 namespace FKSDB\Components\Grids\EventOrg;
 
 use FKSDB\Components\Grids\EntityGrid;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\ORM\Models\ModelEvent;
 use Nette\Application\IPresenter;
-use FKSDB\ORM\Services\ServiceEventOrg;
+use FKSDB\Model\ORM\Services\ServiceEventOrg;
 use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;

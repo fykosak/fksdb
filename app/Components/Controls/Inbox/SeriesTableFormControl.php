@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Components\Forms\OptimisticForm;
-use FKSDB\Logging\ILogger;
+use FKSDB\Model\Logging\ILogger;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;

@@ -2,14 +2,14 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Exceptions\ModelException;
-use FKSDB\Exceptions\NotFoundException;
-use FKSDB\Logging\ILogger;
-use FKSDB\Messages\Message;
-use FKSDB\ORM\Models\ModelContestant;
-use FKSDB\ORM\Models\ModelSubmit;
-use FKSDB\Submits\StorageException;
-use FKSDB\Submits\SubmitHandlerFactory;
+use FKSDB\Model\Exceptions\ModelException;
+use FKSDB\Model\Exceptions\NotFoundException;
+use FKSDB\Model\Logging\ILogger;
+use FKSDB\Model\Messages\Message;
+use FKSDB\Model\ORM\Models\ModelContestant;
+use FKSDB\Model\ORM\Models\ModelSubmit;
+use FKSDB\Model\Submits\StorageException;
+use FKSDB\Model\Submits\SubmitHandlerFactory;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;

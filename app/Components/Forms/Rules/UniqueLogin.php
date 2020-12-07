@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Rules;
 
-use FKSDB\ORM\Models\ModelLogin;
-use FKSDB\ORM\Services\ServiceLogin;
+use FKSDB\Model\ORM\Models\ModelLogin;
+use FKSDB\Model\ORM\Services\ServiceLogin;
 use Nette\Forms\Controls\BaseControl;
 
 

@@ -3,11 +3,11 @@
 namespace FKSDB\Components\Controls\Inbox\SubmitCheck;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Logging\ILogger;
-use FKSDB\ORM\Models\ModelSubmit;
-use FKSDB\Submits\FileSystemStorage\CorrectedStorage;
-use FKSDB\Submits\FileSystemStorage\UploadedStorage;
-use FKSDB\Submits\SeriesTable;
+use FKSDB\Model\Logging\ILogger;
+use FKSDB\Model\ORM\Models\ModelSubmit;
+use FKSDB\Model\Submits\FileSystemStorage\CorrectedStorage;
+use FKSDB\Model\Submits\FileSystemStorage\UploadedStorage;
+use FKSDB\Model\Submits\SeriesTable;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 

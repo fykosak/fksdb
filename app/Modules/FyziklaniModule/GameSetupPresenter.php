@@ -2,11 +2,11 @@
 
 namespace FKSDB\Modules\FyziklaniModule;
 
-use FKSDB\Events\Exceptions\EventNotFoundException;
-use FKSDB\Exceptions\NotFoundException;
-use FKSDB\Fyziklani\NotSetGameParametersException;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\Events\Exceptions\EventNotFoundException;
+use FKSDB\Model\Exceptions\NotFoundException;
+use FKSDB\Model\Fyziklani\NotSetGameParametersException;
+use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
+use FKSDB\Model\UI\PageTitle;
 
 /**
  * Class GameSetupPresenter

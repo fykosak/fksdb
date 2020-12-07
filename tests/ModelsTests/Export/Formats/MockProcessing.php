@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\ModelsTests\Export\Formats;
 
-use FKSDB\StoredQuery\StoredQueryPostProcessing;
+use FKSDB\Model\StoredQuery\StoredQueryPostProcessing;
 
 class MockProcessing extends StoredQueryPostProcessing {
 

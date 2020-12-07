@@ -3,12 +3,12 @@
 namespace FKSDB\Components\Controls\AjaxSubmit;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Messages\Message;
-use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelContestant;
-use FKSDB\ORM\Models\ModelTask;
-use FKSDB\ORM\Services\ServiceTask;
-use FKSDB\ORM\Tables\TypedTableSelection;
+use FKSDB\Model\Messages\Message;
+use FKSDB\Model\ORM\Models\ModelContest;
+use FKSDB\Model\ORM\Models\ModelContestant;
+use FKSDB\Model\ORM\Models\ModelTask;
+use FKSDB\Model\ORM\Services\ServiceTask;
+use FKSDB\Model\ORM\Tables\TypedTableSelection;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 

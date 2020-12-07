@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Controls\Stalking\StalkingComponent;
 
 use FKSDB\Components\Controls\Stalking\StalkingControl;
-use FKSDB\ORM\Models\AbstractModelSingle;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Model\ORM\Models\AbstractModelSingle;
+use FKSDB\Model\ORM\Models\ModelPerson;
+use FKSDB\Model\Exceptions\NotImplementedException;
 use Nette\InvalidStateException;
 
 /**

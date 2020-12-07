@@ -62,7 +62,7 @@ events:
                         condition: %events.fol1.appCond%
                         label: _('Přihlásit tým')
                         onExecuted:
-                            - FKSDB\Events\Transitions\MailSender(team, *)
+                            - FKSDB\Model\Events\Transitions\MailSender(team, *)
                     applied->participated:
                         condition: and(role('admin'),eventWas())
                         label: _('Zúčastnil se')
@@ -122,7 +122,7 @@ events:
                         visible: false
                         label: _('Přidat člena')
                         onExecuted:
-                            - FKSDB\Events\Transitions\MailSender(member,self)
+                            - FKSDB\Model\Events\Transitions\MailSender(member,self)
                     applied->participated:
                         condition: role('admin')
                         visible: false
@@ -153,15 +153,15 @@ events:
             formAdjustments:
                 - @events.privacyPolicy
                 - @events.captcha
-                - FKSDB\Events\FormAdjustments\UniqueCheck('team.name', _("Tým s názvem '%value' již existuje."))
-                - FKSDB\Events\FormAdjustments\UniqueCheck('*.person_id', _("Osoba je již na Fyziklání online přihlášena."))
-                - FKSDB\Events\Spec\Fol\FlagCheck()
-                - FKSDB\Events\Spec\Fol\BornCheck()
+                - FKSDB\Model\Events\FormAdjustments\UniqueCheck('team.name', _("Tým s názvem '%value' již existuje."))
+                - FKSDB\Model\Events\FormAdjustments\UniqueCheck('*.person_id', _("Osoba je již na Fyziklání online přihlášena."))
+                - FKSDB\Model\Events\Spec\Fol\FlagCheck()
+                - FKSDB\Model\Events\Spec\Fol\BornCheck()
 
 
             processings:
-                - FKSDB\Events\Spec\Fol\CategoryProcessing(%events.fol1.rulesVersion%)
-                - FKSDB\Events\Spec\Fol\PasswordProcessing()
+                - FKSDB\Model\Events\Spec\Fol\CategoryProcessing(%events.fol1.rulesVersion%)
+                - FKSDB\Model\Events\Spec\Fol\PasswordProcessing()
                 - @events.privacyPolicy
 
             joins:

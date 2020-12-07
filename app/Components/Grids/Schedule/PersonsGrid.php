@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Grids\Schedule;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
-use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\Model\ORM\Models\Schedule\ModelScheduleItem;
 use Nette\Application\IPresenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;

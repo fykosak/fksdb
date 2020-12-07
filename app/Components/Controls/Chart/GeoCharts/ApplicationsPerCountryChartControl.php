@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Controls\Chart\GeoCharts;
 
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\ServiceEventParticipant;
+use FKSDB\Model\ORM\Models\ModelEvent;
+use FKSDB\Model\ORM\Services\ServiceEventParticipant;
 use Nette\Database\ResultSet;
 use Nette\DI\Container;
 

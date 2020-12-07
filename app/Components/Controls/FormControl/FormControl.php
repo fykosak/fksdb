@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls\FormControl;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Model\Exceptions\BadTypeException;
 use Nette\Application\UI\Form;
 
 /**

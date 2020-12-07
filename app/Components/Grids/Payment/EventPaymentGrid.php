@@ -3,10 +3,10 @@
 namespace FKSDB\Components\Grids\Payment;
 
 use FKSDB\Components\Grids\EntityGrid;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelPayment;
-use FKSDB\ORM\Services\ServicePayment;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\ORM\Models\ModelEvent;
+use FKSDB\Model\ORM\Models\ModelPayment;
+use FKSDB\Model\ORM\Services\ServicePayment;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\IPresenter;
 use Nette\DI\Container;

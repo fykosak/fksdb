@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Grids\Fyziklani\Submits;
 
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Application\IPresenter;
 use Nette\DI\Container;
 use NiftyGrid\DataSource\IDataSource;
