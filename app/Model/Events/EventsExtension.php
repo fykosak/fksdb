@@ -194,6 +194,9 @@ class EventsExtension extends CompilerExtension {
 
         $field->addSetup('setEvaluator', ['@events.expressionEvaluator']);
         foreach ($fieldDefinition as $key => $parameter) {
+            if (is_numeric($key)) {
+                continue;
+            }
             switch ($key) {
                 case 'name':
                 case 'label':

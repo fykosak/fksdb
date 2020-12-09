@@ -176,7 +176,7 @@ abstract class BaseGrid extends Grid {
      * @return Button
      * @throws DuplicateButtonException
      */
-    protected function addButton($name, ?string $label = null): Button {
+    protected function addButton(string $name, ?string $label = null): Button {
         $button = parent::addButton($name, $label);
         $button->setClass('btn btn-sm btn-secondary');
         return $button;
@@ -189,7 +189,7 @@ abstract class BaseGrid extends Grid {
      * @throws DuplicateGlobalButtonException
      * @deprecated do not use for links!
      */
-    public function addGlobalButton($name, ?string $label = null): GlobalButton {
+    public function addGlobalButton(string $name, ?string $label = null): GlobalButton {
         $button = parent::addGlobalButton($name, $label);
         $button->setClass('btn btn-sm btn-primary');
         return $button;

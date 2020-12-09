@@ -14,9 +14,7 @@ use FKSDB\Model\ORM\Services\ServiceContest;
 class DataTestingFactory {
     /** @var PersonTest[][] */
     private array $tests = [];
-
     private ServiceContest $serviceContest;
-
     private DBReflectionFactory $tableReflectionFactory;
 
     /**

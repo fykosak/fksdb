@@ -74,7 +74,7 @@ trait MockApplicationTrait {
     }
 
     protected function createPresenter(string $presenterName): Presenter {
-        $_COOKIE['nette-samesite'] = 1;
+        $_COOKIE['nette-samesite'] = '1';
         $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);
         $presenter = $presenterFactory->createPresenter($presenterName);
         $presenter->autoCanonicalize = false;

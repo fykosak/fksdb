@@ -3,7 +3,6 @@
 use FKSDB\Model\ORM\Models\ModelEmailMessage;
 use FKSDB\Model\ORM\Services\ServiceEmailMessage;
 use Nette\DI\Container;
-use Nette\Mail\IMailer;
 use Nette\Mail\Mailer;
 use Tracy\Debugger;
 
@@ -18,7 +17,7 @@ if (!$container->getParameters()['spamMailer'] || !$container->getParameters()['
     exit(0);
 }
 /**
- * @var IMailer $mailer
+ * @var Mailer $mailer
  */
 $mailer = $container->getByType(Mailer::class);
 

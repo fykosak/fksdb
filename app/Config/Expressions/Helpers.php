@@ -47,10 +47,14 @@ class Helpers {
             foreach ($expression->arguments as $attribute) {
                 $arguments[] = self::statementFromExpression($attribute);
             }
-            $class = self::$semanticMap[$expression->entity] ?? $expression->entity;
-            if (function_exists($class)) { // workaround for Nette interpretation of entities
-                $class = ['', $class];
+            $class = $expression->entity;
+            if (!is_array($expression->entity)) {
+                $class = self::$semanticMap[$expression->entity] ?? $class;
+                if (function_exists($class)) { // workaround for Nette interpretation of entities
+                    $class = ['', $class];
+                }
             }
+
             return new Statement($class, $arguments);
         } elseif (is_array($expression)) {
             return array_map(function ($subExpresion) {
@@ -78,7 +82,6 @@ class Helpers {
                 }
                 $arguments[] = self::evalExpression($attribute, $container);
             }
-
             $entity = self::$semanticMap[$expression->entity] ?? $expression->entity;
             if (function_exists($entity)) {
                 return $entity(...$arguments);

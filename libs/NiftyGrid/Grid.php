@@ -145,7 +145,6 @@ abstract class Grid extends \Nette\Application\UI\Control {
         });
     }
 
-
     abstract protected function configure(Presenter $presenter): void;
 
     /**
@@ -238,7 +237,7 @@ abstract class Grid extends \Nette\Application\UI\Control {
      * @return Components\Button
      * @throws DuplicateButtonException
      */
-    protected function addButton($name, $label = null) {
+    protected function addButton(string $name, ?string $label = null) {
         if (!empty($this['buttons']->components[$name])) {
             throw new DuplicateButtonException("Button $name already exists.");
         }
@@ -255,14 +254,13 @@ abstract class Grid extends \Nette\Application\UI\Control {
         return $button;
     }
 
-
     /**
      * @param string $name
      * @param null|string $label
      * @return Components\GlobalButton
      * @throws DuplicateGlobalButtonException
      */
-    public function addGlobalButton($name, $label = null) {
+    public function addGlobalButton(string $name, ?string $label = null) {
         if (!empty($this['globalButtons']->components[$name])) {
             throw new DuplicateGlobalButtonException("Global button $name already exists.");
         }
@@ -429,11 +427,8 @@ abstract class Grid extends \Nette\Application\UI\Control {
         return count($this['actions']->components) ? true : false;
     }
 
-    /**
-     * @return bool
-     */
-    public function hasActiveFilter() {
-        return count($this->filter) ? true : false;
+    public function hasActiveFilter(): bool {
+        return $this->filter && count($this->filter);
     }
 
     /**
@@ -525,7 +520,6 @@ abstract class Grid extends \Nette\Application\UI\Control {
             foreach ($this->filter as $name => $value) {
                 if (!$this->columnExists($name)) {
                     throw new UnknownColumnException("Neexistující sloupec $name");
-
                 }
                 if (!$this['columns-' . $name]->hasFilter()) {
                     throw new UnknownFilterException("Neexistující filtr pro sloupec $name");
