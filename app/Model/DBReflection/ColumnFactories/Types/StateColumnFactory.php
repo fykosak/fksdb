@@ -3,9 +3,8 @@
 namespace FKSDB\Model\DBReflection\ColumnFactories\Types;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
-use FKSDB\Model\DBReflection\OmittedControlException;
 use FKSDB\Model\ORM\Models\AbstractModelSingle;
-use Nette\Forms\Controls\BaseControl;
+use Nette\Forms\Controls\SelectBox;
 use Nette\Utils\Html;
 
 /**
@@ -36,7 +35,15 @@ class StateColumnFactory extends DefaultColumnFactory {
         return ['badge' => '', 'label' => ''];
     }
 
-    protected function createFormControl(...$args): BaseControl {
-        throw new OmittedControlException();
+    protected function createFormControl(...$args): SelectBox {
+        return new SelectBox($this->getTitle(), $this->getItems());
+    }
+
+    protected function getItems(): array {
+        $data = [];
+        foreach ($this->states as $key => $state) {
+            $data[$key] = $state['label'];
+        }
+        return $data;
     }
 }

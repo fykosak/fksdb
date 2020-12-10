@@ -2,13 +2,13 @@
 
 namespace FKSDB\Modules\CoreModule;
 
-use FKSDB\Components\Controls\PreferredLangFormComponent;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Authentication\PasswordAuthenticator;
 use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Controls\PreferredLangFormComponent;
 use FKSDB\Components\Forms\Factories\LoginFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
+use FKSDB\Model\Authentication\PasswordAuthenticator;
+use FKSDB\Model\Exceptions\BadTypeException;
 use FKSDB\Model\ORM\Models\ModelAuthToken;
 use FKSDB\Model\ORM\Models\ModelLogin;
 use FKSDB\Model\ORM\Services\ServiceLogin;
@@ -103,7 +103,9 @@ class SettingsPresenter extends BasePresenter {
         } else {
             $options = LoginFactory::SHOW_PASSWORD | LoginFactory::VERIFY_OLD_PASSWORD;
         }
-        $loginContainer = $this->loginFactory->createLogin($options, $group, $loginRule);
+        $loginContainer = $this->loginFactory->createLogin($options, $group, function (BaseControl $baseControl) use ($emailRule, $loginRule): bool {
+            return $emailRule($baseControl) && $loginRule($baseControl);
+        });
         $form->addComponent($loginContainer, self::CONT_LOGIN);
         /** @var TextInput|null $oldPasswordControl */
         $oldPasswordControl = $loginContainer->getComponent('old_password', false);

@@ -3,8 +3,8 @@
 namespace FKSDB\Model\DBReflection;
 
 use FKSDB\Model\DBReflection\ColumnFactories\Types\{
-    DateTime\DateRow,
-    DateTime\DateTimeRow,
+    DateTime\DateColumnFactory,
+    DateTime\DateTimeColumnFactory,
     EmailColumnFactory,
     IntColumnFactory,
     LogicColumnFactory,
@@ -13,7 +13,7 @@ use FKSDB\Model\DBReflection\ColumnFactories\Types\{
     StringColumnFactory,
     PhoneColumnFactory,
     TextColumnFactory,
-    DateTime\TimeRow
+    DateTime\TimeColumnFactory
 };
 use FKSDB\Model\DBReflection\LinkFactories\Link;
 use Nette\DI\CompilerExtension;
@@ -168,15 +168,15 @@ class DBReflectionExtension extends CompilerExtension {
     }
 
     private function registerDateTimeRow(ServiceDefinition $factory, string $tableName, string $fieldName, array $field): void {
-        $this->registerAbstractDateTimeRow($factory, $tableName, $fieldName, DateTimeRow::class, $field);
+        $this->registerAbstractDateTimeRow($factory, $tableName, $fieldName, DateTimeColumnFactory::class, $field);
     }
 
     private function registerDateRow(ServiceDefinition $factory, string $tableName, string $fieldName, array $field): void {
-        $this->registerAbstractDateTimeRow($factory, $tableName, $fieldName, DateRow::class, $field);
+        $this->registerAbstractDateTimeRow($factory, $tableName, $fieldName, DateColumnFactory::class, $field);
     }
 
     private function registerTimeRow(ServiceDefinition $factory, string $tableName, string $fieldName, array $field): void {
-        $this->registerAbstractDateTimeRow($factory, $tableName, $fieldName, TimeRow::class, $field);
+        $this->registerAbstractDateTimeRow($factory, $tableName, $fieldName, TimeColumnFactory::class, $field);
     }
 
     private function registerAbstractDateTimeRow(ServiceDefinition $factory, string $tableName, string $fieldName, string $factoryClassName, array $field): void {

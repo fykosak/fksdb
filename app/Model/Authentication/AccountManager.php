@@ -6,13 +6,13 @@ use FKSDB\Model\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Model\Authentication\Exceptions\RecoveryNotImplementedException;
 use FKSDB\Model\Exceptions\BadTypeException;
 use FKSDB\Model\Localization\UnsupportedLanguageException;
+use FKSDB\Model\Mail\MailTemplateFactory;
 use FKSDB\Model\ORM\Models\ModelAuthToken;
 use FKSDB\Model\ORM\Models\ModelLogin;
 use FKSDB\Model\ORM\Models\ModelPerson;
 use FKSDB\Model\ORM\Services\ServiceAuthToken;
 use FKSDB\Model\ORM\Services\ServiceEmailMessage;
 use FKSDB\Model\ORM\Services\ServiceLogin;
-use FKSDB\Model\Mail\MailTemplateFactory;
 use Nette\Utils\DateTime;
 
 /**
@@ -24,8 +24,8 @@ class AccountManager {
 
     private ServiceLogin $serviceLogin;
     private ServiceAuthToken $serviceAuthToken;
-    private string $invitationExpiration = '+1 month';
-    private string $recoveryExpiration = '+1 day';
+    private string $invitationExpiration;
+    private string $recoveryExpiration;
     private string $emailFrom;
     private ServiceEmailMessage $serviceEmailMessage;
     private MailTemplateFactory $mailTemplateFactory;
