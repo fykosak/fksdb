@@ -93,8 +93,6 @@ class SettingsPresenter extends BasePresenter {
             $this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_RECOVERY);
 
         $group = $form->addGroup(_('Authentication'));
-        $emailRule = $this->uniqueEmailFactory->create($login->getPerson()); //TODO em use it somewhere
-        $loginRule = $this->uniqueLoginFactory->create($login);
 
         if ($tokenAuthentication) {
             $options = LoginFactory::SHOW_PASSWORD | LoginFactory::REQUIRE_PASSWORD;
@@ -103,8 +101,8 @@ class SettingsPresenter extends BasePresenter {
         } else {
             $options = LoginFactory::SHOW_PASSWORD | LoginFactory::VERIFY_OLD_PASSWORD;
         }
-        $loginContainer = $this->loginFactory->createLogin($options, $group, function (BaseControl $baseControl) use ($emailRule, $loginRule): bool {
-            return $emailRule($baseControl) && $loginRule($baseControl);
+        $loginContainer = $this->loginFactory->createLogin($options, $group, function (BaseControl $baseControl) use ($login): bool {
+            return $this->uniqueEmailFactory->create($login->getPerson())($baseControl) && $this->uniqueLoginFactory->create($login)($baseControl);
         });
         $form->addComponent($loginContainer, self::CONT_LOGIN);
         /** @var TextInput|null $oldPasswordControl */
@@ -149,7 +147,7 @@ class SettingsPresenter extends BasePresenter {
 
         $this->flashMessage(_('User information has been saved.'), self::FLASH_SUCCESS);
         if ($tokenAuthentication) {
-            $this->flashMessage(_('Password changed.'), self::FLASH_SUCCESS); //TODO here may be Facebook ID
+            $this->flashMessage(_('Password changed.'), self::FLASH_SUCCESS);
             $this->tokenAuthenticator->disposeAuthToken(); // from now on same like password authentication
         }
         $this->redirect('this');
