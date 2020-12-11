@@ -47,13 +47,8 @@
     "no-implicit-dependencies": [
       true,
       [
-        "@fetchApi",
-        "@shared",
-        "@i18n",
-        "@appsCollector",
-        "@inputConnector",
-        "@config",
-        "@apps"
+        "@translator",
+        "@FKSDB"
       ]
     ],
     "member-access": true,

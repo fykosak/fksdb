@@ -1,9 +1,9 @@
+import { Store } from '@FKSDB/Components/Controls/AjaxSubmit/Reducers/Index';
+import { translator } from '@translator/Translator';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { lang } from '../../../../../typescript/i18n/i18n';
 import Card from '../../../../../typescript/shared/components/card';
 import { Submit } from '../Middleware';
-import { Store } from '../Reducers';
 import MessageBox from './MessageBox';
 import File from './Stetes/FileState';
 import Form from './Stetes/FormState';
@@ -33,7 +33,7 @@ class UploadContainer extends React.Component<StateProps, {}> {
     private getInnerContainer() {
         const {submit, submitting} = this.props;
         if (submit.disabled) {
-            return <p className="alert alert-info">{lang.getText('Task is not for your category.')}</p>;
+            return <p className="alert alert-info">{translator.getText('Task is not for your category.')}</p>;
         }
         if (submitting) {
             return (<LoadingState/>);

@@ -1,4 +1,4 @@
-import { lang } from '@i18n/i18n';
+import { translator } from '@translator/Translator';
 import * as React from 'react';
 
 export default class Attendance extends React.Component<{}, { processing: boolean; messages: string[] }> {
@@ -21,8 +21,8 @@ export default class Attendance extends React.Component<{}, { processing: boolea
                 : <i className="fa fa-qrcode" aria-hidden="true"/>}
         </span>
                     {this.state.processing ?
-                        <span className="mx-3 h3">{lang.getText('...reading code...')}</span> :
-                        <span className="mx-3 h3">{lang.getText('Scan QR-code')}</span>
+                        <span className="mx-3 h3">{translator.getText('...reading code...')}</span> :
+                        <span className="mx-3 h3">{translator.getText('Scan QR-code')}</span>
                     }
                     <input
                         style={{height: 1, width: 1}}

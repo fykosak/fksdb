@@ -1,6 +1,3 @@
-import { Submits } from '@apps/fyziklani/helpers/interfaces';
-import { LineChartData } from '@shared/components/lineChart/interfaces';
-import LineChart from '@shared/components/lineChart/lineChart';
 import {
     scaleLinear,
     scaleTime,
@@ -11,6 +8,9 @@ import { connect } from 'react-redux';
 import { getColorByPoints } from '../../middleware/charts/colors';
 import { submitsByTask } from '../../middleware/charts/submitsByTask';
 import { Store as StatisticsStore } from '../../reducers';
+import { Submits } from '../../../../fyziklani/helpers/interfaces';
+import { LineChartData } from '@shared/components/lineChart/interfaces';
+import LineChart from '@shared/components/lineChart/lineChart';
 
 interface StateProps {
     submits: Submits;

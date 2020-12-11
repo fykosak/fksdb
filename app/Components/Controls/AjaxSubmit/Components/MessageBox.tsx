@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { State as ErrorLoggerState } from '../Reducers/errorLogger';
-import { Message } from '../../../../../typescript/fetchApi/interfaces';
-import { FetchApiState } from '../../../../../typescript/fetchApi/reducer';
+import { State as ErrorLoggerState } from '../Reducers/ErrorLogger';
+import { Message } from '@fetchApi/interfaces';
+import { FetchApiState } from '@fetchApi/reducer';
 
 interface StateProps {
     messages: Message[];

@@ -1,4 +1,4 @@
-import { lang } from '../../../../typescript/i18n/i18n';
+import { translator } from '@translator/Translator';
 
 export interface Submit {
     submitId: number | null;
@@ -27,7 +27,7 @@ export const handleFileUpload = (data: FileList, setError: (error) => void): For
                 formData.append('submit', file);
                 return formData;
             } else {
-                setError({text: lang.getText('Unsupported format'), level: 'danger'});
+                setError({text: translator.getText('Unsupported format'), level: 'danger'});
             }
         }
     }

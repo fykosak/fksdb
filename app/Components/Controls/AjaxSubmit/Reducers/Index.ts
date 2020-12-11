@@ -11,7 +11,7 @@ import {
 import {
     fetchApi,
     FetchApiState,
-} from '../../../../../typescript/fetchApi/reducer';
+} from '@fetchApi/reducer';
 import {
     errorLogger,
     State as ErrorLoggerState,

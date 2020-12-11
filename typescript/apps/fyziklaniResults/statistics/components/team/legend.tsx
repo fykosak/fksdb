@@ -1,4 +1,3 @@
-import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -7,6 +6,7 @@ import {
 } from 'redux';
 import { setActivePoints } from '../../actions';
 import { getColorByPoints } from '../../middleware/charts/colors';
+import { translator } from '@translator/Translator';
 
 interface StateProps {
     onActivePoints: (points: number) => void;
@@ -21,14 +21,14 @@ class Legend extends React.Component<StateProps, {}> {
             let pointsLabel;
             switch (points) {
                 case 1:
-                    pointsLabel = lang.getText('bod');
+                    pointsLabel = translator.getText('bod');
                     break;
                 case 2:
                 case 3:
-                    pointsLabel = lang.getText('body');
+                    pointsLabel = translator.getText('body');
                     break;
                 default:
-                    pointsLabel = lang.getText('bodů');
+                    pointsLabel = translator.getText('bodů');
             }
             return (<div key={points}
                          className="col-12 legend-item"

@@ -1,4 +1,3 @@
-import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -7,6 +6,7 @@ import {
 } from 'redux';
 import { setHardVisible } from './actions';
 import { State as OptionsState } from './reducer';
+import { translator } from '@translator/Translator';
 
 interface StateProps {
     hardVisible: boolean;
@@ -22,17 +22,17 @@ class HardVisibleSwitch extends React.Component<StateProps & DispatchProps, {}> 
         const {onHardDisplayChange, hardVisible} = this.props;
 
         return <div className="form-group">
-            <label>{lang.getText('Not public results')}</label>
+            <label>{translator.getText('Not public results')}</label>
             <button
                 className={hardVisible ? 'btn btn-outline-warning' : 'btn btn-warning'}
                 onClick={(event) => {
                     event.preventDefault();
                     onHardDisplayChange(!hardVisible);
                 }}>
-                {hardVisible ? lang.getText('Turn off') : lang.getText('Turn on')}
+                {hardVisible ? translator.getText('Turn off') : translator.getText('Turn on')}
             </button>
             <span
-                className="form-text text-danger">{lang.getText('This function don\'t turn on if results are public!')}</span>
+                className="form-text text-danger">{translator.getText('This function don\'t turn on if results are public!')}</span>
         </div>;
     }
 }

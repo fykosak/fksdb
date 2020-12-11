@@ -1,5 +1,5 @@
-import { lang } from '@i18n/i18n';
 import * as React from 'react';
+import { translator } from '@translator/Translator';
 
 interface OwnProps {
     capacity: number;
@@ -19,7 +19,7 @@ export default class CapacityLabel extends React.Component<OwnProps, {}> {
         }
         return <small
             className={'capacity-label ml-3 ' + ((capacity <= usedCapacity) ? 'text-danger' : '')}>
-            {lang.getText('Free capacity')}: {(capacity - usedCapacity)}
+            {translator.getText('Free capacity')}: {(capacity - usedCapacity)}
         </small>;
     }
 }

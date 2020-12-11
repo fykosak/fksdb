@@ -1,18 +1,18 @@
-import { lang } from '@i18n/i18n';
+import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { translator } from '@translator/Translator';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
     Action,
     Dispatch,
 } from 'redux';
+import ChartContainer from '../../../../../../app/Components/Controls/Chart/ChartContainer';
 import { setFirstTeamId } from '../../actions';
 import { Store as StatisticsStore } from '../../reducers';
 import Legend from './legend';
 import PointsInTime from './lineChart';
 import PointsPie from './pieChart';
 import TimeLine from './timeline';
-import { ModelFyziklaniTeam } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
-import ChartContainer from '../../../../../../app/Components/Controls/Chart/ChartContainer';
 
 interface StateProps {
     teams: ModelFyziklaniTeam[];
@@ -33,7 +33,7 @@ class TeamStats extends React.Component<StateProps & DispatchProps, {}> {
                 <select className="form-control" onChange={(event) => {
                     onChangeFirstTeam(+event.target.value);
                 }}>
-                    <option value={null}>--{lang.getText('select team')}--</option>
+                    <option value={null}>--{translator.getText('select team')}--</option>
                     {teams.map((team) => {
                         return (<option key={team.teamId} value={team.teamId}>{team.name}</option>);
                     })}
@@ -46,7 +46,7 @@ class TeamStats extends React.Component<StateProps & DispatchProps, {}> {
 //
         const headline = (
             <h2 className={'fyziklani-headline'}>
-                {lang.getText('Statistic for team ') + (selectedTeam ? selectedTeam.name : '')}
+                {translator.getText('Statistic for team ') + (selectedTeam ? selectedTeam.name : '')}
             </h2>);
         return (<div>
 
@@ -57,21 +57,21 @@ class TeamStats extends React.Component<StateProps & DispatchProps, {}> {
                     chart={PointsPie}
                     chartProps={{teamId}}
                     legendComponent={Legend}
-                    headline={lang.getText('Success of submitting')}
+                    headline={translator.getText('Success of submitting')}
                 />
                 <hr/>
                 <ChartContainer
                     chart={PointsInTime}
                     chartProps={{teamId}}
                     legendComponent={Legend}
-                    headline={lang.getText('Time progress')}
+                    headline={translator.getText('Time progress')}
                 />
                 <hr/>
                 <ChartContainer
                     chart={TimeLine}
                     chartProps={{teamId}}
                     legendComponent={Legend}
-                    headline={lang.getText('Timeline')}
+                    headline={translator.getText('Timeline')}
                 />
             </>)}
         </div>);

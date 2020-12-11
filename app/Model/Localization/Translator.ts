@@ -1,4 +1,4 @@
-import { data } from './i18n-data';
+import { data } from '../../../i18n/i18n-data';
 
 export type LangMap<TValue> = {
     [key in availableLanguage]: TValue;
@@ -62,7 +62,7 @@ class Lang {
     }
 }
 
-export const lang = new Lang(data);
+export const translator = new Lang(data);
 
 export type LocalizedString = {
     [key in availableLanguage]: string;

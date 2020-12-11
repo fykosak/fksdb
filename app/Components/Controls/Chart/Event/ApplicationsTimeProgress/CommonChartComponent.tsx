@@ -1,11 +1,14 @@
-import { lang } from '@i18n/i18n';
+import { translator } from '@translator/Translator';
 import { LineChartData } from '@shared/components/lineChart/interfaces';
 import LineChart from '@shared/components/lineChart/lineChart';
-import { scaleLinear, scaleOrdinal } from 'd3-scale';
+import {
+    scaleLinear,
+    scaleOrdinal,
+} from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import * as React from 'react';
 import ChartContainer from '../../ChartContainer';
-import { ModelEvent } from '../../../../../Model/ORM/Models/ModelEvent';
+import { ModelEvent } from '@FKSDB/Model/ORM/Models/ModelEvent';
 
 export interface Data {
     events: {
@@ -93,7 +96,7 @@ export default class CommonChartComponent extends React.Component<OwnProps, {}> 
                     yScale,
 
                 }}
-                headline={lang.getText('Time progress')}
+                headline={translator.getText('Time progress')}
             />
             <div className={'list-group'}>
                 {lineChartData.map((datum, key) => {

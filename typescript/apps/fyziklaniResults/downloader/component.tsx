@@ -1,7 +1,6 @@
 import { ResponseData } from '@apps/fyziklaniResults/downloader/inferfaces';
 import { NetteActions } from '@appsCollector/netteActions';
 import { dispatchFetch } from '@fetchApi/netteFetch';
-import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -9,6 +8,7 @@ import {
     Dispatch,
 } from 'redux';
 import { FyziklaniResultsCoreStore } from '../shared/reducers/coreStore';
+import { translator } from '@translator/Translator';
 
 interface StateProps {
     error: Error | any;
@@ -54,7 +54,7 @@ class Downloader extends React.Component<DispatchProps & StateProps & OwnProps, 
                 {!isRefreshing && (<button className="btn btn-primary btn-sm" onClick={() => {
                     const url = this.props.actions.getAction('refresh');
                     return onFetch(url);
-                }}>{lang.getText('Fetch')}</button>)}
+                }}>{translator.getText('Fetch')}</button>)}
             </div>
         );
     }

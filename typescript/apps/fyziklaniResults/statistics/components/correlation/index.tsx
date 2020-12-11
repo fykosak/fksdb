@@ -1,4 +1,3 @@
-import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -11,7 +10,8 @@ import {
 } from '../../actions';
 import { Store as StatisticsStore } from '../../reducers';
 import GlobalCorrelation from './globalCorrelation';
-import { ModelFyziklaniTeam } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { translator } from '@translator/Translator';
 
 interface StateProps {
     teams: ModelFyziklaniTeam[];
@@ -43,7 +43,7 @@ class CorrelationStats extends React.Component<StateProps & DispatchProps, {}> {
                     }}
                             value={this.props.firstTeamId}
                     >
-                        <option value={null}>--{lang.getText('select team')}--</option>
+                        <option value={null}>--{translator.getText('select team')}--</option>
                         {teamsOptions}
                     </select>
                 </div>
@@ -52,7 +52,7 @@ class CorrelationStats extends React.Component<StateProps & DispatchProps, {}> {
                         onChangeSecondTeam(+event.target.value);
                     }} value={this.props.secondTeamId}
                     >
-                        <option value={null}>--{lang.getText('select team')}--</option>
+                        <option value={null}>--{translator.getText('select team')}--</option>
                         {teamsOptions}
                     </select>
                 </div>
@@ -67,7 +67,7 @@ class CorrelationStats extends React.Component<StateProps & DispatchProps, {}> {
         })[0];
 
         const headline = (
-            <h2>{lang.getText('Correlation ') +
+            <h2>{translator.getText('Correlation ') +
             ((firstSelectedTeam && secondSelectedTeam) ? (firstSelectedTeam.name + ' VS ' + secondSelectedTeam.name) : '')}</h2>
         );
 

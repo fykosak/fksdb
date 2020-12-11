@@ -1,6 +1,6 @@
-import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { WrappedFieldProps } from 'redux-form';
+import { translator } from '@translator/Translator';
 
 export default class ScanInput extends React.Component<WrappedFieldProps & {}, { processing: boolean; messages: string[] }> {
     constructor(props) {
@@ -10,7 +10,7 @@ export default class ScanInput extends React.Component<WrappedFieldProps & {}, {
 
     public render() {
         return <>
-            <h3>{lang.getText('Scan QR-code')}</h3>
+            <h3>{translator.getText('Scan QR-code')}</h3>
             {this.state.messages.map((text, index) => {
                 return <p key={index} className="alert alert-danger">{text}</p>;
             })}
@@ -23,8 +23,8 @@ export default class ScanInput extends React.Component<WrappedFieldProps & {}, {
                             : <i className="fa fa-qrcode" aria-hidden="true"/>}
                     </span>
                     {this.state.processing ?
-                        <span className="mx-3 h3">{lang.getText('...reading code...')}</span> :
-                        <span className="mx-3 h3">{lang.getText('Scan QR-code')}</span>
+                        <span className="mx-3 h3">{translator.getText('...reading code...')}</span> :
+                        <span className="mx-3 h3">{translator.getText('Scan QR-code')}</span>
                     }
                     <input
                         style={{height: 1, width: 1}}

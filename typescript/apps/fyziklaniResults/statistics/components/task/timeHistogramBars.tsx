@@ -1,8 +1,4 @@
 import {
-    Submits,
-} from '@apps/fyziklani/helpers/interfaces';
-import AbstractChart from '@shared/components/chart';
-import {
     axisBottom,
     axisLeft,
 } from 'd3-axis';
@@ -15,6 +11,8 @@ import {
 import { select } from 'd3-selection';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import ChartComponent from '../../../../../../app/Components/Controls/Chart/ChartComponent';
+import { Submits } from '../../../../fyziklani/helpers/interfaces';
 import { getColorByPoints } from '../../middleware/charts/colors';
 import { submitsByTask } from '../../middleware/charts/submitsByTask';
 import { Store as StatisticsStore } from '../../reducers';
@@ -32,7 +30,7 @@ interface OwnProps {
     availablePoints: number[];
 }
 
-class TimeHistogramBars extends AbstractChart<StateProps & OwnProps, {}> {
+class TimeHistogramBars extends ChartComponent<StateProps & OwnProps, {}> {
 
     private xAxis: SVGGElement;
     private yAxis: SVGGElement;

@@ -1,4 +1,7 @@
-
+import { NetteActions } from '@appsCollector/netteActions';
+import { dispatchFetch } from '@fetchApi/netteFetch';
+import { Store } from '@FKSDB/Components/Controls/AjaxSubmit/Reducers/Index';
+import { translator } from '@translator/Translator';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -6,10 +9,6 @@ import {
     Dispatch,
 } from 'redux';
 import { Submit } from '../../Middleware';
-import { NetteActions } from '../../../../../../typescript/appsCollector/netteActions';
-import { lang } from '../../../../../../typescript/i18n/i18n';
-import { dispatchFetch } from '../../../../../../typescript/fetchApi/netteFetch';
-import { Store } from '../../Reducers';
 
 interface OwnProps {
     submit: Submit;
@@ -27,9 +26,9 @@ class FileState extends React.Component<OwnProps & DispatchProps & StateProps, {
 
     public render() {
         return <div className="uploaded-file">
-            <button aria-hidden="true" className="pull-right btn btn-warning" title={lang.getText('Revoke')}
+            <button aria-hidden="true" className="pull-right btn btn-warning" title={translator.getText('Revoke')}
                     onClick={() => {
-                        if (window.confirm(lang.getText('Remove submit?'))) {
+                        if (window.confirm(translator.getText('Remove submit?'))) {
                             this.props.onDeleteFile(this.props.actions.getAction('revoke'));
                         }
                     }}>&times;</button>
@@ -45,7 +44,7 @@ class FileState extends React.Component<OwnProps & DispatchProps & StateProps, {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
-        onDeleteFile: (url: string) => dispatchFetch<Submit>(url,  dispatch, JSON.stringify({})),
+        onDeleteFile: (url: string) => dispatchFetch<Submit>(url, dispatch, JSON.stringify({})),
     };
 };
 const mapStateToProps = (state: Store): StateProps => {

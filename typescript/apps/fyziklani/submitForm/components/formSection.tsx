@@ -1,8 +1,14 @@
-import { Message, Response2 } from '@fetchApi/interfaces';
-import { lang } from '@i18n/i18n';
+import {
+    Message,
+    Response2,
+} from '@fetchApi/interfaces';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Field, formValueSelector, SubmitHandler } from 'redux-form';
+import {
+    Field,
+    formValueSelector,
+    SubmitHandler,
+} from 'redux-form';
 import { SubmitFormRequest } from '../actions';
 import { Store as SubmitStore } from '../reducer';
 import { FORM_NAME } from './container';
@@ -11,8 +17,9 @@ import SubmitButtons from './inputs/submitButtons';
 import TextInput from './inputs/text';
 import ErrorBlock from './outputs/errorBlock';
 import ValueDisplay from './outputs/valueDisplay';
-import { ModelFyziklaniTeam } from '../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
-import { ModelFyziklaniTask } from '../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
+import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
+import { translator } from '@translator/Translator';
 
 export interface OwnProps {
     tasks: ModelFyziklaniTask[];
@@ -42,7 +49,7 @@ class FormSection extends React.Component<OwnProps & StateProps, {}> {
                 })}
                 <div className="row">
                     <div className="col-lg-6 col-md-12 mb-3">
-                        <h3 className={'fyziklani-headline-color'}>{lang.getText('Code')}</h3>
+                        <h3 className={'fyziklani-headline-color'}>{translator.getText('Code')}</h3>
                         <div className="form-group">
                             <Field name="code" component={TextInput}/>
                         </div>

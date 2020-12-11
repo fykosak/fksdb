@@ -1,10 +1,13 @@
 import { PointData } from '@apps/fyziklaniResults/statistics/middleware/charts/lines';
-import { lang } from '@i18n/i18n';
 import { LineChartData } from '@shared/components/lineChart/interfaces';
 import LineChart from '@shared/components/lineChart/lineChart';
 import LineChartLegend from '@shared/components/lineChart/lineChartLegend';
-import { scaleLinear, scaleTime } from 'd3-scale';
+import {
+    scaleLinear,
+    scaleTime,
+} from 'd3-scale';
 import * as React from 'react';
+import { translator } from '@translator/Translator';
 
 interface Data {
     created: string;
@@ -60,27 +63,27 @@ export default class TotalPersonsChartComponent extends React.Component<OwnProps
         lineChartData.push({
             color: 'gray',
             display,
-            name: lang.getText('All'),
+            name: translator.getText('All'),
             points: pointsAll,
         });
 
         lineChartData.push({
             color: '#1175da',
             display,
-            name: lang.getText('Male'),
+            name: translator.getText('Male'),
             points: pointsMale,
         });
 
         lineChartData.push({
             color: '#da1175',
             display,
-            name: lang.getText('Female'),
+            name: translator.getText('Female'),
             points: pointsFemale,
         });
         lineChartData.push({
             color: '#da7511',
             display,
-            name: lang.getText('Person Id'),
+            name: translator.getText('Person Id'),
             points: pointsPersonId,
         });
 

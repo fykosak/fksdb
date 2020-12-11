@@ -1,14 +1,14 @@
 import { Submits } from '@apps/fyziklani/helpers/interfaces';
-import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { getTimeLabel } from '../../middleware/charts/correlation';
 import { getAverageNStandardDeviation } from '../../middleware/charts/stdDev';
 import { calculateSubmitsForTeams } from '../../middleware/charts/submitsForTeams';
 import { Store as StatisticsStore } from '../../reducers';
-import { ModelFyziklaniSubmit } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniSubmit';
-import { ModelFyziklaniTeam } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
-import { ModelFyziklaniTask } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
+import { ModelFyziklaniSubmit } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniSubmit';
+import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
+import { translator } from '@translator/Translator';
 
 interface StateProps {
     submits: Submits;
@@ -64,20 +64,20 @@ class Table extends React.Component<StateProps, {}> {
             <table className={'table table-striped table-hover table-sm'}>
                 <thead>
                 <tr>
-                    <th>{lang.getText('Task')}</th>
-                    <th>{lang.getText('Time first team')}</th>
-                    <th>{lang.getText('Time second team')}</th>
-                    <th>{lang.getText('Difference')}</th>
+                    <th>{translator.getText('Task')}</th>
+                    <th>{translator.getText('Time first team')}</th>
+                    <th>{translator.getText('Time second team')}</th>
+                    <th>{translator.getText('Difference')}</th>
                 </tr>
 
                 </thead>
                 <tbody>{rows}</tbody>
             </table>
             <p>
-                <span>{firstTeamSubmits.length} {lang.getText('first team')}</span>
-                <span>{secondTeamSubmits.length} {lang.getText('second team')}</span>
-                <span>{count} {lang.getText('both teams')}</span>
-                <span>{getTimeLabel(avgNStdDev.average, avgNStdDev.standardDeviation)} {lang.getText('per task')}</span>
+                <span>{firstTeamSubmits.length} {translator.getText('first team')}</span>
+                <span>{secondTeamSubmits.length} {translator.getText('second team')}</span>
+                <span>{count} {translator.getText('both teams')}</span>
+                <span>{getTimeLabel(avgNStdDev.average, avgNStdDev.standardDeviation)} {translator.getText('per task')}</span>
             </p>
         </div>;
 

@@ -1,4 +1,3 @@
-import { lang } from '@i18n/i18n';
 import { changeData } from '@inputConnector/actions';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -12,6 +11,7 @@ import { Params } from './index';
 import CapacityLabel from './parts/capacityLabel';
 import DescriptionLabel from './parts/descriptionLabel';
 import PriceLabel from './parts/priceLabel';
+import { translator } from '@translator/Translator';
 
 interface OwnProps {
     item: ScheduleItemDef;
@@ -43,7 +43,7 @@ class Item extends React.Component<OwnProps & DispatchProps & StateProps, {}> {
                     }}
                 />
                     <span className="ml-3">
-                        {label[lang.getCurrentLocale()]} {
+                        {label[translator.getCurrentLocale()]} {
                         params.display.description && <DescriptionLabel description={description}/>
                     }</span>
             </span>

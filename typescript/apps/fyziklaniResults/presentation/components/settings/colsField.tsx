@@ -1,4 +1,3 @@
-import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -7,6 +6,7 @@ import {
 } from 'redux';
 import { setCols } from '../../actions/setCols';
 import { FyziklaniResultsPresentationStore } from '../../reducers';
+import { translator } from '@translator/Translator';
 
 interface StateProps {
     cols: number;
@@ -21,7 +21,7 @@ class ColsField extends React.Component<StateProps & DispatchProps, {}> {
     public render() {
         const {cols, onSetCols} = this.props;
         return <div className={'form-group'}>
-            <label>{lang.getText('Cols')}</label>
+            <label>{translator.getText('Cols')}</label>
             <input name={'cols'} className={'form-control'} value={cols} type={'number'} max={3} min={1}
                    step={0}
                    onChange={(e) => {

@@ -1,4 +1,3 @@
-import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -13,6 +12,7 @@ import { Filter } from '../../../middleware/filters/filter';
 import { createFilters } from '../../../middleware/filters/filters';
 import { FyziklaniResultsTableStore } from '../../../reducers';
 import FilterComponent from '../filterComponent';
+import { translator } from '@translator/Translator';
 
 interface StateProps {
     filters: Filter[];
@@ -33,7 +33,7 @@ class MultiSelect extends React.Component<StateProps & DispatchProps, {}> {
         const availableFilters = createFilters(categories);
 
         return <>
-            <h5 className="text-success">{lang.getText('Active filters')}</h5>
+            <h5 className="text-success">{translator.getText('Active filters')}</h5>
             <div>
                 {filters.map((filter, key) => {
                     return <FilterComponent
@@ -44,7 +44,7 @@ class MultiSelect extends React.Component<StateProps & DispatchProps, {}> {
                 })}
             </div>
             <hr/>
-            <h5>{lang.getText('Available filters')}</h5>
+            <h5>{translator.getText('Available filters')}</h5>
 
             <div>
                 {availableFilters.filter((filter) => {

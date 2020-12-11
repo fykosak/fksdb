@@ -4,10 +4,10 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { ModelFyziklaniTeam } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
 import { removeTeamPlace } from '../../actions/teams';
 import { Store as RoutingStore } from '../../reducers/';
-import { dragEnd, dragStart } from '../../../../../shared/dragndrop';
+import { dragEnd, dragStart } from '@shared/dragndrop';
 
 interface StateProps {
     isUpdated: boolean;

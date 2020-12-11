@@ -1,5 +1,5 @@
-import { lang } from '@i18n/i18n';
-import Ordinal from '@i18n/ordinal';
+import { translator } from '@translator/Translator';
+import Ordinal from '@translator/Ordinal';
 import { ExtendedPointData, LineChartData } from '@shared/components/lineChart/interfaces';
 import LineChart from '@shared/components/lineChart/lineChart';
 import LineChartLegend from '@shared/components/lineChart/lineChartLegend';
@@ -30,7 +30,7 @@ export default class PerYearsChartComponent extends React.Component<OwnProps, {}
                 for (const year in aggregatedSeries[series]) {
                     if (aggregatedSeries[series].hasOwnProperty(year)) {
                         const label = <>
-                            <Ordinal order={+year}/>{' ' + lang.getText('Year')} - {
+                            <Ordinal order={+year}/>{' ' + translator.getText('Year')} - {
                             getSeriesLabel(series)}: {
                             aggregatedSeries[series][year]
                         }

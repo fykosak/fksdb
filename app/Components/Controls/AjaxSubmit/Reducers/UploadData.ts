@@ -1,6 +1,6 @@
-import { Submit } from '@apps/ajaxSubmit/middleware/';
 import { ACTION_FETCH_SUCCESS, ActionFetchSuccess } from '@fetchApi/actions';
 import { Response2 } from '@fetchApi/interfaces';
+import { Submit } from '@FKSDB/Components/Controls/AjaxSubmit/Middleware';
 
 export interface State {
     submit?: Submit;

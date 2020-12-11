@@ -1,12 +1,12 @@
 import { Submits } from '@apps/fyziklani/helpers/interfaces';
-import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Filter } from '../middleware/filters/filter';
 import { FyziklaniResultsTableStore } from '../reducers';
 import Row from './row';
-import { ModelFyziklaniTeam } from '../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
-import { ModelFyziklaniTask } from '../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
+import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
+import { translator } from '@translator/Translator';
 
 interface StateProps {
     filter: Filter;
@@ -35,7 +35,7 @@ class App extends React.Component<StateProps, {}> {
 
         return (
             <div className="mb-3">
-                <h1>{filter ? filter.getHeadline() : lang.getText('Results of Fyziklani')}</h1>
+                <h1>{filter ? filter.getHeadline() : translator.getText('Results of Fyziklani')}</h1>
                 <table className="table-striped table-hover table table-sm bg-white">
                     <thead>
                     <tr>

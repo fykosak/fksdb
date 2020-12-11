@@ -1,6 +1,6 @@
-import { lang } from '@i18n/i18n';
-import Ordinal from '@i18n/ordinal';
 import * as React from 'react';
+import Ordinal from '@translator/Ordinal';
+import { translator } from '@translator/Translator';
 
 interface OwnProps {
     startPosition: number;
@@ -17,14 +17,14 @@ export default class Headline extends React.Component<OwnProps, {}> {
             <h1 className={'text-center row justify-content-center'}>
                 <span className={'mr-3'}>
                     <span>{category ?
-                        (lang.getLocalizedText('Category', 'en') + ' ' + category) :
-                        lang.getLocalizedText('Global results', 'en')} </span>
+                        (translator.getLocalizedText('Category', 'en') + ' ' + category) :
+                        translator.getLocalizedText('Global results', 'en')} </span>
                     <small className={'text-muted'}><Ordinal order={startPosition}/>-<Ordinal order={endPosition}/></small>
                 </span>
                 <span className={'ml-3'}>
                     <span>{category ?
-                        (lang.getLocalizedText('Category', 'cs') + ' ' + category) :
-                        lang.getLocalizedText('Global results', 'cs')} </span>
+                        (translator.getLocalizedText('Category', 'cs') + ' ' + category) :
+                        translator.getLocalizedText('Global results', 'cs')} </span>
                     <small className={'text-muted'}>{startPosition}.-{endPosition}.</small>
                     </span>
             </h1>

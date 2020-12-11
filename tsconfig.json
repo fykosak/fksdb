@@ -16,11 +16,14 @@
       "@apps/*": [
         "./typescript/apps/*"
       ],
+      "@FKSDB/*": [
+        "./app/*"
+      ],
       "@shared/*": [
         "./typescript/shared/*"
       ],
-      "@i18n/*": [
-        "./typescript/i18n/*"
+      "@translator/*": [
+        "./app/Model/Localization/*"
       ],
       "@appsCollector/*": [
         "./typescript/appsCollector/*"
@@ -34,6 +37,6 @@
     }
   },
   "include": [
-    "./src/**/*"
+    "./**/*"
   ]
 }

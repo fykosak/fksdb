@@ -1,6 +1,9 @@
-import { ACTION_FETCH_SUCCESS, ActionFetchSuccess } from '@fetchApi/actions';
-import { Response2 } from '@fetchApi/interfaces';
 import { ResponseData } from '../downloader/inferfaces';
+import { Response2 } from '../../../fetchApi/interfaces';
+import {
+    ACTION_FETCH_SUCCESS,
+    ActionFetchSuccess,
+} from '../../../fetchApi/actions';
 
 export interface State {
     gameEnd?: Date;

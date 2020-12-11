@@ -1,13 +1,16 @@
 import { axisBottom } from 'd3-axis';
-import { ScaleTime, scaleTime } from 'd3-scale';
+import {
+    ScaleTime,
+    scaleTime,
+} from 'd3-scale';
 import { select } from 'd3-selection';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { getColorByPoints } from '../../middleware/charts/colors';
 import { Store as StatisticsStore } from '../../reducers';
 import { ModelFyziklaniSubmit } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniSubmit';
-import { Submits } from '@apps/fyziklani/helpers/interfaces';
 import { ModelFyziklaniTeam } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { Submits } from '../../../../fyziklani/helpers/interfaces';
 
 interface StateProps {
     submits: Submits;

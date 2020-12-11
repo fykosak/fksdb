@@ -1,4 +1,3 @@
-import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import HardVisibleSwitch from '../../../hardVisible/component';
@@ -6,6 +5,7 @@ import { FyziklaniResultsPresentationStore } from '../../reducers';
 import ColsField from './colsField';
 import DelayField from './delayField';
 import RowsField from './rowsField';
+import { translator } from '@translator/Translator';
 
 interface StateProps {
     isOrg: boolean;
@@ -19,7 +19,7 @@ class Index extends React.Component<StateProps, {}> {
             <div className="modal-dialog" role="document">
                 <div className="modal-content">
                     <div className="modal-header">
-                        <h5 className="modal-title">{lang.getText('Options')}</h5>
+                        <h5 className="modal-title">{translator.getText('Options')}</h5>
                         <button type="button" className="close" data-dismiss="modal">
                             <span>&times;</span>
                         </button>

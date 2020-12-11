@@ -1,5 +1,3 @@
-import { lang } from '@i18n/i18n';
-import TimeDisplay from '@shared/components/displays/time';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -13,7 +11,9 @@ import {
     setToDate,
 } from '../../actions';
 import { Store as StatisticsStore } from '../../reducers';
-import { ModelFyziklaniTask } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
+import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
+import { translator } from '@translator/Translator';
+import TimeDisplay from '@shared/components/displays/time';
 
 interface StateProps {
     aggregationTime: number;
@@ -63,7 +63,7 @@ class Options extends React.Component<StateProps & DispatchProps, {}> {
         }
         return (
             <>
-                <h3>{lang.getText('Options')}</h3>
+                <h3>{translator.getText('Options')}</h3>
 
                 <div className={'row'}>
                     <div className={'col-6'}>
@@ -72,7 +72,7 @@ class Options extends React.Component<StateProps & DispatchProps, {}> {
                             <select value={taskId} className="form-control" onChange={(event) => {
                                 onChangeTask(+event.target.value);
                             }}>
-                                <option value={null}>--{lang.getText('select task')}--</option>
+                                <option value={null}>--{translator.getText('select task')}--</option>
                                 {tasks.map((task) => {
                                     return (<option key={task.taskId} value={task.taskId}>{task.label}</option>);
                                 })}
@@ -81,7 +81,7 @@ class Options extends React.Component<StateProps & DispatchProps, {}> {
                     </div>
                     <div className={'col-6'}>
                         <div className={'form-group'}>
-                            <label>{lang.getText('Aggregation time')}</label>
+                            <label>{translator.getText('Aggregation time')}</label>
                             <input type={'range'} max={30 * 60 * 1000} min={60 * 1000}
                                    value={aggregationTime}
                                    step={60 * 1000}
@@ -96,7 +96,7 @@ class Options extends React.Component<StateProps & DispatchProps, {}> {
                 <div className={'row'}>
                     <div className={'col-6'}>
                         <div className={'form-group'}>
-                            <label>{lang.getText('From')}</label>
+                            <label>{translator.getText('From')}</label>
                             <input type={'range'}
                                    className={'form-control'}
                                    value={fromDate.getTime()}
@@ -111,7 +111,7 @@ class Options extends React.Component<StateProps & DispatchProps, {}> {
                     </div>
                     <div className={'col-6'}>
                         <div className={'form-group'}>
-                            <label>{lang.getText('To')}</label>
+                            <label>{translator.getText('To')}</label>
                             <input type={'range'}
                                    className={'form-control'}
                                    value={toDate.getTime()}

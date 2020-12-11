@@ -1,4 +1,3 @@
-import { Submits } from '@apps/fyziklani/helpers/interfaces';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
@@ -7,6 +6,7 @@ import { ModelFyziklaniTask } from '../../../../../../app/Model/ORM/Models/Fyzik
 import { setTaskId } from '../../actions';
 import { getColorByPoints } from '../../middleware/charts/colors';
 import { Store as StatisticsStore } from '../../reducers';
+import { Submits } from '../../../../fyziklani/helpers/interfaces';
 
 interface StateProps {
     tasks: ModelFyziklaniTask[];

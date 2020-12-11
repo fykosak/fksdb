@@ -1,4 +1,3 @@
-import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -7,6 +6,7 @@ import {
 } from 'redux';
 import { setRows } from '../../actions/setRows';
 import { FyziklaniResultsPresentationStore } from '../../reducers';
+import { translator } from '@translator/Translator';
 
 interface StateProps {
     rows: number;
@@ -21,7 +21,7 @@ class RowsField extends React.Component<StateProps & DispatchProps, {}> {
     public render() {
         const {rows, onSetRows} = this.props;
         return <div className={'form-group'}>
-            <label>{lang.getText('Rows')}</label>
+            <label>{translator.getText('Rows')}</label>
             <input name={'rows'} className={'form-control'} value={rows} type={'number'} max={100} min={1}
                    step={1}
                    onChange={(e) => {

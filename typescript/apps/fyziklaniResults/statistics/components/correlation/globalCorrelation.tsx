@@ -1,5 +1,4 @@
 import { Submits } from '@apps/fyziklani/helpers/interfaces';
-import { lang } from '@i18n/i18n';
 import { scaleLinear } from 'd3-scale';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -8,8 +7,9 @@ import { setFirstTeamId, setSecondTeamId } from '../../actions';
 import { calculateCorrelation, getTimeLabel } from '../../middleware/charts/correlation';
 import { calculateSubmitsForTeams } from '../../middleware/charts/submitsForTeams';
 import { Store as StatisticsStore } from '../../reducers';
-import { ModelFyziklaniTeam } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
-import { ModelFyziklaniTask } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
+import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
+import { translator } from '@translator/Translator';
 
 interface StateProps {
     submits: Submits;
@@ -63,11 +63,11 @@ class GlobalCorrelation extends React.Component<StateProps & DispatchProps, {}> 
         return <table className={'table table-striped table-sm'}>
             <thead>
             <tr>
-                <th>{lang.getText('First team')}</th>
-                <th>{lang.getText('Second team')}</th>
-                <th>{lang.getText('Average')}</th>
-                <th>{lang.getText('Under 2 minutes')}</th>
-                <th>{lang.getText('Both teams')}</th>
+                <th>{translator.getText('First team')}</th>
+                <th>{translator.getText('Second team')}</th>
+                <th>{translator.getText('Average')}</th>
+                <th>{translator.getText('Under 2 minutes')}</th>
+                <th>{translator.getText('Both teams')}</th>
             </tr>
             </thead>
             <tbody>{rows}</tbody>

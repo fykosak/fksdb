@@ -1,12 +1,12 @@
+import { NetteActions } from '@appsCollector/netteActions';
+import { dispatchFetch } from '@fetchApi/netteFetch';
+import { dragEnd, dragStart, dropItem } from '@shared/dragndrop';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Action, Dispatch, } from 'redux';
-import { handleFileUpload, Submit } from '../../Middleware/';
-import { Store } from '../../Reducers';
-import { NetteActions } from '../../../../../../typescript/appsCollector/netteActions';
+import { Action, Dispatch } from 'redux';
 import { addError } from '../../Actions';
-import { dragEnd, dragStart, dropItem } from '../../../../../../typescript/shared/dragndrop';
-import { dispatchFetch } from '../../../../../../typescript/fetchApi/netteFetch';
+import { handleFileUpload, Submit } from '../../Middleware';
+import { Store } from '../../Reducers/Index';
 
 interface OwnProps {
     submit: Submit;

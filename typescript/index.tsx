@@ -1,4 +1,3 @@
-import AjaxSubmit from '@apps/ajaxSubmit';
 import Attendance from '@apps/events/attendance';
 import { eventSchedule } from '@apps/events/schedule';
 import TaskCodeApp from '@apps/fyziklani/submitForm/components';
@@ -6,19 +5,18 @@ import FyziklaniResultsPresentation from '@apps/fyziklaniResults/presentation';
 import FyziklaniResultsStatistics from '@apps/fyziklaniResults/statistics';
 import FyziklaniResultsTable from '@apps/fyziklaniResults/table';
 import { mapRegister } from '@appsCollector/mapRegister';
+import AjaxSubmit from '@FKSDB/Components/Controls/AjaxSubmit/AjaxSubmit';
+import PerSeriesChartComponent from '@FKSDB/Components/Controls/Chart/Contestants/PerSeriesChartComponent';
+import PerYearsChartComponent from '@FKSDB/Components/Controls/Chart/Contestants/PerYearsChartComponent';
 import * as React from 'react';
+import CommonChartComponent from '../app/Components/Controls/Chart/Event/ApplicationsTimeProgress/CommonChartComponent';
 import ParticipantAcquaintanceChartControl
     from '../app/Components/Controls/Chart/Event/ParticipantAcquaintanceChartControl';
 import GeoChartComponent from '../app/Components/Controls/Chart/GeoCharts/GeoChartComponent';
 import ParticipantsInTimeGeoChart from '../app/Components/Controls/Chart/GeoCharts/ParticipantsInTimeGeoChart';
 import TotalPersonsChartComponent from '../app/Components/Controls/Chart/TotalPersonsChartComponent';
-import { appsCollector } from './appsCollector';
-import CommonChartComponent from '../app/Components/Controls/Chart/Event/ApplicationsTimeProgress/CommonChartComponent';
-import PerSeriesChartComponent
-    from '../app/Components/Controls/Chart/Contestants/ContestantsPerSeriesChartComponent';
-import PerYearsChartComponent
-    from '../app/Components/Controls/Chart/Contestants/ContestantsPerYearsChartComponent';
 import TimelineComponent from '../app/Components/Controls/Stalking/Timeline/TimelineComponent';
+import { appsCollector } from './appsCollector';
 
 appsCollector.register(eventSchedule);
 
