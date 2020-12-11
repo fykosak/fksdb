@@ -9,7 +9,6 @@ use FKSDB\Model\Events\Model\ApplicationHandler;
 use FKSDB\Model\Events\Model\ApplicationHandlerFactory;
 use FKSDB\Tests\Events\EventTestCase;
 use FKSDB\Model\Events\Model\Holder\Holder;
-use FKSDB\Model\Logging\DevNullLogger;
 use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
@@ -59,7 +58,7 @@ class ApplicationHandlerTest extends EventTestCase {
         /** @var EventDispatchFactory $factory */
         $factory = $this->getContainer()->getByType(EventDispatchFactory::class);
         $this->holder = $factory->getDummyHolder($event);
-        $this->fixture = $handlerFactory->create($event, new DevNullLogger());
+        $this->fixture = $handlerFactory->create($event, new \Fykosak\Utils\Logging\DevNullLogger());
 
         $this->mockApplication();
     }

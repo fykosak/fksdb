@@ -2,16 +2,17 @@
 
 namespace FKSDB\Model\UI;
 
+use Nette\SmartObject;
+
 /**
  * Class PageStyleContainer
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class PageStyleContainer {
+    use SmartObject;
 
     public ?string $styleId;
-
     private string $navBarClassName;
-
     public array $mainContainerClassNames = ['container', 'bg-white-container'];
 
     public function __construct() {

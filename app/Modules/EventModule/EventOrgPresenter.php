@@ -7,7 +7,7 @@ use FKSDB\Components\Grids\EventOrg\EventOrgsGrid;
 use FKSDB\Model\Entity\ModelNotFoundException;
 use FKSDB\Model\Events\Exceptions\EventNotFoundException;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Model\ORM\Models\ModelEventOrg;
 use FKSDB\Model\ORM\Services\ServiceEventOrg;
@@ -69,7 +69,7 @@ class EventOrgPresenter extends BasePresenter {
             $this->flashMessage(_('Entity has been deleted'), Message::LVL_WARNING);
             $this->redirect('list');
         } catch (BadRequestException $exception) {
-            $this->flashMessage(_('Error during deleting'), self::FLASH_ERROR);
+            $this->flashMessage(_('Error during deleting'), Message::LVL_ERROR);
             $this->redirect('list');
         }
     }
@@ -104,5 +104,4 @@ class EventOrgPresenter extends BasePresenter {
     protected function createComponentEditForm(): EventOrgFormComponent {
         return new EventOrgFormComponent($this->getContext(), $this->getEvent(), $this->getEntity());
     }
-
 }

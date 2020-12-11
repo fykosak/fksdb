@@ -5,8 +5,7 @@ namespace FKSDB\Model\Persons;
 use FKSDB\Model\Authentication\AccountManager;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Localization\UnsupportedLanguageException;
-use FKSDB\Modules\Core\BasePresenter;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use FKSDB\Model\ORM\Models\AbstractModelSingle;
 use FKSDB\Model\ORM\IModel;
 use FKSDB\Model\ORM\IService;
@@ -15,12 +14,12 @@ use FKSDB\Model\ORM\Models\ModelPerson;
 use FKSDB\Model\ORM\Services\ServicePerson;
 use FKSDB\Model\Utils\FormUtils;
 use FKSDB\Model\Mail\SendFailedException;
-use FKSDB\Model\Exceptions\ModelException;
+use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\ORM\Exceptions\ModelException;
 use Nette\Database\Connection;
 use Nette\Forms\Form;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
-use FKSDB\Modules\OrgModule\ContestantPresenter;
 use Tracy\Debugger;
 
 /**
@@ -37,21 +36,13 @@ class ExtendedPersonHandler {
     public const RESULT_OK_EXISTING_LOGIN = 1;
     public const RESULT_OK_NEW_LOGIN = 2;
     public const RESULT_ERROR = 0;
-
     protected IService $service;
-
     protected ServicePerson $servicePerson;
-
     private Connection $connection;
-
     private AccountManager $accountManager;
-
     private ModelContest $contest;
-
     private int $year;
-
     private string $invitationLang;
-
     /** @var ModelPerson */
     private $person;
 
@@ -108,7 +99,6 @@ class ExtendedPersonHandler {
      * @throws BadTypeException
      */
     final public function handleForm(Form $form, IExtendedPersonPresenter $presenter, bool $sendEmail): int {
-
         try {
             $this->connection->beginTransaction();
             $create = !$presenter->getModel();
@@ -123,9 +113,9 @@ class ExtendedPersonHandler {
             if ($sendEmail && ($email && !$login)) {
                 try {
                     $this->accountManager->createLoginWithInvitation($this->person, $email, $this->getInvitationLang());
-                    $presenter->flashMessage(_('E-mail invitation sent.'), BasePresenter::FLASH_INFO);
+                    $presenter->flashMessage(_('E-mail invitation sent.'), Message::LVL_INFO);
                 } catch (SendFailedException $exception) {
-                    $presenter->flashMessage(_('E-mail invitation failed to sent.'), BasePresenter::FLASH_ERROR);
+                    $presenter->flashMessage(_('E-mail invitation failed to sent.'), Message::LVL_ERROR);
                 }
             }
             // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
@@ -136,7 +126,7 @@ class ExtendedPersonHandler {
              */
             $this->connection->commit();
 
-            $presenter->flashMessage(sprintf($create ? $presenter->messageCreate() : $presenter->messageEdit(), $this->person->getFullName()), ContestantPresenter::FLASH_SUCCESS);
+            $presenter->flashMessage(sprintf($create ? $presenter->messageCreate() : $presenter->messageEdit(), $this->person->getFullName()), Message::LVL_SUCCESS);
 
             if (!$hasLogin) {
                 return self::RESULT_OK_NEW_LOGIN;
@@ -146,10 +136,10 @@ class ExtendedPersonHandler {
         } catch (ModelException $exception) {
             $this->connection->rollBack();
             if ($exception->getPrevious() && $exception->getPrevious()->getCode() == 23000) {
-                $presenter->flashMessage($presenter->messageExists(), ContestantPresenter::FLASH_ERROR);
+                $presenter->flashMessage($presenter->messageExists(), Message::LVL_ERROR);
             } else {
                 Debugger::log($exception, Debugger::ERROR);
-                $presenter->flashMessage($presenter->messageError(), ContestantPresenter::FLASH_ERROR);
+                $presenter->flashMessage($presenter->messageError(), Message::LVL_ERROR);
             }
 
             return self::RESULT_ERROR;

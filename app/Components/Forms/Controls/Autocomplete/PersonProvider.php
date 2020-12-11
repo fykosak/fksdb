@@ -5,8 +5,8 @@ namespace FKSDB\Components\Forms\Controls\Autocomplete;
 use FKSDB\Model\ORM\Models\ModelContest;
 use FKSDB\Model\ORM\Models\ModelPerson;
 use FKSDB\Model\ORM\Services\ServicePerson;
-use FKSDB\Model\ORM\Tables\TypedTableSelection;
 use FKSDB\Model\YearCalculator;
+use Fykosak\Utils\ORM\TypedTableSelection;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

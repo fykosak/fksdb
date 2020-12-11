@@ -5,14 +5,15 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Model\Astrid\Downloader;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Exceptions\ModelException;
-use FKSDB\Model\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\FlashMessageDump;
 use FKSDB\Model\Pipeline\PipelineException;
 use FKSDB\Model\SeriesCalculator;
 use FKSDB\Model\Submits\UploadException;
 use FKSDB\Model\Tasks\PipelineFactory;
 use FKSDB\Model\Tasks\SeriesData;
 use FKSDB\Model\UI\PageTitle;
+use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\ORM\Exceptions\ModelException;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\DeprecatedException;
@@ -26,10 +27,8 @@ use Tracy\Debugger;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class TasksPresenter extends BasePresenter {
-
     public const SOURCE_ASTRID = 'astrid';
     public const SOURCE_FILE = 'file';
-
     private SeriesCalculator $seriesCalculator;
     private PipelineFactory $pipelineFactory;
     private Downloader $downloader;
@@ -122,16 +121,16 @@ class TasksPresenter extends BasePresenter {
                 $pipeline->setInput($data);
                 $pipeline->run();
                 FlashMessageDump::dump($pipeline->getLogger(), $this);
-                $this->flashMessage(_('Tasks successfully imported.'), self::FLASH_SUCCESS);
+                $this->flashMessage(_('Tasks successfully imported.'), Message::LVL_SUCCESS);
             }
         } catch (PipelineException $exception) {
-            $this->flashMessage(sprintf(_('Error during import. %s'), $exception->getMessage()), self::FLASH_ERROR);
+            $this->flashMessage(sprintf(_('Error during import. %s'), $exception->getMessage()), Message::LVL_ERROR);
             Debugger::log($exception);
         } catch (ModelException $exception) {
-            $this->flashMessage(sprintf(_('Error during import.')), self::FLASH_ERROR);
+            $this->flashMessage(sprintf(_('Error during import.')), Message::LVL_ERROR);
             Debugger::log($exception);
         } catch (DeprecatedException $exception) {
-            $this->flashMessage(_('Legacy XML format is deprecated'), self::FLASH_ERROR);
+            $this->flashMessage(_('Legacy XML format is deprecated'), Message::LVL_ERROR);
         } finally {
             unlink($file);
         }

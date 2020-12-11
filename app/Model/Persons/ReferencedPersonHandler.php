@@ -18,8 +18,8 @@ use FKSDB\Model\ORM\Services\ServicePersonHistory;
 use FKSDB\Model\ORM\Services\ServicePersonInfo;
 use FKSDB\Model\Submits\StorageException;
 use FKSDB\Model\Utils\FormUtils;
-use FKSDB\Model\Exceptions\ModelException;
 use FKSDB\Model\ORM\ModelsMulti\ModelMPostContact;
+use Fykosak\Utils\ORM\Exceptions\ModelException;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;
@@ -35,7 +35,6 @@ class ReferencedPersonHandler implements IReferencedHandler {
 
     public const POST_CONTACT_DELIVERY = 'post_contact_d';
     public const POST_CONTACT_PERMANENT = 'post_contact_p';
-
     private ServicePerson $servicePerson;
     private ServicePersonInfo $servicePersonInfo;
     private ServicePersonHistory $servicePersonHistory;
@@ -44,25 +43,9 @@ class ReferencedPersonHandler implements IReferencedHandler {
     private int $acYear;
     private Handler $eventScheduleHandler;
     private ServiceFlag $serviceFlag;
+    private ?ModelEvent $event = null;
+    private ?string $resolution;
 
-    /** @var ModelEvent */
-    private $event;
-
-    /** @var string */
-    private $resolution;
-
-    /**
-     * ReferencedPersonHandler constructor.
-     * @param ServicePerson $servicePerson
-     * @param ServicePersonInfo $servicePersonInfo
-     * @param ServicePersonHistory $servicePersonHistory
-     * @param ServiceMPostContact $serviceMPostContact
-     * @param ServicePersonHasFlag $servicePersonHasFlag
-     * @param ServiceFlag $serviceFlag
-     * @param Handler $eventScheduleHandler
-     * @param int $acYear
-     * @param string $resolution
-     */
     public function __construct(
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,
@@ -72,7 +55,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
         ServiceFlag $serviceFlag,
         Handler $eventScheduleHandler,
         int $acYear,
-        $resolution
+        ?string $resolution
     ) {
         $this->servicePerson = $servicePerson;
         $this->servicePersonInfo = $servicePersonInfo;
@@ -218,7 +201,7 @@ class ReferencedPersonHandler implements IReferencedHandler {
                 }
             }
             $this->commit();
-        } catch (ModelDataConflictException | StorageException | ModelException$exception) {
+        } catch (ModelDataConflictException | StorageException | ModelException $exception) {
             $this->rollback();
             throw $exception;
         }

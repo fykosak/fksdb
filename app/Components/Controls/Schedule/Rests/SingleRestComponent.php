@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Schedule\Rests;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use FKSDB\Model\ORM\Models\ModelPerson;
 

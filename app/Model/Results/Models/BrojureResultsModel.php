@@ -22,7 +22,7 @@ class BrojureResultsModel extends AbstractResultsModel {
      * Number of (single) series that is listed in detail
      * @var int
      */
-    protected $listedSeries;
+    protected int $listedSeries;
 
     /**
      * Cache

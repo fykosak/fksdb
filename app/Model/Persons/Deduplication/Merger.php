@@ -2,8 +2,8 @@
 
 namespace FKSDB\Model\Persons\Deduplication;
 
-use FKSDB\Model\Logging\DevNullLogger;
-use FKSDB\Model\Logging\ILogger;
+use Fykosak\Utils\Logging\DevNullLogger;
+use Fykosak\Utils\Logging\ILogger;
 use Nette\Database\Context;
 use Nette\Database\Table\ActiveRow;
 use Nette\MemberAccessException;
@@ -21,25 +21,16 @@ class Merger {
     public const IDX_RESOLUTION = 'resolution';
 
     private array $conflicts = [];
-
-    /** @var ActiveRow */
-    private $trunkRow;
-
-    /** @var ActiveRow */
-    private $mergedRow;
-
+    private ActiveRow $trunkRow;
+    private ActiveRow $mergedRow;
     private Context $context;
-
-    /** @var array */
-    private $configuration;
-
+    private array $configuration;
     private ILogger $logger;
 
     /**
-     *
      * @var TableMerger[]
      */
-    private $tableMergers = [];
+    private array $tableMergers = [];
 
     /**
      * Merger constructor.
@@ -94,7 +85,6 @@ class Merger {
         $table = $this->trunkRow->getTable()->getName();
         $tableMerger = $this->getMerger($table);
         $commit = is_null($commit) ? $this->configuration['commit'] : $commit;
-
 
         $this->context->getConnection()->beginTransaction();
 

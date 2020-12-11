@@ -2,12 +2,12 @@
 
 namespace FKSDB\Components\Forms\Controls\Schedule;
 
-use FKSDB\Components\React\ReactComponentTrait;
 use FKSDB\Model\Exceptions\NotImplementedException;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use FKSDB\Model\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Model\ORM\Models\Schedule\ModelScheduleItem;
 use FKSDB\Model\ORM\Services\Schedule\ServiceScheduleItem;
+use Fykosak\Utils\FrontEndComponents\FrontEndComponentTrait;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\TextInput;
 
@@ -16,8 +16,7 @@ use Nette\Forms\Controls\TextInput;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ScheduleField extends TextInput {
-
-    use ReactComponentTrait;
+    use FrontEndComponentTrait;
 
     private ModelEvent $event;
 

@@ -6,19 +6,20 @@ use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
-use FKSDB\Model\ORM\IModel;
 use FKSDB\Model\ORM\Models\ModelContest;
 use FKSDB\Model\ORM\Models\ModelPerson;
 use FKSDB\Model\ORM\Services\ServiceContestant;
 use FKSDB\Model\ORM\Services\ServicePerson;
 use FKSDB\Modules\Core\ContestPresenter\IContestPresenter;
 use FKSDB\Model\UI\PageTitle;
+use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\ORM\AbstractModel;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
@@ -69,7 +70,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @persistent
      */
     public $personId;
-
     private ?ModelPerson $person;
     private ServiceContestant $serviceContestant;
     private ReferencedPersonFactory $referencedPersonFactory;
@@ -116,12 +116,11 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @throws AbortException
      */
     public function actionContestant(): void {
-
         if ($this->user->isLoggedIn()) {
             $person = $this->getPerson();
 
             if (!$person) {
-                $this->flashMessage(_('User must be a person in order to register as a contestant.'), self::FLASH_INFO);
+                $this->flashMessage(_('User must be a person in order to register as a contestant.'), Message::LVL_INFO);
                 $this->redirect(':Core:Authentication:login');
             }
         } else {
@@ -141,7 +140,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
             $contestant = isset($contestants[$contest->contest_id]) ? $contestants[$contest->contest_id] : null;
             if ($contestant && $contestant->year == $this->getSelectedYear()) {
                 // TODO FIXME persistent flash
-                $this->flashMessage(sprintf(_('%s is already contestant in %s.'), $person->getFullName(), $contest->name), self::FLASH_INFO);
+                $this->flashMessage(sprintf(_('%s is already contestant in %s.'), $person->getFullName(), $contest->name), Message::LVL_INFO);
                 $this->redirect(':Core:Authentication:login');
             }
         }
@@ -204,7 +203,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     private function getPerson(): ?ModelPerson {
         if (!isset($this->person)) {
-
             if ($this->user->isLoggedIn()) {
                 $this->person = $this->user->getIdentity()->getPerson();
             } else {
@@ -302,7 +300,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         return $control;
     }
 
-    public function getModel(): ?IModel {
+    public function getModel(): ?AbstractModel {
         return null; //we always create new contestant
     }
 

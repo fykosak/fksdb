@@ -10,7 +10,7 @@ use FKSDB\Model\Events\Machine\Transition;
 use FKSDB\Model\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;
 use FKSDB\Model\Events\Processing\GenKillProcessing;
 use FKSDB\Model\Events\Processing\IProcessing;
-use FKSDB\Model\Logging\ILogger;
+use Fykosak\Utils\Logging\ILogger;
 use FKSDB\Model\ORM\IModel;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use Nette\Forms\Form;

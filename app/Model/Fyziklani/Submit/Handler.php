@@ -2,8 +2,8 @@
 
 namespace FKSDB\Model\Fyziklani\Submit;
 
-use FKSDB\Model\Logging\ILogger;
-use FKSDB\Model\Messages\Message;
+use Fykosak\Utils\Logging\ILogger;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -127,7 +127,7 @@ class Handler {
             $submit->getFyziklaniTeam()->name,
             $submit->getFyziklaniTeam()->e_fyziklani_team_id,
             $submit->getFyziklaniTask()->label,
-            $submit->getFyziklaniTask()->name), ILogger::SUCCESS));
+            $submit->getFyziklaniTask()->name), Message::LVL_SUCCESS));
     }
 
     /**
@@ -149,7 +149,7 @@ class Handler {
                 'modified' => null,
             ]);
             $this->logEvent($submit, 'revoked');
-            $logger->log(new Message(\sprintf(_('Submit %d has been revoked.'), $submit->fyziklani_submit_id), ILogger::SUCCESS));
+            $logger->log(new Message(\sprintf(_('Submit %d has been revoked.'), $submit->fyziklani_submit_id), Message::LVL_SUCCESS));
         }
     }
 
@@ -183,7 +183,7 @@ class Handler {
             $submit->getFyziklaniTeam()->name,
             $submit->getFyziklaniTeam()->e_fyziklani_team_id,
             $submit->getFyziklaniTask()->label,
-            $submit->getFyziklaniTask()->name), ILogger::SUCCESS));
+            $submit->getFyziklaniTask()->name), Message::LVL_SUCCESS));
     }
 
     public function createSubmit(ILogger $logger, ModelFyziklaniTask $task, ModelFyziklaniTeam $team, int $points): void {
@@ -204,7 +204,7 @@ class Handler {
             $team->name,
             $team->e_fyziklani_team_id,
             $task->label,
-            $task->name), ILogger::SUCCESS));
+            $task->name), Message::LVL_SUCCESS));
     }
 
     private function logEvent(ModelFyziklaniSubmit $submit, string $action, string $appendLog = null): void {

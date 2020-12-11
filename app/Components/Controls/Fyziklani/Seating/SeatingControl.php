@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Fyziklani\Seating;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Model\Events\EventDispatchFactory;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;

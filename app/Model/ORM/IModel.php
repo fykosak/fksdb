@@ -19,10 +19,10 @@ interface IModel extends ArrayAccess {
     public function toArray(): array;
 
     /**
-     * @param bool $need
+     * @param bool $throw
      * @return string|int
      */
-    public function getPrimary(bool $need = true);
+    public function getPrimary(bool $throw = true);
 
     /**
      * @note This is here to straddle duck-typing of ActiveRow.

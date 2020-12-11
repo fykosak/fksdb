@@ -8,7 +8,7 @@ use FKSDB\Model\ORM\Models\ModelSubmit;
 use FKSDB\Model\ORM\Services\ServiceContestant;
 use FKSDB\Model\ORM\Services\ServiceSubmit;
 use FKSDB\Model\ORM\Services\ServiceTask;
-use FKSDB\Model\ORM\Tables\TypedTableSelection;
+use Fykosak\Utils\ORM\TypedTableSelection;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

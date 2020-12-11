@@ -9,7 +9,7 @@ use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use FKSDB\Model\ORM\Services\AbstractServiceSingle;
-use FKSDB\Model\ORM\Tables\TypedTableSelection;
+use Fykosak\Utils\ORM\TypedTableSelection;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
 

@@ -2,11 +2,11 @@
 
 namespace FKSDB\Components\Controls\Transitions;
 
-use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Modules\Core\BasePresenter;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Model\Transitions\IStateModel;
 use FKSDB\Model\Transitions\Machine\Machine;
 use FKSDB\Model\Transitions\Transition\UnavailableTransitionsException;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
@@ -17,9 +17,7 @@ use Tracy\Debugger;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class TransitionButtonsControl extends BaseComponent {
-
     private Machine $machine;
-
     private IStateModel $model;
 
     public function __construct(Machine $machine, Container $container, IStateModel $model) {
@@ -42,11 +40,11 @@ class TransitionButtonsControl extends BaseComponent {
         try {
             $this->machine->executeTransition($name, $this->model);
         } catch (ForbiddenRequestException | UnavailableTransitionsException$exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             return;
         } catch (\Exception $exception) {
             Debugger::log($exception);
-            $this->getPresenter()->flashMessage(_('Some error emerged'), BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage(_('Some error emerged'), Message::LVL_ERROR);
         }
         $this->redirect('this');
     }

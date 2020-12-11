@@ -2,7 +2,7 @@
 
 namespace FKSDB\Model\DataTesting;
 
-use FKSDB\Model\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Model\Exceptions\NotImplementedException;
 use Nette\Utils\Html;
 
@@ -13,7 +13,6 @@ use Nette\Utils\Html;
 class TestLog extends Message {
 
     public ?Html $detail;
-
     public string $testName;
 
     public function __construct(string $testName, string $message, string $level, ?Html $detail = null) {
@@ -26,7 +25,7 @@ class TestLog extends Message {
      * @return string[]
      */
     public static function getAvailableLevels(): array {
-        return [self::LVL_DANGER, self::LVL_WARNING, self::LVL_SUCCESS, self::LVL_INFO];
+        return [self::LVL_ERROR, self::LVL_WARNING, self::LVL_SUCCESS, self::LVL_INFO];
     }
 
     /**
@@ -35,7 +34,7 @@ class TestLog extends Message {
      */
     public function mapLevelToIcon(): string {
         switch ($this->level) {
-            case self::LVL_DANGER:
+            case self::LVL_ERROR:
                 return 'fa fa-close';
             case self::LVL_WARNING:
                 return 'fa fa-warning';

@@ -3,8 +3,7 @@
 namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Model\Events\Machine\Machine;
 use FKSDB\Model\Events\Model\ApplicationHandler;
@@ -12,8 +11,9 @@ use FKSDB\Model\Events\Model\Grid\SingleEventSource;
 use FKSDB\Model\Events\Model\ImportHandler;
 use FKSDB\Model\Events\Model\ImportHandlerException;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Model\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\FlashMessageDump;
 use FKSDB\Model\Utils\CSVParser;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\DI\Container;
@@ -25,11 +25,8 @@ use Tracy\Debugger;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class ImportComponent extends BaseComponent {
-
     private Machine $machine;
-
     private SingleEventSource $source;
-
     private ApplicationHandler $handler;
 
     public function __construct(Machine $machine, SingleEventSource $source, ApplicationHandler $handler, Container $container) {
@@ -103,15 +100,15 @@ class ImportComponent extends BaseComponent {
 
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
             if ($result) {
-                $this->getPresenter()->flashMessage(sprintf(_('Import úspěšně proběhl (%.2f s).'), $elapsedTime), BasePresenter::FLASH_SUCCESS);
+                $this->getPresenter()->flashMessage(sprintf(_('Import úspěšně proběhl (%.2f s).'), $elapsedTime), Message::LVL_SUCCESS);
             } else {
-                $this->getPresenter()->flashMessage(sprintf(_('Import proběhl s chybami (%.2f s).'), $elapsedTime), BasePresenter::FLASH_WARNING);
+                $this->getPresenter()->flashMessage(sprintf(_('Import proběhl s chybami (%.2f s).'), $elapsedTime), Message::LVL_WARNING);
             }
 
             $this->redirect('this');
         } catch (ImportHandlerException $exception) {
             FlashMessageDump::dump($this->handler->getLogger(), $this->getPresenter());
-            $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         }
     }
 }

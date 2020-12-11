@@ -5,7 +5,6 @@ namespace FKSDB\Modules\OrgModule;
 use Exception;
 use FKSDB\Components\Controls\Inbox\PointPreview\PointsPreviewControl;
 use FKSDB\Components\Controls\Inbox\PointsForm\PointsFormControl;
-use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\Model\ORM\Models\ModelContest;
 use FKSDB\Model\UI\PageTitle;
 use FKSDB\Model\ORM\Models\ModelLogin;
@@ -15,6 +14,7 @@ use FKSDB\Model\ORM\Services\ServiceTask;
 use FKSDB\Model\ORM\Services\ServiceTaskContribution;
 use FKSDB\Model\Results\SQLResultsCache;
 use FKSDB\Model\Submits\SeriesTable;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Tracy\Debugger;
@@ -24,13 +24,12 @@ use Nette\InvalidArgumentException;
  * Class PointsPresenter
  *
  */
-class PointsPresenter extends BasePresenter implements ISeriesPresenter {
+class PointsPresenter extends BasePresenter {
     /**
      * Show all tasks?
      * @persistent
      */
     public $all;
-
     private SQLResultsCache $SQLResultsCache;
     private SeriesTable $seriesTable;
     private ServiceTask $serviceTask;
@@ -101,9 +100,9 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
     public function handleInvalidate(): void {
         try {
             $this->SQLResultsCache->invalidate($this->getSelectedContest(), $this->getSelectedYear());
-            $this->flashMessage(_('Points invalidated.'), self::FLASH_INFO);
+            $this->flashMessage(_('Points invalidated.'), Message::LVL_INFO);
         } catch (Exception $exception) {
-            $this->flashMessage(_('Error during invalidation.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Error during invalidation.'), Message::LVL_ERROR);
             Debugger::log($exception);
         }
 
@@ -129,9 +128,9 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
                 $this->SQLResultsCache->recalculate($contest, $year->year);
             }
 
-            $this->flashMessage(_('Points recounted.'), self::FLASH_INFO);
+            $this->flashMessage(_('Points recounted.'), Message::LVL_INFO);
         } catch (InvalidArgumentException $exception) {
-            $this->flashMessage(_('Error while recounting.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Error while recounting.'), Message::LVL_ERROR);
             Debugger::log($exception);
         }
 
@@ -149,9 +148,9 @@ class PointsPresenter extends BasePresenter implements ISeriesPresenter {
             $series = $this->getSelectedSeries();
 
             $this->SQLResultsCache->calculateQuizPoints($contest, $year, $series);
-            $this->flashMessage(_('Body kvízových úloh spočteny.'), self::FLASH_INFO);
+            $this->flashMessage(_('Body kvízových úloh spočteny.'), Message::LVL_INFO);
         } catch (Exception $exception) {
-            $this->flashMessage(_('Chyba při výpočtu.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Chyba při výpočtu.'), Message::LVL_ERROR);
             Debugger::log($exception);
         }
     }

@@ -4,7 +4,7 @@ namespace FKSDB\Components\Controls\Inbox\SubmitsPreview;
 
 use FKSDB\Components\Controls\Inbox\SeriesTableComponent;
 use FKSDB\Model\Exceptions\NotFoundException;
-use FKSDB\Model\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Model\Submits\StorageException;
 use FKSDB\Model\Submits\SubmitHandlerFactory;
 use Nette\Application\AbortException;
@@ -39,7 +39,7 @@ class SubmitsPreviewControl extends SeriesTableComponent {
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $submit);
         } catch (ForbiddenRequestException|NotFoundException|StorageException$exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         }
     }
 
@@ -53,7 +53,7 @@ class SubmitsPreviewControl extends SeriesTableComponent {
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleDownloadCorrected($this->getPresenter(), $submit);
         } catch (ForbiddenRequestException|NotFoundException|StorageException$exception) {
-            $this->flashMessage(new Message($exception->getMessage(), Message::LVL_DANGER));
+            $this->flashMessage(new Message($exception->getMessage(), Message::LVL_ERROR));
         }
     }
 }

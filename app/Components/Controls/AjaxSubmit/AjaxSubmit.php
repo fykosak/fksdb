@@ -2,17 +2,16 @@
 
 namespace FKSDB\Components\Controls\AjaxSubmit;
 
-use FKSDB\Components\React\AjaxComponent;
-use FKSDB\Model\Exceptions\ModelException;
 use FKSDB\Model\Exceptions\NotFoundException;
-use FKSDB\Model\Logging\ILogger;
-use FKSDB\Model\Messages\Message;
+use Fykosak\Utils\FrontEndComponents\AjaxComponent;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Model\ORM\Models\ModelContestant;
 use FKSDB\Model\ORM\Models\ModelSubmit;
 use FKSDB\Model\ORM\Models\ModelTask;
 use FKSDB\Model\ORM\Services\ServiceSubmit;
 use FKSDB\Model\Submits\StorageException;
 use FKSDB\Model\Submits\SubmitHandlerFactory;
+use Fykosak\Utils\ORM\Exceptions\ModelException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -27,7 +26,6 @@ use Tracy\Debugger;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class AjaxSubmit extends AjaxComponent {
-
     private ServiceSubmit $serviceSubmit;
     private ModelTask $task;
     private ModelContestant $contestant;
@@ -105,14 +103,14 @@ class AjaxSubmit extends AjaxComponent {
             }
 
             if (!$fileContainer->isOk()) {
-                $this->getLogger()->log(new Message(_('File is not Ok'), ILogger::ERROR));
+                $this->getLogger()->log(new Message(_('File is not Ok'), Message::LVL_ERROR));
                 $this->sendAjaxResponse(Response::S500_INTERNAL_SERVER_ERROR);
             }
             // store submit
             $this->submitHandlerFactory->handleSave($fileContainer, $this->task, $this->contestant);
             $this->submitHandlerFactory->uploadedStorage->commit();
             $this->serviceSubmit->getConnection()->commit();
-            $this->getLogger()->log(new Message(_('Upload successful'), ILogger::SUCCESS));
+            $this->getLogger()->log(new Message(_('Upload successful'), Message::LVL_SUCCESS));
             $this->sendAjaxResponse();
         }
     }
@@ -125,12 +123,12 @@ class AjaxSubmit extends AjaxComponent {
         try {
             $submit = $this->getSubmit(true);
             $this->submitHandlerFactory->handleRevoke($submit);
-            $this->getLogger()->log(new Message(\sprintf(_('Odevzdání úlohy %s zrušeno.'), $submit->getTask()->getFQName()), ILogger::WARNING));
+            $this->getLogger()->log(new Message(\sprintf(_('Odevzdání úlohy %s zrušeno.'), $submit->getTask()->getFQName()), Message::LVL_WARNING));
         } catch (ForbiddenRequestException | NotFoundException$exception) {
-            $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));
-        } catch (StorageException | ModelException$exception) {
+            $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_ERROR));
+        } catch (StorageException | ModelException $exception) {
             Debugger::log($exception);
-            $this->getLogger()->log(new Message(_('Během mazání úlohy došlo k chybě.'), Message::LVL_DANGER));
+            $this->getLogger()->log(new Message(_('Během mazání úlohy došlo k chybě.'), Message::LVL_ERROR));
         }
 
         $this->sendAjaxResponse();
@@ -145,7 +143,7 @@ class AjaxSubmit extends AjaxComponent {
         try {
             $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $this->getSubmit(true));
         } catch (ForbiddenRequestException | StorageException | NotFoundException$exception) {
-            $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_DANGER));
+            $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_ERROR));
         }
         $this->sendAjaxResponse();
     }

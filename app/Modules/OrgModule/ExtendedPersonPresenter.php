@@ -9,9 +9,7 @@ use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\Model\Exceptions\BadTypeException;
 use FKSDB\Model\ORM\Models\AbstractModelSingle;
-use FKSDB\Model\ORM\IModel;
-use FKSDB\Model\ORM\IService;
-use FKSDB\Model\ORM\Models\ModelContestant;
+use FKSDB\Model\ORM\Services\AbstractServiceSingle;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -38,10 +36,10 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     }
 
     /**
-     * @param ModelContestant|IModel|null $model
+     * @param AbstractModelSingle|null $model
      * @param Form|IControl[][] $form
      */
-    protected function setDefaults(?IModel $model, Form $form): void {
+    protected function setDefaults(?AbstractModelSingle $model, Form $form): void {
         if (!$model) {
             return;
         }
@@ -63,7 +61,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
 
     abstract protected function appendExtendedContainer(Form $form): void;
 
-    abstract protected function getORMService(): IService;
+    abstract protected function getORMService(): AbstractServiceSingle;
 
     protected function getAcYearFromModel(): ?int {
         return null;
@@ -133,7 +131,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @param int $id
      * @return AbstractModelSingle
      */
-    protected function loadModel($id): ?IModel {
+    protected function loadModel($id): ?AbstractModelSingle {
         return $this->getORMService()->findByPrimary($id);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Stalking;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
 use FKSDB\Components\Controls\Stalking\Timeline\TimelineControl;
 use FKSDB\Components\Grids\PersonRelatedGrid;

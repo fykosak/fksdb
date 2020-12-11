@@ -5,7 +5,7 @@ namespace FKSDB\Components\Controls\Stalking;
 use FKSDB\Components\Controls\Badges\ContestBadge;
 use FKSDB\Components\Controls\Badges\NoRecordsBadge;
 use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\DBReflection\LinkPrinterComponent;
 use FKSDB\Components\Controls\DBReflection\ValuePrinter\ValuePrinterComponent;
 use FKSDB\Model\DBReflection\DBReflectionFactory;

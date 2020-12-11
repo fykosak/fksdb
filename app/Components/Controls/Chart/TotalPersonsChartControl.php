@@ -2,16 +2,16 @@
 
 namespace FKSDB\Components\Controls\Chart;
 
-use FKSDB\Components\React\ReactComponent;
 use FKSDB\Model\ORM\Models\ModelPerson;
 use FKSDB\Model\ORM\Services\ServicePerson;
+use Fykosak\Utils\FrontEndComponents\FrontEndComponent;
 use Nette\DI\Container;
 
 /**
  * Class TotalPersonsChartControl
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class TotalPersonsChartControl extends ReactComponent implements IChart {
+class TotalPersonsChartControl extends FrontEndComponent implements IChart {
 
     private ServicePerson $servicePerson;
 

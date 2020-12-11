@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Controls;
 
-use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
-use FKSDB\Components\Controls\Loaders\IStylesheetCollector;
+use Fykosak\Utils\Loaders\IJavaScriptCollector;
+use Fykosak\Utils\Loaders\IStylesheetCollector;
 use Nette\Forms\Controls\TextArea;
 use Nette\Utils\Html;
 

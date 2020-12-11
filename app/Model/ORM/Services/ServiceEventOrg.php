@@ -2,14 +2,14 @@
 
 namespace FKSDB\Model\ORM\Services;
 
-use FKSDB\Model\Exceptions\ModelException;
 use FKSDB\Model\ORM\DbNames;
 use FKSDB\Model\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Model\ORM\Models\AbstractModelSingle;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use FKSDB\Model\ORM\Models\ModelEventOrg;
 use FKSDB\Model\ORM\Services\Exceptions\DuplicateOrgException;
-use FKSDB\Model\ORM\Tables\TypedTableSelection;
+use Fykosak\Utils\ORM\Exceptions\ModelException;
+use Fykosak\Utils\ORM\TypedTableSelection;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
 

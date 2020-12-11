@@ -5,7 +5,7 @@ namespace FKSDB\Model\Events\Spec\Fol;
 use FKSDB\Model\Events\Machine\Machine;
 use FKSDB\Model\Events\Model\Holder\Holder;
 use FKSDB\Model\Events\Processing\AbstractProcessing;
-use FKSDB\Model\Logging\ILogger;
+use Fykosak\Utils\Logging\ILogger;
 use FKSDB\Model\ORM\Models\ModelPerson;
 use FKSDB\Model\ORM\Models\ModelPersonHasFlag;
 use FKSDB\Model\ORM\Services\ServiceSchool;

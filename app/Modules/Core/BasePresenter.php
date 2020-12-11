@@ -8,8 +8,8 @@ use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Components\Controls\Choosers\ThemeChooser;
 use FKSDB\Components\Controls\DBReflection\LinkPrinterComponent;
 use FKSDB\Components\Controls\DBReflection\ValuePrinter\ValuePrinterComponent;
-use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
-use FKSDB\Components\Controls\Loaders\IStylesheetCollector;
+use Fykosak\Utils\Loaders\IJavaScriptCollector;
+use Fykosak\Utils\Loaders\IStylesheetCollector;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Components\Controls\Navigation\NavigationChooser;
 use FKSDB\Components\Controls\Navigation\PresenterBuilder;
@@ -17,14 +17,13 @@ use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Localization\GettextTranslator;
-use FKSDB\Model\Localization\UnsupportedLanguageException;
-use FKSDB\Model\Logging\ILogger;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\PresenterTraits\CollectorPresenterTrait;
 use FKSDB\Model\ORM\Services\ServiceContest;
 use FKSDB\Model\UI\PageStyleContainer;
 use FKSDB\Model\UI\PageTitle;
 use FKSDB\Model\YearCalculator;
+use Fykosak\Utils\Localization\GettextTranslator;
 use InvalidArgumentException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -43,11 +42,6 @@ use FKSDB\Model\Utils\Utils;
 abstract class BasePresenter extends Presenter implements IJavaScriptCollector, IStylesheetCollector, IAutocompleteJSONProvider, INavigablePresenter {
 
     use CollectorPresenterTrait;
-
-    public const FLASH_SUCCESS = ILogger::SUCCESS;
-    public const FLASH_INFO = ILogger::INFO;
-    public const FLASH_WARNING = ILogger::WARNING;
-    public const FLASH_ERROR = ILogger::ERROR;
 
     /** @persistent */
     public $tld;
@@ -74,7 +68,6 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     private bool $authorized = true;
     private array $authorizedCache = [];
     private PageStyleContainer $pageStyleContainer;
-
 
     final public function injectBase(
         YearCalculator $yearCalculator,

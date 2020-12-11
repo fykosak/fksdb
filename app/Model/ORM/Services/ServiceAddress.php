@@ -4,11 +4,11 @@ namespace FKSDB\Model\ORM\Services;
 
 use FKSDB\Model\ORM\DbNames;
 use FKSDB\Model\ORM\DeprecatedLazyDBTrait;
-use FKSDB\Model\ORM\IModel;
 use FKSDB\Model\ORM\Models\AbstractModelSingle;
 use FKSDB\Model\ORM\Models\ModelAddress;
 use FKSDB\Model\ORM\Models\ModelRegion;
 use FKSDB\Model\ORM\Services\Exceptions\InvalidPostalCode;
+use Fykosak\Utils\ORM\AbstractModel;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
 use Tracy\Debugger;
@@ -36,7 +36,7 @@ class ServiceAddress extends AbstractServiceSingle {
         return parent::createNewModel($data);
     }
 
-    public function updateModel2(IModel $model, array $data): bool {
+    public function updateModel2(AbstractModel $model, array $data): bool {
         if (!isset($data['region_id'])) {
             $data['region_id'] = $this->inferRegion($data['postal_code']);
         }

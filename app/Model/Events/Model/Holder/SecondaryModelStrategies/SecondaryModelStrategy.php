@@ -40,7 +40,7 @@ abstract class SecondaryModelStrategy {
      * @param IModel|null $primaryModel
      * @return void
      */
-    public function loadSecondaryModels(IService $service, $joinOn, $joinTo, array $holders, IModel $primaryModel = null): void {
+    public function loadSecondaryModels(IService $service, $joinOn, $joinTo, array $holders, ?IModel $primaryModel = null): void {
         $table = $service->getTable();
         if ($primaryModel) {
             $joinValue = $joinTo ? $primaryModel[$joinTo] : $primaryModel->getPrimary();

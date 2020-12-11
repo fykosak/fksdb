@@ -3,12 +3,13 @@
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Modules\Core\AuthenticatedPresenter;
+use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
 use FKSDB\Model\ORM\Models\ModelLogin;
 use FKSDB\Model\UI\PageTitle;
 use Nette\Security\IResource;
 
-abstract class BasePresenter extends AuthenticatedPresenter {
+abstract class BasePresenter extends AuthenticatedPresenter implements ISeriesPresenter {
     use SeriesPresenterTrait;
 
     protected function startup(): void {

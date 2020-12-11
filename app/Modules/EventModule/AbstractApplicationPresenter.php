@@ -13,7 +13,7 @@ use FKSDB\Components\Controls\Events\MassTransitionsControl;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Schedule\PersonGrid;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Model\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Model\ORM\Services\ServiceEventParticipant;

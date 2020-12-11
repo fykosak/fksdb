@@ -10,6 +10,7 @@ use FKSDB\Model\Authorization\EventAuthorizator;
 use Exception;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use FKSDB\Model\ORM\Models\ModelAuthToken;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -29,12 +30,10 @@ use Nette\Security\AuthenticationException;
  * @see http://www.php.net/manual/en/features.http-auth.php
  */
 abstract class AuthenticatedPresenter extends BasePresenter {
-
     public const AUTH_ALLOW_LOGIN = 0x1;
     public const AUTH_ALLOW_HTTP = 0x2;
     public const AUTH_ALLOW_TOKEN = 0x4;
     public const AUTH_ALLOW_GITHUB = 0x8;
-
     protected TokenAuthenticator $tokenAuthenticator;
     protected PasswordAuthenticator $passwordAuthenticator;
     protected GithubAuthenticator $githubAuthenticator;
@@ -178,13 +177,13 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_SSO)) {
                 $this->tokenAuthenticator->disposeAuthToken();
             } else {
-                $this->flashMessage(_('Successful token authentication.'), self::FLASH_INFO);
+                $this->flashMessage(_('Successful token authentication.'), Message::LVL_INFO);
             }
 
             $this->getUser()->login($login);
             $this->redirect('this');
         } catch (AuthenticationException $exception) {
-            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         }
     }
 

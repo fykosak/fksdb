@@ -2,12 +2,12 @@
 
 namespace FKSDB\Components\Controls\Chart;
 
-use FKSDB\Components\React\ReactComponent;
 use FKSDB\Model\ORM\Models\ModelContest;
 use FKSDB\Model\ORM\Services\ServiceSubmit;
+use Fykosak\Utils\FrontEndComponents\FrontEndComponent;
 use Nette\DI\Container;
 
-class ContestantsPerYearsChart extends ReactComponent implements IChart {
+class ContestantsPerYearsChart extends FrontEndComponent implements IChart {
 
     private ServiceSubmit $serviceSubmit;
     protected ModelContest $contest;

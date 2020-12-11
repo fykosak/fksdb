@@ -2,7 +2,7 @@
 
 namespace FKSDB\Model\DBReflection\ColumnFactories;
 
-use FKSDB\Model\Logging\ILogger;
+use Fykosak\Utils\Logging\ILogger;
 use FKSDB\Model\ORM\Models\AbstractModelSingle;
 
 /**

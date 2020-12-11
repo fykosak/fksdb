@@ -2,7 +2,7 @@
 
 namespace FKSDB\Model\DataTesting\Tests\ModelPerson;
 
-use FKSDB\Model\Logging\ILogger;
+use Fykosak\Utils\Logging\ILogger;
 use FKSDB\Model\ORM\Models\ModelContest;
 use FKSDB\Model\ORM\Models\ModelEventParticipant;
 use FKSDB\Model\ORM\Models\ModelPerson;
@@ -55,6 +55,6 @@ class ParticipantsDurationTest extends PersonTest {
         if ($delta < $thresholds[1]) {
             return TestLog::LVL_WARNING;
         }
-        return TestLog::LVL_DANGER;
+        return TestLog::LVL_ERROR;
     }
 }

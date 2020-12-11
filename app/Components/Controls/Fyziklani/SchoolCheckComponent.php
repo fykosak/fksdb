@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\DBReflection\ValuePrinter\ValuePrinterComponent;
 use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Model\ORM\Models\ModelEvent;

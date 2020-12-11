@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Person;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\DBReflection\ValuePrinter\ValuePrinterComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;

@@ -4,7 +4,7 @@ namespace FKSDB\Model\DataTesting\Tests\ModelPerson;
 
 use FKSDB\Model\DataTesting\TestLog;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Logging\ILogger;
+use Fykosak\Utils\Logging\ILogger;
 use FKSDB\Model\ORM\Models\ModelPerson;
 
 /**

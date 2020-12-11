@@ -4,7 +4,7 @@ namespace FKSDB\Model\Events\Processing;
 
 use FKSDB\Model\Events\Machine\Machine;
 use FKSDB\Model\Events\Model\Holder\Holder;
-use FKSDB\Model\Logging\ILogger;
+use Fykosak\Utils\Logging\ILogger;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 

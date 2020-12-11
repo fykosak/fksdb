@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Breadcrumbs;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\Breadcrumbs\Request as NaviRequest;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Model\Exceptions\BadTypeException;

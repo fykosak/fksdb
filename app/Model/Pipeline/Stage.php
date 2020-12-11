@@ -2,7 +2,7 @@
 
 namespace FKSDB\Model\Pipeline;
 
-use FKSDB\Model\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

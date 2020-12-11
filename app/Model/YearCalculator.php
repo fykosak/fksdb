@@ -14,9 +14,6 @@ use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\Security\User;
 
-/**
- * Class FKSDB\YearCalculator
- */
 class YearCalculator {
 
     /**
@@ -30,15 +27,10 @@ class YearCalculator {
     public const FIRST_AC_MONTH = 9;
 
     private ServiceContestYear $serviceContestYear;
-
     private ServiceContest $serviceContest;
-
     private array $cache = [];
-
     private array $revCache = [];
-
     private ?int $acYear;
-
     private Container $container;
 
     public function __construct(ServiceContestYear $serviceContestYear, ServiceContest $serviceContest, Container $container) {

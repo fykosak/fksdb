@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Badges;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use Nette\Utils\Html;
 
 /**

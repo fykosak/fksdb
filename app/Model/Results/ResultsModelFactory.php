@@ -136,18 +136,18 @@ class ResultsModelFactory implements IXMLNodeSerializer {
      * @param AbstractResultsModel $dataSource
      * @param DOMNode $node
      * @param DOMDocument $doc
-     * @param int $formatVersion
+     * @param int $formatVersionVersionVersion
      * @return void
      * @throws SoapFault
      * @throws BadTypeException
      */
-    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $formatVersion): void {
+    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $formatVersionVersionVersion): void {
         if (!$dataSource instanceof AbstractResultsModel) {
             throw new BadTypeException(AbstractModelSingle::class, $dataSource);
         }
 
-        if ($formatVersion !== self::EXPORT_FORMAT_1) {
-            throw new InvalidArgumentException(\sprintf('Export format %s not supported.', $formatVersion));
+        if ($formatVersionVersionVersion !== self::EXPORT_FORMAT_1) {
+            throw new InvalidArgumentException(\sprintf('Export format %s not supported.', $formatVersionVersionVersion));
         }
 
         try {

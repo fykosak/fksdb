@@ -5,7 +5,7 @@ namespace FKSDB\Components\Grids\DataTesting;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Model\DataTesting\DataTestingFactory;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Model\ORM\Services\ServicePerson;
 use FKSDB\Model\DataTesting\TestLog;
 use FKSDB\Model\Exceptions\NotImplementedException;

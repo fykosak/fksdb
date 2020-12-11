@@ -7,12 +7,11 @@ use FKSDB\Model\Events\Machine\Machine;
 use FKSDB\Model\Events\Model\Holder\Holder;
 use FKSDB\Model\Events\Spec\AbstractCategoryProcessing;
 use FKSDB\Model\Events\Exceptions\SubmitProcessingException;
-use FKSDB\Model\Logging\ILogger;
-use FKSDB\Model\Messages\Message;
+use Fykosak\Utils\Logging\ILogger;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
-
 
 /**
  * Na Fyziklani 2013 jsme se rozhodli pocitat tymum automaticky kategorii ve ktere soutezi podle pravidel.
@@ -36,7 +35,7 @@ class CategoryProcessing extends AbstractCategoryProcessing {
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
 
         if ($original != $values['team']['category']) {
-            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($values['team']['category'])), ILogger::INFO));
+            $logger->log(new Message(sprintf(_('Team inserted to category %s.'), ModelFyziklaniTeam::mapCategoryToName($values['team']['category'])), Message::LVL_INFO));
         }
     }
 

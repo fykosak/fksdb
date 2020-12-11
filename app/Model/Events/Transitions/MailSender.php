@@ -9,7 +9,7 @@ use FKSDB\Model\Events\Machine\Transition;
 use FKSDB\Model\Events\Model\Holder\BaseHolder;
 use FKSDB\Model\Events\Model\Holder\Holder;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use FKSDB\Model\Mail\MailTemplateFactory;
 use FKSDB\Modules\PublicModule\ApplicationPresenter;
 use FKSDB\Model\ORM\IModel;
@@ -44,8 +44,7 @@ class MailSender {
     public const ADDR_ALL = '*';
     public const BCC_PREFIX = '.';
 
-    /** @var string */
-    private $filename;
+    private string $filename;
 
     /**
      *
@@ -74,7 +73,7 @@ class MailSender {
      * @param ServiceEmailMessage $serviceEmailMessage
      */
     public function __construct(
-        $filename,
+        string $filename,
         $addresees,
         MailTemplateFactory $mailTemplateFactory,
         AccountManager $accountManager,
@@ -184,7 +183,6 @@ class MailSender {
         $data['recipient'] = $email;
         $data['state'] = ModelEmailMessage::STATE_WAITING;
         return $this->serviceEmailMessage->createNewModel($data);
-
     }
 
     private function createToken(ModelLogin $login, ModelEvent $event, IModel $application): ModelAuthToken {

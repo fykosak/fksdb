@@ -2,11 +2,10 @@
 
 namespace FKSDB\Model\ORM\Services;
 
-
 use FKSDB\Model\ORM\DbNames;
 use FKSDB\Model\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Model\ORM\Models\ModelEmailMessage;
-use FKSDB\Model\ORM\Tables\TypedTableSelection;
+use Fykosak\Utils\ORM\TypedTableSelection;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
 use Nette\Database\Table\ActiveRow;

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Containers\Models;
 
-use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
+use Fykosak\Utils\Loaders\IJavaScriptCollector;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Model\DBReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\Model\DBReflection\OmittedControlException;
@@ -51,7 +51,6 @@ abstract class ReferencedContainer extends ContainerWithOptions {
         $this->createCompactValue();
 
         $this->setAllowClear($allowClear);
-
     }
 
     public function getReferencedId(): ReferencedId {

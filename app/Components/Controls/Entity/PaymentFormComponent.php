@@ -8,7 +8,6 @@ use FKSDB\Components\Forms\Controls\Payment\CurrencyField;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Model\Exceptions\BadTypeException;
 use FKSDB\Model\Exceptions\NotImplementedException;
-use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Model\ORM\Models\ModelLogin;
 use FKSDB\Model\ORM\Models\ModelPayment;
 use FKSDB\Model\ORM\Services\Schedule\ServiceSchedulePayment;
@@ -17,6 +16,7 @@ use FKSDB\Model\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Model\Payment\Handler\EmptyDataException;
 use FKSDB\Model\Payment\Transition\PaymentMachine;
 use FKSDB\Model\Transitions\Transition\UnavailableTransitionsException;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
@@ -29,7 +29,6 @@ use Nette\Forms\Form;
  * @property ModelPayment $model
  */
 class PaymentFormComponent extends AbstractEntityFormComponent {
-
     private PersonFactory $personFactory;
     private PersonProvider $personProvider;
     private bool $isOrg;
@@ -105,8 +104,8 @@ class PaymentFormComponent extends AbstractEntityFormComponent {
         try {
             $this->serviceSchedulePayment->store((array)$values['payment_accommodation'], $model);
             //$this->serviceSchedulePayment->prepareAndUpdate($values['payment_accommodation'], $model);
-        } catch (DuplicatePaymentException|EmptyDataException $exception) {
-            $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
+        } catch (DuplicatePaymentException | EmptyDataException $exception) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             $connection->rollBack();
             return;
         }

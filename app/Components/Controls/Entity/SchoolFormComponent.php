@@ -5,11 +5,11 @@ namespace FKSDB\Components\Controls\Entity;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Model\ORM\Models\ModelSchool;
 use FKSDB\Model\ORM\Services\ServiceAddress;
 use FKSDB\Model\ORM\Services\ServiceSchool;
 use FKSDB\Model\Utils\FormUtils;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Forms\Form;
 
@@ -19,10 +19,8 @@ use Nette\Forms\Form;
  * @property ModelSchool $model
  */
 class SchoolFormComponent extends AbstractEntityFormComponent {
-
     public const CONT_ADDRESS = 'address';
     public const CONT_SCHOOL = 'school';
-
     private ServiceAddress $serviceAddress;
     private ServiceSchool $serviceSchool;
     private SchoolFactory $schoolFactory;
@@ -74,7 +72,7 @@ class SchoolFormComponent extends AbstractEntityFormComponent {
         }
         $connection->commit();
 
-        $this->getPresenter()->flashMessage(!isset($this->model) ? _('School has been created') : _('School has been updated'), BasePresenter::FLASH_SUCCESS);
+        $this->getPresenter()->flashMessage(!isset($this->model) ? _('School has been created') : _('School has been updated'), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 

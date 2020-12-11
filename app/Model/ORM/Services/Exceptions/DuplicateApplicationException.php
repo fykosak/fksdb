@@ -2,12 +2,9 @@
 
 namespace FKSDB\Model\ORM\Services\Exceptions;
 
-use FKSDB\Model\Exceptions\ModelException;
 use FKSDB\Model\ORM\Models\ModelPerson;
+use Fykosak\Utils\ORM\Exceptions\ModelException;
 
-/**
- * Class DuplicateApplicationException
- */
 class DuplicateApplicationException extends ModelException {
 
     public function __construct(?ModelPerson $person = null, ?\Throwable $previous = null) {

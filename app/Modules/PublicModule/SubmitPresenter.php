@@ -8,7 +8,6 @@ use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
 use FKSDB\Model\Exceptions\BadTypeException;
 use FKSDB\Model\Exceptions\GoneException;
-use FKSDB\Model\Exceptions\ModelException;
 use FKSDB\Model\ORM\Models\ModelLogin;
 use FKSDB\Model\ORM\Models\ModelPerson;
 use FKSDB\Model\ORM\Models\ModelQuizQuestion;
@@ -18,7 +17,9 @@ use FKSDB\Model\ORM\Services\ServiceQuizQuestion;
 use FKSDB\Model\ORM\Services\ServiceSubmit;
 use FKSDB\Model\ORM\Services\ServiceSubmitQuizQuestion;
 use FKSDB\Model\ORM\Services\ServiceTask;
-use FKSDB\Model\ORM\Tables\TypedTableSelection;
+use Fykosak\Utils\Logging\Message;
+use Fykosak\Utils\ORM\Exceptions\ModelException;
+use Fykosak\Utils\ORM\TypedTableSelection;
 use FKSDB\Model\Submits\FileSystemStorage\UploadedStorage;
 use FKSDB\Model\Submits\ProcessingException;
 use FKSDB\Model\Submits\SubmitHandlerFactory;
@@ -34,7 +35,6 @@ use Tracy\Debugger;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class SubmitPresenter extends BasePresenter {
-
     private ServiceSubmit $submitService;
     private ServiceSubmitQuizQuestion $submitQuizQuestionService;
     private UploadedStorage $uploadedSubmitStorage;
@@ -218,13 +218,12 @@ class SubmitPresenter extends BasePresenter {
             $this->uploadedSubmitStorage->beginTransaction();
 
             foreach ($taskIds as $taskId) {
-
                 $questions = $this->quizQuestionService->getTable()->where('task_id', $taskId);
                 /** @var ModelTask $task */
                 $task = $this->taskService->findByPrimary($taskId);
 
                 if (!isset($validIds[$taskId])) {
-                    $this->flashMessage(sprintf(_('Task %s cannot be submitted anymore.'), $task->label), self::FLASH_ERROR);
+                    $this->flashMessage(sprintf(_('Task %s cannot be submitted anymore.'), $task->label), Message::LVL_ERROR);
                     continue;
                 }
                 /** @var FileUpload[] $taskValues */
@@ -250,7 +249,7 @@ class SubmitPresenter extends BasePresenter {
                     }
                     $this->submitHandlerFactory->handleSave($taskValues['file'], $task, $this->getContestant());
                 }
-                $this->flashMessage(sprintf(_('Task %s submitted.'), $task->label), self::FLASH_SUCCESS);
+                $this->flashMessage(sprintf(_('Task %s submitted.'), $task->label), Message::LVL_SUCCESS);
             }
 
             $this->uploadedSubmitStorage->commit();
@@ -260,7 +259,7 @@ class SubmitPresenter extends BasePresenter {
             $this->uploadedSubmitStorage->rollback();
             $this->submitService->getConnection()->rollBack();
             Debugger::log($exception);
-            $this->flashMessage(_('Task storing error.'), self::FLASH_ERROR);
+            $this->flashMessage(_('Task storing error.'), Message::LVL_ERROR);
         }
     }
 

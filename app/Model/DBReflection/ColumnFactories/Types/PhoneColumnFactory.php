@@ -7,7 +7,7 @@ use FKSDB\Model\PhoneNumber\PhoneNumberFactory;
 use FKSDB\Model\DBReflection\ColumnFactories\ITestedColumnFactory;
 use FKSDB\Model\DBReflection\MetaDataFactory;
 use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
-use FKSDB\Model\Logging\ILogger;
+use Fykosak\Utils\Logging\ILogger;
 use FKSDB\Model\ORM\Models\AbstractModelSingle;
 use FKSDB\Model\DataTesting\TestLog;
 use Nette\Forms\Controls\BaseControl;
@@ -61,7 +61,7 @@ class PhoneColumnFactory extends DefaultColumnFactory implements ITestedColumnFa
             return;
         }
         if (!$this->phoneNumberFactory->isValid($value)) {
-            $logger->log(new TestLog($this->getTitle(), \sprintf('%s number (%s) is not valid', $this->getTitle(), $value), TestLog::LVL_DANGER));
+            $logger->log(new TestLog($this->getTitle(), \sprintf('%s number (%s) is not valid', $this->getTitle(), $value), TestLog::LVL_ERROR));
         } else {
             $logger->log(new TestLog($this->getTitle(), \sprintf('%s is valid', $this->getTitle()), TestLog::LVL_SUCCESS));
         }

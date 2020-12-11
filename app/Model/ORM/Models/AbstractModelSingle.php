@@ -3,13 +3,14 @@
 namespace FKSDB\Model\ORM\Models;
 
 use FKSDB\Model\ORM\IModel;
+use Fykosak\Utils\ORM\AbstractModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\Selection;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-abstract class AbstractModelSingle extends ActiveRow implements IModel {
+abstract class AbstractModelSingle extends AbstractModel implements IModel {
 
     private array $tmpData;
 
@@ -22,7 +23,7 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
      * @var bool
      * @deprecated
      */
-    protected $stored = true;
+    protected bool $stored = true;
 
     /**
      * @return bool
@@ -45,10 +46,7 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
      * @return static
      */
     public static function createFromActiveRow(ActiveRow $row): self {
-        if ($row instanceof static) {
-            return $row;
-        }
-        $model = new static($row->toArray(), $row->getTable());
+        $model = parent::createFromActiveRow($row);
         if ($model->getPrimary(false)) {
             $model->setNew(false);
         }
@@ -56,11 +54,11 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
     }
 
     /**
-     * @param string|int $key
+     * @param string|int $column
      * @param mixed $value
      */
-    public function __set($key, $value) {
-        $this->tmpData[$key] = $value;
+    public function __set($column, $value) {
+        $this->tmpData[$column] = $value;
     }
 
     /**
@@ -75,14 +73,14 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
     }
 
     /**
-     * @param string|int $key
+     * @param string|int $name
      * @return bool
      */
-    public function __isset($key): bool {
-        if (array_key_exists($key, $this->tmpData)) {
+    public function __isset($name): bool {
+        if (array_key_exists($name, $this->tmpData)) {
             return true;
         }
-        return parent::__isset($key);
+        return parent::__isset($name);
     }
 
     public function getTmpData(): array {

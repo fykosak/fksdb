@@ -6,15 +6,15 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Model\Exceptions\BadTypeException;
 use FKSDB\Model\Fyziklani\Submit\HandlerFactory;
 use FKSDB\Model\Fyziklani\Submit\TaskCodePreprocessor;
-use FKSDB\Model\Logging\FlashMessageDump;
-use FKSDB\Model\Logging\MemoryLogger;
-use FKSDB\Modules\Core\BasePresenter;
+use Fykosak\Utils\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTask;
 use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\IPresenter;
@@ -32,7 +32,6 @@ use FKSDB\Model\SQL\SearchableDataSource;
  * @author Lukáš Timko
  */
 class AllSubmitsGrid extends SubmitsGrid {
-
     private ModelEvent $event;
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
     private ServiceFyziklaniTask $serviceFyziklaniTask;
@@ -107,7 +106,7 @@ class AllSubmitsGrid extends SubmitsGrid {
                             $teamId = TaskCodePreprocessor::extractTeamId($fullCode);
                             $table->where('e_fyziklani_team_id.e_fyziklani_team_id =? AND fyziklani_task.label =? ', $teamId, $taskLabel);
                         } else {
-                            $this->flashMessage(_('Wrong task code'), BasePresenter::FLASH_WARNING);
+                            $this->flashMessage(_('Wrong task code'), Message::LVL_WARNING);
                         }
                         break;
                     case 'not_null':
@@ -129,7 +128,7 @@ class AllSubmitsGrid extends SubmitsGrid {
         /** @var ModelFyziklaniSubmit $submit */
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
         if (!$submit) {
-            $this->flashMessage(_('Submit does not exists.'), BasePresenter::FLASH_ERROR);
+            $this->flashMessage(_('Submit does not exists.'), Message::LVL_ERROR);
             $this->redirect('this');
         }
         try {
@@ -139,7 +138,7 @@ class AllSubmitsGrid extends SubmitsGrid {
             FlashMessageDump::dump($logger, $this);
             $this->redirect('this');
         } catch (BadRequestException $exception) {
-            $this->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             $this->redirect('this');
         }
     }

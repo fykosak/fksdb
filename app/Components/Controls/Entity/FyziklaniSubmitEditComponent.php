@@ -6,11 +6,11 @@ use FKSDB\Model\Exceptions\BadTypeException;
 use FKSDB\Model\Fyziklani\NotSetGameParametersException;
 use FKSDB\Model\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Model\Fyziklani\Submit\HandlerFactory;
-use FKSDB\Model\Logging\FlashMessageDump;
-use FKSDB\Model\Logging\MemoryLogger;
-use FKSDB\Modules\Core\BasePresenter;
+use Fykosak\Utils\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\Model\ORM\Models\ModelEvent;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;
@@ -22,7 +22,6 @@ use Nette\Forms\Form;
  * @property ModelFyziklaniSubmit $model
  */
 class FyziklaniSubmitEditComponent extends AbstractEntityFormComponent {
-
     private ModelEvent $event;
     private HandlerFactory $handlerFactory;
 
@@ -70,7 +69,7 @@ class FyziklaniSubmitEditComponent extends AbstractEntityFormComponent {
             FlashMessageDump::dump($logger, $this->getPresenter());
             $this->redirect('this');
         } catch (ClosedSubmittingException $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
+            $this->getPresenter()->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             $this->redirect('this');
         }
     }

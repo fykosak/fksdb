@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
-use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
+use Fykosak\Utils\BaseComponent\BaseComponent;
+use Fykosak\Utils\Loaders\IJavaScriptCollector;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;

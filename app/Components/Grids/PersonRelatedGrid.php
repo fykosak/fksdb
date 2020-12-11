@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Model\ORM\Models\ModelPerson;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\IPresenter;
@@ -37,7 +37,7 @@ class PersonRelatedGrid extends BaseGrid {
         $query = $this->person->related($this->definition['table']);
         if ($this->definition['minimalPermission'] > $this->userPermissions) {
             $query->where('1=0');
-            $this->flashMessage('Access denied', Message::LVL_DANGER);
+            $this->flashMessage('Access denied', Message::LVL_ERROR);
         }
         return new NDataSource($query);
     }

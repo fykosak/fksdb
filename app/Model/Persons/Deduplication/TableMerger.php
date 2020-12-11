@@ -2,8 +2,8 @@
 
 namespace FKSDB\Model\Persons\Deduplication;
 
-use FKSDB\Model\Logging\ILogger;
-use FKSDB\Model\Messages\Message;
+use Fykosak\Utils\Logging\ILogger;
+use Fykosak\Utils\Logging\Message;
 use Nette\Database\Context;
 use Nette\Database\Conventions\AmbiguousReferenceKeyException;
 use Nette\Database\Table\ActiveRow;
@@ -229,16 +229,16 @@ class TableMerger {
             }
         }
         if ($msg) {
-            $this->logger->log(new Message(sprintf(_('%s(%s) new values: %s'), $row->getTable()->getName(), $row->getPrimary(), implode(', ', $msg)), ILogger::INFO));
+            $this->logger->log(new Message(sprintf(_('%s(%s) new values: %s'), $row->getTable()->getName(), $row->getPrimary(), implode(', ', $msg)), Message::LVL_INFO));
         }
     }
 
     private function logDelete(ActiveRow $row): void {
-        $this->logger->log(new Message(sprintf(_('%s(%s) merged and deleted.'), $row->getTable()->getName(), $row->getPrimary()), ILogger::INFO));
+        $this->logger->log(new Message(sprintf(_('%s(%s) merged and deleted.'), $row->getTable()->getName(), $row->getPrimary()), Message::LVL_INFO));
     }
 
     private function logTrunk(ActiveRow $row): void {
-        $this->logger->log(new Message(sprintf(_('%s(%s) extended by merge.'), $row->getTable()->getName(), $row->getPrimary()), ILogger::INFO));
+        $this->logger->log(new Message(sprintf(_('%s(%s) extended by merge.'), $row->getTable()->getName(), $row->getPrimary()), Message::LVL_INFO));
     }
 
     /*     * ******************************

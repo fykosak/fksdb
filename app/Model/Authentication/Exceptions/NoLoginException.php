@@ -12,6 +12,6 @@ use Nette\Security\IAuthenticator;
  */
 class NoLoginException extends AuthenticationException {
     public function __construct(?\Throwable $previous = null) {
-        parent::__construct(_('Nepřipravený účet.'), IAuthenticator::NOT_APPROVED, $previous);
+        parent::__construct(_('Account not ready.'), IAuthenticator::NOT_APPROVED, $previous);
     }
 }

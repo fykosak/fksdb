@@ -6,13 +6,9 @@ use FKSDB\Model\ORM\Models\ModelContest;
 use FKSDB\Model\ORM\Services\ServiceTask;
 use Nette\Utils\DateTime;
 
-/**
- * Class FKSDB\SeriesCalculator
- */
 class SeriesCalculator {
 
     private ServiceTask $serviceTask;
-
     private YearCalculator $yearCalculator;
 
     public function __construct(ServiceTask $serviceTask, YearCalculator $yearCalculator) {

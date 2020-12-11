@@ -2,12 +2,11 @@
 
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
-use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
-use FKSDB\Components\React\AjaxComponent;
+use Fykosak\Utils\Loaders\IJavaScriptCollector;
 use FKSDB\Model\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Model\Fyziklani\Submit\HandlerFactory;
-use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Model\Messages\Message;
+use Fykosak\Utils\FrontEndComponents\AjaxComponent;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Model\Fyziklani\NotSetGameParametersException;
 use FKSDB\Model\Fyziklani\Submit\TaskCodeException;
 use FKSDB\Model\ORM\Models\ModelEvent;
@@ -22,13 +21,9 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class TaskCodeInput extends AjaxComponent {
-
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
-
     private ServiceFyziklaniTask $serviceFyziklaniTask;
-
     private HandlerFactory $handlerFactory;
-
     private ModelEvent $event;
 
     public function __construct(Container $container, ModelEvent $event) {
@@ -77,7 +72,7 @@ class TaskCodeInput extends AjaxComponent {
             $handler = $this->handlerFactory->create($this->event);
             $handler->preProcess($this->getLogger(), $data['code'], +$data['points']);
         } catch (TaskCodeException | ClosedSubmittingException $exception) {
-            $this->getLogger()->log(new Message($exception->getMessage(), BasePresenter::FLASH_ERROR));
+            $this->getLogger()->log(new Message($exception->getMessage(), Message::LVL_ERROR));
         }
         $this->sendAjaxResponse();
     }

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Grids\Fyziklani\ResultsCategoryGrid;
 use FKSDB\Components\Grids\Fyziklani\ResultsTotalGrid;
 use FKSDB\Model\ORM\Models\ModelEvent;

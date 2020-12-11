@@ -2,6 +2,7 @@
 
 namespace FKSDB\Model\UI;
 
+use Nette\SmartObject;
 use Nette\Utils\Html;
 
 /**
@@ -9,9 +10,9 @@ use Nette\Utils\Html;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class Title {
+    use SmartObject;
 
     public string $title;
-
     public string $icon;
 
     public function __construct(string $title, string $icon = '') {

@@ -60,7 +60,7 @@ services:
     #github
     - FKSDB\Model\Github\EventFactory
      #localization
-    - FKSDB\Model\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
+    - Fykosak\Utils\Localization\GettextTranslator(%localization.locales%, %localization.localeDir%)
     #maitenance
     - FKSDB\Model\Maintenance\Updater
     #main

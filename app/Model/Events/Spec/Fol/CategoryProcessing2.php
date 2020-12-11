@@ -6,8 +6,8 @@ use FKSDB\Model\Events\Machine\BaseMachine;
 use FKSDB\Model\Events\Machine\Machine;
 use FKSDB\Model\Events\Model\Holder\Holder;
 use FKSDB\Model\Events\Spec\AbstractCategoryProcessing;
-use FKSDB\Model\Logging\ILogger;
-use FKSDB\Model\Messages\Message;
+use Fykosak\Utils\Logging\ILogger;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
@@ -29,7 +29,7 @@ class CategoryProcessing2 extends AbstractCategoryProcessing {
 
         $original = $holder->getPrimaryHolder()->getModelState() != BaseMachine::STATE_INIT ? $holder->getPrimaryHolder()->getModel()->category : null;
         if ($original != $result) {
-            $logger->log(new Message(sprintf(_('Tým zařazen do kategorie %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), ILogger::INFO));
+            $logger->log(new Message(sprintf(_('Tým zařazen do kategorie %s.'), ModelFyziklaniTeam::mapCategoryToName($result)), Message::LVL_INFO));
         }
     }
 

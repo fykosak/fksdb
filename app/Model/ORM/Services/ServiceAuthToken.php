@@ -2,10 +2,11 @@
 
 namespace FKSDB\Model\ORM\Services;
 
-use FKSDB\Model\Exceptions\ModelException;
 use FKSDB\Model\ORM\DbNames;
 use FKSDB\Model\ORM\Models\ModelAuthToken;
 use FKSDB\Model\ORM\Models\ModelLogin;
+use Fykosak\Utils\ORM\Exceptions\ModelException;
+use Fykosak\Utils\ORM\TypedTableSelection;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
 use Nette\Utils\DateTime;
@@ -84,13 +85,7 @@ class ServiceAuthToken extends AbstractServiceSingle {
         return $token;
     }
 
-    /**
-     *
-     * @param string $tokenData
-     * @param bool $strict
-     * @return ModelAuthToken|null
-     */
-    public function verifyToken($tokenData, $strict = true): ?ModelAuthToken {
+    public function verifyToken(string $tokenData, bool $strict = true): ?ModelAuthToken {
         $tokens = $this->getTable()
             ->where('token', $tokenData);
         if ($strict) {
@@ -115,20 +110,11 @@ class ServiceAuthToken extends AbstractServiceSingle {
         }
     }
 
-    /**
-     * @param int $eventId
-     * @return array
-     */
-    public function findTokensByEventId($eventId): array {
-        $res = $this->getTable()
+    public function findTokensByEventId(int $eventId): TypedTableSelection {
+        return $this->getTable()
             ->where('type', ModelAuthToken::TYPE_EVENT_NOTIFY)
             ->where('since <= NOW()')
             ->where('until IS NULL OR until >= NOW()')
             ->where('data LIKE ?', $eventId . ':%');
-        $tokens = [];
-        foreach ($res as $token) {
-            $tokens[] = ModelAuthToken::createFromActiveRow($token);
-        }
-        return $tokens;
     }
 }

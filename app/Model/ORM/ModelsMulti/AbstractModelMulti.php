@@ -80,16 +80,16 @@ abstract class AbstractModelMulti extends ActiveRow implements IModel {
     }
 
     /**
-     * @param string|int $key
+     * @param string|int $name
      * @return bool|mixed|ActiveRow|Selection|null
      */
-    public function &__get($key) {
+    public function &__get($name) {
         // $value = $this->getMainModel()->{$name} ?? $this->getJoinedModel()->{$name} ?? null;
-        if ($this->getMainModel()->__isset($key)) {
-            return $this->getMainModel()->__get($key);
+        if ($this->getMainModel()->__isset($name)) {
+            return $this->getMainModel()->__get($name);
         }
-        if ($this->getJoinedModel()->__isset($key)) {
-            return $this->getJoinedModel()->__get($key);
+        if ($this->getJoinedModel()->__isset($name)) {
+            return $this->getJoinedModel()->__get($name);
         }
         // this reference isn't that important
         $null = null;
@@ -97,11 +97,11 @@ abstract class AbstractModelMulti extends ActiveRow implements IModel {
     }
 
     /**
-     * @param string|int $key
+     * @param string|int $name
      * @return bool
      */
-    public function __isset($key): bool {
-        return $this->getMainModel()->__isset($key) || $this->getJoinedModel()->__isset($key);
+    public function __isset($name): bool {
+        return $this->getMainModel()->__isset($name) || $this->getJoinedModel()->__isset($name);
     }
 
     /**
@@ -120,11 +120,11 @@ abstract class AbstractModelMulti extends ActiveRow implements IModel {
     }
 
     /**
-     * @param bool $need
+     * @param bool $throw
      * @return mixed
      */
-    public function getPrimary($need = true) {
-        return $this->getJoinedModel()->getPrimary($need);
+    public function getPrimary($throw = true) {
+        return $this->getJoinedModel()->getPrimary($throw);
     }
 
     public function getSignature(bool $need = true): string {

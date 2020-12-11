@@ -2,14 +2,13 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Model\Exceptions\ModelException;
 use FKSDB\Model\Exceptions\NotFoundException;
-use FKSDB\Model\Logging\ILogger;
-use FKSDB\Model\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Model\ORM\Models\ModelContestant;
 use FKSDB\Model\ORM\Models\ModelSubmit;
 use FKSDB\Model\Submits\StorageException;
 use FKSDB\Model\Submits\SubmitHandlerFactory;
+use Fykosak\Utils\ORM\Exceptions\ModelException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -26,9 +25,7 @@ use Tracy\Debugger;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class SubmitsGrid extends BaseGrid {
-
     private ModelContestant $contestant;
-
     private SubmitHandlerFactory $submitHandlerFactory;
 
     public function __construct(Container $container, ModelContestant $contestant) {
@@ -92,7 +89,7 @@ class SubmitsGrid extends BaseGrid {
             ->setText(_('Download corrected'))->setLink(function (ModelSubmit $row): string {
                 return $this->link('downloadCorrected!', $row->submit_id);
             })->setShow(function (ModelSubmit $row): bool {
-                if (!$row->isQuiz()){
+                if (!$row->isQuiz()) {
                     return $row->corrected;
                 } else {
                     return false;
@@ -107,12 +104,12 @@ class SubmitsGrid extends BaseGrid {
         try {
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleRevoke($submit);
-            $this->flashMessage(sprintf(_('Odevzdání úlohy %s zrušeno.'), $submit->getTask()->getFQName()), ILogger::WARNING);
-        } catch (ForbiddenRequestException|NotFoundException$exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
-        } catch (StorageException|ModelException$exception) {
+            $this->flashMessage(sprintf(_('Odevzdání úlohy %s zrušeno.'), $submit->getTask()->getFQName()), Message::LVL_WARNING);
+        } catch (ForbiddenRequestException | NotFoundException$exception) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
+        } catch (StorageException | ModelException $exception) {
             Debugger::log($exception);
-            $this->flashMessage(_('Během mazání úlohy %s došlo k chybě.'), Message::LVL_DANGER);
+            $this->flashMessage(_('Během mazání úlohy %s došlo k chybě.'), Message::LVL_ERROR);
         }
     }
 
@@ -125,8 +122,8 @@ class SubmitsGrid extends BaseGrid {
         try {
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleDownloadUploaded($this->getPresenter(), $submit);
-        } catch (ForbiddenRequestException|NotFoundException|StorageException $exception) {
-            $this->flashMessage($exception->getMessage(), Message::LVL_DANGER);
+        } catch (ForbiddenRequestException | NotFoundException | StorageException $exception) {
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         }
     }
 
@@ -139,8 +136,8 @@ class SubmitsGrid extends BaseGrid {
         try {
             $submit = $this->submitHandlerFactory->getSubmit($id);
             $this->submitHandlerFactory->handleDownloadCorrected($this->getPresenter(), $submit);
-        } catch (ForbiddenRequestException|NotFoundException|StorageException $exception) {
-            $this->flashMessage(new Message($exception->getMessage(), Message::LVL_DANGER));
+        } catch (ForbiddenRequestException | NotFoundException | StorageException $exception) {
+            $this->flashMessage(new Message($exception->getMessage(), Message::LVL_ERROR));
         }
     }
 }

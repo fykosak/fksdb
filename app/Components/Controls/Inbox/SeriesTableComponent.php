@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Inbox;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Model\Submits\SeriesTable;
 use Nette\Application\UI\ITemplate;
 use Nette\DI\Container;

@@ -2,8 +2,7 @@
 
 namespace FKSDB\Model\Tasks;
 
-use FKSDB\Model\Logging\ILogger;
-use FKSDB\Model\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Model\ORM\Services\ServiceTask;
 use Nette\Utils\DateTime;
 use FKSDB\Model\Pipeline\Stage;
@@ -30,7 +29,7 @@ class DeadlineFromXML extends Stage {
         $xml = $this->data->getData();
         $deadline = (string)$xml->deadline[0];
         if (!$deadline) {
-            $this->log(new Message(_('Missing deadline of the series.'), ILogger::WARNING));
+            $this->log(new Message(_('Missing deadline of the series.'), Message::LVL_WARNING));
             return;
         }
 

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
-use FKSDB\Model\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use FKSDB\Model\ORM\Models\ModelLogin;
 use FKSDB\Model\UI\Title;
 use Nette\Application\AbortException;
@@ -52,7 +52,7 @@ class LanguageChooser extends Chooser {
     public function init(): void {
         if (!isset($this->language)) {
             $this->language = $this->selectLang();
-            $this->getTranslator()->setLang($this->language);
+            $this->translator->setLang($this->language);
         }
         /*if ($redirect && $this->urlLang !== $this->language) {
               $this->getPresenter()->forward('this', ['lang' => $this->language]);
@@ -78,7 +78,7 @@ class LanguageChooser extends Chooser {
      */
     private function selectLang(): string {
         $candidate = $this->getUserPreferredLang() ?? $this->urlLang;
-        $supportedLanguages = $this->getTranslator()->getSupportedLanguages();
+        $supportedLanguages = $this->translator->getSupportedLanguages();
         if (!$candidate || !in_array($candidate, $supportedLanguages)) {
             $candidate = $this->request->detectLanguage($supportedLanguages);
         }
@@ -120,7 +120,7 @@ class LanguageChooser extends Chooser {
 
     protected function getItems(): array {
         if (!count($this->supportedLanguages)) {
-            $this->supportedLanguages = $this->getTranslator()->getSupportedLanguages();
+            $this->supportedLanguages = $this->translator->getSupportedLanguages();
         }
         return $this->supportedLanguages;
     }

@@ -11,13 +11,13 @@ use FKSDB\Model\DBReflection\OmittedControlException;
 use FKSDB\Model\Events\EventDispatchFactory;
 use FKSDB\Model\Events\Model\Holder\Holder;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Logging\ILogger;
 use FKSDB\Model\ORM\Models\ModelContest;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use FKSDB\Model\ORM\Services\ServiceAuthToken;
 use FKSDB\Model\ORM\Services\ServiceEvent;
 use FKSDB\Model\Utils\FormUtils;
 use FKSDB\Model\Utils\Utils;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\BaseControl;
@@ -82,7 +82,7 @@ class EventFormComponent extends AbstractEntityFormComponent {
         $data['year'] = $this->year;
         $model = $this->serviceEvent->store($this->model ?? null, $data);
         $this->updateTokens($model);
-        $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), ILogger::SUCCESS);
+        $this->flashMessage(sprintf(_('Event "%s" has been saved.'), $model->name), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 

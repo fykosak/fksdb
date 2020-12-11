@@ -15,7 +15,7 @@ use FKSDB\Model\Authentication\TokenAuthenticator;
 use FKSDB\Model\Authentication\Exceptions\UnknownLoginException;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use FKSDB\Model\Mail\SendFailedException;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Model\ORM\Models\ModelAuthToken;
@@ -23,6 +23,7 @@ use FKSDB\Model\ORM\Models\ModelLogin;
 use FKSDB\Model\ORM\Services\ServiceAuthToken;
 use FKSDB\Model\UI\PageTitle;
 use FKSDB\Model\Utils\Utils;
+use Fykosak\Utils\Logging\Message;
 use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Provider\Google;
 use Nette\Application\AbortException;
@@ -38,7 +39,6 @@ use Nette\Utils\DateTime;
  * Class AuthenticationPresenter
  */
 final class AuthenticationPresenter extends BasePresenter {
-
     public const PARAM_GSID = 'gsid';
     /** @const Indicates that page is accessed via dispatch from the login page. */
     public const PARAM_DISPATCH = 'dispatch';
@@ -52,13 +52,10 @@ final class AuthenticationPresenter extends BasePresenter {
     public const FLAG_SSO_PROBE = 'ssop';
     public const REASON_TIMEOUT = '1';
     public const REASON_AUTH = '2';
-
     /** @persistent */
     public $backlink = '';
-
     /** @persistent */
     public $flag;
-
     private ServiceAuthToken $serviceAuthToken;
     private IGlobalSession $globalSession;
     private PasswordAuthenticator $passwordAuthenticator;
@@ -126,7 +123,7 @@ final class AuthenticationPresenter extends BasePresenter {
             $this->globalSession->start($this->getParameter(self::PARAM_GSID));
             $this->getUser()->logout(true);
         }
-        $this->flashMessage(_('You were logged out.'), self::FLASH_SUCCESS);
+        $this->flashMessage(_('You were logged out.'), Message::LVL_SUCCESS);
         $this->loginBackLinkRedirect();
         $this->redirect('login');
     }
@@ -149,10 +146,10 @@ final class AuthenticationPresenter extends BasePresenter {
             if ($this->getParameter(self::PARAM_REASON)) {
                 switch ($this->getParameter(self::PARAM_REASON)) {
                     case self::REASON_TIMEOUT:
-                        $this->flashMessage(_('You\'ve been logged out due to inactivity.'), self::FLASH_INFO);
+                        $this->flashMessage(_('You\'ve been logged out due to inactivity.'), Message::LVL_INFO);
                         break;
                     case self::REASON_AUTH:
-                        $this->flashMessage(_('You must be logged in to continue.'), self::FLASH_ERROR);
+                        $this->flashMessage(_('You must be logged in to continue.'), Message::LVL_ERROR);
                         break;
                 }
             }
@@ -255,7 +252,7 @@ final class AuthenticationPresenter extends BasePresenter {
             $this->loginBackLinkRedirect($login);
             $this->initialRedirect();
         } catch (AuthenticationException $exception) {
-            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         }
     }
 
@@ -274,15 +271,15 @@ final class AuthenticationPresenter extends BasePresenter {
             $login = $this->passwordAuthenticator->findLogin($values['id']);
             $this->accountManager->sendRecovery($login, $login->getPerson()->getPreferredLang() ?: $this->getLang());
             $email = Utils::cryptEmail($login->getPerson()->getInfo()->email);
-            $this->flashMessage(sprintf(_('Further instructions for the recovery have been sent to %s.'), $email), self::FLASH_SUCCESS);
+            $this->flashMessage(sprintf(_('Further instructions for the recovery have been sent to %s.'), $email), Message::LVL_SUCCESS);
             $connection->commit();
             $this->redirect('login');
         } catch (AuthenticationException | RecoveryException $exception) {
-            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
             $connection->rollBack();
         } catch (SendFailedException $exception) {
             $connection->rollBack();
-            $this->flashMessage($exception->getMessage(), self::FLASH_ERROR);
+            $this->flashMessage($exception->getMessage(), Message::LVL_ERROR);
         }
     }
 
@@ -322,7 +319,7 @@ final class AuthenticationPresenter extends BasePresenter {
             if (in_array($url->getHost(), $this->getContext()->getParameters()['authentication']['backlinkHosts'])) {
                 $this->redirectUrl((string)$url, 303);
             } else {
-                $this->flashMessage(sprintf(_('Backlink %s not allowed'), (string)$url), self::FLASH_ERROR);
+                $this->flashMessage(sprintf(_('Backlink %s not allowed'), (string)$url), Message::LVL_ERROR);
             }
         }
     }
@@ -332,7 +329,7 @@ final class AuthenticationPresenter extends BasePresenter {
      */
     public function actionGoogle(): void {
         if ($this->getGoogleSection()->state !== $this->getParameter('state')) {
-            $this->flashMessage(_('Invalid CSRF token'), self::FLASH_ERROR);
+            $this->flashMessage(_('Invalid CSRF token'), Message::LVL_ERROR);
             $this->redirect('login');
         }
         try {
@@ -344,10 +341,10 @@ final class AuthenticationPresenter extends BasePresenter {
             $this->getUser()->login($login);
             $this->initialRedirect();
         } catch (UnknownLoginException $exception) {
-            $this->flashMessage(_('No account is associated with this profile'), self::FLASH_ERROR);
+            $this->flashMessage(_('No account is associated with this profile'), Message::LVL_ERROR);
             $this->redirect('login');
         } catch (IdentityProviderException | AuthenticationException $exception) {
-            $this->flashMessage(_('Error'), self::FLASH_ERROR);
+            $this->flashMessage(_('Error'), Message::LVL_ERROR);
             $this->redirect('login');
         }
     }

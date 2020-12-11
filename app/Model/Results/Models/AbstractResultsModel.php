@@ -4,7 +4,7 @@ namespace FKSDB\Model\Results\Models;
 
 use FKSDB\Model\ORM\Models\ModelContest;
 use FKSDB\Model\ORM\Services\ServiceTask;
-use FKSDB\Model\ORM\Tables\TypedTableSelection;
+use Fykosak\Utils\ORM\TypedTableSelection;
 use FKSDB\Model\Results\EvaluationStrategies\EvaluationStrategy;
 use FKSDB\Model\Results\ModelCategory;
 use Nette\Database\Connection;

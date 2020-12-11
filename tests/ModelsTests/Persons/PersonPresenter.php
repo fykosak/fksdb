@@ -3,12 +3,12 @@
 namespace FKSDB\Tests\ModelsTests\Persons;
 
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Model\ORM\IModel;
 use FKSDB\Model\Persons\IExtendedPersonPresenter;
+use Fykosak\Utils\ORM\AbstractModel;
 
 class PersonPresenter extends BasePresenter implements IExtendedPersonPresenter {
 
-    public function getModel(): ?IModel {
+    public function getModel(): ?AbstractModel {
         return null;
     }
 

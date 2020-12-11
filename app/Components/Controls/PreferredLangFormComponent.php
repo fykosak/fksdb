@@ -5,10 +5,10 @@ namespace FKSDB\Components\Controls;
 use FKSDB\Components\Controls\Choosers\LanguageChooser;
 use FKSDB\Components\Controls\FormComponent\FormComponent;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Exceptions\ModelException;
-use FKSDB\Model\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Model\ORM\Models\ModelPerson;
 use FKSDB\Model\ORM\Services\ServicePersonInfo;
+use Fykosak\Utils\ORM\Exceptions\ModelException;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 use Nette\Forms\Controls\SubmitButton;
@@ -18,9 +18,7 @@ use Nette\Forms\Controls\SubmitButton;
  * @package FKSDB\Components\Forms\Controls
  */
 class PreferredLangFormComponent extends FormComponent {
-
     protected ModelPerson $person;
-
     protected ServicePersonInfo $servicePersonInfo;
 
     public function __construct(Container $container, ModelPerson $person) {
@@ -45,13 +43,13 @@ class PreferredLangFormComponent extends FormComponent {
             $this->flashMessage(_('Preferred language has been set'), Message::LVL_SUCCESS);
             $this->getPresenter()->redirect('this');
         } catch (ModelException $exception) {
-            $this->flashMessage(_('Error'), Message::LVL_DANGER);
+            $this->flashMessage(_('Error'), Message::LVL_ERROR);
         }
     }
 
     protected function configureForm(Form $form): void {
         $items = [];
-        foreach ($this->getTranslator()->getSupportedLanguages() as $lang) {
+        foreach ($this->translator->getSupportedLanguages() as $lang) {
             $items[$lang] = LanguageChooser::$languageNames[$lang];
         }
         $form->addRadioList('preferred_lang')->setItems($items);

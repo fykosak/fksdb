@@ -5,10 +5,10 @@ namespace FKSDB\Model\ORM\Services;
 use DateTime;
 use FKSDB\Model\ORM\DbNames;
 use FKSDB\Model\ORM\DeprecatedLazyDBTrait;
-use FKSDB\Model\ORM\IModel;
 use FKSDB\Model\ORM\Models\AbstractModelSingle;
 use FKSDB\Model\ORM\Models\ModelPerson;
 use FKSDB\Model\ORM\Models\ModelPersonInfo;
+use Fykosak\Utils\ORM\AbstractModel;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
 
@@ -32,11 +32,11 @@ class ServicePersonInfo extends AbstractServiceSingle {
     }
 
     /**
-     * @param IModel|AbstractModelSingle|ModelPersonInfo $model
+     * @param AbstractModel|ModelPersonInfo $model
      * @param array $data
      * @return bool
      */
-    public function updateModel2(IModel $model, array $data): bool {
+    public function updateModel2(AbstractModel $model, array $data): bool {
         if (isset($data['agreed'])) {
             if ($data['agreed'] == '1') {
                 $data['agreed'] = new DateTime();

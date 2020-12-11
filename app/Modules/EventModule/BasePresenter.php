@@ -4,7 +4,7 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Model\Events\Exceptions\EventNotFoundException;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Model\Events\EventDispatchFactory;

@@ -3,7 +3,7 @@
 namespace FKSDB\Model\DataTesting\Tests\ModelPerson;
 
 use FKSDB\Model\DataTesting\TestLog;
-use FKSDB\Model\Logging\ILogger;
+use Fykosak\Utils\Logging\ILogger;
 use FKSDB\Model\ORM\Models\ModelContest;
 use FKSDB\Model\ORM\Models\ModelContestant;
 use FKSDB\Model\ORM\Models\ModelEventOrg;
@@ -74,7 +74,7 @@ class EventCoveringTest extends PersonTest {
     }
 
     private function createLog(int $year, int $contestId, string $typeP, string $typeO): TestLog {
-        return new TestLog($this->title, \sprintf(_('Organization and participation at same year %d and contestId %d %s<->%s. '), $year, $contestId, $typeP, $typeO), TestLog::LVL_DANGER);
+        return new TestLog($this->title, \sprintf(_('Organization and participation at same year %d and contestId %d %s<->%s. '), $year, $contestId, $typeP, $typeO), TestLog::LVL_ERROR);
     }
 
     private function getEventOrgYears(ModelPerson $person): array {

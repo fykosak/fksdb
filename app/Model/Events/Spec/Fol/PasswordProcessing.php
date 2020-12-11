@@ -6,8 +6,8 @@ use FKSDB\Model\Events\Machine\BaseMachine;
 use FKSDB\Model\Events\Machine\Machine;
 use FKSDB\Model\Events\Model\Holder\Holder;
 use FKSDB\Model\Events\Processing\AbstractProcessing;
-use FKSDB\Model\Logging\ILogger;
-use FKSDB\Model\Messages\Message;
+use Fykosak\Utils\Logging\ILogger;
+use Fykosak\Utils\Logging\Message;
 use Nette\Forms\Form;
 use Nette\Utils\ArrayHash;
 
@@ -31,7 +31,7 @@ class PasswordProcessing extends AbstractProcessing {
         }
 
         if ($original !== null && $original != $result) {
-            $logger->log(new Message(_('Set new game password.'), ILogger::INFO));
+            $logger->log(new Message(_('Set new game password.'), Message::LVL_INFO));
         }
     }
 

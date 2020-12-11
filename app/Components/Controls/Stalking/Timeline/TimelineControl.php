@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Controls\Stalking\Timeline;
 
-use FKSDB\Components\React\ReactComponent;
 use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\Model\ORM\Models\ModelContestant;
 use FKSDB\Model\ORM\Models\ModelEvent;
@@ -11,13 +10,14 @@ use FKSDB\Model\ORM\Models\ModelEventParticipant;
 use FKSDB\Model\ORM\Models\ModelOrg;
 use FKSDB\Model\ORM\Models\ModelPerson;
 use FKSDB\Model\YearCalculator;
+use Fykosak\Utils\FrontEndComponents\FrontEndComponent;
 use Nette\DI\Container;
 
 /**
  * Class TimelineControl
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class TimelineControl extends ReactComponent {
+class TimelineControl extends FrontEndComponent {
 
     private ModelPerson $person;
 
@@ -109,7 +109,6 @@ class TimelineControl extends ReactComponent {
             $team = ModelFyziklaniTeam::createFromActiveRow($row);
             $eventTeachers[] = ['event' => $this->eventToArray($team->getEvent()), 'model' => null];
             $events[] = $team->getEvent();
-
         }
         return [$events, [
             'eventOrgs' => $eventOrganisers,

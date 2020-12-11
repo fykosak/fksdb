@@ -2,13 +2,13 @@
 
 namespace FKSDB\Components\Controls\AjaxSubmit;
 
-use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Model\Messages\Message;
+use Fykosak\Utils\BaseComponent\BaseComponent;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Model\ORM\Models\ModelContest;
 use FKSDB\Model\ORM\Models\ModelContestant;
 use FKSDB\Model\ORM\Models\ModelTask;
 use FKSDB\Model\ORM\Services\ServiceTask;
-use FKSDB\Model\ORM\Tables\TypedTableSelection;
+use Fykosak\Utils\ORM\TypedTableSelection;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 
@@ -40,7 +40,7 @@ class SubmitContainer extends BaseComponent {
     protected function createComponent(string $name): ?IComponent {
         $component = parent::createComponent($name);
         if (!$component && preg_match('/task_[0-9]+/', $name)) {
-            $this->flashMessage(_('Task is not available'), Message::LVL_DANGER);
+            $this->flashMessage(_('Task is not available'), Message::LVL_ERROR);
             $this->redirect('this');
         }
         return $component;

@@ -2,12 +2,12 @@
 
 namespace FKSDB\Components\Controls\Inbox;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Model\ORM\Models\ModelTask;
 use FKSDB\Model\ORM\Models\ModelTaskContribution;
 use FKSDB\Model\ORM\Services\ServicePerson;

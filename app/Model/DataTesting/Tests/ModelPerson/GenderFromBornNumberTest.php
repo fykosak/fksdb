@@ -3,7 +3,7 @@
 namespace FKSDB\Model\DataTesting\Tests\ModelPerson;
 
 use FKSDB\Components\Forms\Rules\BornNumber;
-use FKSDB\Model\Logging\ILogger;
+use Fykosak\Utils\Logging\ILogger;
 use FKSDB\Model\ORM\Models\ModelPerson;
 use FKSDB\Model\DataTesting\TestLog;
 
@@ -35,7 +35,7 @@ class GenderFromBornNumberTest extends PersonTest {
         }
 
         if (BornNumber::getGender($info->born_id) != $person->gender) {
-            $logger->log(new TestLog($this->title, 'Gender not match born number', TestLog::LVL_DANGER));
+            $logger->log(new TestLog($this->title, 'Gender not match born number', TestLog::LVL_ERROR));
         } else {
             $logger->log(new TestLog($this->title, 'Gender match born number', TestLog::LVL_SUCCESS));
         }

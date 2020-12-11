@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Model\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
 use FKSDB\Model\News;
 use FKSDB\Model\UI\PageTitle;

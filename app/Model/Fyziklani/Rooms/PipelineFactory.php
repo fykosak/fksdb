@@ -2,7 +2,7 @@
 
 namespace FKSDB\Model\Fyziklani\Rooms;
 
-use FKSDB\Model\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use FKSDB\Model\Pipeline\Pipeline;

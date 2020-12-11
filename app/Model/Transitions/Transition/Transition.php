@@ -2,19 +2,19 @@
 
 namespace FKSDB\Model\Transitions\Transition;
 
-use FKSDB\Model\Logging\ILogger;
 use FKSDB\Model\Transitions\IStateModel;
 use FKSDB\Model\Transitions\Machine\Machine;
+use Fykosak\Utils\Logging\Message;
 
 /**
  * Class Transition
  * @author Michal Červeňák <miso@fykos.cz>
  */
 final class Transition {
-    public const TYPE_SUCCESS = ILogger::SUCCESS;
-    public const TYPE_WARNING = ILogger::WARNING;
-    public const TYPE_DANGER = ILogger::ERROR;
-    public const TYPE_PRIMARY = ILogger::PRIMARY;
+    public const TYPE_SUCCESS = Message::LVL_SUCCESS;
+    public const TYPE_WARNING = Message::LVL_WARNING;
+    public const TYPE_DANGER = Message::LVL_ERROR;
+    public const TYPE_PRIMARY = Message::LVL_PRIMARY;
 
     /** @var callable */
     private $condition;

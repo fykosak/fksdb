@@ -27,7 +27,7 @@ class Authentication {
      * @param string $loginURL
      * @param string $logoutURL
      */
-    public function __construct(IGlobalSession $globalSession, string $loginURL,string $logoutURL) {
+    public function __construct(IGlobalSession $globalSession, string $loginURL, string $logoutURL) {
         $this->globalSession = $globalSession;
         $this->loginURL = $loginURL;
         $this->logoutURL = $logoutURL;

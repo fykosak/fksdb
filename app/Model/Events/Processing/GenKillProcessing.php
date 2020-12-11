@@ -7,7 +7,7 @@ use FKSDB\Model\Events\Machine\Machine;
 use FKSDB\Model\Events\Model\Holder\BaseHolder;
 use FKSDB\Model\Events\Model\Holder\Holder;
 use FKSDB\Model\Events\Exceptions\SubmitProcessingException;
-use FKSDB\Model\Logging\ILogger;
+use Fykosak\Utils\Logging\ILogger;
 use Nette\Forms\Form;
 use Nette\SmartObject;
 use Nette\Utils\ArrayHash;

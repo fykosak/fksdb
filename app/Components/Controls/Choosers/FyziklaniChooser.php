@@ -5,7 +5,7 @@ namespace FKSDB\Components\Controls\Choosers;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use FKSDB\Model\ORM\Models\ModelEventType;
 use FKSDB\Model\ORM\Services\ServiceEvent;
-use FKSDB\Model\ORM\Tables\TypedTableSelection;
+use Fykosak\Utils\ORM\TypedTableSelection;
 use FKSDB\Model\UI\Title;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;

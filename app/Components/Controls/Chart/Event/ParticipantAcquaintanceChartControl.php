@@ -3,16 +3,16 @@
 namespace FKSDB\Components\Controls\Chart\Event;
 
 use FKSDB\Components\Controls\Chart\IChart;
-use FKSDB\Components\React\ReactComponent;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use FKSDB\Model\ORM\Models\ModelEventParticipant;
+use Fykosak\Utils\FrontEndComponents\FrontEndComponent;
 use Nette\DI\Container;
 
 /**
  * Class ParticipantAcquaintanceChartControl
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class ParticipantAcquaintanceChartControl extends ReactComponent implements IChart {
+class ParticipantAcquaintanceChartControl extends FrontEndComponent implements IChart {
 
     private ModelEvent $event;
 

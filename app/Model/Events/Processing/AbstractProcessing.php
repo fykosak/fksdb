@@ -5,7 +5,7 @@ namespace FKSDB\Model\Events\Processing;
 use FKSDB\Model\Events\Machine\BaseMachine;
 use FKSDB\Model\Events\Machine\Machine;
 use FKSDB\Model\Events\Model\Holder\Holder;
-use FKSDB\Model\Logging\ILogger;
+use Fykosak\Utils\Logging\ILogger;
 use Nette\Application\UI\Control;
 use Nette\ComponentModel\Component;
 use Nette\Forms\Controls\BaseControl;

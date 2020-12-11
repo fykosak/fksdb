@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Controls\Inbox;
 
 use FKSDB\Components\Forms\OptimisticForm;
-use FKSDB\Model\Logging\ILogger;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
@@ -27,7 +27,7 @@ abstract class SeriesTableFormControl extends SeriesTableComponent {
         $form->addSubmit('submit', _('Save'));
         $form->onError[] = function (Form $form) {
             foreach ($form->getErrors() as $error) {
-                $this->flashMessage($error, ILogger::ERROR);
+                $this->flashMessage($error, Message::LVL_ERROR);
             }
         };
         $form->onSuccess[] = function (Form $form) {

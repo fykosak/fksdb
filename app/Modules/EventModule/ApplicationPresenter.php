@@ -10,7 +10,7 @@ use FKSDB\Components\Controls\Events\ImportComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Application\SingleApplicationsGrid;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Model\ORM\Models\ModelEventParticipant;
 use FKSDB\Model\ORM\Services\ServiceEventParticipant;
 use FKSDB\Model\UI\PageTitle;

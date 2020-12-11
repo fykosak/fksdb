@@ -7,9 +7,7 @@ use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactor
 use FKSDB\Model\DBReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\Model\DBReflection\OmittedControlException;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Exceptions\ModelException;
-use FKSDB\Model\Messages\Message;
-use FKSDB\Modules\OrgModule\BasePresenter;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Modules\OrgModule\StoredQueryPresenter;
 use FKSDB\Model\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Model\ORM\Models\StoredQuery\ModelStoredQueryParameter;
@@ -19,6 +17,7 @@ use FKSDB\Model\ORM\Services\StoredQuery\ServiceStoredQueryTag;
 use FKSDB\Model\StoredQuery\StoredQueryFactory;
 use FKSDB\Model\StoredQuery\StoredQueryParameter;
 use FKSDB\Model\Utils\FormUtils;
+use Fykosak\Utils\ORM\Exceptions\ModelException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\SubmitButton;
@@ -34,7 +33,6 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
     private const CONT_SQL = 'sql';
     private const CONT_PARAMS = 'params';
     private const CONT_MAIN = 'main';
-
     private StoredQueryFormFactory $storedQueryFormFactory;
     private ServiceStoredQuery $serviceStoredQuery;
     private ServiceStoredQueryTag $serviceStoredQueryTag;
@@ -152,7 +150,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
                 $values[self::CONT_PARAMS][] = $paramData;
             }
             if ($this->model->php_post_proc) {
-                $this->flashMessage(_('Query result is still processed by PHP. Stick to the correct names of columns and parameters.'), BasePresenter::FLASH_WARNING);
+                $this->flashMessage(_('Query result is still processed by PHP. Stick to the correct names of columns and parameters.'), Message::LVL_WARNING);
             }
             $this->getForm()->setDefaults($values);
         }

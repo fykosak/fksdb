@@ -10,7 +10,7 @@ use FKSDB\Model\Events\Machine\Machine;
 use FKSDB\Model\Events\Model\Holder\Holder;
 use FKSDB\Model\Events\Processing\IProcessing;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Logging\ILogger;
+use Fykosak\Utils\Logging\ILogger;
 use FKSDB\Model\ORM\Services\ServicePersonInfo;
 use FKSDB\Model\Utils\FormUtils;
 use Nette\Forms\Form;

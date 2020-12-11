@@ -8,9 +8,9 @@ use FKSDB\Model\DBReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\Model\DBReflection\FieldLevelPermission;
 use FKSDB\Model\DBReflection\OmittedControlException;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Logging\FlashMessageDump;
-use FKSDB\Model\Logging\MemoryLogger;
-use FKSDB\Model\Messages\Message;
+use Fykosak\Utils\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Model\ORM\Models\ModelPerson;
 use FKSDB\Model\ORM\Models\ModelPostContact;
 use FKSDB\Model\ORM\Services\ServiceAddress;
@@ -99,7 +99,6 @@ class PersonFormComponent extends AbstractEntityFormComponent {
                     break;
                 default:
                     throw new InvalidArgumentException();
-
             }
             $form->addComponent($control, $table);
         }

@@ -12,6 +12,6 @@ use Nette\Security\IAuthenticator;
  */
 class InactiveLoginException extends AuthenticationException {
     public function __construct(?\Throwable $previous = null) {
-        parent::__construct(_('Neaktivní účet.'), IAuthenticator::NOT_APPROVED, $previous);
+        parent::__construct(_('Inactive account.'), IAuthenticator::NOT_APPROVED, $previous);
     }
 }

@@ -6,11 +6,11 @@ use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Model\DBReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\Model\DBReflection\OmittedControlException;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Logging\ILogger;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use FKSDB\Model\ORM\Models\Schedule\ModelScheduleGroup;
 use FKSDB\Model\ORM\Services\Schedule\ServiceScheduleGroup;
 use FKSDB\Model\Utils\FormUtils;
+use Fykosak\Utils\Logging\Message;
 use Nette\DI\Container;
 use Nette\Forms\Form;
 
@@ -42,7 +42,7 @@ class ScheduleGroupFormComponent extends AbstractEntityFormComponent {
         $data = FormUtils::emptyStrToNull($values[self::CONTAINER], true);
         $data['event_id'] = $this->event->event_id;
         $model = $this->serviceScheduleGroup->store($this->model ?? null, $data);
-        $this->flashMessage(sprintf(_('Group "%s" has been saved.'), $model->getLabel()), ILogger::SUCCESS);
+        $this->flashMessage(sprintf(_('Group "%s" has been saved.'), $model->getLabel()), Message::LVL_SUCCESS);
         $this->getPresenter()->redirect('list');
     }
 

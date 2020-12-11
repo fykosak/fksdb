@@ -8,8 +8,6 @@ use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
 use FKSDB\Model\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
-use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
 use FKSDB\Model\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Model\ORM\Services\StoredQuery\ServiceStoredQuery;
 use FKSDB\Model\UI\PageTitle;
@@ -21,8 +19,7 @@ use Nette\Security\IResource;
  * @author Michal Červeňák <miso@fykos.cz>
  * @method ModelStoredQuery getEntity()
  */
-class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
-    use SeriesPresenterTrait;
+class StoredQueryPresenter extends BasePresenter{
     use EntityPresenterTrait;
 
     private ServiceStoredQuery $serviceStoredQuery;

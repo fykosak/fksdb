@@ -2,7 +2,7 @@
 
 namespace FKSDB\Model\Persons;
 
-use FKSDB\Model\ORM\IModel;
+use Fykosak\Utils\ORM\AbstractModel;
 
 /**
  *
@@ -10,7 +10,7 @@ use FKSDB\Model\ORM\IModel;
  */
 interface IExtendedPersonPresenter {
 
-    public function getModel(): ?IModel;
+    public function getModel(): ?AbstractModel;
 
     /**
      * @note First '%s' is replaced with referenced person's name.

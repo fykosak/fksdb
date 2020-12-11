@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\StoredQuery;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Model\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Model\ORM\Models\StoredQuery\ModelStoredQueryTag;
 use FKSDB\Model\ORM\Services\StoredQuery\ServiceStoredQueryTagType;

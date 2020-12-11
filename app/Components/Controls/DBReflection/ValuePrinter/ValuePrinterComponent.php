@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\DBReflection\ValuePrinter;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Model\DBReflection\DBReflectionFactory;
 use FKSDB\Model\DBReflection\FieldLevelPermission;
 use FKSDB\Model\Exceptions\BadTypeException;

@@ -3,7 +3,7 @@
 namespace FKSDB\Model\Events\Model;
 
 use FKSDB\Model\Events\EventDispatchFactory;
-use FKSDB\Model\Logging\ILogger;
+use Fykosak\Utils\Logging\ILogger;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use Nette\Database\Connection;
 use Nette\DI\Container;

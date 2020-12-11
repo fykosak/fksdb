@@ -11,6 +11,7 @@ use FKSDB\Model\Exceptions\NotImplementedException;
 use FKSDB\Model\ORM\Models\AbstractModelSingle;
 use FKSDB\Model\ORM\Services\AbstractServiceSingle;
 use FKSDB\Model\UI\PageTitle;
+use Fykosak\Utils\ORM\Exceptions\ModelException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\IResource;
@@ -149,7 +150,7 @@ trait EntityPresenterTrait {
     public function traitHandleDelete(): void {
         $success = $this->getEntity()->delete();
         if (!$success) {
-            throw new Exceptions\ModelException(_('Error during deleting'));
+            throw new ModelException(_('Error during deleting'));
         }
     }
 

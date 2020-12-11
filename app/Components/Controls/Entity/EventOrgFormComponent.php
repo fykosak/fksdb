@@ -4,7 +4,7 @@ namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use FKSDB\Model\ORM\Models\ModelEventOrg;
 use FKSDB\Model\ORM\Services\ServiceEventOrg;

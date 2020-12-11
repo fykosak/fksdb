@@ -8,7 +8,7 @@ use FKSDB\Model\Events\Model\ExpressionEvaluator;
 use FKSDB\Model\Events\Model\Holder\BaseHolder;
 use FKSDB\Model\Events\Model\Holder\Holder;
 use FKSDB\Model\Events\Exceptions\TransitionConditionFailedException;
-use FKSDB\Model\Logging\ILogger;
+use Fykosak\Utils\Logging\Message;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 
@@ -21,9 +21,9 @@ use Nette\SmartObject;
 class Transition {
     use SmartObject;
 
-    public const TYPE_SUCCESS = ILogger::SUCCESS;
-    public const TYPE_WARNING = ILogger::WARNING;
-    public const TYPE_DANGEROUS = ILogger::ERROR;
+    public const TYPE_SUCCESS = Message::LVL_SUCCESS;
+    public const TYPE_WARNING = Message::LVL_WARNING;
+    public const TYPE_DANGEROUS = Message::LVL_ERROR;
     public const TYPE_DEFAULT = 'secondary';
 
     private BaseMachine $baseMachine;

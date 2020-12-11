@@ -2,12 +2,12 @@
 
 namespace FKSDB\Model\StoredQuery;
 
-use FKSDB\Modules\Core\BasePresenter;
 use DOMDocument;
 use DOMNode;
 use FKSDB\Model\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Model\ORM\Models\StoredQuery\ModelStoredQueryParameter;
 use FKSDB\Model\ORM\Services\StoredQuery\ServiceStoredQuery;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
 use Nette\Http\Response;
@@ -22,15 +22,12 @@ use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class StoredQueryFactory implements IXMLNodeSerializer {
-
     public const PARAM_CONTEST_ID = 'contest_id';
     public const PARAM_CONTEST = 'contest';
     public const PARAM_YEAR = 'year';
     public const PARAM_SERIES = 'series';
     public const PARAM_AC_YEAR = 'ac_year';
-
     private Connection $connection;
-
     private ServiceStoredQuery $serviceStoredQuery;
 
     public function __construct(Connection $connection, ServiceStoredQuery $serviceStoredQuery) {
@@ -85,7 +82,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
             ];
         } catch (BadRequestException $exception) {
             if ($exception->getCode() == Response::S500_INTERNAL_SERVER_ERROR) {
-                $presenter->flashMessage(_('Series context for queries is not available'), BasePresenter::FLASH_WARNING);
+                $presenter->flashMessage(_('Series context for queries is not available'), Message::LVL_WARNING);
                 return [];
             } else {
                 throw $exception;
@@ -97,16 +94,16 @@ class StoredQueryFactory implements IXMLNodeSerializer {
      * @param StoredQuery $dataSource
      * @param DOMNode $node
      * @param DOMDocument $doc
-     * @param int $formatVersion
+     * @param int $formatVersionVersionVersion
      * @return void
      * @throws BadRequestException
      */
-    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $formatVersion): void {
+    public function fillNode($dataSource, DOMNode $node, DOMDocument $doc, int $formatVersionVersionVersion): void {
         if (!$dataSource instanceof StoredQuery) {
             throw new InvalidArgumentException('Expected StoredQuery, got ' . get_class($dataSource) . '.');
         }
-        if ($formatVersion !== self::EXPORT_FORMAT_1 && $formatVersion !== self::EXPORT_FORMAT_2) {
-            throw new InvalidArgumentException(sprintf('Export format %s not supported.', $formatVersion));
+        if ($formatVersionVersionVersion !== self::EXPORT_FORMAT_1 && $formatVersionVersionVersion !== self::EXPORT_FORMAT_2) {
+            throw new InvalidArgumentException(sprintf('Export format %s not supported.', $formatVersionVersionVersion));
         }
         // parameters
         $parametersNode = $doc->createElement('parameters');
@@ -136,9 +133,9 @@ class StoredQueryFactory implements IXMLNodeSerializer {
                 if (is_numeric($colName)) {
                     continue;
                 }
-                if ($formatVersion == self::EXPORT_FORMAT_1) {
+                if ($formatVersionVersionVersion == self::EXPORT_FORMAT_1) {
                     $colNode = $doc->createElement('col');
-                } elseif ($formatVersion == self::EXPORT_FORMAT_2) {
+                } elseif ($formatVersionVersionVersion == self::EXPORT_FORMAT_2) {
                     $colNode = $doc->createElement(Utils::xmlName($colName));
                 } else {
                     throw new BadRequestException(_('Unsupported format'));

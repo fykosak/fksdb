@@ -5,8 +5,8 @@ namespace FKSDB\Components\Controls\Inbox\Corrected;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Inbox\SeriesTableComponent;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Logging\ILogger;
 use FKSDB\Model\Submits\FileSystemStorage\CorrectedStorage;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 
@@ -55,9 +55,9 @@ class CorrectedControl extends SeriesTableComponent {
         }
         try {
             $updated = $this->getSeriesTable()->getSubmits()->where('submit_id', $ids)->update(['corrected' => 1]);
-            $this->flashMessage(\sprintf(_('Updated %d submits'), $updated), ILogger::INFO);
+            $this->flashMessage(\sprintf(_('Updated %d submits'), $updated), Message::LVL_INFO);
         } catch (\PDOException $exception) {
-            $this->flashMessage(_('Error during updating'), ILogger::ERROR);
+            $this->flashMessage(_('Error during updating'), Message::LVL_ERROR);
         }
         $this->getPresenter()->redirect('this');
     }

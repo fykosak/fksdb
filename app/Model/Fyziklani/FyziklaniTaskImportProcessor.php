@@ -2,9 +2,8 @@
 
 namespace FKSDB\Model\Fyziklani;
 
-use FKSDB\Model\Logging\ILogger;
-use FKSDB\Model\Messages\Message;
-use FKSDB\Modules\Core\BasePresenter;
+use Fykosak\Utils\Logging\ILogger;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Model\Utils\CSVParser;
@@ -18,9 +17,7 @@ use Tracy\Debugger;
  * @author Lukáš Timko
  */
 class FyziklaniTaskImportProcessor {
-
     private ServiceFyziklaniTask $serviceFyziklaniTask;
-
     private ModelEvent $event;
 
     public function __construct(ServiceFyziklaniTask $serviceFyziklaniTask, ModelEvent $event) {
@@ -51,19 +48,19 @@ class FyziklaniTaskImportProcessor {
                         'event_id' => $this->event->event_id,
                     ]);
 
-                    $logger->log(new Message(sprintf(_('Úloha %s "%s" bola vložena'), $row['label'], $row['name']), BasePresenter::FLASH_SUCCESS));
+                    $logger->log(new Message(sprintf(_('Úloha %s "%s" bola vložena'), $row['label'], $row['name']), Message::LVL_SUCCESS));
                 } elseif ($values->state == TaskPresenter::IMPORT_STATE_UPDATE_N_INSERT) {
                     $this->serviceFyziklaniTask->updateModel2($task, [
                         'label' => $row['label'],
                         'name' => $row['name'],
                     ]);
-                    $logger->log(new Message(sprintf(_('Úloha %s "%s" byla aktualizována'), $row['label'], $row['name']), BasePresenter::FLASH_INFO));
+                    $logger->log(new Message(sprintf(_('Úloha %s "%s" byla aktualizována'), $row['label'], $row['name']), Message::LVL_INFO));
                 } else {
                     $logger->log(new Message(
-                        sprintf(_('Úloha %s "%s" nebyla aktualizována'), $row['label'], $row['name']), ILogger::WARNING));
+                        sprintf(_('Úloha %s "%s" nebyla aktualizována'), $row['label'], $row['name']), Message::LVL_WARNING));
                 }
             } catch (\Exception $exception) {
-                $logger->log(new Message(_('Vyskytla se chyba'), BasePresenter::FLASH_ERROR));
+                $logger->log(new Message(_('Vyskytla se chyba'), Message::LVL_ERROR));
                 Debugger::log($exception);
                 $connection->rollBack();
                 return;

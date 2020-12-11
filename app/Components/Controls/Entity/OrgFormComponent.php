@@ -7,7 +7,7 @@ use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Model\DBReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\Model\DBReflection\OmittedControlException;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Messages\Message;
+use Fykosak\Utils\Logging\Message;
 use FKSDB\Model\ORM\Models\ModelContest;
 use FKSDB\Model\ORM\Models\ModelOrg;
 use FKSDB\Model\ORM\Services\ServiceOrg;

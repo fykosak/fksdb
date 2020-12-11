@@ -2,13 +2,13 @@
 
 namespace FKSDB\Components\Controls\Events;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Model\Events\Machine\BaseMachine;
 use FKSDB\Model\Events\Machine\Machine;
 use FKSDB\Model\Events\Model\ApplicationHandler;
 use FKSDB\Model\Events\Model\ApplicationHandlerException;
 use FKSDB\Model\Events\Model\Holder\Holder;
-use FKSDB\Model\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\FlashMessageDump;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\AbortException;

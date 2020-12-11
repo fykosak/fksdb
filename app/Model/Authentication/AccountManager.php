@@ -5,7 +5,7 @@ namespace FKSDB\Model\Authentication;
 use FKSDB\Model\Authentication\Exceptions\RecoveryExistsException;
 use FKSDB\Model\Authentication\Exceptions\RecoveryNotImplementedException;
 use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
 use FKSDB\Model\ORM\Models\ModelAuthToken;
 use FKSDB\Model\ORM\Models\ModelLogin;
 use FKSDB\Model\ORM\Models\ModelPerson;

@@ -13,8 +13,8 @@ use FKSDB\Model\Events\Model\Holder\Holder;
 use FKSDB\Model\Exceptions\BadTypeException;
 use FKSDB\Model\Exceptions\GoneException;
 use FKSDB\Model\Exceptions\NotFoundException;
-use FKSDB\Model\Localization\UnsupportedLanguageException;
-use FKSDB\Model\Logging\MemoryLogger;
+use Fykosak\Utils\Localization\UnsupportedLanguageException;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Model\ORM\IModel;
 use FKSDB\Model\ORM\Models\AbstractModelSingle;
 use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -25,6 +25,7 @@ use FKSDB\Model\ORM\Models\ModelEventParticipant;
 use FKSDB\Model\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\Model\ORM\Services\ServiceEvent;
 use FKSDB\Model\UI\PageTitle;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -37,7 +38,6 @@ use Nette\InvalidArgumentException;
  */
 class ApplicationPresenter extends BasePresenter {
     public const PARAM_AFTER = 'a';
-
     private ?ModelEvent $event;
     private ?IModel $eventApplication = null;
     private Holder $holder;
@@ -166,12 +166,11 @@ class ApplicationPresenter extends BasePresenter {
         }
 
         if (!$this->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->holder, $this->getHolder()->getPrimaryHolder()->getModelState())) {
-
             if ($this->getHolder()->getPrimaryHolder()->getModelState() == \FKSDB\Model\Transitions\Machine\Machine::STATE_INIT) {
                 $this->setView('closed');
-                $this->flashMessage(_('Registration is not open.'), BasePresenter::FLASH_INFO);
+                $this->flashMessage(_('Registration is not open.'), Message::LVL_INFO);
             } elseif (!$this->getParameter(self::PARAM_AFTER, false)) {
-                $this->flashMessage(_('Application machine has no available transitions.'), BasePresenter::FLASH_INFO);
+                $this->flashMessage(_('Application machine has no available transitions.'), Message::LVL_INFO);
             }
         }
 

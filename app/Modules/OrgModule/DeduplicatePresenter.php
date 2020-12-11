@@ -7,9 +7,8 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
 use FKSDB\Model\Exceptions\BadTypeException;
 use FKSDB\Model\Exceptions\NotFoundException;
-use FKSDB\Model\Logging\FlashMessageDump;
-use FKSDB\Model\Logging\ILogger;
-use FKSDB\Model\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\FlashMessageDump;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Model\ORM\Models\ModelPerson;
 use FKSDB\Model\ORM\Services\ServicePerson;
 use FKSDB\Model\ORM\Services\ServicePersonInfo;
@@ -17,6 +16,7 @@ use FKSDB\Model\Persons\Deduplication\DuplicateFinder;
 use FKSDB\Model\Persons\Deduplication\Merger;
 use FKSDB\Model\UI\PageTitle;
 use FKSDB\Model\Utils\FormUtils;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
@@ -101,7 +101,7 @@ class DeduplicatePresenter extends BasePresenter {
         $trunkData = ['duplicates' => trim($trunkPI->duplicates . ",not-same($mergedId)", ',')];
         $this->servicePersonInfo->updateModel2($trunkPI, $trunkData);
 
-        $this->flashMessage(_('Persons not merged.'), ILogger::SUCCESS);
+        $this->flashMessage(_('Persons not merged.'), Message::LVL_SUCCESS);
         $this->backLinkRedirect(true);
     }
 
@@ -219,11 +219,11 @@ class DeduplicatePresenter extends BasePresenter {
         $logger = new MemoryLogger();
         $merger->setLogger($logger);
         if ($merger->merge()) {
-            $this->flashMessage(_('Persons successfully merged.'), self::FLASH_SUCCESS);
+            $this->flashMessage(_('Persons successfully merged.'), Message::LVL_SUCCESS);
             FlashMessageDump::dump($logger, $this);
             $this->backLinkRedirect(true);
         } else {
-            $this->flashMessage(_('Manual conflict resolution is necessary.'), self::FLASH_INFO);
+            $this->flashMessage(_('Manual conflict resolution is necessary.'), Message::LVL_INFO);
             $this->redirect('this'); //this is correct
         }
     }

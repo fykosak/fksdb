@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
-use FKSDB\Components\Controls\BaseComponent;
+use Fykosak\Utils\BaseComponent\BaseComponent;
 use FKSDB\Model\UI\Title;
 
 /**

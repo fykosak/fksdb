@@ -15,6 +15,7 @@ use FKSDB\Model\Payment\PaymentExtension;
 use FKSDB\Model\Payment\Transition\PaymentMachine;
 use FKSDB\Model\Transitions\Machine;
 use FKSDB\Model\UI\PageTitle;
+use Fykosak\Utils\Logging\Message;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
@@ -28,7 +29,6 @@ class PaymentPresenter extends BasePresenter {
     use EventEntityPresenterTrait;
 
     private Machine\Machine $machine;
-
     private ServicePayment $servicePayment;
 
     final public function injectServicePayment(ServicePayment $servicePayment): void {
@@ -98,7 +98,7 @@ class PaymentPresenter extends BasePresenter {
      */
     public function actionEdit(): void {
         if (!$this->isContestsOrgAuthorized($this->getEntity(), 'edit')) {
-            $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()), \FKSDB\Modules\Core\BasePresenter::FLASH_ERROR);
+            $this->flashMessage(\sprintf(_('Payment #%s can not be edited'), $this->getEntity()->getPaymentId()), Message::LVL_ERROR);
             $this->redirect(':Core:MyPayments:');
         }
     }

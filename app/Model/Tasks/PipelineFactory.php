@@ -2,7 +2,7 @@
 
 namespace FKSDB\Model\Tasks;
 
-use FKSDB\Model\Logging\MemoryLogger;
+use Fykosak\Utils\Logging\MemoryLogger;
 use FKSDB\Model\ORM\Services\ServiceOrg;
 use FKSDB\Model\ORM\Services\ServiceStudyYear;
 use FKSDB\Model\ORM\Services\ServiceTask;
