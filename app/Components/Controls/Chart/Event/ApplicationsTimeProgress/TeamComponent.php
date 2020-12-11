@@ -14,7 +14,7 @@ use Nette\DI\Container;
  * Class TeamApplicationsTimeProgress
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class TeamApplicationsTimeProgress extends ReactComponent implements IChart {
+class TeamComponent extends ReactComponent implements IChart {
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
     private ModelEventType $eventType;

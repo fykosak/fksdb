@@ -1,6 +1,4 @@
-import {
-    Event,
-} from '@apps/fyziklani/helpers/interfaces';
+import { Event } from '@apps/fyziklani/helpers/interfaces';
 import { lang } from '@i18n/i18n';
 import ChartContainer from '@shared/components/chartContainer';
 import { LineChartData } from '@shared/components/lineChart/interfaces';
@@ -30,7 +28,7 @@ interface OwnProps {
     accessKey: 'participants' | 'teams';
 }
 
-export default class ApplicationsTimeProgress extends React.Component<OwnProps, {}> {
+export default class ChartComponent extends React.Component<OwnProps, {}> {
 
     public render() {
         const {data, accessKey} = this.props;

@@ -16,7 +16,7 @@ interface OwnProps {
     data: Data[];
 }
 
-export default class TotalPersons extends React.Component<OwnProps, {}> {
+export default class TotalPersonsChartComponent extends React.Component<OwnProps, {}> {
 
     public render() {
         const {data} = this.props;

@@ -2,9 +2,9 @@ var path = require('path');
 const {TsConfigPathsPlugin} = require('awesome-typescript-loader');
 
 module.exports = {
-    entry: './src/index.tsx',
+    entry: './typescript/index.tsx',
     output: {
-        path: __dirname + '/../www/js/',
+        path: __dirname + '/www/js/',
         filename: 'bundle.min.js',
         publicPath: 'js',
     },

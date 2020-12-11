@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./dist",
+    "outDir": "/dist",
     "sourceMap": true,
     "noImplicitAny": false,
     "module": "es2015",
@@ -11,25 +11,25 @@
     "baseUrl": ".",
     "paths": {
       "@fetchApi/*": [
-        "./src/fetchApi/*"
+        "./typescript/fetchApi/*"
       ],
       "@apps/*": [
-        "./src/apps/*"
+        "./typescript/apps/*"
       ],
       "@shared/*": [
-        "./src/shared/*"
+        "./typescript/shared/*"
       ],
       "@i18n/*": [
-        "./src/i18n/*"
+        "./typescript/i18n/*"
       ],
       "@appsCollector/*": [
-        "./src/appsCollector/*"
+        "./typescript/appsCollector/*"
       ],
       "@inputConnector/*": [
-        "./src/inputConnector/*"
+        "./typescript/inputConnector/*"
       ],
       "@config": [
-        "./src/config"
+        "./typescript/config"
       ]
     }
   },

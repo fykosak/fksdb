@@ -26,7 +26,7 @@ interface OwnProps {
     data: Data[];
 }
 
-export default class ParticipantAcquaintance extends React.Component<OwnProps, State> {
+export default class ParticipantAcquaintanceChartControl extends React.Component<OwnProps, State> {
     private readonly innerRadius = 320;
     private readonly outerRadius = 340;
     private readonly textRadius = 360;

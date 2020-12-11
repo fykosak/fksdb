@@ -15,7 +15,7 @@ use Nette\DI\Container;
  * Class SingleApplicationsTimeProgress
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
+class SingleComponent extends ReactComponent implements IChart {
 
     private ServiceEventParticipant $serviceEventParticipant;
 

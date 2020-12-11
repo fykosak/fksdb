@@ -13,7 +13,8 @@
     "file-name-casing": [
       true,
       {
-        ".*.tsx?": "camel-case"
+        ".*.tsx?": "camel-case",
+        "app/.*.tsx?": "pascal-case"
       }
     ],
     "cyclomatic-complexity": false,

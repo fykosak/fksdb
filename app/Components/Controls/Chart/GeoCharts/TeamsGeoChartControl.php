@@ -5,7 +5,7 @@ namespace FKSDB\Components\Controls\Chart\GeoCharts;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use Nette\DI\Container;
 
-class TeamsGeoChartControl extends ApplicationsPerCountryChartControl {
+class TeamsGeoChartControl extends ApplicationsPerCountryChartComponent {
     public function __construct(Container $context, ModelEvent $event) {
         parent::__construct($context, $event, self::SCALE_LOG);
     }

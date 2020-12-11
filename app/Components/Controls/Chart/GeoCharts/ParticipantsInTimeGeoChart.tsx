@@ -1,6 +1,6 @@
-import ItemsPerCountryLog from '@apps/chart/itemsPerCountryLog';
-import { GeoData } from '@shared/components/geoChart/geoData';
 import * as React from 'react';
+import GeoChartComponent, { SCALE_LOG } from './GeoChartComponent';
+import { GeoData } from './GeoChartHelper';
 
 interface OwnProps {
     data: Array<{
@@ -42,7 +42,7 @@ export default class ParticipantsInTimeGeoChart extends React.Component<OwnProps
                        value={value}/>
                 <small className="form-text text-muted">{(new Date(value)).toISOString()}</small>
             </div>
-            <ItemsPerCountryLog data={geoData}/>
+            <GeoChartComponent data={geoData} scaleType={SCALE_LOG}/>
         </div>;
     }
 }

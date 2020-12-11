@@ -7,7 +7,7 @@ use FKSDB\Model\ORM\Services\ServiceEventParticipant;
 use Nette\Database\ResultSet;
 use Nette\DI\Container;
 
-abstract class ApplicationsPerCountryChartControl extends GeoChartControl {
+abstract class ApplicationsPerCountryChartComponent extends GeoChartComponent {
 
     protected ModelEvent $event;
     protected ServiceEventParticipant $serviceEventParticipant;

@@ -5,7 +5,7 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Controls\Chart\ContestantsPerSeries\AggregatedSeries;
 use FKSDB\Components\Controls\Chart\ContestantsPerSeries\PerSeriesChart;
 use FKSDB\Components\Controls\Chart\ContestantsPerYearsChart;
-use FKSDB\Components\Controls\Chart\TotalPersonsChartControl;
+use FKSDB\Components\Controls\Chart\TotalPersonsChartComponent;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
 
 /**
@@ -33,7 +33,7 @@ class ChartPresenter extends BasePresenter {
             'contestantsPerSeries' => new PerSeriesChart($this->getContext(), $this->getSelectedContest()),
             'totalContestantsPerSeries' => new AggregatedSeries($this->getContext(), $this->getSelectedContest()),
             'contestantsPerYears' => new ContestantsPerYearsChart($this->getContext(), $this->getSelectedContest()),
-            'totalPersons' => new TotalPersonsChartControl($this->getContext()),
+            'totalPersons' => new TotalPersonsChartComponent($this->getContext()),
         ];
     }
 

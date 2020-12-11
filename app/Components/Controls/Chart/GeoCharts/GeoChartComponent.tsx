@@ -1,15 +1,16 @@
-import { GeoData } from '@shared/components/geoChart/geoData';
 import { geoNaturalEarth1, geoPath } from 'd3-geo';
-import { ScaleLinear, ScaleLogarithmic } from 'd3-scale';
+import { scaleLinear, scaleLog } from 'd3-scale';
 import * as React from 'react';
+import { findMax, GeoData } from './GeoChartHelper';
 
 interface OwnProps {
     data: GeoData;
-    activeColorScale: ScaleLinear<string, string> | ScaleLogarithmic<string, string>;
-    inactiveColorScale: ScaleLinear<string, string> | ScaleLogarithmic<string, string>;
+    scaleType: typeof SCALE_LINEAR | typeof SCALE_LOG;
 }
 
-export default class GeoChart extends React.Component<OwnProps, { active?: string }> {
+export const SCALE_LINEAR = 'linear';
+export const SCALE_LOG = 'log';
+export default class GeoChartComponent extends React.Component<OwnProps, { active?: string }> {
 
     private countryData = [];
 
@@ -23,7 +24,26 @@ export default class GeoChart extends React.Component<OwnProps, { active?: strin
     }
 
     public render() {
-        const {data, activeColorScale, inactiveColorScale} = this.props;
+        const {data, scaleType} = this.props;
+        const max = findMax(data);
+        let inactiveColorScale = null;
+        let activeColorScale = null;
+        switch (scaleType) {
+            default:
+            case SCALE_LINEAR:
+                inactiveColorScale = scaleLinear<string, string>();
+                activeColorScale = scaleLinear<string, string>();
+                inactiveColorScale.domain([0, max + 1]);
+                activeColorScale.domain([0, max + 1]);
+                break;
+            case SCALE_LOG:
+                inactiveColorScale = scaleLog<string, string>();
+                activeColorScale = scaleLog<string, string>();
+                inactiveColorScale.domain([0.1, max + 1]);
+                activeColorScale.domain([0.1, max + 1]);
+        }
+        inactiveColorScale.range(['#dc3545', '#28a745']);
+        activeColorScale.range(['#fc5565', '#48c765']);
 
         const projection = geoNaturalEarth1()
             .scale(180)
