@@ -1,14 +1,12 @@
-import {
-    Submits,
-    Task,
-    Team,
-} from '@apps/fyziklani/helpers/interfaces';
+import { Submits } from '@apps/fyziklani/helpers/interfaces';
 import * as React from 'react';
+import { ModelFyziklaniTeam } from '../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { ModelFyziklaniTask } from '../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
 
 interface OwnProps {
     submits: Submits;
-    team: Team;
-    tasks: Task[];
+    team: ModelFyziklaniTeam;
+    tasks: ModelFyziklaniTask[];
     visible: boolean;
 }
 

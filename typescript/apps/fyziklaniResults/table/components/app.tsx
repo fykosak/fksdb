@@ -1,20 +1,18 @@
-import {
-    Submits,
-    Task,
-    Team,
-} from '@apps/fyziklani/helpers/interfaces';
+import { Submits } from '@apps/fyziklani/helpers/interfaces';
 import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Filter } from '../middleware/filters/filter';
 import { FyziklaniResultsTableStore } from '../reducers';
 import Row from './row';
+import { ModelFyziklaniTeam } from '../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { ModelFyziklaniTask } from '../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
 
 interface StateProps {
     filter: Filter;
     submits: Submits;
-    teams: Team[];
-    tasks: Task[];
+    teams: ModelFyziklaniTeam[];
+    tasks: ModelFyziklaniTask[];
 }
 
 class App extends React.Component<StateProps, {}> {
@@ -31,7 +29,7 @@ class App extends React.Component<StateProps, {}> {
             }
         }
 
-        const headCools = tasks.map((task: Task, taskIndex) => {
+        const headCools = tasks.map((task: ModelFyziklaniTask, taskIndex) => {
             return (<th key={taskIndex} data-task_label={task.label}>{task.label}</th>);
         });
 
@@ -50,7 +48,7 @@ class App extends React.Component<StateProps, {}> {
                     </tr>
                     </thead>
                     <tbody>
-                    {teams.map((team: Team, teamIndex) => {
+                    {teams.map((team: ModelFyziklaniTeam, teamIndex) => {
                         return (
                             <Row
                                 tasks={tasks}

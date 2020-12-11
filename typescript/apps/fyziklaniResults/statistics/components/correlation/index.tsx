@@ -1,4 +1,3 @@
-import { Team } from '@apps/fyziklani/helpers/interfaces';
 import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -12,9 +11,10 @@ import {
 } from '../../actions';
 import { Store as StatisticsStore } from '../../reducers';
 import GlobalCorrelation from './globalCorrelation';
+import { ModelFyziklaniTeam } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
 
 interface StateProps {
-    teams: Team[];
+    teams: ModelFyziklaniTeam[];
     firstTeamId: number;
     secondTeamId: number;
 }

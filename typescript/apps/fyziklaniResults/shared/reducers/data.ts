@@ -1,16 +1,14 @@
 import { ACTION_FETCH_SUCCESS, ActionFetchSuccess } from '@fetchApi/actions';
 import { Response2 } from '@fetchApi/interfaces';
-import {
-    Submits,
-    Task,
-    Team,
-} from '@apps/fyziklani/helpers/interfaces';
+import { Submits } from '@apps/fyziklani/helpers/interfaces';
 import { ResponseData } from '../../downloader/inferfaces';
+import { ModelFyziklaniTeam } from '../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { ModelFyziklaniTask } from '../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
 
 export interface State {
     submits?: Submits;
-    tasks?: Task[];
-    teams?: Team[];
+    tasks?: ModelFyziklaniTask[];
+    teams?: ModelFyziklaniTeam[];
     // rooms?: Room[];
     categories?: string[];
     availablePoints?: number[];

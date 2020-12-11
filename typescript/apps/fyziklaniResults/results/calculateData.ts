@@ -1,13 +1,11 @@
-import {
-    Submit,
-    Submits,
-    Team,
-} from '../../fyziklani/helpers/interfaces';
+import { Submits, } from '../../fyziklani/helpers/interfaces';
+import { ModelFyziklaniSubmit } from '../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniSubmit';
+import { ModelFyziklaniTeam } from '../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
 
 export interface Item {
-    team: Team;
+    team: ModelFyziklaniTeam;
     submits: {
-        [taskId: number]: Submit;
+        [taskId: number]: ModelFyziklaniSubmit;
     };
     points: number;
     groups: {
@@ -19,7 +17,7 @@ export interface Item {
     count: number;
 }
 
-export const calculate = (submits: Submits, teams: Team[] = []): { [teamId: number]: Item } => {
+export const calculate = (submits: Submits, teams: ModelFyziklaniTeam[] = []): { [teamId: number]: Item } => {
     const submitsForTeams: {
         [teamId: number]: Item;
     } = {};
@@ -40,7 +38,7 @@ export const calculate = (submits: Submits, teams: Team[] = []): { [teamId: numb
             }
 
             const {teamId, taskId: taskId} = submit;
-            const [selectedTeam] = teams.filter((team: Team) => {
+            const [selectedTeam] = teams.filter((team: ModelFyziklaniTeam) => {
                 return team.teamId === submit.teamId;
             });
             if (!selectedTeam) {

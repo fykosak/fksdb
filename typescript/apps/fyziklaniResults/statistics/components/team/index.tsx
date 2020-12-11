@@ -1,6 +1,4 @@
-import { Team } from '@apps/fyziklani/helpers/interfaces';
 import { lang } from '@i18n/i18n';
-import ChartContainer from '@shared/components/chartContainer';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -13,9 +11,11 @@ import Legend from './legend';
 import PointsInTime from './lineChart';
 import PointsPie from './pieChart';
 import TimeLine from './timeline';
+import { ModelFyziklaniTeam } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import ChartContainer from '../../../../../../app/Components/Controls/Chart/ChartContainer';
 
 interface StateProps {
-    teams: Team[];
+    teams: ModelFyziklaniTeam[];
     teamId: number;
 }
 

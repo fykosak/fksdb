@@ -1,23 +1,19 @@
-import {
-    Submit,
-    Submits,
-    Task,
-    Team,
-} from '@apps/fyziklani/helpers/interfaces';
+import { Submits } from '@apps/fyziklani/helpers/interfaces';
 import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-    getTimeLabel,
-} from '../../middleware/charts/correlation';
+import { getTimeLabel } from '../../middleware/charts/correlation';
 import { getAverageNStandardDeviation } from '../../middleware/charts/stdDev';
 import { calculateSubmitsForTeams } from '../../middleware/charts/submitsForTeams';
 import { Store as StatisticsStore } from '../../reducers';
+import { ModelFyziklaniSubmit } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniSubmit';
+import { ModelFyziklaniTeam } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { ModelFyziklaniTask } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
 
 interface StateProps {
     submits: Submits;
-    tasks: Task[];
-    teams: Team[];
+    tasks: ModelFyziklaniTask[];
+    teams: ModelFyziklaniTeam[];
     firstTeamId: number;
     secondTeamId: number;
 }
@@ -27,8 +23,8 @@ class Table extends React.Component<StateProps, {}> {
     public render() {
 
         const {firstTeamId, secondTeamId, submits, tasks} = this.props;
-        const firstTeamSubmits: Submit[] = [];
-        const secondTeamSubmits: Submit[] = [];
+        const firstTeamSubmits: ModelFyziklaniSubmit[] = [];
+        const secondTeamSubmits: ModelFyziklaniSubmit[] = [];
         for (const id in submits) {
             if (submits.hasOwnProperty(id)) {
                 const submit = submits[id];
@@ -46,7 +42,7 @@ class Table extends React.Component<StateProps, {}> {
         let count = 0;
         const firstTeamData = submitsForTeams.hasOwnProperty(firstTeamId) ? submitsForTeams[firstTeamId] : {};
         const secondTeamData = submitsForTeams.hasOwnProperty(secondTeamId) ? submitsForTeams[secondTeamId] : {};
-        tasks.forEach((task: Task, id) => {
+        tasks.forEach((task: ModelFyziklaniTask, id) => {
             const firstSubmit = firstTeamData.hasOwnProperty(task.taskId) ? firstTeamData[task.taskId] : null;
             const secondSubmit = secondTeamData.hasOwnProperty(task.taskId) ? secondTeamData[task.taskId] : null;
             let delta = 0;

@@ -1,13 +1,13 @@
 import { Action } from 'redux';
-import { Team } from '../../helpers/interfaces';
+import { ModelFyziklaniTeam } from '../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
 
 export const ACTION_ADD_TEAMS = 'ACTION_ADD_TEAMS';
 
 export interface ActionAddTeams extends Action {
-    teams: Team[];
+    teams: ModelFyziklaniTeam[];
 }
 
-export const addTeams = (teams: Team[]): ActionAddTeams => {
+export const addTeams = (teams: ModelFyziklaniTeam[]): ActionAddTeams => {
     return {
         teams,
         type: ACTION_ADD_TEAMS,

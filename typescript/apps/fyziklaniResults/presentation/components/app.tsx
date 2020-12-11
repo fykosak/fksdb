@@ -1,24 +1,19 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-    Submits,
-    Task,
-    Team,
-} from '@apps/fyziklani/helpers/interfaces';
-import {
-    calculate,
-    Item,
-} from '../../results/calculateData';
+import { Submits } from '@apps/fyziklani/helpers/interfaces';
+import { calculate, Item } from '../../results/calculateData';
 import { FyziklaniResultsPresentationStore } from '../reducers';
 import Headline from './headline';
 import Row from './row';
+import { ModelFyziklaniTeam } from '../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { ModelFyziklaniTask } from '../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
 
 interface StateProps {
     availablePoints: number[];
     category: string;
     submits: Submits;
-    teams: Team[];
-    tasks: Task[];
+    teams: ModelFyziklaniTeam[];
+    tasks: ModelFyziklaniTask[];
     cols: number;
     rows: number;
     position: number;

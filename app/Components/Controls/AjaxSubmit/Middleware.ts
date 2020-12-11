@@ -1,4 +1,4 @@
-import { lang } from '@i18n/i18n';
+import { lang } from '../../../../typescript/i18n/i18n';
 
 export interface Submit {
     submitId: number | null;

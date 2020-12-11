@@ -1,10 +1,10 @@
-import { Submit } from '@apps/fyziklani/helpers/interfaces';
 import {
     getAverageNStandardDeviation,
     StdDevOutput,
 } from './stdDev';
+import { ModelFyziklaniSubmit } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniSubmit';
 
-export interface PreprocessedSubmit extends Submit {
+export interface PreprocessedSubmit extends ModelFyziklaniSubmit {
     timestamp: number;
 }
 

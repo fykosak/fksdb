@@ -1,19 +1,19 @@
-import { getMinMaxYear, getSeriesLabel, parseData, seriesType, YearsData } from '@apps/chart/contestatnsData';
 import { lang } from '@i18n/i18n';
 import Ordinal from '@i18n/ordinal';
-import LineChart from '@shared/components/lineChart/lineChart';
 import { ExtendedPointData, LineChartData } from '@shared/components/lineChart/interfaces';
+import LineChart from '@shared/components/lineChart/lineChart';
 import LineChartLegend from '@shared/components/lineChart/lineChartLegend';
 import { scaleLinear, scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { curveCatmullRom } from 'd3-shape';
 import * as React from 'react';
+import { getMinMaxYear, getSeriesLabel, parseData, seriesType, YearsData } from './ContestatnsData';
 
 export interface OwnProps {
     data: YearsData;
 }
 
-export default class ContestantsPerYears extends React.Component<OwnProps, {}> {
+export default class PerYearsChartComponent extends React.Component<OwnProps, {}> {
 
     public render() {
         const {data} = this.props;

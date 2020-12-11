@@ -1,14 +1,12 @@
 import StoreCreator from '@shared/components/storeCreator';
 import * as React from 'react';
-import {
-    Room,
-    Team,
-} from '../../helpers/interfaces';
+import { Room } from '../../helpers/interfaces';
 import { app } from '../reducers/';
 import App from './app';
+import { ModelFyziklaniTeam } from '../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
 
 interface OwnProps {
-    teams: Team[];
+    teams: ModelFyziklaniTeam[];
     rooms: Room[];
 }
 

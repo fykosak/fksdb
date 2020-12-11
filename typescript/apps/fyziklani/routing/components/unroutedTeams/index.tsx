@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Team } from '../../../helpers/interfaces';
+import { ModelFyziklaniTeam } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
 import { Store as RoutingStore } from '../../reducers/';
 import TeamComponent from '../team/';
 
 interface StateProps {
-    stateTeams: Team[];
+    stateTeams: ModelFyziklaniTeam[];
 }
 
 class UnRoutedTeams extends React.Component<StateProps, {}> {

@@ -1,20 +1,15 @@
-import {
-    Submit,
-    Submits,
-    Task,
-} from '@apps/fyziklani/helpers/interfaces';
+import { Submits } from '@apps/fyziklani/helpers/interfaces';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-    Action,
-    Dispatch,
-} from 'redux';
+import { Action, Dispatch } from 'redux';
+import { ModelFyziklaniSubmit } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniSubmit';
+import { ModelFyziklaniTask } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
 import { setTaskId } from '../../actions';
 import { getColorByPoints } from '../../middleware/charts/colors';
 import { Store as StatisticsStore } from '../../reducers';
 
 interface StateProps {
-    tasks: Task[];
+    tasks: ModelFyziklaniTask[];
     submits: Submits;
 }
 
@@ -22,7 +17,7 @@ interface DispatchProps {
     onChangeTask(taskId: number): void;
 }
 
-interface StatItem extends Task {
+interface StatItem extends ModelFyziklaniTask {
     5: number;
     3: number;
     2: number;
@@ -57,7 +52,7 @@ class TimeProgress extends React.Component<StateProps & DispatchProps & OwnProps
         let max = 0;
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
-                const submit: Submit = submits[index];
+                const submit: ModelFyziklaniSubmit = submits[index];
                 const {taskId, points} = submit;
                 if (tasksSubmits.hasOwnProperty(taskId)) {
                     tasksSubmits[taskId][points]++;

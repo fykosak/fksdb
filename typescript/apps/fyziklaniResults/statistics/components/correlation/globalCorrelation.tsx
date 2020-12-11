@@ -1,31 +1,20 @@
-import {
-    Submits,
-    Task,
-    Team,
-} from '@apps/fyziklani/helpers/interfaces';
+import { Submits } from '@apps/fyziklani/helpers/interfaces';
 import { lang } from '@i18n/i18n';
 import { scaleLinear } from 'd3-scale';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-    Action,
-    Dispatch,
-} from 'redux';
-import {
-    setFirstTeamId,
-    setSecondTeamId,
-} from '../../actions';
-import {
-    calculateCorrelation,
-    getTimeLabel,
-} from '../../middleware/charts/correlation';
+import { Action, Dispatch, } from 'redux';
+import { setFirstTeamId, setSecondTeamId } from '../../actions';
+import { calculateCorrelation, getTimeLabel } from '../../middleware/charts/correlation';
 import { calculateSubmitsForTeams } from '../../middleware/charts/submitsForTeams';
 import { Store as StatisticsStore } from '../../reducers';
+import { ModelFyziklaniTeam } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { ModelFyziklaniTask } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
 
 interface StateProps {
     submits: Submits;
-    tasks: Task[];
-    teams: Team[];
+    tasks: ModelFyziklaniTask[];
+    teams: ModelFyziklaniTeam[];
     firstTeamId: number;
     secondTeamId: number;
 }

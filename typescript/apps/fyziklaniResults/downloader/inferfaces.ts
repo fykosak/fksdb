@@ -1,4 +1,6 @@
-import { Submits, Task, Team } from '../../fyziklani/helpers/interfaces';
+import { Submits } from '../../fyziklani/helpers/interfaces';
+import { ModelFyziklaniTeam } from '../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { ModelFyziklaniTask } from '../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
 
 export interface ResponseData {
     availablePoints: number[];
@@ -16,7 +18,7 @@ export interface ResponseData {
     tasksOnBoard: number;
 
     submits: Submits;
-    teams?: Team[];
-    tasks?: Task[];
+    teams?: ModelFyziklaniTeam[];
+    tasks?: ModelFyziklaniTask[];
     categories?: string[];
 }

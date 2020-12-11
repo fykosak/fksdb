@@ -1,19 +1,8 @@
-import {
-    Message,
-    Response2,
-} from '@fetchApi/interfaces';
+import { Message, Response2 } from '@fetchApi/interfaces';
 import { lang } from '@i18n/i18n';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-    Field,
-    formValueSelector,
-    SubmitHandler,
-} from 'redux-form';
-import {
-    Task,
-    Team,
-} from '../../helpers/interfaces';
+import { Field, formValueSelector, SubmitHandler } from 'redux-form';
 import { SubmitFormRequest } from '../actions';
 import { Store as SubmitStore } from '../reducer';
 import { FORM_NAME } from './container';
@@ -22,10 +11,12 @@ import SubmitButtons from './inputs/submitButtons';
 import TextInput from './inputs/text';
 import ErrorBlock from './outputs/errorBlock';
 import ValueDisplay from './outputs/valueDisplay';
+import { ModelFyziklaniTeam } from '../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { ModelFyziklaniTask } from '../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
 
 export interface OwnProps {
-    tasks: Task[];
-    teams: Team[];
+    tasks: ModelFyziklaniTask[];
+    teams: ModelFyziklaniTeam[];
     valid: boolean;
     submitting: boolean;
     availablePoints: number[];

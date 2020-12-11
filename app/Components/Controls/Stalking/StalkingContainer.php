@@ -4,7 +4,7 @@ namespace FKSDB\Components\Controls\Stalking;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\Stalking\StalkingComponent\StalkingComponent;
-use FKSDB\Components\Controls\Stalking\Timeline\TimelineControl;
+use FKSDB\Components\Controls\Stalking\Timeline\TimelineComponent;
 use FKSDB\Components\Grids\PersonRelatedGrid;
 use FKSDB\Model\ORM\Models\ModelPerson;
 use Nette\DI\Container;
@@ -85,7 +85,7 @@ class StalkingContainer extends BaseComponent {
         return new Components\Validation($this->getContext());
     }
 
-    protected function createComponentTimeline(): TimelineControl {
-        return new TimelineControl($this->getContext(), $this->person);
+    protected function createComponentTimeline(): TimelineComponent {
+        return new TimelineComponent($this->getContext(), $this->person);
     }
 }

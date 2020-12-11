@@ -1,16 +1,16 @@
-import UploadContainer from '@apps/ajaxSubmit/components/container';
-import { NetteActions } from '@appsCollector/netteActions';
-import ActionsStoreCreator from '@fetchApi/actionsStoreCreator';
 import * as React from 'react';
-import { Submit } from './middleware';
-import { app } from './reducers';
+import { NetteActions } from '../../../../typescript/appsCollector/netteActions';
+import ActionsStoreCreator from '../../../../typescript/fetchApi/actionsStoreCreator';
+import UploadContainer from './Components/Container';
+import { Submit } from './Middleware';
+import { app } from './Reducers/Index';
 
 interface IProps {
     data: Submit;
     actions: NetteActions;
 }
 
-export default class Index extends React.Component<IProps, {}> {
+export default class AjaxSubmit extends React.Component<IProps, {}> {
 
     public render() {
         return <ActionsStoreCreator

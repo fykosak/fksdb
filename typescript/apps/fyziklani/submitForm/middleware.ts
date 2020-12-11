@@ -1,6 +1,7 @@
-import { Task, Team } from '@apps/fyziklani/helpers/interfaces';
 import { FormErrors } from 'redux-form';
 import { OwnProps } from './components/formSection';
+import { ModelFyziklaniTeam } from '../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { ModelFyziklaniTask } from '../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
 
 export const getFullCode = (code: string): string => {
     const length = code.length;
@@ -28,7 +29,7 @@ const getControl = (subCode: Array<string | number>): number => {
         (+subCode[1] + +subCode[4] + +subCode[7]) * 7 +
         (+subCode[2] + +subCode[5] + +subCode[8]);
 };
-export const getTeam = (fullCode: string, teams: Team[]): Team => {
+export const getTeam = (fullCode: string, teams: ModelFyziklaniTeam[]): ModelFyziklaniTeam => {
     const matchedTeam = fullCode.match(/^([0-9]+)/);
     if (!matchedTeam) {
         return null;
@@ -38,7 +39,7 @@ export const getTeam = (fullCode: string, teams: Team[]): Team => {
     })[0];
 };
 
-export const getTask = (fullCode: string, tasks: Task[]): Task => {
+export const getTask = (fullCode: string, tasks: ModelFyziklaniTask[]): ModelFyziklaniTask => {
     const matchedLabel = fullCode.match(/^[0-9]+([a-zA-Z]{2})/);
 
     if (!matchedLabel) {

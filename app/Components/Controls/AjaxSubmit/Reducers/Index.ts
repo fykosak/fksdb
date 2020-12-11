@@ -2,20 +2,20 @@ import { combineReducers } from 'redux';
 import {
     dragNDrop,
     State as DragNDropState,
-} from './dragNDrop';
+} from './DragNDrop';
 import {
     State as UploadDataStore,
     uploadData,
-} from './uploadData';
+} from './UploadData';
 
 import {
     fetchApi,
     FetchApiState,
-} from '@fetchApi/reducer';
+} from '../../../../../typescript/fetchApi/reducer';
 import {
     errorLogger,
     State as ErrorLoggerState,
-} from './errorLogger';
+} from './ErrorLogger';
 
 export const app = combineReducers({
     dragNDrop,

@@ -1,13 +1,13 @@
-import Loading from '@apps/ajaxSubmit/components/states/loading';
-import { Submit } from '@apps/ajaxSubmit/middleware/';
-import { lang } from '@i18n/i18n';
-import Card from '@shared/components/card';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Store } from '../reducers';
-import MessageBox from './messageBox';
-import File from './states/file';
-import Form from './states/form';
+import { lang } from '../../../../../typescript/i18n/i18n';
+import Card from '../../../../../typescript/shared/components/card';
+import { Submit } from '../Middleware';
+import { Store } from '../Reducers';
+import MessageBox from './MessageBox';
+import File from './Stetes/FileState';
+import Form from './Stetes/FormState';
+import LoadingState from './Stetes/LoadingState';
 
 interface StateProps {
     submitting: boolean;
@@ -36,7 +36,7 @@ class UploadContainer extends React.Component<StateProps, {}> {
             return <p className="alert alert-info">{lang.getText('Task is not for your category.')}</p>;
         }
         if (submitting) {
-            return (<Loading/>);
+            return (<LoadingState/>);
         }
         if (submit.submitId) {
             return (<File submit={submit}/>);

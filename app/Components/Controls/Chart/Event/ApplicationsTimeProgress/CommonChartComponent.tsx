@@ -1,15 +1,15 @@
-import { Event } from '@apps/fyziklani/helpers/interfaces';
 import { lang } from '@i18n/i18n';
-import ChartContainer from '@shared/components/chartContainer';
 import { LineChartData } from '@shared/components/lineChart/interfaces';
 import LineChart from '@shared/components/lineChart/lineChart';
 import { scaleLinear, scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import * as React from 'react';
+import ChartContainer from '../../ChartContainer';
+import { ModelEvent } from '../../../../../Model/ORM/Models/ModelEvent';
 
 export interface Data {
     events: {
-        [eventId: number]: Event;
+        [eventId: number]: ModelEvent;
     };
     teams?: {
         [eventId: number]: Array<{
@@ -28,7 +28,7 @@ interface OwnProps {
     accessKey: 'participants' | 'teams';
 }
 
-export default class ChartComponent extends React.Component<OwnProps, {}> {
+export default class CommonChartComponent extends React.Component<OwnProps, {}> {
 
     public render() {
         const {data, accessKey} = this.props;

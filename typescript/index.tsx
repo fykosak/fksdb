@@ -1,5 +1,4 @@
 import AjaxSubmit from '@apps/ajaxSubmit';
-import PersonTimeline from '@apps/chart/personTimeLine';
 import Attendance from '@apps/events/attendance';
 import { eventSchedule } from '@apps/events/schedule';
 import TaskCodeApp from '@apps/fyziklani/submitForm/components';
@@ -8,15 +7,18 @@ import FyziklaniResultsStatistics from '@apps/fyziklaniResults/statistics';
 import FyziklaniResultsTable from '@apps/fyziklaniResults/table';
 import { mapRegister } from '@appsCollector/mapRegister';
 import * as React from 'react';
-import ContestantsPerSeries from '../app/Components/Controls/Chart/ContestantsPerSeries/contestantsPerSeries';
-import ContestantsPerYears from '../app/Components/Controls/Chart/ContestantsPerSeries/contestantsPerYears';
-import ChartComponent from '../app/Components/Controls/Chart/Event/ApplicationsTimeProgress/ChartComponent';
 import ParticipantAcquaintanceChartControl
     from '../app/Components/Controls/Chart/Event/ParticipantAcquaintanceChartControl';
 import GeoChartComponent from '../app/Components/Controls/Chart/GeoCharts/GeoChartComponent';
 import ParticipantsInTimeGeoChart from '../app/Components/Controls/Chart/GeoCharts/ParticipantsInTimeGeoChart';
 import TotalPersonsChartComponent from '../app/Components/Controls/Chart/TotalPersonsChartComponent';
 import { appsCollector } from './appsCollector';
+import CommonChartComponent from '../app/Components/Controls/Chart/Event/ApplicationsTimeProgress/CommonChartComponent';
+import PerSeriesChartComponent
+    from '../app/Components/Controls/Chart/Contestants/ContestantsPerSeriesChartComponent';
+import PerYearsChartComponent
+    from '../app/Components/Controls/Chart/Contestants/ContestantsPerYearsChartComponent';
+import TimelineComponent from '../app/Components/Controls/Stalking/Timeline/TimelineComponent';
 
 appsCollector.register(eventSchedule);
 
@@ -29,13 +31,13 @@ mapRegister.registerActionsComponent('fyziklani.results.presentation', Fyziklani
 mapRegister.registerActionsComponent('fyziklani.submit-form', TaskCodeApp);
 
 // tslint:disable-next-line:max-line-length
-mapRegister.registerDataComponent('events.applications-time-progress.participants', ChartComponent, {accessKey: 'participants'});
-mapRegister.registerDataComponent('events.applications-time-progress.teams', ChartComponent, {accessKey: 'teams'});
+mapRegister.registerDataComponent('events.applications-time-progress.participants', CommonChartComponent, {accessKey: 'participants'});
+mapRegister.registerDataComponent('events.applications-time-progress.teams', CommonChartComponent, {accessKey: 'teams'});
 mapRegister.registerDataComponent('chart.total-person', TotalPersonsChartComponent);
-mapRegister.registerDataComponent('person.detail.timeline', PersonTimeline);
+mapRegister.registerDataComponent('person.detail.timeline', TimelineComponent);
 mapRegister.registerDataComponent('chart.participant-acquaintance', ParticipantAcquaintanceChartControl);
-mapRegister.registerDataComponent('chart.contestants-per-series', ContestantsPerSeries);
-mapRegister.registerDataComponent('chart.contestants-per-years', ContestantsPerYears);
+mapRegister.registerDataComponent('chart.contestants-per-series', PerSeriesChartComponent);
+mapRegister.registerDataComponent('chart.contestants-per-years', PerYearsChartComponent);
 mapRegister.registerDataComponent('chart.items-per-country-log', GeoChartComponent, {scaleType: 'log'});
 mapRegister.registerDataComponent('chart.items-per-country-linear', GeoChartComponent, {scaleType: 'linear'});
 mapRegister.registerDataComponent('chart.participants-in-time-geo', ParticipantsInTimeGeoChart);

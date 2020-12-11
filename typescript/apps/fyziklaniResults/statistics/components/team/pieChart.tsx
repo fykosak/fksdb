@@ -1,17 +1,15 @@
 import { arc, PieArcDatum } from 'd3-shape';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-    Submit,
-    Submits,
-    Team,
-} from '@apps/fyziklani/helpers/interfaces';
+import { Submits } from '@apps/fyziklani/helpers/interfaces';
 import { getColorByPoints } from '../../middleware/charts/colors';
 import { getPieData } from '../../middleware/charts/pie';
 import { Store as StatisticsStore } from '../../reducers';
+import { ModelFyziklaniSubmit } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniSubmit';
+import { ModelFyziklaniTeam } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
 
 interface StateProps {
-    teams: Team[];
+    teams: ModelFyziklaniTeam[];
     submits: Submits;
     activePoints: number;
 }
@@ -41,7 +39,7 @@ class Chart extends React.Component<StateProps & OwnProps, {}> {
         let maxPoints = 0;
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
-                const submit: Submit = submits[index];
+                const submit: ModelFyziklaniSubmit = submits[index];
                 const {teamId: submitTeamId, points} = submit;
                 if (teamId === submitTeamId) {
 

@@ -8,7 +8,7 @@ use FKSDB\Model\ORM\Services\ServiceSubmit;
  * Class ContestantsPerSeries
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PerSeriesChart extends AbstractContestantsPerSeriesChart {
+class PerSeriesChartComponent extends AbstractPerSeriesChart {
 
     private ServiceSubmit $serviceSubmit;
 

@@ -17,7 +17,7 @@ use Nette\DI\Container;
  * Class TimelineControl
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class TimelineControl extends ReactComponent {
+class TimelineComponent extends ReactComponent {
 
     private ModelPerson $person;
 

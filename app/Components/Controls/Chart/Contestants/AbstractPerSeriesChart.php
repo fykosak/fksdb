@@ -11,7 +11,7 @@ use Nette\DI\Container;
  * Class AbstractContestantsPerSeriesChart
  * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class AbstractContestantsPerSeriesChart extends ReactComponent implements IChart {
+abstract class AbstractPerSeriesChart extends ReactComponent implements IChart {
 
     protected ModelContest $contest;
 

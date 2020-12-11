@@ -2,24 +2,16 @@ import { NetteActions } from '@appsCollector/netteActions';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
-import {
-    Form,
-    InjectedFormProps,
-    reduxForm,
-} from 'redux-form';
-import {
-    Task,
-    Team,
-} from '../../helpers/interfaces';
-import {
-    SubmitFormRequest, submitStart,
-} from '../actions';
+import { Form, InjectedFormProps, reduxForm, } from 'redux-form';
+import { SubmitFormRequest, submitStart, } from '../actions';
 import { validate } from '../middleware';
 import FormSection from './formSection';
+import { ModelFyziklaniTeam } from '../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { ModelFyziklaniTask } from '../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
 
 export interface OwnProps {
-    tasks: Task[];
-    teams: Team[];
+    tasks: ModelFyziklaniTask[];
+    teams: ModelFyziklaniTeam[];
     actions: NetteActions;
     availablePoints: number[];
 }

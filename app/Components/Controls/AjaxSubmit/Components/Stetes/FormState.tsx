@@ -1,15 +1,12 @@
-import { NetteActions } from '@appsCollector/netteActions';
-import { dispatchFetch } from '@fetchApi/netteFetch';
-import { dragEnd, dragStart, dropItem } from '@shared/dragndrop';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-    Action,
-    Dispatch,
-} from 'redux';
-import { addError } from '../../actions';
-import { handleFileUpload, Submit } from '../../middleware/';
-import { Store } from '../../reducers';
+import { Action, Dispatch, } from 'redux';
+import { handleFileUpload, Submit } from '../../Middleware/';
+import { Store } from '../../Reducers';
+import { NetteActions } from '../../../../../../typescript/appsCollector/netteActions';
+import { addError } from '../../Actions';
+import { dragEnd, dragStart, dropItem } from '../../../../../../typescript/shared/dragndrop';
+import { dispatchFetch } from '../../../../../../typescript/fetchApi/netteFetch';
 
 interface OwnProps {
     submit: Submit;
@@ -33,7 +30,7 @@ interface StateProps {
     actions: NetteActions;
 }
 
-class Form extends React.Component<OwnProps & StateProps & DispatchProps, {}> {
+class FormState extends React.Component<OwnProps & StateProps & DispatchProps, {}> {
 
     public render() {
         const {dragged} = this.props;
@@ -114,4 +111,4 @@ const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps =
     };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Form);
+export default connect(mapStateToProps, mapDispatchToProps)(FormState);

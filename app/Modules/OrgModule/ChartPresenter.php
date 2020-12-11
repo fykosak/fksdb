@@ -2,9 +2,9 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Chart\ContestantsPerSeries\AggregatedSeries;
-use FKSDB\Components\Controls\Chart\ContestantsPerSeries\PerSeriesChart;
-use FKSDB\Components\Controls\Chart\ContestantsPerYearsChart;
+use FKSDB\Components\Controls\Chart\ContestantsPerSeries\AggregatedSeriesChartComponent;
+use FKSDB\Components\Controls\Chart\ContestantsPerSeries\PerSeriesChartComponent;
+use FKSDB\Components\Controls\Chart\PerYearsChartComponent;
 use FKSDB\Components\Controls\Chart\TotalPersonsChartComponent;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
 
@@ -30,9 +30,9 @@ class ChartPresenter extends BasePresenter {
 
     protected function registerCharts(): array {
         return [
-            'contestantsPerSeries' => new PerSeriesChart($this->getContext(), $this->getSelectedContest()),
-            'totalContestantsPerSeries' => new AggregatedSeries($this->getContext(), $this->getSelectedContest()),
-            'contestantsPerYears' => new ContestantsPerYearsChart($this->getContext(), $this->getSelectedContest()),
+            'contestantsPerSeries' => new PerSeriesChartComponent($this->getContext(), $this->getSelectedContest()),
+            'totalContestantsPerSeries' => new AggregatedSeriesChartComponent($this->getContext(), $this->getSelectedContest()),
+            'contestantsPerYears' => new PerYearsChartComponent($this->getContext(), $this->getSelectedContest()),
             'totalPersons' => new TotalPersonsChartComponent($this->getContext()),
         ];
     }

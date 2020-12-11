@@ -1,4 +1,5 @@
-import { Submit, Submits } from '@apps/fyziklani/helpers/interfaces';
+import { Submits } from '@apps/fyziklani/helpers/interfaces';
+import { ModelFyziklaniSubmit } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniSubmit';
 
 export interface SubmitsByTask {
     [time: number]: {
@@ -15,7 +16,7 @@ export const submitsByTask = (
     const taskTimeSubmits: SubmitsByTask = {};
     for (const index in submits) {
         if (submits.hasOwnProperty(index)) {
-            const submit: Submit = submits[index];
+            const submit: ModelFyziklaniSubmit = submits[index];
             if (submit.taskId === activeTaskId) {
                 if (submit.points > 0) {
                     if (!activePoints || activePoints === submit.points) {

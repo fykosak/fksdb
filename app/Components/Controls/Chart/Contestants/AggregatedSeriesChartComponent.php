@@ -8,7 +8,7 @@ use Nette\Database\Context;
  * Class ContestantsPerSeries
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class AggregatedSeries extends AbstractContestantsPerSeriesChart {
+class AggregatedSeriesChartComponent extends AbstractPerSeriesChart {
 
     private Context $context;
 

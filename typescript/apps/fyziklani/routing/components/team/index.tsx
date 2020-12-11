@@ -1,13 +1,13 @@
-import { dragEnd, dragStart } from '@shared/dragndrop';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
     Action,
     Dispatch,
 } from 'redux';
-import { Team } from '../../../helpers/interfaces';
+import { ModelFyziklaniTeam } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
 import { removeTeamPlace } from '../../actions/teams';
 import { Store as RoutingStore } from '../../reducers/';
+import { dragEnd, dragStart } from '../../../../../shared/dragndrop';
 
 interface StateProps {
     isUpdated: boolean;
@@ -23,7 +23,7 @@ interface DispatchProps {
 }
 
 interface OwnProps {
-    team: Team;
+    team: ModelFyziklaniTeam;
 }
 
 class TeamComponent extends React.Component<OwnProps & StateProps & DispatchProps, {}> {

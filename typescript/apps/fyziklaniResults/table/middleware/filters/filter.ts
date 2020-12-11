@@ -1,4 +1,4 @@
-import { Team } from '@apps/fyziklani/helpers/interfaces';
+import { ModelFyziklaniTeam } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
 
 export class Filter {
     public name: string;
@@ -11,7 +11,7 @@ export class Filter {
         this.name = name;
     }
 
-    public match(team: Team): boolean {
+    public match(team: ModelFyziklaniTeam): boolean {
         const {roomId, category} = team;
         if (this.category && this.category !== category) {
             return false;

@@ -1,9 +1,9 @@
-import AbstractChart from '@shared/components/chart';
 import { axisBottom } from 'd3-axis';
 import { scaleOrdinal, ScaleTime } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { select } from 'd3-selection';
 import * as React from 'react';
+import ChartComponent from '../../Chart/ChartComponent';
 
 interface Event {
     begin: string;
@@ -59,7 +59,7 @@ interface Props {
     };
 }
 
-export default class PersonTimeLine extends AbstractChart<Props, {}> {
+export default class TimelineComponent extends ChartComponent<Props, {}> {
     private colorScale;
     private readonly lineHeight = 30;
     private rowNumber;

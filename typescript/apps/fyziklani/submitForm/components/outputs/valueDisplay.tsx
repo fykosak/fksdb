@@ -1,15 +1,13 @@
 import { getFullCode, getTask, getTeam } from '@apps/fyziklani/submitForm/middleware';
 import { lang } from '@i18n/i18n';
 import * as React from 'react';
-import {
-    Task,
-    Team,
-} from '../../../helpers/interfaces';
+import { ModelFyziklaniTeam } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { ModelFyziklaniTask } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
 
 interface OwnProps {
     code: string;
-    tasks: Task[];
-    teams: Team[];
+    tasks: ModelFyziklaniTask[];
+    teams: ModelFyziklaniTeam[];
 }
 
 export default class ValueDisplay extends React.Component<OwnProps, {}> {

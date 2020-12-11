@@ -1,7 +1,7 @@
 import { ScaleTime, scaleTime } from 'd3-scale';
 import * as React from 'react';
 
-export default abstract class AbstractChart<T, S> extends React.Component<T, S> {
+export default abstract class ChartComponent<T, S> extends React.Component<T, S> {
     protected readonly size = {
         height: 600,
         width: 900,

@@ -1,4 +1,3 @@
-import { Team } from '@apps/fyziklani/helpers/interfaces';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
@@ -7,12 +6,13 @@ import {
 } from 'redux';
 import { setPosition } from '../actions/setPosition';
 import { FyziklaniResultsPresentationStore } from '../reducers';
+import { ModelFyziklaniTeam } from '../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
 
 interface StateProps {
     categories: string[];
     category: string;
     cols: number;
-    teams: Team[];
+    teams: ModelFyziklaniTeam[];
     rows: number;
     delay: number;
     position: number;

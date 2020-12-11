@@ -4,18 +4,18 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { Team } from '../../../helpers/interfaces';
 import { saveTeams } from '../../actions/save';
 import { Store as RoutingStore } from '../../reducers/';
+import { ModelFyziklaniTeam } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
 
 interface StateProps {
-    teams: Team[];
+    teams: ModelFyziklaniTeam[];
     saving: boolean;
     error: Error | any;
 }
 
 interface DispatchProps {
-    onSaveRouting(teams: Team[]): void;
+    onSaveRouting(teams: ModelFyziklaniTeam[]): void;
 }
 
 class Form extends React.Component<StateProps & DispatchProps, {}> {
@@ -34,7 +34,7 @@ class Form extends React.Component<StateProps & DispatchProps, {}> {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action>): DispatchProps => {
     return {
-        onSaveRouting: (data: Team[]) => saveTeams(dispatch, data),
+        onSaveRouting: (data: ModelFyziklaniTeam[]) => saveTeams(dispatch, data),
     };
 };
 

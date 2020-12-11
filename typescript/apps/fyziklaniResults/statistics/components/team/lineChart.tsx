@@ -1,26 +1,23 @@
-import {
-    Submit,
-    Submits,
-    Task, Team,
-} from '@apps/fyziklani/helpers/interfaces';
+import { Submits} from '@apps/fyziklani/helpers/interfaces';
 import { LineChartData } from '@shared/components/lineChart/interfaces';
 import LineChart from '@shared/components/lineChart/lineChart';
-import {
-    scaleLinear, scaleTime,
-} from 'd3-scale';
+import { scaleLinear, scaleTime } from 'd3-scale';
 import { curveLinear } from 'd3-shape';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { getColorByPoints } from '../../middleware/charts/colors';
 import { Store as StatisticsStore } from '../../reducers';
+import { ModelFyziklaniSubmit } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniSubmit';
+import { ModelFyziklaniTeam } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { ModelFyziklaniTask } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
 
 interface StateProps {
     submits: Submits;
-    tasks: Task[];
+    tasks: ModelFyziklaniTask[];
     gameStart: Date;
     gameEnd: Date;
     activePoints: number;
-    teams: Team[];
+    teams: ModelFyziklaniTeam[];
 }
 
 interface OwnProps {
@@ -59,7 +56,7 @@ class PointsInTime extends React.Component<StateProps & OwnProps, {}> {
 
         for (const index in submits) {
             if (submits.hasOwnProperty(index)) {
-                const submit: Submit = submits[index];
+                const submit: ModelFyziklaniSubmit = submits[index];
                 const {teamId: submitTeamId, points} = submit;
                 meanPoints += (submit.points / numberOfTeams);
                 meanTeamData.push({

@@ -1,6 +1,5 @@
 import { ACTION_FETCH_SUCCESS, ActionFetchSuccess } from '@fetchApi/actions';
 import { Response2 } from '@fetchApi/interfaces';
-import { Team } from '../../helpers/interfaces';
 import {
     ACTION_ADD_TEAMS,
     ACTION_REMOVE_PLACE,
@@ -12,9 +11,10 @@ import {
     ResponseData,
 } from '../middleware/interfaces';
 import { ACTION_DROP_ITEM, ActionDropItem } from '@shared/dragndrop';
+import { ModelFyziklaniTeam } from '../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
 
 export interface State {
-    availableTeams: Team[];
+    availableTeams: ModelFyziklaniTeam[];
     updatedTeams: number[];
 }
 

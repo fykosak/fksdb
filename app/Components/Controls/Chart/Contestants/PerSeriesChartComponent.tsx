@@ -1,5 +1,3 @@
-import { getMinMaxYear, getSeriesLabel, parseData, YearsData } from '@apps/chart/contestatnsData';
-import AbstractChart from '@shared/components/chart';
 import { LineChartData } from '@shared/components/lineChart/interfaces';
 import LineChartLegend from '@shared/components/lineChart/lineChartLegend';
 import { axisBottom, axisLeft } from 'd3-axis';
@@ -7,12 +5,14 @@ import { ScaleLinear, scaleLinear, scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { select } from 'd3-selection';
 import * as React from 'react';
+import ChartComponent from '../ChartComponent';
+import { getMinMaxYear, getSeriesLabel, parseData, YearsData } from './ContestatnsData';
 
 interface OwnProps {
     data: YearsData;
 }
 
-export default class ContestantsPerSeries extends AbstractChart<OwnProps, {}> {
+export default class PerSeriesChartComponent extends ChartComponent<OwnProps, {}> {
 
     private xAxis: SVGGElement;
     private yAxis: SVGGElement;

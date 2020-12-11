@@ -1,4 +1,3 @@
-import { Task } from '@apps/fyziklani/helpers/interfaces';
 import { lang } from '@i18n/i18n';
 import TimeDisplay from '@shared/components/displays/time';
 import * as React from 'react';
@@ -14,10 +13,11 @@ import {
     setToDate,
 } from '../../actions';
 import { Store as StatisticsStore } from '../../reducers';
+import { ModelFyziklaniTask } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
 
 interface StateProps {
     aggregationTime: number;
-    tasks: Task[];
+    tasks: ModelFyziklaniTask[];
     taskId: number;
     fromDate: Date;
     toDate: Date;

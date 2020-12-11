@@ -7,19 +7,19 @@ import {
 } from 'redux';
 import {
     Room,
-    Team,
 } from '../../helpers/interfaces';
 import { addTeams } from '../actions/teams';
 import Form from './form/';
 import Rooms from './rooms/';
 import UnRoutedTeams from './unroutedTeams/';
+import { ModelFyziklaniTeam } from '../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
 
 interface DispatchProps {
-    onAddTeams(teams: Team[]): void;
+    onAddTeams(teams: ModelFyziklaniTeam[]): void;
 }
 
 interface OwnProps {
-    teams: Team[];
+    teams: ModelFyziklaniTeam[];
     rooms: Room[];
 }
 
