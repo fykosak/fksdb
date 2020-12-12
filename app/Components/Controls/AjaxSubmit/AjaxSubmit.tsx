@@ -1,9 +1,10 @@
-import * as React from 'react';
 import { NetteActions } from '@appsCollector/netteActions';
+import * as React from 'react';
 import ActionsStoreCreator from '../../../../typescript/fetchApi/actionsStoreCreator';
 import UploadContainer from './Components/Container';
 import { Submit } from './Middleware';
 import { app } from './Reducers/Index';
+import './style.scss';
 
 interface IProps {
     data: Submit;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { ModelFyziklaniTeam } from '../../../../../../app/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
 import { Store as RoutingStore } from '../../reducers/';
 import TeamComponent from '../team/';
 

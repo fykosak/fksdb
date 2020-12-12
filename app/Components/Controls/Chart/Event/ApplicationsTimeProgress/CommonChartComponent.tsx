@@ -1,6 +1,4 @@
 import { translator } from '@translator/Translator';
-import { LineChartData } from '@shared/components/lineChart/interfaces';
-import LineChart from '@shared/components/lineChart/lineChart';
 import {
     scaleLinear,
     scaleOrdinal,
@@ -9,6 +7,8 @@ import { schemeCategory10 } from 'd3-scale-chromatic';
 import * as React from 'react';
 import ChartContainer from '../../ChartContainer';
 import { ModelEvent } from '@FKSDB/Model/ORM/Models/ModelEvent';
+import { LineChartData } from '@FKSDB/Components/Controls/Chart/LineChart/Middleware';
+import LineChartComponent from '@FKSDB/Components/Controls/Chart/LineChart/LineChartComponent';
 
 export interface Data {
     events: {
@@ -85,7 +85,7 @@ export default class CommonChartComponent extends React.Component<OwnProps, {}> 
 
         return <>
             <ChartContainer
-                chart={LineChart}
+                chart={LineChartComponent}
                 chartProps={{
                     data: lineChartData,
                     display: {

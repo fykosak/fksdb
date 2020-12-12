@@ -1,13 +1,10 @@
 import Attendance from '@apps/events/attendance';
-import { eventSchedule } from '@apps/events/schedule';
-import TaskCodeApp from '@apps/fyziklani/submitForm/components';
-import FyziklaniResultsPresentation from '@apps/fyziklaniResults/presentation';
-import FyziklaniResultsStatistics from '@apps/fyziklaniResults/statistics';
-import FyziklaniResultsTable from '@apps/fyziklaniResults/table';
 import { mapRegister } from '@appsCollector/mapRegister';
 import AjaxSubmit from '@FKSDB/Components/Controls/AjaxSubmit/AjaxSubmit';
 import PerSeriesChartComponent from '@FKSDB/Components/Controls/Chart/Contestants/PerSeriesChartComponent';
 import PerYearsChartComponent from '@FKSDB/Components/Controls/Chart/Contestants/PerYearsChartComponent';
+import PointsEntryComponent from '@FKSDB/Components/Controls/Fyziklani/Submit/PointsEntryComponent';
+import { eventSchedule } from '@FKSDB/Components/Forms/Controls/Schedule/ScheduleField';
 import * as React from 'react';
 import CommonChartComponent from '../app/Components/Controls/Chart/Event/ApplicationsTimeProgress/CommonChartComponent';
 import ParticipantAcquaintanceChartControl
@@ -17,16 +14,22 @@ import ParticipantsInTimeGeoChart from '../app/Components/Controls/Chart/GeoChar
 import TotalPersonsChartComponent from '../app/Components/Controls/Chart/TotalPersonsChartComponent';
 import TimelineComponent from '../app/Components/Controls/Stalking/Timeline/TimelineComponent';
 import { appsCollector } from './appsCollector';
+import ResultsTableComponent
+    from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsTable/ResultsTableComponent';
+import ResultsPresentationComponent
+    from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/ResultsPresentation/ResultsPresentationComponent';
+import StatisticsComponent
+    from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Statistics/StatisticsComponent';
 
 appsCollector.register(eventSchedule);
 
 mapRegister.registerActionsComponent('public.ajax-submit', AjaxSubmit);
-mapRegister.registerActionsComponent('fyziklani.results.table', FyziklaniResultsTable);
-mapRegister.registerActionsComponent('fyziklani.statistics.team', FyziklaniResultsStatistics, {mode: 'team'});
-mapRegister.registerActionsComponent('fyziklani.statistics.task', FyziklaniResultsStatistics, {mode: 'task'});
-mapRegister.registerActionsComponent('fyziklani.statistics.correlation', FyziklaniResultsStatistics, {mode: 'correlation'});
-mapRegister.registerActionsComponent('fyziklani.results.presentation', FyziklaniResultsPresentation);
-mapRegister.registerActionsComponent('fyziklani.submit-form', TaskCodeApp);
+mapRegister.registerActionsComponent('fyziklani.results.table', ResultsTableComponent);
+mapRegister.registerActionsComponent('fyziklani.statistics.team', StatisticsComponent, {mode: 'team'});
+mapRegister.registerActionsComponent('fyziklani.statistics.task', StatisticsComponent, {mode: 'task'});
+mapRegister.registerActionsComponent('fyziklani.statistics.correlation', StatisticsComponent, {mode: 'correlation'});
+mapRegister.registerActionsComponent('fyziklani.results.presentation', ResultsPresentationComponent);
+mapRegister.registerActionsComponent('fyziklani.submit-form', PointsEntryComponent);
 
 // tslint:disable-next-line:max-line-length
 mapRegister.registerDataComponent('events.applications-time-progress.participants', CommonChartComponent, {accessKey: 'participants'});

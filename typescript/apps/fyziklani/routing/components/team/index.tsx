@@ -1,13 +1,13 @@
+import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
+import { dragEnd, dragStart } from '@shared/dragndrop';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
     Action,
     Dispatch,
 } from 'redux';
-import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
 import { removeTeamPlace } from '../../actions/teams';
 import { Store as RoutingStore } from '../../reducers/';
-import { dragEnd, dragStart } from '@shared/dragndrop';
 
 interface StateProps {
     isUpdated: boolean;

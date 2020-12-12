@@ -1,5 +1,3 @@
-import { LineChartData } from '@shared/components/lineChart/interfaces';
-import LineChartLegend from '@shared/components/lineChart/lineChartLegend';
 import { axisBottom, axisLeft } from 'd3-axis';
 import { ScaleLinear, scaleLinear, scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
@@ -7,6 +5,8 @@ import { select } from 'd3-selection';
 import * as React from 'react';
 import ChartComponent from '../ChartComponent';
 import { getMinMaxYear, getSeriesLabel, parseData, YearsData } from './ContestatnsData';
+import { LineChartData } from '@FKSDB/Components/Controls/Chart/LineChart/Middleware';
+import LegendComponent from '@FKSDB/Components/Controls/Chart/LineChart/LegendComponent';
 
 interface OwnProps {
     data: YearsData;
@@ -80,7 +80,7 @@ export default class PerSeriesChartComponent extends ChartComponent<OwnProps, {}
                 </svg>
             </div>
             <div className="chart-legend-container col-lg-3 col-md-4">
-                <LineChartLegend data={legendData}/>
+                <LegendComponent data={legendData}/>
             </div>
         </div>;
     }

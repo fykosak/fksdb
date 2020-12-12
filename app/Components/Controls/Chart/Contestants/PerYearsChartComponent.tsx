@@ -1,13 +1,13 @@
 import { translator } from '@translator/Translator';
 import Ordinal from '@translator/Ordinal';
-import { ExtendedPointData, LineChartData } from '@shared/components/lineChart/interfaces';
-import LineChart from '@shared/components/lineChart/lineChart';
-import LineChartLegend from '@shared/components/lineChart/lineChartLegend';
 import { scaleLinear, scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { curveCatmullRom } from 'd3-shape';
 import * as React from 'react';
 import { getMinMaxYear, getSeriesLabel, parseData, seriesType, YearsData } from './ContestatnsData';
+import { ExtendedPointData, LineChartData } from '@FKSDB/Components/Controls/Chart/LineChart/Middleware';
+import LineChartComponent from '@FKSDB/Components/Controls/Chart/LineChart/LineChartComponent';
+import LegendComponent from '@FKSDB/Components/Controls/Chart/LineChart/LegendComponent';
 
 export interface OwnProps {
     data: YearsData;
@@ -62,10 +62,10 @@ export default class PerYearsChartComponent extends React.Component<OwnProps, {}
 
         return <div className="row">
             <div className="chart-container col-lg-9 col-md-8">
-                <LineChart data={lineChartData} xScale={xScale} yScale={yScale} display={{xGrid: false, yGrid: true}}/>
+                <LineChartComponent data={lineChartData} xScale={xScale} yScale={yScale} display={{xGrid: false, yGrid: true}}/>
             </div>
             <div className="chart-legend-container col-lg-3 col-md-4">
-                <LineChartLegend data={lineChartData}/>
+                <LegendComponent data={lineChartData}/>
             </div>
         </div>;
     }
