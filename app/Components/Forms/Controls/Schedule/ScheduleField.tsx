@@ -1,12 +1,13 @@
-import { App } from '@appsCollector/index';
 import Container from '@FKSDB/Components/Forms/Controls/Schedule/Components/Container';
-import { app } from '@FKSDB/Components/Forms/Controls/Schedule/Reducer';
-import { ModelScheduleGroup } from '@FKSDB/Model/ORM/Models/Schedule/ModelScheduleGroup';
-import InputConnector from '@inputConnector/netteInputConnector';
-import StoreCreator from '@shared/components/storeCreator';
-import { translator } from '@translator/Translator';
+import { app } from '@FKSDB/Components/Forms/Controls/Schedule/reducer';
+import NetteInputConnector from '@FKSDB/Model/FrontEnd/InputConnector/NetteInputConnector';
+import { App } from '@FKSDB/Model/FrontEnd/Loader/Loader';
+import StoreCreator from '@FKSDB/Model/FrontEnd/Loader/StoreCreator';
+import { ModelScheduleGroup } from '@FKSDB/Model/ORM/Models/Schedule/modelScheduleGroup';
+import { translator } from '@translator/translator';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
+import './style.scss';
 
 interface OwnProps {
     scheduleDef: {
@@ -32,7 +33,7 @@ class ScheduleField extends React.Component<OwnProps, {}> {
     public render() {
         return <StoreCreator app={app}>
             <>
-                <InputConnector input={this.props.input}/>
+                <NetteInputConnector input={this.props.input}/>
                 {this.getComponentByMode()}
             </>
         </StoreCreator>;

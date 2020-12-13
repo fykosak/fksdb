@@ -1,9 +1,9 @@
-import { Store } from '@FKSDB/Components/Controls/AjaxSubmit/Reducers/Index';
-import { translator } from '@translator/Translator';
+import { Store } from '@FKSDB/Components/Controls/AjaxSubmit/Reducers';
+import Card from '@FKSDB/Model/UI/Card';
+import { translator } from '@translator/translator';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import Card from '../../../../../typescript/shared/components/card';
-import { Submit } from '../Middleware';
+import { Submit } from '../middleware';
 import MessageBox from './MessageBox';
 import File from './Stetes/FileState';
 import Form from './Stetes/FormState';

@@ -2,10 +2,10 @@ import {
     getFullCode,
     getTask,
     getTeam,
-} from '@FKSDB/Components/Controls/Fyziklani/Submit/Middleware';
-import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
-import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
-import { translator } from '@translator/Translator';
+} from '@FKSDB/Components/Controls/Fyziklani/Submit/middleware';
+import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTask';
+import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { translator } from '@translator/translator';
 import * as React from 'react';
 
 interface OwnProps {

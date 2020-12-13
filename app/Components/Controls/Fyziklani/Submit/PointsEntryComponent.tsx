@@ -1,10 +1,10 @@
-import { NetteActions } from '@appsCollector/netteActions';
-import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
-import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
-import StoreCreator from '@shared/components/storeCreator';
+import { NetteActions } from '@FKSDB/Model/FrontEnd/Loader/netteActions';
+import StoreCreator from '@FKSDB/Model/FrontEnd/Loader/StoreCreator';
+import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTask';
+import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTeam';
 import * as React from 'react';
 import Container from './Components/Container';
-import { app } from './Reducer';
+import { app } from './reducer';
 
 interface OwnProps {
     data: {

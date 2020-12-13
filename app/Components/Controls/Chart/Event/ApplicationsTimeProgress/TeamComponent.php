@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\Components\Controls\Chart\Event;
+namespace FKSDB\Components\Controls\Chart\Event\ApplicationsTimeProgress;
 
-use FKSDB\Components\Controls\Chart\IChart;
+use FKSDB\Components\Controls\Chart\Contestants\Core\Chart;
 use FKSDB\Components\React\ReactComponent;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use FKSDB\Model\ORM\Models\ModelEventType;
@@ -14,14 +14,14 @@ use Nette\DI\Container;
  * Class TeamApplicationsTimeProgress
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class TeamComponent extends ReactComponent implements IChart {
+class TeamComponent extends ReactComponent implements Chart {
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
     private ModelEventType $eventType;
     private ServiceEvent $serviceEvent;
 
     public function __construct(Container $context, ModelEvent $event) {
-        parent::__construct($context, 'events.applications-time-progress.teams');
+        parent::__construct($context, 'chart.events.teams.time-progress');
         $this->eventType = $event->getEventType();
     }
 

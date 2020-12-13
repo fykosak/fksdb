@@ -1,16 +1,16 @@
-import { Submits } from '@apps/fyziklani/helpers/interfaces';
-import { NetteActions } from '@appsCollector/netteActions';
-import { dispatchFetch } from '@fetchApi/netteFetch';
-import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
-import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
-import { translator } from '@translator/Translator';
+import { FyziklaniResultsCoreStore } from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Reducers/coreStore';
+import { Submits } from '@FKSDB/Model/FrontEnd/apps/fyziklani/helpers/interfaces';
+import { dispatchFetch } from '@FKSDB/Model/FrontEnd/Fetch/netteFetch';
+import { NetteActions } from '@FKSDB/Model/FrontEnd/Loader/netteActions';
+import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTask';
+import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { translator } from '@translator/translator';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
     Action,
     Dispatch,
 } from 'redux';
-import { FyziklaniResultsCoreStore } from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/shared/reducers/coreStore';
 
 interface StateProps {
     error: Error | any;

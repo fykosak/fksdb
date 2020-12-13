@@ -1,6 +1,6 @@
+import { translator } from '@translator/translator';
 import * as React from 'react';
 import { WrappedFieldProps } from 'redux-form';
-import { translator } from '@translator/Translator';
 
 export default class ScanInput extends React.Component<WrappedFieldProps & {}, { processing: boolean; messages: string[] }> {
     constructor(props) {

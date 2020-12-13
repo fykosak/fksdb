@@ -2,7 +2,7 @@ var path = require('path');
 const {TsConfigPathsPlugin} = require('awesome-typescript-loader');
 
 module.exports = {
-    entry: './typescript/index.tsx',
+    entry: './app/Bootstrap.tsx',
     output: {
         path: __dirname + '/www/js/',
         filename: 'bundle.min.js',
@@ -34,7 +34,16 @@ module.exports = {
                     // Translates CSS into CommonJS
                     "css-loader",
                     // Compiles Sass to CSS
-                    "sass-loader",
+                    {
+                        loader: 'sass-loader',
+                        options: {
+                            webpackImporter: false,
+                            sassOptions: {
+                                includePaths: ['node_modules'],
+                            },
+                            implementation: require('sass'),
+                        },
+                    },
                 ],
             },
         ],

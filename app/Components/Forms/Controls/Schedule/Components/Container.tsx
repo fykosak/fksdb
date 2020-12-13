@@ -1,5 +1,5 @@
 import { Params } from '@FKSDB/Components/Forms/Controls/Schedule/ScheduleField';
-import { ModelScheduleGroup } from '@FKSDB/Model/ORM/Models/Schedule/ModelScheduleGroup';
+import { ModelScheduleGroup } from '@FKSDB/Model/ORM/Models/Schedule/modelScheduleGroup';
 import * as React from 'react';
 import Group from './Group';
 

@@ -1,19 +1,20 @@
 <?php
 
-namespace FKSDB\Components\Controls\Chart;
+namespace FKSDB\Components\Controls\Chart\Contestants;
 
+use FKSDB\Components\Controls\Chart\Contestants\Core\Chart;
 use FKSDB\Components\React\ReactComponent;
 use FKSDB\Model\ORM\Models\ModelContest;
 use FKSDB\Model\ORM\Services\ServiceSubmit;
 use Nette\DI\Container;
 
-class PerYearsChartComponent extends ReactComponent implements IChart {
+class PerYearsChartComponent extends ReactComponent implements Chart {
 
     private ServiceSubmit $serviceSubmit;
     protected ModelContest $contest;
 
     public function __construct(Container $container, ModelContest $contest) {
-        parent::__construct($container, 'chart.contestants-per-years');
+        parent::__construct($container, 'chart.contestants.per-years');
         $this->contest = $contest;
     }
 

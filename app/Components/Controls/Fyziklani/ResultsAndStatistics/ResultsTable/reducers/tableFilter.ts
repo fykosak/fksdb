@@ -6,7 +6,7 @@ import {
     ACTION_SET_AUTO_SWITCH,
     ACTION_SET_FILTER,
 } from '../Actions/tableFilter';
-import { Filter } from '../Filter';
+import { Filter } from '../filter';
 
 export interface State {
     filters: Filter[];

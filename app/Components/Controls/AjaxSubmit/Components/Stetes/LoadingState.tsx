@@ -1,5 +1,5 @@
+import { translator } from '@translator/translator';
 import * as React from 'react';
-import { translator } from '@translator/Translator';
 
 export default class LoadingState extends React.Component<{}, {}> {
     public render() {

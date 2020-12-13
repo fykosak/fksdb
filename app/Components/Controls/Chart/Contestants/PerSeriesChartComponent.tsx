@@ -1,61 +1,41 @@
-import { axisBottom, axisLeft } from 'd3-axis';
-import { ScaleLinear, scaleLinear, scaleOrdinal } from 'd3-scale';
+import BarHistogram from '@FKSDB/Components/Controls/Chart/Core/BarHistogram/BarHistogram';
+import ChartContainer from '@FKSDB/Components/Controls/Chart/Core/ChartContainer';
+import LineChartLegend from '@FKSDB/Components/Controls/Chart/Core/LineChart/LineChartLegend';
+import { LineChartData } from '@FKSDB/Components/Controls/Chart/Core/LineChart/middleware';
+import { scaleLinear, scaleOrdinal } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
-import { select } from 'd3-selection';
 import * as React from 'react';
-import ChartComponent from '../ChartComponent';
 import { getMinMaxYear, getSeriesLabel, parseData, YearsData } from './ContestatnsData';
-import { LineChartData } from '@FKSDB/Components/Controls/Chart/LineChart/Middleware';
-import LegendComponent from '@FKSDB/Components/Controls/Chart/LineChart/LegendComponent';
 
 interface OwnProps {
     data: YearsData;
 }
 
-export default class PerSeriesChartComponent extends ChartComponent<OwnProps, {}> {
-
-    private xAxis: SVGGElement;
-    private yAxis: SVGGElement;
-
-    private xScale: ScaleLinear<number, number>;
-    private yScale: ScaleLinear<number, number>;
-
-    public componentDidMount() {
-        this.getAxis();
-    }
-
-    public componentDidUpdate() {
-        this.getAxis();
-    }
+export default class PerSeriesChartComponent extends React.Component<OwnProps, {}> {
 
     public render() {
         const colorScale = scaleOrdinal(schemeCategory10);
         const {data} = this.props;
         const {maxValue, maxSeries} = parseData(data);
         const [minYear, maxYear] = getMinMaxYear(data);
-        this.yScale = scaleLinear<number, number>().domain([0, maxValue]).range(this.getInnerYSize());
-        this.xScale = scaleLinear<number, number>().domain([minYear - 1, maxYear]).range(this.getInnerXSize());
+        const yScale = scaleLinear<number, number>().domain([0, maxValue]);
+        const xScale = scaleLinear<number, number>().domain([minYear - 1, maxYear]);
 
-        const barXSize = 0.8 / (maxSeries + 2);
-        const bars = [];
+        const histogramData = [];
         for (const year in data) {
             if (data.hasOwnProperty(year)) {
-                const relativeYear = +year - 0.5;
+                const histogramItems = [];
                 const datum = data[year];
-                const rows = [];
                 for (const series in datum) {
                     if (datum.hasOwnProperty(series)) {
-                        const x1 = this.xScale(relativeYear + barXSize * +series);
-                        const x2 = this.xScale(relativeYear + barXSize * (+series + 1));
-                        const y1 = this.yScale(datum[series]);
-                        const y2 = this.yScale(0);
-                        rows.push(<polygon
-                            key={series}
-                            points={[[x1, y1], [x1, y2], [x2, y2], [x2, y1]].join(' ')}
-                            fill={colorScale(series)}/>);
+                        histogramItems.push({
+                            color: colorScale(series),
+                            label: series,
+                            yValue: datum[series],
+                        });
                     }
                 }
-                bars.push(rows);
+                histogramData.push({xValue: year, items: histogramItems});
             }
         }
 
@@ -69,28 +49,11 @@ export default class PerSeriesChartComponent extends ChartComponent<OwnProps, {}
             });
         }
 
-        return <div className="row">
-            <div className="chart-container col-lg-9 col-md-8">
-                <svg viewBox={this.getViewBox()} className="chart time-histogram">
-                    <g>
-                        {bars}
-                        <g transform={this.transformXAxis()} className="x-axis" ref={(xAxis) => this.xAxis = xAxis}/>
-                        <g transform={this.transformYAxis()} className="y-axis" ref={(yAxis) => this.yAxis = yAxis}/>
-                    </g>
-                </svg>
-            </div>
-            <div className="chart-legend-container col-lg-3 col-md-4">
-                <LegendComponent data={legendData}/>
-            </div>
-        </div>;
-    }
-
-    private getAxis(): void {
-        const xAxis = axisBottom<number>(this.xScale);
-        xAxis.tickValues(Object.keys(this.props.data).map((value) => +value));
-        select(this.xAxis).call(xAxis);
-
-        const yAxis = axisLeft<number>(this.yScale);
-        select(this.yAxis).call(yAxis);
+        return <ChartContainer
+            chart={BarHistogram}
+            chartProps={{xScale, yScale, data: histogramData}}
+            legendComponent={LineChartLegend}
+            legendProps={{data: legendData}}
+        />;
     }
 }

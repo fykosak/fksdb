@@ -1,8 +1,8 @@
-import * as React from 'react';
 import {
     LocalizedString,
     translator,
-} from '@translator/Translator';
+} from '@translator/translator';
+import * as React from 'react';
 
 interface OwnProps {
     description: LocalizedString;

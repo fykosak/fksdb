@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { translator } from '@translator/Translator';
 import Ordinal from '@translator/Ordinal';
+import { translator } from '@translator/translator';
+import * as React from 'react';
 
 export type seriesType = string | 'year';
 

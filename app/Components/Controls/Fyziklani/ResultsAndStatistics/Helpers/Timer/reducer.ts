@@ -1,9 +1,9 @@
-import { Response2 } from '@fetchApi/interfaces';
+import { ResponseData } from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Downloader/Downloader';
 import {
     ACTION_FETCH_SUCCESS,
     ActionFetchSuccess,
-} from '@fetchApi/actions';
-import { ResponseData } from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Downloader/Downloader';
+} from '@FKSDB/Model/FrontEnd/Fetch/actions';
+import { Response2 } from '@FKSDB/Model/FrontEnd/Fetch/interfaces';
 
 export interface State {
     gameEnd?: Date;

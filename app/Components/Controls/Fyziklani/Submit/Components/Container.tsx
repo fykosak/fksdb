@@ -1,20 +1,20 @@
-import { NetteActions } from '@appsCollector/netteActions';
-import { Message } from '@fetchApi/interfaces';
-import { SubmitFormRequest, submitStart } from '@FKSDB/Components/Controls/Fyziklani/Submit/Actions';
+import { SubmitFormRequest, submitStart } from '@FKSDB/Components/Controls/Fyziklani/Submit/actions';
 import ScanInput from '@FKSDB/Components/Controls/Fyziklani/Submit/Components/Inputs/ScanInput';
 import SubmitButtons from '@FKSDB/Components/Controls/Fyziklani/Submit/Components/Inputs/SubmitButtons';
 import TextInput from '@FKSDB/Components/Controls/Fyziklani/Submit/Components/Inputs/TextInput';
 import ErrorBlock from '@FKSDB/Components/Controls/Fyziklani/Submit/Components/Outputs/ErrorBlock';
 import ValueDisplay from '@FKSDB/Components/Controls/Fyziklani/Submit/Components/Outputs/ValueDisplay';
-import { Store as SubmitStore } from '@FKSDB/Components/Controls/Fyziklani/Submit/Reducer';
-import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
-import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
-import { translator } from '@translator/Translator';
+import { Store as SubmitStore } from '@FKSDB/Components/Controls/Fyziklani/Submit/reducer';
+import { Message } from '@FKSDB/Model/FrontEnd/Fetch/interfaces';
+import { NetteActions } from '@FKSDB/Model/FrontEnd/Loader/netteActions';
+import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTask';
+import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { translator } from '@translator/translator';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
 import { Field, Form, formValueSelector, InjectedFormProps, reduxForm } from 'redux-form';
-import { validate } from '../Middleware';
+import { validate } from '../middleware';
 
 export interface OwnProps {
     tasks: ModelFyziklaniTask[];

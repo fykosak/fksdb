@@ -1,7 +1,7 @@
-import { Response2 } from '@fetchApi/interfaces';
+import { SubmitFormRequest } from '@FKSDB/Components/Controls/Fyziklani/Submit/actions';
+import { Response2 } from '@FKSDB/Model/FrontEnd/Fetch/interfaces';
 import * as React from 'react';
 import { SubmitHandler } from 'redux-form';
-import { SubmitFormRequest } from '@FKSDB/Components/Controls/Fyziklani/Submit/Actions';
 
 interface OwnProps {
     valid: boolean;

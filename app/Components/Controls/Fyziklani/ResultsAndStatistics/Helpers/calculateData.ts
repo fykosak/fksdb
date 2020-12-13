@@ -1,6 +1,6 @@
-import { ModelFyziklaniSubmit } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniSubmit';
-import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
-import { Submits } from '@apps/fyziklani/helpers/interfaces';
+import { Submits } from '@FKSDB/Model/FrontEnd/apps/fyziklani/helpers/interfaces';
+import { ModelFyziklaniSubmit } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniSubmit';
+import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTeam';
 
 export interface Item {
     team: ModelFyziklaniTeam;

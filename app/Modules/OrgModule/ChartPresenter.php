@@ -2,9 +2,9 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Chart\ContestantsPerSeries\AggregatedSeriesChartComponent;
-use FKSDB\Components\Controls\Chart\ContestantsPerSeries\PerSeriesChartComponent;
-use FKSDB\Components\Controls\Chart\PerYearsChartComponent;
+use FKSDB\Components\Controls\Chart\Contestants\AggregatedSeriesChartComponent;
+use FKSDB\Components\Controls\Chart\Contestants\PerSeriesChartComponent;
+use FKSDB\Components\Controls\Chart\Contestants\PerYearsChartComponent;
 use FKSDB\Components\Controls\Chart\TotalPersonsChartComponent;
 use FKSDB\Modules\Core\PresenterTraits\ChartPresenterTrait;
 

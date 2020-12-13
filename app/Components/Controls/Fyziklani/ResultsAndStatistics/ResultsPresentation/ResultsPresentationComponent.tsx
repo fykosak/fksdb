@@ -1,12 +1,13 @@
-import { NetteActions } from '@appsCollector/netteActions';
 import { ResponseData } from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Downloader/Downloader';
-import MainComponent from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/shared/components/mainComponent';
+import MainComponent from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/MainComponent';
+import ResultsShower from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/ResultsShower';
+import { NetteActions } from '@FKSDB/Model/FrontEnd/Loader/netteActions';
 import * as React from 'react';
-import ResultsShower from '../Helpers/shared/components/resultsShower';
-import App from './components/app';
-import PositionSwitcher from './components/positionSwitcher';
-import Settings from './components/settings';
-import { app } from './reducers';
+import App from './Components/InnerComponent';
+import PositionSwitcher from './Components/PositionSwitcher';
+import Settings from './Components/Settings/Form';
+import { app } from './Reducers';
+import './style.scss';
 
 interface OwnProps {
     actions: NetteActions;

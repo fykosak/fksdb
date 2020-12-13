@@ -3,7 +3,8 @@ import { scaleOrdinal, ScaleTime } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { select } from 'd3-selection';
 import * as React from 'react';
-import ChartComponent from '../../Chart/ChartComponent';
+import './style.scss';
+import ChartComponent from '@FKSDB/Components/Controls/Chart/Core/ChartComponent';
 
 interface Event {
     begin: string;
@@ -78,7 +79,11 @@ export default class TimelineComponent extends ChartComponent<Props, {}> {
     public render() {
         this.colorScale = scaleOrdinal(schemeCategory10);
         this.rowNumber = 0;
-        const {events: {eventOrgs, eventParticipants, eventTeachers}, scale: {max, min}, states: {orgs, contestants}} = this.props.data;
+        const {
+            events: {eventOrgs, eventParticipants, eventTeachers},
+            scale: {max, min},
+            states: {orgs, contestants},
+        } = this.props.data;
         this.scale = this.createTimeXScale(new Date(min), new Date(max));
         const content = <g transform="translate(0,15)" className="content">
             {this.createEvents(eventOrgs, 'Event org')}
@@ -104,8 +109,8 @@ export default class TimelineComponent extends ChartComponent<Props, {}> {
             {this.createContestants(contestants)}
         </g>;
         this.rowNumber += 3;
-        return <div className="row-12">
-            <svg className="w-100 chart person-timeline" viewBox={'0 0 ' + this.size.width + ' ' + this.getCurrentY()}>
+        return <div className="row-12 chart-container person-detail-timeline">
+            <svg className="chart w-100 " viewBox={'0 0 ' + this.size.width + ' ' + this.getCurrentY()}>
                 <g transform={'translate(0,' + (this.getCurrentY() - this.margin.bottom) + ')'}
                    className={'axis x-axis grid'}
                    ref={(xAxis) => this.xAxis = xAxis}/>

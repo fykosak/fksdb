@@ -1,9 +1,9 @@
-import { NetteActions } from '@appsCollector/netteActions';
+import ActionsStoreCreator from '@FKSDB/Model/FrontEnd/Fetch/ActionsStoreCreator';
+import { NetteActions } from '@FKSDB/Model/FrontEnd/Loader/netteActions';
 import * as React from 'react';
-import ActionsStoreCreator from '../../../../typescript/fetchApi/actionsStoreCreator';
 import UploadContainer from './Components/Container';
-import { Submit } from './Middleware';
-import { app } from './Reducers/Index';
+import { Submit } from './middleware';
+import { app } from './Reducers';
 import './style.scss';
 
 interface IProps {

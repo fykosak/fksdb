@@ -1,14 +1,14 @@
-import { NetteActions } from '@appsCollector/netteActions';
-import { dispatchFetch } from '@fetchApi/netteFetch';
-import { Store } from '@FKSDB/Components/Controls/AjaxSubmit/Reducers/Index';
-import { translator } from '@translator/Translator';
+import { Store } from '@FKSDB/Components/Controls/AjaxSubmit/Reducers';
+import { dispatchFetch } from '@FKSDB/Model/FrontEnd/Fetch/netteFetch';
+import { NetteActions } from '@FKSDB/Model/FrontEnd/Loader/netteActions';
+import { translator } from '@translator/translator';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
     Action,
     Dispatch,
 } from 'redux';
-import { Submit } from '../../Middleware';
+import { Submit } from '../../middleware';
 
 interface OwnProps {
     submit: Submit;

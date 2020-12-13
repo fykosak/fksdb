@@ -1,14 +1,14 @@
-import { translator } from '@translator/Translator';
+import ChartContainer from '@FKSDB/Components/Controls/Chart/Core/ChartContainer';
+import LineChart from '@FKSDB/Components/Controls/Chart/Core/LineChart/LineChart';
+import { LineChartData } from '@FKSDB/Components/Controls/Chart/Core/LineChart/middleware';
+import { ModelEvent } from '@FKSDB/Model/ORM/Models/modelEvent';
+import { translator } from '@translator/translator';
 import {
     scaleLinear,
     scaleOrdinal,
 } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import * as React from 'react';
-import ChartContainer from '../../ChartContainer';
-import { ModelEvent } from '@FKSDB/Model/ORM/Models/ModelEvent';
-import { LineChartData } from '@FKSDB/Components/Controls/Chart/LineChart/Middleware';
-import LineChartComponent from '@FKSDB/Components/Controls/Chart/LineChart/LineChartComponent';
 
 export interface Data {
     events: {
@@ -83,29 +83,31 @@ export default class CommonChartComponent extends React.Component<OwnProps, {}> 
         const yScale = scaleLinear<number, number>().domain([0, max]);
         const xScale = scaleLinear<number, number>().domain([minTime, 0]);
 
-        return <>
-            <ChartContainer
-                chart={LineChartComponent}
-                chartProps={{
-                    data: lineChartData,
-                    display: {
-                        xGrid: true,
-                        yGrid: true,
-                    },
-                    xScale,
-                    yScale,
-
-                }}
-                headline={translator.getText('Time progress')}
-            />
-            <div className={'list-group'}>
+        const legend = () => {
+            return <div className={'list-group'}>
                 {lineChartData.map((datum, key) => {
                     return <div
                         key={key}
                         className={'list-group-item'}
                         style={{color: datum.color}}>{datum.name}</div>;
                 })}
-            </div>
-        </>;
+            </div>;
+        };
+
+        return <ChartContainer
+            chart={LineChart}
+            chartProps={{
+                data: lineChartData,
+                display: {
+                    xGrid: true,
+                    yGrid: true,
+                },
+                xScale,
+                yScale,
+
+            }}
+            legendComponent={legend}
+            headline={translator.getText('Time progress')}
+        />;
     }
 }

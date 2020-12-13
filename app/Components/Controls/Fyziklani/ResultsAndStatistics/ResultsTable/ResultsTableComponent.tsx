@@ -1,11 +1,12 @@
-import { NetteActions } from '@appsCollector/netteActions';
 import { ResponseData } from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Downloader/Downloader';
-import MainComponent from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/shared/components/mainComponent';
+import MainComponent from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/MainComponent';
+import ResultsShower from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/ResultsShower';
+import { NetteActions } from '@FKSDB/Model/FrontEnd/Loader/netteActions';
 import * as React from 'react';
-import ResultsShower from '../Helpers/shared/components/resultsShower';
-import FilterSelect from './components/filters/select';
+import FilterSelect from './components/filters/select/Index';
 import App from './components/Index';
 import { app } from './reducers';
+import './style.scss';
 
 interface OwnProps {
     actions: NetteActions;

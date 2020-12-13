@@ -1,12 +1,13 @@
+import LineChartLegend from '@FKSDB/Components/Controls/Chart/Core/LineChart/LineChartLegend';
+import LineChart from '@FKSDB/Components/Controls/Chart/Core/LineChart/LineChart';
+import { LineChartData, PointData } from '@FKSDB/Components/Controls/Chart/Core/LineChart/middleware';
+import { translator } from '@translator/translator';
 import {
     scaleLinear,
     scaleTime,
 } from 'd3-scale';
 import * as React from 'react';
-import { translator } from '@translator/Translator';
-import { LineChartData, PointData } from '@FKSDB/Components/Controls/Chart/LineChart/Middleware';
-import LineChartComponent from '@FKSDB/Components/Controls/Chart/LineChart/LineChartComponent';
-import LegendComponent from '@FKSDB/Components/Controls/Chart/LineChart/LegendComponent';
+import ChartContainer from '@FKSDB/Components/Controls/Chart/Core/ChartContainer';
 
 interface Data {
     created: string;
@@ -88,14 +89,16 @@ export default class TotalPersonsChartComponent extends React.Component<OwnProps
 
         const yScale = scaleLinear<number, number>().domain([0, data[data.length - 1].personId]);
         const xScale = scaleTime().domain([new Date(data[0].created), new Date()]);
-
-        return <div className="row">
-            <div className="chart-container col-lg-9 col-md-8">
-                <LineChartComponent data={lineChartData} xScale={xScale} yScale={yScale} display={{xGrid: true, yGrid: true}}/>
-            </div>
-            <div className="chart-legend-container col-lg-3 col-md-4">
-                <LegendComponent data={lineChartData}/>
-            </div>
-        </div>;
+        return <ChartContainer
+            chart={LineChart}
+            chartProps={{
+                data: lineChartData,
+                display: {xGrid: true, yGrid: true},
+                xScale,
+                yScale,
+            }}
+            legendComponent={LineChartLegend}
+            legendProps={{data: lineChartData}}
+        />;
     }
 }

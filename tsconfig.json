@@ -10,34 +10,16 @@
     "allowJs": true,
     "baseUrl": ".",
     "paths": {
-      "@fetchApi/*": [
-        "./typescript/fetchApi/*"
-      ],
-      "@apps/*": [
-        "./typescript/apps/*"
-      ],
       "@FKSDB/*": [
         "./app/*"
       ],
-      "@shared/*": [
-        "./typescript/shared/*"
-      ],
       "@translator/*": [
         "./app/Model/Localization/*"
-      ],
-      "@appsCollector/*": [
-        "./typescript/appsCollector/*"
-      ],
-      "@inputConnector/*": [
-        "./typescript/inputConnector/*"
-      ],
-      "@config": [
-        "./typescript/config"
       ]
     }
   },
   "include": [
     "./app/**/*",
-    "./typescript/**/*"
+    "./vendor/fykosak/**/*"
   ]
 }

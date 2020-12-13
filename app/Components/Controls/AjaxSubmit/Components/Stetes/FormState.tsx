@@ -1,12 +1,12 @@
-import { NetteActions } from '@appsCollector/netteActions';
-import { dispatchFetch } from '@fetchApi/netteFetch';
-import { dragEnd, dragStart, dropItem } from '@shared/dragndrop';
+import { dispatchFetch } from '@FKSDB/Model/FrontEnd/Fetch/netteFetch';
+import { NetteActions } from '@FKSDB/Model/FrontEnd/Loader/netteActions';
+import { dragEnd, dragStart, dropItem } from '@FKSDB/Model/FrontEnd/shared/dragndrop';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
-import { addError } from '../../Actions';
-import { handleFileUpload, Submit } from '../../Middleware';
-import { Store } from '../../Reducers/Index';
+import { addError } from '../../actions';
+import { handleFileUpload, Submit } from '../../middleware';
+import { Store } from '../../Reducers';
 
 interface OwnProps {
     submit: Submit;

@@ -1,4 +1,4 @@
-import { Filter } from '../Filter';
+import { Filter } from '../filter';
 import { FilterAction } from './filterAction';
 
 export const ACTION_ADD_FILTER = '@@fyziklani/ACTION_ADD_FILTER';

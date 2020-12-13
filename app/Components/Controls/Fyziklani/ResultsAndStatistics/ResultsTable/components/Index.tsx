@@ -1,12 +1,12 @@
-import { Submits } from '@apps/fyziklani/helpers/interfaces';
-import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTask';
-import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/ModelFyziklaniTeam';
-import { translator } from '@translator/Translator';
+import { Submits } from '@FKSDB/Model/FrontEnd/apps/fyziklani/helpers/interfaces';
+import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTask';
+import { ModelFyziklaniTeam } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTeam';
+import { translator } from '@translator/translator';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { FyziklaniResultsTableStore } from '../../ResultsTable/reducers';
-import { Filter } from '../Filter';
-import Row from './row';
+import { Filter } from '../filter';
+import Row from './Row';
 
 interface StateProps {
     filter: Filter;

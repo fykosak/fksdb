@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\Components\Controls\Chart\IChart;
+use FKSDB\Components\Controls\Chart\Contestants\Core\Chart;
 use FKSDB\Model\UI\PageTitle;
 use Nette\ComponentModel\IComponent;
 
@@ -12,7 +12,7 @@ use Nette\ComponentModel\IComponent;
  */
 trait ChartPresenterTrait {
 
-    protected IChart $selectedChart;
+    protected Chart $selectedChart;
 
     private array $chartComponents;
 
@@ -33,7 +33,7 @@ trait ChartPresenterTrait {
     }
 
     /**
-     * @return IChart[]
+     * @return Chart[]
      */
     protected function getCharts(): array {
         $this->chartComponents = $this->chartComponents ?? $this->registerCharts();
@@ -58,7 +58,7 @@ trait ChartPresenterTrait {
     abstract public function authorizedChart(): void;
 
     /**
-     * @return IChart[]
+     * @return Chart[]
      */
     abstract protected function registerCharts(): array;
 

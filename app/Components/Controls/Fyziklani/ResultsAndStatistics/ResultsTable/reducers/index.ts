@@ -1,5 +1,5 @@
+import { coreApp, FyziklaniResultsCoreStore } from '@FKSDB/Components/Controls/Fyziklani/ResultsAndStatistics/Helpers/Reducers/coreStore';
 import { combineReducers } from 'redux';
-import { coreApp, FyziklaniResultsCoreStore } from '../../Helpers/shared/reducers/coreStore';
 import {
     fyziklaniTableFilter,
     State as TableFilterState,

@@ -1,12 +1,12 @@
 import { Params } from '@FKSDB/Components/Forms/Controls/Schedule/ScheduleField';
-import { ScheduleGroupType } from '@FKSDB/Model/ORM/Models/Schedule/ModelScheduleGroup';
-import { ModelScheduleItem } from '@FKSDB/Model/ORM/Models/Schedule/ModelScheduleItem';
-import { changeData } from '@inputConnector/actions';
-import { translator } from '@translator/Translator';
+import { changeData } from '@FKSDB/Model/FrontEnd/InputConnector/actions';
+import { ScheduleGroupType } from '@FKSDB/Model/ORM/Models/Schedule/modelScheduleGroup';
+import { ModelScheduleItem } from '@FKSDB/Model/ORM/Models/Schedule/modelScheduleItem';
+import { translator } from '@translator/translator';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Dispatch } from 'redux';
-import { Store } from '../Reducer';
+import { Store } from '../reducer';
 import CapacityLabel from './Parts/CapacityLabel';
 import DescriptionLabel from './Parts/DescriptionLabel';
 import PriceLabel from './Parts/PriceLabel';

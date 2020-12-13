@@ -13,8 +13,8 @@
     "file-name-casing": [
       true,
       {
-        ".*.tsx?": "camel-case",
-        "app/.*.tsx?": "pascal-case"
+        ".*.tsx": "pascal-case",
+        ".*.ts": "camel-case"
       }
     ],
     "cyclomatic-complexity": false,
@@ -90,7 +90,7 @@
     ],
     "max-classes-per-file": false,
     "max-line-length": [
-      true,
+      false,
       140
     ],
     "increment-decrement": [
@@ -138,6 +138,12 @@
       "allow-leading-underscore",
       "allow-pascal-case"
     ],
-    "deprecation": true
+    "deprecation": true,
+    "no-import-side-effect": [
+      true,
+      {
+        "ignore-module": "(\\.scss)$"
+      }
+    ]
   }
 }
