@@ -1,13 +1,5 @@
 import { translator } from '@translator/translator';
 
-export interface Submit {
-    submitId: number | null;
-    name: string;
-    deadline: string | null;
-    taskId: number;
-    disabled: boolean;
-}
-
 const allowedTypes = [
     'application/pdf',
 ];

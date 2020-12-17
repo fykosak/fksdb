@@ -1,6 +1,7 @@
 import { Store } from '@FKSDB/Components/Controls/AjaxSubmit/Reducers';
 import { dispatchFetch } from '@FKSDB/Model/FrontEnd/Fetch/netteFetch';
 import { NetteActions } from '@FKSDB/Model/FrontEnd/Loader/netteActions';
+import { ModelSubmit } from '@FKSDB/Model/ORM/Models/modelSubmit';
 import { translator } from '@translator/translator';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -8,10 +9,9 @@ import {
     Action,
     Dispatch,
 } from 'redux';
-import { Submit } from '../../middleware';
 
 interface OwnProps {
-    submit: Submit;
+    submit: ModelSubmit;
 }
 
 interface DispatchProps {
@@ -44,7 +44,7 @@ class FileState extends React.Component<OwnProps & DispatchProps & StateProps, {
 
 const mapDispatchToProps = (dispatch: Dispatch<Action<string>>): DispatchProps => {
     return {
-        onDeleteFile: (url: string) => dispatchFetch<Submit>(url, dispatch, JSON.stringify({})),
+        onDeleteFile: (url: string) => dispatchFetch<ModelSubmit>(url, dispatch, JSON.stringify({})),
     };
 };
 const mapStateToProps = (state: Store): StateProps => {
