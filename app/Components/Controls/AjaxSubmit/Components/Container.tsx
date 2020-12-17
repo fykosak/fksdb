@@ -1,9 +1,9 @@
 import { Store } from '@FKSDB/Components/Controls/AjaxSubmit/Reducers';
+import { ModelSubmit } from '@FKSDB/Model/ORM/Models/modelSubmit';
 import Card from '@FKSDB/Model/UI/Card';
 import { translator } from '@translator/translator';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Submit } from '../middleware';
 import MessageBox from './MessageBox';
 import File from './Stetes/FileState';
 import Form from './Stetes/FormState';
@@ -11,7 +11,7 @@ import LoadingState from './Stetes/LoadingState';
 
 interface StateProps {
     submitting: boolean;
-    submit: Submit;
+    submit: ModelSubmit;
 }
 
 class UploadContainer extends React.Component<StateProps, {}> {

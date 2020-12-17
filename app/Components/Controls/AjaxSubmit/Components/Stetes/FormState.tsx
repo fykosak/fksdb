@@ -5,11 +5,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Action, Dispatch } from 'redux';
 import { addError } from '../../actions';
-import { handleFileUpload, Submit } from '../../middleware';
+import { handleFileUpload } from '../../middleware';
 import { Store } from '../../Reducers';
+import { ModelSubmit } from '@FKSDB/Model/ORM/Models/modelSubmit';
 
 interface OwnProps {
-    submit: Submit;
+    submit: ModelSubmit;
 }
 
 interface DispatchProps {

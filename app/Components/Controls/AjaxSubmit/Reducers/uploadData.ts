@@ -1,12 +1,12 @@
-import { Submit } from '@FKSDB/Components/Controls/AjaxSubmit/middleware';
 import { ACTION_FETCH_SUCCESS, ActionFetchSuccess } from '@FKSDB/Model/FrontEnd/Fetch/actions';
 import { Response2 } from '@FKSDB/Model/FrontEnd/Fetch/interfaces';
+import { ModelSubmit } from '@FKSDB/Model/ORM/Models/modelSubmit';
 
 export interface State {
-    submit?: Submit;
+    submit?: ModelSubmit;
 }
 
-const fetchSuccess = (state: State, action: ActionFetchSuccess<Response2<Submit>>): State => {
+const fetchSuccess = (state: State, action: ActionFetchSuccess<Response2<ModelSubmit>>): State => {
     return {
         submit: {...action.data.data},
     };
