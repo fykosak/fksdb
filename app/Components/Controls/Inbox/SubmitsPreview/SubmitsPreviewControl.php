@@ -3,10 +3,10 @@
 namespace FKSDB\Components\Controls\Inbox\SubmitsPreview;
 
 use FKSDB\Components\Controls\Inbox\SeriesTableComponent;
-use FKSDB\Exceptions\NotFoundException;
-use FKSDB\Messages\Message;
-use FKSDB\Submits\StorageException;
-use FKSDB\Submits\SubmitHandlerFactory;
+use FKSDB\Model\Exceptions\NotFoundException;
+use FKSDB\Model\Messages\Message;
+use FKSDB\Model\Submits\StorageException;
+use FKSDB\Model\Submits\SubmitHandlerFactory;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;

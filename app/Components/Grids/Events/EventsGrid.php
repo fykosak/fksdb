@@ -3,10 +3,10 @@
 namespace FKSDB\Components\Grids\Events;
 
 use FKSDB\Components\Grids\EntityGrid;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Services\ServiceEvent;
-use Nette\Application\UI\Presenter;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\ORM\Models\ModelContest;
+use FKSDB\Model\ORM\Services\ServiceEvent;
+use Nette\Application\IPresenter;
 use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;
 use NiftyGrid\DuplicateColumnException;
@@ -31,12 +31,12 @@ class EventsGrid extends EntityGrid {
     }
 
     /**
-     * @param Presenter $presenter
+     * @param IPresenter $presenter
+     * @throws BadTypeException
      * @throws DuplicateButtonException
      * @throws DuplicateColumnException
-     * @throws BadTypeException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
         $this->setDefaultOrder('event.begin ASC');
 

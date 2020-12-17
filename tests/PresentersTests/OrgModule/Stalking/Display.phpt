@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Tests\PresentersTests\CommonModule\Stalking;
+namespace FKSDB\Tests\PresentersTests\OrgModule\Stalking;
 
 $container = require '../../../Bootstrap.php';
 

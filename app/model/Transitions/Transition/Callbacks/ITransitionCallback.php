@@ -1,8 +1,8 @@
 <?php
 
-namespace FKSDB\Transitions\Callbacks;
+namespace FKSDB\model\Transitions\Transition\Callbacks;
 
-use FKSDB\Transitions\IStateModel;
+use FKSDB\Model\Transitions\IStateModel;
 
 /**
  * Interface ITransitionCallback

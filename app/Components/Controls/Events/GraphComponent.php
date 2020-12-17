@@ -4,8 +4,8 @@ namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
-use FKSDB\Events\Machine\BaseMachine;
-use FKSDB\Transitions\Machine;
+use FKSDB\Model\Events\Machine\BaseMachine;
+use FKSDB\Model\Transitions\Machine\Machine;
 use Nette\DI\Container;
 
 /**
@@ -16,9 +16,7 @@ use Nette\DI\Container;
 class GraphComponent extends BaseComponent {
 
     private BaseMachine $baseMachine;
-
     private ExpressionPrinter $expressionPrinter;
-
     private bool $attachedJS = false;
 
     public function __construct(Container $container, BaseMachine $baseMachine) {
@@ -55,7 +53,7 @@ class GraphComponent extends BaseComponent {
      * @return string[]
      */
     private function getAllStates(): array {
-        return array_merge($this->baseMachine->getStates(), [Machine\Machine::STATE_INIT, Machine\Machine::STATE_TERMINATED]);
+        return array_merge($this->baseMachine->getStates(), [Machine::STATE_INIT, Machine::STATE_TERMINATED]);
     }
 
     /**
@@ -65,11 +63,10 @@ class GraphComponent extends BaseComponent {
         $states = $this->getAllStates();
         $nodes = [];
         foreach ($states as $state) {
-
             $nodes[] = [
                 'id' => $state,
                 'label' => $this->baseMachine->getStateName($state),
-                'type' => $state === Machine\Machine::STATE_INIT ? 'init' : ($state === Machine\Machine::STATE_TERMINATED ? 'terminated' : 'default'),
+                'type' => $state === Machine::STATE_INIT ? 'init' : ($state === Machine::STATE_TERMINATED ? 'terminated' : 'default'),
             ];
         }
         return $nodes;

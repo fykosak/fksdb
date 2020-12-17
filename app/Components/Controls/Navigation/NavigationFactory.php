@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Navigation;
 
-use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Model\Exceptions\BadTypeException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\Presenter;

@@ -100,7 +100,7 @@ parameters:
                 name: name_en
 
         # Mapping of contribution types to comprising XML element (taken from Czech version only.)
-        # Contributions types must be FKSDB\ORM\Models\ModelTaskContribution::TYPE_* constants.
+        # Contributions types must be FKSDB\Model\ORM\Models\ModelTaskContribution::TYPE_* constants.
         contributionMapping:
             author: authors
             solution: solution-authors
@@ -177,9 +177,6 @@ parameters:
 
         # system user who should run the install script
         installUser: fksdb-updater
-
-
-
 php:
     date.timezone: Europe/Prague
     session.gc_maxlifetime: 1213200
@@ -196,19 +193,17 @@ session:
    autoStart: true
 extensions:
     fksrouter: FKSDB\Config\Extensions\RouterExtension
-    acl: FKSDB\Authorization\ACLExtension
+    acl: FKSDB\Model\Authorization\ACLExtension
     navigation: FKSDB\Components\Controls\Navigation\NavigationExtension
-    events: FKSDB\Events\EventsExtension(%appDir%/../app/config/events.neon)
-    DBReflection: FKSDB\DBReflection\DBReflectionExtension
-    transitions: FKSDB\Payment\Transition\TransitionsExtension
+    events: FKSDB\Model\Events\EventsExtension(%appDir%/../app/config/events.neon)
+    payment: FKSDB\Model\Payment\PaymentExtension
+    DBReflection: FKSDB\Model\DBReflection\DBReflectionExtension
 
 includes:
     - router.neon
     - acl.neon
     - orm.neon
-    - forms.neon
     - services.neon
-    - factories.neon
     - navigation.neon
     - contests.neon
     - exports.neon

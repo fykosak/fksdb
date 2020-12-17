@@ -5,28 +5,29 @@ namespace FKSDB\Modules\PublicModule;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Controls\CaptchaBox;
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Localization\UnsupportedLanguageException;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\BasePresenter as CoreBasePresenter;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
-use FKSDB\ORM\IModel;
-use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Services\ServiceContestant;
-use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\Model\ORM\IModel;
+use FKSDB\Model\ORM\Models\ModelContest;
+use FKSDB\Model\ORM\Models\ModelPerson;
+use FKSDB\Model\ORM\Services\ServiceContestant;
+use FKSDB\Model\ORM\Services\ServicePerson;
 use FKSDB\Modules\Core\ContestPresenter\IContestPresenter;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\UI\PageTitle;
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\InvalidStateException;
-use FKSDB\Persons\ExtendedPersonHandler;
-use FKSDB\Persons\ExtendedPersonHandlerFactory;
-use FKSDB\Persons\IExtendedPersonPresenter;
-use FKSDB\Persons\SelfResolver;
+use FKSDB\Model\Persons\ExtendedPersonHandler;
+use FKSDB\Model\Persons\ExtendedPersonHandlerFactory;
+use FKSDB\Model\Persons\IExtendedPersonPresenter;
+use FKSDB\Model\Persons\SelfResolver;
 
 /**
  * INPUT:
@@ -218,7 +219,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @throws BadTypeException
      */
     protected function createComponentEmailForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->addText('email', _('E-mail'));
         $form->addSubmit('submit', _('Find'));
@@ -237,6 +238,10 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
         $this->redirect('contestant', ['email' => $values['email'],]);
     }
 
+    /**
+     * @return array
+     * @throws \ReflectionException
+     */
     private function getFieldsDefinition(): array {
         $contestId = $this->getSelectedContest()->contest_id;
         $contestName = $this->getContext()->getParameters()['contestMapping'][$contestId];
@@ -248,9 +253,10 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @throws AbortException
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
+     * @throws \ReflectionException
      */
     protected function createComponentContestantForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $container = new ContainerWithOptions();
@@ -290,7 +296,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
                     $this->getUser()->login($login);
                 }
                 $this->redirect('Dashboard:default');
-
             }
         };
         $form->addProtection(_('The form has expired. Please send it again.'));
@@ -323,6 +328,7 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @throws AbortException
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
+     * @throws BadRequestException
      * @throws \ReflectionException
      */
     protected function beforeRender(): void {

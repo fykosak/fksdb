@@ -2,13 +2,10 @@
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Components\Controls\Choosers\YearChooser;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Localization\UnsupportedLanguageException;
-use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
+use FKSDB\Model\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\CoreModule\AuthenticationPresenter;
-use FKSDB\News;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\News;
+use FKSDB\Model\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 
@@ -39,8 +36,7 @@ class DashboardPresenter extends BasePresenter {
 
     public function authorizedDefault(): void {
         $login = $this->getUser()->getIdentity();
-        $access = (bool)$login;
-        $this->setAuthorized($access);
+        $this->setAuthorized((bool)$login);
     }
 
     public function titleDefault(): void {

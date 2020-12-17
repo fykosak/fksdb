@@ -5,15 +5,15 @@ namespace FKSDB\Modules\EventModule;
 use FKSDB\Components\Controls\Entity\ScheduleItemFormContainer;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Schedule\PersonsGrid;
-use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Events\EventNotFoundException;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Model\Entity\ModelNotFoundException;
+use FKSDB\Model\Events\Exceptions\EventNotFoundException;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
-use FKSDB\ORM\Models\Schedule\ModelScheduleItem;
-use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\ORM\Models\Schedule\ModelScheduleGroup;
+use FKSDB\Model\ORM\Models\Schedule\ModelScheduleItem;
+use FKSDB\Model\ORM\Services\Schedule\ServiceScheduleItem;
+use FKSDB\Model\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
 
@@ -54,7 +54,7 @@ class ScheduleItemPresenter extends BasePresenter {
 
     /**
      * @return void
-     * @throws EventNotFoundException
+     * @throws ForbiddenRequestException
      */
     public function titleCreate(): void {
         $this->setPageTitle(new PageTitle(_('Create schedule item'), 'fa fa-calendar-check-o'));
@@ -107,11 +107,11 @@ class ScheduleItemPresenter extends BasePresenter {
 
     /**
      * @param string|IResource $resource
-     * @param string $privilege
+     * @param string|null $privilege
      * @return bool
      * @throws EventNotFoundException
      */
-    protected function traitIsAuthorized($resource, string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool {
         return $this->isContestsOrgAuthorized($resource, $privilege);
     }
 

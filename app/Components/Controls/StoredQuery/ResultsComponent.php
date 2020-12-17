@@ -2,16 +2,16 @@
 
 namespace FKSDB\Components\Controls\StoredQuery;
 
-use FKSDB\Authorization\ContestAuthorizator;
+use FKSDB\Model\Authorization\ContestAuthorizator;
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Exports\ExportFormatFactory;
-use FKSDB\StoredQuery\StoredQuery;
-use FKSDB\StoredQuery\StoredQueryFactory as StoredQueryFactorySQL;
+use FKSDB\Model\Exports\ExportFormatFactory;
+use FKSDB\Model\StoredQuery\StoredQuery;
+use FKSDB\Model\StoredQuery\StoredQueryFactory as StoredQueryFactorySQL;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory;
 use FKSDB\Components\Grids\StoredQuery\ResultsGrid;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotFoundException;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\Exceptions\NotFoundException;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Form;
@@ -87,7 +87,7 @@ class ResultsComponent extends BaseComponent {
      * @throws BadTypeException
      */
     protected function createComponentParametrizeForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $parameters = $this->storedQueryFormFactory->createParametersValues($this->storedQuery->getQueryPattern()->getParameters());
@@ -122,6 +122,7 @@ class ResultsComponent extends BaseComponent {
     /**
      * @return void
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     public function render(): void {
         if ($this->parameters) {
@@ -167,7 +168,7 @@ class ResultsComponent extends BaseComponent {
 
     /**
      * TODO is this really need?
-      G*/
+     * G*/
     private function isAuthorized(): bool {
         if (!$this->hasStoredQuery()) {
             return false;

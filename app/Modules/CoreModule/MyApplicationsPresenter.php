@@ -3,10 +3,10 @@
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Grids\PersonRelatedGrid;
-use FKSDB\DBReflection\FieldLevelPermission;
-use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\Model\DBReflection\FieldLevelPermission;
+use FKSDB\Model\ORM\Models\ModelPerson;
 use FKSDB\Components\Grids\Application\Person\NewApplicationsGrid;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\UI\PageTitle;
 
 /**
  * Class MyApplicationsPresenter

@@ -1,13 +1,14 @@
 <?php
 
-namespace FKSDB\Transitions\Callbacks;
+namespace FKSDB\model\Transitions\Callbacks;
 
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Localization\UnsupportedLanguageException;
-use FKSDB\Mail\MailTemplateFactory;
-use FKSDB\ORM\Models\IPersonReferencedModel;
-use FKSDB\ORM\Services\ServiceEmailMessage;
-use FKSDB\Transitions\IStateModel;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\Localization\UnsupportedLanguageException;
+use FKSDB\Model\Mail\MailTemplateFactory;
+use FKSDB\Model\ORM\Models\IPersonReferencedModel;
+use FKSDB\Model\ORM\Services\ServiceEmailMessage;
+use FKSDB\model\Transitions\IStateModel;
+use FKSDB\model\Transitions\Transition\Callbacks\ITransitionCallback;
 
 /**
  * Class MailCallback

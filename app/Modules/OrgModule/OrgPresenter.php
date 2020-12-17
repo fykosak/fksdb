@@ -4,11 +4,11 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Entity\OrgFormComponent;
 use FKSDB\Components\Grids\OrgsGrid;
-use FKSDB\Entity\ModelNotFoundException;
+use FKSDB\Model\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\ORM\Models\ModelOrg;
-use FKSDB\ORM\Services\ServiceOrg;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\ORM\Models\ModelOrg;
+use FKSDB\Model\ORM\Services\ServiceOrg;
+use FKSDB\Model\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
 
@@ -104,10 +104,10 @@ class OrgPresenter extends BasePresenter {
 
     /**
      * @param IResource|string|null $resource
-     * @param string $privilege
+     * @param string|null $privilege
      * @return bool
      */
-    protected function traitIsAuthorized($resource, string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 }

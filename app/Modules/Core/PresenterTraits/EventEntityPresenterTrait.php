@@ -2,12 +2,12 @@
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Events\EventNotFoundException;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\AbstractModelSingle;
-use FKSDB\ORM\Models\IEventReferencedModel;
-use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\Model\Entity\ModelNotFoundException;
+use FKSDB\Model\Events\Exceptions\EventNotFoundException;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\ORM\Models\AbstractModelSingle;
+use FKSDB\Model\ORM\Models\IEventReferencedModel;
+use FKSDB\Model\ORM\Models\ModelEvent;
 use Nette\Application\ForbiddenRequestException;
 
 /**
@@ -27,7 +27,7 @@ trait EventEntityPresenterTrait {
      * @throws ModelNotFoundException
      */
     protected function getEntity(): AbstractModelSingle {
-        $model = $this->getBaseEntity(true);
+        $model = $this->getBaseEntity();
 
         if (!$model instanceof IEventReferencedModel) {
             throw new BadTypeException(IEventReferencedModel::class, $model);

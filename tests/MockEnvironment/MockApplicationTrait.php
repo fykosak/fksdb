@@ -2,12 +2,13 @@
 
 namespace FKSDB\Tests\MockEnvironment;
 
-use FKSDB\Authentication\LoginUserStorage;
-use FKSDB\ORM\Models\ModelLogin;
-use FKSDB\ORM\Services\ServiceLogin;
-use FKSDB\Mail\MailTemplateFactory;
-use Nette\Application\IPresenter;
+use FKSDB\Model\Authentication\LoginUserStorage;
+use FKSDB\Model\ORM\Models\ModelLogin;
+use FKSDB\Model\ORM\Services\ServiceLogin;
+use FKSDB\Model\Mail\MailTemplateFactory;
+use FKSDB\Model\YearCalculator;
 use Nette\Application\IPresenterFactory;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
 use Nette\Http\Session;
 use Tester\Assert;
@@ -56,7 +57,7 @@ trait MockApplicationTrait {
         $section->$key = $token;
     }
 
-    protected function authenticate($login): void {
+    protected function authenticate($login, ?Presenter $presenter = null): void {
         $container = $this->getContainer();
         if (!$login instanceof ModelLogin) {
             $login = $container->getByType(ServiceLogin::class)->findByPrimary($login);
@@ -65,13 +66,15 @@ trait MockApplicationTrait {
         $storage = $container->getByType(LoginUserStorage::class);
         $storage->setIdentity($login);
         $storage->setAuthenticated(true);
+
+        if ($presenter) {
+            $login->injectYearCalculator($this->getContainer()->getByType(YearCalculator::class));
+            $presenter->getUser()->login($login);
+        }
     }
 
-    /**
-     * @param string $presenterName
-     * @return IPresenter
-     */
-    protected function createPresenter($presenterName): IPresenter {
+    protected function createPresenter(string $presenterName): Presenter {
+        $_COOKIE['nette-samesite'] = '1';
         $presenterFactory = $this->getContainer()->getByType(IPresenterFactory::class);
         $presenter = $presenterFactory->createPresenter($presenterName);
         $presenter->autoCanonicalize = false;

@@ -3,30 +3,29 @@
 namespace FKSDB\Modules\PublicModule;
 
 use FKSDB\Components\Controls\AjaxSubmit\SubmitContainer;
-use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Grids\SubmitsGrid;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\GoneException;
-use FKSDB\Exceptions\ModelException;
-use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
-use FKSDB\ORM\Models\ModelLogin;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Models\ModelQuizQuestion;
-use FKSDB\ORM\Models\ModelSubmit;
-use FKSDB\ORM\Models\ModelTask;
-use FKSDB\ORM\Services\ServiceQuizQuestion;
-use FKSDB\ORM\Services\ServiceSubmit;
-use FKSDB\ORM\Services\ServiceSubmitQuizQuestion;
-use FKSDB\ORM\Services\ServiceTask;
-use FKSDB\ORM\Tables\TypedTableSelection;
-use FKSDB\Submits\FileSystemStorage\UploadedStorage;
-use FKSDB\Submits\ProcessingException;
-use FKSDB\Submits\SubmitHandlerFactory;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\Exceptions\GoneException;
+use FKSDB\Model\Exceptions\ModelException;
+use FKSDB\Model\ORM\Models\ModelLogin;
+use FKSDB\Model\ORM\Models\ModelPerson;
+use FKSDB\Model\ORM\Models\ModelQuizQuestion;
+use FKSDB\Model\ORM\Models\ModelSubmit;
+use FKSDB\Model\ORM\Models\ModelTask;
+use FKSDB\Model\ORM\Services\ServiceQuizQuestion;
+use FKSDB\Model\ORM\Services\ServiceSubmit;
+use FKSDB\Model\ORM\Services\ServiceSubmitQuizQuestion;
+use FKSDB\Model\ORM\Services\ServiceTask;
+use FKSDB\Model\ORM\Tables\TypedTableSelection;
+use FKSDB\Model\Submits\FileSystemStorage\UploadedStorage;
+use FKSDB\Model\Submits\ProcessingException;
+use FKSDB\Model\Submits\SubmitHandlerFactory;
+use FKSDB\Model\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
+use Nette\Http\FileUpload;
 use Tracy\Debugger;
 
 /**
@@ -58,6 +57,7 @@ class SubmitPresenter extends BasePresenter {
         $this->quizQuestionService = $quizQuestionService;
         $this->submitHandlerFactory = $submitHandlerFactory;
     }
+
     /* ******************* AUTH ************************/
 
     public function authorizedDefault(): void {
@@ -114,7 +114,7 @@ class SubmitPresenter extends BasePresenter {
      * @throws BadTypeException
      */
     protected function createComponentUploadForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $taskIds = [];
@@ -174,7 +174,6 @@ class SubmitPresenter extends BasePresenter {
                 }
             }
 
-
             $prevDeadline = $task->submit_deadline;
             $taskIds[] = $task->task_id;
         }
@@ -187,7 +186,6 @@ class SubmitPresenter extends BasePresenter {
             $form->onSuccess[] = function (Form $form) {
                 $this->handleUploadFormSuccess($form);
             };
-
             // $form->addProtection(_('The form has expired. Please send it again.'));
         }
 
@@ -229,7 +227,7 @@ class SubmitPresenter extends BasePresenter {
                     $this->flashMessage(sprintf(_('Task %s cannot be submitted anymore.'), $task->label), self::FLASH_ERROR);
                     continue;
                 }
-
+                /** @var FileUpload[] $taskValues */
                 $taskValues = $values['task' . $task->task_id];
 
                 if (count($questions)) {
@@ -258,12 +256,7 @@ class SubmitPresenter extends BasePresenter {
             $this->uploadedSubmitStorage->commit();
             $this->submitService->getConnection()->commit();
             $this->redirect('this');
-        } catch (ModelException $exception) {
-            $this->uploadedSubmitStorage->rollback();
-            $this->submitService->getConnection()->rollBack();
-            Debugger::log($exception);
-            $this->flashMessage(_('Task storing error.'), self::FLASH_ERROR);
-        } catch (ProcessingException $exception) {
+        } catch (ModelException | ProcessingException $exception) {
             $this->uploadedSubmitStorage->rollback();
             $this->submitService->getConnection()->rollBack();
             Debugger::log($exception);

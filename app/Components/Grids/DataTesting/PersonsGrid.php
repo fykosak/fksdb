@@ -3,13 +3,13 @@
 namespace FKSDB\Components\Grids\DataTesting;
 
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\DataTesting\DataTestingFactory;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\Services\ServicePerson;
-use FKSDB\DataTesting\TestLog;
-use FKSDB\Exceptions\NotImplementedException;
-use Nette\Application\UI\Presenter;
+use FKSDB\Model\DataTesting\DataTestingFactory;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\Logging\MemoryLogger;
+use FKSDB\Model\ORM\Services\ServicePerson;
+use FKSDB\Model\DataTesting\TestLog;
+use FKSDB\Model\Exceptions\NotImplementedException;
+use Nette\Application\IPresenter;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DataSource\NDataSource;
@@ -36,12 +36,12 @@ class PersonsGrid extends BaseGrid {
     }
 
     /**
-     * @param Presenter $presenter
+     * @param IPresenter $presenter
      * @return void
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
 
         $this->addColumns(['person.person_link']);

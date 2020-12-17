@@ -2,10 +2,10 @@
 
 namespace FKSDB\Modules\CoreModule;
 
-use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelLogin;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\ORM\Models\ModelContest;
+use FKSDB\Model\ORM\Models\ModelLogin;
+use FKSDB\Model\ORM\Models\ModelPerson;
+use FKSDB\Model\UI\PageTitle;
 use Nette\Application\UI\InvalidLinkException;
 
 /**

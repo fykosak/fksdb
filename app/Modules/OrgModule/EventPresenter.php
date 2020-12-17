@@ -4,13 +4,13 @@ namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Controls\Entity\EventFormComponent;
 use FKSDB\Components\Grids\Events\EventsGrid;
-use FKSDB\Entity\ModelNotFoundException;
+use FKSDB\Model\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\ServiceEvent;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\ORM\Models\ModelEvent;
+use FKSDB\Model\ORM\Services\ServiceEvent;
+use FKSDB\Model\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
-use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Model\Exceptions\NotImplementedException;
 use Nette\Security\IResource;
 
 /**
@@ -73,10 +73,10 @@ class EventPresenter extends BasePresenter {
 
     /**
      * @param IResource|string|null $resource
-     * @param string $privilege
+     * @param string|null $privilege
      * @return bool
      */
-    protected function traitIsAuthorized($resource, string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 }

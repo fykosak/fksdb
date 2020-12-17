@@ -3,11 +3,11 @@
 namespace FKSDB\Modules\OrgModule;
 
 use FKSDB\Components\Grids\EmailsGrid;
-use FKSDB\Entity\ModelNotFoundException;
+use FKSDB\Model\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\Services\ServiceEmailMessage;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\Exceptions\NotImplementedException;
+use FKSDB\Model\ORM\Services\ServiceEmailMessage;
+use FKSDB\Model\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\IResource;
@@ -72,10 +72,10 @@ class SpamPresenter extends BasePresenter {
 
     /**
      * @param IResource|string $resource
-     * @param string $privilege
+     * @param string|null $privilege
      * @return bool
      */
-    protected function traitIsAuthorized($resource, string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool {
         return $this->isAnyContestAuthorized($resource, $privilege);
     }
 }

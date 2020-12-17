@@ -2,11 +2,11 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Services\ServicePerson;
-use FKSDB\ORM\Tables\TypedTableSelection;
-use FKSDB\YearCalculator;
+use FKSDB\Model\ORM\Models\ModelContest;
+use FKSDB\Model\ORM\Models\ModelPerson;
+use FKSDB\Model\ORM\Services\ServicePerson;
+use FKSDB\Model\ORM\Tables\TypedTableSelection;
+use FKSDB\Model\YearCalculator;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

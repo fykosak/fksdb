@@ -47,7 +47,7 @@ events:
                         label: _('Preferovaná skupina')
                         required: true
                         modifiable: %events.defaultDsef.appCond%
-                        factory: Chooser(_('Zvolit skupinu'), FKSDB\Events\Spec\Dsef\GroupOptions())
+                        factory: Chooser(_('Zvolit skupinu'), FKSDB\Model\Events\Spec\Dsef\GroupOptions())
                     lunch_count:
                         modifiable: %events.defaultDsef.appCond%
                         description:  _('à 30 Kč')
@@ -65,7 +65,7 @@ events:
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine
             formAdjustments:
-                - FKSDB\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                - FKSDB\Model\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
                 - @events.captcha
 

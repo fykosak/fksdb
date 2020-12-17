@@ -1,11 +1,11 @@
 <?php
 
-namespace FKSDB\Tests\ModelTests;
+namespace FKSDB\Tests\ModelsTests;
 /** @var Container $container */
 $container = require '../Bootstrap.php';
 
-use FKSDB\ORM\Services\Exceptions\InvalidPostalCode;
-use FKSDB\ORM\Services\ServiceAddress;
+use FKSDB\Model\ORM\Services\Exceptions\InvalidPostalCode;
+use FKSDB\Model\ORM\Services\ServiceAddress;
 use Nette\DI\Container;
 use Tester\Assert;
 use Tester\TestCase;

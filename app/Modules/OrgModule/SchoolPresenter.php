@@ -5,11 +5,11 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Controls\Entity\SchoolFormComponent;
 use FKSDB\Components\Grids\ContestantsFromSchoolGrid;
 use FKSDB\Components\Grids\SchoolsGrid;
-use FKSDB\Entity\ModelNotFoundException;
+use FKSDB\Model\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\ORM\Models\ModelSchool;
-use FKSDB\ORM\Services\ServiceSchool;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\ORM\Models\ModelSchool;
+use FKSDB\Model\ORM\Services\ServiceSchool;
+use FKSDB\Model\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
 
@@ -89,10 +89,10 @@ class SchoolPresenter extends BasePresenter {
 
     /**
      * @param IResource|string $resource
-     * @param string $privilege
+     * @param string|null $privilege
      * @return bool
      */
-    protected function traitIsAuthorized($resource, string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool {
         return $this->isAnyContestAuthorized($resource, $privilege);
     }
 

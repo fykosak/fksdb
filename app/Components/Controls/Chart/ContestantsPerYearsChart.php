@@ -3,8 +3,8 @@
 namespace FKSDB\Components\Controls\Chart;
 
 use FKSDB\Components\React\ReactComponent;
-use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Services\ServiceSubmit;
+use FKSDB\Model\ORM\Models\ModelContest;
+use FKSDB\Model\ORM\Services\ServiceSubmit;
 use Nette\DI\Container;
 
 class ContestantsPerYearsChart extends ReactComponent implements IChart {

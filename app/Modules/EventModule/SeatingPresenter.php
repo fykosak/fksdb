@@ -3,10 +3,10 @@
 namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Fyziklani\Seating\SeatingControl;
-use FKSDB\Events\EventNotFoundException;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\Events\Exceptions\EventNotFoundException;
+use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
+use FKSDB\Model\UI\PageTitle;
 use Nette\DeprecatedException;
 
 /**

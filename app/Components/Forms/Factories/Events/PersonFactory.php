@@ -3,20 +3,20 @@
 namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\Events\EventsExtension;
-use FKSDB\Events\Model\ExpressionEvaluator;
-use FKSDB\Events\Model\Holder\DataValidator;
-use FKSDB\Events\Model\Holder\Field;
-use FKSDB\Events\Model\PersonContainerResolver;
+use FKSDB\Model\Events\EventsExtension;
+use FKSDB\Model\Events\Model\ExpressionEvaluator;
+use FKSDB\Model\Events\Model\Holder\DataValidator;
+use FKSDB\Model\Events\Model\Holder\Field;
+use FKSDB\Model\Events\Model\PersonContainerResolver;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
-use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\Model\ORM\Services\ServicePerson;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container as DIContainer;
 use Nette\Forms\IControl;
 use Nette\Security\User;
-use FKSDB\Persons\SelfResolver;
+use FKSDB\Model\Persons\SelfResolver;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -90,6 +90,11 @@ class PersonFactory extends AbstractFactory {
         $this->container = $container;
     }
 
+    /**
+     * @param Field $field
+     * @return ReferencedId
+     * @throws \ReflectionException
+     */
     public function createComponent(Field $field): ReferencedId {
         $searchType = $this->evaluator->evaluate($this->searchType, $field);
         $allowClear = $this->evaluator->evaluate($this->allowClear, $field);
@@ -141,6 +146,7 @@ class PersonFactory extends AbstractFactory {
      * @param Field $field
      * @param DataValidator $validator
      * @return bool|void
+     * @throws \ReflectionException
      */
     public function validate(Field $field, DataValidator $validator) {
         // check person ID itself
@@ -171,6 +177,7 @@ class PersonFactory extends AbstractFactory {
     /**
      * @param Field $field
      * @return array|mixed
+     * @throws \ReflectionException
      */
     private function evaluateFieldsDefinition(Field $field) {
         Helpers::registerSemantic(EventsExtension::$semanticMap);

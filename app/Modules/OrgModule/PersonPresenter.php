@@ -9,14 +9,14 @@ use FKSDB\Components\Controls\Stalking\StalkingContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\DBReflection\FieldLevelPermission;
-use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Model\DBReflection\FieldLevelPermission;
+use FKSDB\Model\Entity\ModelNotFoundException;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Services\ServicePerson;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\ORM\Models\ModelPerson;
+use FKSDB\Model\ORM\Services\ServicePerson;
+use FKSDB\Model\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Security\IResource;
@@ -131,7 +131,7 @@ class PersonPresenter extends BasePresenter {
      * @throws BadTypeException
      */
     protected function createComponentFormSearch(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $form->addComponent($this->personFactory->createPersonSelect(true, _('Person'), new PersonProvider($this->servicePerson)), 'person_id');
 
@@ -182,7 +182,7 @@ class PersonPresenter extends BasePresenter {
      * @throws ModelNotFoundException
      */
     public function createComponentStalkingContainer(): StalkingContainer {
-        return new StalkingContainer($this->getContext(), $this->getEntity(), $this->getUserPermissions(true));
+        return new StalkingContainer($this->getContext(), $this->getEntity(), $this->getUserPermissions());
     }
 
     /**
@@ -223,7 +223,7 @@ class PersonPresenter extends BasePresenter {
      * @param string|null $privilege
      * all auth method is overwritten
      */
-    protected function traitIsAuthorized($resource, string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool {
         return $this->isAnyContestAuthorized($resource, $privilege);
     }
 }

@@ -3,13 +3,12 @@
 namespace FKSDB\Components\Controls\AjaxSubmit;
 
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Messages\Message;
-use FKSDB\ORM\Models\ModelContest;
-use FKSDB\ORM\Models\ModelContestant;
-use FKSDB\ORM\Models\ModelTask;
-use FKSDB\ORM\Services\ServiceTask;
-use FKSDB\ORM\Tables\TypedTableSelection;
-use Nette\Application\AbortException;
+use FKSDB\Model\Messages\Message;
+use FKSDB\Model\ORM\Models\ModelContest;
+use FKSDB\Model\ORM\Models\ModelContestant;
+use FKSDB\Model\ORM\Models\ModelTask;
+use FKSDB\Model\ORM\Services\ServiceTask;
+use FKSDB\Model\ORM\Tables\TypedTableSelection;
 use Nette\ComponentModel\IComponent;
 use Nette\DI\Container;
 
@@ -38,19 +37,14 @@ class SubmitContainer extends BaseComponent {
         }
     }
 
-    /**
-     * @param int|string $name
-     * @param bool $throw
-     * @return IComponent|null
-     * @throws AbortException
-     */
-    public function getComponent($name, $throw = true): ?IComponent {
-        $component = parent::getComponent($name, $throw);
+    protected function createComponent(string $name): ?IComponent {
+        $component = parent::createComponent($name);
         if (!$component && preg_match('/task_[0-9]+/', $name)) {
             $this->flashMessage(_('Task is not available'), Message::LVL_DANGER);
             $this->redirect('this');
         }
         return $component;
+
     }
 
     final public function injectPrimary(ServiceTask $serviceTask): void {

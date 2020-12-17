@@ -4,12 +4,12 @@ namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
-use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Model\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\ORM\Models\ModelSchool;
-use FKSDB\ORM\Services\ServiceAddress;
-use FKSDB\ORM\Services\ServiceSchool;
-use FKSDB\Utils\FormUtils;
+use FKSDB\Model\ORM\Models\ModelSchool;
+use FKSDB\Model\ORM\Services\ServiceAddress;
+use FKSDB\Model\ORM\Services\ServiceSchool;
+use FKSDB\Model\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\Forms\Form;
 

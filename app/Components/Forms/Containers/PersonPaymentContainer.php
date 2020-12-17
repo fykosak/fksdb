@@ -3,10 +3,10 @@
 namespace FKSDB\Components\Forms\Containers;
 
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
-use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
-use FKSDB\ORM\Services\Schedule\ServicePersonSchedule;
+use FKSDB\Model\Exceptions\NotImplementedException;
+use FKSDB\Model\ORM\Models\ModelEvent;
+use FKSDB\Model\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\Model\ORM\Services\Schedule\ServicePersonSchedule;
 use Nette\ComponentModel\IContainer;
 use Nette\DI\Container;
 

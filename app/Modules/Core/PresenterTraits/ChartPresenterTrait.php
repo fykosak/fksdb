@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Chart\IChart;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\UI\PageTitle;
 use Nette\ComponentModel\IComponent;
 
 /**
@@ -62,11 +62,7 @@ trait ChartPresenterTrait {
      */
     abstract protected function registerCharts(): array;
 
-    /**
-     * @param bool $fullyQualified
-     * @return string
-     */
-    abstract public function getAction($fullyQualified = false);
+    abstract public function getAction(bool $fullyQualified = false): string;
 
     /**
      * @param string $id

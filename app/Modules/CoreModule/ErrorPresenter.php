@@ -4,7 +4,7 @@ namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Modules\Core\BasePresenter;
 use Exception;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Http\IResponse;

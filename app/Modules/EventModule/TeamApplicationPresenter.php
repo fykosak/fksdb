@@ -8,12 +8,12 @@ use FKSDB\Components\Controls\Schedule\Rests\TeamRestsComponent;
 use FKSDB\Components\Grids\Application\AbstractApplicationsGrid;
 use FKSDB\Components\Grids\Application\TeamApplicationsGrid;
 use FKSDB\Config\NeonSchemaException;
-use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Events\EventNotFoundException;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Fyziklani\NotSetGameParametersException;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Model\Entity\ModelNotFoundException;
+use FKSDB\Model\Events\Exceptions\EventNotFoundException;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\Fyziklani\NotSetGameParametersException;
+use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\Application\ForbiddenRequestException;
 
 /**

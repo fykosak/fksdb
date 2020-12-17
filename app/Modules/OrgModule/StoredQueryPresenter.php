@@ -6,14 +6,14 @@ use FKSDB\Components\Controls\Entity\StoredQueryFormComponent;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\StoredQuery\StoredQueriesGrid;
-use FKSDB\Entity\ModelNotFoundException;
+use FKSDB\Model\Entity\ModelNotFoundException;
 use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\Modules\Core\PresenterTraits\SeriesPresenterTrait;
-use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
-use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
-use FKSDB\UI\PageTitle;
 use Nette\Application\AbortException;
+use FKSDB\Model\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\Model\ORM\Services\StoredQuery\ServiceStoredQuery;
+use FKSDB\Model\UI\PageTitle;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\IResource;
 
@@ -118,7 +118,7 @@ class StoredQueryPresenter extends BasePresenter implements ISeriesPresenter {
      * @param string|null $privilege
      * @return bool
      */
-    protected function traitIsAuthorized($resource, string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool {
         return $this->contestAuthorizator->isAllowed($resource, $privilege, $this->getSelectedContest());
     }
 }

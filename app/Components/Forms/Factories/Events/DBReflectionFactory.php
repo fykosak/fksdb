@@ -3,13 +3,11 @@
 namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
-use FKSDB\Events\Model\Holder\Field;
-use FKSDB\DBReflection\DBReflectionFactory as ReflectionFactory;
-use FKSDB\ORM\AbstractServiceMulti;
-use FKSDB\ORM\AbstractServiceSingle;
-use FKSDB\Transitions\Machine;
-use FKSDB\ORM\Services\AbstractServiceSingle;
-use FKSDB\ORM\ServicesMulti\AbstractServiceMulti;
+use FKSDB\Model\Events\Model\Holder\Field;
+use FKSDB\Model\DBReflection\DBReflectionFactory as ReflectionFactory;
+use FKSDB\Model\ORM\Services\AbstractServiceSingle;
+use FKSDB\Model\ORM\ServicesMulti\AbstractServiceMulti;
+use FKSDB\Model\Transitions\Machine\Machine;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\Database\Connection;
@@ -29,10 +27,8 @@ use Nette\InvalidArgumentException;
 class DBReflectionFactory extends AbstractFactory {
 
     private Connection $connection;
-
     /** @var array tableName => columnName[] */
-    private $columns = [];
-
+    private array $columns = [];
     private ReflectionFactory $tableReflectionFactory;
 
     public function __construct(Connection $connection, ReflectionFactory $tableReflectionFactory) {
@@ -88,7 +84,6 @@ class DBReflectionFactory extends AbstractFactory {
         }
         $element->caption = $field->getLabel();
         if ($field->getDescription()) {
-
             $element->setOption('description', $field->getDescription());
         }
 
@@ -101,7 +96,6 @@ class DBReflectionFactory extends AbstractFactory {
      * @return void
      */
     protected function setDefaultValue(IComponent $component, Field $field): void {
-
         if ($field->getBaseHolder()->getModelState() == Machine::STATE_INIT && $field->getDefault() === null) {
             $column = $this->resolveColumn($field);
             $default = $column['default'];
@@ -127,11 +121,7 @@ class DBReflectionFactory extends AbstractFactory {
         return $component;
     }
 
-    /**
-     * @param Field $field
-     * @return null
-     */
-    private function resolveColumn(Field $field) {
+    private function resolveColumn(Field $field): ?array {
         $service = $field->getBaseHolder()->getService();
         $columnName = $field->getName();
 

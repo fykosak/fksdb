@@ -3,20 +3,20 @@
 namespace FKSDB\Modules\FyziklaniModule;
 
 use FKSDB\Components\Grids\Fyziklani\Submits\TeamSubmitsGrid;
-use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Events\EventNotFoundException;
-use FKSDB\Fyziklani\Closing\AlreadyClosedException;
-use FKSDB\Fyziklani\Closing\NotCheckedSubmitsException;
+use FKSDB\Model\Entity\ModelNotFoundException;
+use FKSDB\Model\Events\Exceptions\EventNotFoundException;
+use FKSDB\Model\Fyziklani\Closing\AlreadyClosedException;
+use FKSDB\Model\Fyziklani\Closing\NotCheckedSubmitsException;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Controls\Fyziklani\CloseTeamControl;
 use FKSDB\Components\Grids\BaseGrid;
 use FKSDB\Components\Grids\Fyziklani\CloseTeamsGrid;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\Exceptions\NotImplementedException;
+use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Model\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
@@ -76,11 +76,11 @@ class ClosePresenter extends BasePresenter {
 
     /**
      * @param IResource|string|null $resource
-     * @param string $privilege
+     * @param string|null $privilege
      * @return bool
      * @throws EventNotFoundException
      */
-    protected function traitIsAuthorized($resource, string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool {
         return $this->isEventOrContestOrgAuthorized($resource, $privilege);
     }
     /* *********** ACTIONS **************** */
@@ -95,10 +95,7 @@ class ClosePresenter extends BasePresenter {
     public function actionTeam(): void {
         try {
             $this->getEntity()->canClose();
-        } catch (AlreadyClosedException $exception) {
-            $this->flashMessage($exception->getMessage());
-            $this->redirect('list');
-        } catch (NotCheckedSubmitsException$exception) {
+        } catch (AlreadyClosedException | NotCheckedSubmitsException $exception) {
             $this->flashMessage($exception->getMessage());
             $this->redirect('list');
         }

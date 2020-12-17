@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls;
 
-use FKSDB\Localization\GettextTranslator;
+use FKSDB\Model\Localization\GettextTranslator;
 use Nette\Application\UI\Control;
 use Nette\Application\UI\ITemplate;
 use Nette\Bridges\ApplicationLatte\Template;
@@ -20,7 +20,6 @@ abstract class BaseComponent extends Control {
     private GettextTranslator $translator;
 
     public function __construct(Container $container) {
-        parent::__construct();
         $container->callInjects($this);
         $this->context = $container;
     }

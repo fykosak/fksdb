@@ -4,9 +4,9 @@ namespace FKSDB\Components\Controls\Transitions;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Transitions\IStateModel;
-use FKSDB\Transitions\Machine\Machine;
-use FKSDB\Transitions\Transition\UnavailableTransitionsException;
+use FKSDB\Model\Transitions\IStateModel;
+use FKSDB\Model\Transitions\Machine\Machine;
+use FKSDB\Model\Transitions\Transition\UnavailableTransitionsException;
 use Nette\Application\AbortException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
@@ -41,10 +41,7 @@ class TransitionButtonsControl extends BaseComponent {
     public function handleTransition(string $name): void {
         try {
             $this->machine->executeTransition($name, $this->model);
-        } catch (ForbiddenRequestException $exception) {
-            $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
-            return;
-        } catch (UnavailableTransitionsException $exception) {
+        } catch (ForbiddenRequestException | UnavailableTransitionsException$exception) {
             $this->getPresenter()->flashMessage($exception->getMessage(), BasePresenter::FLASH_ERROR);
             return;
         } catch (\Exception $exception) {

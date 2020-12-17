@@ -4,14 +4,14 @@ namespace FKSDB\Modules\EventModule;
 
 use FKSDB\Components\Controls\Entity\EventOrgFormComponent;
 use FKSDB\Components\Grids\EventOrg\EventOrgsGrid;
-use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Events\EventNotFoundException;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Messages\Message;
+use FKSDB\Model\Entity\ModelNotFoundException;
+use FKSDB\Model\Events\Exceptions\EventNotFoundException;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\Messages\Message;
 use FKSDB\Modules\Core\PresenterTraits\EventEntityPresenterTrait;
-use FKSDB\ORM\Models\ModelEventOrg;
-use FKSDB\ORM\Services\ServiceEventOrg;
-use FKSDB\UI\PageTitle;
+use FKSDB\Model\ORM\Models\ModelEventOrg;
+use FKSDB\Model\ORM\Services\ServiceEventOrg;
+use FKSDB\Model\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
@@ -52,11 +52,11 @@ class EventOrgPresenter extends BasePresenter {
 
     /**
      * @param IResource|string|null $resource
-     * @param string $privilege
+     * @param string|null $privilege
      * @return bool
      * @throws EventNotFoundException
      */
-    protected function traitIsAuthorized($resource, string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool {
         return $this->isContestsOrgAuthorized($resource, $privilege);
     }
 
@@ -65,7 +65,7 @@ class EventOrgPresenter extends BasePresenter {
      */
     public function actionDelete(): void {
         try {
-           $this->traitHandleDelete();
+            $this->traitHandleDelete();
             $this->flashMessage(_('Entity has been deleted'), Message::LVL_WARNING);
             $this->redirect('list');
         } catch (BadRequestException $exception) {

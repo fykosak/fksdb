@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Controls\Payment;
 
-use FKSDB\Payment\Price;
-use FKSDB\Payment\PriceCalculator\UnsupportedCurrencyException;
+use FKSDB\Model\Payment\Price;
+use FKSDB\Model\Payment\PriceCalculator\UnsupportedCurrencyException;
 use Nette\Forms\Controls\SelectBox;
 
 /**

@@ -2,24 +2,21 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Entity\ModelNotFoundException;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Model\Entity\ModelNotFoundException;
+use FKSDB\Model\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
-use FKSDB\StoredQuery\StoredQuery;
-use FKSDB\StoredQuery\StoredQueryFactory;
+use FKSDB\Model\StoredQuery\StoredQuery;
+use FKSDB\Model\StoredQuery\StoredQueryFactory;
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Controls\StoredQuery\StoredQueryTagCloud;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
-use FKSDB\UI\PageTitle;
-use FKSDB\Modules\Core\PresenterTraits\{EntityPresenterTrait, SeriesPresenterTrait};
-use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
-use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
 use Nette\Application\AbortException;
+use FKSDB\Model\UI\PageTitle;
+use FKSDB\Modules\Core\PresenterTraits\EntityPresenterTrait;
+use FKSDB\Model\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\Model\ORM\Services\StoredQuery\ServiceStoredQuery;
 use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Control;
 use Nette\Security\IResource;
 use Nette\Utils\Strings;
@@ -60,7 +57,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
             case 'show':
                 $this->redirect(':Org:StoredQuery:detail', $this->getParameters());
         }
-        $this->seriesTraitStartup(YearChooser::ROLE_ORG);
         parent::startup();
     }
 
@@ -184,10 +180,10 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
 
     /**
      * @param IResource|string|null $resource
-     * @param string $privilege
+     * @param string|null $privilege
      * @return bool
      */
-    protected function traitIsAuthorized($resource, string $privilege): bool {
+    protected function traitIsAuthorized($resource, ?string $privilege): bool {
         return false;
     }
 

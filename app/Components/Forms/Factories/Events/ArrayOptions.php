@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use FKSDB\Events\Model\Holder\Field;
+use FKSDB\Model\Events\Model\Holder\Field;
 use Nette\SmartObject;
 
 /**

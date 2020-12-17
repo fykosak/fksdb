@@ -3,17 +3,17 @@
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Controls\PreferredLangFormComponent;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Authentication\PasswordAuthenticator;
+use FKSDB\Model\Exceptions\BadTypeException;
+use FKSDB\Model\Authentication\PasswordAuthenticator;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Factories\LoginFactory;
 use FKSDB\Components\Forms\Rules\UniqueEmailFactory;
 use FKSDB\Components\Forms\Rules\UniqueLoginFactory;
-use FKSDB\ORM\Models\ModelAuthToken;
-use FKSDB\ORM\Models\ModelLogin;
-use FKSDB\ORM\Services\ServiceLogin;
-use FKSDB\UI\PageTitle;
-use FKSDB\Utils\FormUtils;
+use FKSDB\Model\ORM\Models\ModelAuthToken;
+use FKSDB\Model\ORM\Models\ModelLogin;
+use FKSDB\Model\ORM\Services\ServiceLogin;
+use FKSDB\Model\UI\PageTitle;
+use FKSDB\Model\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\BaseControl;
@@ -84,7 +84,7 @@ class SettingsPresenter extends BasePresenter {
      * @throws BadTypeException
      */
     protected function createComponentSettingsForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
         /** @var ModelLogin $login */
         $login = $this->getUser()->getIdentity();
