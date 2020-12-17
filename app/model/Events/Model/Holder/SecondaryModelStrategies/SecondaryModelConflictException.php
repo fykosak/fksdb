@@ -10,7 +10,7 @@ use RuntimeException;
 
 /**
  * Class SecondaryModelConflictException
- * *
+ *
  */
 class SecondaryModelConflictException extends RuntimeException {
 
@@ -18,14 +18,7 @@ class SecondaryModelConflictException extends RuntimeException {
 
     private iterable $conflicts;
 
-    /**
-     * SecondaryModelConflictException constructor.
-     * @param BaseHolder $baseHolder
-     * @param iterable $conflicts
-     * @param null $code
-     * @param null $previous
-     */
-    public function __construct(BaseHolder $baseHolder, iterable $conflicts, $code = null, $previous = null) {
+    public function __construct(BaseHolder $baseHolder, iterable $conflicts, ?int $code = null, ?\Throwable $previous = null) {
         parent::__construct($this->createMessage($baseHolder->getModel(), $conflicts), $code, $previous);
         $this->baseHolder = $baseHolder;
         $this->conflicts = $conflicts;

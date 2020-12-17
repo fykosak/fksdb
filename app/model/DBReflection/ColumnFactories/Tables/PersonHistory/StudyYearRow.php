@@ -1,11 +1,11 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\PersonHistory;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\PersonHistory;
 
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnFactory;
-use FKSDB\DBReflection\FieldLevelPermission;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
+use FKSDB\DBReflection\MetaDataFactory;
 use FKSDB\ValuePrinters\StringPrinter;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\YearCalculator;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
@@ -15,28 +15,13 @@ use Nette\Utils\Html;
  * Class StudyYearRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class StudyYearRow extends AbstractColumnFactory {
+class StudyYearRow extends DefaultColumnFactory {
 
     private YearCalculator $yearCalculator;
 
-    /**
-     * StudyYearRow constructor.
-     * @param YearCalculator $yearCalculator
-     */
-    public function __construct(YearCalculator $yearCalculator) {
+    public function __construct(YearCalculator $yearCalculator, MetaDataFactory $metaDataFactory) {
+        parent::__construct($metaDataFactory);
         $this->yearCalculator = $yearCalculator;
-    }
-
-    public function getTitle(): string {
-        return _('Study year');
-    }
-
-    public function getPermission(): FieldLevelPermission {
-        return new FieldLevelPermission(self::PERMISSION_ALLOW_BASIC, self::PERMISSION_ALLOW_BASIC);
-    }
-
-    public function getDescription(): ?string {
-        return _('Kvůli zařazení do kategorie.');
     }
 
     /**
@@ -44,7 +29,7 @@ class StudyYearRow extends AbstractColumnFactory {
      * @return BaseControl
      * @throws \InvalidArgumentException
      */
-    public function createField(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         [$acYear] = $args;
         if (\is_null($acYear)) {
             throw new \InvalidArgumentException();
@@ -52,37 +37,29 @@ class StudyYearRow extends AbstractColumnFactory {
         $control = new SelectBox($this->getTitle());
         $control->setItems($this->createOptions($acYear));
         $control->setOption('description', $this->getDescription());
-        $control->setPrompt(_('Zvolit ročník'));
+        $control->setPrompt(_('Choose study year'));
         return $control;
     }
 
-    /**
-     * @param int $acYear
-     * @return array
-     */
-    private function createOptions(int $acYear) {
+    private function createOptions(int $acYear): array {
         $hsYears = [];
         foreach (range(1, 4) as $studyYear) {
-            $hsYears[$studyYear] = sprintf(_('%d. ročník (očekávaný rok maturity %d)'),
+            $hsYears[$studyYear] = sprintf(_('grade %d (expected graduation in %d)'),
                 $studyYear,
                 $this->yearCalculator->getGraduationYear($studyYear, $acYear));
         }
 
         $primaryYears = [];
         foreach (range(6, 9) as $studyYear) {
-            $primaryYears[$studyYear] = sprintf(_('%d. ročník (očekávaný rok maturity %d)'),
+            $primaryYears[$studyYear] = sprintf(_('grade %d (expected graduation in %d)'),
                 $studyYear,
                 $this->yearCalculator->getGraduationYear($studyYear, $acYear));
         }
 
         return [
-            _('střední škola') => $hsYears,
-            _('základní škola nebo víceleté gymnázium') => $primaryYears,
+            _('high school') => $hsYears,
+            _('primary school') => $primaryYears,
         ];
-    }
-
-    protected function getModelAccessKey(): string {
-        return 'study_year';
     }
 
     protected function createHtmlValue(AbstractModelSingle $model): Html {

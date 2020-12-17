@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Rules;
 
-use FKSDB\Components\Forms\Controls\WriteOnlyInput;
+use FKSDB\Components\Forms\Controls\WriteOnly\WriteOnlyInput;
 use Nette\Forms\Controls\BaseControl;
 use Nette\OutOfRangeException;
 
@@ -21,13 +21,12 @@ class BornNumber {
         if ($rc == WriteOnlyInput::VALUE_ORIGINAL) {
             return true;
         }
-        $matches = [];
         // "be liberal in what you receive"
-        if (!preg_match('#^\s*(\d\d)(\d\d)(\d\d)[ /]*(\d\d\d)(\d?)\s*$#', $rc, $matches)) {
+        try {
+            [$year, $month, $day, $ext, $c] = self::parseBornNumber($rc);
+        } catch (OutOfRangeException $exception) {
             return false;
         }
-
-        [, $year, $month, $day, $ext, $c] = $matches;
 
         // do roku 1954 přidělovaná devítimístná RČ nelze ověřit
         if ($c === '') {
@@ -71,15 +70,25 @@ class BornNumber {
 
     /**
      * @param string $bornNumber
-     * @return string
+     * @return array [year,month,day,extension,control]
      * @throws OutOfRangeException
      */
-    public static function getGender(string $bornNumber): string {
+    private static function parseBornNumber(string $bornNumber): array {
         if (!preg_match('#^\s*(\d\d)(\d\d)(\d\d)[ /]*(\d\d\d)(\d?)\s*$#', $bornNumber, $matches)) {
             throw new OutOfRangeException('Born number not match');
         }
 
-        [, , $month, , , $control] = $matches;
+        [, $year, $month, $day, $ext, $c] = $matches;
+        return [$year, $month, $day, $ext, $c];
+    }
+
+    /**
+     * @param string $bornNumber
+     * @return string
+     * @throws OutOfRangeException
+     */
+    public static function getGender(string $bornNumber): string {
+        [, $month, , , $control] = self::parseBornNumber($bornNumber);
 
         // do roku 1954 přidělovaná devítimístná RČ nelze ověřit
         if ($control === '') {

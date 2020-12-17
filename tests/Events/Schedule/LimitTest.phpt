@@ -5,7 +5,7 @@ namespace FKSDB\Tests\Events\Schedule;
 use Nette\Application\Responses\TextResponse;
 use Tester\Assert;
 
-$container = require '../../bootstrap.php';
+$container = require '../../Bootstrap.php';
 
 class LimitTest extends ScheduleTestCase {
 

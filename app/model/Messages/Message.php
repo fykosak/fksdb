@@ -2,6 +2,7 @@
 
 namespace FKSDB\Messages;
 
+use FKSDB\ArrayAble;
 use FKSDB\Logging\ILogger;
 use Nette\SmartObject;
 
@@ -9,7 +10,7 @@ use Nette\SmartObject;
  * Class Message
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class Message {
+class Message implements ArrayAble {
     use SmartObject;
 
     public const LVL_DANGER = ILogger::ERROR;
@@ -17,57 +18,19 @@ class Message {
     public const LVL_WARNING = ILogger::WARNING;
     public const LVL_INFO = ILogger::INFO;
 
-    private string $message;
+    public string $text;
 
-    private string $level;
+    public string $level;
 
-    /**
-     * Message constructor.
-     * @param string $message
-     * @param string $level
-     */
     public function __construct(string $message, string $level) {
-        $this->message = $message;
-        $this->level = $level;
-    }
-
-    /**
-     * @return string
-     * @deprecated
-     */
-    public function getText(): string {
-        return $this->message;
-    }
-
-    /**
-     * @param string $message
-     * @return void
-     * @deprecated
-     */
-    public function setText(string $message): void {
-        $this->message = $message;
-    }
-
-    public function setMessage(string $message): void {
-        $this->message = $message;
-    }
-
-    public function getMessage(): string {
-        return $this->message;
-    }
-
-    public function getLevel(): string {
-        return $this->level;
-    }
-
-    public function setLevel(string $level): void {
+        $this->text = $message;
         $this->level = $level;
     }
 
     public function __toArray(): array {
         return [
-            'text' => $this->message,
-            'message' => $this->message,
+            'text' => $this->text,
+            'message' => $this->text,
             'level' => $this->level,
         ];
     }

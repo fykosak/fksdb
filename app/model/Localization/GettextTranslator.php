@@ -18,11 +18,6 @@ class GettextTranslator implements ITranslator {
 
     private ?string $lang = null;
 
-    /**
-     * GettextTranslator constructor.
-     * @param array $locales
-     * @param string $localeDir
-     */
     public function __construct(array $locales, string $localeDir) {
         $this->locales = $locales;
         $this->localeDir = $localeDir;
@@ -79,7 +74,7 @@ class GettextTranslator implements ITranslator {
      * @param string $lang
      * @return mixed
      */
-    public static function i18nHelper($object, $field, $lang) {
+    public static function i18nHelper(object $object, string $field, string $lang) {
         return $object->{$field . '_' . $lang};
     }
 

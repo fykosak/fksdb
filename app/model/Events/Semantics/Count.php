@@ -16,18 +16,10 @@ class Count {
 
     private string $state;
 
-    /**
-     * Count constructor.
-     * @param string $state
-     */
     public function __construct(string $state) {
         $this->state = $state;
     }
 
-    /**
-     * @param array $args
-     * @return int
-     */
     public function __invoke(...$args): int {
         $baseHolder = $this->getHolder($args[0])->getPrimaryHolder();
         $table = $baseHolder->getService()->getTable();

@@ -16,10 +16,6 @@ class PersonLink extends AbstractValuePrinter {
 
     private LinkGenerator $presenterComponent;
 
-    /**
-     * PersonLink constructor.
-     * @param LinkGenerator $presenterComponent
-     */
     public function __construct(LinkGenerator $presenterComponent) {
         $this->presenterComponent = $presenterComponent;
     }
@@ -35,7 +31,7 @@ class PersonLink extends AbstractValuePrinter {
             throw new BadTypeException(ModelPerson::class, $person);
         }
         return Html::el('a')
-            ->addAttributes(['href' => $this->presenterComponent->link('Common:Person:detail', [
+            ->addAttributes(['href' => $this->presenterComponent->link('Org:Person:detail', [
                 'id' => $person->person_id,
             ])])
             ->addText($person->getFullName());

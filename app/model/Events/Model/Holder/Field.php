@@ -41,12 +41,7 @@ class Field {
     /** @var bool|callable */
     private $visible;
 
-    /**
-     * Field constructor.
-     * @param string $name
-     * @param string|null $label
-     */
-    public function __construct(string $name, string $label = null) {
+    public function __construct(string $name, ?string $label = null) {
         $this->name = $name;
         $this->label = $label;
     }

@@ -73,10 +73,6 @@ class EventsExtension extends CompilerExtension {
 
     private string $schemeFile;
 
-    /**
-     * EventsExtension constructor.
-     * @param string $schemaFile
-     */
     public function __construct(string $schemaFile) {
         $this->schemeFile = $schemaFile;
         Helpers::registerSemantic(self::$semanticMap);
@@ -426,6 +422,7 @@ class EventsExtension extends CompilerExtension {
                 if ($hasNonDetermining) {
                     throw new MachineDefinitionException("Field '$name' cannot be preceded by non-determining fields. Reorder the fields.");
                 }
+                $fieldDef['required'] = $instanceDefinition['required'];
             } else {
                 $hasNonDetermining = true;
             }

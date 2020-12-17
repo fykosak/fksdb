@@ -34,44 +34,24 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     public const AUTH_ALLOW_TOKEN = 0x4;
     public const AUTH_ALLOW_GITHUB = 0x8;
 
-    private TokenAuthenticator $tokenAuthenticator;
-
-    private PasswordAuthenticator $passwordAuthenticator;
-
-    private GithubAuthenticator $githubAuthenticator;
-
-    private EventAuthorizator $eventAuthorizator;
-
+    protected TokenAuthenticator $tokenAuthenticator;
+    protected PasswordAuthenticator $passwordAuthenticator;
+    protected GithubAuthenticator $githubAuthenticator;
+    protected EventAuthorizator $eventAuthorizator;
     protected ContestAuthorizator $contestAuthorizator;
 
-    public function injectAuthenticators(
+    final public function injectAuthenticated(
         TokenAuthenticator $tokenAuthenticator,
         PasswordAuthenticator $passwordAuthenticator,
-        GithubAuthenticator $githubAuthenticator
+        GithubAuthenticator $githubAuthenticator,
+        ContestAuthorizator $contestAuthorizator,
+        EventAuthorizator $eventAuthorizator
     ): void {
         $this->tokenAuthenticator = $tokenAuthenticator;
         $this->passwordAuthenticator = $passwordAuthenticator;
         $this->githubAuthenticator = $githubAuthenticator;
-    }
-
-    public function injectAuthorizators(
-        ContestAuthorizator $contestAuthorizator,
-        EventAuthorizator $eventAuthorizator
-    ): void {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->eventAuthorizator = $eventAuthorizator;
-    }
-
-    public function getContestAuthorizator(): ContestAuthorizator {
-        return $this->contestAuthorizator;
-    }
-
-    public function getEventAuthorizator(): EventAuthorizator {
-        return $this->eventAuthorizator;
-    }
-
-    public function getTokenAuthenticator(): TokenAuthenticator {
-        return $this->tokenAuthenticator;
     }
 
     /* Formats action method name.*/
@@ -106,7 +86,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
         $methods = $this->getAllowedAuthMethods();
 
         if ($methods & self::AUTH_ALLOW_TOKEN) {
-            // successfull token authentication overwrites the user identity (if any)
+            // successful token authentication overwrites the user identity (if any)
             $this->tryAuthToken();
         }
 
@@ -152,7 +132,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     * This method may be overriden, however only simple conditions
+     * This method may be override, however only simple conditions
      * can be checked there -- user session is not prepared at the
      * moment of the call.
      *
@@ -163,7 +143,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
     }
 
     /**
-     * It may be overriden (should return realm).
+     * It may be override (should return realm).
      * @return int
      */
     public function getAllowedAuthMethods(): int {
@@ -197,7 +177,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             if ($this->tokenAuthenticator->isAuthenticatedByToken(ModelAuthToken::TYPE_SSO)) {
                 $this->tokenAuthenticator->disposeAuthToken();
             } else {
-                $this->flashMessage(_('Úspešné přihlášení pomocí tokenu.'), self::FLASH_INFO);
+                $this->flashMessage(_('Successful token authentication.'), self::FLASH_INFO);
             }
 
             $this->getUser()->login($login);
@@ -258,7 +238,7 @@ abstract class AuthenticatedPresenter extends BasePresenter {
             $method = $this->formatAuthorizedMethod($this->getAction());
             $this->tryCall($method, $this->getParameters());
         } catch (AuthenticationException $exception) {
-            throw new ForbiddenRequestException(_('Chyba autentizace.'), Response::S403_FORBIDDEN, $exception);
+            throw new ForbiddenRequestException(_('Authentication failure.'), Response::S403_FORBIDDEN, $exception);
         }
     }
 }

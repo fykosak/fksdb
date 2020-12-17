@@ -6,7 +6,6 @@ use Nette;
 use Nette\Http\IRequest;
 use Nette\Http\IResponse;
 use Nette\SmartObject;
-use Nette\Utils\JsonException;
 
 /**
  * Class ReactResponse
@@ -32,15 +31,10 @@ final class AjaxResponse implements Nette\Application\IResponse {
         $this->content = $content;
     }
 
-    /**
-     * @param IRequest $httpRequest
-     * @param IResponse $httpResponse
-     * @throws JsonException
-     */
     public function send(IRequest $httpRequest, IResponse $httpResponse): void {
         $httpResponse->setCode($this->code);
         $httpResponse->setContentType($this->getContentType());
         $httpResponse->setExpiration(false);
-        echo Nette\Utils\Json::encode($this->content);
+        echo json_encode($this->content);
     }
 }

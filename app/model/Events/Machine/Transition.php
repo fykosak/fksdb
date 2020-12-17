@@ -2,6 +2,7 @@
 
 namespace FKSDB\Events\Machine;
 
+use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Events\TransitionConditionFailedException;
@@ -14,27 +15,18 @@ use Nette\InvalidArgumentException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Transition extends \FKSDB\Transitions\Transition {
+class Transition extends \FKSDB\Transitions\Transition\Transition {
 
     private BaseMachine $baseMachine;
-
     private array $inducedTransitions = [];
-
     private string $mask;
-
     private string $name;
-
     private string $source;
-
     /** @var bool|callable */
     private $visible;
+    public array $onExecuted = [];
+    private string $type;
 
-    /**
-     * Transition constructor.
-     * @param string $mask
-     * @param string|null $label
-     * @param string $type
-     */
     public function __construct(string $mask, ?string $label = null, string $type = self::TYPE_DEFAULT) {
         $this->setMask($mask);
         $this->setLabel($label ?? '');
@@ -42,7 +34,7 @@ class Transition extends \FKSDB\Transitions\Transition {
     }
 
     /**
-     * Meaningless idenifier.
+     * Meaningless identifier.
      */
     public function getName(): string {
         return $this->name;
@@ -89,7 +81,7 @@ class Transition extends \FKSDB\Transitions\Transition {
     }
 
     public function isCreating(): bool {
-        return strpos($this->source, \FKSDB\Transitions\Machine::STATE_INIT) !== false;
+        return strpos($this->source, \FKSDB\Transitions\Machine\Machine::STATE_INIT) !== false;
     }
 
     public function isVisible(Holder $holder): bool {
@@ -213,14 +205,14 @@ class Transition extends \FKSDB\Transitions\Transition {
             $inducedTransition->executed($holder, []);
         }
         try {
-            $this->callAfterExecute($this,$holder);
+            $this->callAfterExecute($this, $holder);
         } catch (\Exception $exception) {
             throw new TransitionOnExecutedException($this->getName(), null, $exception);
         }
     }
 
     /**
-     * @note Assumes the condition is fullfilled.
+     * @note Assumes the condition is fulfilled.
      * @param BaseHolder $holder
      */
     private function changeState(BaseHolder $holder): void {
@@ -242,8 +234,8 @@ class Transition extends \FKSDB\Transitions\Transition {
         /*
          * Star matches any state but meta-states (initial and terminal)
          */
-        if (strpos(\FKSDB\Transitions\Machine::STATE_ANY, $stateMask) !== false || (strpos(\FKSDB\Transitions\Machine::STATE_ANY, $this->source) !== false &&
-                ($mask != \FKSDB\Transitions\Machine::STATE_INIT && $mask != \FKSDB\Transitions\Machine::STATE_TERMINATED))) {
+        if (strpos(\FKSDB\Transitions\Machine\Machine::STATE_ANY, $stateMask) !== false || (strpos(\FKSDB\Transitions\Machine\Machine::STATE_ANY, $this->source) !== false &&
+                ($mask != \FKSDB\Transitions\Machine\Machine::STATE_INIT && $mask != \FKSDB\Transitions\Machine\Machine::STATE_TERMINATED))) {
             return true;
         }
 
@@ -270,11 +262,11 @@ class Transition extends \FKSDB\Transitions\Transition {
         $sources = explode('|', $sources);
 
         foreach ($sources as $source) {
-            if (!in_array($source, array_merge($states, [\FKSDB\Transitions\Machine::STATE_ANY, \FKSDB\Transitions\Machine::STATE_INIT]))) {
+            if (!in_array($source, array_merge($states, [\FKSDB\Transitions\Machine\Machine::STATE_ANY, \FKSDB\Transitions\Machine\Machine::STATE_INIT]))) {
                 return false;
             }
         }
-        if (!in_array($target, array_merge($states, [\FKSDB\Transitions\Machine::STATE_TERMINATED]))) {
+        if (!in_array($target, array_merge($states, [\FKSDB\Transitions\Machine\Machine::STATE_TERMINATED]))) {
             return false;
         }
         return true;

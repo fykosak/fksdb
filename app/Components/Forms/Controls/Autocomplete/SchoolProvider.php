@@ -2,10 +2,10 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServiceSchool;
 use Nette\InvalidStateException;
-use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).
@@ -26,10 +26,6 @@ class SchoolProvider implements IFilteredDataProvider {
      */
     private $defaultValue;
 
-    /**
-     * SchoolProvider constructor.
-     * @param ServiceSchool $serviceSchool
-     */
     public function __construct(ServiceSchool $serviceSchool) {
         $this->serviceSchool = $serviceSchool;
     }
@@ -37,10 +33,10 @@ class SchoolProvider implements IFilteredDataProvider {
     /**
      * Prefix search.
      *
-     * @param string $search
+     * @param string|null $search
      * @return array
      */
-    public function getFilteredItems(string $search): array {
+    public function getFilteredItems(?string $search): array {
         $search = trim($search);
         $tokens = preg_split('/[ ,\.]+/', $search);
 

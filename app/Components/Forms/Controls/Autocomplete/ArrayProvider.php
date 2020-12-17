@@ -13,10 +13,6 @@ class ArrayProvider implements IFilteredDataProvider {
 
     private array $labelById;
 
-    /**
-     * ArrayProvider constructor.
-     * @param array $data
-     */
     public function __construct(array $data) {
         $this->data = [];
         $this->labelById = $data;
@@ -31,10 +27,10 @@ class ArrayProvider implements IFilteredDataProvider {
     /**
      * Prefix search.
      *
-     * @param string $search
+     * @param string|null $search
      * @return array
      */
-    public function getFilteredItems(string $search): array {
+    public function getFilteredItems(?string $search): array {
         $result = [];
         foreach ($this->data as $item) {
             $label = $item[self::LABEL];

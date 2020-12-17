@@ -1,8 +1,9 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\Fyziklani\FyziklaniTeam;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\Fyziklani\FyziklaniTeam;
 
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use Nette\Utils\Html;
 
@@ -10,11 +11,7 @@ use Nette\Utils\Html;
  * Class NameNIdRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class NameNIdRow extends AbstractFyziklaniTeamRow {
-
-    public function getTitle(): string {
-        return _('Team');
-    }
+class NameNIdRow extends DefaultColumnFactory {
 
     /**
      * @param AbstractModelSingle|ModelFyziklaniTeam $model

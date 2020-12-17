@@ -6,12 +6,13 @@ use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Config\NeonSchemaException;
 use FKSDB\Config\NeonScheme;
-use FKSDB\ORM\AbstractServiceMulti;
-use FKSDB\ORM\AbstractServiceSingle;
+use FKSDB\Events\Machine\BaseMachine;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\Transitions\Machine;
+use FKSDB\ORM\Services\AbstractServiceSingle;
+use FKSDB\ORM\ServicesMulti\AbstractServiceMulti;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
 use Nette\Neon\Neon;
@@ -27,42 +28,24 @@ class BaseHolder {
     public const EVENT_COLUMN = 'event_id';
 
     private string $name;
-
     private ?string $description;
-
     private ExpressionEvaluator $evaluator;
-
     private DataValidator $validator;
-
     /** Relation to the primary holder's event.     */
     private ?IEventRelation $eventRelation;
-
     private ModelEvent $event;
-
     private string $label;
-
     private IService $service;
-
     private ?string $joinOn = null;
-
     private ?string $joinTo = null;
-
     private array $personIdColumns;
-
     private string $eventIdColumn;
-
     private Holder $holder;
-
     /** @var Field[] */
     private array $fields = [];
-
-    /** @var IModel */
-    private $model;
-
+    private ?IModel $model = null;
     private array $paramScheme;
-
     private array $parameters;
-
 
     /** @var bool|callable */
     private $modifiable;
@@ -70,10 +53,6 @@ class BaseHolder {
     /** @var bool|callable */
     private $visible;
 
-    /**
-     * BaseHolder constructor.
-     * @param string $name
-     */
     public function __construct(string $name) {
         $this->name = $name;
     }
@@ -244,7 +223,6 @@ class BaseHolder {
     public function setLabel(string $label): void {
         $this->label = $label;
     }
-
 
     public function getDescription(): ?string {
         return $this->description;

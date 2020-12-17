@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\React\ReactComponent\Events;
+namespace FKSDB\Components\Controls\Chart\Event;
 
 use FKSDB\Components\Controls\Chart\IChart;
 use FKSDB\Components\React\ReactComponent;
@@ -9,7 +9,6 @@ use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ORM\Models\ModelEventType;
 use FKSDB\ORM\Services\ServiceEvent;
 use FKSDB\ORM\Services\ServiceEventParticipant;
-use Nette\Application\UI\Control;
 use Nette\DI\Container;
 
 /**
@@ -24,17 +23,12 @@ class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
 
     private ServiceEvent $serviceEvent;
 
-    /**
-     * TeamApplicationsTimeProgress constructor.
-     * @param Container $context
-     * @param ModelEvent $event
-     */
     public function __construct(Container $context, ModelEvent $event) {
         parent::__construct($context, 'events.applications-time-progress.participants');
         $this->eventType = $event->getEventType();
     }
 
-    public function injectPrimary(ServiceEventParticipant $serviceEventParticipant, ServiceEvent $serviceEvent): void {
+    final public function injectPrimary(ServiceEventParticipant $serviceEventParticipant, ServiceEvent $serviceEvent): void {
         $this->serviceEventParticipant = $serviceEventParticipant;
         $this->serviceEvent = $serviceEvent;
     }
@@ -62,10 +56,10 @@ class SingleApplicationsTimeProgress extends ReactComponent implements IChart {
     }
 
     public function getTitle(): string {
-        return 'Applications time progress';
+        return _('Applications time progress');
     }
 
-    public function getControl(): Control {
+    public function getControl(): self {
         return $this;
     }
 

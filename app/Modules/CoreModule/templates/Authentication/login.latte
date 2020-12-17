@@ -6,7 +6,8 @@
         {input id}
         {input password}
         {input send class => 'btn btn-lg btn-success btn-block'}
-        <a n:href=":Public:Register:default" class="btn btn-info btn-block">{_'Registrace'}</a>
-        <a class="btn btn-secondary btn-sm btn-block" n:href="recover, backlink => null, bc => null, flag => null">{_'Zapomenuté heslo'}</a>
+        <a n:href=":Public:Register:default" class="btn btn-info btn-block">{_'Register'}</a>
+        <a class="btn btn-secondary btn-sm btn-block" n:href="recover, backlink => null, bc => null, flag => null">{_'Forgotten password'}</a>
+        <a class="btn btn-secondary btn-sm btn-block" href="{link google!}"><i class="fa fa-google mr-3"/>{_'Login via Google account'}</a>
     {/form loginForm}
 {/block}

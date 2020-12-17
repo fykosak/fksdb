@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Grids\Fyziklani;
+namespace FKSDB\Components\Grids\Fyziklani\Submits;
 
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
@@ -20,11 +20,6 @@ class TeamSubmitsGrid extends SubmitsGrid {
 
     private ModelFyziklaniTeam $team;
 
-    /**
-     * FyziklaniSubmitsGrid constructor.
-     * @param ModelFyziklaniTeam $team
-     * @param Container $container
-     */
     public function __construct(ModelFyziklaniTeam $team, Container $container) {
         $this->team = $team;
         parent::__construct($container);

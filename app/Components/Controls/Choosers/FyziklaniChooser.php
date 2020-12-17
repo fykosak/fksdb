@@ -21,17 +21,12 @@ class FyziklaniChooser extends Chooser {
 
     private ServiceEvent $serviceEvent;
 
-    /**
-     * FyziklaniChooser constructor.
-     * @param Container $container
-     * @param ModelEvent $event
-     */
     public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    public function injectServiceEvent(ServiceEvent $serviceEvent): void {
+    final public function injectServiceEvent(ServiceEvent $serviceEvent): void {
         $this->serviceEvent = $serviceEvent;
     }
 

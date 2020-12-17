@@ -9,36 +9,29 @@ use FKSDB\Fyziklani\Submit\HandlerFactory;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Application\AbortException;
-use Nette\Forms\Form;
 use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;
+use Nette\Forms\Form;
 
 /**
  * Class EditControl
  * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelFyziklaniSubmit $model
  */
-class FyziklaniSubmitEditComponent extends EditEntityFormComponent {
+class FyziklaniSubmitEditComponent extends AbstractEntityFormComponent {
 
     private ModelEvent $event;
-
     private HandlerFactory $handlerFactory;
 
-    /**
-     * EditControl constructor.
-     * @param Container $container
-     * @param ModelEvent $event
-     */
-    public function __construct(Container $container, ModelEvent $event) {
-        parent::__construct($container, false);
+    public function __construct(Container $container, ModelEvent $event, ModelFyziklaniSubmit $model) {
+        parent::__construct($container, $model);
         $this->event = $event;
     }
 
-    public function injectHandlerFactory(HandlerFactory $handlerFactory): void {
+    final public function injectHandlerFactory(HandlerFactory $handlerFactory): void {
         $this->handlerFactory = $handlerFactory;
     }
 
@@ -52,12 +45,11 @@ class FyziklaniSubmitEditComponent extends EditEntityFormComponent {
     }
 
     /**
-     * @param AbstractModelSingle|ModelFyziklaniSubmit|null $model
      * @return void
      * @throws BadTypeException
      */
-    protected function setDefaults(?AbstractModelSingle $model): void {
-        if (!is_null($model)) {
+    protected function setDefaults(): void {
+        if (isset($this->model)) {
             $this->getForm()->setDefaults([
                 'team_id' => $this->model->e_fyziklani_team_id,
                 'points' => $this->model->points,

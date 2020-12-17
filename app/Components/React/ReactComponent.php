@@ -13,20 +13,12 @@ use Nette\Utils\Html;
 abstract class ReactComponent extends BaseComponent {
     use ReactComponentTrait;
 
-    /**
-     * ReactComponent constructor.
-     * @param Container $container
-     * @param string $reactId
-     */
     public function __construct(Container $container, string $reactId) {
         parent::__construct($container);
         $this->registerReact($reactId);
     }
 
-    /**
-     * @return void
-     */
-    final public function render() {
+    final public function render(): void {
         $html = Html::el('div');
         $this->appendPropertyTo($html);
         $this->template->html = $html;

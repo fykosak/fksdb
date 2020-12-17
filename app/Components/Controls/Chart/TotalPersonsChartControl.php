@@ -5,7 +5,6 @@ namespace FKSDB\Components\Controls\Chart;
 use FKSDB\Components\React\ReactComponent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Services\ServicePerson;
-use Nette\Application\UI\Control;
 use Nette\DI\Container;
 
 /**
@@ -16,15 +15,11 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
 
     private ServicePerson $servicePerson;
 
-    /**
-     * TotalPersonsChartControl constructor.
-     * @param Container $container
-     */
     public function __construct(Container $container) {
         parent::__construct($container, 'chart.total-person');
     }
 
-    public function injectServicePerson(ServicePerson $servicePerson): void {
+    final public function injectServicePerson(ServicePerson $servicePerson): void {
         $this->servicePerson = $servicePerson;
     }
 
@@ -46,7 +41,7 @@ class TotalPersonsChartControl extends ReactComponent implements IChart {
         return _('Total persons in FKSDB');
     }
 
-    public function getControl(): Control {
+    public function getControl(): self {
         return $this;
     }
 

@@ -8,6 +8,8 @@ use FKSDB\DBReflection\DBReflectionFactory as ReflectionFactory;
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\AbstractServiceSingle;
 use FKSDB\Transitions\Machine;
+use FKSDB\ORM\Services\AbstractServiceSingle;
+use FKSDB\ORM\ServicesMulti\AbstractServiceMulti;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\Database\Connection;
@@ -33,11 +35,6 @@ class DBReflectionFactory extends AbstractFactory {
 
     private ReflectionFactory $tableReflectionFactory;
 
-    /**
-     * DBReflectionFactory constructor.
-     * @param Connection $connection
-     * @param ReflectionFactory $tableReflectionFactory
-     */
     public function __construct(Connection $connection, ReflectionFactory $tableReflectionFactory) {
         $this->connection = $connection;
         $this->tableReflectionFactory = $tableReflectionFactory;
@@ -156,12 +153,7 @@ class DBReflectionFactory extends AbstractFactory {
         return $column;
     }
 
-    /**
-     * @param string $table
-     * @param string $column
-     * @return array|null
-     */
-    private function getColumnMetadata($table, $column) {
+    private function getColumnMetadata(string $table, string $column): ?array {
         if (!isset($this->columns[$table])) {
             $columns = [];
             foreach ($this->connection->getSupplementalDriver()->getColumns($table) as $columnMeta) {
@@ -175,5 +167,4 @@ class DBReflectionFactory extends AbstractFactory {
             return null;
         }
     }
-
 }

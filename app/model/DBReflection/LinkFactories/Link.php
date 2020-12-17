@@ -2,7 +2,7 @@
 
 namespace FKSDB\DBReflection\LinkFactories;
 
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 
 /**
  * Class Link
@@ -16,12 +16,6 @@ class Link extends AbstractLink {
 
     private string $title;
 
-    /**
-     * Link constructor.
-     * @param string $destination
-     * @param array $params
-     * @param string $title
-     */
     public function __construct(string $destination, array $params, string $title) {
         $this->destination = $destination;
         $this->params = $params;

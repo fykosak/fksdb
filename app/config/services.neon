@@ -4,23 +4,21 @@
 
 services:
     accountManager:
-        class: FKSDB\Authentication\AccountManager
-        setup:
-            - setInvitationExpiration(%invitation.expiration%)
-            - setRecoveryExpiration(%recovery.expiration%)
-            - setEmailFrom(%email.from%)
+        class: FKSDB\Authentication\AccountManager(%invitation.expiration%,%recovery.expiration%,%email.from%)
     - FKSDB\Authentication\FacebookAuthenticator
     - FKSDB\Authentication\GithubAuthenticator
     - FKSDB\Authentication\PasswordAuthenticator
     - FKSDB\Authentication\TokenAuthenticator
+    - FKSDB\Authentication\GoogleAuthenticator
+    - FKSDB\Authentication\Provider\GoogleProvider(%googleOAuth2.clientId%,%googleOAuth2.clientSecret%, ...)
     - FKSDB\Authorization\ContestAuthorizator
     - FKSDB\Authorization\EventAuthorizator
     - FKSDB\Authorization\RelatedPersonAuthorizator
-    - FKSDB\Components\Events\ExpressionPrinter
+    - FKSDB\Components\Controls\Events\ExpressionPrinter
     downloader: FKSDB\Astrid\Downloader(%astrid.user%, %astrid.password%, %astrid.host%, %tempDir%, %contestMapping%, ...)
     - Facebook({appId: %facebook.appId%, secret: %facebook.secret%})
     yearCalculator: FKSDB\YearCalculator
-    news: FKSDB\News\News
+    news: FKSDB\News
     seriesCalculator: FKSDB\SeriesCalculator
     SQLResultsCache: FKSDB\Results\SQLResultsCache
     seriesTable: FKSDB\Submits\SeriesTable
@@ -30,7 +28,7 @@ services:
         class: FKSDB\Persons\Deduplication\Merger(%merger%, ...)
     - FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider
     - FKSDB\Components\Forms\Controls\Autocomplete\SchoolProvider
-    - FKSDB\Components\Controls\PresenterBuilder
+    - FKSDB\Components\Controls\Navigation\PresenterBuilder
     - FKSDB\Github\EventFactory
     - FKSDB\Maintenance\Updater
     globalSession:
@@ -57,6 +55,7 @@ services:
         class: SoapServer(%wsdlUrl%)
         setup:
             - setObject(@webServiceModel)
+    - FKSDB\WebService\EventSoapFactory
 
     webServiceModel: FKSDB\WebService\WebServiceModel(%inverseContestMapping%, ...)
 
@@ -77,7 +76,7 @@ services:
     events.captcha: FKSDB\Events\FormAdjustments\Captcha
 
     - FKSDB\DBReflection\DBReflectionFactory
-    - FKSDB\Components\Controls\PhoneNumber\PhoneNumberFactory
+    - FKSDB\PhoneNumber\PhoneNumberFactory
     - FKSDB\DBReflection\MetaDataFactory
     - FKSDB\Fyziklani\Submit\HandlerFactory
 

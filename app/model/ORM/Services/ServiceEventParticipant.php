@@ -2,8 +2,8 @@
 
 namespace FKSDB\ORM\Services;
 
-use FKSDB\ORM\Services\Exception\DuplicateApplicationException;
-use FKSDB\ORM\AbstractServiceSingle;
+use FKSDB\ORM\Services\Exceptions\DuplicateApplicationException;
+
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
@@ -17,11 +17,7 @@ use Nette\Database\IConventions;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceEventParticipant extends AbstractServiceSingle {
-    /**
-     * ServiceEventParticipant constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
+
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_EVENT_PARTICIPANT, ModelEventParticipant::class);
     }
@@ -30,7 +26,7 @@ class ServiceEventParticipant extends AbstractServiceSingle {
      * @param ModelEventParticipant|IModel $model
      * @deprecated
      */
-    public function save(IModel &$model) {
+    public function save(IModel &$model): void {
         try {
             parent::save($model);
         } catch (ModelException $exception) {
@@ -70,6 +66,10 @@ class ServiceEventParticipant extends AbstractServiceSingle {
     }
 
     public function findPossiblyAttending(ModelEvent $event): TypedTableSelection {
-        return $this->getTable()->where('status', ['participated', 'approved', 'spare', 'applied'])->where('event_id', $event->event_id);
+        return $this->findByEvent($event)->where('status', ['participated', 'approved', 'spare', 'applied']);
+    }
+
+    public function findByEvent(ModelEvent $event): TypedTableSelection {
+        return $this->getTable()->where('event_id', $event->event_id);
     }
 }

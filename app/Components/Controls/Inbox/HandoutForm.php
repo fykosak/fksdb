@@ -31,17 +31,12 @@ class HandoutForm extends BaseComponent {
 
     private PersonFactory $personFactory;
 
-    /**
-     * HandoutForm constructor.
-     * @param Container $container
-     * @param SeriesTable $seriesTable
-     */
     public function __construct(Container $container, SeriesTable $seriesTable) {
         parent::__construct($container);
         $this->seriesTable = $seriesTable;
     }
 
-    public function injectPrimary(PersonFactory $personFactory, ServicePerson $servicePerson, YearCalculator $yearCalculator, ServiceTaskContribution $serviceTaskContribution): void {
+    final public function injectPrimary(PersonFactory $personFactory, ServicePerson $servicePerson, YearCalculator $yearCalculator, ServiceTaskContribution $serviceTaskContribution): void {
         $this->personFactory = $personFactory;
         $this->servicePerson = $servicePerson;
         $this->yearCalculator = $yearCalculator;

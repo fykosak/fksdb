@@ -2,6 +2,8 @@
 
 namespace FKSDB\ORM;
 
+use FKSDB\ORM\Models\AbstractModelSingle;
+use FKSDB\ORM\ModelsMulti\AbstractModelMulti;
 use Nette\Database\Table\Selection;
 
 /**
@@ -15,12 +17,12 @@ interface IService {
      * @param iterable|null $data
      * @deprecated
      */
-    public function createNew($data = null);
+    public function createNew(?iterable $data = null);
 
     public function createNewModel(array $data): IModel;
 
     /**
-     * @param int $key
+     * @param mixed $key
      * @return IModel|null
      */
     public function findByPrimary($key): ?IModel;
@@ -30,7 +32,7 @@ interface IService {
      * @return void
      * @deprecated
      */
-    public function save(IModel &$model);
+    public function save(IModel &$model): void;
 
     public function dispose(IModel $model): void;
 
@@ -39,10 +41,10 @@ interface IService {
     /**
      * @param IModel $model
      * @param iterable $data
-     * @return mixed
+     * @return void
      * @deprecated
      */
-    public function updateModel(IModel $model, $data);
+    public function updateModel(IModel $model, iterable $data): void;
 
     public function updateModel2(IModel $model, array $data): bool;
 

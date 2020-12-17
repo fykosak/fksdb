@@ -2,16 +2,15 @@
 
 namespace FKSDB\Components\Controls\Entity;
 
+use FKSDB\Components\Forms\Factories\AddressFactory;
+use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\DBReflection\FieldLevelPermission;
 use FKSDB\DBReflection\OmittedControlException;
-use FKSDB\Components\Forms\Factories\AddressFactory;
-use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\FlashMessageDump;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\Messages\Message;
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPostContact;
 use FKSDB\ORM\Services\ServiceAddress;
@@ -20,8 +19,8 @@ use FKSDB\ORM\Services\ServicePersonInfo;
 use FKSDB\ORM\Services\ServicePostContact;
 use FKSDB\Utils\FormUtils;
 use Nette\Application\AbortException;
-use Nette\Forms\Form;
 use Nette\DI\Container;
+use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 
 /**
@@ -29,7 +28,7 @@ use Nette\InvalidArgumentException;
  * @author Michal Červeňák <miso@fykos.cz>
  * @property ModelPerson $model
  */
-class PersonFormComponent extends EditEntityFormComponent {
+class PersonFormComponent extends AbstractEntityFormComponent {
 
     public const POST_CONTACT_DELIVERY = 'post_contact_d';
     public const POST_CONTACT_PERMANENT = 'post_contact_p';
@@ -37,35 +36,22 @@ class PersonFormComponent extends EditEntityFormComponent {
     public const PERSON_CONTAINER = 'person';
     public const PERSON_INFO_CONTAINER = 'person_info';
 
-    protected SingleReflectionFormFactory $singleReflectionFormFactory;
-
-    protected AddressFactory $addressFactory;
-
-    protected ServicePerson $servicePerson;
-
-    protected ServicePersonInfo $servicePersonInfo;
-
+    private SingleReflectionFormFactory $singleReflectionFormFactory;
+    private AddressFactory $addressFactory;
+    private ServicePerson $servicePerson;
+    private ServicePersonInfo $servicePersonInfo;
     private ServicePostContact $servicePostContact;
-
     private ServiceAddress $serviceAddress;
-
     private MemoryLogger $logger;
-
     private FieldLevelPermission $userPermission;
 
-    /**
-     * AbstractPersonFormControl constructor.
-     * @param Container $container
-     * @param int $userPermission is required to model editing, otherwise is setted to 2048
-     * @param bool $create
-     */
-    public function __construct(Container $container, bool $create, int $userPermission) {
-        parent::__construct($container, $create);
+    public function __construct(Container $container, int $userPermission, ?ModelPerson $person) {
+        parent::__construct($container, $person);
         $this->userPermission = new FieldLevelPermission($userPermission, $userPermission);
         $this->logger = new MemoryLogger();
     }
 
-    public function injectFactories(
+    final public function injectFactories(
         SingleReflectionFormFactory $singleReflectionFormFactory,
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,
@@ -130,28 +116,27 @@ class PersonFormComponent extends EditEntityFormComponent {
         $data = FormUtils::emptyStrToNull($values, true);
         $connection->beginTransaction();
         $this->logger->clear();
-        $person = $this->servicePerson->store($this->create ? null : $this->model, $data[self::PERSON_CONTAINER]);
+        $person = $this->servicePerson->store($this->model ?? null, $data[self::PERSON_CONTAINER]);
         $this->servicePersonInfo->store($person, $person->getInfo(), $data[self::PERSON_INFO_CONTAINER]);
         $this->storeAddresses($person, $data);
 
         $connection->commit();
-        $this->logger->log(new Message($this->create ? _('Person has been created') : _('Data has been updated'), Message::LVL_SUCCESS));
+        $this->logger->log(new Message(!isset($this->model) ? _('Person has been created') : _('Data has been updated'), Message::LVL_SUCCESS));
         FlashMessageDump::dump($this->logger, $this->getPresenter(), true);
         $this->getPresenter()->redirect('this');
     }
 
     /**
-     * @param AbstractModelSingle|ModelPerson|null $model
      * @return void
      * @throws BadTypeException
      */
-    protected function setDefaults(?AbstractModelSingle $model): void {
-        if (!is_null($model)) {
+    protected function setDefaults(): void {
+        if (isset($this->model)) {
             $this->getForm()->setDefaults([
-                self::PERSON_CONTAINER => $model->toArray(),
-                self::PERSON_INFO_CONTAINER => $model->getInfo() ? $model->getInfo()->toArray() : null,
-                self::POST_CONTACT_DELIVERY => $model->getDeliveryAddress2() ?: [],
-                self::POST_CONTACT_PERMANENT => $model->getPermanentAddress2() ?: [],
+                self::PERSON_CONTAINER => $this->model->toArray(),
+                self::PERSON_INFO_CONTAINER => $this->model->getInfo() ? $this->model->getInfo()->toArray() : null,
+                self::POST_CONTACT_DELIVERY => $this->model->getDeliveryAddress2() ?: [],
+                self::POST_CONTACT_PERMANENT => $this->model->getPermanentAddress2() ?: [],
             ]);
         }
     }

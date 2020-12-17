@@ -2,10 +2,11 @@
 
 namespace FKSDB\ORM\Services\StoredQuery;
 
-use FKSDB\ORM\AbstractServiceSingle;
+
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyService;
 use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\ORM\Services\AbstractServiceSingle;
 use FKSDB\ORM\Tables\TypedTableSelection;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
@@ -18,12 +19,6 @@ class ServiceStoredQuery extends AbstractServiceSingle {
 
     private ServiceStoredQueryTag $serviceStoredQueryTag;
 
-    /**
-     * FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery constructor.
-     * @param Context $context
-     * @param ServiceStoredQueryTag $serviceStoredQueryTag
-     * @param IConventions $conventions
-     */
     public function __construct(Context $context, ServiceStoredQueryTag $serviceStoredQueryTag, IConventions $conventions) {
         parent::__construct($context, $conventions, DbNames::TAB_STORED_QUERY, ModelStoredQuery::class);
         $this->serviceStoredQueryTag = $serviceStoredQueryTag;

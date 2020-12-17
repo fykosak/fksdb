@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\React;
 
-use FKSDB\Exceptions\BadTypeException;
 use FKSDB\React\AjaxResponse;
 use Nette\Application\AbortException;
 use Nette\Http\IRequest;
@@ -16,7 +15,7 @@ abstract class AjaxComponent extends ReactComponent {
 
     private IRequest $request;
 
-    public function injectRequest(IRequest $request): void {
+    final public function injectRequest(IRequest $request): void {
         $this->request = $request;
     }
 

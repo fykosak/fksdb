@@ -1,12 +1,11 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\Teacher;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\Teacher;
 
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnFactory;
-use FKSDB\DBReflection\FieldLevelPermission;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
 use FKSDB\ValuePrinters\DatePrinter;
 use FKSDB\Components\Forms\Controls\DateInputs\DateInput;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelTeacher;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
@@ -15,7 +14,7 @@ use Nette\Utils\Html;
  * Class UntilRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class UntilRow extends AbstractColumnFactory {
+class UntilRow extends DefaultColumnFactory {
 
     /**
      * @param AbstractModelSingle|ModelTeacher $model
@@ -28,15 +27,7 @@ class UntilRow extends AbstractColumnFactory {
         return (new DatePrinter(_('__date')))($model->until);
     }
 
-    public function getTitle(): string {
-        return _('Teaches until');
-    }
-
-    public function createField(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         return new DateInput($this->getTitle());
-    }
-
-    public function getPermission(): FieldLevelPermission {
-        return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
     }
 }

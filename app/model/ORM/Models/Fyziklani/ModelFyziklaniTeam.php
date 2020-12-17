@@ -4,7 +4,7 @@ namespace FKSDB\ORM\Models\Fyziklani;
 
 use FKSDB\Fyziklani\Closing\AlreadyClosedException;
 use FKSDB\Fyziklani\Closing\NotCheckedSubmitsException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Events\ModelFyziklaniParticipant;
 use FKSDB\ORM\Models\IContestReferencedModel;
@@ -13,30 +13,41 @@ use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
+use FKSDB\WebService\INodeCreator;
+use FKSDB\WebService\XMLHelper;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
 
 /**
- * @property-read  string category
- * @property-read  string name
- * @property-read  int e_fyziklani_team_id
- * @property-read  int event_id
- * @property-read  int points
- * @property-read  string status
- * @property-read  \DateTimeInterface created
- * @property-read  \DateTimeInterface modified
- * @property-read  string phone
- * @property-read  bool force_a
- * @property-read  string password
- * @property-read  ActiveRow event
+ * @property-read string category
+ * @property-read string name
+ * @property-read int e_fyziklani_team_id
+ * @property-read int event_id
+ * @property-read int points
+ * @property-read string status
+ * @property-read \DateTimeInterface created
+ * @property-read \DateTimeInterface modified
+ * @property-read string phone
+ * @property-read bool force_a
+ * @property-read string password
+ * @property-read ActiveRow event
+ * @property-read string game_lang
+ * @property-read int rank_category
+ * @property-read int rank_total
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  * @author Michal Červeňák <miso@fykos.cz>
  *
  */
-class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferencedModel, IResource, IContestReferencedModel {
+class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferencedModel, IResource, IContestReferencedModel, INodeCreator {
     public const RESOURCE_ID = 'fyziklani.team';
+
+    public const CATEGORY_HIGH_SCHOOL_A = 'A';
+    public const CATEGORY_HIGH_SCHOOL_B = 'B';
+    public const CATEGORY_HIGH_SCHOOL_C = 'C';
+    public const CATEGORY_ABROAD = 'F';
+    public const CATEGORY_OPEN = 'O';
 
     public function __toString(): string {
         return $this->name;
@@ -142,14 +153,19 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
         return $persons;
     }
 
-    public function __toArray(bool $includePosition = false): array {
+    public function __toArray(bool $includePosition = false, bool $includePassword = false): array {
         $data = [
             'created' => $this->created->format('c'),
             'category' => $this->category,
             'name' => $this->name,
             'status' => $this->status,
             'teamId' => $this->e_fyziklani_team_id,
+            'gameLang' => $this->game_lang,
+            'points' => $this->points,
         ];
+        if ($includePassword) {
+            $data['password'] = $this->password;
+        }
         $position = $this->getPosition();
         if ($includePosition && $position) {
             $data['x'] = $position->col;
@@ -159,7 +175,50 @@ class ModelFyziklaniTeam extends AbstractModelSingle implements IEventReferenced
         return $data;
     }
 
+    public function createXMLNode(\DOMDocument $doc): \DOMElement {
+        $node = $doc->createElement('team');
+        $node->setAttribute('teamId', $this->e_fyziklani_team_id);
+        XMLHelper::fillArrayToNode([
+            'teamId' => $this->e_fyziklani_team_id,
+            'name' => $this->name,
+            'status' => $this->status,
+            'category' => $this->category,
+            'created' => $this->created->format('c'),
+            'phone' => $this->phone,
+            'password' => $this->password,
+            'points' => $this->points,
+            'rankCategory' => $this->rank_category,
+            'rankTotal' => $this->rank_total,
+            'forceA' => $this->force_a,
+            'gameLang' => $this->game_lang,
+        ], $doc, $node);
+        return $node;
+
+        // `teacher_id`           INT(11)     NULL     DEFAULT NULL
+        // `teacher_accomodation` TINYINT(1)  NOT NULL DEFAULT 0,
+        // `teacher_present`      TINYINT(1)  NOT NULL DEFAULT 0,
+        // `teacher_schedule`     TEXT        NULL     DEFAULT NULL
+        // `note`                 TEXT        NULL     DEFAULT NULL,
+    }
+
     public function getResourceId(): string {
         return self::RESOURCE_ID;
+    }
+
+    public static function mapCategoryToName(string $category): string {
+        switch ($category) {
+            case self::CATEGORY_HIGH_SCHOOL_A :
+                return _('Středoškoláci A');
+            case self::CATEGORY_HIGH_SCHOOL_B :
+                return _('Středoškoláci B');
+            case self::CATEGORY_HIGH_SCHOOL_C :
+                return _('Středoškoláci C');
+            case self::CATEGORY_ABROAD :
+                return _('Zahraniční SŠ');
+            case self::CATEGORY_OPEN :
+                return _('Open');
+            default:
+                throw new \InvalidArgumentException();
+        }
     }
 }

@@ -25,17 +25,12 @@ class StoredQueriesGrid extends BaseGrid {
 
     private array $activeTagIds;
 
-    /**
-     * StoredQueries2Grid constructor.
-     * @param Container $container
-     * @param array $activeTagIds
-     */
     public function __construct(Container $container, array $activeTagIds) {
         parent::__construct($container);
         $this->activeTagIds = $activeTagIds;
     }
 
-    public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery): void {
+    final public function injectServiceStoredQuery(ServiceStoredQuery $serviceStoredQuery): void {
         $this->serviceStoredQuery = $serviceStoredQuery;
     }
 
@@ -56,30 +51,17 @@ class StoredQueriesGrid extends BaseGrid {
             $queries = $this->serviceStoredQuery->getTable()->order('name');
             $this->setDataSource(new NDataSource($queries));
         }
-        $this->addColumn('query_id', _('Query Id'));
-        $this->addColumn('name', _('Export name'));
-        $this->addColumn('description', _('Description'))->setTruncate(self::DESCRIPTION_TRUNC);
         $this->addColumns([
+            'stored_query.query_id',
+            'stored_query.name',
             'stored_query.qid',
             'stored_query.tags',
         ]);
-        $this->addButton('edit', _('Edit'))
-            ->setText(_('Edit'))
-            ->setLink(function (ModelStoredQuery $row): string {
-                return $this->getPresenter()->link('StoredQuery:edit', ['id' => $row->query_id]);
-            });
-        $this->addButton('detail', _('Detail'))
-            ->setText(_('Detail'))
-            ->setLink(function (ModelStoredQuery $row): string {
-                return $this->getPresenter()->link('StoredQuery:detail', ['id' => $row->query_id]);
-            });
+        $this->addColumn('description', _('Description'))->setTruncate(self::DESCRIPTION_TRUNC);
 
-        $this->addButton('execute', _('Execute'))
-            ->setClass('btn btn-sm btn-primary')
-            ->setText(_('Execute'))
-            ->setLink(function (ModelStoredQuery $row): string {
-                return $this->getPresenter()->link('Export:execute', ['id' => $row->query_id]);
-            });
+        $this->addLinkButton('StoredQuery:edit', 'edit', _('Edit'), false, ['id' => 'query_id']);
+        $this->addLinkButton('StoredQuery:detail', 'detail', _('Detail'), false, ['id' => 'query_id']);
+        $this->addLinkButton('Export:execute', 'execute', _('Execute export'), false, ['id' => 'query_id']);
     }
 
     protected function getModelClassName(): string {

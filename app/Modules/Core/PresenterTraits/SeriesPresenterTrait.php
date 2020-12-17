@@ -3,9 +3,8 @@
 namespace FKSDB\Modules\Core\PresenterTraits;
 
 use FKSDB\Components\Controls\Choosers\SeriesChooser;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\ModelContest;
-use Nette\Application\AbortException;
+use FKSDB\SeriesCalculator;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\DI\Container;
 
@@ -14,6 +13,7 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 trait SeriesPresenterTrait {
+    use YearPresenterTrait;
 
     /**
      * @var int
@@ -21,49 +21,54 @@ trait SeriesPresenterTrait {
      */
     public $series;
 
+    private SeriesCalculator $seriesCalculator;
+
+    public function injectSeriesCalculator(SeriesCalculator $seriesCalculator): void {
+        $this->seriesCalculator = $seriesCalculator;
+    }
+
     /**
      * @return void
-     * @throws BadTypeException
+     * @throws BadRequestException
      * @throws ForbiddenRequestException
-     * @throws AbortException
      */
     protected function seriesTraitStartup(): void {
-        $control = $this->getComponent('seriesChooser');
-        if (!$control instanceof SeriesChooser) {
-            throw new BadTypeException(SeriesChooser::class, $control);
+        $this->yearTraitStartup();
+        if (!isset($this->series)) {
+            $this->redirect('this', array_merge($this->getParameters(), ['series' => $this->selectSeries()]));
         }
-        $control->init();
     }
 
     /**
      * @return int
-     * @throws AbortException
-     * @throws BadTypeException
      * @throws ForbiddenRequestException
      */
-    public function getSelectedSeries(): int {
-        $control = $this->getComponent('seriesChooser');
-        if (!$control instanceof SeriesChooser) {
-            throw new BadTypeException(SeriesChooser::class, $control);
+    private function selectSeries(): int {
+        $candidate = $this->seriesCalculator->getLastSeries($this->getSelectedContest(), $this->getSelectedYear());
+        if (!$this->isValidSeries($candidate)) {
+            throw new ForbiddenRequestException();
         }
-        return $control->getSelectedSeries(false);
+        return $candidate;
     }
 
-    /**
-     * @return SeriesChooser
-     * @throws BadTypeException
-     * @throws ForbiddenRequestException
-     */
+    private function isValidSeries(?int $series): bool {
+        return in_array($series, $this->getAllowedSeries());
+    }
+
+    private function getAllowedSeries(): array {
+        return $this->seriesCalculator->getAllowedSeries($this->getSelectedContest(), $this->getSelectedYear());
+    }
+
+    public function getSelectedSeries(): ?int {
+        return $this->series;
+    }
+
     protected function createComponentSeriesChooser(): SeriesChooser {
-        return new SeriesChooser($this->getContext(), $this->getSelectedContest(), $this->getSelectedYear(), $this->series);
+        return new SeriesChooser($this->getContext(), $this->getSelectedSeries(), $this->getSelectedSeries(), $this->getAllowedSeries());
     }
 
     /**
      * @return Container
      */
     abstract protected function getContext();
-
-    abstract public function getSelectedContest(): ?ModelContest;
-
-    abstract public function getSelectedYear(): int;
 }

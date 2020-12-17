@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Grids\Fyziklani;
+namespace FKSDB\Components\Grids\Fyziklani\Submits;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Exceptions\BadTypeException;
@@ -34,24 +34,16 @@ use FKSDB\SQL\SearchableDataSource;
 class AllSubmitsGrid extends SubmitsGrid {
 
     private ModelEvent $event;
-
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
-
     private ServiceFyziklaniTask $serviceFyziklaniTask;
-
     private HandlerFactory $handlerFactory;
 
-    /**
-     * FyziklaniSubmitsGrid constructor.
-     * @param ModelEvent $event
-     * @param Container $container
-     */
     public function __construct(ModelEvent $event, Container $container) {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    public function injectPrimary(HandlerFactory $handlerFactory, ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask): void {
+    final public function injectPrimary(HandlerFactory $handlerFactory, ServiceFyziklaniTeam $serviceFyziklaniTeam, ServiceFyziklaniTask $serviceFyziklaniTask): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->handlerFactory = $handlerFactory;
@@ -99,7 +91,7 @@ class AllSubmitsGrid extends SubmitsGrid {
     }
 
     private function getFilterCallBack(): callable {
-        return function (Selection $table, $value) {
+        return function (Selection $table, $value): void {
             foreach ($value as $key => $condition) {
                 if (!$condition) {
                     continue;
@@ -137,7 +129,7 @@ class AllSubmitsGrid extends SubmitsGrid {
         /** @var ModelFyziklaniSubmit $submit */
         $submit = $this->serviceFyziklaniSubmit->findByPrimary($id);
         if (!$submit) {
-            $this->flashMessage(_('Submit dos not exists.'), BasePresenter::FLASH_ERROR);
+            $this->flashMessage(_('Submit does not exists.'), BasePresenter::FLASH_ERROR);
             $this->redirect('this');
         }
         try {
@@ -183,7 +175,7 @@ class AllSubmitsGrid extends SubmitsGrid {
         $form->addText('code', _('Code'))->setAttribute('placeholder', _('Task code'));
         $form->addCheckbox('not_null', _('Only not revoked submits'));
         $form->addSubmit('submit', _('Search'));
-        $form->onSuccess[] = function (Form $form) {
+        $form->onSuccess[] = function (Form $form): void {
             $values = $form->getValues();
             $this->searchTerm = $values;
             $this->dataSource->applyFilter($values);
@@ -193,5 +185,4 @@ class AllSubmitsGrid extends SubmitsGrid {
         };
         return $control;
     }
-
 }

@@ -6,19 +6,19 @@ use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\Breadcrumbs\Request as NaviRequest;
 use FKSDB\Components\Controls\Navigation\INavigablePresenter;
 use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Utils\Utils;
 use Nette\Application\IPresenterFactory;
 use Nette\Application\IRouter;
 use Nette\Application\Request as AppRequest;
-use Nette\Application\UI\Presenter;
 use Nette\Application\UI\ComponentReflection;
+use Nette\Application\UI\Presenter;
 use Nette\DI\Container;
-use Tracy\Debugger;
 use Nette\Http\Request as HttpRequest;
 use Nette\Http\Session;
 use Nette\Http\SessionSection;
 use Nette\InvalidArgumentException;
 use Nette\Utils\Random;
-use FKSDB\Utils\Utils;
+use Tracy\Debugger;
 
 /**
  * Monitors user's traversal through the web and build the tree,
@@ -33,22 +33,18 @@ use FKSDB\Utils\Utils;
  */
 class Breadcrumbs extends BaseComponent {
 
-    public const SECTION_REQUESTS = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.main';
-    public const SECTION_BACKIDS = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.backids';
-    public const SECTION_REVERSE = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.reverse';
-    public const SECTION_PATH_REVERSE = 'FKSDB\Components\Controls\Breadcrumbs\Breadcrumbs.pathReverse';
+    public const SECTION_REQUESTS = self::class . '.main';
+    public const SECTION_BACKIDS = self::class . '.backids';
+    public const SECTION_REVERSE = self::class . '.reverse';
+    public const SECTION_PATH_REVERSE = self::class . '.pathReverse';
     // const EXPIRATION = '+ 10 minutes';
     public const BACKID_LEN = 4;
     public const BACKID_DOMAIN = '0-9a-zA-Z';
 
     private Session $session;
-
     private IRouter $router;
-
     private HttpRequest $httpRequest;
-
     private IPresenterFactory $presenterFactory;
-
     /**
      * Prevents multiple storing the current request.
      *
@@ -61,7 +57,7 @@ class Breadcrumbs extends BaseComponent {
      * @param string $expiration
      * @param Container $container
      */
-    public function __construct($expiration, Container $container) {
+    public function __construct(string $expiration, Container $container) {
         parent::__construct($container);
         $this->getRequests()->setExpiration($expiration);
         $this->getPathKeyCache()->setExpiration($expiration);
@@ -69,7 +65,7 @@ class Breadcrumbs extends BaseComponent {
         $this->getReverseBackLinkMap()->setExpiration($expiration);
     }
 
-    public function injectPrimary(Session $session, IRouter $router, HttpRequest $httpRequest, IPresenterFactory $presenterFactory): void {
+    final public function injectPrimary(Session $session, IRouter $router, HttpRequest $httpRequest, IPresenterFactory $presenterFactory): void {
         $this->session = $session;
         $this->router = $router;
         $this->httpRequest = $httpRequest;
@@ -85,7 +81,7 @@ class Breadcrumbs extends BaseComponent {
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    public function setBackLink(AppRequest $request) {
+    public function setBackLink(AppRequest $request): void {
         $presenter = $this->getPresenter();
         if (!$presenter instanceof INavigablePresenter) {
             throw new BadTypeException(INavigablePresenter::class, $presenter);
@@ -198,7 +194,7 @@ class Breadcrumbs extends BaseComponent {
 
     /**
      *
-     * @param AppRequest|string $request
+     * @param AppRequest|string|NaviRequest $request
      * @return string
      * @throws \ReflectionException
      */
@@ -254,11 +250,11 @@ class Breadcrumbs extends BaseComponent {
      * ********************** */
 
     /**
-     * @param string $backLink
+     * @param string|null $backLink
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    private function storeRequest($backLink) {
+    private function storeRequest(?string $backLink): void {
         if ($this->storedRequest) {
             return;
         }
@@ -282,12 +278,12 @@ class Breadcrumbs extends BaseComponent {
     /**
      * @param INavigablePresenter|Presenter $presenter
      * @param AppRequest $request
-     * @param string $backLink
+     * @param string|null $backLink
      * @return Request
      * @throws \ReflectionException
      * @throws BadTypeException
      */
-    protected function createNaviRequest(Presenter $presenter, AppRequest $request, $backLink): NaviRequest {
+    protected function createNaviRequest(Presenter $presenter, AppRequest $request, ?string $backLink): NaviRequest {
         $pathKey = $this->getPathKey($request);
         if (!$presenter instanceof INavigablePresenter) {
             throw new BadTypeException(INavigablePresenter::class, $presenter);

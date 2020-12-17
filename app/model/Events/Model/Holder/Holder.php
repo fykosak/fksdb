@@ -7,8 +7,8 @@ use FKSDB\Events\FormAdjustments\IFormAdjustment;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Machine\Transition;
 use FKSDB\Events\Model\Holder\SecondaryModelStrategies\SecondaryModelStrategy;
-use FKSDB\Events\Processings\GenKillProcessing;
-use FKSDB\Events\Processings\IProcessing;
+use FKSDB\Events\Processing\GenKillProcessing;
+use FKSDB\Events\Processing\IProcessing;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelEvent;
@@ -44,10 +44,6 @@ class Holder {
 
     private SecondaryModelStrategy $secondaryModelStrategy;
 
-    /**
-     * Holder constructor.
-     * @param Connection $connection
-     */
     public function __construct(Connection $connection) {
         $this->connection = $connection;
 

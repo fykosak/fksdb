@@ -14,12 +14,6 @@ class AESOPFormat extends XSLFormat {
 
     public const ID_SCOPE = 'fksdb.person_id';
 
-    /**
-     * AESOPFormat constructor.
-     * @param StoredQuery $storedQuery
-     * @param string $xslFile
-     * @param IXMLNodeSerializer $xmlSerializer
-     */
     public function __construct(StoredQuery $storedQuery, string $xslFile, IXMLNodeSerializer $xmlSerializer) {
         parent::__construct($storedQuery, $xslFile, $xmlSerializer);
 

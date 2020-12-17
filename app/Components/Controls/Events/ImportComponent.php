@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Events;
+namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\BasePresenter;
@@ -32,13 +32,6 @@ class ImportComponent extends BaseComponent {
 
     private ApplicationHandler $handler;
 
-    /**
-     * ImportComponent constructor.
-     * @param Machine $machine
-     * @param SingleEventSource $source
-     * @param ApplicationHandler $handler
-     * @param Container $container
-     */
     public function __construct(Machine $machine, SingleEventSource $source, ApplicationHandler $handler, Container $container) {
         parent::__construct($container);
         $this->machine = $machine;
@@ -72,7 +65,6 @@ class ImportComponent extends BaseComponent {
             ])
             ->setDefaultValue(ImportHandler::STATELESS_IGNORE);
 
-
         $form->addSubmit('import', _('Import'));
 
         $form->onSuccess[] = function (Form $form) {
@@ -98,7 +90,6 @@ class ImportComponent extends BaseComponent {
             // process form values
             $filename = $values['file']->getTemporaryFile();
             $parser = new CSVParser($filename, CSVParser::INDEX_FROM_HEADER);
-
 
             $errorMode = $values['errorMode'];
             $stateless = $values['stateless'];

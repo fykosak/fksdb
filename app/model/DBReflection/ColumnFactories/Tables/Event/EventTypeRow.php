@@ -1,10 +1,10 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\Event;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\Event;
 
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnFactory;
-use FKSDB\DBReflection\FieldLevelPermission;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
+use FKSDB\DBReflection\MetaDataFactory;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\ServiceEventType;
@@ -16,20 +16,13 @@ use Nette\Utils\Html;
  * Class EventTypeRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class EventTypeRow extends AbstractColumnFactory {
+class EventTypeRow extends DefaultColumnFactory {
 
     private ServiceEventType $serviceEventType;
 
-    /**
-     * EventTypeRow constructor.
-     * @param ServiceEventType $serviceEventType
-     */
-    public function __construct(ServiceEventType $serviceEventType) {
+    public function __construct(ServiceEventType $serviceEventType, MetaDataFactory $metaDataFactory) {
+        parent::__construct($metaDataFactory);
         $this->serviceEventType = $serviceEventType;
-    }
-
-    public function getTitle(): string {
-        return _('Event type');
     }
 
     /**
@@ -37,7 +30,7 @@ class EventTypeRow extends AbstractColumnFactory {
      * @return BaseControl
      * @throws \InvalidArgumentException
      */
-    public function createField(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         [$contest] = $args;
         if (\is_null($contest) || !$contest instanceof ModelContest) {
             throw new \InvalidArgumentException();
@@ -58,9 +51,5 @@ class EventTypeRow extends AbstractColumnFactory {
      */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         return Html::el('span')->addText($model->getEventType()->name);
-    }
-
-    public function getPermission(): FieldLevelPermission {
-        return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
     }
 }

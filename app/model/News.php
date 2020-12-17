@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\News;
+namespace FKSDB;
 
 use FKSDB\ORM\Models\ModelContest;
 use Nette\DI\Container;
@@ -14,10 +14,6 @@ class News {
 
     private Container $container;
 
-    /**
-     * News constructor.
-     * @param Container $container
-     */
     public function __construct(Container $container) {
         $this->container = $container;
     }
@@ -34,5 +30,4 @@ class News {
             return [];
         }
     }
-
 }

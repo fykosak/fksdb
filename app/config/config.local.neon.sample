@@ -36,7 +36,9 @@ parameters:
 		# deployment:
 		# 	/path/to/fksdb/instance: branch-name
 		# 	/path/to/another/fksdb/instance: branch-name
-
+    googleOAuth2:
+        clientId:
+        clientSecret:
 # Contest specific parameters
     fykos:
         # Allow forward registrations

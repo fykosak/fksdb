@@ -1,17 +1,33 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories;
+namespace FKSDB\DBReflection\ColumnFactories\Types;
 
+use FKSDB\Components\Controls\Badges\NotSetBadge;
+use FKSDB\Components\Controls\Badges\PermissionDeniedBadge;
+use FKSDB\DBReflection\ColumnFactories\IColumnFactory;
 use FKSDB\DBReflection\FieldLevelPermission;
 use FKSDB\DBReflection\MetaDataFactory;
 use FKSDB\DBReflection\OmittedControlException;
+use FKSDB\DBReflection\ReferencedFactory;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\ORM\Models\AbstractModelSingle;
+use FKSDB\ValuePrinters\StringPrinter;
 use Nette\Forms\Controls\BaseControl;
+use Nette\SmartObject;
+use Nette\Utils\Html;
 
 /**
  * Class DefaultRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-abstract class DefaultColumnFactory extends AbstractColumnFactory {
+abstract class DefaultColumnFactory implements IColumnFactory {
+
+    use SmartObject;
+
+    public const PERMISSION_ALLOW_ANYBODY = 1;
+    public const PERMISSION_ALLOW_BASIC = 16;
+    public const PERMISSION_ALLOW_RESTRICT = 128;
+    public const PERMISSION_ALLOW_FULL = 1024;
 
     private string $title;
 
@@ -31,10 +47,8 @@ abstract class DefaultColumnFactory extends AbstractColumnFactory {
 
     private MetaDataFactory $metaDataFactory;
 
-    /**
-     * StringRow constructor.
-     * @param MetaDataFactory $metaDataFactory
-     */
+    protected ReferencedFactory $referencedFactory;
+
     public function __construct(MetaDataFactory $metaDataFactory) {
         $this->metaDataFactory = $metaDataFactory;
         $this->permission = new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
@@ -45,7 +59,10 @@ abstract class DefaultColumnFactory extends AbstractColumnFactory {
         $this->tableName = $tableName;
         $this->modelAccessKey = $modelAccessKey;
         $this->description = $description;
-        $this->metaData = $this->metaDataFactory->getMetaData($tableName, $modelAccessKey);
+    }
+
+    public function setReferencedFactory(ReferencedFactory $factory): void {
+        $this->referencedFactory = $factory;
     }
 
     /**
@@ -103,6 +120,9 @@ abstract class DefaultColumnFactory extends AbstractColumnFactory {
     }
 
     final protected function getMetaData(): array {
+        if (!isset($this->metaData)) {
+            $this->metaData = $this->metaDataFactory->getMetaData($this->tableName, $this->modelAccessKey);
+        }
         return $this->metaData;
     }
 
@@ -111,5 +131,49 @@ abstract class DefaultColumnFactory extends AbstractColumnFactory {
      * @return BaseControl
      * @throws OmittedControlException
      */
-    abstract protected function createFormControl(...$args): BaseControl;
+    protected function createFormControl(...$args): BaseControl {
+        throw new OmittedControlException();
+    }
+
+    protected function createHtmlValue(AbstractModelSingle $model): Html {
+        return (new StringPrinter())($model->{$this->getModelAccessKey()});
+    }
+
+    /**
+     * @param AbstractModelSingle $model
+     * @param int $userPermissionsLevel
+     * @return Html
+     * @throws BadTypeException
+     */
+    final public function render(AbstractModelSingle $model, int $userPermissionsLevel): Html {
+        if (!$this->hasReadPermissions($userPermissionsLevel)) {
+            return PermissionDeniedBadge::getHtml();
+        }
+        $model = $this->resolveModel($model);
+        if (is_null($model)) {
+            return $this->renderNullModel();
+        }
+        return $this->createHtmlValue($model);
+    }
+
+    /**
+     * @param AbstractModelSingle $modelSingle
+     * @return AbstractModelSingle|null
+     * @throws BadTypeException
+     */
+    protected function resolveModel(AbstractModelSingle $modelSingle): ?AbstractModelSingle {
+        return $this->referencedFactory->accessModel($modelSingle);
+    }
+
+    final public function hasReadPermissions(int $userValue): bool {
+        return $userValue >= $this->getPermission()->read;
+    }
+
+    final public function hasWritePermissions(int $userValue): bool {
+        return $userValue >= $this->getPermission()->write;
+    }
+
+    protected function renderNullModel(): Html {
+        return NotSetBadge::getHtml();
+    }
 }

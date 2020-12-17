@@ -38,15 +38,6 @@ class ReferencedPersonFactory {
 
     private Container $context;
 
-    /**
-     * AbstractReferencedPersonFactory constructor.
-     * @param ServicePerson $servicePerson
-     * @param PersonFactory $personFactory
-     * @param ReferencedPersonHandlerFactory $referencedPersonHandlerFactory
-     * @param PersonProvider $personProvider
-     * @param PersonScheduleFactory $personScheduleFactory
-     * @param Container $context
-     */
     public function __construct(
         ServicePerson $servicePerson,
         PersonFactory $personFactory,

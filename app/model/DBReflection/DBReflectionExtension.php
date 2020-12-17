@@ -2,8 +2,9 @@
 
 namespace FKSDB\DBReflection;
 
-use FKSDB\DBReflection\ColumnFactories\{DateRow,
-    DateTimeRow,
+use FKSDB\DBReflection\ColumnFactories\Types\{
+    DateTime\DateRow,
+    DateTime\DateTimeRow,
     EmailColumnFactory,
     IntColumnFactory,
     LogicColumnFactory,
@@ -12,7 +13,7 @@ use FKSDB\DBReflection\ColumnFactories\{DateRow,
     StringColumnFactory,
     PhoneColumnFactory,
     TextColumnFactory,
-    TimeRow
+    DateTime\TimeRow
 };
 use FKSDB\Config\Expressions\Helpers;
 use FKSDB\DBReflection\LinkFactories\Link;
@@ -30,14 +31,6 @@ class DBReflectionExtension extends CompilerExtension {
      */
     public function loadConfiguration(): void {
         $this->registerFactories($this->config['tables']);
-        $this->registerDetails($this->config['details']);
-    }
-
-    private function registerDetails(array $details): void {
-        $builder = $this->getContainerBuilder();
-        $builder->addDefinition($this->prefix('detailFactory'))
-            ->setFactory(DetailFactory::class)
-            ->addSetup('setNodes', [$details]);
     }
 
     /**
@@ -128,6 +121,9 @@ class DBReflectionExtension extends CompilerExtension {
                 case 'logic':
                     $this->registerLogicRow($factory, $tableName, $fieldName, $field);
                     break;
+                case 'class':
+                    $this->registerClassColumnFactory($factory, $tableName, $fieldName, $field);
+                    break;
                 default:
                     throw new NotImplementedException();
             }
@@ -135,6 +131,10 @@ class DBReflectionExtension extends CompilerExtension {
             $factory->setFactory($field);
         }
         return $factory;
+    }
+
+    private function registerClassColumnFactory(ServiceDefinition $factory, string $tableName, string $fieldName, array $field): void {
+        $this->setUpDefaultFactory($factory, $tableName, $fieldName, $field['class'], $field);
     }
 
     private function registerStateRow(ServiceDefinition $factory, string $tableName, string $fieldName, array $field): void {

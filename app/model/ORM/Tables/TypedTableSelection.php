@@ -2,7 +2,7 @@
 
 namespace FKSDB\ORM\Tables;
 
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
 use Nette\Database\Table\Selection;
@@ -15,13 +15,6 @@ class TypedTableSelection extends Selection {
 
     protected string $modelClassName;
 
-    /**
-     * TypedTableSelection constructor.
-     * @param string $modelClassName
-     * @param string $table
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(string $modelClassName, string $table, Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, $table);
         $this->modelClassName = $modelClassName;

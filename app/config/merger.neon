@@ -11,6 +11,7 @@ parameters:
             person_info: [person_id]
             person_history: [person_id, ac_year]
             person_has_flag: [person_id, flag_id]
+            person_schedule: [person_id, schedule_item_id]
             submit: [ct_id, task_id]
             org: [person_id, contest_id]
             post_contact: [person_id, type]

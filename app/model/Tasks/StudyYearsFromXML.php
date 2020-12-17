@@ -63,11 +63,7 @@ class StudyYearsFromXML extends Stage {
         return $this->data;
     }
 
-    /**
-     * @param SimpleXMLElement $XMLTask
-     * @return void
-     */
-    private function processTask(SimpleXMLElement $XMLTask) {
+    private function processTask(SimpleXMLElement $XMLTask): void {
         $tasks = $this->data->getTasks();
         $tasknr = (int)(string)$XMLTask->number;
 
@@ -90,7 +86,7 @@ class StudyYearsFromXML extends Stage {
                 $hasYears = true;
 
                 if (!$this->serviceStudyYear->findByPrimary($studyYear)) {
-                    $this->log(new Message(sprintf(_("Neznámý ročník '%s'."), $studyYear), ILogger::INFO));
+                    $this->log(new Message(sprintf(_('Unknown year "%s".'), $studyYear), ILogger::INFO));
                     continue;
                 }
 

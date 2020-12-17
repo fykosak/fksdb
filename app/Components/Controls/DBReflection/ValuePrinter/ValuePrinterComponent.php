@@ -1,12 +1,12 @@
 <?php
 
-namespace FKSDB\Components\Controls\DBReflection;
+namespace FKSDB\Components\Controls\DBReflection\ValuePrinter;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\DBReflection\DBReflectionFactory;
 use FKSDB\DBReflection\FieldLevelPermission;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 
 /**
  * Class ValuePrinterComponent
@@ -16,7 +16,7 @@ class ValuePrinterComponent extends BaseComponent {
 
     private DBReflectionFactory $tableReflectionFactory;
 
-    public function injectTableReflectionFactory(DBReflectionFactory $tableReflectionFactory): void {
+    final public function injectTableReflectionFactory(DBReflectionFactory $tableReflectionFactory): void {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
@@ -40,7 +40,6 @@ class ValuePrinterComponent extends BaseComponent {
      * @param AbstractModelSingle $model
      * @param int $userPermission
      * @return void
-     *
      * @throws BadTypeException
      */
     public function renderRow(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL): void {
@@ -65,7 +64,6 @@ class ValuePrinterComponent extends BaseComponent {
      * @param AbstractModelSingle $model
      * @param int $userPermission
      * @return void
-     *
      * @throws BadTypeException
      */
     public function renderOnlyValue(string $field, AbstractModelSingle $model, int $userPermission = FieldLevelPermission::ALLOW_FULL): void {

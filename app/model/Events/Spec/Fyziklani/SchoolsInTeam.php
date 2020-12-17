@@ -44,10 +44,10 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
     }
 
     /**
-     * @param int $schoolsInTeam
+     * @param mixed $schoolsInTeam
      * @return void
      */
-    public function setSchoolsInTeam($schoolsInTeam) {
+    public function setSchoolsInTeam($schoolsInTeam): void {
         $this->schoolsInTeam = $schoolsInTeam;
     }
 
@@ -77,12 +77,7 @@ class SchoolsInTeam extends SchoolCheck implements IFormAdjustment {
         };
     }
 
-    /**
-     * @param array $schools
-     * @return bool
-     */
-    private function checkMixture($schools) {
+    private function checkMixture(array $schools): bool {
         return count(array_unique($schools)) <= $this->getSchoolsInTeam();
     }
-
 }

@@ -3,10 +3,11 @@
 namespace FKSDB\ORM\Models;
 
 use FKSDB\Fyziklani\NotSetGameParametersException;
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyModel;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
+use FKSDB\WebService\INodeCreator;
+use FKSDB\WebService\XMLHelper;
 use Nette\Database\Table\ActiveRow;
 use Nette\Database\Table\GroupedSelection;
 use Nette\Security\IResource;
@@ -26,7 +27,8 @@ use Nette\Security\IResource;
  * @property-read \DateTimeInterface registration_end
  * @property-read string parameters
  */
-class ModelEvent extends AbstractModelSingle implements IResource, IContestReferencedModel {
+
+class ModelEvent extends AbstractModelSingle implements IResource, IContestReferencedModel, INodeCreator  {
     use DeprecatedLazyModel;
 
     public const TEAM_EVENTS = [1, 9, 13];
@@ -96,10 +98,19 @@ class ModelEvent extends AbstractModelSingle implements IResource, IContestRefer
             'eventYear' => $this->event_year,
             'begin' => $this->begin ? $this->begin->format('c') : null,
             'end' => $this->end ? $this->end->format('c') : null,
-            'registration_begin' => $this->registration_begin ? $this->registration_begin->format('c') : null,
-            'registration_end' => $this->registration_end ? $this->registration_end->format('c') : null,
+            'registration_begin' => $this->registration_begin ? $this->registration_begin->format('c') : null, // TODO remove
+            'registration_end' => $this->registration_end ? $this->registration_end->format('c') : null, // TODO remove
+            'registrationBegin' => $this->registration_begin ? $this->registration_begin->format('c') : null,
+            'registrationEnd' => $this->registration_end ? $this->registration_end->format('c') : null,
             'name' => $this->name,
-            'event_type_id' => $this->event_type_id,
+            'eventTypeId' => $this->event_type_id,
         ];
+    }
+
+    public function createXMLNode(\DOMDocument $doc): \DOMElement {
+        $node = $doc->createElement('event');
+        $node->setAttribute('eventId', $this->event_id);
+        XMLHelper::fillArrayToNode($this->__toArray(), $doc, $node);
+        return $node;
     }
 }

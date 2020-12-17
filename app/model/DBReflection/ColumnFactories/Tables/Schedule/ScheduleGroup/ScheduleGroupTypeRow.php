@@ -1,37 +1,17 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\Schedule\ScheduleGroup;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\Schedule\ScheduleGroup;
 
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnFactory;
-use FKSDB\DBReflection\FieldLevelPermission;
-use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\Schedule\ModelScheduleGroup;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
 /**
  * Class ScheduleGroupTypeRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class ScheduleGroupTypeRow extends AbstractColumnFactory {
-
-    public function getTitle(): string {
-        return _('Type');
-    }
-
-    public function getPermission(): FieldLevelPermission {
-        return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
-    }
-
-    /**
-     * @param array $args
-     * @return BaseControl
-     * @throws NotImplementedException
-     */
-    public function createField(...$args): BaseControl {
-        throw new NotImplementedException();
-    }
+class ScheduleGroupTypeRow extends DefaultColumnFactory {
 
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         $container = Html::el('span');

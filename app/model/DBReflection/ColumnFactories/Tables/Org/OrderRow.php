@@ -1,9 +1,10 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\Org;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\Org;
 
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
 use FKSDB\ValuePrinters\StringPrinter;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelOrg;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
@@ -14,29 +15,21 @@ use Nette\Utils\Html;
  * Class OrderRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class OrderRow extends AbstractOrgRowFactory {
+class OrderRow extends DefaultColumnFactory {
 
     public function getOrderMapping(): array {
         return [
-            0 => '0 - ' . _('pasivní org'),
-            1 => '1 - ' . _('org'),
-            2 => '2 - ' . _('aktivní org'),
+            0 => '0 - ' . _('Passive organiser'),
+            1 => '1 - ' . _('Organiser'),
+            2 => '2 - ' . _('Active organiser'),
             3 => '3 - ',
-            4 => '4 - ' . _('vedení'),
+            4 => '4 - ' . _('Leadership'),
             5 => '5 - ',
-            6 => '6 - ' . _('zástupce hlavního organizátora'),
-            7 => '7 - ' . _('hlavní organizátor'),
+            6 => '6 - ' . _('Deputy head organiser'),
+            7 => '7 - ' . _('Head organiser'),
             8 => '8 - ',
             9 => '9 - ' . _('vedoucí semináře'),
         ];
-    }
-
-    public function getDescription(): ?string {
-        return _('Pro řazení v seznamu organizátorů');
-    }
-
-    public function getTitle(): string {
-        return _('Order');
     }
 
     /**
@@ -50,7 +43,7 @@ class OrderRow extends AbstractOrgRowFactory {
         return (new StringPrinter())($model->order);
     }
 
-    public function createField(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         $control = new SelectBox($this->getTitle());
         $control->setOption('description', $this->getDescription());
         $control->setItems($this->getOrderMapping());

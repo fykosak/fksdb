@@ -2,6 +2,7 @@
 
 namespace FKSDB\Authentication;
 
+use FKSDB\Authentication\Exceptions\InactiveLoginException;
 use FKSDB\ORM\Models\ModelAuthToken;
 use FKSDB\ORM\Models\ModelLogin;
 use FKSDB\ORM\Services\ServiceAuthToken;
@@ -20,16 +21,8 @@ class TokenAuthenticator extends AbstractAuthenticator {
     public const SESSION_NS = 'auth';
 
     private ServiceAuthToken $authTokenService;
-
     private Session $session;
 
-    /**
-     * TokenAuthenticator constructor.
-     * @param ServiceAuthToken $authTokenService
-     * @param Session $session
-     * @param ServiceLogin $serviceLogin
-     * @param YearCalculator $yearCalculator
-     */
     public function __construct(ServiceAuthToken $authTokenService, Session $session, ServiceLogin $serviceLogin, YearCalculator $yearCalculator) {
         parent::__construct($serviceLogin, $yearCalculator);
         $this->authTokenService = $authTokenService;
@@ -44,7 +37,7 @@ class TokenAuthenticator extends AbstractAuthenticator {
     public function authenticate($tokenData): ModelLogin {
         $token = $this->authTokenService->verifyToken($tokenData);
         if (!$token) {
-            throw new AuthenticationException(_('Autentizační token je neplatný.'));
+            throw new AuthenticationException(_('Invalid authentication token.'));
         }
         // login by the identity
         $login = $token->getLogin();

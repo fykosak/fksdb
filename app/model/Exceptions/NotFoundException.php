@@ -10,12 +10,8 @@ use Nette\Http\Response;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class NotFoundException extends BadRequestException {
-    /**
-     * NotFoundException constructor.
-     * @param string $message
-     * @param \Exception|NULL $previous
-     */
-    public function __construct($message = '', \Exception $previous = null) {
+
+    public function __construct(?string $message = '', ?\Throwable $previous = null) {
         parent::__construct($message ?: 'Resource no found', Response::S404_NOT_FOUND, $previous);
     }
 }

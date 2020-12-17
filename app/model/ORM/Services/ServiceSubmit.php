@@ -2,8 +2,8 @@
 
 namespace FKSDB\ORM\Services;
 
-use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\AbstractServiceSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
+
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyService;
 use FKSDB\ORM\Models\ModelSubmit;
@@ -23,11 +23,6 @@ class ServiceSubmit extends AbstractServiceSingle {
 
     private array $submitCache = [];
 
-    /**
-     * ServiceSubmit constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_SUBMIT, ModelSubmit::class);
     }

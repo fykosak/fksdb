@@ -2,7 +2,6 @@
 
 namespace FKSDB\Components\Controls\Navigation;
 
-use FKSDB\Components\Controls\PresenterBuilder;
 use FKSDB\Exceptions\BadTypeException;
 use Nette\Application\BadRequestException;
 use Nette\Application\UI\InvalidLinkException;
@@ -18,10 +17,6 @@ class NavigationFactory {
 
     public PresenterBuilder $presenterBuilder;
 
-    /**
-     * NavigationFactory constructor.
-     * @param PresenterBuilder $presenterBuilder
-     */
     public function __construct(PresenterBuilder $presenterBuilder) {
         $this->presenterBuilder = $presenterBuilder;
     }

@@ -1,7 +1,8 @@
 <?php
 
-namespace FKSDB\Components\Controls\Inbox;
+namespace FKSDB\Components\Controls\Inbox\PointsForm;
 
+use FKSDB\Components\Controls\Inbox\SeriesTableFormControl;
 use FKSDB\Components\Forms\OptimisticForm;
 use FKSDB\ORM\Services\ServiceSubmit;
 use FKSDB\Submits\SeriesTable;
@@ -21,19 +22,12 @@ class PointsFormControl extends SeriesTableFormControl {
 
     private ServiceSubmit $serviceSubmit;
 
-    /**
-     * PointsFormControl constructor.
-     * @param callable $invalidCacheCallback
-     * @param Container $context
-     * @param SeriesTable $seriesTable
-     * @param bool $displayAll
-     */
     public function __construct(callable $invalidCacheCallback, Container $context, SeriesTable $seriesTable, bool $displayAll = false) {
         parent::__construct($context, $seriesTable, $displayAll);
         $this->invalidCacheCallback = $invalidCacheCallback;
     }
 
-    public function injectServiceSubmit(ServiceSubmit $serviceSubmit): void {
+    final public function injectServiceSubmit(ServiceSubmit $serviceSubmit): void {
         $this->serviceSubmit = $serviceSubmit;
     }
 

@@ -3,8 +3,8 @@
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
 use FKSDB\ORM\DbNames;
+use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelTests\DatabaseTestCase;
-use MockEnvironment\MockApplicationTrait;
 use Nette\Application\Request;
 use Nette\Application\Responses\TextResponse;
 use Nette\Application\UI\ITemplate;
@@ -76,10 +76,10 @@ abstract class AbstractPageDisplayTestCase extends DatabaseTestCase {
     abstract public function getPages(): array;
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM global_session');
-        $this->connection->query('DELETE FROM `grant`');
-        $this->connection->query('DELETE FROM login');
-        $this->connection->query('DELETE FROM person');
+        //   $this->connection->query('DELETE FROM global_session');
+        //    $this->connection->query('DELETE FROM `grant`');
+        //    $this->connection->query('DELETE FROM login');
+        //    $this->connection->query('DELETE FROM person');
         parent::tearDown();
     }
 }

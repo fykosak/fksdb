@@ -3,11 +3,10 @@
 namespace FKSDB\Persons;
 
 use FKSDB\Authentication\AccountManager;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Localization\UnsupportedLanguageException;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Components\Forms\Controls\ModelDataConflictException;
-use FKSDB\Components\Forms\Controls\ReferencedId;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelContest;
@@ -55,16 +54,6 @@ class ExtendedPersonHandler {
     /** @var ModelPerson */
     private $person;
 
-    /**
-     * ExtendedPersonHandler constructor.
-     * @param IService $service
-     * @param ServicePerson $servicePerson
-     * @param Connection $connection
-     * @param AccountManager $accountManager
-     * @param ModelContest $contest
-     * @param int $year
-     * @param string $invitationLang
-     */
     public function __construct(
         IService $service,
         ServicePerson $servicePerson,
@@ -132,9 +121,9 @@ class ExtendedPersonHandler {
             if ($sendEmail && ($email && !$login)) {
                 try {
                     $this->accountManager->createLoginWithInvitation($this->person, $email, $this->getInvitationLang());
-                    $presenter->flashMessage(_('Zvací e-mail odeslán.'), BasePresenter::FLASH_INFO);
+                    $presenter->flashMessage(_('E-mail invitation sent.'), BasePresenter::FLASH_INFO);
                 } catch (SendFailedException $exception) {
-                    $presenter->flashMessage(_('Zvací e-mail se nepodařilo odeslat.'), BasePresenter::FLASH_ERROR);
+                    $presenter->flashMessage(_('E-mail invitation failed to sent.'), BasePresenter::FLASH_ERROR);
                 }
             }
             // reload the model (this is workaround to avoid caching of empty but newly created referenced/related models)
@@ -163,7 +152,7 @@ class ExtendedPersonHandler {
 
             return self::RESULT_ERROR;
         } catch (ModelDataConflictException $exception) {
-            $form->addError(_('Zadaná data se neshodují s již uloženými.'));
+            $form->addError(_('Data don\'t match already stored data.'));
             $exception->getReferencedId()->getReferencedContainer()->setConflicts($exception->getConflicts());
             $exception->getReferencedId()->rollback();
             $this->connection->rollBack();

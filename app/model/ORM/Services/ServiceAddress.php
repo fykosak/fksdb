@@ -2,14 +2,13 @@
 
 namespace FKSDB\ORM\Services;
 
-use FKSDB\ORM\AbstractModelSingle;
-use FKSDB\ORM\AbstractServiceSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyService;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Models\ModelAddress;
 use FKSDB\ORM\Models\ModelRegion;
-use FKSDB\ORM\Services\Exception\InvalidPostalCode;
+use FKSDB\ORM\Services\Exceptions\InvalidPostalCode;
 use Nette\Database\Context;
 use Nette\Database\IConventions;
 use Tracy\Debugger;
@@ -22,11 +21,6 @@ class ServiceAddress extends AbstractServiceSingle {
 
     private const PATTERN = '/[0-9]{5}/';
 
-    /**
-     * ServiceAddress constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_ADDRESS, ModelAddress::class);
     }

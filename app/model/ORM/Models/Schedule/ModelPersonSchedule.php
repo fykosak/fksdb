@@ -2,20 +2,18 @@
 
 namespace FKSDB\ORM\Models\Schedule;
 
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyModel;
 use FKSDB\ORM\Models\IEventReferencedModel;
 use FKSDB\ORM\Models\IPaymentReferencedModel;
 use FKSDB\ORM\Models\IPersonReferencedModel;
-use FKSDB\ORM\Models\IScheduleGroupReferencedModel;
-use FKSDB\ORM\Models\IScheduleItemReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelPayment;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\Transitions\IStateModel;
 use Nette\Database\Table\ActiveRow;
-use FKSDB\Exceptions\NotImplementedException;
 
 /**
  * Class ModelPersonSchedule

@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Controls\Fyziklani;
 
-use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
 use Nette\DI\Container;
@@ -20,11 +20,6 @@ class RoutingDownload extends BaseComponent {
 
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
 
-    /**
-     * RoutingDownload constructor.
-     * @param Container $container
-     * @param ModelEvent $event
-     */
     public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container);
         $this->event = $event;
@@ -38,7 +33,7 @@ class RoutingDownload extends BaseComponent {
         });
     }
 
-    public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
+    final public function injectPrimary(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 

@@ -25,17 +25,12 @@ class CloseTeamControl extends BaseComponent {
 
     private ServiceFyziklaniTask $serviceFyziklaniTask;
 
-    /**
-     * CloseTeamControl constructor.
-     * @param Container $container
-     * @param ModelEvent $event
-     */
     public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask): void {
+    final public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask): void {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
     }
 

@@ -3,8 +3,8 @@
 namespace FKSDB\Components\Controls\Person;
 
 use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Components\Controls\DBReflection\ValuePrinter\ValuePrinterComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Components\Controls\DBReflection\ValuePrinterComponent;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Exceptions\BadTypeException;
@@ -21,7 +21,7 @@ class PizzaControl extends BaseComponent {
 
     private PersonFactory $personFactory;
 
-    public function injectPrimary(ServicePerson $servicePerson, PersonFactory $personFactory): void {
+    final public function injectPrimary(ServicePerson $servicePerson, PersonFactory $personFactory): void {
         $this->servicePerson = $servicePerson;
         $this->personFactory = $personFactory;
     }

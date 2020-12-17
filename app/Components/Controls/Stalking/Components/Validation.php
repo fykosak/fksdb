@@ -1,7 +1,8 @@
 <?php
 
-namespace FKSDB\Components\Controls\Stalking;
+namespace FKSDB\Components\Controls\Stalking\Components;
 
+use FKSDB\Components\Controls\Stalking\StalkingControl;
 use FKSDB\DBReflection\FieldLevelPermission;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelPerson;
@@ -15,7 +16,7 @@ class Validation extends StalkingControl {
 
     private DataTestingFactory $validationFactory;
 
-    public function injectDataTestingFactory(DataTestingFactory $factory): void {
+    final public function injectDataTestingFactory(DataTestingFactory $factory): void {
         $this->validationFactory = $factory;
     }
 

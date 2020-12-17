@@ -2,23 +2,18 @@
 
 namespace FKSDB\ORM\ServicesMulti\Events;
 
-use FKSDB\ORM\AbstractModelMulti;
-use FKSDB\ORM\AbstractServiceMulti;
+use FKSDB\ORM\ModelsMulti\AbstractModelMulti;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\Services\Events\ServiceDsefParticipant;
 use FKSDB\ORM\Services\ServiceEventParticipant;
 use FKSDB\ORM\ModelsMulti\Events\ModelMDsefParticipant;
+use FKSDB\ORM\ServicesMulti\AbstractServiceMulti;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceMDsefParticipant extends AbstractServiceMulti {
 
-    /**
-     * ServiceMDsefParticipant constructor.
-     * @param ServiceEventParticipant $mainService
-     * @param ServiceDsefParticipant $joinedService
-     */
     public function __construct(ServiceEventParticipant $mainService, ServiceDsefParticipant $joinedService) {
         parent::__construct($mainService, $joinedService, 'event_participant_id', ModelMDsefParticipant::class);
     }

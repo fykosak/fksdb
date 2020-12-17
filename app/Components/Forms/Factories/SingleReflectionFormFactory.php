@@ -2,11 +2,11 @@
 
 namespace FKSDB\Components\Forms\Factories;
 
+use FKSDB\Components\Forms\Controls\WriteOnly\IWriteOnly;
 use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\DBReflection\ColumnFactories\IColumnFactory;
 use FKSDB\DBReflection\FieldLevelPermission;
 use FKSDB\DBReflection\OmittedControlException;
-use FKSDB\Components\Forms\Containers\IWriteOnly;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\DBReflection\DBReflectionFactory;
 use FKSDB\Exceptions\BadTypeException;
@@ -20,10 +20,6 @@ class SingleReflectionFormFactory {
 
     protected DBReflectionFactory $tableReflectionFactory;
 
-    /**
-     * PersonHistoryFactory constructor.
-     * @param DBReflectionFactory $tableReflectionFactory
-     */
     public function __construct(DBReflectionFactory $tableReflectionFactory) {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }

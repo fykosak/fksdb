@@ -31,17 +31,12 @@ class LanguageChooser extends Chooser {
 
     private IRequest $request;
 
-    /**
-     * LanguageChooser constructor.
-     * @param Container $container
-     * @param string|null $urlLang
-     */
     public function __construct(Container $container, ?string $urlLang) {
         parent::__construct($container);
         $this->urlLang = $urlLang;
     }
 
-    public function injectPrimary(User $user, IRequest $request): void {
+    final public function injectPrimary(User $user, IRequest $request): void {
         $this->user = $user;
         $this->request = $request;
     }

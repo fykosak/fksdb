@@ -26,17 +26,12 @@ class CloseTeamsGrid extends BaseGrid {
 
     private ModelEvent $event;
 
-    /**
-     * FyziklaniTeamsGrid constructor.
-     * @param ModelEvent $event
-     * @param Container $container
-     */
     public function __construct(ModelEvent $event, Container $container) {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
+    final public function injectServiceFyziklaniTeam(ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
     }
 
@@ -74,7 +69,7 @@ class CloseTeamsGrid extends BaseGrid {
         $this->addLinkButton(':Fyziklani:Close:team', 'close', _('Close submitting'), false, [
             'id' => 'e_fyziklani_team_id',
             'eventId' => 'event_id',
-        ])->setShow(function (ModelFyziklaniTeam $row) {
+        ])->setShow(function (ModelFyziklaniTeam $row): bool {
             return $row->canClose(false);
         });
     }

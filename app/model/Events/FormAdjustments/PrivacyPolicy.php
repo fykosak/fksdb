@@ -7,7 +7,7 @@ use FKSDB\DBReflection\OmittedControlException;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\Events\Processings\IProcessing;
+use FKSDB\Events\Processing\IProcessing;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Services\ServicePersonInfo;
@@ -32,11 +32,6 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
 
     private SingleReflectionFormFactory $singleReflectionFormFactory;
 
-    /**
-     * PrivacyPolicy constructor.
-     * @param ServicePersonInfo $servicePersonInfo
-     * @param SingleReflectionFormFactory $singleReflectionFormFactory
-     */
     public function __construct(ServicePersonInfo $servicePersonInfo, SingleReflectionFormFactory $singleReflectionFormFactory) {
         $this->servicePersonInfo = $servicePersonInfo;
         $this->singleReflectionFormFactory = $singleReflectionFormFactory;
@@ -76,11 +71,7 @@ class PrivacyPolicy implements IProcessing, IFormAdjustment {
         $this->trySetAgreed($values);
     }
 
-    /**
-     * @param ArrayHash $values
-     * @return void
-     */
-    private function trySetAgreed(ArrayHash $values) {
+    private function trySetAgreed(ArrayHash $values): void {
         foreach ($values as $key => $value) {
             if ($value instanceof ArrayHash) {
                 $this->trySetAgreed($value);

@@ -1,7 +1,8 @@
 <?php
 
-namespace FKSDB\Components\Controls\Inbox;
+namespace FKSDB\Components\Controls\Inbox\Inbox;
 
+use FKSDB\Components\Controls\Inbox\SeriesTableFormControl;
 use FKSDB\Components\Forms\OptimisticForm;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelSubmit;
@@ -21,16 +22,11 @@ class InboxControl extends SeriesTableFormControl {
 
     private ServiceSubmit $serviceSubmit;
 
-    /**
-     * InboxControl constructor.
-     * @param Container $context
-     * @param SeriesTable $seriesTable
-     */
     public function __construct(Container $context, SeriesTable $seriesTable) {
         parent::__construct($context, $seriesTable, true);
     }
 
-    public function injectServiceSubmit(ServiceSubmit $serviceSubmit): void {
+    final public function injectServiceSubmit(ServiceSubmit $serviceSubmit): void {
         $this->serviceSubmit = $serviceSubmit;
     }
 

@@ -2,7 +2,6 @@
 
 namespace FKSDB\ORM\Models;
 
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DeprecatedLazyModel;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
@@ -16,6 +15,7 @@ use Nette\Security\IResource;
  * @property-read bool|int active
  */
 class ModelSchool extends AbstractModelSingle implements IResource {
+
     use DeprecatedLazyModel;
 
     public const RESOURCE_ID = 'school';

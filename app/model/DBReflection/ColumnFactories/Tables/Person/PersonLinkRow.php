@@ -1,11 +1,11 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\Person;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\Person;
 
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnFactory;
-use FKSDB\DBReflection\FieldLevelPermission;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
+use FKSDB\DBReflection\MetaDataFactory;
 use FKSDB\ValuePrinters\PersonLink;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Application\LinkGenerator;
 use Nette\Utils\Html;
@@ -14,24 +14,13 @@ use Nette\Utils\Html;
  * Class PersonLinkRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PersonLinkRow extends AbstractColumnFactory {
+class PersonLinkRow extends DefaultColumnFactory {
 
     private LinkGenerator $presenterComponent;
 
-    /**
-     * PersonLinkRow constructor.
-     * @param LinkGenerator $presenterComponent
-     */
-    public function __construct(LinkGenerator $presenterComponent) {
+    public function __construct(LinkGenerator $presenterComponent, MetaDataFactory $metaDataFactory) {
+        parent::__construct($metaDataFactory);
         $this->presenterComponent = $presenterComponent;
-    }
-
-    public function getPermission(): FieldLevelPermission {
-        return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
-    }
-
-    public function getTitle(): string {
-        return _('Person');
     }
 
     /**

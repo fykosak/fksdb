@@ -2,7 +2,6 @@
 
 namespace FKSDB\ORM\Models;
 
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyModel;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
@@ -76,7 +75,7 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     }
 
     public function canEdit(): bool {
-        return \in_array($this->getState(), [Machine::STATE_INIT, self::STATE_NEW]);
+        return \in_array($this->getState(), [Machine\Machine::STATE_INIT, self::STATE_NEW]);
     }
 
     public function getPrice(): Price {

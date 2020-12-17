@@ -18,10 +18,6 @@ class RelatedPersonAuthorizator {
 
     private IUserStorage $user;
 
-    /**
-     * RelatedPersonAuthorizator constructor.
-     * @param IUserStorage $user
-     */
     public function __construct(IUserStorage $user) {
         $this->user = $user;
     }

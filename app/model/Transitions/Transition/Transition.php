@@ -1,17 +1,20 @@
 <?php
 
-namespace FKSDB\Transitions;
+namespace FKSDB\Transitions\Transition;
 
 use FKSDB\Events\Model\ExpressionEvaluator;
 use FKSDB\Logging\ILogger;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
+use FKSDB\Transitions\IStateModel;
+use FKSDB\Transitions\Machine\Machine;
 
 /**
  * Class Transition
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class Transition {
+
     use SmartObject;
 
     public const TYPE_SUCCESS = ILogger::SUCCESS;
@@ -19,7 +22,6 @@ class Transition {
     public const TYPE_DANGEROUS = ILogger::ERROR;
     public const TYPE_PRIMARY = ILogger::PRIMARY;
     public const TYPE_DEFAULT = 'secondary';
-
     protected const AVAILABLE_BEHAVIOR_TYPE = [
         self::TYPE_SUCCESS,
         self::TYPE_WARNING,
@@ -27,23 +29,16 @@ class Transition {
         self::TYPE_DEFAULT,
         self::TYPE_PRIMARY,
     ];
-
     /** @var callable|bool */
     protected $condition;
-
     private string $behaviorType = self::TYPE_DEFAULT;
-
     private string $label;
-
     /** @var callable[] */
     public array $beforeExecuteCallbacks = [];
     /** @var callable[] */
     public array $afterExecuteCallbacks = [];
-
     protected string $sourceState;
-
     protected string $targetState;
-
     protected ExpressionEvaluator $evaluator;
 
     public function setSourceState(string $sourceState): void {
@@ -74,12 +69,8 @@ class Transition {
         return $this->getTargetState() === Machine::STATE_TERMINATED;
     }
 
-    public function getFromState(): string {
-        return $this->fromState;
-    }
-
-    public function getToState(): string {
-        return $this->toState;
+    public function __construct(string $label) {
+        $this->label = $label;
     }
 
     public function getId(): string {

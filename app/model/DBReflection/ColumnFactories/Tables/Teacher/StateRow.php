@@ -1,11 +1,10 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\Teacher;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\Teacher;
 
 use FKSDB\Components\Controls\Badges\NotSetBadge;
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnFactory;
-use FKSDB\DBReflection\FieldLevelPermission;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelTeacher;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\SelectBox;
@@ -15,7 +14,7 @@ use Nette\Utils\Html;
  * Class StateRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class StateRow extends AbstractColumnFactory {
+class StateRow extends DefaultColumnFactory {
 
     /**
      * @param AbstractModelSingle|ModelTeacher $model
@@ -45,15 +44,11 @@ class StateRow extends AbstractColumnFactory {
         return $el;
     }
 
-    public function getTitle(): string {
-        return _('Cooperation status');
-    }
-
     /**
      * @param array $args
      * @return BaseControl
      */
-    public function createField(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         return new SelectBox($this->getTitle(), $this->getItems());
     }
 
@@ -64,8 +59,5 @@ class StateRow extends AbstractColumnFactory {
             'ended' => _('Ended'),
             'undefined' => _('Undefined')
         ];
-    }
-    public function getPermission(): FieldLevelPermission {
-        return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
     }
 }

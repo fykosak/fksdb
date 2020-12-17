@@ -6,7 +6,9 @@ use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ReferencedContainer;
 use FKSDB\Components\Forms\Containers\SearchContainer\SearchContainer;
 use FKSDB\Components\Forms\Controls\Schedule\ExistingPaymentException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\Persons\IReferencedHandler;
+use FKSDB\Persons\ModelDataConflictException;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
 use FKSDB\ORM\Models\ModelPerson;
@@ -51,13 +53,6 @@ class ReferencedId extends HiddenField {
 
     private bool $attachedSearch = false;
 
-    /**
-     * ReferencedId constructor.
-     * @param SearchContainer $searchContainer
-     * @param ReferencedContainer $referencedContainer
-     * @param IService $service
-     * @param IReferencedHandler $handler
-     */
     public function __construct(SearchContainer $searchContainer, ReferencedContainer $referencedContainer, IService $service, IReferencedHandler $handler) {
         $this->referencedContainer = $referencedContainer;
         $this->getReferencedContainer()->setReferencedId($this);
@@ -130,7 +125,7 @@ class ReferencedId extends HiddenField {
      * @param bool $force
      * @return static
      */
-    public function setValue($pValue, bool $force = false) {
+    public function setValue($pValue, bool $force = false): self {
 
         if ($pValue instanceof IModel) {
             $personModel = $pValue;

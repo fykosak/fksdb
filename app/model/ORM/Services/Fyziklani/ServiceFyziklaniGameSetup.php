@@ -2,7 +2,7 @@
 
 namespace FKSDB\ORM\Services\Fyziklani;
 
-use FKSDB\ORM\AbstractServiceSingle;
+use FKSDB\ORM\Services\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyService;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
@@ -16,11 +16,6 @@ use Nette\Database\IConventions;
 class ServiceFyziklaniGameSetup extends AbstractServiceSingle {
     use DeprecatedLazyService;
 
-    /**
-     * ServiceFyziklaniGameSetup constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_FYZIKLANI_GAME_SETUP, ModelFyziklaniGameSetup::class);
     }

@@ -2,8 +2,8 @@
 
 namespace FKSDB\ORM\Models\Fyziklani;
 
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DeprecatedLazyModel;
+use FKSDB\ORM\Models\AbstractModelSingle;
 
 /**
  *

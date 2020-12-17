@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Transitions\Statements\Conditions;
+namespace FKSDB\Transitions\Transition\Statements\Conditions;
 
 use FKSDB\Authorization\EventAuthorizator;
 use FKSDB\ORM\Models\ModelEvent;
@@ -15,13 +15,6 @@ class ExplicitEventRole extends EventRole {
 
     private string $resource;
 
-    /**
-     * ExplicitEventRole constructor.
-     * @param EventAuthorizator $eventAuthorizator
-     * @param string $privilege
-     * @param ModelEvent $event
-     * @param string $resource
-     */
     public function __construct(EventAuthorizator $eventAuthorizator, string $privilege, ModelEvent $event, string $resource) {
         parent::__construct($eventAuthorizator, $privilege);
         $this->event = $event;

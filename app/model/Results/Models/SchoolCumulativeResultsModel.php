@@ -28,14 +28,6 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
 
     private CumulativeResultsModel $cumulativeResultsModel;
 
-    /**
-     * FKSDB\Results\Models\SchoolCumulativeResultsModel constructor.
-     * @param CumulativeResultsModel $cumulativeResultsModel
-     * @param ModelContest $contest
-     * @param ServiceTask $serviceTask
-     * @param Connection $connection
-     * @param int $year
-     */
     public function __construct(CumulativeResultsModel $cumulativeResultsModel, ModelContest $contest, ServiceTask $serviceTask, Connection $connection, int $year) {
         parent::__construct($contest, $serviceTask, $connection, $year, new EvaluationNullObject());
         $this->cumulativeResultsModel = $cumulativeResultsModel;
@@ -71,7 +63,7 @@ class SchoolCumulativeResultsModel extends AbstractResultsModel {
                 self::COL_ALIAS => self::ALIAS_UNWEIGHTED_SUM,
             ];
             $dataColumns[] = [
-                self::COL_DEF_LABEL => self::LABEL_PERCETAGE,
+                self::COL_DEF_LABEL => self::LABEL_PERCENTAGE,
                 self::COL_DEF_LIMIT => 100,
                 self::COL_ALIAS => self::ALIAS_PERCENTAGE,
             ];

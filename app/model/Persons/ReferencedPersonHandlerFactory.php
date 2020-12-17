@@ -34,16 +34,6 @@ class ReferencedPersonHandlerFactory {
 
     private ServiceFlag $serviceFlag;
 
-    /**
-     * ReferencedPersonHandlerFactory constructor.
-     * @param ServicePerson $servicePerson
-     * @param ServicePersonInfo $servicePersonInfo
-     * @param ServicePersonHistory $servicePersonHistory
-     * @param ServiceMPostContact $serviceMPostContact
-     * @param ServicePersonHasFlag $servicePersonHasFlag
-     * @param Handler $eventScheduleHandler
-     * @param ServiceFlag $serviceFlag
-     */
     public function __construct(
         ServicePerson $servicePerson,
         ServicePersonInfo $servicePersonInfo,

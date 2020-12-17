@@ -17,11 +17,6 @@ class StatsModelFactory {
 
     private ServiceTask $serviceTask;
 
-    /**
-     * StatsModelFactory constructor.
-     * @param Connection $connection
-     * @param ServiceTask $serviceTask
-     */
     public function __construct(Connection $connection, ServiceTask $serviceTask) {
         $this->connection = $connection;
         $this->serviceTask = $serviceTask;

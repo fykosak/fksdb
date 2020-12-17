@@ -4,7 +4,7 @@ namespace FKSDB\DBReflection\ColumnFactories;
 
 use FKSDB\DBReflection\FieldLevelPermission;
 use FKSDB\DBReflection\OmittedControlException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 

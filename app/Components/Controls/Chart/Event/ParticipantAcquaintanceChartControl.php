@@ -6,7 +6,6 @@ use FKSDB\Components\Controls\Chart\IChart;
 use FKSDB\Components\React\ReactComponent;
 use FKSDB\ORM\Models\ModelEvent;
 use FKSDB\ORM\Models\ModelEventParticipant;
-use Nette\Application\UI\Control;
 use Nette\DI\Container;
 
 /**
@@ -17,11 +16,6 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
 
     private ModelEvent $event;
 
-    /**
-     * ParticipantAcquaintanceChartControl constructor.
-     * @param Container $context
-     * @param ModelEvent $event
-     */
     public function __construct(Container $context, ModelEvent $event) {
         parent::__construct($context, 'chart.participant-acquaintance');
         $this->event = $event;
@@ -54,7 +48,7 @@ class ParticipantAcquaintanceChartControl extends ReactComponent implements ICha
         return _('Participant acquaintance');
     }
 
-    public function getControl(): Control {
+    public function getControl(): self {
         return $this;
     }
 

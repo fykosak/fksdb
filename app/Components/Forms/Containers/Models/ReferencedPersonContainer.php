@@ -2,10 +2,10 @@
 
 namespace FKSDB\Components\Forms\Containers\Models;
 
+use FKSDB\Components\Forms\Controls\WriteOnly\IWriteOnly;
+use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
 use FKSDB\DBReflection\OmittedControlException;
-use FKSDB\Components\Forms\Containers\IWriteOnly;
-use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\AddressFactory;
 use FKSDB\Components\Forms\Factories\FlagFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
@@ -25,7 +25,6 @@ use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\InvalidArgumentException;
 use Nette\InvalidStateException;
-use Nette\Utils\JsonException;
 use FKSDB\Persons\IModifiabilityResolver;
 use FKSDB\Persons\IVisibilityResolver;
 use FKSDB\Persons\ReferencedPersonHandler;
@@ -63,16 +62,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
 
     private bool $configured = false;
 
-    /**
-     * ReferencedPersonContainer constructor.
-     * @param Container $container
-     * @param IModifiabilityResolver $modifiabilityResolver
-     * @param IVisibilityResolver $visibilityResolver
-     * @param int $acYear
-     * @param array $fieldsDefinition
-     * @param ModelEvent|null $event
-     * @param bool $allowClear
-     */
     public function __construct(
         Container $container,
         IModifiabilityResolver $modifiabilityResolver,
@@ -95,7 +84,7 @@ class ReferencedPersonContainer extends ReferencedContainer {
         });
     }
 
-    public function injectPrimary(
+    final public function injectPrimary(
         AddressFactory $addressFactory,
         FlagFactory $flagFactory,
         ServicePerson $servicePerson,
@@ -114,7 +103,6 @@ class ReferencedPersonContainer extends ReferencedContainer {
      * @throws AbstractColumnException
      * @throws BadRequestException
      * @throws BadTypeException
-     * @throws JsonException
      * @throws NotImplementedException
      * @throws OmittedControlException
      */
@@ -271,12 +259,10 @@ class ReferencedPersonContainer extends ReferencedContainer {
                 break;
             default:
                 throw new InvalidArgumentException();
-
         }
         $this->appendMetadata($control, $fieldName, $metadata);
 
         return $control;
-
     }
 
     protected function appendMetadata(BaseControl $control, string $fieldName, array $metadata): void {

@@ -1,10 +1,9 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\Person;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\Person;
 
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnFactory;
-use FKSDB\DBReflection\FieldLevelPermission;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\RadioList;
@@ -14,21 +13,13 @@ use Nette\Utils\Html;
  * Class GenderRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class GenderRow extends AbstractColumnFactory {
-
-    public function getTitle(): string {
-        return _('Gender');
-    }
-
-    public function getPermission(): FieldLevelPermission {
-        return new FieldLevelPermission(self::PERMISSION_ALLOW_FULL, self::PERMISSION_ALLOW_FULL);
-    }
+class GenderRow extends DefaultColumnFactory {
 
     /**
      * @param array $args
      * @return BaseControl
      */
-    public function createField(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         $control = new RadioList($this->getTitle(), $this->createOptions());
         $control->setDefaultValue('M');
         return $control;

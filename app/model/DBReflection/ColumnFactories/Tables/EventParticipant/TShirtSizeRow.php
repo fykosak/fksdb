@@ -1,16 +1,18 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\EventParticipant;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\EventParticipant;
 
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
+use FKSDB\ORM\Models\ModelEventParticipant;
 use FKSDB\ValuePrinters\StringPrinter;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use Nette\Utils\Html;
 
 /**
  * Class TShirtSizeRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class TShirtSizeRow extends AbstractParticipantRow {
+class TShirtSizeRow extends DefaultColumnFactory {
 
     public const SIZE_MAP = [
         'XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL',
@@ -20,10 +22,10 @@ class TShirtSizeRow extends AbstractParticipantRow {
         'F' => 'female',
     ];
 
-    public function getTitle(): string {
-        return _('T-shirt size');
-    }
-
+    /**
+     * @param AbstractModelSingle|ModelEventParticipant $model
+     * @return Html
+     */
     protected function createHtmlValue(AbstractModelSingle $model): Html {
         return (new StringPrinter())($model->tshirt_size);
     }

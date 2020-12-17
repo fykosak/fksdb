@@ -1,15 +1,16 @@
 <?php
 
-namespace FKSDB\Payment\Transition\Transitions;
+namespace FKSDB\Payment\Transition\TransitionsGenerator;
 
-use FKSDB\Authorization\EventAuthorizator;
 use Exception;
-use FKSDB\Transitions\Statements\Conditions\DateBetween;
+use FKSDB\Payment\Transition\Transitions\PaymentTransitions;
+use FKSDB\Transitions\Transition\Statements\Conditions\DateBetween;
 
 /**
  * Class Fyziklani13Payment
  * @author Michal Červeňák <miso@fykos.cz>
  */
+
 class Fyziklani13Payment extends PaymentTransitions {
 
     /**

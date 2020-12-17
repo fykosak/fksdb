@@ -4,7 +4,7 @@ namespace FKSDB\Events\Spec\Fol;
 
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\Events\Processings\AbstractProcessing;
+use FKSDB\Events\Processing\AbstractProcessing;
 use FKSDB\Logging\ILogger;
 use FKSDB\Messages\Message;
 use Nette\Forms\Form;
@@ -34,11 +34,7 @@ class PasswordProcessing extends AbstractProcessing {
         }
     }
 
-    /**
-     * @param string $string
-     * @return string
-     */
-    private function hash($string): string {
+    private function hash(?string $string): string {
         return sha1($string);
     }
 

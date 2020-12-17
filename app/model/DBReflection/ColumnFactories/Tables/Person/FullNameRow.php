@@ -1,12 +1,11 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\Person;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\Person;
 
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnFactory;
 use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\DBReflection\FieldLevelPermission;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
 use FKSDB\ValuePrinters\StringPrinter;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelPerson;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
@@ -15,22 +14,14 @@ use Nette\Utils\Html;
  * Class FullNameRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class FullNameRow extends AbstractColumnFactory {
-
-    public function getPermission(): FieldLevelPermission {
-        return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
-    }
-
-    public function getTitle(): string {
-        return _('Person');
-    }
+class FullNameRow extends DefaultColumnFactory {
 
     /**
      * @param mixed ...$args
      * @return BaseControl
      * @throws AbstractColumnException
      */
-    public function createField(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         throw new AbstractColumnException();
     }
 

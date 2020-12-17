@@ -1,6 +1,6 @@
 <?php
 
-namespace FKSDB\Components\Events;
+namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Config\NeonSchemaException;
@@ -25,17 +25,12 @@ class MassTransitionsControl extends BaseComponent {
 
     private ApplicationHandlerFactory $applicationHandlerFactory;
 
-    /**
-     * MassTransitionsControl constructor.
-     * @param Container $container
-     * @param ModelEvent $event
-     */
     public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    public function injectPrimary(EventDispatchFactory $eventDispatchFactory, ApplicationHandlerFactory $applicationHandlerFactory): void {
+    final public function injectPrimary(EventDispatchFactory $eventDispatchFactory, ApplicationHandlerFactory $applicationHandlerFactory): void {
         $this->eventDispatchFactory = $eventDispatchFactory;
         $this->applicationHandlerFactory = $applicationHandlerFactory;
     }

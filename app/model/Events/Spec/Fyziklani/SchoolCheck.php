@@ -5,7 +5,7 @@ namespace FKSDB\Events\Spec\Fyziklani;
 use FKSDB\Events\FormAdjustments\AbstractAdjustment;
 use FKSDB\Events\FormAdjustments\IFormAdjustment;
 use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\Components\Forms\Controls\ModelDataConflictException;
+use FKSDB\Persons\ModelDataConflictException;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\IControl;
@@ -18,13 +18,8 @@ use Nette\Forms\IControl;
 abstract class SchoolCheck extends AbstractAdjustment implements IFormAdjustment {
 
     private ServicePersonHistory $servicePersonHistory;
-
     private Holder $holder;
 
-    /**
-     * SchoolCheck constructor.
-     * @param ServicePersonHistory $servicePersonHistory
-     */
     public function __construct(ServicePersonHistory $servicePersonHistory) {
         $this->servicePersonHistory = $servicePersonHistory;
     }

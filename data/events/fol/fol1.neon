@@ -89,7 +89,6 @@ events:
                         required: true
                         visible: neg(state('__init'))
                         modifiable: false
-                        factory: Chooser(_('Category'), FKSDB\Events\Spec\Fol\CategoryProcessing(%events.fol1.rulesVersion%))
                     note:
                         label: _('Kontaktní adresa')
                         required: false
@@ -150,28 +149,7 @@ events:
         #   explanation: machine consists of several instances of base machines
         #
         machine:
-            baseMachines:
-                team:
-                    bmName: TEAM
-                    label: _('Tým')
-                    required: true # default false, it's conjuction with fields requirement
-                    primary: true # base machine states are propagated to the machine
-                p1:
-                    bmName: PARTICIPANT
-                    label: _('1. člen')
-                    required: true
-                p2:
-                    bmName: PARTICIPANT
-                    label: _('2. člen')
-                p3:
-                    bmName: PARTICIPANT
-                    label: _('3. člen')
-                p4:
-                    bmName: PARTICIPANT
-                    label: _('4. člen')
-                p5:
-                    bmName: PARTICIPANT
-                    label: _('5. člen')
+            baseMachines: %events.fol.default.baseMachines%
             formAdjustments:
                 - @events.privacyPolicy
                 - @events.captcha

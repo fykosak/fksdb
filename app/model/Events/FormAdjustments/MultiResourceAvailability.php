@@ -6,8 +6,8 @@ use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\BaseHolder;
 use FKSDB\Events\Model\Holder\Field;
 use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\ORM\AbstractServiceMulti;
-use FKSDB\ORM\AbstractServiceSingle;
+use FKSDB\ORM\Services\AbstractServiceSingle;
+use FKSDB\ORM\ServicesMulti\AbstractServiceMulti;
 use Nette\Database\Context;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
@@ -39,7 +39,7 @@ class MultiResourceAvailability extends AbstractAdjustment {
      * @param array|string $fields
      * @return void
      */
-    private function setFields($fields) {
+    private function setFields($fields): void {
         if (!is_array($fields)) {
             $fields = [$fields];
         }

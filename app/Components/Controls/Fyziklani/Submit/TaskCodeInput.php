@@ -2,11 +2,11 @@
 
 namespace FKSDB\Components\Controls\Fyziklani\Submit;
 
+use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
 use FKSDB\Components\React\AjaxComponent;
 use FKSDB\Fyziklani\Submit\ClosedSubmittingException;
 use FKSDB\Fyziklani\Submit\HandlerFactory;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Messages\Message;
 use FKSDB\Fyziklani\NotSetGameParametersException;
 use FKSDB\Fyziklani\Submit\TaskCodeException;
@@ -31,11 +31,6 @@ class TaskCodeInput extends AjaxComponent {
 
     private ModelEvent $event;
 
-    /**
-     * TaskCodeInput constructor.
-     * @param Container $container
-     * @param ModelEvent $event
-     */
     public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container, 'fyziklani.submit-form');
         $this->event = $event;
@@ -44,7 +39,7 @@ class TaskCodeInput extends AjaxComponent {
         });
     }
 
-    public function injectPrimary(HandlerFactory $handlerFactory, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
+    final public function injectPrimary(HandlerFactory $handlerFactory, ServiceFyziklaniTask $serviceFyziklaniTask, ServiceFyziklaniTeam $serviceFyziklaniTeam): void {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
         $this->serviceFyziklaniTeam = $serviceFyziklaniTeam;
         $this->handlerFactory = $handlerFactory;

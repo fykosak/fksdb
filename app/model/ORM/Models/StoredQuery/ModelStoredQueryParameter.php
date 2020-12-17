@@ -2,8 +2,8 @@
 
 namespace FKSDB\ORM\Models\StoredQuery;
 
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DeprecatedLazyModel;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use Nette\InvalidStateException;
 use PDO;
 
@@ -44,7 +44,7 @@ class ModelStoredQueryParameter extends AbstractModelSingle {
      * @param mixed $value
      * @throws InvalidStateException
      */
-    public function setDefaultValue($value) {
+    public function setDefaultValue($value): void {
         switch ($this->type) {
             case self::TYPE_INT:
             case self::TYPE_BOOL:

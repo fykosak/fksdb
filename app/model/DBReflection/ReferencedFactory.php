@@ -4,7 +4,7 @@ namespace FKSDB\DBReflection;
 
 use FKSDB\Entity\CannotAccessModelException;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 
 /**
  * Class ReferencedFactory
@@ -19,11 +19,6 @@ final class ReferencedFactory {
      */
     private ?array $referencedAccess;
 
-    /**
-     * ReferencedFactory constructor.
-     * @param string $modelClassName
-     * @param array|null $referencedAccess
-     */
     public function __construct(string $modelClassName, ?array $referencedAccess) {
         $this->referencedAccess = $referencedAccess;
         $this->modelClassName = $modelClassName;
@@ -43,7 +38,7 @@ final class ReferencedFactory {
 
         // if referenced access is not set and model is not desired model throw exception
         if (!isset($this->referencedAccess)) {
-            throw new BadTypeException($this->modelClassName, get_class($model));
+            throw new BadTypeException($this->modelClassName, $model);
         }
         return $this->accessReferencedModel($model);
     }

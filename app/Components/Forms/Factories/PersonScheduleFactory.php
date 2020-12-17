@@ -16,10 +16,6 @@ class PersonScheduleFactory {
 
     private ServiceScheduleItem $serviceScheduleItem;
 
-    /**
-     * PersonScheduleFactory constructor.
-     * @param ServiceScheduleItem $serviceScheduleItem
-     */
     public function __construct(ServiceScheduleItem $serviceScheduleItem) {
         $this->serviceScheduleItem = $serviceScheduleItem;
     }
@@ -31,7 +27,6 @@ class PersonScheduleFactory {
      * @throws BadRequestException
      * @throws NotImplementedException
      * @throws BadRequestException
-     * @throws JsonException
      */
     public function createField(string $fieldName, ModelEvent $event): ScheduleField {
         return new ScheduleField($event, $fieldName, $this->serviceScheduleItem);

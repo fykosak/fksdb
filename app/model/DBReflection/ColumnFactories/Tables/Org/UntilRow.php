@@ -1,9 +1,10 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\Org;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\Org;
 
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
 use FKSDB\ValuePrinters\StringPrinter;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelOrg;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Controls\TextInput;
@@ -14,11 +15,7 @@ use Nette\Utils\Html;
  * Class UntilRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class UntilRow extends AbstractOrgRowFactory {
-
-    public function getTitle(): string {
-        return _('Until');
-    }
+class UntilRow extends DefaultColumnFactory {
 
     /**
      * @param AbstractModelSingle|ModelOrg $model
@@ -32,7 +29,7 @@ class UntilRow extends AbstractOrgRowFactory {
         }
     }
 
-    public function createField(...$args): BaseControl {
+    protected function createFormControl(...$args): BaseControl {
         [$min, $max] = $args;
         if (\is_null($max) || \is_null($min)) {
             throw new \InvalidArgumentException();
@@ -41,7 +38,7 @@ class UntilRow extends AbstractOrgRowFactory {
 
         $control->addCondition(Form::FILLED)
             ->addRule(Form::NUMERIC)
-            ->addRule(Form::RANGE, _('Koncový ročník není v intervalu [%d, %d].'), [$min, $max]);
+            ->addRule(Form::RANGE, _('Final year is not in interval [%d, %d].'), [$min, $max]);
         return $control;
     }
 }

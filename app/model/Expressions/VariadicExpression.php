@@ -11,10 +11,6 @@ abstract class VariadicExpression extends EvaluatedExpression {
 
     protected array $arguments;
 
-    /**
-     * VariadicExpression constructor.
-     * @param array ...$args
-     */
     public function __construct(...$args) {
         $this->arguments = $args;
     }

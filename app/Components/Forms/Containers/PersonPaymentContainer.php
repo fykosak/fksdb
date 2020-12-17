@@ -22,13 +22,6 @@ class PersonPaymentContainer extends ContainerWithOptions {
 
     private bool $showAll;
 
-    /**
-     * ScheduleContainer constructor.
-     * @param Container $container
-     * @param ModelEvent $event
-     * @param array $groupTypes
-     * @param bool $showAll
-     */
     public function __construct(Container $container, ModelEvent $event, array $groupTypes, bool $showAll = true) {
         parent::__construct($container);
         $this->event = $event;
@@ -43,7 +36,7 @@ class PersonPaymentContainer extends ContainerWithOptions {
         });
     }
 
-    public function injectServicePersonSchedule(ServicePersonSchedule $servicePersonSchedule): void {
+    final public function injectServicePersonSchedule(ServicePersonSchedule $servicePersonSchedule): void {
         $this->servicePersonSchedule = $servicePersonSchedule;
     }
 

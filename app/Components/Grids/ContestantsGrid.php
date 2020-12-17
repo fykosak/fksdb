@@ -26,19 +26,13 @@ class ContestantsGrid extends BaseGrid {
 
     private ModelContest $contest;
 
-    /**
-     * ContestantsGrid constructor.
-     * @param Container $container
-     * @param ModelContest $contest
-     * @param int $year
-     */
     public function __construct(Container $container, ModelContest $contest, int $year) {
         parent::__construct($container);
         $this->contest = $contest;
         $this->year = $year;
     }
 
-    public function injectServiceContestant(ServiceContestant $serviceContestant): void {
+    final public function injectServiceContestant(ServiceContestant $serviceContestant): void {
         $this->serviceContestant = $serviceContestant;
     }
 
@@ -63,7 +57,6 @@ class ContestantsGrid extends BaseGrid {
         $this->addColumn('name', _('Name'));
         $this->addColumn('study_year', _('Study year'));
         $this->addColumn('school_name', _('School'));
-
 
         $this->addLinkButton('Contestant:edit', 'edit', _('Edit'), false, ['id' => 'ct_id']);
         // $this->addLinkButton('Contestant:detail', 'detail', _('Detail'), false, ['id' => 'ct_id']);

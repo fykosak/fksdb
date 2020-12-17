@@ -15,11 +15,6 @@ class SeriesCalculator {
 
     private YearCalculator $yearCalculator;
 
-    /**
-     * FKSDB\SeriesCalculator constructor.
-     * @param ServiceTask $serviceTask
-     * @param YearCalculator $yearCalculator
-     */
     public function __construct(ServiceTask $serviceTask, YearCalculator $yearCalculator) {
         $this->serviceTask = $serviceTask;
         $this->yearCalculator = $yearCalculator;
@@ -47,13 +42,7 @@ class SeriesCalculator {
         return range(1, $lastSeries);
     }
 
-    /**
-     *
-     * @param ModelContest $contest
-     * @param int $year
-     * @return int
-     */
-    public function getTotalSeries(ModelContest $contest, $year): int {
+    public function getTotalSeries(ModelContest $contest, int $year): int {
         //TODO allow variance?
         if ($contest->contest_id === ModelContest::ID_VYFUK && $year >= 9) { //TODO Think of better solution of deciding
             return 9;
@@ -61,5 +50,4 @@ class SeriesCalculator {
             return 6;
         }
     }
-
 }

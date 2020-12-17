@@ -3,11 +3,13 @@
 namespace FKSDB\Components\Grids;
 
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\DBReflection\FieldLevelPermission;
 use FKSDB\DBReflection\DBReflectionFactory;
+use FKSDB\DBReflection\FieldLevelPermission;
 use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotImplementedException;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
+use FKSDB\SQL\SearchableDataSource;
 use Nette\Application\AbortException;
 use Nette\Application\UI\Form;
 use Nette\Application\UI\InvalidLinkException;
@@ -16,7 +18,6 @@ use Nette\Application\UI\Presenter;
 use Nette\Bridges\ApplicationLatte\Template;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
-use FKSDB\Exceptions\NotImplementedException;
 use Nette\Localization\ITranslator;
 use Nette\Utils\Html;
 use NiftyGrid\Components\Button;
@@ -30,7 +31,6 @@ use NiftyGrid\Grid;
 use NiftyGrid\GridException;
 use NiftyGrid\GridPaginator;
 use PePa\CSVResponse;
-use FKSDB\SQL\SearchableDataSource;
 
 /**
  *
@@ -44,21 +44,14 @@ abstract class BaseGrid extends Grid {
 
     private Container $container;
 
-    /**
-     * BaseGrid constructor.
-     * @param Container $container
-     */
     public function __construct(Container $container) {
         parent::__construct();
         $this->container = $container;
         $container->callInjects($this);
     }
 
-    public function injectTableReflectionFactory(DBReflectionFactory $tableReflectionFactory): void {
+    final public function injectBase(DBReflectionFactory $tableReflectionFactory, ITranslator $translator): void {
         $this->tableReflectionFactory = $tableReflectionFactory;
-    }
-
-    public function injectTranslator(ITranslator $translator): void {
         $this->setTranslator($translator);
     }
 
@@ -183,7 +176,7 @@ abstract class BaseGrid extends Grid {
      * @return Button
      * @throws DuplicateButtonException
      */
-    protected function addButton(string $name, ?string $label = null): Button {
+    protected function addButton($name, ?string $label = null): Button {
         $button = parent::addButton($name, $label);
         $button->setClass('btn btn-sm btn-secondary');
         return $button;
@@ -305,7 +298,7 @@ abstract class BaseGrid extends Grid {
         /** @var Button $button */
         $button = $this->addButton(str_replace('.', '_', $linkId), $factory->getText())
             ->setText($factory->getText())
-            ->setLink(function ($model) use ($factory) {
+            ->setLink(function ($model) use ($factory): string {
                 if (!$model instanceof AbstractModelSingle) {
                     $model = $this->getModelClassName()::createFromActiveRow($model);
                 }

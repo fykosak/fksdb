@@ -1,0 +1,231 @@
+<?php
+
+namespace FKSDB\Modules\OrgModule;
+
+use FKSDB\Components\Controls\FormControl\FormControl;
+use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
+use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
+use FKSDB\Exceptions\BadTypeException;
+use FKSDB\Exceptions\NotFoundException;
+use FKSDB\Logging\FlashMessageDump;
+use FKSDB\Logging\ILogger;
+use FKSDB\Logging\MemoryLogger;
+use FKSDB\ORM\Models\ModelPerson;
+use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\ORM\Services\ServicePersonInfo;
+use FKSDB\Persons\Deduplication\DuplicateFinder;
+use FKSDB\Persons\Deduplication\Merger;
+use FKSDB\UI\PageTitle;
+use FKSDB\Utils\FormUtils;
+use Nette\Application\AbortException;
+use Nette\Forms\Controls\SubmitButton;
+use Nette\Forms\Form;
+use Nette\Utils\Html;
+
+/**
+ * Due to author's laziness there's no class doc (or it's self explaining).
+ *
+ * @author Michal Koutný <michal@fykos.cz>
+ */
+class DeduplicatePresenter extends BasePresenter {
+
+    private ServicePerson $servicePerson;
+    private Merger $merger;
+    private ServicePersonInfo $servicePersonInfo;
+    private ModelPerson $trunkPerson;
+    private ModelPerson $mergedPerson;
+
+    final public function injectQuarterly(
+        ServicePerson $servicePerson,
+        Merger $merger,
+        ServicePersonInfo $servicePersonInfo
+    ): void {
+        $this->servicePerson = $servicePerson;
+        $this->merger = $merger;
+        $this->servicePersonInfo = $servicePersonInfo;
+    }
+
+    public function authorizedPerson(): void {
+        $this->setAuthorized($this->contestAuthorizator->isAllowedForAnyContest('person', 'list'));
+    }
+
+    /**
+     * @param int $trunkId
+     * @param int $mergedId
+     * @throws NotFoundException
+     */
+    public function authorizedDontMerge(int $trunkId, int $mergedId): void {
+        $this->authorizedMerge($trunkId, $mergedId);
+    }
+
+
+    /**
+     * @param int $trunkId
+     * @param int $mergedId
+     * @throws NotFoundException
+     */
+    public function authorizedMerge(int $trunkId, int $mergedId): void {
+        $trunkPerson = $this->servicePerson->findByPrimary($trunkId);
+        $mergedPerson = $this->servicePerson->findByPrimary($mergedId);
+        if (is_null($trunkPerson) || is_null($mergedPerson)) {
+            throw new NotFoundException('Person does not exists');
+        }
+        $this->trunkPerson = $trunkPerson;
+        $this->mergedPerson = $mergedPerson;
+        $authorized = $this->contestAuthorizator->isAllowedForAnyContest($this->trunkPerson, 'merge') &&
+            $this->contestAuthorizator->isAllowedForAnyContest($this->mergedPerson, 'merge');
+        $this->setAuthorized($authorized);
+    }
+
+    public function titleMerge(): void {
+        $this->setPageTitle(new PageTitle(sprintf(_('Merging persons %s (%d) and %s (%d)'), $this->trunkPerson->getFullName(), $this->trunkPerson->person_id, $this->mergedPerson->getFullName(), $this->mergedPerson->person_id)));
+    }
+
+    public function titlePerson(): void {
+        $this->setPageTitle(new PageTitle(_('Duplicate persons'), 'fa fa-exchange'));
+    }
+
+    /**
+     * @param int $trunkId
+     * @param int $mergedId
+     * @return void
+     * @throws AbortException
+     * @throws BadTypeException
+     * @throws \ReflectionException
+     */
+    public function actionDontMerge(int $trunkId, int $mergedId): void {
+        $mergedPI = $this->servicePersonInfo->findByPrimary($mergedId);
+        $mergedData = ['duplicates' => trim($mergedPI->duplicates . ",not-same($trunkId)", ',')];
+        $this->servicePersonInfo->updateModel2($mergedPI, $mergedData);
+
+        $trunkPI = $this->servicePersonInfo->findByPrimary($trunkId);
+        $trunkData = ['duplicates' => trim($trunkPI->duplicates . ",not-same($mergedId)", ',')];
+        $this->servicePersonInfo->updateModel2($trunkPI, $trunkData);
+
+        $this->flashMessage(_('Persons not merged.'), ILogger::SUCCESS);
+        $this->backLinkRedirect(true);
+    }
+
+    public function actionMerge(int $trunkId, int $mergedId): void {
+        $this->merger->setMergedPair($this->trunkPerson, $this->mergedPerson);
+        $this->updateMergeForm($this->getComponent('mergeForm')->getForm());
+    }
+
+    private function updateMergeForm(Form $form): void {
+        $conflicts = $this->merger->getConflicts();
+        foreach ($conflicts as $table => $pairs) {
+            $form->addGroup($table);
+            $tableContainer = new ContainerWithOptions();
+
+            $form->addComponent($tableContainer, $table);
+
+            foreach ($pairs as $pairId => $data) {
+                if (!isset($data[Merger::IDX_TRUNK])) {
+                    continue;
+                }
+                $pairSuffix = '';
+                if (count($pairs) > 1) {
+                    $pairSuffix = " ($pairId)";
+                }
+                $pairContainer = new ContainerWithOptions();
+                $tableContainer->addComponent($pairContainer, $pairId);
+                $pairContainer->setOption('label', \str_replace('_', ' ', $table));
+                foreach ($data[Merger::IDX_TRUNK] as $column => $value) {
+                    if (isset($data[Merger::IDX_RESOLUTION]) && array_key_exists($column, $data[Merger::IDX_RESOLUTION])) {
+                        $default = $data[Merger::IDX_RESOLUTION][$column];
+                    } else {
+                        $default = $value; // default is trunk
+                    }
+
+                    $textElement = $pairContainer->addText($column, $column . $pairSuffix)
+                        ->setDefaultValue($default);
+
+                    $description = Html::el('div');
+
+                    $trunk = Html::el('div');
+                    $trunk->addAttributes(['class' => 'mergeSource']);
+                    $trunk->data['field'] = $textElement->getHtmlId();
+                    $elVal = Html::el('span');
+                    $elVal->setText($value);
+                    $trunk->addText(_('Trunk') . ': ');
+                    $trunk->addText($elVal);
+                    $elVal->addAttributes(['class' => 'value']);
+
+                    $description->addHtml($trunk);
+
+                    $merged = Html::el('div');
+                    $merged->addAttributes(['class' => 'mergeSource']);
+                    $merged->data['field'] = $textElement->getHtmlId();
+                    $elVal = Html::el('span');
+                    $elVal->setText($data[Merger::IDX_MERGED][$column]);
+                    $elVal->addAttributes(['class' => 'value']);
+                    $merged->addText(_('Merged') . ': ');
+                    $merged->addText($elVal);
+                    $description->addHtml($merged);
+
+                    $textElement->setOption('description', $description);
+                }
+            }
+        }
+        $this->registerJSFile('js/mergeForm.js');
+    }
+
+    protected function createComponentPersonsGrid(): PersonsGrid {
+        $duplicateFinder = $this->createPersonDuplicateFinder();
+        $pairs = $duplicateFinder->getPairs();
+        $trunkPersons = $this->servicePerson->getTable()->where('person_id', array_keys($pairs));
+
+        return new PersonsGrid($trunkPersons, $pairs, $this->getContext());
+    }
+
+    protected function createPersonDuplicateFinder(): DuplicateFinder {
+        return new DuplicateFinder($this->servicePerson, $this->getContext());
+    }
+
+    /**
+     * @return FormControl
+     * @throws BadTypeException
+     */
+    protected function createComponentMergeForm(): FormControl {
+        $control = new FormControl();
+        $form = $control->getForm();
+        $this->updateMergeForm($form);
+        $submitButton = $form->addSubmit('send', _('Merge persons'));
+        $submitButton->getControlPrototype()->addAttributes(['class' => 'btn-lg']);
+        $submitButton->onClick[] = function (SubmitButton $button) {
+            $this->handleMergeFormSuccess($button->getForm());
+        };
+        $cancelButton = $form->addSubmit('cancel', _('Cancel'));
+        $cancelButton->getControlPrototype()->addAttributes(['class' => 'btn-lg']);
+        $cancelButton->onClick[] = function () {
+            $this->backLinkRedirect(true);
+        };
+
+        return $control;
+    }
+
+    /**
+     * @param Form $form
+     * @throws AbortException
+     * @throws \ReflectionException
+     * @throws BadTypeException
+     */
+    private function handleMergeFormSuccess(Form $form): void {
+
+        $values = $form->getValues();
+        $values = FormUtils::emptyStrToNull($values);
+
+        $merger = $this->merger;
+        $merger->setConflictResolution($values);
+        $logger = new MemoryLogger();
+        $merger->setLogger($logger);
+        if ($merger->merge()) {
+            $this->flashMessage(_('Persons successfully merged.'), self::FLASH_SUCCESS);
+            FlashMessageDump::dump($logger, $this);
+            $this->backLinkRedirect(true);
+        } else {
+            $this->flashMessage(_('Manual conflict resolution is necessary.'), self::FLASH_INFO);
+            $this->redirect('this'); //this is correct
+        }
+    }
+}

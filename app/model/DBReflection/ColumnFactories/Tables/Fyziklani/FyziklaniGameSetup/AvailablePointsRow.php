@@ -1,25 +1,17 @@
 <?php
 
-namespace FKSDB\DBReflection\ColumnFactories\Fyziklani\FyziklaniGameSetup;
+namespace FKSDB\DBReflection\ColumnFactories\Tables\Fyziklani\FyziklaniGameSetup;
 
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnFactory;
-use FKSDB\DBReflection\FieldLevelPermission;
-use FKSDB\DBReflection\OmittedControlException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\DBReflection\ColumnFactories\Types\DefaultColumnFactory;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniGameSetup;
-use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;
 
 /**
  * Class AvailablePointsRow
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class AvailablePointsRow extends AbstractColumnFactory {
-
-    public function getTitle(): string {
-        return _('Available points');
-    }
-
+class AvailablePointsRow extends DefaultColumnFactory{
     /**
      * @param AbstractModelSingle|ModelFyziklaniGameSetup $model
      * @return Html
@@ -32,13 +24,5 @@ class AvailablePointsRow extends AbstractColumnFactory {
                 ->addText($points));
         }
         return $container;
-    }
-
-    public function getPermission(): FieldLevelPermission {
-        return new FieldLevelPermission(self::PERMISSION_ALLOW_ANYBODY, self::PERMISSION_ALLOW_ANYBODY);
-    }
-
-    public function createField(...$args): BaseControl {
-        throw new OmittedControlException();
     }
 }

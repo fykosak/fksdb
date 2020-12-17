@@ -1,17 +1,13 @@
 <?php
 
-/**
- * For presenters that provide contest and year context.
- *
- * @author Michal Koutný <xm.koutny@gmail.com>
- */
-
 namespace FKSDB\Modules\Core\ContestPresenter;
 
 use FKSDB\ORM\Models\ModelContest;
 
 /**
- * Interface IContestPresenter
+ * For presenters that provide contest and year context.
+ *
+ * @author Michal Koutný <xm.koutny@gmail.com>
  */
 interface IContestPresenter {
 
@@ -26,5 +22,5 @@ interface IContestPresenter {
      * @param string $type
      * @return void
      */
-    public function flashMessage($message, $type = 'info');
+    public function flashMessage($message, string $type = 'info'): \stdClass;
 }

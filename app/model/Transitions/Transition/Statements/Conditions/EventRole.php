@@ -1,9 +1,9 @@
 <?php
 
-namespace FKSDB\Transitions\Statements\Conditions;
+namespace FKSDB\Transitions\Transition\Statements\Conditions;
 
 use FKSDB\Authorization\EventAuthorizator;
-use FKSDB\Transitions\Statements\Statement;
+use FKSDB\Transitions\Transition\Statements\Statement;
 
 /**
  * Class EventRole
@@ -12,7 +12,6 @@ use FKSDB\Transitions\Statements\Statement;
 abstract class EventRole extends Statement {
 
     protected EventAuthorizator $eventAuthorizator;
-
     protected ?string $privilege;
 
     /**

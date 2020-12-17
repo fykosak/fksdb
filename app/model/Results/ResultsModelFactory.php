@@ -6,7 +6,7 @@ use DOMDocument;
 use DOMNode;
 use Exception;
 use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\AbstractModelSingle;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\ModelContest;
 use FKSDB\ORM\Services\ServiceTask;
 use FKSDB\Results\EvaluationStrategies\EvaluationFykos2001;
@@ -40,11 +40,6 @@ class ResultsModelFactory implements IXMLNodeSerializer {
 
     private ServiceTask $serviceTask;
 
-    /**
-     * FKSDB\Results\ResultsModelFactory constructor.
-     * @param Connection $connection
-     * @param ServiceTask $serviceTask
-     */
     public function __construct(Connection $connection, ServiceTask $serviceTask) {
         $this->connection = $connection;
         $this->serviceTask = $serviceTask;

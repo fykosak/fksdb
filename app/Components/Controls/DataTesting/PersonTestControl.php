@@ -6,7 +6,7 @@ use FKSDB\Components\Controls\BaseComponent;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\DataTesting\DataTestingFactory;
-use FKSDB\DataTesting\Tests\Person\PersonTest;
+use FKSDB\DataTesting\Tests\ModelPerson\PersonTest;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\Logging\MemoryLogger;
 use FKSDB\ORM\Models\ModelPerson;
@@ -47,7 +47,7 @@ class PersonTestControl extends BaseComponent {
 
     private DataTestingFactory $dataTestingFactory;
 
-    public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory): void {
+    final public function injectPrimary(ServicePerson $servicePerson, DataTestingFactory $dataTestingFactory): void {
         $this->servicePerson = $servicePerson;
         $this->dataTestingFactory = $dataTestingFactory;
     }
@@ -79,7 +79,7 @@ class PersonTestControl extends BaseComponent {
         $testsContainer = new ContainerWithOptions();
         $testsContainer->setOption('label', _('Tests'));
         foreach ($this->dataTestingFactory->getTests('person') as $key => $test) {
-            $field = $testsContainer->addCheckbox($key, $test->getTitle());
+            $field = $testsContainer->addCheckbox($key, $test->title);
             if (\in_array($test, $this->tests)) {
                 $field->setDefaultValue(true);
             }
@@ -123,7 +123,7 @@ class PersonTestControl extends BaseComponent {
                 $test->run($logger, $model);
             }
             $personLog = \array_filter($logger->getMessages(), function (TestLog $simpleLog): bool {
-                return \in_array($simpleLog->getLevel(), $this->levels);
+                return \in_array($simpleLog->level, $this->levels);
             });
             if (\count($personLog)) {
                 $logs[] = ['model' => $model, 'log' => $personLog];

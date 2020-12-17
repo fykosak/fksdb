@@ -2,9 +2,14 @@
 
 namespace FKSDB\ORM\ServicesMulti;
 
+
 use FKSDB\ORM\AbstractModelMulti;
 use FKSDB\ORM\AbstractServiceMulti;
 use FKSDB\ORM\DeprecatedLazyService;
+
+use FKSDB\ORM\ModelsMulti\AbstractModelMulti;
+use FKSDB\ORM\DeprecatedLazyDBTrait;
+>>>>>>> origin/master
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\ModelsMulti\ModelMPostContact;
 use FKSDB\ORM\Services\ServiceAddress;
@@ -18,11 +23,6 @@ use FKSDB\ORM\Services\ServicePostContact;
 class ServiceMPostContact extends AbstractServiceMulti {
     use DeprecatedLazyService;
 
-    /**
-     * ServiceMPostContact constructor.
-     * @param ServiceAddress $mainService
-     * @param ServicePostContact $joinedService
-     */
     public function __construct(ServiceAddress $mainService, ServicePostContact $joinedService) {
         parent::__construct($mainService, $joinedService, 'address_id', ModelMPostContact::class);
     }

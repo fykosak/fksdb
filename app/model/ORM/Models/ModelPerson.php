@@ -2,7 +2,6 @@
 
 namespace FKSDB\ORM\Models;
 
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
 use FKSDB\ORM\Models\Schedule\ModelPersonSchedule;
@@ -23,6 +22,7 @@ use Nette\Security\IResource;
  * @property-read \DateTimeInterface created
  */
 class ModelPerson extends AbstractModelSingle implements IResource {
+
     public const RESOURCE_ID = 'person';
 
     /**
@@ -87,6 +87,7 @@ class ModelPerson extends AbstractModelSingle implements IResource {
         if ($contestId) {
             $related->where('contest_id', $contestId);
         }
+
         return $related;
     }
 

@@ -4,11 +4,9 @@ namespace FKSDB\ORM\Models\Fyziklani;
 
 use FKSDB\Fyziklani\Submit\AlreadyRevokedSubmitException;
 use FKSDB\Fyziklani\Submit\ClosedSubmittingException;
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DeprecatedLazyModel;
+use FKSDB\ORM\Models\AbstractModelSingle;
 use FKSDB\ORM\Models\IEventReferencedModel;
-use FKSDB\ORM\Models\IFyziklaniTaskReferencedModel;
-use FKSDB\ORM\Models\IFyziklaniTeamReferencedModel;
 use FKSDB\ORM\Models\ModelEvent;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
@@ -35,7 +33,6 @@ class ModelFyziklaniSubmit extends AbstractModelSingle implements IFyziklaniTeam
 
     public const STATE_NOT_CHECKED = 'not_checked';
     public const STATE_CHECKED = 'checked';
-
     public const RESOURCE_ID = 'fyziklani.submit';
 
     public function getFyziklaniTask(): ModelFyziklaniTask {

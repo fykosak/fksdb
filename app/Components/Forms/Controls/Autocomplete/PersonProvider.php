@@ -21,10 +21,6 @@ class PersonProvider implements IFilteredDataProvider {
 
     private TypedTableSelection $searchTable;
 
-    /**
-     * PersonProvider constructor.
-     * @param ServicePerson $servicePerson
-     */
     public function __construct(ServicePerson $servicePerson) {
         $this->servicePerson = $servicePerson;
         $this->searchTable = $this->servicePerson->getTable();
@@ -35,7 +31,7 @@ class PersonProvider implements IFilteredDataProvider {
      * @param ModelContest $contest
      * @param YearCalculator $yearCalculator
      */
-    public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator) {
+    public function filterOrgs(ModelContest $contest, YearCalculator $yearCalculator): void {
         $this->searchTable = $this->servicePerson->getTable()
             ->where([
                 ':org.contest_id' => $contest->contest_id,
@@ -48,10 +44,10 @@ class PersonProvider implements IFilteredDataProvider {
     /**
      * Prefix search.
      *
-     * @param string $search
+     * @param string|null $search
      * @return array
      */
-    public function getFilteredItems(string $search): array {
+    public function getFilteredItems(?string $search): array {
         $search = trim($search);
         $search = str_replace(' ', '', $search);
         $this->searchTable

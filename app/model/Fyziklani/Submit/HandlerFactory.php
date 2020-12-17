@@ -15,20 +15,10 @@ use Nette\Security\User;
 class HandlerFactory {
 
     private ServiceFyziklaniSubmit $serviceFyziklaniSubmit;
-
     private ServiceFyziklaniTask $serviceFyziklaniTask;
-
     private ServiceFyziklaniTeam $serviceFyziklaniTeam;
-
     private User $user;
 
-    /**
-     * TaskCodeHandler constructor.
-     * @param ServiceFyziklaniTeam $serviceFyziklaniTeam
-     * @param ServiceFyziklaniTask $serviceFyziklaniTask
-     * @param ServiceFyziklaniSubmit $serviceFyziklaniSubmit
-     * @param User $user
-     */
     public function __construct(
         ServiceFyziklaniTeam $serviceFyziklaniTeam,
         ServiceFyziklaniTask $serviceFyziklaniTask,

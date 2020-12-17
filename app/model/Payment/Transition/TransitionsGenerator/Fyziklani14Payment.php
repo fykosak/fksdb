@@ -1,9 +1,10 @@
 <?php
 
-namespace FKSDB\Payment\Transition\Transitions;
+namespace FKSDB\Payment\Transition\TransitionsGenerator;
 
 use Exception;
-use FKSDB\Transitions\Statements\Conditions\DateBetween;
+use FKSDB\Payment\Transition\Transitions\PaymentTransitions;
+use FKSDB\Transitions\Transition\Statements\Conditions\DateBetween;
 
 /**
  * Class Fyziklani14Payment

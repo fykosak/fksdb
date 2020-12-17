@@ -2,13 +2,13 @@
 
 namespace FKSDB\Components\Grids\Application;
 
-use Closure;
-use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\BaseGrid;
+use FKSDB\Events\Model\Holder\Holder;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\SQL\SearchableDataSource;
 use Nette\Application\UI\Presenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
@@ -16,7 +16,6 @@ use Nette\Forms\Form;
 use Nette\Utils\Html;
 use NiftyGrid\DataSource\IDataSource;
 use NiftyGrid\DuplicateColumnException;
-use FKSDB\SQL\SearchableDataSource;
 
 /**
  * Class AbstractApplicationGrid
@@ -25,15 +24,8 @@ use FKSDB\SQL\SearchableDataSource;
 abstract class AbstractApplicationsGrid extends BaseGrid {
 
     protected ModelEvent $event;
-
     private Holder $holder;
 
-    /**
-     * AbstractApplicationGrid constructor.
-     * @param ModelEvent $event
-     * @param Holder $holder
-     * @param Container $container
-     */
     public function __construct(ModelEvent $event, Holder $holder, Container $container) {
         parent::__construct($container);
         $this->event = $event;
@@ -79,7 +71,7 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
         }
         $form->addComponent($stateContainer, 'status');
         $form->addSubmit('submit', _('Apply filter'));
-        $form->onSuccess[] = function (Form $form) {
+        $form->onSuccess[] = function (Form $form): void {
             $values = $form->getValues();
             $this->searchTerm = $values;
             $this->dataSource->applyFilter($values);
@@ -100,8 +92,8 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
         $this->addHolderColumns();
     }
 
-    public function getFilterCallBack(): Closure {
-        return function (Selection $table, $value) {
+    public function getFilterCallBack(): callable {
+        return function (Selection $table, $value): void {
             $states = [];
             foreach ($value->status as $state => $value) {
                 if ($value) {

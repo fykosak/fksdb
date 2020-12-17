@@ -1,11 +1,14 @@
 <?php
 
-namespace FKSDB\Transitions;
+namespace FKSDB\Transitions\Machine;
 
 use Exception;
 use FKSDB\Exceptions\BadTypeException;
 use FKSDB\ORM\IModel;
 use FKSDB\ORM\IService;
+use FKSDB\Transitions\IStateModel;
+use FKSDB\Transitions\Transition\Transition;
+use FKSDB\Transitions\Transition\UnavailableTransitionsException;
 use LogicException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Database\Context;
@@ -33,11 +36,6 @@ abstract class Machine {
      */
     private $implicitCondition = null;
 
-    /**
-     * Machine constructor.
-     * @param Context $context
-     * @param IService $service
-     */
     public function __construct(Context $context, IService $service) {
         $this->context = $context;
         $this->service = $service;

@@ -4,7 +4,7 @@ namespace FKSDB\Events\Spec\Fol;
 
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\Events\Processings\AbstractProcessing;
+use FKSDB\Events\Processing\AbstractProcessing;
 use FKSDB\Logging\ILogger;
 use FKSDB\ORM\Models\ModelPerson;
 use FKSDB\ORM\Models\ModelPersonHasFlag;
@@ -24,11 +24,6 @@ class FlagProcessing extends AbstractProcessing {
 
     private ServiceSchool $serviceSchool;
 
-    /**
-     * FlagProcessing constructor.
-     * @param YearCalculator $yearCalculator
-     * @param ServiceSchool $serviceSchool
-     */
     public function __construct(YearCalculator $yearCalculator, ServiceSchool $serviceSchool) {
         $this->yearCalculator = $yearCalculator;
         $this->serviceSchool = $serviceSchool;
@@ -38,24 +33,21 @@ class FlagProcessing extends AbstractProcessing {
         if (!isset($values['team'])) {
             return;
         }
-
         $event = $holder->getPrimaryHolder()->getEvent();
-        $contest = $event->getEventType()->contest;
-        $year = $event->year;
-        $acYear = $this->yearCalculator->getAcademicYear($contest, $year);
+        $acYear = $this->yearCalculator->getAcademicYear($event->getEventType()->getContest(), $event->year);
 
         foreach ($holder->getBaseHolders() as $name => $baseHolder) {
             if ($name == 'team') {
                 continue;
             }
-            /** @var BaseControl[] $formControls */
+            /** @var BaseControl[][] $formControls */
             $formControls = [
                 'school_id' => $this->getControl("$name.person_id.person_history.school_id"),
                 'study_year' => $this->getControl("$name.person_id.person_history.study_year"),
             ];
             $formControls['school_id'] = reset($formControls['school_id']);
             $formControls['study_year'] = reset($formControls['study_year']);
-
+            /** @var BaseControl[] $formControls */
             $formValues = [
                 'school_id' => ($formControls['school_id'] ? $formControls['school_id']->getValue() : null),
                 'study_year' => ($formControls['study_year'] ? $formControls['study_year']->getValue() : null),
@@ -66,7 +58,7 @@ class FlagProcessing extends AbstractProcessing {
                     continue;
                 }
                 /** @var ModelPerson $person */
-                $person = $baseHolder->getModel()->getMainModel()->person;
+                $person = $baseHolder->getModel()->getMainModel()->getPerson();
                 $history = $person->getHistory($acYear);
                 $participantData = [
                     'school_id' => $history->school_id,

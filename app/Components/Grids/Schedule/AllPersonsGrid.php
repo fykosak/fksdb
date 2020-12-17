@@ -23,17 +23,12 @@ class AllPersonsGrid extends BaseGrid {
 
     private ModelEvent $event;
 
-    /**
-     * PersonsGrid constructor.
-     * @param Container $container
-     * @param ModelEvent $event
-     */
     public function __construct(Container $container, ModelEvent $event) {
         parent::__construct($container);
         $this->event = $event;
     }
 
-    public function injectServicePersonSchedule(ServicePersonSchedule $servicePersonSchedule): void {
+    final public function injectServicePersonSchedule(ServicePersonSchedule $servicePersonSchedule): void {
         $this->servicePersonSchedule = $servicePersonSchedule;
     }
 
@@ -52,21 +47,9 @@ class AllPersonsGrid extends BaseGrid {
      */
     protected function configure(Presenter $presenter): void {
         parent::configure($presenter);
-
         $this->paginate = false;
-
         $this->addColumn('person_schedule_id', _('#'));
-
-        $this->addColumns(['person.full_name']);
-
-        $this->addColumn('schedule_item', _('Schedule item'))->setRenderer(function (ModelPersonSchedule $model): string {
-            return $model->getScheduleItem()->getLabel();
-        })->setSortable(false);
-        $this->addColumn('schedule_group', _('Schedule group'))->setRenderer(function (ModelPersonSchedule $model): string {
-            return $model->getScheduleItem()->getScheduleGroup()->getLabel();
-        })->setSortable(false);
-
-        $this->addColumns(['schedule_item.price_czk', 'schedule_item.price_eur', 'event.role', 'payment.payment']);
+        $this->addColumns(['person.full_name', 'schedule_item.name', 'schedule_group.name', 'schedule_item.price_czk', 'schedule_item.price_eur', 'event.role', 'payment.payment']);
     }
 
     protected function getModelClassName(): string {

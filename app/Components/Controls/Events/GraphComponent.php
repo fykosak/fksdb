@@ -1,10 +1,10 @@
 <?php
 
-namespace FKSDB\Components\Events;
+namespace FKSDB\Components\Controls\Events;
 
 use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
 use FKSDB\Events\Machine\BaseMachine;
-use FKSDB\Application\IJavaScriptCollector;
 use FKSDB\Transitions\Machine;
 use Nette\DI\Container;
 
@@ -21,11 +21,6 @@ class GraphComponent extends BaseComponent {
 
     private bool $attachedJS = false;
 
-    /**
-     * GraphComponent constructor.
-     * @param Container $container
-     * @param BaseMachine $baseMachine
-     */
     public function __construct(Container $container, BaseMachine $baseMachine) {
         parent::__construct($container);
         $this->monitor(IJavaScriptCollector::class, function (IJavaScriptCollector $collector) {
@@ -40,7 +35,7 @@ class GraphComponent extends BaseComponent {
         $this->baseMachine = $baseMachine;
     }
 
-    public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter): void {
+    final public function injectExpressionPrinter(ExpressionPrinter $expressionPrinter): void {
         $this->expressionPrinter = $expressionPrinter;
     }
 
@@ -60,7 +55,7 @@ class GraphComponent extends BaseComponent {
      * @return string[]
      */
     private function getAllStates(): array {
-        return array_merge($this->baseMachine->getStates(), [Machine::STATE_INIT, Machine::STATE_TERMINATED]);
+        return array_merge($this->baseMachine->getStates(), [Machine\Machine::STATE_INIT, Machine\Machine::STATE_TERMINATED]);
     }
 
     /**
@@ -74,7 +69,7 @@ class GraphComponent extends BaseComponent {
             $nodes[] = [
                 'id' => $state,
                 'label' => $this->baseMachine->getStateName($state),
-                'type' => $state === Machine::STATE_INIT ? 'init' : ($state === Machine::STATE_TERMINATED ? 'terminated' : 'default'),
+                'type' => $state === Machine\Machine::STATE_INIT ? 'init' : ($state === Machine\Machine::STATE_TERMINATED ? 'terminated' : 'default'),
             ];
         }
         return $nodes;

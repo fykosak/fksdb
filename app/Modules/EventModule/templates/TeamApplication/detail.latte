@@ -43,10 +43,6 @@
     {if $teacher}
         {control valuePrinter:row 'person.person_link', $teacher}
         {include #personSchedule, person => $teacher,event=> $model->getEvent()}
-        {if $hasSchedule}
-            <h4 class="mt-3 pull-left">{_'Schedule'}</h4>
-            {control personScheduleGrid $teacher, $model->getEvent()}
-        {/if}
     {/if}
     <hr/>
 

@@ -2,7 +2,6 @@
 
 namespace FKSDB\ORM\Models;
 
-use FKSDB\ORM\AbstractModelSingle;
 use FKSDB\ORM\DeprecatedLazyModel;
 
 /**
@@ -11,5 +10,6 @@ use FKSDB\ORM\DeprecatedLazyModel;
  * @property-read int study_year
  */
 class ModelTaskStudyYear extends AbstractModelSingle {
+
     use DeprecatedLazyModel;
 }

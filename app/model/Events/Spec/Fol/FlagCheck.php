@@ -2,16 +2,14 @@
 
 namespace FKSDB\Events\Spec\Fol;
 
-use FKSDB\ORM\Models\ModelPersonHistory;
-use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\Events\FormAdjustments\AbstractAdjustment;
 use FKSDB\Events\FormAdjustments\IFormAdjustment;
 use FKSDB\Events\Machine\Machine;
 use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\ORM\Models\ModelPersonHistory;
+use FKSDB\ORM\Models\ModelSchool;
 use FKSDB\ORM\Services\ServicePersonHistory;
 use FKSDB\ORM\Services\ServiceSchool;
-use Nette\Database\Table\ActiveRow;
-use Nette\Database\Table\Selection;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
@@ -24,18 +22,9 @@ use Nette\Forms\IControl;
 class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
 
     private ServiceSchool $serviceSchool;
-
     private ServicePersonHistory $servicePersonHistory;
+    private Holder $holder;
 
-    /** @var Holder */
-    private $holder;
-
-
-    /**
-     * FlagCheck constructor.
-     * @param ServiceSchool $serviceSchool
-     * @param ServicePersonHistory $servicePersonHistory
-     */
     public function __construct(ServiceSchool $serviceSchool, ServicePersonHistory $servicePersonHistory) {
         $this->serviceSchool = $serviceSchool;
         $this->servicePersonHistory = $servicePersonHistory;
@@ -67,7 +56,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
             $personControl = $personControls[$i];
             $studyYearControl = $studyYearControls[$i];
             $control->addCondition($form::FILLED)
-                ->addRule(function () use ($schoolControl, $personControl, $form, $msgForeign) : bool {
+                ->addRule(function () use ($schoolControl, $personControl, $form, $msgForeign): bool {
                     $schoolId = $this->getSchoolId($schoolControl, $personControl);
                     if (!$this->serviceSchool->isCzSkSchool($schoolId)) {
                         $form->addError($msgForeign);
@@ -98,7 +87,7 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
 //                };
     }
 
-    private function getStudyYear(IControl $studyYearControl, IControl $personControl): int {
+    private function getStudyYear(IControl $studyYearControl, IControl $personControl): ?int {
         if ($studyYearControl->getValue()) {
             return $studyYearControl->getValue();
         }
@@ -125,6 +114,6 @@ class FlagCheck extends AbstractAdjustment implements IFormAdjustment {
     }
 
     private function isStudent(?int $studyYear): bool {
-        return ($studyYear === null) ? false : true;
+        return !is_null($studyYear);
     }
 }

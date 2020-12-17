@@ -2,7 +2,7 @@
 
 namespace FKSDB\ORM\Services\Fyziklani;
 
-use FKSDB\ORM\AbstractServiceSingle;
+use FKSDB\ORM\Services\AbstractServiceSingle;
 use FKSDB\ORM\DbNames;
 use FKSDB\ORM\DeprecatedLazyService;
 use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniRoom;
@@ -16,11 +16,6 @@ use Nette\Database\IConventions;
 class ServiceFyziklaniRoom extends AbstractServiceSingle {
     use DeprecatedLazyService;
 
-    /**
-     * ServiceFyziklaniRoom constructor.
-     * @param Context $connection
-     * @param IConventions $conventions
-     */
     public function __construct(Context $connection, IConventions $conventions) {
         parent::__construct($connection, $conventions, DbNames::TAB_FYZIKLANI_ROOM, ModelFyziklaniRoom::class);
     }
@@ -32,6 +27,7 @@ class ServiceFyziklaniRoom extends AbstractServiceSingle {
     public function getRoomsByIds(array $ids): array {
         $rooms = [];
         foreach ($ids as $roomId) {
+            /** @var ModelFyziklaniRoom $room */
             $room = $this->findByPrimary($roomId);
             if ($room) {
                 $rooms[] = $room->__toArray();
