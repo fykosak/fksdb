@@ -13,14 +13,13 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 trait SeriesPresenterTrait {
+
     use YearPresenterTrait;
 
     /**
-     * @var int
      * @persistent
      */
-    public $series;
-
+    public ?int $series = null;
     private SeriesCalculator $seriesCalculator;
 
     public function injectSeriesCalculator(SeriesCalculator $seriesCalculator): void {

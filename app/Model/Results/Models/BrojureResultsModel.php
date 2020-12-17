@@ -14,16 +14,13 @@ use Nette\InvalidStateException;
 class BrojureResultsModel extends AbstractResultsModel {
 
     public const COL_SERIES_PREFIX = 's';
-
     /** @var int[] */
     protected array $series;
-
     /**
      * Number of (single) series that is listed in detail
      * @var int
      */
-    protected $listedSeries;
-
+    protected int $listedSeries;
     /**
      * Cache
      * @var array

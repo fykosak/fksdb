@@ -10,10 +10,11 @@ use Nette\SmartObject;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class DataValidator {
+
     use SmartObject;
 
     /** @var string[] */
-    private $validationErrors;
+    private array $validationErrors;
 
     public function validate(BaseHolder $baseHolder): void {
         // validate

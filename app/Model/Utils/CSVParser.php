@@ -12,6 +12,7 @@ use Nette\SmartObject;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class CSVParser implements Iterator {
+
     use SmartObject;
 
     public const INDEX_NUMERIC = 0;
@@ -19,13 +20,10 @@ class CSVParser implements Iterator {
     public const BOM = '\xEF\xBB\xBF';
     /** @var resource */
     private $file;
-
     private string $delimiter;
-
     private int $indexType;
-    /** @var int */
-    private $rowNumber;
-    /** @var int */
+    private int $rowNumber;
+    /** @var mixed */
     private $currentRow;
     /** @var mixed */
     private $header;
@@ -88,5 +86,4 @@ class CSVParser implements Iterator {
         }
         return !$eof;
     }
-
 }

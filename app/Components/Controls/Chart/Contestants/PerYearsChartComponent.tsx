@@ -1,5 +1,6 @@
-import LineChartLegend from '@FKSDB/Components/Controls/Chart/Core/LineChart/LineChartLegend';
+import ChartContainer from '@FKSDB/Components/Controls/Chart/Core/ChartContainer';
 import LineChart from '@FKSDB/Components/Controls/Chart/Core/LineChart/LineChart';
+import LineChartLegend from '@FKSDB/Components/Controls/Chart/Core/LineChart/LineChartLegend';
 import { ExtendedPointData, LineChartData } from '@FKSDB/Components/Controls/Chart/Core/LineChart/middleware';
 import Ordinal from '@translator/Ordinal';
 import { translator } from '@translator/translator';
@@ -8,7 +9,6 @@ import { schemeCategory10 } from 'd3-scale-chromatic';
 import { curveCatmullRom } from 'd3-shape';
 import * as React from 'react';
 import { getMinMaxYear, getSeriesLabel, parseData, seriesType, YearsData } from './ContestatnsData';
-import ChartContainer from '@FKSDB/Components/Controls/Chart/Core/ChartContainer';
 
 export interface OwnProps {
     data: YearsData;

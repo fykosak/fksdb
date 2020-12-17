@@ -23,7 +23,7 @@ use Nette\Utils\Html;
 class MultiResourceAvailability extends AbstractAdjustment {
 
     /** @var array fields that specifies amount used (string masks) */
-    private $fields;
+    private array $fields;
 
     /** @var string Name of event parameter that hold overall capacity. */
     private $paramCapacity;

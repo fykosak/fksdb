@@ -54,7 +54,7 @@ final class AuthenticationPresenter extends BasePresenter {
     public const REASON_AUTH = '2';
 
     /** @persistent */
-    public $backlink = '';
+    public ?string $backlink = '';
 
     /** @persistent */
     public $flag;

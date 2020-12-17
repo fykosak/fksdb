@@ -20,8 +20,7 @@ use Nette\Forms\IControl;
 class ResourceAvailability extends AbstractAdjustment {
 
     /** @var array fields that specifies amount used (string masks) */
-    private $fields;
-
+    private array $fields;
     /** @var string Name of event parameter that hold overall capacity. */
     private $paramCapacity;
     /** @var array|string */
@@ -116,7 +115,6 @@ class ResourceAvailability extends AbstractAdjustment {
             } else {
                 $table->where('1=0');
             }
-
 
             $primaries = array_map(function (BaseHolder $baseHolder) {
                 return $baseHolder->getModel()->getPrimary(false);

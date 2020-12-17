@@ -1,3 +1,4 @@
+import ChartComponent from '@FKSDB/Components/Controls/Chart/Core/ChartComponent';
 import { Submits } from '@FKSDB/Model/FrontEnd/apps/fyziklani/helpers/interfaces';
 import { ModelFyziklaniSubmit } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniSubmit';
 import { ModelFyziklaniTask } from '@FKSDB/Model/ORM/Models/Fyziklani/modelFyziklaniTask';
@@ -9,7 +10,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { getColorByPoints } from '../Middleware/colors';
 import { Store } from '../Reducers';
-import ChartComponent from '@FKSDB/Components/Controls/Chart/Core/ChartComponent';
 
 interface StateProps {
     activePoints: number;

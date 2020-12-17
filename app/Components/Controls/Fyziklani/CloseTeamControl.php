@@ -19,23 +19,17 @@ use Nette\DI\Container;
 class CloseTeamControl extends BaseComponent {
 
     private ModelEvent $event;
-
-    /** @var ModelFyziklaniTeam */
-    private $team;
-
+    private ModelFyziklaniTeam $team;
     private ServiceFyziklaniTask $serviceFyziklaniTask;
 
-    public function __construct(Container $container, ModelEvent $event) {
+    public function __construct(Container $container, ModelEvent $event, ModelFyziklaniTeam $team) {
         parent::__construct($container);
         $this->event = $event;
+        $this->team = $team;
     }
 
     final public function injectServiceFyziklaniTask(ServiceFyziklaniTask $serviceFyziklaniTask): void {
         $this->serviceFyziklaniTask = $serviceFyziklaniTask;
-    }
-
-    public function setTeam(ModelFyziklaniTeam $team): void {
-        $this->team = $team;
     }
 
     /**

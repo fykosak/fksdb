@@ -13,13 +13,13 @@ use Nette\DI\Container;
  * @property YearCalculator $yearCalculator
  */
 trait YearPresenterTrait {
+
     use ContestPresenterTrait;
 
     /**
-     * @var int
      * @persistent
      */
-    public $year;
+    public ?int $year = null;
 
     /**
      * @return void

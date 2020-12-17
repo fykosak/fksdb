@@ -27,27 +27,17 @@ class ResultsComponent extends BaseComponent {
 
     public const CONT_PARAMS = 'params';
     public const PARAMETER_URL_PREFIX = 'p_';
-
     /**
      * @persistent
-     * @var array
      */
-    public $parameters = [];
-
-    /** @var StoredQuery */
-    private $storedQuery;
-
+    public array $parameters = [];
+    private ?StoredQuery $storedQuery = null;
     private ContestAuthorizator $contestAuthorizator;
-
     private StoredQueryFactory $storedQueryFormFactory;
-
     private ExportFormatFactory $exportFormatFactory;
-
     /** @var null|bool|string */
     private $error;
-
-    /** @var bool */
-    private $showParametrizeForm = true;
+    private bool $showParametrizeForm = true;
 
     final public function injectPrimary(ContestAuthorizator $contestAuthorizator, StoredQueryFactory $storedQueryFormFactory, ExportFormatFactory $exportFormatFactory): void {
         $this->contestAuthorizator = $contestAuthorizator;
@@ -59,8 +49,8 @@ class ResultsComponent extends BaseComponent {
         $this->showParametrizeForm = $showParametersForm;
     }
 
-    public function setStoredQuery(StoredQuery $query): void {
-        $this->storedQuery = $query;
+    public function setStoredQuery(StoredQuery $storedQuery): void {
+        $this->storedQuery = $storedQuery;
     }
 
     private function hasStoredQuery(): bool {

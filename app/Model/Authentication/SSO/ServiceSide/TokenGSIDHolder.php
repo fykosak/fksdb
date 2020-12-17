@@ -18,10 +18,8 @@ class TokenGSIDHolder implements IGSIDHolder {
     public const TABLE = 'auth_token';
     public const URL_PARAM = 'at';
     public const SESSION_KEY = '_sso';
-
     private Connection $connection;
-    /** @var bool */
-    private $cachedGSID = false;
+    private ?string $cachedGSID;
 
     public function __construct(Connection $connection) {
         $this->connection = $connection;
@@ -31,7 +29,7 @@ class TokenGSIDHolder implements IGSIDHolder {
      * @return bool|null
      */
     public function getGSID() {
-        if ($this->cachedGSID === false) {
+        if (!isset($this->cachedGSID)) {
             if (isset($_GET[self::URL_PARAM])) {
                 $token = $_GET[self::URL_PARAM];
                 unset($_GET[self::URL_PARAM]);
@@ -60,20 +58,11 @@ class TokenGSIDHolder implements IGSIDHolder {
         }
     }
 
-    /**
-     * @param string $token
-     * @return null
-     */
-    private function getGSIDFromDB($token) {
-        $sql = 'SELECT data FROM `' . self::TABLE . '`
+    private function getGSIDFromDB(string $token): ?string {
+        $stmt = $this->connection->query('SELECT data FROM `' . self::TABLE . '`
             where token = ?
             and since <= now()
-            and (until is null or until >= now())';
-
-        $stmt = $this->connection->getPdo()->prepare($sql);
-
-        $stmt->execute([$token]);
-
+            and (until is null or until >= now())', $token);
         $row = $stmt->fetch();
         if (!$row) {
             return null;

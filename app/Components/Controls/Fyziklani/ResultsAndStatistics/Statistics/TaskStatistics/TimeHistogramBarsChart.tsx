@@ -1,3 +1,4 @@
+import ChartComponent from '@FKSDB/Components/Controls/Chart/Core/ChartComponent';
 import { Submits } from '@FKSDB/Model/FrontEnd/apps/fyziklani/helpers/interfaces';
 import {
     axisBottom,
@@ -15,7 +16,6 @@ import { connect } from 'react-redux';
 import { getColorByPoints } from '../Middleware/colors';
 import { submitsByTask } from '../Middleware/submitsByTask';
 import { Store as StatisticsStore } from '../Reducers';
-import ChartComponent from '@FKSDB/Components/Controls/Chart/Core/ChartComponent';
 
 interface StateProps {
     submits: Submits;

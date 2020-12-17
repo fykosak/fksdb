@@ -13,7 +13,6 @@ use Nette\ComponentModel\IComponent;
 trait ChartPresenterTrait {
 
     protected Chart $selectedChart;
-
     private array $chartComponents;
 
     public function titleChart(): void {
@@ -68,5 +67,5 @@ trait ChartPresenterTrait {
      * @param string $id
      * @return static
      */
-    abstract public function setView($id);
+    abstract public function setView(string $id);
 }

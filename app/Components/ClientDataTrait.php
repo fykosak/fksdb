@@ -9,8 +9,7 @@ namespace FKSDB\Components;
  */
 trait ClientDataTrait {
 
-    /** @var array */
-    private $clientData = [];
+    private array $clientData = [];
 
     /**
      * @param string|int $key
@@ -39,5 +38,4 @@ trait ClientDataTrait {
             return isset($this->clientData[$key]) ? $this->clientData[$key] : null;
         }
     }
-
 }

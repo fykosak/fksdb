@@ -30,12 +30,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
     use EntityPresenterTrait;
 
     private const PARAM_HTTP_AUTH = 'ha';
-
-    /**
-     * @persistent
-     */
-    public $qid;
-
     private ServiceStoredQuery $serviceStoredQuery;
     private StoredQueryFactory $storedQueryFactory;
     private StoredQuery $storedQuery;

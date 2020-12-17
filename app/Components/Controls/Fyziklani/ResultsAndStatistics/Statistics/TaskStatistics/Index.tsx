@@ -1,3 +1,4 @@
+import ChartContainer from '@FKSDB/Components/Controls/Chart/Core/ChartContainer';
 import { translator } from '@translator/translator';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -7,7 +8,6 @@ import TimeHistogram from './TimeHistogramBarsChart';
 import TimeHistogramLines from './TimeHistogramLinesChart';
 import Timeline from './Timeline';
 import Progress from './TimeProgress';
-import ChartContainer from '@FKSDB/Components/Controls/Chart/Core/ChartContainer';
 
 interface StateProps {
     taskId: number;

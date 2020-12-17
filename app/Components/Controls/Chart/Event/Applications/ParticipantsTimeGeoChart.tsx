@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { GeoData } from '@FKSDB/Components/Controls/Chart/Core/GeoCharts/geoChartHelper';
 import ChartContainer from '@FKSDB/Components/Controls/Chart/Core/ChartContainer';
 import GeoChartComponent, { SCALE_LOG } from '@FKSDB/Components/Controls/Chart/Core/GeoCharts/GeoChartComponent';
+import { GeoData } from '@FKSDB/Components/Controls/Chart/Core/GeoCharts/geoChartHelper';
+import * as React from 'react';
 
 interface OwnProps {
     data: Array<{

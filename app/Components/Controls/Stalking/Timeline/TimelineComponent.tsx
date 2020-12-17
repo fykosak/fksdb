@@ -1,10 +1,10 @@
+import ChartComponent from '@FKSDB/Components/Controls/Chart/Core/ChartComponent';
 import { axisBottom } from 'd3-axis';
 import { scaleOrdinal, ScaleTime } from 'd3-scale';
 import { schemeCategory10 } from 'd3-scale-chromatic';
 import { select } from 'd3-selection';
 import * as React from 'react';
 import './style.scss';
-import ChartComponent from '@FKSDB/Components/Controls/Chart/Core/ChartComponent';
 
 interface Event {
     begin: string;

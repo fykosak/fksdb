@@ -16,11 +16,9 @@ use Nette\Application\BadRequestException;
 trait ContestPresenterTrait {
 
     /**
-     * @var int
      * @persistent
      */
-    public $contestId;
-
+    public ?int $contestId = null;
     private ?ModelContest $contest;
 
     public function injectServiceContest(ServiceContest $serviceContest): void {
@@ -81,7 +79,7 @@ trait ContestPresenterTrait {
 
                 break;
             case YearChooser::ROLE_ORG:
-                $contestIds = array_keys($login->getActiveOrgs($this->yearCalculator));
+                $contestIds = $login ? array_keys($login->getActiveOrgs($this->yearCalculator)) : [];
                 break;
         }
         $contests = [];

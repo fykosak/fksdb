@@ -19,27 +19,17 @@ class Merger {
     public const IDX_TRUNK = 'trunk';
     public const IDX_MERGED = 'merged';
     public const IDX_RESOLUTION = 'resolution';
-
     private array $conflicts = [];
-
-    /** @var ActiveRow */
-    private $trunkRow;
-
-    /** @var ActiveRow */
-    private $mergedRow;
-
+    private ActiveRow $trunkRow;
+    private ActiveRow $mergedRow;
     private Context $context;
-
     /** @var array */
     private $configuration;
-
     private ILogger $logger;
-
     /**
-     *
      * @var TableMerger[]
      */
-    private $tableMergers = [];
+    private array $tableMergers = [];
 
     /**
      * Merger constructor.
@@ -94,7 +84,6 @@ class Merger {
         $table = $this->trunkRow->getTable()->getName();
         $tableMerger = $this->getMerger($table);
         $commit = is_null($commit) ? $this->configuration['commit'] : $commit;
-
 
         $this->context->getConnection()->beginTransaction();
 
@@ -234,5 +223,4 @@ class Merger {
 
         return $this->conflicts[$table][$pairId];
     }
-
 }

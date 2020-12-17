@@ -37,8 +37,8 @@ use PePa\CSVResponse;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class BaseGrid extends Grid {
-    /** @persistent string */
-    public $searchTerm;
+    /** @persistent */
+    public ?string $searchTerm=null;
 
     protected DBReflectionFactory $tableReflectionFactory;
 
