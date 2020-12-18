@@ -8,7 +8,7 @@ use FKSDB\Model\ORM\DbNames;
 use FKSDB\Model\ORM\Models\ModelPayment;
 use FKSDB\Model\ORM\Services\Schedule\ServicePersonSchedule;
 use FKSDB\Model\Payment\Transition\PaymentMachine;
-use FKSDB\model\Transitions\ITransitionsDecorator;
+use FKSDB\Model\Transitions\ITransitionsDecorator;
 use FKSDB\Model\Transitions\Machine\Machine;
 use FKSDB\Model\Transitions\Transition\Statements\Conditions\ExplicitEventRole;
 use FKSDB\Model\Transitions\Transition\Transition;

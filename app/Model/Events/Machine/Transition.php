@@ -14,7 +14,7 @@ use Nette\InvalidArgumentException;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class Transition extends \FKSDB\model\Transitions\Transition\Transition {
+class Transition extends \FKSDB\Model\Transitions\Transition\Transition {
 
     private BaseMachine $baseMachine;
     private array $inducedTransitions = [];
@@ -80,7 +80,7 @@ class Transition extends \FKSDB\model\Transitions\Transition\Transition {
     }
 
     public function isCreating(): bool {
-        return strpos($this->source, \FKSDB\model\Transitions\Machine\Machine::STATE_INIT) !== false;
+        return strpos($this->source, \FKSDB\Model\Transitions\Machine\Machine::STATE_INIT) !== false;
     }
 
     public function isVisible(Holder $holder): bool {
@@ -233,8 +233,8 @@ class Transition extends \FKSDB\model\Transitions\Transition\Transition {
         /*
          * Star matches any state but meta-states (initial and terminal)
          */
-        if (strpos(\FKSDB\model\Transitions\Machine\Machine::STATE_ANY, $stateMask) !== false || (strpos(\FKSDB\model\Transitions\Machine\Machine::STATE_ANY, $this->source) !== false &&
-                ($mask != \FKSDB\model\Transitions\Machine\Machine::STATE_INIT && $mask != \FKSDB\model\Transitions\Machine\Machine::STATE_TERMINATED))) {
+        if (strpos(\FKSDB\Model\Transitions\Machine\Machine::STATE_ANY, $stateMask) !== false || (strpos(\FKSDB\Model\Transitions\Machine\Machine::STATE_ANY, $this->source) !== false &&
+                ($mask != \FKSDB\Model\Transitions\Machine\Machine::STATE_INIT && $mask != \FKSDB\Model\Transitions\Machine\Machine::STATE_TERMINATED))) {
             return true;
         }
 
@@ -261,11 +261,11 @@ class Transition extends \FKSDB\model\Transitions\Transition\Transition {
         $sources = explode('|', $sources);
 
         foreach ($sources as $source) {
-            if (!in_array($source, array_merge($states, [\FKSDB\model\Transitions\Machine\Machine::STATE_ANY, \FKSDB\model\Transitions\Machine\Machine::STATE_INIT]))) {
+            if (!in_array($source, array_merge($states, [\FKSDB\Model\Transitions\Machine\Machine::STATE_ANY, \FKSDB\Model\Transitions\Machine\Machine::STATE_INIT]))) {
                 return false;
             }
         }
-        if (!in_array($target, array_merge($states, [\FKSDB\model\Transitions\Machine\Machine::STATE_TERMINATED]))) {
+        if (!in_array($target, array_merge($states, [\FKSDB\Model\Transitions\Machine\Machine::STATE_TERMINATED]))) {
             return false;
         }
         return true;

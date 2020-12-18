@@ -1,9 +1,10 @@
 <?php
 
-namespace FKSDB\model\Transitions;
+namespace FKSDB\Model\Transitions;
 
 use FKSDB\Config\Expressions\Helpers;
 use Nette\DI\CompilerExtension;
+use FKSDB\Model\Transitions\Transition\Transition;
 
 /**
  * Class PaymentTransitionsExtension
@@ -47,7 +48,7 @@ class TransitionsExtension extends CompilerExtension {
         $builder = $this->getContainerBuilder();
         $factory = $builder->addDefinition($this->prefix($machineName . '.' . $source . '.' . $target))
             ->addTag($machineName)
-            ->setType(Transition\Transition::class)
+            ->setType(Transition::class)
             ->addSetup('setSourceState', [$source])
             ->addSetup('setTargetState', [$target])
             ->addSetup('setLabel', [Helpers::translate($transitionConfig['label'])]);

@@ -30,39 +30,36 @@ parameters:
 
 services:
     fyziklani13payment.symbolGenerator:
-        factory: FKSDB\Payment\SymbolGenerator\Generators\DefaultGenerator()
+        factory: FKSDB\Model\Payment\SymbolGenerator\Generators\DefaultGenerator
         setup:
              - setUp(%fyziklani13payment.symbolGenerator.variableSymbolStart%, %fyziklani13payment.symbolGenerator.variableSymbolEnd%, %fyziklani13payment.symbolGenerator.info%)
-    fyziklani13payment.priceCalculator:
-        factory: FKSDB\Payment\PriceCalculator\PriceCalculator
+    fyziklaniPayment.priceCalculator:
+        factory: FKSDB\Model\Payment\PriceCalculator\PriceCalculator
         setup:
-            - addPreprocess(FKSDB\Payment\PriceCalculator\PreProcess\SchedulePrice())
+            - addPreprocess(FKSDB\Model\Payment\PriceCalculator\PreProcess\SchedulePrice())
     fyziklani13payment.machine:
-        factory: FKSDB\Payment\Transition\PaymentMachine
+        factory: FKSDB\Model\Payment\Transition\PaymentMachine
         setup:
             - setEventId(137)
-            - setPriceCalculator(@fyziklani13payment.priceCalculator)
+            - setPriceCalculator(@fyziklaniPayment.priceCalculator)
             - setScheduleGroupTypes([accommodation])
 
     fyziklani14payment.symbolGenerator:
-        factory: FKSDB\Payment\SymbolGenerator\Generators\DefaultGenerator()
+        factory: FKSDB\Model\Payment\SymbolGenerator\Generators\DefaultGenerator
         setup:
              - setUp(%fyziklani14payment.symbolGenerator.variableSymbolStart%, %fyziklani14payment.symbolGenerator.variableSymbolEnd%, %fyziklani14payment.symbolGenerator.info%)
-    fyziklani14payment.priceCalculator:
-        factory: FKSDB\Payment\PriceCalculator\PriceCalculator
-        setup:
-            - addPreprocess(FKSDB\Payment\PriceCalculator\PreProcess\SchedulePrice())
+
     fyziklani14payment.machine:
-        factory: FKSDB\Payment\Transition\PaymentMachine
+        factory: FKSDB\Model\Payment\Transition\PaymentMachine
         setup:
             - setEventId(145)
-            - setPriceCalculator(@fyziklani14payment.priceCalculator)
+            - setPriceCalculator(@fyziklaniPayment.priceCalculator)
             - setScheduleGroupTypes([accommodation])
 
 transitions:
     fyziklani13payment:
         machine: fyziklani13payment.machine
-        transitionsDecorator: FKSDB\Payment\Transition\Transitions\Fyziklani13Payment()
+        transitionsDecorator: FKSDB\Model\Payment\Transition\TransitionsGenerator\Fyziklani13Payment()
         transitions:
             __init->new:
                 label: _('Create')
@@ -72,9 +69,9 @@ transitions:
                 behaviorType: success
                 beforeExecute:
                     - @fyziklani13payment.symbolGenerator
-                    - @fyziklani13payment.priceCalculator
+                    - @fyziklaniPayment.priceCalculator
                 afterExecute:
-                    - FKSDB\Transitions\Callbacks\MailCallback('fyziklani/fyziklani2019/payment/create',['blind_carbon_copy': 'Fyziklání <fyziklani@fykos.cz>','sender' : 'fyziklani@fykos.cz','subject' : 'Payment was created',])
+                    - FKSDB\Model\Transitions\Transition\Callbacks\MailCallback('fyziklani/fyziklani2019/payment/create',['blind_carbon_copy': 'Fyziklání <fyziklani@fykos.cz>','sender' : 'fyziklani@fykos.cz','subject' : 'Payment was created',])
             new|waiting->canceled:
                 label: _('Cancel payment')
                 behaviorType: danger
@@ -82,10 +79,10 @@ transitions:
                 behaviorType: success
                 label: _('Paid')
                 afterExecute:
-                    - FKSDB\Transitions\Callbacks\MailCallback('fyziklani/fyziklani2019/payment/receive',['blind_carbon_copy': 'Fyziklání <fyziklani@fykos.cz>','sender' : 'fyziklani@fykos.cz','subject' : 'We are receive payment',])
+                    - FKSDB\Model\Transitions\Transition\Callbacks\MailCallback('fyziklani/fyziklani2019/payment/receive',['blind_carbon_copy': 'Fyziklání <fyziklani@fykos.cz>','sender' : 'fyziklani@fykos.cz','subject' : 'We are receive payment',])
     fyziklani14payment:
         machine: fyziklani14payment.machine
-        transitionsDecorator: FKSDB\Payment\Transition\Transitions\Fyziklani14Payment()
+        transitionsDecorator: FKSDB\Model\Payment\Transition\TransitionsGenerator\Fyziklani14Payment()
         transitions:
             __init->new:
                 label: _('Create')
@@ -95,9 +92,9 @@ transitions:
                 behaviorType: success
                 beforeExecute:
                     - @fyziklani14payment.symbolGenerator
-                    - @fyziklani14payment.priceCalculator
+                    - @fyziklaniPayment.priceCalculator
                 afterExecute:
-                    - FKSDB\Transitions\Callbacks\MailCallback('fyziklani/fyziklani2020/payment/create',['blind_carbon_copy' : 'Fyziklání <fyziklani@fykos.cz>','sender': 'fyziklani@fykos.cz','subject': 'Payment was created',])
+                    - FKSDB\Model\Transitions\Transition\Callbacks\MailCallback('fyziklani/fyziklani2020/payment/create',['blind_carbon_copy' : 'Fyziklání <fyziklani@fykos.cz>','sender': 'fyziklani@fykos.cz','subject': 'Payment was created',])
             new|waiting->canceled:
                 label: _('Cancel payment')
                 behaviorType: danger
@@ -105,4 +102,4 @@ transitions:
                 behaviorType: success
                 label: _('Paid')
                 afterExecute:
-                    - FKSDB\Transitions\Callbacks\MailCallback('fyziklani/fyziklani2020/payment/receive',['blind_carbon_copy' : 'Fyziklání <fyziklani@fykos.cz>','sender' : 'fyziklani@fykos.cz','subject' : 'We are receive payment',])
+                    - FKSDB\Model\Transitions\Transition\Callbacks\MailCallback('fyziklani/fyziklani2020/payment/receive',['blind_carbon_copy' : 'Fyziklání <fyziklani@fykos.cz>','sender' : 'fyziklani@fykos.cz','subject' : 'We are receive payment',])

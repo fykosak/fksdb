@@ -4,12 +4,12 @@ namespace FKSDB\Model\Payment\Transition\TransitionsGenerator;
 
 use Exception;
 use FKSDB\Model\Transitions\Transition\Statements\Conditions\DateBetween;
+use FKSDB\Model\Transitions\TransitionsGenerator\PaymentTransitions;
 
 /**
  * Class Fyziklani13Payment
  * @author Michal Červeňák <miso@fykos.cz>
  */
-
 class Fyziklani13Payment extends PaymentTransitions {
 
     /**

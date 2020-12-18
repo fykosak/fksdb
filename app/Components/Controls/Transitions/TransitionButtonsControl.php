@@ -3,8 +3,8 @@
 namespace FKSDB\Components\Controls\Transitions;
 
 use FKSDB\Components\Controls\BaseComponent;
+use FKSDB\Model\Transitions\Holder\IModelHolder;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\Model\Transitions\IStateModel;
 use FKSDB\Model\Transitions\Machine\Machine;
 use FKSDB\Model\Transitions\Transition\UnavailableTransitionsException;
 use Nette\Application\AbortException;
@@ -20,9 +20,9 @@ class TransitionButtonsControl extends BaseComponent {
 
     private Machine $machine;
 
-    private IStateModel $model;
+    private IModelHolder $model;
 
-    public function __construct(Machine $machine, Container $container, IStateModel $model) {
+    public function __construct(Machine $machine, Container $container, IModelHolder $model) {
         parent::__construct($container);
         $this->machine = $machine;
         $this->model = $model;

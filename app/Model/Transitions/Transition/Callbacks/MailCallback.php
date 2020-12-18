@@ -1,14 +1,13 @@
 <?php
 
-namespace FKSDB\model\Transitions\Callbacks;
+namespace FKSDB\Model\Transitions\Transition\Callbacks;
 
 use FKSDB\Model\Exceptions\BadTypeException;
 use FKSDB\Model\Localization\UnsupportedLanguageException;
 use FKSDB\Model\Mail\MailTemplateFactory;
 use FKSDB\Model\ORM\Models\IPersonReferencedModel;
 use FKSDB\Model\ORM\Services\ServiceEmailMessage;
-use FKSDB\model\Transitions\IStateModel;
-use FKSDB\model\Transitions\Transition\Callbacks\ITransitionCallback;
+use FKSDB\Model\Transitions\Holder\IModelHolder;
 
 /**
  * Class MailCallback
@@ -17,11 +16,8 @@ use FKSDB\model\Transitions\Transition\Callbacks\ITransitionCallback;
 class MailCallback implements ITransitionCallback {
 
     protected ServiceEmailMessage $serviceEmailMessage;
-
     protected MailTemplateFactory $mailTemplateFactory;
-
     protected string $templateFile;
-
     protected array $emailData;
 
     /**
@@ -44,24 +40,24 @@ class MailCallback implements ITransitionCallback {
     }
 
     /**
-     * @param IStateModel $model
+     * @param IModelHolder $model
      * @param mixed ...$args
      * @return void
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
-    public function __invoke(IStateModel $model, ...$args): void {
+    public function __invoke(IModelHolder $model, ...$args): void {
         $this->invoke($model, ...$args);
     }
 
     /**
-     * @param IStateModel $model
+     * @param IModelHolder $model
      * @param mixed ...$args
      * @return void
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
      */
-    public function invoke(IStateModel $model, ...$args): void {
+    public function invoke(IModelHolder $model, ...$args): void {
         if (!$model instanceof IPersonReferencedModel) {
             throw new BadTypeException(IPersonReferencedModel::class, $model);
         }

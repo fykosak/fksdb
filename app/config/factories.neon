@@ -21,6 +21,4 @@ services:
         class: FKSDB\Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, %tasks.defaultStudyYears%, ...)
     event.DBReflectionFactory:
         class: FKSDB\Components\Forms\Factories\Events\DBReflectionFactory
-#transition
-    transitionsFactory: FKSDB\Transitions\Transition\TransitionsFactory
 

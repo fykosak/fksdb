@@ -3,10 +3,10 @@
 namespace FKSDB\Model\Transitions\Transition;
 
 use FKSDB\Model\Events\Model\ExpressionEvaluator;
+use FKSDB\Model\Transitions\Holder\IModelHolder;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
 use FKSDB\Model\Logging\ILogger;
-use FKSDB\Model\Transitions\IStateModel;
 use FKSDB\Model\Transitions\Machine\Machine;
 
 /**
@@ -22,6 +22,7 @@ class Transition {
     public const TYPE_DANGEROUS = ILogger::ERROR;
     public const TYPE_PRIMARY = ILogger::PRIMARY;
     public const TYPE_DEFAULT = 'secondary';
+
     protected const AVAILABLE_BEHAVIOR_TYPE = [
         self::TYPE_SUCCESS,
         self::TYPE_WARNING,
@@ -67,10 +68,6 @@ class Transition {
 
     public function isTerminating(): bool {
         return $this->getTargetState() === Machine::STATE_TERMINATED;
-    }
-
-    public function __construct(string $label) {
-        $this->label = $label;
     }
 
     public function getId(): string {
@@ -119,7 +116,7 @@ class Transition {
         return (bool)$this->getEvaluator()->evaluate($this->condition, ...$args);
     }
 
-    public function canExecute2(?IStateModel $model): bool {
+    public function canExecute2(?IModelHolder $model): bool {
         return $this->isConditionFulfilled($model);
     }
 

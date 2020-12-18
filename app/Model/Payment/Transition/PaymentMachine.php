@@ -2,29 +2,32 @@
 
 namespace FKSDB\Model\Payment\Transition;
 
+use FKSDB\Model\ORM\Models\AbstractModelSingle;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use FKSDB\Model\ORM\Models\ModelPayment;
 use FKSDB\Model\ORM\Services\ServiceEvent;
 use FKSDB\Model\ORM\Services\ServicePayment;
 use FKSDB\Model\Payment\PriceCalculator\PriceCalculator;
-use FKSDB\model\Transitions\ITransitionsDecorator;
-use FKSDB\Model\Transitions\Machine;
+use FKSDB\Model\Transitions\ITransitionsDecorator;
+use FKSDB\Model\Transitions\Machine\Machine;
 use Nette\Database\Context;
 
 /**
  * Class PaymentMachine
  * @author Michal Červeňák <miso@fykos.cz>
  */
-class PaymentMachine extends Machine\Machine {
+class PaymentMachine extends Machine {
 
     private PriceCalculator $priceCalculator;
     private ModelEvent $event;
     private ServiceEvent $serviceEvent;
     private array $scheduleGroupTypes;
+    private ServicePayment $servicePayment;
 
     public function __construct(Context $connection, ServicePayment $servicePayment, ServiceEvent $serviceEvent) {
-        parent::__construct($connection, $servicePayment);
+        parent::__construct($connection);
         $this->serviceEvent = $serviceEvent;
+        $this->servicePayment = $servicePayment;
     }
 
     public function decorateTransitions(ITransitionsDecorator $decorator): void {
@@ -60,5 +63,9 @@ class PaymentMachine extends Machine\Machine {
 
     public function getCreatingState(): string {
         return ModelPayment::STATE_NEW;
+    }
+
+    public function createHolder(AbstractModelSingle $model): PaymentHolder {
+        return new PaymentHolder($model, $this->servicePayment);
     }
 }

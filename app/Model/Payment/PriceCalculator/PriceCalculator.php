@@ -2,8 +2,8 @@
 
 namespace FKSDB\Model\Payment\PriceCalculator;
 
-use FKSDB\Model\Transitions\IStateModel;
-use FKSDB\model\Transitions\Transition\Callbacks\ITransitionCallback;
+use FKSDB\Model\Transitions\Holder\IModelHolder;
+use FKSDB\Model\Transitions\Transition\Callbacks\ITransitionCallback;
 use FKSDB\Model\ORM\Models\ModelPayment;
 use FKSDB\Model\ORM\Services\ServicePayment;
 use FKSDB\Model\Payment\Price;
@@ -27,15 +27,14 @@ class PriceCalculator implements ITransitionCallback {
         $this->preProcess[] = $preProcess;
     }
 
-    final public function __invoke(IStateModel $model, ...$args): void {
-        $price = new Price(0, $model->currency);
+    final public function __invoke(IModelHolder $model, ...$args): void {
+        $price = new Price(0, $model->getModel()->currency);
         foreach ($this->preProcess as $preProcess) {
-            $subPrice = $preProcess->calculate($model);
+            $subPrice = $preProcess->calculate($model->getModel());
             $price->add($subPrice);
         }
-        $this->servicePayment->updateModel2($model, ['price' => $price->getAmount(), 'currency' => $price->getCurrency()]);
+        $this->servicePayment->updateModel2($model->getModel(), ['price' => $price->getAmount(), 'currency' => $price->getCurrency()]);
     }
-
 
     /**
      * @param ModelPayment $modelPayment
@@ -49,7 +48,7 @@ class PriceCalculator implements ITransitionCallback {
         return $items;
     }
 
-    public function invoke(IStateModel $model, ...$args): void {
+    public function invoke(IModelHolder $model, ...$args): void {
         $this->__invoke($model, ...$args);
     }
 }

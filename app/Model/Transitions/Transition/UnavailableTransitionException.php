@@ -3,7 +3,7 @@
 namespace FKSDB\Model\Transitions\Transition;
 
 use FKSDB\Model\Events\Machine\Transition as EventTransition;
-use FKSDB\Model\ORM\IModel;
+use FKSDB\Model\Transitions\Holder\IModelHolder;
 use Nette\InvalidStateException;
 
 /**
@@ -11,12 +11,13 @@ use Nette\InvalidStateException;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class UnavailableTransitionException extends \Exception {
+
     /**
      * UnavailableTransitionException constructor.
      * @param EventTransition|Transition $transition
-     * @param IModel $model
+     * @param IModelHolder|null $holder
      */
-    public function __construct($transition, $model) {
+    public function __construct($transition, ?IModelHolder $holder) {
         $target = $transition->getTargetState();
         if ($transition instanceof EventTransition) {
             $source = $transition->getSource();
@@ -29,7 +30,7 @@ class UnavailableTransitionException extends \Exception {
             _('Transition from %s to %s is unavailable for %s'),
             $source,
             $target,
-            $model
+            $holder->getModel()
         ));
     }
 }

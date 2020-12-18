@@ -86,8 +86,6 @@ services:
     - FKSDB\Model\Stats\StatsModelFactory
     #tasks
     - FKSDB\Model\Tasks\PipelineFactory(%tasks.columnMapping%, %tasks.contributionMapping%, %tasks.defaultStudyYears%, ...)
-    #transitions
-    - FKSDB\Model\Transitions\Transition\TransitionsFactory
 
     #webservice
     - FKSDB\Model\WebService\EventSoapFactory

@@ -7,7 +7,6 @@ use FKSDB\Model\ORM\DbNames;
 use FKSDB\Model\ORM\Models\Schedule\ModelPersonSchedule;
 use FKSDB\Model\ORM\Models\Schedule\ModelSchedulePayment;
 use FKSDB\Model\Payment\Price;
-use FKSDB\Model\Transitions\IStateModel;
 use FKSDB\Model\Transitions\Machine;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
@@ -34,7 +33,7 @@ use Nette\Security\IResource;
  * @property-read string iban
  * @property-read string swift
  */
-class ModelPayment extends AbstractModelSingle implements IResource, IStateModel, IEventReferencedModel, IPersonReferencedModel {
+class ModelPayment extends AbstractModelSingle implements IResource, IEventReferencedModel, IPersonReferencedModel {
     use DeprecatedLazyModel;
 
     public const STATE_WAITING = 'waiting'; // waiting for confirm payment
@@ -88,9 +87,5 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
 
     public function getState(): ?string {
         return $this->state;
-    }
-
-    public function getStateColumn(): string {
-        return 'state';
     }
 }

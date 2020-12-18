@@ -12,7 +12,6 @@ use FKSDB\Model\ORM\Models\IPersonReferencedModel;
 use FKSDB\Model\ORM\Models\ModelEvent;
 use FKSDB\Model\ORM\Models\ModelPayment;
 use FKSDB\Model\ORM\Models\ModelPerson;
-use FKSDB\Model\Transitions\IStateModel;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -26,7 +25,6 @@ use Nette\Database\Table\ActiveRow;
  * @property-read int person_schedule_id
  */
 class ModelPersonSchedule extends AbstractModelSingle implements
-    IStateModel,
     IPersonReferencedModel,
     IScheduleGroupReferencedModel,
     IPaymentReferencedModel,
@@ -88,13 +86,5 @@ class ModelPersonSchedule extends AbstractModelSingle implements
             default:
                 throw new NotImplementedException();
         }
-    }
-
-    public function getState(): ?string {
-        return $this->state;
-    }
-
-    public function getStateColumn(): string {
-        return 'state';
     }
 }

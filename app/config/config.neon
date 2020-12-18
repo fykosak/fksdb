@@ -198,6 +198,7 @@ extensions:
     events: FKSDB\Model\Events\EventsExtension(%appDir%/../app/config/events.neon)
     payment: FKSDB\Model\Payment\PaymentExtension
     DBReflection: FKSDB\Model\DBReflection\DBReflectionExtension
+    transitions: FKSDB\Model\Transitions\TransitionsExtension
 
 includes:
     - router.neon
