@@ -156,16 +156,6 @@ class ExportPresenter extends BasePresenter implements ISeriesPresenter {
         return new StoredQueryTagCloud($this->getContext());
     }
 
-    /**
-     * @param PageTitle $pageTitle
-     * @return void
-     * @throws AbortException
-     */
-    protected function setPageTitle(PageTitle $pageTitle): void {
-        $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
-        parent::setPageTitle($pageTitle);
-    }
-
     protected function createComponentCreateForm(): Control {
         throw new NotImplementedException();
     }

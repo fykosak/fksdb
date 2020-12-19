@@ -150,14 +150,4 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
         }
         parent::beforeRender();
     }
-
-    /**
-     * @param PageTitle $pageTitle
-     * @return void
-     * @throws AbortException
-     */
-    protected function setPageTitle(PageTitle $pageTitle): void {
-        $pageTitle->subTitle .= ' ' . sprintf(_('%d. series'), $this->getSelectedSeries());
-        parent::setPageTitle($pageTitle);
-    }
 }
