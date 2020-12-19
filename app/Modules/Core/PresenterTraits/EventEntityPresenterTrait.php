@@ -2,12 +2,12 @@
 
 namespace FKSDB\Modules\Core\PresenterTraits;
 
-use FKSDB\Model\Entity\ModelNotFoundException;
-use FKSDB\Model\Events\Exceptions\EventNotFoundException;
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\ORM\Models\AbstractModelSingle;
-use FKSDB\Model\ORM\Models\IEventReferencedModel;
-use FKSDB\Model\ORM\Models\ModelEvent;
+use FKSDB\Models\Entity\ModelNotFoundException;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\ORM\Models\IEventReferencedModel;
+use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Application\ForbiddenRequestException;
 
 /**

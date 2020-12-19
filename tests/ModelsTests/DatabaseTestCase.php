@@ -2,8 +2,8 @@
 
 namespace FKSDB\Tests\ModelsTests;
 
-use FKSDB\Model\Authentication\PasswordAuthenticator;
-use FKSDB\Model\ORM\DbNames;
+use FKSDB\Models\Authentication\PasswordAuthenticator;
+use FKSDB\Models\ORM\DbNames;
 use Nette\Database\Connection;
 use Nette\Database\Context;
 use Nette\Database\IRow;

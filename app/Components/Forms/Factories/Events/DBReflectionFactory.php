@@ -3,11 +3,11 @@
 namespace FKSDB\Components\Forms\Factories\Events;
 
 use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
-use FKSDB\Model\Events\Machine\BaseMachine;
-use FKSDB\Model\Events\Model\Holder\Field;
-use FKSDB\Model\DBReflection\DBReflectionFactory as ReflectionFactory;
-use FKSDB\Model\ORM\Services\AbstractServiceSingle;
-use FKSDB\Model\ORM\ServicesMulti\AbstractServiceMulti;
+use FKSDB\Models\Events\Machine\BaseMachine;
+use FKSDB\Models\Events\Model\Holder\Field;
+use FKSDB\Models\DBReflection\DBReflectionFactory as ReflectionFactory;
+use FKSDB\Models\ORM\Services\AbstractServiceSingle;
+use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\Database\Connection;

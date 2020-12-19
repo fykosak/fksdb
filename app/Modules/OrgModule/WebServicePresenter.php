@@ -5,7 +5,7 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\AbortException;
 use Tracy\Debugger;
-use FKSDB\Model\WebService\SoapResponse;
+use FKSDB\Models\WebService\SoapResponse;
 
 /**
  * Description of WebServicePresenter

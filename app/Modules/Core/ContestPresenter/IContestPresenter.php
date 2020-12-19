@@ -2,7 +2,7 @@
 
 namespace FKSDB\Modules\Core\ContestPresenter;
 
-use FKSDB\Model\ORM\Models\ModelContest;
+use FKSDB\Models\ORM\Models\ModelContest;
 
 /**
  * For presenters that provide contest and year context.

@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\PresentersTests\FyziklaniModule;
 
-use FKSDB\Model\ORM\DbNames;
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\MockEnvironment\MockApplicationTrait;
 use FKSDB\Tests\ModelsTests\DatabaseTestCase;
 use Nette\Database\IRow;

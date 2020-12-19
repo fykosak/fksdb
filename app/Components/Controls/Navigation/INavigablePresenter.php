@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Navigation;
 
-use FKSDB\Model\UI\PageTitle;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\IPresenter;
 
 /**

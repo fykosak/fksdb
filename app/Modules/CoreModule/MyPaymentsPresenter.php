@@ -3,8 +3,8 @@
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Grids\PersonRelatedGrid;
-use FKSDB\Model\DBReflection\FieldLevelPermission;
-use FKSDB\Model\UI\PageTitle;
+use FKSDB\Models\DBReflection\FieldLevelPermission;
+use FKSDB\Models\UI\PageTitle;
 
 /**
  * Class MyPaymentsPresenter

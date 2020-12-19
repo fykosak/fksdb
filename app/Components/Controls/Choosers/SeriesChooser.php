@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Controls\Choosers;
 
-use FKSDB\Model\UI\Title;
+use FKSDB\Models\UI\Title;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DI\Container;
 

@@ -3,10 +3,10 @@
 namespace FKSDB\Components\Controls\Fyziklani;
 
 use FKSDB\Components\React\AjaxComponent;
-use FKSDB\Model\ORM\Models\Fyziklani\ModelFyziklaniRoom;
-use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
-use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
-use FKSDB\Model\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniRoom;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniRoom;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam;
+use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition;
 use Nette\Application\UI\InvalidLinkException;
 use Nette\DeprecatedException;
 

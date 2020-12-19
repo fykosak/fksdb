@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Grids;
 
-use FKSDB\Model\Exceptions\BadTypeException;
-use FKSDB\Model\ORM\Services\ServiceEmailMessage;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Services\ServiceEmailMessage;
 use Nette\Application\IPresenter;
 use Nette\DI\Container;
 use NiftyGrid\DuplicateButtonException;

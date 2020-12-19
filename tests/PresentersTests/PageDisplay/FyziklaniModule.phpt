@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
-use FKSDB\Model\ORM\DbNames;
+use FKSDB\Models\ORM\DbNames;
 use FKSDB\Tests\PresentersTests\PageDisplay\EventModule\EventModuleTestCase;
 
 $container = require '../../Bootstrap.php';
