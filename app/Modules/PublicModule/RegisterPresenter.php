@@ -17,7 +17,6 @@ use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Services\ServiceContestant;
 use FKSDB\Models\ORM\Services\ServicePerson;
-use FKSDB\Modules\Core\ContestPresenter\IContestPresenter;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -53,7 +52,7 @@ use FKSDB\Models\Persons\SelfResolver;
  *
  * @author Michal Koutný <michal@fykos.cz>
  */
-class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, IExtendedPersonPresenter {
+class RegisterPresenter extends CoreBasePresenter implements IExtendedPersonPresenter {
     /**
      * @var int
      * @persistent

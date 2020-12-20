@@ -2,15 +2,17 @@
 
 namespace FKSDB\Tests\ModelsTests\Export\Formats;
 
-use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\Models\ORM\Models\ModelContest;
 use FKSDB\Models\ORM\Services\ServiceContest;
+use FKSDB\Modules\OrgModule\BasePresenter;
 use Nette\DI\Container;
 
-class MockSeriesPresenter implements ISeriesPresenter {
+class MockSeriesPresenter extends BasePresenter {
+
     private ModelContest $contest;
 
     public function __construct(Container $container) {
+        parent::__construct();
         $this->contest = $container->getByType(ServiceContest::class)->findByPrimary(1);
     }
 

@@ -8,7 +8,6 @@ use FKSDB\Components\Controls\Inbox\Inbox\InboxControl;
 use FKSDB\Components\Controls\Inbox\SubmitCheck\SubmitCheckComponent;
 use FKSDB\Components\Controls\Inbox\SubmitsPreview\SubmitsPreviewControl;
 use FKSDB\Models\Exceptions\BadTypeException;
-use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
 use FKSDB\Models\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use FKSDB\Modules\Core\PresenterTraits\{SeriesPresenterTrait};
@@ -20,7 +19,8 @@ use Nette\Security\Permission;
  * Class InboxPresenter
  *
  */
-class InboxPresenter extends BasePresenter implements ISeriesPresenter {
+class InboxPresenter extends BasePresenter {
+
     use SeriesPresenterTrait;
 
     private SeriesTable $seriesTable;
