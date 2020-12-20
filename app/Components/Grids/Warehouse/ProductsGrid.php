@@ -3,7 +3,7 @@
 namespace FKSDB\Components\Grids\Warehouse;
 
 use FKSDB\Components\Grids\EntityGrid;
-use FKSDB\ORM\Services\Warehouse\ServiceProduct;
+use FKSDB\Models\ORM\Services\Warehouse\ServiceProduct;
 use Nette\DI\Container;
 
 /**

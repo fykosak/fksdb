@@ -3,14 +3,11 @@
 namespace FKSDB\Models\ORM\Services;
 
 use DateTime;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\ORM\Models\ModelPersonInfo;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -18,11 +15,8 @@ use Nette\Database\IConventions;
  * @method ModelPersonInfo findByPrimary($key)
  */
 class ServicePersonInfo extends AbstractServiceSingle {
-    use DeprecatedLazyDBTrait;
 
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_PERSON_INFO, ModelPersonInfo::class);
-    }
+    use DeprecatedLazyDBTrait;
 
     public function createNewModel(array $data): ModelPersonInfo {
         if (isset($data['agreed']) && $data['agreed'] == '1') {

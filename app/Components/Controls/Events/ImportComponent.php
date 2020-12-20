@@ -5,7 +5,7 @@ namespace FKSDB\Components\Controls\Events;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Config\NeonSchemaException;
+use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\Machine\Machine;
 use FKSDB\Models\Events\Model\ApplicationHandler;
 use FKSDB\Models\Events\Model\Grid\SingleEventSource;

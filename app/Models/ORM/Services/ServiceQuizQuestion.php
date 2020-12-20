@@ -2,23 +2,16 @@
 
 namespace FKSDB\Models\ORM\Services;
 
-
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\ModelQuizQuestion;
 use FKSDB\Models\ORM\Models\ModelTask;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 
 /**
  * @author Miroslav Jarý <mira.jary@gmail.com>
  */
 class ServiceQuizQuestion extends AbstractServiceSingle {
-    use DeprecatedLazyDBTrait;
 
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_QUIZ, ModelQuizQuestion::class);
-    }
+    use DeprecatedLazyDBTrait;
 
     /**
      * Find question from quiz by task

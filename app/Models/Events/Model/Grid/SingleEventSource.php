@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Events\Model\Grid;
 
-use FKSDB\Config\NeonSchemaException;
+use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\EventDispatchFactory;
 use FKSDB\Models\ORM\IModel;
 use FKSDB\Models\ORM\IService;

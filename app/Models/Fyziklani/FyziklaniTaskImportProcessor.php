@@ -8,7 +8,7 @@ use FKSDB\Modules\Core\BasePresenter;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask;
 use FKSDB\Models\Utils\CSVParser;
-use FKSDB\Modules\FyziklaniModule\TaskPresenter;
+use FKSDB\Modules\EventModule\Fyziklani\TaskPresenter;
 use Nette\Utils\ArrayHash;
 use Tracy\Debugger;
 

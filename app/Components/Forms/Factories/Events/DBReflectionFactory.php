@@ -5,7 +5,7 @@ namespace FKSDB\Components\Forms\Factories\Events;
 use FKSDB\Components\Forms\Controls\DateInputs\TimeInput;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Model\Holder\Field;
-use FKSDB\Models\DBReflection\DBReflectionFactory as ReflectionFactory;
+use FKSDB\Models\ORM\ORMFactory as ReflectionFactory;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use FKSDB\Models\ORM\ServicesMulti\AbstractServiceMulti;
 use Nette\ComponentModel\Component;
@@ -50,7 +50,7 @@ class DBReflectionFactory extends AbstractFactory {
                 $tableName = $service->getMainService()->getTable()->getName();
             }
             if ($tableName) {
-                $element = $this->tableReflectionFactory->loadColumnFactory($tableName . '.' . $columnName)->createField();
+                $element = $this->tableReflectionFactory->loadColumnFactory($tableName, $columnName)->createField();
             }
         } catch (\Exception $e) {
         }

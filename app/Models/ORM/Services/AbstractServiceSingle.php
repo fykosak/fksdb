@@ -29,10 +29,9 @@ use Tracy\Debugger;
 abstract class AbstractServiceSingle extends Selection implements IService {
 
     private string $modelClassName;
-
     private string $tableName;
 
-    public function __construct(Context $connection, IConventions $conventions, string $tableName, string $modelClassName) {
+    public function __construct(string $tableName, string $modelClassName, Context $connection, IConventions $conventions) {
         $this->tableName = $tableName;
         $this->modelClassName = $modelClassName;
         parent::__construct($connection, $conventions, $tableName);

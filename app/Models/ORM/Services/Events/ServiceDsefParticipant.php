@@ -14,6 +14,6 @@ use Nette\Database\IConventions;
 class ServiceDsefParticipant extends AbstractServiceSingle {
 
     public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_E_DSEF_PARTICIPANT, ModelDsefParticipant::class);
+        parent::__construct(DbNames::TAB_E_DSEF_PARTICIPANT, ModelDsefParticipant::class, $connection, $conventions);
     }
 }

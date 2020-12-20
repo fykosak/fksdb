@@ -4,7 +4,7 @@ namespace FKSDB\Components\Controls\Stalking\Components;
 
 use FKSDB\Models\Authorization\Grant;
 use FKSDB\Components\Controls\Stalking\StalkingControl;
-use FKSDB\Models\DBReflection\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Models\ModelGrant;
 use FKSDB\Models\ORM\Models\ModelPerson;

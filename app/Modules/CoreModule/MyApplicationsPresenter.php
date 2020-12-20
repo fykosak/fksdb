@@ -3,7 +3,7 @@
 namespace FKSDB\Modules\CoreModule;
 
 use FKSDB\Components\Grids\PersonRelatedGrid;
-use FKSDB\Models\DBReflection\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Components\Grids\Application\Person\NewApplicationsGrid;
 use FKSDB\Models\UI\PageTitle;

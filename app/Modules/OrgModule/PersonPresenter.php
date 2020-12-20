@@ -9,7 +9,7 @@ use FKSDB\Components\Controls\Stalking\StalkingContainer;
 use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Models\DBReflection\FieldLevelPermission;
+use FKSDB\Models\ORM\FieldLevelPermission;
 use FKSDB\Models\Entity\ModelNotFoundException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\NotImplementedException;

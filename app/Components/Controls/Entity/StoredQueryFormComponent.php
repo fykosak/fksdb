@@ -4,8 +4,8 @@ namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
-use FKSDB\Models\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Models\DBReflection\OmittedControlException;
+use FKSDB\Models\ORM\Columns\AbstractColumnException;
+use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Exceptions\ModelException;
 use FKSDB\Models\Messages\Message;
@@ -31,10 +31,10 @@ use Nette\Forms\Form;
  * @property ModelStoredQuery $model
  */
 class StoredQueryFormComponent extends AbstractEntityFormComponent {
+
     private const CONT_SQL = 'sql';
     private const CONT_PARAMS = 'params';
     private const CONT_MAIN = 'main';
-
     private StoredQueryFormFactory $storedQueryFormFactory;
     private ServiceStoredQuery $serviceStoredQuery;
     private ServiceStoredQueryTag $serviceStoredQueryTag;

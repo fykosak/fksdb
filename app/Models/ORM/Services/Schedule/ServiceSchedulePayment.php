@@ -3,7 +3,6 @@
 namespace FKSDB\Models\ORM\Services\Schedule;
 
 use FKSDB\Models\Exceptions\NotImplementedException;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Models\Schedule\ModelSchedulePayment;
@@ -11,19 +10,14 @@ use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use FKSDB\Models\Payment\Handler\DuplicatePaymentException;
 use FKSDB\Models\Payment\Handler\EmptyDataException;
 use FKSDB\Models\Submits\StorageException;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 
 /**
  * Class ServiceSchedulePayment
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ServiceSchedulePayment extends AbstractServiceSingle {
-    use DeprecatedLazyDBTrait;
 
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_SCHEDULE_PAYMENT, ModelSchedulePayment::class);
-    }
+    use DeprecatedLazyDBTrait;
 
     /**
      * @param array $data

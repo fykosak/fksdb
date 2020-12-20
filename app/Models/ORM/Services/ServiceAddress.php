@@ -9,21 +9,16 @@ use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelAddress;
 use FKSDB\Models\ORM\Models\ModelRegion;
 use FKSDB\Models\ORM\Services\Exceptions\InvalidPostalCode;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 use Tracy\Debugger;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 class ServiceAddress extends AbstractServiceSingle {
+
     use DeprecatedLazyDBTrait;
 
     private const PATTERN = '/[0-9]{5}/';
-
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_ADDRESS, ModelAddress::class);
-    }
 
     /**
      * @param array $data

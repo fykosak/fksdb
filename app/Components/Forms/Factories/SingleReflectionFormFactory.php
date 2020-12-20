@@ -3,12 +3,12 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Controls\WriteOnly\IWriteOnly;
-use FKSDB\Models\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Models\DBReflection\ColumnFactories\IColumnFactory;
-use FKSDB\Models\DBReflection\FieldLevelPermission;
-use FKSDB\Models\DBReflection\OmittedControlException;
+use FKSDB\Models\ORM\Columns\AbstractColumnException;
+use FKSDB\Models\ORM\Columns\IColumnFactory;
+use FKSDB\Models\ORM\FieldLevelPermission;
+use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Components\Forms\Containers\ModelContainer;
-use FKSDB\Models\DBReflection\DBReflectionFactory;
+use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 use Nette\Forms\Controls\BaseControl;
 
@@ -18,9 +18,9 @@ use Nette\Forms\Controls\BaseControl;
  */
 class SingleReflectionFormFactory {
 
-    protected DBReflectionFactory $tableReflectionFactory;
+    protected ORMFactory $tableReflectionFactory;
 
-    public function __construct(DBReflectionFactory $tableReflectionFactory) {
+    public function __construct(ORMFactory $tableReflectionFactory) {
         $this->tableReflectionFactory = $tableReflectionFactory;
     }
 
@@ -31,7 +31,7 @@ class SingleReflectionFormFactory {
      * @throws BadTypeException
      */
     protected function loadFactory(string $tableName, string $fieldName): IColumnFactory {
-        return $this->tableReflectionFactory->loadColumnFactory($tableName . '.' . $fieldName);
+        return $this->tableReflectionFactory->loadColumnFactory($tableName, $fieldName);
     }
 
     /**

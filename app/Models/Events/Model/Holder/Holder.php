@@ -2,7 +2,7 @@
 
 namespace FKSDB\Models\Events\Model\Holder;
 
-use FKSDB\Config\NeonSchemaException;
+use FKSDB\Models\Expressions\NeonSchemaException;
 use FKSDB\Models\Events\FormAdjustments\IFormAdjustment;
 use FKSDB\Models\Events\Machine\BaseMachine;
 use FKSDB\Models\Events\Machine\Machine;

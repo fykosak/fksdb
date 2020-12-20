@@ -3,15 +3,12 @@
 namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\Exceptions\ModelException;
-use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelEventOrg;
 use FKSDB\Models\ORM\Services\Exceptions\DuplicateOrgException;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
 
 /**
  * Class ServiceEventOrg
@@ -19,11 +16,8 @@ use Nette\Database\IConventions;
  * @method ModelEventOrg refresh(AbstractModelSingle $model)
  */
 class ServiceEventOrg extends AbstractServiceSingle {
-    use DeprecatedLazyDBTrait;
 
-    public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_EVENT_ORG, ModelEventOrg::class);
-    }
+    use DeprecatedLazyDBTrait;
 
     /*/**
      * @param IModel|ModelEventOrg $model

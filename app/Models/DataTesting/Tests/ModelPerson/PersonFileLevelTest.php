@@ -2,8 +2,8 @@
 
 namespace FKSDB\Models\DataTesting\Tests\ModelPerson;
 
-use FKSDB\Models\DBReflection\ColumnFactories\ITestedColumnFactory;
-use FKSDB\Models\DBReflection\DBReflectionFactory;
+use FKSDB\Models\ORM\Columns\ITestedColumnFactory;
+use FKSDB\Models\ORM\ORMFactory;
 use FKSDB\Models\Exceptions\BadTypeException;
 
 /**
@@ -13,18 +13,16 @@ use FKSDB\Models\Exceptions\BadTypeException;
 abstract class PersonFileLevelTest extends PersonTest {
 
     private ITestedColumnFactory $rowFactory;
-
     private string $fieldName;
-
-    private DBReflectionFactory $tableReflectionFactory;
+    private ORMFactory $tableReflectionFactory;
 
     /**
      * PersonFileLevelTest constructor.
-     * @param DBReflectionFactory $tableReflectionFactory
+     * @param ORMFactory $tableReflectionFactory
      * @param string $fieldName
      * @throws BadTypeException
      */
-    public function __construct(DBReflectionFactory $tableReflectionFactory, string $fieldName) {
+    public function __construct(ORMFactory $tableReflectionFactory, string $fieldName) {
         $this->fieldName = $fieldName;
         $this->tableReflectionFactory = $tableReflectionFactory;
         parent::__construct(str_replace('.', '__', $fieldName), $this->getRowFactory()->getTitle());
@@ -36,7 +34,7 @@ abstract class PersonFileLevelTest extends PersonTest {
      */
     final protected function getRowFactory(): ITestedColumnFactory {
         if (!isset($this->rowFactory)) {
-            $rowFactory = $this->tableReflectionFactory->loadColumnFactory($this->fieldName);
+            $rowFactory = $this->tableReflectionFactory->loadColumnFactory(...explode('.', $this->fieldName));
             if (!$rowFactory instanceof ITestedColumnFactory) {
                 throw new BadTypeException(ITestedColumnFactory::class, $this->rowFactory);
             }

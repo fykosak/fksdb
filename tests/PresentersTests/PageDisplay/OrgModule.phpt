@@ -11,6 +11,7 @@ $container = require '../../Bootstrap.php';
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class OrgModule extends AbstractPageDisplayTestCase {
+
     protected function setUp(): void {
         parent::setUp();
         $this->insert(DbNames::TAB_ORG, ['person_id' => $this->personId, 'contest_id' => 1, 'since' => 1, 'order' => 1]);
@@ -74,6 +75,15 @@ class OrgModule extends AbstractPageDisplayTestCase {
             ['Org:Validation', 'default'],
             ['Org:Validation', 'list'],
             ['Org:Validation', 'preview'],
+
+            ['Warehouse:Dashboard', 'default'],
+
+            //['Warehouse:Item', 'create'],
+            ['Warehouse:Item', 'list'],
+
+            ['Warehouse:Producer', 'list'],
+
+            ['Warehouse:Product', 'list'],
         ];
     }
 

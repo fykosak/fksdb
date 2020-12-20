@@ -15,10 +15,11 @@ use Nette\Database\IConventions;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
+
     use DeprecatedLazyDBTrait;
 
     public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_FYZIKLANI_TEAM_POSITION, ModelFyziklaniTeamPosition::class);
+        parent::__construct(DbNames::TAB_FYZIKLANI_TEAM_POSITION, ModelFyziklaniTeamPosition::class, $connection, $conventions);
     }
 
     public function findByTeamId(int $teamId): ?ModelFyziklaniTeamPosition {
@@ -35,7 +36,6 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
                 /** @var ModelFyziklaniTeamPosition $model */
                 $model = $this->findByTeamId($teamData->teamId);
                 if (is_numeric($teamData->x) && is_numeric($teamData->y)) {
-
                     $data = [
                         'e_fyziklani_team_id' => $teamData->teamId,
                         'row' => $teamData->y,

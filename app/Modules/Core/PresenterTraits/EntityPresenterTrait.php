@@ -20,12 +20,12 @@ use Nette\Security\IResource;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 trait EntityPresenterTrait {
+
     /**
      * @persistent
      * @var int
      */
     public $id;
-
     protected ?AbstractModelSingle $model;
 
     public function authorizedList(): void {
@@ -179,7 +179,7 @@ trait EntityPresenterTrait {
     }
 
     /**
-     * @param IResource|string $resource
+     * @param IResource|string|null $resource
      * @param string|null $privilege
      * @return bool
      */

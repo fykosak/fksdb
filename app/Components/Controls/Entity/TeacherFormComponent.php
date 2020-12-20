@@ -5,8 +5,8 @@ namespace FKSDB\Components\Controls\Entity;
 use FKSDB\Components\Forms\Containers\ModelContainer;
 use FKSDB\Components\Forms\Factories\SchoolFactory;
 use FKSDB\Components\Forms\Factories\SingleReflectionFormFactory;
-use FKSDB\Models\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\Models\DBReflection\OmittedControlException;
+use FKSDB\Models\ORM\Columns\AbstractColumnException;
+use FKSDB\Models\ORM\OmittedControlException;
 use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Models\Messages\Message;
 use FKSDB\Models\ORM\Models\ModelTeacher;
@@ -25,7 +25,6 @@ class TeacherFormComponent extends AbstractEntityFormComponent {
     use ReferencedPersonTrait;
 
     private const CONTAINER = 'teacher';
-
     private SchoolFactory $schoolFactory;
     private SingleReflectionFormFactory $singleReflectionFormFactory;
     private ServiceTeacher $serviceTeacher;

@@ -14,10 +14,11 @@ use Nette\Database\IConventions;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class ServiceFyziklaniRoom extends AbstractServiceSingle {
+
     use DeprecatedLazyDBTrait;
 
     public function __construct(Context $connection, IConventions $conventions) {
-        parent::__construct($connection, $conventions, DbNames::TAB_FYZIKLANI_ROOM, ModelFyziklaniRoom::class);
+        parent::__construct(DbNames::TAB_FYZIKLANI_ROOM, ModelFyziklaniRoom::class, $connection, $conventions);
     }
 
     /**
