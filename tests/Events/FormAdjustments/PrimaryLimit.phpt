@@ -70,7 +70,7 @@ class PrimaryLimit extends ResourceAvailabilityTestCase {
         $response = $this->fixture->run($request);
         Assert::type(RedirectResponse::class, $response);
 
-        Assert::equal(2, (int)$this->connection->fetchField('SELECT SUM(accomodation) FROM event_participant WHERE event_id = ?', $this->eventId));
+        Assert::equal(2, (int)$this->context->fetchField('SELECT SUM(accomodation) FROM event_participant WHERE event_id = ?', $this->eventId));
     }
 
     protected function getCapacity(): int {

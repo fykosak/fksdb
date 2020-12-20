@@ -29,7 +29,6 @@ use Tracy\Debugger;
 abstract class AbstractServiceSingle extends Selection implements IService {
 
     private string $modelClassName;
-
     private string $tableName;
 
     public function __construct(Context $connection, IConventions $conventions, string $tableName, string $modelClassName) {
@@ -68,7 +67,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @throws ModelException
      * @deprecated use createNewModel
      */
-    public function createNew(iterable $data = null) {
+    public function createNew(?iterable $data = null): IModel {
         if ($data === null) {
             $data = $this->getDefaultData();
         }
@@ -83,7 +82,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @deprecated
      * @internal Used also in MultiTableSelection.
      */
-    public function createFromArray(array $data) {
+    public function createFromArray(array $data): AbstractModelSingle {
         $className = $this->getModelClassName();
         $data = $this->filterData($data);
         return new $className($data, $this);

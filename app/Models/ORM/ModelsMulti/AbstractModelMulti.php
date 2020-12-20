@@ -15,6 +15,7 @@ use Nette\SmartObject;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class AbstractModelMulti extends ActiveRow implements IModel {
+
     use SmartObject;
 
     protected AbstractModelSingle $mainModel;
@@ -80,16 +81,16 @@ abstract class AbstractModelMulti extends ActiveRow implements IModel {
     }
 
     /**
-     * @param string|int $key
+     * @param string|int $name
      * @return bool|mixed|ActiveRow|Selection|null
      */
-    public function &__get($key) {
+    public function &__get($name) {
         // $value = $this->getMainModel()->{$name} ?? $this->getJoinedModel()->{$name} ?? null;
-        if ($this->getMainModel()->__isset($key)) {
-            return $this->getMainModel()->__get($key);
+        if ($this->getMainModel()->__isset($name)) {
+            return $this->getMainModel()->__get($name);
         }
-        if ($this->getJoinedModel()->__isset($key)) {
-            return $this->getJoinedModel()->__get($key);
+        if ($this->getJoinedModel()->__isset($name)) {
+            return $this->getJoinedModel()->__get($name);
         }
         // this reference isn't that important
         $null = null;
@@ -169,5 +170,4 @@ abstract class AbstractModelMulti extends ActiveRow implements IModel {
     public function offsetUnset($offset): void {
         throw new LogicException("Cannot update multiModel directly.");
     }
-
 }

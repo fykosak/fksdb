@@ -68,5 +68,5 @@ trait ChartPresenterTrait {
      * @param string $id
      * @return static
      */
-    abstract public function setView($id);
+    abstract public function setView(string $id);
 }

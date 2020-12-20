@@ -27,26 +27,20 @@ use Nette\SmartObject;
  * @method SingleEventSource where(string $cond, ...$args)
  */
 class SingleEventSource implements IHolderSource {
+
     use SmartObject;
 
     private ModelEvent $event;
-
     private Container $container;
-
     private EventDispatchFactory $eventDispatchFactory;
-    /** @var MultiTableSelection|TypedTableSelection|Selection */
-    private $primarySelection;
-
+    private Selection $primarySelection;
     private Holder $dummyHolder;
-
     /** @var IModel[] */
-    private $primaryModels = null;
-
+    private ?array $primaryModels = null;
     /** @var IModel[][] */
-    private $secondaryModels = null;
-
+    private ?array $secondaryModels = null;
     /** @var Holder[] */
-    private $holders = [];
+    private ?array $holders = [];
 
     /**
      * SingleEventSource constructor.

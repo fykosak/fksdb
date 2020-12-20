@@ -27,7 +27,7 @@ class ServicePersonHasFlag extends AbstractServiceSingle {
      * @throws ModelException
      * @deprecated
      */
-    public function createNew(?iterable $data = null) {
+    public function createNew(?iterable $data = null): ModelPersonHasFlag {
         if ($data === null) {
             $data = new ArrayHash();
         }

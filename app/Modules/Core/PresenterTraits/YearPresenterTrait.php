@@ -13,13 +13,13 @@ use Nette\DI\Container;
  * @property YearCalculator $yearCalculator
  */
 trait YearPresenterTrait {
+
     use ContestPresenterTrait;
 
     /**
-     * @var int
      * @persistent
      */
-    public $year;
+    public ?int $year = null;
 
     /**
      * @return void
@@ -64,9 +64,4 @@ trait YearPresenterTrait {
     protected function createComponentYearChooser(): YearChooser {
         return new YearChooser($this->getContext(), $this->getSelectedYear(), $this->getAvailableItems());
     }
-
-    /**
-     * @return Container
-     */
-    abstract protected function getContext();
 }

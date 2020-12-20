@@ -91,7 +91,7 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase {
             'id' => $this->eventId,
         ]);
         Assert::type(RedirectResponse::class, $response);
-        $org = $this->connection->query('SELECT * FROM event where event_id=?', $this->eventId)->fetch();
+        $org = $this->context->query('SELECT * FROM event where event_id=?', $this->eventId)->fetch();
         Assert::equal('Dummy Event edited', $org->name);
     }
 
@@ -100,12 +100,12 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase {
     }
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM event');
+        $this->truncateTables([DbNames::TAB_EVENT]);
         parent::tearDown();
     }
 
     private function countEvents(): int {
-        return $this->connection->query('SELECT * FROM event')->getRowCount();
+        return $this->context->query('SELECT * FROM event')->getRowCount();
     }
 }
 

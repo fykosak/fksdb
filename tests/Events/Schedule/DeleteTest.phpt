@@ -94,7 +94,7 @@ class DeleteTest extends ScheduleTestCase {
         Assert::type(RedirectResponse::class, $response);
 
         //Assert::equal('cancelled', $this->connection->fetchField('SELECT status FROM event_participant WHERE event_participant_id=?', $this->dsefAppId));
-        Assert::equal(0, (int)$this->connection->fetchField('SELECT count(*) FROM person_schedule WHERE schedule_item_id = ? AND person_id=?', $this->itemId, $this->lastPersonId));
+        Assert::equal(0, (int)$this->context->fetchField('SELECT count(*) FROM person_schedule WHERE schedule_item_id = ? AND person_id=?', $this->itemId, $this->lastPersonId));
     }
 
     public function getAccommodationCapacity(): int {

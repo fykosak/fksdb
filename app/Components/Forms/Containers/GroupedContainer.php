@@ -14,10 +14,9 @@ use Nette\Forms\Form;
 class GroupedContainer extends Container {
 
     /**
-     *
      * @var ControlGroup[]
      */
-    private $groups = [];
+    private array $groups = [];
     /** @var mixed */
     private $prefix;
 

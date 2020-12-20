@@ -25,9 +25,7 @@ abstract class EventTestCase extends DatabaseTestCase {
     }
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM event_participant');
-        $this->connection->query('DELETE FROM event');
-        $this->connection->query('DELETE FROM auth_token');
+        $this->truncateTables([DbNames::TAB_EVENT_PARTICIPANT, DbNames::TAB_EVENT, DbNames::TAB_AUTH_TOKEN]);
         parent::tearDown();
     }
 
@@ -66,18 +64,17 @@ abstract class EventTestCase extends DatabaseTestCase {
     abstract protected function getEventId(): int;
 
     protected function assertApplication(int $eventId, string $email): IRow {
-        $personId = $this->connection->fetchField('SELECT person_id FROM person_info WHERE email=?', $email);
+        $personId = $this->context->fetchField('SELECT person_id FROM person_info WHERE email=?', $email);
         Assert::notEqual(null, $personId);
 
-        $application = $this->connection->fetch('SELECT * FROM event_participant WHERE event_id = ? AND person_id = ?', $eventId, $personId);
+        $application = $this->context->fetch('SELECT * FROM event_participant WHERE event_id = ? AND person_id = ?', $eventId, $personId);
         Assert::notEqual(null, $application);
         return $application;
     }
 
     protected function assertExtendedApplication(IRow $application, string $table): IRow {
-        $application = $this->connection->fetch('SELECT * FROM `' . $table . '` WHERE event_participant_id = ?', $application->event_participant_id);
+        $application = $this->context->fetch('SELECT * FROM `' . $table . '` WHERE event_participant_id = ?', $application->event_participant_id);
         Assert::notEqual(null, $application);
         return $application;
     }
-
 }

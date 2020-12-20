@@ -22,7 +22,7 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
      * @var bool
      * @deprecated
      */
-    protected $stored = true;
+    protected bool $stored = true;
 
     /**
      * @return bool
@@ -59,8 +59,8 @@ abstract class AbstractModelSingle extends ActiveRow implements IModel {
      * @param string|int $key
      * @param mixed $value
      */
-    public function __set($key, $value) {
-        $this->tmpData[$key] = $value;
+    public function __set($name, $value) {
+        $this->tmpData[$name] = $value;
     }
 
     /**

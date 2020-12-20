@@ -22,14 +22,12 @@ use Nette\SmartObject;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class AbstractServiceMulti implements IService {
+
     use SmartObject;
 
     protected AbstractServiceSingle $mainService;
-
     protected AbstractServiceSingle $joinedService;
-
     private string $joiningColumn;
-
     private string $modelClassName;
 
     public function __construct(AbstractServiceSingle $mainService, AbstractServiceSingle $joinedService, string $joiningColumn, string $modelClassName) {
@@ -46,7 +44,7 @@ abstract class AbstractServiceMulti implements IService {
      * @return AbstractModelMulti
      * @deprecated
      */
-    public function createNew(?iterable $data = null) {
+    public function createNew(?iterable $data = null): IModel {
         $mainModel = $this->getMainService()->createNew($data);
         $joinedModel = $this->getJoinedService()->createNew($data);
         return $this->composeModel($mainModel, $joinedModel);

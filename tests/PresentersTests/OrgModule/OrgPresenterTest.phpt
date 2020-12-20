@@ -103,7 +103,7 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase {
             'id' => (string)$this->orgId,
         ]);
         Assert::type(RedirectResponse::class, $response);
-        $org = $this->connection->query('SELECT * FROM org where org_id=?', $this->orgId)->fetch();
+        $org = $this->context->query('SELECT * FROM org where org_id=?', $this->orgId)->fetch();
         Assert::equal('b', $org->domain_alias);
         Assert::equal(2, $org->order);
     }
@@ -122,14 +122,13 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase {
     }
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM org');
+        $this->truncateTables([DbNames::TAB_ORG]);
         parent::tearDown();
     }
 
     private function countOrgs(): int {
-        return $this->connection->query('SELECT * FROM org where person_id=?', $this->personId)->getRowCount();
+        return $this->context->query('SELECT * FROM org where person_id=?', $this->personId)->getRowCount();
     }
-
 }
 
 $testCase = new OrgPresenterTest($container);

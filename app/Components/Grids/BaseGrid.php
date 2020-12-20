@@ -37,11 +37,10 @@ use PePa\CSVResponse;
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
 abstract class BaseGrid extends Grid {
-    /** @persistent string */
-    public $searchTerm;
 
+    /** @persistent */
+    public ?string $searchTerm = null;
     protected DBReflectionFactory $tableReflectionFactory;
-
     private Container $container;
 
     public function __construct(Container $container) {
@@ -59,7 +58,6 @@ abstract class BaseGrid extends Grid {
         try {
             $this->setDataSource($this->getData());
         } catch (NotImplementedException $exception) {
-
         }
         $this->setTemplate(__DIR__ . DIRECTORY_SEPARATOR . 'BaseGrid.latte');
         /** @var GridPaginator $paginator */

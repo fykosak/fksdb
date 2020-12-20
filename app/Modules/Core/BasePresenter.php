@@ -48,33 +48,27 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     public const FLASH_INFO = ILogger::INFO;
     public const FLASH_WARNING = ILogger::WARNING;
     public const FLASH_ERROR = ILogger::ERROR;
-
     /** @persistent */
-    public $tld;
-
+    public ?string $tld = null;
     /**
      * BackLink for tree construction for breadcrumbs.
      * @persistent
      */
-    public $bc;
-
+    public ?string $bc = null;
     /**
      * @persistent
      * @internal
      */
-    public $lang;
-
+    public ?string $lang = null;
     protected YearCalculator $yearCalculator;
     protected ServiceContest $serviceContest;
     protected BreadcrumbsFactory $breadcrumbsFactory;
     protected PresenterBuilder $presenterBuilder;
     protected GettextTranslator $translator;
-
     private ?PageTitle $pageTitle;
     private bool $authorized = true;
     private array $authorizedCache = [];
     private PageStyleContainer $pageStyleContainer;
-
 
     final public function injectBase(
         YearCalculator $yearCalculator,

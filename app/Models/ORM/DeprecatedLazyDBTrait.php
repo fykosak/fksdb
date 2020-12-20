@@ -10,12 +10,13 @@ use Nette\DeprecatedException;
  * Use for IService that is lazy DB access not supported
  */
 trait DeprecatedLazyDBTrait {
+
     /**
      * @param iterable|null $data
      * @return IModel|mixed
      * @deprecated
      */
-    public function createNew(?iterable $data = null) {
+    public function createNew(?iterable $data = null): IModel {
         throw new DeprecatedException();
     }
 

@@ -54,22 +54,19 @@ use FKSDB\Models\Persons\SelfResolver;
  * @author Michal Koutný <michal@fykos.cz>
  */
 class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, IExtendedPersonPresenter {
-    /**
-     * @var int
-     * @persistent
-     */
-    public $contestId;
-    /**
-     * @var int
-     * @persistent
-     */
-    public $year;
-    /**
-     * @var int
-     * @persistent
-     */
-    public $personId;
 
+    /**
+     * @persistent
+     */
+    public ?int $contestId = null;
+    /**
+     * @persistent
+     */
+    public ?int $year = null;
+    /**
+     * @persistent
+     */
+    public ?int $personId = null;
     private ?ModelPerson $person;
     private ServiceContestant $serviceContestant;
     private ReferencedPersonFactory $referencedPersonFactory;
@@ -116,7 +113,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
      * @throws AbortException
      */
     public function actionContestant(): void {
-
         if ($this->user->isLoggedIn()) {
             $person = $this->getPerson();
 
@@ -204,7 +200,6 @@ class RegisterPresenter extends CoreBasePresenter implements IContestPresenter, 
 
     private function getPerson(): ?ModelPerson {
         if (!isset($this->person)) {
-
             if ($this->user->isLoggedIn()) {
                 $this->person = $this->user->getIdentity()->getPerson();
             } else {

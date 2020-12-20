@@ -26,7 +26,7 @@ class GroupOptions implements IOptionsProvider {
     private $excludeStates;
 
     /** @var array  eventId => groups cache */
-    private $groups = [];
+    private array $groups = [];
 
     /**
      * @note In NEON instatiate as GroupOptions(..., ['state1'],['state1', 'state2']).

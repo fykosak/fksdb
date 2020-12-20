@@ -21,13 +21,10 @@ abstract class EntityPresenter extends BasePresenter {
 
     public const COMP_EDIT_FORM = 'editComponent';
     public const COMP_CREATE_FORM = 'createComponent';
-
     /**
-     * @var int
      * @persistent
      */
-    public $id;
-
+    public ?int $id = null;
     private ?IModel $model;
 
     public function authorizedCreate(): void {

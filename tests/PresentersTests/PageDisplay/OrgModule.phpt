@@ -11,6 +11,7 @@ $container = require '../../Bootstrap.php';
  * @author Michal Červeňák <miso@fykos.cz>
  */
 class OrgModule extends AbstractPageDisplayTestCase {
+
     protected function setUp(): void {
         parent::setUp();
         $this->insert(DbNames::TAB_ORG, ['person_id' => $this->personId, 'contest_id' => 1, 'since' => 1, 'order' => 1]);
@@ -78,8 +79,7 @@ class OrgModule extends AbstractPageDisplayTestCase {
     }
 
     protected function tearDown(): void {
-        $this->connection->query('DELETE FROM person_info');
-        $this->connection->query('DELETE FROM org');
+        $this->truncateTables(['person_info', 'org']);
         parent::tearDown();
     }
 }

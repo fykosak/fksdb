@@ -13,14 +13,13 @@ use Nette\DI\Container;
  * @author Michal Červeňák <miso@fykos.cz>
  */
 trait SeriesPresenterTrait {
+
     use YearPresenterTrait;
 
     /**
-     * @var int
      * @persistent
      */
-    public $series;
-
+    public ?int $series = null;
     private SeriesCalculator $seriesCalculator;
 
     public function injectSeriesCalculator(SeriesCalculator $seriesCalculator): void {
@@ -66,9 +65,4 @@ trait SeriesPresenterTrait {
     protected function createComponentSeriesChooser(): SeriesChooser {
         return new SeriesChooser($this->getContext(), $this->getSelectedSeries(), $this->getSelectedSeries(), $this->getAllowedSeries());
     }
-
-    /**
-     * @return Container
-     */
-    abstract protected function getContext();
 }
