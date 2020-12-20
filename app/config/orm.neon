@@ -2,63 +2,65 @@
 # ORM services definitions
 #
 services:
-    ServiceAuthToken:          FKSDB\ORM\Services\ServiceAuthToken
-    ServiceAddress:            FKSDB\ORM\Services\ServiceAddress
-    ServiceContestant:         FKSDB\ORM\Services\ServiceContestant
-    ServiceContest:            FKSDB\ORM\Services\ServiceContest
-    ServiceContestYear:        FKSDB\ORM\Services\ServiceContestYear
-    ServiceEvent:              FKSDB\ORM\Services\ServiceEvent
-    ServiceEventOrg:           FKSDB\ORM\Services\ServiceEventOrg
-    ServiceEventType:          FKSDB\ORM\Services\ServiceEventType
-    ServiceFlag:               FKSDB\ORM\Services\ServiceFlag
-    ServiceGlobalSession:      FKSDB\ORM\Services\ServiceGlobalSession
-    ServiceLogin:              FKSDB\ORM\Services\ServiceLogin
-    ServiceOrg:                FKSDB\ORM\Services\ServiceOrg
-    ServiceEmailMessage:       FKSDB\ORM\Services\ServiceEmailMessage
-    ServicePerson:             FKSDB\ORM\Services\ServicePerson
-    ServicePersonHasFlag:      FKSDB\ORM\Services\ServicePersonHasFlag
-    ServicePersonHistory:      FKSDB\ORM\Services\ServicePersonHistory
-    ServicePersonInfo:         FKSDB\ORM\Services\ServicePersonInfo
-    ServicePostContact:        FKSDB\ORM\Services\ServicePostContact
-    ServiceQuizQuestion:       FKSDB\ORM\Services\ServiceQuizQuestion
-    ServiceRegion:             FKSDB\ORM\Services\ServiceRegion
-    ServiceSubmit:             FKSDB\ORM\Services\ServiceSubmit
-    ServiceSubmitQuizQuestion: FKSDB\ORM\Services\ServiceSubmitQuizQuestion
-    ServiceSchool:             FKSDB\ORM\Services\ServiceSchool
-    ServiceStudyYear:          FKSDB\ORM\Services\ServiceStudyYear
-    ServiceTask:               FKSDB\ORM\Services\ServiceTask
-    ServiceTaskContribution:   FKSDB\ORM\Services\ServiceTaskContribution
-    ServiceTaskStudyYear:      FKSDB\ORM\Services\ServiceTaskStudyYear
-    ServiceTeacher:            FKSDB\ORM\Services\ServiceTeacher
-    ServicePayment:            FKSDB\ORM\Services\ServicePayment
+    - FKSDB\Models\ORM\Services\ServiceAuthToken
+    - FKSDB\Models\ORM\Services\ServiceAddress
+    - FKSDB\Models\ORM\Services\ServiceContestant
+    - FKSDB\Models\ORM\Services\ServiceContest
+    - FKSDB\Models\ORM\Services\ServiceContestYear
+    - FKSDB\Models\ORM\Services\ServiceEvent
+    - FKSDB\Models\ORM\Services\ServiceEventOrg
+    - FKSDB\Models\ORM\Services\ServiceEventType
+    - FKSDB\Models\ORM\Services\ServiceFlag
+    - FKSDB\Models\ORM\Services\ServiceGlobalSession
+    - FKSDB\Models\ORM\Services\ServiceLogin
+    - FKSDB\Models\ORM\Services\ServiceOrg
+    - FKSDB\Models\ORM\Services\ServiceEmailMessage
+    - FKSDB\Models\ORM\Services\ServicePerson
+    - FKSDB\Models\ORM\Services\ServicePersonHasFlag
+    - FKSDB\Models\ORM\Services\ServicePersonHistory
+    - FKSDB\Models\ORM\Services\ServicePersonInfo
+    - FKSDB\Models\ORM\Services\ServicePostContact
+    - FKSDB\Models\ORM\Services\ServiceQuizQuestion
+    - FKSDB\Models\ORM\Services\ServiceRegion
+    - FKSDB\Models\ORM\Services\ServiceSubmit
+    - FKSDB\Models\ORM\Services\ServiceSubmitQuizQuestion
+    - FKSDB\Models\ORM\Services\ServiceSchool
+    - FKSDB\Models\ORM\Services\ServiceStudyYear
+    - FKSDB\Models\ORM\Services\ServiceTask
+    - FKSDB\Models\ORM\Services\ServiceTaskContribution
+    - FKSDB\Models\ORM\Services\ServiceTaskStudyYear
+    - FKSDB\Models\ORM\Services\ServiceTeacher
+    - FKSDB\Models\ORM\Services\ServicePayment
 
-    ServiceStoredQuery:      FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery
-    ServiceStoredQueryParameter: FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter
-    ServiceStoredQueryTag:   FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTag
-    ServiceStoredQueryTagType: FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType
+    - FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery
+    - FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryParameter
+    - FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTag
+    - FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType
 
-    fyziklani.ServiceFyziklaniGameSetup: FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniGameSetup
-    fyziklani.ServiceFyziklaniRoom:        FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniRoom
-    fyziklani.ServiceFyziklaniTeamPosition: FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition
-    fyziklani.ServiceFyziklaniSubmit:  FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniSubmit
-    fyziklani.ServiceFyziklaniTask:    FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTask
-    fyziklani.ServiceFyziklaniTeam:             FKSDB\ORM\Services\Fyziklani\ServiceFyziklaniTeam
+    - FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniGameSetup
+    - FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniRoom
+    - FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeamPosition
+    - FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniSubmit
+    - FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTask
+    fyziklani.ServiceFyziklaniTeam:             FKSDB\Models\ORM\Services\Fyziklani\ServiceFyziklaniTeam
 
-    schedule.ServiceScheduleGroup: FKSDB\ORM\Services\Schedule\ServiceScheduleGroup
-    schedule.ServiceScheduleItem: FKSDB\ORM\Services\Schedule\ServiceScheduleItem
-    schedule.ServicePersonSchedule: FKSDB\ORM\Services\Schedule\ServicePersonSchedule
-    schedule.ServiceSchedulePayment: FKSDB\ORM\Services\Schedule\ServiceSchedulePayment
+    - FKSDB\Models\ORM\Services\Schedule\ServiceScheduleGroup
+    - FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem
+    - FKSDB\Models\ORM\Services\Schedule\ServicePersonSchedule
+    - FKSDB\Models\ORM\Services\Schedule\ServiceSchedulePayment
 
-    event.ServiceEventParticipant:          FKSDB\ORM\Services\ServiceEventParticipant
-    event.ServiceDsefGroup:                 FKSDB\ORM\Services\Events\ServiceDsefGroup
-    event.ServiceDsefParticipant:           FKSDB\ORM\Services\Events\ServiceDsefParticipant
-    event.ServiceMDsefParticipant:          FKSDB\ORM\ServicesMulti\Events\ServiceMDsefParticipant
+    event.ServiceEventParticipant:          FKSDB\Models\ORM\Services\ServiceEventParticipant
+    event.ServiceDsefGroup:                 FKSDB\Models\ORM\Services\Events\ServiceDsefGroup
+    event.ServiceDsefParticipant:           FKSDB\Models\ORM\Services\Events\ServiceDsefParticipant
+    event.ServiceMDsefParticipant:          FKSDB\Models\ORM\ServicesMulti\Events\ServiceMDsefParticipant
 
-    event.ServiceFyziklaniParticipant:      FKSDB\ORM\Services\Events\ServiceFyziklaniParticipant
-    event.ServiceMFyziklaniParticipant:     FKSDB\ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant
+    event.ServiceFyziklaniParticipant:      FKSDB\Models\ORM\Services\Events\ServiceFyziklaniParticipant
+    event.ServiceMFyziklaniParticipant:     FKSDB\Models\ORM\ServicesMulti\Events\ServiceMFyziklaniParticipant
+    - FKSDB\Models\ORM\ServicesMulti\ServiceMPostContact
 
     warehouse.ServiceProducer: FKSDB\ORM\Services\Warehouse\ServiceProducer
     warehouse.ServiceProduct: FKSDB\ORM\Services\Warehouse\ServiceProduct
     warehouse.ServiceItem: FKSDB\ORM\Services\Warehouse\ServiceItem
 
     ServiceMPostContact:     FKSDB\ORM\ServicesMulti\ServiceMPostContact
+

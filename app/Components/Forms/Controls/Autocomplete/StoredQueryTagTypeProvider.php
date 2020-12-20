@@ -2,9 +2,9 @@
 
 namespace FKSDB\Components\Forms\Controls\Autocomplete;
 
-use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryTagType;
-use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
-use FKSDB\ORM\Tables\TypedTableSelection;
+use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTagType;
+use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType;
+use FKSDB\Models\ORM\Tables\TypedTableSelection;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

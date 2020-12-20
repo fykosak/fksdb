@@ -2,7 +2,7 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use FKSDB\Events\Model\Holder\Field;
+use FKSDB\Models\Events\Model\Holder\Field;
 use Nette\ComponentModel\Component;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\Controls\TextInput;
@@ -17,7 +17,7 @@ class PasswordFactory extends AbstractFactory {
 
     public function createComponent(Field $field): TextInput {
         $element = new TextInput($field->getLabel());
-        $element->setType('password');
+        $element->setHtmlType('password');
         $element->setOption('description', $field->getDescription());
         return $element;
     }

@@ -2,15 +2,15 @@
 
 namespace FKSDB\Components\Controls\Entity;
 
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Fyziklani\NotSetGameParametersException;
-use FKSDB\Fyziklani\Submit\ClosedSubmittingException;
-use FKSDB\Fyziklani\Submit\HandlerFactory;
-use FKSDB\Logging\FlashMessageDump;
-use FKSDB\Logging\MemoryLogger;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Fyziklani\NotSetGameParametersException;
+use FKSDB\Models\Fyziklani\Submit\ClosedSubmittingException;
+use FKSDB\Models\Fyziklani\Submit\HandlerFactory;
+use FKSDB\Models\Logging\FlashMessageDump;
+use FKSDB\Models\Logging\MemoryLogger;
 use FKSDB\Modules\Core\BasePresenter;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
-use FKSDB\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniSubmit;
+use FKSDB\Models\ORM\Models\ModelEvent;
 use Nette\Application\AbortException;
 use Nette\DI\Container;
 use Nette\Forms\Controls\RadioList;

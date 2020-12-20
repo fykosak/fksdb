@@ -2,13 +2,12 @@
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
-use FKSDB\ORM\DbNames;
-use FKSDB\ORM\Models\ModelContestant;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\UI\PageTitle;
+use FKSDB\Models\ORM\DbNames;
+use FKSDB\Models\ORM\Models\ModelContestant;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\UI\PageTitle;
 
 /**
  *

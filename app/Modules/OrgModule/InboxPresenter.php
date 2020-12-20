@@ -2,19 +2,17 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\Components\Controls\Choosers\YearChooser;
 use FKSDB\Components\Controls\Inbox\Corrected\CorrectedControl;
 use FKSDB\Components\Controls\Inbox\HandoutForm;
 use FKSDB\Components\Controls\Inbox\Inbox\InboxControl;
 use FKSDB\Components\Controls\Inbox\SubmitCheck\SubmitCheckComponent;
 use FKSDB\Components\Controls\Inbox\SubmitsPreview\SubmitsPreviewControl;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotImplementedException;
+use FKSDB\Models\Exceptions\BadTypeException;
 use FKSDB\Modules\Core\PresenterTraits\ISeriesPresenter;
-use FKSDB\UI\PageTitle;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\BadRequestException;
 use FKSDB\Modules\Core\PresenterTraits\{SeriesPresenterTrait};
-use FKSDB\Submits\SeriesTable;
+use FKSDB\Models\Submits\SeriesTable;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Permission;
 
@@ -78,7 +76,6 @@ class InboxPresenter extends BasePresenter implements ISeriesPresenter {
     /* *********** LIVE CYCLE *************/
     /**
      * @throws ForbiddenRequestException
-     * @throws NotImplementedException
      * @throws BadRequestException
      */
     protected function startup(): void {

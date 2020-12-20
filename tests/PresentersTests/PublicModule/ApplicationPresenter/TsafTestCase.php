@@ -28,9 +28,4 @@ EOT
             ,
         ]);
     }
-
-    protected function tearDown(): void {
-        $this->connection->query('DELETE FROM e_dsef_participant');
-        parent::tearDown();
-    }
 }

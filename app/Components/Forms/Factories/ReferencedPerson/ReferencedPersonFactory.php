@@ -8,15 +8,15 @@ use FKSDB\Components\Forms\Controls\Autocomplete\PersonProvider;
 use FKSDB\Components\Forms\Controls\ReferencedId;
 use FKSDB\Components\Forms\Factories\PersonFactory;
 use FKSDB\Components\Forms\Factories\PersonScheduleFactory;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Services\ServicePerson;
 use Nette\DI\Container;
 use Nette\InvalidArgumentException;
 use Nette\SmartObject;
-use FKSDB\Persons\IModifiabilityResolver;
-use FKSDB\Persons\IVisibilityResolver;
-use FKSDB\Persons\ReferencedPersonHandlerFactory;
+use FKSDB\Models\Persons\IModifiabilityResolver;
+use FKSDB\Models\Persons\IVisibilityResolver;
+use FKSDB\Models\Persons\ReferencedPersonHandlerFactory;
 
 /**
  * Due to author's laziness there's no class doc (or it's self explaining).

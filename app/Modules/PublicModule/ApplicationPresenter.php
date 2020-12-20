@@ -2,32 +2,31 @@
 
 namespace FKSDB\Modules\PublicModule;
 
-use FKSDB\Authorization\RelatedPersonAuthorizator;
-use FKSDB\Components\Controls\Choosers\YearChooser;
+use FKSDB\Models\Authorization\RelatedPersonAuthorizator;
 use FKSDB\Components\Controls\Events\ApplicationComponent;
 use FKSDB\Config\NeonSchemaException;
-use FKSDB\Events\EventDispatchFactory;
-use FKSDB\Events\EventNotFoundException;
-use FKSDB\Events\Machine\Machine;
-use FKSDB\Events\Model\ApplicationHandlerFactory;
-use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\GoneException;
-use FKSDB\Exceptions\NotFoundException;
-use FKSDB\Localization\UnsupportedLanguageException;
-use FKSDB\Logging\MemoryLogger;
-use FKSDB\Modules\Core\PresenterTraits\YearPresenterTrait;
-use FKSDB\ORM\IModel;
-use FKSDB\ORM\Models\AbstractModelSingle;
-use FKSDB\ORM\Models\Fyziklani\ModelFyziklaniTeam;
-use FKSDB\ORM\Models\IEventReferencedModel;
-use FKSDB\ORM\Models\ModelAuthToken;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Models\ModelEventParticipant;
-use FKSDB\ORM\ModelsMulti\AbstractModelMulti;
-use FKSDB\ORM\Services\ServiceEvent;
-use FKSDB\UI\PageTitle;
+use FKSDB\Models\Events\EventDispatchFactory;
+use FKSDB\Models\Events\Exceptions\EventNotFoundException;
+use FKSDB\Models\Events\Machine\Machine;
+use FKSDB\Models\Events\Model\ApplicationHandlerFactory;
+use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\GoneException;
+use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Models\Localization\UnsupportedLanguageException;
+use FKSDB\Models\Logging\MemoryLogger;
+use FKSDB\Models\ORM\IModel;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeam;
+use FKSDB\Models\ORM\Models\IEventReferencedModel;
+use FKSDB\Models\ORM\Models\ModelAuthToken;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Models\ModelEventParticipant;
+use FKSDB\Models\ORM\ModelsMulti\AbstractModelMulti;
+use FKSDB\Models\ORM\Services\ServiceEvent;
+use FKSDB\Models\UI\PageTitle;
 use Nette\Application\AbortException;
+use Nette\Application\BadRequestException;
 use Nette\Application\ForbiddenRequestException;
 use Nette\InvalidArgumentException;
 
@@ -72,10 +71,10 @@ class ApplicationPresenter extends BasePresenter {
                         throw new EventNotFoundException();
                     }
                     // hack if contestId is not present, but there ale a eventId param
-                    $this->forward('default', array_merge($this->getParameters(), ['contestId' => $this->getEvent()->contest_id, 'year' => $this->getEvent()->year]));
+                    $this->forward('default', array_merge($this->getParameters(), ['contestId' => $this->getEvent()->getEventType()->contest_id, 'year' => $this->getEvent()->year]));
                 }
         }
-        $this->yearTraitStartup(YearChooser::ROLE_SELECTED);
+        $this->yearTraitStartup();
         parent::startup();
     }
 
@@ -118,7 +117,7 @@ class ApplicationPresenter extends BasePresenter {
     protected function unauthorizedAccess(): void {
         if ($this->getAction() == 'default') {
             $this->initializeMachine();
-            if ($this->getHolder()->getPrimaryHolder()->getModelState() == \FKSDB\Transitions\Machine\Machine::STATE_INIT) {
+            if ($this->getHolder()->getPrimaryHolder()->getModelState() == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT) {
                 return;
             }
         }
@@ -168,7 +167,7 @@ class ApplicationPresenter extends BasePresenter {
 
         if (!$this->getMachine()->getPrimaryMachine()->getAvailableTransitions($this->holder, $this->getHolder()->getPrimaryHolder()->getModelState())) {
 
-            if ($this->getHolder()->getPrimaryHolder()->getModelState() == \FKSDB\Transitions\Machine\Machine::STATE_INIT) {
+            if ($this->getHolder()->getPrimaryHolder()->getModelState() == \FKSDB\Models\Transitions\Machine\Machine::STATE_INIT) {
                 $this->setView('closed');
                 $this->flashMessage(_('Registration is not open.'), BasePresenter::FLASH_INFO);
             } elseif (!$this->getParameter(self::PARAM_AFTER, false)) {
@@ -293,6 +292,7 @@ class ApplicationPresenter extends BasePresenter {
      * @return void
      * @throws BadTypeException
      * @throws UnsupportedLanguageException
+     * @throws BadRequestException
      * @throws \ReflectionException
      */
     protected function beforeRender(): void {

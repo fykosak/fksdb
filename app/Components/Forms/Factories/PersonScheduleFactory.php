@@ -3,9 +3,9 @@
 namespace FKSDB\Components\Forms\Factories;
 
 use FKSDB\Components\Forms\Controls\Schedule\ScheduleField;
-use FKSDB\Exceptions\NotImplementedException;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\ORM\Services\Schedule\ServiceScheduleItem;
+use FKSDB\Models\Exceptions\NotImplementedException;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\ORM\Services\Schedule\ServiceScheduleItem;
 use Nette\Application\BadRequestException;
 
 /**

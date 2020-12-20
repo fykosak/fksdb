@@ -5,9 +5,8 @@ namespace FKSDB\Tests\PresentersTests\OrgModule;
 $container = require '../../Bootstrap.php';
 
 use FKSDB\Components\Controls\Entity\EventFormComponent;
-use FKSDB\ORM\DbNames;
+use FKSDB\Models\ORM\DbNames;
 use Nette\Application\Responses\RedirectResponse;
-use Nette\Application\Responses\TextResponse;
 use Tester\Assert;
 
 /**
@@ -16,8 +15,7 @@ use Tester\Assert;
  */
 class EventPresenterTest extends AbstractOrgPresenterTestCase {
 
-    /** @var int */
-    private $eventId;
+    private int $eventId;
 
     protected function setUp(): void {
         parent::setUp();
@@ -47,9 +45,9 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase {
         $init = $this->countEvents();
         $response = $this->createFormRequest('create', [
             EventFormComponent::CONT_EVENT => [
-                'event_type_id' => 2,
-                'year' => 1,
-                'event_year' => 1,
+                'event_type_id' => (string)2,
+                'year' => (string)1,
+                'event_year' => (string)1,
                 'begin' => (new \DateTime())->format('c'),
                 'end' => (new \DateTime())->format('c'),
                 'name' => 'Dummy Event',
@@ -64,9 +62,9 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase {
         $init = $this->countEvents();
         $response = $this->createFormRequest('create', [
             EventFormComponent::CONT_EVENT => [
-                'event_type_id' => 1,
-                'year' => 1,
-                'event_year' => 1,
+                'event_type_id' => (string)1,
+                'year' => (string)1,
+                'event_year' => (string)1,
                 'begin' => (new \DateTime())->format('c'),
                 'end' => (new \DateTime())->format('c'),
                 'name' => 'Dummy Event',
@@ -82,9 +80,9 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase {
     public function testEdit(): void {
         $response = $this->createFormRequest('edit', [
             EventFormComponent::CONT_EVENT => [
-                'event_type_id' => 1,
-                'year' => 1,
-                'event_year' => 1,
+                'event_type_id' => (string)1,
+                'year' => (string)1,
+                'event_year' => (string)1,
                 'begin' => (new \DateTime())->format('c'),
                 'end' => (new \DateTime())->format('c'),
                 'name' => 'Dummy Event edited',
@@ -92,9 +90,6 @@ class EventPresenterTest extends AbstractOrgPresenterTestCase {
         ], [
             'id' => $this->eventId,
         ]);
-        if ($response instanceof TextResponse) {
-            file_put_contents('t.html', (string)$response->getSource());
-        }
         Assert::type(RedirectResponse::class, $response);
         $org = $this->connection->query('SELECT * FROM event where event_id=?', $this->eventId)->fetch();
         Assert::equal('Dummy Event edited', $org->name);

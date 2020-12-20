@@ -16,15 +16,15 @@ use FKSDB\Components\Controls\Navigation\PresenterBuilder;
 use FKSDB\Components\Forms\Controls\Autocomplete\AutocompleteSelectBox;
 use FKSDB\Components\Forms\Controls\Autocomplete\IAutocompleteJSONProvider;
 use FKSDB\Components\Forms\Controls\Autocomplete\IFilteredDataProvider;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Localization\GettextTranslator;
-use FKSDB\Localization\UnsupportedLanguageException;
-use FKSDB\Logging\ILogger;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Localization\GettextTranslator;
+use FKSDB\Models\Localization\UnsupportedLanguageException;
+use FKSDB\Models\Logging\ILogger;
 use FKSDB\Modules\Core\PresenterTraits\CollectorPresenterTrait;
-use FKSDB\ORM\Services\ServiceContest;
-use FKSDB\UI\PageStyleContainer;
-use FKSDB\UI\PageTitle;
-use FKSDB\YearCalculator;
+use FKSDB\Models\ORM\Services\ServiceContest;
+use FKSDB\Models\UI\PageStyleContainer;
+use FKSDB\Models\UI\PageTitle;
+use FKSDB\Models\YearCalculator;
 use InvalidArgumentException;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
@@ -34,7 +34,7 @@ use Nette\Application\UI\InvalidLinkException;
 use Nette\Application\UI\ITemplate;
 use Nette\Application\UI\Presenter;
 use ReflectionException;
-use FKSDB\Utils\Utils;
+use FKSDB\Models\Utils\Utils;
 
 /**
  * Base presenter for all application presenters.
@@ -192,10 +192,10 @@ abstract class BasePresenter extends Presenter implements IJavaScriptCollector, 
     }
 
     /**
+     * @throws BadRequestException
      * @throws BadTypeException
      * @throws ReflectionException
      * @throws UnsupportedLanguageException
-     * @throws AbortException
      */
     protected function beforeRender(): void {
         parent::beforeRender();

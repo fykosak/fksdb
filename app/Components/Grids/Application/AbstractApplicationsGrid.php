@@ -5,11 +5,11 @@ namespace FKSDB\Components\Grids\Application;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\BaseGrid;
-use FKSDB\Events\Model\Holder\Holder;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\ModelEvent;
-use FKSDB\SQL\SearchableDataSource;
-use Nette\Application\UI\Presenter;
+use FKSDB\Models\Events\Model\Holder\Holder;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\ModelEvent;
+use FKSDB\Models\SQL\SearchableDataSource;
+use Nette\Application\IPresenter;
 use Nette\Database\Table\Selection;
 use Nette\DI\Container;
 use Nette\Forms\Form;
@@ -57,7 +57,7 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
             ];
         }
 
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $stateContainer = new ContainerWithOptions();
         $stateContainer->setOption('label', _('States'));
@@ -82,12 +82,12 @@ abstract class AbstractApplicationsGrid extends BaseGrid {
     }
 
     /**
-     * @param Presenter $presenter
+     * @param IPresenter $presenter
      * @return void
      * @throws BadTypeException
      * @throws DuplicateColumnException
      */
-    protected function configure(Presenter $presenter): void {
+    protected function configure(IPresenter $presenter): void {
         parent::configure($presenter);
         $this->addHolderColumns();
     }

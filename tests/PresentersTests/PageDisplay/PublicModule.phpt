@@ -2,7 +2,7 @@
 
 namespace FKSDB\Tests\PresentersTests\PageDisplay;
 
-use FKSDB\ORM\DbNames;
+use FKSDB\Models\ORM\DbNames;
 
 $container = require '../../Bootstrap.php';
 
@@ -18,16 +18,16 @@ class PublicModule extends AbstractPageDisplayTestCase {
 
     protected function transformParams(string $presenterName, string $action, array $params): array {
         [$presenterName, $action, $params] = parent::transformParams($presenterName, $action, $params);
-        $params['year'] = 1;
-        $params['contestId'] = 1;
+        $params['year'] = '1';
+        $params['contestId'] = '1';
         return [$presenterName, $action, $params];
     }
 
     public function getPages(): array {
         return [
             ['Public:Dashboard', 'default'],
-            ['Public:Submit', 'ajax'],
             ['Public:Submit', 'default'],
+            ['Public:Submit', 'ajax'],
         ];
     }
 

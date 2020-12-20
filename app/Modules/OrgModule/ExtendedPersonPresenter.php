@@ -7,20 +7,19 @@ use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Forms\Containers\SearchContainer\PersonSearchContainer;
 use FKSDB\Components\Forms\Factories\ReferencedPerson\ReferencedPersonFactory;
 use FKSDB\Config\Expressions\Helpers;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\ORM\Models\AbstractModelSingle;
-use FKSDB\ORM\IModel;
-use FKSDB\ORM\IService;
-use FKSDB\ORM\Models\ModelContestant;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\ORM\Models\AbstractModelSingle;
+use FKSDB\Models\ORM\IModel;
+use FKSDB\Models\ORM\IService;
+use FKSDB\Models\ORM\Models\ModelContestant;
 use Nette\Application\BadRequestException;
-use Nette\Application\ForbiddenRequestException;
 use Nette\Application\UI\Form;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\IControl;
-use FKSDB\Persons\AclResolver;
-use FKSDB\Persons\ExtendedPersonHandler;
-use FKSDB\Persons\ExtendedPersonHandlerFactory;
-use FKSDB\Persons\IExtendedPersonPresenter;
+use FKSDB\Models\Persons\AclResolver;
+use FKSDB\Models\Persons\ExtendedPersonHandler;
+use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
+use FKSDB\Models\Persons\IExtendedPersonPresenter;
 
 /**
  * Class ExtendedPersonPresenter
@@ -33,7 +32,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
     private ReferencedPersonFactory $referencedPersonFactory;
     private ExtendedPersonHandlerFactory $handlerFactory;
 
-    final public function injectExtendedPerson(ReferencedPersonFactory $referencedPersonFactory,ExtendedPersonHandlerFactory $handlerFactory): void {
+    final public function injectExtendedPerson(ReferencedPersonFactory $referencedPersonFactory, ExtendedPersonHandlerFactory $handlerFactory): void {
         $this->referencedPersonFactory = $referencedPersonFactory;
         $this->handlerFactory = $handlerFactory;
     }
@@ -52,6 +51,10 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
         }
     }
 
+    /**
+     * @return array
+     * @throws \ReflectionException
+     */
     protected function getFieldsDefinition(): array {
         $contestId = $this->getSelectedContest()->contest_id;
         $contestName = $this->getContext()->getParameters()['contestMapping'][$contestId];
@@ -70,10 +73,10 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @param bool $create
      * @return FormControl
      * @throws BadTypeException
-     * @throws BadRequestException
+     * @throws \ReflectionException
      */
     private function createComponentFormControl(bool $create): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
 
         $container = new ContainerWithOptions();
@@ -110,6 +113,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @return FormControl
      * @throws BadRequestException
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     final protected function createComponentCreateComponent(): FormControl {
         return $this->createComponentFormControl(true);
@@ -119,6 +123,7 @@ abstract class ExtendedPersonPresenter extends EntityPresenter implements IExten
      * @return FormControl
      * @throws BadRequestException
      * @throws BadTypeException
+     * @throws \ReflectionException
      */
     final protected function createComponentEditComponent(): FormControl {
         return $this->createComponentFormControl(false);

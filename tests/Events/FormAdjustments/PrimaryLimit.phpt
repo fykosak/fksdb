@@ -17,9 +17,9 @@ class PrimaryLimit extends ResourceAvailabilityTestCase {
         $request = new Request('Public:Application', 'GET', [
             'action' => 'default',
             'lang' => 'cs',
-            'contestId' => 1,
-            'year' => 1,
-            'eventId' => $this->eventId,
+            'contestId' => (string)1,
+            'year' => (string)1,
+            'eventId' => (string)$this->eventId,
         ]);
 
         $response = $this->fixture->run($request);

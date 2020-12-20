@@ -5,18 +5,18 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Components\Controls\FormControl\FormControl;
 use FKSDB\Components\Forms\Containers\Models\ContainerWithOptions;
 use FKSDB\Components\Grids\Deduplicate\PersonsGrid;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\NotFoundException;
-use FKSDB\Logging\FlashMessageDump;
-use FKSDB\Logging\ILogger;
-use FKSDB\Logging\MemoryLogger;
-use FKSDB\ORM\Models\ModelPerson;
-use FKSDB\ORM\Services\ServicePerson;
-use FKSDB\ORM\Services\ServicePersonInfo;
-use FKSDB\Persons\Deduplication\DuplicateFinder;
-use FKSDB\Persons\Deduplication\Merger;
-use FKSDB\UI\PageTitle;
-use FKSDB\Utils\FormUtils;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\NotFoundException;
+use FKSDB\Models\Logging\FlashMessageDump;
+use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\MemoryLogger;
+use FKSDB\Models\ORM\Models\ModelPerson;
+use FKSDB\Models\ORM\Services\ServicePerson;
+use FKSDB\Models\ORM\Services\ServicePersonInfo;
+use FKSDB\Models\Persons\Deduplication\DuplicateFinder;
+use FKSDB\Models\Persons\Deduplication\Merger;
+use FKSDB\Models\UI\PageTitle;
+use FKSDB\Models\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\Forms\Controls\SubmitButton;
 use Nette\Forms\Form;
@@ -57,7 +57,6 @@ class DeduplicatePresenter extends BasePresenter {
     public function authorizedDontMerge(int $trunkId, int $mergedId): void {
         $this->authorizedMerge($trunkId, $mergedId);
     }
-
 
     /**
      * @param int $trunkId
@@ -187,7 +186,7 @@ class DeduplicatePresenter extends BasePresenter {
      * @throws BadTypeException
      */
     protected function createComponentMergeForm(): FormControl {
-        $control = new FormControl();
+        $control = new FormControl($this->getContext());
         $form = $control->getForm();
         $this->updateMergeForm($form);
         $submitButton = $form->addSubmit('send', _('Merge persons'));

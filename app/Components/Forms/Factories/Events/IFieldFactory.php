@@ -2,8 +2,8 @@
 
 namespace FKSDB\Components\Forms\Factories\Events;
 
-use FKSDB\Events\Model\Holder\DataValidator;
-use FKSDB\Events\Model\Holder\Field;
+use FKSDB\Models\Events\Model\Holder\DataValidator;
+use FKSDB\Models\Events\Model\Holder\Field;
 use Nette\ComponentModel\IComponent;
 use Nette\Forms\IControl;
 

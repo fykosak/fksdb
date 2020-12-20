@@ -12,7 +12,7 @@ parameters:
                     condition: %events.defaultDsef.appCond%
                     label: _('Přihlásit účastníka')
                     onExecuted:
-                        - FKSDB\Events\Transitions\MailSender(confirmation, .self)
+                        - FKSDB\Models\Events\Transitions\MailSender(confirmation, .self)
                 applied->participated:
                     condition: and(role('admin'),eventWas())
                     label: _('Prezentovat')
@@ -59,7 +59,7 @@ events:
                     required: true # default false, it's conjuction with fields requirement
                     primary: true # base machine states are propagated to the machine
             formAdjustments:
-                - FKSDB\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
+                - FKSDB\Models\Events\FormAdjustments\UniqueCheck('participant.person_id', "Zvolená osoba je již přihlášená.")
                 - @events.privacyPolicy
                 - @events.captcha
 

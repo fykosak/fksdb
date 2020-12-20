@@ -2,16 +2,16 @@
 
 namespace FKSDB\Components\Controls\Events;
 
-use FKSDB\Authorization\ContestAuthorizator;
+use FKSDB\Models\Authorization\ContestAuthorizator;
 use FKSDB\Components\Controls\BaseComponent;
-use FKSDB\Events\Machine\BaseMachine;
-use FKSDB\Events\Machine\Machine;
-use FKSDB\Events\Model\ApplicationHandler;
-use FKSDB\Events\Model\ApplicationHandlerException;
-use FKSDB\Events\Model\Holder\Holder;
+use FKSDB\Models\Events\Machine\BaseMachine;
+use FKSDB\Models\Events\Machine\Machine;
+use FKSDB\Models\Events\Model\ApplicationHandler;
+use FKSDB\Models\Events\Model\ApplicationHandlerException;
+use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Components\Controls\FormControl\FormControl;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Logging\FlashMessageDump;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Logging\FlashMessageDump;
 use FKSDB\Modules\Core\AuthenticatedPresenter;
 use FKSDB\Modules\Core\BasePresenter;
 use Nette\Application\AbortException;
@@ -91,7 +91,7 @@ class ApplicationComponent extends BaseComponent {
      *
      */
     protected function createComponentForm(): FormControl {
-        $result = new FormControl();
+        $result = new FormControl($this->getContext());
         $form = $result->getForm();
 
         /*
@@ -145,7 +145,7 @@ class ApplicationComponent extends BaseComponent {
          * Create cancel button
          */
         $submit = $form->addSubmit('cancel', _('Cancel'));
-        $submit->setValidationScope(false);
+        $submit->setValidationScope(null);
         $submit->getControlPrototype()->addAttributes(['class' => 'btn-warning']);
         $submit->onClick[] = function (): void {
             $this->finalRedirect();

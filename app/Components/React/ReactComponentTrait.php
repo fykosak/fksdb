@@ -3,9 +3,9 @@
 namespace FKSDB\Components\React;
 
 use FKSDB\Components\Controls\Loaders\IJavaScriptCollector;
-use FKSDB\Logging\ILogger;
-use FKSDB\Logging\MemoryLogger;
-use FKSDB\Messages\Message;
+use FKSDB\Models\Logging\ILogger;
+use FKSDB\Models\Logging\MemoryLogger;
+use FKSDB\Models\Messages\Message;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\BaseControl;
 use Nette\Utils\Html;

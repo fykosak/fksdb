@@ -5,9 +5,7 @@ namespace FKSDB\Tests\PresentersTests\OrgModule;
 $container = require '../../Bootstrap.php';
 
 use FKSDB\Components\Controls\Entity\OrgFormComponent;
-use FKSDB\ORM\DbNames;
-use FKSDB\Tests\PresentersTests\EntityPresenterTestCase;
-use Nette\Application\Request;
+use FKSDB\Models\ORM\DbNames;
 use Nette\Application\Responses\RedirectResponse;
 use Tester\Assert;
 
@@ -48,9 +46,9 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase {
         $response = $this->createFormRequest('create', [
             OrgFormComponent::CONTAINER => [
                 'person_id__meta' => 'JS',
-                'person_id' => $this->personId,
-                'since' => 1,
-                'order' => 0,
+                'person_id' => (string)$this->personId,
+                'since' => (string)1,
+                'order' => (string)0,
                 'domain_alias' => 't',
             ],
         ]);
@@ -64,9 +62,9 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase {
         $response = $this->createFormRequest('create', [
             OrgFormComponent::CONTAINER => [
                 'person_id__meta' => 'JS',
-                'person_id' => $this->personId,
-                'since' => 2, // out of range
-                'order' => 0,
+                'person_id' => (string)$this->personId,
+                'since' => (string)2, // out of range
+                'order' => (string)0,
                 'domain_alias' => 't',
             ],
         ]);
@@ -82,8 +80,8 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase {
             OrgFormComponent::CONTAINER => [
                 'person_id__meta' => 'JS',
                 'person_id' => null, // empty personId
-                'since' => 1,
-                'order' => 0,
+                'since' => (string)1,
+                'order' => (string)0,
                 'domain_alias' => 't',
             ],
         ]);
@@ -96,13 +94,13 @@ class OrgPresenterTest extends AbstractOrgPresenterTestCase {
     public function testEdit(): void {
         $response = $this->createFormRequest('edit', [
             OrgFormComponent::CONTAINER => [
-                'person_id__meta' => $this->orgPersonId,
-                'since' => 1,
-                'order' => 2,
+                'person_id__meta' => (string)$this->orgPersonId,
+                'since' => (string)1,
+                'order' => (string)2,
                 'domain_alias' => 'b',
             ],
         ], [
-            'id' => $this->orgId,
+            'id' => (string)$this->orgId,
         ]);
         Assert::type(RedirectResponse::class, $response);
         $org = $this->connection->query('SELECT * FROM org where org_id=?', $this->orgId)->fetch();

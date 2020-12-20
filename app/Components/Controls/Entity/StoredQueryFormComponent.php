@@ -4,21 +4,21 @@ namespace FKSDB\Components\Controls\Entity;
 
 use FKSDB\Components\Controls\StoredQuery\ResultsComponent;
 use FKSDB\Components\Forms\Factories\StoredQueryFactory as StoredQueryFormFactory;
-use FKSDB\DBReflection\ColumnFactories\AbstractColumnException;
-use FKSDB\DBReflection\OmittedControlException;
-use FKSDB\Exceptions\BadTypeException;
-use FKSDB\Exceptions\ModelException;
-use FKSDB\Messages\Message;
+use FKSDB\Models\DBReflection\ColumnFactories\AbstractColumnException;
+use FKSDB\Models\DBReflection\OmittedControlException;
+use FKSDB\Models\Exceptions\BadTypeException;
+use FKSDB\Models\Exceptions\ModelException;
+use FKSDB\Models\Messages\Message;
 use FKSDB\Modules\OrgModule\BasePresenter;
 use FKSDB\Modules\OrgModule\StoredQueryPresenter;
-use FKSDB\ORM\Models\StoredQuery\ModelStoredQuery;
-use FKSDB\ORM\Models\StoredQuery\ModelStoredQueryParameter;
-use FKSDB\ORM\Services\StoredQuery\ServiceStoredQuery;
-use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryParameter;
-use FKSDB\ORM\Services\StoredQuery\ServiceStoredQueryTag;
-use FKSDB\StoredQuery\StoredQueryFactory;
-use FKSDB\StoredQuery\StoredQueryParameter;
-use FKSDB\Utils\FormUtils;
+use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
+use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryParameter;
+use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
+use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryParameter;
+use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTag;
+use FKSDB\Models\StoredQuery\StoredQueryFactory;
+use FKSDB\Models\StoredQuery\StoredQueryParameter;
+use FKSDB\Models\Utils\FormUtils;
 use Nette\Application\AbortException;
 use Nette\Application\BadRequestException;
 use Nette\Forms\Controls\SubmitButton;
@@ -103,7 +103,7 @@ class StoredQueryFormComponent extends AbstractEntityFormComponent {
         $form->setCurrentGroup();
 
         $submit = $form->addSubmit('execute', _('Execute'))
-            ->setValidationScope(false);
+            ->setValidationScope(null);
         $submit->getControlPrototype()->addAttributes(['class' => 'btn-success']);
         $submit->onClick[] = function (SubmitButton $button) {
             $this->handleComposeExecute($button->getForm());

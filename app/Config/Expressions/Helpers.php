@@ -2,16 +2,16 @@
 
 namespace FKSDB\Config\Expressions;
 
-use FKSDB\Expressions\Comparison\Le;
-use FKSDB\Expressions\Comparison\Leq;
-use FKSDB\Expressions\Logic\LogicAnd;
-use FKSDB\Expressions\Logic\Not;
-use FKSDB\Expressions\Logic\LogicOr;
-use FKSDB\Expressions\Predicates\After;
-use FKSDB\Expressions\Predicates\Before;
+use FKSDB\Models\Expressions\Comparison\Le;
+use FKSDB\Models\Expressions\Comparison\Leq;
+use FKSDB\Models\Expressions\Logic\LogicAnd;
+use FKSDB\Models\Expressions\Logic\Not;
+use FKSDB\Models\Expressions\Logic\LogicOr;
+use FKSDB\Models\Expressions\Predicates\After;
+use FKSDB\Models\Expressions\Predicates\Before;
 use Nette\DI\Container;
-use Nette\DI\Helpers as DIHelpers;
-use Nette\DI\Statement;
+use Nette\DI\Definitions\Statement;
+use Nette\DI\Resolver;
 use Nette\Reflection\ClassType;
 
 /**
@@ -47,16 +47,19 @@ class Helpers {
             foreach ($expression->arguments as $attribute) {
                 $arguments[] = self::statementFromExpression($attribute);
             }
-            $class = self::$semanticMap[$expression->entity] ?? $expression->entity;
-            if (function_exists($class)) { // workaround for Nette interpretation of entities
-                $class = ['', $class];
+            $class = $expression->entity;
+            if (!is_array($expression->entity)) {
+                $class = self::$semanticMap[$expression->entity] ?? $class;
+                if (function_exists($class)) { // workaround for Nette interpretation of entities
+                    $class = ['', $class];
+                }
             }
+
             return new Statement($class, $arguments);
         } elseif (is_array($expression)) {
             return array_map(function ($subExpresion) {
                 return self::statementFromExpression($subExpresion);
             }, $expression);
-
         } else {
             return $expression;
         }
@@ -68,6 +71,7 @@ class Helpers {
      * @param mixed $expression
      * @param Container $container
      * @return mixed
+     * @throws \ReflectionException
      */
     public static function evalExpression($expression, Container $container) {
         if ($expression instanceof Statement) {
@@ -78,13 +82,15 @@ class Helpers {
                 }
                 $arguments[] = self::evalExpression($attribute, $container);
             }
-
             $entity = self::$semanticMap[$expression->entity] ?? $expression->entity;
             if (function_exists($entity)) {
                 return $entity(...$arguments);
             } else {
                 $rc = ClassType::from($entity);
-                return $rc->newInstanceArgs(DIHelpers::autowireArguments($rc->getConstructor(), $arguments, $container));
+                return $rc->newInstanceArgs(Resolver::autowireArguments($rc->getConstructor(), $arguments, function (string $type, bool $single) use ($container) {
+                    return $this->getByType($type);
+                }));
+                // TODO!!!
             }
         } else {
             return $expression;
@@ -95,6 +101,7 @@ class Helpers {
      * @param mixed $expressionArray
      * @param Container $container
      * @return mixed
+     * @throws \ReflectionException
      */
     public static function evalExpressionArray($expressionArray, Container $container) {
         if (is_iterable($expressionArray)) {

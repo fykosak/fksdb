@@ -1,6 +1,6 @@
 <?php
 
-use FKSDB\Utils\CSVParser;
+use FKSDB\Models\Utils\CSVParser;
 use Nette\DI\Container;
 use Nette\Mail\Message;
 

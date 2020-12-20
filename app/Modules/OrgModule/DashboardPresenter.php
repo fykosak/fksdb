@@ -2,8 +2,8 @@
 
 namespace FKSDB\Modules\OrgModule;
 
-use FKSDB\ORM\Models\ModelLogin;
-use FKSDB\UI\PageTitle;
+use FKSDB\Models\ORM\Models\ModelLogin;
+use FKSDB\Models\UI\PageTitle;
 
 /**
  * Homepage presenter.
