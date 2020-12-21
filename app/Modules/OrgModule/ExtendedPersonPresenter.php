@@ -21,10 +21,6 @@ use FKSDB\Models\Persons\ExtendedPersonHandler;
 use FKSDB\Models\Persons\ExtendedPersonHandlerFactory;
 use FKSDB\Models\Persons\IExtendedPersonPresenter;
 
-/**
- * Class ExtendedPersonPresenter
- *
- */
 abstract class ExtendedPersonPresenter extends EntityPresenter implements IExtendedPersonPresenter {
 
     protected bool $sendEmail = true;

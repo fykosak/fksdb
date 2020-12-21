@@ -19,10 +19,6 @@ use Nette\Application\BadRequestException;
 use Tracy\Debugger;
 use Nette\InvalidArgumentException;
 
-/**
- * Class PointsPresenter
- *
- */
 class PointsPresenter extends BasePresenter {
 
     /**

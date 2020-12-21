@@ -5,9 +5,6 @@ namespace FKSDB\Modules\OrgModule;
 use FKSDB\Models\ORM\Models\ModelLogin;
 use FKSDB\Models\UI\PageTitle;
 
-/**
- * Homepage presenter.
- */
 class DashboardPresenter extends BasePresenter {
 
     public function authorizedDefault(): void {

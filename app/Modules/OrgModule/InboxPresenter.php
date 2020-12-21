@@ -15,10 +15,6 @@ use FKSDB\Models\Submits\SeriesTable;
 use Nette\Application\ForbiddenRequestException;
 use Nette\Security\Permission;
 
-/**
- * Class InboxPresenter
- *
- */
 class InboxPresenter extends BasePresenter {
 
     use SeriesPresenterTrait;
