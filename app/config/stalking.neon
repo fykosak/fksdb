@@ -65,8 +65,6 @@ parameters:
                  - person_info.account
                  - person_info.career
                  - person_info.homepage
-                 - person_info.im
-                 - person_info.linkedin_id
                  - person_info.note
                  - person_info.origin
 
