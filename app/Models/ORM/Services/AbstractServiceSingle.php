@@ -29,7 +29,6 @@ use Tracy\Debugger;
 abstract class AbstractServiceSingle extends Selection implements IService {
 
     private string $modelClassName;
-
     private string $tableName;
 
     public function __construct(Context $connection, IConventions $conventions, string $tableName, string $modelClassName) {
@@ -96,13 +95,12 @@ abstract class AbstractServiceSingle extends Selection implements IService {
      * @return AbstractModelSingle|null
      */
     public function findByPrimary($key): ?AbstractModelSingle {
-        /** @var AbstractModelSingle|null $result */
-        $result = $this->getTable()->get($key);
-        if ($result !== false) {
-            return $result;
-        } else {
+        if (is_null($key)) {
             return null;
         }
+        /** @var AbstractModelSingle|null $result */
+        $result = $this->getTable()->get($key);
+        return $result;
     }
 
     /**

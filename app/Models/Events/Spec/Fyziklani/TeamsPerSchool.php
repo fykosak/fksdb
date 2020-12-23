@@ -21,12 +21,9 @@ use Nette\Forms\IControl;
 class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
 
     private Context $context;
-
     /** @var mixed */
     private $teamsPerSchool;
-
     private int $teamsPerSchoolValue;
-
     private ExpressionEvaluator $evaluator;
 
     /**
@@ -66,19 +63,19 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         $first = true;
         $msgMulti = sprintf(_('A school cannot have more than %d teams in the contest.'), $this->getTeamsPerSchool());
         foreach ($schoolControls as $control) {
-            $control->addRule(function (IControl $control) use ($first, $schoolControls, $personControls) : bool {
+            $control->addRule(function (IControl $control) use ($first, $schoolControls, $personControls): bool {
                 $schools = $this->getSchools($schoolControls, $personControls);
                 return $this->checkMulti($first, $control, $schools);
             }, $msgMulti);
             $first = false;
         }
-        $form->onValidate[] = function (Form $form) use ($schoolControls, $personControls, $msgMulti) : void {
-            if ($form->isValid()) { // it means that all schools may have been disabled
-                $schools = $this->getSchools($schoolControls, $personControls);
-                if (!$this->checkMulti(true, null, $schools)) {
-                    $form->addError($msgMulti);
-                }
+        $form->onValidate[] = function (Form $form) use ($schoolControls, $personControls, $msgMulti): void {
+            // if ($form->isValid()) { // it means that all schools may have been disabled
+            $schools = $this->getSchools($schoolControls, $personControls);
+            if (!$this->checkMulti(true, null, $schools)) {
+                $form->addError($msgMulti);
             }
+            // }
         };
     }
 
@@ -86,7 +83,6 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
     private $cache;
 
     private function checkMulti(bool $first, ?IControl $control, array $schools): bool {
-
         $team = $this->getHolder()->getPrimaryHolder()->getModel();
         $event = $this->getHolder()->getPrimaryHolder()->getEvent();
         $secondaryGroups = $this->getHolder()->getGroupedSecondaryHolders();
@@ -124,5 +120,4 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
         }
         return count($this->cache) == 0;
     }
-
 }
