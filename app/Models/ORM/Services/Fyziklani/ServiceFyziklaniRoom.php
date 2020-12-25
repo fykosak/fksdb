@@ -6,8 +6,8 @@ use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniRoom;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
+use Nette\Database\Conventions;
+use Nette\Database\Explorer;
 
 /**
  * Class ServiceFyziklaniRoom
@@ -17,7 +17,7 @@ class ServiceFyziklaniRoom extends AbstractServiceSingle {
 
     use DeprecatedLazyDBTrait;
 
-    public function __construct(Context $connection, IConventions $conventions) {
+    public function __construct(Explorer $connection, Conventions $conventions) {
         parent::__construct(DbNames::TAB_FYZIKLANI_ROOM, ModelFyziklaniRoom::class, $connection, $conventions);
     }
 

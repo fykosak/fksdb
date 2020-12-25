@@ -4,8 +4,8 @@ namespace FKSDB\Models\ORM\Services;
 
 use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\ModelGlobalSession;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
+use Nette\Database\Conventions;
+use Nette\Database\Explorer;
 use Nette\Http\Request;
 use Nette\Utils\DateTime;
 use Nette\Utils\Random;
@@ -20,7 +20,7 @@ class ServiceGlobalSession extends AbstractServiceSingle {
     private const SESSION_ID_LENGTH = 32;
     private Request $request;
 
-    public function __construct(string $tableName, string $modelClassName, Request $request, Context $context, IConventions $conventions) {
+    public function __construct(string $tableName, string $modelClassName, Request $request, Explorer $context, Conventions $conventions) {
         parent::__construct($tableName, $modelClassName, $context, $conventions);
         $this->request = $request;
     }

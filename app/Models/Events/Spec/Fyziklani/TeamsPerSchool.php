@@ -9,7 +9,7 @@ use FKSDB\Models\Events\Model\Holder\BaseHolder;
 use FKSDB\Models\Events\Model\Holder\Holder;
 use FKSDB\Models\ORM\DbNames;
 use FKSDB\Models\ORM\Services\ServicePersonHistory;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Forms\Form;
 use Nette\Forms\IControl;
 
@@ -20,7 +20,7 @@ use Nette\Forms\IControl;
  */
 class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
 
-    private Context $context;
+    private Explorer $context;
 
     /** @var mixed */
     private $teamsPerSchool;
@@ -33,12 +33,12 @@ class TeamsPerSchool extends SchoolCheck implements IFormAdjustment {
      * TeamsPerSchool constructor.
      * @param int $teamsPerSchool
      * @param ExpressionEvaluator $evaluator
-     * @param Context $context
+     * @param Explorer $explorer
      * @param ServicePersonHistory $servicePersonHistory
      */
-    public function __construct($teamsPerSchool, ExpressionEvaluator $evaluator, Context $context, ServicePersonHistory $servicePersonHistory) {
+    public function __construct($teamsPerSchool, ExpressionEvaluator $evaluator, Explorer $explorer, ServicePersonHistory $servicePersonHistory) {
         parent::__construct($servicePersonHistory);
-        $this->context = $context;
+        $this->context = $explorer;
         $this->evaluator = $evaluator;
         $this->setTeamsPerSchool($teamsPerSchool);
     }

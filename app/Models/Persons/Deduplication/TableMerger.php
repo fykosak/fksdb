@@ -4,8 +4,8 @@ namespace FKSDB\Models\Persons\Deduplication;
 
 use FKSDB\Models\Logging\ILogger;
 use FKSDB\Models\Messages\Message;
-use Nette\Database\Context;
 use Nette\Database\Conventions\AmbiguousReferenceKeyException;
+use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 use Nette\InvalidStateException;
 use FKSDB\Models\Persons\Deduplication\MergeStrategy\CannotMergeException;
@@ -25,7 +25,7 @@ class TableMerger {
 
     private Merger $merger;
 
-    private Context $context;
+    private Explorer $context;
 
     private ActiveRow $trunkRow;
 
@@ -38,10 +38,10 @@ class TableMerger {
 
     private ILogger $logger;
 
-    public function __construct(string $table, Merger $merger, Context $context, IMergeStrategy $globalMergeStrategy, ILogger $logger) {
+    public function __construct(string $table, Merger $merger, Explorer $explorer, IMergeStrategy $globalMergeStrategy, ILogger $logger) {
         $this->table = $table;
         $this->merger = $merger;
-        $this->context = $context;
+        $this->context = $explorer;
         $this->globalMergeStrategy = $globalMergeStrategy;
         $this->logger = $logger;
     }
@@ -256,7 +256,7 @@ class TableMerger {
     private function getReferencingTables() {
         if ($this->refTables === null) {
             $this->refTables = [];
-            foreach ($this->context->getConnection()->getSupplementalDriver()->getTables() as $otherTable) {
+            foreach ($this->context->getConnection()->getDriver()->getTables() as $otherTable) {
                 try {
                     [$table, $refColumn] = $this->context->getConventions()->getHasManyReference($this->table, $otherTable['name']);
                     self::$refreshReferencing = false;
@@ -278,7 +278,7 @@ class TableMerger {
     private function getColumns() {
         if ($this->columns === null) {
             $this->columns = [];
-            foreach ($this->context->getConnection()->getSupplementalDriver()->getColumns($this->table) as $column) {
+            foreach ($this->context->getConnection()->getDriver()->getColumns($this->table) as $column) {
                 $this->columns[] = $column['name'];
             }
         }
@@ -330,7 +330,7 @@ class TableMerger {
     private function getSecondaryKey() {
         if ($this->secondaryKey === null) {
             $this->secondaryKey = [];
-            foreach ($this->context->getConnection()->getSupplementalDriver()->getIndexes($this->table) as $index) {
+            foreach ($this->context->getConnection()->getDriver()->getIndexes($this->table) as $index) {
                 if ($index['unique']) {
                     $this->secondaryKey = array_merge($this->secondaryKey, $index['columns']);
                 }

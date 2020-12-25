@@ -11,7 +11,7 @@ use FKSDB\Models\Transitions\Transition\Transition;
 use FKSDB\Models\Transitions\Transition\UnavailableTransitionsException;
 use LogicException;
 use Nette\Application\ForbiddenRequestException;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -25,7 +25,7 @@ abstract class Machine {
 
     private array $transitions = [];
 
-    protected Context $context;
+    protected Explorer $context;
 
     private IService $service;
     /**
@@ -34,8 +34,8 @@ abstract class Machine {
      */
     private $explicitCondition;
 
-    public function __construct(Context $context, IService $service) {
-        $this->context = $context;
+    public function __construct(Explorer $explorer, IService $service) {
+        $this->context = $explorer;
         $this->service = $service;
     }
 

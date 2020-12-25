@@ -12,8 +12,8 @@ use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelPayment;
 use FKSDB\Models\ORM\Models\ModelPerson;
 use FKSDB\Models\Transitions\IStateModel;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
+use Nette\Database\Conventions;
+use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 
 /**
@@ -99,12 +99,12 @@ class ModelPersonSchedule extends AbstractModelSingle implements
     }
 
     /**
-     * @param Context $connection
-     * @param IConventions $conventions
+     * @param Explorer $connection
+     * @param Conventions $conventions
      * @return IStateModel
      * @throws NotImplementedException
      */
-    public function refresh(Context $connection, IConventions $conventions): IStateModel {
+    public function refresh(Explorer $connection, Conventions $conventions): IStateModel {
         throw new NotImplementedException();
     }
 }

@@ -19,6 +19,7 @@ use Nette\Bridges\ApplicationLatte\Template;
 use Nette\DI\Container;
 use Nette\InvalidStateException;
 use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 use Nette\Utils\Html;
 use NiftyGrid\Components\Button;
 use NiftyGrid\Components\Column;
@@ -49,7 +50,7 @@ abstract class BaseGrid extends Grid {
         $container->callInjects($this);
     }
 
-    final public function injectBase(ORMFactory $tableReflectionFactory, ITranslator $translator): void {
+    final public function injectBase(ORMFactory $tableReflectionFactory, Translator $translator): void {
         $this->tableReflectionFactory = $tableReflectionFactory;
         $this->setTranslator($translator);
     }
@@ -185,7 +186,6 @@ abstract class BaseGrid extends Grid {
      * @param string|null $label
      * @return GlobalButton
      * @throws DuplicateGlobalButtonException
-     * @deprecated do not use for links!
      */
     public function addGlobalButton(string $name, ?string $label = null): GlobalButton {
         $button = parent::addGlobalButton($name, $label);

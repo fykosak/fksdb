@@ -11,8 +11,8 @@ use FKSDB\Models\Payment\IPaymentModel;
 use FKSDB\Models\Payment\Price;
 use FKSDB\Models\Transitions\IStateModel;
 use FKSDB\Models\Transitions\Machine;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
+use Nette\Database\Conventions;
+use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 use Nette\Security\IResource;
 
@@ -96,11 +96,11 @@ class ModelPayment extends AbstractModelSingle implements IResource, IStateModel
     }
 
     /**
-     * @param Context $connection
-     * @param IConventions $conventions
+     * @param Explorer $connection
+     * @param Conventions $conventions
      * @return ModelPayment|IModel|ActiveRow|AbstractModelSingle
      */
-    public function refresh(Context $connection, IConventions $conventions): IStateModel {
+    public function refresh(Explorer $connection, Conventions $conventions): IStateModel {
         $query = new TypedTableSelection(self::class, DbNames::TAB_PAYMENT, $connection, $conventions);
         return $query->get($this->getPrimary());
     }

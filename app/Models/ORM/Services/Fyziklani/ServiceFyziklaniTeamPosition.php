@@ -7,8 +7,8 @@ use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\Fyziklani\ModelFyziklaniTeamPosition;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
+use Nette\Database\Conventions;
+use Nette\Database\Explorer;
 
 /**
  * Class ServiceFyziklaniTeamPosition
@@ -18,7 +18,7 @@ class ServiceFyziklaniTeamPosition extends AbstractServiceSingle {
 
     use DeprecatedLazyDBTrait;
 
-    public function __construct(Context $connection, IConventions $conventions) {
+    public function __construct(Explorer $connection, Conventions $conventions) {
         parent::__construct(DbNames::TAB_FYZIKLANI_TEAM_POSITION, ModelFyziklaniTeamPosition::class, $connection, $conventions);
     }
 

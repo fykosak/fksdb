@@ -4,7 +4,7 @@ namespace FKSDB\Models\Persons\Deduplication;
 
 use FKSDB\Models\Logging\DevNullLogger;
 use FKSDB\Models\Logging\ILogger;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Database\Table\ActiveRow;
 use Nette\MemberAccessException;
 
@@ -28,7 +28,7 @@ class Merger {
     /** @var ActiveRow */
     private $mergedRow;
 
-    private Context $context;
+    private Explorer $context;
 
     /** @var array */
     private $configuration;
@@ -44,11 +44,11 @@ class Merger {
     /**
      * Merger constructor.
      * @param mixed $configuration
-     * @param Context $context
+     * @param Explorer $explorer
      */
-    public function __construct($configuration, Context $context) {
+    public function __construct($configuration, Explorer $explorer) {
         $this->configuration = $configuration;
-        $this->context = $context;
+        $this->context = $explorer;
         $this->logger = new DevNullLogger();
     }
 

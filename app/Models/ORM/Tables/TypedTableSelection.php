@@ -3,8 +3,8 @@
 namespace FKSDB\Models\ORM\Tables;
 
 use FKSDB\Models\ORM\Models\AbstractModelSingle;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
+use Nette\Database\Conventions;
+use Nette\Database\Explorer;
 use Nette\Database\Table\Selection;
 
 /**
@@ -15,7 +15,7 @@ class TypedTableSelection extends Selection {
 
     protected string $modelClassName;
 
-    public function __construct(string $modelClassName, string $table, Context $connection, IConventions $conventions) {
+    public function __construct(string $modelClassName, string $table, Explorer $connection, Conventions $conventions) {
         parent::__construct($connection, $conventions, $table);
         $this->modelClassName = $modelClassName;
     }

@@ -4,7 +4,7 @@ namespace FKSDB\Models\Authorization;
 
 use FKSDB\Models\ORM\Models\ModelEvent;
 use FKSDB\Models\ORM\Models\ModelLogin;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 use Nette\Security\IResource;
 use Nette\Security\IUserStorage;
 use Nette\Security\Permission;
@@ -21,15 +21,15 @@ class EventAuthorizator {
 
     private Permission $permission;
 
-    private Context $context;
+    private Explorer $context;
 
     private ContestAuthorizator $contestAuthorizator;
 
-    public function __construct(IUserStorage $identity, Permission $acl, ContestAuthorizator $contestAuthorizator, Context $db) {
+    public function __construct(IUserStorage $identity, Permission $acl, ContestAuthorizator $contestAuthorizator, Explorer $explorer) {
         $this->contestAuthorizator = $contestAuthorizator;
         $this->userStorage = $identity;
         $this->permission = $acl;
-        $this->context = $db;
+        $this->context = $explorer;
     }
 
     public function getUser(): IUserStorage {

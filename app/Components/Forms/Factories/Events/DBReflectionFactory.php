@@ -148,7 +148,7 @@ class DBReflectionFactory extends AbstractFactory {
     private function getColumnMetadata(string $table, string $column): ?array {
         if (!isset($this->columns[$table])) {
             $columns = [];
-            foreach ($this->connection->getSupplementalDriver()->getColumns($table) as $columnMeta) {
+            foreach ($this->connection->getDriver()->getColumns($table) as $columnMeta) {
                 $columns[$columnMeta['name']] = $columnMeta;
             }
             $this->columns[$table] = $columns;

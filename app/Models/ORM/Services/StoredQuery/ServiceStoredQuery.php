@@ -6,8 +6,8 @@ use FKSDB\Models\ORM\DeprecatedLazyDBTrait;
 use FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQuery;
 use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
+use Nette\Database\Conventions;
+use Nette\Database\Explorer;
 
 /**
  * @author Michal Koutný <xm.koutny@gmail.com>
@@ -18,8 +18,8 @@ class ServiceStoredQuery extends AbstractServiceSingle {
 
     private ServiceStoredQueryTag $serviceStoredQueryTag;
 
-    public function __construct(string $tableName, string $className, Context $context, ServiceStoredQueryTag $serviceStoredQueryTag, IConventions $conventions) {
-        parent::__construct($tableName, $className, $context, $conventions);
+    public function __construct(string $tableName, string $className, Explorer $explorer, ServiceStoredQueryTag $serviceStoredQueryTag, Conventions $conventions) {
+        parent::__construct($tableName, $className, $explorer, $conventions);
         $this->serviceStoredQueryTag = $serviceStoredQueryTag;
     }
 

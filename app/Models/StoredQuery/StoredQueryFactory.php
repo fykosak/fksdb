@@ -10,7 +10,6 @@ use FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQuery;
 use FKSDB\Modules\OrgModule\BasePresenter;
 use Nette\Application\BadRequestException;
 use Nette\Database\Connection;
-use Nette\Http\Response;
 use Nette\InvalidArgumentException;
 use FKSDB\Models\Utils\Utils;
 use FKSDB\Models\WebService\IXMLNodeSerializer;
@@ -27,9 +26,7 @@ class StoredQueryFactory implements IXMLNodeSerializer {
     public const PARAM_YEAR = 'year';
     public const PARAM_SERIES = 'series';
     public const PARAM_AC_YEAR = 'ac_year';
-
     private Connection $connection;
-
     private ServiceStoredQuery $serviceStoredQuery;
 
     public function __construct(Connection $connection, ServiceStoredQuery $serviceStoredQuery) {
@@ -74,22 +71,13 @@ class StoredQueryFactory implements IXMLNodeSerializer {
     }
 
     private function presenterContextParameters(BasePresenter $presenter): array {
-        try {
-            return [
-                self::PARAM_CONTEST_ID => $presenter->getSelectedContest()->contest_id,
-                self::PARAM_CONTEST => $presenter->getSelectedContest()->contest_id,
-                self::PARAM_YEAR => $presenter->getSelectedYear(),
-                self::PARAM_AC_YEAR => $presenter->getSelectedAcademicYear(),
-                self::PARAM_SERIES => $presenter->getSelectedSeries(),
-            ];
-        } catch (BadRequestException $exception) {
-            if ($exception->getCode() == Response::S500_INTERNAL_SERVER_ERROR) {
-                $presenter->flashMessage(_('Series context for queries is not available'), BasePresenter::FLASH_WARNING);
-                return [];
-            } else {
-                throw $exception;
-            }
-        }
+        return [
+            self::PARAM_CONTEST_ID => $presenter->getSelectedContest()->contest_id,
+            self::PARAM_CONTEST => $presenter->getSelectedContest()->contest_id,
+            self::PARAM_YEAR => $presenter->getSelectedYear(),
+            self::PARAM_AC_YEAR => $presenter->getSelectedAcademicYear(),
+            self::PARAM_SERIES => $presenter->getSelectedSeries(),
+        ];
     }
 
     /**

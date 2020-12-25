@@ -10,7 +10,7 @@ use FKSDB\Models\Payment\PriceCalculator\PriceCalculator;
 use FKSDB\Models\Payment\SymbolGenerator\Generators\AbstractSymbolGenerator;
 use FKSDB\Models\Transitions\AbstractTransitionsGenerator;
 use FKSDB\Models\Transitions\Machine;
-use Nette\Database\Context;
+use Nette\Database\Explorer;
 
 /**
  * Class PaymentMachine
@@ -28,8 +28,8 @@ class PaymentMachine extends Machine\Machine {
 
     private array $scheduleGroupTypes;
 
-    public function __construct(Context $connection, ServicePayment $servicePayment, ServiceEvent $serviceEvent) {
-        parent::__construct($connection, $servicePayment);
+    public function __construct(Explorer $explorer, ServicePayment $servicePayment, ServiceEvent $serviceEvent) {
+        parent::__construct($explorer, $servicePayment);
         $this->serviceEvent = $serviceEvent;
     }
 

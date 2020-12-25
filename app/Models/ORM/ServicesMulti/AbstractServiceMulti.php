@@ -10,8 +10,8 @@ use FKSDB\Models\ORM\Services\AbstractServiceSingle;
 use FKSDB\Models\ORM\Tables\MultiTableSelection;
 use InvalidArgumentException;
 use Nette\Database\Connection;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
+use Nette\Database\Conventions;
+use Nette\Database\Explorer;
 use Nette\InvalidStateException;
 use Nette\SmartObject;
 
@@ -149,11 +149,11 @@ abstract class AbstractServiceMulti implements IService {
         return $this->mainService->getConnection();
     }
 
-    public function getContext(): Context {
+    public function getContext(): Explorer {
         return $this->mainService->getContext();
     }
 
-    public function getConventions(): IConventions {
+    public function getConventions(): Conventions {
         return $this->mainService->getConventions();
     }
 

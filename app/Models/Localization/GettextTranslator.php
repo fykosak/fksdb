@@ -3,13 +3,13 @@
 namespace FKSDB\Models\Localization;
 
 use Nette\InvalidArgumentException;
-use Nette\Localization\ITranslator;
+use Nette\Localization\Translator;
 
 /**
  *
  * @author Michal Koutný <xm.koutny@gmail.com>
  */
-class GettextTranslator implements ITranslator {
+class GettextTranslator implements Translator {
 
     /** @var array[lang] => locale */
     private array $locales;

@@ -9,8 +9,8 @@ use FKSDB\Models\ORM\IService;
 use FKSDB\Models\ORM\Tables\TypedTableSelection;
 use InvalidArgumentException;
 use Nette\Database\Connection;
-use Nette\Database\Context;
-use Nette\Database\IConventions;
+use Nette\Database\Conventions;
+use Nette\Database\Explorer;
 use Nette\Database\Table\Selection;
 use Nette\InvalidStateException;
 use PDOException;
@@ -31,7 +31,7 @@ abstract class AbstractServiceSingle extends Selection implements IService {
     private string $modelClassName;
     private string $tableName;
 
-    public function __construct(string $tableName, string $modelClassName, Context $connection, IConventions $conventions) {
+    public function __construct(string $tableName, string $modelClassName, Explorer $connection, Conventions $conventions) {
         $this->tableName = $tableName;
         $this->modelClassName = $modelClassName;
         parent::__construct($connection, $conventions, $tableName);
@@ -206,11 +206,11 @@ abstract class AbstractServiceSingle extends Selection implements IService {
         return $this->context->getConnection();
     }
 
-    public function getContext(): Context {
+    public function getContext(): Explorer {
         return $this->context;
     }
 
-    public function getConventions(): IConventions {
+    public function getConventions(): Conventions {
         return $this->conventions;
     }
 

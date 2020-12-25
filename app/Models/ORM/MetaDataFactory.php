@@ -11,7 +11,6 @@ use Nette\Database\Connection;
 class MetaDataFactory {
 
     private array $metadata = [];
-
     private Connection $connection;
 
     public function __construct(Connection $connection) {
@@ -27,7 +26,7 @@ class MetaDataFactory {
 
     private function fetchMeta(string $tableName): void {
         $this->metadata[$tableName] = [];
-        foreach ($this->connection->getSupplementalDriver()->getColumns($tableName) as $columnMeta) {
+        foreach ($this->connection->getDriver()->getColumns($tableName) as $columnMeta) {
             $this->metadata[$tableName][$columnMeta['name']] = $columnMeta;
         }
     }
