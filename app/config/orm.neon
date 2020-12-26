@@ -986,6 +986,44 @@ orm:
         stored_query_tag_type:
              serviceClassName: FKSDB\Models\ORM\Services\StoredQuery\ServiceStoredQueryTagType
              modelClassName: FKSDB\Models\ORM\Models\StoredQuery\ModelStoredQueryTagType
+#wareHouse
+        warehouse_product:
+             serviceClassName: FKSDB\Models\ORM\Services\Warehouse\ServiceProduct
+             modelClassName: FKSDB\Models\ORM\Models\Warehouse\ModelProduct
+             columnFactories:
+                 product_id:
+                     type: primaryKey
+                     title: _(Product Id)
+                 name_cs:
+                     type: string
+                     title: _(Name cs)
+                 name_en:
+                     type: string
+                     title: _(Name en)
+                 category:
+                     type: state
+                     title: _(Category)
+                     states:
+                         game: {badge: 'badge badge-1', label: 'Game'}
+                         game-extension: {badge: 'badge badge-1', label: 'Game extension'}
+                         apparel: {badge: 'badge badge-2', label: 'Apparel'}
+                         book: {badge: 'badge badge-3', label: 'Book'}
+        warehouse_producer:
+             serviceClassName: FKSDB\Models\ORM\Services\Warehouse\ServiceProducer
+             modelClassName: FKSDB\Models\ORM\Models\Warehouse\ModelProducer
+             referencedAccess:
+                 modelClassName: FKSDB\Models\ORM\Models\Warehouse\IProducerReferencedModel
+                 method: getProducer
+             columnFactories:
+                 producer_id:
+                     type: primaryKey
+                     title: _(Product Id)
+                 name:
+                     type: string
+                     title: _(Producer)
+        warehouse_item:
+            serviceClassName: FKSDB\Models\ORM\Services\Warehouse\ServiceItem
+            modelClassName: FKSDB\Models\ORM\Models\Warehouse\ModelItem
 
 services:
 

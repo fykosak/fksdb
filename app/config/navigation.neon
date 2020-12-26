@@ -74,3 +74,7 @@ navigation:
             Org.Points.preview: []
             Org.Points.entry: []
             Org.Inbox.corrected: []
+        Warehouse.Dashboard.default:
+            Warehouse.Producer.list: []
+            Warehouse.Product.list: []
+            Warehouse.Item.list: []
